@@ -67,3 +67,122 @@ __recovery/
 
 # Boss dependency manager vendor folder https://github.com/HashLoad/boss
 modules/
+/Battle Tutorials
+/Campaigns
+/CampaignsMP
+/data/cursors
+/data/defines/backup
+data/definespaths.txt
+/data/gfx/fonts
+data/gfx/gouraud.dat
+data/gfx/h2lremap.dat
+data/gfx/Map.bbm
+data/gfx/mapgold.lbm
+data/gfx/pal0.bbm
+data/gfx/pal0.lbm
+data/gfx/pal1.bbm
+data/gfx/pal1.lbm
+data/gfx/pal2.bbm
+data/gfx/pal2.lbm
+data/gfx/pal3.bbm
+data/gfx/pal3.lbm
+data/gfx/pal4.bbm
+data/gfx/pal4.lbm
+data/gfx/pal5.bbm
+data/gfx/pal5.lbm
+data/gfx/remap.dat
+data/gfx/remap2.dat
+data/gfx/Setup.bbm
+data/gfx/setup.lbm
+data/gfx/setup2.bbm
+data/gfx/text0.dat
+data/gfx/text1.dat
+data/gfx/text2.dat
+data/gfx/text3.dat
+/data/mission
+/data/save
+/data/sfx
+/data/gfx
+data/locales.txt
+data/text/text.bel.libx
+data/text/text.bul.libx
+data/text/text.chn.libx
+data/text/text.cze.libx
+data/text/text.dut.libx
+data/text/text.est.libx
+data/text/text.fin.libx
+data/text/text.fre.libx
+data/text/text.ger.libx
+data/text/text.hun.libx
+data/text/text.ita.libx
+data/text/text.jpn.libx
+data/text/text.kor.libx
+data/text/text.lit.libx
+data/text/text.nor.libx
+data/text/text.ptb.libx
+data/text/text.rom.libx
+data/text/text.rus.libx
+data/text/text.slv.libx
+data/text/text.spa.libx
+data/text/text.srb.libx
+data/text/text.svk.libx
+data/text/text.swe.libx
+data/text/text.tur.libx
+data/text/text.ukr.libx
+data/text/text.vie.libx
+/Export
+/Logs
+/Maps
+/MapsDL
+/MapsMP
+/Modding Graphics
+/Music
+/Saves
+/SavesMP
+/screenshots
+/Sounds
+RXXPacker.log
+RXXEditor.log
+ResourceValues.txt
+*.zip
+/Tutorials
+trees.rx
+units.rx
+TranslationManager.ini
+/Utils/_BugParser (moved to CrashReporter repo)
+/Utils/_chat (died out prototype)
+/Utils/_FontEditor (deprecated)
+/Utils/_KaM Editor
+/Utils/_MasterServer (moved to kp-wiki repo)
+/Utils/_ScriptingParser (moved to kp-wiki repo)/header
+/Utils/_ScriptingParser (moved to kp-wiki repo)
+/Utils/_TestFunctional
+/Utils/AnimInterp
+/Utils/AVIPlayer
+/Utils/Batcher
+/Utils/DedicatedServer
+/Utils/DedicatedServerGUI
+/Utils/Delanay Triangulation
+/Utils/DependenciesGrapher
+/Utils/DS video playback
+/Utils/FontX Collator
+/Utils/FontX Editor
+/Utils/FontX Generator
+/Utils/HousePreview
+/Utils/HTTPTest
+/Utils/LIB Decoder
+/Utils/LIB Opener
+/Utils/MapUtil
+/Utils/Network Test
+/Utils/Network TestTCP
+/Utils/PathFinder
+/Utils/Runner
+/Utils/RunnerParallelExtension
+/Utils/RVO2
+/Utils/RXXPacker
+/Utils/Scripting
+/Utils/Server Poller
+/Utils/TileEditor
+/Utils/TileResampler
+/Utils/uniteditor
+/Utils/UnitTests

@@ -1,0 +1,63 @@
+{
+  "Bridges": [
+	  {
+		"TextID" : 1954,
+		"Description" : 1955,
+		"MaxProgress" : 50,	
+		"GUIIcon" : 347,	
+		"IsConstruction" : false,
+		"IsBridge" : true,
+		"BridgeType" : 1,
+		"Cost" : [
+					{"WareType" : "wtTrunk", "Count" : 1},
+					{"WareType" : "wtTimber", "Count" : 1}
+			],
+		"Size" : {"X": 1, "Y": 3}, 
+		
+		"Tiles": [
+					{"Tile" : [1, 246, 0, 255]},
+					{"Tile" : [1, 246, 0, 255]},
+					{"Tile" : [2, 246, 0, 255]}
+				]
+	  },
+	  {
+		"TextID" : 1954,
+		"Description" : 1955,
+		"MaxProgress" : 100,	
+		"GUIIcon" : 347,	
+		"IsConstruction" : false,
+		"IsBridge" : true,
+		"BridgeType" : 2,
+		"Cost" : [
+					{"WareType" : "wtStone", "Count" : 3},
+					{"WareType" : "wtTimber", "Count" : 2}
+			],
+		"Size" : {"X": 1, "Y": 3},
+		"Tiles" : [ 
+					{"Tile" : [1, 215, 3, 255]},
+					{"Tile" : [1, 215, 3, 255]},
+					{"Tile" : [2, 215, 3, 255]}
+					]
+	  },
+	  {
+		"TextID" : 1954,
+		"Description" : 1955,
+		"MaxProgress" : 100,	
+		"GUIIcon" : 347,	
+		"IsConstruction" : true,
+		"IsBridge" : false,
+		"BridgeType" : 0,
+		"Cost" : [
+					{"WareType" : "wtStone", "Count" : 3},
+					{"WareType" : "wtTimber", "Count" : 2},
+					{"WareType" : "wtIron", "Count" : 2}
+			],
+		"Size" : {"X": 1, "Y": 3},
+		"Tiles" : [ 
+					{"Tile" : [1, 215, 3, 255]},
+					{"Tile" : [1, 215, 3, 255]},
+					{"Tile" : [2, 215, 3, 255]}
+					]
+	  }
+  ]
+}

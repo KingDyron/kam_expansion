@@ -1,0 +1,238 @@
+﻿
+
+
+Zmiany w jednostkach:	
+	Wydłużono głód jednostek (z 45 minut do 60 minut), ze względu na nową produkcję jedzenia oraz \/
+	Wytrzymałość/kondycja żołnierza zależy od akcji, które wykonuje. Jeżeli jest w spoczynku wytrzyma najdłużej.
+	Jednostki strzeleckie wymagają amunicji. Kusznik oraz łucznik potrzebują kołczanu do przeładowania, a pachołek kamiennego pocisku.
+	Kołczan da jednostce losową ilość amunicji między 90 a 110.
+	Dodano możliwość zmieniania statystyk jednostki za pomocą skryptów. Można zmienić: atak, obrona, maksymalne życie, prędkość, zasięg odkrywania.
+	Zmieniono prędkość jednostek konnych. od najwolniejszej Cięzka jazda -> Lekka jazda -> Włóczęga.
+	Dodano umiejętność 'Natychmiastowe Zabójstwo', które jest włączane za pomocą skryptów.
+	Jeśli jednostka ma atak większy niż 200, zawsze zada cios/obrażenia
+	Jednostka jest ma słabszą obronę oraz atak jeśli jest głodna
+	Oddział będzie nakarmione w całości jeśli zostanie zamówione jedzenie.
+	Każdy rodzaj jedzenia ma inny wpływ na wytrzymałość żołnierza.
+	Wojownik kosztuje dwa złota więcej. Otrzymał za to dodatkowy punkt obrony.
+	Żołnierze przyjmują tylko kiełbasy, chleb oraz jabłka jako jedzenie
+	Pomocnik ma inną prędkość w zależności co nosi w rękach. Z koniem jest najwolniejszy.
+	
+	Jeśli w szkole znajdują się buty, niektóre jednostki wykorzystują je i zwiększają swoją prędkość
+	Jednostki noszące buty wytwarzają kurz podczas chodzenia
+	Jednostki posiadające wzmocnienie bitynowe wyświetlają nad sobą tarczę
+	
+	Dodano do gry Paladyna
+	Dodano do gry Strzelca na koniu
+	
+Dodano machiny obleżnicze
+	Jako nowy typ oddziału(nie można łączyć z innymi strzelającymi)
+	Machiny mają większy minimalny zasięg (mniejszy teren do strzelania z bliskich odległości)
+	Balista ma o jedną kratkę większy zasięg niż strzelający (czyli 11).
+	Katapulta ma większy zasięg strzelania niż balista(czyli, 14 kratek)
+	Machiny można wytwarzać w warsztacie wojennym.
+	Katapulta ma znacznie większe obrażenia dla budowli.
+	Tworzenie machin ma 4 fazy, każda potrzebuje minimalnie 3x belka, 3x części stalowe oraz 1x koło. 1 faza to ok. 1.5 minuty tworzenia
+	Machiny posiadają spowolnioną wytrzymałość/głód
+	W warsztacie dodano kolejkę machin oblężniczych(podobnie do szkoły);
+	Machiny można wzmocnić, jeśli do produkcji dodamy wzmocnienie bitynowe.(zwiększa ich zdrowie, defensywę oraz prędkość, zależnie od danej ilości).
+	Machiny potrzebują amunicji. Katapulty potrzebują kamienne pociski, a balisty bełty.
+	Balista zabija jednostkę jednym uderzeniem (jak trafi), chyba że opponent jest wzmocniony bitynem
+	
+	Taran zadaje duże obrażenia przeciw budynkom. Długo się go tworzy, ponieważ potrzebuje aż 7 faz budowy.
+	
+---	
+Dodano nowe płytki węgla które można stawiać na każdym terenie.
+Dodano płytkę, która tworzy nielimitowane złoże, dla gliny oraz węgla są osobne 
+Dodano płytki dekoracyjne (drewniane płotki, kamienie, barierki, etc)
+---	
+Dodano Nowe Budynki  : 	
+	Mury obronne: 
+		Buduje się jak normalne budynki, ale można je stawiać obok siebie.
+		Mozna budować je bez drogi
+		Murów obronnych nie możemy stawiać wszędzie. Najpierw trzeba postawić bramę, a potem będzie możliwość budowania muru w zasięgu 15 kratek od bramy(szuka połączenia muru z bramą).
+		Mury obronne możemu ogrodzić zasiekami które będą raniły przeciwnika. Kosztują one 3 pnie za jedną kratkę
+		Zasieki działają tylko na jednostki przeciwnika. Sojusznika nie ranią.
+		W edytorze map mury można stawiać gdziekolwiek na potrzeby gracza, ale podczas rozgrywki mają swoje ograniczenia
+		
+		
+	Kurnik(Hodowca): 
+		Wytwarza jajka.
+		jajka są bardzo cennym towarem w targowisku.
+		Jajka są potrzebne do wytwarzania chleba.
+		Do produkcji wymagana woda oraz ziarno.
+		
+	Nowa wieża obronną(Rekrut) - wieża strzelnicza:
+		Strzela bełtami i zadaje niewielkie obrażenia. Potrzebuje w środku rekruta lub dwóch.
+		Wieża ma daleki zasięg strzelania oraz duży obszar odkrywania.
+		Wymaga kołczanu, który starcza jej na 50 strzałów.
+		Może w niej być dwóch rekrutów.
+		
+	Kopalnia bitynu(Górnik): 
+		Wydobywa bitynową rudę.
+	
+	Kamienny znak:
+		Można zostawiać wiadomości na mapie.
+		Można go postawić tylko w edytorze map.
+		Panel znaku można zamknąć za pomocą czerwonego X lub naciskają poza panel
+		
+	Studnia:
+		wytwarza wodę raz na 30 sekund.
+		Woda jest potrzebna do produkcji chleba, koni, świń, jajek oraz jabłek.
+		Budynek 1x1 z małym zapotrzebowaniem. 
+		Nie można postawić na śniegu oraz piasku/pustyni
+		
+	Warsztat części(kamieniarz):
+		Produkuje kamienne pociski potrzebne do machin oraz pachołków jako amunicja.
+		Produkuje belki wymagane do machin oblężniczych
+		Produkuje koła wymagane do machin oblężniczych
+		
+	Odlewnia metalu(Hutnik):
+		Wytwarza części stalowe potrzebne do produkcji balist oraz katapult
+		Wytwarza bełty, które służą jako amunicja dla balist.
+		Wytwarza wzmocnienie bitynowe.
+	
+	Kupiec:
+		Przenosi wybrane towary dla wybranego sojusznika.
+		Czas trwania będzie dłuższy jeśli wyślemy więcej towarów.
+		
+	Jabłoń:
+		Produkuje 5x jabłko.
+		Dodatkowy budynek do produkcji jedzenia (zastępstwo w zimowych lub piaszczystych mapach)
+		Tani koszt budowy
+		Potrzebuje chłopa
+		Aby drzewo mogło rosnąć potrzebuje wody przez pierwsze etapy rośnięcia
+		Posiada etapy wieku przedstawione w kilku grafikach
+		Drzewo w końcu traci owoce i musi zostać odnowione.
+	
+	Garncarnia:
+		Produkuje dachówki potrzebne do budowy.
+		Wykopuje złoża gliny i wykorzystuje ją do produkcji.
+		
+	Wypalarka drewna:
+		Wytwarza węgiel z drewna.
+		Do przetwarzania drewna jest potrzebna słoma, trociny lub węgiel jako paliwo.
+	
+	Dom Emisariusza:
+		Dzięki niemu można przesłać towary do sojuszników.
+	
+	Chata kolekcjonera:
+		Wydobywa kamienie szlachetne z kamieni na mapie
+		Wytwarza biżuterię, bardzo droga na targowisku
+	
+	Krawiec:
+		Wytwarza buty ze skóry, które dają przyspeszenie dla niektórych jednostek pracujących
+		Może produkować również pancerze
+
+	Silos:
+		Można w nim przechować towary. Nie będą z niego zabierane dopuki nie będziesz tego chciał.
+		
+	Chata mieszkalna:
+		Nie wielki budynek, w którym mieszkają ludzie bez profesji.
+		
+	Dom mieszkalny:
+		Budynek, w którym mieszkają ludzie bez profesji.
+		Ma większą pojemność niż chata mieszkalna.
+	
+	Pałac:
+		Szkoli się w nim silnych wojowników.
+	
+		
+---	
+Zmiany w aktualnych budynkach:
+	Gospodarstwo wytwarza dodatkowo ziarno oprócz słomy.
+	
+	Słoma potrzebna jest dla świń jak i koni.
+	
+	Młyn potrzebuje teraz ziarno do produkcji mąki (nie słome jak było wcześcniej)
+	
+	Przywrócono warsztat machin.
+
+	
+	Warsztat zbroi: Można w nim produkować kołczany.
+	
+	Dymarka: Dodatkowo wytwarza Bityn.
+	
+	Spichlerz: Dodano maksymalną ilość surowców. Stan napełniena jest widoczny w panelu budynku
+				Wynoszenie towaru będzie możliwe jeśli towar będzie oznaczony pomarańczowym trójkątem.
+				
+	Wieża obronna wymaga kamiennych pocisków
+	
+	Warownia : Dodano surowiec 'bitynowa blacha', która jest dodatkiem do pancerzy dla żelaznych jednostek.
+				Zostaną podświetlone na czerwono surowce, których nie mamy wystarczająco do wyposażenia żołnierza. 
+	
+	Gospoda : Zamiast kiełbasy dodano jabłka.
+				Jabłka dodają tyle samo wytrzymałości co kiełbasa.
+	
+	Szkoła : Wymaga cywilów, których produkuje się w chatach i domach mieszkalnych.
+				
+---
+Dodano do gry dachówki jako nowy towar. Jest potrzebny do budowy znacznej ilości budynków.
+
+Bityn możemy pozyskać z bitynowych złóż za pomocą kopalni bitynu.
+	Złoża bitynu mogą występować na szarej, jak i na brązowej górze.
+	Bityn przetapiamy na stal bitynową w hucie stali. Przetwór kosztuje 2x węgiel + 2x ruda bitynu -> 1x stal bitynowa
+	Ze stali bitynowej możemy tworzyć wzmocnienia bitynowe, dzięki którym możemy wzmocnić jednostkę.
+
+Obiekty :
+	Dodano zaśnieżone obiekty
+	Obiekty nr.80 oraz 81 nie są widoczne podczas rozgrywki, a w edytorze map są niebieskimi kwadracikami.
+	Dodano kilka obiektów flagowych
+
+W Edytorze map :
+	Dodano maskę terenu(wybieramy teren na którym chcemy nakładać zmiany i tylko na nim będą one następowały)
+	W spichlerzu można najechać na towar i użyć kółka myszki aby większyć lub zmniejszyć ilość danego towaru (shift i ctrl zwiększa ilość powiększania)
+	Dodano większą gumkę budynków/dróg/pól. Można zwiększyćzasięg oddziałowywania
+	Dodano możliwość łączenia ze sobą oddziałów.
+	Do paneli jednostek dodano przycisk który automatycznie dodaje pracowników budynków dla wybranego gracza.
+	Dodano nową funkcję stawiania obiektów oraz wzniesień : Szablony
+		Szablony można tworzyć w panelu zaznaczania (muszą mieć rozmiar 30x30);
+		Szablony mogą zostać zapisane, usunięte oraz można zmienić ich nazwę.
+		W drugim panelu obiektów, za pomocą pędzla zaznaczany jest teren.
+		Po zaakcepotowaniu zaznaczenia, obiekty/wzniesienia z wcześniej wybranego szablonu zostaną postawione na mapie.
+	
+	Dodano zapisywanie warstw terenu do pliku, dzięki czemu można zrobić szybką kopie zapasować i w łatwy sposób ją wczytywać
+	
+Poprawki paneli
+	Dodano rozkładane panele: za pomocą małego przycisku możemy schować lub pokazać zawartość panelu, aby ukryć nie potrzebne rzeczy
+		Dodano je do paneli z
+			Pędzlami terenu	
+			Budynkami gracza
+			Jednostkami gracza
+AI:	
+	Gracze którzy są komputerami od teraz mogą szkolić jednostki w ratuszu, ale także z warsztatów oblężniczych.
+	Jeśli komputer będzie miał więcej koszar, będzie szkolił szybciej jednostki. Tak samo z ratuszem.
+	Jeśli komputer będzie miał nadmiar danej broni w koszarach, przestanie go produkować, aby skupić produkcję na inne bronie.
+	Jeśli armia zostanie zaatakowana przez oddziały strzeleckie, ta sprawdza najpierw czy warto przebyć drogę aby je atakować. 
+	Dodano funkcję patroli dla pozycji obronnych. Podczas wybranej pozycji wciśnij ctrl + RMB na mapie aby ustawić punkt patrolu.
+	Jeśli wszystkie oddziały atakujące będą miały punkt patrolu, wykorzystane będzie to jako szyk przed atakiem.
+	
+	
+Dodano kilka wariantów wyglądu gotowych budynków.
+	Warianty są wybierane losowo.
+
+Dodano do koszar surowiec: Wzmocnienie bitynowe. 
+	Pozwala zwiększyć życie, obronę oraz atak jednostki (tylko uzbrojonych w żelazo) kosztem jej prędkości.
+	Ikonę z rekrutami przeniesiono na wyższy pasek, a w jego miejsce wstawiono wzmocnienie bitynowe.
+	
+
+Ogólne :
+	Wyłączono wygładzone animacje ze względu na błędy grafik nowych budynków.
+	Zmniejszono głosność dźwięków wytwarzanych przez grę, aby dźwięki wywoływanie przez skrypty były głośniejsze.
+
+Dodano możliwość tworzenia własnego panelu w trakcie rozgrywki.
+	Można dodać do niego przyciski, obrazy oraz tekst.
+
+Dodano skrypty
+	Akcje :
+		A.UnitChangeSpec(aUnitID, aHPMax, aAttack, aAttackHorse, aDefence, aSpeed, aSight : Integer);//zmienia statystyki jednostki
+		A.UnitSetInstantKill(aUnitID: Integer; isInstant: Boolean): Boolean;//Ustawia jednostce szybkie zabijanie.
+		A.GroupMakeHero(aGroupID : Integer IsHero : Boolean);//zmienia pojedynczy oddział w bohatera, usuwa pewne funkcje.
+		A.GroupInfiniteAmmoSet(aGroupID : Integer IsInfinite : Boolean);//ustawia oddziałowi nieskończoną ilość amunicji
+		A.GroupHungerPaceSet(aGroupID : Integer aPace : Cardinal); //ustawia oddziałowi prędkość spadu wytrzymałości. Większa wartość, oznacza dłuższe życie.
+		A.UnitHungerPaceSet(aUnitID : Integer aPace : Cardinal); //ustawia jednostce prędkość spadu wytrzymałości. Większa wartość, oznacza dłuższe życie.
+		
+		A.UnitBootsSet(aUnitID : Integer; aBoots : Boolean); //dodaje jednostce buty
+		
+		A.MapLayerLoad(aLayerName : String); //wczytuje warstwę terenu i ustawia ją w trakcie rozgrywki
+	
+

@@ -1,0 +1,449 @@
+{
+  "Houses": [
+    {
+		"Name": "htSchool",
+			"DescriptionID": 1741,
+			"WoodPileOffset" : {"MoveX" : -70, "MoveY" : 15}, 
+			"StonePileOffset" : {"MoveX" : -10, "MoveY" : 15}, 
+			"TilePileOffset" : {"MoveX" : 10, "MoveY" : 15}	
+	},
+    {
+		"Name": "htStore",
+			"DescriptionID": 1742,
+			"WoodPileOffset" : {"MoveX" : -70, "MoveY" : 15}, 
+			"StonePileOffset" : {"MoveX" : -10, "MoveY" : 15}, 
+			"TilePileOffset" : {"MoveX" : 10, "MoveY" : 15},
+			"WareInput" : ["wtAll", "wtNone", "wtNone", "wtNone"],
+			"WareOutput" : ["wtAll", "wtNone", "wtNone", "wtNone"],
+			"Styles" : [
+						{"GuiIcon" : 353, "StonePic" : 2434, "SnowPic" : 2489}
+						]
+						
+	},
+    {
+		"Name": "htInn",
+			"DescriptionID": 1743,
+			"WareInput" : ["wtBread", "wtSausage", "wtWine", "wtFish", "wtApple", "wtVegetables"],
+			"WoodPileOffset" : {"MoveX" : -70, "MoveY" : 15}, 
+			"StonePileOffset" : {"MoveX" : -5, "MoveY" : 15}, 
+			"TilePileOffset" : {"MoveX" : 20, "MoveY" : 15}			
+	},
+    {
+		"Name": "htBarracks",
+			"MaxHealth" : 800,
+			"StoneCost": 9,
+			"DescriptionID": 1744,
+			"WoodPileOffset" : {"MoveX" : -70, "MoveY" : 15}, 
+			"StonePileOffset" : {"MoveX" : -5, "MoveY" : 15}, 
+			"TilePileOffset" : {"MoveX" : 20, "MoveY" : 15},
+			"WareInput" : ["wtWarfare"],
+			"WareOutput" : ["wtWarfare"],
+			"UnlockAfter" : ["htPottery"]
+	},
+    {
+		"Name": "htTownhall",
+			"DescriptionID": 1745,
+			"WoodPileOffset" : {"MoveX" : -70, "MoveY" : 15}, 
+			"StonePileOffset" : {"MoveX" : -5, "MoveY" : 15}, 
+			"TilePileOffset" : {"MoveX" : 20, "MoveY" : 15}	
+	},
+    {
+		"Name": "htFishermans",
+			"DescriptionID": 1746,
+			"WoodPileOffset" : {"MoveX" : -5, "MoveY" : 15}, 
+			"StonePileOffset" : {"MoveX" : 15, "MoveY" : 15}, 
+			"TilePileOffset" : {"MoveX" : 40, "MoveY" : 15},
+			"CanForceWork" : true
+	},
+    {
+		"Name": "htMarket",
+			"DescriptionID": 1747,
+			"WoodPileOffset" : {"MoveX" : -75, "MoveY" : 15}, 
+			"StonePileOffset" : {"MoveX" : -35, "MoveY" : 15}, 
+			"TilePileOffset" : {"MoveX" : -10, "MoveY" : 15}	
+	},
+    {
+		"Name": "htArmorSmithy",
+			"DescriptionID": 1748,
+			"WoodPileOffset" : {"MoveX" : -80, "MoveY" : 20}, 
+			"StonePileOffset" : {"MoveX" : 10, "MoveY" : 20}, 
+			"TilePileOffset" : {"MoveX" : 40, "MoveY" : 20},
+			"WareInput" : ["wtIron", "wtCoal", "wtBitinE"],
+			"WareOutput" : ["wtIronArmor", "wtIronShield", "wtBitinArmor"],
+			"WorkAnim" : [
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork4", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork4", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork4", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork4", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork5", "Cycles" : 1}
+						]		
+	},
+    {
+		"Name": "htArmorWorkshop",
+			"DescriptionID": 1749,
+			"WoodPileOffset" : {"MoveX" : 25, "MoveY" : 20}, 
+			"StonePileOffset" : {"MoveX" : -5, "MoveY" : 20}, 
+			"TilePileOffset" : {"MoveX" : 50, "MoveY" : 20},
+			"WareInput": ["wtTimber"],
+			"UnlockAfter": ["htSawmill"],
+			"WareOutput": ["wtWoodenShield", "wtPlateArmor","wtSawDust"],
+			"SupplyOut3" : [2337, 2338, 2339, 2340, 2341], 	
+			"SupplyOut4" : [2332, 2333, 2334, 2335, 2336], 	
+			"WorkAnim" : [
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork4", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork4", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork4", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork4", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1}
+						]			
+	},
+    {
+		"Name": "htBakery",	
+			"DescriptionID": 1750,
+			"WoodPileOffset" : {"MoveX" : -40, "MoveY" : 15}, 
+			"StonePileOffset" : {"MoveX" : -25, "MoveY" : 15}, 
+			"TilePileOffset" : {"MoveX" : -10, "MoveY" : 15},
+			"SupplyIn2" : [2302, 2303, 2304, 2305, 2306], 
+			"WareInput" : ["wtFlour", "wtWater"], 
+			"WorkAnim" : [
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1}
+						],
+			"CanForceWork" : true	 		
+	},
+    {
+		"Name": "htButchers",
+			"DescriptionID": 1751,
+			"WoodPileOffset" : {"MoveX" : -40, "MoveY" : 15}, 
+			"StonePileOffset" : {"MoveX" : -33, "MoveY" : 15}, 
+			"TilePileOffset" : {"MoveX" : -15, "MoveY" : 15},
+			"WorkAnim" : [
+							{ "WorkType" : "haWork1", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork4", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork4", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork4", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork4", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork4", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork4", "Cycles" : 1}
+						],
+			"CanForceWork" : true	 		
+	},
+    {
+		"Name": "htCoalMine",
+			"DescriptionID": 1752,
+			"SupplyOut1" : [200, 201, 202, 203, 204], 
+			"WoodPileOffset" : {"MoveX" : -70, "MoveY" : 15}, 
+			"StonePileOffset" : {"MoveX" : -10, "MoveY" : 15}, 
+			"TilePileOffset" : {"MoveX" : 10, "MoveY" : 15},
+			"WorkAnim" : [
+							{ "WorkType" : "haWork1", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 23},
+							{ "WorkType" : "haWork5", "Cycles" : 1}
+						],
+			"CanForceWork" : true	 		
+	},
+    {
+		"Name": "htGoldMine",
+			"DescriptionID": 1753,
+			"WoodPileOffset" : {"MoveX" : -40, "MoveY" : 15}, 
+			"StonePileOffset" : {"MoveX" : -20, "MoveY" : 15}, 
+			"TilePileOffset" : {"MoveX" : 0, "MoveY" : 15},
+			"WorkAnim" : [
+							{ "WorkType" : "haWork1", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 24},
+							{ "WorkType" : "haWork5", "Cycles" : 1}
+						],
+			"CanForceWork" : true	 	
+	},
+    {
+		"Name": "htIronMine",
+			"DescriptionID": 1754,
+			"WoodPileOffset" : {"MoveX" : -40, "MoveY" : 15}, 
+			"StonePileOffset" : {"MoveX" : -20, "MoveY" : 15}, 
+			"TilePileOffset" : {"MoveX" : 30, "MoveY" : 15},
+			"WorkAnim" : [
+							{ "WorkType" : "haWork1", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 24},
+							{ "WorkType" : "haWork5", "Cycles" : 1}
+						],
+			"CanForceWork" : true	 			
+	},
+    {
+		"Name": "htIronSmithy",	
+			"DescriptionID": 1755,
+			"WoodPileOffset" : {"MoveX" : -40, "MoveY" : 15}, 
+			"StonePileOffset" : {"MoveX" : 30, "MoveY" : 15}, 
+			"TilePileOffset" : {"MoveX" : -80, "MoveY" : 15},
+			"UnlockAfter" : ["htBitinMine", "htIronMine"],
+			"CanForceWork" : true						
+	},
+    {
+		"Name": "htSiegeWorkshop",	
+			"WoodCost": 6,
+			"StoneCost": 0,
+			"DescriptionID": 1756,
+			"WoodPileOffset" : {"MoveX" : 30, "MoveY" : 15}, 
+			"StonePileOffset" : {"MoveX" : 10, "MoveY" : 15}, 
+			"TilePileOffset" : {"MoveX" : 50, "MoveY" : 15},	
+			"WorkerTypes": [{"UnitType" : "utCarpenter", "MaxCount" : 1}, {"UnitType" : "utOperator", "MaxCount" : 9}],
+			"SupplyIn1" : [2342, 2343, 2344, 2345, 2346],
+			"SupplyIn3" : [2347, 2348, 2349, 2350, 2351],
+			"SupplyIn4" : [2352, 2353, 2354, 2355, 2356]
+	},
+    {
+		"Name": "htMetallurgists",
+			"DescriptionID": 1757,
+			"WoodPileOffset" : {"MoveX" : -70, "MoveY" : 15}, 
+			"StonePileOffset" : {"MoveX" : -10, "MoveY" : 15}, 
+			"TilePileOffset" : {"MoveX" : 10, "MoveY" : 15},
+			"WorkAnim" : [
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork4", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork4", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork4", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork4", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1}
+						],
+			"CanForceWork" : true	 			
+	},
+    {
+		"Name": "htMill",
+			"DescriptionID": 1758,
+			"WoodPileOffset" : {"MoveX" : -30, "MoveY" : 15}, 
+			"StonePileOffset" : {"MoveX" : 0, "MoveY" : 15}, 
+			"TilePileOffset" : {"MoveX" : 10, "MoveY" : 15},
+			"WorkAnim" : [
+							{ "WorkType" : "haWork2", "Cycles" : 47}
+						],
+			"CanForceWork" : true	 	
+	},
+    {
+		"Name": "htSawmill",
+			"DescriptionID": 1759,
+			"WoodPileOffset" : {"MoveX" : -70, "MoveY" : 15}, 
+			"StonePileOffset" : {"MoveX" : 0, "MoveY" : 15}, 
+			"TilePileOffset" : {"MoveX" : 30, "MoveY" : 15},
+			
+			"SupplyOut2" : [2296, 2295, 2294, 2293, 2292], 
+			"WorkAnim" : [
+							{ "WorkType" : "haWork1", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 25},
+							{ "WorkType" : "haWork5", "Cycles" : 1}
+						],
+			"CanForceWork" : true	 
+		
+	},
+    {
+		"Name": "htStables",
+			"DescriptionID": 1760,
+			"WoodPileOffset" : {"MoveX" : -50, "MoveY" : 15}, 
+			"StonePileOffset" : {"MoveX" : -30, "MoveY" : 15}, 
+			"TilePileOffset" : {"MoveX" : 40, "MoveY" : 15},	
+			"WareInput" : ["wtCorn", "wtWater", "wtHay"],
+			"SupplyIn2" : [2322, 2323, 2324, 2325, 2326], 	
+			"WorkAnim" : [
+							{ "WorkType" : "haWork1", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork4", "Cycles" : 1},
+							{ "WorkType" : "haWork5", "Cycles" : 1}
+						],
+			"CanForceWork" : true	 		
+	},
+    {
+		"Name": "htSwine",
+			"StonePic" : 367,
+			"DescriptionID": 1761,
+			"WoodPileOffset" : {"MoveX" : -70, "MoveY" : 15}, 
+			"StonePileOffset" : {"MoveX" : -50, "MoveY" : 15}, 
+			"TilePileOffset" : {"MoveX" : -20, "MoveY" : 15},	
+			"WareInput" : ["wtCorn", "wtWater", "wtHay"],
+			"SupplyIn2" : [2312, 2313, 2314, 2315, 2316], 
+			"WorkAnim" : [
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1}
+						],
+			"Styles" : [
+						{"GuiIcon" : 353, "StonePic" : 2433, "SnowPic" : 2433}
+						],
+			"CanForceWork" : true	
+	},
+    {
+		"Name": "htTannery",
+			"DescriptionID": 1762,
+			"WoodPileOffset" : {"MoveX" : -40, "MoveY" : 15}, 
+			"StonePileOffset" : {"MoveX" : 10, "MoveY" : 15}, 
+			"TilePileOffset" : {"MoveX" : 10, "MoveY" : 15},
+			"WorkAnim" : [
+							{ "WorkType" : "haWork1", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 29}
+						],
+			"CanForceWork" : true	 			
+	},
+    {
+		"Name": "htVineyard",
+			"DescriptionID": 1763,
+			"WoodPileOffset" : {"MoveX" : -35, "MoveY" : 15}, 
+			"StonePileOffset" : {"MoveX" : -18, "MoveY" : 15}, 
+			"TilePileOffset" : {"MoveX" : 0, "MoveY" : 15},
+			"WorkAnim" : [
+							{ "WorkType" : "haWork1", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 11},
+							{ "WorkType" : "haWork5", "Cycles" : 1}
+						],
+			"CanForceWork" : true	                          
+	},
+    {
+		"Name": "htWoodcutters",
+			"DescriptionID": 1764,
+			"WoodCost": 5,
+			"StoneCost": 0,
+			"SupplyOut1" : [228, 229, 230, 231, 232], 
+			"WoodPileOffset" : {"MoveX" : -60, "MoveY" : 15}, 
+			"StonePileOffset" : {"MoveX" : -30, "MoveY" : 15},
+			"CanForceWork" : true
+	},
+    {
+		"Name": "htWatchTower",
+			"DescriptionID": 1765, 
+			"WoodPileOffset" : {"MoveX" : -40, "MoveY" : 15}, 
+			"TilePileOffset" : {"MoveX" : -5, "MoveY" : 15},	
+			"StonePileOffset" : {"MoveX" : -20, "MoveY" : 15}, 
+			"Wariants": [2135, 2136],
+			"WorkerTypes": [{"UnitType" : "utOperator", "MaxCount" : 1}],
+			"UnlockAfter" : ["htBarracks", "htPalace", "htTownhall"]
+		
+	},
+    {
+		"Name": "htQuarry",
+			"DescriptionID": 1766,
+			"WoodCost": 4,
+			"StoneCost": 0,
+			"SupplyOut1" : [223, 224, 225, 226, 227], 
+			"WoodPileOffset" : {"MoveX" : -30, "MoveY" : 15}, 
+			"StonePileOffset" : {"MoveX" : 20, "MoveY" : 15}, 
+			"WorkAnim" : [
+							{ "WorkType" : "haWork1", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 9},
+							{ "WorkType" : "haWork5", "Cycles" : 1}
+						],
+			"CanForceWork" : true	 
+		
+	},
+    {
+		"Name": "htFarm",
+			"DescriptionID": 1767,
+			"WoodPileOffset" : {"MoveX" : -70, "MoveY" : 15}, 
+			"StonePileOffset" : {"MoveX" : 0, "MoveY" : 15}, 
+			"TilePileOffset" : {"MoveX" : 30, "MoveY" : 15},
+			"WareOutput" : ["wtCorn", "wtSeed", "wtHay", "wtVegetables"],
+			"SupplyOut2" : [2297, 2298, 2299, 2300, 2301], 
+			"TileCost": 1,
+			"CanForceWork" : true
+		
+	},
+    {
+		"Name": "htWeaponSmithy",
+			"DescriptionID": 1768,
+			"WoodPileOffset" : {"MoveX" : -70, "MoveY" : 15}, 
+			"StonePileOffset" : {"MoveX" : 0, "MoveY" : 15}, 
+			"TilePileOffset" : {"MoveX" : 30, "MoveY" : 15},	
+			"WareOutput" : ["wtSword", "wtCrossbow", "wtPike", "wtFlail"],
+			"WorkAnim" : [
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork4", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork4", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork4", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork4", "Cycles" : 1},
+							{ "WorkType" : "haWork5", "Cycles" : 1}
+						]		
+	},
+    {
+		"Name": "htWeaponWorkshop",
+			"DescriptionID": 1769,
+			"WoodPileOffset" : {"MoveX" : -70, "MoveY" : 15}, 
+			"StonePileOffset" : {"MoveX" : 0, "MoveY" : 15}, 
+			"TilePileOffset" : {"MoveX" : 30, "MoveY" : 15},
+			"WareOutput" : ["wtAxe", "wtBow", "wtLance", "wtMace", "wtSawdust"],
+			"SupplyOut4" : [2327, 2328, 2329, 2330, 2331], 	
+			"WorkAnim" : [
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork4", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork4", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork4", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork4", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1}
+						]			
+	}
+    
+  ]
+}
