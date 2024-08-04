@@ -45,7 +45,8 @@
 			"DescriptionID": 1745,
 			"WoodPileOffset" : {"MoveX" : -70, "MoveY" : 15}, 
 			"StonePileOffset" : {"MoveX" : -5, "MoveY" : 15}, 
-			"TilePileOffset" : {"MoveX" : 20, "MoveY" : 15}	
+			"TilePileOffset" : {"MoveX" : 20, "MoveY" : 15},	
+			"WareInput" : ["wtGold", "wtBitinArmor"]
 	},
     {
 		"Name": "htFishermans",
@@ -96,6 +97,7 @@
 			"WareInput": ["wtTimber"],
 			"UnlockAfter": ["htSawmill"],
 			"WareOutput": ["wtWoodenShield", "wtPlateArmor","wtSawDust"],
+			"SupplyIn2" : [1357, 1358, 1359, 1360, 1361], 
 			"SupplyOut3" : [2337, 2338, 2339, 2340, 2341], 	
 			"SupplyOut4" : [2332, 2333, 2334, 2335, 2336], 	
 			"WorkAnim" : [
@@ -148,18 +150,6 @@
 			"TilePileOffset" : {"MoveX" : -15, "MoveY" : 15},
 			"WorkAnim" : [
 							{ "WorkType" : "haWork1", "Cycles" : 1},
-							{ "WorkType" : "haWork2", "Cycles" : 1},
-							{ "WorkType" : "haWork3", "Cycles" : 1},
-							{ "WorkType" : "haWork4", "Cycles" : 1},
-							{ "WorkType" : "haWork2", "Cycles" : 1},
-							{ "WorkType" : "haWork3", "Cycles" : 1},
-							{ "WorkType" : "haWork4", "Cycles" : 1},
-							{ "WorkType" : "haWork2", "Cycles" : 1},
-							{ "WorkType" : "haWork3", "Cycles" : 1},
-							{ "WorkType" : "haWork4", "Cycles" : 1},
-							{ "WorkType" : "haWork2", "Cycles" : 1},
-							{ "WorkType" : "haWork3", "Cycles" : 1},
-							{ "WorkType" : "haWork4", "Cycles" : 1},
 							{ "WorkType" : "haWork2", "Cycles" : 1},
 							{ "WorkType" : "haWork3", "Cycles" : 1},
 							{ "WorkType" : "haWork4", "Cycles" : 1},
@@ -287,7 +277,7 @@
 			"WoodPileOffset" : {"MoveX" : -50, "MoveY" : 15}, 
 			"StonePileOffset" : {"MoveX" : -30, "MoveY" : 15}, 
 			"TilePileOffset" : {"MoveX" : 40, "MoveY" : 15},	
-			"WareInput" : ["wtCorn", "wtWater", "wtHay"],
+			"WareInput" : ["wtCorn", "wtWater", "wtHay", "wtVegetables"],
 			"SupplyIn2" : [2322, 2323, 2324, 2325, 2326], 	
 			"WorkAnim" : [
 							{ "WorkType" : "haWork1", "Cycles" : 1},
@@ -305,7 +295,7 @@
 			"WoodPileOffset" : {"MoveX" : -70, "MoveY" : 15}, 
 			"StonePileOffset" : {"MoveX" : -50, "MoveY" : 15}, 
 			"TilePileOffset" : {"MoveX" : -20, "MoveY" : 15},	
-			"WareInput" : ["wtCorn", "wtWater", "wtHay"],
+			"WareInput" : ["wtCorn", "wtHay", "wtVegetables", "wtWater"],
 			"SupplyIn2" : [2312, 2313, 2314, 2315, 2316], 
 			"WorkAnim" : [
 							{ "WorkType" : "haWork2", "Cycles" : 1},
@@ -341,6 +331,7 @@
 			"WoodPileOffset" : {"MoveX" : -35, "MoveY" : 15}, 
 			"StonePileOffset" : {"MoveX" : -18, "MoveY" : 15}, 
 			"TilePileOffset" : {"MoveX" : 0, "MoveY" : 15},
+			"SupplyOut1" : [391, 392, 393, 394, 395], 
 			"WorkAnim" : [
 							{ "WorkType" : "haWork1", "Cycles" : 1},
 							{ "WorkType" : "haWork2", "Cycles" : 11},

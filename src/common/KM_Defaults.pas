@@ -131,7 +131,7 @@ var
   SP_BOOST_AI_BUILD       :Boolean = False; //Boost build algorithm of the new AI (performance impact)
   SP_DEFAULT_ADVANCED_AI  :Boolean = False; //Set advanced AI as default for SP games
   {User interface options}
-  DEBUG_SPEEDUP_SPEED     :Integer = 300;   //Speed for speedup from debug menu
+  DEBUG_SPEEDUP_SPEED     :Integer = 600;   //Speed for speedup from debug menu
   DEBUG_LOGS              :Boolean = True;  //Log debug info
   DEBUG_SCRIPTING_EXEC    :Boolean = False; //Use slow debug executor (about 3 times slower! never use on release version). Using it we can find exact position of execution time error (row/col/pos/module)
   USE_KMR_DIR_FOR_SETTINGS:Boolean = DEBUG_CFG; // Do we use KMR local directory for settings?
@@ -373,7 +373,7 @@ const
   UNIT_CONDITION_BASE        = 0.7;        //Base amount of health a unit starts with (measured in KaM)
   UNIT_CONDITION_RANDOM      = 0.2;        //Random jitter of unit's starting health (KaM did not have this, all units started the same)
   TROOPS_TRAINED_CONDITION   = 0.7;        //Condition troops start with when trained (measured from KaM)
-  SHIP_MAX_CAPACITY          = 20;
+  SHIP_MAX_CAPACITY          = 30;
   //Units are fed acording to this: (from knightsandmerchants.de tips and tricks)
   //Bread    = +40%
   //Sausages = +60%
@@ -386,6 +386,7 @@ const
   APPLE_RESTORE = 0.15;
   VEGE_RESTORE = 0.20;
 
+  FISHERMAN_FISH_MAX_DISTANCE = 25;
 
   DEFAULT_HITPOINT_RESTORE  = 100;        //1 hitpoint is restored to units every X ticks (using Humbelum's advice)
   TIME_BETWEEN_MESSAGES     = 5*600;      //Time between messages saying house is unoccupied or unit is hungry. In KaM it's 4 minutes
@@ -502,6 +503,7 @@ type
     cmTileSelection,
     cmBridges,
     cmAssignToShip,
+    cmDecorations,
     cmCustom);  //Tile overlays
 
 type
@@ -524,6 +526,7 @@ const
   MARKER_AISTART = 4;
   MARKER_RALLY_POINT = 5;
   MARKER_DEFEND = 6;
+  MARKER_ANIMALS = 7;
 
 const
   DATE_TIME_ZERO: TDateTime = 0; // DateTime as 0, for simplicity. Some compilers (Delphi Berlin, f.e.) can't handle TDateTime(0)
@@ -599,7 +602,7 @@ type
   );
   TKMTerrainPassabilitySet = set of TKMTerrainPassability;
 
-  TKMHeightPass = (hpWalking, hpBuilding, hpBuildingMines);
+  TKMHeightPass = (hpWalking, hpBuilding, hpBuildingMines, hpFish);
 
 const
   PASSABILITY_GUI_TEXT: array [TKMTerrainPassability] of UnicodeString = (
@@ -656,7 +659,7 @@ type
     utTrainedWolf,  utAmmoCart,     utPikeMachine,   utShip,
     utClubMan,      utMaceFighter,  utFlailFighter,  utShieldBearer,
     utFighter,      utSpikedTrap,   utWoodenWall,    utTorchMan,
-    utMedic,
+    utMedic,        utBattleShip,   utBoat,
 
     utWolf,         utFish,         utWatersnake,    utSeastar,
     utCrab,         utWaterflower,  utWaterleaf,     utDuck);
@@ -669,13 +672,13 @@ const
   CITIZEN_MIN = utSerf;
   CITIZEN_MAX = utClayPicker;
   WARRIOR_MIN = utMilitia;
-  WARRIOR_MAX = utMedic;
+  WARRIOR_MAX = utBoat;
   WARRIOR_EQUIPABLE_BARRACKS_MIN = utMilitia; //Available from barracks
   WARRIOR_EQUIPABLE_BARRACKS_MAX = utKnight;
   WARRIOR_EQUIPABLE_TH_MIN = utBarbarian; //Available from Townhall
   WARRIOR_EQUIPABLE_TH_MAX =  utWarrior;
   HUMANS_MIN = utSerf;
-  HUMANS_MAX =  utMedic;
+  HUMANS_MAX =  utBoat;
   ANIMAL_MIN = utWolf;
   ANIMAL_MAX = utDuck;
   WARRIOR_BITIN_EQUIPABLE = [ utSwordFighter, utCrossbowman, utPikeman, utKnight, utCatapult,
@@ -687,11 +690,12 @@ const
   UNITS_HUMAN = [HUMANS_MIN..HUMANS_MAX];
   UNITS_NEW = [utOperator, utClayPicker, utRam .. HUMANS_MAX];
   WARRIORS_IRON = [utSwordFighter, utCrossbowman, utPikeman, utKnight, utWarrior];
-  SPECIAL_UNITS = [utPaladin, utTrainedWolf, utArcher, utSpy, utAmmoCart, utShip];
+  SPECIAL_UNITS = [utPaladin, utTrainedWolf, utArcher, utSpy, utAmmoCart, utShip, utBoat, utBattleShip];
 
   CITIZENS_CNT = Integer(CITIZEN_MAX) - Integer(CITIZEN_MIN) + 1;
   WARRIORS_CNT = Integer(WARRIOR_MAX) - Integer(WARRIOR_MIN) + 1;
   SIEGE_MACHINES = [utBallista, utCatapult, utRam, utAmmoCart, utWoodenWall];
+  UNITS_SHIPS = [utBoat, utShip, utBattleShip];
 
   OPERATORS_PER_MACHINE = 4;
 
@@ -710,17 +714,17 @@ type
 // Used for AI defence and linking troops
 type
   //* Group type
-  TKMGroupType = (gtNone, gtAny, gtMelee, gtAntiHorse, gtRanged, gtMounted, gtMachines, gtMachinesMelee, gtWreckers);
+  TKMGroupType = (gtNone, gtAny, gtMelee, gtAntiHorse, gtRanged, gtMounted, gtMachines, gtMachinesMelee, gtWreckers, gtShips);
   //* Group type set
   TKMGroupTypeSet = set of TKMGroupType;
-
 const
   GROUP_TYPE_MIN = gtMelee;
-  GROUP_TYPE_MAX = gtWreckers;
+  GROUP_TYPE_MAX = gtShips;
   GROUP_TYPE_MIN_OFF = Ord(GROUP_TYPE_MIN);
-  GROUP_TYPES: array [GROUP_TYPE_MIN..GROUP_TYPE_MAX] of Byte = (0, 1, 2, 3, 4, 5, 6);
+  GROUP_TYPES: array [GROUP_TYPE_MIN..GROUP_TYPE_MAX] of Byte = (0, 1, 2, 3, 4, 5, 6, 7);
   GROUP_TYPES_VALID = [gtAny, GROUP_TYPE_MIN..GROUP_TYPE_MAX];
   GROUP_TYPES_CNT = Integer(GROUP_TYPE_MAX) - Integer(GROUP_TYPE_MIN) + 1;
+  GROUP_TYPE_ORDER : array[0..GROUP_TYPES_CNT - 1] of TKMGroupType = (gtMelee, gtAntiHorse, gtRanged, gtMounted, gtMachines, gtMachinesMelee, gtWreckers, gtShips);
 
 type
   TKMGroupTypeArray = array [gtAny..GROUP_TYPE_MAX] of Word;
@@ -750,7 +754,7 @@ const
     gtMounted,//utTrainedWolf
     gtMachines,//AmmoCart
     gtAntiHorse,//PikeMachine
-    gtMachines,//AmmoCart
+    gtShips,//utShip
     gtWreckers,//clubman
     gtWreckers,//utMaceFighter
     gtWreckers,//utFlailfighter
@@ -759,7 +763,9 @@ const
     gtMachinesMelee,
     gtMachinesMelee,
     gtWreckers,
-    gtAny
+    gtAny,
+    gtShips,
+    gtShips
     );
 
 type
@@ -976,7 +982,8 @@ type
     mlTowersAttackRadius,
     mlUnitsAttackRadius,
     mlDefencesAll,
-    mlFlatTerrain
+    mlFlatTerrain,
+    mlSpawners
   );
 
   TKMMapVisibleLayerSet = set of TKMGameVisibleLayer; //Set of above enum
@@ -990,7 +997,8 @@ type
     melSelection,
     melWaterFlow,
     melMapResize,
-    melDefences
+    melDefences,
+    melSpawners
   );
 
   TKMMapEdVisibleLayerSet = set of TKMMapEdVisibleLayers; //Set of above enum
@@ -1222,7 +1230,7 @@ const
     371, 374,
     376, 377,
     684, 734,
-    734);
+    891, 891);
 
   GROUP_TXT_COLOR: array [GROUP_TYPE_MIN..GROUP_TYPE_MAX] of Cardinal = (
     icWhite,
@@ -1231,7 +1239,9 @@ const
     icRed,
     icCyan,
     icOrange,
-    icYellow);
+    icYellow,
+    icYellow
+    );
   type
     TKMDirType = (dtOldHouses, dtNewHouses, dtUnits, dtWares, dtModding);
     TKMFogRevealType = (frtScript, frtUnit, frtHouse);
@@ -1254,7 +1264,7 @@ const
     0,
     1, 2.4, 6, 6,
     0.5, 10, 10,
-    2, 2
+    2, 2, 2, 2
   );
 
 const

@@ -690,6 +690,7 @@ begin
       nTile.I['ID'] := I;
       nTile.B['Walkable'] := fTiles[I].Walkable;
       nTile.B['Roadable'] := fTiles[I].Roadable;
+      nTile.B['NotBuildable'] := fTiles[I].NotBuildable;
       AddTileIAttr('Stone', fTiles[I].Stone);
       AddTileIAttr('Coal',  fTiles[I].Coal);
       AddTileIAttr('Iron',  fTiles[I].Iron);
@@ -778,6 +779,7 @@ begin
       fTiles[I].ID := nTile.I['ID'];
       fTiles[I].Walkable := nTile.B['Walkable'];
       fTiles[I].Roadable := nTile.B['Roadable'];
+      fTiles[I].NotBuildable := nTile.B['NotBuildable'];
 
       fTiles[I].Stone := nTile.I['Stone'];
       fTiles[I].Coal  := nTile.I['Coal'];

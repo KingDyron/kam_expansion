@@ -210,7 +210,7 @@ procedure TKMHandAI.CheckGoals(aAllowResetGoals: Boolean = False);
                                                          htSiegeWorkshop, htPalace, htWallTower]) > 0);
       gcSerfsAndSchools:   Result := (stats.GetHouseQty([htSchool]) > 0) or (stats.GetUnitQty(utSerf) > 0);
       gcEconomyBuildings:  Result := (stats.GetHouseQty([htStore, htSchool, htInn]) > 0);
-      gcBuildingsType:  Result := (stats.GetHouseQty(HOUSE_GUI_TAB_ORDER[aGoal.BuldingsType].H) > 0);
+      //gcBuildingsType:  Result := (stats.GetHouseQty(HOUSE_GUI_TAB_ORDER[aGoal.BuldingsType].H) > 0);
       gcAllBuildings:  If aGoal.GoalType = gltSurvive then
                           Result := (stats.GetHousesLost = 0)
                        else
@@ -437,6 +437,7 @@ begin
     end;
   end;
   //}
+  UnitAttackNotification(aUnit, aAttacker);//attack unit
   if aNotifyScript then
     gScriptEvents.ProcUnitWounded(aUnit, aAttacker); //At the end since it could kill the unit
 end;

@@ -12,7 +12,9 @@ type
                     toCoal1, toCoal2, toCoal3, toCoal4, toCoal5,
                     toClay1, toClay2, toClay3, toClay4, toClay5,
                     toFence1, toFence2, toFence3, toFence4, toFence5, toFence6, toInfinity, toInfinityClay,
-                    toInfinityCoal);
+                    toInfinityCoal, toBlock, toBlockBuilding,
+                    toDig3Wooden, toDig4Wooden, toDig3Clay, toDig4Clay, toDig3Exclusive, toDig4Exclusive);
+
 
   // Tile corners
   //  ____
@@ -25,14 +27,13 @@ type
                     vuNWSE,    //Vertex is used NW-SE like this: \
                     vuNESW);   //Vertex is used NE-SW like this: /
 
-  TKMFenceKind = (fncNone, fncCorn, fncWine, fncHousePlan, fncHouseFence, fncWoodenBridge, fncStoneBridge, fncGrassLand, fncVegeField);
+  TKMFenceKind = (fncNone, fncCorn, fncWine, fncHousePlan, fncHouseFence, fncWoodenBridge, fncStoneBridge, fncGrassLand, fncVegeField,
+                    fncAppleTree);
 
   //Farmers/Woodcutters preferred activity
   TKMPlantAct = (taCut, taPlant, taAny);
 
-  TKMTreeType = (ttNone, ttOnGrass, ttOnYellowGrass, ttOnDirt, ttOnSnow, ttOnLightGrass);
-const
-  TREE_TYPE_NAME : array[TKMTreeType] of String = ('ttNone', 'ttOnGrass', 'ttOnYellowGrass', 'ttOnDirt', 'ttOnSnow', 'ttOnLightGrass');
+  TKMTerrainClimat = (tcNone, tcDry1, tcDry2, tcWarm1, tcWarm2, tcWet1, tcWet2, tcNeutral, tcCold1, tcCold2);
 type
   TKMTileChangeType = (tctTerrain, tctRotation, tctHeight, tctObject);
 
@@ -49,6 +50,11 @@ type
   TKMTerrainTileFence = record
     Kind: TKMFenceKind; //Fences (ropes, planks, stones)
     Side: Byte; //Bitfield whether the fences are enabled
+  end;
+
+  TKMTerrainWare = record
+    W : Byte; //later it's gonna be converted to TKMWareType
+    C : Byte;
   end;
 
   TKMLandFences = array [1..MAX_MAP_SIZE, 1..MAX_MAP_SIZE] of TKMTerrainTileFence;
@@ -86,8 +92,8 @@ type
     IsHidden: Boolean;
     RoadType: TKMRoadType;
     GrainType: TKMGrainType;
+    Ware : TKMTerrainWare;
   end;
-
   // Notice fields order, because of record 4-bytes alignment
   TKMTerrainTile = record
   private
@@ -136,6 +142,8 @@ type
     BridgeType : Byte;
     RoadType: TKMRoadType;
     GrainType: TKMGrainType;
+    NightAffection: Single;
+    Ware : TKMTerrainWare;
 
     property Height: Byte read fHeight write SetHeight;
 
@@ -190,7 +198,7 @@ type
     aType : TKMPatternType;
     function GetFromPattern(X, Y : Integer) : Word;
   end;
-
+  function TileOverlayVisibleInGame(aOverlay : TKMTileOverlay) : Boolean;
 const
   OBJ_BLOCK = 61;
   OBJ_NONE = 255;
@@ -199,11 +207,11 @@ const
   //overlays, that considered as road: basically road and dig4, which looks almost like a finished road
   ROAD_LIKE_OVERLAYS: set of TKMTileOverlay = [toDig4, toRoad];
   COAL_LIKE_OVERLAYS: set of TKMTileOverlay = [toCoal1..toCoal5, toInfinityCoal];
-  CLAY_LIKE_OVERLAYS: set of TKMTileOverlay = [toClay1..toClay5, toInfinityClay];
-  TILE_OVERLAY_IDS: array[toNone..toInfinityCoal] of Integer = (0, 249, 251, 253, 255, 254,
+  TILE_OVERLAY_IDS: array[toNone..toDig4Exclusive] of Integer = (0, 249, 251, 253, 255, 254,
                                                           598, 599, 600, 601, 602,//toNone, toDig1, toDig2, toDig3, toDig4, toRoad
                                                           619, 620, 621, 622, 623,
-                                                          603, 604, 605, 606, 607, 608, 617, 626, 627);
+                                                          603, 604, 605, 606, 607, 608, 617, 626, 627,
+                                                          679, 680, 681, 682, 683, 684, 685, 686);
 
   WINE_TERRAIN_ID = 55;
   CORN_STAGE5_OBJ_ID = 58;
@@ -315,6 +323,7 @@ begin
   Result.BlendingLvl  := BlendingLvl;
   Result.TileOverlay  := TileOverlay;
   Result.TileOverlay2  := TileOverlay2;
+  Result.Ware         := Ware;
   for L := 0 to 2 do
     Result.Layer[L] := Layer[L];
 end;
@@ -373,6 +382,17 @@ end;
 function TKMPattern.GetFromPattern(X: Integer; Y: Integer): Word;
 begin
   Result := Value[X mod 30 + 1, Y mod 30 + 1];
+end;
+
+function TileOverlayVisibleInGame(aOverlay : TKMTileOverlay) : Boolean;
+begin
+  case aOverlay of
+    toInfinity,
+    toBlock,
+    toBlockBuilding : Result := false;
+    else Result := true;
+
+  end;
 end;
 
 end.

@@ -96,6 +96,7 @@ type
     gicHouseTownHallEquip,           //Place an order to train warrior in the TownHall
     gicHouseTownHallRally,           //Set the rally point for the TownHall
     gicHouseTownHallMaxGold,         //Set TownHall MaxGold value
+    gicHouseTownHallMaxBitin,         //Set TownHall MaxGold value
     gicHouseRemoveTrain,             //Remove unit being trained from School
     gicHouseWoodcuttersCutting,      //Set the cutting point for the Woodcutters
     // Mys gip procedures
@@ -115,6 +116,14 @@ type
     gicHStoreSetNotAllowTakeOutFlag,    //Control wares delivery from store
     gicHouseStoreBell,
     gicHousePalaceCancelOrder,
+    gicHouseFruitTreeToggleType,
+    gicHouseShipType,
+    gicHouseShipDoWork,
+    gicAssignToShip,
+    gicUnloadShip,
+    gicPlaceBridgePlan,
+    gicPlaceBridgeRemove,
+    gicPlaceDecoration,
 
     //V.     Delivery ratios changes (and other game-global settings)
     gicWareDistributionChange,   //Change of distribution for 1 ware
@@ -136,7 +145,6 @@ type
     gicGamePlayerDefeat,     //Player can be defeated after intentional quit from the game
     gicGamePlayerAllianceSet,//Set player alliance to other player
     gicGamePlayerAddDefGoals,//Set player default goals
-
     //VII.
     gicScriptConsoleCommand, //Script console command invokation
     gicScriptSoundRemoveRq,  //Request to remove script sound
@@ -230,6 +238,7 @@ const
     gicHouseTownHallEquip,
     gicHouseTownHallRally,
     gicHouseTownHallMaxGold,
+    gicHouseTownHallMaxBitin,
     gicHouseRemoveTrain,
     gicHouseWoodcuttersCutting,
     gicHouseSiegeTrain,
@@ -249,7 +258,10 @@ const
     gicHStoreSetNotAcceptFlag,
     gicHStoreSetNotAllowTakeOutFlag,
     gicHouseStoreBell,
-    gicHousePalaceCancelOrder
+    gicHousePalaceCancelOrder,
+    gicHouseFruitTreeToggleType,
+    gicHouseShipType,
+    gicHouseShipDoWork
     ];
 
 
@@ -307,6 +319,7 @@ const
     gicpt_Int3,     // gicHouseTownHallEquip
     gicpt_Int3,     // gicHouseTownHallRally
     gicpt_Int2,     // gicHouseTownHallMaxGold
+    gicpt_Int2,     // gicHouseTownHallMaxBitin
     gicpt_Int2,     // gicHouseRemoveTrain
     gicpt_Int3,     // gicHouseWoodcuttersCutting
 
@@ -329,7 +342,14 @@ const
     gicpt_Int3,//gicHStoreSetNotAllowTakeOutFlag
     gicpt_Int1,//gicHouseStoreBell
     gicpt_Int2,//gicHousePalaceCancelOrder
-
+    gicpt_Int2,//gicHouseFruitTreeToggleType
+    gicpt_Int2,//gicHouseShipType
+    gicpt_Int1,//gicHouseShipDoWork
+    gicpt_Int2,//gicAssignToShip
+    gicpt_Int1,//gicUnloadShip
+    gicpt_Int1SmInt3,//gicPlaceBridgePlan
+    gicpt_Int2,//gicPlaceBridgeRemove
+    gicpt_Int3,//gicPlaceBridgeRemove
 
 
     //V.     Delivery ratios changes (and other game-global settings)
@@ -378,6 +398,7 @@ type
     DateTimeParam: TDateTime;
     procedure Clear;
   end;
+  PKMGameInputCommand = ^TKMGameInputCommand;
 
   function IsSelectedObjectCommand(aGIC: TKMGameInputCommandType): Boolean;
   //As TGameInputCommand is no longer fixed size (due to the string) we cannot simply read/write it as a block
@@ -488,11 +509,14 @@ type
     procedure CmdArmy(aCommandType: TKMGameInputCommandType; aGroup: TKMUnitGroup; aTurnAmount, aLineAmount: ShortInt); overload;
     procedure CmdArmy(aCommandType: TKMGameInputCommandType; aGroup: TKMUnitGroup; const aLoc: TKMPoint; aDirection: TKMDirection); overload;
 
-    procedure CmdUnit(aCommandType: TKMGameInputCommandType; aUnit: TKMUnit);
+    procedure CmdUnit(aCommandType: TKMGameInputCommandType; aUnit: TKMUnit);overload;
+    procedure CmdUnit(aCommandType: TKMGameInputCommandType; aUnit, aUnit2: TKMUnit);overload;
 
     procedure CmdBuild(aCommandType: TKMGameInputCommandType; const aLoc: TKMPoint); overload;
     procedure CmdBuild(aCommandType: TKMGameInputCommandType; const aLoc: TKMPoint; aFieldType: TKMFieldType; aRoadType : TKMRoadType = rtNone); overload;
     procedure CmdBuild(aCommandType: TKMGameInputCommandType; const aLoc: TKMPoint; aHouseType: TKMHouseType); overload;
+    procedure CmdBuild(aCommandType: TKMGameInputCommandType; const aLoc: TKMPoint; aBridgeType, aRotation: Integer); overload;
+    procedure CmdBuild(aCommandType: TKMGameInputCommandType; const aLoc: TKMPoint; aParam: Integer); overload;
 
     procedure CmdHouse(aCommandType: TKMGameInputCommandType; aHouse: TKMHouse); overload;
     procedure CmdHouse(aCommandType: TKMGameInputCommandType; aHouse: TKMHouse; aItem, aAmountChange: Integer); overload;
@@ -562,7 +586,8 @@ uses
   KM_HouseQueue,
   KM_ScriptingEvents, KM_Alerts, KM_CommonUtils, KM_RenderUI, KM_HouseSiegeWorkshop,
   KM_ResFonts, KM_Resource,
-  KM_Log;
+  KM_Log,
+  KM_UnitWarrior;
 
 const 
   NO_LAST_TICK_VALUE = 0;
@@ -1018,7 +1043,7 @@ begin
       if (tgtUnit = nil) or tgtUnit.IsDeadOrDying then //Unit has died before command could be executed
         Exit;
     end;
-    if CommandType in [gicHouseRepairToggle, gicHouseDeliveryModeNext, gicHouseDeliveryModePrev, gicHouseWoodcuttersCutting, gicHouseTownHallMaxGold,
+    if CommandType in [gicHouseRepairToggle, gicHouseDeliveryModeNext, gicHouseDeliveryModePrev, gicHouseWoodcuttersCutting, gicHouseTownHallMaxGold,gicHouseTownHallMaxBitin,
       gicHouseOrderProduct, gicHouseMarketFrom, gicHouseMarketTo, gicHouseBarracksRally, gicHouseTownHallRally, gicHouseSiegeWorkshopRally, gicHouseCollectorsRally,
       gicHousePalaceRally,
       gicHouseStoreNotAcceptFlag, gicHStoreNotAllowTakeOutFlag, gicHouseBarracksAcceptFlag, gicHBarracksNotAllowTakeOutFlag,
@@ -1027,7 +1052,8 @@ begin
       gicHouseWoodcutterMode, gicHBarracksAcceptRecruitsTgl, gicHouseArmorWSDeliveryToggle, gicHouseSiegeTrain, gicHouseDeliveryToggle, gicHouseMerchantSetType,
       gicHouseForceWork, gicHouseMakeUpgrade, gicHouseCancelUpgrade, gicHouseTransferWare, gicHouseDontAcceptWorker,
       gicHouseStallBuyCoin, gicHouseStallBuyItem, gicHousePalaceOrder, gicHouseQueueAdd, gicHouseQueueRem, gicHouseMerchantSendTo, gicHouseFarmToggleGrain,
-      gicHStoreSetNotAcceptFlag, gicHStoreSetNotAllowTakeOutFlag, gicHouseStoreBell, gicHousePalaceCancelOrder] then
+      gicHStoreSetNotAcceptFlag, gicHStoreSetNotAllowTakeOutFlag, gicHouseStoreBell, gicHousePalaceCancelOrder, gicHouseFruitTreeToggleType, gicHouseShipType,
+      gicHouseShipDoWork] then
     begin
       srcHouse := gHands.GetHouseByUID(IntParams[0]);
       if (srcHouse = nil) or srcHouse.IsDestroyed //House has been destroyed before command could be executed
@@ -1040,7 +1066,7 @@ begin
       if (tgtHouse = nil) or tgtHouse.IsDestroyed then Exit; //House has been destroyed before command could be executed
     end;
 
-    if CommandType in [gicUnitDismiss, gicUnitDismissCancel] then
+    if CommandType in [gicUnitDismiss, gicUnitDismissCancel, gicAssignToShip, gicUnloadShip] then
     begin
       srcUnit := gHands.GetUnitByUID(IntParams[0]);
       if (srcUnit = nil) or srcUnit.IsDeadOrDying //Unit has died before command could be executed
@@ -1063,6 +1089,10 @@ begin
     if gLog.CanLogCommands() and not DoSkipLogCommand(aCommand.CommandType) then
       gLog.LogCommands(Format('Tick: %6d Exec command: %s', [gGameParams.Tick, GIPCommandToString(aCommand)]));
 
+    if P <> nil then
+      if P.IsComputer then
+        P.AI.Mayor.Recorder.ProceedGIPCommand(@aCommand, gGameParams.Tick);
+
     case CommandType of
       gicArmyFeed:         srcGroup.OrderFood(True, false, IntParams[1] = 1);
       gicArmySplit:        srcGroup.OrderSplit;
@@ -1081,12 +1111,20 @@ begin
       gicUnitDismiss:        srcUnit.Dismiss;
       gicUnitDismissCancel:  srcUnit.DismissCancel;
 
+      gicUnloadShip:         TKMUnitWarriorShip(srcUnit).DoUnloadUnits;
+      gicAssignToShip:       TKMUnitWarriorShip(srcUnit).AssignToShip(gHands.GetUnitByUID(IntParams[1]));
+
       gicBuildToggleFieldPlan:   P.ToggleFieldPlan(KMPoint(IntParams[0],WordParams[0]), TKMFieldType(WordParams[1]), not gGameParams.IsMultiPlayerOrSpec, TKMRoadType(WordParams[2])); //Make sound in singleplayer mode only
       gicBuildRemoveFieldPlan:   P.RemFieldPlan(KMPoint(IntParams[0],IntParams[1]), not gGameParams.IsMultiPlayerOrSpec); //Make sound in singleplayer mode only
       gicBuildRemoveHouse:       P.RemHouse(KMPoint(IntParams[0],IntParams[1]), isSilent);
       gicBuildRemoveHousePlan:   P.RemHousePlan(KMPoint(IntParams[0],IntParams[1]));
       gicBuildHousePlan:         if P.CanAddHousePlan(KMPoint(IntParams[1],IntParams[2]), TKMHouseType(IntParams[0])) then
                                     P.AddHousePlan(TKMHouseType(IntParams[0]), KMPoint(IntParams[1],IntParams[2]));
+      gicPlaceBridgePlan:        if P.CanAddBridgePlan(KMPoint(SmallIntParams[0], SmallIntParams[1]), IntParams[0], SmallIntParams[2] ) then
+                                  P.AddBridgePlan(KMPoint(SmallIntParams[0], SmallIntParams[1]), IntParams[0], SmallIntParams[2]);
+
+      gicPlaceDecoration:        if P.CanPlaceDecoration(KMPoint(IntParams[0],IntParams[1]), IntParams[2]) then
+                                    P.PlaceDecoration(KMPoint(IntParams[0],IntParams[1]), IntParams[2]);
 
       gicHouseRepairToggle:      srcHouse.BuildingRepair := not srcHouse.BuildingRepair;
       gicHouseDeliveryModeNext:   //Delivery mode has to be delayed, to avoid occasional delivery mode button clicks
@@ -1114,6 +1152,7 @@ begin
       gicHouseTownHallEquip:     TKMHouseTownHall(srcHouse).Equip(TKMUnitType(IntParams[1]), IntParams[2]);
       gicHouseTownHallRally:     TKMHouseTownHall(srcHouse).FlagPoint := KMPoint(IntParams[1], IntParams[2]);
       gicHouseTownHallMaxGold:   TKMHouseTownHall(srcHouse).GoldMaxCnt := EnsureRange(IntParams[1], 0, High(Word));
+      gicHouseTownHallMaxBitin:   TKMHouseTownHall(srcHouse).BitinArmorMaxCnt := EnsureRange(IntParams[1], 0, High(Word));
       gicHouseSiegeWorkshopRally:TKMHouseSiegeWorkshop(srcHouse).FlagPoint := KMPoint(IntParams[1], IntParams[2]);
       gicHouseCollectorsRally:   TKMHouseCollectors(srcHouse).FlagPoint := KMPoint(IntParams[1], IntParams[2]);
       gicHousePalaceRally:       TKMHousePalace(srcHouse).FlagPoint := KMPoint(IntParams[1], IntParams[2]);
@@ -1142,9 +1181,10 @@ begin
 
       //My gip procedures
       gicHouseStoreBell            : if srcHouse.HouseType in [htStore, htTownhall] then
-                                     begin
                                       gHands[srcHouse.Owner].ProceedStoreBell(srcHouse.PointBelowEntrance);
-                                     end;
+      gicHouseShipDoWork             : TKMHouseShipYard(srcHouse).DoWork := not TKMHouseShipYard(srcHouse).DoWork;
+      gicHouseShipType           : TKMHouseShipYard(srcHouse).SetNextShipType(IntParams[1]);
+
       gicHouseForceWork            : srcHouse.ForceWorking := not srcHouse.ForceWorking;
       gicHouseMakeUpgrade          : srcHouse.MakeUpgrade;
       gicHouseCancelUpgrade        : srcHouse.CancelUpgrading;
@@ -1163,6 +1203,7 @@ begin
                                      else
                                      If srcHouse.HouseType = htProductionThatch then
                                        TKMHouseProdThatch(srcHouse).SetNextGrainType(IntParams[1], IntParams[2]);
+      gicHouseFruitTreeToggleType:  TKMHouseAppleTree(srcHouse).SetNextFruitType(IntParams[1]);
 
       gicHouseMerchantSetType      : srcHouse.SetWareSlot(IntParams[1]);
       gicWareDistributionChange:  begin
@@ -1323,8 +1364,14 @@ end;
 
 procedure TKMGameInputProcess.CmdUnit(aCommandType: TKMGameInputCommandType; aUnit: TKMUnit);
 begin
-  Assert(aCommandType in [gicUnitDismiss, gicUnitDismissCancel]);
+  Assert(aCommandType in [gicUnitDismiss, gicUnitDismissCancel, gicUnloadShip]);
   TakeCommand(MakeCommand(aCommandType, aUnit.UID));
+end;
+
+procedure TKMGameInputProcess.CmdUnit(aCommandType: TKMGameInputCommandType; aUnit, aUnit2: TKMUnit);
+begin
+  Assert(aCommandType in [gicAssignToShip]);
+  TakeCommand(MakeCommand(aCommandType, aUnit.UID, aUnit2.UID));
 end;
 
 
@@ -1369,11 +1416,29 @@ begin
   TakeCommand(MakeCommand(aCommandType, Byte(aHouseType), aLoc.X, aLoc.Y));
 end;
 
+procedure TKMGameInputProcess.CmdBuild(aCommandType: TKMGameInputCommandType; const aLoc: TKMPoint; aBridgeType, aRotation: Integer);
+begin
+  Assert(aCommandType = gicPlaceBridgePlan);
+
+  if gGameParams.IsReplayOrSpectate then Exit;
+
+  TakeCommand(MakeCommandSmI(aCommandType, aBridgeType, aLoc.X, aLoc.Y, aRotation));
+end;
+
+procedure TKMGameInputProcess.CmdBuild(aCommandType: TKMGameInputCommandType; const aLoc: TKMPoint; aParam: Integer);
+begin
+  Assert(aCommandType = gicPlaceDecoration);
+
+  if gGameParams.IsReplayOrSpectate then Exit;
+
+  TakeCommand(MakeCommand(aCommandType, aLoc.X, aLoc.Y, aParam));
+end;
+
 
 procedure TKMGameInputProcess.CmdHouse(aCommandType: TKMGameInputCommandType; aHouse: TKMHouse);
 begin
   Assert(aCommandType in [gicHouseRepairToggle, gicHouseClosedForWorkerTgl, gicHBarracksAcceptRecruitsTgl, gicHouseDeliveryModeNext, gicHouseDeliveryModePrev,
-                          gicHouseForceWork, gicHouseMakeUpgrade, gicHouseCancelUpgrade, gicHouseStoreBell]);
+                          gicHouseForceWork, gicHouseMakeUpgrade, gicHouseCancelUpgrade, gicHouseStoreBell, gicHouseShipDoWork]);
   TakeCommand(MakeCommand(aCommandType, aHouse.UID));
 end;
 
@@ -1417,7 +1482,8 @@ end;
 procedure TKMGameInputProcess.CmdHouse(aCommandType: TKMGameInputCommandType; aHouse: TKMHouse; aValue: Integer);
 begin
   Assert(aCommandType in [gicHouseRemoveTrain, gicHouseSchoolTrainChLastUOrder, gicHouseTownHallMaxGold, gicHouseTransferWare,
-                          gicHouseMerchantSetType, gicHouseDontAcceptWorker, gicHouseQueueRem, gicHouseMerchantSendTo, gicHousePalaceCancelOrder]);
+                          gicHouseMerchantSetType, gicHouseDontAcceptWorker, gicHouseQueueRem, gicHouseMerchantSendTo, gicHousePalaceCancelOrder,
+                          gicHouseFruitTreeToggleType, gicHouseShipType, gicHouseTownHallMaxBitin]);
   //Assert((aHouse is TKMHouseSchool) or (aHouse is TKMHouseTownHall) or (aHouse is TKMHouseSiegeWorkshop));
   TakeCommand(MakeCommand(aCommandType, aHouse.UID, aValue));
 end;

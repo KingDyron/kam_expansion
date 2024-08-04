@@ -554,9 +554,40 @@ var
     for J := left to right do
       fSaves[J] := tempSaves[J];
   end;
+
+  procedure SortByVersion;
+  var I, J : Integer;
+  begin
+    J := 0;
+    //supported version first
+    for I := 0 to fCount-1 do
+    if fSaves[I].IsValid then
+    begin
+      tempSaves[J] := fSaves[I];
+      inc(J);
+    end;
+
+    //now unsupperted
+    for I := 0 to fCount-1 do
+    if not fSaves[I].IsValid then
+    begin
+      tempSaves[J] := fSaves[I];
+      inc(J);
+    end;
+
+    for I := 0 to fCount-1 do
+      fSaves[I] := tempSaves[I];
+
+
+  end;
+
 begin
   SetLength(tempSaves, fCount);
   MergeSort(0, fCount-1);
+
+  SortByVersion;
+
+
 end;
 
 

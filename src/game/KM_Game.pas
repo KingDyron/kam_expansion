@@ -12,6 +12,7 @@ uses
   KM_MapEditor, KM_Campaigns, KM_Maps, KM_MapTypes, KM_CampaignTypes, KM_TerrainPainter,
   KM_Render, KM_Scripting,
   KM_MediaTypes,
+  KM_WeatherCollection,
   KM_InterfaceGame, KM_InterfaceGamePlay, KM_InterfaceMapEditor,
   KM_ResTypes, KM_ResFonts, KM_ResTexts,
   KM_Hand,
@@ -98,6 +99,7 @@ type
 
     fMapEdMapSaveStarted: TEvent;
     fMapEdMapSaveEnded: TEvent;
+    fWeather : TKMWeatherCollection;
 
     procedure IssueAutosaveCommand(aAfterPT: Boolean);
     function FindHandToSpec: Integer;
@@ -287,6 +289,7 @@ type
     property MapEditor: TKMMapEditor read GetMapEditor;
     property TerrainPainter: TKMTerrainPainter read fTerrainPainter;
     property TextMission: TKMTextLibraryMulti read fTextMission;
+    property Weather : TKMWeatherCollection read fWeather;
 
     procedure SetSeed(aSeed: Integer);
 
@@ -326,6 +329,7 @@ uses
   KM_Terrain, KM_TerrainTypes, KM_HandsCollection, KM_HandSpectator, KM_MapEdTypes,
   KM_MissionScript, KM_MissionScript_Info, KM_MissionScript_Standard,
   KM_GameInputProcess_Multi, KM_GameInputProcess_Single,
+  KM_Particles, KM_WeatherTypes,
   KM_Resource, KM_ResSound,
   KM_InterfaceDefaults, KM_InterfaceTypes, KM_GameSettings,
   KM_Log, KM_ScriptingEvents, KM_Saves, KM_FileIO, KM_CommonUtils, KM_RandomChecks, KM_DevPerfLog, KM_DevPerfLogTypes,
@@ -444,6 +448,8 @@ begin
   end;
   gProjectiles := TKMProjectiles.Create(gRenderPool.AddProjectile);
   gSpecAnim := TKMSpecialAnims.Create;
+  gParticles := TKMParticlesCollection.Create;
+  fWeather := TKMWeatherCollection.Create;
 
   if gRandomCheckLogger <> nil then
   begin
@@ -478,6 +484,8 @@ begin
   FreeAndNil(gAIFields);
   FreeAndNil(gProjectiles);
   FreeAndNil(gSpecAnim);
+  FreeAndNil(gParticles);
+  FreeAndNil(fWeather);
   FreeAndNil(fPathfinding);
   FreeAndNil(fScripting);
   FreeAndNil(gScriptSounds);
@@ -542,7 +550,7 @@ var
   parser: TKMMissionParserStandard;
   parserPlayerInfo: TKMMissionParserInfo;
   mapInfo: TKMMapInfo;
-  campDataStream: TKMemoryStream;
+  campDataStream, AIStream: TKMemoryStream;
   campaignDataFilePath: UnicodeString;
 begin
   gLog.AddTime('GameStart');
@@ -757,6 +765,13 @@ begin
     if fParams.IsMultiPlayerOrSpec then
       MultiplayerRig(True);
 
+    if FileExists(ChangeFileExt(fParams.MissionFullFilePath, '.AISetup')) then
+    begin
+      AIStream := TKMemoryStreamBinary.Create;
+        AIStream.LoadFromFile(ChangeFileExt(fParams.MissionFullFilePath, '.AISetup'));
+        gHands.LoadFromFile(AIStream);
+      AIStream.Free;
+    end;
     //some late operations for parser (f.e. ProcessAttackPositions, which should be done after MultiplayerRig)
     parser.PostLoadMission;
   finally
@@ -765,6 +780,7 @@ begin
 
   gLog.AddTime('Game options: ' + fOptions.ToString);
   gLog.AddTime('Gameplay initialized', True);
+  //try to load AISetup from file
 end;
 
 
@@ -831,6 +847,7 @@ begin
   fIsJustStarted := True; // Mark game as just started
 
   gLog.AddTime('After game start', True);
+
 end;
 
 
@@ -2239,6 +2256,8 @@ begin
   fPathfinding.Save(aBodyStream);
   gProjectiles.Save(aBodyStream);
   gSpecAnim.Save(aBodyStream);
+  gParticles.Save(aBodyStream);
+  fWeather.Save(aBodyStream);
   fScripting.Save(aBodyStream);
   gScriptSounds.Save(aBodyStream);
   aBodyStream.Write(fAIType, SizeOf(fAIType));
@@ -2309,8 +2328,9 @@ end;
 procedure TKMGame.SaveGameToFile(const aPathName: String; aSaveByPlayer: Boolean; aSaveWorkerThread: TKMWorkerThread;
                                  aTimestamp: TDateTime; const aMPLocalDataPathName: String = '');
 var
-  mainStream, headerStream, bodyStream, saveStreamTxt: TKMemoryStream;
+  mainStream, headerStream, bodyStream, saveStreamTxt, aiStream: TKMemoryStream;
   gameMPLocalData: TKMGameMPLocalData;
+
 begin
   if BLOCK_SAVE then Exit; // This must be here because of paraller Runner
 
@@ -2326,7 +2346,6 @@ begin
   mainStream    := TKMemoryStreamBinary.Create(False); // Not compressed
   headerStream  := TKMemoryStreamBinary.Create(False); // Not compressed
   bodyStream    := TKMemoryStreamBinary.Create(True);  // Compressed
-
   SaveGameToStream(aTimestamp, headerStream, bodyStream);
 
   //In MP each player has his own perspective, hence we dont save minimaps in the main save file to avoid cheating,
@@ -2358,6 +2377,14 @@ begin
     saveStreamTxt := TKMemoryStreamText.Create;
     SaveGameToStream(aTimestamp, saveStreamTxt);
     TKMemoryStream.AsyncSaveToFileAndFree(saveStreamTxt, aPathName + EXT_SAVE_TXT_DOT, aSaveWorkerThread);
+  end;
+
+  if (fParams.Tick > 0) and gHands.DoSaveToFile then
+  begin
+    aiStream  := TKMemoryStreamBinary.Create;
+      gHands.SaveToFile(aiStream);
+      aiStream.SaveToFile(ChangeFileExt(gGameParams.MissionFullFilePath, '.AISetup'));
+    aiStream.Free;
   end;
 end;
 
@@ -2644,6 +2671,8 @@ begin
     fPathfinding.Load(bodyStream);
     gProjectiles.Load(bodyStream);
     gSpecAnim.Load(bodyStream);
+    gParticles.Load(bodyStream);
+    fWeather.Load(bodyStream);
     fScripting.Load(bodyStream);
     gScriptSounds.Load(bodyStream);
     bodyStream.Read(fAIType, SizeOf(fAIType));
@@ -3145,6 +3174,8 @@ begin
       fPathfinding.UpdateState;
       gProjectiles.UpdateState; //If game has stopped it's NIL
       gSpecAnim.UpdateState(fParams.Tick); //If game has stopped it's NIL
+      gParticles.UpdateState; //If game has stopped it's NIL
+      fWeather.UpdateState;
 
       fGameInputProcess.RunningTimer(fParams.Tick); //GIP_Multi issues all commands for this tick
 

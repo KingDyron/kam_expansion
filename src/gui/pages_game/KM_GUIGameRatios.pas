@@ -75,7 +75,7 @@ begin
   SetLength(Button_Ratios, length(gRes.Wares.WareDistribution));
   for I := 0 to High(gRes.Wares.WareDistribution) do
   begin
-    Button_Ratios[I]         := TKMButton.Create(Panel_Ratios,10 + (I mod 4) *45 , 20 + 30 * (I div 4), 25, 25, 0, rxGui, bsGame);
+    Button_Ratios[I]         := TKMButton.Create(Panel_Ratios,10 + (I mod 5) *35 , 20 + 30 * (I div 5), 25, 25, 0, rxGui, bsGame);
     Button_Ratios[I].TexID   := gRes.Wares[gRes.Wares.WareDistribution[I].WareType].GUIIcon;
     Button_Ratios[I].Hint    := gRes.Wares[gRes.Wares.WareDistribution[I].WareType].Title;
     Button_Ratios[I].Tag     := I;

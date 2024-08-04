@@ -133,8 +133,6 @@ type
     fHitable: Boolean; //Can this control be hit with the cursor?
     fControlIndex: Integer; //Index number of this control in his Parent's (TKMPanel) collection
     fID: Integer; //Control global ID
-    fHint: UnicodeString; //Text that shows up when cursor is over that control, mainly for Buttons
-    fHintBackColor: TKMColor4f; //Hint background color
 
     fClickHoldMode: Boolean;
     fClickHoldHandled: Boolean;
@@ -203,6 +201,9 @@ type
 
     fBaseLeft,
     fBaseTop : SmallInt;
+    fHint: UnicodeString; //Text that shows up when cursor is over that control, mainly for Buttons
+    fHintBackColor: TKMColor4f; //Hint background color
+    fMobilHint : Boolean;
 
     procedure SetLeft(aValue: Integer); virtual;
     procedure SetTop(aValue: Integer); virtual;
@@ -258,6 +259,9 @@ type
     procedure SetHint(const aHint: UnicodeString); virtual;
     procedure SetHintBackColor(const aValue: TKMColor4f); virtual;
 
+    function GetMobilHint : Boolean;Virtual;
+    procedure SetMobilHint(aValue : Boolean); Virtual;
+
     function CanFocusNext: Boolean; virtual;
   public
     AutoFocusable: Boolean; //Can we focus on this element automatically (f.e. if set to False we will able to Focus only by manual mouse click)
@@ -271,7 +275,7 @@ type
     Tag2: Integer; //Some tag which can be used for various needs
 
     DebugHighlight: Boolean;
-    MobilHint : Boolean;
+    //MobilHint : Boolean;
     constructor Create(aParent: TKMPanel; aLeft, aTop, aWidth, aHeight: Integer);
     destructor Destroy; override;
     function HitTest(X, Y: Integer; aIncludeDisabled: Boolean = False; aIncludeNotHitable: Boolean = False): Boolean; virtual;
@@ -304,6 +308,7 @@ type
     property HintTextColor: TColor4 read GetHintTextColor;
     property HintBackRect: TKMRect read GetHintBackRect;
     property HintTextOffset: TKMPoint read GetHintTextOffset;
+    property MobilHint : Boolean read GetMobilHint write SetMobilHint;
 
     property MouseWheelStep: Integer read fMouseWheelStep write fMouseWheelStep;
 
@@ -382,7 +387,7 @@ type
     property OnHeightChange: TObjectIntegerEvent read fOnHeightChange write fOnHeightChange;
     property OnSizeSet: TNotifyEvent read fOnSizeSet write fOnSizeSet;
     property OnPositionSet: TNotifyEvent read fOnPositionSet write fOnPositionSet;
-
+    procedure RePaint;
     procedure Paint; virtual;
     procedure UpdateState(aTickCount: Cardinal); virtual;
 
@@ -713,6 +718,16 @@ begin
   fHintBackColor := aValue;
 end;
 
+function TKMControl.GetMobilHint : Boolean;
+begin
+  Result := fMobilHint;
+end;
+
+procedure TKMControl.SetMobilHint(aValue : Boolean);
+begin
+  fMobilHint := aValue;
+end;
+
 
 function TKMControl.GetHintBackColor: TKMColor4f;
 begin
@@ -787,7 +802,12 @@ begin
   end;
 end;
 
-
+procedure TKMControl.Repaint;
+begin
+  Show;
+  Paint;
+  Hide;
+end;
 // One common thing - draw childs for self
 procedure TKMControl.Paint;
 var

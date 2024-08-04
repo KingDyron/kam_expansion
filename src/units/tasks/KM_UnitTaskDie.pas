@@ -32,7 +32,7 @@ begin
   fType := uttDie;
   fShowAnimation := aShowAnimation;
   //Shortcut to remove the pause before the dying animation which makes fights look odd
-  if aUnit.Visible then
+  if aUnit.Visible or (aUnit.InShip <> nil) then
   begin
     fPhase := 1; //Phase 0 can be skipped when the unit is visible
     Execute;
@@ -103,6 +103,9 @@ begin
             TempUnitType := fUnit.UnitType;
             TempX := fUnit.Position.X;
             TempY := fUnit.Position.Y;
+            if fUnit.IsAnimal then
+              if TKMUnitAnimal(fUnit).SpawnerID <> -1 then
+                gHands.PlayerAnimals.Spawners[TKMUnitAnimal(fUnit).SpawnerID].Animals.Remove(fUnit);
 
             fUnit.CloseUnit;          //This will FreeAndNil the Task and mark unit as "closed"
 

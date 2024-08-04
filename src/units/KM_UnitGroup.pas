@@ -762,7 +762,7 @@ end;
 
 function TKMUnitGroup.IsRanged: Boolean;
 begin
-  Result := (fGroupType in [gtRanged, gtMachines]);
+  Result := (fGroupType in [gtRanged, gtMachines, gtShips]);
 end;
 
 
@@ -1563,6 +1563,7 @@ begin
 
   Result := (aTargetGroup.GetMembersGroupType in [gtAny, GroupType])
             or (GetMembersGroupType in [aTargetGroup.GetMembersGroupType, gtAny]);
+  Result := Result and (Owner = aTargetGroup.Owner);
 end;
 
 procedure TKMUnitGroup.OrderLinkTo(aTargetGroup: TKMUnitGroup; aClearOffenders: Boolean);
@@ -2621,12 +2622,15 @@ begin
                    begin
                      // Link to other group
                      Result := gHands[aUnit.Owner].UnitGroups.GetGroupByMember(linkUnit);
-                     Result.AddMember(aUnit);
-                     // Form a square (rather than a long snake like in TSK/TPR)
-                     // but don't change formation if player decided to set it manually
-                     if not Result.ManualFormation then
-                       Result.UnitsPerRow := Ceil(Sqrt(Result.Count));
-                     Result.OrderRepeat(False);
+                     if Result <> nil then
+                     begin
+                        Result.AddMember(aUnit);
+                       // Form a square (rather than a long snake like in TSK/TPR)
+                       // but don't change formation if player decided to set it manually
+                       if not Result.ManualFormation then
+                         Result.UnitsPerRow := Ceil(Sqrt(Result.Count));
+                       Result.OrderRepeat(False);
+                     end;
                    end
                    else
                    begin

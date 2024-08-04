@@ -42,7 +42,7 @@
 41:Flour
 42:Leather
 43:Sausages
-44:Pigs
+44:Meat
 45:Skins
 46:Wooden shields
 47:Iron shields
@@ -1972,3 +1972,18 @@
 2013:Cabbages
 2014:Tomatos
 2015:Potatos
+2017:Apple
+2018:Cherry
+2019:Black apple
+2020:Set as house site
+2021:Building progress
+2022:Ships
+2023:Battle ship
+2024:Boat
+2025:Banana tree
+2026:Coconut tree
+2027:Animal spawner
+2028:Army
+2029:Max bitin armor
+2030:Deselect current selection
+2031:Guardians

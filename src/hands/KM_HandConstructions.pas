@@ -120,6 +120,7 @@ type
     procedure AddFakeDeletedField(const aLoc: TKMPoint);
     procedure AddField(const aLoc: TKMPoint; aFieldType: TKMFieldType; aRoadType : TKMRoadType = rtNone);
     function HasField(const aLoc: TKMPoint): TKMFieldType;
+    function GetRoadType(const aLoc: TKMPoint): TKMRoadType;
     function HasFakeField(const aLoc: TKMPoint): TKMFieldType;
     procedure RemFieldPlan(const aLoc: TKMPoint);
     procedure RemFakeField(const aLoc: TKMPoint);
@@ -750,6 +751,9 @@ begin
         WareDelivered.Cost[J].C := 0;
       end;
     end;
+    aLoc := KMPointSubtract(aLoc, gRes.Bridges[aIndex].Offset[aRot]);
+    aLoc := gTerrain.FindPlaceForUnit(aLoc, tpWalk, 5);
+    gMySpectator.Hand.Deliveries.Queue.AddDemand(aLoc, wtTimber, 1);
   end;
 end;
 
@@ -1052,7 +1056,7 @@ begin
       //It is possible to have a fake fieldplans at the position of a real fieldplan temporarily when
       //clicking on one tile repeatly due to network delay. Don't add duplicate points to the list.
       if fFakeFields[I].Active and not aList.Contains(fFakeFields[I].Loc) then
-        aList.Add(fFakeFields[I].Loc, Byte(fFakeFields[I].FieldType), Byte(fFields[I].RoadType));
+        aList.Add(fFakeFields[I].Loc, Byte(fFakeFields[I].FieldType), Byte(fFakeFields[I].RoadType));
     //Fields that have been deleted should not be painted
     for I := 0 to Length(fFakeDeletedFields) - 1 do
       if fFakeDeletedFields[I].Active then
@@ -1186,6 +1190,20 @@ end;
 
 
 //Will return the field as the game should see it, ignoring all fakes.
+function TKMFieldworksList.GetRoadType(const aLoc: TKMPoint): TKMRoadType;
+var
+  I: Integer;
+begin
+  Result := rtNone;
+
+  for I := 0 to fFieldsCount - 1 do
+  if KMSamePoint(fFields[I].Loc, aLoc) then
+  begin
+    Result := fFields[I].RoadType;
+    Exit;
+  end;
+end;
+
 function TKMFieldworksList.HasField(const aLoc: TKMPoint): TKMFieldType;
 var
   I: Integer;
@@ -1199,7 +1217,6 @@ begin
     Exit;
   end;
 end;
-
 
 //Will return the field as the user should see it.
 //Fake fields are shown when the command has not yet been processed, and
@@ -1374,9 +1391,9 @@ begin
 
   for I := 0 to fPlansCount - 1 do
   if (fPlans[I].HouseType <> htNone)
-  and ((fPlans[I].Loc.X + HD[fPlans[I].HouseType].EntranceOffsetX <> aSkip.X) or (fPlans[I].Loc.Y <> aSkip.Y)) then
+  and ((fPlans[I].Loc.X + HD[fPlans[I].HouseType].EntranceOffsetX <> aSkip.X) or (fPlans[I].Loc.Y + HD[fPlans[I].HouseType].EntranceOffsetY <> aSkip.Y)) then
   begin
-    entrance := KMPoint(fPlans[I].Loc.X + HD[fPlans[I].HouseType].EntranceOffsetX, fPlans[I].Loc.Y + 1);
+    entrance := KMPoint(fPlans[I].Loc.X + HD[fPlans[I].HouseType].EntranceOffsetX, fPlans[I].Loc.Y + 1 + HD[fPlans[I].HouseType].EntranceOffsetY);
     dist := KMLengthDiag(entrance, aLoc);
     if dist < best then
     begin
@@ -1396,7 +1413,7 @@ begin
   Result := True;
   for I := 0 to fPlansCount - 1 do
     if (fPlans[I].HouseType = aHT)
-      AND KMSamePoint(  aLoc, KMPointAdd( fPlans[I].Loc, KMPoint(gRes.Houses[aHT].EntranceOffsetX,0) )  ) then
+      AND KMSamePoint(  aLoc, KMPointAdd( fPlans[I].Loc, KMPoint(gRes.Houses[aHT].EntranceOffsetX,gRes.Houses[aHT].EntranceOffsetY) )  ) then
 	    Exit;
   Result := False;
 end;
@@ -1533,7 +1550,7 @@ begin
   if (fPlans[I].HouseType <> htNone)
   and InRange(fPlans[I].Loc.X - 2, rect.Left, rect.Right)
   and InRange(fPlans[I].Loc.Y - 2, rect.Top, rect.Bottom) then
-    aList.Add(KMPoint(fPlans[I].Loc.X + gRes.Houses[fPlans[I].HouseType].EntranceOffsetX, fPlans[I].Loc.Y), Byte(fPlans[I].HouseType));
+    aList.Add(KMPoint(fPlans[I].Loc.X + gRes.Houses[fPlans[I].HouseType].EntranceOffsetX, fPlans[I].Loc.Y + gRes.Houses[fPlans[I].HouseType].EntranceOffsetY), Byte(fPlans[I].HouseType));
 end;
 
 
@@ -1872,7 +1889,7 @@ var
 begin
   Result := 0;
   for I := 0 to fWorkersCount - 1 do
-    if fWorkers[I].Worker.IsIdle then
+    if fWorkers[I].Worker.IsIdle and (fWorkers[I].Worker.InShip = nil) and (fWorkers[I].Worker.Visible) then
       inc(Result);
 end;
 
@@ -1885,7 +1902,7 @@ begin
   Result := nil;
   bestBid := MaxSingle;
   for I := 0 to fWorkersCount - 1 do
-    if fWorkers[I].Worker.IsIdle and fWorkers[I].Worker.CanWalkTo(aPoint, 0) then
+    if fWorkers[I].Worker.IsIdle and fWorkers[I].Worker.CanWalkTo(aPoint, 0) and (fWorkers[I].Worker.InShip = nil) and (fWorkers[I].Worker.Visible) then
     begin
       newBid := KMLengthDiag(fWorkers[I].Worker.Position, aPoint);
       if newBid < bestBid then
@@ -1959,6 +1976,7 @@ var
   I, availableWorkers, availableJobs, jobID: Integer;
   myBid: Single;
   bestWorker: TKMUnitWorker;
+  H : TKMHouse;
 begin
   availableWorkers := GetIdleWorkerCount;
   availableJobs := fHouseList.GetAvailableJobsCount;
@@ -1978,7 +1996,11 @@ begin
       if (fHouseList.fHouses[i].House <> nil) and fHouseList.fHouses[i].House.CheckResToBuild
       and(fHouseList.fHouses[I].Assigned < MAX_WORKERS[fHouseList.fHouses[i].House.HouseType]) then
       begin
-        bestWorker := GetBestWorker(fHouseList.fHouses[I].House.PointBelowEntrance);
+        H := fHouseList.fHouses[I].House;
+        if H is TKMHouseAppleTree then
+          if TKMHouseAppleTree(H).ParentTree.IsValid then
+            H := TKMHouseAppleTree(H).ParentTree;
+        bestWorker := GetBestWorker(H.PointBelowEntrance);
         if bestWorker <> nil then fHouseList.GiveTask(I, bestWorker);
       end;
 end;

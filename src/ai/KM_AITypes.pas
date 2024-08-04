@@ -1,12 +1,14 @@
 unit KM_AITypes;
 {$I KaM_Remake.inc}
 interface
+  uses KM_ResTypes, KM_Defaults, KM_Points;
 
 type
   //* AI defence position type
   // For now IDs must match with KaM
   TKMAIDefencePosType = (dtFrontLine, //Front line troops may not go on attacks, they are for defence
-                         dtBackLine); //Back line troops may attack
+                         dtBackLine,
+                         dtGuardLine); //Back line troops may attack
   //* AI attack type
   TKMAIAttackType = (
     aatOnce,     // Attack will occur once (after the set time has passed and if they have enough troops

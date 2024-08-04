@@ -423,7 +423,14 @@ uses
   KM_ResBridges in 'src\res\KM_ResBridges.pas',
   KM_GUIMenuCampaignLobby in 'src\gui\pages_menu\KM_GUIMenuCampaignLobby.pas',
   KM_GUIMenuTutorials in 'src\gui\pages_menu\KM_GUIMenuTutorials.pas',
-  KM_ControlsGrid in 'src\controls\KM_ControlsGrid.pas';
+  KM_ControlsGrid in 'src\controls\KM_ControlsGrid.pas',
+  KM_GUIMapEdTownAnimals in 'src\gui\pages_maped\town\KM_GUIMapEdTownAnimals.pas',
+  KM_GUIMapEdMarkerSpawner in 'src\gui\pages_maped\KM_GUIMapEdMarkerSpawner.pas',
+  KM_Weather in 'src\weather\KM_Weather.pas',
+  KM_WeatherCollection in 'src\weather\KM_WeatherCollection.pas',
+  KM_WeatherTypes in 'src\weather\KM_WeatherTypes.pas',
+  KM_Particles in 'src\weather\KM_Particles.pas',
+  KM_AIRecordBuilding in 'src\ai\KM_AIRecordBuilding.pas';
 
 //KM_PerfLog in 'src\unused\KM_PerfLog.pas', //unused
 

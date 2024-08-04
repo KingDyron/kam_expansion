@@ -22,17 +22,12 @@ type
     procedure Town_ChangeFillType(Sender: TObject; Shift: TShiftState);
   protected
     Panel_Build: TKMScrollPanel;
-      {Button_BuildRoad:array[rtStone..high(TKMRoadType)] of TKMButtonFlat;
-      Button_BuildGrassField,
-      Button_BuildField: TKMButtonFlatStack;
-      Button_BuildWine: TKMButtonFlat;
-      Button_BuildPalisade: TKMButtonFlat;
-      Button_BuildCancel: TKMButtonFlat;}
       Button_BuildField: array[TKMLockFieldType] of TKMButtonFlatStack;
       Button_HouseRandomRes,
       Button_HouseNoRes,
       Button_HouseFW,
-      Button_HouseStyle:TKMButton;
+      Button_HouseStyle,
+      Button_HouseSite:TKMButton;
 
       Button_HouseLevel: TKMButtonFlat;
 
@@ -67,10 +62,10 @@ uses
 { TKMMapEdTownHouses }
 constructor TKMMapEdTownHouses.Create(aParent: TKMPanel);
 var
-  I, J, lastID, top : Integer;
+  I, J, K, L, lastID, top : Integer;
   //RT : TKMRoadType;
   FT : TKMLockFieldType;
-
+  H : TKMHouseType;
 begin
   inherited Create;
   gCursor.MapEd_HouseFill := 0;
@@ -175,36 +170,46 @@ begin
   top := BrushSize.Bottom + 10;
 
 
-  Button_HouseStyle := TKMButton.Create(Panel_Build, 9, top, 30, 30, 389, rxGui, bsGame);
+  Button_HouseStyle := TKMButton.Create(Panel_Build, 0, top, 30, 30, 389, rxGui, bsGame);
   Button_HouseStyle.Tag := 1;
   Button_HouseStyle.Hint := gResTexts[1812];
+  Button_HouseStyle.MobilHint := true;
   Button_HouseStyle.OnClick := Town_SetStyle;
 
 
-  Button_HouseNoRes := TKMButton.Create(Panel_Build, 39, top, 30, 30, 717, rxGui, bsGame);
+  Button_HouseNoRes := TKMButton.Create(Panel_Build, 30, top, 30, 30, 717, rxGui, bsGame);
   Button_HouseNoRes.Hint := gResTexts[1868];
+  Button_HouseNoRes.MobilHint := true;
   Button_HouseNoRes.OnClick := Town_SetStyle;
 
 
-  Button_HouseFW := TKMButton.Create(Panel_Build, 69, top, 30, 30, 769, rxGui, bsGame);
+  Button_HouseFW := TKMButton.Create(Panel_Build, 60, top, 30, 30, 769, rxGui, bsGame);
   Button_HouseFW.Hint := gResTexts[1818];
+  Button_HouseFW.MobilHint := true;
   Button_HouseFW.OnClick := Town_SetStyle;
 
-  Button_HouseRandomRes := TKMButton.Create(Panel_Build, 99, top, 40, 30, '--', bsGame);
+  Button_HouseRandomRes := TKMButton.Create(Panel_Build, 90, top, 40, 30, '--', bsGame);
   Button_HouseRandomRes.Hint := gResTexts[1869];
+  Button_HouseRandomRes.MobilHint := true;
   Button_HouseRandomRes.OnClickShift := Town_ChangeFillType;
   Button_HouseRandomRes.Font := fntMetal;
 
-  Button_HouseLevel := TKMButtonFlat.Create(Panel_Build, 139, top,33,33,748);
+  Button_HouseSite := TKMButton.Create(Panel_Build, 130, top, 30, 30, 389, rxGui, bsGame);
+  Button_HouseSite.Hint := gResTexts[2020];
+  Button_HouseSite.MobilHint := true;
+  Button_HouseSite.OnClick := Town_SetStyle;
+
+  Button_HouseLevel := TKMButtonFlat.Create(Panel_Build, 160, top,33,33,748);
   Button_HouseLevel.OnClickShift := Town_SetLevel;
   Button_HouseLevel.Tag := 0;
 
-  top := Button_HouseRandomRes.Bottom + 5;
 
+
+  top := Button_HouseRandomRes.Bottom + 5;
+    
   J := 0;
   for I := 0 to high(HOUSE_GUI_TAB_ORDER) do
   begin
-    lastID := 0;
     if I > 0 then
       top := Button_Build[J - 1].Bottom + 3;
 
@@ -212,15 +217,21 @@ begin
     Label_BuildType[I].Hitable := false;
 
     Inc(Top, 15);
-    while (lastID < length(HOUSE_GUI_TAB_ORDER[I].H)) do
+    for K := 0 to High(HOUSE_GUI_TAB_ORDER[I].H) do
     begin
-      SetLength(Button_Build, J + 1);//add new elements
-      Button_Build[J] := TKMButtonFlat.Create(Panel_Build, lastID mod 5 * 37, top + (lastID div 5) * 37,33,33,gRes.Houses[HOUSE_GUI_TAB_ORDER[I].H[lastID]].GUIIcon);
-      Button_Build[J].OnClick := Town_BuildChange;
-      Button_Build[J].Tag := Byte(HOUSE_GUI_TAB_ORDER[I].H[lastID]);
-      Button_Build[J].Hint := gRes.Houses[HOUSE_GUI_TAB_ORDER[I].H[lastID]].HouseName;
-      Inc(J);
-      Inc(lastID);
+      lastID := 0;
+      for L := 0 to high(HOUSE_GUI_TAB_ORDER[I].H[K]) do
+      begin
+        H := HOUSE_GUI_TAB_ORDER[I].H[K,L];
+        SetLength(Button_Build, J + 1);//add new elements
+        Button_Build[J] := TKMButtonFlat.Create(Panel_Build, lastID mod 5 * 37, top + (lastID div 5) * 37,33,33,gRes.Houses[H].GUIIcon);
+        Button_Build[J].OnClick := Town_BuildChange;
+        Button_Build[J].Tag := Byte(H);
+        Button_Build[J].Hint := gRes.Houses[H].HouseName;
+        Inc(J);
+        Inc(lastID);
+      end;
+      top := Button_Build[J - 1].Bottom + 3;
     end;
   end;
 
@@ -416,7 +427,10 @@ begin
           lftGrassField: gCursor.Mode := cmGrassLand;
           lftVegetablesField: gCursor.Mode := cmVegeField;
           lftWineField: gCursor.Mode := cmWine;
-          lftRemove: gCursor.Mode := cmErase;
+          lftRemove:  begin
+                        gCursor.Mode := cmErase;
+                        gCursor.MapEdSize := BrushSize.Position;
+                      end;
         end;
         Exit;
       end;
@@ -576,6 +590,12 @@ begin
   Button_HouseLevel.Disable;
   Button_HouseRandomRes.Disable;
 
+  if gCursor.MapEd_HouseSite then
+    Button_HouseSite.TexID := 389
+  else
+    Button_HouseSite.TexID := 718;
+
+
   if (gCursor.Mode = cmHouses) then
   begin
     Button_HouseRandomRes.Enable;
@@ -661,7 +681,14 @@ var I : Integer;
 begin
   HT := TKMHouseType(gCursor.Tag1);
 
-
+  if Sender = Button_HouseSite then
+  begin
+    gCursor.MapEd_HouseSite := not gCursor.MapEd_HouseSite;
+    if gCursor.MapEd_HouseSite then
+      Button_HouseSite.TexID := 389
+    else
+      Button_HouseSite.TexID := 718;
+  end else
   if (Sender = Button_HouseNoRes) then
   begin
     If gCursor.SwitchMod(medHouseNoResource) then

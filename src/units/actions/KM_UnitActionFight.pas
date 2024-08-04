@@ -233,12 +233,13 @@ end;
 function TKMUnitActionFight.ExecuteProcessRanged(Step: Byte): Boolean;
 var
   W: TKMUnitWarrior;
+  dir : TKMDirection;
 begin
   Result := False;
 
   W := TKMUnitWarrior(fUnit);
   // don't fire the arrow if unit has no ammo
-  if (W.IsRanged or W.CanShootAndFight) and (W.BoltCount <= 0) then
+  if (W.IsRanged or W.CanShootAndFight) and ((W.BoltCount <= 0) and not W.InfinityAmmo) then
   begin
     Result := true;
     fFightDelay :=  W.AimingDelay;
@@ -270,9 +271,31 @@ begin
       TKMUnitWarriorSpy(fOpponent).SetAttackedTime;//Spy can only attack house
 
     //Fire the arrow
-    gProjectiles.AimTarget(fUnit.PositionF, fOpponent, W.ProjectileType, fUnit, W.RangeMax, W.RangeMin);
+    if fUnit.UnitType = utBattleShip then
+    begin
+      dir := DIR_TO_PREV2[fUnit.Direction];
+      if W.TakeBolt then
+        gProjectiles.AimTarget(fUnit.PositionF, KMPointAffectDir(fOpponent.PositionF, dir, -2), 0.5, W.ProjectileType, fUnit, W.RangeMax, W.RangeMin);//aim to the left
+      if W.TakeBolt then
+        gProjectiles.AimTarget(fUnit.PositionF, KMPointAffectDir(fOpponent.PositionF, dir, -1), 0.5, W.ProjectileType, fUnit, W.RangeMax, W.RangeMin);//aim to the left
 
-    //decrease ammo count
+      if W.TakeBolt then
+        gProjectiles.AimTarget(fUnit.PositionF, KMPointAffectDir(fOpponent.PositionF, dir, 0), 0.1, W.ProjectileType, fUnit, W.RangeMax, W.RangeMin);//aim directly at opponent
+
+      if W.TakeBolt then
+        gProjectiles.AimTarget(fUnit.PositionF, KMPointAffectDir(fOpponent.PositionF, dir, 1), 0.5, W.ProjectileType, fUnit, W.RangeMax, W.RangeMin);//aim to the right
+      if W.TakeBolt then
+        gProjectiles.AimTarget(fUnit.PositionF, KMPointAffectDir(fOpponent.PositionF, dir, 2), 0.5, W.ProjectileType, fUnit, W.RangeMax, W.RangeMin);//aim to the right
+      {if W.TakeBolt then
+        gProjectiles.AimTarget(fUnit.PositionF, fOpponent.PositionF, 1, W.ProjectileType, fUnit, W.RangeMax, W.RangeMin);//aim directly at opponent
+      if W.TakeBolt then
+        gProjectiles.AimTarget(fUnit.PositionF, KMPointFAdd(fOpponent.PositionF, KMPointF(-2, 0)), 1, W.ProjectileType, fUnit, W.RangeMax, W.RangeMin);//aim a little bit to the left
+      if W.TakeBolt then
+        gProjectiles.AimTarget(fUnit.PositionF, KMPointFAdd(fOpponent.PositionF, KMPointF(2, 0)), 1, W.ProjectileType, fUnit, W.RangeMax, W.RangeMin);//aim a little bit to the right}
+    end else
+      if W.TakeBolt then
+        gProjectiles.AimTarget(fUnit.PositionF, fOpponent, W.ProjectileType, fUnit, W.RangeMax, W.RangeMin);
+    {//decrease ammo count
     if gRes.Units[W.UnitType].CanOrderAmmo then
       if not W.InfinityAmmo then
       begin
@@ -281,7 +304,7 @@ begin
         if (gHands[W.Owner].IsComputer) or W.CanOrderAmmoFromCart then
           if W.BoltCount < 5 then
             W.OrderAmmo;
-      end;
+      end;}
 
     fFightDelay := -1; //Reset
   end;
@@ -387,7 +410,13 @@ begin
 
   //Opponent can walk next to us, keep facing him
   if step = 0 then //Only change direction between strikes, otherwise it looks odd
+  begin
     fUnit.Direction := KMGetDirection(fUnit.PositionF, fOpponent.PositionF);
+    if fUnit.UnitType = utBattleShip then
+      fUnit.Direction := DIR_TO_NEXT2[KMGetDirection(fUnit.PositionF, fOpponent.PositionF)]
+    else
+      fUnit.Direction := KMGetDirection(fUnit.PositionF, fOpponent.PositionF);
+  end;
 
   //If the vertex usage has changed we should update it
   if not W.IsRanged then //Ranged units do not use verticies

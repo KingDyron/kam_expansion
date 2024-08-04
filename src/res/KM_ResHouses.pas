@@ -150,6 +150,7 @@ type
     property WoodPicSteps: Word read fHouseDat.WoodPicSteps;
     property StonePicSteps: Word read fHouseDat.StonePicSteps;
     property EntranceOffsetX: ShortInt read fHouseDat.EntranceOffsetX;
+    property EntranceOffsetY: ShortInt read fHouseDat.EntranceOffsetY;
     property EntranceOffsetXpx: ShortInt read fHouseDat.EntranceOffsetXpx;
     property EntranceOffsetYpx: ShortInt read fHouseDat.EntranceOffsetYpx;
     property WoodCost: Byte read fHouseDat.WoodCost;
@@ -351,12 +352,12 @@ const
     );
 
   WALL_HOUSES : TKMHouseTypeSet = [ htWall, htWall2, htWall3, htWall4, htWall5];
+  IGNORE_HOUSE_BLOCK : TKMHouseTypeSet = [htWall..htWall5, htAppleTree];
 
 Var
   HOUSE_GUI_TAB_ORDER : array of record
-    ShowExpanded : Boolean;
-    TextID : Word;
-    H : TKMHouseTypeArray;
+    TextID, GuiIcon : Word;
+    H : TKMHouseTypeArray2;
   end;
 
 implementation
@@ -717,7 +718,7 @@ const
     Output:           (wtNone,        wtNone,       wtNone,       wtNone);
     UnlockedByHouse:  WALL_UNLOCK_HOUSE;
     SnowSpriteId:     2480;
-    GroundArea:       ((0,0,0,0), (0,0,0,0), (3,0,1,0), (4,2,1,0));
+    GroundArea:       ((0,0,0,0), (0,0,0,0), (0,0,0,0), (0,2,3,2));
     ),
     ( //htWall2
     PlanYX:           ((0,0,0,0), (0,0,0,0), (0,0,0,0), (1,3,3,2));
@@ -728,7 +729,7 @@ const
     Output:           (wtNone,        wtNone,       wtNone,       wtNone);
     UnlockedByHouse:  WALL_UNLOCK_HOUSE;
     SnowSpriteId:     2481;
-    GroundArea:       ((0,0,0,0), (0,0,0,0), (3,0,1,0), (4,2,1,0));
+    GroundArea:       ((0,0,0,0), (0,0,0,0), (0,0,0,0), (3,1,1,3));
     ),
     ( //htWall3
     PlanYX:           ((0,0,0,0), (0,0,1,0), (0,0,1,0), (0,0,2,0));
@@ -739,7 +740,7 @@ const
     Output:           (wtNone,        wtNone,       wtNone,       wtNone);
     UnlockedByHouse:  WALL_UNLOCK_HOUSE;
     SnowSpriteId:     2482;
-    GroundArea:       ((0,0,0,0), (0,0,0,0), (3,0,1,0), (4,2,1,0));
+    GroundArea:       ((0,0,0,0), (0,0,2,0), (0,0,2,0), (0,0,2,0));
     ),
     ( //htWall4
     PlanYX:           ((0,0,1,0), (0,0,3,0), (0,0,3,0), (0,0,2,0));
@@ -750,7 +751,7 @@ const
     Output:           (wtNone,        wtNone,       wtNone,       wtNone);
     UnlockedByHouse:  WALL_UNLOCK_HOUSE;
     SnowSpriteId:     2483;
-    GroundArea:       ((0,0,0,0), (0,0,0,0), (3,0,1,0), (4,2,1,0));
+    GroundArea:       ((0,0,3,0), (0,0,1,0), (0,0,1,0), (0,0,3,0));
     ),
     ( //htWall5
     PlanYX:           ((0,0,0,0), (0,0,0,0), (0,0,0,0), (0, 0,2,0));
@@ -761,7 +762,7 @@ const
     Output:           (wtNone,        wtNone,       wtNone,       wtNone);
     UnlockedByHouse:  WALL_UNLOCK_HOUSE;
     SnowSpriteId:     2484;
-    GroundArea:       ((0,0,0,0), (0,0,0,0), (3,0,1,0), (4,2,1,0));
+    GroundArea:       ((0,0,0,0), (0,0,0,0), (0,0,0,0), (0,0,3,0));
     ),
     ( //htHovel
     PlanYX:           ((0,0,0,0), (0,0,0,0), (0,1,1,1), (0, 1,1,2));
@@ -772,7 +773,7 @@ const
     Output:           (wtFeathers,    wtSausage,       wtNone,       wtNone);
     UnlockedByHouse:  htFarm;
     SnowSpriteId:     2466;
-    GroundArea:       ((0,0,0,0), (0,0,0,0), (3,0,1,0), (4,2,1,0));
+    GroundArea:       ((0,0,0,0), (0,0,0,0), (0,1,2,3), (0,1,2,3));
     ),
     ( //htSign
     PlanYX:           ((0,0,0,0), (0,0,0,0), (0,0,0,0), (0, 0,2,0));
@@ -782,8 +783,8 @@ const
     Input:            (wtNone,       wtNone,       wtNone,       wtNone);
     Output:           (wtNone,        wtNone,       wtNone,       wtNone);
     UnlockedByHouse:  htNone;
-    SnowSpriteId:     NO_HOUSE_IMAGE;
-    GroundArea:       ((0,0,0,0), (0,0,0,0), (3,0,1,0), (4,2,1,0));
+    SnowSpriteId:     2579;
+    GroundArea:       ((0,0,0,0), (0,0,0,0), (0,0,0,0), (0,0,3,0));
     ),
     ( //htBitinMine
     PlanYX:           ((0,0,0,0), (0,0,0,0), (0,0,0,0), (0, 1,1,2));
@@ -794,7 +795,7 @@ const
     Output:           (wtBitinOre,        wtNone,       wtNone,       wtNone);
     UnlockedByHouse:  htPottery;
     SnowSpriteId:     2465;
-    GroundArea:       ((0,0,0,0), (0,0,0,0), (0,0,0,0), (0,4,4,4));
+    GroundArea:       ((0,0,0,0), (0,0,0,0), (0,0,0,0), (0,1,2,3));
     ),
     ( //htWallTower
     PlanYX:           ((0,0,0,0), (0,0,0,0), (0,1,0,0), (0, 1,2,0));
@@ -805,7 +806,7 @@ const
     Output:           (wtNone,        wtNone,       wtNone,       wtNone);
     UnlockedByHouse:  htPottery;
     SnowSpriteId:     2121;
-    GroundArea:       ((0,0,0,0), (0,0,0,0), (3,0,1,0), (4,2,1,0));
+    GroundArea:       ((0,0,0,0), (0,0,0,0), (0,3,0,0), (0,4,2,0));
     ),
     ( //htWell
     PlanYX:           ((0,0,0,0), (0,0,0,0), (0,0,0,0), (0, 0,2,0));
@@ -816,7 +817,7 @@ const
     Output:           (wtWater,        wtNone,       wtNone,       wtNone);
     UnlockedByHouse:  htSawmill;
     SnowSpriteId:     5;
-    GroundArea:       ((0,0,0,0), (0,0,0,0), (3,0,1,0), (4,2,1,0));
+    GroundArea:       ((0,0,0,0), (0,0,0,0), (0,0,0,0), (0,0,3,0));
     ),
     ( //htStoneWorkshop
     PlanYX:           ((0,0,0,0), (1,1,1,0), (1,1,1,1), (0, 1,1,2));
@@ -827,7 +828,7 @@ const
     Output:           (wtStoneBolt,        wtLog,       wtWheel,       wtSawDust);
     UnlockedByHouse:  htQuarry;
     SnowSpriteId:     2472;
-    GroundArea:       ((0,0,0,0), (0,0,0,0), (3,0,1,0), (4,2,1,0));
+    GroundArea:       ((0,0,0,0), (1,1,3,0), (1,1,3,1), (0,3,3,2));
     ),
     ( //htIronFoundry
     PlanYX:           ((0,0,0,0), (0,1,1,0), (1,1,1,0), (1,1,2,0));
@@ -838,7 +839,7 @@ const
     Output:           (wtSteelE,        wtBitinE,       wtBolt,       wtNone);
     UnlockedByHouse:  htIronSmithy;
     SnowSpriteId:     2467;
-    GroundArea:       ((0,0,0,0), (0,0,0,0), (3,0,1,0), (4,2,1,0));
+    GroundArea:       ((0,0,0,0), (0,1,1,0), (2,2,2,0), (3,3,3,0));
     ),
     ( //htMerchant
     PlanYX:           ((0,0,0,0), (0,1,1,1), (0,1,1,1), (0,1,2,1));
@@ -849,7 +850,7 @@ const
     Output:           (wtNone,        wtNone,       wtNone,       wtNone);
     UnlockedByHouse:  htTownhall;
     SnowSpriteId:     2468;
-    GroundArea:       ((0,0,0,0), (0,0,0,0), (3,0,1,0), (4,2,1,0));
+    GroundArea:       ((0,3,3,3), (0,3,3,3), (0,2,2,2), (0,1,1,1));
     ),
     ( //htPottery
     PlanYX:           ((0,0,0,0), (0,0,1,1), (0,1,1,1), (0,1,2,1));
@@ -860,7 +861,7 @@ const
     Output:           (wtTile,        wtNone,       wtNone,       wtNone);
     UnlockedByHouse:  htSawmill;
     SnowSpriteId:     2464;
-    GroundArea:       ((0,0,0,0), (0,0,0,0), (3,0,1,0), (4,2,1,0));
+    GroundArea:       ((0,0,0,0), (0,0,1,1), (0,2,2,2), (0,3,3,1));
     ),
     ( //htWoodBurner
     PlanYX:           ((0,0,0,0), (0,0,0,0), (1,1,1,0), (1,1,2,0));
@@ -871,7 +872,7 @@ const
     Output:           (wtCoal,        wtNone,       wtNone,       wtNone);
     UnlockedByHouse:  htFarm;
     SnowSpriteId:     2185;
-    GroundArea:       ((0,0,0,0), (0,0,0,0), (3,0,1,0), (4,2,1,0));
+    GroundArea:       ((0,0,0,0), (0,0,0,0), (1,2,1,0), (1,3,1,0));
     ),
     ( //htAppleTree
     PlanYX:           ((0,0,0,0), (0,0,0,0), (0,1,1,0), (0,1,2,0));
@@ -882,7 +883,7 @@ const
     Output:           (wtApple,        wtNone,       wtNone,       wtNone);
     UnlockedByHouse:  htWell;
     SnowSpriteId:     5;
-    GroundArea:       ((0,0,0,0), (0,0,0,0), (3,0,1,0), (4,2,1,0));
+    GroundArea:       ((0,0,0,0), (0,0,0,0), (0,2,2,0), (0,2,2,0));
     ),
     ( //htSmallStore
     PlanYX:           ((0,0,0,0), (0,0,0,0), (0,1,1,0), (0,1,2,0));
@@ -893,7 +894,7 @@ const
     Output:           (wtNone,        wtNone,       wtNone,       wtNone);
     UnlockedByHouse:  htNone;
     SnowSpriteId:     2469;
-    GroundArea:       ((0,0,0,0), (0,0,0,0), (3,0,1,0), (4,2,1,0));
+    GroundArea:       ((0,0,0,0), (0,0,0,0), (0,2,2,0), (0,2,2,0));
     ),
     ( //htCollectors
     PlanYX:           ((0,0,0,0), (0,0,0,0), (0,1,1,0), (0,1,2,0));
@@ -904,7 +905,7 @@ const
     Output:           (wtCoal,        wtStone,       wtIronOre,       wtGoldOre);
     UnlockedByHouse:  htSawMill;
     SnowSpriteId:     2473;
-    GroundArea:       ((0,0,0,0), (0,0,0,0), (3,0,1,0), (4,2,1,0));
+    GroundArea:       ((0,0,0,0), (2,2,2,2), (2,4,4,3), (1,1,3,1));
     ),
     ( //htTailorsShop
     PlanYX:           ((0,0,0,0), (0,0,0,0), (0,1,1,0), (0,1,2,0));
@@ -915,7 +916,7 @@ const
     Output:           (wtBoots,        wtLeatherArmor,       wtNone,       wtNone);
     UnlockedByHouse:  htTannery;
     SnowSpriteId:     2474;
-    GroundArea:       ((0,0,0,0), (0,0,0,0), (3,0,1,0), (4,2,1,0));
+    GroundArea:       ((2,2,2,2), (2,2,2,2), (2,2,2,2), (2,2,2,2));
     ),
     ( //htCottage
     PlanYX:           ((0,0,0,0), (0,0,0,0), (0,1,1,0), (0,1,2,0));
@@ -926,7 +927,7 @@ const
     Output:           (wtNone,        wtNone,       wtNone,       wtNone);
     UnlockedByHouse:  htStore;
     SnowSpriteId:     2462;
-    GroundArea:       ((0,0,0,0), (0,0,0,0), (3,0,1,0), (4,2,1,0));
+    GroundArea:       ((2,2,2,2), (2,2,2,2), (2,2,2,2), (2,2,2,2));
     ),
     ( //htHouse
     PlanYX:           ((0,0,0,0), (1,1,1,0), (1,1,1,0), (1,1,2,0));
@@ -937,7 +938,7 @@ const
     Output:           (wtNone,        wtNone,       wtNone,       wtNone);
     UnlockedByHouse:  htPottery;
     SnowSpriteId:     2461;
-    GroundArea:       ((0,0,0,0), (0,0,0,0), (3,0,1,0), (4,2,1,0));
+    GroundArea:       ((2,2,2,2), (2,2,2,2), (2,2,2,2), (2,2,2,2));
     ),
     ( //htPalace
     PlanYX:           ((0,0,0,0), (1,1,1,0), (1,1,1,0), (1,1,2,0));
@@ -948,9 +949,9 @@ const
     Output:           (wtNone,        wtNone,       wtNone,       wtNone);
     UnlockedByHouse:  htPottery;
     SnowSpriteId:     2463;
-    GroundArea:       ((0,0,0,0), (0,0,0,0), (3,0,1,0), (4,2,1,0));
+    GroundArea:       ((2,2,2,2), (2,2,2,2), (2,2,2,2), (2,2,2,2));
     ),
-    ( //htPalace
+    ( //htStall
     PlanYX:           ((0,0,0,0), (1,1,1,0), (1,1,1,0), (1,1,2,0));
     NeedsPlayerOrder: false;
     BuildIcon:        867;
@@ -958,8 +959,8 @@ const
     Input:            (wtApple,        wtGold,       wtBread,     wtSausage);
     Output:           (wtNone,        wtNone,       wtNone,       wtNone);
     UnlockedByHouse:  htPottery;
-    SnowSpriteId:     2463;
-    GroundArea:       ((0,0,0,0), (0,0,0,0), (3,0,1,0), (4,2,1,0));
+    SnowSpriteId:     2580;
+    GroundArea:       ((2,2,2,2), (2,2,2,2), (2,2,2,2), (2,2,2,2));
     ),
     ( //htProductionThatch
     PlanYX:           ((0,0,0,0), (1,1,1,0), (1,1,1,0), (1,1,2,0));
@@ -969,8 +970,8 @@ const
     Input:            (wtTrunk,        wtGold,       wtBread,     wtSausage);
     Output:           (wtTimber,        wtNone,       wtNone,       wtNone);
     UnlockedByHouse:  htPottery;
-    SnowSpriteId:     2463;
-    GroundArea:       ((0,0,0,0), (0,0,0,0), (3,0,1,0), (4,2,1,0));
+    SnowSpriteId:     2581;
+    GroundArea:       ((2,2,2,2), (2,2,2,2), (2,2,2,2), (2,2,2,2));
     ),
     ( //htShipyard
     PlanYX:           ((0,0,0,0), (1,1,1,0), (1,1,1,0), (1,1,2,0));
@@ -980,8 +981,8 @@ const
     Input:            (wtNone,        wtNone,       wtNone,     wtNone);
     Output:           (wtNone,        wtNone,       wtNone,       wtNone);
     UnlockedByHouse:  htPottery;
-    SnowSpriteId:     2463;
-    GroundArea:       ((0,0,0,0), (0,0,0,0), (3,0,1,0), (4,2,1,0));
+    SnowSpriteId:     -1;
+    GroundArea:       ((2,2,2,2), (2,2,2,2), (2,2,2,2), (2,2,2,2));
     )
     );
 
@@ -1872,32 +1873,6 @@ begin
 
   end;
 
-  setlength(HOUSE_GUI_TAB_ORDER, 7);
-  //default value of house order
-  HOUSE_GUI_TAB_ORDER[0].H := [htSchool, htInn, htBarracks, htTownHall,  htStore, htSmallStore, htCottage, htHouse, htPalace];
-  HOUSE_GUI_TAB_ORDER[1].H := [htQuarry, htWoodcutters, htSawmill, htPottery, htFarm, htWell];
-  HOUSE_GUI_TAB_ORDER[2].H := [htMill, htBakery, htSwine, htButchers, htHovel, htVineyard, htAppleTree, htFishermans,  htStables, htTannery];
-  HOUSE_GUI_TAB_ORDER[3].H := [htGoldMine, htIronMine, htBitinMine, htCoalMine];
-  HOUSE_GUI_TAB_ORDER[4].H := [htWeaponWorkshop, htArmorWorkshop, htMetallurgists, htIronSmithy, htIronFoundry, htWeaponSmithy, htArmorSmithy, htSiegeWorkshop,htStoneWorkshop, htWoodBurner];
-  HOUSE_GUI_TAB_ORDER[5].H := [htWall, htWall2, htWall3, htWall4, htWall5, htWallTower, htWatchTower];
-  HOUSE_GUI_TAB_ORDER[6].H := [htMarket, htMerchant, htCollectors, htTailorsShop, htSign];
-
-  HOUSE_GUI_TAB_ORDER[0].TextID := 1649;
-  HOUSE_GUI_TAB_ORDER[1].TextID := 1650;
-  HOUSE_GUI_TAB_ORDER[2].TextID := 1651;
-  HOUSE_GUI_TAB_ORDER[3].TextID := 1652;
-  HOUSE_GUI_TAB_ORDER[4].TextID := 1653;
-  HOUSE_GUI_TAB_ORDER[5].TextID := 1654;
-  HOUSE_GUI_TAB_ORDER[6].TextID := 1655;
-
-  HOUSE_GUI_TAB_ORDER[0].ShowExpanded := true;
-  HOUSE_GUI_TAB_ORDER[1].ShowExpanded := true;
-  HOUSE_GUI_TAB_ORDER[2].ShowExpanded := false;
-  HOUSE_GUI_TAB_ORDER[3].ShowExpanded := false;
-  HOUSE_GUI_TAB_ORDER[4].ShowExpanded := false;
-  HOUSE_GUI_TAB_ORDER[5].ShowExpanded := false;
-  HOUSE_GUI_TAB_ORDER[6].ShowExpanded := false;
-
 
  //set some default values if none of them were asigned
   for H := HOUSE_MIN to HOUSE_MAX do
@@ -1985,8 +1960,8 @@ end;
 function TKMResHouses.GetBeastAnim(aType: TKMHouseType; aBeast, aAge: Integer): TKMAnimLoop;
 begin
   Assert(aType in [htSwine, htStables, htMarket,htHovel]);
-  Assert(InRange(aBeast, 1, 5));
-  Assert(InRange(aAge, 1, 3));
+  Assert(InRange(aBeast, 1, 5), 'Beast ID: ' + IntToStr(aBeast));
+  Assert(InRange(aAge, 1, 3),  'Beast Age: ' + IntToStr(aAge));
   case aType of
     htSwine:    Result := fBeastAnim[1, aBeast, aAge];
     htStables:  Result := fBeastAnim[2, aBeast, aAge];
@@ -2063,6 +2038,33 @@ function TKMResHouses.LoadFromJSON(aFileName : String) : Cardinal;
   Procedure SetValue(var A : SmallInt; B : SmallInt; aCondition : Boolean = true); Overload;  begin if aCondition then  A := B; end;
   Procedure SetValue(var A : ShortInt; B : ShortInt; aCondition : Boolean = true); Overload;  begin if aCondition then  A := B; end;
 
+  function ConvertToHouseArray2(aHouses : TKMHouseTypeArray; aHouseType : TKMHouseType = htNone) : TKMHouseTypeArray2;
+  var I, J, K : Integer;
+      H : TKMHouseType;
+  begin
+    J := 0;
+    K := 0;
+    for I := 0 to High(aHouses) do
+    begin
+      if (I = 0) or (aHouses[I] = aHouseType) then
+      begin
+        SetLength(Result, K + 1);
+        J := 0;
+        Inc(K);
+      end;
+
+      if (aHouses[I] = aHouseType) then
+        Continue;
+
+      SetLength(Result[K - 1], J + 1);
+
+      Result[K - 1, J] := aHouses[I];
+      Inc(J);
+    end;
+
+
+  end;
+
 var
   I, K, J, L : Integer;
   jsonPath: string;
@@ -2075,6 +2077,7 @@ var
   GS : TKMGatheringScript;
   C : Cardinal;
   UT : TKMUnitType;
+
 begin
 
   //jsonPath := ExeDir + //JSON_PATH + aFileName + '.json';
@@ -2095,10 +2098,12 @@ begin
       SetLength(HOUSE_GUI_TAB_ORDER, nAR.Count);
       for I := 0 to nAR.Count - 1 do
       begin
-
+        SetLength(HOUSE_GUI_TAB_ORDER[I].H, 1);
         HOUSE_GUI_TAB_ORDER[I].TextID := nAR[I].I['TitleID'];
-        HOUSE_GUI_TAB_ORDER[I].ShowExpanded := nAR[I].B['ShowExpanded'];
-        nAR.O[I].GetArray('Houses', HOUSE_GUI_TAB_ORDER[I].H);
+        HOUSE_GUI_TAB_ORDER[I].GuiIcon := nAR[I].I['GuiIcon'];
+
+        nAR.O[I].GetArray('Houses', HOUSE_GUI_TAB_ORDER[I].H[0]);
+        HOUSE_GUI_TAB_ORDER[I].H := ConvertToHouseArray2(HOUSE_GUI_TAB_ORDER[I].H[0]);
       end;
     end;
     nHouses := nRoot.A['Houses'];
@@ -2132,6 +2137,7 @@ begin
           SetValue(WoodPic, nHouse.I['WoodPic'], nHouse.Contains('WoodPic'));
           SetValue(StonePic, nHouse.I['StonePic'], nHouse.Contains('StonePic'));
           SetValue(EntranceOffsetX, nHouse.I['EntranceOffsetX'], nHouse.Contains('EntranceOffsetX'));
+          SetValue(EntranceOffsetY, nHouse.I['EntranceOffsetY'], nHouse.Contains('EntranceOffsetY'));
           SetValue(EntranceOffsetXpx, nHouse.I['EntranceOffsetXpx'], nHouse.Contains('EntranceOffsetXpx'));
           SetValue(EntranceOffsetYpx, nHouse.I['EntranceOffsetYpx'], nHouse.Contains('EntranceOffsetYpx'));
           SetValue(WorkerType, nHouse.I['WorkerType'], nHouse.Contains('WorkerType'));
@@ -2496,7 +2502,6 @@ begin
   S.Write(J);
   for I := 0 to J - 1 do
   begin
-    S.Write(HOUSE_GUI_TAB_ORDER[I].ShowExpanded);
     S.Write(HOUSE_GUI_TAB_ORDER[I].TextID);
 
     L := Length(HOUSE_GUI_TAB_ORDER[I].H);
@@ -2538,7 +2543,6 @@ begin
 
   for I := 0 to J - 1 do
   begin
-    S.Read(HOUSE_GUI_TAB_ORDER[I].ShowExpanded);
     S.Read(HOUSE_GUI_TAB_ORDER[I].TextID);
 
     S.Read(L);

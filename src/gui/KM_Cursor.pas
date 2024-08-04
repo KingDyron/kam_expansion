@@ -51,6 +51,7 @@ type
 
     //Objects Brush
     MapEdCleanBrush,
+    MapEdOverrideObjectsSingle,
     MapEdOverrideObjects: Boolean;
     MapEdObjectsType: array[TKMTerrainObjectType] of Boolean;
     MapEdForestAge: Integer;
@@ -80,10 +81,16 @@ type
     MapEdPatterns : record
       AddHeight : Integer;
     end;
+    MapEd_HouseSite: Boolean;
     MapEd_HouseStyle: Byte;
     MapEd_HouseLevel: Byte;
     MapEd_UnitAddBoots: Boolean;
     MapEd_HouseFill: Byte;
+
+    MapEd_Animals : TKMUnitTypeArray;
+    MapEd_AnimalsPace,
+    MapEd_AnimalsCount : Integer;
+
     MapEd_Modifications : set of TKMMapEdModification;
 
     Custom : Record

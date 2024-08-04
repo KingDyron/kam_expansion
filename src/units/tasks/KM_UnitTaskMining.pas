@@ -117,14 +117,15 @@ begin
                                       else
                                         Result := taAny;
                     end;
-    {htFarm:         if (fUnit.Home.CheckWareOut(wtCorn) >= fUnit.Home.GetMaxOutWare)
-                        and (fUnit.Home.CheckWareOut(wtSeed) >= fUnit.Home.GetMaxOutWare)
-                        and (fUnit.Home.CheckWareOut(wtVegetables) >= fUnit.Home.GetMaxOutWare)
-                        //and (fUnit.Home.CheckWareOut(wtHay) >= fUnit.Home.GetMaxOutWare)
-                        and not fUnit.Home.ForceWorking then
-                      Result := taPlant
-                    else
-                      Result := taAny;}
+    htFarm:         begin
+
+                      Result := taAny;
+                      if not fUnit.Home.ForceWorking then
+                        if not (TKMHouseFarm(fUnit.Home).HasGrain
+                        or TKMHouseFarm(fUnit.Home).HasGrass
+                        or TKMHouseFarm(fUnit.Home).HasVege) then //if doesn't show these grain types than all we can do is plant
+                          Result := taPlant;
+                    end;
 
     htProductionThatch: if (not fUnit.Home.HasSpaceForWaresOut([wtCorn, wtSeed, wtVegetables{, wtHay}], false)) and not fUnit.Home.ForceWorking then
                           Result := taPlant
@@ -279,7 +280,7 @@ var
   TimeToWork, StillFrame: Integer;
   actWalkFrom: TKMUnitActionType;
   ResAcquired, hasRes: Boolean;
-  addPercentage, I, K, L : integer;
+  addPercentage, I, K, L, tmp : integer;
 begin
   Result := trTaskContinues;
   addPercentage := 0;
@@ -507,6 +508,9 @@ begin
             fPhase2 := 0;
             Home.SetState(hstWork);
 
+            if WorkPlan.GatheringScript = gsAppleTree then
+              TKMHouseAppleTree(fUnit.Home).SetAnimation(WorkPlan.TMPInt);
+
             if Home is TKMHouseQueue then
               TKMHouseQueue(Home).InProgress := true;
             //Take required resources
@@ -542,36 +546,12 @@ begin
                 end;
 
               end;
-
-
-
-              {for I := 0 to 3 do
-              begin
-
-                if WorkPlan.Res[I].W <> wtNone then
-                  Home.WareTakeFromIn(WorkPlan.Res[I].W, WorkPlan.Res[I].C);
-
-                gHands[fUnit.Owner].Stats.WareConsumed(WorkPlan.Res[I].W, WorkPlan.Res[I].C);
-                CalculateWorkingTime(Home);
-              end;}
             end;
 
             Home.CurrentAction.SubActionAdd([haSmoke]);
             if WorkPlan.GatheringScript = gsSwineBreeder then
             begin //Swines get feed and taken immediately
-              //fBeastID := TKMHouseSwineStable(Home).FeedBeasts;
-
-              //check for corn fist
-              for I := 0 to high(fWorkPlan.Res) do
-                if (fWorkPlan.Res[I].W = wtCorn) and (fWorkPlan.Res[I].C > 0) then
-                  fBeastID := TKMHouseSwineStable(Home).FeedBeasts;
-              //now hay
-              for I := 0 to high(fWorkPlan.Res) do
-                if (fWorkPlan.Res[I].W = wtHay) and (fWorkPlan.Res[I].C > 0) then
-                  if fBeastID > 0 then
-                    TKMHouseSwineStable(Home).FeedBeastsHay(fBeastID)
-                  else
-                    fBeastID := TKMHouseSwineStable(Home).FeedBeasts;
+              fBeastID := TKMHouseSwineStable(Home).FeedBeasts(fWorkplan.Res);
 
               K := TKMHouseSwineStable(Home).GetPigsCount;//how many wtPig are produced
 
@@ -586,7 +566,7 @@ begin
 
             end else
             if WorkPlan.GatheringScript = gsHovel then
-              fBeastID := TKMHouseHovel(Home).FeedChicken;
+              fBeastID := TKMHouseHovel(Home).FeedChicken(fWorkPlan.Res);
 
             if fDistantResAcquired and (fPhase2 < WorkPlan.ActCount) then
             begin
@@ -609,21 +589,10 @@ begin
             //Feed a horse/pig
             if (WorkPlan.GatheringScript = gsHorseBreeder) and (fPhase2 = 1) then
             begin
-              //fBeastID := TKMHouseSwineStable(Home).FeedBeasts;
-
-              //check for corn fist
-              for I := 0 to high(fWorkPlan.Res) do
-                if (fWorkPlan.Res[I].W = wtCorn) and (fWorkPlan.Res[I].C > 0) then
-                  fBeastID := TKMHouseSwineStable(Home).FeedBeasts;
-              //now hay
-              for I := 0 to high(fWorkPlan.Res) do
-                if (fWorkPlan.Res[I].W = wtHay) and (fWorkPlan.Res[I].C > 0) then
-                  if fBeastID > 0 then
-                    TKMHouseSwineStable(Home).FeedBeastsHay(fBeastID)
-                  else
-                    fBeastID := TKMHouseSwineStable(Home).FeedBeasts;
+              fBeastID := TKMHouseSwineStable(Home).FeedBeasts(fWorkPlan.Res);
 
             end;
+
 
             //Keep on working
             if fDistantResAcquired and (fPhase2 < WorkPlan.ActCount) then
@@ -691,9 +660,9 @@ begin
               gsStoneCutter,
               gsFisherCatch:  ResAcquired := fDistantResAcquired; // fResAcquired was set earlier when we tried to get resource
               gsAppleTree:    begin
-                                ResAcquired := TKMHouseAppleTree(Home).IncGrowPhase;
+                                ResAcquired := TKMHouseAppleTree(Home).IncGrowPhase(WorkPlan.TMPInt);
                                 if ResAcquired then
-                                  TKMHouseAppleTree(Home).MakeFruits;
+                                  TKMHouseAppleTree(Home).MakeFruits(WorkPlan.TMPInt);
                                 ResAcquired := false;
                               end;
               gsCoalMiner:    ResAcquired := gTerrain.DecOreDeposit(WorkPlan.Loc, wtCoal);
@@ -716,10 +685,11 @@ begin
               gsHovel:        begin
                                 if fBeastID > 0 then
                                 begin
-                                  TKMHouseHovel(Home).TakeChicken(fBeastID);
-                                  Home.ProduceWare(wtSausage);
+
+                                  Home.ProduceWare(wtSausage, TKMHouseHovel(Home).TakeChicken(fBeastID));
                                 end;
-                                Home.ProduceWare(wtFeathers, TKMHouseHovel(Home).ChickenCount);
+                                TKMHouseHovel(Home).MakeFeathers;
+                                //Home.ProduceWare(wtFeathers, TKMHouseHovel(Home).ChickenCount);
                                 ResAcquired := false;
                               end;
               gsCollector : if (fObjectType <> 0) and (fObjectType <> 255) then
@@ -741,6 +711,7 @@ begin
               for I := 0 to 3 do
                 if WorkPlan.Prod[I].W <> wtNone then
                 begin
+                  tmp := home.CheckWareIn(WorkPlan.Prod[I].W);
                   if (not Home.ForceWorking)
                     or (Home.CheckWareOut(WorkPlan.Prod[I].W) < Home.GetMaxOutWare)
                     or gRes.Houses[Home.HouseType].CanOverFill then

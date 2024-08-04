@@ -15,20 +15,35 @@ type
   private
     fGoldCnt: Word;
     fGoldMaxCnt: Word;
+    fBitinArmorCnt: Word;
+    fBitinArmorMaxCnt: Word;
     procedure SetGoldCnt(aValue: Word); overload;
     procedure SetGoldCnt(aValue: Word; aLimitMaxGoldCnt: Boolean); overload;
 
+    procedure SetBitinCnt(aValue: Word); overload;
+    procedure SetBitinCnt(aValue: Word; aLimitMaxGoldCnt: Boolean); overload;
+
 
     procedure SetGoldMaxCnt(aValue: Word);
+    procedure SetBitinMaxCnt(aValue: Word);
 
     function GetGoldDeliveryCnt: Word;
     procedure SetGoldDeliveryCnt(aCount: Word);
 
+    function GetBitinDeliveryCnt: Word;
+    procedure SetBitinDeliveryCnt(aCount: Word);
+
     function GetGoldDemandsClosing: Word;
     procedure SetGoldDemandsClosing(aCount: Word);
 
+    function GetBitinDemandsClosing: Word;
+    procedure SetBitinDemandsClosing(aCount: Word);
+
     property GoldDeliveryCnt: Word read GetGoldDeliveryCnt write SetGoldDeliveryCnt;
     property GoldDemandsClosing: Word read GetGoldDemandsClosing write SetGoldDemandsClosing;
+
+    property BitinDeliveryCnt: Word read GetBitinDeliveryCnt write SetBitinDeliveryCnt;
+    property BitinDemandsClosing: Word read GetBitinDemandsClosing write SetBitinDemandsClosing;
   protected
     procedure AddDemandsOnActivate(aWasBuilt: Boolean); override;
     function GetWareIn(aI: Byte): Word; override;
@@ -43,6 +58,10 @@ type
 
     property GoldCnt: Word read fGoldCnt write SetGoldCnt;
     property GoldMaxCnt: Word read fGoldMaxCnt write SetGoldMaxCnt;
+
+    property BitinArmorCnt: Word read fBitinArmorCnt write SetBitinCnt;
+    property BitinArmorMaxCnt: Word read fBitinArmorMaxCnt write SetBitinMaxCnt;
+
 
     function ShouldAbandonDeliveryTo(aWareType: TKMWareType): Boolean; override;
 
@@ -81,6 +100,7 @@ begin
   else
    fGoldMaxCnt := 12;
 
+   fBitinArmorMaxCnt := 5;
   inherited;
 end;
 
@@ -93,6 +113,8 @@ begin
   LoadStream.Read(fGoldCnt);
   LoadStream.Read(fGoldMaxCnt);
   LoadStream.Read(EquipTime);
+  LoadStream.Read(fBitinArmorCnt);
+  LoadStream.Read(fBitinArmorMaxCnt);
 end;
 
 
@@ -104,6 +126,8 @@ begin
   SaveStream.Write(fGoldCnt);
   SaveStream.Write(fGoldMaxCnt);
   SaveStream.Write(EquipTime);
+  SaveStream.Write(fBitinArmorCnt);
+  SaveStream.Write(fBitinArmorMaxCnt);
 end;
 
 
@@ -127,11 +151,36 @@ begin
     gScriptEvents.ProcHouseWareCountChanged(Self, wtGold, fGoldCnt, fGoldCnt - oldValue);
 end;
 
+procedure TKMHouseTownHall.SetBitinCnt(aValue: Word);
+begin
+  SetBitinCnt(aValue, True);
+end;
+procedure TKMHouseTownHall.SetBitinCnt(aValue: Word; aLimitMaxGoldCnt: Boolean);
+var
+  oldValue: Integer;
+begin
+  oldValue := fBitinArmorCnt;
+
+  fBitinArmorCnt := EnsureRange(aValue, 0, IfThen(aLimitMaxGoldCnt, fBitinArmorMaxCnt, High(Word)));
+
+  SetWareInManageTakeOutDeliveryMode(wtBitinArmor, fBitinArmorCnt - oldValue);
+
+  if oldValue <> fBitinArmorCnt then
+    gScriptEvents.ProcHouseWareCountChanged(Self, wtBitinArmor, fBitinArmorCnt, fBitinArmorCnt - oldValue);
+end;
+
 
 function TKMHouseTownHall.TryDecWareDelivery(aWare: TKMWareType; aDeleteCanceled: Boolean): Boolean;
 begin
-  Assert(GoldDemandsClosing > 0);
-
+  Assert((GoldDemandsClosing > 0) or (BitinDemandsClosing > 0));
+  Result := false;
+  if aWare = wtBitinArmor then
+  begin
+    if not aDeleteCanceled then
+      BitinDeliveryCnt := BitinDeliveryCnt - 1;
+    BitinDemandsClosing := BitinDemandsClosing - 1;
+    Exit;
+  end;
   if not aDeleteCanceled then
     GoldDeliveryCnt := GoldDeliveryCnt - 1;
   GoldDemandsClosing := GoldDemandsClosing - 1;
@@ -143,6 +192,12 @@ end;
 procedure TKMHouseTownHall.SetGoldMaxCnt(aValue: Word);
 begin
   fGoldMaxCnt := EnsureRange(aValue, 0, TH_MAX_GOLDMAX_VALUE);
+  UpdateDemands;
+end;
+
+procedure TKMHouseTownHall.SetBitinMaxCnt(aValue: Word);
+begin
+  fBitinArmorMaxCnt := EnsureRange(aValue, 0, TH_MAX_GOLDMAX_VALUE);
   UpdateDemands;
 end;
 
@@ -209,6 +264,13 @@ begin
     if Assigned(U.OnUnitTrained) then
       U.OnUnitTrained(U);
 
+    if aUnitType in WARRIOR_BITIN_EQUIPABLE then
+      if CheckWareIn(wtBitinArmor) > 0 then
+      begin
+        WareTakeFromIn(wtBitinArmor, 1);
+        TKMUnitWarrior(U).AddBitin;
+      end;
+
     Inc(Result);
   end;
 end;
@@ -246,9 +308,13 @@ end;
 
 function TKMHouseTownHall.ShouldAbandonDeliveryTo(aWareType: TKMWareType): Boolean;
 begin
-  Result := inherited or (aWareType <> wtGold);
-  if not Result then
+  Result := inherited or not (aWareType in [wtGold, wtBitinArmor]);
+
+  if not Result and (aWareType = wtGold) then
     Result := GoldCnt + gHands[Owner].Deliveries.Queue.GetDeliveriesToHouseCnt(Self, wtGold) > GoldMaxCnt;
+
+  if not Result and (aWareType = wtBitinArmor) then
+    Result := BitinArmorCnt + gHands[Owner].Deliveries.Queue.GetDeliveriesToHouseCnt(Self, wtBitinArmor) > BitinArmorMaxCnt;
 end;
 
 
@@ -256,8 +322,26 @@ procedure TKMHouseTownHall.WareAddToIn(aWare: TKMWareType; aCount: Integer = 1; 
 var
   ordersRemoved, plannedToRemove: Integer;
 begin
-  Assert(aWare = wtGold, 'Invalid ware added to TownHall');
+  Assert(aWare in [wtGold, wtBitinArmor], 'Invalid ware added to TownHall');
 
+  if aWare = wtBitinArmor then
+  begin
+    // Allow to enlarge GoldMaxCnt from script (either from .dat or from .script)
+    if aFromScript and (fBitinArmorMaxCnt < fBitinArmorCnt + aCount) then
+      SetBitinMaxCnt(fBitinArmorCnt + aCount);
+
+    SetBitinCnt(fBitinArmorCnt + aCount, False);
+
+    if aFromScript then
+    begin
+      BitinDeliveryCnt := BitinDeliveryCnt + aCount;
+      ordersRemoved := gHands[Owner].Deliveries.Queue.TryRemoveDemand(Self, aWare, aCount, plannedToRemove);
+      BitinDeliveryCnt := BitinDeliveryCnt - ordersRemoved;
+      BitinDemandsClosing := BitinDemandsClosing + plannedToRemove;
+    end;
+    UpdateDemands;
+    Exit;
+  end;
   // Allow to enlarge GoldMaxCnt from script (either from .dat or from .script)
   if aFromScript and (fGoldMaxCnt < fGoldCnt + aCount) then
     SetGoldMaxCnt(fGoldCnt + aCount);
@@ -287,6 +371,16 @@ begin
   WareDeliveryCnt[1] := aCount;
 end;
 
+function TKMHouseTownHall.GetBitinDeliveryCnt: Word;
+begin
+  Result := WareDeliveryCnt[2];
+end;
+
+
+procedure TKMHouseTownHall.SetBitinDeliveryCnt(aCount: Word);
+begin
+  WareDeliveryCnt[2] := aCount;
+end;
 
 function TKMHouseTownHall.GetGoldDemandsClosing: Word;
 begin
@@ -299,16 +393,25 @@ begin
   WareDemandsClosing[1] := aCount;
 end;
 
+function TKMHouseTownHall.GetBitinDemandsClosing: Word;
+begin
+  Result := WareDemandsClosing[2];
+end;
+
+procedure TKMHouseTownHall.SetBitinDemandsClosing(aCount: Word);
+begin
+  WareDemandsClosing[2] := aCount;
+end;
 
 procedure TKMHouseTownHall.UpdateDemands;
 const
   MAX_GOLD_DEMANDS = 20; //Limit max number of demands by townhall to not to overfill demands list
 var
-  goldToOrder, ordersRemoved, plannedToRemove, deliveringGold: Integer;
+  goldToOrder, ordersRemoved, plannedToRemove, deliveringWare: Integer;
 begin
-  deliveringGold := GoldDeliveryCnt - GoldDemandsClosing;
+  deliveringWare := GoldDeliveryCnt - GoldDemandsClosing;
 
-  goldToOrder := Min(MAX_GOLD_DEMANDS - (deliveringGold - fGoldCnt), fGoldMaxCnt - deliveringGold);
+  goldToOrder := Min(MAX_GOLD_DEMANDS - (deliveringWare - fGoldCnt), fGoldMaxCnt - deliveringWare);
 
   if goldToOrder > 0 then
   begin
@@ -321,6 +424,24 @@ begin
     ordersRemoved := gHands[Owner].Deliveries.Queue.TryRemoveDemand(Self, wtGold, -goldToOrder, plannedToRemove);
     GoldDeliveryCnt := GoldDeliveryCnt - ordersRemoved;
     GoldDemandsClosing := GoldDemandsClosing + plannedToRemove;
+  end;
+
+
+  deliveringWare := BitinDeliveryCnt - BitinDemandsClosing;
+
+  goldToOrder := Min(MAX_GOLD_DEMANDS - (deliveringWare - fBitinArmorCnt), fBitinArmorMaxCnt - deliveringWare);
+
+  if goldToOrder > 0 then
+  begin
+    gHands[Owner].Deliveries.Queue.AddDemand(Self, nil, wtBitinArmor, goldToOrder, dtOnce, diNorm);
+    BitinDeliveryCnt := BitinDeliveryCnt + goldToOrder;
+  end
+  else
+  if goldToOrder < 0 then
+  begin
+    ordersRemoved := gHands[Owner].Deliveries.Queue.TryRemoveDemand(Self, wtBitinArmor, -goldToOrder, plannedToRemove);
+    BitinDeliveryCnt := BitinDeliveryCnt - ordersRemoved;
+    BitinDemandsClosing := BitinDemandsClosing + plannedToRemove;
   end;
 end;
 
@@ -336,7 +457,20 @@ end;
 
 procedure TKMHouseTownHall.WareTakeFromIn(aWare: TKMWareType; aCount: Word = 1; aFromScript: Boolean = False);
 begin
-  Assert(aWare = wtGold, 'Invalid ware taken from TownHall');
+  Assert(aWare in [wtGold, wtBitinArmor], 'Invalid ware taken from TownHall');
+
+  if aWare = wtBitinArmor then
+  begin
+    aCount := EnsureRange(aCount, 0, fBitinArmorCnt);
+    if aFromScript then
+    begin
+      aCount := EnsureRange(aCount, 0, fBitinArmorCnt);
+      gHands[Owner].Stats.WareConsumed(aWare, aCount);
+    end;
+
+    SetBitinCnt(fBitinArmorCnt - aCount, False);
+    Exit;
+  end;
 
   aCount := EnsureRange(aCount, 0, fGoldCnt);
   if aFromScript then
@@ -352,7 +486,7 @@ end;
 
 procedure TKMHouseTownHall.WareTakeFromOut(aWare: TKMWareType; aCount: Word = 1; aFromScript: Boolean = False);
 begin
-  Assert(aWare = wtGold, 'Invalid ware taken from TownHall');
+  Assert(aWare in [wtGold, wtBitinArmor], 'Invalid ware taken from TownHall');
 
   if aFromScript then
   begin
@@ -378,6 +512,8 @@ begin
   Result := 0; //Including Wood/stone in building stage
   if aWare = wtGold then
     Result := fGoldCnt;
+  if aWare = wtBitinArmor then
+    Result := fBitinArmorCnt;
 end;
 
 function TKMHouseTownHall.CheckWareTotal(aWare: TKMWareType): Word;
@@ -385,19 +521,21 @@ begin
   Result := 0; //Including Wood/stone in building stage
   if aWare = wtGold then
     Result := fGoldCnt;
+  if aWare = wtBitinArmor then
+    Result := fBitinArmorCnt;
 end;
 
 
 function TKMHouseTownHall.WareCanAddToIn(aWare: TKMWareType): Boolean;
 begin
-  Result := (aWare = wtGold) and (fGoldCnt < fGoldMaxCnt);
+  Result := ((aWare = wtGold) and (fGoldCnt < fGoldMaxCnt))
+            or ((aWare = wtBitinArmor) and (fBitinArmorCnt < fBitinArmorMaxCnt));
 end;
 
 
 function TKMHouseTownHall.CanHaveWareType(aWare: TKMWareType): Boolean;
 begin
-  Result := (aWare = wtGold);
+  Result := (aWare in [wtGold, wtBitinArmor]);
 end;
-
 
 end.

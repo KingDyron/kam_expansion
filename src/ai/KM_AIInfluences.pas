@@ -382,13 +382,15 @@ const
   EACH_X_MEMBER_COEF = 5;
   PENALIZATION_ARR: array [GROUP_TYPE_MIN..GROUP_TYPE_MAX, GROUP_TYPE_MIN..GROUP_TYPE_MAX] of Single = (
     // gtMelee, gtAntiHorse, gtRanged, gtMounted, gtMachines
-    (    1.0,      0.3,       0.0,      0.5,       1.0, 1.0, 1.0), // gtMelee
-    (    1.0,      1.0,       0.0,      0.0,       1.0, 1.0, 1.0), // gtAntiHorse
-    (    1.0,      1.0,       1.0,      2.0,       1.0, 1.0, 1.0), // gtRanged
-    (    1.0,      2.0,       0.0,      1.0,       1.0, 1.0, 1.0),  // gtMounted
-    (    1.0,      1.0,       1.0,      2.0,       1.0, 1.0, 1.0),  // gtMachines
-    (    1.0,      1.0,       1.0,      2.0,       1.0, 1.0, 1.0),  // gtMachinesMelee
-    (    1.0,      1.0,       1.0,      2.0,       1.0, 1.0, 1.0)  // gtWreckers
+    (    1.0,      0.3,       0.0,      0.5,       1.0, 1.0, 1.0, 1), // gtMelee
+    (    1.0,      1.0,       0.0,      0.0,       1.0, 1.0, 1.0, 1), // gtAntiHorse
+    (    1.0,      1.0,       1.0,      2.0,       1.0, 1.0, 1.0, 1), // gtRanged
+    (    1.0,      2.0,       0.0,      1.0,       1.0, 1.0, 1.0, 1),  // gtMounted
+    (    1.0,      1.0,       1.0,      2.0,       1.0, 1.0, 1.0, 1),  // gtMachines
+    (    1.0,      1.0,       1.0,      2.0,       1.0, 1.0, 1.0, 1),  // gtMachinesMelee
+    (    1.0,      1.0,       1.0,      2.0,       1.0, 1.0, 1.0, 1),  // gtWreckers
+    (    1.0,      1.0,       1.0,      2.0,       1.0, 1.0, 1.0, 1)  // gtShips
+
   );
   procedure EvaluatePolygon(aIdx: Cardinal; aEval: Word; aGT: TKMGroupType);
   var GT : TKMGroupType;

@@ -112,6 +112,7 @@ type
     function IsAllowedAdvancedAIAtAnyHand: Boolean;
 
     function HasBridgeBuiltAt(aLoc : TKMPoint) : Boolean;
+    function MakeConsolCommands(aCommand : String) : Boolean;
 
     procedure Save(SaveStream: TKMemoryStream; aMultiplayer: Boolean);
     procedure Load(LoadStream: TKMemoryStream);
@@ -123,7 +124,12 @@ type
     procedure Paint(const aRect: TKMRect; aTickLag: Single);
     function ObjToString: String;
 
+
     procedure ExportGameStatsToCSV(const aPath: String; const aHeader: String = '');
+
+    procedure LoadFromFile(LoadStream: TKMemoryStream);//seperate file only for AI
+    procedure SaveToFile(SaveStream: TKMemoryStream);//seperate file only for AI
+    function DoSaveToFile : Boolean;
   end;
 
 var
@@ -1222,6 +1228,33 @@ begin
         Exit(true);
 
 end;
+
+function TKMHandsCollection.MakeConsolCommands(aCommand: string): Boolean;
+var cmd : TKMConsolCommandType;
+  I : Integer;
+begin
+  Result := false;
+
+  cmd := GetAIConsolCommand(aCommand);
+  if cmd = cctNone then
+    Exit;
+
+  {for I := 0 to fCount - 1 do
+    if fHandsList[I].AI.Mayor.Recorder.MakeConsolCommands(cmd) then
+      Exit(true);}
+  if gMySpectator.Hand.AI.Mayor.Recorder.MakeConsolCommands(cmd) then
+    Exit(true);
+  Result := true;
+
+  case cmd of
+    cctResetRecordings : for I := 0 to fCount - 1 do
+                          fHandsList[I].AI.Mayor.Recorder.ResetRecordings;
+    else
+      Result := false;
+
+  end;
+end;
+
 // aMultiplayer - savegames should be identical when in MP mode
 procedure TKMHandsCollection.Save(SaveStream: TKMemoryStream; aMultiplayer: Boolean);
 var
@@ -1259,7 +1292,6 @@ begin
   fTeamsDirty := True; //Always reload teams after load
 end;
 
-
 procedure TKMHandsCollection.SyncLoad;
 var
   I: Integer;
@@ -1272,6 +1304,42 @@ begin
   GetTeamsLazy;
 end;
 
+procedure TKMHandsCollection.LoadFromFile(LoadStream: TKMemoryStream);
+var
+  I: Integer;
+begin
+  if gGameParams.IsMapEditor then
+    Exit;
+
+  for I := 0 to fCount - 1 do
+    gHands[I].AI.Mayor.Recorder.LoadFromFile(LoadStream);
+end;
+
+procedure TKMHandsCollection.SaveToFile(SaveStream: TKMemoryStream);
+var
+  I: Integer;
+begin
+  if gGameParams.IsMapEditor then
+    Exit;
+
+  for I := 0 to fCount - 1 do
+    gHands[I].AI.Mayor.Recorder.SaveToFile(SaveStream);
+end;
+
+function TKMHandsCollection.DoSaveToFile: Boolean;
+var
+  I: Integer;
+begin
+  Result := false;
+
+  if gGameParams.IsMapEditor then
+    Exit;
+  Result := true;
+  Exit;
+  for I := 0 to fCount - 1 do
+    If gHands[I].AI.Mayor.Recorder.HasAnythingToSave then
+      Exit(true);
+end;
 
 procedure TKMHandsCollection.IncAnimStep;
 var

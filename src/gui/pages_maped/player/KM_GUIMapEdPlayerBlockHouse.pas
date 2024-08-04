@@ -43,7 +43,7 @@ uses
 { TKMMapEdPlayerBlockHouse }
 constructor TKMMapEdPlayerBlockHouse.Create(aParent: TKMPanel);
 var
-  I, J, top, lastID: Integer;
+  I, J, K, L, top, lastID: Integer;
   H : TKMHouseType;
   FT : TKMLockFieldType;
 begin
@@ -108,46 +108,33 @@ begin
 
     Label_BlockHouse[I] := TKMLabel.Create(Panel_BlockHouse, 0, top - 3, Panel_BlockHouse.Width, 20, gResTexts[HOUSE_GUI_TAB_ORDER[I].TextID], fntOutline, taCenter);
     Inc(Top, 15);
-    lastID := 0;
-
-    while (lastID < length(HOUSE_GUI_TAB_ORDER[I].H)) do
+    for K := 0 to High(HOUSE_GUI_TAB_ORDER[I].H) do
     begin
-      H := HOUSE_GUI_TAB_ORDER[I].H[lastID];
-      SetLength(Button_BlockHouse, Length(Button_BlockHouse) + 1);//add new elements
-      //SetLength(Image_BlockHouse, Length(Image_BlockHouse) + 1);//add new elements
+      LastID := 0;
 
-      Button_BlockHouse[J] := TKMButtonFlatBlock.Create(Panel_BlockHouse, 9 + lastID mod 5 * 37, top + (lastID div 5) * 37,33,33,gRes.Houses[H].GUIIcon);
-      Button_BlockHouse[J].Hint := gRes.Houses[H].HouseName;
-      //Button_BlockHouse[J].OnClickShift := Player_BlockHouseClick;
-      Button_BlockHouse[J].Tag := byte(H);
-      Button_BlockHouse[J].Tag2 := BUTTON_BLOCK_HOUSE_TAG_2;
-      Button_BlockHouse[J].Hint := gRes.Houses[H].HouseName;
-      Button_BlockHouse[J].OnMouseDown := Player_BlockHouseClick;
+      for L := 0 to High(HOUSE_GUI_TAB_ORDER[I].H[K]) do
+      begin
+        H := HOUSE_GUI_TAB_ORDER[I].H[K, L];
+        SetLength(Button_BlockHouse, Length(Button_BlockHouse) + 1);//add new element
 
-      {Image_BlockHouse[J] := TKMImage.Create(Panel_BlockHouse, 9 + lastID mod 5 * 37 + 15, top + (lastID div 5) * 37 + 15, 16, 16, 0, rxGuiMain);
-      Image_BlockHouse[J].Hitable := False;
-      Image_BlockHouse[J].ImageCenter;}
-      Inc(J);
-      Inc(lastID);
+        Button_BlockHouse[J] := TKMButtonFlatBlock.Create(Panel_BlockHouse, 9 + lastID mod 5 * 37, top + (lastID div 5) * 37,33,33,gRes.Houses[H].GUIIcon);
+        Button_BlockHouse[J].Hint := gRes.Houses[H].HouseName;
+        Button_BlockHouse[J].Tag := byte(H);
+        Button_BlockHouse[J].Tag2 := BUTTON_BLOCK_HOUSE_TAG_2;
+        Button_BlockHouse[J].Hint := gRes.Houses[H].HouseName;
+        Button_BlockHouse[J].OnMouseDown := Player_BlockHouseClick;
+
+        Inc(J);
+        Inc(lastID);
+      end;
+      top := Button_BlockHouse[J - 1].Bottom + 3;
     end;
   end;
 
-
-  {for I := 1 to high(GUIHouseOrderFull) do
-  if GUIHouseOrderFull[I] <> htNone then
-  begin
-    Button_BlockHouse[I] := TKMButtonFlat.Create(Panel_BlockHouse, 9 + ((I-1) mod 5)*37, 70 + ((I-1) div 5)*37,33,33,gRes.Houses[GUIHouseOrderFull[I]].GUIIcon);
-    Button_BlockHouse[I].Hint := gRes.Houses[GUIHouseOrderFull[I]].HouseName;
-    Button_BlockHouse[I].OnClickShift := Player_BlockHouseClick;
-    Button_BlockHouse[I].Tag := I;
-    Image_BlockHouse[I] := TKMImage.Create(Panel_BlockHouse, 9 + ((I-1) mod 5)*37 + 15, 70 + ((I-1) div 5)*37 + 15, 16, 16, 0, rxGuiMain);
-    Image_BlockHouse[I].Hitable := False;
-    Image_BlockHouse[I].ImageCenter;
-  end;}
 end;
 
 procedure TKMMapEdPlayerBlockHouse.Player_ChangeToLvl(Sender: TObject);
-var I, J, L : Integer;
+var I, J : Integer;
   H : TKMHouseType;
 
 begin
@@ -168,31 +155,27 @@ begin
 
   if fLevels then
   begin
-    L := 0;
-    for I := 0 to High(HOUSE_GUI_TAB_ORDER) do
-      for J := 0 to High(HOUSE_GUI_TAB_ORDER[I].H) do
+    for I := 0 to High(Button_BlockHouse) do
+    begin
+      H := TKMHouseType(Button_BlockHouse[I].Tag);
+      Button_BlockHouse[I].Disable;
+      if length(gRes.Houses[H].Levels) > 0 then
       begin
-        H := HOUSE_GUI_TAB_ORDER[I].H[J];
-        Button_BlockHouse[L].Disable;
-        if length(gRes.Houses[H].Levels) > 0 then
+        Button_BlockHouse[I].Enable;
+
+        if gMySpectator.Hand.Locks.HouseMaxLvl[H] > 0 then
         begin
-          Button_BlockHouse[L].Enable;
+          if gMySpectator.Hand.Locks.HouseMaxLvl[H] = (length(gRes.Houses[H].Levels) + 1) then
+            Button_BlockHouse[I].Caption := 'max'
+          else
+            Button_BlockHouse[I].Caption := IntToStr(gMySpectator.Hand.Locks.HouseMaxLvl[H] - 1)
+        end else
+          Button_BlockHouse[I].Caption := '--';
 
-          if gMySpectator.Hand.Locks.HouseMaxLvl[H] > 0 then
-          begin
-            if gMySpectator.Hand.Locks.HouseMaxLvl[H] = (length(gRes.Houses[H].Levels) + 1) then
-              Button_BlockHouse[L].Caption := 'max'
-            else
-              Button_BlockHouse[L].Caption := IntToStr(gMySpectator.Hand.Locks.HouseMaxLvl[H] - 1)
-          end else
-            Button_BlockHouse[L].Caption := '--';
-
-        end;
-        Inc(L);
       end;
+    end;
   end else
     Player_BlockHouseRefresh;
-
 
 end;
 

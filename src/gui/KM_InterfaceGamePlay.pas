@@ -4402,7 +4402,8 @@ begin
         // Only allow placing of roads etc. with the left mouse button
         if gMySpectator.FogOfWar.CheckTileRevelation(P.X, P.Y) = 0 then
         begin
-          if (gCursor.Mode in [cmErase, cmRoad, cmField, cmGrassLand, cmVegeField, cmWine, cmHouses, cmPalisade, cmBridges, cmAssignToShip, cmCustom]) and not gGameParams.IsReplayOrSpectate then
+          if (gCursor.Mode in [cmErase, cmRoad, cmField, cmGrassLand, cmVegeField, cmWine, cmHouses, cmPalisade,
+                              cmBridges, cmDecorations, cmAssignToShip, cmCustom]) and not gGameParams.IsReplayOrSpectate then
             // Can't place noise when clicking on unexplored areas
             gSoundPlayer.Play(sfxCantPlace, P, False, 4);
         end
@@ -4487,7 +4488,8 @@ begin
               begin
                 if gMySpectator.Hand.CanAddBridgePlan(P, gCursor.Tag1, gCursor.MapEdDir) then
                 begin
-                  gMySpectator.Hand.AddBridgePlan(P, gCursor.Tag1, gCursor.MapEdDir);
+                  gGame.GameInputProcess.CmdBuild(gicPlaceBridgePlan, P, gCursor.Tag1, gCursor.MapEdDir);
+                  //gMySpectator.Hand.AddBridgePlan(P, gCursor.Tag1, gCursor.MapEdDir);
                   {gGame.GameInputProcess.CmdBuild(gicBuildHousePlan, P, TKMHouseType(gCursor.Tag1));
                   // If shift pressed do not reset cursor (keep selected building)
                   if not (ssShift in Shift)
@@ -4500,7 +4502,17 @@ begin
                 else
                   gSoundPlayer.Play(sfxCantPlace, P, False, 4);
               end;
+            cmDecorations :
+              begin
+                if gMySpectator.Hand.CanPlaceDecoration(P, gCursor.Tag1) then
+                begin
+                  gGame.GameInputProcess.CmdBuild(gicPlaceDecoration, P, gCursor.Tag1);
+                  if not (ssShift in Shift) then //Do not show Build menu after place first storehouse feature
+                    fGuiGameBuild.Show;
+                end else
+                  gSoundPlayer.Play(sfxCantPlace, P, False, 4);
 
+              end;
 
             cmErase:
               if KMSamePoint(fLastDragPoint, KMPOINT_ZERO) then
@@ -4545,7 +4557,7 @@ begin
               end;
             cmAssignToShip:   if gCursor.Tag1 = 1 then
                               begin
-                                U := gMySpectator.Hand.UnitsHitTest(P, utAny);//Find Ship at location
+                                U := gMySpectator.Hand.UnitsHitTest(P, utAny);//Find unit at location
 
                                 if (U = nil)
                                 or (U.UnitType in [utShip])
@@ -4555,7 +4567,8 @@ begin
                                   gSoundPlayer.Play(sfxCantPlace, P, False, 4) // there is no possible unit to assign to ship
                                 else
                                 begin
-                                  U.AssignToShip(TKMUnitGroup(gMySpectator.Selected).SelectedUnit);
+                                  //U.AssignToShip(TKMUnitGroup(gMySpectator.Selected).SelectedUnit);
+                                  gGame.GameInputProcess.CmdUnit(gicAssignToShip, U, TKMUnitGroup(gMySpectator.Selected).SelectedUnit);
                                 end;
                                 
 
@@ -4576,7 +4589,8 @@ begin
                                   end else
                                   if gMySpectator.Selected is TKMUnit then
                                   begin
-                                    TKMUnit(gMySpectator.Selected).AssignToShip(U);
+                                    //TKMUnit(gMySpectator.Selected).AssignToShip(U);
+                                    gGame.GameInputProcess.CmdUnit(gicAssignToShip, TKMUnit(gMySpectator.Selected), U);
                                     gCursor.Mode := cmNone;
                                   end;
                               end;
@@ -4712,6 +4726,7 @@ procedure TKMGamePlayInterface.Save(SaveStream: TKMemoryStream);
 begin
   fViewport.Save(SaveStream);
 
+  fGuiGameBuild.SaveToStream(SaveStream);
   fGuiGameHouse.Save(SaveStream);
   SaveStream.WriteW(fLastSaveName);
   SaveStream.Write(fSelection, SizeOf(fSelection));
@@ -4730,7 +4745,7 @@ end;
 procedure TKMGamePlayInterface.Load(LoadStream: TKMemoryStream);
 begin
   fViewport.Load(LoadStream);
-
+  fGuiGameBuild.LoadFromStream(LoadStream);
   fGuiGameHouse.Load(LoadStream);
   LoadStream.ReadW(fLastSaveName);
   LoadStream.Read(fSelection, SizeOf(fSelection));
@@ -4982,11 +4997,13 @@ var
 begin
   Result := inherited;
 
+  Result := Result + gMySpectator.Hand.AI.Mayor.Recorder.DebugStr;
+  //Result := Result + 'TickLag : ' + FloatToStr(gGameParams.TickFrac) + '|';
   // Debug info
   if SHOW_GAME_TICK then
   begin
     Result := Result + 'Tick: ' + IntToStr(gGameParams.Tick) + '|';
-    Result := Result + 'NIghtTime: ' + FloatToStr(TERRAIN_DARK);
+    Result := Result + 'NIghtTime: ' + FloatToStr(gTerrain.NightFactor);
   end;
   if SHOW_SPRITE_COUNT then
     Result := Result + Format('%d units on map|%d/%d sprites queued/rendered|%d controls rendered|', [

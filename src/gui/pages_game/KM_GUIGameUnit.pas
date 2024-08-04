@@ -479,8 +479,9 @@ begin
       //gtAntiHorse :  Row_Attack.TexID := gRes.Wares[wtPike].GuiIcon;
       gtRanged :  Row_Attack.TexID := gRes.Wares[wtBow].GuiIcon;
       gtMachines :  Row_Attack.TexID := gRes.Wares[wtBolt].GuiIcon;
-      gtMachinesMelee :  Row_Attack.TexID := gRes.Wares[wtStoneBolt].GuiIcon;
-      gtWreckers :  Row_Attack.TexID := gRes.Wares[wtAxe].GuiIcon;
+      gtMachinesMelee :  Row_Attack.TexID := gRes.Wares[wtMace].GuiIcon;
+      gtWreckers :  Row_Attack.TexID := gRes.Wares[wtMace].GuiIcon;
+      gtShips : Row_Attack.TexID := gRes.Wares[wtCrossbow].GuiIcon;
     end;
 
 
@@ -659,7 +660,7 @@ begin
       gSoundPlayer.PlayWarrior(group.UnitType, spRotLeft);
   end;
   if Sender = Button_Ship_Unload then
-    TKMUnitWarriorShip(group.SelectedUnit).DoUnloadUnits;
+    gGame.GameInputProcess.CmdUnit(gicUnloadShip, group.SelectedUnit);
 
   if Sender = Button_Army_Storm   then
   begin

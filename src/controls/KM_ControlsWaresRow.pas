@@ -11,8 +11,15 @@ uses
 type
   // Row with resource name and icons
   TKMWaresRow = class(TKMButtonFlatCommon)
+  private
+    fFinCap : UnicodeString;
+  protected
+    procedure SetWidth(aValue: Integer); override;
+    procedure SetCaption(aValue : String); override;
+    function GetMobilHint : Boolean;override;
+    function GetHint : UnicodeString;override;
   public
-    TextOffset : SmallInt;
+    TextOffset, TextMarginX : SmallInt;
     TxtOffset : SmallInt;
     ShowName : Boolean;
     Spacing : Word;
@@ -75,6 +82,7 @@ type
     Count: Byte;
     Caption: UnicodeString;
     MaxCount: Byte;
+    AddBevel : Boolean;
     constructor Create(aParent: TKMPanel; aLeft, aTop, aWidth, aHeight: Integer; aMaxCount: Byte = 6);
     procedure Paint; override;
   end;
@@ -105,6 +113,7 @@ type
       VSpacing,
       HSpacing : SmallInt;
       StillSize : Boolean;
+      Caption : String;
       procedure SetIcons(aIcons : TKMWordArray);
 
       property OnIconClicked : TIntegerEvent read fOnIconClicked write fOnIconClicked;
@@ -126,7 +135,7 @@ type
       Shape : (stSquare, stRound);
       Progress : TSingleArray;
       Colors : TKMCardinalArray;
-
+      ColumnCount : Byte;
     constructor Create(aParent: TKMPanel; aLeft, aTop, aWidth, aHeight: Integer; aRound : Boolean = false; aTexID : TKMWord2Array = []);
     procedure Paint; override;
   end;
@@ -137,6 +146,7 @@ uses
   {$IFDEF Unix} LCLIntf, LCLType, {$ENDIF}
   SysUtils, Math,
   KM_RenderUI,
+  KM_Resource,
   KM_ResFonts,
   KM_UtilsExt;
 
@@ -166,6 +176,47 @@ begin
   TxtOffset := 0;
   ShowName := true;
   MaxWares := 6;
+  TextMarginX := -20;
+end;
+
+procedure TKMWaresRow.SetCaption(aValue: string);
+var clipText : Single;
+begin
+  Inherited;
+  clipText := (Width + TextMarginX) / gRes.Fonts[fntGame].GetTextSize(Caption).X;
+
+  if clipText < 1 then
+  begin
+    fFinCap := copy(Caption, 1, Round(high(Caption) * clipText));
+    if fFinCap[high(fFinCap)] = #32 then  //delete space if it's the last char
+      SetLength(fFinCap, high(fFinCap) - 1);
+    fFinCap := fFinCap + '...';
+
+  end
+  else
+    fFinCap := Caption;
+end;
+
+procedure TKMWaresRow.SetWidth(aValue: Integer);
+begin
+  Inherited;
+  SetCaption(Caption);
+end;
+
+function TKMWaresRow.GetMobilHint: Boolean;
+begin
+  if Caption <> fFinCap then
+    Result := True
+  else
+    Result := fMobilHint;
+end;
+
+function TKMWaresRow.GetHint: UnicodeString;
+begin
+  if Caption <> fFinCap then
+    Result := fCaption
+  else
+    Result := fHint;
 end;
 
 
@@ -174,8 +225,13 @@ var
   I: Integer;
 begin
   inherited;
+
   if ShowName then
-    TKMRenderUI.WriteText(AbsLeft + 4 + TextOffset, AbsTop + 3, Width-8, Caption, fntGame, taLeft, $FFE0E0E0);
+  begin
+    TKMRenderUI.WriteText(AbsLeft + 4 + TextOffset, AbsTop + 3, Width-8, fFinCap, fntGame, taLeft, $FFE0E0E0);
+  end;
+
+
   //Render in reverse order so the rightmost resource is on top (otherwise lighting looks wrong)
   if WareCntAsNumber then
   begin
@@ -398,6 +454,7 @@ begin
 
   MaxCount := aMaxCount;
   TexArr := [];
+  AddBevel := true;
 end;
 
 
@@ -406,8 +463,12 @@ var
   I, gap, baseLeft: Integer;
 begin
   inherited;
-  TKMRenderUI.WriteBevel(AbsLeft, AbsTop, Width, 40, 1, 0.35);
-  TKMRenderUI.WriteText(AbsLeft + 3, AbsTop + 2, Width - 6, Caption, fntGrey, taCenter, $FFFFFFFF);
+
+  if AddBevel then
+  begin
+    TKMRenderUI.WriteBevel(AbsLeft, AbsTop, Width, 40, 1, 0.35);
+    TKMRenderUI.WriteText(AbsLeft + 3, AbsTop + 2, Width - 6, Caption, fntGrey, taCenter, $FFFFFFFF);
+  end;
 
   if Count > 0 then
   begin
@@ -571,16 +632,23 @@ end;
 
 
 procedure TKMIconsRow.Paint;
-var I, C : integer;
+var I, C, top, lWidth : integer;
 begin
   inherited;
   C := length(fIcons);
   if C = 0 then Exit;
 
-  TKMRenderUI.WriteBevel(AbsLeft, AbsTop, Width, Height, 1, 0.8);
+  if Caption <> '' then
+    lWidth := Max(C div MaxCountInRow * VSpacing, gRes.Fonts[fntMetal].GetTextSize(Caption, I).X + 10)
+  else
+    lWidth := Width;
 
+  TKMRenderUI.WriteBevel(AbsLeft, AbsTop, lWidth, IfThen(Caption <> '', Height + 20, Height), 1, 0.8);
+
+  top := IfThen(Caption <> '', 20, 0);
+  TKMRenderUI.WriteText(AbsLeft, AbsTop, lWidth, Caption, fntMetal, taCenter);
   for I := 0 to C - 1 do
-    TKMRenderUI.WritePicture(AbsLeft + HSpacing * (I mod MaxCountInRow), AbsTop + VSpacing * (I div MaxCountInRow), HSpacing, VSpacing,
+    TKMRenderUI.WritePicture(AbsLeft + HSpacing * (I mod MaxCountInRow), AbsTop + top + VSpacing * (I div MaxCountInRow), HSpacing, VSpacing,
                               [], RX, fIcons[I], not (fIconClicked = I), $FFFF00FF, 0.4 * ord(fIconOver = I));
 end;
 
@@ -594,6 +662,7 @@ begin
     Shape := stSquare;
   TexID := aTexID;
   Colors := [];
+  ColumnCount := 5;
 end;
 
 procedure TKMIconProgressBar.Paint;
@@ -611,9 +680,9 @@ begin
 
     //render frame first
     case Shape of
-      stSquare:   TKMRenderUI.WritePicture(AbsLeft + I mod 5 * 36, AbsTop + I div 5 * 36, 30, 30,
+      stSquare:   TKMRenderUI.WritePicture(AbsLeft + I mod ColumnCount * 36, AbsTop + I div ColumnCount * 36, 30, 30,
                               [], rxGui, 874, Enabled, $FFFF00FF);
-      stRound:   TKMRenderUI.WritePicture(AbsLeft + I mod 5 * 36, AbsTop + I div 5 * 36, 30, 30,
+      stRound:   TKMRenderUI.WritePicture(AbsLeft + I mod ColumnCount * 36, AbsTop + I div ColumnCount * 36, 30, 30,
                               [], rxGui, 879, Enabled, $FFFF00FF);
     end;
 
@@ -637,14 +706,14 @@ begin
       C := Colors[EnsureRange(I, 0, high(Colors))];
     //render bar in cpolor
     case Shape of
-      stSquare:   TKMRenderUI.WritePicture(AbsLeft + I mod 5 * 36, AbsTop + I div 5 * 36, 30, 30,
+      stSquare:   TKMRenderUI.WritePicture(AbsLeft + I mod ColumnCount * 36, AbsTop + I div ColumnCount * 36, 30, 30,
                               [], rxGui, 878, Enabled, C, 0, A);
-      stRound:   TKMRenderUI.WritePicture(AbsLeft + I mod 5 * 36, AbsTop + I div 5 * 36, 30, 30,
+      stRound:   TKMRenderUI.WritePicture(AbsLeft + I mod ColumnCount * 36, AbsTop + I div ColumnCount * 36, 30, 30,
                               [], rxGui, 880, Enabled, C, 0, A);
     end;
 
 
-    TKMRenderUI.WritePicture(AbsLeft + I mod 5 * 36, AbsTop + I div 5 * 36, 30, 30,
+    TKMRenderUI.WritePicture(AbsLeft + I mod ColumnCount * 36, AbsTop + I div ColumnCount * 36, 30, 30,
                               [], RX, id, Enabled);
 
   end;

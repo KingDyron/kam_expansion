@@ -27,7 +27,7 @@ type
     fID: TKMHandID; //Index of this hand in gHands
     fUnits: TKMUnitsCollection;
   public
-    constructor Create(aHandIndex: TKMHandID);
+    constructor Create(aHandIndex: TKMHandID); virtual;
     destructor Destroy; override;
     property ID: TKMHandID read fID;
     property Units: TKMUnitsCollection read fUnits;
@@ -259,6 +259,8 @@ type
     function CanAddHousePlan(const aLoc: TKMPoint; aHouseType: TKMHouseType): Boolean;
     function CanAddHousePlanAI(aX, aY: Word; aHouseType: TKMHouseType; aCheckInfluence: Boolean): Boolean;
     function CanAddBridgePlan(const aLoc : TKMPoint; aIndex, aRot : Word) : Boolean;
+    function HasVWares(aCost : TKMVWarePlanCommon) : Boolean;
+    function CanPlaceDecoration(const aLoc : TKMPoint; aIndex : Word) : Boolean;
     function CanBuildHouse(aHouseType : TKMHouseType) : Boolean;
     procedure AddFirstStorehouse(aEntrance: TKMPoint);
     procedure ResetChooseLocation;
@@ -274,6 +276,7 @@ type
     function AddHouse(aHouseType: TKMHouseType; PosX, PosY: Word; RelativeEntrace: Boolean): TKMHouse;
     procedure AddHousePlan(aHouseType: TKMHouseType; const aLoc: TKMPoint);
     procedure AddBridgePlan(const aLoc : TKMPoint; aIndex, aRot: Word);
+    procedure PlaceDecoration(const aLoc : TKMPoint; aIndex: Word);
 
     function HasHousePlan(const aLoc: TKMPoint): Boolean;
     function AddHouseWIP(aHouseType: TKMHouseType; const aLoc: TKMPoint): TKMHouse;
@@ -336,10 +339,47 @@ type
 
   end;
 
+  TKMAnimalSpawner = record
+    Loc : TKMPoint;
+    Radius : Byte;
+    AnimalTypes : TKMUnitTypeArray;
+    Animals : TKMUnitsArray;
+    Pace,
+    MaxCount : Integer;
+    procedure IncludeAnimal(aType : TKMUnitType);
+    procedure ExcludeAnimal(aType : TKMUnitType);
+    function HasType(aType : TKMUnitType) : Boolean;
+    function GetType : TKMUnitType;
+    procedure ClearAnimalTypes;
+  end;
+
+  PKMAnimalSpawner = ^TKMAnimalSpawner;
 
   TKMHandAnimals = class(TKMHandCommon)
+  private
+    fSpawners : array of TKMAnimalSpawner;
+    function GetSpawner(aIndex : Integer) : PKMAnimalSpawner;
+    function GetSpawnersCount : Word;
+    function GetSpawnerAtLoc(aLoc : TKMPoint) : PKMAnimalSpawner;
+  protected
   public
-    function GetFishInWaterBody(aWaterID: Byte; FindHighestCount: Boolean = True): TKMUnitFish;
+    function GetFishInWaterBody(aWaterID: Byte; aFishermanPos: TKMPoint; FindHighestCount: Boolean = True; aRadius : Integer = 0): TKMUnitFish;
+
+    property SpawnersCount : Word read GetSpawnersCount;
+    property Spawners[aIndex : Integer] : PKMAnimalSpawner read GetSpawner;
+    procedure AddSpawner(aLoc: TKMPoint; aRadius: Byte; aMaxCount, aSpawnPace : Integer; aAnimals: TKMUnitTypeArray);
+    procedure AddAnimalTypeToLastSpawner(aAnimal: TKMUnitType);
+    procedure RemoveSpawner(aIndex : integer);
+
+
+    constructor Create(aHandIndex: TKMHandID); override;
+
+    procedure UpdateState(aTick: Cardinal); override;
+    procedure Paint(const aRect: TKMRect; aTickLag: Single); override;
+
+    procedure Save(SaveStream: TKMemoryStream); override;
+    procedure Load(LoadStream: TKMemoryStream); override;
+    procedure SyncLoad; override;
   end;
 
   function GetStatsUpdatePeriod: Integer;
@@ -353,6 +393,7 @@ uses
   KM_HandsCollection, KM_Sound, KM_AIFields, KM_MapEdTypes,
   KM_HouseStore, KM_HouseSchool,  KM_HouseBarracks,
   KM_Resource, KM_ResSound, KM_ResTexts, KM_ResMapElements, KM_ScriptingEvents, KM_ResUnits,
+  KM_RenderPool, KM_RenderAux,
   KM_CommonUtils, KM_GameSettings,
   KM_UnitGroupTypes,
   KM_MapTypes, KM_HouseCottage;
@@ -756,7 +797,7 @@ begin
         if HWFP.IsFlagPointSet
         and G.CanWalkTo(HWFP.FlagPoint, 0) then
         begin
-          G2 := gHands.GroupsHitTest(HWFP.FlagPoint.X, HWFP.FlagPoint.Y);
+          G2 := gHands[G.Owner].GroupsHitTest(HWFP.FlagPoint.X, HWFP.FlagPoint.Y);
           if (G2 <> nil) and G.CanLinkTo(G2) then
             G.OrderLinkTo(G2, true)
           else
@@ -1307,8 +1348,8 @@ begin
   for K := 1 to 4 do
   if HA[I,K] <> 0 then
   begin
-    Tx := aLoc.X - gRes.Houses[aHouseType].EntranceOffsetX + K - 3;
-    Ty := aLoc.Y + I - 4;
+    Tx := aLoc.X + K - 3- gRes.Houses[aHouseType].EntranceOffsetX;
+    Ty := aLoc.Y + I - 4 - gRes.Houses[aHouseType].EntranceOffsetY;
     //AI ignores FOW (this function is used from scripting)
     Result := Result and gTerrain.TileInMapCoords(Tx, Ty, 1)
                      and (IsComputer
@@ -1377,34 +1418,33 @@ begin
 
           end;
       end;
+end;
 
-    {for X := 0 to Size.X - 1 do
-      for Y := 0 to Size.Y - 1 do
-      if Points[X, Y] > 0 then
-      begin
-        P := KMPointAdd(aLoc, Offset, KMPoint(X, Y));
+function TKMHand.HasVWares(aCost: TKMVWarePlanCommon): Boolean;
+var I : Integer;
+begin
+  Result := true;
+  for I := 0 to High(aCost) do
+    with aCost[I] do
+    if self.VirtualWare[W] < C then
+      Exit(false);
+end;
 
-        Result := Result and gTerrain.TileInMapCoords(P, 1)
-                         and (IsComputer
-                          or (NeedToChooseFirstStorehouseInGame and fFogOfWar.CheckTileInitialRevelation(P.X, P.Y)) //Use initial revelation for first storehouse
-                          or (not NeedToChooseFirstStorehouseInGame and (fFogOfWar.CheckTileRevelation(P.X, P.Y) > 0)));
-        if not Result then exit;
+function TKMHand.CanPlaceDecoration(const aLoc: TKMPoint; aIndex: Word): Boolean;
+var I : Integer;
+begin
+  Result := true;
 
-        //This tile must not contain fields/houses of allied players or self
-        for J := 0 to gHands.Count - 1 do
-          if fAlliances[J] = atAlly then
-          begin
-            Result := Result and (gHands[J].fConstructions.FieldworksList.HasField(P) = ftNone);
-            //Surrounding tiles must not be a house
-
-            for S := -1 to 1 do
-              for T := -1 to 1 do
-                Result := Result
-                            and not gHands[J].fConstructions.HousePlanList.HasPlan(KMPoint(P.X+S,P.Y+T));
-
-          end;
-      end;}
-      
+  if not gTerrain.CheckPassability(aLoc, tpWalk) then
+    Exit(false);
+  case gDecorations[aIndex].DType of
+    dtObject : Result := gTerrain.Land[aLoc.Y, aLoc.X].Obj <> gDecorations[aIndex].ID;
+    dtTile : Result := gTerrain.Land[aLoc.Y, aLoc.X].BaseLayer.Terrain <> gDecorations[aIndex].ID;
+    dtTileOverlay : Result := byte(gTerrain.Land[aLoc.Y, aLoc.X].TileOverlay2) <> gDecorations[aIndex].ID;
+  end;
+  if not Result then
+    Exit;
+  Result := Result and HasVWares(gDecorations[aIndex].Cost);
 end;
 
 function TKMHand.CanAddHousePlanAI(aX, aY: Word; aHouseType: TKMHouseType; aCheckInfluence: Boolean): Boolean;
@@ -1429,7 +1469,7 @@ begin
   if HA[I,K] <> 0 then
   begin
     Tx := aX + K - 3 - enterOff;
-    Ty := aY + I - 4;
+    Ty := aY + I - 4 - gRes.Houses[aHouseType].EntranceOffsetY;
 
     //Make sure we don't block existing roads
     if gTerrain.CheckPassability(KMPoint(Tx, Ty), tpWalkRoad) then
@@ -1516,6 +1556,21 @@ begin
          ftWine: gScriptEvents.ProcPlanWinefieldPlaced(fID, aLoc.X, aLoc.Y);
       else
         raise Exception.Create('Unknown aFieldType');
+      end;
+      case aFieldType of
+         ftVegeField: gScriptEvents.ProcFieldPlanPlaced(fID, aLoc.X, aLoc.Y, lftVegetablesField);
+         ftRemove: gScriptEvents.ProcFieldPlanPlaced(fID, aLoc.X, aLoc.Y, lftRemove);
+         ftPalisade:gScriptEvents.ProcFieldPlanPlaced(fID, aLoc.X, aLoc.Y, lftPalisade);
+         ftGrassLand:gScriptEvents.ProcFieldPlanPlaced(fID, aLoc.X, aLoc.Y, lftGrassField);
+         ftRoad:case aRoadType of
+                  rtNone,
+                  rtStone : gScriptEvents.ProcFieldPlanPlaced(fID, aLoc.X, aLoc.Y, lftRoadStone);
+                  rtWooden : gScriptEvents.ProcFieldPlanPlaced(fID, aLoc.X, aLoc.Y, lftRoadWooden);
+                  rtClay : gScriptEvents.ProcFieldPlanPlaced(fID, aLoc.X, aLoc.Y, lftRoadClay);
+                  rtExclusive : gScriptEvents.ProcFieldPlanPlaced(fID, aLoc.X, aLoc.Y, lftRoadExclusive);
+                end;
+         ftCorn: gScriptEvents.ProcFieldPlanPlaced(fID, aLoc.X, aLoc.Y, lftField);
+         ftWine: gScriptEvents.ProcFieldPlanPlaced(fID, aLoc.X, aLoc.Y, lftWineField);
       end;
     end
     else
@@ -1636,7 +1691,7 @@ begin
       if fUnits[I].UnitType in UNITS_CITIZEN then
         if KMLength(fUnits[I].Position, aLoc) < 60 then
           fUnits[I].GoToStore(aLoc);
-  gSoundPlayer.Play(sfxnStoreBell, aLoc, false, 1);
+  gSoundPlayer.Play(sfxnStoreBell, aLoc, true, 1);
 end;
 
 function TKMHand.AddHouse(aHouseType: TKMHouseType; PosX, PosY: Word; RelativeEntrace: Boolean): TKMHouse;
@@ -1652,7 +1707,7 @@ var
   loc: TKMPoint;
 begin
   loc.X := aLoc.X - gRes.Houses[aHouseType].EntranceOffsetX;
-  loc.Y := aLoc.Y;
+  loc.Y := aLoc.Y - gRes.Houses[aHouseType].EntranceOffsetY;
 
   fConstructions.HousePlanList.AddPlan(aHouseType, loc);
   fStats.HousePlanned(aHouseType);
@@ -1669,8 +1724,19 @@ begin
   loc.X := aLoc.X + gRes.Bridges[aIndex].Offset[aRot].X;
   loc.Y := aLoc.Y + gRes.Bridges[aIndex].Offset[aRot].Y;
 
-  fConstructions.BridgePlanList.AddPlan(loc, aIndex, aRot);
   gTerrain.SetBridgePlan(loc, aIndex, aRot, hbsStone);
+  fConstructions.BridgePlanList.AddPlan(loc, aIndex, aRot);
+  if (ID = gMySpectator.HandID) and not gGameParams.IsReplayOrSpectate then
+    gSoundPlayer.Play(sfxPlacemarker);
+end;
+
+procedure TKMHand.PlaceDecoration(const aLoc: TKMPoint; aIndex: Word);
+var I : integer;
+begin
+  with gDecorations[aIndex] do
+    for I := 0 to High(Cost) do
+      VirtualWareTake(Cost[I].W, Cost[I].C);
+  gTerrain.PlaceDecoration(aLoc, aIndex);
   if (ID = gMySpectator.HandID) and not gGameParams.IsReplayOrSpectate then
     gSoundPlayer.Play(sfxPlacemarker);
 end;
@@ -1729,8 +1795,10 @@ end;
 procedure TKMHand.RemFieldPlan(const Position: TKMPoint; aMakeSound: Boolean);
 var
   fieldType: TKMFieldType;
+  roadType : TKMRoadType;
 begin
   fieldType := fConstructions.FieldworksList.HasField(Position);
+  roadType := fConstructions.FieldworksList.GetRoadType(Position);
   if fieldType = ftNone then Exit; //Can happen due to network delays
   fConstructions.FieldworksList.RemFieldPlan(Position);
 
@@ -1744,6 +1812,21 @@ begin
     ftWine: gScriptEvents.ProcPlanWinefieldRemoved(fID, Position.X, Position.Y);
   else
     raise Exception.Create('Unknown fieldType');
+  end;
+  case fieldType of
+     ftVegeField: gScriptEvents.ProcFieldPlanRemoved(fID, Position.X, Position.Y, lftVegetablesField);
+     ftRemove: gScriptEvents.ProcFieldPlanRemoved(fID, Position.X, Position.Y, lftRemove);
+     ftPalisade:gScriptEvents.ProcFieldPlanRemoved(fID, Position.X, Position.Y, lftPalisade);
+     ftGrassLand:gScriptEvents.ProcFieldPlanRemoved(fID, Position.X, Position.Y, lftGrassField);
+     ftRoad:case roadType of
+              rtNone:;
+              rtStone : gScriptEvents.ProcFieldPlanRemoved(fID, Position.X, Position.Y, lftRoadStone);
+              rtWooden : gScriptEvents.ProcFieldPlanRemoved(fID, Position.X, Position.Y, lftRoadWooden);
+              rtClay : gScriptEvents.ProcFieldPlanRemoved(fID, Position.X, Position.Y, lftRoadClay);
+              rtExclusive : gScriptEvents.ProcFieldPlanRemoved(fID, Position.X, Position.Y, lftRoadExclusive);
+            end;
+     ftCorn: gScriptEvents.ProcFieldPlanRemoved(fID, Position.X, Position.Y, lftField);
+     ftWine: gScriptEvents.ProcFieldPlanRemoved(fID, Position.X, Position.Y, lftWineField);
   end;
 
   if aMakeSound and not gGameParams.IsReplayOrSpectate
@@ -1953,7 +2036,7 @@ begin
   else
   begin
     //We have to consider destroyed closed house as actually opened, otherwise closed houses stats will be corrupted
-    if aHouse.IsClosedForWorker and not gGameParams.IsMapEditor then
+    if aHouse.GetWasClosedByHand and not gGameParams.IsMapEditor then
       fStats.HouseClosed(False, aHouse.HouseType);
 
     //Distribute honors
@@ -2289,10 +2372,10 @@ begin
   for I := 1 to 4 do
     for K := 1 to 4 do
       if (HA[I,K] <> 0)
-        and gTerrain.TileInMapCoords(aLoc.X + K - 3 - gRes.Houses[aHouseType].EntranceOffsetX, aLoc.Y + I - 4, 1) then
+        and gTerrain.TileInMapCoords(aLoc.X + K - 3 - gRes.Houses[aHouseType].EntranceOffsetX, aLoc.Y + I - 4 - gRes.Houses[aHouseType].EntranceOffsetY, 1) then
       begin
         //This can't be done earlier since values can be off-map
-        P2 := KMPoint(aLoc.X + K - 3 - gRes.Houses[aHouseType].EntranceOffsetX, aLoc.Y + I - 4);
+        P2 := KMPoint(aLoc.X + K - 3 - gRes.Houses[aHouseType].EntranceOffsetX, aLoc.Y + I - 4 - gRes.Houses[aHouseType].EntranceOffsetY);
 
         //Forbid planning on unrevealed areas and fieldplans
         allowBuild := aIgnoreFOW
@@ -3015,7 +3098,7 @@ begin
       with fConstructions.HousePlanList.Plans[I] do
         if (HouseType = htStore) then
         begin
-          entrance := KMPointAdd( Loc, KMPoint(gRes.Houses[HouseType].EntranceOffsetX,0) );
+          entrance := KMPointAdd( Loc, KMPoint(gRes.Houses[HouseType].EntranceOffsetX,gRes.Houses[HouseType].EntranceOffsetY) );
           RemHousePlan(entrance);
           if CanAddFieldPlan(KMPoint(entrance.X, entrance.Y+1), ftRoad) then
             AddFirstStorehouse(entrance);
@@ -3378,9 +3461,73 @@ begin
     end;
         
 end;
+{TKMAnimalSpawner}
+procedure TKMAnimalSpawner.IncludeAnimal(aType: TKMUnitType);
+var I, id : Integer;
+begin
+  Assert(gRes.Units[aType].IsAnimal, 'TKMAnimalSpawner.IncludeAnimal: UnitType is not animal');
+  id := -1;
 
+  for I := 0 to High(AnimalTypes) do
+    if AnimalTypes[I] = aType then
+      id := I;
+
+  if id >= 0 then //don't add the same type again
+    Exit;
+  SetLength(AnimalTypes, length(AnimalTypes) + 1);
+
+  AnimalTypes[high(AnimalTypes)] := aType;
+end;
+
+procedure TKMAnimalSpawner.ExcludeAnimal(aType: TKMUnitType);
+var I, id : Integer;
+begin
+  Assert(gRes.Units[aType].IsAnimal, 'TKMAnimalSpawner.ExcludeAnimal: UnitType is not animal');
+  id := -1;
+  for I := 0 to High(AnimalTypes) do
+    if AnimalTypes[I] = aType then
+      id := I;
+
+  if id = -1 then //no type found
+    Exit;
+
+  for I := id to High(AnimalTypes) - 1 do
+    AnimalTypes[I] := AnimalTypes[I + 1];
+
+  SetLength(AnimalTypes, high(AnimalTypes));
+end;
+
+function TKMAnimalSpawner.HasType(aType: TKMUnitType): Boolean;
+var I : integer;
+begin
+  Assert(gRes.Units[aType].IsAnimal, 'TKMAnimalSpawner.HasType: UnitType is not animal');
+  Result := false;
+  for I := 0 to High(AnimalTypes) do
+    if AnimalTypes[I] = aType then
+      Exit(true);
+end;
+
+procedure TKMAnimalSpawner.ClearAnimalTypes;
+begin
+  AnimalTypes := [];
+end;
+
+function TKMAnimalSpawner.GetType: TKMUnitType;
+begin
+  if length(AnimalTypes) = 0 then
+    Exit(utNone);
+
+  Result := AnimalTypes[KamRandom(length(AnimalTypes), 'TKMAnimalSpawner.GetType')];
+end;
 { TKMHandAnimals }
-function TKMHandAnimals.GetFishInWaterBody(aWaterID: Byte; FindHighestCount: Boolean = True): TKMUnitFish;
+
+constructor TKMHandAnimals.Create(aHandIndex: ShortInt);
+begin
+  Inherited;
+  SetLength(fSpawners, 0);
+end;
+
+function TKMHandAnimals.GetFishInWaterBody(aWaterID: Byte; aFishermanPos: TKMPoint; FindHighestCount: Boolean = True; aRadius : Integer = 0): TKMUnitFish;
 var
   I, highestGroupCount: Integer;
   U: TKMUnit;
@@ -3397,7 +3544,8 @@ begin
     and (U.UnitType = utFish)
     and not U.IsDeadOrDying //Fish are killed when they are caught or become stuck
     and (gTerrain.Land^[U.Position.Y, U.Position.X].WalkConnect[wcFish] = aWaterID)
-    and (TKMUnitFish(U).FishCount > highestGroupCount) then
+    and (TKMUnitFish(U).FishCount > highestGroupCount)
+    and ((aRadius = 0) or (KMLengthSqr(aFishermanPos, U.Position) < Sqr(aRadius))) then
     begin
       Result := TKMUnitFish(U);
       //This is for time saving when we don't actually care which group is returned
@@ -3407,7 +3555,195 @@ begin
   end;
 end;
 
+function TKMHandAnimals.GetSpawnersCount: Word;
+begin
+  Result := length(fSpawners)
+end;
 
+
+function TKMHandAnimals.GetSpawner(aIndex: Integer): PKMAnimalSpawner;
+begin
+  Assert(InRange(aIndex, 0, GetSpawnersCount - 1), 'No such spawner ID :' + IntToStr(aIndex));
+  Result := @fSpawners[aIndex];
+end;
+
+function TKMHandAnimals.GetSpawnerAtLoc(aLoc: TKMPoint): PKMAnimalSpawner;
+var I : Integer;
+begin
+  Result := nil;
+  for I := 0 to High(fSpawners) do
+    if fSpawners[I].Loc = aLoc then
+      Result := GetSpawner(I);
+
+end;
+
+procedure TKMHandAnimals.AddSpawner(aLoc: TKMPoint; aRadius: Byte; aMaxCount, aSpawnPace : Integer; aAnimals: TKMUnitTypeArray);
+begin
+  if GetSpawnerAtLoc(aLoc) <> nil then //don't add spawner here if there is one alredy
+    Exit;
+
+  SetLength(fSpawners, length(fSpawners) + 1);
+
+  with fSpawners[high(fSpawners)] do
+  begin
+    Loc := aLoc;
+    Radius := aRadius;
+    AnimalTypes := aAnimals;
+    Pace := aSpawnPace;
+    MaxCount := aMaxCount;
+  end;
+end;
+
+procedure TKMHandAnimals.AddAnimalTypeToLastSpawner(aAnimal: TKMUnitType);
+begin
+  Spawners[high(fSpawners)].IncludeAnimal(aAnimal);
+end;
+
+procedure TKMHandAnimals.RemoveSpawner(aIndex: Integer);
+var I : Integer;
+begin
+  for I := aIndex to High(fSpawners) - 1 do
+    fSpawners[I] := fSpawners[I + 1];
+
+  SetLength(fSpawners, high(fSpawners));
+end;
+
+procedure TKMHandAnimals.UpdateState(aTick: Cardinal);
+
+  function GetRandomPos(aLoc : TKMPoint; aRadius : Integer; aPassability : TKMTerrainPassability) : TKMPoint;
+  var P : TKMPoint;
+    J : Integer;
+  begin
+    Result := KMPOINT_ZERO;
+    J := 0;
+
+    while (Result = KMPOINT_ZERO) and (J < 20) do//check max 5 times
+    begin
+      P.X := aLoc.X + KM_CommonUtils.KaMRandomI2(aRadius, 'TKMHandAnimals.UpdateState');
+      P.Y := aLoc.Y + KM_CommonUtils.KaMRandomI2(aRadius, 'TKMHandAnimals.UpdateState');
+      if KMLengthSqr(aLoc, P) <= sqr(aRadius) then
+        If gTerrain.CheckPassability(P, aPassability) then
+          if gTerrain.GetUnit(P) = nil then
+            Result := P;
+      Inc(J);
+    end;
+
+  end;
+
+var I : Integer;
+  P : TKMPoint;
+  U : TKMUnitAnimal;
+  UT : TKMUnitType;
+begin
+  Inherited;
+  //use spawners
+  for I := 0 to High(fSpawners) do
+    with fSpawners[I] do
+      if Animals.Count < MaxCount then
+        if aTick mod fSpawners[I].Pace = 0 then
+        begin
+          UT := GetType;
+          if UT = utNone then
+            Continue;
+
+          P := GetRandomPos(Loc, Radius, gRes.Units[UT].AllowedPassability);
+          if P = KMPOINT_ZERO then //no spot detected, skip it
+            Continue;
+          U := TKMUnitAnimal(AddUnit(UT, P, false));
+          if U = nil then
+            Continue;
+          U.SpawnerID := I;
+          Animals.Add(TKMUnit(U));
+        end;
+
+
+end;
+
+procedure TKMHandAnimals.Paint(const aRect: TKMRect; aTickLag: Single);
+var I : Integer;
+begin
+  Inherited;
+
+  if (gGameParams.IsMapEditor and (melSpawners in gGame.MapEditor.VisibleLayers))
+      or (gGameParams.IsGame and (mlSpawners in gGameParams.VisibleLayers)) then
+    for I := 0 to High(fSpawners) do
+      with fSpawners[I] do
+        if KMInRect(Loc, KMRectGrow(aRect, Radius div 2)) then
+        begin
+
+          gRenderPool.RenderSpriteOnTile(Loc, 914);
+          gRenderAux.CircleOnTerrain(Loc.X-0.5, Loc.Y-0.5,
+                                      1,
+                                      icDeepGreen AND $55FFFFFF,
+                                      icDeepGreen);
+          gRenderAux.CircleOnTerrain(Loc.X-0.5, Loc.Y-0.5,
+                                      Radius,
+                                      icGreen AND $10FFFFFF,
+                                      icGreen);
+        end;
+
+
+
+end;
+
+procedure TKMHandAnimals.Save(SaveStream: TKMemoryStream);
+var I, J, nC, newCount : Integer;
+begin
+  Inherited;
+  newCount := length(fSpawners);
+
+  SaveStream.Write(newCount);
+  for I := 0 to newCount - 1 do
+  begin
+    SaveStream.Write(fSpawners[I].Loc);
+    SaveStream.Write(fSpawners[I].Radius);
+    SaveStream.Write(fSpawners[I].Pace);
+    SaveStream.Write(fSpawners[I].MaxCount);
+
+    nC := length(fSpawners[I].AnimalTypes);
+    SaveStream.Write(nC);
+
+    for J := 0 to nc - 1 do
+      SaveStream.Write(fSpawners[I].AnimalTypes[J], SizeOf(fSpawners[I].AnimalTypes[J]));
+
+    fSpawners[I].Animals.SaveToStream(SaveStream)
+
+  end;
+end;
+
+procedure TKMHandAnimals.Load(LoadStream: TKMemoryStream);
+var I, J, nC, newCount : Integer;
+begin
+  Inherited;
+  LoadStream.Read(newCount);
+  SetLength(fSpawners, newCount);
+
+  for I := 0 to newCount - 1 do
+  begin
+    LoadStream.Read(fSpawners[I].Loc);
+    LoadStream.Read(fSpawners[I].Radius);
+    LoadStream.Read(fSpawners[I].Pace);
+    LoadStream.Read(fSpawners[I].MaxCount);
+
+    LoadStream.Read(nC);
+    Setlength(fSpawners[I].AnimalTypes, nC);
+    for J := 0 to nc - 1 do
+      LoadStream.Read(fSpawners[I].AnimalTypes[J], SizeOf(fSpawners[I].AnimalTypes[J]));
+
+    fSpawners[I].Animals.LoadFromStream(LoadStream)
+
+  end;
+end;
+
+procedure TKMHandAnimals.SyncLoad;
+var I : Integer;
+begin
+  Inherited;
+
+  for I := 0 to high(fSpawners) do
+    fSpawners[I].Animals.SyncLoad;
+
+end;
 //-----------
 function GetStatsUpdatePeriod: Integer;
 begin

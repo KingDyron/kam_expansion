@@ -32,6 +32,10 @@
 						{
 							"HouseName" : "htWeaponWorkshop",
 							"Qty" : 4
+						},
+						{
+							"HouseName" : "htTailorsShop",
+							"Qty" : 3
 						}
 		
 					]
@@ -76,6 +80,10 @@
 						{
 							"HouseName" : "htWoodBurner",
 							"Qty" : 2
+						},
+						{
+							"HouseName" : "htHovel",
+							"Qty" : 1
 						}
 		
 					]
@@ -85,11 +93,42 @@
 		"Houses" : 	[
 						{
 							"HouseName" : "htHovel",
-							"Qty" : 4
+							"Qty" : 5
 						},
 						{
 							"HouseName" : "htMill",
+							"Qty" : 4
+						}
+		
+					]
+	},
+    {
+		"Ware": "wtHay",
+		"Houses" : 	[
+						{
+							"HouseName" : "htSwine",
+							"Qty" : 3
+						},
+						{
+							"HouseName" : "htStables",
 							"Qty" : 5
+						}		
+					]
+	},
+    {
+		"Ware": "wtVegetables",
+		"Houses" : 	[
+						{
+							"HouseName" : "htSwine",
+							"Qty" : 5
+						},
+						{
+							"HouseName" : "htStables",
+							"Qty" : 3
+						},
+						{
+							"HouseName" : "htHovel",
+							"Qty" : 3
 						}
 		
 					]

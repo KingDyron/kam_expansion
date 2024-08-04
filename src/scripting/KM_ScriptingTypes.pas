@@ -34,6 +34,12 @@ type
     evtMerchantTrade,
     evtMissionStart,
     evtPeacetimeEnd,
+
+    evtFieldPlanPlaced,
+    evtFieldPlanRemoved,
+    evtFieldPlanDigged,
+    evtFieldPlanBuilt,
+
     evtPlanFieldPlaced,
     evtPlanFieldRemoved,
     evtPlanRoadDigged,

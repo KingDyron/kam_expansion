@@ -746,7 +746,6 @@ begin
         fRXData.SizeNoShadow[aIndex].Bottom := 40;
       end else
       begin
-
         fRXData.SizeNoShadow[aIndex].Left := StrToInt(TXTFile.Strings[2]);
         fRXData.SizeNoShadow[aIndex].Top := StrToInt(TXTFile.Strings[3]);
         fRXData.SizeNoShadow[aIndex].Right := StrToInt(TXTFile.Strings[4]);
@@ -948,7 +947,7 @@ end;
 
 procedure TKMSpritePack.CollectSpriteFilesToOverloadInFolder(const aFolder: string; aFileList: TStringList);
 var
-  filePath: string;
+  filePath, S: string;
   filterPredicate: TDirectory.TFilterPredicate;
 begin
   filterPredicate :=
@@ -964,7 +963,10 @@ begin
     end;
 
   for filePath in TDirectory.GetFiles(aFolder, IntToStr(Ord(fRT) + 1) + '_*.png', TSearchOption.soAllDirectories, filterPredicate) do
-    aFileList.Add(ExtractRelativePath(aFolder, filePath));
+  begin
+    S := ExtractRelativePath(aFolder, filePath);
+    aFileList.Add(S);
+  end;
 end;
 
 

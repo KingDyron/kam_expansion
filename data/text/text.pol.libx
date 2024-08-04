@@ -42,7 +42,7 @@
 41:Mąka
 42:Rulony skóry
 43:Kiełbasa
-44:Świnie
+44:Mięso
 45:Płaty skóry
 46:Drewniana tarcza
 47:Żelazna tarcza
@@ -954,7 +954,7 @@
 1023:PT-
 1024:%s zwyciężył!
 1025:%s nie jest już połączony z grą
-1026:Maksymalne złoto
+1026:Maksymalna ilość złota
 1027:Maksymalna ilość złota dostarczana do Ratusza
 1028:Tylko sadź
 1029:Otwórz / zamknij bydynek dla %s
@@ -1569,9 +1569,9 @@
 1647:Gospodarcze V1
 1648:Gospodarcze V2
 
-1649:Ważne
-1650:Budowlane
-1651:Ekonomiczne
+1649:Podstawowe
+1650:Produkcyjne
+1651:Wojskowe
 1652:Kopalnie
 1653:Warsztaty
 1654:Obronne
@@ -1608,7 +1608,7 @@
 
 1683:Ta garncarnia nie ma gospodarza
 1684:Ten kurnik nie ma gospodarza
-1685:Ta jabłoń nie ma gospodarza
+1685:Ten sad nie ma gospodarza
 1686:Ta kopalnia bitynu nie ma gospodarza
 1687:Ta odlewnia nie ma gospodarza
 1688:Ten warsztat ciesielski nie ma gospodarza
@@ -1648,7 +1648,7 @@
 1722:Strzelec konny
 
 1723:Murami możesz zabezpieczyć swoje miasto.||Można je rozbudować do drugiego poziomu.
-1724:W kurniku chodowane są kury. Pozyskasz w nim prióra, które są potrzebne do produkcji kołczanów i butów.
+1724:W kurniku chodowane są kury. Pozyskasz w nim prióra, które są potrzebne do produkcji kołczanów i butów. Karmiąc kury warzywami, utuczysz je i otrzymasz z nich szybciej mięso.
 1725:Kamienna tabliczka służy do przekazywania informacji graczom.
 1726:Dzięki temu budynkowi możesz wykopać rzadki minerał, którym jest ruda bitynu.
 1727:Wieża strzelnicza odkrywa duży obszar terenu. Celność rekrutów jest bardzo dobra i mogą zabić przeciwnika jednym strzałem.
@@ -1658,7 +1658,7 @@
 1731:Dzięki emisariuszowi możesz przekazywać wybrane towary swoim sojusznikom. 
 1732:W garncarni wytwarzane są dachówki wymagane do rozbudowy miasta.
 1733:Jest to jedyny budynek, który może wyprodukować węgiel z surowca odnawialnego jakim jest drewno. Potrzebuje rozpałki w postaci słomy oraz paliwa, czyli trocin lub węgla.
-1734:Na jabłoni rośnie mnóstwo jabłek. Ludzie w domostwach potrzebują ich jako pokarmu. Jeśli niedaleko jabłoni znajduje się studnia, chłop sam weźmie wiadro i pobierze wodę bez udziału pomocnika.
+1734:Na drzewie rośnie mnóstwo owoców. Ludzie w domostwach potrzebują ich jako pokarmu. Jeśli niedaleko sadu znajduje się studnia, chłop sam weźmie wiadro i pobierze wodę bez udziału pomocnika.
 1735:W tym budynku kolekcjoner wydobywa z kamieni cenne materiały. Z nich można zrobić pierścień, który jest drogocenny podczas wymiany w targowisku. Również jest wymagany w szkoleniu elitarnych jednostek w pałacu.
 1736:Krawiec, dzięki swoim zdolnościom wyszywa buty. Każdy obywatel, który pracuje w ciągłym ruchu może je ubrać w szkole. Dodatkowo jest w stanie produkować pancerze.
 1737:Silos może przechować różne surowce. Nie będą one tykane dopuki sam nie wydasz takiego rozkazu. Budynek można rozbudować do trzeciego poziomu.
@@ -1945,3 +1945,18 @@
 2014:Pomidory
 2015:Ziemniaki
 2016:Ziemniaki
+2017:Jabłoń
+2018:Czereśnia
+2019:Czarna jabłoń
+2020:Postaw plan budynku
+2021:Progres budowania
+2022:Statki
+2023:Statek Bitewny
+2024:Łódka
+2025:Bananowiec
+2026:Kokosowiec
+2027:Spawner zwierząt
+2028:Wojsko
+2029:Maksymalna ilość bitynowych kolczug
+2030:Odznacz zaznaczenie
+2031:Strażnicy

@@ -3,6 +3,7 @@
 interface
 uses
   StrUtils, SysUtils, Classes,
+  KM_CommonClasses,
   KM_Controls, KM_ControlsBase,
   KM_Defaults, KM_ControlsScroll, KM_ControlsWaresRow,
   KM_InterfaceGame, KM_ResHouses;
@@ -11,7 +12,12 @@ uses
 type
   TKMGUIGameBuild = class
   private
-    procedure Build_ButtonClick(Sender: TObject);
+    fLastRoadType : TKMLockFieldType;
+    fSelectedType : Byte;
+    fOverID : Byte;
+    procedure Build_ButtonClick(Sender: TObject; Shift: TShiftState);
+    procedure BuildType_Click(Sender: TObject);
+    procedure Build_ButtonOver(Sender : TObject; Shift: TShiftState);
     //procedure Build_ButtonOver(Sender: TObject; X, Y: Integer; Shift : TShiftState);
   protected
     Panel_Build: TKMScrollPanel;
@@ -21,18 +27,14 @@ type
         Image_Build_Selected: TKMImage;
         Row_Cost : array[0..2] of TKMWaresRow;
 
-      {Button_BuildRoad:array[rtStone..high(TKMRoadType)] of TKMButtonFlat;
-      Button_BuildField: TKMButtonFlat;
-      Button_BuildGrassLand: TKMButtonFlat;
-      Button_BuildWine: TKMButtonFlat;
-      Button_BuildPalisade: TKMButtonFlat;
-      Button_BuildCancel: TKMButtonFlat;}
       Button_BuildField: array[TKMLockFieldType] of TKMButtonFlat;
-      Label_BuildType: array of TKMLabel;
+
+      Button_BuildTypes: array of TKMButton;
+      Label_BuildType: TKMLabel;
+
       Button_Build: array of TKMButtonFlat;
-      Button_BuildBridge: array of TKMButtonFlat;
-      //Button_BuildWalls: array [1..high(GUIHouseWallsOrder)] of TKMButtonFlat;
-      //Button_BuildAdd: array [1..high(GUIHouseAddOrder)] of TKMButtonFlat;
+
+      Icons_UnlockingHouses : TKMIconsRow;
   public
     constructor Create(aParent: TKMPanel);
     procedure PlanRoad;
@@ -44,37 +46,74 @@ type
     function Visible: Boolean;
     procedure UpdateHotkeys;
     procedure UpdateState;
+    procedure SaveToStream(aSaveStream : TKMemoryStream);
+    procedure LoadFromStream(aSaveStream : TKMemoryStream);
   end;
 Const BUTTON_BUILD_TAG2 = 2;
 
 implementation
 uses
+  KM_CommonTypes,
   KM_GameSettings,
   KM_RenderUI, KM_Cursor, KM_HandsCollection, KM_ResTexts, KM_Resource, KM_ResFonts,
   KM_Utils, Math, KM_HandTypes,
-  KM_ResTypes,
+  KM_ResTypes, KM_ResMapElements,
   KM_UtilsExt;
 
 
 { TKMGUIGameBuild }
 constructor TKMGUIGameBuild.Create(aParent: TKMPanel);
 var
-  I, J, lastID, top: Integer;
+  I, J, K, buttonsCount, top: Integer;
   W : TKMWareType;
   //RT : TKMRoadType;
   FT : TKMLockFieldType;
 begin
 
   inherited Create;
+  fSelectedType := 0;
 
-  Panel_Build := TKMScrollPanel.Create(aParent, TB_PAD, 44 + 100, TB_WIDTH + 25, aParent.MasterParent.Height - 350, [saVertical], bsMenu, ssCommon);
+  fLastRoadType := lftRoadStone;
+
+  Panel_Build := TKMScrollPanel.Create(aParent, TB_PAD, 44 + 100, TB_WIDTH + 25, aParent.MasterParent.Height - 250, [saVertical], bsMenu, ssCommon);
 
   Panel_Build.DoScrollUpdate := false;
+  Panel_Build.OnMouseOver := Build_ButtonOver;
+
+  SetLength(Button_BuildTypes, length(HOUSE_GUI_TAB_ORDER) + 2);//include structures and decorations
+
+  for I := 0 to High(Button_BuildTypes) do
+  begin
+    Button_BuildTypes[I] := TKMButton.Create(Panel_Build, 7 + 33 * I, 0, 33, 30, 0, rxGui, bsPaper2);
+    Button_BuildTypes[I].OnClick := BuildType_Click;
+
+    if I < length(HOUSE_GUI_TAB_ORDER) then
+    begin
+      Button_BuildTypes[I].TexID := HOUSE_GUI_TAB_ORDER[I].GuiIcon;
+      Button_BuildTypes[I].Hint := gResTexts[HOUSE_GUI_TAB_ORDER[I].TextID];
+    end else
+    if I = length(HOUSE_GUI_TAB_ORDER) then
+    begin
+      Button_BuildTypes[I].TexID := 39;
+      Button_BuildTypes[I].Hint := 'Structures';
+    end else
+    if I = length(HOUSE_GUI_TAB_ORDER) + 1 then
+    begin
+      Button_BuildTypes[I].TexID := 666;
+      Button_BuildTypes[I].Hint := 'Decorations';
+    end;
+
+    Button_BuildTypes[I].MobilHint := true;
+    Button_BuildTypes[I].Tag := I;
+  end;
+  top := Button_BuildTypes[0].Bottom + 3;
+  Label_BuildType := TKMLabel.Create(Panel_Build, 0, top, Panel_Build.Width, 20, '', fntOutline, taCenter);
+
 
     for FT := low(TKMLockFieldType) to High(TKMLockFieldType) do
     begin
       Button_BuildField[FT] := TKMButtonFlat.Create(Panel_Build, 37 * (byte(FT) mod 5), 37 + 37 * (byte(FT) div 5), 33, 33, LOCK_FIELD_GUI[FT]);
-      Button_BuildField[FT].OnClick   := Build_ButtonClick;
+      Button_BuildField[FT].OnClickShift   := Build_ButtonClick;
       Button_BuildField[FT].Tag       := byte(FT);
       case FT of
         lftRoadStone: Button_BuildField[FT].Hint := gResTexts[1992];
@@ -89,72 +128,30 @@ begin
         lftRemove: Button_BuildField[FT].Hint := gResTexts[TX_BUILD_DEMOLISH];
       end;
     end;
-    {for RT := rtStone to High(Button_BuildRoad) do
-    begin
-      Button_BuildRoad[RT]           := TKMButtonFlat.Create(Panel_Build,   -37 + byte(RT) * 37, 0, 33, 33, ROAD_GUI_PIC[RT]);
-      Button_BuildRoad[RT].OnClick   := Build_ButtonClick;
-      Button_BuildRoad[RT].Tag       := byte(RT);
-
-      //if RT <> rtStone then
-      //  Button_BuildRoad[RT].Hide;
-    end;
-
-    Button_BuildField       := TKMButtonFlat.Create(Panel_Build,  0, 37, 33, 33, 337);
-    Button_BuildGrassLand   := TKMButtonFlat.Create(Panel_Build,  37, 37, 33, 33, 132);
-    Button_BuildWine        := TKMButtonFlat.Create(Panel_Build,  74, 37, 33, 33, 336);
-    Button_BuildPalisade    := TKMButtonFlat.Create(Panel_Build, 111, 37, 33, 33, 373);
-    Button_BuildCancel      := TKMButtonFlat.Create(Panel_Build, 148, 37, 33, 33, 340);
-
-    Button_BuildField.OnClick         := Build_ButtonClick;
-    Button_BuildGrassLand.OnClick     := Build_ButtonClick;
-    Button_BuildWine.OnClick          := Build_ButtonClick;
-    Button_BuildCancel.OnClick        := Build_ButtonClick;
-    Button_BuildPalisade.OnClick        := Build_ButtonClick;
-
-
-    Button_BuildPalisade.Disable;}
 
   SetLength(Button_Build, 0);//just in case
-  SetLength(Label_BuildType, length(HOUSE_GUI_TAB_ORDER));
 
   top := Button_BuildField[high(TKMLockFieldType)].Bottom + 3;
 
-  J := 0;
+  //check how many buttons we need
   for I := 0 to high(HOUSE_GUI_TAB_ORDER) do
   begin
-    lastID := 0;
-    if I > 0 then
-      top := Button_Build[J - 1].Bottom + 3;
-
-    Label_BuildType[I] := TKMLabel.Create(Panel_Build, 0, top - 3, Panel_Build.Width, 20, gResTexts[HOUSE_GUI_TAB_ORDER[I].TextID], fntOutline, taCenter);
-    Label_BuildType[I].Hitable := false;
-
-    Inc(Top, 15);
-    while (lastID < length(HOUSE_GUI_TAB_ORDER[I].H)) do
-    begin
-      SetLength(Button_Build, Length(Button_Build) + 1);//add new elements
-      Button_Build[J] := TKMButtonFlat.Create(Panel_Build, lastID mod 5 * 37, top + (lastID div 5) * 37,33,33,gRes.Houses[HOUSE_GUI_TAB_ORDER[I].H[lastID]].GUIIcon);
-      Button_Build[J].OnClick := Build_ButtonClick;
-      Button_Build[J].Tag2 := BUTTON_BUILD_TAG2;
-      Button_Build[J].Tag := Byte(HOUSE_GUI_TAB_ORDER[I].H[lastID]);
-      Button_Build[J].Hint := gRes.Houses[HOUSE_GUI_TAB_ORDER[I].H[lastID]].HouseName;
-      Inc(J);
-      Inc(lastID);
-    end;
+    K := 0;
+    for J := 0 to High(HOUSE_GUI_TAB_ORDER[I].H) do
+      Inc(K, length(HOUSE_GUI_TAB_ORDER[I].H[J]));
+    buttonsCount := max(buttonsCount, K);
   end;
 
-  top := Button_Build[J - 1].Bottom + 10;
-  SetLength(Button_BuildBridge, gRes.Bridges.Count);
-  for I := 0 to High(Button_BuildBridge) do
+  SetLength(Button_Build, buttonsCount);
+
+  for I := 0 to high(Button_Build) do
   begin
-    Button_BuildBridge[I] := TKMButtonFlat.Create(Panel_Build, I mod 5 * 37, top + I div 5 * 37,33,33, gRes.Bridges[I].GuiIcon);
-    Button_BuildBridge[I].OnClick := Build_ButtonClick;
-    Button_BuildBridge[I].Tag2 := 1;
-    Button_BuildBridge[I].Tag := I;
-    //Button_BuildBridge[I].Hint := gRes.Houses[HOUSE_GUI_TAB_ORDER[J].H[lastID]].HouseName;
+    Button_Build[I] := TKMButtonFlat.Create(Panel_Build, 0, 0,33,33, 0);
+    Button_Build[I].OnClickShift := Build_ButtonClick;
+    Button_Build[I].OnMouseOver := Build_ButtonOver;
   end;
 
-  Panel_Cost := TKMPanel.Create(aParent, TB_PAD, 44, TB_WIDTH, aParent.MasterParent.Height - 350);
+  Panel_Cost := TKMPanel.Create(aParent, TB_PAD, 44, TB_WIDTH, 100);
 
   Bevel_Build := TKMBevel.Create(Panel_Cost, 0, 0, TB_WIDTH, 0);
   Bevel_Build.Color.SetColor(0.05, 0.1, 0.05);
@@ -162,7 +159,7 @@ begin
 
   Label_Build := TKMLabel.Create(Panel_Cost, 0, 0, TB_WIDTH, 0, '', fntOutline, taCenter);
 
-  Image_Build_Selected := TKMImage.Create(Panel_Cost, 45, 40, 32, 32, 335);
+  Image_Build_Selected := TKMImage.Create(Panel_Cost, 1, 20, 32, 32, 335);
   Image_Build_Selected.ImageCenter;
 
   for I := Low(Row_Cost) to High(Row_Cost) do
@@ -175,7 +172,7 @@ begin
       else
         W := wtNone;
     end;
-    Row_Cost[I] := TKMWaresRow.Create(Panel_Cost, TB_WIDTH - 89, 25 + 23 * I, 50);
+    Row_Cost[I] := TKMWaresRow.Create(Panel_Cost, 35 + 47 * I, 25, 45);
     Row_Cost[I].RX := rxGui;
     Row_Cost[I].TexID := gRes.Wares[W].GUIIcon;
     Row_Cost[I].Caption := gRes.Wares[W].Title;
@@ -187,13 +184,15 @@ begin
     Row_Cost[I].TxtOffset := -25;
     Row_Cost[I].TextOffset := 15;
   end;
-  Panel_Cost.Height := Row_Cost[high(Row_Cost)].Bottom + 3;
+  Panel_Cost.Height := 60;
   Bevel_Build.Height := Panel_Cost.Height;
 
   Panel_Build.Top := Panel_Cost.Bottom + 3;
 
   Panel_Build.Height := Panel_Build.Height - Panel_Build.Top;
-
+  Icons_UnlockingHouses := TKMIconsRow.Create(Panel_Build.MasterPanel, 0, 0, 37, 37);
+  Icons_UnlockingHouses.Hitable := false;
+  Icons_UnlockingHouses.MaxCountInRow := 5;
 end;
 
 
@@ -201,8 +200,8 @@ procedure TKMGUIGameBuild.PlanRoad;
 begin
   //Button_BuildRoad[rtStone].Down := True;
   //Build_ButtonClick(Button_BuildRoad[rtStone]);
-  Button_BuildField[lftRoadStone].Down := True;
-  Build_ButtonClick(Button_BuildField[lftRoadStone]);
+  //Button_BuildField[lftRoadStone].Down := True;
+  Build_ButtonClick(Button_BuildField[fLastRoadType], []);
 end;
 
 
@@ -212,7 +211,7 @@ begin
   //Build_ButtonClick(Button_BuildField);
 
   Button_BuildField[lftField].Down := True;
-  Build_ButtonClick(Button_BuildField[lftField]);
+  Build_ButtonClick(Button_BuildField[lftField], []);
 end;
 
 
@@ -221,7 +220,7 @@ begin
   //Button_BuildWine.Down := True;
   //Build_ButtonClick(Button_BuildWine);
   Button_BuildField[lftWineField].Down := True;
-  Build_ButtonClick(Button_BuildField[lftWineField]);
+  Build_ButtonClick(Button_BuildField[lftWineField], []);
 end;
 
 
@@ -230,11 +229,11 @@ begin
   {Button_BuildCancel.Down := True;
   Build_ButtonClick(Button_BuildCancel);}
   Button_BuildField[lftRemove].Down := True;
-  Build_ButtonClick(Button_BuildField[lftRemove]);
+  Build_ButtonClick(Button_BuildField[lftRemove], []);
 end;
 
 
-procedure TKMGUIGameBuild.Build_ButtonClick(Sender: TObject);
+procedure TKMGUIGameBuild.Build_ButtonClick(Sender: TObject; Shift: TShiftState);
 
   procedure SetCost(aCursor: TKMCursorMode; aTag, aTexId, aWood, aStone, aTile: Integer; const aCaption: UnicodeString);
   begin
@@ -275,42 +274,12 @@ begin
   for I := 1 to high(Button_Build) do
       Button_Build[I].Down := False;
 
-  for I := 0 to high(Button_BuildBridge) do
-      Button_BuildBridge[I].Down := False;
-
   //Press the button
   TKMButtonFlat(Sender).Down := True;
 
   //Reset building mode and see if it needs to be changed
   SetCost(cmNone, 0, 0, 0, 0, 0, '');
 
- { if Button_BuildCancel.Down then
-    SetCost(cmErase, 0, 340, 0, 0, 0, gResTexts[TX_BUILD_DEMOLISH])
-  else
-  if Button_BuildRoad[rtStone].Down then
-    SetCost(cmRoad, 1, 335, 0, 1, 0, gResTexts[TX_BUILD_ROAD])
-  else
-  if Button_BuildRoad[rtWooden].Down then
-    SetCost(cmRoad, 2, 822, 1, 0, 0, gResTexts[TX_BUILD_ROAD])
-  else
-  if Button_BuildRoad[rtClay].Down then
-    SetCost(cmRoad, 3, 823, 0, 0, 1, gResTexts[TX_BUILD_ROAD])
-  else
-  if Button_BuildRoad[rtExclusive].Down then
-    SetCost(cmRoad, 4, 824, 1, 1, 1, gResTexts[TX_BUILD_ROAD])
-  else
-  if Button_BuildField.Down then
-    SetCost(cmField, 0, 337, 0, 0, 0, gResTexts[TX_BUILD_FIELD])
-  else
-  if Button_BuildGrassLand.Down then
-    SetCost(cmGrassLand, 0, 132, 0, 0, 0, '')
-  else
-  if Button_BuildWine.Down then
-    SetCost(cmWine, 0, 336, 1, 0, 0, gResTexts[TX_BUILD_WINE])
-  else
-  if Button_BuildPalisade.Down then
-    SetCost(cmPalisade, 0, 373, 1, 0, 0, gResTexts[1633])
-  else}
   for FT := Low(TKMLockFieldType) to High(TKMLockFieldType) do
     if (Sender = Button_BuildField[FT]) and (Button_BuildField[FT].Visible) and (Button_BuildField[FT].Enabled) then
     begin
@@ -326,11 +295,19 @@ begin
         lftWineField:         SetCost(cmWine, 0, LOCK_FIELD_GUI[FT], 1, 0, 0, gResTexts[TX_BUILD_WINE]);
         lftRemove:            SetCost(cmErase, 0, LOCK_FIELD_GUI[FT], 0, 0, 0, gResTexts[TX_BUILD_DEMOLISH]);
       end;
+      if ssRight in Shift then
+        if FT in [lftRoadStone, lftRoadWooden, lftRoadClay, lftRoadExclusive] then
+          fLastRoadType := FT;
       Exit;
     end;
 
 
 
+  if (Sender is TKMButtonFlat) and (TKMButtonFlat(Sender).Tag2 = 2) then
+  begin
+    with gDecorations[TKMButtonFlat(Sender).Tag] do
+      SetCost(cmDecorations, TKMButtonFlat(Sender).Tag, GUIIcon, 0, 0, 0, gResTexts[TextID]);
+  end else
   if (Sender is TKMButtonFlat) and (TKMButtonFlat(Sender).Tag2 = 1) then
   begin
     with gRes.Bridges[TKMButtonFlat(Sender).Tag] do
@@ -344,40 +321,72 @@ begin
   end;
 end;
 
-{procedure TKMGUIGameBuild.Build_ButtonOver(Sender: TObject; X, Y: Integer; Shift : TShiftState);
-var ctrlDown : TKMControl;
+procedure TKMGUIGameBuild.BuildType_Click(Sender: TObject);
 begin
-  if Sender = nil then
-    Exit;
-  if not (Sender is TKMButtonFlat) then
+  fSelectedType := TKMButton(Sender).Tag;
+
+  UpdateState;
+end;
+
+procedure TKMGUIGameBuild.Build_ButtonOver(Sender: TObject; Shift: TShiftState);
+var I : Integer;
+    H, H2 : TKMHouseType;
+    icons : TKMWordArray;
+begin
+  Icons_UnlockingHouses.Hide;
+  if fSelectedType >= length(HOUSE_GUI_TAB_ORDER) then
     Exit;
 
-  if not (TKMButtonFlat(Sender).Tag2 = BUTTON_BUILD_TAG2) then
-    Exit;
-  ctrlDown := TKMButtonFlat(Sender).MasterPanel.MasterControl.CtrlDown;
-  if ctrlDown = nil then
-    Exit;
-  if (ctrlDown is TKMButtonFlat) and (TKMButtonFlat(ctrlDown).Tag2 = BUTTON_BUILD_TAG2) then
-  begin
-    TKMButtonFlat(Sender).HighLightColor := $400707FF;
-    TKMButtonFlat(Sender).Down := true;
-  end;
-end;}
+  for I := 0 to High(Button_Build) do
+    if Sender = Button_Build[I] then
+    if Button_Build[I].TexID = 41 then
+    begin
+      H := TKMHouseType(TKMButtonFlat(Sender).Tag);
+      if H = htNone then
+        Exit;
+
+      icons := [];
+      for H2 in gRes.Houses[H].ReleasedBy do
+      begin
+        if H2 in [htNone, htAny] then
+          Continue;
+        SetLength(icons, length(icons) + 1);
+        icons[high(icons)] := gRes.Houses[H2].GUIIcon;
+      end;
+      Icons_UnlockingHouses.SetIcons(icons);
+      //Icons_UnlockingHouses.SetIcons()
+      Icons_UnlockingHouses.Left := Button_Build[I].AbsRight;
+      Icons_UnlockingHouses.Top := Button_Build[I].AbsTop - 37;
+      Icons_UnlockingHouses.Caption := 'Unlocks after';
+      Icons_UnlockingHouses.Show;
+    end;
+
+end;
 
 procedure TKMGUIGameBuild.Show;
 var FT : TKMLockFieldType;
+  HasAny : Boolean;
 begin
-  Panel_Build.Show;
-  Panel_Cost.Show;
   //UpdateState;
   gCursor.Mode := cmNone;
-  for FT := lftRoadStone to lftRoadExclusive do
-    if not gMySpectator.Hand.Locks.FieldLocked(FT) then
-      if Button_BuildField[FT].Visible and Button_BuildField[FT].Enabled then
-      begin
-        Build_ButtonClick(Button_BuildField[FT]);
-        Break;
-      end;
+  HasAny := false;
+  Panel_Build.Show;
+  Panel_Cost.Show;
+  if gMySpectator.Hand.Locks.FieldLocked(fLastRoadType) then
+  begin
+    for FT := lftRoadStone to lftRoadExclusive do
+      if not gMySpectator.Hand.Locks.FieldLocked(FT) then
+        if Button_BuildField[FT].Visible and Button_BuildField[FT].Enabled then
+        begin
+          fLastRoadType := FT;
+          HasAny := true;
+          Break;
+        end;
+  end else
+    HasAny := true;
+  if HasAny then
+    Build_ButtonClick(Button_BuildField[fLastRoadType], []);
+
   UpdateState;
 end;
 
@@ -387,12 +396,12 @@ var oldVisible : Boolean;
 begin
   //Reset cursor
   oldVisible := Visible;
+  Icons_UnlockingHouses.Hide;
 
   Panel_Build.Hide;
   Panel_Cost.Hide;
   if oldVisible <> Panel_Build.Visible then
-    Build_ButtonClick(nil);
-
+    Build_ButtonClick(nil, []);
 end;
 
 
@@ -405,10 +414,6 @@ end;
 
 procedure TKMGUIGameBuild.UpdateHotkeys;
 begin
-  {Button_BuildRoad[rtStone].Hint   := GetHintWHotkey(TX_BUILD_ROAD_HINT,   kfPlanRoad);
-  Button_BuildField.Hint  := GetHintWHotkey(TX_BUILD_FIELD_HINT,  kfPlanField);
-  Button_BuildWine.Hint   := GetHintWHotkey(TX_BUILD_WINE_HINT,   kfPlanWine);
-  Button_BuildCancel.Hint := GetHintWHotkey(TX_BUILD_CANCEL_HINT, kfErasePlan);}
   Button_BuildField[lftRoadStone].Hint := GetHintWHotkey(TX_BUILD_ROAD_HINT, kfPlanRoad);
   Button_BuildField[lftField].Hint := GetHintWHotkey(TX_BUILD_FIELD_HINT, kfPlanField);
   Button_BuildField[lftWineField].Hint := GetHintWHotkey(TX_BUILD_WINE_HINT, kfPlanWine);
@@ -426,10 +431,18 @@ var H : TKMHouseType;
   FT : TKMLockFieldType;
 begin
   //standard
+  hasAny := false;
   for I := 0 to High(Button_Build) do
+  begin
     Button_Build[I].Hide;
-  for I := 0 to High(Label_BuildType) do
-    Label_BuildType[I].Hide;
+    Button_Build[I].Tag2 := 0;
+    Button_Build[I].RX := rxGui;
+
+    if Panel_Build.MasterControl.CtrlOver = Button_Build[I] then
+      hasAny := true;
+  end;
+  if not hasAny then
+    Icons_UnlockingHouses.Hide;
 
   top := 0;
   for I := 0 to byte(high(TKMLockFieldType)) div 5 do
@@ -438,6 +451,7 @@ begin
     lastId := 0;
     //check each 5 icons
     for FT := TKMLockFieldType(I * 5) to TKMLockFieldType(I * 5 + 4) do
+    begin
       if (FT = lftPalisade) and not gMySpectator.Hand.Locks.FieldLocked(FT) then
       begin
         if gMySpectator.Hand.Locks.HouseCanBuild(htWall) then
@@ -446,6 +460,7 @@ begin
           Button_BuildField[FT].Left := 37 * (J mod 5);
           Button_BuildField[FT].Show;
           Button_BuildField[FT].TexID := LOCK_FIELD_GUI[FT];
+          Button_BuildField[FT].Enable;
           Inc(J);
         end else
         begin
@@ -467,144 +482,138 @@ begin
       end else
         Button_BuildField[FT].Hide;
 
+      Button_BuildField[FT].BackBevelColor := IfThen(fLastRoadType = FT, $4000FF00, $00000000);
+    end;
+
     if J > 0 then
       Inc(top, 37);
   end;
+  K := 0;//Button_Build Index
+  for I := 0 to High(Button_BuildTypes) do
+    Button_BuildTypes[I].Top := top;
+  top := Button_BuildTypes[0].Bottom + 3;
+  Label_BuildType.Top := top;
+  inc(top, 17);
 
-  {for FT := Low(TKMLockFieldType) to High(TKMLockFieldType) do
+  if fSelectedType < length(HOUSE_GUI_TAB_ORDER) then
   begin
-    if byte(FT) + 1 mod 5 = 0 then
+    Label_BuildType.Caption := gResTexts[HOUSE_GUI_TAB_ORDER[fSelectedType].TextID];
+    for I := 0 to High(HOUSE_GUI_TAB_ORDER[fSelectedType].H) do
     begin
-      lastId := 0;
-      Inc(J, 5);
-    end;
-    if (FT = lftPalisade) and not gMySpectator.Hand.Locks.FieldLocked(FT) then
-    begin
-      if gMySpectator.Hand.Locks.HouseCanBuild(htWall) then
+      hasAny := false;
+
+      for J := 0 to High(HOUSE_GUI_TAB_ORDER[fSelectedType].H[I]) do
       begin
-        Button_BuildField[FT].Top := top +  37 * (byte(FT) div 5);
-        Button_BuildField[FT].Left := 37 * (lastId mod 5);
-        Button_BuildField[FT].Show;
-        Button_BuildField[FT].TexID := LOCK_FIELD_GUI[FT];
-        Inc(J);
-        Inc(lastId);
-      end else
-      begin
-        Button_BuildField[FT].Top := top +  37 * (byte(FT) div 5);
-        Button_BuildField[FT].Left := 37 * (lastId mod 5);
-        Button_BuildField[FT].Show;
-        Button_BuildField[FT].Disable;
-        Button_BuildField[FT].TexID := 41;
-        Inc(J);
-        Inc(lastId);
+        H := HOUSE_GUI_TAB_ORDER[fSelectedType].H[I, J];
+        if gMySpectator.Hand.Locks.HouseLock[H] <> hlNotVisible then
+        begin
+          hasAny := true;
+          Break;
+        end;
       end;
+      if not hasAny then
+        Continue;
 
-    end else
-    if not gMySpectator.Hand.Locks.FieldLocked(FT) then
-    begin
-      Button_BuildField[FT].Top := top + 37 * (byte(FT) div 5);
-      Button_BuildField[FT].Left := 37 * (lastId mod 5);
-      Button_BuildField[FT].Show;
-      Inc(J);
-      Inc(lastId);
-    end else
-      Button_BuildField[FT].Hide;
-  end;}
+      lastVisible := 0;
 
-  J := 0;
-  for I := 0 to High(HOUSE_GUI_TAB_ORDER) do
-  begin
-    hasAny := false;
-    for K := 0 to High(HOUSE_GUI_TAB_ORDER[I].H) do
-      if gMySpectator.Hand.Locks.HouseLock[HOUSE_GUI_TAB_ORDER[I].H[K]] <> hlNotVisible then
+      for J := 0 to High(HOUSE_GUI_TAB_ORDER[fSelectedType].H[I]) do
       begin
-        hasAny := true;
-        break;
-      end;
+        H := HOUSE_GUI_TAB_ORDER[fSelectedType].H[I, J];
+        if gMySpectator.Hand.Locks.HouseLock[H] = hlNotVisible then
+          Continue;
 
-    if hasAny then
-    begin
-      Label_BuildType[I].Top := top - 3;
-      Label_BuildType[I].Show;
-      Inc(top, 17);
-    end else
-      Continue;
+        Button_Build[K].Left := lastVisible mod 5 * 37;
+        Button_Build[K].Top := top + lastVisible div 5 * 37;
+        Button_Build[K].Show;
 
-    lastID := 0;
-    lastVisible := 0;
-    while lastID < length(HOUSE_GUI_TAB_ORDER[I].H) do
-    begin
-      H := HOUSE_GUI_TAB_ORDER[I].H[lastID];
-      if gMySpectator.Hand.Locks.HouseLock[H] <> hlNotVisible then
-      begin
-        Button_Build[J].Tag := Byte(H);
-        Button_Build[J].Hint := gRes.Houses[H].HouseName;
-        //Button_Build[J].TexID := gRes.Houses[H].GUIIcon;
-        Button_Build[J].Top := top + lastVisible div 5 * 37;
-        Button_Build[J].Left := lastVisible mod 5 * 37;
-        Button_Build[J].Show;
+        if gMySpectator.Hand.Locks.HouseCanBuild(H) then
+        begin
+          Button_Build[K].Hint := gRes.Houses[H].HouseName;
+          Button_Build[K].TexID := gRes.Houses[H].GUIIcon;
+          Button_Build[K].Tag := ord(H);
+          Button_Build[K].Down := gCursor.Tag1 = Button_Build[K].Tag;
+          Button_Build[K].OnClickShift := Build_ButtonClick;
+        end else
+        begin
+          Button_Build[K].Hint := gResTexts[TX_HOUSE_NOT_AVAILABLE];
+          Button_Build[K].TexID := 41;
+          Button_Build[K].Tag := ord(H);
+          Button_Build[K].OnClickShift := nil;
+          Button_Build[K].Down := false;
+        end;
+        if gMySpectator.Hand.Locks.HouseLock[H] = hlBlocked then
+          Button_Build[K].Disable
+        else
+          Button_Build[K].Enable;
 
-        Inc(J);
         Inc(lastVisible);
+        Inc(K);
       end;
-      Inc(lastID);
 
+      top := Button_Build[Max(K - 1, 0)].Bottom + 3;
+      Inc(top, 4);
     end;
-    if J > 0 then
-      top := Button_Build[J - 1].Bottom;
-    
-  end;
 
-  top := Button_Build[J - 1].Bottom + 3;
-  SetLength(Button_BuildBridge, gRes.Bridges.Count);
-  for I := 0 to High(Button_BuildBridge) do
+
+  end else
+  if fSelectedType = length(HOUSE_GUI_TAB_ORDER) then //structures
   begin
-    Button_BuildBridge[I].Top := top + I div 5 * 37;
-    Button_BuildBridge[I].Left := I mod 5 * 37;
-    Button_BuildBridge[I].Hide;
-    //Button_BuildBridge[I].Hint := gRes.Houses[HOUSE_GUI_TAB_ORDER[J].H[lastID]].HouseName;
-  end;
-
-
-    {case gMySpectator.Hand.Locks.HouseLock[H] of
-      hlNone,
-      hlDefault,
-      hlBlocked,
-      hlGranted,
-      hlNotVisible : ;
-    end;}
-
-
-  {if gMySpectator.Hand.Locks.HouseCanBuild(htWall) then
-  begin
-    Button_BuildPalisade.TexID := 373;
-    Button_BuildPalisade.Enable;
-  end
-  else
-    Button_BuildPalisade.TexID := 41;
-  }
-  for I := 0 to high(Button_Build) do
-    if Button_Build[I].Visible then
+    for I := 0 to gRes.Bridges.Count - 1 do
     begin
-      H := TKMHouseType(Button_Build[I].Tag);
-      if gMySpectator.Hand.Locks.HouseCanBuild(H) then
-      begin
-        Button_Build[I].Enabled := gMySpectator.Hand.CanBuildHouse(H);
-        Button_Build[I].TexID := gRes.Houses[H].GUIIcon;
-        Button_Build[I].OnClick := Build_ButtonClick;
-        Button_Build[I].Hint := gRes.Houses[H].HouseName + gResTexts[TX_BUILD_HOUSE_POSTFIX];
-      end
-      else
-      begin
-        Button_Build[I].OnClick := nil;
-        Button_Build[I].TexID := 41;
-        Button_Build[I].Hint := gResTexts[TX_HOUSE_NOT_AVAILABLE]; //Building not available
-      end;
+      Button_Build[I].Left := I mod 5 * 37;
+      Button_Build[I].Top := top + I div 5 * 37;
+      Button_Build[I].Tag2 := 1;
+      Button_Build[I].Tag := I;
+      Button_Build[I].TexID := gRes.Bridges[I].GuiIcon;
+      Button_Build[I].Hint := gResTexts[gRes.Bridges[I].TextID];
+      Button_Build[I].OnClickShift := Build_ButtonClick;
+      Button_Build[I].Show;
     end;
+  end else
+  if fSelectedType = length(HOUSE_GUI_TAB_ORDER) + 1 then //decorations
+  begin
+    for I := 0 to High(gDecorations) do
+    begin
+      Button_Build[I].Left := I mod 5 * 37;
+      Button_Build[I].Top := top + I div 5 * 37;
+      Button_Build[I].Tag2 := 2;
+      Button_Build[I].Tag := I;
+
+      case gDecorations[I].DType of
+        dtObject : Button_Build[I].RX := rxTrees;
+        else Button_Build[I].RX := rxTiles;
+      end;
+      case gDecorations[I].DType of
+        dtObject : Button_Build[I].TexID := gMapElements[gDecorations[I].ID].Anim.Step[1] + 1;
+        else Button_Build[I].TexID := gDecorations[I].GuiIcon;
+      end;
+      Button_Build[I].Hint := gResTexts[gDecorations[I].TextID];
+      Button_Build[I].OnClickShift := Build_ButtonClick;
+      Button_Build[I].Show;
+      Button_build[I].Enabled := gMySpectator.Hand.HasVWares(gDecorations[I].Cost);
+    end;
+
+  end;
+
+
+
 
   if Panel_Build.Visible then
     Panel_Build.UpdateScrolls;
 
+end;
+
+
+procedure TKMGUIGameBuild.SaveToStream(aSaveStream : TKMemoryStream);
+begin
+  Exit;
+  aSaveStream.Write(fLastRoadType, sizeOf(fLastRoadType));
+end;
+
+procedure TKMGUIGameBuild.LoadFromStream(aSaveStream : TKMemoryStream);
+begin
+  Exit;
+  aSaveStream.Read(fLastRoadType, sizeOf(fLastRoadType));
 end;
 
 end.

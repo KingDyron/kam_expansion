@@ -7,7 +7,7 @@
   </Main>
   <Game>
     <GFX Brightness="1" AlphaShadows="True" LoadFullFonts="False"/>
-    <SFX Volume="0.5000"/>
+    <SFX Volume="0.0500"/>
     <Music Enabled="True" Volume="0.0000" Shuffle="False"/>
     <Video Enabled="False" Stretch="True" Startup="True" Volume="0.5000"/>
     <GameCommon Locale="pol">
@@ -25,7 +25,7 @@
     <MapEd HistoryDepth="250" MaxTerrainHeight="150"/>
     <Multiplayer Name="NoNam" LastIP="127.0.0.1" LastPort="56789" LastRoom="0" LastPassword="" FlashOnMessage="True"/>
     <Misc AsyncGameResLoader="True" BeastPanelExpanded="False" WaresPanelExpanded="False False False False True True True False False False False " HousesPanelExpanded="False False False False False False False False False False False "/>
-    <Menu FavouriteMaps="" CampaignName="" LobbyMapType="5" CampaignID="9" CampaignMapID="9">
+    <Menu FavouriteMaps="" CampaignName="" LobbyMapType="2" CampaignID="9" CampaignMapID="9">
       <Singleplayer Type="0" ScenarioMapCRC="348272594" MissionMapCRC="0" TacticMapCRC="0" SpecialMapCRC="0" SaveFileName="autosave"/>
       <Replay Type="1" SPSaveName="K&amp;M Tower Defense" MPSaveName="autosave01"/>
       <MapEd MapType="1" NewMapX="128" NewMapY="128" SPMapCRC="348272594" MPMapCRC="1929638820" MPMapName="Across the Desert" DLMapCRC="0"/>

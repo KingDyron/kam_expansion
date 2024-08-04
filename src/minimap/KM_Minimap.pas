@@ -43,13 +43,15 @@ type
     procedure LoadFromStream(LoadStream: TKMemoryStream);
     procedure SaveToStream(SaveStream: TKMemoryStream);
 
+    procedure SaveAsScreenShot(aMapName : String);
+
     procedure Update(aRevealAll: Boolean = False);
   end;
 
 
 implementation
 uses
-  SysUtils, Math,
+  SysUtils, Math, Graphics,
   KromUtils;
 
 
@@ -201,5 +203,21 @@ begin
   UpdateTexture;
 end;
 
+procedure TKMMinimap.SaveAsScreenShot(aMapName: string);
+var I, K, J : Integer;
+  bmp : TBitmap;
+  fileName, dateStr : String;
+
+begin
+  bmp := TBitmap.Create;
+  bmp.SetSize(fMapX, fMapY);
+  for I := 0 to High(fBase) do
+    bmp.Canvas.Pixels[I mod fMapX, I div fMapX] := fBase[I] and $FFFFFF;
+
+  DateTimeToString(dateStr, 'yyyy-mm-dd hh-nn-ss', Now); //2007-12-23 15-24-33
+  fileName := ExeDir + 'screenshots\' + aMapName + '  ' + dateStr + '.png';
+  bmp.SaveToFile(fileName);
+  bmp.Free;
+end;
 
 end.

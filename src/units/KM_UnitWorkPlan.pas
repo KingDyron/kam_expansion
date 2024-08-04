@@ -11,10 +11,7 @@ const
   MAX_WORKPLAN = 24;
 type
   TKMWorkPlanAllowedEvent = function(aProduct: TKMWareType): Boolean of object;
-  TKMResPlanWares = record
-    W : TKMWareType;
-    Q : Byte;
-  end;
+
   TKMUnitWorkPlan = class
   private
     fHome: TKMHouseType;
@@ -51,6 +48,7 @@ type
 
     AfterWorkIdle: Integer;
     ResourceDepleted: Boolean;
+    TMPInt : Integer;
   public
     TotalWorkingTime : Integer;
     procedure FindPlan(aUnit: TKMUnit; aHome: TKMHouseType; aProduct: TKMWareType;
@@ -69,7 +67,9 @@ implementation
 uses
   SysUtils,
   KM_Hand, KM_HandTypes, KM_Entity,
-  KM_ResUnits, KM_Houses, KM_HouseWoodcutters, KM_HouseSiegeWorkshop, KM_HouseWoodBurner, KM_HouseQueue,
+  KM_ResUnits,
+  KM_Houses, KM_HouseWoodcutters, KM_HouseSiegeWorkshop, KM_HouseWoodBurner, KM_HouseQueue,
+  KM_HouseSwineStable,
   KM_Terrain, KM_ResWares, KM_Log, KM_ResMapElements,
   KM_Resource, KM_CommonUtils, KM_HandsCollection, Math;
 
@@ -105,6 +105,10 @@ begin
 
   AfterWorkIdle := 0;
   ResourceDepleted := False;
+  TMPInt := 0;
+
+  Res.SetCount(WARES_IN_OUT_COUNT);
+  Prod.SetCount(WARES_IN_OUT_COUNT);
 end;
 
 
@@ -291,6 +295,7 @@ begin
         Res[I].W := wtNone;
         Res[I].C := 0;
       end;
+    Prod[0].C := TKMHouseQueue(H).Queue[0].Qt * gRes.Wares[Prod[0].W].GetProductionCount(htTailorsShop);
 
 
     if length(gRes.Houses[H.HouseType].WorkAnim) > 0 then
@@ -431,7 +436,7 @@ begin
       ) then
   begin
     PlantAct := taCut;
-    Result := treeList.GetClosest(aLoc, Tree){.GetWeightedRandom(Tree)};
+    Result := treeList.GetWeightedRandom(Tree);
   end
   else
   begin
@@ -440,8 +445,8 @@ begin
     for I := bestToPlant.Count - 1 downto 0 do
       if not TKMUnitCitizen(aUnit).CanWorkAt(bestToPlant[I], gsWoodCutterPlant) then
         bestToPlant.Delete(I);
-    //Result := bestToPlant.GetWeightedRandom(T);
-    Result := bestToPlant.GetClosest(aLoc, T);
+    Result := bestToPlant.GetWeightedRandom(T);
+    //Result := bestToPlant.GetClosest(aLoc, T);
     //Trees must always be planted facing north as that is the direction the animation uses
     if Result then
       Tree := KMPointDir(T, dirN)
@@ -451,8 +456,8 @@ begin
       for I := secondBestToPlant.Count - 1 downto 0 do
         if not TKMUnitCitizen(aUnit).CanWorkAt(secondBestToPlant[I], gsWoodCutterPlant) then
           secondBestToPlant.Delete(I);
-      Result := secondBestToPlant.GetClosest(aLoc, T);
-      //Result := secondBestToPlant.GetWeightedRandom(T);
+      //Result := secondBestToPlant.GetClosest(aLoc, T);
+      Result := secondBestToPlant.GetWeightedRandom(T);
       //Trees must always be planted facing north as that is the direction the animation uses
       if Result then
         Tree := KMPointDir(T, dirN);
@@ -507,11 +512,20 @@ var
   function GetFarmGrainType : TKMGrainTypeSet;
   begin
     Result := [];
+    if aUnit.Home.IsValid(htFarm) then
+      Result := TFarm(aUnit.Home).GrainTypes
+    else
+    if aUnit.Home.IsValid(htProductionThatch) then
+      Result := TThatch(aUnit.Home).GrainTypes;
+  end;
+  function GetFarmCutGrainType : TKMGrainTypeSet;
+  begin
+    Result := [];
     if aUnit.Home is TKMHouseFarm then
-      Result := TKMHouseFarm(aUnit.Home).GrainTypes
+      Result := TKMHouseFarm(aUnit.Home).CutGrainTypes
     else
     if aUnit.Home is TKMHouseProdThatch then
-      Result := TKMHouseProdThatch(aUnit.Home).GrainTypes;
+      Result := TKMHouseProdThatch(aUnit.Home).CutGrainTypes;
   end;
 begin
   Clear;
@@ -625,8 +639,10 @@ begin
     gsSwineBreeder:begin
                     hardWritten := true;
                     DefaultPlan(aUnit);
+                    Res.Clear;
+                    Res.AddWare(wtWater);
                     fIssued := true;
-                    for I := 0 to High(Res) do
+                    {for I := 0 to High(Res) do
                     begin
                       if Res[I].W = wtCorn then
                       begin
@@ -637,12 +653,20 @@ begin
                         
                       end;
                       
-                      if Res[I].W = wtHay then
-                        if aUnit.Home.CheckWareIn(wtHay) > 0 then
+                      if Res[I].W in [wtHay, wtVegetables] then
+                        if aUnit.Home.CheckWareIn(Res[I].W) > 0 then
                           Res[I].C := 1
                         else
                           Res[I].C := 0;
-                    end;
+                    end;}
+                    if aUnit.Home.CheckWareIn(wtCorn) > 0 then
+                      Res.AddWare(wtCorn);
+                    if aUnit.Home.CheckWareIn(wtHay) > 0 then
+                      Res.AddWare(wtHay);
+                    if aUnit.Home.CheckWareIn(wtVegetables) > 0 then
+                      Res.AddWare(wtVegetables);
+
+                    fIssued := Res.HasWares([wtWater]) and Res.HasAnyWares([wtCorn, wtHay, wtVegetables]);//corn or hay must be, vegetables are just additional
 
                    end;
     gsWoodCutterPlant,
@@ -707,22 +731,41 @@ begin
 
                       end;
     gsHovel:          begin
-                        Prod[0].C := 3;
                         hardWritten := true;
                         DefaultPlan(aUnit);
-                        Prod[1].W := wtNone;
-                        fIssued := True;
+                        Res.Clear;
+                        Res.AddWare(wtWater);
+                        if aUnit.Home.CheckWareIn(wtSeed) > 0 then
+                          Res.AddWare(wtSeed);
+                        if aUnit.Home.CheckWareIn(wtVegetables) > 0 then
+                          Res.AddWare(wtVegetables);
+                        if aUnit.Home.CheckWareIn(wtCorn) > 0 then
+                          Res.AddWare(wtCorn);
+
+
+                        {for I := 0 to High(Res) do
+                        begin
+                          if (Res[I].W in [wtSeed, wtVegetables, wtCorn]) and (aUnit.Home.CheckWareIn(Res[I].W) = 0) then
+                            Res[I].W := wtNone;
+
+                          if not TKMHouseHovel(aUnit.Home).CanFeedWithWare(Res[I].W) then
+                            Res[I].W := wtNone;
+
+                        end;}
+
+                        fIssued := Res.HasWares([wtWater]) and Res.HasAnyWares([wtSeed, wtVegetables, wtCorn]);
                       end;
     gsAppleTree:      if aHome = htAppleTree then
                       begin
                         hardWritten := true;
-                        fIssued := TKMHouseAppleTree(aUnit.Home).CanWork;
+                        TMPInt := TKMHouseAppleTree(aUnit.Home).CanWork(true, true);
+                        fIssued := TMPInt > -1;
                         if fIssued then
                         begin
-                          if TKMHouseAppleTree(aUnit.Home).NeedWater then
+                          if TKMHouseAppleTree(aUnit.Home).NeedWater(TMPInt) then
                           begin
                             tmpHouse := gHands[aUnit.Owner].GetClosestHouse(aUnit.Home.Position, [htWell], []);
-                            If (aUnit.Home.CheckWareIn(wtWater) = 0) and (tmpHouse <> nil) and (KMLengthDiag(tmpHouse.Position, aUnit.Home.Position) <= 5) then //don't take water when well is nearby and has water in it
+                            If (tmpHouse <> nil) and (KMLengthDiag(tmpHouse.Position, aUnit.Home.Position) <= 5) then //don't take water when well is nearby and has water in it
                             begin
                               //SubActAdd(haWork5, 5);
                               //tmpHouse.WareTakeFromOut(wtWater);//take water from nearest well
@@ -732,19 +775,37 @@ begin
                               WalkStyle(tmp, uaWalk, uaWalk,0,1,uaWalk,gsAppleTree);
                               ResourcePlan(wtNone,0,wtNone, 0, wtNone)
                             end else
-                              ResourcePlan(wtWater,1,wtNone, 0, wtNone);
+                            begin
+                              //well not found
+                              fIssued := false;
+                              if aUnit.Home.CheckWareIn(wtWater) > 0 then //has water, use it
+                              begin
+                                fIssued := true;
+                                ResourcePlan(wtWater,1,wtNone, 0, wtNone) ;
+                                SubActAdd(haWork5, 6);//play clear animation
+                              end else
+                              begin
+                                TMPInt := TKMHouseAppleTree(aUnit.Home).CanWork(true, false);//try to find any apple tree that doesn't need water
+                                fIssued := TMPInt > -1;
+                                if fIssued then
+                                begin
+                                  SubActAdd(haWork5, 6 * 20 div 10 + 1);//play clear animation
+                                  ResourcePlan(wtNone,0,wtNone, 0, wtApple);
+                                  Prod[0].C := 1;
+                                end;
+                              end;
 
-                            SubActAdd(haWork1, 10);
-                            SubActAdd(haIdle, 25 + KamRandom(10, 'TKMUnitWorkPlan.FindPlan:AppleTreeWorkAnim'));
+                            end;
+
                           end else
                           begin
-                            SubActAdd(haWork2, 20);
-                            SubActAdd(haIdle, 1);
+                            SubActAdd(haWork5, 6 * 20 div 10 + 1);//play clear animation
                             ResourcePlan(wtNone,1,wtNone, 0, wtApple);
                             Prod[0].C := 1;{gRes.Wares[wtApple].GetProductionCount(htAppleTree)}
+                            fIssued := true;
                           end;
 
-                          fIssued := true;
+                          //fIssued := true;
                         end;
                       end;
     gsFarmerSow,
@@ -755,7 +816,7 @@ begin
                         GrainType := GetFarmGrainType;
                         fIssued := gTerrain.FindCornField(aLoc, gRes.Units[aUnit.UnitType].MiningRange,
                                                           KMPOINT_ZERO, aPlantAct, tmpHouse, plantAct, tmp,
-                                                          GrainType);
+                                                          GetFarmCutGrainType);
 
                         
 
@@ -763,6 +824,25 @@ begin
                           case plantAct of
                             taCut:    begin
                                         ClearPlan;
+                                        if gTerrain.GetGrainType(tmp.Loc) in GRAIN_GRAIN then
+                                        begin
+                                          if not ((aUnit.Home.IsValid(htFarm) and TFarm(aUnit.Home).HasGrain)
+                                             or (aUnit.Home.IsValid(htProductionThatch) and TThatch(aUnit.Home).HasGrain)) then
+                                            fIssued := false;
+                                        end else
+                                        if gTerrain.GetGrainType(tmp.Loc) in GRAIN_GRASS then
+                                        begin
+                                          if not ((aUnit.Home.IsValid(htFarm) and TFarm(aUnit.Home).HasGrass)
+                                             or (aUnit.Home.IsValid(htProductionThatch) and TThatch(aUnit.Home).HasGrass)) then
+                                            fIssued := false;
+                                        end else
+                                        if gTerrain.GetGrainType(tmp.Loc) in GRAIN_VEGE then
+                                        begin
+                                          if not ((aUnit.Home.IsValid(htFarm) and TFarm(aUnit.Home).HasVege)
+                                             or (aUnit.Home.IsValid(htProductionThatch) and TThatch(aUnit.Home).HasVege)) then
+                                            fIssued := false;
+                                        end;
+
                                         if gTerrain.TileIsGrassField(tmp.Loc) and (gTerrain.Land^[tmp.Loc.Y, tmp.Loc.X].FieldAge = CORN_AGE_MAX) then
                                           WalkStyle(KMPointDir(tmp.Loc, dirN), uaWalkTool2,uaWork2,6,0,uaWalkBooty2,gsFarmerCorn)
                                         else
@@ -922,8 +1002,29 @@ begin
                       end;
     gsShipyard:       begin
                         hardWritten := true;
-                        DefaultPlan(aUnit);
-                        fIssued := True;
+                        Res.Clear;
+
+                        //DefaultPlan(aUnit);
+                        case TKMHouseShipYard(aUnit.Home).ShipType of
+                          utBoat: begin
+                                    Res.AddWare(wtTimber, 1);
+                                    Res.AddWare(wtLog, 1);
+                                    Res.AddWare(wtLeather, 1);
+                                  end;
+                          utShip: begin
+                                    Res.AddWare(wtTimber, 1);
+                                    Res.AddWare(wtLog, 1);
+                                    Res.AddWare(wtLeather, 1);
+                                  end;
+                          utBattleShip: begin
+                                          Res.AddWare(wtTimber, 1);
+                                          Res.AddWare(wtLog, 1);
+                                          Res.AddWare(wtLeather, 1);
+                                          Res.AddWare(wtSteelE, 1);
+                                          Res.AddWare(wtQuiver, 1);
+                                        end;
+                        end;
+                        fIssued := TKMHouseShipYard(aUnit.Home).CanWork;
                       end;
   else
     hardWritten := false;
@@ -943,6 +1044,9 @@ begin
 
     fIssued := ValidPlan;
   end;
+  WorkCyc := Max(Round(ifThen(aUnit.BootsAdded, WorkCyc * 0.75, WorkCyc)), 1);
+
+
 
   {if IsMiner and fIssued then
     if aHome is htProductionThatch then
@@ -977,7 +1081,8 @@ begin
     LoadStream.Read(HouseAct[I].Act, SizeOf(HouseAct[I].Act));
     LoadStream.Read(HouseAct[I].TimeToWork);
   end;
-
+  Res.SetCount(4);
+  Prod.SetCount(4);
   for I := 0 to 3 do //Write only assigned
     begin
       LoadStream.Read(Res[I].W, SizeOf(Res[I].W));
@@ -988,6 +1093,7 @@ begin
     end;
   LoadStream.Read(AfterWorkIdle);
   LoadStream.Read(ResourceDepleted);
+  LoadStream.Read(TMPInt);
   LoadStream.Read(WorkHouse, 4);
 end;
 
@@ -1025,6 +1131,7 @@ begin
   end;
   SaveStream.Write(AfterWorkIdle);
   SaveStream.Write(ResourceDepleted);
+  SaveStream.Write(TMPInt);
   SaveStream.Write(TKMHouse(WorkHouse).UID);
 end;
 

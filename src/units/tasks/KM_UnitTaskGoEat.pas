@@ -107,7 +107,7 @@ function TKMTaskGoEat.Execute: TKMTaskResult;
     Result := wtNone;
     I := 1;
     Repeat
-      case KamRandom(5, 'TKMTaskGoEat.Execute') of
+      case KamRandom(6, 'TKMTaskGoEat.Execute') of
         0 : WT := wtBread;
         1 : WT := wtWine;
         2 : WT := wtSausage;

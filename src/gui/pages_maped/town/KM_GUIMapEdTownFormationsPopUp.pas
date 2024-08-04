@@ -14,6 +14,10 @@ type
   private
     fOwner: TKMHandID;
     procedure Formations_Close(Sender: TObject);
+    procedure Formations_Change(Sender: TObject);
+    procedure Formations_MouseOverInc(Sender: TObject; Shift : TShiftState);
+    procedure Formations_MouseOverDec(Sender: TObject; Shift : TShiftState);
+    procedure Formations_PanelOver(Sender: TObject; Shift : TShiftState);
     function GetVisible: Boolean;
   protected
     Panel_Formations: TKMPanel;
@@ -22,6 +26,8 @@ type
       NumEdit_FormationsColumns: array [GROUP_TYPE_MIN..GROUP_TYPE_MAX] of TKMNumericEdit;
       Button_Formations_Ok: TKMButton;
       Button_Formations_Cancel: TKMButton;
+      BevelStack : TKMBevel;
+      ImageStack_Army : TKMImageStack;
   public
     constructor Create(aParent: TKMPanel);
 
@@ -45,7 +51,7 @@ const
                                                           TX_MAPED_AI_ATTACK_TYPE_ANTIHORSE,
                                                           TX_MAPED_AI_ATTACK_TYPE_RANGED,
                                                           TX_MAPED_AI_ATTACK_TYPE_MOUNTED,
-                                                          1643, 1883, 1963);
+                                                          1643, 1883, 1963, 2022);
   SIZE_X = 670;
   SIZE_Y = 280;
 var
@@ -62,29 +68,51 @@ begin
   TKMBevel.Create(Panel_Formations, -2000,  -2000, 5000, 5000);
   img := TKMImage.Create(Panel_Formations, -20, -50, SIZE_X+40, SIZE_Y+60, 15, rxGuiMain);
   img.ImageStretch;
-  TKMBevel.Create(Panel_Formations,   0,  0, SIZE_X, SIZE_Y);
+  with TKMBevel.Create(Panel_Formations,   0,  0, SIZE_X, SIZE_Y) do
+    OnMouseOver := Formations_PanelOver;
+
   TKMLabel.Create(Panel_Formations, SIZE_X div 2, 10, gResTexts[TX_MAPED_AI_FORMATIONS_TITLE], fntOutline, taCenter);
 
   Image_FormationsFlag := TKMImage.Create(Panel_Formations, 10, 10, 0, 0, 30, rxGuiMain);
 
   TKMLabel.Create(Panel_Formations, 20, 70, 80, 0, gResTexts[TX_MAPED_AI_FORMATIONS_COUNT], fntMetal, taLeft);
   TKMLabel.Create(Panel_Formations, 20, 95, 80, 0, gResTexts[TX_MAPED_AI_FORMATIONS_COLUMNS], fntMetal, taLeft);
+
   I := 0;
-  for GT := gtMelee to gtMounted do
+  for GT := gtMelee to GROUP_TYPE_MAX do
   begin
-    TKMLabel.Create(Panel_Formations, 130 + I * 110 + 32, 50, 0, 0, gResTexts[T[GT]], fntMetal, taCenter);
-    NumEdit_FormationsCount[GT] := TKMNumericEdit.Create(Panel_Formations, 130 + I * 110, 70, 1, 255);
-    NumEdit_FormationsColumns[GT] := TKMNumericEdit.Create(Panel_Formations, 130 + I * 110, 95, 1, 255);
+    with TKMLabel.Create(Panel_Formations, 50 + (I mod 4) * 140 + 32, 37 + (I div 4) * 90, 120, 35, gResTexts[T[GT]], fntMetal, taCenter) do
+    begin
+      WordWrap := true;
+      Hitable := false;
+      TextVAlign := tvaMiddle;
+    end;
+
+    NumEdit_FormationsCount[GT] := TKMNumericEdit.Create(Panel_Formations, 110 + (I mod 4) * 140, 75 + (I div 4) * 90, 1, 255);
+    NumEdit_FormationsColumns[GT] := TKMNumericEdit.Create(Panel_Formations, 110 + (I mod 4) * 140, 100 + (I div 4) * 90, 1, 255);
+    NumEdit_FormationsColumns[GT].OnChange := Formations_Change;
+    NumEdit_FormationsCount[GT].OnChange := Formations_Change;
+    NumEdit_FormationsColumns[GT].ButtonInc.OnMouseOver := Formations_MouseOverInc;
+    NumEdit_FormationsColumns[GT].ButtonDec.OnMouseOver := Formations_MouseOverDec;
+    NumEdit_FormationsCount[GT].ButtonInc.OnMouseOver := Formations_MouseOverInc;
+    NumEdit_FormationsCount[GT].ButtonDec.OnMouseOver := Formations_MouseOverDec;
     inc(I);
   end;
-  I := 0;
+  {I := 0;
   for GT := gtMachines to GROUP_TYPE_MAX do
   begin
-    TKMLabel.Create(Panel_Formations, 190 + I * 210 + 32, 125, 0, 0, gResTexts[T[GT]], fntMetal, taCenter);
-    NumEdit_FormationsCount[GT] := TKMNumericEdit.Create(Panel_Formations, 190 + I * 210, 145, 1, 255);
-    NumEdit_FormationsColumns[GT] := TKMNumericEdit.Create(Panel_Formations, 190 + I * 210, 170, 1, 255);
+    TKMLabel.Create(Panel_Formations, 150 + I * 170 + 32, 125, 0, 0, gResTexts[T[GT]], fntMetal, taCenter);
+    NumEdit_FormationsCount[GT] := TKMNumericEdit.Create(Panel_Formations, 150 + I * 170, 145, 1, 255);
+    NumEdit_FormationsColumns[GT] := TKMNumericEdit.Create(Panel_Formations, 150 + I * 170, 170, 1, 255);
+    NumEdit_FormationsColumns[GT].OnChange := Formations_Change;
+    NumEdit_FormationsCount[GT].OnChange := Formations_Change;
+
+    NumEdit_FormationsColumns[GT].ButtonInc.OnMouseOver := Formations_MouseOverInc;
+    NumEdit_FormationsColumns[GT].ButtonDec.OnMouseOver := Formations_MouseOverDec;
+    NumEdit_FormationsCount[GT].ButtonInc.OnMouseOver := Formations_MouseOverInc;
+    NumEdit_FormationsCount[GT].ButtonDec.OnMouseOver := Formations_MouseOverDec;
     inc(I);
-  end;
+  end;}
 
   {with TKMLabel.Create(Panel_Formations, 20, 205, SIZE_X - 20, 60, gResTexts[TX_MAPED_AI_FORMATIONS_AAI_INFO], fntMetal, taLeft) do
   begin
@@ -92,10 +120,18 @@ begin
     WordWrap := True;
   end;}
 
-  Button_Formations_Ok := TKMButton.Create(Panel_Formations, SIZE_X-20-320-10, SIZE_Y-50, 160, 30, gResTexts[TX_MAPED_OK], bsMenu);
+  Button_Formations_Ok := TKMButton.Create(Panel_Formations, (SIZE_X div 2) - 160 - 20 , SIZE_Y-40, 160, 30, gResTexts[TX_MAPED_OK], bsMenu);
   Button_Formations_Ok.OnClick := Formations_Close;
-  Button_Formations_Cancel := TKMButton.Create(Panel_Formations, SIZE_X-20-160, SIZE_Y-50, 160, 30, gResTexts[TX_MAPED_CANCEL], bsMenu);
+  Button_Formations_Cancel := TKMButton.Create(Panel_Formations, (SIZE_X div 2) + 20, SIZE_Y-40, 160, 30, gResTexts[TX_MAPED_CANCEL], bsMenu);
   Button_Formations_Cancel.OnClick := Formations_Close;
+
+  BevelStack := TKMBevel.Create(Panel_Formations, 0, 0, 60, 44);
+  ImageStack_Army    := TKMImageStack.Create(Panel_Formations, 0, 0, 56, 40, 43, 50);
+  ImageStack_Army.SetCount(1, 1, 1 div 2);
+  BevelStack.Hitable := false;
+  ImageStack_Army.Hitable := false;
+  BevelStack.Hide;
+  ImageStack_Army.Hide;
 end;
 
 
@@ -159,5 +195,78 @@ begin
   Panel_Formations.Hide;
 end;
 
+procedure TKMMapEdTownFormations.Formations_MouseOverInc(Sender: TObject; Shift: TShiftState);
+var GT, GT2 : TKMGroupType;
+begin
+  GT2 := gtNone;
+  for GT := GROUP_TYPE_MIN to GROUP_TYPE_MAX do
+    if (Sender = NumEdit_FormationsColumns[GT].ButtonInc) or (Sender = NumEdit_FormationsCount[GT].ButtonInc) then
+    begin
+      GT2 := GT;
+      Break;
+    end;
+  if GT2 = gtNone then
+    Exit;
+  BevelStack.Show;
+  ImageStack_Army.Show;
+
+  BevelStack.Left := NumEdit_FormationsCount[GT2].Left - BevelStack.Width - 4;
+  BevelStack.Top := NumEdit_FormationsCount[GT2].Top;
+  ImageStack_Army.Left := BevelStack.Left + 2;
+  ImageStack_Army.Top := BevelStack.Top + 2;
+
+  ImageStack_Army.SetCount(NumEdit_FormationsCount[GT2].Value, NumEdit_FormationsColumns[GT2].Value, NumEdit_FormationsColumns[GT2].Value div 2);
+  //BevelStack.RePaint;
+  //ImageStack_Army.Repaint;
+end;
+
+procedure TKMMapEdTownFormations.Formations_MouseOverDec(Sender: TObject; Shift: TShiftState);
+var GT, GT2 : TKMGroupType;
+begin
+
+  GT2 := gtNone;
+  for GT := GROUP_TYPE_MIN to GROUP_TYPE_MAX do
+    if (Sender = NumEdit_FormationsColumns[GT].ButtonDec) or (Sender = NumEdit_FormationsCount[GT].ButtonDec) then
+    begin
+      GT2 := GT;
+      Break;
+    end;
+  if GT2 = gtNone then
+    Exit;
+  BevelStack.Show;
+  ImageStack_Army.Show;
+
+  BevelStack.Left := NumEdit_FormationsCount[GT2].Left - BevelStack.Width - 4;
+  BevelStack.Top := NumEdit_FormationsCount[GT2].Top;
+  ImageStack_Army.Left := BevelStack.Left + 2;
+  ImageStack_Army.Top := BevelStack.Top + 2;
+
+  ImageStack_Army.SetCount(NumEdit_FormationsCount[GT2].Value, NumEdit_FormationsColumns[GT2].Value, NumEdit_FormationsColumns[GT2].Value div 2);
+  //BevelStack.RePaint;
+  //ImageStack_Army.Repaint;
+end;
+
+procedure TKMMapEdTownFormations.Formations_Change(Sender: TObject);
+var GT, GT2 : TKMGroupType;
+begin
+  GT2 := gtNone;
+  for GT := GROUP_TYPE_MIN to GROUP_TYPE_MAX do
+    if (Sender = NumEdit_FormationsColumns[GT]) or (Sender = NumEdit_FormationsCount[GT]) then
+    begin
+      GT2 := GT;
+      Break;
+    end;
+
+  if GT2 = gtNone then
+    Exit;
+  ImageStack_Army.SetCount(NumEdit_FormationsCount[GT2].Value, NumEdit_FormationsColumns[GT2].Value, NumEdit_FormationsColumns[GT2].Value div 2);
+
+end;
+
+procedure TKMMapEdTownFormations.Formations_PanelOver(Sender: TObject; Shift: TShiftState);
+begin
+  BevelStack.Hide;
+  ImageStack_Army.Hide;
+end;
 
 end.

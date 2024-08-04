@@ -144,6 +144,8 @@ type
     property Text : String read fText write fText;
     function KeyDown(Key: Word; Shift: TShiftState): Boolean; override;
     procedure MouseWheel(Sender: TObject; WheelSteps: Integer; var aHandled: Boolean); override;
+    property ButtonInc : TKMButton read fButtonInc;
+    property ButtonDec : TKMButton read fButtonDec;
     procedure Paint; override;
   end;
 

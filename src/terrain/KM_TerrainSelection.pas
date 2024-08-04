@@ -28,7 +28,7 @@ type
                     TileOwner: TKMHandID;
                     FieldAge: Byte;
                     CornOrWine: Byte; //Indicate Corn or Wine field placed on the tile (without altering terrain)
-                    CornOrWineTerrain: Byte; //We use fake terrain for maped to be able delete or alter it if needed
+                    CornOrWineTerrain: Word; //We use fake terrain for maped to be able delete or alter it if needed
                   end;
 
 
@@ -85,7 +85,7 @@ type
     procedure SetNiceCoal; //Do the actual paste from buffer to terrain
 
     procedure AddPattern(aType : TKMPatternType);
-    procedure SetFromPattern(aPatternID : Integer;ReplaceObjects : Boolean);
+    procedure SetFromPattern(aPatternID : Integer; ReplaceObjects, aDeselect : Boolean);
     property Rect : TKMRect read fSelectionRect write fSelectionRect;
 
     function TileWithinPastePreview(aX, aY: Word): Boolean;
@@ -1001,18 +1001,8 @@ begin
     for X := fSelectionRect.Left+1 to fSelectionRect.Right do
       for Y := fSelectionRect.Top+1 to fSelectionRect.Bottom do
       begin
-        if I = 0 then
-        begin
-          if  gTerrain.Land^[Y, X].TileOverlay2 in CLAY_LIKE_OVERLAYS then
-            gTerrain.Land^[Y, X].TileOverlay2 := toClay1;
-        end
-        else
-        begin
-
-          if CheckTilesAround(X, Y, aCO) then
-            gTerrain.Land^[Y, X].TileOverlay2 := TKMTileOverlay(byte(aCO) + 1);
-
-        end;
+        if CheckTilesAround(X, Y, aCO) then
+          gTerrain.Land^[Y, X].TileOverlay2 := TKMTileOverlay(byte(aCO) + 1);
       end;
   end;
 end;
@@ -1073,8 +1063,8 @@ end;
 procedure TKMSelection.AddPattern(aType : TKMPatternType);
 var X, Y, J, aStartX, aStartY : Integer;
 begin
-  aStartX := Min(fSelectionRect.Left, gTerrain.MapX - 31);
-  aStartY := Min(fSelectionRect.Top, gTerrain.MapY - 31);
+  aStartX := Min(fSelectionRect.Left + 1, gTerrain.MapX - 31);
+  aStartY := Min(fSelectionRect.Top + 1, gTerrain.MapY - 31);
   J := length(gRes.Patterns);
   SetLength(gRes.Patterns, J + 1);
 
@@ -1092,7 +1082,7 @@ begin
       gRes.Patterns[J].Value[X,Y] := gTerrain.Land^[aStartY + Y - 1, aStartX + X - 1].Obj;
 end;
 
-procedure TKMSelection.SetFromPattern(aPatternID : Integer;ReplaceObjects : Boolean);
+procedure TKMSelection.SetFromPattern(aPatternID : Integer;ReplaceObjects, aDeselect : Boolean);
 var X, Y: Integer;
   RanX, RanY : Integer;
   temp : array[0..MAX_MAP_SIZE, 0..MAX_MAP_SIZE] of Byte;
@@ -1165,10 +1155,10 @@ begin
     if gTerrain.TileInMapCoords(L[X]) then
       gTerrain.Land^[L[X].Y, L[X].X].Height := temp[L[X].X, L[X].Y];
   end;
-
-  for X := 1 to gTerrain.MapX - 1 do
-    for Y := 1 to gTerrain.MapY - 1 do
-      gTerrain.Land^[Y,X].TileSelected := false;
+  if aDeselect then
+    for X := 1 to gTerrain.MapX - 1 do
+      for Y := 1 to gTerrain.MapY - 1 do
+        gTerrain.Land^[Y,X].TileSelected := false;
 
 
   if gRes.Patterns[aPatternID].aType = ptHeights then

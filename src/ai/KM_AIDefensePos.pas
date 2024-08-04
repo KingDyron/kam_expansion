@@ -11,7 +11,7 @@ uses
 type
   TAIDefencePosition = class(TKMEntity)
   private
-    fOnPatrolTime : Cardinal;
+    fTimer : Cardinal;
     fDontRestock : Boolean;
     fDefenceType: TKMAIDefencePosType; //Whether this is a front or back line defence position. See comments on TAIDefencePosType above
     fGroupType: TKMGroupType; //Type of group to defend this position (e.g. melee)
@@ -137,7 +137,7 @@ begin
   fDefenceType := aDefenceType;
   CurrentGroup := nil; //Unoccupied
   IsOnPatrol := false;
-  fOnPatrolTime := 0;
+  fTimer := 0;
   fPositionPatrol.Dir := dirN;
 end;
 
@@ -213,7 +213,7 @@ begin
   SaveStream.Write(fDefenceType, SizeOf(fDefenceType));
   SaveStream.Write(fCurrentGroup.UID); //Store ID
   SaveStream.Write(IsOnPatrol); //Store ID
-  SaveStream.Write(fOnPatrolTime); //Store ID
+  SaveStream.Write(fTimer); //Store ID
   SaveStream.Write(fIsReturning); //Store ID
   SaveStream.Write(fDontRestock); //Store ID
 end;
@@ -231,7 +231,7 @@ begin
   LoadStream.Read(fDefenceType, SizeOf(fDefenceType));
   LoadStream.Read(fCurrentGroup, 4); //subst on syncload
   LoadStream.Read(IsOnPatrol); //subst on syncload
-  LoadStream.Read(fOnPatrolTime); //subst on syncload
+  LoadStream.Read(fTimer); //subst on syncload
   LoadStream.Read(fIsReturning); //Store ID
   LoadStream.Read(fDontRestock); //Store ID
 end;
@@ -268,10 +268,11 @@ procedure TAIDefencePosition.UpdateState;
     
   end;
 var aToLoc : TKMPointDir;
+  J : Integer;
 begin
   //If the group is Dead or too far away we should disassociate
   //them from the defence position so new warriors can take up the defence if needs be
-  if self.fDefenceType in [dtBackLine{, dtFrontLine}] then
+  if fDefenceType = dtBackLine then
   begin
     if (CurrentGroup = nil)
     or CurrentGroup.IsDead
@@ -279,6 +280,19 @@ begin
         and (KMLengthDiag(Position.Loc, CurrentGroup.Position) > Radius)) then
       CurrentGroup := nil;
 
+  end else
+  if fDefenceType = dtGuardLine then
+  begin
+
+
+    if (CurrentGroup = nil)
+    or CurrentGroup.IsDead
+    or ((CurrentGroup.InFight or (CurrentGroup.Order in [goAttackHouse, goAttackUnit]))
+        and (KMLengthDiag(Position.Loc, CurrentGroup.Position) > Radius)) then
+    begin
+      CurrentGroup := nil;
+      fTimer := 0;
+    end;
   end else
   begin
 
@@ -313,7 +327,31 @@ begin
   if (CurrentGroup <> nil)
     and CurrentGroup.IsIdleToAI([wtokFlagPoint, wtokHaltOrder]) then
   begin
-    if (PositionPatrol.Loc.X <= 0) or (DefenceType = dtBackLine)then
+    if (DefenceType = dtGuardLine) then
+    begin
+      Inc(fTimer);
+      if fTimer >= 30 then
+      begin
+
+        fPositionPatrol.Loc := KMPointRandomInRadius(Position.Loc, Radius);
+        J := 0;
+        while (J < 10) and not CurrentGroup.CanWalkTo(fPositionPatrol.Loc, 0) and (KMLength(Position.Loc, fPositionPatrol.Loc) > Radius)  do
+        begin
+          fPositionPatrol.Loc := KMPointRandomInRadius(Position.Loc, Radius);
+          inc(J);
+        end;
+        fPositionPatrol.Dir := KMGetDirection(Position.Loc, fPositionPatrol.Loc);
+
+        If CurrentGroup.CanWalkTo(fPositionPatrol.Loc, 0) then
+        begin
+          CurrentGroup.OrderWalk(fPositionPatrol.Loc, True, wtokAIGotoDefencePos, fPositionPatrol.Dir);
+          fTimer := 0;
+        end;
+      end;
+
+
+    end else
+    if (PositionPatrol.Loc.X <= 0) or (DefenceType = dtBackLine) then
     begin
       aToLoc := Position;// KMPointDir(PositionPatrol.Loc, Position.Dir);
       if IsOnPatrol and (DefenceType = dtBackLine) and (PositionPatrol.Loc.X > 0) then
@@ -322,11 +360,12 @@ begin
       If CurrentGroup.CanWalkTo(aToLoc.Loc, 0) then
         CurrentGroup.OrderWalk(aToLoc.Loc, True, wtokAIGotoDefencePos, aToLoc.Dir);
     end else
+    if (PositionPatrol.Loc.X <= 0) then
     begin
-      Inc(fOnPatrolTime);
-      if fOnPatrolTime = 30 then
+      Inc(fTimer);
+      if fTimer = 30 then
       begin
-        fOnPatrolTime := 0;
+        fTimer := 0;
         if IsOnPatrol then
         begin
           If CurrentGroup.CanWalkTo(Position.Loc, 0) then
@@ -350,6 +389,7 @@ begin
       end;
 
     end;
+
 
 
 

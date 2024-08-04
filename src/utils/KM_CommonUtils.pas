@@ -219,6 +219,15 @@ const
   procedure IncLoop(var A : Word; const aLow, aMax : Word; const aStep : Word = 1); overload;
   procedure IncLoop(var A : Byte; const aLow, aMax : Byte; const aStep : Byte = 1); overload;
 
+  procedure Inc(var X: SmallInt; A : SmallInt = 1); overload;
+  procedure Inc(var X: ShortInt; A : ShortInt = 1); overload;
+  procedure Inc(var X: Int64; A : Int64 = 1); overload;
+  procedure Inc(var X: Integer; A : Integer = 1); overload;
+  procedure Inc(var X: Cardinal; A : Cardinal = 1); overload;
+  procedure Inc(var X: Byte; A : Byte = 1); overload;
+  procedure Inc(var X: Word; A : Word = 1); overload;
+  procedure Inc(var X: Single; A : Single = 1); overload;
+
 implementation
 uses
   StrUtils, Types, UITypes,
@@ -2279,5 +2288,47 @@ function IsNil(aObject : Pointer) : Boolean;
 begin
   Result := aObject = nil;
 end;
+
+procedure Inc(var X: SmallInt; A : SmallInt = 1);
+begin
+  X := X + A;
+end;
+
+procedure Inc(var X: ShortInt; A : ShortInt = 1);
+begin
+  X := X + A;
+end;
+
+procedure Inc(var X: Int64; A : Int64 = 1);
+begin
+  X := X + A;
+end;
+
+procedure Inc(var X: Integer; A : Integer = 1);
+begin
+  X := X + A;
+end;
+
+
+procedure Inc(var X: Cardinal; A : Cardinal = 1);
+begin
+  X := X + A;
+end;
+
+procedure Inc(var X: Byte; A : Byte = 1);
+begin
+  X := X + A;
+end;
+
+procedure Inc(var X: Word; A : Word = 1);
+begin
+  X := X + A;
+end;
+
+procedure Inc(var X: Single; A : Single = 1);
+begin
+  X := X + A;
+end;
+
 
 end.

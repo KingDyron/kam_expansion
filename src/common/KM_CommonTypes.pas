@@ -81,6 +81,7 @@ type
     procedure Create(X, Y : Integer; Steps : TIntegerArray; aOffset : Byte = 0);overload;
     procedure Create(Steps : TIntegerArray; aDuplicates : Byte = 1);overload;
     procedure Create(X, Y, StepStart, aCount : Integer; aOffset : Byte = 0; doBackWard : Boolean = false);overload;
+    procedure Clear;
   end;
 
   TKMAnimation = packed record
@@ -100,12 +101,18 @@ type
     procedure Create(aX, aY, StepStart, aCount : Integer; aOffset : Byte = 0; doBackWard : Boolean = false);overload;
     procedure Create(aAnimation : TKMAnimLoop); overload;
     procedure Create(aName : String); overload;
+
     procedure Extend(aCount : Byte);
     procedure SaveToStream(SaveStream : TObject);
     procedure LoadFromStream(LoadStream : TObject);
   end;
 
+  function Anim(aX, aY : Integer; aAnimation : TKMWordArray; aOffset : Byte = 0) : TKMAnimation;overload;
+  function Anim(aX, aY, StepStart, aCount : Integer; aOffset : Byte = 0; doBackWard : Boolean = false) : TKMAnimation;overload;
+  function Anim(aAnimation : TKMAnimLoop) : TKMAnimation;overload;
+  function Anim(aName : String) : TKMAnimation;overload;
 
+type
   TKMCursorDir = (cdNone = 0, cdForward = 1, cdBack = -1);
 
   TWonOrLost = (wolNone, wolWon, wolLost);
@@ -169,7 +176,6 @@ type
 
   TKMColor3bArray = array of TKMColor3b;
   TKMProgressBarOrientation = (pboLeft, pboRight, pboUp, pboDown);
-
 const
   COLOR3F_WHITE: TKMColor3f = (R: 1; G: 1; B: 1);
   COLOR3F_BLACK: TKMColor3f = (R: 0; G: 0; B: 0);
@@ -430,6 +436,16 @@ begin
     Step[I + 1] := StepStart + (I + aOffset) mod aCount;
 end;
 
+procedure TKMAnimLoop.Clear;
+var I : Integer;
+begin
+  for I := Low(Step) to High(Step) do
+    Step[I] := -1;
+  Count := 0;
+  MoveX := 0;
+  MoveY := 0;
+end;
+
 procedure TKMAnimation.Clear;
 begin
   SetLength(fSteps, 0);
@@ -556,6 +572,27 @@ begin
   SetLength(fSteps, newCount);
   for I := 0 to newCount - 1 do
     TKMemoryStream(LoadStream).Read(fSteps[I]);
+end;
+
+
+function Anim(aX, aY : Integer; aAnimation : TKMWordArray; aOffset : Byte = 0) : TKMAnimation;
+begin
+  Result.Create(aX, aY, aAnimation, aOffset);
+end;
+
+function Anim(aX, aY, StepStart, aCount : Integer; aOffset : Byte = 0; doBackWard : Boolean = false) : TKMAnimation;
+begin
+  Result.Create(aX, aY, StepStart, aCount, aOffset, doBackWard);
+end;
+
+function Anim(aAnimation : TKMAnimLoop) : TKMAnimation;
+begin
+  Result.Create(aAnimation);
+end;
+
+function Anim(aName : String) : TKMAnimation;
+begin
+  Result.Create(aName);
 end;
 
 end.

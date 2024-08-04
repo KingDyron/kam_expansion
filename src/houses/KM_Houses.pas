@@ -181,6 +181,7 @@ type
 
     function GetWareDistribution(aID: Byte): Byte; //Will use GetRatio from mission settings to find distribution amount
     procedure SetIsClosedForWorker(aIsClosed: Boolean);
+    function GetClosedForWorker : Boolean; virtual;
     procedure UpdateDeliveryMode;
     function GetHasWorker: Boolean;
     procedure ShowMsg(aTextID: Integer);
@@ -192,6 +193,7 @@ type
     procedure SetStyle(aValue : Byte);
     procedure SetLevel(aValue : Byte);
     function GetProductionCycle(aIndex : Byte) : Word;
+    function PaintHouseWork : Boolean; virtual;
   protected
     fWorkers: TPointerArray;
     fProductionCycles: array [1..WARES_IN_OUT_COUNT] of Word; //If HousePlaceOrders=True then here are production orders
@@ -212,6 +214,7 @@ type
     procedure SetNewDeliveryMode(aValue: TKMDeliveryMode); virtual;
     procedure CheckTakeOutDeliveryMode; virtual;
     function GetDeliveryModeForCheck(aImmidiate: Boolean): TKMDeliveryMode;
+    function ShowUnoccupiedMSG : Boolean; virtual;
 
     procedure SetWareDeliveryCount(aIndex: Integer; aCount: Word);
     function GetWareDeliveryCount(aIndex: Integer): Word;
@@ -316,7 +319,8 @@ type
     procedure SetWorker(aWorker: Pointer); //Explicitly use SetWorker, to make it clear its not only pointer assignment
     property HasWorker: Boolean read GetHasWorker; //There's a citizen who runs this house
     //function CanHasWorker: Boolean;//deprecated
-    property IsClosedForWorker: Boolean read fIsClosedForWorker write SetIsClosedForWorker;
+    property IsClosedForWorker: Boolean read GetClosedForWorker write SetIsClosedForWorker;
+    function GetWasClosedByHand : Boolean;
     property DisableUnoccupiedMessage: Boolean read fDisableUnoccupiedMessage write fDisableUnoccupiedMessage;
     function HasWorkerInside : Boolean;
     function WorkersCount : Word;overload;
@@ -333,6 +337,7 @@ type
     function GetHealth: Word;
     function GetBuildWoodDelivered: Byte;
     function GetBuildStoneDelivered: Byte;
+    function GetBuildTileDelivered: Byte;
     property TileDelivered: Byte read fBuildTileDelivered;
     function GetBuildResourceDelivered: Byte;
     function GetBuildResDeliveredPercent: Single;
@@ -344,13 +349,18 @@ type
     property BuildingState: TKMHouseBuildState read fBuildState write fBuildState;
     property BuildSupplyWood: Byte read fBuildSupplyWood;
     property BuildSupplyStone: Byte read fBuildSupplyStone;
-    procedure IncBuildingProgress;
+    property BuildSupplyTile: Byte read fBuildSupplyTile;
+    procedure IncBuildingProgress; overload;
+    procedure IncBuildingProgress(aStep : Integer); overload;
     procedure IncBuildingUpgradeProgress;
     property IsMaxLevel : Boolean read CheckMaxLevel;
     function MaxHealth: Word;
     procedure AddDamage(aAmount: Word; aAttacker: TObject; aIsEditor: Boolean = False);
     procedure AddRepair(aAmount: Word = 5);
     procedure UpdateDamage;
+    procedure AddDemandBuildingMaterials;virtual;
+
+    procedure SetBuildingProgress(aProgress, aWood, aStone, aTile : Word);
 
     function IsStone: Boolean;
     function IsComplete: Boolean; inline;
@@ -371,9 +381,10 @@ type
     function GetMaxInWare: Word;
     function GetMaxOutWare: Word;
     procedure WareAddToIn(aWare: TKMWareType; aCount: Integer = 1; aFromStaticScript: Boolean = False); virtual; //override for School and etc..
-    procedure WareAddToOut(aWare: TKMWareType; const aCount: Integer = 1);
+    procedure WareAddToOut(aWare: TKMWareType; const aCount: Integer = 1); virtual;
     procedure WareAddToEitherFromScript(aWare: TKMWareType; aCount: Integer);
-    function WareAddToBuild(aWare: TKMWareType; aCount: Integer = 1) : Boolean;
+    function WareAddToBuild(aWare: TKMWareType; aCount: Integer = 1) : Boolean; virtual;
+    function NeedsWareToBuild(aWare: TKMWareType) : Boolean;
     procedure WareTake(aWare: TKMWareType; aCount: Word = 1; aFromScript: Boolean = False); virtual;
     procedure WareTakeFromIn(aWare: TKMWareType; aCount: Word = 1; aFromScript: Boolean = False); virtual;
     procedure WareTakeFromOut(aWare: TKMWareType; aCount: Word = 1; aFromScript: Boolean = False); virtual;
@@ -386,7 +397,7 @@ type
     property ResOut[aId: Byte]: Word read GetWareOut write SetWareOut;
     property WareInLocked[aId: Byte]: Word read GetWareInLocked;
     procedure ToggleAcceptWaresIn(aWare : TKMWareType; aCount : Integer = 1);
-    Procedure ProduceWare(aWare : TKMWareType; aCount : Integer = 1);
+    Procedure ProduceWare(aWare : TKMWareType; aCount : Integer = 1); virtual;
     function GetWareProdCt(aWare : TKMWareType) : Byte;
     procedure SetWareInCnt(aWare : TKMWareType; aValue : Integer);
     function CanMakeUpgrade : Boolean;
@@ -398,10 +409,14 @@ type
     property ForceWorking : Boolean read fForceWorking write fForceWorking;
     property DontNeedRes : Boolean read fDontNeedRes write fDontNeedRes;
 
-    procedure IncProductionCycle(aWare : TKMWareType);
+    procedure IncProductionCycle(aIndex : Integer);overload;
+    procedure IncProductionCycle(aWare : TKMWareType);overload;
+    procedure IncProductionCycle(aWare : TKMWareType; aCount : Integer);overload;
     property ProductionCycle[aIndex : Byte] : Word read GetProductionCycle;
     function GetWareInIndex(aWare : TKMWareType) : Byte;
     function GetWareOutIndex(aWare : TKMWareType) : Byte;
+    function IsValid(aHouseType : TKMHouseType = htAny; aDifferent : Boolean = false; aBuilt : Boolean = false) : Boolean;
+    function PlaceRoad : Boolean; virtual;
 
 
     property HSpec : TKMHouseSpec read GetHouseSpec;
@@ -506,28 +521,64 @@ type
       fGrowPhase : Byte;
       fPhase : Word;
       fProgress : Integer;
-      fFruitTreeID : ShortInt;
+      fNextFruitTreeID,
+      fFruitTreeID : Integer;
+
       fFillFruits : Single;
-      procedure SetProgress;
+      fParentTree : Pointer;
+      fChildTrees : TPointerArray;
+      fWorkAnim : TKMHouseActionType;
+      fStartAnim : Integer;
+      fWorkingAtChild : Integer;
+      fTmpObject : Word;
+      procedure SetProgress(aIgnoreWater : Boolean = false);
       procedure SetGrowPhase(aValue : Byte);
-      procedure SetFruitTreeID(aValue : ShortInt);
+      procedure SetFruitTreeID(aValue : Integer);
+
+      function  GetParentTree: TKMHouse;
+      procedure SetParentTree(aHouse : TKMHouse);
+      procedure ClearChilds;
+      function ChildCount : Integer;
+      procedure AddChildTree(aTree : Pointer);
+      procedure RemoveChild(aHouse : Pointer);
+
+      function GetClosedForWorker : Boolean; override;
+      function PaintHouseWork : Boolean; override;
+      procedure RecheckParenting(aPosX : Integer = -1; aPosY : Integer = -1);
     protected
        procedure Activate(aWasBuilt: Boolean); override;
-    public
+       function ShowUnoccupiedMSG : Boolean; override;
+     public
       procedure UpdatePosition(const aPos: TKMPoint); override;//Used only by map editor
+      procedure Demolish(aFrom: TKMHandID; IsSilent: Boolean = False); override;
+      Procedure ProduceWare(aWare : TKMWareType; aCount : Integer = 1); override;
+      function PlaceRoad : Boolean; override;
+      procedure WareAddToIn(aWare: TKMWareType; aCount: Integer = 1; aFromStaticScript: Boolean = False); override; //override for School and etc..
+      function WareAddToBuild(aWare: TKMWareType; aCount: Integer = 1) : Boolean; override;
 
-
-      function CanWork : Boolean;
-      function IncGrowPhase : Boolean;
-      Function NeedWater: Boolean;
+      function CanWork(aCheckChild : Boolean = false; aIncludeWater : Boolean = true) : Integer;
+      function IncGrowPhase(aChildID : Integer = 0) : Boolean;
+      Function NeedWater(aChildID : Integer = 0): Boolean;
       property GrowPhase : Byte read fGrowPhase write SetGrowPhase;
-      property FruitType : ShortInt read fFruitTreeID write SetFruitTreeID;
-      procedure MakeFruits;
+      property FruitType : Integer read fFruitTreeID write SetFruitTreeID;
+      procedure MakeFruits(aChildID : Integer = 0);
+      function CanAddChildTree(aLoc : TKMPoint) : Boolean; overload;
+      function CanAddChildTree(X, Y : Integer) : Boolean; overload;
+      property ParentTree : TKMHouse read GetParentTree write SetParentTree;
+      function ChildTree(aIndex : Integer) : TKMHouseAppleTree;
+      procedure AddDemandBuildingMaterials; override;
+
+      function GetFruitType : Byte;
+      procedure SetNextFruitType(aStep : Integer);
+
+      procedure SetAnimation(aChildID : Integer = -1);
 
       constructor Create(aUID: Integer; aHouseType: TKMHouseType; PosX, PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
       constructor Load(LoadStream: TKMemoryStream); override;
+      procedure SyncLoad; override;
       procedure Save(SaveStream: TKMemoryStream); override;
       procedure UpdateState(aTick: Cardinal); override;
+      procedure UpdateDemands; override;
       procedure Paint; Override;
       function ObjToString(const aSeparator: String = '|'): String; override;
 
@@ -645,6 +696,7 @@ type
       procedure SetNextGrassType(aValue : Integer);
       procedure SetNextVegeType(aValue : Integer);
       function GetGrainTypes : TKMGrainTypeSet;
+      function GetCutGrainTypes : TKMGrainTypeSet;
     protected
       procedure MakeSound; Override; //Swine/stables make extra sounds
     public
@@ -658,8 +710,13 @@ type
       property GrassType : TKMGrainType read fGrassType;
       property VegeType : TKMGrainType read fVegeType;
       property GrainTypes : TKMGrainTypeSet read GetGrainTypes;
+      property CutGrainTypes : TKMGrainTypeSet read GetCutGrainTypes;
       procedure SetNextGrainType(aValue : Integer; aType : Byte);
       procedure GrainCut(aGrain : TKMGrainType);
+
+      function HasGrain : Boolean;
+      function HasGrass : Boolean;
+      function HasVege : Boolean;
 
       constructor Create(aUID: Integer; aHouseType: TKMHouseType; PosX, PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
       constructor Load(LoadStream: TKMemoryStream); override;
@@ -677,6 +734,7 @@ type
       fFillCorn,
       fFillVege : Single;
       function GetGrainTypes : TKMGrainTypeSet;
+      function GetCutGrainTypes : TKMGrainTypeSet;
       procedure SetNextGrassType(aValue : Integer);
       procedure SetNextVegeType(aValue : Integer);
     protected
@@ -688,10 +746,14 @@ type
       property GrassType : TKMGrainType read fGrassType;
       property VegeType : TKMGrainType read fVegeType;
       property GrainTypes : TKMGrainTypeSet read GetGrainTypes;
+      property CutGrainTypes : TKMGrainTypeSet read GetCutGrainTypes;
       procedure SetNextGrainType(aValue : Integer; aType : Byte);
       function GetProgressArray : TSingleArray;
       function GetTexIDsArray : TKMWord2Array;
       procedure GrainCut(aGrain : TKMGrainType);
+      function HasGrain : Boolean;
+      function HasGrass : Boolean;
+      function HasVege : Boolean;
   end;
   TKMHouseVineYard = class(TKMHouse)
     private
@@ -710,15 +772,20 @@ type
 
   TKMHouseShipyard = class(TKMHouse)
     private
-      fShipType : TKMUnitType;
+      fWayOutID : Byte;
+      fShipType, fNextShipType : TKMUnitType;
       fShipSketchPosition : TKMPointDir;
       fShipPhase : Byte;
+      fDoWork : Boolean;
     protected
        procedure Activate(aWasBuilt: Boolean); override;
     public
       constructor Load(LoadStream: TKMemoryStream); override;
       procedure Save(SaveStream: TKMemoryStream); override;
-      property ShipType : TKMUnitType read fShipType write fShipType;
+      property ShipType : TKMUnitType read fShipType;
+      property NextShipType : TKMUnitType read fNextShipType;
+      property DoWork : Boolean read fDoWork write fDoWork;
+      procedure SetNextShipType(aAmount : Integer);
 
       procedure IncSketchPhase;
       function CanWork : Boolean;
@@ -726,6 +793,12 @@ type
 
       procedure Paint; Override;
   end;
+
+  TShipyard = TKMHouseShipyard;//just a shurtcut
+  TVineyard = TKMHouseVineYard;//just a shurtcut
+  TFarm = TKMHouseFarm;//just a shurtcut
+  TThatch = TKMHouseProdThatch;//just a shurtcut
+  TStall = TKMHouseStall;//just a shurtcut
 
 implementation
 uses
@@ -764,7 +837,8 @@ begin
   inherited Create(etHouse, aUID, aOwner);
 
   fType     := aHouseType;
-  fPosition := KMPoint (PosX, PosY);
+
+  fPosition := KMPoint(PosX, PosY);
   UpdateEntrancePos;
 end;
 
@@ -775,7 +849,7 @@ begin
   if IsEmpty then Exit;
   
   fEntrance.X := fPosition.X + gRes.Houses[fType].EntranceOffsetX;
-  fEntrance.Y := fPosition.Y;
+  fEntrance.Y := fPosition.Y + gRes.Houses[fType].EntranceOffsetY;
   Assert((fEntrance.X > 0) and (fEntrance.Y > 0));
 
   fPointBelowEntrance := KMPointBelow(fEntrance);
@@ -906,7 +980,7 @@ var
   //firstHouse : TKMHouse;
 begin
   inherited Create(aUID, aHouseType, PosX, PosY, aOwner);
-
+  //SetPosition(KMPoint(PosX - gRes.Houses[aHouseType].EntranceOffsetX, PosY));
   fBuildState := aBuildState;
 
   fBuildSupplyWood  := 0;
@@ -1318,7 +1392,7 @@ begin
   //We have to remove the house THEN check to see if we can place it again so we can put it on the old position
   gTerrain.SetHouse(self, HAND_NONE, hsNone);
 
-  if gMySpectator.Hand.CanAddHousePlan(aPos, HouseType) then
+  if gHands[Owner].CanAddHousePlan(aPos, HouseType) then
   begin
     isRallyPointSet := False;
     //Save if flag point was set for previous position
@@ -1327,7 +1401,8 @@ begin
 
     gTerrain.RemRoad(Entrance);
 
-    SetPosition(KMPoint(aPos.X - gRes.Houses[fType].EntranceOffsetX, aPos.Y));
+    SetPosition(KMPoint(aPos.X - gRes.Houses[fType].EntranceOffsetX, aPos.Y - gRes.Houses[fType].EntranceOffsetY));
+    gTerrain.SetRoad(Entrance, Owner, rtStone);
 
     //Update rally/cutting point position for houses with flag point after change fPosition
     if (Self is TKMHouseWFlagPoint) then
@@ -1338,8 +1413,14 @@ begin
         TKMHouseWFlagPoint(Self).ValidateFlagPoint;
     end;
   end;
+  case fBuildState of
+    hbsNoGlyph,
+    hbsWood: gTerrain.SetHouse(self, Owner, hsFence); // Update terrain tiles for house;
+    hbsStone,
+    hbsDone: gTerrain.SetHouse(self, Owner, hsBuilt); // Update terrain tiles for house;
+  end;
 
-  gTerrain.SetHouse(self, Owner, hsBuilt); // Update terrain tiles for house
+
 
   //Do not remove all snow if house is moved from snow to snow
   wasOnSnow := fIsOnSnow;
@@ -1417,6 +1498,10 @@ begin
     Result := DeliveryMode;
 end;
 
+function TKMHouse.ShowUnoccupiedMSG: Boolean;
+begin
+  Result := true;
+end;
 
 procedure TKMHouse.UpdateDeliveryMode;
 begin
@@ -2082,6 +2167,20 @@ begin
     Result := fBuildStoneDelivered;
 end;
 
+function TKMHouse.GetBuildTileDelivered: Byte;
+begin
+
+  case fBuildState of
+    hbsDone:  Result := gRes.Houses[fType].TileCost;
+    hbsWood:  Result := fBuildTileDelivered;
+    hbsStone: Result := fBuildTileDelivered;
+    else       Result := 0;
+  end;
+
+  if IsUpgrading then
+    Result := fBuildTileDelivered;
+end;
+
 
 function TKMHouse.GetBuildResourceDelivered: Byte;
 begin
@@ -2094,6 +2193,15 @@ begin
   Result := GetBuildResourceDelivered / (gRes.Houses[fType].TotalBuildSupply);
 end;
 
+procedure TKMHouse.IncBuildingProgress(aStep: Integer);
+var progress : Single;
+begin
+  if gGameParams.Mode <> gmMapEd then
+    Exit;
+
+  progress := (BuildSupplyWood + BuildSupplyStone + BuildSupplyTile) / HSpec.TotalBuildSupply;
+  fBuildingProgress := EnsureRange(fBuildingProgress - aStep, 0, Round(MaxHealth * progress));
+end;
 
 // Increase building progress of house. When it reaches some point Stoning replaces Wooding
 // and then it's done and house should be finalized
@@ -2120,28 +2228,31 @@ procedure TKMHouse.IncBuildingProgress;
       gHands[Owner].Constructions.RepairList.AddHouse(Self);
 
     gScriptEvents.ProcHouseBuilt(Self); //At the end since it could destroy this house
+    gTerrain.SetHouse(self, Owner, hsBuilt);
   end;
 begin
   if IsComplete then Exit;
 
-  if (fBuildState = hbsWood) and (fBuildReserve <= 0) then
+  if (fBuildState = hbsWood) and (fBuildReserve <= 0) and (fBuildSupplyWood > 0) then
   begin
     Dec(fBuildSupplyWood);
     Inc(fBuildReserve, gRes.Houses[fType].HealthSupplyStep);
   end;
 
-  if (fBuildState = hbsStone) and (fBuildReserve <= 0) then
+  if (fBuildState = hbsStone) and (fBuildReserve <= 0) and ((fBuildSupplyStone > 0) or (fBuildSupplyTile > 0)) then
   begin
     if (fBuildSupplyStone = 0) and (fBuildStoneDelivered = gRes.Houses[fType].StoneCost) then
     begin
 
       if gRes.Houses[fType].TileCost > 0 then
-      begin
-        Dec(fBuildSupplyTile);
-        Inc(fBuildReserve, gRes.Houses[fType].HealthSupplyStep + 5);
-      end;
+        if fBuildSupplyTile > 0 then
+        begin
+          Dec(fBuildSupplyTile);
+          Inc(fBuildReserve, gRes.Houses[fType].HealthSupplyStep + 5);
+        end;
 
     end else
+    if fBuildSupplyStone > 0 then
     begin
       Dec(fBuildSupplyStone);
       Inc(fBuildReserve, gRes.Houses[fType].HealthSupplyStep + 5);
@@ -2390,13 +2501,93 @@ begin
     gScriptEvents.ProcHouseRepaired(Self, oldDmg - fDamage, fDamage);
 end;
 
+procedure TKMHouse.AddDemandBuildingMaterials;
+begin
+  gHands[Owner].Deliveries.Queue.AddDemand(self, nil, wtTimber, gRes.Houses[self.HouseType].WoodCost, dtOnce, diHigh4);
+  gHands[Owner].Deliveries.Queue.AddDemand(self, nil, wtStone, gRes.Houses[self.HouseType].StoneCost, dtOnce, diHigh4);
+  gHands[Owner].Deliveries.Queue.AddDemand(self, nil, wtTile, gRes.Houses[self.HouseType].TileCost, dtOnce, diHigh4);
+end;
+
+procedure TKMHouse.SetBuildingProgress(aProgress: Word; aWood: Word; aStone: Word; aTile: Word);
+var I, newAmount, resNeeded, plannedToRemove : Integer;
+  progress : Single;
+begin
+  if gGameParams.Mode = gmMapEd then
+  begin
+    fBuildSupplyWood := EnsureRange(aWood, 0, HSpec.WoodCost);
+    fBuildSupplyStone := EnsureRange(aStone, 0, HSpec.StoneCost);
+    fBuildSupplyTile := EnsureRange(aTile, 0, HSpec.TileCost);
+    if fBuildSupplyWood < HSpec.WoodCost then //not enough wood, so max progress is BuildSuppyWood / HSpec.TotalBuildSupply;
+      progress := BuildSupplyWood / HSpec.TotalBuildSupply
+    else
+      progress := (BuildSupplyWood + BuildSupplyStone + BuildSupplyTile) / HSpec.TotalBuildSupply;
+    fBuildingProgress := EnsureRange(aProgress, 0, Round(progress * HSpec.MaxHealth)) div 5 * 5;
+  end else
+  begin
+
+    newAmount := EnsureRange(aWood, -BuildSupplyWood, gRes.Houses[HouseType].WoodCost - GetBuildWoodDelivered);
+    if newAmount > 0 then
+    begin
+      resNeeded := gHands[Owner].Deliveries.Queue.TryRemoveDemand(self, wtTimber, newAmount, plannedToRemove);
+      Inc(resNeeded, plannedToRemove);
+      WareAddToBuild(wtTimber, resNeeded);
+    end
+    else
+    begin
+      WareAddToBuild(wtTimber, newAmount);
+      gHands[Owner].Deliveries.Queue.AddDemand(self, nil, wtTimber, -newAmount, dtOnce, diHigh4);
+    end;
+
+    newAmount := EnsureRange(aStone, -BuildSupplyStone, gRes.Houses[HouseType].StoneCost - GetBuildStoneDelivered);
+    if newAmount > 0 then
+    begin
+      resNeeded := gHands[Owner].Deliveries.Queue.TryRemoveDemand(self, wtStone, newAmount, plannedToRemove);
+      Inc(resNeeded, plannedToRemove);
+      WareAddToBuild(wtStone, resNeeded);
+    end
+    else
+    begin
+      WareAddToBuild(wtStone, newAmount);
+      gHands[Owner].Deliveries.Queue.AddDemand(self, nil, wtStone, -newAmount, dtOnce, diHigh4);
+    end;
+
+    newAmount := EnsureRange(aTile, -BuildSupplyTile, gRes.Houses[HouseType].TileCost - GetBuildTileDelivered);
+    if newAmount > 0 then
+    begin
+      resNeeded := gHands[Owner].Deliveries.Queue.TryRemoveDemand(self, wtTile, newAmount, plannedToRemove);
+      Inc(resNeeded, plannedToRemove);
+      WareAddToBuild(wtTile, resNeeded);
+    end
+    else
+    begin
+      WareAddToBuild(wtTile, newAmount);
+      gHands[Owner].Deliveries.Queue.AddDemand(self, nil, wtTile, -newAmount, dtOnce, diHigh4);
+    end;
+
+    for I := 1 to aProgress div 5 do
+    begin
+      if IsComplete or not CheckResToBuild then
+        Break;
+      IncBuildingProgress;
+    end;
+    
+
+  end;
+
+
+end;
 
 //Update house damage animation
 procedure TKMHouse.UpdateDamage;
 var
   dmgLevel: Word;
 begin
+  if not IsComplete then
+    Exit;
   dmgLevel := MaxHealth div 8; //There are 8 fire places for each house, so the increment for each fire level is Max_Health / 8
+
+  gTerrain.AddLight(Entrance, 5 + Round((fDamage / MaxHealth) * 3) , 100 + 5 * Round((fDamage / MaxHealth) * 20) );//update lights, fire gives extra light
+
   CurrentAction.SubActionRem([haFire1, haFire2, haFire3, haFire4, haFire5, haFire6, haFire7, haFire8]);
   if fDamage > 0 * dmgLevel then CurrentAction.SubActionAdd([haFire1]);
   if fDamage > 1 * dmgLevel then CurrentAction.SubActionAdd([haFire2]);
@@ -2434,6 +2625,20 @@ begin
   if not gGameParams.IsMapEditor then
     gHands[Owner].Stats.HouseClosed(aIsClosed, fType);
   SetLength(fNotAcceptWorkers, 0);//clear it here, cause we are closing whole house, so player might want to get workers inside again.
+end;
+
+function TKMHouse.GetClosedForWorker: Boolean;
+begin
+  if not IsValid then
+    Exit(true);
+  Result := fIsClosedForWorker;
+end;
+
+function TKMHouse.GetWasClosedByHand: Boolean;
+begin
+  if not IsValid then
+    Exit(true);
+  Result := fIsClosedForWorker;
 end;
 
 //deprecated
@@ -2695,6 +2900,11 @@ begin
   Result := fProductionCycles[aIndex];
 end;
 
+function TKMHouse.PaintHouseWork: Boolean;
+begin
+  Result := true;
+end;
+
 function TKMHouse.GetWareInIndex(aWare: TKMWareType): Byte;
 var I : integer;
 begin
@@ -2712,6 +2922,25 @@ begin
     if fWareOutput[I] = aWare then
       Exit(I);
 end;
+
+function TKMHouse.IsValid(aHouseType : TKMHouseType = htAny; aDifferent : Boolean = false; aBuilt : Boolean = false): Boolean;
+begin
+  if Self = nil then
+    Exit(false);
+  Result := not self.IsDestroyed;
+  if aBuilt then
+    Result := Result and IsComplete;
+  if aDifferent then
+    Result := Result and ((HouseType <> aHouseType) or (aHouseType = htAny))
+  else
+    Result := Result and ((HouseType = aHouseType) or (aHouseType = htAny));
+end;
+
+function TKMHouse.PlaceRoad: Boolean;
+begin
+  Result := not (HouseType in WALL_HOUSES);
+end;
+
 procedure TKMHouse.SetStyle(aValue : Byte);
 begin
   fStyle := EnsureRange(aValue, 0, Length(HSpec.Styles));
@@ -3023,8 +3252,8 @@ begin
               Break;
           end;
       end;
-
-      gHands[Owner].Deliveries.Queue.AddOffer(Self, aWare, count2);
+      if HouseType <> htWell then
+        gHands[Owner].Deliveries.Queue.AddOffer(Self, aWare, count2);
     end;
 end;
 
@@ -3053,7 +3282,16 @@ begin
   WareAddToIn(aWare, aCount - count, True);
 end;
 
-
+function TKMHouse.NeedsWareToBuild(aWare: TKMWareType): Boolean;
+begin
+  case aWare of
+    wtTimber:   Result := fBuildWoodDelivered < gRes.Houses[fType].WoodCost;
+    wtStone:    Result := fBuildStoneDelivered < gRes.Houses[fType].StoneCost;
+    wtTile:     Result := fBuildTileDelivered < gRes.Houses[fType].TileCost;
+    else
+      Result := false;
+  end;
+end;
 // Add resources to building process
 function TKMHouse.WareAddToBuild(aWare: TKMWareType; aCount: Integer = 1) : Boolean;
 var maxWood, maxStone, maxTile : Byte;
@@ -3569,27 +3807,43 @@ begin
   end;
 end;
 
+procedure TKMHouse.IncProductionCycle(aIndex: Integer);
+var W : TKMWareType;
+  I, aMod : Integer;
+begin
+  if aIndex <= 0 then Exit;
+  Inc(fProductionCycles[aIndex]);
+  W := WareOutput[aIndex];
+  for I := 0 to gRes.Wares.VirtualWares.Count - 1 do
+    if HouseType in gRes.Wares.VirtualWares[I].ProduceInHouses then
+    begin
+      aMod := gRes.Wares.VirtualWares[I].GetModulo(HouseType, W);
+      if aMod > 0 then
+        if fProductionCycles[aIndex] mod aMod = 0 then
+          gHands[Owner].SetVirtualWareCnt(gRes.Wares.VirtualWares[I].Name, gRes.Wares.VirtualWares[I].GetProdCount(HouseType, W));
+    end;
+end;
+
 procedure TKMHouse.IncProductionCycle(aWare: TKMWareType);
-var I, aIndex, aMod: Integer;
+var I, aIndex: Integer;
 begin
   aIndex := 0;
   for I := 1 to WARES_IN_OUT_COUNT do
     if aWare = fWareOutput[I] then
       aIndex := I;
-
-  if aIndex = 0 then Exit;
-  Inc(fProductionCycles[aIndex]);
-
-  for I := 0 to gRes.Wares.VirtualWares.Count - 1 do
-    if HouseType in gRes.Wares.VirtualWares[I].ProduceInHouses then
-    begin
-      aMod := gRes.Wares.VirtualWares[I].GetModulo(HouseType, aWare);
-      if aMod > 0 then
-        if fProductionCycles[aIndex] mod aMod = 0 then
-          gHands[Owner].SetVirtualWareCnt(gRes.Wares.VirtualWares[I].Name, gRes.Wares.VirtualWares[I].GetProdCount(HouseType, aWare));
-    end;
+  IncProductionCycle(aIndex);
 end;
 
+procedure TKMHouse.IncProductionCycle(aWare : TKMWareType; aCount : Integer);
+var I, aIndex : Integer;
+begin
+  if aCount <= 0 then
+    Exit;
+  aIndex := GetWareOutIndex(aWare);
+
+  for I := 1 to aCount do
+    IncProductionCycle(aIndex);
+end;
 //Request more wares (if distribution of wares has changed)
 //todo: Situation: I have timber set to 5 for the weapons workshop, and no timber in my village.
 //      I change timber to 0 for the weapons workshop. My woodcutter starts again and 5 timber is still
@@ -3609,7 +3863,7 @@ begin
 
     resDelivering := WareDeliveryCnt[I] - WareDemandsClosing[I];
 
-    maxDistribution := Min(GetWareDistribution(I), GetMaxInWare - GetAcceptWareIn(fWareInput[I]));
+    maxDistribution := Max(0, Min(GetWareDistribution(I), GetMaxInWare - GetAcceptWareIn(fWareInput[I])));
     if fResetDemands then
       maxDistribution := 0;
 
@@ -3788,7 +4042,7 @@ begin
   //Show unoccupied message if needed and house belongs to human player and can have worker at all
   //and is not closed for worker and not a barracks
   if not fDisableUnoccupiedMessage and not HasWorker and not fIsClosedForWorker
-  and gRes.Houses[fType].CanHasWorker and (fType <> htBarracks) then
+  and gRes.Houses[fType].CanHasWorker and (fType <> htBarracks) and ShowUnoccupiedMSG then
   begin
     Dec(fTimeSinceUnoccupiedReminder);
     if fTimeSinceUnoccupiedReminder = 0 then
@@ -3813,13 +4067,13 @@ end;
 procedure TKMHouse.Paint;
 var
   H: TKMHouseSpec;
-  progress: Single;
+  progress, stoneProgress: Single;
   I : Integer;
 begin
   H := gRes.Houses[fType];
   case fBuildState of
     hbsNoGlyph:; //Nothing
-    hbsWood:   begin
+    {hbsWood:   begin
 
                   progress := fBuildingProgress / H.MaxWoodHealth;
                   //if there is no stone required then render it on different progress
@@ -3834,8 +4088,6 @@ begin
                       progress := progress * 2;
                       gRenderPool.AddHouse(fType, fPosition, progress, 0, 0, GetWoodPic)
                     end;
-
-
                   end
                   else
                     gRenderPool.AddHouse(fType, fPosition, progress, 0, 0, GetWoodPic);
@@ -3845,6 +4097,24 @@ begin
     hbsStone:  begin
                   progress := (fBuildingProgress - H.MaxWoodHealth) / H.MaxStoneHealth;
                   gRenderPool.AddHouse(fType, fPosition, 1, progress, 0, GetWoodPic, GetStonePic, -1, false, false, 0);
+                  gRenderPool.AddHouseBuildSupply(fType, fPosition, fBuildSupplyWood, fBuildSupplyStone, fBuildSupplyTile);
+                end;}
+    hbsWood,
+    hbsStone :  begin
+                  progress := EnsureRange(fBuildingProgress / H.MaxWoodHealth, 0, 1);//wood progress
+                  stoneProgress := EnsureRange((fBuildingProgress - H.MaxWoodHealth) / H.MaxStoneHealth, 0, 1);
+                  if (gRes.Houses[fType].StoneCost = 0) and (gRes.Houses[fType].TileCost = 0) then
+                  begin
+                    progress := progress * 2;
+                    if progress > 1 then
+                    begin
+                      stoneProgress := progress - 1;
+                      progress := 1;
+                    end;
+
+                  end;
+
+                  gRenderPool.AddHouse(fType, fPosition, progress, stoneProgress, 0, GetWoodPic, GetStonePic, -1, false, false, 0);
                   gRenderPool.AddHouseBuildSupply(fType, fPosition, fBuildSupplyWood, fBuildSupplyStone, fBuildSupplyTile);
                 end;
     else
@@ -3891,11 +4161,13 @@ begin
                         gRenderPool.AddAnimation(fPosition, HSpec.Levels[CurrentLevel - 1].Anim[I], WorkAnimStep, gHands[Owner].GameFlagColor, rxHouses);
 
                       if not HSpec.Levels[CurrentLevel - 1].ReplaceAnim then
-                        gRenderPool.AddHouseWork(fType, fPosition, CurrentAction.SubAction, WorkAnimStep, WorkAnimStepPrev, gHands[Owner].GameFlagColor);
+                        if PaintHouseWork then
+                          gRenderPool.AddHouseWork(fType, fPosition, CurrentAction.SubAction, WorkAnimStep, WorkAnimStepPrev, gHands[Owner].GameFlagColor);
 
 
                     end else
                     if CurrentAction <> nil then
+                      if PaintHouseWork then
                       gRenderPool.AddHouseWork(fType, fPosition, CurrentAction.SubAction, WorkAnimStep, WorkAnimStepPrev, gHands[Owner].GameFlagColor);
                     
                   end
@@ -4265,6 +4537,7 @@ begin
 end;
 
 procedure TKMHouseWell.UpdateState(aTick: Cardinal);
+var I : Integer;
 begin
   if not IsComplete then  Exit;
   if CheckWareOut(wtWater) > 0 then
@@ -4280,6 +4553,11 @@ begin
       fProductionCycles[1] := fProductionCycles[1] - 100;
       gHands[Owner].VirtualWareTake('vtPearl', -1);
     end;
+    for I := 0 to gHands.Count - 1 do
+      if gHands[I].Enabled then
+        if gHands[I].Deliveries.Queue.HasOffers(self, [wtWater]) = 0 then
+          gHands[I].Deliveries.Queue.AddOffer(self, wtWater, 1);
+
 
     fProgress := 0;
   end;
@@ -4548,6 +4826,17 @@ begin
       FindNextHand;
 end;
 
+procedure TKMHouseAppleTree.AddDemandBuildingMaterials;
+begin
+  if ParentTree.IsValid then
+  begin
+    gHands[Owner].Deliveries.Queue.AddDemand(ParentTree, nil, wtTimber, gRes.Houses[self.HouseType].WoodCost, dtOnce, diHigh4);
+    gHands[Owner].Deliveries.Queue.AddDemand(ParentTree, nil, wtStone, gRes.Houses[self.HouseType].StoneCost, dtOnce, diHigh4);
+    gHands[Owner].Deliveries.Queue.AddDemand(ParentTree, nil, wtTile, gRes.Houses[self.HouseType].TileCost, dtOnce, diHigh4);
+  end else
+    Inherited;
+end;
+
 procedure TKMHouseAppleTree.UpdatePosition(const aPos: TKMPoint);
 var aID, aFruit : Word;
 begin
@@ -4561,27 +4850,164 @@ begin
   end;
 end;
 
-function TKMHouseAppleTree.CanWork: Boolean;
+function TKMHouseAppleTree.GetClosedForWorker: Boolean;
 begin
-  Result := fGrowPhase in [0, 1, 2, 3]; //0..3: water the tree, 7: gather apples
-
-  Result := Result or (fGrowPhase = gFruitTrees[fFruitTreeID].StagesCount - 1);
+  Result := Inherited;
+  if ParentTree.IsValid then
+    Result := true;
 end;
 
-function TKMHouseAppleTree.IncGrowPhase: Boolean;
+function TKMHouseAppleTree.PaintHouseWork: Boolean;
+begin
+  Result := true;
+  if fStartAnim > 0 then
+    if fTick < fStartAnim + IfThen(fWorkAnim = haWork1, 50, (6 * 20)) then
+      Result := false;
+end;
+
+procedure TKMHouseAppleTree.Demolish(aFrom: ShortInt; IsSilent: Boolean = False);
+var I : Integer;
+  H : TKMHouse;
+begin
+  if length(fChildTrees) > 0 then
+  begin
+    for I := 0 to length(fChildTrees) - 1 do
+      if ChildTree(I).IsValid then
+        TKMHouseAppleTree(fChildTrees[I]).Demolish(-1, IsSilent);
+
+  end;
+  Inherited;
+  if ParentTree.IsValid then
+    ParentTree.Demolish(-1, IsSilent);
+
+end;
+
+procedure TKMHouseAppleTree.ProduceWare(aWare: TKMWareType; aCount: Integer = 1);
+begin
+  if ParentTree.IsValid then
+    ParentTree.ProduceWare(aWare, aCount)
+  else
+    Inherited;
+end;
+
+function TKMHouseAppleTree.PlaceRoad: Boolean;
+begin
+  Result := not ParentTree.IsValid;
+end;
+
+function TKMHouseAppleTree.WareAddToBuild(aWare: TKMWareType; aCount: Integer = 1): Boolean;
+var I : Integer;
+  H : TKMHouse;
+begin
+  if not IsComplete and  NeedsWareToBuild(aWare) then
+    Inherited
+  else
+  begin
+    for I := 0 to High(fChildTrees) do
+    begin
+      H := TKMHouse(fChildTrees[I]);
+      if not H.IsComplete then
+        if H.NeedsWareToBuild(aWare) then
+        begin
+          H.WareAddToBuild(aWare, aCount);
+          Exit;
+        end;
+
+    end;
+  end;
+end;
+
+procedure TKMHouseAppleTree.WareAddToIn(aWare: TKMWareType; aCount: Integer = 1; aFromStaticScript: Boolean = False);
+var I : Integer;
+  H : TKMHouse;
+begin
+  //wtTimber, wtStone, wtTile is here for child trees
+  if aWare in [wtTimber, wtStone, wtTile] then
+    for I := 0 to High(fChildTrees) do
+    begin
+      H := TKMHouse(fChildTrees[I]);
+      if not H.IsComplete then
+        if H.NeedsWareToBuild(aWare) then
+        begin
+          H.WareAddToBuild(aWare, aCount);
+          Exit;
+        end;
+
+    end;
+  Inherited;
+
+end;
+
+function TKMHouseAppleTree.CanWork(aCheckChild : Boolean = false; aIncludeWater : Boolean = true): Integer;
+var I, J : Integer;
+  FW : Boolean;
+begin
+  Result := -1;
+  fWorkingAtChild := -1;
+  if IsComplete and (fProgress = 0) then
+  begin
+    if ParentTree.IsValid then
+      J := ParentTree.CheckWareOut(wtApple)
+    else
+      J := CheckWareOut(wtApple);
+
+    if ParentTree.IsValid then
+      FW := ParentTree.ForceWorking
+    else
+      FW := ForceWorking;
+
+    if (fGrowPhase in [0, 1, 2, 3]) and aIncludeWater then
+      Result := 0;
+    if Result <> 0 then
+      if (fGrowPhase = gFruitTrees[fFruitTreeID].StagesCount - 1) then //tree has fruits, but do not gather them if we are full
+        if (FW or (J < GetMaxOutWare)) then
+          Result := 0;
+
+  end;
+
+  if Result > -1 then
+    Exit;
+  fWorkingAtChild := 0;
+  if aCheckChild then
+    if Result = -1 then //main tree doesn't need to work on. Check for childs
+      for I := 0 to High(fChildTrees) do
+        if (ChildTree(I).CanWork(false, aIncludeWater) = 0) then
+        begin
+          fWorkingAtChild := I + 1;
+          Result := I + 1;
+          Exit;
+        end;
+end;
+
+function TKMHouseAppleTree.IncGrowPhase(aChildID : Integer = 0): Boolean;
+var I : Integer;
 begin
   Result := false;
-  if fGrowPhase = gFruitTrees[fFruitTreeID].StagesCount - 1 then
+  if aChildID > 0 then
+  begin
+    if ChildTree(aChildID - 1) <> nil then //this house might be destroyed;
+      Result := ChildTree(aChildID - 1).IncGrowPhase;
+    Exit;
+  end;
+
+  if (fProgress > 0) then //main tree is in progress
+    Exit;
+
+  if fGrowPhase = gFruitTrees[fFruitTreeID].StagesCount - 1 then //tree has fruits
   begin
     if fPhase > 0 then
     begin
-      fGrowPhase := gFruitTrees[fFruitTreeID].MatureTreeStage;
+      fGrowPhase := gFruitTrees[fFruitTreeID].MatureTreeStage; //tree can have more fruits
       Dec(fPhase);
     end
     else
     begin
-      fPhase := 3;
+      fPhase := 3 + KamRandom(5, 'TKMHouseAppleTree.SetProgress'); //make it sapling again
       fGrowPhase := 0;
+      if fNextFruitTreeID <> fFruitTreeID then
+        FruitType := fNextFruitTreeID;
+      gHands[Owner].VirtualWareTake('vtHerbs', -10)
+
     end;
 
 
@@ -4589,82 +5015,259 @@ begin
   end else
     Inc(fGrowPhase);
 
-  //fWariant := fGrowPhase;
+
 
   SetProgress;
 end;
 
-procedure TKMHouseAppleTree.MakeFruits;
+procedure TKMHouseAppleTree.MakeFruits(aChildID : Integer = 0);
 var count : Byte;
+  add : Single;
 begin
-  fFillFruits := fFillFruits + gFruitTrees[fFruitTreeID].Fruits;
+  if aChildID > 0 then
+  begin
+    if ChildTree(aChildID - 1) <> nil then //this house might be destroyed;
+      ChildTree(aChildID - 1).MakeFruits;
+    Exit;
+  end;
+  add := gFruitTrees[fFruitTreeID].Fruits * gFruitTrees[fFruitTreeID].ClimateMulti[gTerrain.FindBestClimatType(Entrance)];
+
+
+  fFillFruits := fFillFruits + add;
   count := trunc(fFillFruits);
   if count > 0 then
   begin
     ProduceWare(wtApple, count);
-    Inc(fProductionCycles[1], count);
+    IncProductionCycle(wtApple, count);
   end;
   fFillFruits := fFillFruits - count;
 end;
 
 
-function TKMHouseAppleTree.NeedWater: Boolean;
+function TKMHouseAppleTree.NeedWater(aChildID : Integer = 0): Boolean;
+var I : Integer;
 begin
+  if aChildID > 0 then
+    if ChildTree(aChildID - 1) <> nil then //this house might be destroyed;
+      Exit(ChildTree(aChildID - 1).NeedWater)
+    else
+      Exit(false);
+
   Result := fGrowPhase in [0, 1, 2, 3];
+
 end;
 
-
-procedure TKMHouseAppleTree.SetProgress;
+procedure TKMHouseAppleTree.SetNextFruitType(aStep: Integer);
 begin
-  if fGrowPhase = gFruitTrees[fFruitTreeID].StagesCount - 1 then
+  IncLoop(fNextFruitTreeID, 0, high(gFruitTrees), aStep);
+end;
+
+function TKMHouseAppleTree.GetFruitType: Byte;
+begin
+  Result := fNextFruitTreeID;
+end;
+
+procedure TKMHouseAppleTree.SetProgress(aIgnoreWater : Boolean = false);
+begin
+  if fGrowPhase = gFruitTrees[fFruitTreeID].StagesCount - 1 then //max
     fProgress := 0
   else
-    fProgress := gFruitTrees[fFruitTreeID].ProgressPerStage;
+  If not NeedWater or aIgnoreWater then
+  begin
+    if fGrowPhase = 0 then
+      if fFruitTreeID <> fNextFruitTreeID then
+        FruitType := fNextFruitTreeID;
 
-  {
-    case fGrowPhase of
-      0..6 : fProgress := 400 + KamRandom(400, 'AppleTreeNextStage');
-      7: fProgress := 0; //set delay before animation
-    end;
-  }
+    fProgress := gFruitTrees[fFruitTreeID].ProgressPerStage + KamRandom(100, 'TKMHouseAppleTree.SetProgress');
+    fProgress := Round(fProgress / gFruitTrees[fFruitTreeID].ClimateMulti[gTerrain.FindBestClimatType(Entrance)]);
+  end
+  else
+    fProgress := 0;
 end;
 
-procedure TKMHouseAppleTree.SetFruitTreeID(aValue: ShortInt);
+procedure TKMHouseAppleTree.SetFruitTreeID(aValue: Integer);
 begin
   if not gGameParams.IsMapEditor then
     gTerrain.RemoveObject(Entrance);
   fFruitTreeID := aValue;
+  fNextFruitTreeID := fFruitTreeID;
 end;
 
 procedure TKMHouseAppleTree.SetGrowPhase(aValue: Byte);
 begin
   fGrowPhase := aValue;
-  fProgress := gFruitTrees[fFruitTreeID].ProgressPerStage;
+  if aValue > 0 then
+    fProgress := gFruitTrees[fFruitTreeID].ProgressPerStage + KamRandom(100, 'TKMHouseAppleTree.SetProgress');
+end;
 
+function TKMHouseAppleTree.GetParentTree: TKMHouse;
+begin
+  Result := TKMHouse(fParentTree);
+end;
+
+
+procedure TKMHouseAppleTree.SetAnimation(aChildID : Integer = -1);
+var I : Integer;
+begin
+  if aChildID > 0 then
+  begin
+    if ChildTree(aChildID - 1) <> nil then //this house might be destroyed;
+      ChildTree(aChildID - 1).SetAnimation;
+  end;
+
+  if CanWork = 0 then //first check if main tree can work
+  begin
+    if NeedWater then
+      fWorkAnim := haWork1
+    else
+      fWorkAnim := haWork2;
+
+    case fWorkAnim of
+      haWork1: fStartAnim := fTick;
+      haWork2: fStartAnim := fTick;
+    end;
+    SetProgress(true);
+  end;
+
+
+end;
+
+procedure TKMHouseAppleTree.SetParentTree(aHouse: TKMHouse);
+var I : Integer;
+begin
+  fParentTree := aHouse;
+  if not ParentTree.IsValid then //check if new parent is valid (is not nil)
+    Exit;
+
+  for I := 0 to TKMHouseAppleTree(aHouse).ChildCount - 1 do
+    if TKMHouseAppleTree(aHouse).fChildTrees[I] = self then //don't add the same house
+      Exit;
+  TKMHouseAppleTree(aHouse).AddChildTree(self);//add child
+end;
+
+function TKMHouseAppleTree.ChildTree(aIndex: Integer): TKMHouseAppleTree;
+begin
+  if InRange(aIndex, 0, high(fChildTrees)) then
+    Result := TKMHouseAppleTree(fChildTrees[aIndex])
+  else
+    Result := nil;
+end;
+
+procedure TKMHouseAppleTree.ClearChilds;
+begin
+  SetLength(fChildTrees, 0);
+end;
+
+function TKMHouseAppleTree.ChildCount: Integer;
+begin
+  Result := Length(fChildTrees);
+end;
+
+Procedure TKMHouseAppleTree.AddChildTree(aTree: Pointer);
+begin
+  SetLength(fChildTrees, ChildCount + 1);
+  fChildTrees[high(fChildTrees)] := aTree;
+end;
+
+procedure TKMHouseAppleTree.RemoveChild(aHouse: Pointer);
+var I, Index : Integer;
+begin
+  Index := - 1;
+  for I := 0 to High(fChildTrees) do
+    if fChildTrees[I] = aHouse then
+      Index := I;
+  if Index = -1 then
+    Exit;
+
+  for I := Index to High(fChildTrees) - 1 do
+    fChildTrees[I] := fChildTrees[I + 1];
+
+    SetLength(fChildTrees, high(fChildTrees));
+
+
+end;
+function TKMHouseAppleTree.CanAddChildTree(X: Integer; Y: Integer): Boolean;
+Const MAX_TREES_COUNT = 30;
+begin
+  if IsNil(self) then Exit(false);
+  if ParentTree = nil then
+    Result := (ChildCount < MAX_TREES_COUNT) and ((X <> Entrance.X) or (Y < Entrance.Y))
+  else
+    Result := TKMHouseAppleTree(ParentTree).CanAddChildTree(X, Y);
+end;
+
+function TKMHouseAppleTree.CanAddChildTree(aLoc : TKMPoint): Boolean;
+begin
+  Result := CanAddChildTree(aLoc.X, aLoc.Y)
+end;
+
+procedure TKMHouseAppleTree.RecheckParenting(aPosX : Integer = -1; aPosY : Integer = -1);
+var oldParent, newParent : Pointer;
+  procedure MakeParent(aX, aY : Integer);
+  var H : TKMHouseAppleTree;
+  begin
+    if newParent <> nil then    //don't make parent if we already have one
+      Exit;
+    H := gTerrain.House(aX, aY) as TKMHouseAppleTree;
+
+    if not H.IsValid then
+      Exit;
+    if H = self then
+      Exit;
+
+    if H.ParentTree <> nil then //if it already has parent than replace it
+      newParent := H.ParentTree
+    else
+      newParent := H;
+  end;
+begin
+  if aPosX = -1 then
+  begin
+    aPosX := Position.X;
+    aPosY := Position.Y;
+  end;
+  oldParent := fParentTree;
+  newParent := nil;
+  MakeParent(aPosX, aPosY + 1);
+  MakeParent(aPosX, aPosY - 2);
+  MakeParent(aPosX + 1, aPosY);
+  MakeParent(aPosX - 2, aPosY);
+
+  if oldParent <> newParent then
+    if oldParent <> nil then
+      TKMHouseAppleTree(oldParent).RemoveChild(self);
+
+  ParentTree := newParent;
+end;
+
+function TKMHouseAppleTree.ShowUnoccupiedMSG: Boolean;
+begin
+  Result := not IsClosedForWorker;
 end;
 
 constructor TKMHouseAppleTree.Create(aUID: Integer; aHouseType: TKMHouseType; PosX: Integer; PosY: Integer; aOwner: ShortInt; aBuildState: TKMHouseBuildState);
 begin
+  fStartAnim := 0;
+  RecheckParenting(PosX, PosY);
   inherited;
+  fTmpObject := gTerrain.Land[Entrance.Y, Entrance.X].Obj;
 end;
 
 procedure TKMHouseAppleTree.Activate(aWasBuilt: Boolean);
 var obj : Word;
 begin
-  Inherited;
   fProgress := 0;
   fGrowPhase := 0;
   fWariant := 0;
   fFillFruits := 0;
-  fFruitTreeID := 0;
+  FruitType := 0;
 
-  {if not aWasBuilt then
-  begin
-    fPhase := 3 + KamRandom(4, 'TKMHouseAppleTree.Activate:Randomize cut apple tree');
-    //fGrowPhase := 4 + KamRandom(4, 'Randomize Apple trees');
-    SetGrowPhase(gFruitTrees[fFruitTreeID].MatureTreeStage);
-  end;}
-  obj := gTerrain.Land[Entrance.Y, Entrance.X].Obj;
+  fPhase := 2 + KamRandom(3, 'TKMHouseAppleTree.SetProgress');
+  if fTmpObject <> 0 then
+    obj := fTmpObject
+  else
+    obj := gTerrain.Land[Entrance.Y, Entrance.X].Obj;
+
   if (obj <> OBJ_NONE) and (gMapElements[obj].IsFruit > 0) then
   begin
     fFruitTreeID := gMapElements[obj].IsFruit - 1;
@@ -4677,17 +5280,23 @@ begin
   begin
     fFruitTreeID := 0;
     if aWasBuilt then
-      SetGrowPhase(0)
-    else
+    begin
+      SetGrowPhase(0);
+    end else
+    begin
       SetGrowPhase(gFruitTrees[fFruitTreeID].MatureTreeStage);
+    end;
   end;
   if not gGameParams.IsMapEditor then
     gTerrain.RemoveObject(Entrance);
 
   fFillFruits := 0;
+  Inherited;
 end;
 
 constructor TKMHouseAppleTree.Load(LoadStream: TKMemoryStream);
+var I, newCount : Integer;
+  H : Pointer;
 begin
   Inherited;
   LoadStream.CheckMarker('HouseAppleTree');
@@ -4695,10 +5304,25 @@ begin
   LoadStream.Read(fPhase);
   LoadStream.Read(fGrowPhase);
   LoadStream.Read(fFruitTreeID);
+  LoadStream.Read(fNextFruitTreeID);
+  LoadStream.Read(fFillFruits);
+  LoadStream.Read(fWorkAnim, SizeOf(fWorkAnim));
+  LoadStream.Read(fStartAnim);
+  LoadStream.Read(fWorkingAtChild);
+  LoadStream.Read(fTmpObject);
+  LoadStream.Read(fParentTree, 4);
+
+  LoadStream.Read(newCount);
+  SetLength(fChildTrees, newCount);
+  for I := 0 to newCount - 1 do
+    LoadStream.Read(fChildTrees[I], 4);
+
+
 
 end;
 
 procedure TKMHouseAppleTree.Save(SaveStream: TKMemoryStream);
+var newCount, I : Integer;
 begin
   Inherited;
   SaveStream.PlaceMarker('HouseAppleTree');
@@ -4706,6 +5330,36 @@ begin
   SaveStream.Write(fPhase);
   SaveStream.Write(fGrowPhase);
   SaveStream.Write(fFruitTreeID);
+  SaveStream.Write(fNextFruitTreeID);
+  SaveStream.Write(fFillFruits);
+  SaveStream.Write(fWorkAnim, SizeOf(fWorkAnim));
+  SaveStream.Write(fStartAnim);
+  SaveStream.Write(fWorkingAtChild);
+  SaveStream.Write(fTmpObject);
+  SaveStream.Write(TKMHouse(fParentTree).UID);
+
+  newCount := ChildCount;
+  SaveStream.Write(newCount);
+  for I := 0 to newCount - 1 do
+    SaveStream.Write(TKMHouse(fChildTrees[I]).UID);
+end;
+
+procedure TKMHouseAppleTree.SyncLoad;
+var I : Integer;
+begin
+  Inherited;
+  for I := 0 to high(fChildTrees) do
+    fChildTrees[I] := TKMHouse(gHands.GetHouseByUID(Integer(fChildTrees[I]))  );
+
+  fParentTree := TKMHouse(gHands.GetHouseByUID(Integer(fParentTree)));
+
+end;
+
+procedure TKMHouseAppleTree.UpdateDemands;
+begin
+  if ParentTree.IsValid then
+    Exit;
+  Inherited;
 end;
 
 procedure TKMHouseAppleTree.UpdateState(aTick: Cardinal);
@@ -4713,23 +5367,20 @@ begin
   Inherited;
   if not IsComplete then
     Exit;
-  //Don't fo anything for these phases. The worker has animation here.
-  if CanWork{fGrowPhase in [0,1,2,3, 7]} then
-    Exit;
 
   if fProgress > 0 then
   begin
     Dec(fProgress);
+    if fProgress = 0 then
+      IncGrowPhase;
     Exit;
   end;
 
-  if fProgress = 0 then
-    IncGrowPhase;
 end;
 
 function TKMHouseAppleTree.ObjToString(const aSeparator: String = '|'): String;
 begin
-  Result := Inherited ObjToString(aSeparator) + Format('%s fProgress: %d%s fGrowPhase: %d%s CanWork: %s', [aSeparator, fProgress, aSeparator, fGrowPhase, aSeparator, BoolToStr(CanWork, true)])
+  Result := Inherited ObjToString(aSeparator) + Format('%s fProgress: %d%s fGrowPhase: %d%s fPhase: %d%s fWorkingAtChild %d%s CanWork: %d%s HasParent: %s', [aSeparator, fProgress, aSeparator, fGrowPhase, aSeparator, fPhase, aSeparator, fWorkingAtChild, aSeparator, CanWork(true), aSeparator, BoolToStr(ParentTree <> nil, true)])
 
 end;
 
@@ -4739,13 +5390,22 @@ begin
 
   if not IsComplete then
     Exit;
-  gRenderPool.RenderMapElement(gFruitTrees[fFruitTreeID].Stage[fGrowPhase], gTerrain.AnimStep, Entrance.X, Entrance.Y, false, false ,true);
+  gRenderPool.RenderMapElement(gFruitTrees[fFruitTreeID].Stage[fGrowPhase], gTerrain.AnimStep, Entrance.X, Entrance.Y, false, false ,false);
 
-  gRenderPool.AddHouseSupply(HouseType, fPosition, [0, CheckWareIn(wtWater), 0, 0], [], []);
-  if CurrentAction <> nil then
+  gRenderPool.AddHouseSupply(HouseType, fPosition, [0, CheckWareIn(wtWater), 0, 0], [CheckWareOut(wtApple), 0, 0, 0], []);
+
+  {if CurrentAction <> nil then
     gRenderPool.AddHouseWork(HouseType, fPosition,
                             CurrentAction.SubAction * [haWork1, haWork2, haWork3, haWork4, haWork5],
-                            WorkAnimStep, WorkAnimStepPrev, gHands[Owner].GameFlagColor);
+                            WorkAnimStep, WorkAnimStepPrev, gHands[Owner].GameFlagColor);}
+
+  if fStartAnim > 0 then
+    if fTick < fStartAnim + IfThen(fWorkAnim = haWork1, 50, (6 * 20)) then
+      gRenderPool.AddHouseWork(HouseType, fPosition,
+                              [fWorkAnim],
+                              Abs(fTick - fStartAnim), WorkAnimStepPrev, gHands[Owner].GameFlagColor);
+
+  
   //first house
   //second tree
   //and the rest
@@ -5474,9 +6134,9 @@ begin
     Exit;
   for I := 0 to High(fVWares) do
     if (fVWares[I] <> '') and (fVWaresCount[I] > 0) then
-      gRenderPool.AddSprite(Position, KMPoint(57 - 6 * I, 17 + 1 * I), gRes.Wares.VirtualWares.WareS[fVWares[I]].SpriteInStall, rxHouses, gHands[Owner].FlagColor);
+      gRenderPool.AddSprite(Position, KMPoint(57 - 6 * I, -23 + 1 * I), gRes.Wares.VirtualWares.WareS[fVWares[I]].SpriteInStall, rxHouses, gHands[Owner].FlagColor);
   If gGameParams.Tick < fSpecialPriceTick then
-    gRenderPool.AddSprite(Position, KMPoint(0, 0), 2508, rxHouses, gHands[Owner].FlagColor);
+    gRenderPool.AddSprite(Position, KMPoint(0, -46), 2508, rxHouses, gHands[Owner].FlagColor);
 end;
 
 constructor TKMHouseProdThatch.Create(aUID: Integer; aHouseType: TKMHouseType; PosX: Integer; PosY: Integer; aOwner: ShortInt; aBuildState: TKMHouseBuildState);
@@ -5757,6 +6417,7 @@ begin
     begin
       count := trunc(fFillCorn);
       if count > 0 then ProduceWare(wtCorn, count);
+      IncProductionCycle(wtCorn, Max(count, 0));
       fFillCorn := fFillCorn - count;
     end;
 
@@ -5766,6 +6427,7 @@ begin
 
       count := trunc(fFillSeeds);
       if count > 0 then ProduceWare(wtSeed, count);
+      IncProductionCycle(wtSeed, Max(count, 0));
       fFillSeeds := fFillSeeds - count;
     end;
 
@@ -5774,6 +6436,7 @@ begin
     begin
       count := trunc(fFillWine);
       if count > 0 then ProduceWare(wtWine, count);
+      IncProductionCycle(wtWine, Max(count, 0));
       fFillWine := fFillWine - count;
     end;
 
@@ -5782,6 +6445,7 @@ begin
     begin
       count := trunc(fFillHay);
       if count > 0 then ProduceWare(wtHay, count);
+      IncProductionCycle(wtHay, Max(count, 0));
       fFillHay := fFillHay - count;
     end;
 
@@ -5790,9 +6454,55 @@ begin
     begin
       count := trunc(fFillVege);
       if count > 0 then ProduceWare(wtVegetables, count);
+      IncProductionCycle(wtVegetables, Max(count, 0));
       fFillVege := fFillVege - count;
     end;
 
+end;
+
+function TKMHouseProdThatch.HasGrain : Boolean;
+var GT : TKMGrainType;
+begin
+  Result := false;
+  for GT in GrainTypes do
+    if GT in GRAIN_GRAIN then
+      Result := true;
+  Result := Result and self.HasSpaceForWaresOut([wtCorn, wtSeed], false);
+  Result := Result or ForceWorking;
+end;
+
+function TKMHouseProdThatch.HasGrass : Boolean;
+var GT : TKMGrainType;
+begin
+  Result := false;
+  for GT in GrainTypes do
+    if GT in GRAIN_GRASS then
+      Result := true;
+  Result := Result and HasSpaceForWareOut(wtHay);
+  Result := Result or ForceWorking;
+end;
+
+function TKMHouseProdThatch.HasVege : Boolean;
+var GT : TKMGrainType;
+begin
+  Result := false;
+  for GT in GrainTypes do
+    if GT in GRAIN_VEGE then
+      Result := true;
+  Result := Result and HasSpaceForWareOut(wtVegetables);
+  Result := Result or ForceWorking;
+end;
+
+
+function TKMHouseProdThatch.GetCutGrainTypes: TKMGrainTypeSet;
+begin
+  Result := [];
+  if HasGrain then
+    Result := Result + [fGrainType];
+  if HasGrass then
+    Result := Result + [fGrassType];
+  if HasVege then
+    Result := Result + [fVegeType];
 end;
 
 procedure TKMHouseProdThatch.UpdateState(aTick: Cardinal);
@@ -5846,6 +6556,17 @@ end;
 function TKMHouseFarm.GetGrainTypes: TKMGrainTypeSet;
 begin
   Result := [fGrainType, fGrassType, fVegeType];
+end;
+
+function TKMHouseFarm.GetCutGrainTypes: TKMGrainTypeSet;
+begin
+  Result := [];
+  if HasGrain then
+    Result := Result + [fGrainType];
+  if HasGrass then
+    Result := Result + [fGrassType];
+  if HasVege then
+    Result := Result + [fVegeType];
 end;
 
 constructor TKMHouseFarm.Load(LoadStream: TKMemoryStream);
@@ -5915,8 +6636,6 @@ begin
 
   IncLoop(aIndex, low(GRAIN_GUI_ORDER), high(GRAIN_GUI_ORDER), aValue);
   fGrainType := GRAIN_GUI_ORDER[aIndex];
-
-  fGrainType := GRAIN_GUI_ORDER[aIndex];
 end;
 
 procedure TKMHouseFarm.SetNextGrassType(aValue: Integer);
@@ -5957,6 +6676,38 @@ begin
   fVegeType := VEGE_GUI_ORDER[aIndex];
 end;
 
+function TKMHouseFarm.HasGrain : Boolean;
+var GT : TKMGrainType;
+begin
+  Result := false;
+  for GT in GrainTypes do
+    if GT in GRAIN_GRAIN then
+      Result := true;
+  Result := Result and self.HasSpaceForWaresOut([wtCorn, wtSeed], false);
+  Result := Result or ForceWorking;
+end;
+
+function TKMHouseFarm.HasGrass : Boolean;
+var GT : TKMGrainType;
+begin
+  Result := false;
+  for GT in GrainTypes do
+    if GT in GRAIN_GRASS then
+      Result := true;
+  Result := Result and HasSpaceForWareOut(wtHay);
+  Result := Result or ForceWorking;
+end;
+
+function TKMHouseFarm.HasVege : Boolean;
+var GT : TKMGrainType;
+begin
+  Result := false;
+  for GT in GrainTypes do
+    if GT in GRAIN_VEGE then
+      Result := true;
+  Result := Result and HasSpaceForWareOut(wtVegetables);
+  Result := Result or ForceWorking;
+end;
 
 procedure TKMHouseFarm.GrainCut(aGrain: TKMGrainType);
 var count : Byte;
@@ -5968,18 +6719,22 @@ begin
 
   count := trunc(fFillCorn);
   if count > 0 then ProduceWare(wtCorn, count);
+  IncProductionCycle(wtCorn, Max(count, 0));
   fFillCorn := fFillCorn - count;
 
   count := trunc(fFillSeeds);
   if count > 0 then ProduceWare(wtSeed, count);
+  IncProductionCycle(wtSeed, Max(count, 0));
   fFillSeeds := fFillSeeds - count;
 
   count := trunc(fFillHay);
   if count > 0 then ProduceWare(wtHay, count);
+  IncProductionCycle(wtHay, Max(count, 0));
   fFillHay := fFillHay - count;
 
   count := trunc(fFillVege);
   if count > 0 then ProduceWare(wtVegetables, count);
+  IncProductionCycle(wtVegetables, Max(count, 0));
   fFillVege := fFillVege - count;
 end;
 
@@ -6072,11 +6827,12 @@ end;
 procedure TKMHouseVineYard.ProduceWine;
 var wineCount : Byte;
 begin
-  wineCount := trunc(fFillWine);
+  wineCount := EnsureRange(trunc(fFillWine), 0, 5);
   fFillWine := fFillWine - wineCount;
 
   if wineCount > 0 then
     ProduceWare(wtWine, wineCount);
+  IncProductionCycle(wtWine, Max(wineCount, 0));
 end;
 
 function TKMHouseVineYard.CanMakeWine(aNoFieldsToCut: Boolean): Boolean;
@@ -6089,7 +6845,7 @@ begin
 end;
 function TKMHouseVineYard.WineToProduce: Byte;
 begin
-  Result := Trunc(fFillWine);
+  Result := EnsureRange(Trunc(fFillWine), 0, 5);
 end;
 
 function TKMHouseVineYard.GetProgressArray: TSingleArray;
@@ -6107,14 +6863,60 @@ begin
   LoadStream.Read(fShipType, SizeOf(fShipType));
   LoadStream.Read(fShipSketchPosition);
   LoadStream.Read(fShipPhase);
+  LoadStream.Read(fDoWork);
+  LoadStream.Read(fNextShipType, SizeOf(fNextShipType));
+  LoadStream.Read(fWayOutID);
 end;
 
 procedure TKMHouseShipyard.Activate(aWasBuilt: Boolean);
+  function CheckWater(aX, aY : Integer) : Boolean;
+  begin
+    Result := false;
+    if gTerrain.TileInMapCoords(aX, aY, 1) then
+      Result := gTerrain.CheckPassability(aX, aY, tpFish);
+  end;
+
 begin
   Inherited;
   fShipType := SHIPYARD_ORDER[0];
+  fNextShipType := fShipType;
   fShipPhase := 0;
   fShipSketchPosition.Dir := KaMRandomDir('TKMHouseShipyard.Activate');
+
+  if CheckWater(Entrance.X - 1, Entrance.Y + 4) then
+  begin
+    fShipSketchPosition.Loc := KMPoint(Entrance.X - 1, Entrance.Y + 4);
+    fShipSketchPosition.Dir := dirS;
+    fWayOutID := 1
+  end
+  else
+  if CheckWater(Entrance.X + 2, Entrance.Y + 4) then
+  begin
+    fShipSketchPosition.Loc := KMPoint(Entrance.X + 2, Entrance.Y + 4);
+    fShipSketchPosition.Dir := dirS;
+    fWayOutID := 2
+  end
+  else
+  if CheckWater(Entrance.X + 4, Entrance.Y + 2) then
+  begin
+    fShipSketchPosition.Loc := KMPoint(Entrance.X + 4, Entrance.Y + 2);
+    fShipSketchPosition.Dir := dirE;
+    fWayOutID := 3
+  end
+  else
+  if CheckWater(Entrance.X - 3, Entrance.Y + 2) then
+  begin
+    fShipSketchPosition.Loc := KMPoint(Entrance.X - 3, Entrance.Y + 2);
+    fShipSketchPosition.Dir := dirW;
+    fWayOutID := 4
+  end else
+    fWayOutID := 0;
+
+  Assert(fWayOutID <> 0, 'TKMHouseShipyard did not found water')
+  {Result := HasWater(X - 1, Y + 4)  //under entrance on the right
+            or HasWater(X + 2, Y + 4)
+            or HasWater(X + 4, Y + 2)//on the right
+            or HasWater(X - 3, Y + 2);//on the left from the entrace}
 end;
 
 procedure TKMHouseShipyard.Save(SaveStream: TKMemoryStream);
@@ -6124,6 +6926,9 @@ begin
   SaveStream.Write(fShipType, SizeOf(fShipType));
   SaveStream.Write(fShipSketchPosition);
   SaveStream.Write(fShipPhase);
+  SaveStream.Write(fDoWork);
+  SaveStream.Write(fNextShipType, SizeOf(fNextShipType));
+  SaveStream.Write(fWayOutID);
 end;
 
 procedure TKMHouseShipyard.IncSketchPhase;
@@ -6133,13 +6938,17 @@ procedure TKMHouseShipyard.IncSketchPhase;
     gHands[Owner].AddUnitGroup(fShipType, fShipSketchPosition.Loc, fShipSketchPosition.Dir, 1, 1);
     //fShipType := utNone;
     fShipPhase := 0;
-    fShipSketchPosition.Loc := KMPOINT_INVALID_TILE;
+    //fShipSketchPosition.Loc := KMPOINT_INVALID_TILE;
+    if fNextShipType <> fShipType then
+      fShipType := fNextShipType;
   end;
 var count : Integer;
 begin
   Inc(fShipPhase);
   count := 0;
     case fShipType of
+      utBoat: count := 5;
+      utBattleShip: count := 16;
       utShip : count := gRes.Units.ShipSketch[fShipSketchPosition.Dir].Count;
     end;
 
@@ -6149,17 +6958,39 @@ begin
   end else
   if fShipPhase = 1 then
   begin
-    fShipSketchPosition.Dir := KaMRandomDir('TKMHouseShipyard.Activate');
-    fShipSketchPosition.Loc := gTerrain.FindPlaceForUnit(Position, tpFish, 5);
+    //fShipSketchPosition.Dir := KaMRandomDir('TKMHouseShipyard.Activate');
+    //fShipSketchPosition.Loc := gTerrain.FindPlaceForUnit(Position, tpFish, 5);
     gTerrain.SetTileLock(fShipSketchPosition.Loc, tlRoadWork);
   end;
 
 
 end;
 
+procedure TKMHouseShipyard.SetNextShipType(aAmount: Integer);
+var I, Index: Integer;
+begin
+  Index := -1;
+  for I := 0 to High(SHIPYARD_ORDER) do
+    If SHIPYARD_ORDER[I] = fNextShipType then
+    begin
+      Index := I;
+      Break;
+    end;
+  if Index = -1 then
+    Exit;
+  IncLoop(Index, low(SHIPYARD_ORDER), high(SHIPYARD_ORDER), aAmount);
+  fNextShipType := SHIPYARD_ORDER[Index];
+
+  if (fShipPhase = 0) and (GetState <> hstWork) then
+    if fNextShipType <> fShipType then
+      fShipType := fNextShipType;
+
+
+end;
+
 function TKMHouseShipyard.CanWork: Boolean;
 begin
-  Result := true;
+  Result := fDoWork or (fShipPhase > 0);
 end;
 
 procedure TKMHouseShipyard.Paint;
@@ -6169,11 +7000,57 @@ procedure TKMHouseShipyard.Paint;
     Result.Y := fShipSketchPosition.Loc.Y + 0.5;
   end;
 begin
-  Inherited;
+  if not IsComplete then
+    Inherited
+  else
+  begin
+
+    //Incase we need to render house at desired step in debug mode
+    if HOUSE_BUILDING_STEP = 0 then
+    begin
+      //Shipyard is Painted as seperated parts
+      {if fIsOnSnow then
+        gRenderPool.AddHouse(fType, fPosition, 1, 1, fSnowStep, -1, GetStonePic, GetSnowPic, false, false, 0)
+      else
+        gRenderPool.AddHouse(fType, fPosition, 1, 1, 0, -1, GetStonePic, -1, false, false, 0);}
+
+      gRenderPool.AddSpriteG(fPosition, KMPOINT_ZERO, 2538, rxHouses, gHands[Owner].FlagColor);//house
+      gRenderPool.AddSpriteG(fPosition, KMPOINT_ZERO, 2534, rxHouses, gHands[Owner].FlagColor);//yard
+      case fWayOutID of
+        1: gRenderPool.AddSpriteG(fPosition, KMPOINT_ZERO, 2539, rxHouses, gHands[Owner].FlagColor);//bottom Right
+        2: gRenderPool.AddSpriteG(fPosition, KMPOINT_ZERO, 2535, rxHouses, gHands[Owner].FlagColor);//bottom Left
+        3:  begin
+              gRenderPool.AddSpriteG(fPosition, KMPOINT_ZERO, 2536, rxHouses, gHands[Owner].FlagColor);//right
+              gRenderPool.AddSpriteG(fPosition, KMPOINT_ZERO, 2539, rxHouses, gHands[Owner].FlagColor);//bottom Right
+              gRenderPool.AddSpriteG(fPosition, KMPOINT_ZERO, 2535, rxHouses, gHands[Owner].FlagColor);//bottom Left
+            end;
+        4:  begin
+              gRenderPool.AddSpriteG(fPosition, KMPOINT_ZERO, 2537, rxHouses, gHands[Owner].FlagColor);//left
+              gRenderPool.AddSpriteG(fPosition, KMPOINT_ZERO, 2539, rxHouses, gHands[Owner].FlagColor);//bottom Right
+              gRenderPool.AddSpriteG(fPosition, KMPOINT_ZERO, 2535, rxHouses, gHands[Owner].FlagColor);//bottom Left
+            end;
+      end;
+
+
+      if CurrentAction <> nil then
+        if PaintHouseWork then
+        gRenderPool.AddHouseWork(fType, fPosition, CurrentAction.SubAction, WorkAnimStep, WorkAnimStepPrev, gHands[Owner].GameFlagColor);
+
+    end
+    else
+      gRenderPool.AddHouse(fType, fPosition,
+        Min(HOUSE_BUILDING_STEP * 3, 1),
+        EnsureRange(HOUSE_BUILDING_STEP * 3 - 1, 0, 1),
+        Max(HOUSE_BUILDING_STEP * 3 - 2, 0)
+        ,GetWoodPic, GetStonePic, GetSnowPic
+        );
+  end;
 
   if fShipPhase > 0 then
   begin
     case fShipType of
+      utBoat,
+      utBattleShip,
       utShip : gRenderPool.AddAnimation( SketchPointF,
                                         gRes.Units.ShipSketch[fShipSketchPosition.Dir],
                                         fShipPhase - 1,

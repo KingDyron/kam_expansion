@@ -19,7 +19,7 @@ uses
 
 implementation
 uses
-  KromUtils;
+  KromUtils, IOUtils;
 
 
 function RunOpenDialog(Sender: TOpenDialog; const aName, aPath, aFilter: string): Boolean;
@@ -131,6 +131,5 @@ begin
   end;
   {$ENDIF}
 end;
-
 
 end.

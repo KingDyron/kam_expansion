@@ -94,13 +94,16 @@ begin
   S.Write(coal_overlay, SizeOf(coal_overlay)); //10
   S.Write(aTileBasic.IsHidden);           //11
   S.Write(aTileBasic.RoadType, SizeOf(aTileBasic.RoadType));           //12
-  S.Write(aTileBasic.GrainType, SizeOf(aTileBasic.GrainType));           //12
+  S.Write(aTileBasic.GrainType, SizeOf(aTileBasic.GrainType));           //13
+
+  S.Write(aTileBasic.Ware.W);           //14
+  S.Write(aTileBasic.Ware.C);           //15
 
 
 
   S.Write(aTileBasic.LayersCnt);          //9
 
-  Inc(aMapDataSize, 13); // obligatory 10 bytes per tile
+  Inc(aMapDataSize, 15); // obligatory 14 bytes per tile
 
   if aTileBasic.LayersCnt > 0 then
   begin
@@ -165,6 +168,8 @@ begin
     aTileBasic.TileOverlay2 := toNone;
     aTileBasic.RoadType := rtNone;
     aTileBasic.GrainType := gftNone;
+    aTileBasic.Ware.W := 0;
+    aTileBasic.Ware.C := 0;
   end else
   begin
     aStream.Read(aTileBasic.BaseLayer.Terrain); //2
@@ -198,16 +203,23 @@ begin
       aTileBasic.RoadType := rtNone;
 
     if aGameRev > 15832 then
-      aStream.Read(aTileBasic.GrainType, SizeOf(aTileBasic.GrainType)) //12
+      aStream.Read(aTileBasic.GrainType, SizeOf(aTileBasic.GrainType)) //13
     else
       aTileBasic.GrainType := gftNone;
+
+    if aGameRev > 15833 then
+    begin
+      aStream.Read(aTileBasic.Ware.W); //14
+      aStream.Read(aTileBasic.Ware.C); //15
+    end
+    else
+      aTileBasic.Ware.W := 0;
 
     // Load all layers info
     // First get layers count
     aStream.Read(aTileBasic.LayersCnt);         //9
 
-
-    if aTileBasic.LayersCnt = 0 then            // No need to save corners, if we have no layers on that tile
+    if (aTileBasic.LayersCnt = 0) then            // No need to save corners, if we have no layers on that tile
       aTileBasic.BaseLayer.SetAllCorners // Set all corners then
     else begin
       // if there are some layers, then load base layer corners first
@@ -245,6 +257,7 @@ begin
         //but need to save/load its generation parameters (terKind/mask types etc)
           aTileBasic.Layer[I].Terrain := gRes.Sprites.GenTerrainTransitions[genInfo.TerKind, genInfo.Mask.Kind,
                                                                           genInfo.Mask.MType, genInfo.Mask.SubType];
+          //aTileBasic.Layer[I].Terrain := 0;
           aStream.Read(aTileBasic.Layer[I].Rotation);
       end;
 

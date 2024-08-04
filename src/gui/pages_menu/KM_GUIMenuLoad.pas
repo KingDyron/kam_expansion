@@ -39,6 +39,7 @@ type
     procedure BackClick(Sender: TObject);
     procedure EscKeyDown(Sender: TObject);
     procedure KeyDown(Key: Word; Shift: TShiftState);
+    procedure SaveMiniMap(Sender : TObject);
   protected
     Panel_Load: TKMPanel;
     ColumnBox_Load: TKMColumnBox;
@@ -126,7 +127,7 @@ begin
 
     MinimapView_Load := TKMMinimapView.Create(fMinimap, Panel_Load, 630, 555, 191, 191, True);
     MinimapView_Load.Anchors := [anLeft, anBottom];
-
+    MinimapView_Load.OnDoubleClick := SaveMiniMap;
     //Delete PopUp
     deleteConfirmStr := gResTexts[TX_MENU_LOAD_DELETE_CONFIRM];
     deleteConfirmWidth := Max(450, gRes.Fonts[DELETE_CONFIRM_FONT].GetTextSize(deleteConfirmStr).X + PAD*2);
@@ -508,6 +509,14 @@ end;
 procedure TKMMenuLoad.UpdateState;
 begin
   fSaves.UpdateState;
+end;
+
+procedure TKMMenuLoad.SaveMiniMap(Sender: TObject);
+begin
+  if not ColumnBox_Load.IsSelected then
+    Exit;
+
+  fMinimap.SaveAsScreenShot(fSaves[ColumnBox_Load.ItemIndex].FileName);
 end;
 
 

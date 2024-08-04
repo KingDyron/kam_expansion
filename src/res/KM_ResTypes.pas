@@ -17,6 +17,7 @@ type
     wtSkin,     wtWoodenShield,  wtIronShield, wtLeatherArmor, wtIronArmor,
     wtAxe,      wtSword,         wtLance,      wtPike,         wtBow,
     wtCrossbow, wtHorse,         wtFish,       wtBitin,        wtVegetables,
+
     wtBitinOre, wtStoneBolt,     wtLog,        wtSteelE,       wtBitinE,
     wtWheel,    wtBolt,          wtQuiver,     wtWater,        wtTile,
     wtSeed,     wtSawDust,       wtApple,      wtJewerly,      wtBoots,
@@ -41,7 +42,7 @@ const
 
   WARES_VALID = [WARE_MIN..WARE_MAX];
 
-  WARES_WARFARE = [WARFARE_MIN..WARFARE_MAX, wtBitinE, wtMace, wtFlail, wtPlateArmor, wtBitinArmor, wtBoots, wtQuiver];
+  WARES_WARFARE = [WARFARE_MIN..WARFARE_MAX, wtMace, wtFlail, wtPlateArmor, wtBitinArmor, wtBoots, wtQuiver];
   WARES_FOOD = [wtBread, wtSausage, wtFish, wtWine];
 
   WARE_CNT = Integer(WARE_MAX) - Integer(WARE_MIN) + 1;
@@ -72,6 +73,7 @@ type
   //* House type set
   TKMHouseTypeSet = set of TKMHouseType;
   TKMHouseTypeArray = array of TKMHouseType;
+  TKMHouseTypeArray2 = array of TKMHouseTypeArray;
 
   TKMWareDistributionType = array of Record
     WareType : TKMWareType;
@@ -347,10 +349,26 @@ type
   end;
   PRXData = ^TRXData;
 
-  TKMWarePlan = array[0..3] of record
+  TKMWarePlanSingle = record
       W : TKMWareType;
       C : Byte;
     end;
+  TKMWarePlan = array of TKMWarePlanSingle;
+
+  TKMWarePlanHelper = record helper for TKMWarePlan
+    function HasWare(aWare : TKMWareType) : Byte;
+    function HasWares(aWares : TKMWareTypeSet) : Boolean;
+    function HasAnyWares(aWares : TKMWareTypeSet) : Boolean;
+    procedure SetCount(aCount : Byte);
+    procedure AddWare(aWare : TKMWareType; aCount: Integer = 1);
+    procedure Clear;
+  end;
+
+  TKMVWarePlanCommon = array of record
+    W : String;
+    C : Word;
+  end;
+
 
   TKMVWarePlan = record
     PhaseCount : Integer;
@@ -362,7 +380,6 @@ type
       C : Byte;
     end;
   end;
-
   TKMBuildCost = record
     W : TKMWareType;
     C : Byte;
@@ -460,5 +477,73 @@ begin
     LoadStream.Read(Cost[I].C);
   end;
 end;
+
+function TKMWarePlanHelper.HasWare(aWare: TKMWareType): Byte;
+var I : integer;
+begin
+  Result := 0;
+  for I := 0 to High(self) do
+    if Self[I].W = aWare then
+      Exit(Self[I].C);
+end;
+
+function TKMWarePlanHelper.HasWares(aWares: TKMWareTypeSet): Boolean;
+var I : Integer;
+begin
+
+  for I := 0 to High(self) do
+    if (Self[I].W in aWares) and (Self[I].C > 0) then
+    begin
+      aWares := aWares - [Self[I].W];
+      if aWares = [] then
+        Exit(true);
+    end;
+
+  Result := aWares = [];
+end;
+
+function TKMWarePlanHelper.HasAnyWares(aWares: TKMWareTypeSet): Boolean;
+var I : Integer;
+begin
+  Result := false;
+  for I := 0 to High(self) do
+    if (Self[I].W in aWares) and (Self[I].C > 0) then
+    begin
+      Exit(true);
+    end;
+
+end;
+
+
+procedure TKMWarePlanHelper.SetCount(aCount: Byte);
+begin
+  SetLength(self, 0); //clear everything
+  SetLength(self, aCount);
+end;
+
+procedure TKMWarePlanHelper.AddWare(aWare : TKMWareType; aCount: Integer = 1);
+var I : Integer;
+begin
+  for I := 0 to High(self) do
+    if (self[I].W = wtNone) or (self[I].C = 0) then
+    begin
+      self[I].W := aWare;
+      self[I].C := aCount;
+      Exit;
+    end;
+
+
+end;
+
+procedure TKMWarePlanHelper.Clear;
+var I : Integer;
+begin
+  for I := 0 to High(self) do
+  begin
+    self[I].W := wtNone;
+    self[I].C := 0;
+  end;
+end;
+
 
 end.

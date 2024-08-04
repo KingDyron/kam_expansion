@@ -429,38 +429,58 @@ begin
        end;
     2: begin
          gTerrain.ResetDigState(fLoc); //Remove any dig over that might have been there (e.g. destroyed house) after first dig
-         gTerrain.IncDigState(fLoc);
-         SetActionLockedStay(11,uaWork1,False);
+         gTerrain.IncDigState(fLoc, fRoadType);
+         gTerrain.FlattenTerrain(fLoc, true, false, 0.25); //Flatten the terrain slightly on and around the road
+         if BootsAdded then
+          SetActionLockedStay(0,uaWork1,False) //skip this step
+         else
+          SetActionLockedStay(11,uaWork1,False);
        end;
     3: begin
-         gTerrain.IncDigState(fLoc);
+         gTerrain.IncDigState(fLoc, fRoadType);
          SetActionLockedStay(11,uaWork1,False);
        end;
     //Warning! This step value is harcoded in KM_UnitTaskDelivery
     4: begin //This step is repeated until Serf brings us some stone
           SetActionLockedStay(30,uaWork1);
-          Thought := thStone;
+          if fRoadType = rtWooden then
+            Thought := thWood
+          else
+            Thought := thStone;
+
           if not fIsDigged then
           begin
             gScriptEvents.ProcPlanRoadDigged(Owner, fLoc.X, fLoc.Y);
+            case fRoadType of
+              rtNone,
+              rtStone: gScriptEvents.ProcFieldPlanDigged(Owner, fLoc.X, fLoc.Y, lftRoadStone);
+              rtWooden: gScriptEvents.ProcFieldPlanDigged(Owner, fLoc.X, fLoc.Y, lftRoadWooden);
+              rtClay: gScriptEvents.ProcFieldPlanDigged(Owner, fLoc.X, fLoc.Y, lftRoadClay);
+              rtExclusive: gScriptEvents.ProcFieldPlanDigged(Owner, fLoc.X, fLoc.Y, lftRoadExclusive);
+            end;
+
+
             fIsDigged := True;
           end;
        end;
     5: begin
-         SetActionLockedStay(11,uaWork2,False);
+         if BootsAdded then
+          SetActionLockedStay(0,uaWork2,False) //skip this step
+         else
+          SetActionLockedStay(11,uaWork2,False);
          fDemandSet := False;
          Thought := thNone;
        end;
     6: begin
-         gTerrain.IncDigState(fLoc);
-         SetActionLockedStay(11,uaWork2,False);
+         gTerrain.IncDigState(fLoc, fRoadType);
+          SetActionLockedStay(11,uaWork2,False);
        end;
     7: begin
-         gTerrain.IncDigState(fLoc);
-         gTerrain.FlattenTerrain(fLoc); //Flatten the terrain slightly on and around the road
+         gTerrain.IncDigState(fLoc, fRoadType);
+         gTerrain.FlattenTerrain(fLoc, true, false, 0.25); //Flatten the terrain slightly on and around the road
          if gMapElements[gTerrain.Land^[fLoc.Y,fLoc.X].Obj].WineOrCorn then
            gTerrain.RemoveObject(fLoc); //Remove corn/wine/grass as they won't fit with road
-         SetActionLockedStay(11,uaWork2,False);
+          SetActionLockedStay(11,uaWork2,False);
        end;
     8: begin
          gTerrain.SetRoad(fLoc, Owner, fRoadType);
@@ -468,6 +488,13 @@ begin
          SetActionStay(5, uaWalk);
          gTerrain.UnlockTile(fLoc);
          fTileLockSet := False;
+          case fRoadType of
+            rtNone,
+            rtStone: gScriptEvents.ProcFieldPlanBuilt(Owner, fLoc.X, fLoc.Y, lftRoadStone);
+            rtWooden: gScriptEvents.ProcFieldPlanBuilt(Owner, fLoc.X, fLoc.Y, lftRoadWooden);
+            rtClay: gScriptEvents.ProcFieldPlanBuilt(Owner, fLoc.X, fLoc.Y, lftRoadClay);
+            rtExclusive: gScriptEvents.ProcFieldPlanBuilt(Owner, fLoc.X, fLoc.Y, lftRoadExclusive);
+          end;
        end;
     else Result := trTaskDone;
   end;
@@ -607,7 +634,10 @@ begin
       end;
    2: begin
         gTerrain.IncDigState(fLoc);
-        SetActionLockedStay(24,uaWork1,False);
+         if BootsAdded then
+          SetActionLockedStay(0,uaWork1,False) //skip this step
+         else
+          SetActionLockedStay(24,uaWork1,False);
       end;
    3: begin
         gTerrain.IncDigState(fLoc);
@@ -616,29 +646,39 @@ begin
    4: begin
         gTerrain.ResetDigState(fLoc);
         gTerrain.SetInitWine(fLoc, Owner); //Replace the terrain, but don't seed grapes yet
-        SetActionLockedStay(30, uaWork1);
+         if BootsAdded then
+          SetActionLockedStay(0,uaWork1,False) //skip this step
+         else
+          SetActionLockedStay(30, uaWork1);
         Thought := thWood;
         if not fIsDigged then
         begin
           gScriptEvents.ProcPlanWinefieldDigged(Owner, fLoc.X, fLoc.Y);
+          gScriptEvents.ProcFieldPlanDigged(Owner, fLoc.X, fLoc.Y, lftWineField);
           fIsDigged := True;
         end;
       end;
    //Warning! This step value is harcoded in KM_UnitTaskDelivery
    5: begin //This step is repeated until Serf brings us some wood
-        SetActionLockedStay(30, uaWork1);
+
+         if BootsAdded then
+          SetActionLockedStay(0,uaWork1,False) //skip this step
+         else
+          SetActionLockedStay(30, uaWork1);
         Thought := thWood;
       end;
    6: begin
         fDemandSet := False;
-        SetActionLockedStay(11*8, uaWork2, False);
+        SetActionLockedStay(IfThen(BootsAdded, 11*6, 11*8), uaWork2, False);
         Thought := thNone;
       end;
    7: begin
+         gTerrain.FlattenTerrain(fLoc, true, false, 0.25); //Flatten the terrain slightly on and around the road
         gTerrain.SetField(fLoc, Owner, ftWine);
         SetActionStay(5, uaWalk);
         gTerrain.UnlockTile(fLoc);
         fTileLockSet := False;
+        gScriptEvents.ProcFieldPlanBuilt(Owner, fLoc.X, fLoc.Y, lftWineField);
       end;
    else Result := trTaskDone;
   end;
@@ -734,7 +774,10 @@ begin
         SetActionLockedStay(0,uaWalk);
        end;
     2: begin
-        SetActionLockedStay(11,uaWork1,False);
+         if BootsAdded and (fPhase2 mod 4 = 0) then
+          SetActionLockedStay(0,uaWork1,False) //skip this step
+         else
+          SetActionLockedStay(11,uaWork1,False);
         inc(fPhase2);
         if fPhase2 = 2 then gTerrain.ResetDigState(fLoc); //Remove any dig over that might have been there (e.g. destroyed house)
         if (fPhase2 = 4) and gMapElements[gTerrain.Land^[fLoc.Y,fLoc.X].Obj].WineOrCorn then
@@ -742,11 +785,13 @@ begin
         if fPhase2 in [6,8] then gTerrain.IncDigState(fLoc);
        end;
     3: begin
+         gTerrain.FlattenTerrain(fLoc, true, false, 0.25); //Flatten the terrain slightly on and around the road
         Thought := thNone; //Keep thinking build until it's done
         gTerrain.SetField(fLoc, Owner, ftCorn);
         SetActionStay(5,uaWalk);
         gTerrain.UnlockTile(fLoc);
         fTileLockSet := False;
+        gScriptEvents.ProcFieldPlanDigged(Owner, fLoc.X, fLoc.Y, lftField);
        end;
     else Result := trTaskDone;
   end;
@@ -840,7 +885,10 @@ begin
         SetActionLockedStay(0,uaWalk);
        end;
     2: begin
-        SetActionLockedStay(11,uaWork1,False);
+         if BootsAdded and (fPhase2 mod 4 = 0) then
+          SetActionLockedStay(0,uaWork1,False) //skip this step
+         else
+          SetActionLockedStay(11,uaWork1,False);
         inc(fPhase2);
         if fPhase2 = 2 then gTerrain.ResetDigState(fLoc); //Remove any dig over that might have been there (e.g. destroyed house)
         if (fPhase2 = 4) and gMapElements[gTerrain.Land^[fLoc.Y,fLoc.X].Obj].WineOrCorn then
@@ -848,11 +896,13 @@ begin
         if fPhase2 in [6,8] then gTerrain.IncDigState(fLoc);
        end;
     3: begin
+         gTerrain.FlattenTerrain(fLoc, true, false, 0.25); //Flatten the terrain slightly on and around the road
         Thought := thNone; //Keep thinking build until it's done
         gTerrain.SetField(fLoc, Owner, ftGrassLand, 0, gftGrass);
         SetActionStay(5,uaWalk);
         gTerrain.UnlockTile(fLoc);
         fTileLockSet := False;
+        gScriptEvents.ProcFieldPlanDigged(Owner, fLoc.X, fLoc.Y, lftGrassField);
        end;
     else Result := trTaskDone;
   end;
@@ -946,7 +996,10 @@ begin
         SetActionLockedStay(0,uaWalk);
        end;
     2: begin
-        SetActionLockedStay(11,uaWork1,False);
+         if BootsAdded and (fPhase2 mod 4 = 0) then
+          SetActionLockedStay(0,uaWork1,False) //skip this step
+         else
+          SetActionLockedStay(11,uaWork1,False);
         inc(fPhase2);
         if fPhase2 = 2 then gTerrain.ResetDigState(fLoc); //Remove any dig over that might have been there (e.g. destroyed house)
         if (fPhase2 = 4) and gMapElements[gTerrain.Land^[fLoc.Y,fLoc.X].Obj].WineOrCorn then
@@ -954,11 +1007,13 @@ begin
         if fPhase2 in [6,8] then gTerrain.IncDigState(fLoc);
        end;
     3: begin
+         gTerrain.FlattenTerrain(fLoc, true, false, 0.25); //Flatten the terrain slightly on and around the road
         Thought := thNone; //Keep thinking build until it's done
         gTerrain.SetField(fLoc, Owner, ftVegeField, 0, gftPumpkin);
         SetActionStay(5,uaWalk);
         gTerrain.UnlockTile(fLoc);
         fTileLockSet := False;
+        gScriptEvents.ProcFieldPlanDigged(Owner, fLoc.X, fLoc.Y, lftVegetablesField);
        end;
     else Result := trTaskDone;
   end;
@@ -1051,7 +1106,10 @@ begin
         SetActionLockedStay(0,uaWalk);
        end;
     2: begin
-        SetActionLockedStay(22,uaWork1,False);
+         if BootsAdded and (fPhase2 mod 4 = 0) then
+          SetActionLockedStay(0,uaWork1,False) //skip this step
+         else
+          SetActionLockedStay(11,uaWork1,False);
         inc(fPhase2);
         //if fPhase2 = 2 then gTerrain.ResetDigState(fLoc); //Remove any dig over that might have been there (e.g. destroyed house)
         if (fPhase2 = 6) and (gMapElements[gTerrain.Land^[fLoc.Y,fLoc.X].Obj].WineOrCorn or gTerrain.TileHasPalisade(fLoc.X, fLoc.Y)) then
@@ -1067,6 +1125,7 @@ begin
        end;
     3: begin
         Thought := thNone; //Keep thinking build until it's done
+        gTerrain.FlattenTerrain(fLoc, true, false, 0.25); //Flatten the terrain slightly on and around the road
 
         if gTerrain.TileHasRoad(fLoc) then
           gTerrain.RemRoad(fLoc)
@@ -1090,6 +1149,7 @@ begin
         SetActionStay(5,uaWalk);
         gTerrain.UnlockTile(fLoc);
         fTileLockSet := False;
+        gScriptEvents.ProcFieldPlanDigged(Owner, fLoc.X, fLoc.Y, lftRemove);
        end;
     else Result := trTaskDone;
   end;
@@ -1192,7 +1252,7 @@ begin
         with gHands[fUnit.Owner].Constructions.BridgePlanList do
           if HasAllBuildingMaterials(fBuildID) then
           begin
-            SetActionLockedStay(10,uaWork2,false);
+            SetActionLockedStay(IfThen(BootsAdded, 7, 10),uaWork2,false);
             IncBuildingProgress(fBuildID);
             phaseDone := Plans[fBuildID].BuildingProgress >= (gRes.Bridges[fBridgeIndex].MaxProgress * 2);
 
@@ -1333,10 +1393,8 @@ begin
   begin
     fHouse.BuildingState := hbsWood;
     gHands[fUnit.Owner].Constructions.HouseList.AddHouse(fHouse); //Add the house to JobList, so then all workers could take it
-    gHands[fUnit.Owner].Deliveries.Queue.AddDemand(fHouse, nil, wtTimber, gRes.Houses[fHouse.HouseType].WoodCost, dtOnce, diHigh4);
-    gHands[fUnit.Owner].Deliveries.Queue.AddDemand(fHouse, nil, wtStone, gRes.Houses[fHouse.HouseType].StoneCost, dtOnce, diHigh4);
-    gHands[fUnit.Owner].Deliveries.Queue.AddDemand(fHouse, nil, wtTile, gRes.Houses[fHouse.HouseType].TileCost, dtOnce, diHigh4);
 
+    fHouse.AddDemandBuildingMaterials;
   end;
 
   gHands.CleanUpHousePointer(fHouse);
@@ -1354,7 +1412,7 @@ end;
 function TKMTaskBuildHouseArea.GetHouseEntranceLoc: TKMPoint;
 begin
   Result.X := fHouseLoc.X + gRes.Houses[fHouseType].EntranceOffsetX;
-  Result.Y := fHouseLoc.Y;
+  Result.Y := fHouseLoc.Y + gRes.Houses[fHouseType].EntranceOffsetY;
 end;
 
 
@@ -1424,18 +1482,26 @@ begin
           Exit;
         end;
     3:  begin
-          SetActionLockedStay(11,uaWork1,False); //Don't flatten terrain here as we haven't started digging yet
+          SetActionLockedStay(IfThen(BootsAdded, 5, 11),uaWork1,False); //Don't flatten terrain here as we haven't started digging yet
         end;
     4:  begin
-          SetActionLockedStay(11,uaWork1,False);
+          if BootsAdded then
+            SetActionLockedStay(0,uaWork1,False)
+          else
+            SetActionLockedStay(11,uaWork1,False);
+
           gTerrain.FlattenTerrain(fCellsToDig[fLastToDig]);
         end;
     5:  begin
-          SetActionLockedStay(11,uaWork1,False);
+          SetActionLockedStay(IfThen(BootsAdded, 5, 11),uaWork1,False);
           gTerrain.FlattenTerrain(fCellsToDig[fLastToDig]);
         end;
     6:  begin
-          SetActionLockedStay(11,uaWork1,False);
+          if BootsAdded then
+            SetActionLockedStay(0,uaWork1,False)
+          else
+            SetActionLockedStay(11,uaWork1,False);
+
           gTerrain.FlattenTerrain(fCellsToDig[fLastToDig]);
           gTerrain.FlattenTerrain(fCellsToDig[fLastToDig]); //Flatten the terrain twice now to ensure it really is flat
 
@@ -1445,7 +1511,7 @@ begin
             gTerrain.SetTileLock(fCellsToDig[fLastToDig], tlDigged); //Block passability on tile
 
           if KMSamePoint(fHouse.Entrance, fCellsToDig[fLastToDig]) then
-            if not (fHouse.HouseType in WALL_HOUSES) then
+            if fHouse.PlaceRoad then
                 gTerrain.SetRoad(fHouse.Entrance, Owner, gTerrain.GetRoadType(fHouse.Entrance.X, fHouse.Entrance.Y + 1));
 
           if not ((fHouse.HouseType = htAppleTree) and KMSamePoint(fHouse.Entrance, fCellsToDig[fLastToDig])) then
@@ -1617,8 +1683,12 @@ begin
     4:  begin
           //Update house on hummer hit
           fHouse.IncBuildingProgress;
+
+          if fUnit.BootsAdded and (fPhase2 mod 2 = 0)then
+            fHouse.IncBuildingProgress;
+
           SetActionLockedStay(6, uaWork, False, 0, 5); //Do building and end animation
-          if not (fHouse.HouseType in WALL_HOUSES) then
+          if fHouse.PlaceRoad then
               gTerrain.SetRoad(fHouse.Entrance, Owner, gTerrain.GetRoadType(fHouse.Entrance.X, fHouse.Entrance.Y + 1));
           Inc(fPhase2);
         end;
@@ -1775,6 +1845,8 @@ begin
     4:  begin
           //Update house on hummer hit
           fHouse.IncBuildingUpgradeProgress;
+          if BootsAdded then
+            fHouse.IncBuildingUpgradeProgress;
           SetActionLockedStay(6, uaWork, False, 0, 5); //Do building and end animation
           Inc(fPhase2);
         end;
@@ -1916,6 +1988,9 @@ begin
           end;
       4:  begin
             fHouse.AddRepair;
+            if BootsAdded then
+              fHouse.AddRepair;
+
             SetActionLockedStay(6, uaWork,False, 0, 5); //Do building and end animation
             inc(fPhase2);
           end;
@@ -2056,6 +2131,7 @@ begin
     3: begin
          gTerrain.IncDigState(fLoc);
          SetActionLockedStay(44,uaWork1,False);
+         gScriptEvents.ProcFieldPlanDigged(Owner, fLoc.X, fLoc.Y, lftPalisade);
        end;
     //Warning! This step value is harcoded in KM_UnitTaskDelivery
     4: begin //This step is repeated until Serf brings us some stone
@@ -2112,6 +2188,7 @@ begin
          SetActionStay(5, uaWalk);
          fTileLockSet := False;
          gTerrain.UnlockTile(fLoc);
+         gScriptEvents.ProcFieldPlanBuilt(Owner, fLoc.X, fLoc.Y, lftPalisade);
        end;
     else Result := trTaskDone;
   end;
@@ -2134,3 +2211,4 @@ begin
 end;
 
 end.
+

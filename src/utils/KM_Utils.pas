@@ -32,7 +32,6 @@ uses
 
   function CompareTextLogical(A, B: UnicodeString): Integer;
 
-
 implementation
 uses
   Math, KM_ResTexts, KM_ResKeys;

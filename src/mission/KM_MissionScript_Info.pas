@@ -99,6 +99,9 @@ begin
                           if TKMGoalCondition(P[0]) = gcTime then
                             fMapInfo.AddGoal(gltVictory, fLastHand, TKMGoalCondition(P[0]), TKMGoalStatus(P[1]), 0)
                           else
+                          if TKMGoalCondition(P[0]) in [gcFindPlace, gcRevealPlace, gcSpecified] then
+                            fMapInfo.AddGoal(gltVictory, fLastHand, TKMGoalCondition(P[0]), TKMGoalStatus(P[1]), -1)
+                          else
                             fMapInfo.AddGoal(gltVictory, fLastHand, TKMGoalCondition(P[0]), TKMGoalStatus(P[1]), P[3]);
 
     ctAddLostGoal:     if fLastHand >= 0 then

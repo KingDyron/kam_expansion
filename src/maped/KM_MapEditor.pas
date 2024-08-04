@@ -467,6 +467,17 @@ begin
           Exit;
         end;
   end;
+  if melSpawners in fVisibleLayers then
+  begin
+    for I := 0 to gHands.PlayerAnimals.SpawnersCount - 1 do
+      if gHands.PlayerAnimals.Spawners[I].Loc = KMPoint(X, Y) then
+      begin
+        Result.MarkerType := mmtSpawner;
+        Result.Index := I;
+        Exit;
+      end;
+      
+  end;
 
   //Else nothing is found
   Result.MarkerType := mmtNone;
@@ -686,13 +697,16 @@ begin
     //change direction forward
     cdmDir:         gCursor.MapEdDirection := KMAddDirection(gCursor.MapEdDirection, aDirInc);
     // change group type of defence position
-    cdmGroupType:   if gCursor.MapEdDefPosGroupType = gtMachinesMelee then
+    cdmGroupType:   if gCursor.MapEdDefPosGroupType = gtWreckers then
                       gCursor.MapEdDefPosGroupType := gtMelee
                     else
                       gCursor.MapEdDefPosGroupType := TKMGroupType(Ord(gCursor.MapEdDefPosGroupType) + 1);
     //change defence type - defensive/attacking
     cdmDefPosType:  if gCursor.MapEdDefPosType = dtFrontLine then
                       gCursor.MapEdDefPosType := dtBackLine
+                    else
+                    if gCursor.MapEdDefPosType = dtBackLine then
+                      gCursor.MapEdDefPosType := dtGuardLine
                     else
                       gCursor.MapEdDefPosType := dtFrontLine;
 
@@ -920,7 +934,15 @@ begin
                   if TKMHouseType(gCursor.Tag1) in WALL_HOUSES then
                     if gMySpectator.Hand.CanAddHousePlan(P, TKMHouseType(gCursor.Tag1)) then
                     begin
-                      H := gMySpectator.Hand.AddHouse(TKMHouseType(gCursor.Tag1), P.X, P.Y, True);
+                      if gCursor.MapEd_HouseSite then
+                      begin
+                        H := gMySpectator.Hand.AddHouseWip(TKMHouseType(gCursor.Tag1), P);
+                        H.UpdatePosition(P);
+                        H.UpdatePosition(P);
+                        gTerrain.SetRoad(H.Entrance, H.Owner, rtStone);
+                        H.BuildingState := hbsWood;
+                      end else
+                        H := gMySpectator.Hand.AddHouse(TKMHouseType(gCursor.Tag1), P.X, P.Y, True);
 
                       fAddedHouse := true;
                       if H <> nil then
@@ -1136,9 +1158,10 @@ const
                            (utRebel,    utLanceCarrier, utPikeman),
                            (utRogue,    utBowman,       utCrossbowman),
                            (utVagabond, utScout,        utKnight),
-                           (utCatapult, utAmmoCart,     utBallista),
+                           (utCatapult, utWoodenWall,     utBallista),
                            (utRam,      utRam,          utRam),
-                           (utClubMan,  utMaceFighter,  utFlailFighter)
+                           (utClubMan,  utMaceFighter,  utFlailFighter),
+                           (utBattleShip,  utBattleShip,  utBattleShip)
                           );
 
 var
@@ -1232,51 +1255,62 @@ begin
                 cmHouses:     begin
                                 if gMySpectator.Hand.CanAddHousePlan(P, TKMHouseType(gCursor.Tag1)) then
                                 begin
-                                  H := gMySpectator.Hand.AddHouse(TKMHouseType(gCursor.Tag1), P.X, P.Y, True);
-                                  if H <> nil then
+                                  if gCursor.MapEd_HouseSite then
                                   begin
-                                    if gCursor.MapEd_HouseStyle > 0 then
-                                      H.Style := gCursor.MapEd_HouseStyle;
+                                    H := gMySpectator.Hand.AddHouseWip(TKMHouseType(gCursor.Tag1), P);
+                                    H.UpdatePosition(P);
+                                    gTerrain.SetRoad(H.Entrance, gMySpectator.HandID, rtStone);
+                                    H.BuildingState := hbsWood;
+                                  end else
+                                  begin
+                                    H := gMySpectator.Hand.AddHouse(TKMHouseType(gCursor.Tag1), P.X, P.Y, True);
 
-                                    if gCursor.MapEd_HouseLevel > 0 then
-                                      H.CurrentLevel := gCursor.MapEd_HouseLevel;
+                                    if H <> nil then
+                                    begin
+                                      if gCursor.MapEd_HouseStyle > 0 then
+                                        H.Style := gCursor.MapEd_HouseStyle;
 
-                                    if medHouseNoResource in gCursor.MapEd_Modifications then
-                                      H.DontNeedRes := true;
+                                      if gCursor.MapEd_HouseLevel > 0 then
+                                        H.CurrentLevel := gCursor.MapEd_HouseLevel;
 
-                                    if medHouseForceWorking in gCursor.MapEd_Modifications then
-                                      H.ForceWorking := true;
-                                    case gCursor.MapEd_HouseFill of
-                                      0, 10 : ;//do nothing
-                                      1, 2, 3, 4, 5 : if H.GetMaxInWare <= 5 then
-                                                        for I := 1 to 4 do
-                                                        begin
-                                                          if H.WareInput[I] <> wtNone then
-                                                            H.WareAddToIn(H.WareInput[I], gCursor.MapEd_HouseFill, true);
-                                                          if H.WareOutput[I] <> wtNone then
-                                                            H.WareAddToOut(H.WareOutput[I], gCursor.MapEd_HouseFill);
-                                                        end;
-                                      11, 12, 13, 14, 15 :  if H.GetMaxInWare <= 5 then
-                                                              for I := 1 to 4 do
-                                                              begin
-                                                                if H.WareInput[I] <> wtNone then
-                                                                  H.WareAddToIn(H.WareInput[I], KamRandom(gCursor.MapEd_HouseFill - 10 + 1, 'MapEd:FillHouse Input'), true);
-                                                                if H.WareOutput[I] <> wtNone then
-                                                                  H.WareAddToOut(H.WareOutput[I], KamRandom(gCursor.MapEd_HouseFill - 10 + 1, 'MapEd:FillHouse Output'));
-                                                              end;
+                                      if medHouseNoResource in gCursor.MapEd_Modifications then
+                                        H.DontNeedRes := true;
 
-                                      6, 16 : if H.GetMaxInWare <= 5 then
-                                                for I := 1 to 4 do
-                                                begin
-                                                  if H.WareInput[I] <> wtNone then
-                                                    H.WareAddToIn(H.WareInput[I], 5, true);
-                                                  if H.WareOutput[I] <> wtNone then
-                                                    H.WareAddToOut(H.WareOutput[I], 5);
-                                                end;
+                                      if medHouseForceWorking in gCursor.MapEd_Modifications then
+                                        H.ForceWorking := true;
+                                      case gCursor.MapEd_HouseFill of
+                                        0, 10 : ;//do nothing
+                                        1, 2, 3, 4, 5 : if H.GetMaxInWare <= 5 then
+                                                          for I := 1 to 4 do
+                                                          begin
+                                                            if H.WareInput[I] <> wtNone then
+                                                              H.WareAddToIn(H.WareInput[I], gCursor.MapEd_HouseFill, true);
+                                                            if H.WareOutput[I] <> wtNone then
+                                                              H.WareAddToOut(H.WareOutput[I], gCursor.MapEd_HouseFill);
+                                                          end;
+                                        11, 12, 13, 14, 15 :  if H.GetMaxInWare <= 5 then
+                                                                for I := 1 to 4 do
+                                                                begin
+                                                                  if H.WareInput[I] <> wtNone then
+                                                                    H.WareAddToIn(H.WareInput[I], KamRandom(gCursor.MapEd_HouseFill - 10 + 1, 'MapEd:FillHouse Input'), true);
+                                                                  if H.WareOutput[I] <> wtNone then
+                                                                    H.WareAddToOut(H.WareOutput[I], KamRandom(gCursor.MapEd_HouseFill - 10 + 1, 'MapEd:FillHouse Output'));
+                                                                end;
+
+                                        6, 16 : if H.GetMaxInWare <= 5 then
+                                                  for I := 1 to 4 do
+                                                  begin
+                                                    if H.WareInput[I] <> wtNone then
+                                                      H.WareAddToIn(H.WareInput[I], 5, true);
+                                                    if H.WareOutput[I] <> wtNone then
+                                                      H.WareAddToOut(H.WareOutput[I], 5);
+                                                  end;
+                                      end;
+
                                     end;
-
                                   end;
-                                  fAddedHouse := true;
+
+                                  fAddedHouse := H <> nil;
                                 end;
                                 if fAddedHouse then
                                   fHistory.MakeCheckpoint(caHouses,
@@ -1333,6 +1367,10 @@ begin
                                 MARKER_RALLY_POINT:   if gMySpectator.Selected is TKMHouseWFlagPoint then
                                                         TKMHouseWFlagPoint(gMySpectator.Selected).FlagPoint := P;
                                 MARKER_DEFEND:       AddDefendMarker(P);
+                                MARKER_ANIMALS:      gHands.PlayerAnimals.AddSpawner(P, gCursor.MapEdSize,
+                                                                                    gCursor.MapEd_AnimalsCount,
+                                                                                    gCursor.MapEd_AnimalsPace,
+                                                                                    gCursor.MapEd_Animals);
                               end;
                 cmErase:      begin
                                 ApplyBigErase;

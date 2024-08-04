@@ -117,6 +117,7 @@ type
     ClipToBounds: Boolean;
     Tiled: Boolean;
     AlphaStep : Single;
+    TexID2 : Word;
     constructor Create(aParent: TKMPanel; aLeft, aTop, aWidth, aHeight: Integer; aTexID: Word; aRX: TRXType = rxGui;
                        aImageAnchors: TKMAnchorsSet = [anLeft, anTop]);
     property RX: TRXType read fRX write fRX;
@@ -148,6 +149,8 @@ type
   public
     AnimStep: Integer;
     Animation : TKMAnimLoop;
+    AddBevel,
+    StopAnim : Boolean;
     procedure Paint; override;
     Procedure UpdateState(aTickCount: Cardinal); override;
   end;
@@ -192,7 +195,9 @@ type
 
   // Common Flat Button
   TKMButtonFlatCommon = class abstract(TKMControl)
-  private
+  protected
+    fCaption : UnicodeString;
+    procedure SetCaption(aValue : String); virtual;
   public
     RX: TRXType;
     TexID: Word;
@@ -200,7 +205,7 @@ type
     TexOffsetY: Shortint;
     CapOffsetX: SmallInt;
     CapOffsetY: SmallInt;
-    Caption: UnicodeString;
+    //Caption: UnicodeString;
     CapColor: TColor4;
     FlagColor: TColor4;
     Font: TKMFont;
@@ -209,10 +214,12 @@ type
     EdgeAlpha: Single;
     BackAlpha: Single;
     HighLightColor : TColor4;
+    BackBevelColor : TColor4;
 
     constructor Create(aParent: TKMPanel; aLeft, aTop, aWidth, aHeight, aTexID: Integer; aRX: TRXType = rxGui); virtual;
 
     procedure MouseUp(X,Y: Integer; Shift: TShiftState; Button: TMouseButton); override;
+    property Caption : UnicodeString read fCaption write SetCaption;
 
     procedure Paint; override;
   end;
@@ -552,6 +559,7 @@ begin
   HighlightOnMouseOver := False;
   HighlightCoef := CTRL_HIGHLIGHT_COEF_DEF;
   AlphaStep := -1;
+  TexID2 := 0;
 end;
 
 
@@ -629,12 +637,15 @@ begin
     else
       TKMRenderUI.WritePicture(AbsLeft, AbsTop, Width, Height, ImageAnchors, fRX, fTexID, Enabled, fFlagColor, paintLightness, AlphaStep);
 
+    if TexID2 > 0 then
+      TKMRenderUI.WritePicture(AbsLeft, AbsTop, Width, Height, ImageAnchors, fRX, TexID2, Enabled, fFlagColor, paintLightness, AlphaStep);
     if ClipToBounds then
     begin
       TKMRenderUI.ReleaseClipX;
       TKMRenderUI.ReleaseClipY;
     end;
   end;
+  
 end;
 
 
@@ -840,10 +851,15 @@ begin
   Clickable := True;
   EdgeAlpha := BEVEL_EDGE_ALPHA_DEF;
   BackAlpha := BEVEL_BACK_ALPHA_DEF;
+  BackBevelColor := $00000000;
   HighLightColor := $40FFFFFF;
 end;
 
 
+procedure TKMButtonFlatCommon.SetCaption(aValue: string);
+begin
+  fCaption := aValue;
+end;
 
 procedure TKMButtonFlatCommon.MouseUp(X,Y: Integer; Shift: TShiftState; Button: TMouseButton);
 begin
@@ -860,6 +876,8 @@ begin
   inherited;
 
   TKMRenderUI.WriteBevel(AbsLeft, AbsTop, Width, Height, EdgeAlpha, BackAlpha);
+
+  TKMRenderUI.WriteShape(AbsLeft+1, AbsTop+1, Width-2, Height-2, BackBevelColor);
 
   if (csOver in State) and Enabled and not HideHighlight then
     TKMRenderUI.WriteShape(AbsLeft+1, AbsTop+1, Width-2, Height-2, HighLightColor);
@@ -977,13 +995,18 @@ end;
 procedure TKMImageAnimation.UpdateState(aTickCount: Cardinal);
 begin
   Inherited;
-  Inc(AnimStep);
+  if not StopAnim then
+    Inc(AnimStep);
 end;
 
 procedure TKMImageAnimation.Paint;
 var id : Integer;
   paintLightness : Single;
 begin
+  if AddBevel then
+    TKMRenderUI.WriteBevel(AbsLeft, AbsTop, Width, Height);
+
+
   Inherited;
 
   if Animation.Count > 0 then //No picture to draw
@@ -997,7 +1020,7 @@ begin
 
     paintLightness := Lightness + HighlightCoef * (Byte(HighlightOnMouseOver and (csOver in State)) + Byte(Highlight));
 
-    TKMRenderUI.WritePicture(AbsRight, AbsTop, Width, Height, ImageAnchors, fRX, id, Enabled, fFlagColor, paintLightness, AlphaStep);
+    TKMRenderUI.WritePicture(AbsLeft, AbsTop, Width, Height, ImageAnchors, fRX, id, Enabled, fFlagColor, paintLightness, AlphaStep);
 
     if ClipToBounds then
     begin

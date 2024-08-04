@@ -67,6 +67,7 @@ type
     procedure KeyDown(Key: Word; Shift: TShiftState);
     function IsCampaign : Boolean;
     procedure HideForCampaign;
+    procedure SaveMiniMap(Sender: TObject);
   protected
     Panel_MapEd: TKMPanel;
 
@@ -333,6 +334,7 @@ begin
 
       MinimapView_MapEd := TKMMinimapView.Create(fMinimap, Panel_MapInfo, 4, 4, 191, 191, True);
       MinimapView_MapEd.Anchors := [anLeft, anTop];
+      MinimapView_MapEd.OnDoubleClick := SaveMiniMap;
 
       Label_MapType := TKMLabel.Create(Panel_MapInfo, 0, 199+10, '', fntMetal, taLeft);
       Label_MapType.Anchors := [anLeft, anTop];
@@ -1396,6 +1398,16 @@ begin
   fMaps.UpdateState;
   HideForCampaign;
   Bevel_CampaignImage.Visible := Image_Campaign.Visible;
+end;
+
+
+procedure TKMMenuMapEditor.SaveMiniMap(Sender: TObject);
+begin
+  if not ColumnBox_MapEd.IsSelected then
+    Exit;
+
+
+  fMinimap.SaveAsScreenShot(fMaps[ColumnBox_MapEd.SelectedItemTag].MapName);
 end;
 
 

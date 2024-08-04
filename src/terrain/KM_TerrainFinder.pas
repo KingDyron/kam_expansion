@@ -226,7 +226,7 @@ const
     //Test whether this tile is valid and exit immediately if not
     //Multiply the radius because of diagonal approximation (straight=5, diagonal=7)
     if (aWalkDistance > aRadius * STRAIGHT_COST)
-      or not (aPass in gTerrain.Land^[Y,X].Passability) then
+      or not (aPass in gTerrain.Land^[Y,X].Passability + [tpNone]) then
       Exit;
 
     visitX := aStart.X - X + aRadius;
@@ -252,7 +252,7 @@ const
         Visit(X-1,Y+1, aWalkDistance + DIAG_COST);
     end;
 
-    if Y-1 >=     1 then
+    if Y-1 >= 1 then
       Visit(X, Y-1, aWalkDistance + STRAIGHT_COST);
 
     if Y+1 <= fMapY then

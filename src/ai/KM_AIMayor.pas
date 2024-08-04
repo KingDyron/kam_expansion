@@ -2,7 +2,7 @@ unit KM_AIMayor;
 {$I KaM_Remake.inc}
 interface
 uses
-  KM_AIMayorBalance, KM_AICityPlanner, KM_AISetup,
+  KM_AIMayorBalance, KM_AICityPlanner, KM_AISetup, KM_AIRecordBuilding,
   KM_PathfindingRoad,
   KM_ResHouses, KM_HouseCollection,
   KM_CommonClasses, KM_Defaults, KM_Points,
@@ -18,6 +18,7 @@ type
     fSetup: TKMHandAISetup;
     fBalance: TKMayorBalance;
     fCityPlanner: TKMCityPlanner;
+    fRecorder : TKMAIRecorder;
     fPathFindingRoad: TKMPathFindingRoad;
     fPathFindingRoadShortcuts: TKMPathFindingRoadShortcuts;
 
@@ -57,6 +58,7 @@ type
     destructor Destroy; override;
 
     property CityPlanner: TKMCityPlanner read fCityPlanner;
+    property Recorder : TKMAIRecorder read fRecorder;
 
     procedure AfterMissionInit;
     procedure OwnerUpdate(aPlayer: TKMHandID);
@@ -153,6 +155,7 @@ begin
   fPathFindingRoad := TKMPathFindingRoad.Create(fOwner);
   fPathFindingRoadShortcuts := TKMPathFindingRoadShortcuts.Create(fOwner);
   fDefenceTowers := TKMPointTagList.Create;
+  fRecorder := TKMAIRecorder.Create(fOwner);
 end;
 
 
@@ -163,7 +166,7 @@ begin
   fPathFindingRoad.Free;
   fPathFindingRoadShortcuts.Free;
   fDefenceTowers.Free;
-
+  fRecorder.Free;
   inherited;
 end;
 
@@ -206,7 +209,10 @@ var
 
   function RecruitsNeeded: Integer;
   var AxesLeft: Integer;
+    I : Integer;
+    H : TKMHouseBarracks;
   begin
+
     if P.Stats.GetHouseQty(htBarracks) = 0 then
       Result := 0
     else
@@ -227,7 +233,18 @@ var
           Inc(Result, AxesLeft);
       end
       else
-        Result := fSetup.RecruitCount * P.Stats.GetHouseQty(htBarracks);
+      begin
+        Result := 0;
+        for I := 0 to P.Houses.Barracks.Count - 1 do
+        begin
+          H := TKMHouseBarracks(P.Houses.Barracks[I]);
+          if (H <> nil) and not H.IsDestroyed then
+            Inc(Result, fSetup.RecruitCount - H.RecruitsCount);
+        end;
+
+        //Result := fSetup.RecruitCount * P.Stats.GetHouseQty(htBarracks);
+      end;
+    Inc(Result, P.Stats.GetHouseQty(htWallTower) * 2);
   end;
 
 var
@@ -252,8 +269,9 @@ begin
   for I := 0 to P.Houses.Count - 1 do
   begin
     house := P.Houses[I];
-    if (house <> nil)
-    and not house.IsDestroyed
+    if house.IsValid(htAny, false, true)
+    and not house.IsClosedForWorker
+    and not (house.HouseType in [htBarracks, htStore, htInn, htMarket])
     and gRes.Houses[house.HouseType].CanHasWorker then
     begin
       FillChar(tmpUnitCnt, SizeOf(tmpUnitCnt), #0); //Clear up
@@ -419,21 +437,66 @@ begin
   for I := 0 to gHands[fOwner].Houses.Count - 1 do
   begin
     H := gHands[fOwner].Houses[I];
-
-    WareOrder := H.WareOrder[1] + H.WareOrder[2] + H.WareOrder[3] + H.WareOrder[4];
+    WareOrder := 0;
+    if H.HouseType <> htProductionThatch then
+      for K := 1 to WARES_IN_OUT_COUNT do
+        WareOrder := WareOrder + H.WareOrder[6];
 
     if not H.IsDestroyed and ((WareOrder = 0) or (H.HouseType in [htTailorsShop, htIronFoundry])) then
     case H.HouseType of
+      htProductionThatch: for K := 1 to WARES_IN_OUT_COUNT do
+                          begin
+                            H.WareOrder[K] := 0;
+                            case H.WareOutPut[K] of
+                              wtHay,
+                              wtCorn :If (WarfareRatios[wtLeatherArmor] > 0)
+                                      or (WarfareRatios[wtHorse] > 0)
+                                      or (WarfareRatios[wtQuiver] > 0)
+                                      or HasHouses([htSwine, htStables]) then
+                                        H.WareOrder[K] := MAX_WARES_ORDER;
+
+                              wtSeed :If (WarfareRatios[wtQuiver] > 0)
+                                      or HasHouses([htMill, htHovel]) then
+                                        H.WareOrder[K] := MAX_WARES_ORDER;
+
+                              wtVegetables :If HasHouses([htInn]) then
+                                              H.WareOrder[K] := MAX_WARES_ORDER;
+                              wtWine :If HasHouses([htInn]) then
+                                              H.WareOrder[K] := MAX_WARES_ORDER;
+                              wtStoneBolt :If NeedsWare(wtStoneBolt) and (HasHouses([htWatchTower]) or HasUnits([utRogue])) then
+                                        H.WareOrder[K] := MAX_WARES_ORDER;
+
+                              wtTile,
+                              wtStone,
+                              wtIron,
+                              wtGold,
+                              wtBitin,
+                              wtBitinE,
+                              wtSteelE,
+                              wtBread,
+                              wtFlour,
+                              wtSawDust,
+                              wtLog,
+                              wtWheel,
+                              wtTimber :If NeedsWare(H.WareOutPut[K]) then
+                                        H.WareOrder[K] := MAX_WARES_ORDER;
+
+                            end;
+                          end;
+
       htTailorsShop:If TKMHouseQueue(H).QueueIsEmpty then
-                      for K := 1 to 4 do
+                      for K := 1 to WARES_IN_OUT_COUNT do
                           case H.WareOutput[K] of
-                            wtBoots : if (gHands[fOwner].Stats.GetHouseQty([htSchool, htPalace]) > 0) then TKMHouseQueue(H).AddWareToQueue(wtBoots, 1, 1);
-                            wtQuiver :  if gHands[fOwner].Stats.Wares[wtQuiver].ActualCnt < 50 then
-                                          if (gHands[fOwner].Stats.GetHouseQty([htSchool, htPalace]) > 0) then TKMHouseQueue(H).AddWareToQueue(wtQuiver, 1, 1);
-                            wtLeatherArmor : If WarfareRatios[wtLeatherArmor] > 0 then TKMHouseQueue(H).AddWareToQueue(wtLeatherArmor, 2, 2);
+                            wtBoots : if gHands[fOwner].Stats.Wares[wtBoots].ActualCnt < 10 then //we have made so many boots that everyone has, no need to make more
+                                      TKMHouseQueue(H).AddWareToQueue(wtBoots, 1, 1);
+                            wtQuiver :  if gHands[fOwner].Stats.Wares[wtQuiver].ActualCnt < 25 * gHands[fOwner].Stats.GetHouseQty(htStore) then
+                                          TKMHouseQueue(H).AddWareToQueue(wtQuiver, 1, 1);
+                            wtLeatherArmor : If WarfareRatios[wtLeatherArmor] > 0 then
+                                              if (gHands[fOwner].Stats.Wares[wtLeatherArmor].ActualCnt < 100) or (gHands[fOwner].Stats.Wares[wtLeatherArmor].ActualCnt > 200) then
+                                                TKMHouseQueue(H).AddWareToQueue(wtLeatherArmor, 1, 4);
                           end;
       htIronFoundry:
-                      for K := 1 to 4 do
+                      for K := 1 to WARES_IN_OUT_COUNT do
                         If H.WareOrder[K] = 0 then
                           case H.WareOutput[K] of
                             wtSteelE : if  MachinesUnlocked and ((ArmyDemand[gtMachines] > 0) or (ArmyDemand[gtMachinesMelee] > 0)) then H.WareOrder[K] := 8;
@@ -442,7 +505,7 @@ begin
                                         H.WareOrder[K] := 2;//produce bolt only if they are unlocked
                           end;
 
-      htStoneWorkshop:   for K := 1 to 4 do
+      htStoneWorkshop:   for K := 1 to WARES_IN_OUT_COUNT do
                           If H.WareOrder[K] = 0 then
                             case H.WareOutput[K] of
                               wtStoneBolt : If (H.CheckWareIn(wtStone) > 0) and ((gHands[fOwner].Stats.GetHouseQty(htWatchTower) > 0) or UnitUnlocked(utCatapult) or((UnitUnlocked(utRogue) and (ArmyDemand[gtRanged] > 0)))) then H.WareOrder[K] := 6;
@@ -452,7 +515,7 @@ begin
 
                               wtSawDust : If (gHands[fOwner].Stats.GetHouseQty(htWoodburner) > 0) and (H.CheckWareIn(wtTrunk) > 0) then H.WareOrder[K] := 1;
                             end;
-      htArmorWorkshop:   for K := 1 to 4 do
+      htArmorWorkshop:   for K := 1 to WARES_IN_OUT_COUNT do
                           case H.WareOutput[K] of
                             wtWoodenShield : H.WareOrder[K] := Round(WarfareRatios[H.WareOutput[K]] * PORTIONS);
                             wtPlateArmor : H.WareOrder[K] := Round(WarfareRatios[wtPlateArmor] * PORTIONS);
@@ -460,7 +523,7 @@ begin
 
       else
       begin
-        for K := 1 to 4 do
+        for K := 1 to WARES_IN_OUT_COUNT do
           if DoProduceWare(H.WareOutput[K]) then
             H.WareOrder[K] := Round(WarfareRatios[H.WareOutput[K]] * PORTIONS);
       end;
@@ -794,6 +857,7 @@ procedure TKMayor.CheckWareFlow;
 var
   I: Integer;
   S: TKMHouseStore;
+  B : TKMHouseBarracks;
   Houses: TKMHousesCollection;
 
   function BlockWare(aWare : TKMWareType; aHouses : TKMHouseTypeSet; Min1, Min2 : Integer) : Boolean;
@@ -814,8 +878,20 @@ begin
     If Houses[I].IsComplete
     and not Houses[I].IsDestroyed then
     case Houses[I].HouseType of
-      htTownhall: TKMHouseTownHall(Houses[I]).GoldMaxCnt := IfThen(gHands[fOwner].Stats.Wares[wtGold].ActualCnt < 30, 0, 20);
+
+      htTownhall: if TKMHouseTownHall(Houses[I]).GoldMaxCnt > 0 then
+                    TKMHouseTownHall(Houses[I]).GoldMaxCnt := IfThen(gHands[fOwner].Stats.Wares[wtGold].ActualCnt < 15, 0, 15)
+                  else
+                    TKMHouseTownHall(Houses[I]).GoldMaxCnt := IfThen(gHands[fOwner].Stats.Wares[wtGold].ActualCnt < 30, 0, 15);
+
       htFarm : Houses[I].ForceWorking := true;
+      htBarracks: begin
+                    B := TKMHouseBarracks(Houses[I]);
+
+                    B.NotAcceptFlag[wtQuiver] := B.CheckWareIn(wtQuiver) > 10;
+                    B.NotAcceptFlag[wtBoots] := B.CheckWareIn(wtBoots) > 10;
+                    B.NotAcceptFlag[wtBitinArmor] := B.CheckWareIn(wtBitinArmor) > 10;
+                  end;
       htStore : begin
                   S := TKMHouseStore(Houses[I]);
 
@@ -1576,6 +1652,7 @@ begin
   gPerfLogs.SectionEnter(psAICityCls);
   {$ENDIF}
   try
+    Recorder.UpdateState(aTick);//recorder works at every tick
     //Checking mod result against MAX_HANDS causes first update to happen ASAP
     if (aTick + Byte(fOwner)) mod (MAX_HANDS * 4) <> MAX_HANDS then Exit;
 
@@ -1597,7 +1674,8 @@ begin
 
 
       //Build more roads if necessary
-      CheckRoadsCount;
+      if not Recorder.HasRecording then
+        CheckRoadsCount;
     end;
   finally
     {$IFDEF PERFLOG}
@@ -1622,7 +1700,9 @@ begin
   fCityPlanner.Save(SaveStream);
   fPathFindingRoad.Save(SaveStream);
   fPathFindingRoadShortcuts.Save(SaveStream);
+  fRecorder.Save(SaveStream);
 end;
+
 
 
 procedure TKMayor.Load(LoadStream: TKMemoryStream);
@@ -1640,6 +1720,7 @@ begin
   fCityPlanner.Load(LoadStream);
   fPathFindingRoad.Load(LoadStream);
   fPathFindingRoadShortcuts.Load(LoadStream);
+  fRecorder.Load(LoadStream);
 end;
 
 

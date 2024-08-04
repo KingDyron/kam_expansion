@@ -129,6 +129,9 @@ type
     function HouseWoodcutterMode(aHouseID: Integer): TKMWoodcutterMode;
     function HouseWorker(aHouseID: Integer): Integer;
     function HouseArea(aHouseType: Integer): TKMHouseArea;
+    function HouseEntranceOffset(aHouseType: Integer): TKMPoint;
+    function HouseTypeToID(aHouseType: TKMHouseType): Integer;
+    function HouseIDtoType(aHouseType: Integer): TKMHouseType;
 
     function IsFieldAt(aHand: ShortInt; X, Y: Integer): Boolean;
     function IsWinefieldAt(aHand: ShortInt; X, Y: Integer): Boolean;
@@ -273,9 +276,13 @@ type
     function UnitTypeEx(aUnitID: Integer): TKMUnitType;
     function UnitTypeName(aUnitType: Byte): AnsiString;
     function UnitTypeNameEx(aUnitType: TKMUnitType): AnsiString;
+    function UnitTypeToID(aUnitType: TKMUnitType): Integer;
+    function UnitIDToType(aUnitType: Integer): TKMUnitType;
 
     function WareTypeName(aWareType: Byte): AnsiString;
     function WareTypeNameEx(aWareType: TKMWareType): AnsiString;
+    function WareTypeToID(aWareType: TKMWareType): Integer;
+    function WareIdToType(aWareType: Integer): TKMWareType;
     function WarriorInFight(aUnitID: Integer; aCountCitizens: Boolean): Boolean;
   end;
 
@@ -3754,6 +3761,23 @@ begin
   end;
 end;
 
+function TKMScriptStates.HouseEntranceOffset(aHouseType: Integer): TKMPoint;
+var I, K : Integer;
+begin
+  try
+    if InRange(aHouseType, low(HOUSE_ID_TO_TYPE), high(HOUSE_ID_TO_TYPE)) then
+    begin
+      Result.X := gRes.Houses[HOUSE_ID_TO_TYPE[aHouseType]].EntranceOffsetX;
+      Result.Y := gRes.Houses[HOUSE_ID_TO_TYPE[aHouseType]].EntranceOffsetY;
+    end
+    else
+      LogIntParamWarn('States.HouseArea', [aHouseType]);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
 
 //* Version: 5345
 //* Returns True if the specified player has a corn field at the specified location.
@@ -5339,7 +5363,77 @@ begin
   end;
 end;
 
+function TKMScriptStates.UnitTypeToID(aUnitType: TKMUnitType): Integer;
+begin
+    if (aUnitType in UNITS_VALID) then
+      Result := UNIT_TYPE_TO_ID[aUnitType]
+    else
+    begin
+      Result := -1;
+      LogParamWarn('States.UnitTypeToID', [GetEnumName(TypeInfo(TKMUnitType), Integer(aUnitType))]);
+    end;
+end;
 
+function TKMScriptStates.UnitIDToType(aUnitType: Integer): TKMUnitType;
+begin
+  try
+    if (aUnitType in [Low(UNIT_ID_TO_TYPE) .. High(UNIT_ID_TO_TYPE)]) then
+      Result := UNIT_ID_TO_TYPE[aUnitType]
+    else
+    begin
+      Result := utNone;
+      LogParamWarn('States.UnitIDToType', [GetEnumName(TypeInfo(TKMUnitType), aUnitType)]);
+    end;
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
+
+function TKMScriptStates.WareTypeToID(aWareType: TKMWareType): Integer;
+begin
+    if (aWareType in WARES_VALID) then
+      Result := WARE_TY_TO_ID[aWareType]
+    else
+    begin
+      Result := -1;
+      LogParamWarn('States.WareTypeToID', [GetEnumName(TypeInfo(TKMWareType), Integer(aWareType))]);
+    end;
+end;
+
+function TKMScriptStates.WareIdToType(aWareType: Integer): TKMWareType;
+begin
+    if (aWareType in [low(WARE_ID_TO_TYPE)..high(WARE_ID_TO_TYPE)]) then
+      Result := KM_ResWares.WARE_ID_TO_TYPE[aWareType]
+    else
+    begin
+      Result := wtNone;
+      LogParamWarn('States.WareTypeToID', [GetEnumName(TypeInfo(TKMWareType), aWareType)]);
+    end;
+end;
+
+function TKMScriptStates.HouseTypeToID(aHouseType: TKMHouseType): Integer;
+begin
+    if (aHouseType in HOUSES_VALID) then
+      Result := KM_ResHouses.HOUSE_TYPE_TO_ID[aHouseType]
+    else
+    begin
+      Result := -1;
+      LogParamWarn('States.HouseTypeToID', [GetEnumName(TypeInfo(TKMHouseType), Integer(aHouseType))]);
+    end;
+end;
+
+function TKMScriptStates.HouseIDtoType(aHouseType: Integer): TKMHouseType;
+begin
+    if (aHouseType in [low(HOUSE_ID_TO_TYPE)..high(HOUSE_ID_TO_TYPE)]) then
+      Result := KM_ResHouses.HOUSE_ID_TO_TYPE[aHouseType]
+    else
+    begin
+      Result := htNone;
+      LogParamWarn('States.HouseIDtoType', [GetEnumName(TypeInfo(TKMHouseType), aHouseType)]);
+    end;
+end;
 //* Version: 6001
 //* Returns the the translated name of the specified ware type.
 //* Note: To ensure multiplayer consistency the name is returned as a number encoded within a markup

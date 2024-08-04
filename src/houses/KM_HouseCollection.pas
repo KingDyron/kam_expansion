@@ -192,7 +192,7 @@ end;
 function TKMHousesCollection.AddHouse(aHouseType: TKMHouseType; aPosX, aPosY: Integer; aOwner: TKMHandID; aRelativeEntrance: Boolean):TKMHouse;
 begin
   if aRelativeEntrance then
-    Result := AddToCollection(aHouseType, aPosX - gRes.Houses[aHouseType].EntranceOffsetX, aPosY, aOwner, hbsDone)
+    Result := AddToCollection(aHouseType, aPosX - gRes.Houses[aHouseType].EntranceOffsetX, aPosY  - gRes.Houses[aHouseType].EntranceOffsetY, aOwner, hbsDone)
   else
     Result := AddToCollection(aHouseType, aPosX, aPosY, aOwner, hbsDone);
 end;

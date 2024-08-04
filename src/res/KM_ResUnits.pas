@@ -18,12 +18,13 @@ type
     x9, x10: ShortInt;
     CanWalkOut, x11: SmallInt;
   end;
-
+  TKMUnitSpriteSingle = packed record
+      Dir: array [dirN..dirNW] of TKMAnimLoop;
+      procedure Clear;
+  end;
   //this is old TKMUnitSprite;
   TKMUnitSprite = packed record
-    Act: array [TKMUnitActionType] of packed record
-      Dir: array [dirN..dirNW] of TKMAnimLoop;
-    end;
+    Act: array [TKMUnitActionType] of TKMUnitSpriteSingle;
   end;
 
   TKMUnitSpriteNew = array [TKMUnitActionType, dirN..dirNW] of TKMAnimation;//TKMAnimation can have more steps
@@ -194,11 +195,11 @@ const
     35, 36,
     14,15,16,17,18,19,20,21,22,23, //Warriors
     -1,-1,-1,-1, -1,-1, -1, -1, -1, -1, -1, - 1, -1, -1, -1, -1, //TPR warriors (can't be placed with SET_UNIT)
-    -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     24,25,26,27,28,29,30,31); //Animals
 
   //This is a map of the valid values for !SET_GROUP, and the corresponing unit that will be created (matches KaM behavior)
-  UNIT_ID_TO_TYPE: array[0..61] of TKMUnitType = (
+  UNIT_ID_TO_TYPE: array[0..63] of TKMUnitType = (
     utSerf,utWoodcutter,utMiner,utAnimalBreeder,utFarmer,
     utCarpenter,utBaker,utButcher,utFisher,utBuilder,
     utStonemason,utSmith,utMetallurgist,utRecruit, //Units
@@ -213,7 +214,7 @@ const
     utClubMan, utMaceFighter, utFlailFighter,
     utOperator, utShieldBearer, utFighter,
     utSpikedTrap, utWoodenWall, utClayPicker,
-    utTorchMan, utMedic,
+    utTorchMan, utMedic, utBattleShip, utBoat,
     utNone, utNone, utNone
     );
 
@@ -224,7 +225,7 @@ const
     14,15,16,17,18,19,20,21,22,23, //Warriors
     24,25,26,27, 28,29,//TPR warriors
     38, 39, 40, 41, 42, 43, 44, 45, 46, 47,//My Warriors
-    48, 49, 50, 52, 53, 54, 55, 57, 58,
+    48, 49, 50, 52, 53, 54, 55, 57, 58, 59, 60,
     30,31,32,33,34,35,36,37); //Animals
 
 
@@ -290,6 +291,8 @@ begin
   fUnitType := aType;
 
 
+  PalaceCost.Plan.SetCount(4);
+  SiegeCost.SetCount(4);
   AmmoType := GetAmmoType;
   CanOrderAmmo := GetCanOrderAmmo;
   CanAttackUnits := aType in UNITS_WARRIORS;
@@ -376,13 +379,13 @@ end;
 
 function TKMUnitSpec.GetCanOrderAmmo: Boolean;
 begin
-  Result := fUnitType in [utBowMan, utCrossbowMan, utBallista, utCatapult, utRogue, utAmmoCart, utArcher, utShip];
+  Result := fUnitType in [utBowMan, utCrossbowMan, utBallista, utCatapult, utRogue, utAmmoCart, utArcher, utShip, utBattleShip];
 end;
 
 function TKMUnitSpec.GetAmmoType: TKMUnitAmmoType;
 begin
   case fUnitType of
-    utShip,
+    utBattleShip,
     utArcher,
     utCrossbowMan,
     utBowMan : Result := uatArrow;
@@ -405,6 +408,7 @@ begin
   case fUnitType of
     utGolem,
     utCatapult:     Result := Trunc(RANGE_WATCHTOWER_MAX - 7);
+    utBattleShip:     Result := 2;
     utBallista:     Result := 4;
     utArcher:     Result := 2;
     utBowman:     Result := RANGE_BOWMAN_MIN;
@@ -428,6 +432,7 @@ begin
     utArcher:     Result := 7.99;
     utBowman:     Result := RANGE_BOWMAN_MAX;
     utBallista:   Result := RANGE_BALLISTA_MAX;
+    utBattleShip: Result := RANGE_ARBALETMAN_MAX;
     utGolem,
     utCatapult:   Result := RANGE_CATAPULT_MAX;
     utCrossbowman: Result := RANGE_ARBALETMAN_MAX;
@@ -442,6 +447,8 @@ begin
     utCatapult: Result := 8;
     utAmmoCart,
     utRam: Result := 12;
+    utBoat,
+    utBattleShip,
     utShip,
     utGolem: Result := -1;
     utGiant: Result := -1;
@@ -531,6 +538,8 @@ const
     [uaWalk, uaWork, uaDie, uaEat],//utWoodenWall
     [uaWalk, uaWork, uaDie, uaEat, uaStay],//utTorchMan
     [uaWalk, uaSpec, uaDie, uaEat],//utTorchMan
+    [uaWalk, uaWork, uaDie, uaEat],//utBattleShip
+    [uaWalk, uaWork, uaDie, uaEat],//utBoat
 
     [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk] //Animals
   );
@@ -548,7 +557,7 @@ begin
   case fUnitType of
     ANIMAL_MIN..ANIMAL_MAX:  Result := ANIMAL_TERRAIN[fUnitType]; //Animals
   else
-    if fUnitType = utShip then
+    if fUnitType in [utShip, utBoat, utBattleShip] then
       Result := tpFish
     else
       Result := tpWalk; // Worker, Warriors
@@ -587,6 +596,8 @@ const
     ftMelee, ftMelee, ftMelee,//utShieldBearer, utFighter, utSpikedTrap,
     ftMelee,//utWoodenWall
     ftMelee,//utWoodenWall
+    ftMelee,
+    ftRanged,
     ftMelee
   );
 begin
@@ -615,6 +626,8 @@ begin
     utAmmoCart:    Result := 790;
     utPikeMachine:    Result := 793;
 
+    utBoat,
+    utBattleShip,
     utShip: Result := 848;
     utClubMan: Result := 849;
     utMaceFighter: Result := 850;
@@ -626,6 +639,15 @@ begin
     utOperator: Result := 857;
     utTorchman: Result := 859;
     utMedic: Result := 861;
+
+    utWolf : Result := 71;
+    utFish : Result := 72;
+    utWatersnake : Result := 73;
+    utSeastar : Result := 74;
+    utCrab : Result := 75;
+    utWaterflower : Result := 76;
+    utWaterleaf : Result := 77;
+    utDuck : Result := 78;
   else
     if IsCitizen then
       Result := 141 + UNIT_TYPE_TO_ID[fUnitType]
@@ -657,6 +679,8 @@ begin
       utTrainedWolf: Result := 783;
       utAmmoCart: Result := 784;
       utPikeMachine: Result := 792;
+      utBoat,
+      utBattleShip,
       utShip: Result := 840;
       utClubMan: Result := 841;
       utMaceFighter: Result := 842;
@@ -684,7 +708,8 @@ const
     0,0,0,0,0,0,0,0,0,0,0,0, 0,
     $B0B0B0,$B08000,$B08000,$80B0B0,$00B0B0,$B080B0,$00B000,$80B0B0,
     $80B0B0 ,$80B0B0,$80B0B0,$80B0B0,$80B0B0, $80B0B0, $80B0B0, $80B0B0, $80B0B0, $80B0B0,
-    $80B0B0, $80B0B0 ,$80B0B0,$80B0B0, $80B0B0, $80B0B0 ,$80B0B0,$80B0B0,$80B0B0,$80B0B0); //Exact colors can be tweaked
+    $80B0B0, $80B0B0 ,$80B0B0,$80B0B0, $80B0B0, $80B0B0 ,$80B0B0,$80B0B0,$80B0B0,$80B0B0,
+    $80B0B0,$80B0B0); //Exact colors can be tweaked
 begin
   Result := MM_COLOR[fUnitType] or $FF000000;
 end;
@@ -784,6 +809,8 @@ begin
     utClayPicker:        Result := 1976;
     utTorchman:          Result := 1996;
     utMedic:             Result := 1997;
+    utBattleShip:        Result := 2023;
+    utBoat:               Result := 2024;
   else
     Result := TX_UNITS_NAMES__29 + UNIT_TYPE_TO_ID[fUnitType];
   end;
@@ -1025,7 +1052,6 @@ begin
   begin
     PalaceCost.PhaseDuration := aUnit.O['PalaceCost'].I['PhaseDuration'];
     PalaceCost.PhaseCount := aUnit.O['PalaceCost'].I['PhaseCount'];
-
     nArr := aUnit.O['PalaceCost'].A['VirtualWares'];
     if nArr.Count > 0 then
       SetLength(PalaceCost.Wares, 0);
@@ -1134,7 +1160,8 @@ const
     ( 0,  6,  2,  3, -5,-10, -8,  5,  6),  //gtMounted
     ( 0,  8,  6,  6, -6, -8, -3,  8,  6),  // gtmachines
     ( 0,  8,  6,  6, -6, -8, -3,  8,  6),  // gtMachinesMelee
-    ( 0,  8,  6,  6, -6, -8, -3,  8,  6)  // gtWreckers
+    ( 0,  8,  6,  6, -6, -8, -3,  8,  6),  // gtWreckers
+    ( 0,  8,  6,  6, -6, -8, -3,  8,  6)  // gtShips
   );
 
   FlagYOffset: array [GROUP_TYPE_MIN..GROUP_TYPE_MAX, TKMDirection] of shortint = (
@@ -1144,7 +1171,8 @@ const
     ( 0,  4, 16, 16,  4,  5,  2,  3,  4),  //gtMounted
     ( 0, 28, 30, 30, 26, 25, 24, 25, 27),  // gtmachines
     ( 0, 28, 30, 30, 26, 25, 24, 25, 27),  // gtMachinesMelee
-    ( 0, 28, 30, 30, 26, 25, 24, 25, 27)  // gtWreckers
+    ( 0, 28, 30, 30, 26, 25, 24, 25, 27),  // gtWreckers
+    ( 0, 28, 30, 30, 26, 25, 24, 25, 27)  // gtShips
     );
 var
   UT: TKMUnitType;
@@ -1278,13 +1306,40 @@ begin
   fItems[utPikeMachine].fUnitDat.Sight := 4;
 
   fItems[utShip].fUnitDat := fItems[utMilitia].fUnitDat;
-  //fItems[utShip].fUnitSprite := fItems[utCatapult].fUnitSprite;
-  fItems[utShip].fUnitDat.HitPoints := 20;
+  fItems[utShip].fUnitSprite := fItems[utCatapult].fUnitSprite;
+  for dir := DirN to dirNW do
+    fItems[utShip].fUnitSprite.Act[uaWalkArm].Dir[dir].Count := 0;
+  //fItems[utShip].fUnitSprite.Act[uaWalkArm].Clear;
+  fItems[utShip].fUnitDat.HitPoints := 5;
   fItems[utShip].fUnitDat.Defence := 3;
-  fItems[utShip].fUnitDat.Attack := 55;
-  fItems[utShip].fUnitDat.AttackHorse := 100;
-  fItems[utShip].fUnitDat.Speed := 12;
+  fItems[utShip].fUnitDat.Attack := 0;
+  fItems[utShip].fUnitDat.AttackHorse := 0;
+  fItems[utShip].fUnitDat.Speed := 16;
   fItems[utShip].fUnitDat.Sight := 7;
+
+  fItems[utBattleShip].fUnitDat := fItems[utMilitia].fUnitDat;
+  fItems[utBattleShip].fUnitSprite := fItems[utCatapult].fUnitSprite;
+  for dir := DirN to dirNW do
+    fItems[utBattleShip].fUnitSprite.Act[uaWalkArm].Dir[dir].Count := 0;
+  fItems[utBattleShip].fUnitDat.HitPoints := 8;
+  fItems[utBattleShip].fUnitDat.Defence := 5;
+  fItems[utBattleShip].fUnitDat.Attack := 120;
+  fItems[utBattleShip].fUnitDat.AttackHorse := 0;
+  fItems[utBattleShip].HouseDamage := 25;
+  fItems[utBattleShip].fUnitDat.Speed := 16;
+  fItems[utBattleShip].fUnitDat.Sight := 7;
+
+
+  fItems[utBoat].fUnitDat := fItems[utMilitia].fUnitDat;
+  fItems[utBoat].fUnitSprite := fItems[utCatapult].fUnitSprite;
+  for dir := DirN to dirNW do
+    fItems[utBoat].fUnitSprite.Act[uaWalkArm].Dir[dir].Count := 0;
+  fItems[utBoat].fUnitDat.HitPoints := 5;
+  fItems[utBoat].fUnitDat.Defence := 1;
+  fItems[utBoat].fUnitDat.Attack := 0;
+  fItems[utBoat].fUnitDat.AttackHorse := 0;
+  fItems[utBoat].fUnitDat.Speed := 20;
+  fItems[utBoat].fUnitDat.Sight := 7;
 
 
   fItems[utOperator].fUnitDat := fItems[utRecruit].fUnitDat;
@@ -1511,7 +1566,7 @@ begin
                         utFisher, utFarmer, utBaker, utAnimalBreeder, utButcher,
                         utMiner, utMetallurgist, utSmith, utRecruit];
   SIEGE_GAME_ORDER := [utCatapult, utBallista, utRam];
-  SHIPYARD_ORDER := [utShip];
+  SHIPYARD_ORDER := [utBoat, utShip, utBattleShip];
 
 
   Explosion.Create(10, 0, [13354, 13355, 13356, 13357, 13358]);
@@ -1943,14 +1998,15 @@ begin
       if GT in [gtNone] then Continue;
 
       if GT = gtAny then
-      begin
+        Continue;
+      {begin
         for GT := GROUP_TYPE_MIN to GROUP_TYPE_MAX do
         begin
           I := length(AI_TROOP_TRAIN_ORDER_NEW[GT]);
           SetLength(AI_TROOP_TRAIN_ORDER_NEW[GT], I + 1);
           AI_TROOP_TRAIN_ORDER_NEW[GT][I] := UT;
         end;
-      end else
+      end else}
       begin
         I := length(AI_TROOP_TRAIN_ORDER_NEW[GT]);
         SetLength(AI_TROOP_TRAIN_ORDER_NEW[GT], I + 1);
@@ -1972,6 +2028,14 @@ begin
 
   for UT in UNITS_HUMAN do
     ;
+
+end;
+
+procedure TKMUnitSpriteSingle.Clear;
+var d : TKMDirection;
+begin
+  for d := dirN to dirNE do
+    Dir[d].Clear;
 
 end;
 

@@ -5,7 +5,7 @@ uses
   KM_Defaults, KM_ResTileset, KM_TerrainTypes, KM_ResTilesetTypes;
 
 type
-  TKMMapEdMarkerType = (mmtNone, mmtDefence, mmtRevealFOW, mmtDefendPos);
+  TKMMapEdMarkerType = (mmtNone, mmtDefence, mmtRevealFOW, mmtDefendPos, mmtSpawner);
 
   TKMMapEdMarker = record
     MarkerType: TKMMapEdMarkerType;

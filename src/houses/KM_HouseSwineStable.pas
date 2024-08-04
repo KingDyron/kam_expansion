@@ -11,16 +11,15 @@ type
   // SwineStable has unique property - it needs to accumulate some resource before production begins, also special animation
   TKMHouseSwineStable = class(TKMHouse)
   private
-    BeastAge: array[1..5] of byte; //Each beasts "age". Once Best reaches age 3+1 it's ready
-    HayBreeded : array[1..5] of byte;
+    BeastAge: array[1..5] of Single; //Each beasts "age". Once Best reaches age 3+1 it's ready
+    HayBreeded : array[1..5] of Single;
     fPigsProgress : Single;
   protected
     procedure MakeSound; override;
     function GetBeastAge(aIndex : Integer) : Single;
   public
     constructor Load(LoadStream: TKMemoryStream); override;
-    function FeedBeasts: Byte;
-    procedure FeedBeastsHay(aID : Byte);
+    function FeedBeasts(aFood : TKMWarePlan): Byte;
     function TakeBeast : Byte;
     property Beast[aIndex : Integer] : Single read GetBeastAge;
     function GetBeastsProgresses : TSingleArray;
@@ -35,22 +34,31 @@ type
   private
     fLast : byte;
     fSausage : Boolean;
-    BeastAge: array[1..3]of byte; //Each beasts "age". Once Best reaches age 3+1 it's ready
+    fFillFeather : Single;
+    BeastAge: array[1..3]of Single; //Each beasts "age". Once Best reaches age 3+1 it's ready
+    CornBreeded : array[1..3] of Byte;
+
     BeastAnim: array[1..3]of byte;
     function GetBeastAge(aIndex : Integer) : Single;
   protected
     //procedure MakeSound; override;
   public
     constructor Load(LoadStream: TKMemoryStream); override;
-    function FeedChicken : Byte;
-    procedure TakeChicken(aID : Integer);
+    function FeedChicken(aFood : TKMWarePlan) : Byte;
+    function TakeChicken(aID : Integer) : Byte;
     function ChickenCount : Byte;
     property GetsSausage : Boolean read fSausage;
     property Beast[aIndex : Integer] : Single read GetBeastAge;
+    property FeathersProgress : Single read fFillFeather;
     function GetBeastsProgresses : TSingleArray;
+    function GetBeastsProgressColors : TKMCardinalArray;
+    function CanFeedWithWare(aWare : TKMWareType) : Boolean;
+    procedure MakeFeathers;
     procedure Save(SaveStream: TKMemoryStream); override;
     procedure Paint; override;
   end;
+const
+  HOVEL_MAX_AGE = 5;
 implementation
 uses
   Math,
@@ -73,57 +81,126 @@ end;
 
 
 //Return ID of beast that has grown up
-function TKMHouseSwineStable.FeedBeasts: Byte;
+function TKMHouseSwineStable.FeedBeasts(aFood : TKMWarePlan): Byte;
+
+  procedure FeedAnotherBeast(aFoodM : Single);
+  var I : Integer;
+  begin
+
+    for I := Low(BeastAge) to High(BeastAge) do
+    if (BeastAge[I] < 4) then
+    begin
+      if (BeastAge[I] + aFoodM > 4) then
+      begin
+        aFoodM := (BeastAge[I] + aFoodM) - 4;
+        BeastAge[I] := 4;
+        FeedAnotherBeast(aFoodM);
+      end
+      else
+        Inc(BeastAge[I], aFoodM);
+      Exit;
+    end;
+
+  end;
+var foodMulti, hayMulti : Single;
 begin
   Result := KaMRandom(5, 'TKMHouseSwineStable.FeedBeasts') + 1;
-  Inc(BeastAge[Result]); //Let's hope it never overflows MAX
-  {for I := 1 to Length(BeastAge) do
-    if BeastAge[I] > 3 then
-      Result := I;}
-end;
 
-procedure TKMHouseSwineStable.FeedBeastsHay(aID : Byte);
-var
-  I, K: Integer;
-begin
+  hayMulti := 1;
+
   if HouseType = htSwine then
   begin
-    Inc(HayBreeded[aID]);
-    fPigsProgress := fPigsProgress + 0.25;
+    foodMulti := 1;
+    if aFood.HasWares([wtVegetables]) then
+      inc(hayMulti, 0.45);
+    if aFood.HasWares([wtCorn]) then
+      inc(hayMulti, 0.3);
+    if aFood.HasWares([wtHay]) then
+      inc(hayMulti, 0.25);
+
+    if aFood.HasWares([wtCorn, wtHay, wtVegetables]) then
+      inc(hayMulti, 0.1);//give extra
   end else
   begin
-    if BeastAge[aID] <= 3 then
-      Inc(BeastAge[aID])
-    else
+    foodMulti := 0;
+    if aFood.HasWares([wtVegetables]) then
+      inc(hayMulti, 0.25);
+    if aFood.HasWares([wtCorn]) then
+      inc(hayMulti, 0.35);
+    if aFood.HasWares([wtHay]) then
+      inc(hayMulti, 0.45);
+
+    if aFood.HasWares([wtCorn, wtHay, wtVegetables]) then
+      inc(hayMulti, 0.1);//give extra
+  end;
+
+
+
+  {if (aFood.HasWare(wtCorn) > 0) and (aFood.HasWare(wtHay) = 0) then //has corn but not hay
+    Inc(foodMulti, 1)
+  else
+  if (aFood.HasWare(wtCorn) = 0) and (aFood.HasWare(wtHay) > 0) then //has hay but not corn
+    Inc(foodMulti, 1)
+  else begin
+    //has both hay and corn
+    if aFood.HasWare(wtCorn ) > 0 then
+      Inc(foodMulti, 1); //2
+
+    if aFood.HasWare(wtHay) > 0 then
+      Inc(hayMulti, 0.75); //2
+
+
+  end;
+
+  if aFood.HasWare(wtVegetables) > 0 then
+    Inc(hayMulti, 0.5); //vegetables can increase only hay
+
+  if aFood.HasWares([wtCorn, wtHay, wtVegetables]) then  //if they get all types of food, add extra
+    Inc(hayMulti, 0.25);}
+
+  if HouseType = htStables then
+  begin
+    if BeastAge[Result] + foodMulti + hayMulti > 4 then
     begin
-      //feed new beasts if aID is already at age max
-      I := KaMRandom(5, 'TKMHouseSwineStable.FeedBeasts') + 1;
-      K := 0;
-      while (BeastAge[I] > 3) and (K < 10) do //try max 10 times
-      begin
-        Inc(K);
-        I := KaMRandom(5, 'TKMHouseSwineStable.FeedBeasts') + 1;
-      end;
-      if (BeastAge[I] > 3) then
-        Exit;
-      Inc(BeastAge[I]);
+      foodMulti := (BeastAge[Result] + foodMulti + hayMulti) - 4;
+      BeastAge[Result] := 4;
+      FeedAnotherBeast(foodMulti);
+    end else
+    begin
+      Inc(BeastAge[Result], foodMulti);
+      Inc(BeastAge[Result], hayMulti);//in stables horses are growing faster
     end;
+  end else
+  begin
+    if BeastAge[Result] + foodMulti > 4 then
+    begin
+      foodMulti := (BeastAge[Result] + foodMulti) - 4;
+      BeastAge[Result] := 4;
+      Inc(HayBreeded[Result], hayMulti);//swines are getting fat
+      FeedAnotherBeast(foodMulti);
+    end else
+    begin
+      Inc(BeastAge[Result], foodMulti);
+      Inc(HayBreeded[Result], hayMulti);//swines are getting fat
+    end;
+    //Inc(fPigsProgress, hayMulti);
+
   end;
 end;
-
 
 function TKMHouseSwineStable.TakeBeast : Byte;
 var I : Integer;
 begin
   Result := 0;
+  fPigsProgress := fPigsProgress - trunc(fPigsProgress);
   for I := Low(BeastAge) to High(BeastAge) do
     if (BeastAge[I]>3) then
     begin
       Inc(Result);
       BeastAge[I] := 0;
+      Inc(fPigsProgress, (HayBreeded[I]) - trunc(HayBreeded[I]) );
       HayBreeded[I] := 0;
     end;
-  fPigsProgress := fPigsProgress - trunc(fPigsProgress);
   //if (aID<>0) and (BeastAge[aID]>3) then
   //  BeastAge[aID] := 0;
 
@@ -133,14 +210,16 @@ end;
 function TKMHouseSwineStable.GetPigsCount: Byte;
 var I : Integer;
 begin
- // Result := 0;
-  {for I := Low(BeastAge) to High(BeastAge) do
+  Result := 0;
+  for I := Low(BeastAge) to High(BeastAge) do
     if (BeastAge[I]>3) then
     begin
-      //fPigsProgress := fPigsProgress + 1 + HayBreeded[I] / 3;
-      //Inc(Result, HayBreeded[I] div 2);
-    end;}
-  Result := Trunc(fPigsProgress);
+      //fPigsProgress := fPigsProgress + 3;
+      //Inc(Result, 1);
+      Inc(Result, trunc(HayBreeded[I]));
+    end;
+  if Result > 0 then
+    Result := Result + Trunc(fPigsProgress); //you get 3 meat from 1 swine
 end;
 
 function TKMHouseSwineStable.GetBeastsProgressColors: TKMCardinalArray;
@@ -191,7 +270,7 @@ function TKMHouseSwineStable.GetBeastAge(aIndex: Integer): Single;
 begin
   Assert(InRange(aIndex, 1, 5));
 
-  Result := BeastAge[aIndex] / 3;
+  Result := EnsureRange(BeastAge[aIndex] / 3, 0, 1);
 end;
 
 procedure TKMHouseSwineStable.Save(SaveStream: TKMemoryStream);
@@ -215,7 +294,7 @@ begin
   if fBuildState = hbsDone then
     for I := 1 to 5 do
       if BeastAge[I] > 0 then
-        gRenderPool.AddHouseStableBeasts(HouseType, fPosition, I, Min(BeastAge[I],3), FlagAnimStep);
+        gRenderPool.AddHouseStableBeasts(HouseType, fPosition, I, Round(EnsureRange(BeastAge[I],1, 3)), FlagAnimStep);
 
   gRenderPool.AddHouseSupply(HouseType, fPosition, [0, CheckWareIn(wtWater), 0, 0], [], []);
   //But Animal Breeders should be on top of beasts
@@ -235,46 +314,78 @@ begin
   LoadStream.Read(BeastAge, SizeOf(BeastAge));
   LoadStream.Read(fLast);
   LoadStream.Read(fSausage);
+  LoadStream.Read(fFillFeather);
+  LoadStream.Read(CornBreeded, SizeOf(CornBreeded));
 end;
 
-procedure TKMHouseHovel.TakeChicken(aID: Integer);
+function TKMHouseHovel.TakeChicken(aID: Integer) : Byte;
 begin
   Assert(InRange(aID, 1, 3));
+  Result := 1;
   BeastAge[aID] := 0;
+  CornBreeded[aID] := 0;
   fSausage := false;
 end;
 
-function TKMHouseHovel.FeedChicken : Byte;
+function TKMHouseHovel.FeedChicken(aFood : TKMWarePlan) : Byte;
 var I, J : Integer;
+  cornAdded : Boolean;
 begin
   Result := 0;
 
   //find empty space
-  J := 0;
+  {J := 0;
   for I := 1 to 3 do
     if BeastAge[I] = 0 then
     begin
       J := I;
       Break;
-    end;
+    end;}
 
 
   //fLast := fLast mod 3 + 1;
-  if J = 0 then
-    fLast :=  KaMRandom(3, 'TKMHouseHovel.FeedChicken:Hovel random anim1') + 1//it's full so feed random chicken
-  else
-    fLast := J;//empty space found so add new chicken
+  fLast :=  KaMRandom(3, 'TKMHouseHovel.FeedChicken:Hovel random anim1') + 1;//it's full so feed random chicken
   if BeastAge[fLast] = 0 then
     BeastAnim[fLast] := KaMRandom(3, 'TKMHouseHovel.FeedChicken:Hovel random anim2');
 
-  Inc(BeastAge[fLast]);
+  if aFood.HasWares([wtSeed]) then
+    Inc(BeastAge[fLast], 0.4);
+
+  if aFood.HasWares([wtVegetables]) then
+    Inc(BeastAge[fLast], 0.2);
+  if aFood.HasWares([wtSeed, wtVegetables]) then
+    Inc(BeastAge[fLast], 0.1);
+
+
+  if aFood.HasWares([wtCorn]) then
+  begin
+    cornAdded := false;
+    if CornBreeded[fLast] = 0 then
+    begin
+      Inc(CornBreeded[fLast]);
+      cornAdded := true;
+    end else
+      for I := Low(BeastAge) to High(BeastAge) do
+        if (BeastAge[I] > 0) and (CornBreeded[I] = 0) then
+        begin
+          Inc(CornBreeded[I]);
+          cornAdded := true;
+          Break;
+        end;
+
+    if not cornAdded then //no chicken found that has taken 0 corn
+      Inc(CornBreeded[fLast]);
+  end;
+
+
   fSausage := false;
-  if BeastAge[fLast] >= 4 then
+  if BeastAge[fLast] >= HOVEL_MAX_AGE then
   begin
     //BeastAge[fLast] := 0;
     Result := fLast;
     fSausage := true;
   end;
+
 
 end;
 
@@ -294,16 +405,70 @@ function TKMHouseHovel.GetBeastAge(aIndex: Integer): Single;
 begin
   Assert(InRange(aIndex, 1, 3));
 
-  Result := BeastAge[aIndex] / 4;
+  Result := EnsureRange(BeastAge[aIndex] / HOVEL_MAX_AGE, 0, 1);
 end;
 
 function TKMHouseHovel.GetBeastsProgresses: TSingleArray;
 begin
   SetLength(Result, 3);
-  Result[0] := BeastAge[1] / 4;
-  Result[1] := BeastAge[2] / 4;
-  Result[2] := BeastAge[3] / 4;
+  Result[0] := BeastAge[1] / HOVEL_MAX_AGE;
+  Result[1] := BeastAge[2] / HOVEL_MAX_AGE;
+  Result[2] := BeastAge[3] / HOVEL_MAX_AGE;
 end;
+
+function TKMHouseHovel.GetBeastsProgressColors: TKMCardinalArray;
+var I : Integer;
+begin
+  SetLength(Result, 3);
+
+  for I := Low(CornBreeded) to High(CornBreeded) do
+    if CornBreeded[I] > 0 then
+      Result[I - 1] := icRed
+    else
+      Result[I - 1] := icLightGreen
+end;
+
+function TKMHouseHovel.CanFeedWithWare(aWare: TKMWareType): Boolean;
+var I : Integer;
+begin
+  if aWare = wtCorn then
+  begin
+    Result := false;
+    for I := Low(BeastAge) to High(BeastAge) do
+      if (BeastAge[I] > 0) and (CornBreeded[I] = 0) then
+        Exit(true);
+
+
+  end else
+    Result := true;
+
+end;
+
+procedure TKMHouseHovel.MakeFeathers;
+var count : Integer;
+  I : Integer;
+begin
+  for I := Low(BeastAge) to High(BeastAge) do
+    if BeastAge[I] > 0 then
+    begin
+      Inc(fFillFeather, 0.1);
+
+      Inc(fFillFeather, CornBreeded[I] * 0.05);
+    end;
+
+  fFillFeather := fFillFeather + (0.1) * ChickenCount;
+  count := Trunc(fFillFeather);
+
+  if count > 0 then
+  begin
+    ProduceWare(wtFeathers, count);
+    IncProductionCycle(wtFeathers, count);
+  end;
+
+  fFillFeather := fFillFeather - count;
+
+end;
+
 procedure TKMHouseHovel.Save(SaveStream: TKMemoryStream);
 begin
   inherited;
@@ -312,6 +477,9 @@ begin
   SaveStream.Write(BeastAge, SizeOf(BeastAge));
   SaveStream.Write(fLast);
   SaveStream.Write(fSausage);
+  SaveStream.Write(fFillFeather);
+  SaveStream.Write(CornBreeded, SizeOf(CornBreeded));
+
 end;
 
 

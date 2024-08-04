@@ -10,10 +10,11 @@ uses
   KM_GUIMapEdTownUnits,
   KM_GUIMapEdTownScript,
   KM_GUIMapEdTownDefence,
-  KM_GUIMapEdTownOffence;
+  KM_GUIMapEdTownOffence,
+  KM_GUIMapEdTownAnimals;
 
 type
-  TKMTownTab = (ttHouses, ttUnits, ttScript, ttDefences, ttOffence);
+  TKMTownTab = (ttHouses, ttUnits, ttWarriors, ttAnimals, ttScript, ttDefences, ttOffence);
 
   TKMMapEdTown = class(TKMMapEdMenuPage)
   private
@@ -21,9 +22,11 @@ type
 
     fGuiHouses: TKMMapEdTownHouses;
     fGuiUnits: TKMMapEdTownUnits;
+    fGuiWarriors: TKMMapEdTownWarriors;
     fGuiScript: TKMMapEdTownScript;
     fGuiDefence: TKMMapEdTownDefence;
     fGuiOffence: TKMMapEdTownOffence;
+    fGuiAnimals: TKMMapEdTownAnimals;
 
     procedure PageChange(Sender: TObject);
   protected
@@ -64,8 +67,8 @@ uses
 { TKMMapEdTown }
 constructor TKMMapEdTown.Create(aParent: TKMPanel; aOnPageChange: TNotifyEvent);
 const
-  TAB_GLYPH: array [TKMTownTab] of Word    = (391,   141,   62,        43,    53);
-  TAB_RXX  : array [TKMTownTab] of TRXType = (rxGui, rxGui, rxGuiMain, rxGui, rxGui);
+  TAB_GLYPH: array [TKMTownTab] of Word    = (391,   141,   61,    915,    62,        43,    53);
+  TAB_RXX  : array [TKMTownTab] of TRXType = (rxGui, rxGui, rxGui, rxGui, rxGuiMain, rxGui, rxGui);
 var
   TT: TKMTownTab;
 begin
@@ -78,15 +81,17 @@ begin
 
   for TT := Low(TKMTownTab) to High(TKMTownTab) do
   begin
-    Button_Town[TT] := TKMButton.Create(Panel_Town, 9 + SMALL_PAD_W * Byte(TT), 0, SMALL_TAB_W, SMALL_TAB_H, TAB_GLYPH[TT], TAB_RXX[TT], bsGame);
+    Button_Town[TT] := TKMButton.Create(Panel_Town, 9 + SMALL_PAD_W * Byte(TT), 0, SMALL_TAB_W, SMALL_TAB_H, TAB_GLYPH[TT], TAB_RXX[TT], bsPaper2);
     Button_Town[TT].OnClick := PageChange;
   end;
 
   fGuiHouses := TKMMapEdTownHouses.Create(Panel_Town);
   fGuiUnits := TKMMapEdTownUnits.Create(Panel_Town);
+  fGuiWarriors := TKMMapEdTownWarriors.Create(Panel_Town);
   fGuiScript := TKMMapEdTownScript.Create(Panel_Town);
   fGuiDefence := TKMMapEdTownDefence.Create(Panel_Town);
   fGuiOffence := TKMMapEdTownOffence.Create(Panel_Town);
+  fGuiAnimals := TKMMapEdTownAnimals.Create(Panel_Town);
 end;
 
 
@@ -94,10 +99,11 @@ destructor TKMMapEdTown.Destroy;
 begin
   fGuiHouses.Free;
   fGuiUnits.Free;
+  fGuiWarriors.Free;
   fGuiScript.Free;
   fGuiDefence.Free;
   fGuiOffence.Free;
-
+  fGuiAnimals.Free;
   inherited;
 end;
 
@@ -110,15 +116,20 @@ begin
   //Hide existing pages
   fGuiHouses.Hide;
   fGuiUnits.Hide;
+  fGuiWarriors.Hide;
   fGuiScript.Hide;
   fGuiDefence.Hide;
   fGuiOffence.Hide;
+  fGuiAnimals.Hide;
 
   if (Sender = Button_Town[ttHouses]) then
     fGuiHouses.Show
   else
   if (Sender = Button_Town[ttUnits]) then
     fGuiUnits.Show
+  else
+  if (Sender = Button_Town[ttWarriors]) then
+    fGuiWarriors.Show
   else
   if (Sender = Button_Town[ttScript]) then
     fGuiScript.Show
@@ -127,7 +138,10 @@ begin
     fGuiDefence.Show
   else
   if (Sender = Button_Town[ttOffence]) then
-    fGuiOffence.Show;
+    fGuiOffence.Show
+  else
+  if (Sender = Button_Town[ttAnimals]) then
+    fGuiAnimals.Show;
 
   //Signal that active page has changed, that may affect layers visibility
   fOnPageChange(Self);
@@ -139,9 +153,11 @@ begin
   case aPage of
     ttHouses:   fGuiHouses.Show;
     ttUnits:    fGuiUnits.Show;
+    ttWarriors: fGuiWarriors.Show;
     ttScript:   fGuiScript.Show;
     ttDefences: fGuiDefence.Show;
     ttOffence:  fGuiOffence.Show;
+    ttAnimals:  fGuiAnimals.Show;
   end;
 
   //Signal that active page has changed, that may affect layers visibility
@@ -168,9 +184,11 @@ begin
 
   fGuiHouses.ExecuteSubMenuAction(aIndex, aHandled);
   fGuiUnits.ExecuteSubMenuAction(aIndex, aHandled);
+  fGuiWarriors.ExecuteSubMenuAction(aIndex, aHandled);
   fGuiScript.ExecuteSubMenuAction(aIndex, aHandled);
   fGuiDefence.ExecuteSubMenuAction(aIndex, aHandled);
   fGuiOffence.ExecuteSubMenuAction(aIndex, aHandled);
+  //fGuiAnimals.ExecuteSubMenuAction(aIndex, aHandled);
 end;
 
 
@@ -196,6 +214,7 @@ begin
     ttScript:   Result := fGuiScript.Visible;
     ttDefences: Result := fGuiDefence.Visible;
     ttOffence:  Result := fGuiOffence.Visible;
+    ttAnimals:  Result := fGuiAnimals.Visible;
     else        Result := False;
   end;
 end;
@@ -229,7 +248,9 @@ const
     TX_MAPED_UNITS,
     TX_MAPED_AI_TITLE,
     TX_MAPED_AI_DEFENSE_OPTIONS,
-    TX_MAPED_AI_ATTACK);
+    TX_MAPED_AI_ATTACK,
+    2027,
+    2028);
 var
   TT: TKMTownTab;
 begin
@@ -248,7 +269,9 @@ procedure TKMMapEdTown.UpdatePlayerColor;
 begin
   //Update colors
   Button_Town[ttUnits].FlagColor := gMySpectator.Hand.FlagColor;
+  Button_Town[ttWarriors].FlagColor := gMySpectator.Hand.FlagColor;
   fGuiUnits.UpdatePlayerColor;
+  fGuiWarriors.UpdatePlayerColor;
 end;
 
 
@@ -256,6 +279,7 @@ procedure TKMMapEdTown.UpdateState;
 begin
   fGuiHouses.UpdateState;
   fGuiUnits.UpdateState;
+  fGuiWarriors.UpdateState;
   fGuiScript.UpdateState;
   fGuiDefence.UpdateState;
 end;

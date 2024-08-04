@@ -329,6 +329,11 @@ end;
 
 class procedure TKMRenderUI.WriteBevel(aLeft, aTop, aWidth, aHeight: SmallInt; const aColor: TKMColor3f;
                                        aEdgeAlpha: Single = BEVEL_EDGE_ALPHA_DEF; aBackAlpha: Single = BEVEL_BACK_ALPHA_DEF);
+const BEVEL_INSET = 0.5;
+      BEVEL_THICKNESS = 1;
+      BEVEL_STEEP = 4;
+var lineWidth : Integer;
+  I : Integer;
 begin
   if (aWidth < 0) or (aHeight < 0) then Exit;
 
@@ -338,6 +343,8 @@ begin
   glPushMatrix;
   try
     glTranslatef(aLeft, aTop, 0);
+    glGetIntegerv(GL_LINE_WIDTH, @lineWidth);
+    glLineWidth(3);
 
     //Background
     glColor4f(aColor.R, aColor.G, aColor.B, aBackAlpha);
@@ -350,22 +357,49 @@ begin
     begin
       //Bright edge
       glBlendFunc(GL_DST_COLOR, GL_ONE);
-      glColor3f(0.75 * aEdgeAlpha, 0.75 * aEdgeAlpha, 0.75 * aEdgeAlpha);
+      glColor3f(0.6 * aEdgeAlpha, 0.6 * aEdgeAlpha, 0.6 * aEdgeAlpha);
       glBegin(GL_LINE_STRIP);
-        glVertex2f(aWidth-0.5, 0.5);
-        glVertex2f(aWidth-0.5, aHeight-0.5);
-        glVertex2f(0.5, aHeight-0.5);
+        glVertex2f(aWidth - BEVEL_INSET, BEVEL_INSET);
+        glVertex2f(aWidth-BEVEL_INSET, aHeight-BEVEL_INSET);
+        glVertex2f(BEVEL_INSET, aHeight-BEVEL_INSET);
       glEnd;
 
       //Dark edge
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-      glColor4f(0, 0, 0, aEdgeAlpha);
+      glColor4f(0, 0, 0, aEdgeAlpha * 0.8);
       glBegin(GL_LINE_STRIP);
-        glVertex2f(0.5, aHeight-0.5);
-        glVertex2f(0.5, 0.5);
-        glVertex2f(aWidth-0.5, 0.5);
+        glVertex2f(BEVEL_INSET, aHeight-BEVEL_INSET);
+        glVertex2f(BEVEL_INSET, BEVEL_INSET);
+        glVertex2f(aWidth-BEVEL_INSET, BEVEL_INSET);
       glEnd;
     end;
+    for I := 2 to BEVEL_STEEP + 1 do
+    begin
+      glLineWidth(BEVEL_THICKNESS * I);
+      //2 Thin outlines rendered on top of background to avoid inset calculations
+      if aEdgeAlpha > 0 then
+      begin
+        //Bright edge
+        glBlendFunc(GL_DST_COLOR, GL_ONE);
+        glColor3f((0.4 - (0.07 * I)) * aEdgeAlpha, (0.4 - (0.07 * I)) * aEdgeAlpha, (0.4 - (0.07 * I)) * aEdgeAlpha);
+        glBegin(GL_LINE_STRIP);
+          glVertex2f(aWidth - BEVEL_INSET * I, BEVEL_INSET * I);
+          glVertex2f(aWidth-BEVEL_INSET * I, aHeight-BEVEL_INSET * I);
+          glVertex2f(BEVEL_INSET * I, aHeight-BEVEL_INSET * I);
+        glEnd;
+
+        //Dark edge
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glColor4f(0, 0, 0, aEdgeAlpha * (0.4 - (0.06 * I)));
+        glBegin(GL_LINE_STRIP);
+          glVertex2f(BEVEL_INSET * I, aHeight-BEVEL_INSET * I);
+          glVertex2f(BEVEL_INSET * I, BEVEL_INSET * I);
+          glVertex2f(aWidth-BEVEL_INSET * I, BEVEL_INSET * I);
+        glEnd;
+      end;
+    end;
+
+    glLineWidth(lineWidth);
   finally
     glPopMatrix;
   end;

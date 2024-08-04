@@ -70,6 +70,7 @@ type
     Importance: TKMDemandImportance; //How important demand is, e.g. Workers and building sites should be diHigh
     Loc_House: TKMHouse;
     Loc_Unit: TKMUnit;
+    Loc_Other: TKMPoint;
     BeingPerformed: Cardinal; //Can be performed multiple times for dtAlways
     IsDeleted: Boolean; //So we don't get pointer issues
     DeleteState: TKMDeliveryDemandDeleteState; // State of demand delete process
@@ -287,7 +288,8 @@ type
     procedure RemOffer(aHouse: TKMHouse; aWare: TKMWareType; aCount: Cardinal);
     function HasOffers(aHouse: TKMHouse; aWares : TKMWareTypeSet) : Word;
     function GetDemandsCnt(aHouse: TKMHouse; aWare: TKMWareType; aType: TKMDemandType; aImp: TKMDemandImportance): Integer;
-    procedure AddDemand(aHouse: TKMHouse; aUnit: TKMUnit; aWare: TKMWareType; aCount: Integer; aType: TKMDemandType = dtOnce; aImp: TKMDemandImportance = diNorm);
+    procedure AddDemand(aHouse: TKMHouse; aUnit: TKMUnit; aWare: TKMWareType; aCount: Integer; aType: TKMDemandType = dtOnce; aImp: TKMDemandImportance = diNorm); overload;
+    procedure AddDemand(aLoc: TKMPoint; aWare: TKMWareType; aCount: Integer; aType: TKMDemandType = dtOnce; aImp: TKMDemandImportance = diNorm); overload;
     function TryRemoveDemand(aHouse: TKMHouse; aWare: TKMWareType; aCount: Integer): Word; overload;
     function TryRemoveDemand(aHouse: TKMHouse; aWare: TKMWareType; aCount: Integer; out aPlannedToRemove: Integer): Word; overload;
     procedure RemDemand(aHouse: TKMHouse); overload;
@@ -304,7 +306,7 @@ type
     procedure ReAssignDelivery(iQ: Integer; aSerf: TKMUnitSerf);
     procedure AssignDelivery(oWT, dWT: TKMWareType; iO, iD: Integer; aSerf: TKMUnitSerf);
     function AskForDelivery(aSerf: TKMUnitSerf; aHouse: TKMHouse = nil): Boolean;
-    procedure CheckForBetterDemand(aDeliveryID: Integer; out aToHouse: TKMHouse; out aToUnit: TKMUnit; aSerf: TKMUnitSerf);
+    procedure CheckForBetterDemand(aDeliveryID: Integer; out aToHouse: TKMHouse; out aToUnit: TKMUnit; out aToLoc: TKMPoint;  aSerf: TKMUnitSerf);
     procedure DeliveryFindBestDemand(aSerf: TKMUnitSerf; aDeliveryId: Integer; aWare: TKMWareType; out aToHouse: TKMHouse; out aToUnit: TKMUnit; out aForceDelivery: Boolean);
     procedure TakenOffer(iQ: Integer);
     procedure GaveDemand(iQ: Integer);
@@ -1214,9 +1216,51 @@ begin
         Importance := diHigh1;
 
       //Food to Inn
-      if (aWare in [wtBread, wtSausage, wtWine, wtFish])
+      if (aWare in [wtBread, wtSausage, wtWine, wtFish, wtVegetables, wtApple])
         and (Loc_House <> nil) and (Loc_House.HouseType = htInn) then
         Importance := diHigh3;
+
+      Form_UpdateDemandNode(aWare,I);
+    end;
+  end;
+end;
+
+procedure TKMDeliveries.AddDemand(aLoc: TKMPoint; aWare: TKMWareType; aCount: Integer; aType: TKMDemandType = dtOnce; aImp: TKMDemandImportance = diNorm);
+var
+  I,K,J: Integer;
+begin
+  if gGameParams.IsMapEditor then
+    Exit;
+  Assert(aWare <> wtNone, 'Demanding wtNone');
+  if aCount <= 0 then Exit;
+  if aLoc = KMPOINT_ZERO then
+    Exit;
+
+  for K := 0 to aCount - 1 do
+  begin
+    I := 0;
+    while (I < fDemandCount[aWare]) and fDemand[aWare, I].IsActive do
+      Inc(I);
+    if I >= fDemandCount[aWare] then
+    begin
+      Inc(fDemandCount[aWare], LENGTH_INC);
+      SetLength(fDemand[aWare], fDemandCount[aWare]);
+      for J := I to fDemandCount[aWare] - 1 do
+        //We could do fDemand[aWare,J].Reset here, but FillChar is a bit faster
+        FillChar(fDemand[aWare,J], SizeOf(fDemand[aWare,J]), #0);
+    end;
+
+    with fDemand[aWare,I] do
+    begin
+      Loc_House := nil;
+      Loc_Unit := nil;
+      Loc_Other := aLoc;
+
+      IsActive := True;
+      DemandType := aType; //Once or Always
+
+      Importance := aImp;
+      Assert((not IsDeleted) and (BeingPerformed = 0)); //Make sure this item has been closed properly, if not there is a flaw
 
       Form_UpdateDemandNode(aWare,I);
     end;
@@ -1246,6 +1290,7 @@ begin
   Result := fDemand[dWT,iD].IsActive
             and ((fDemand[dWT,iD].DemandType = dtAlways) or (fDemand[dWT,iD].BeingPerformed = 0)) // Demand isn't reserved already
             and not fDemand[dWT,iD].IsDeleted;
+
 end;
 
 //IgnoreOffer means we don't check whether offer was already taken or deleted (used after offer was already claimed)
@@ -1260,6 +1305,11 @@ begin
   offer := @fOffer[oWT,iO];
   demand := @fDemand[dWT,iD];
 
+  if demand.Loc_Other <> KMPOINT_ZERO then
+  begin
+    Result := gTerrain.RouteCanBeMade(offer.Loc_House.PointBelowEntrance, demand.Loc_Other, tpWalk, 2);
+    Exit;
+  end;
 
 
   // Conditions are called in the frequency of a negative Result: most negative first
@@ -1275,7 +1325,8 @@ begin
             or
             ( //House-Unit delivery can be performed without connecting road
             (demand.Loc_Unit <> nil) and
-            (gTerrain.RouteCanBeMade(offer.Loc_House.PointBelowEntrance, demand.Loc_Unit.Position, tpWalk, 1))
+            (gTerrain.RouteCanBeMade(offer.Loc_House.PointBelowEntrance, demand.Loc_Unit.Position, tpWalk, 1)
+            or ((demand.Loc_Unit.UnitType in UNITS_SHIPS) and gTerrain.RouteCanBeMade(offer.Loc_House.PointBelowEntrance, demand.Loc_Unit.Position, tpWalk, 4)))
             ));
 
   //If Demand house should abandon delivery
@@ -1390,6 +1441,8 @@ function TKMDeliveries.SerfCanDoDelivery(oWT: TKMWareType; iO: Integer; aSerf: T
 var
   locA, locB: TKMPoint;
 begin
+  if aSerf.InShip <> nil then
+    Exit(false);
   locA := GetSerfActualPos(aSerf);
   locB := fOffer[oWT,iO].Loc_House.PointBelowEntrance;
 
@@ -1512,7 +1565,7 @@ end;
 function TKMDeliveries.TryCalcRouteCost(aCalcKind: TKMDeliveryCalcKind; aFromPos, aToPos: TKMPoint; aRouteStep: TKMDeliveryRouteStep;
                                         var aRoutCost: TKMDeliveryRouteCalcCost; aSecondPass: TKMTerrainPassability = tpNone): Boolean;
 
-  function RouteCanBeMade(const LocA, LocB: TKMPoint; aPass: TKMTerrainPassability): Boolean; inline;
+  function RouteCanBeMade(const LocA, LocB: TKMPoint; aPass: TKMTerrainPassability): Boolean;
   begin
     if aPass = tpNone then
       Exit(False);
@@ -1627,7 +1680,6 @@ begin
       if aCalcKind = dckFast then
         aBidBasicCost.OfferToDemand.Pass := tpWalkRoad;
 
-      //Calc cost between offer and demand houses
       Result := TryCalcRouteCost(aCalcKind, aOfferPos, fDemand[dWT,iD].Loc_House.PointBelowEntrance, drsOfferToDemand, aBidBasicCost.OfferToDemand, secondPass);
 
       // There is no route, Exit immidiately
@@ -1640,6 +1692,12 @@ begin
       //Resource ratios are also considered
       aBidBasicCost.IncAddition(KaMRandom(maxWareIn + 1 - 3*distr, 'TKMDeliveries.TryCalculateBidBasic 2'));
     end;
+  end
+  else
+  if fDemand[dWT,iD].Loc_Other <> KMPOINT_ZERO then
+  begin
+    aBidBasicCost.OfferToDemand.Pass := tpWalk;
+    Result := TryCalcRouteCost(aCalcKind, aOfferPos, fDemand[dWT,iD].Loc_Other, drsOfferToDemand, aBidBasicCost.OfferToDemand);
   end
   else
   begin
@@ -1750,7 +1808,7 @@ begin
 end;
 
 
-procedure TKMDeliveries.CheckForBetterDemand(aDeliveryID: Integer; out aToHouse: TKMHouse; out aToUnit: TKMUnit; aSerf: TKMUnitSerf);
+procedure TKMDeliveries.CheckForBetterDemand(aDeliveryID: Integer; out aToHouse: TKMHouse; out aToUnit: TKMUnit; out aToLoc: TKMPoint;  aSerf: TKMUnitSerf);
 var
   iD, iO, bestD, oldD: Integer;
   oldDWT, dWT, bestDWT, oWT: TKMWareType;
@@ -1781,6 +1839,7 @@ begin
     begin
       aToHouse := fDemand[oldDWT,oldD].Loc_House;
       aToUnit := fDemand[oldDWT,oldD].Loc_Unit;
+      aToLoc := fDemand[oldDWT,oldD].Loc_Other;
       Exit;
     end;
 
@@ -1860,6 +1919,7 @@ begin
     //Return chosen unit and house
     aToHouse := fDemand[bestDWT, bestD].Loc_House;
     aToUnit := fDemand[bestDWT, bestD].Loc_Unit;
+    aToLoc := fDemand[bestDWT, bestD].Loc_Other;
   finally
     {$IFDEF PERFLOG}
     gPerfLogs.SectionLeave(psDelivery);
@@ -2285,6 +2345,9 @@ begin
     gLog.LogDelivery('Creating delivery ID ' + IntToStr(I));
 
   //Now we have best job and can perform it
+  if fDemand[dWT,iD].Loc_Other <> KMPOINT_ZERO then
+    aSerf.Deliver(fOffer[oWT,iO].Loc_House, fDemand[dWT,iD].Loc_Other, oWT, I)
+  else
   if fDemand[dWT,iD].Loc_House <> nil then
     aSerf.Deliver(fOffer[oWT,iO].Loc_House, fDemand[dWT,iD].Loc_House, oWT, I)
   else
@@ -2507,6 +2570,7 @@ begin
 
           SaveStream.Write(Loc_House.UID);
           SaveStream.Write(Loc_Unit.UID );
+          SaveStream.Write(Loc_Other);
 
           SaveStream.Write(BeingPerformed);
           SaveStream.Write(IsDeleted);
@@ -2573,6 +2637,7 @@ begin
           LoadStream.Read(Importance, SizeOf(Importance));
           LoadStream.Read(Loc_House, 4);
           LoadStream.Read(Loc_Unit, 4);
+          LoadStream.Read(Loc_Other);
           LoadStream.Read(BeingPerformed);
           LoadStream.Read(IsDeleted);
           LoadStream.Read(DeleteState, SizeOf(DeleteState));
@@ -3204,6 +3269,7 @@ begin
   Importance := diNorm;
   Loc_House := nil;
   Loc_Unit := nil;
+  Loc_Other := KMPOINT_ZERO;
   BeingPerformed := 0;
   IsDeleted := False;
   DeleteState := ddtNone;

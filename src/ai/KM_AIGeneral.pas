@@ -303,7 +303,7 @@ var
     begin
       HSW := TKMHouseSiegeWorkshop(gHands[fOwner].Houses.SiegeWorkshops[I]);
 
-      if HSW = nil then
+      if not HSW.IsValid then
         Continue;
 
       HSW.RemUnitFromQueue(1);
@@ -430,7 +430,7 @@ begin
       //Chose a random group type that we are going to attempt to train (so we don't always train certain group types first)
       K := 0;
       repeat
-        GT := TKMGroupType(GROUP_TYPE_MIN_OFF + KaMRandom(4, 'TKMGeneral.CheckArmyCount')); //Pick random from overall count
+        GT := GROUP_TYPE_ORDER[KaMRandom(Length(GROUP_TYPE_ORDER), 'TKMGeneral.CheckArmyCount')]; //Pick random from overall count
         Inc(K);
       until (GroupReq[GT] > 0) or (K > 9); //Limit number of attempts to guarantee it doesn't loop forever
 
@@ -496,7 +496,7 @@ begin
       Inc(J);
       K := 0;//Chose a random group type that we are going to attempt to train (so we don't always train certain group types first)
       repeat
-        GT := TKMGroupType(GROUP_TYPE_MIN_OFF + KaMRandom(4, 'TKMGeneral.CheckArmyCount')); //Pick random from overall count
+        GT := TKMGroupType(GROUP_TYPE_MIN_OFF + KaMRandom(GROUP_TYPES_CNT, 'TKMGeneral.CheckArmyCount')); //Pick random from overall count
         Inc(K);
       until (GroupReq[GT] > 0) or (K > 9); //Limit number of attempts to guarantee it doesn't loop forever
 

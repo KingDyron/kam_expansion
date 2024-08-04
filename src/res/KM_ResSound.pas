@@ -161,7 +161,7 @@ const
     'rebel', 'rogue', 'warrior', 'vagabond', 'machines', 'machines', 'machines', '', '', 'paladin',
     'bowman', 'pikeman', 'wolf', 'machines', 'machines', 'machines',
     'swordman', 'bowman', 'crossbowman', 'vagabond', 'lanceman', 'machines', 'machines',
-    'knights', 'bowman');
+    'knights', 'bowman', '', '');
 
   //TPR warriors reuse TSK voices in some languages, so if the specific ones don't exist use these
   WARRIOR_SFX_FOLDER_BACKUP: array[WARRIOR_MIN..WARRIOR_MAX] of string = (
@@ -170,7 +170,7 @@ const
     'bowman', 'lanceman', 'barbarian', 'cavalry', 'machines', 'machines', 'machines', '', '', 'paladin',
     'bowman', 'lanceman', 'wolf', 'machines', 'machines', 'machines',
     'swordman', 'bowman', 'crossbowman', 'vagabond', 'lanceman', 'machines', 'machines',
-    'knights', 'bowman');
+    'knights', 'bowman', '', '');
 
   WARRIOR_SFX: array[TWarriorSpeech] of string = (
     'select', 'eat', 'left', 'right', 'halve',

@@ -22,6 +22,7 @@ uses
   KM_GUIMapEdTownFormationsPopUp,
   KM_GUIMapEdMarkerDefence,
   KM_GUIMapEdMarkerReveal,
+  KM_GUIMapEdMarkerSpawner,
   KM_GUIMapEdMenu,
   KM_GUIMapEdMenuQuickPlay,
   KM_GUIMapEdUnit,
@@ -56,6 +57,7 @@ type
     fGuiMessage: TKMMapEdMessage;
     fGuiMarkerDefence: TKMMapEdMarkerDefence;
     fGuiMarkerReveal: TKMMapEdMarkerReveal;
+    fGuiMarkerSpawner: TKMMapEdMarkerSpawner;
     fGuiMenu: TKMMapEdMenu;
 
     fMapIsMultiplayer: Boolean;
@@ -308,7 +310,7 @@ begin
   fGuiHouse := TKMMapEdHouse.Create(Panel_Common);
   fGuiMarkerDefence := TKMMapEdMarkerDefence.Create(Panel_Common, Marker_Done);
   fGuiMarkerReveal := TKMMapEdMarkerReveal.Create(Panel_Common, Marker_Done);
-
+  fGuiMarkerSpawner := TKMMapEdMarkerSpawner.Create(Panel_Common, Marker_Done);
   //Modal pages
   fGuiAttack := TKMMapEdTownAttack.Create(Panel_Main);
   fGuiFormations := TKMMapEdTownFormations.Create(Panel_Main);
@@ -388,6 +390,7 @@ begin
   fGuiGoal.Free;
   fGuiMarkerDefence.Free;
   fGuiMarkerReveal.Free;
+  fGuiMarkerSpawner.Free;
   fGuiMenu.Free;
   fGuiMessage.Free;
   fGuiUnit.Free;
@@ -614,6 +617,9 @@ begin
   if fGuiPlayer.IsVisible(ptView) or fGuiMarkerReveal.Visible then
     gGame.MapEditor.VisibleLayers := gGame.MapEditor.VisibleLayers + [melRevealFOW, melCenterScreen];
 
+  if fGuiMarkerSpawner.Visible or fGuiTown.IsVisible(ttAnimals) then
+    gGame.MapEditor.VisibleLayers := gGame.MapEditor.VisibleLayers + [melSpawners];
+
   if fGuiTown.IsVisible(ttScript) then
     gGame.MapEditor.VisibleLayers := gGame.MapEditor.VisibleLayers + [melAIStart];
 
@@ -639,6 +645,7 @@ begin
   fGuiUnit.Hide;
   fGuiMarkerDefence.Hide;
   fGuiMarkerReveal.Hide;
+  fGuiMarkerSpawner.Hide;
 
   if gMySpectator.Selected <> nil then
     gMySpectator.Selected := nil;
@@ -723,6 +730,7 @@ begin
     mmtDefence:    fGuiMarkerDefence.Show(aMarker.Owner, aMarker.Index);
     mmtDefendPos:  fGuiMarkerReveal.Show(aMarker.Owner, aMarker.Index, aMarker.MarkerType);
     mmtRevealFOW:  fGuiMarkerReveal.Show(aMarker.Owner, aMarker.Index, aMarker.MarkerType);
+    mmtSpawner:    fGuiMarkerSpawner.Show(aMarker.Index);
   end;
 
   Layers_UpdateVisibility;
@@ -750,6 +758,12 @@ begin
     HidePages;
     fGuiTown.Show(ttDefences);
   end;
+  if Sender = fGuiMarkerSpawner then
+  begin
+    HidePages;
+    fGuiTown.Show(ttAnimals);
+
+  end;
 end;
 
 
@@ -772,6 +786,7 @@ begin
       if fGuiHouse.Visible then Exit;
       if fGuiMarkerDefence.Visible then Exit;
       if fGuiMarkerReveal.Visible then Exit;
+      if fGuiMarkerSpawner.Visible then Exit;
     end;
 
     // We rotate tile on RMB
@@ -1628,6 +1643,10 @@ begin
                   end;
 
                 end;
+
+                if fGuiMarkerSpawner.Visible then
+                  fGuiMarkerSpawner.Spawner.Loc := gCursor.Cell;
+
               end;
   end;
 

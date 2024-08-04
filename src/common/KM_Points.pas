@@ -13,6 +13,8 @@ const
   DIR_MIN = dirN;
   DIR_MAX = dirNW;
   DIRS_VALID = [DIR_MIN..DIR_MAX];
+  DIR_TO_NEXT2 : array[TKMDirection] of TKMDirection = (dirNA, dirE, dirSE, dirS, dirSW, dirW, dirNW, dirN, dirNE);
+  DIR_TO_PREV2 : array[TKMDirection] of TKMDirection = (dirNA, dirW, dirNW, dirN, dirNE, dirE, dirSE, dirS, dirSW);
 
 type
   //Records must be packed so they are stored identically in MP saves (padding bytes are unknown values)
@@ -23,6 +25,8 @@ type
     class operator Add(const A, B: TKMPointF): TKMPointF;
     class function New(aX, aY: Single): TKMPointF; static;
     function ToString: String;
+    function RX : Integer;
+    function RY : Integer;
   end;
 
   //* Point with integer coordinates X and Y
@@ -43,6 +47,8 @@ type
     Loc: TKMPoint;
     Dir: TKMDirection;
     function ToString: String;
+    property X : Integer read Loc.X write Loc.X;
+    property Y : Integer read Loc.Y write Loc.Y;
   end;
 
   TKMPointExact = packed record Loc: TKMPoint; Exact: Boolean; end;
@@ -93,7 +99,8 @@ type
 
   TKMPointFunction = function(aPoint: TKMPoint): Boolean of object;
 
-  function KMPoint(X,Y: Integer): TKMPoint;
+  function KMPoint(X,Y: Integer): TKMPoint; overload;
+  function KMPoint(A : TKMPointF): TKMPoint; overload;
   function KMPointF(X,Y: Single): TKMPointF; overload;
   function KMPointF(const P: TKMPoint):  TKMPointF; overload;
   function KMPointDir(X,Y: Integer; Dir: TKMDirection): TKMPointDir; overload;
@@ -176,6 +183,7 @@ type
   function KMPointSubtract(const A, B: TKMPoint): TKMPoint;
   function KMPointAdd(const A, B: TKMPoint): TKMPoint; overload;
   function KMPointAdd(const A, B, C: TKMPoint): TKMPoint; overload;
+  function KMPointFAdd(const A, B: TKMPointF): TKMPointF;
   function KMDotProduct(const A, B: TKMPoint): Single;
   function KMDistanceAbs(const A, B: TKMPoint): Integer;
   function KMDistanceWalk(const A, B: TKMPoint): Integer;
@@ -226,6 +234,10 @@ type
   function KMEnlargeRange(const aRange: TKMRangeInt; aValue: Integer): TKMRangeInt; overload;
   function KMEnlargeRange(const aRange: TKMRangeSingle; aValue: Single): TKMRangeSingle; overload;
 
+  function KMPointAffectDir(const aLoc : TKMPointF; aDir : TKMDirection; aAddDistance : Single) : TKMPointF;
+
+  function KMPointRandomInRadius(const aLoc : TKMPoint; aRadius : Integer) : TKMPoint;
+  function KMPointFRandomInRadius(const aLoc : TKMPointF; aRadius : Single) : TKMPointF;
 
 const
   KMPOINT_ZERO: TKMPoint = (X: 0; Y: 0);
@@ -318,6 +330,15 @@ begin
   Result := TypeToString(Self);
 end;
 
+function TKMPointF.RX : Integer;
+begin
+  Result := Round(X);
+end;
+function TKMPointF.RY : Integer;
+begin
+  Result := Round(Y);
+end;
+
 
 function TKMPointW.ToString: String;
 begin
@@ -394,6 +415,11 @@ begin
   Result.Y := Y;
 end;
 
+function KMPoint(A : TKMPointF): TKMPoint;
+begin
+  Result.X := Round(A.X);
+  Result.Y := Round(A.Y);
+end;
 
 function KMPointF(const P: TKMPoint): TKMPointF;
 begin
@@ -988,6 +1014,12 @@ begin
 end;
 
 
+function KMPointFAdd(const A, B: TKMPointF): TKMPointF;
+begin
+  Result.X := A.X + B.X;
+  Result.Y := A.Y + B.Y;
+end;
+
 function KMDotProduct(const A, B: TKMPoint): Single;
 begin
   Result := A.X * B.X + A.Y * B.Y;
@@ -1294,6 +1326,33 @@ function KMEnlargeRange(const aRange: TKMRangeSingle; aValue: Single): TKMRangeS
 begin
   Result.Min := Min(aRange.Min, aValue);
   Result.Max := Max(aRange.Max, aValue);
+end;
+
+function KMPointAffectDir(const aLoc : TKMPointF; aDir : TKMDirection; aAddDistance : Single) : TKMPointF;
+begin
+  case aDir of
+    dirNA : Result := aLoc;
+    dirN : Result := KMPointFAdd(aLoc, KMPointF(1 * aAddDistance, 0 * aAddDistance) );
+    dirNE : Result := KMPointFAdd(aLoc, KMPointF(-1 * aAddDistance, -1 * aAddDistance) );
+    dirE : Result := KMPointFAdd(aLoc, KMPointF(0 * aAddDistance, 1 * aAddDistance) );
+    dirSE : Result := KMPointFAdd(aLoc, KMPointF(1 * aAddDistance, -1 * aAddDistance) );
+    dirS : Result := KMPointFAdd(aLoc, KMPointF(1 * aAddDistance, 0 * aAddDistance) );
+    dirSW : Result := KMPointFAdd(aLoc, KMPointF(-1 * aAddDistance, -1 * aAddDistance) );
+    dirW : Result := KMPointFAdd(aLoc, KMPointF(0 * aAddDistance, 1 * aAddDistance) );
+    dirNW : Result := KMPointFAdd(aLoc, KMPointF(-1 * aAddDistance, 1 * aAddDistance) );
+  end;
+end;
+
+function KMPointRandomInRadius(const aLoc : TKMPoint; aRadius : Integer) : TKMPoint;
+begin
+  Result.X := aLoc.X + KamRandomI2(aRadius, 'KMPointRandomInRadius');
+  Result.Y := aLoc.Y + KamRandomI2(aRadius, 'KMPointRandomInRadius');
+end;
+
+function KMPointFRandomInRadius(const aLoc : TKMPointF; aRadius : Single) : TKMPointF;
+begin
+  Result.X := aLoc.X + KamRandomS2(aRadius, 'KMPointFRandomInRadius');
+  Result.Y := aLoc.Y + KamRandomS2(aRadius, 'KMPointFRandomInRadius');
 end;
 
 

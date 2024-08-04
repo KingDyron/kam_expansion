@@ -625,6 +625,13 @@
         <DCCReference Include="src\gui\pages_menu\KM_GUIMenuCampaignLobby.pas"/>
         <DCCReference Include="src\gui\pages_menu\KM_GUIMenuTutorials.pas"/>
         <DCCReference Include="src\controls\KM_ControlsGrid.pas"/>
+        <DCCReference Include="src\gui\pages_maped\town\KM_GUIMapEdTownAnimals.pas"/>
+        <DCCReference Include="src\gui\pages_maped\KM_GUIMapEdMarkerSpawner.pas"/>
+        <DCCReference Include="src\weather\KM_Weather.pas"/>
+        <DCCReference Include="src\weather\KM_WeatherCollection.pas"/>
+        <DCCReference Include="src\weather\KM_WeatherTypes.pas"/>
+        <DCCReference Include="src\weather\KM_Particles.pas"/>
+        <DCCReference Include="src\ai\KM_AIRecordBuilding.pas"/>
         <None Include="KM_TextIDs.inc"/>
         <None Include="KaM_Remake.dpr"/>
         <None Include="KaM_Remake.inc"/>

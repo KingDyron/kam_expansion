@@ -64,7 +64,7 @@ type
     function  GiveHouse(aHand, aHouseType, X,Y: Integer): Integer;
     function  GiveHouseEx(aHand: Integer; aHouseType: TKMHouseType; X,Y: Integer): Integer;
     function  GiveHouseSite(aHand, aHouseType, X, Y: Integer; aAddMaterials: Boolean): Integer;
-    function  GiveHouseSiteEx(aHand: Integer; aHouseType: TKMHouseType; X, Y, aWoodAmount, aStoneAmount: Integer): Integer;
+    function  GiveHouseSiteEx(aHand: Integer; aHouseType: TKMHouseType; X, Y, aWoodAmount, aStoneAmount, aTileAmount: Integer): Integer;
     function  GiveUnit(aHand, aType, X,Y, aDir: Integer): Integer;
     function  GiveUnitEx(aHand: Integer; aType: TKMUnitType; X,Y: Integer; aDir: TKMDirection): Integer;
     function  GiveRoad(aHand, X, Y: Integer): Boolean;
@@ -164,6 +164,7 @@ type
     function MapTileHeightSet(X, Y, Height: Integer): Boolean;
     function MapTileObjectSet(X, Y, Obj: Integer): Boolean;
     function MapTileOverlaySet(X, Y: Integer; aOverlay: TKMTileOverlay; aOverwrite: Boolean): Boolean;
+    procedure MapSetNightTime(aValue : Single);
 
     procedure MarketSetTrade(aMarketID, aFrom, aTo, aAmount: Integer);
     procedure MarketSetTradeEx(aMarketID: Integer; aFrom, aTo: TKMWareType; aAmount: Integer);
@@ -201,6 +202,7 @@ type
     function PlanAddHouse(aHand, aHouseType, X, Y: Integer): Boolean;
     function PlanAddHouseEx(aHand: Integer; aHouseType: TKMHouseType; X, Y: Integer): Boolean;
     function PlanAddRoad(aHand, X, Y: Integer): Boolean;
+    function PlanFieldAdd(aHand, X, Y: Integer; aFIeldType : TKMLockFieldType): Boolean;
     function PlanAddWinefield(aHand, X, Y: Integer): Boolean;
     function PlanConnectRoad(aHand, X1, Y1, X2, Y2: Integer; aCompleted: Boolean): Boolean;
     function PlanRemove(aHand, X, Y: Integer): Boolean;
@@ -1215,7 +1217,7 @@ begin
     and HouseTypeValid(aHouseType)
     and gTerrain.TileInMapCoords(X, Y) then
     begin
-      if gTerrain.CanPlaceHouseFromScript(HOUSE_ID_TO_TYPE[aHouseType], KMPoint(X - gRes.Houses[HOUSE_ID_TO_TYPE[aHouseType]].EntranceOffsetX, Y)) then
+      if gTerrain.CanPlaceHouseFromScript(HOUSE_ID_TO_TYPE[aHouseType], KMPoint(X - gRes.Houses[HOUSE_ID_TO_TYPE[aHouseType]].EntranceOffsetX, Y - gRes.Houses[HOUSE_ID_TO_TYPE[aHouseType]].EntranceOffsetY)) then
       begin
         H := gHands[aHand].AddHouse(HOUSE_ID_TO_TYPE[aHouseType], X, Y, True);
         if H = nil then Exit;
@@ -1245,7 +1247,7 @@ begin
       and (aHouseType in HOUSES_VALID)
       and gTerrain.TileInMapCoords(X, Y) then
     begin
-      if gTerrain.CanPlaceHouseFromScript(aHouseType, KMPoint(X - gRes.Houses[aHouseType].EntranceOffsetX, Y)) then
+      if gTerrain.CanPlaceHouseFromScript(aHouseType, KMPoint(X - gRes.Houses[aHouseType].EntranceOffsetX, Y - gRes.Houses[aHouseType].EntranceOffsetY)) then
       begin
         H := gHands[aHand].AddHouse(aHouseType, X, Y, True);
         if H = nil then Exit;
@@ -1269,7 +1271,7 @@ var
   H: TKMHouse;
   I, K: Integer;
   HA: TKMHouseArea;
-  nonEntranceX: Integer;
+  nonEntranceX, nonEntranceY: Integer;
 begin
   try
     Result := -1;
@@ -1279,9 +1281,10 @@ begin
     and gTerrain.TileInMapCoords(X,Y) then
     begin
       nonEntranceX := X - gRes.Houses[HOUSE_ID_TO_TYPE[aHouseType]].EntranceOffsetX;
-      if gTerrain.CanPlaceHouseFromScript(HOUSE_ID_TO_TYPE[aHouseType], KMPoint(nonEntranceX, Y)) then
+      nonEntranceY := Y - gRes.Houses[HOUSE_ID_TO_TYPE[aHouseType]].EntranceOffsetY;
+      if gTerrain.CanPlaceHouseFromScript(HOUSE_ID_TO_TYPE[aHouseType], KMPoint(nonEntranceX, nonEntranceY)) then
       begin
-        H := gHands[aHand].AddHouseWIP(HOUSE_ID_TO_TYPE[aHouseType], KMPoint(nonEntranceX, Y));
+        H := gHands[aHand].AddHouseWIP(HOUSE_ID_TO_TYPE[aHouseType], KMPoint(nonEntranceX, nonEntranceY));
         if (H = nil) or (H.IsDestroyed) then
           Exit;
 
@@ -1291,9 +1294,9 @@ begin
         for K := 1 to 4 do
           if HA[I, K] <> 0 then
           begin
-            gTerrain.RemoveObject(KMPoint(nonEntranceX + K - 3, Y + I - 4));
-            gTerrain.FlattenTerrain(KMPoint(nonEntranceX + K - 3, Y + I - 4));
-            gTerrain.SetTileLock(KMPoint(nonEntranceX + K - 3, Y + I - 4), tlDigged);
+            gTerrain.RemoveObject(KMPoint(nonEntranceX + K - 3, nonEntranceY + I - 4));
+            gTerrain.FlattenTerrain(KMPoint(nonEntranceX + K - 3, nonEntranceY + I - 4));
+            gTerrain.SetTileLock(KMPoint(nonEntranceX + K - 3, nonEntranceY + I - 4), tlDigged);
           end;
 
         gTerrain.SetRoad(H.Entrance, aHand, rtStone);
@@ -1324,12 +1327,12 @@ end;
 //* Give player a digged house area and returns House ID or -1 if house site was not able to be added.
 //* aStoneAmount: number of resources to be added to the site
 //* aWoodAmount: number of resources to be added to the site
-function TKMScriptActions.GiveHouseSiteEx(aHand: Integer; aHouseType: TKMHouseType; X, Y, aWoodAmount, aStoneAmount: Integer): Integer;
+function TKMScriptActions.GiveHouseSiteEx(aHand: Integer; aHouseType: TKMHouseType; X, Y, aWoodAmount, aStoneAmount, aTileAmount: Integer): Integer;
 var
   H: TKMHouse;
   I, K: Integer;
   HA: TKMHouseArea;
-  nonEntranceX: Integer;
+  nonEntranceX, nonEntranceY: Integer;
 begin
   try
     Result := -1;
@@ -1339,6 +1342,7 @@ begin
       and gTerrain.TileInMapCoords(X,Y) then
     begin
       nonEntranceX := X - gRes.Houses[aHouseType].EntranceOffsetX;
+      nonEntranceY := Y - gRes.Houses[aHouseType].EntranceOffsetY;
       if gTerrain.CanPlaceHouseFromScript(aHouseType, KMPoint(nonEntranceX, Y)) then
       begin
         H := gHands[aHand].AddHouseWIP(aHouseType, KMPoint(nonEntranceX, Y));
@@ -1368,6 +1372,12 @@ begin
         aStoneAmount := EnsureRange(aStoneAmount, 0, gRes.Houses[aHouseType].StoneCost);
         H.WareAddToBuild(wtStone, aStoneAmount);
         gHands[aHand].Deliveries.Queue.AddDemand(H, nil, wtStone, gRes.Houses[aHouseType].StoneCost - aStoneAmount, dtOnce, diHigh4);
+
+        // Add Tiles
+        aTileAmount := EnsureRange(aTileAmount, 0, gRes.Houses[aHouseType].TileCost);
+        H.WareAddToBuild(wtTile, aTileAmount);
+        gHands[aHand].Deliveries.Queue.AddDemand(H, nil, wtTile, gRes.Houses[aHouseType].TileCost - aTileAmount, dtOnce, diHigh4);
+
 
         gHands[aHand].Constructions.HouseList.AddHouse(H);
       end;
@@ -4210,6 +4220,16 @@ begin
   end;
 end;
 
+procedure TKMScriptActions.MapSetNightTime(aValue: Single);
+begin
+
+  try
+    gTerrain.NightFactor := aValue;
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
 
 //* Version: 6216
 //* Sets the trade in the specified market
@@ -4710,6 +4730,66 @@ begin
     raise;
   end;
 end;
+
+function TKMScriptActions.PlanFieldAdd(aHand: Integer; X: Integer; Y: Integer; aFIeldType: TKMLockFieldType): Boolean;
+
+  function FieldType : TKMFieldType;
+  begin
+    case aFIeldType of
+      lftRoadStone,
+      lftRoadWooden,
+      lftRoadClay,
+      lftRoadExclusive : Result := ftRoad;
+      lftPalisade : Result := ftPalisade;
+      lftField : Result := ftCorn;
+      lftGrassField : Result := ftGrassland;
+      lftVegetablesField : Result := ftVegeField;
+      lftWineField : Result := ftWine;
+      lftRemove : Result := ftRemove;
+    end;
+  end;
+
+  function RoadType : TKMRoadType;
+  begin
+    case aFIeldType of
+      lftRoadStone : Result := rtStone;
+      lftRoadWooden : Result := rtWooden;
+      lftRoadClay : Result := rtClay;
+      lftRoadExclusive : Result := rtExclusive;
+      lftPalisade,
+      lftField,
+      lftGrassField,
+      lftVegetablesField,
+      lftWineField,
+      lftRemove : Result := rtNone;
+    end;
+  end;
+
+var FT : TKMFieldType;
+    RT : TKMRoadType;
+begin
+  try
+    Result := False;
+    //Verify all input parameters
+    if InRange(aHand, 0, gHands.Count - 1) and (gHands[aHand].Enabled)
+    and gTerrain.TileInMapCoords(X,Y) then
+    begin
+      FT := FieldType;
+      RT := RoadType;
+      if gHands[aHand].CanAddFieldPlan(KMPoint(X, Y), FT) then
+      begin
+        Result := True;
+        gHands[aHand].Constructions.FieldworksList.AddField(KMPoint(X, Y), FT, RT);
+      end;
+    end
+    else
+      LogIntParamWarn('Actions.PlanAddField', [aHand, X, Y]);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
 
 
 //* Version: 5057

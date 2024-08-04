@@ -149,6 +149,7 @@ end;
 function TKMHouseSiegeWorkshop.GetNeededWares : TKMWarePlan;
 var UT : TKMUnitType;
 begin
+  Result.SetCount(4);
   if Queue[0] = utNone then
     UT := Queue[1]
   else
@@ -214,6 +215,7 @@ end;
 class function TKMHouseSiegeWorkshop.GetTotalCost(aUnitType : TKMUnitType) : TKMWarePlan;
 var I : Integer;
 begin
+   Result.SetCount(4);
    Result[0].W := wtNone;
    Result[1].W := wtNone;
    Result[2].W := wtNone;
@@ -480,6 +482,7 @@ begin
     U := TKMUnit(fWorkers[I]);
     if operatorsTaken < OPERATORS_PER_MACHINE then
       if (U <> nil)
+      and (U.InHouse <> nil)
       and (U.UnitType = utOperator)
       and not U.IsDeadOrDying then
       begin

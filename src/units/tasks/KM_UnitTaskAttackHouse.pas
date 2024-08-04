@@ -119,6 +119,7 @@ var
    AnimLength: Integer;
    Delay, Cycle: Integer;
    closest: TKMPoint;
+   dir : TKMDirection;
 begin
   Result := trTaskContinues;
 
@@ -170,10 +171,15 @@ begin
               SetActionLockedStay(Delay,uaWork); //Pretend to aim
 
               if not KMSamePoint(Position, fHouse.GetClosestCell(Position)) then //Unbuilt houses can be attacked from within
+              begin
                 Direction := KMGetDirection(PositionNext, fHouse.Entrance); //Look at house
+                if UnitType in UNITS_SHIPS then
+                  Direction := DIR_TO_NEXT2[Direction];
+              end;
 
               if gMySpectator.FogOfWar.CheckTileRevelation(Round(PositionF.X), Round(PositionF.Y)) >= 255 then
               case UnitType of
+                utBattleShip,
                 utCrossbowman: gSoundPlayer.Play(sfxCrossbowDraw, PositionF); //Aiming
                 utArcher,
                 utBowman:     gSoundPlayer.Play(sfxBowDraw,      PositionF); //Aiming
@@ -228,16 +234,24 @@ begin
               //Launch the missile and forget about it
               //Shooting range is not important now, houses don't walk (except Howl's Moving Castle perhaps)
               //todo: Slingers (rogues) should launch rock part on SLINGSHOT_FIRING_DELAY like they do in ActionFight (animation looks wrong now)
-              gProjectiles.AimTarget(PositionF, fHouse, ProjectileType, fUnit, RangeMax, RangeMin);
-
-              if not TKMUnitWarrior(fUnit).InfinityAmmo then
+              if UnitType = utBattleShip then
               begin
-                TKMUnitWarrior(fUnit).BoltCount := TKMUnitWarrior(fUnit).BoltCount - 1;
+                dir := DIR_TO_PREV2[Direction];
+                if TakeBolt then
+                  gProjectiles.AimTarget(fUnit.PositionF, KMPointAffectDir(KMPointF(fHouse.GetRandomCellWithin), dir, -1), 0.2, ProjectileType, fUnit, RangeMax, RangeMin);//aim to the left
+                if TakeBolt then
+                  gProjectiles.AimTarget(fUnit.PositionF, KMPointAffectDir(KMPointF(fHouse.GetRandomCellWithin), dir, -0.5), 0.2, ProjectileType, fUnit, RangeMax, RangeMin);//aim to the left
 
-                if gHands[Owner].IsComputer or TKMUnitWarrior(fUnit).CanOrderAmmoFromCart then
-                  if TKMUnitWarrior(fUnit).BoltCount < 5 then
-                    TKMUnitWarrior(fUnit).OrderAmmo;
-              end;
+                if TakeBolt then
+                  gProjectiles.AimTarget(fUnit.PositionF, KMPointAffectDir(KMPointF(fHouse.GetRandomCellWithin), dir, 0), 0.1, ProjectileType, fUnit, RangeMax, RangeMin);//aim directly at opponent
+
+                if TakeBolt then
+                  gProjectiles.AimTarget(fUnit.PositionF, KMPointAffectDir(KMPointF(fHouse.GetRandomCellWithin), dir, 0.5), 0.2, ProjectileType, fUnit, RangeMax, RangeMin);//aim to the right
+                if TakeBolt then
+                  gProjectiles.AimTarget(fUnit.PositionF, KMPointAffectDir(KMPointF(fHouse.GetRandomCellWithin), dir, 1), 0.2, ProjectileType, fUnit, RangeMax, RangeMin);//aim to the right
+              end else
+              If TakeBolt then
+                gProjectiles.AimTarget(PositionF, fHouse, ProjectileType, fUnit, RangeMax, RangeMin);
 
 
               SetLastShootTime; //Record last time the warrior shot
@@ -326,6 +340,7 @@ begin
 end;
 
 function TKMTaskAssignToShip.Execute: TKMTaskResult;
+var P : TKMPoint;
 begin
   Result := trTaskContinues;
 
@@ -339,7 +354,11 @@ begin
   with TKMUnitWarrior(fUnit) do
     case fPhase of
       0:  begin
-            SetActionWalkToSpot(fShip.GetClosestSpot, uaWalk, 2);
+            P := fShip.GetClosestSpot;
+            if KMlength(P, Position) > 2 then
+              SetActionWalkToSpot(fShip.GetClosestSpot, uaWalk, 2)
+            else
+              SetActionLockedStay(5, uaWalk);
           end;
       1:  begin
             if fShip.WarriorMustWait then

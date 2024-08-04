@@ -69,10 +69,12 @@ begin
   DropList_DefenceGroup.Add(gResTexts[TX_MAPED_AI_ATTACK_TYPE_MOUNTED]);
   DropList_DefenceGroup.Add(gResTexts[1643]);
   DropList_DefenceGroup.Add(gResTexts[1883]);
+  DropList_DefenceGroup.Add(gResTexts[1963]);
   DropList_DefenceGroup.OnChange := Marker_Change;
   DropList_DefenceType := TKMDropList.Create(Panel_MarkerDefence, 0, 85, Panel_MarkerDefence.Width, 20, fntGame, '', bsGame);
   DropList_DefenceType.Add(gResTexts[TX_MAPED_AI_DEFENCE_DEFENDERS]);
   DropList_DefenceType.Add(gResTexts[TX_MAPED_AI_DEFENCE_ATTACKERS]);
+  DropList_DefenceType.Add(gResTexts[2031]);
   DropList_DefenceType.OnChange := Marker_Change;
   TrackBar_DefenceRad := TKMTrackBar.Create(Panel_MarkerDefence, 0, 115, Panel_MarkerDefence.Width, 1, 128);
   TrackBar_DefenceRad.Caption := gResTexts[TX_MAPED_AI_DEFENCE_RADIUS];

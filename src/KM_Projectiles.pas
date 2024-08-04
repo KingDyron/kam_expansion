@@ -41,6 +41,7 @@ type
 
     function AimTarget(const aStart: TKMPointF; aTarget: TKMUnit; aProjType: TKMProjectileType; aOwner: TKMUnit; aMaxRange,aMinRange: Single):word; overload;
     function AimTarget(const aStart: TKMPointF; aTarget: TKMHouse; aProjType: TKMProjectileType; aOwner: TKMUnit; aMaxRange,aMinRange: Single):word; overload;
+    function AimTarget(const aStart: TKMPointF; aEnd: TKMPointF; aRadius : Single; aProjType: TKMProjectileType; aOwner: TKMUnit; aMaxRange,aMinRange: Single):word; overload;
 
     procedure UpdateState;
     procedure Paint(aTickLag: Single);
@@ -195,6 +196,7 @@ begin
 end;
 
 
+
 function TKMProjectiles.AimTarget(const aStart: TKMPointF; aTarget: TKMHouse; aProjType: TKMProjectileType; aOwner: TKMUnit; aMaxRange,aMinRange: Single): Word;
 var
   speed, arc: Single;
@@ -205,6 +207,26 @@ begin
   aim := KMPointF(aTarget.GetRandomCellWithin);
   target.X := aim.X + KaMRandomS2(ProjectileJitterHouse[aProjType], 'TKMProjectiles.AimTarget 6'); //So that arrows were within house area, without attitude to tile corners
   target.Y := aim.Y + KaMRandomS2(ProjectileJitterHouse[aProjType], 'TKMProjectiles.AimTarget 7');
+
+  //Calculate the arc, less for shorter flights
+  distanceToHit := GetLength(target.X, target.Y);
+  distanceInRange := EnsureRange(distanceToHit, aMinRange, aMaxRange);
+  arc := (distanceInRange/distanceToHit)*(ProjectileArcs[aProjType, 1] + KaMRandomS2(ProjectileArcs[aProjType, 2], 'TKMProjectiles.AimTarget 8'));
+
+  Result := AddItem(aStart, aim, target, speed, arc, aMaxRange, aProjType, aOwner, nil);
+end;
+
+function TKMProjectiles.AimTarget(const aStart: TKMPointF; aEnd: TKMPointF; aRadius : Single; aProjType: TKMProjectileType; aOwner: TKMUnit; aMaxRange,aMinRange: Single): Word;
+var
+  speed, arc: Single;
+  distanceToHit, distanceInRange: Single;
+  aim, target: TKMPointF;
+begin
+
+  speed := ProjectileSpeeds[aProjType] + KaMRandomS2(0.05, 'TKMProjectiles.AimTarget 5');
+  aim := aEnd;
+  target.X := aim.X + KaMRandomS2(aRadius, 'TKMProjectiles.AimTarget 8'); //So that arrows were within house area, without attitude to tile corners
+  target.Y := aim.Y + KaMRandomS2(aRadius, 'TKMProjectiles.AimTarget 9');
 
   //Calculate the arc, less for shorter flights
   distanceToHit := GetLength(target.X, target.Y);
@@ -290,6 +312,9 @@ begin
         begin
           gScriptEvents.ProcUnitHit(fOpponent, fOwner);
           U := gTerrain.UnitsHitTestF(fTarget);
+
+          if fType = ptCatapultRock then
+            HitAllInRadius(fOwner, U, fTarget, 1.3, 200, 2);
           //Projectile can miss depending on the distance to the unit
           if (U = nil) or ((1 - Math.Min(KMLength(U.PositionF, fTarget), 1)) > KaMRandom('TKMProjectiles.UpdateState')) then
           begin
@@ -338,8 +363,6 @@ begin
                                 if not (fType in [ptBallistaBolt, ptCatapultRock]) then
                                   Damage := Round(Damage / Math.max(U.GetProjectileDefence(fType in [ptBolt, ptBallistaBolt, ptCatapultRock]), 1)); //Max is not needed, but animals have 0 defence
 
-                                if fType = ptCatapultRock then
-                                  HitAllInRadius(fOwner, U, fTarget, 1.3, 200, 2);
 
                                 if (FRIENDLY_FIRE or (gHands.CheckAlliance(fOwner.Owner, U.Owner)= atEnemy))
                                 and (Damage >= KaMRandom(101, 'TKMProjectiles.UpdateState:Damage')) then

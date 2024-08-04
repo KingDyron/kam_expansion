@@ -232,6 +232,7 @@ type
     fID: Integer;
     fWalkable: Boolean;
     fRoadable: Boolean;
+    fNotBuildable : Boolean;
     fStone: Byte;
     fCoal: Byte;
     fIron: Byte;
@@ -263,6 +264,7 @@ type
     property ID: Integer read fID write fID;
     property Walkable: Boolean read fWalkable write fWalkable;
     property Roadable: Boolean read fRoadable write fRoadable;
+    property NotBuildable: Boolean read fNotBuildable write fNotBuildable;
     property Stone: Byte read fStone write fStone;
     property Coal: Byte read fCoal write fCoal;
     property Iron: Byte read fIron write fIron;

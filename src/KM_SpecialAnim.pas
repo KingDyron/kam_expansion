@@ -169,7 +169,8 @@ begin
     with fItems[I] do
       if Visible then
       begin
-        gRenderPool.AddSpecAnim(Pos, Anim, AnimStep, RX, InFront, AlphaStep);
+        if KMInRect(Pos, gRenderPool.ViewPort.GetClip) then
+          gRenderPool.AddSpecAnim(Pos, Anim, AnimStep, RX, InFront, AlphaStep);
         if FirstPaint then
           FirstPaint := false;
       end;

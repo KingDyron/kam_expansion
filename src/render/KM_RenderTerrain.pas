@@ -114,7 +114,7 @@ implementation
 uses
   KM_Game,
   KM_GameParams,
-  KM_Render, KM_RenderTypes, KM_RenderAux,
+  KM_Render, KM_RenderTypes, KM_RenderAux, KM_RenderPool,
   KM_Resource,
   KM_DevPerfLog, KM_DevPerfLogTypes,
   KM_Terrain;
@@ -228,7 +228,8 @@ begin
   //VBO has proper vertice coords only for Light/Shadow
   //it cant handle 3D yet and because of FOW leaves terrain revealed, which is an exploit in MP
   //Thus we allow VBO only in 2D
-  Result := VBOSupported and not RENDER_3D;
+  Exit(false);
+  //Result := VBOSupported and not RENDER_3D;
 end;
 
 
@@ -543,7 +544,9 @@ end;
 procedure TKMRenderTerrain.RenderQuadTextureBlended(var TexC: TKMUVRect; tX,tY: Word; aCorners: TKMTileCorners; aBlendingLevel: Byte);
 var
   blendFactor: Single;
+  night : Single;
 begin
+  night := gTerrain.GetNightAtTile(tX, tY);
   blendFactor := 1 - Max(0, Min(1, aBlendingLevel / TERRAIN_MAX_BLENDING_LEVEL));
   with gTerrain do
     if RENDER_3D then
@@ -555,29 +558,29 @@ begin
     end else
     begin
       if aCorners[0] then
-        glColor4f(1 * TERRAIN_DARK, 1 * TERRAIN_DARK, 1 * TERRAIN_DARK, 1)
+        glColor4f(1 * night, 1 * night, 1 * night, 1)
       else
-        glColor4f(1 * TERRAIN_DARK, 1 * TERRAIN_DARK, 1 * TERRAIN_DARK,blendFactor);
+        glColor4f(1 * night, 1 * night, 1 * night,blendFactor);
       glTexCoord2fv(@TexC[1]); glVertex3f(tX-1,tY-1-LandExt^[tY,  tX].RenderHeight / CELL_HEIGHT_DIV, tY-1);
 
       if aCorners[3] then
-        glColor4f(1 * TERRAIN_DARK, 1 * TERRAIN_DARK, 1 * TERRAIN_DARK,1)
+        glColor4f(1 * night, 1 * night, 1 * night,1)
       else
-        glColor4f(1 * TERRAIN_DARK, 1 * TERRAIN_DARK, 1 * TERRAIN_DARK,blendFactor);
+        glColor4f(1 * night, 1 * night, 1 * night,blendFactor);
       glTexCoord2fv(@TexC[2]); glVertex3f(tX-1,tY  -LandExt^[tY+1,tX].RenderHeight / CELL_HEIGHT_DIV, tY-1);
 
       if aCorners[2] then
-        glColor4f(1 * TERRAIN_DARK, 1 * TERRAIN_DARK, 1 * TERRAIN_DARK,1)
+        glColor4f(1 * night, 1 * night, 1 * night,1)
       else
-        glColor4f(1 * TERRAIN_DARK, 1 * TERRAIN_DARK, 1 * TERRAIN_DARK,blendFactor);
+        glColor4f(1 * night, 1 * night, 1 * night,blendFactor);
       glTexCoord2fv(@TexC[3]); glVertex3f(tX  ,tY  -LandExt^[tY+1,tX+1].RenderHeight / CELL_HEIGHT_DIV, tY-1);
 
       if aCorners[1] then
-        glColor4f(1 * TERRAIN_DARK, 1 * TERRAIN_DARK, 1 * TERRAIN_DARK,1)
+        glColor4f(1 * night, 1 * night, 1 * night,1)
       else
-        glColor4f(1 * TERRAIN_DARK, 1 * TERRAIN_DARK, 1 * TERRAIN_DARK,blendFactor);
+        glColor4f(1 * night, 1 * night, 1 * night,blendFactor);
       glTexCoord2fv(@TexC[4]); glVertex3f(tX  ,tY-1-LandExt^[tY,  tX+1].RenderHeight / CELL_HEIGHT_DIV, tY-1);
-      glColor4f(1 * TERRAIN_DARK, 1 * TERRAIN_DARK, 1 * TERRAIN_DARK,1);
+      glColor4f(1 * night, 1 * night, 1 * night,1);
     end;
 end;
 
@@ -588,14 +591,15 @@ var
   texC: TKMUVRect;
   sizeX, sizeY: Word;
   tX, tY: Word;
+  night : Single;
 begin
   {$IFDEF PERFLOG}
   gPerfLogs.SectionEnter(psFrameTiles);
   {$ENDIF}
   //First we render base layer, then we do animated layers for Water/Swamps/Waterfalls
   //They all run at different speeds so we can't adjoin them in one layer
-  //glColor4f(1,1,1,1);
-  glColor4f(1 * TERRAIN_DARK,1 * TERRAIN_DARK,1 * TERRAIN_DARK,1);
+  glColor4f(1,1,1,1);
+  //glColor4f(1 * TERRAIN_DARK,1 * TERRAIN_DARK,1 * TERRAIN_DARK,1);
   //Draw with VBO only if all tiles are on the same texture
   if fUseVBO and TKMResSprites.AllTilesOnOneAtlas then
   begin
@@ -628,6 +632,8 @@ begin
         begin
           tX := K + fClipRect.Left;
           tY := I + fClipRect.Top;
+          night := gTerrain.GetNightAtTile(tX, tY);
+          glColor4f(1 * night,1 * night,1 * night,1);
           if DO_DEBUG_TER_RENDER and not (0 in DEBUG_TERRAIN_LAYERS) then Continue;
 
           if TileHasToBeRendered(I*K = 0, tX, tY, aFow) then // Do not render tiles fully covered by FOW
@@ -657,13 +663,14 @@ var
   sizeX, sizeY: Word;
   tX, tY: Word;
   terInfo: TKMGenTerrainInfo;
+  night : Single;
 begin
   {$IFDEF PERFLOG}
   gPerfLogs.SectionEnter(psFrameTilesLayers);
   {$ENDIF}
   //First we render base layer, then we do animated layers for Water/Swamps/Waterfalls
   //They all run at different speeds so we can't adjoin them in one layer
-  glColor4f(1 * TERRAIN_DARK,1 * TERRAIN_DARK,1 * TERRAIN_DARK,1);
+  glColor4f(1,1,1,1);
   //Draw with VBO only if all tiles are on the same texture
 
   //DONT USE VBO FOR LAYERS FOR NOW, SINCE WE CAN USE BLENDING HERE
@@ -701,6 +708,9 @@ begin
         begin
           tX := K + fClipRect.Left;
           tY := I + fClipRect.Top;
+          night := gTerrain.GetNightAtTile(tX, tY);
+          glColor4f(1 * night,1 * night,1 * night,1);
+
           if TileHasToBeRendered(I*K = 0,tX,tY,aFow) then // Do not render tiles fully covered by FOW
             for L := 0 to Land^[tY,tX].LayersCnt - 1 do
             begin
@@ -736,6 +746,7 @@ var
   texC: TKMUVRect;
   animID: Word;
   tile: TKMTileParams;
+  night : Single;
 begin
   if SKIP_TER_RENDER_ANIMS then Exit;
 
@@ -787,7 +798,9 @@ begin
               texC := GetTileUV(animID, Land^[I,K].BaseLayer.Rotation);
 
               glBegin(GL_TRIANGLE_FAN);
-                glColor4f(1 * TERRAIN_DARK,1 * TERRAIN_DARK,1 * TERRAIN_DARK,1);
+                //glColor4f(1 * TERRAIN_DARK,1 * TERRAIN_DARK,1 * TERRAIN_DARK,1);
+                night := gTerrain.GetNightAtTile(K, I);
+                glColor4f(1 * night,1 * night,1 * night,1);
                 RenderQuadTexture(texC, K, I);
               glEnd;
             end;
@@ -899,10 +912,10 @@ begin
       4,
       3,
       1:  RenderTile(gGame.MapEditor.LandMapEd^[pY, pX].CornOrWineTerrain, pX, pY, 0, DoHighlight, HighlightColor); // Corn
-      2:  RenderTile(WINE_TERRAIN_ID, pX, pY, 0, DoHighlight, HighlightColor); //Wine
+      2:  RenderTile(gGame.MapEditor.LandMapEd^[pY, pX].CornOrWineTerrain, pX, pY, 0, DoHighlight, HighlightColor); //Wine
     end;
 
-  if gTerrain.Land^[pY, pX].TileOverlay2 in (COAL_LIKE_OVERLAYS + CLAY_LIKE_OVERLAYS - [toInfinityCoal, toInfinityClay]) then
+  if gTerrain.Land^[pY, pX].TileOverlay2 in (COAL_LIKE_OVERLAYS - [toInfinityCoal, toInfinityClay]) then
     RenderTile(TILE_OVERLAY_IDS[gTerrain.Land^[pY, pX].TileOverlay2], pX, pY, (gTerrain.Land^[pY,pX].BaseLayer.Rotation + 1) mod 4, DoHighlight, HighlightColor);
 
   case gTerrain.Land^[pY, pX].TileOverlay2 of
@@ -915,9 +928,6 @@ begin
                       RenderTile(TILE_OVERLAY_IDS[gTerrain.Land^[pY, pX].TileOverlay2], pX, pY, 0, DoHighlight, HighlightColor)
                     else
                       RenderTile(TILE_OVERLAY_IDS[toClay5], pX, pY, 0, DoHighlight, HighlightColor);
-
-    toInfinity :  if gGameParams.IsMapEditor then
-                    RenderTile(TILE_OVERLAY_IDS[gTerrain.Land^[pY, pX].TileOverlay2], pX, pY, 0, DoHighlight, HighlightColor);
   end;
 
   if gTerrain.Land^[pY, pX].TileOverlay = toRoad then
@@ -944,7 +954,13 @@ begin
     RenderTile(TILE_OVERLAY_IDS[gTerrain.Land^[pY, pX].TileOverlay], pX, pY, gTerrain.Land^[pY,pX].BaseLayer.Rotation, DoHighlight, HighlightColor);
 
   case gTerrain.Land^[pY, pX].TileOverlay2 of
+    toNone : ;
+    toInfinityCoal: ;
+    toInfinityClay: ;
     toFence1..toFence6 : RenderTile(TILE_OVERLAY_IDS[gTerrain.Land^[pY, pX].TileOverlay2], pX, pY, 0, DoHighlight, HighlightColor);
+    else
+      if gGameParams.IsMapEditor or KM_TerrainTypes.TileOverlayVisibleInGame(gTerrain.Land^[pY, pX].TileOverlay2) then
+        RenderTile(TILE_OVERLAY_IDS[gTerrain.Land^[pY, pX].TileOverlay2], pX, pY, 0, DoHighlight, HighlightColor);
   end;
 
   if gTerrain.Land^[pY, pX].TileSelected then
@@ -1040,6 +1056,7 @@ var
   I, K: Integer;
   sizeX, sizeY: Word;
   tX, tY: Word;
+  night : Single;
 begin
   if SKIP_TER_RENDER_LIGHT then Exit;
 
@@ -1047,7 +1064,7 @@ begin
   gPerfLogs.SectionEnter(psFrameLighting);
   {$ENDIF}
 
-  glColor4f(1 * TERRAIN_DARK, 1 * TERRAIN_DARK, 1 * TERRAIN_DARK, 1);
+  glColor4f(1, 1, 1, 1);
   //Render highlights
   glBlendFunc(GL_DST_COLOR, GL_ONE);
   TKMRender.BindTexture(fTextG);
@@ -1079,6 +1096,8 @@ begin
         begin
           tX := K + fClipRect.Left;
           tY := I + fClipRect.Top;
+          night := gTerrain.GetNightAtTile(tX, tY);
+          glColor4f(1 * night,1 * night,1 * night,1);
           if TileHasToBeRendered(I*K = 0,tX,tY,aFow) then // Do not render tiles fully covered by FOW
           begin
             if RENDER_3D then
@@ -1180,6 +1199,7 @@ begin
   gPerfLogs.SectionLeave(psFrameShadows);
   {$ENDIF}
 end;
+
 
 
 //Render FOW at once
@@ -1414,13 +1434,15 @@ procedure TKMRenderTerrain.DoRenderTile(aTerrainId: Word; pX,pY,Rot: Integer; aC
                                       aBlendingLvl: Byte = 0);
 var
   texC: TKMUVRect; // Texture UV coordinates
+  night : Single;
 begin
   if not gTerrain.TileInMapCoords(pX,pY) then Exit;
+  night := gTerrain.GetNightAtTile(pX, pY);
 
   if DoHighlight then
     glColor4ub(HighlightColor and $FF, (HighlightColor shr 8) and $FF, (HighlightColor shr 16) and $FF, $FF)
   else
-    glColor4f(1 * TERRAIN_DARK, 1 * TERRAIN_DARK, 1 * TERRAIN_DARK, 1);
+    glColor4f(1 * night, 1 * night, 1 * night, 1);
 
   if aDoBindTexture then
     TKMRender.BindTexture(gGFXData[rxTiles, aTerrainId + 1].Tex.TexID);
@@ -1447,11 +1469,11 @@ const
   NO_CORNERS: TKMTileCorners = (False, False, False, False);
 var
   texC: TKMUVRect; // Texture UV coordinates
-
+  night : Single;
 begin
   if not gTerrain.TileInMapCoords(pX,pY) then Exit;
-
-  glColor4f(1 * TERRAIN_DARK, 1 * TERRAIN_DARK, 1 * TERRAIN_DARK, 1);
+  night := gTerrain.GetNightAtTile(pX, pY);
+  glColor4f(1 * night, 1 * night, 1 * night, 1);
   //glColor4f(1, 1, 1, 1);
 
   TKMRender.BindTexture(gGFXData[aRX, aID].Tex.TexID);
@@ -1505,9 +1527,12 @@ var
   texID: Integer;
   x1, y1, y2, fenceX, fenceY: Single;
   heightInPx: Integer;
+  night : Single;
 begin
   if Pos = dirNA then
     Exit;
+  night := gTerrain.GetNightAtTile(pX, pY);
+
   case aFence of
     fncHouseFence: if Pos in [dirN,dirS] then texID:=463 else texID:=467; //WIP (Wood planks)
     fncHousePlan:  if Pos in [dirN,dirS] then texID:=105 else texID:=117; //Plan (Ropes)
@@ -1517,10 +1542,11 @@ begin
     fncStoneBridge:   if Pos in [dirS] then texID:=819 else texID:=818; //Fence (Stones)
     fncGrassLand:  if Pos in [dirN,dirS] then texID:=835 else texID:=836; //Fence
     fncVegeField:  if Pos in [dirN,dirS] then texID:=123 else texID:=124; //Fence
+    fncAppleTree:  if Pos in [dirN,dirS] then texID:=109 else texID:=109; //Fence
     else          texID := 0;
   end;
   if not (aFence in [fncHousePlan]) then
-    glColor4f(1 * TERRAIN_DARK,1 * TERRAIN_DARK,1 * TERRAIN_DARK,1)
+    glColor4f(1 * night,1 * night,1 * night,1)
   else
     glColor4f(1, 1, 1, 1);
 

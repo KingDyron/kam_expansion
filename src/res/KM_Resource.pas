@@ -364,7 +364,7 @@ begin
   //fSprites := TKMResSprites.Create(nil, nil);
   //fSprites.LoadMenuResources;
   if Assigned(aEvent) then aEvent('Reloading Data|Sprites');
-  LoadGameResources(true, true);
+    fSprites.LoadGameResources(true, true);
 
   if Assigned(aEvent) then aEvent('Reloading Data|Sprites|Houses');
   fHouses.ReloadJSONData(UpdateCRC);

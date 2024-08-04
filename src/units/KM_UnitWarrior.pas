@@ -118,6 +118,7 @@ type
     property ProjectileType: TKMProjectileType read GetProjectileType;
     property AimSoundDelay: Byte read GetAimSoundDelay;
     property BoltCount: Word read fBoltCount write fBoltCount;
+    function TakeBolt : Boolean;
     property BitinAdded: Boolean read fBitinAdded write fBitinAdded;
     procedure SetActionFight(aAction: TKMUnitActionType; aOpponent: TKMUnit);
 
@@ -217,7 +218,8 @@ type
     function CanAssignWarrior(aWarrior : Pointer) : Boolean;
     function WarriorMustWait : Boolean;
     function WarriorMustWaitToUnload : Boolean;
-    function UnloadUnit(aUnit : TKMUnit; aLocTo : TKMPoint) : Boolean;
+    function UnloadUnit(aUnit : TKMUnit; aLocTo : TKMPoint; aForceByKill : Boolean = false) : Boolean;
+    procedure RemoveUnit(aUnit : TKMUnit;  aForceByKill : Boolean = false);
     function IsCloseToWater : Boolean;
 
     procedure AssignWarrior(aWarrior : Pointer);
@@ -226,6 +228,8 @@ type
     procedure OrderAmmo(aForceOrder : Boolean = false); override;
     procedure DoUnloadUnits;
     function GetUnloadingPoint : TKMPoint;
+
+    procedure CloseUnit(aRemoveTileUsage: Boolean = True); override;
 
     constructor Create(aID: Cardinal; aUnitType: TKMUnitType; const aLoc: TKMPointDir; aOwner: TKMHandID; aInHouse: TKMHouse);
 
@@ -305,6 +309,10 @@ begin
   fLastShootTime     := 0;
   DamageUnits := gRes.Units[aUnitType].UnitDamage;
   DamageHouse := gRes.Units[aUnitType].HouseDamage;
+
+  //if fType = utBattleShip then
+  //  fInfinityAmmo := true;
+
 end;
 
 
@@ -506,13 +514,13 @@ begin
     end;
   end else
   begin
-    Attack := Attack + IfThen(IsRanged, 60, 25);
+    Attack := Attack + IfThen(IsRanged, 15, 5);
 
     if AttackHorse > 0 then
-      AttackHorse := AttackHorse + 15;
+      AttackHorse := AttackHorse + 5;
 
-    Defence := Defence + 2;
-    HitPointsMax := HitPointsMax + 1;
+    Defence := Defence + 4;
+    HitPointsMax := HitPointsMax + 2;
     HitPointsChangeFromScript(2);
   end;
 
@@ -533,7 +541,7 @@ begin
     utBowman,
     utRogue:  Result := fBoltCount <= 30;
     utCatapult: Result := fBoltCount <= 5;
-    UtBallista:  Result := fBoltCount <= 10;
+    utBallista:  Result := fBoltCount <= 10;
     else Result := fBoltCount <= 10;
   end;
 end;
@@ -556,7 +564,7 @@ var ammoCart : TKMUnitWarriorAmmoCart;
   count : Word;
   S : TKMUnitWarriorShip;
 begin
-  Assert(gRes.Units[UnitType].CanOrderAmmo, 'Warrior cant order ammo');
+  //Assert(gRes.Units[UnitType].CanOrderAmmo, 'Warrior cant order ammo');
 
   if not CanOrderAmmo then
     Exit;
@@ -564,7 +572,6 @@ begin
   if UnitType in [utCatapult, utBallista] then
     if fGroup <> nil then
       ammoCart :=  TKMUnitGroup(fGroup).GetUnitAmmoCart(gRes.Units[UnitType].AmmoType);
-   //ammoCart := TKMUnitWarriorAmmoCart(gHands[Owner].Units.ClosestAmmoCart(self.Position, gRes.Units[UnitType].AmmoType));
 
   if ammoCart <> nil then
   begin
@@ -979,6 +986,23 @@ begin
   Result := Result and (fNextOrder = woNone); //If we have been given an order we're about to move somewhere 
 end;
 
+function TKMUnitWarrior.TakeBolt: Boolean;
+begin
+  Result := gRes.Units[UnitType].CanOrderAmmo;
+  if not Result then
+    Exit;
+
+  Result := (fBoltCount > 0) or InfinityAmmo;
+
+  if not InfinityAmmo and (fBoltCount > 0) then
+  begin
+    dec(fBoltCount);
+    if UnitType <> utBattleShip then
+      if (gHands[Owner].IsComputer) or CanOrderAmmoFromCart then
+        if BoltCount < 5 then
+          OrderAmmo;
+  end;
+end;
 
 function TKMUnitWarrior.CheckForEnemy: Boolean;
 var
@@ -1089,14 +1113,22 @@ begin
   else
     testDir := dirNA;
 
+
   range := aMaxRange;
   //AI has an "auto attack range" for melee like in TSK/TPR so you can't sneak past them (when idle)
   if not IsRanged and IsIdle and gHands[Owner].IsComputer then
     range := Max(range, gHands[Owner].AI.Setup.AutoAttackRange);
 
+  if UnitType = utBattleShip then
+    testDir := DIR_TO_NEXT2[Direction];
   //This function should not be run too often, as it will take some time to execute (e.g. with lots of warriors in the range area to check)
   Result := gTerrain.UnitsHitTestWithinRad(Position, aMinRange, range, Owner, atEnemy, testDir, not RANDOM_TARGETS);
-
+  if Result = nil then
+    if UnitType = utBattleShip then
+    begin
+      testDir := DIR_TO_PREV2[Direction];
+      Result := gTerrain.UnitsHitTestWithinRad(Position, aMinRange, range, Owner, atEnemy, testDir, not RANDOM_TARGETS);
+    end;
   //if fType in [utSpy, utAmmoCart, utRam] then
   if not gRes.Units[fType].CanAttackUnits then   
     Result := nil;
@@ -1177,6 +1209,7 @@ begin
   Result := 0;
   if IsRanged then
     case UnitType of
+      utBattleShip : Result := 8;
       utGolem,
       utArcher,
       utBowman,
@@ -1200,18 +1233,19 @@ const
 
   CATAPULT_AIMING_DELAY_MIN = 16; //minimum time for crossbowmen to aim
   CATAPULT_AIMING_DELAY_ADD = 16; //random component
-  BALLISTA_AIMING_DELAY_MIN = 10; //minimum time for crossbowmen to aim
+  BALLISTA_AIMING_DELAY_MIN = 16; //minimum time for balista to aim
 begin
   Result := 0;
   if IsRanged then
     case UnitType of
+      utBattleShip : Result := 16;
       utGolem,
       utArcher,
       utBowman:     Result := BOWMEN_AIMING_DELAY_MIN + KaMRandom(BOWMEN_AIMING_DELAY_ADD, 'TKMUnitWarrior.GetAimingDelay');
 
       utCrossbowman: Result := CROSSBOWMEN_AIMING_DELAY_MIN + KaMRandom(CROSSBOWMEN_AIMING_DELAY_ADD, 'TKMUnitWarrior.GetAimingDelay 2');
       utRogue:  Result := SLINGSHOT_AIMING_DELAY_MIN + KaMRandom(SLINGSHOT_AIMING_DELAY_ADD, 'TKMUnitWarrior.GetAimingDelay 3');
-      utBallista:  Result := BALLISTA_AIMING_DELAY_MIN + KaMRandom(8, 'TKMUnitWarrior.GetAimingDelay 4');
+      utBallista:  Result := BALLISTA_AIMING_DELAY_MIN + KaMRandom(BALLISTA_AIMING_DELAY_MIN, 'TKMUnitWarrior.GetAimingDelay 4');
       utCatapult:  Result := CATAPULT_AIMING_DELAY_MIN + KaMRandom(CATAPULT_AIMING_DELAY_ADD, 'TKMUnitWarrior.GetAimingDelay 5');
       else raise Exception.Create('Unknown shooter');
     end;
@@ -1220,6 +1254,8 @@ end;
 procedure TKMUnitWarrior.UpdateHitPoints;
 var medicsCount : Byte;
 begin
+  if UnitType in UNITS_SHIPS then   //do not increase health if it's ship
+    Exit;
   //Use fHitPointCounter as a counter to restore hit points every X ticks (Humbelum says even when in fights)
   if HITPOINT_RESTORE_PACE = 0 then Exit; //0 pace means don't restore
   medicsCount := 0;
@@ -1347,6 +1383,7 @@ begin
     utGolem,
     utArcher,
     utBowman:     Result := ptArrow;
+    utBattleShip,
     utCrossbowman: Result := ptBolt;
     utBallista : Result := ptBallistaBolt;
     utCatapult : Result := ptCatapultRock;
@@ -2060,6 +2097,17 @@ begin
   //DoUnloadUnits;
 end;
 
+procedure TKMUnitWarriorShip.CloseUnit(aRemoveTileUsage: Boolean = True);
+var I : Integer;
+begin
+  for I := 0 to fUnitsInside.Count - 1 do
+  begin
+    fUnitsInside[I].Kill(HAND_NONE, false, false);
+    fUnitsInside[I].InShip := nil;
+  end;
+  fUnitsInside.Clear;
+  Inherited;
+end;
 function TKMUnitWarriorShip.WarriorMustWait: Boolean;
 begin
   Result := gGameParams.Tick <= fLastAsignementTick + 25;
@@ -2110,16 +2158,9 @@ begin
   //gTerrain.UnitRem(TKMUnit(aWarrior).Position);
 end;
 
-function TKMUnitWarriorShip.UnloadUnit(aUnit: TKMUnit; aLocTo : TKMPoint): Boolean;
-var I, aIndex : integer;
+procedure TKMUnitWarriorShip.RemoveUnit(aUnit: TKMUnit; aForceByKill : Boolean = false);
+var I, aIndex : Integer;
 begin
-  Result := false;
-  if IsNil(aUnit) then
-    Exit;
-  if WarriorMustWaitToUnload then
-    Exit;
-  if aLocTo = KMPOINT_INVALID_TILE then
-    Exit;
   aIndex := -1;
   for I := 0 to fUnitsInside.Count do
     if aUnit = fUnitsInside[I] then
@@ -2127,13 +2168,30 @@ begin
       aIndex := I;
       Break;
     end;
+  Assert(aIndex <> -1, 'TKMUnitWarriorShip.RemoveUnit');
+
+  fUnitsInside.Remove(aIndex);
+  if not aForceByKill then
+    fLastUnloadTick := gGameParams.Tick;
+
+  fStoredUnits := fStoredUnits - gRes.Units[aUnit.UnitType].ShipWeight;
+  TKMUnit(aUnit).InShip := nil;
+end;
+
+function TKMUnitWarriorShip.UnloadUnit(aUnit: TKMUnit; aLocTo : TKMPoint; aForceByKill : Boolean = false): Boolean;
+var I, aIndex : integer;
+begin
+  Result := false;
+  if IsNil(aUnit) then
+    Exit;
+  if WarriorMustWaitToUnload and not aForceByKill then
+    Exit;
+  if (aLocTo = KMPOINT_INVALID_TILE) and not aForceByKill then
+    Exit;
   If not TKMUnit(aUnit).SetUnitPositionFromShip(aLocTo) then
     Exit;
   Result := true;
-  fUnitsInside.Remove(aIndex);
-  fLastUnloadTick := gGameParams.Tick;
-  fStoredUnits := fStoredUnits - gRes.Units[aUnit.UnitType].ShipWeight;
-  TKMUnit(aUnit).InShip := nil;
+  RemoveUnit(aUnit);
   //TKMUnit(aUnit).Show;// it's made in TKMTaskUnloadFromShip
 
 end;

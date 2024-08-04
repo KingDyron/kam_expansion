@@ -37,6 +37,7 @@ type
     procedure CompactMapElements;
     procedure ObjectsUpdate(aObjIndex: Integer);
     procedure UpdateObjectsScrollPosToIndex(aObjIndex: Integer);
+    procedure ObjectsOverride(Sender: TObject);
     procedure ObjectsChange(Sender: TObject);
     procedure ObjectsBrushChange(Sender: TObject);
     procedure ObjectsRefresh(Sender: TObject);
@@ -56,6 +57,7 @@ type
       ObjectsPalette_Button: TKMButtonFlat;
       ObjectsTable: array [0..8] of TKMButtonFlat;
       ObjectsScroll: TKMScrollBar;
+      Objects_Override: TKMCheckBox;
 
     PopUp_ObjectsPalette: TKMPopUpMenu;
       Bevel_ObjectsPalette: TKMBevel;
@@ -97,6 +99,7 @@ type
   TKMMapEdTerrainPatterns = class(TKMMapEdSubMenuPage)
   private
     procedure ObjectsPatternClick(Sender: TObject);
+    procedure ObjectsPatternClickDouble(Sender: TObject);
     procedure DeletePatternClick(Sender: TObject);
   protected
     Panel_PatternSelection : TKMPanel;
@@ -115,7 +118,8 @@ type
       ColumnBox_PatternsList: TKMColumnBox;
       Button_SavePatterns: TKMButton;
       Button_RefreshPatterns, Button_ReName, Button_Delete: TKMButton;
-      Check_Override: TKMCheckBox;
+      Check_Override,
+      Check_DeSelect: TKMCheckBox;
       Scroll_AdditionalHeight : TKMTrackBar;
 
     PopUp_Rename: TKMPopUpMenu;
@@ -275,7 +279,6 @@ begin
   ObjectsPalette_Button.Caption := gResTexts[TX_MAPED_TERRAIN_OBJECTS_PALETTE];
   ObjectsPalette_Button.CapOffsetY := -11;
   ObjectsPalette_Button.OnClick := ObjectsPaletteButton_Click;
-
   PopUp_ObjectsPalette := TKMPopUpMenu.Create(aParent.MasterParent, aParent.MasterParent.Width - 50);
   PopUp_ObjectsPalette.Height := aParent.MasterParent.Height - 50;
   PopUp_ObjectsPalette.OnChangeVisibility := ObjectsPalette_OnShow;
@@ -349,7 +352,10 @@ begin
 
 
   // Objects brushes
-  top := 355;
+  top := 350;
+  Objects_Override := TKMCheckBox.Create(Panel_Objects, 9, NextTop(25), Panel_Objects.Width, 20, gResTexts[1503], fntMetal);
+  Objects_Override.Checked := true;
+  Objects_Override.OnClick := ObjectsOverride;
 
   with TKMLabel.Create(Panel_Objects, 9, NextTop(25), Panel_Objects.Width, 0, gResTexts[TX_MAPED_OBJECTS_BRUSH], fntOutline, taCenter) do
     Anchors := [anLeft, anTop, anRight];
@@ -780,6 +786,17 @@ begin
 end;
 
 
+procedure TKMMapEdTerrainObjects.ObjectsOverride(Sender: TObject);
+begin
+  if gCursor.Tag1 = OBJ_BLOCK then
+    ObjectsUpdate(OBJ_BLOCK_TAG)
+  else
+  if gCursor.Tag1 = OBJ_NONE then
+    ObjectsUpdate(OBJ_NONE_TAG)
+  else
+    ObjectsUpdate(fMapElemToCompact[gCursor.Tag1]);
+end;
+
 procedure TKMMapEdTerrainObjects.ObjectsUpdate(aObjIndex: Integer);
 begin
   //Skip indexes out of range
@@ -794,12 +811,14 @@ begin
     OBJ_NONE_TAG:   gCursor.Tag1 := OBJ_NONE; //Erase
     else gCursor.Tag1 := fCompactToMapElem[aObjIndex];
   end;
+  gCursor.MapEdOverrideObjectsSingle := Objects_Override.Checked;
 
   //Remember last selected object
   fLastObjectIndex := aObjIndex;
 
   ObjectsRefresh(nil);
 end;
+
 
 
 procedure TKMMapEdTerrainObjects.ObjectsPaletteButton_Click(Sender: TObject);
@@ -1013,6 +1032,7 @@ begin
     ColumnBox_PatternsList.HintBackColor := TKMColor4f.New(57, 48, 50); // Dark grey
     ColumnBox_PatternsList.PassAllKeys := True;
     ColumnBox_PatternsList.OnChange := ObjectsPatternClick;
+    ColumnBox_PatternsList.OnDoubleClick := ObjectsPatternClickDouble;
     Button_SavePatterns := TKMButton.Create(PopUp_Patterns, 9, PopUp_Patterns.Height - 50, 150, 25, gResTexts[1829], bsGame);
     Button_SavePatterns.OnClick := ObjectsPatternClick;
     //Button_SavePatterns.Hide;
@@ -1026,7 +1046,9 @@ begin
     Button_Delete:= TKMButton.Create(PopUp_Patterns, ColumnBox_PatternsList.Center.X - 75, ColumnBox_PatternsList.Bottom + 5, 150, 25, gResTexts[1832], bsGame);
     Button_Delete.OnClick := ObjectsPatternClick;
 
-    Check_Override:= TKMCheckBox.Create(PopUp_Patterns, 9, 80, PopUp_Patterns.Width div 2, 25, gResTexts[1833], fntMetal);
+    Check_Override := TKMCheckBox.Create(PopUp_Patterns, 9, 80, PopUp_Patterns.Width div 2, 25, gResTexts[1833], fntMetal);
+    Check_Deselect := TKMCheckBox.Create(PopUp_Patterns, 9, 105, PopUp_Patterns.Width div 2, 25, gResTexts[2030], fntMetal);
+    Check_Deselect.Checked := true;
 
     Scroll_AdditionalHeight := TKMTrackBar.Create(PopUp_Patterns, 9, PopUp_Patterns.Height div 2, 100, 0, 100);
     Scroll_AdditionalHeight.OnChange := ObjectsPatternClick;
@@ -1125,10 +1147,6 @@ end;
 procedure TKMMapEdTerrainPatterns.ObjectsPatternClick(Sender: TObject);
 var I, J : Integer;
 begin
-  Brush_Hide.Down := false;
-  Brush_Show.Down := false;
-  Brush_Clean.Down := false;
-  Brush_Select.Down := false;
   if Sender = Button_Delete then
   begin
     PopUp_Delete.LabelCenter.Caption := gResTexts[1836] + gRes.Patterns[ColumnBox_PatternsList.ItemIndex].Name;
@@ -1176,7 +1194,7 @@ begin
     //Exit;
   end else
   if Sender = Button_SetFromPattern then
-    gGame.MapEditor.Selection.SetFromPattern(ColumnBox_PatternsList.ItemIndex, Check_Override.Checked)
+    gGame.MapEditor.Selection.SetFromPattern(ColumnBox_PatternsList.ItemIndex, Check_Override.Checked, Check_Deselect.Checked)
   else
   if Sender = BrushSelectCircle then
   begin
@@ -1191,22 +1209,18 @@ begin
   if Sender = Brush_Select then
   begin
     gCursor.Tag1 := 0;
-    Brush_Select.Down := true;
   end else
   if Sender = Brush_Clean then
   begin
     gCursor.Tag1 := 1;
-    Brush_Clean.Down := true;
   end else
   if Sender = Brush_Hide then
   begin
     gCursor.Tag1 := 2;
-    Brush_Hide.Down := true;
   end else
   if Sender = Brush_Show then
   begin
     gCursor.Tag1 := 3;
-    Brush_Show.Down := true;
   end;
 
 
@@ -1217,6 +1231,13 @@ begin
   end;
 
   gCursor.Mode := cmTileSelection;
+
+
+  Brush_Select.Down := (gCursor.Mode = cmTileSelection) and (gCursor.Tag1 = 0);
+  Brush_Clean.Down := (gCursor.Mode = cmTileSelection) and (gCursor.Tag1 = 1);
+  Brush_Hide.Down := (gCursor.Mode = cmTileSelection) and (gCursor.Tag1 = 2);
+  Brush_Show.Down := (gCursor.Mode = cmTileSelection) and (gCursor.Tag1 = 3);
+
   gCursor.MapEdPatterns.AddHeight := Scroll_AdditionalHeight.Position;
   //gCursor.MapEdOverrideObjects := OverrideObjects.Checked;
   gCursor.MapEdSize := BrushSelectSize.Position;
@@ -1224,6 +1245,14 @@ begin
 
 
   gCursor.MapEdPatterns.AddHeight := Scroll_AdditionalHeight.Position;
+end;
+
+procedure TKMMapEdTerrainPatterns.ObjectsPatternClickDouble(Sender: TObject);
+begin
+  if not ColumnBox_PatternsList.IsSelected then
+    Exit;
+
+  gGame.MapEditor.Selection.SetFromPattern(ColumnBox_PatternsList.ItemIndex, Check_Override.Checked, Check_Deselect.Checked)
 end;
 
 // Check if new name is allowed

@@ -83,7 +83,8 @@ uses
   Math, SysUtils, StrUtils,
   KM_ResTexts,
   KM_ScriptingEvents, KM_ScriptingConsoleCommands,
-  KM_Game, KM_GameInputProcess,
+  KM_Game, KM_GameParams, KM_GameInputProcess,
+  KM_HandsCollection,
   KM_CommonUtils, KM_Defaults;
 
 const
@@ -224,8 +225,19 @@ begin
 
   cmdName := AnsiString(Copy(Text, 2, spacePos - 2));
 
-  if gScriptEvents.TryToCheat(cmdName) then
-    Exit;
+  if not gGameParams.IsMultiPlayerOrSpec then
+    if gScriptEvents.TryToCheat(cmdName)then
+    begin
+      if Assigned(fOnPostLocal) then
+        fOnPostLocal('local command: /' + cmdName + ' [Cheat Command]');
+      Exit(true);
+    end else
+    if gHands.MakeConsolCommands(cmdName) then
+    begin
+      if Assigned(fOnPostLocal) then
+        fOnPostLocal('local command: /' + cmdName + ' [Player Command]');
+      Exit(true);
+    end;
 
   if not gScriptEvents.HasConsoleCommand(cmdName)
     and Assigned(fOnError) then

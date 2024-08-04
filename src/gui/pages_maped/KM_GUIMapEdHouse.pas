@@ -61,6 +61,9 @@ type
     procedure HouseSetForceWorking(Sender : TObject);
     procedure HouseToggleAcceptWare(Sender : TObject);
     procedure MerchantChange(Sender : TObject);
+
+    procedure Panel_HouseContructionChange(Sender : TObject; Shift: TShiftState);
+    procedure Panel_HouseBuildWaresChange(Sender : TObject; aCount : Integer);
   protected
     Panel_HouseAdditional: TKMPanel;
       Button_HouseForceWork : TKMButton;
@@ -68,6 +71,14 @@ type
       Button_HouseStyles: TKMButton;
       Button_WareInputSlot : array[0..9] of TKMButton;
       Button_Level : TKMButton;
+
+    Panel_Construction : TKMPanel;
+      Label_HouseConstruction: TKMLabel;
+      Image_HouseConstruction_Logo: TKMImage;
+      ResRow_Ware_Build: array [0..2] of TKMWareOrderRow;
+      HealthBar_BuildingProgress: TKMPercentBar;
+      Button_BuildingProgressDec: TKMButton;
+      Button_BuildingProgressInc: TKMButton;
 
     Panel_House: TKMScrollPanel;
       Label_House: TKMLabel;
@@ -179,7 +190,7 @@ begin
   Panel_HouseAdditional := TKMPanel.Create(aParent, TB_PAD, 45, TB_MAP_ED_WIDTH - TB_PAD, 400);
   Panel_HouseAdditional.Hitable := false;
     //Thats common things
-    Label_House := TKMLabel.Create(Panel_HouseAdditional, 0, 14, Panel_House.Width, 0, '', fntOutline, taCenter);
+    Label_House := TKMLabel.Create(Panel_HouseAdditional, 0, 0, Panel_House.Width, 0, '', fntOutline, taCenter);
 
     Button_HouseDeliveryMode := TKMButton.Create(Panel_HouseAdditional,0,42,30,30,37, rxGui, bsGame);
     Button_HouseDeliveryMode.Hint := gResTexts[TX_HOUSE_TOGGLE_DELIVERS_HINT];
@@ -188,7 +199,7 @@ begin
     Button_HouseRepair.Hint := gResTexts[TX_HOUSE_TOGGLE_REPAIR_HINT];
     Button_HouseRepair.OnClick := House_RepairToggle;
 
-    Image_House_Worker := TKMImage.Create(Panel_HouseAdditional,60,41,32,32,141);
+    Image_House_Worker := TKMImage.Create(Panel_HouseAdditional,60,41,32,32,0);
     Image_House_Worker.ImageCenter;
     Button_House_Worker := TKMButton.Create(Panel_HouseAdditional,60,42,30,30,141, rxGui, bsGame);
     Button_House_Worker.OnClick := House_ClosedForWorkerToggle; //Clicking the button cycles it
@@ -233,6 +244,36 @@ begin
       Button_WareInputSlot[I].RX := rxGui;
     end;
 
+  Panel_Construction := TKMPanel.Create(aParent, TB_PAD, 45, TB_MAP_ED_WIDTH - TB_PAD, 400);
+
+    for I := 0 to High(ResRow_Ware_Build) do
+    begin
+      Label_HouseConstruction := TKMLabel.Create(Panel_Construction, 0, 5, Panel_Construction.Width, 20, '', fntOutline, taCenter);
+      Image_HouseConstruction_Logo := TKMImage.Create(Panel_Construction,Round(Panel_Construction.Width / 2 - 16),25,32,32,338);
+      //Image_HouseConstruction_Logo.ImageCenter;
+      Image_HouseConstruction_Logo.Hide;
+      TKMLabel.Create(Panel_Construction, 0, 60, Panel_Construction.Width - 20, 20, gResTexts[2021], fntMetal, taCenter);
+      Button_BuildingProgressDec := TKMButton.Create(Panel_Construction, 9, 85, 15, 15, '-', bsGame);
+      HealthBar_BuildingProgress := TKMPercentBar.Create(Panel_Construction, 25, 85, TB_MAP_ED_WIDTH - 60, 15);
+      Button_BuildingProgressInc := TKMButton.Create(Panel_Construction, HealthBar_BuildingProgress.Right + 1, 85, 15, 15, '+', bsGame);
+      Button_BuildingProgressDec.OnClickShift := Panel_HouseContructionChange;
+      Button_BuildingProgressInc.OnClickShift := Panel_HouseContructionChange;
+
+
+      ResRow_Ware_Build[I] := TKMWareOrderRow.Create(Panel_Construction, 0, 120 + I * 25, TB_MAP_ED_WIDTH - 20);
+      ResRow_Ware_Build[I].WareRow.RX := rxGui;
+      ResRow_Ware_Build[I].OnChange := Panel_HouseBuildWaresChange;
+      ResRow_Ware_Build[I].WareRow.WareCntAsNumber := true;
+      case I of
+        0: ResRow_Ware_Build[I].WareRow.TexID := gRes.Wares[wtTimber].GUIIcon;
+        1: ResRow_Ware_Build[I].WareRow.TexID := gRes.Wares[wtStone].GUIIcon;
+        2: ResRow_Ware_Build[I].WareRow.TexID := gRes.Wares[wtTile].GUIIcon;
+      end;
+      //ResRow_Ware_Build[I].OnChange := HouseChange;
+
+
+    end;
+
 
     Label_House_Input := TKMLabel.Create(Panel_House, 0, 125, Panel_House.Width, 0, gResTexts[TX_HOUSE_NEEDS], fntGrey, taCenter);
 
@@ -246,6 +287,7 @@ begin
       ResRow_Ware_Input[I].WareRow.Hitable := true;
       ResRow_Ware_Input[I].WareRow.Tag := I;
       ResRow_Ware_Input[I].WareRow.OnClick := HouseToggleAcceptWare;
+      ResRow_Ware_Input[I].WareRow.TextMarginX := -50;
 
       Button_BlockWare[I] := TKMButtonFlat.Create(Panel_House, ResRow_Ware_Input[I].Right, ResRow_Ware_Input[I].Top, 20, 20, 33, rxGuiMain);
       Button_BlockWare[I].Hint := gResTexts[1927];
@@ -801,7 +843,26 @@ begin
   if fHouse = nil then Exit;
 
   houseSpec := gRes.Houses[fHouse.HouseType];
+  if fHouse.BuildingState <> hbsDone then
+  begin
+    Panel_House.Hide;
+    Panel_HouseAdditional.Hide;
+    Panel_Construction.Show;
 
+    ResRow_Ware_Build[0].OrderCntMax := fHouse.HSpec.WoodCost;
+    ResRow_Ware_Build[1].OrderCntMax := fHouse.HSpec.StoneCost;
+    ResRow_Ware_Build[2].OrderCntMax := fHouse.HSpec.TileCost;
+
+
+    Label_HouseConstruction.Caption := houseSpec.HouseName;
+    Image_HouseConstruction_Logo.TexID := houseSpec.GUIIcon;
+    Panel_HouseContructionChange(nil, []);
+    Panel_House.Hide;
+    Exit;
+  end;
+  Panel_Construction.Hide;
+  Panel_House.Show;
+  Panel_HouseAdditional.Show;
   {Common data}
   Label_House.Caption := houseSpec.HouseName;
   Image_House_Logo.TexID := houseSpec.GUIIcon;
@@ -1096,7 +1157,6 @@ procedure TKMMapEdHouse.HouseHealthChange(Sender: TObject; Shift: TShiftState);
 begin
   if Sender = Button_HouseHealthDec then fHouse.AddDamage(GetMultiplicator(Shift), nil, True);
   if Sender = Button_HouseHealthInc then fHouse.AddRepair(GetMultiplicator(Shift));
-
   HealthBar_House.Caption := IntToStr(Round(fHouse.GetHealth)) + '/' + IntToStr(fHouse.MaxHealth);
   HealthBar_House.Position := fHouse.GetHealth / fHouse.MaxHealth;
 end;
@@ -1510,6 +1570,55 @@ begin
     fHouse.ForceWorking := not fHouse.ForceWorking;
     Button_HouseForceWork.TexID :=  IfThen(fHouse.ForceWorking, 770, 769);
   end;
+end;
+procedure TKMMapEdHouse.Panel_HouseBuildWaresChange(Sender: TObject; aCount: Integer);
+var newCount : Word;
+begin
+  if Sender = ResRow_Ware_Build[0] then
+  begin
+    newCount := EnsureRange(fHouse.BuildSupplyWood + aCount, 0, fHouse.HSpec.WoodCost);
+    ResRow_Ware_Build[0].OrderCount := newCOunt;
+  end;
+  if Sender = ResRow_Ware_Build[1] then
+  begin
+    newCount := EnsureRange(fHouse.BuildSupplyStone + aCount, 0, fHouse.HSpec.StoneCost);
+    ResRow_Ware_Build[1].OrderCount := newCOunt;
+  end;
+  if Sender = ResRow_Ware_Build[2] then
+  begin
+    newCount := EnsureRange(fHouse.BuildSupplyTile + aCount, 0, fHouse.HSpec.TileCost);
+    ResRow_Ware_Build[2].OrderCount := newCOunt;
+  end;
+
+
+  fHouse.SetBuildingProgress(fHouse.BuildingProgress, ResRow_Ware_Build[0].OrderCount,
+                                                      ResRow_Ware_Build[1].OrderCount,
+                                                      ResRow_Ware_Build[2].OrderCount);
+  Panel_HouseContructionChange(Sender, []);
+end;
+procedure TKMMapEdHouse.Panel_HouseContructionChange(Sender: TObject; Shift: TShiftState);
+var I : Integer;
+begin
+
+  if Sender = Button_BuildingProgressDec then fHouse.IncBuildingProgress(5 * GetMultiplicator(Shift));
+  if Sender = Button_BuildingProgressInc then fHouse.IncBuildingProgress(5 * -GetMultiplicator(Shift));
+
+  if (Sender = Button_BuildingProgressDec) or (Sender = Button_BuildingProgressInc) then
+    fHouse.SetBuildingProgress(fHouse.BuildingProgress, ResRow_Ware_Build[0].OrderCount,
+                                                        ResRow_Ware_Build[1].OrderCount,
+                                                        ResRow_Ware_Build[2].OrderCount);
+
+
+
+  ResRow_Ware_Build[0].OrderCount := fHouse.BuildSupplyWood;
+  ResRow_Ware_Build[1].OrderCount := fHouse.BuildSupplyStone;
+  ResRow_Ware_Build[2].OrderCount := fHouse.BuildSupplyTile;
+  ResRow_Ware_Build[0].WareRow.WareCount := fHouse.BuildSupplyWood;
+  ResRow_Ware_Build[1].WareRow.WareCount := fHouse.BuildSupplyStone;
+  ResRow_Ware_Build[2].WareRow.WareCount := fHouse.BuildSupplyTile;
+  HealthBar_BuildingProgress.Caption := IntToStr(fHouse.BuildingProgress) + ' / ' + IntToStr(fHouse.MaxHealth);
+  HealthBar_BuildingProgress.Position := fHouse.BuildingProgress / fHouse.MaxHealth;
+
 end;
 
 end.

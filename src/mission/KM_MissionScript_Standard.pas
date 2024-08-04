@@ -205,7 +205,7 @@ procedure TKMMissionParserStandard.ProcessCommand(CommandType: TKMCommandType; P
   end;
 
 var
-  I: Integer;
+  I, K, nonEntranceX: Integer;
   qty, HandI: Integer;
   U: TKMUnit;
   H: TKMHouse;
@@ -214,6 +214,7 @@ var
   iPlayerAI: TKMHandAI;
   chooseLoc: TKMChooseLoc;
   groupOrder: TKMMissionScriptGroupOrder;
+  HA: TKMHouseArea;
 begin
   case CommandType of
     ctSetMap:           begin
@@ -361,12 +362,45 @@ begin
                         end;
 
     ctSetHouse:         if fLastHand <> HAND_NONE then
+                        begin
+                          nonEntranceX := P[1] + 1{ - gRes.Houses[HOUSE_ID_TO_TYPE[P[0]]].EntranceOffsetX};
                           if PointInMap(P[1]+1, P[2]+1) and InRange(P[0], Low(HOUSE_ID_TO_TYPE), High(HOUSE_ID_TO_TYPE)) then
                             if gTerrain.CanPlaceHouseFromScript(HOUSE_ID_TO_TYPE[P[0]], KMPoint(P[1]+1, P[2]+1)) then
-                              fLastHouse := gHands[fLastHand].AddHouse(
-                                HOUSE_ID_TO_TYPE[P[0]], P[1]+1, P[2]+1, False)
+                            begin
+                              if P[3] = 1 then
+                              begin
+                                fLastHouse := gHands[fLastHand].AddHouseWip(HOUSE_ID_TO_TYPE[P[0]], KMPoint(nonEntranceX, P[2]+1));
+                                //fLastHouse.UpdatePosition(KMPoint(P[1]+1, P[2]+1));
+                                fLastHouse.BuildingState := hbsWood;
+                                gTerrain.SetRoad(fLastHouse.Entrance, fLastHand, rtStone);
+                                fLastHouse.AddDemandBuildingMaterials;
+
+                                HA := gRes.Houses[fLastHouse.HouseType].BuildArea;
+                                for I := 1 to 4 do
+                                for K := 1 to 4 do
+                                  if HA[I, K] <> 0 then
+                                  begin
+                                    //gTerrain.RemoveObject(KMPoint(nonEntranceX + K - 3, P[2]+1 + I - 4));
+                                    //gTerrain.FlattenTerrain(KMPoint(nonEntranceX + K - 3, P[2]+1 + I - 4));
+                                    gTerrain.SetTileLock(KMPoint(nonEntranceX + K - 3, P[2]+1 + I - 4), tlDigged);
+                                  end;
+                                gHands[fLastHand].Constructions.HouseList.AddHouse(fLastHouse);
+                                //fLastHouse.UpdatePosition(KMPoint(P[1]+1, P[2]+1));
+                              end else
+                                fLastHouse := gHands[fLastHand].AddHouse(
+                                  HOUSE_ID_TO_TYPE[P[0]], P[1]+1, P[2]+1, False)
+                            end
                             else
                               AddError('ct_SetHouse failed, can not place house at ' + TypeToString(KMPoint(P[1]+1, P[2]+1)));
+                          end;
+
+    ctSetHouseBuildingProgress:if fLastHand <> HAND_NONE then
+                                  if (fLastHouse <> nil) and (fLastHouse.BuildingState <> hbsDone) then
+                                  begin
+                                    fLastHouse.SetBuildingProgress(P[0], P[1], P[2], P[3]);
+                                  end
+                                  else
+                                    AddError('ct_SetHouseBuildingProgress ');
 
     ctSetHouseDamage:   if fLastHand <> HAND_NONE then //Skip False-positives for skipped players
                           if fLastHouse <> nil then
@@ -1092,6 +1126,12 @@ begin
                       gHands[fLastHand].Locks.SetFieldLocked(TKMLockFieldType(P[0]), true);
 
                      end;
+    ctAnimalSpawner:  begin
+                        gHands.PlayerAnimals.AddSpawner(KMPoint(P[0], P[1]), P[2], P[3], P[4], []);
+                      end;
+    ctAddAnimalTypeToSpawner:   begin
+                                  gHands.PlayerAnimals.AddAnimalTypeToLastSpawner(UNIT_ID_TO_TYPE[P[0]]);
+                                end;
    end;
 end;
 
@@ -1431,7 +1471,12 @@ begin
       H := gHands[I].Houses[K];
       if not H.IsDestroyed then
       begin
-        AddCommand(ctSetHouse, [HOUSE_TYPE_TO_ID[H.HouseType]-1, H.Position.X-1 + aLeftInset, H.Position.Y-1 + aTopInset]);
+        AddCommand(ctSetHouse, [HOUSE_TYPE_TO_ID[H.HouseType]-1, H.Position.X-1 + aLeftInset, H.Position.Y-1 + aTopInset, byte(H.BuildingState in [hbsNoGlyph, hbsWood])]);
+
+        if H.BuildingState in [hbsNoGlyph, hbsWood, hbsStone] then
+          AddCommand(ctSetHouseBuildingProgress, [H.BuildingProgress, H.BuildSupplyWood, H.BuildSupplyStone, H.BuildSupplyTile]);
+
+
         if H.IsDamaged then
           AddCommand(ctSetHouseDamage, [H.GetDamage]);
 
@@ -1613,7 +1658,24 @@ begin
     end;
 
     AddCommand(ctSetUnit, params);
+    {Loc : TKMPoint;
+    Radius : Byte;
+    AnimalTypes : TKMUnitTypeArray;
+    Animals : TKMUnitsArray;
+    Pace,
+    MaxCount : Integer;}
+
+
   end;
+  //Animal spawners
+  for K := 0 to gHands.PlayerAnimals.SpawnersCount - 1 do
+    with gHands.PlayerAnimals do
+    begin
+      AddCommand(ctAnimalSpawner, [Spawners[K].Loc.X, Spawners[K].Loc.Y, Spawners[K].Radius, Spawners[K].MaxCount, Spawners[K].Pace]);
+
+      for J := 0 to High(Spawners[K].AnimalTypes) do
+        AddCommand(ctAddAnimalTypeToSpawner, [KM_ResUnits.UNIT_TYPE_TO_ID[Spawners[K].AnimalTypes[J]]  ]);
+    end;
   AddData(''); //NL
 
   //Similar footer to one in Lewin's Editor, useful so ppl know what mission was made with.

@@ -2357,6 +2357,7 @@ begin
                     end;
     cmObjects:      if ssLeft in gCursor.SState then
                       if CanEditTile(gCursor.Cell.X, gCursor.Cell.Y) then
+                      if gCursor.MapEdOverrideObjectsSingle or (gTerrain.Land^[gCursor.Cell.Y, gCursor.Cell.X].Obj = OBJ_NONE) then
                        gTerrain.SetObject(gCursor.Cell, gCursor.Tag1);
 
     cmObjectsBrush: if (ssLeft in gCursor.SState) then

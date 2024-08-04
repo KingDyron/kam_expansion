@@ -31,6 +31,23 @@ type
     Font: TKMFont;
   end;
 
+  TKMConsolCommandType = (
+      cctNone,
+      cctStartRecording,
+      cctStopRecording ,
+      cctResetRecordings
+    );
+
+
+const CONSOLE_COMMANDS_NAME : array[TKMConsolCommandType] of String = (
+      '',
+      'start_recording',
+      'stop_recording',
+      'reset_recordings'
+      );
+
+function GetAIConsolCommand(aName : String) : TKMConsolCommandType;
+
 const
   HAND_NONE = -1; //No player
   HAND_ANIMAL = -2; //animals
@@ -39,5 +56,14 @@ const
   DELIVERY_NO_ID = -1;
 
 implementation
+
+function GetAIConsolCommand(aName : String) : TKMConsolCommandType;
+var I : TKMConsolCommandType;
+begin
+  Result := cctNone;
+  for I := Low(TKMConsolCommandType) to High(TKMConsolCommandType) do
+    if aName = CONSOLE_COMMANDS_NAME[I] then
+      Exit(I);
+end;
 
 end.

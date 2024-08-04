@@ -99,7 +99,7 @@ const
   TERRAIN_PAGE_TITLE_Y = PAGE_TITLE_Y + 2; // Terrain pages title offset
   STATS_LINES_CNT = 13; //Number of stats (F3) lines
 
-  DEFENCE_LINE_TYPE_COL: array [TKMAIDefencePosType] of Cardinal = ($FF80FF00, $FFFF8000);
+  DEFENCE_LINE_TYPE_COL: array [TKMAIDefencePosType] of Cardinal = ($FF80FF00, $FFFF8000, icOrange);
 
   // Shortcuts
   // All shortcuts are in English and are the same for all languages to avoid
@@ -160,19 +160,18 @@ const
     (
      //new line
      wtNone,
-     wtTrunk,         wtStone,          wtTimber,         wtTile,//basic
-     wtSawDust,
+     wtTrunk,         wtStone,          wtTimber,         wtTile,   wtApple, //basic
 
 
      //new line
      wtNone,
-     wtWine,         wtApple,           wtBread,          wtSausage,        wtFish,//food
+     wtVegetables,   wtWine,           wtBread,          wtSausage,        wtFish,//food
 
 
      //new line
      wtNone,
      wtWater,         wtCorn,            wtSeed,          wtHay,            wtFlour,     //farm/animal products
-     wtPig,           wtSkin,            wtLeather,       wtFeathers,       wtVegetables,
+     wtPig,           wtSkin,            wtLeather,       wtFeathers,       wtSawDust,
 
      //new line
      wtNone,
@@ -278,7 +277,7 @@ const
     (HouseType: (htStore, htSchool, htInn, htMarket, htNone);                             UnitType: (utSerf, utBuilder))
     ); }
 
-  MapEd_Order: array [0..34] of TKMUnitType = (
+  MapEd_Order: array [0..36] of TKMUnitType = (
     utFighter, utMilitia, utAxeFighter, utSwordFighter, utBowman, utCrossbowman,
     utLanceCarrier, utPikeman, utScout, utKnight,
     utClubMan, utMaceFighter, utFlailFighter,
@@ -287,7 +286,8 @@ const
     utShieldBearer,
     utCatapult, utBallista, utRam,   utWoodenWall,
     utAmmoCart, utPikeMachine,
-    utTorchMan, utMedic, utPaladin, utArcher, utSpy, utTrainedWolf, utSpikedTrap, utShip, utGolem, utGiant);
+    utTorchMan, utMedic, utPaladin, utArcher, utSpy, utTrainedWolf, utSpikedTrap,
+    utBoat, utShip, utBattleShip, utGolem, utGiant);
 
   MapEd_Icon: array [0..26] of Word = (
     61, 62, 63, 64, 65,
@@ -310,8 +310,8 @@ const
   BIG_TAB_H = 36;
   // Small sub-tab buttons in MapEd
   SMALL_TAB_W = 30;
-  SMALL_PAD_W = 30;
-  SMALL_TAB_H = 26;
+  SMALL_PAD_W = 29;
+  SMALL_TAB_H = 30;
 
   MESSAGE_AREA_HEIGHT = 173+17; // Image_ChatHead + Image_ChatBody
   MESSAGE_AREA_RESIZE_Y = 200; // How much can we resize it

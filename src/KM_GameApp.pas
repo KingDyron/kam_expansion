@@ -245,8 +245,10 @@ begin
 
   fOnGameStart := GameStarted;
   fOnGameEnd := GameEnded;
-
+  {$IFNDEF DEBUG_CRC}
   TryStrToInt64(GetTextFromGithub(GITHUB_CRC_LINK), fGithubCRC);
+  {$ENDIF}
+
   if fGithubCRC <> 0 then
   begin
     //save as the latest loaded CRC

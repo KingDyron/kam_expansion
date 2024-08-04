@@ -113,6 +113,11 @@ type
     procedure ProcMerchantTrade(aMerchant : TKMHouse; aHandID : Integer; aWare : TKMWareType; aCount : Integer);
     procedure ProcMissionStart;
     procedure ProcPeacetimeEnd;
+    procedure ProcFieldPlanPlaced(aPlayer : TKMHandID; aX, aY: Integer; aFieldType : TKMLockFieldType);
+    procedure ProcFieldPlanRemoved(aPlayer : TKMHandID; aX, aY: Integer; aFieldType : TKMLockFieldType);
+    procedure ProcFieldPlanDigged(aPlayer : TKMHandID; aX, aY: Integer; aFieldType : TKMLockFieldType);
+    procedure ProcFieldPlanBuilt(aPlayer : TKMHandID; aX, aY: Integer; aFieldType : TKMLockFieldType);
+
     procedure ProcPlanRoadDigged(aPlayer: TKMHandID; aX, aY: Integer);
     procedure ProcPlanRoadPlaced(aPlayer: TKMHandID; aX, aY: Integer);
     procedure ProcPlanRoadRemoved(aPlayer: TKMHandID; aX, aY: Integer);
@@ -139,6 +144,7 @@ type
     procedure ProcCustomCursorClick(aPlayer: TKMHandID; X, Y, aTag: Integer);
     procedure ProcUnitSelected(aPlayer : TKMHandID; aUnit: TKMUnit; aSelected : Boolean);
     procedure ProcHouseSelected(aPlayer : TKMHandID; aHouse: TKMHouse; aSelected : Boolean);
+
 
     procedure Save(SaveStream: TKMemoryStream);
     procedure Load(LoadStream: TKMemoryStream);
@@ -495,6 +501,8 @@ begin
   Result := false;
   if not InRange(gMySpectator.HandID, 0, gHands.Count - 1) then
     Exit;
+
+
   if aCmdName = 'YouShallNotPass' then
   begin
      Result := true;
@@ -853,8 +861,8 @@ end;
 
 procedure TKMScriptEvents.EventHousePlanPlaced(aPlayer: TKMHandID; aX, aY: Integer; aType: TKMHouseType);
 begin
-  ProcHousePlanPlaced(aPlayer, aX + gRes.Houses[aType].EntranceOffsetX, aY, HOUSE_TYPE_TO_ID[aType] - 1);
-  ProcHousePlanPlacedEx(aPlayer, aX + gRes.Houses[aType].EntranceOffsetX, aY, aType);
+  ProcHousePlanPlaced(aPlayer, aX + gRes.Houses[aType].EntranceOffsetX, aY + gRes.Houses[aType].EntranceOffsetY, HOUSE_TYPE_TO_ID[aType] - 1);
+  ProcHousePlanPlacedEx(aPlayer, aX + gRes.Houses[aType].EntranceOffsetX, aY + gRes.Houses[aType].EntranceOffsetY, aType);
 end;
 
 
@@ -880,8 +888,8 @@ end;
 
 procedure TKMScriptEvents.EventHousePlanRemoved(aPlayer: TKMHandID; aX, aY: Integer; aType: TKMHouseType);
 begin
-  ProcHousePlanRemoved(aPlayer, aX + gRes.Houses[aType].EntranceOffsetX, aY, HOUSE_TYPE_TO_ID[aType] - 1);
-  ProcHousePlanRemovedEx(aPlayer, aX + gRes.Houses[aType].EntranceOffsetX, aY, aType);
+  ProcHousePlanRemoved(aPlayer, aX + gRes.Houses[aType].EntranceOffsetX, aY + gRes.Houses[aType].EntranceOffsetY, HOUSE_TYPE_TO_ID[aType] - 1);
+  ProcHousePlanRemovedEx(aPlayer, aX + gRes.Houses[aType].EntranceOffsetX, aY + gRes.Houses[aType].EntranceOffsetY, aType);
 end;
 
 
@@ -1263,12 +1271,34 @@ begin
   if MethodAssigned(evtUnitSelected) then
     CallEventHandlers(evtUnitSelected, [aPlayer, aUnit.UID, byte(aSelected)]);
 end;
+
 procedure TKMScriptEvents.ProcHouseSelected(aPlayer : TKMHandID; aHouse: TKMHouse; aSelected : Boolean);
 begin
   if MethodAssigned(evtHouseSelected) then
     CallEventHandlers(evtHouseSelected, [aPlayer, aHouse.UID, byte(aSelected)]);
 end;
 
+procedure TKMScriptEvents.ProcFieldPlanPlaced(aPlayer: ShortInt; aX: Integer; aY: Integer; aFieldType: TKMLockFieldType);
+begin
+  if MethodAssigned(evtFieldPlanPlaced) then
+    CallEventHandlers(evtFieldPlanPlaced, [aPlayer, aX, aY, byte(aFieldType)]);
+end;
+procedure TKMScriptEvents.ProcFieldPlanRemoved(aPlayer: ShortInt; aX: Integer; aY: Integer; aFieldType: TKMLockFieldType);
+begin
+  if MethodAssigned(evtFieldPlanRemoved) then
+    CallEventHandlers(evtFieldPlanRemoved, [aPlayer, aX, aY, byte(aFieldType)]);
+end;
+procedure TKMScriptEvents.ProcFieldPlanDigged(aPlayer: ShortInt; aX: Integer; aY: Integer; aFieldType: TKMLockFieldType);
+begin
+  if MethodAssigned(evtFieldPlanDigged) then
+    CallEventHandlers(evtFieldPlanDigged, [aPlayer, aX, aY, byte(aFieldType)]);
+end;
+
+procedure TKMScriptEvents.ProcFieldPlanBuilt(aPlayer: ShortInt; aX: Integer; aY: Integer; aFieldType: TKMLockFieldType);
+begin
+  if MethodAssigned(evtFieldPlanBuilt) then
+    CallEventHandlers(evtFieldPlanBuilt, [aPlayer, aX, aY, byte(aFieldType)]);
+end;
 //* Version: 14000
 //* Occurs when resource is produced for specified house.
 procedure TKMScriptEvents.ProcWareProduced(aHouse: TKMHouse; aWareType: TKMWareType; aCount: Integer);

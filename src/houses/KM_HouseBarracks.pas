@@ -361,11 +361,13 @@ var
   soldier: TKMUnitWarrior;
   U : TKMUnit;
   condition : Integer;
+  hadBoots : Boolean;
 begin
   Result := nil;
   //Make sure we have enough resources to equip a unit
   if not CanEquip(aUnitType) then Exit;
 
+  hadBoots := TKMUnitRecruit(fRecruitsList.Items[0]).BootsAdded;
   condition := TKMUnitRecruit(fRecruitsList.Items[0]).Condition;
   //Take resources
   for I := 0 to high(gRes.Units[aUnitType].BarracksCost) do
@@ -403,6 +405,8 @@ begin
       U.OnUnitTrained(U);
     Result := U;
     U.Condition := condition;
+    if hadBoots then
+      U.GiveBoots(false);
   end else
   if aUnitType in UNITS_WARRIORS then
   begin
@@ -415,6 +419,9 @@ begin
     if Assigned(soldier.OnUnitTrained) then
       soldier.OnUnitTrained(soldier);
 
+    if hadBoots then
+      soldier.GiveBoots(false)
+    else
     if (CheckWareIn(wtBoots) > 0) and not (UNIT_TO_GROUP_TYPE[soldier.UnitType] in [gtMounted, gtMachines, gtMachinesMelee]) then
     if soldier.GiveBoots(false) then
         WareTakeFromOut(wtBoots, 1);

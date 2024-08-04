@@ -105,7 +105,10 @@ type
     ctSetGrassField,
     ctSetFruitTreeAge,
     ctSetBlockField,
-    ctSetVegeField
+    ctSetVegeField,
+    ctSetHouseBuildingProgress,
+    ctAnimalSpawner,
+    ctAddAnimalTypeToSpawner
     );
 
 const
@@ -201,7 +204,10 @@ const
     'SET_GRASS_FIELD',
     'SET_FRUIT_TREE_AGE',
     'BLOCK_FIELD',
-    'SET_VEGE_FIELD'
+    'SET_VEGE_FIELD',
+    'SET_HOUSE_BUILDING_PROGRESS',
+    'SET_ANIMAL_SPAWNER',
+    'ADD_ANIMAL_TYPE_TO_SPAWNER'
     );
 type
   TKMMissionParserCommon = class

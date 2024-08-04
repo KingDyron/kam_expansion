@@ -175,6 +175,7 @@ function JSONArrToValidArr(aARR : TJsonArray; out aInt : TKMWordArray) : Boolean
 var I, J : Integer;
 begin
   Result := false;
+  aInt := aInt;
   if aARR.Count > 0 then
     SetLength(aInt, 0)
   else

@@ -76,6 +76,7 @@ type
     procedure SetMarketPriceMultiplier(aValue: Single);
   public
     CoinPrice : Byte;
+    AtTerrainPic : TKMWordArray;
     constructor Create(aType: TKMWareType);
     function IsValid: Boolean;
     property GUIColor: Cardinal read GetGUIColor;
@@ -89,6 +90,7 @@ type
     function MaxProduction(aHouse : TKMHouseType) : Word;
     function MinProduction(aHouse : TKMHouseType) : Word;
     function GetProductionCount(aHouse : TKMHouseType) : Word;
+    function GetTerrainPic(aCount : Byte) : Integer;
   end;
 
   TKMResWares = class
@@ -174,15 +176,15 @@ const
   PRODUCTION_RATE: array [WARE_MIN..WARE_MAX] of Single = (
     88/120, 414/120, 390/120, 160/120,  160/120,
     155/120, 218/120, 330/120, 78/120, 150/120,
-    336/120, 162/120, 324/120, 510/120, 84/180,
+    336/120, 162/120, 324/120, 400/120, 300/120,
     84/180,  180/120, 155/120, 180/120, 155/120,
     200/120, 195/120, 200/120, 195/120, 200/120,
     195/120, 69/120,  122/120, 199/120, 171/120,
 
     65/120,  168/120,  84/120,  166/120,  83/120,
-    168/120,  167/120,  192/120,  345/120,  102/120,
-    150/120, 219/120, 82/120,     1/300,     55/120,
-    195/120, 195/120, 195/120, 195/120, 195/120,
+    168/120,  167/120,  160/120,  345/120,  102/120,
+    150/120, 219/120, 216/120,     1/300,     55/120,
+    195/120, 195/120, 195/120, 100/120, 195/120,
     195/120
     );
 
@@ -378,6 +380,15 @@ begin
   aMin := MinProduction(aHouse);
   Result := aMin;
   //Result := aMin + KaMRandom(aMax - aMin + 1, 'TKMWareSpec.GetProductionCount');
+end;
+
+function TKMWareSpec.GetTerrainPic(aCount: Byte): Integer;
+begin
+  Result := 0;
+
+  if Length(AtTerrainPic) = 0 then
+    Exit;
+  Result := AtTerrainPic[Min(aCount - 1, high(AtTerrainPic))];
 end;
 
 function TKMWareSpec.GetMarketPrice: Single;
@@ -656,10 +667,11 @@ begin
   Wares[wtWine       ].fMarketPrice := (1/PRODUCTION_RATE[wtWine]) + WINE_ADDN;
   Wares[wtCorn       ].fMarketPrice := (1/PRODUCTION_RATE[wtCorn]) / 2;
   Wares[wtFlour      ].fMarketPrice := (1/PRODUCTION_RATE[wtFlour]) + Wares[wtCorn].MarketPrice;
-  Wares[wtPig        ].fMarketPrice := (1/PRODUCTION_RATE[wtPig]) + (1/2)*4*Wares[wtCorn].MarketPrice; //1/2 because two products are made simultaneously
-  Wares[wtSkin       ].fMarketPrice := (1/PRODUCTION_RATE[wtSkin]) + (1/2)*4*Wares[wtCorn].MarketPrice; //1/2 because two products are made simultaneously
+  Wares[wtWater       ].fMarketPrice := (1/PRODUCTION_RATE[wtWater]);
+  Wares[wtPig        ].fMarketPrice := (1/PRODUCTION_RATE[wtPig]) + (4*Wares[wtCorn].MarketPrice + 4*Wares[wtWater].MarketPrice) / 4; //1/2 because two products are made simultaneously
+  Wares[wtSkin       ].fMarketPrice := (1/PRODUCTION_RATE[wtSkin]) + (4*Wares[wtCorn].MarketPrice + 4*Wares[wtWater].MarketPrice) / 4; //1/2 because two products are made simultaneously
   Wares[wtLeather    ].fMarketPrice := (1/PRODUCTION_RATE[wtLeather]) + (1/2)*Wares[wtSkin].MarketPrice;
-  Wares[wtSausage   ].fMarketPrice := (1/PRODUCTION_RATE[wtSausage]) + (1/3)*Wares[wtPig].MarketPrice;
+  Wares[wtSausage   ].fMarketPrice := (1/PRODUCTION_RATE[wtSausage]) + Wares[wtPig].MarketPrice;
   Wares[wtWoodenShield     ].fMarketPrice := (1/PRODUCTION_RATE[wtWoodenShield]) + Wares[wtTimber].MarketPrice;
   Wares[wtIronShield].fMarketPrice := (1/PRODUCTION_RATE[wtIronShield]) + Wares[wtIron].MarketPrice + Wares[wtCoal].MarketPrice;
   Wares[wtLeatherArmor      ].fMarketPrice := (1/PRODUCTION_RATE[wtLeatherArmor]) + Wares[wtLeather].MarketPrice;
@@ -670,7 +682,7 @@ begin
   Wares[wtPike  ].fMarketPrice := (1/PRODUCTION_RATE[wtPike]) + Wares[wtIron].MarketPrice + Wares[wtCoal].MarketPrice;
   Wares[wtBow        ].fMarketPrice := (1/PRODUCTION_RATE[wtBow]) + 2*Wares[wtTimber].MarketPrice;
   Wares[wtCrossbow    ].fMarketPrice := (1/PRODUCTION_RATE[wtCrossbow]) + Wares[wtIron].MarketPrice + Wares[wtCoal].MarketPrice;
-  Wares[wtHorse      ].fMarketPrice := (1/PRODUCTION_RATE[wtHorse]) + 4*Wares[wtCorn].MarketPrice;
+  Wares[wtHorse      ].fMarketPrice := (1/PRODUCTION_RATE[wtHorse]) + 4*Wares[wtCorn].MarketPrice + 4*Wares[wtWater].MarketPrice;
   Wares[wtFish       ].fMarketPrice := NON_RENEW*(1/PRODUCTION_RATE[wtFish]);
 
 
@@ -684,8 +696,7 @@ begin
   Wares[wtBitinE       ].fMarketPrice := (1/PRODUCTION_RATE[wtBitinE])+Wares[wtBitin].MarketPrice + Wares[wtCoal].MarketPrice;
   Wares[wtWheel       ].fMarketPrice := (1/PRODUCTION_RATE[wtWheel])+Wares[wtTrunk].MarketPrice/2;
   Wares[wtBolt       ].fMarketPrice :=  (1/PRODUCTION_RATE[wtBolt]) + (Wares[wtIron].MarketPrice + Wares[wtCoal].MarketPrice + Wares[wtTrunk].MarketPrice) / 2;
-  Wares[wtQuiver       ].fMarketPrice := (1/PRODUCTION_RATE[wtQuiver]) + (Wares[wtLeather].MarketPrice + Wares[wtTimber].MarketPrice) / 2;
-  Wares[wtWater       ].fMarketPrice := (1/PRODUCTION_RATE[wtWater]);
+  Wares[wtQuiver       ].fMarketPrice := (1/PRODUCTION_RATE[wtQuiver]) + (Wares[wtLeather].MarketPrice + Wares[wtFeathers].MarketPrice) / 2;
 
   Wares[wtTile       ].fMarketPrice := (1/PRODUCTION_RATE[wtTile]);
   Wares[wtSeed       ].fMarketPrice := (1/PRODUCTION_RATE[wtSeed]) / 2;
@@ -697,7 +708,7 @@ begin
 
   Wares[wtMace       ].fMarketPrice := (1/PRODUCTION_RATE[wtMace]) + Wares[wtTimber].MarketPrice * 2;
   Wares[wtFlail       ].fMarketPrice := (1/PRODUCTION_RATE[wtFlail]) + Wares[wtIron].MarketPrice + Wares[wtCoal].MarketPrice;
-  Wares[wtFeathers       ].fMarketPrice := (1/PRODUCTION_RATE[wtFeathers]);
+  Wares[wtFeathers       ].fMarketPrice := (1/PRODUCTION_RATE[wtFeathers]) + (Wares[wtSeed].MarketPrice + Wares[wtWater].MarketPrice) * 3;
   Wares[wtPlateArmor       ].fMarketPrice := (1/PRODUCTION_RATE[wtPlateArmor]) + Wares[wtTimber].MarketPrice * 2;
   Wares[wtBitinArmor       ].fMarketPrice := (1/PRODUCTION_RATE[wtBitinArmor]) + Wares[wtCoal].MarketPrice * 2 + Wares[wtBitinE].MarketPrice ;
 
@@ -739,6 +750,7 @@ begin
       SetLength(WareDistribution, J + 1);
 
       WareDistribution[J].WareType := W;
+
 
       SetLength(WareDistribution[J].Houses, nArr.Count);
 
@@ -853,6 +865,7 @@ begin
       SetLength(OrderCost, length(OrderCost) + 1);
       OrderCost[high(OrderCost)] := WT2;
     end;
+    JSONArrToValidArr(aJSONFile.A['TerrainPics'], fList[WT].AtTerrainPic);
 
     //OrderCost : array of TKMWareType;
   end;

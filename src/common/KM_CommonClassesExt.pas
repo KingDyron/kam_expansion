@@ -70,6 +70,7 @@ type
 
   TKMEnumUtils = class
     class function TryGetAs<T>(aEnumStr: String; out aEnumValue: T): Boolean;
+    class function GetName<T>(aEnumValue: T; out aEnumStr: String): Boolean;
   end;
 
   TKMVarValue = class
@@ -208,6 +209,18 @@ begin
    Result := True;
 end;
 
+class function TKMEnumUtils.GetName<T>(aEnumValue: T; out aEnumStr: string): Boolean;
+var I : Integer;
+begin
+  I := 0;
+  Move(aEnumValue, I, SizeOf(aEnumValue));
+
+  if I = -1 then
+    Exit(false);
+
+  aEnumStr := GetEnumName(TypeInfo(T), I);
+  Result := true;
+end;
 
 { TKMListUnique<T> }
 function TKMListUnique<T>.Add(const Value: T): Integer;

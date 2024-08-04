@@ -269,6 +269,8 @@ type
   end;
 
 
+  TKList = class(TList); //just a shortcut
+
   //TKMList owns items and frees them when they are deleted from the list
   TKMList = class(TList)
   protected
@@ -423,25 +425,23 @@ type
     procedure Remove(aMapCRC: Cardinal);
     procedure Replace(aOldCRC, aNewCRC: Cardinal);
   end;
-
-
   TKMArray <T> = record
     private
       fCount : Integer;
       fList : array of T;
       function GetItem(aIndex : Integer) : T;
+      procedure SetItem(aIndex : Integer; aValue : T);
     public
       function Add(aItem : T) : Integer;
       function Remove(aIndex : Integer) : Boolean; Overload;
       procedure Clear;
 
-      property Item[aIndex : Integer] : T read GetItem; default;
+      property Item[aIndex : Integer] : T read GetItem write SetItem; default;
       property Count : Integer read fCount;
 
       procedure SaveToStream(aSaveStream : TKMemoryStream);
       procedure LoadFromStream(aLoadStream : TKMemoryStream);
   end;
-
 implementation
 uses
   Math,
@@ -2152,6 +2152,11 @@ begin
   if not InRange(aIndex, 0, fCount - 1) then
     Exit;
   Result := fList[aIndex];
+end;
+
+procedure TKMArray<T>.SetItem(aIndex : Integer; aValue : T);
+begin
+  fList[aIndex] := aValue;
 end;
 
 procedure TKMArray<T>.SaveToStream(aSaveStream : TKMemoryStream);

@@ -4,7 +4,7 @@ interface
 uses
   Classes, Math, SysUtils, KromUtils, Types,
   KM_CommonClasses, KM_CommonTypes, KM_Defaults, KM_Points, KM_CommonUtils, KM_UnitVisual,
-  KM_Terrain, KM_ResHouses, KM_Houses, KM_HouseSchool, KM_HouseBarracks, KM_HouseInn, KM_ResUnits,
+  KM_ResHouses, KM_Houses, KM_HouseSchool, KM_HouseBarracks, KM_HouseInn, KM_ResUnits,
   KM_HandEntity,
   KM_ResTypes;
 
@@ -271,7 +271,7 @@ type
     function  IsIdle: Boolean;
     procedure TrainInHouse(aSchool: TKMHouseSchool);
 
-    function CanStepTo(X,Y: Integer; aPass: TKMTerrainPassability): Boolean;
+    function CanStepTo(X,Y: Integer; aPass: TKMTerrainPassability): Boolean; virtual;
     function CanWalkTo(const aTo: TKMPoint; aDistance: Single): Boolean; overload;
     function CanWalkTo(const aTo: TKMPoint; aPass: TKMTerrainPassability; aDistance: Single): Boolean; overload;
     function CanWalkTo(const aFrom, aTo: TKMPoint; aDistance: Single): Boolean; overload;
@@ -362,6 +362,7 @@ type
 
     procedure Deliver(aFrom: TKMHouse; toHouse: TKMHouse; aWare: TKMWareType; aID: integer); overload;
     procedure Deliver(aFrom: TKMHouse; toUnit: TKMUnit; aWare: TKMWareType; aID: integer); overload;
+    procedure Deliver(aFrom: TKMHouse; aTo: TKMPoint; aWare: TKMWareType; aID: integer); overload;
     function TryDeliverFrom(aFrom: TKMHouse): Boolean;
     procedure DelegateDelivery(aToSerf: TKMUnitSerf);
 
@@ -395,6 +396,11 @@ type
 
   // Animals
   TKMUnitAnimal = class(TKMUnit)
+  private
+    fSpawnerID : Integer;
+    //walking boundaries
+    fStartLoc : TKMPoint;
+    fRadius : Word;
   protected
     function GetIsSelectable: Boolean; override;
     function GetPaintActionType(aAct: TKMUnitActionType): TKMUnitActionType; virtual;
@@ -405,7 +411,12 @@ type
 
     function IsAnimal: Boolean; override;
 
+    property SpawnerID : Integer read fSpawnerID write fSpawnerID;
+    function CanStepTo(X,Y: Integer; aPass: TKMTerrainPassability): Boolean; override;
+
+    constructor Load(LoadStream: TKMemoryStream); override;
     function UpdateState: Boolean; override;
+    procedure Save(SaveStream: TKMemoryStream); override;
   end;
 
 
@@ -436,6 +447,7 @@ type
     public
       function Add(aItem : TKMUnit) : Integer;
       function Remove(aIndex : Integer) : Boolean; Overload;
+      function Remove(aPointer : Pointer) : Boolean; Overload;
       procedure Clear;
 
       property Units[aIndex : Integer] : TKMUnit read GetItem; default;
@@ -481,7 +493,9 @@ uses
   KM_SpecialAnim,
   KM_GameTypes,
   KM_HandTypes,
-  KM_CommonExceptions;
+  KM_CommonExceptions,
+  KM_Terrain,
+  KM_Particles;
 
 
 //Pixel positions (waypoints) for sliding around other units. Uses a lookup to save on-the-fly calculations.
@@ -523,6 +537,9 @@ end;
 function TKMCivilUnit.GoEat(aInn: TKMHouseInn; aUnitAlreadyInsideInn: Boolean = False): Boolean;
 begin
   Result := False;
+  if InShip <> nil then
+    Exit;
+
   if aInn <> nil then
   begin
     FreeAndNil(fTask);
@@ -955,6 +972,12 @@ begin
   fTask := TKMTaskDeliver.Create(Self, aFrom, toUnit, aWare, aID);
 end;
 
+procedure TKMUnitSerf.Deliver(aFrom: TKMHouse; aTo: TKMPoint; aWare: TKMWareType; aID: Integer);
+begin
+  fThought := thNone; //Clear ? thought
+  fTask := TKMTaskDeliver.Create(Self, aFrom, aTo, aWare, aID);
+end;
+
 
 function TKMUnitSerf.GetCarry: TKMWareType;
 begin
@@ -1235,6 +1258,8 @@ begin
     spots[myCount] := I;
     Inc(myCount);
   end;
+  if aList.Count = 0 then
+    Exit(false);
   //Scan the list and pick suitable locations
   aSpot := UID mod aList.Count;
   if H <> nil then
@@ -1318,6 +1343,9 @@ end;
 constructor TKMUnitAnimal.Create(aID: Cardinal; aUnitType: TKMUnitType; const aLoc: TKMPointDir; aOwner: TKMHandID);
 begin
   inherited Create(aID, aUnitType, aLoc, aOwner, nil);
+  fSpawnerID := -1;
+  fStartLoc := aLoc.Loc;
+  fRadius := 20
 end;
 
 
@@ -1326,12 +1354,39 @@ begin
   Result := True;
 end;
 
+function TKMUnitAnimal.CanStepTo(X: Integer; Y: Integer; aPass: TKMTerrainPassability): Boolean;
+var spawner : PKMAnimalSpawner;
+begin
+  Result := Inherited;
+  if fSpawnerID <> -1 then
+  begin
+    spawner := gHands.PlayerAnimals.Spawners[fSpawnerID];
+    Result := Result and (KMLengthSqr(spawner.Loc.X, spawner.Loc.Y, X, Y) <= sqr(spawner.Radius) );
+  end else
+    Result := Result and (KMLengthSqr(fStartLoc.X, fStartLoc.Y, X, Y) <= sqr(fRadius) );
+end;
+
 
 function TKMUnitAnimal.GetIsSelectable: Boolean;
 begin
   Result := False;
 end;
 
+constructor TKMUnitAnimal.Load(LoadStream: TKMemoryStream);
+begin
+  Inherited;
+  LoadStream.Read(fSpawnerID);
+  LoadStream.Read(fStartLoc);
+  LoadStream.Read(fRadius);
+end;
+
+procedure TKMUnitAnimal.Save(SaveStream: TKMemoryStream);
+begin
+  Inherited;
+  SaveStream.Write(fSpawnerID);
+  SaveStream.Write(fStartLoc);
+  SaveStream.Write(fRadius);
+end;
 
 function TKMUnitAnimal.UpdateState: Boolean;
 begin
@@ -1344,6 +1399,8 @@ begin
 
   if fKillASAP then
   begin
+    if fSpawnerID <> -1 then
+      gHands.PlayerAnimals.Spawners[fSpawnerID].Animals.Remove(self);
     DoKill(fKillASAPShowAnimation);
     fKillASAP := False;
     Exit;
@@ -1368,6 +1425,9 @@ begin
   if (not gTerrain.CheckPassability(fPositionRound, DesiredPassability))
   or gTerrain.CheckAnimalIsStuck(fPositionRound, DesiredPassability) then
   begin
+    if fSpawnerID <> -1 then
+      gHands.PlayerAnimals.Spawners[fSpawnerID].Animals.Remove(self);
+
     Kill(HAND_NONE, True, False); //Animal is stuck so it dies
     Exit;
   end;
@@ -1545,6 +1605,13 @@ begin
   //The area around the unit should be visible at the start of the mission
   if InRange(Owner, 0, MAX_HANDS - 1) then //Not animals
     gHands.RevealForTeam(Owner, fPositionRound, fSight, FOG_OF_WAR_MAX, frtUnit);
+
+  if fType in UNITS_SHIPS then
+  begin
+    Condition := UNIT_MAX_CONDITION;
+    NeverHungry := true;
+  end;
+
 end;
 
 
@@ -1780,6 +1847,11 @@ begin
     //fHome.SetState(hstEmpty);
     if fHome is TKMHouseProdThatch then
       TKMHouseProdThatch(fHome).ClearPoints;
+  end;
+
+  if InShip <> nil then
+  begin
+    TKMUnitWarriorShip(InShip).RemoveUnit(self, true);
   end;
 
   gHands.CleanUpHousePointer(fHome);
@@ -2833,6 +2905,8 @@ end;
 
 procedure TKMUnit.UpdateHitPoints;
 begin
+  if UnitType in UNITS_SHIPS then   //do not increase health if it's ship
+    Exit;
   //Use fHitPointCounter as a counter to restore hit points every X ticks (Humbelum says even when in fights)
   if HITPOINT_RESTORE_PACE = 0 then Exit; //0 pace means don't restore
 
@@ -3011,6 +3085,7 @@ end;
 function TKMUnit.IsIdle: Boolean;
 begin
   Result := (fTask = nil) and ((fAction is TKMUnitActionStay) and not TKMUnitActionStay(fAction).Locked);
+  Result := Result and (InShip = nil);
 end;
 
 
@@ -3183,18 +3258,6 @@ begin
   // - specific UpdateState (Task creating layer)
   Result := True;
 
-  {if InShip <> nil then
-  begin
-    if not fNeverHungry then
-      if (fTicker mod Max(fConditionPace, 1) = 0) then
-      begin
-        If (fCondition > 0) then
-          Dec(fCondition);
-
-      end;
-    Exit;
-  end;}
-
   if fAction = nil then
     raise ELocError.Create(gRes.Units[UnitType].GUIName + ' has no action at start of TKMUnit.UpdateState', fPositionRound);
 
@@ -3240,10 +3303,9 @@ begin
 
     end;
 
-
+  //kill by palisade
   if (fTicker mod 10 = 0) then
   begin
-
     if gTerrain.TileHasPalisade(fPositionRound.X, fPositionRound.Y) then
       if gHands.CheckAlliance(Owner, gTerrain.Land^[fPositionRound.Y, fPositionRound.X].TileOwner) = atEnemy then
         HitPointsDecrease(45, 1, nil);
@@ -3562,6 +3624,17 @@ begin
 
 end;
 
+function TKMUnitsArray.Remove(aPointer: Pointer): Boolean;
+var I : Integer;
+begin
+  if fCount = 0 then
+    Exit(false);
+
+  for I := fCount - 1 downto 0 do
+    if fList[I] = aPointer then
+      Remove(I);
+end;
+
 function TKMUnitsArray.GetItem(aIndex : Integer) : TKMUnit;
 begin
   Result := nil;
@@ -3612,6 +3685,7 @@ end;
   end;}
 
 end.
+
 
 
 

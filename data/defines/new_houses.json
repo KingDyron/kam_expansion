@@ -1,39 +1,35 @@
 {
 	"HousesOrder" : [
 		{
-			"TitleID" : 1649,
-			"ShowExpanded" : true,
-			"Houses" : ["htSchool", "htInn", "htBarracks", "htTownHall",  "htStore", "htSmallStore", "htCottage", "htHouse", "htPalace", "htSiegeWorkshop"]
+			"TitleID" : 1649, 
+			"GuiIcon" : 312,
+			"Houses" : [
+						"htNone", "htStore", "htSchool", "htInn", "htCottage",  "htHouse",
+						"htNone", "htQuarry", "htWoodcutters", "htSawmill", "htPottery", "htCollectors",
+						"htNone", "htWell", "htAppleTree", "htFarm", "htVineyard", "htFishermans",
+						"htNone", "htSmallStore", "htGoldMine", "htIronMine", "htBitinMine", "htCoalMine",
+						"htNone", "htMarket", "htMerchant", "htStall"
+						]
 		},
 		{
-			"TitleID" : 1650,
-			"ShowExpanded" : true,
-			"Houses" : ["htQuarry", "htWoodcutters", "htSawmill", "htPottery", "htFarm", "htWell"]
+			"TitleID" : 1650, 
+			"GuiIcon" : 308,
+			"Houses" : [
+						"htNone", "htProductionThatch", "htMill", "htHovel", "htSwine",  "htStables",
+						"htNone", "htBakery", "htButchers", "htTannery", "htMetallurgists", "htIronSmithy",
+						"htNone", "htWeaponWorkshop", "htArmorWorkshop", "htTailorsShop", "htWeaponSmithy", "htArmorSmithy",
+						"htNone", "htStoneWorkshop", "htWoodBurner", "htIronFoundry",
+						"htNone", "htWell"
+						]
 		},
 		{
-			"TitleID" : 1651,
-			"ShowExpanded" : false,
-			"Houses" : ["htHovel", "htMill", "htBakery", "htSwine", "htButchers", "htVineyard", "htAppleTree", "htFishermans",  "htStables", "htTannery"]
-		},
-		{
-			"TitleID" : 1652,
-			"ShowExpanded" : false,
-			"Houses" : ["htGoldMine", "htIronMine", "htBitinMine", "htCoalMine"]
-		},
-		{
-			"TitleID" : 1653,
-			"ShowExpanded" : false,
-			"Houses" : ["htWeaponWorkshop", "htArmorWorkshop", "htTailorsShop", "htMetallurgists", "htIronSmithy", "htIronFoundry", "htWeaponSmithy", "htArmorSmithy","htStoneWorkshop", "htWoodBurner"]
-		},
-		{
-			"TitleID" : 1654,
-			"ShowExpanded" : false,
-			"Houses" : ["htWall", "htWall2", "htWall3", "htWall4", "htWall5", "htWallTower", "htWatchTower"]
-		},
-		{
-			"TitleID" : 1655,
-			"ShowExpanded" : false,
-			"Houses" : ["htMarket", "htStall", "htMerchant", "htCollectors", "htSign", "htProductionThatch", "htShipYard"]
+			"TitleID" : 1651, 
+			"GuiIcon" : 322,
+			"Houses" : [
+						"htNone", "htBarracks", "htTownhall", "htPalace", "htSiegeWorkshop",  "htShipYard",
+						"htNone", "htWall", "htWall2", "htWall3", "htWall4", "htWall5",
+						"htNone", "htWallTower", "htWatchTower"
+						]
 		}
 	],
   "Houses": [
@@ -117,7 +113,7 @@
 			"DescriptionID": 1723,
 			
 			"EntranceOffsetX": 0,
-			"EntranceOffsetY": 1,
+			"EntranceOffsetY": 0,
 			"EntranceOffsetXpx": 20,
 			"EntranceOffsetYpx": 0,
 			"WorkerType": -1,
@@ -226,6 +222,7 @@
 			"Sight": 5,
 			"DescriptionID": 1724, 	
 			"WorkerTypes": [{"UnitType" : "utAnimalBreeder", "MaxCount" : 1}],
+			"WareInput": ["wtSeed", "wtWater", "wtVegetables", "wtCorn"],
 			"WareOutput": ["wtFeathers", "wtSausage"],
 			
 			"EntranceOffsetX": 1,
@@ -238,8 +235,8 @@
 			"SupplyIn2" : [2317, 2318, 2319, 2320, 2321], 
 			"SupplyOut1" : [2088, 2089, 2090, 2091, 2092], 
 			"WorkAnim" : [
-							{ "WorkType" : "haWork2", "Cycles" : 4},
-							{ "WorkType" : "haWork3", "Cycles" : 40}
+							{ "WorkType" : "haWork2", "Cycles" : 5},
+							{ "WorkType" : "haWork3", "Cycles" : 20}
 						],			
 						
 			"ha_Idle": {
@@ -526,16 +523,16 @@
 							"Y4": [0, 2, 1, 1]
 						},
 			"WareSlots" : [
-								{  "GuiIcon" : 352, "WareInput" : ["wtTrunk", "wtStone", "wtTimber", "wtTile"] },
+								{  "GuiIcon" : 352, "WareInput" : ["wtTrunk", "wtStone", "wtTimber", "wtTile", "wtSawDust"] },
 								{  "GuiIcon" : 354, "WareInput" : ["wtGoldOre", "wtIronOre", "wtBitinOre", "wtCoal"] },
 								{  "GuiIcon" : 659, "WareInput" : ["wtBread", "wtWine", "wtSausage", "wtFish"]} ,
 								{  "GuiIcon" : 358, "WareInput" : ["wtGold", "wtIron", "wtBitin", "wtJewerly"] },
-								{  "GuiIcon" : 360, "WareInput" : ["wtCorn", "wtSeed", "wtFlour", "wtPig"] },
-								{  "GuiIcon" : 681, "WareInput" : ["wtApple", "wtVegetables", "wtSkin", "wtWater"] },
-								{  "GuiIcon" : 371, "WareInput" : ["wtAxe", "wtLance", "wtBow", "wtQuiver"] },
-								{  "GuiIcon" : 372, "WareInput" : ["wtSword", "wtPike", "wtCrossbow", "wtHorse"] },
-								{  "GuiIcon" : 370, "WareInput" : ["wtWoodenShield", "wtIronShield", "wtLeatherArmor", "wtIronArmor"] },
-								{  "GuiIcon" : 695, "WareInput" : ["wtStoneBolt", "wtBolt", "wtBitinE"] }
+								{  "GuiIcon" : 360, "WareInput" : ["wtCorn", "wtSeed", "wtHay", "wtApple", "wtVegetables"] },
+								{  "GuiIcon" : 864, "WareInput" : ["wtFlour", "wtPig", "wtSkin", "wtFeathers", "wtWater"] },
+								{  "GuiIcon" : 371, "WareInput" : ["wtAxe", "wtLance", "wtBow", "wtMace", "wtQuiver"] },
+								{  "GuiIcon" : 372, "WareInput" : ["wtSword", "wtPike", "wtCrossbow", "wtFlail", "wtHorse"] },
+								{  "GuiIcon" : 370, "WareInput" : ["wtWoodenShield", "wtPlateArmor", "wtLeatherArmor", "wtIronShield", "wtIronArmor"] },
+								{  "GuiIcon" : 695, "WareInput" : ["wtStoneBolt", "wtBolt", "wtBitinE", "wtBitinArmor"] }
 								]
 	},
     {
@@ -626,6 +623,7 @@
 			"WorkerTypes": [{"UnitType" : "utFarmer", "MaxCount" : 1}],
 			"EntranceOffsetXpx" : 20,
 			"EntranceOffsetX" : 0,
+			"MaxOutWares" : 10,
 			"WareInput" : ["wtWater"], 
 			"WareOutput" : ["wtApple"], 
 			"TextID": 1640,		
@@ -737,6 +735,7 @@
 			"EntranceOffsetXpx" : 5,
 			"EntranceOffsetX" : 1,		
 			"DescriptionID": 1736,
+			"MaxOutWares": 15,
 			"WorkerTypes": [{"UnitType" : "utCarpenter", "MaxCount" : 1}],
 			
 			"WoodPileOffset" : {"X" : -45, "Y" : 15}, 
@@ -990,13 +989,15 @@
 			"SupplyOut3" : [5, 5, 5, 5, 5],
 			"SupplyOut4" : [5, 5, 5, 5, 5],
 			"WareInput" : ["wtGold", "wtApple", "wtBread", "wtSausage"],
-			"MaxInWares" : 5, 
+			"MaxInWares" : 15, 
 			"WoodPileOffset" : {"X" : -10, "Y" : 15}, 
 			"StonePileOffset" : {"X" : 0, "Y" : 15}, 
 			"TilePileOffset" : {"X" : 10, "Y" : 15}, 
 			"DescriptionID": 1728,
 			"UnlockAfter" : ["htPottery", "htMarket"],
 			"Wariants" : [2489, 2508, 2509, 2510, 2511, 2512, 2513, 2514, 2515, 2516, 2517],
+			
+			"ha_Flag2": {"X": 6, "Y": -14, "Steps": [1165,1166,1167,1163,1164]},
 			
 			"Build_Area": {
 							"Y1": [0, 0, 0, 0], 
@@ -1049,6 +1050,7 @@
 			"TilePileOffset" : {"X" : 10, "Y" : 15}, 
 			"DescriptionID": 1728,
 			"UnlockAfter" : ["htPottery", "htMarket"],
+			"CanForceWork" : true,
 			
 			"Build_Area": {
 							"Y1": [1, 1, 1, 1], 
@@ -1084,10 +1086,10 @@
 		"Name": "htShipYard",
 			"MaxHealth": 600,
 			"WoodCost": 6,
-			"StoneCost": 6,
-			"TileCost": 6,
-			"WoodPic": 2530,
-			"StonePic": 2518,
+			"StoneCost": 0,
+			"TileCost": 4,
+			"WoodPic": 2532,
+			"StonePic": 2531,
 			"Sight": 6,
 			"WorkerRest": 50,
 			"WorkerType": 5,
@@ -1095,11 +1097,12 @@
 			"MaxWorkersCount": 1,
 			"MaxInWares": 10,
 			"TextID": 1983,
-			"EntranceOffsetXpx": 20,
+			"EntranceOffsetXpx": 0,
 			"EntranceOffsetYpx": 10,
-			"EntranceOffsetX" : 0,
+			"EntranceOffsetX" : -1,
+			"EntranceOffsetY" : -2,
 			"SupplyIn1" : [5, 5, 5, 5, 5],
-			"WareInput" : ["wtTimber", "wtNone", "wtNone", "wtNone"],
+			"WareInput" : ["wtTimber", "wtLog", "wtLeather", wtSteelE, "wtBitinE", "wtQuiver"],
 			"WoodPileOffset" : {"X" : -10, "Y" : 15}, 
 			"StonePileOffset" : {"X" : 0, "Y" : 15}, 
 			"TilePileOffset" : {"X" : 10, "Y" : 15}, 
@@ -1107,11 +1110,12 @@
 			"UnlockAfter" : ["htPottery", "htMarket"],
 			
 			"Build_Area": {
-							"Y1": [0, 0, 0, 0], 
-							"Y2": [0, 0, 0, 0],
-							"Y3": [0, 1, 1, 0],
-							"Y4": [0, 1, 2, 0]
+							"Y1": [0, 1, 1, 0], 
+							"Y2": [0, 2, 1, 0],
+							"Y3": [0, 0, 0, 0],
+							"Y4": [1, 1, 1, 1]
 						},
+			"ha_Flag1": {"X": -15, "Y": -170, "Steps": [1183, 1184, 1185, 1186, 1187, 1188, 1189, 1190, 1191, 1192]},
 			"ha_Work2": {
 							"X": 0, 
 							"Y": 0, 

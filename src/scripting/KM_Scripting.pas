@@ -484,6 +484,8 @@ begin
     Sender.AddTypeS('TKMHouseArea', 'array [1..4] of array [1..4] of Byte');
 
     Sender.AddTypeS('TKMCursorRenderType', '(crtNone, crtWireTile, crtTile, crtObject, crtUnit, crtHouseSite, crtHouse, crtX, crtDelete)');
+    Sender.AddTypeS('TKMLockFieldType', '(lftRoadStone, lftRoadWooden, lftRoadClay, lftRoadExclusive, lftPalisade,' +
+                      'lftField, lftGrassField, lftVegetablesField, lftWineField, lftRemove)');
 
     //*Types-Reg*//
 
@@ -596,6 +598,11 @@ begin
     RegisterMethodCheck(c, 'function  HouseWoodcutterChopOnly(aHouseID: Integer): Boolean');
     RegisterMethodCheck(c, 'function  HouseWoodcutterMode(aHouseID: Integer): TKMWoodcutterMode');
     RegisterMethodCheck(c, 'function  HouseWorker(aHouseID: Integer): Integer');
+    RegisterMethodCheck(c, 'function  HouseArea(aHouseType: Integer): TKMHouseArea');
+    RegisterMethodCheck(c, 'function  HouseEntranceOffset(aHouseType: Integer): TKMPoint');
+    RegisterMethodCheck(c, 'function  HouseTypeToID(aHouseType: TKMHouseType): Integer');
+    RegisterMethodCheck(c, 'function  HouseIDtoType(aHouseType: Integer): TKMHouseType');
+
     RegisterMethodCheck(c, 'function  IsFieldAt(aHand: ShortInt; X, Y: Integer): Boolean');
     RegisterMethodCheck(c, 'function  IsFieldPlanAt(var aHand: Integer; X, Y: Integer): Boolean');
     RegisterMethodCheck(c, 'function  IsHousePlanAt(var aHand: Integer; var aHouseType: TKMHouseType; X, Y: Integer): Boolean');
@@ -728,8 +735,12 @@ begin
     RegisterMethodCheck(c, 'function  UnitTypeEx(aUnitID: Integer): TKMUnitType');
     RegisterMethodCheck(c, 'function  UnitTypeName(aUnitType: Byte): AnsiString');
     RegisterMethodCheck(c, 'function  UnitTypeNameEx(aUnitType: TKMUnitType): AnsiString');
+    RegisterMethodCheck(c, 'function  UnitTypeToID(aUnitType: TKMUnitType): Integer');
+    RegisterMethodCheck(c, 'function  UnitIDToType(aUnitType: Integer): TKMUnitType');
     RegisterMethodCheck(c, 'function  WareTypeName(aWareType: Byte): AnsiString');
     RegisterMethodCheck(c, 'function  WareTypeNameEx(aWareType: TKMWareType): AnsiString');
+    RegisterMethodCheck(c, 'function  WareTypeToID(aWareType: TKMWareType): Integer');
+    RegisterMethodCheck(c, 'function  WareIdToType(aWareType: Integer): TKMWareType');
     RegisterMethodCheck(c, 'function  WarriorInFight(aUnitID: Integer; aCountCitizens: Boolean): Boolean');
     //*States-Check*//
 
@@ -790,7 +801,7 @@ begin
     RegisterMethodCheck(c, 'function  GiveHouseEx(aHand: Integer; aHouseType: TKMHouseType; X, Y: Integer): Integer');
     RegisterMethodCheck(c, 'function  GiveHouseSite(aHand: Integer; aHouseType: Integer; X, Y: Integer; aAddMaterials: Boolean): Integer');
     RegisterMethodCheck(c, 'function  GiveHouseSiteEx(aHand: Integer; aHouseType: TKMHouseType; X, Y: Integer; aWoodAmount: Integer; ' +
-      'aStoneAmount: Integer): Integer');
+      'aStoneAmount, aTileAmount: Integer): Integer');
     RegisterMethodCheck(c, 'function  GiveRoad(aHand: Integer; X, Y: Integer): Boolean');
     RegisterMethodCheck(c, 'function  GiveUnit(aHand: Integer; aType: Integer; X, Y: Integer; aDir: Integer): Integer');
     RegisterMethodCheck(c, 'function  GiveUnitEx(aHand: Integer; aType: TKMUnitType; X, Y: Integer; aDir: TKMDirection): Integer');
@@ -875,6 +886,7 @@ begin
     RegisterMethodCheck(c, 'function  MapTileHeightSet(X, Y: Integer; Height: Integer): Boolean');
     RegisterMethodCheck(c, 'function  MapTileObjectSet(X, Y: Integer; Obj: Integer): Boolean');
     RegisterMethodCheck(c, 'function  MapTileOverlaySet(X, Y: Integer; aOverlay: TKMTileOverlay; aOverwrite: Boolean): Boolean');
+    RegisterMethodCheck(c, 'procedure MapSetNightTime(aValue : Single)');
     RegisterMethodCheck(c, 'function  MapTilesArraySet(aTiles: array of TKMTerrainTileBrief; aRevertOnFail: Boolean; aShowDetailedErrors: Boolean): Boolean');
     RegisterMethodCheck(c, 'function  MapTilesArraySetS(aTilesS: TAnsiStringArray; aRevertOnFail: Boolean; aShowDetailedErrors: Boolean): Boolean');
     RegisterMethodCheck(c, 'function  MapTileSet(X, Y: Integer; aType: Integer; aRotation: Integer): Boolean');
@@ -907,6 +919,7 @@ begin
 
     RegisterMethodCheck(c, 'procedure Peacetime(aPeacetime: Cardinal)');
     RegisterMethodCheck(c, 'function  PlanAddField(aHand: Integer; X, Y: Integer): Boolean');
+    RegisterMethodCheck(c, 'function PlanFieldAdd(aHand: Integer; X: Integer; Y: Integer; aFIeldType: TKMLockFieldType): Boolean');
     RegisterMethodCheck(c, 'function  PlanAddHouse(aHand: Integer; aHouseType: Integer; X, Y: Integer): Boolean');
     RegisterMethodCheck(c, 'function  PlanAddHouseEx(aHand: Integer; aHouseType: TKMHouseType; X, Y: Integer): Boolean');
     RegisterMethodCheck(c, 'function  PlanAddRoad(aHand: Integer; X, Y: Integer): Boolean');
@@ -1107,6 +1120,12 @@ const
 
     (ParamCount: 0; Typ: (0, 0     , 0     , 0     , 0     ); Dir: (pmIn, pmIn, pmIn, pmIn)), // OnMissionStart
     (ParamCount: 0; Typ: (0, 0     , 0     , 0     , 0     ); Dir: (pmIn, pmIn, pmIn, pmIn)), // OnPeacetimeEnd
+
+    (ParamCount: 4; Typ: (0, btS32 , btS32 , btS32 , btEnum     ); Dir: (pmIn, pmIn, pmIn, pmIn)), // evtFieldPlanPlaced
+    (ParamCount: 4; Typ: (0, btS32 , btS32 , btS32 , btEnum     ); Dir: (pmIn, pmIn, pmIn, pmIn)), // evtFieldPlanRemoved
+    (ParamCount: 4; Typ: (0, btS32 , btS32 , btS32 , btEnum     ); Dir: (pmIn, pmIn, pmIn, pmIn)), // evtFieldPlanDigged
+    (ParamCount: 4; Typ: (0, btS32 , btS32 , btS32 , btEnum     ); Dir: (pmIn, pmIn, pmIn, pmIn)), // evtFieldPlanBuilt
+
     (ParamCount: 3; Typ: (0, btS32 , btS32 , btS32 , 0     ); Dir: (pmIn, pmIn, pmIn, pmIn)), // OnPlanFieldPlaced
     (ParamCount: 3; Typ: (0, btS32 , btS32 , btS32 , 0     ); Dir: (pmIn, pmIn, pmIn, pmIn)), // OnPlanFieldRemoved
     (ParamCount: 3; Typ: (0, btS32 , btS32 , btS32 , 0     ); Dir: (pmIn, pmIn, pmIn, pmIn)), // OnPlanRoadDigged
@@ -1386,6 +1405,10 @@ begin
       RegisterMethod(@TKMScriptStates.HouseWoodcutterChopOnly, 'HouseWoodcutterChopOnly');
       RegisterMethod(@TKMScriptStates.HouseWoodcutterMode, 'HouseWoodcutterMode');
       RegisterMethod(@TKMScriptStates.HouseWorker, 'HouseWorker');
+      RegisterMethod(@TKMScriptStates.HouseArea, 'HouseArea');
+      RegisterMethod(@TKMScriptStates.HouseEntranceOffset, 'HouseEntranceOffset');
+      RegisterMethod(@TKMScriptStates.HouseTypeToID, 'HouseTypeToID');
+      RegisterMethod(@TKMScriptStates.HouseIDtoType, 'HouseIDtoType');
       RegisterMethod(@TKMScriptStates.IsFieldAt, 'IsFieldAt');
       RegisterMethod(@TKMScriptStates.IsFieldPlanAt, 'IsFieldPlanAt');
       RegisterMethod(@TKMScriptStates.IsHousePlanAt, 'IsHousePlanAt');
@@ -1517,8 +1540,12 @@ begin
       RegisterMethod(@TKMScriptStates.UnitTypeEx, 'UnitTypeEx');
       RegisterMethod(@TKMScriptStates.UnitTypeName, 'UnitTypeName');
       RegisterMethod(@TKMScriptStates.UnitTypeNameEx, 'UnitTypeNameEx');
+      RegisterMethod(@TKMScriptStates.UnitTypeToID, 'UnitTypeToID');
+      RegisterMethod(@TKMScriptStates.UnitIDToType, 'UnitIDToType');
       RegisterMethod(@TKMScriptStates.WareTypeName, 'WareTypeName');
       RegisterMethod(@TKMScriptStates.WareTypeNameEx, 'WareTypeNameEx');
+      RegisterMethod(@TKMScriptStates.WareTypeToID, 'WareTypeToID');
+      RegisterMethod(@TKMScriptStates.WareIdToType, 'WareIdToType');
       RegisterMethod(@TKMScriptStates.WarriorInFight, 'WarriorInFight');
       //*States-Reg*//
     end;
@@ -1653,6 +1680,7 @@ begin
       RegisterMethod(@TKMScriptActions.MapTileHeightSet, 'MapTileHeightSet');
       RegisterMethod(@TKMScriptActions.MapTileObjectSet, 'MapTileObjectSet');
       RegisterMethod(@TKMScriptActions.MapTileOverlaySet, 'MapTileOverlaySet');
+      RegisterMethod(@TKMScriptActions.MapSetNightTime, 'MapSetNightTime');
       RegisterMethod(@TKMScriptActions.MapTilesArraySet, 'MapTilesArraySet');
       RegisterMethod(@TKMScriptActions.MapTilesArraySetS, 'MapTilesArraySetS');
       RegisterMethod(@TKMScriptActions.MapTileSet, 'MapTileSet');
@@ -1685,6 +1713,7 @@ begin
 
       RegisterMethod(@TKMScriptActions.Peacetime, 'Peacetime');
       RegisterMethod(@TKMScriptActions.PlanAddField, 'PlanAddField');
+      RegisterMethod(@TKMScriptActions.PlanFieldAdd, 'PlanFieldAdd');
       RegisterMethod(@TKMScriptActions.PlanAddHouse, 'PlanAddHouse');
       RegisterMethod(@TKMScriptActions.PlanAddHouseEx, 'PlanAddHouseEx');
       RegisterMethod(@TKMScriptActions.PlanAddRoad, 'PlanAddRoad');

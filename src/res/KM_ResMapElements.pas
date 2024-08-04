@@ -46,6 +46,8 @@ type
     NextTreeAgeObj,
     FallTreeAnimObj : Word;
 
+    LightRadius, LightPower : Byte;
+
   end;
 
   TKMResMapElements = class
@@ -89,8 +91,24 @@ type
     ProgressPerStage : Word;
     MatureTreeStage : Byte;
     Stage : array of Word;
+    HintID,
+    GuiIcon : Word;
+    ClimateMulti: array[TKMTerrainClimat] of Single;
     function StagesCount : Byte;
     function GetStage(aObj : Word) : Byte;
+  end;
+  TKMDecorationType = (dtObject, dtTile, dtTileOverlay);
+
+  TKMDecoration = record
+    ID, GuiIcon, TextID : Word;
+    Cost : TKMVWarePlanCommon;
+    DType : TKMDecorationType;
+  end;
+
+  TKMDecorationArray = array of TKMDecoration;
+
+  TKMDecorationArrayHelper = record helper for TKMDecorationArray
+    procedure Add(aType : TKMDecorationType; aID, aGuiIcon, aTextID : Word; aCost : TKMVWarePlanCommon);
   end;
 
   function ObjectIsChoppableTree(aObjId: Integer): Boolean; overload;
@@ -111,7 +129,8 @@ var
   gMapElements: array of TKMMapElement;
   gFieldGrains: array[TKMGrainType] of TKMGrainDat;
   gFruitTrees : array of TKMFruitTree;
-  gTreeTypeID : array[TKMTreeType] of TIntegerArray;
+  gTreeTypeID : array[TKMTerrainClimat] of TIntegerArray;
+  gDecorations : TKMDecorationArray;
 const
   //Chopable tree, Chopdown animation,
   //Age1, Age2, Age3, Age4, Falling, Stump
@@ -165,7 +184,8 @@ const
   WINE_AGE_FULL = 5000 div TERRAIN_PACE; //Wine ready to be harvested
 
 implementation
-uses JsonDataObjects, KM_CommonUtils, KM_CommonClassesExt, Math, KM_JSONUtils;
+uses JsonDataObjects, KM_CommonUtils, KM_CommonClassesExt, Math, KM_JSONUtils,
+  TypInfo;
 const
   // We use Byte instead of TKMKillByRoad to have a shorter table
   OBJ_KILL_BY_ROAD: array [Byte] of Byte {TKMKillByRoad} = (
@@ -520,7 +540,10 @@ var I, K, J, aID, MatureTreeAge : Integer;
   tmpGrain : TKMGrainDat;
   tmpElement : TKMMapElement;
   GT : TKMGrainType;
-  TT : TKMTreeType;
+  TT : TKMTerrainClimat;
+  S : String;
+  tmpCost : TKMVWarePlanCommon;
+  DT : TKMDecorationType;
 begin
   jsonPath :=  ExeDir + 'data' + PathDelim + 'defines' + PathDelim + 'objects.json';
 
@@ -539,6 +562,8 @@ begin
       tmpElement.AxeHitTimes := nObject.I['AxeHitTimes'];
       tmpElement.TrunksCount := nObject.I['TrunksCount'];
       tmpElement.FallTreeAnimObj := nObject.I['FallTreeAnimObj'];
+      tmpElement.LightRadius := nObject.I['LightRadius'];
+      tmpElement.LightPower := nObject.I['LightPower'];
       tmpElement.IsFruit := nObject.I['IsFruit'];
       MatureTreeAge := nObject.I['MatureTree'];
       tmpElement.TreeGrowAge := nObject.I['TreeGrowAge'];
@@ -628,6 +653,8 @@ begin
         TreeGrowAge := nObject.I['TreeGrowAge'];
         FallTreeAnimObj := nObject.I['FallTreeAnimObj'];
         NextTreeAgeObj := nObject.I['NextTreeAgeObj'];
+        LightRadius := nObject.I['LightRadius'];
+        LightPower := nObject.I['LightPower'];
 
         RenderAsTwo := nObject.B['RenderAsTwo'];
         if nObject.B['PlaceableInEditor'] then
@@ -710,6 +737,9 @@ begin
         if nObject.Contains('TreeGrowAge') then   TreeGrowAge := nObject.I['TreeGrowAge'];
         if nObject.Contains('FallTreeAnimObj') then   FallTreeAnimObj := nObject.I['FallTreeAnimObj'];
         if nObject.Contains('NextTreeAgeObj') then   NextTreeAgeObj := nObject.I['NextTreeAgeObj'];
+
+        if nObject.Contains('LightRadius') then   LightRadius := nObject.I['LightRadius'];
+        if nObject.Contains('LightPower') then   LightPower := nObject.I['LightPower'];
 
         if nObject.Contains('AxeHitTimes') then
           AxeHitTimes := nObject.I['AxeHitTimes'];
@@ -804,17 +834,53 @@ begin
     gFruitTrees[I].Fruits := nObject.D['Fruits'];
     gFruitTrees[I].ProgressPerStage := nObject.I['ProgressPerStage'];
     gFruitTrees[I].MatureTreeStage := nObject.I['MatureTreeStage'];
+    gFruitTrees[I].GuiIcon := nObject.I['GuiIcon'];
+    gFruitTrees[I].HintID := nObject.I['HintID'];
+
 
     nArr2 := nObject.A['Stages'];
     SetLength(gFruitTrees[I].Stage, nArr2.Count);
 
     for K := 0 to nArr2.Count - 1 do
       gFruitTrees[I].Stage[K] := nArr2.I[K];
+    for TT := Low(TKMTerrainClimat) to High(TKMTerrainClimat) do
+      if TKMEnumUtils.GetName<TKMTerrainClimat>(TT, S) then
+        gFruitTrees[I].ClimateMulti[TT] := nObject.D[S];
 
   end;
 
-  for TT := Low(TKMTreeType) to High(TKMTreeType) do
-    JSONArrToValidArr(nObjects.A[TREE_TYPE_NAME[TT]], gTreeTypeID[TT]);
+  for TT := Low(TKMTerrainClimat) to High(TKMTerrainClimat) do
+  begin
+    if TKMEnumUtils.GetName<TKMTerrainClimat>(TT, S) then
+      JSONArrToValidArr(nObjects.A[S], gTreeTypeID[TT]);
+  end;
+
+
+  nArr := nObjects.A['Decorations'];
+
+  for I := 0 to nArr.Count - 1 do
+  begin
+    nObject := nArr.O[I];
+    SetLength(tmpCost, 0);
+    nArr2 := nObject.A['Cost'];
+    for K := 0 to nArr2.Count - 1 do
+    begin
+      SetLength(tmpCost, length(tmpCost) + 1);
+      tmpCost[high(tmpCost)].W := nArr2.O[K].S['VWareName'];
+      tmpCost[high(tmpCost)].C := nArr2.O[K].I['Count'];
+    end;
+
+    if nObject.Contains('Type') then
+    begin
+      if not TKMEnumUtils.TryGetAs<TKMDecorationType>(nObject.S['Type'], DT) then
+        Continue;
+    end else
+      DT := dtObject;
+    gDecorations.Add(DT, nObject.I['ID'], nObject.I['GuiIcon'], nObject.I['TextID'], tmpCost);
+  end;
+    
+
+
 
   //gFieldGrains
     {Anim: TKMAnimLoop;}
@@ -945,6 +1011,18 @@ begin
     if Stage[I] = aObj then
       Result := I;
 
+end;
+
+procedure TKMDecorationArrayHelper.Add(aType : TKMDecorationType; aID, aGuiIcon, aTextID : Word; aCost : TKMVWarePlanCommon);
+var J : Integer;
+begin
+  J := length(self);
+  SetLength(self, J + 1);
+  self[J].ID := aID;
+  self[J].GuiIcon := aGuiIcon;
+  self[J].TextID := aTextID;
+  self[J].DType := aType;
+  self[J].Cost := aCost;
 end;
 
 function ObjectIsChoppableTree(aObjId: Integer): Boolean;
