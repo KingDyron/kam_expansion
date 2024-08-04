@@ -1021,7 +1021,7 @@ begin
                                           Res.AddWare(wtLog, 1);
                                           Res.AddWare(wtLeather, 1);
                                           Res.AddWare(wtSteelE, 1);
-                                          Res.AddWare(wtQuiver, 1);
+                                          //Res.AddWare(wtQuiver, 1);
                                         end;
                         end;
                         fIssued := TKMHouseShipYard(aUnit.Home).CanWork;

@@ -635,9 +635,10 @@
 			"CanAttackUnits" : true,
 			"CanOrderAmmo" : true,
 			"DescriptionID" : 1919,
-			"Attack" : 200,
+			"Attack" : 500,
+			"UnitDamage" : 5,
 			"AttackHorse" : 0,
-			"HouseDamage" : 2,
+			"HouseDamage" : 10,
 			"FullUnitAnimations": [
 				{"ActionType" : "uaWalk", "StartStep" : 13606, "StepsCount" : 15},
 				{"ActionType" : "uaWork", "StartStep" : 13606, "StepsCount" : 15}

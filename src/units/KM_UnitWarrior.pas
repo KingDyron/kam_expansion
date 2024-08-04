@@ -274,6 +274,11 @@ type
       function UpdateState : Boolean; override;
   end;
 
+  TKMUnitWarriorBShip = class(TKMUnitWarrior)
+  public
+    procedure OrderAmmo(aForceOrder : Boolean = false); override;
+  end;
+
 
 implementation
 uses
@@ -562,7 +567,6 @@ end;
 procedure TKMUnitWarrior.OrderAmmo(aForceOrder : Boolean = false);
 var ammoCart : TKMUnitWarriorAmmoCart;
   count : Word;
-  S : TKMUnitWarriorShip;
 begin
   //Assert(gRes.Units[UnitType].CanOrderAmmo, 'Warrior cant order ammo');
 
@@ -2578,6 +2582,25 @@ begin
 
       gRenderPool.RenderDebug.RenderTiledArea(Position, GetFightMinRange, GetFightMaxRange, GetLength, fillColor, lineColor);
     end;
+end;
+
+
+procedure TKMUnitWarriorBShip.OrderAmmo(aForceOrder: Boolean = False);
+var HS : TKMHouse;//shipyard
+begin
+
+  if fBoltCount > 500 then
+    Exit;
+
+  HS := gHands[Owner].GetClosestHouse(Position, [htShipYard], [wtBolt], 3);
+
+  if not HS.IsValid then
+    Exit;
+  if not HS.HasWorkerInside then
+    Exit;
+
+  HS.WareTakeFromIn(wtBolt, 1, true);
+  Inc(fBoltCount, 50)
 end;
 
 end.

@@ -126,6 +126,7 @@ type
       CostsRow_Costs: array [1..WARES_IN_OUT_COUNT] of TKMCostsRow; //3 bars is the maximum
       Label_DepletedMsg: TKMLabel;
       VirtualWares_Row: array [1..9] of TKMWaresRow; //Virtual wares show max 9 wares
+      ProgressBar_BigWare: TKMPercentBar;
       Progress_BigWare : TKMImageAnimation;
       Progress_Beasts : TKMIconProgressBar;
 
@@ -472,10 +473,12 @@ begin
   end;
 
 
-  Progress_BigWare := TKMImageAnimation.Create(Panel_House_Common, 0, 0, TB_WIDTH, 50, 0, rxGui, []);
+  ProgressBar_BigWare := TKMPercentBar.Create(Panel_House_Common, 0, 0, TB_WIDTH, 40);
+  ProgressBar_BigWare.LinesCount := 4;
+  Progress_BigWare := TKMImageAnimation.Create(Panel_House_Common, 0, 0, TB_WIDTH, 40, 0, rxGui, []);
   Progress_BigWare.Hitable := false;
   Progress_BigWare.StopAnim := true;
-  Progress_BigWare.AddBevel := true;
+  Progress_BigWare.AddBevel := false;
 
   Progress_Beasts := TKMIconProgressBar.Create(Panel_House_Common, 0, 0, TB_WIDTH, 30, false, [[490, 569, 403], [490, 569, 403], [490, 569, 403], [490, 569, 403], [490, 569, 403]]);
   Progress_Beasts.RX := rxHouses;
@@ -1625,6 +1628,8 @@ begin
   Progress_Beasts.ColumnCount := 5;
   Progress_Beasts.Hide;
   Progress_BigWare.Hide;
+  ProgressBar_BigWare.Hide;
+
   Button_BarracksRecruit.Hide;
   Image_Barracks_NotAcceptRecruit.Hide;
   case aHouse.HouseType of
@@ -2051,6 +2056,8 @@ begin
                       Progress_BigWare.Top := Progress_Beasts.Top;
                       Progress_BigWare.Animation.Create(0, 0, 901, 11);
                       Progress_BigWare.AnimStep := EnsureRange(Round(Progress_BigWare.Animation.Count * TKMHouseHovel(aHouse).FeathersProgress) - 1, 0, 10);
+
+
                       Progress_Beasts.Top := Progress_BigWare.Bottom + 3;
                     end;
         htFarm :    begin
@@ -2065,13 +2072,20 @@ begin
                         Progress_BigWare.Animation.Create(0, 0, 892, 9);
                         Progress_BigWare.AnimStep := EnsureRange(Round(Progress_BigWare.Animation.Count * (TKMHouseVineyard(aHouse).WineToProduce / 5)) - 1, 0, 8);
 
-                        Progress_Beasts.Top := Progress_BigWare.Bottom + 3;
+                        ProgressBar_BigWare.Top := Progress_BigWare.Top;
+                        ProgressBar_BigWare.Position := TKMHouseVineyard(aHouse).WineProgress / 5;
+                        ProgressBar_BigWare.Show;
+
+
+                        Progress_Beasts.Hide;
+
+                        {Progress_Beasts.Top := Progress_BigWare.Bottom + 3;
                         //Progress_Beasts.RX := rxGui;
                         Progress_Beasts.Progress := TKMHouseVineyard(aHouse).GetProgressArray;
                         Progress_Beasts.Colors := [icLightGreen];
                         Progress_Beasts.TexID := [[359]];
                         Progress_Beasts.Shape := stRound;
-                        Progress_Beasts.ColumnCount := 5;
+                        Progress_Beasts.ColumnCount := 5;}
                       end;
         else
           Progress_Beasts.Hide;

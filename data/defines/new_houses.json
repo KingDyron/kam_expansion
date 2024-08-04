@@ -1102,7 +1102,7 @@
 			"EntranceOffsetX" : -1,
 			"EntranceOffsetY" : -2,
 			"SupplyIn1" : [5, 5, 5, 5, 5],
-			"WareInput" : ["wtTimber", "wtLog", "wtLeather", wtSteelE, "wtBitinE", "wtQuiver"],
+			"WareInput" : ["wtTimber", "wtLog", "wtLeather", wtSteelE, "wtBitinE", "wtBolt"],
 			"WoodPileOffset" : {"X" : -10, "Y" : 15}, 
 			"StonePileOffset" : {"X" : 0, "Y" : 15}, 
 			"TilePileOffset" : {"X" : 10, "Y" : 15}, 

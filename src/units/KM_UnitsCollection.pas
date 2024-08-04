@@ -141,22 +141,15 @@ begin
     utStonemason..utMetallurgist: Result := TKMUnitCitizen.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
     utOperator,
     utRecruit:                    Result := TKMUnitRecruit.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
-    WARRIOR_MIN..WARRIOR_MAX:     If aUnitType = utSpy then
-                                    Result := TKMUnitWarriorSpy.Create(uid, aUnitType, pointDir, aOwner, aInHouse)
-                                  else
-                                  If aUnitType = utAmmoCart then
-                                    Result := TKMUnitWarriorAmmoCart.Create(uid, aUnitType, pointDir, aOwner, aInHouse)
-                                  else
-                                  If aUnitType = utShip then
-                                    Result := TKMUnitWarriorShip.Create(uid, aUnitType, pointDir, aOwner, aInHouse)
-                                  else
-                                  If aUnitType = utSpikedTrap then
-                                    Result := TKMUnitWarriorSpikedTrap.Create(uid, aUnitType, pointDir, aOwner, aInHouse)
-                                  else
-                                  If aUnitType = utMedic then
-                                    Result := TKMUnitWarriorMedic.Create(uid, aUnitType, pointDir, aOwner, aInHouse)
-                                  else
-                                    Result := TKMUnitWarrior.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
+    WARRIOR_MIN..WARRIOR_MAX:     case aUnitType of
+                                    utSpy       : Result := TKMUnitWarriorSpy.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
+                                    utAmmoCart  : Result := TKMUnitWarriorAmmoCart.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
+                                    utShip       : Result := TKMUnitWarriorShip.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
+                                    utSpikedTrap       : Result := TKMUnitWarriorSpikedTrap.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
+                                    utMedic       : Result := TKMUnitWarriorMedic.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
+                                    utBattleShip       : Result := TKMUnitWarriorBShip.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
+                                    else Result := TKMUnitWarrior.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
+                                  end;
     // Do not specify aAddInHouse, we want to call TKMUnitAnimal constructor
     utWolf,
     utWatersnake..utDuck:         Result := TKMUnitAnimal.Create(uid, aUnitType, pointDir, aOwner);
@@ -373,22 +366,15 @@ begin
                                 U := TKMUnitCitizen.Load(LoadStream);
       utOperator,
       utRecruit:                U := TKMUnitRecruit.Load(LoadStream);
-      WARRIOR_MIN..WARRIOR_MAX: If unitType = utSpy then
-                                    U := TKMUnitWarriorSpy.Load(LoadStream)
-                                else
-                                If unitType = utAmmoCart then
-                                    U := TKMUnitWarriorAmmoCart.Load(LoadStream)
-                                else
-                                If unitType = utShip then
-                                    U := TKMUnitWarriorShip.Load(LoadStream)
-                                else
-                                If unitType = utSpikedTrap then
-                                    U := TKMUnitWarriorSpikedTrap.Load(LoadStream)
-                                else
-                                If unitType = utMedic then
-                                    U := TKMUnitWarriorMedic.Load(LoadStream)
-                                else
-                                  U := TKMUnitWarrior.Load(LoadStream);
+      WARRIOR_MIN..WARRIOR_MAX: case unitType of
+                                  utSpy       : U := TKMUnitWarriorSpy.Load(LoadStream);
+                                  utAmmoCart  : U := TKMUnitWarriorAmmoCart.Load(LoadStream);
+                                  utShip       : U := TKMUnitWarriorShip.Load(LoadStream);
+                                  utSpikedTrap       : U := TKMUnitWarriorSpikedTrap.Load(LoadStream);
+                                  utMedic       : U := TKMUnitWarriorMedic.Load(LoadStream);
+                                  utBattleShip       : U := TKMUnitWarriorBShip.Load(LoadStream);
+                                  else U := TKMUnitWarrior.Load(LoadStream);
+                                end;
       utWolf,
       utWatersnake..utDuck:     U := TKMUnitAnimal.Load(LoadStream);
       utFish:                   U := TKMUnitFish.Load(LoadStream);

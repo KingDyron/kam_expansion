@@ -297,7 +297,7 @@ type
     procedure GetHouseMarks(const aLoc: TKMPoint; aHouseType: TKMHouseType; aList: TKMPointTagList; aIgnoreFOW: Boolean = False; aIgnoreObjects: Boolean = false);
     procedure GetBridgeMarks(const aLoc: TKMPoint; aIndex, aRot: Word; aList : TKMPointTagList; aIgnoreFOW: Boolean = false);
 
-    function GetClosestHouse(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aWareSet : TKMWareTypeSet = [wtAll]) : TKMHouse;
+    function GetClosestHouse(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aWareSet : TKMWareTypeSet = [wtAll];  aMaxDistance : Single = 999) : TKMHouse;
     function GetClosestStore(aLoc : TKMPoint; aWare: TKMWareType) : TKMHouse;
     function GetClosestBarracks(aLoc : TKMPoint; aWare: TKMWareType) : TKMHouse;
 
@@ -2504,7 +2504,7 @@ begin
 
 end;
 
-function TKMHand.GetClosestHouse(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aWareSet : TKMWareTypeSet = [wtAll]) : TKMHouse;
+function TKMHand.GetClosestHouse(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aWareSet : TKMWareTypeSet = [wtAll]; aMaxDistance : Single = 999) : TKMHouse;
 var I : Integer;
   lastDistance : Single;
   H : TKMHouse;
@@ -2521,7 +2521,10 @@ begin
     repeat
       H := FindHouse(HT, I);
 
-      if (H <> nil) and (not H.IsDestroyed) and (KMLengthDiag(aLoc, H.Position) < lastDistance) then
+      if (H <> nil)
+      and (not H.IsDestroyed)
+      and (KMLengthDiag(aLoc, H.Position) < lastDistance)
+      and (KMLengthDiag(aLoc, H.Position) <= aMaxDistance) then
         if wtAll in aWareSet then
         begin
           Result := H;

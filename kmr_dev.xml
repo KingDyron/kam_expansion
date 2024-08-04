@@ -256,7 +256,7 @@
       <chkShowUnits Checked="True"/>
       <chkShowHouses Checked="True"/>
       <chkShowObjects Checked="True"/>
-      <chkShowFlatTerrain Checked="True"/>
+      <chkShowFlatTerrain Checked="False"/>
       <chkPaintSounds Checked="False"/>
       <chkShowRoutesSteps Checked="False"/>
       <chkViewportPos Checked="False"/>

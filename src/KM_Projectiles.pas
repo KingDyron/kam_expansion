@@ -329,7 +329,7 @@ begin
                             and (KMLengthSqr(fShotFrom, U.PositionF) <= Sqr(fMaxLength)) then
                             begin
                               U.SetHitTime;
-                              if fOwner.InstantKill then
+                              if fOwner.InstantKill or (fOwner.Attack >= 500) then
                               begin
                                 if (FRIENDLY_FIRE or (gHands.CheckAlliance(fOwner.Owner, U.Owner)= atEnemy)) then
                                   U.HitPointsDecrease(U.HitPointsMax, fOwner)

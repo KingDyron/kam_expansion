@@ -1310,23 +1310,23 @@ begin
   for dir := DirN to dirNW do
     fItems[utShip].fUnitSprite.Act[uaWalkArm].Dir[dir].Count := 0;
   //fItems[utShip].fUnitSprite.Act[uaWalkArm].Clear;
-  fItems[utShip].fUnitDat.HitPoints := 5;
+  fItems[utShip].fUnitDat.HitPoints := 4;
   fItems[utShip].fUnitDat.Defence := 3;
   fItems[utShip].fUnitDat.Attack := 0;
   fItems[utShip].fUnitDat.AttackHorse := 0;
-  fItems[utShip].fUnitDat.Speed := 16;
+  fItems[utShip].fUnitDat.Speed := 30;
   fItems[utShip].fUnitDat.Sight := 7;
 
   fItems[utBattleShip].fUnitDat := fItems[utMilitia].fUnitDat;
   fItems[utBattleShip].fUnitSprite := fItems[utCatapult].fUnitSprite;
   for dir := DirN to dirNW do
     fItems[utBattleShip].fUnitSprite.Act[uaWalkArm].Dir[dir].Count := 0;
-  fItems[utBattleShip].fUnitDat.HitPoints := 8;
+  fItems[utBattleShip].fUnitDat.HitPoints := 6;
   fItems[utBattleShip].fUnitDat.Defence := 5;
-  fItems[utBattleShip].fUnitDat.Attack := 120;
+  fItems[utBattleShip].fUnitDat.Attack := 500;
   fItems[utBattleShip].fUnitDat.AttackHorse := 0;
   fItems[utBattleShip].HouseDamage := 25;
-  fItems[utBattleShip].fUnitDat.Speed := 16;
+  fItems[utBattleShip].fUnitDat.Speed := 30;
   fItems[utBattleShip].fUnitDat.Sight := 7;
 
 
@@ -1338,7 +1338,7 @@ begin
   fItems[utBoat].fUnitDat.Defence := 1;
   fItems[utBoat].fUnitDat.Attack := 0;
   fItems[utBoat].fUnitDat.AttackHorse := 0;
-  fItems[utBoat].fUnitDat.Speed := 20;
+  fItems[utBoat].fUnitDat.Speed := 32;
   fItems[utBoat].fUnitDat.Sight := 7;
 
 

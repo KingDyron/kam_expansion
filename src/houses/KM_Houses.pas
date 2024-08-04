@@ -767,6 +767,7 @@ type
       function CanMakeWine(aNoFieldsToCut : Boolean) : Boolean;
       function GetProgressArray : TSingleArray;
       function WineToProduce : Byte;
+      property WineProgress: Single read fFillWine;
       procedure ProduceWine;
   end;
 
