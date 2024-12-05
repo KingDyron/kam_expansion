@@ -92,11 +92,15 @@ type
     MapEd_AnimalsCount : Integer;
 
     MapEd_Modifications : set of TKMMapEdModification;
-
     Custom : Record
       RenderType : TKMCursorRenderType;
       Tag1, Tag2 : Integer;
     end;
+    MapEd_WaresCount : Integer;
+    Hint : String;
+    MapEd_WaresMinCount : Byte;
+    MapEd_WaresMaxCount : Byte;
+    MapEd_WaresRandomCount : Boolean;
 
     constructor Create;
     procedure AddMod(aMod : TKMMapEdModification);

@@ -71,6 +71,7 @@ type
     BlockTeamSelection: Boolean;
     BlockPeacetime: Boolean;
     BlockFullMapPreview: Boolean;
+    Weather : TKMSettingsWeather;
 
     constructor Create;
 
@@ -1087,6 +1088,7 @@ begin
   fSmallDescLibx := LIBX_NO_ID;
   fBigDescLibx := LIBX_NO_ID;
   fNameLibx := LIBX_NO_ID;
+  Weather.SetDefault;
 end;
 
 
@@ -1096,12 +1098,24 @@ var
   ft: TextFile;
   MD: TKMMissionDifficulty;
 
-  procedure WriteLine(const aLineHeader: String; const aLineValue: String = '');
+  procedure WriteLine(const aLineHeader: String; const aLineValue: String = ''); overload;
   begin
     Writeln(ft, aLineHeader);
     if aLineValue <> '' then
       Writeln(ft, aLineValue);
-    Writeln(ft);
+    //Writeln(ft);
+  end;
+
+  procedure WriteLine(const aLineHeader: String; const aLineValue: Integer); overload;
+  begin
+    Writeln(ft, aLineHeader);
+    Writeln(ft, IntToStr(aLineValue));
+    //Writeln(ft);
+  end;
+  procedure WriteLine(const aLineValue: Integer); overload;
+  begin
+    Writeln(ft, IntToStr(aLineValue));
+    //Writeln(ft);
   end;
 
 begin
@@ -1162,6 +1176,21 @@ begin
   if BlockFullMapPreview then
     WriteLine('BlockFullMapPreview');
 
+  if Weather.Overwrite then
+  begin
+    WriteLine('WeatherOverwrite');
+    WriteLine(BoolToStr(Weather.Enabled, true));//enabled or disabled
+    WriteLine(Weather.MaxCount);
+    WriteLine(Weather.MaxSpawnCount);
+    WriteLine(Weather.MinInterval);
+    WriteLine(Weather.MaxInterval);
+    WriteLine(Weather.MaxLifeTime);
+    WriteLine(FloatToStr(Weather.MaxCloudSpeed));
+    WriteLine(Weather.DecParticles);
+    WriteLine(Weather.NightTime);
+    WriteLine(BoolToStr(Weather.DynamicLight, true));//enabled or disabled
+  end;
+
   if HasDifficultyLevels then
   begin
     St := '';
@@ -1193,13 +1222,37 @@ procedure TKMMapTxtInfo.LoadTXTInfo(const aFilePath: String);
     missionTexts.Free;
   end;
 
+
 var
   I, tmpInt: Integer;
   St, S: String;
   ft: TextFile;
   stList: TStringList;
   MD: TKMMissionDifficulty;
+
+  function NextLineToInt(aDefaultValue : Integer = 0) : Integer;
+  begin
+    Result := aDefaultValue;
+    ReadLn(ft, S);
+    TryStrToInt(S, Result);
+  end;
+
+  function NextLineToFloat(aDefaultValue : Single = 0) : Single;
+  begin
+    Result := aDefaultValue;
+    ReadLn(ft, S);
+    TryStrToFloat(S, Result);
+  end;
+
+  function NextLineToBool : Boolean;
+  begin
+    Result := false;
+    ReadLn(ft, S);
+    TryStrToBool(S, Result);
+  end;
+
 begin
+
   //Load additional text info
   if FileExists(aFilePath) then
   begin
@@ -1213,6 +1266,26 @@ begin
 
       if SameText(St, 'Version') then
         Readln(ft, Version);
+      if SameText(St, 'WeatherOverwrite') then
+      begin
+        Weather.Overwrite := true;
+        Weather.Enabled := NextLineToBool;
+        Weather.MaxCount := NextLineToInt;
+        Weather.MaxSpawnCount := NextLineToInt;
+        Weather.MinInterval := NextLineToInt;
+        Weather.MaxInterval := NextLineToInt;
+        Weather.MaxLifeTime := NextLineToInt;
+        Weather.MaxCloudSpeed := NextLineToFloat;
+        Weather.DecParticles := NextLineToInt;
+        Weather.NightTime := NextLineToInt;
+        Weather.NightSpeed := NextLineToInt;
+        Weather.DynamicLight := NextLineToBool;
+      end;
+
+      if SameText(St, 'WeatherOverwrite') then
+      begin
+
+      end;
 
       if SameText(St, 'BigDesc') then
       begin
@@ -1414,7 +1487,8 @@ begin
             or (Author <> '') or (Version <> '')
             or (fSmallDesc <> '') or IsSmallDescLibxSet
             or (fBigDesc <> '') or IsBigDescLibxSet
-            or HasDifficultyLevels);
+            or HasDifficultyLevels
+            or Weather.Overwrite);
 end;
 
 
@@ -1478,6 +1552,7 @@ begin
   LoadStream.ReadW(fBigDesc);
   LoadStream.Read(fBigDescLibx);
   LoadStream.Read(fNameLibx);
+  LoadStream.Read(Weather, SizeOf(Weather));
 end;
 
 
@@ -1503,6 +1578,7 @@ begin
   SaveStream.WriteW(fBigDesc);
   SaveStream.Write(fBigDescLibx);
   SaveStream.Write(fNameLibx);
+  SaveStream.Write(Weather, SizeOf(Weather));
 end;
 
 

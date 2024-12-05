@@ -8,7 +8,7 @@ uses
   KM_PathFinding,
   KM_GameParams, KM_GameInputProcess,
   KM_GameSavePoints,
-  KM_GameOptions, KM_GameTypes,
+  KM_GameOptions, KM_GameTypes, KM_GameDefines,
   KM_MapEditor, KM_Campaigns, KM_Maps, KM_MapTypes, KM_CampaignTypes, KM_TerrainPainter,
   KM_Render, KM_Scripting,
   KM_MediaTypes,
@@ -17,7 +17,8 @@ uses
   KM_ResTypes, KM_ResFonts, KM_ResTexts,
   KM_Hand,
   KM_Defaults, KM_Points, KM_CommonTypes, KM_CommonClasses, KM_CommonClassesExt,
-  KM_GameUIDTracker;
+  KM_GameUIDTracker,
+  KM_Achievements;
 
 type
   //Class that manages single game session
@@ -100,6 +101,7 @@ type
     fMapEdMapSaveStarted: TEvent;
     fMapEdMapSaveEnded: TEvent;
     fWeather : TKMWeatherCollection;
+    fGameRes : TKMGameResources;
 
     procedure IssueAutosaveCommand(aAfterPT: Boolean);
     function FindHandToSpec: Integer;
@@ -166,7 +168,8 @@ type
 
     procedure Start(const aMissionFullFilePath, aName: UnicodeString; aFullCRC, aSimpleCRC: Cardinal; aCampaign: TKMCampaign;
                     aCampMap: Byte; aLocation: ShortInt; aColor: Cardinal; aMapDifficulty: TKMMissionDifficulty = mdNone;
-                    aAIType: TKMAIType = aitNone);
+                    aAIType: TKMAIType = aitNone;
+                    aBDifficulty: TKMMissionBuiltInDifficulty = mdbNormal);
 
     procedure AfterStart;
     procedure MapEdStartEmptyMap(aSizeX, aSizeY: Integer);
@@ -290,6 +293,8 @@ type
     property TerrainPainter: TKMTerrainPainter read fTerrainPainter;
     property TextMission: TKMTextLibraryMulti read fTextMission;
     property Weather : TKMWeatherCollection read fWeather;
+    property Resource : TKMGameResources read fGameRes;
+    function Achievements : TKMAchievements;
 
     procedure SetSeed(aSeed: Integer);
 
@@ -450,7 +455,7 @@ begin
   gSpecAnim := TKMSpecialAnims.Create;
   gParticles := TKMParticlesCollection.Create;
   fWeather := TKMWeatherCollection.Create;
-
+  fGameRes := TKMGameResources.Create;
   if gRandomCheckLogger <> nil then
   begin
     gRandomCheckLogger.Clear;
@@ -486,6 +491,7 @@ begin
   FreeAndNil(gSpecAnim);
   FreeAndNil(gParticles);
   FreeAndNil(fWeather);
+  FreeAndNil(fGameRes);
   FreeAndNil(fPathfinding);
   FreeAndNil(fScripting);
   FreeAndNil(gScriptSounds);
@@ -539,7 +545,8 @@ end;
 // New mission
 procedure TKMGame.Start(const aMissionFullFilePath, aName: UnicodeString; aFullCRC, aSimpleCRC: Cardinal; aCampaign: TKMCampaign;
                             aCampMap: Byte; aLocation: ShortInt; aColor: Cardinal;
-                            aMapDifficulty: TKMMissionDifficulty = mdNone; aAIType: TKMAIType = aitNone);
+                            aMapDifficulty: TKMMissionDifficulty = mdNone; aAIType: TKMAIType = aitNone;
+                            aBDifficulty: TKMMissionBuiltInDifficulty = mdbNormal);
 const
   GAME_PARSE: array [TKMGameMode] of TKMMissionParsingMode = (
     mpmSingle, mpmSingle, mpmMulti, mpmMulti, mpmEditor, mpmSingle, mpmSingle);
@@ -550,14 +557,14 @@ var
   parser: TKMMissionParserStandard;
   parserPlayerInfo: TKMMissionParserInfo;
   mapInfo: TKMMapInfo;
-  campDataStream, AIStream: TKMemoryStream;
+  campDataStream: TKMemoryStream;
   campaignDataFilePath: UnicodeString;
 begin
   gLog.AddTime('GameStart');
   Assert(fParams.Mode in [gmMulti, gmMultiSpectate, gmMapEd, gmSingle, gmCampaign]);
 
   gRes.Wares.ResetToDefaults;
-
+  //gRes.OverloadJSONData(aMissionFullFilePath);
   fParams.Name := aName;
 
   fParams.MissionFullFilePath := aMissionFullFilePath;
@@ -573,6 +580,7 @@ begin
 
   fCampaignMap := aCampMap;
   fParams.MissionDifficulty := aMapDifficulty;
+  fParams.MissionBuiltInDifficulty := aBDifficulty;
   fAIType := aAIType;
 
   if fParams.IsMultiPlayerOrSpec then
@@ -586,6 +594,9 @@ begin
 
   gLog.AddTime('Loading DAT file: ' + aMissionFullFilePath);
 
+
+  fGameRes.SetDefault;
+  fGameRes.LoadFromJson(aMissionFullFilePath);
   //Disable players in MP to skip their assets from loading by MissionParser
   //In SP all players are enabled by default
   case fParams.Mode of
@@ -641,6 +652,7 @@ begin
 
   //Choose how we will parse the script
   parseMode := GAME_PARSE[fParams.Mode];
+
 
   if fParams.IsMapEditor then
   begin
@@ -731,6 +743,29 @@ begin
 
     // MapTxtInfo should be loaded before MultiplayerRig, since we use map txt params there in UpdateHandState
     fMapTxtInfo.LoadTXTInfo(ChangeFileExt(aMissionFullFilePath, '.txt'));
+    fWeather.Settings.SetDefault;
+    case fParams.Mode of
+      gmMulti, gmMultiSpectate: begin
+                                  //settings can be default or the ones used by map
+                                  if MapTxtInfo.Weather.Overwrite then
+                                    fWeather.Settings := MapTxtInfo.Weather
+                                  else
+                                    fWeather.Settings := gNetworking.NetGameOptions.Weather;
+                                end;
+      gmSingle, gmCampaign: begin
+                              //settings can be default or the ones used by map
+                              if MapTxtInfo.Weather.Overwrite then
+                                fWeather.Settings := MapTxtInfo.Weather
+                              else
+                                fWeather.Settings := gGameSettings.Weather;
+                            end;
+    end;
+    if fParams.MBD = mdbRealism then
+      fWeather.Settings.SetRealism;
+
+    fWeather.StartMission;
+    gTerrain.AfterLoadFromFile;
+
 
     // Set default goals for SP game on MP map with PlayableAsSP flag
     if fParams.IsSingle
@@ -746,6 +781,7 @@ begin
                   fTextMission := TKMTextLibraryMulti.Create;
                   // Make a full scan for Libx top ID, to allow unordered Libx ID's by not carefull mapmakers
                   fTextMission.LoadLocale(ChangeFileExt(aMissionFullFilePath, '.%s.libx'), True);
+                  fGameRes.ApplyAfterStart;
                 end;
       gmSingle, gmCampaign:
                 begin
@@ -753,10 +789,12 @@ begin
                   fTextMission := TKMTextLibraryMulti.Create;
                   // Make a full scan for Libx top ID, to allow unordered Libx ID's by not carefull mapmakers
                   fTextMission.LoadLocale(ChangeFileExt(aMissionFullFilePath, '.%s.libx'), True);
+                  fGameRes.ApplyAfterStart;
                 end;
       gmMapEd:  begin
                   fTextMission := TKMTextLibraryMulti.Create;
                   fTextMission.LoadLocale(ChangeFileExt(aMissionFullFilePath, '.%s.libx'), True);
+                  //fTextMission.SaveToFile(aMissionFullFilePath);
                 end;
     end;
 
@@ -764,14 +802,10 @@ begin
 
     if fParams.IsMultiPlayerOrSpec then
       MultiplayerRig(True);
-
-    if FileExists(ChangeFileExt(fParams.MissionFullFilePath, '.AISetup')) then
-    begin
-      AIStream := TKMemoryStreamBinary.Create;
-        AIStream.LoadFromFile(ChangeFileExt(fParams.MissionFullFilePath, '.AISetup'));
-        gHands.LoadFromFile(AIStream);
-      AIStream.Free;
-    end;
+    if not fParams.IsMapEditor then
+      for I := 0 to gHands.Count - 1 do
+        if gHands[I].Enabled then
+          gHands[I].AI.Mayor.Recorder.LoadFromFile;
     //some late operations for parser (f.e. ProcessAttackPositions, which should be done after MultiplayerRig)
     parser.PostLoadMission;
   finally
@@ -1239,6 +1273,7 @@ end;
 procedure TKMGame.PlayerVictory(aHandIndex: TKMHandID);
 var C : TKMCampaign;
 begin
+  Achievements.GameWon;
   if fParams.IsMultiPlayerOrSpec then
   begin
     if gNetworking.NetPlayers.PlayerIndexToLocal(aHandIndex) = -1 then
@@ -1583,7 +1618,7 @@ begin
       mapInfo.Free;
     end;
   end;
-
+  fTextMission.SaveToFile(aPathName);
   fParams.Name := TruncateExt(ExtractFileName(aPathName));
   fSetMissionFileSP(ExtractRelativePath(ExeDir, aPathName));
 
@@ -2136,6 +2171,7 @@ begin
     gameInfo.SaveTimestamp := aTimestamp;
     gameInfo.MissionMode := fParams.MissionMode;
     gameInfo.MissionDifficulty := fParams.MissionDifficulty;
+    gameInfo.MissionBuiltInDifficulty := fParams.MissionBuiltInDifficulty;
     gameInfo.MapSizeX := gTerrain.MapX;
     gameInfo.MapSizeY := gTerrain.MapY;
     gameInfo.PlayerCount := gHands.Count;
@@ -2258,6 +2294,7 @@ begin
   gSpecAnim.Save(aBodyStream);
   gParticles.Save(aBodyStream);
   fWeather.Save(aBodyStream);
+  fGameRes.Save(aBodyStream);
   fScripting.Save(aBodyStream);
   gScriptSounds.Save(aBodyStream);
   aBodyStream.Write(fAIType, SizeOf(fAIType));
@@ -2328,7 +2365,7 @@ end;
 procedure TKMGame.SaveGameToFile(const aPathName: String; aSaveByPlayer: Boolean; aSaveWorkerThread: TKMWorkerThread;
                                  aTimestamp: TDateTime; const aMPLocalDataPathName: String = '');
 var
-  mainStream, headerStream, bodyStream, saveStreamTxt, aiStream: TKMemoryStream;
+  mainStream, headerStream, bodyStream, saveStreamTxt: TKMemoryStream;
   gameMPLocalData: TKMGameMPLocalData;
 
 begin
@@ -2379,13 +2416,14 @@ begin
     TKMemoryStream.AsyncSaveToFileAndFree(saveStreamTxt, aPathName + EXT_SAVE_TXT_DOT, aSaveWorkerThread);
   end;
 
-  if (fParams.Tick > 0) and gHands.DoSaveToFile then
+  //changed to seperated files for each player
+  {if (fParams.Tick > 0) and gHands.DoSaveToFile then
   begin
     aiStream  := TKMemoryStreamBinary.Create;
       gHands.SaveToFile(aiStream);
       aiStream.SaveToFile(ChangeFileExt(gGameParams.MissionFullFilePath, '.AISetup'));
     aiStream.Free;
-  end;
+  end;}
 end;
 
 
@@ -2583,6 +2621,7 @@ begin
       fSetGameTickEvent(gameInfo.TickCount);
       fParams.MissionMode := gameInfo.MissionMode;
       fParams.MissionDifficulty := gameInfo.MissionDifficulty;
+      fParams.MissionBuiltInDifficulty := gameInfo.MissionBuiltInDifficulty;
       fMapTxtInfo.Free; // Free previously create gGame's fMapTxtInfo, which was created in TKMGame.Create
       fMapTxtInfo := gameInfo.TxtInfo;
       gameInfo.TxtInfo := nil; // Don't Free MapTxtInfo object in gameInfo, its used by our game
@@ -2673,6 +2712,7 @@ begin
     gSpecAnim.Load(bodyStream);
     gParticles.Load(bodyStream);
     fWeather.Load(bodyStream);
+    fGameRes.Load(bodyStream);
     fScripting.Load(bodyStream);
     gScriptSounds.Load(bodyStream);
     bodyStream.Read(fAIType, SizeOf(fAIType));
@@ -3014,6 +3054,13 @@ begin
       fGameInputProcess.CmdGame(gicType, UTCNow);
 end;
 
+function TKMGame.Achievements: TKMAchievements;
+begin
+  if Self = nil then
+    Exit;
+
+  Result := gAchievements;
+end;
 
 procedure TKMGame.SetSeed(aSeed: Integer);
 begin

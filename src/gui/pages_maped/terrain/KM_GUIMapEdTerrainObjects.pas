@@ -7,7 +7,7 @@ uses
   Classes, Math, SysUtils,
   KM_InterfaceDefaults,
   KM_Controls, KM_ControlsList, KM_ControlsBase, KM_ControlsPopUp, KM_ControlsScroll, KM_ControlsSwitch, KM_ControlsTrackBar,
-  KM_ControlsEdit,
+  KM_ControlsEdit, KM_ControlsDrop,
   KM_TerrainTypes, KM_ResMapElements,
   KM_Defaults, KM_Pics, KM_Cursor, KM_Points, KM_CommonTypes;
 
@@ -29,6 +29,7 @@ type
     fObjPaletteTableSize: TKMPoint;
     fObjPaletteAttr: array of TKMTerrainObjectAttributeSet;
 
+    procedure SwitchPage(aPage : Byte);
     function GetObjPaletteTableHeight: Integer;
     function GetObjPaletteTableWidth: Integer;
 
@@ -49,8 +50,18 @@ type
 
     procedure ObjectsPaletteButton_Click(Sender: TObject);
     procedure ObjectsPaletteClose_Click(Sender: TObject);
+
+
+    procedure CreateWaresPanel(aParent : TKMPanel);
+
+    procedure Wares_Change(Sender : TObject);
+    procedure Button_Swith_Click(Sender : TObject);
+
+    procedure SortType_Change(Sender : TObject);
+
   protected
-    Label_Panel_Name : TKMLabel;
+    Buttons_SwitchPage : array[0..1] of TKMButton;
+
     Panel_Objects: TKMScrollPanel;
       ObjectErase: TKMButtonFlat;
       ObjectBlock: TKMButtonFlat;
@@ -59,6 +70,12 @@ type
       ObjectsScroll: TKMScrollBar;
       Objects_Override: TKMCheckBox;
 
+    Panel_WaresOnGround : TKMScrollPanel;
+      Button_Brush : TKMButtonFlat;
+      Button_Wares : array of TKMButtonFlat;
+      Scroll_Count : TKMTrackBar;
+
+
     PopUp_ObjectsPalette: TKMPopUpMenu;
       Bevel_ObjectsPalette: TKMBevel;
       Image_ObjectsPalette: TKMImage;
@@ -66,8 +83,10 @@ type
       Button_ClosePalette: TKMButton;
       Button_ObjPaletteErase: TKMButtonFlat;
       Button_ObjPaletteBlock: TKMButtonFlat;
-      ObjectsPaletteTable: array of TKMButtonFlat;
+      Panel_ObjectsTable: TKMScrollPanel;
+        ObjectsPaletteTable: array of TKMButtonFlat;
       Image_ObjectAttributes: array[0..2] of array of TKMImage;
+      DropBox_SortType: TKMDropList;
 
       //Objects brush
       BrushSize, ForestDensity, ForestAge: TKMTrackBar;
@@ -236,9 +255,26 @@ begin
   SetLength(fMapElemToCompact, OBJECTS_CNT + 1);
 
   CompactMapElements;
-  Label_Panel_Name := TKMLabel.Create(aParent, 40, 40,  aParent.Width - 80, 25, '',fntOutline, taCenter);
+  K := length(Buttons_SwitchPage);
 
-  Panel_Objects := TKMScrollPanel.Create(aParent, 0, 28, aParent.Width, aParent.Height - 28, [saVertical], bsMenu, ssCommon);
+  J := aParent.Width div 2 - (K * 30) div 2;
+  Inc(J, 9);
+  for I := 0 to High(Buttons_SwitchPage) do
+  begin
+    Buttons_SwitchPage[I] := TKMButton.Create(aParent, J + I * 30, 32, 30, 28, 0, rxGui, bsGame);
+    Buttons_SwitchPage[I].OnClick := Button_Swith_Click;
+    Buttons_SwitchPage[I].Tag := I;
+    case I of
+      0: Buttons_SwitchPage[I].TexID := 712;
+      1: Buttons_SwitchPage[I].TexID := 717;
+    end;
+    case I of
+      0: Buttons_SwitchPage[I].Hint := gResTexts[372];
+      1: Buttons_SwitchPage[I].Hint := gResTexts[2089];
+    end;
+  end;
+    
+  Panel_Objects := TKMScrollPanel.Create(aParent, 0, 28 + 30, aParent.Width, aParent.Height - 28 - 30, [saVertical], bsMenu, ssCommon);
   Panel_Objects.Padding.SetBottom(10);
   Panel_Objects.ScrollV_PadTop := 10;
   Panel_Objects.ScrollV_PadBottom := 10;
@@ -300,21 +336,26 @@ begin
     Scroll_ObjectsPalette.MinValue := 0;
     Scroll_ObjectsPalette.Position := 0;
     Scroll_ObjectsPalette.OnChange := ObjectsPalette_Refresh;
-
+    Scroll_ObjectsPalette.Hide;
     // Add event handlers after Scroll is created
     Image_ObjectsPalette.OnMouseWheel := Scroll_ObjectsPalette.MouseWheel;
     Bevel_ObjectsPalette.OnMouseWheel := Scroll_ObjectsPalette.MouseWheel;
 
+    Panel_ObjectsTable := TKMScrollPanel.Create(PopUp_ObjectsPalette, PopUp_ObjectsPalette.Width div 2 - 600, 0, 1200, PopUp_ObjectsPalette.Height - 125, [saVertical], bsMenu, ssCommon);
+    Panel_ObjectsTable.AnchorsStretch;
+    Panel_ObjectsTable.ScrollV.WheelStep := 100;
+    Panel_ObjectsTable.MouseWheelStep := 100;
+
     SetLength(ObjectsPaletteTable, fCountCompact);
     for I := 0 to fCountCompact - 1 do
     begin
-      ObjectsPaletteTable[I] := TKMButtonFlat.Create(PopUp_ObjectsPalette, 0, 0, OBJ_CELL_PALETTE_W, OBJ_CELL_PALETTE_H, 1, rxTrees); // Left and Top will update later
+      ObjectsPaletteTable[I] := TKMButtonFlat.Create(Panel_ObjectsTable, 0, 0, OBJ_CELL_PALETTE_W, OBJ_CELL_PALETTE_H, 1, rxTrees); // Left and Top will update later
       ObjectsPaletteTable[I].Tag := I; //Store ID
       ObjectsPaletteTable[I].CapOffsetY := 15;
 //      ObjectsPaletteTable[I].TexOffsetY := 0;
       ObjectsPaletteTable[I].Enable;
       ObjectsPaletteTable[I].Hide;
-      ObjectsPaletteTable[I].OnMouseWheel := Scroll_ObjectsPalette.MouseWheel;
+      //ObjectsPaletteTable[I].OnMouseWheel := Scroll_ObjectsPalette.MouseWheel;
       ObjectsPaletteTable[I].OnClickShift := ObjPalette_ClickShift;
 
     end;
@@ -325,7 +366,7 @@ begin
       SetLength(Image_ObjectAttributes[J], fCountCompact);
       for I := 0 to fCountCompact - 1 do
       begin
-        Image_ObjectAttributes[J, I] := TKMImage.Create(PopUp_ObjectsPalette, 0, 0, 0, 0, 0);
+        Image_ObjectAttributes[J, I] := TKMImage.Create(Panel_ObjectsTable, 0, 0, 0, 0, 0);
         Image_ObjectAttributes[J, I].Hide;
         Image_ObjectAttributes[J, I].Hitable := False;
       end;
@@ -343,6 +384,17 @@ begin
     Button_ObjPaletteBlock.Tag := OBJ_BLOCK_TAG; //block object
     Button_ObjPaletteBlock.OnClickShift := ObjPalette_ClickShift;
 
+    DropBox_SortType := TKMDropList.Create(PopUp_ObjectsPalette, 0, 0, 180, 20, fntGrey, gResTexts[2090], bsMenu);
+    DropBox_SortType.Add(gResTexts[2091]);
+    DropBox_SortType.Add(gResTexts[2092]);
+    DropBox_SortType.Add(gResTexts[2093]);
+    DropBox_SortType.Add(gResTexts[2094]);
+    DropBox_SortType.Add(gResTexts[2095]);
+    DropBox_SortType.Add(gResTexts[2096]);
+    DropBox_SortType.OnChange := SortType_Change;
+    DropBox_SortType.DropUp := true;
+    DropBox_SortType.ItemIndex := 0;
+    DropBox_SortType.Hint := gResTexts[2097];
     Button_ClosePalette  := TKMButton.Create(PopUp_ObjectsPalette, PopUp_ObjectsPalette.Center.X - 100, PopUp_ObjectsPalette.Bottom - 50,
                                              200, 30, gResTexts[TX_MAPED_TERRAIN_CLOSE_PALETTE], bsGame);
     Button_ClosePalette.Anchors := [anLeft,anBottom];
@@ -434,6 +486,7 @@ begin
 
   gCursor.MapEdForestAge := 1;
   gCursor.MapEdCleanBrush := False;
+  CreateWaresPanel(aParent);
 
   // hotkeys for object functions
   fSubMenuActionsEvents[0] := ObjectsChange;
@@ -453,6 +506,61 @@ begin
   fSubMenuActionsCtrls[6,0] := ObjectTypeSet[otAllButTrees];
 end;
 
+procedure TKMMapEdTerrainObjects.CreateWaresPanel(aParent: TKMPanel);
+var I : Integer;
+  WT : TKMWareType;
+begin
+  Panel_WaresOnGround := TKMScrollPanel.Create(aParent, 0, 28 + 30, aParent.Width, aParent.Height - 28 - 30, [saVertical], bsMenu, ssCommon);
+  Panel_WaresOnGround.Padding.SetBottom(10);
+  Panel_WaresOnGround.ScrollV_PadTop := 10;
+  Panel_WaresOnGround.ScrollV_PadBottom := 10;
+  Panel_WaresOnGround.ScrollV_PadLeft := -20;
+  Panel_WaresOnGround.ScrollV.Left := Panel_Objects.ScrollV.Left + 20;
+  Panel_WaresOnGround.AnchorsStretch;
+
+  with TKMLabel.Create(Panel_WaresOnGround, 0, TERRAIN_PAGE_TITLE_Y, Panel_WaresOnGround.Width, 0, gResTexts[2089], fntOutline, taCenter) do
+    Anchors := [anLeft, anTop, anRight];
+
+  //Button_Brush := TKMButtonFlat.Create(Panel_WaresOnGround, 9, 27, 33, 33, 673);
+
+  Scroll_Count := TKMTrackBar.Create(Panel_WaresOnGround, 9, 27, Panel_WaresOnGround.Width - 18, 0, 15);
+  Scroll_Count.Caption := gResTexts[1040];
+  Scroll_Count.OnChange := Wares_Change;
+  Scroll_Count.ThumbWidth := 100;
+
+  with TKMLabel.Create(Panel_WaresOnGround, 0, 67, Panel_WaresOnGround.Width, 0, gResTexts[2074], fntGrey, taCenter) do
+    Anchors := [anLeft, anTop, anRight];
+
+  SetLength(Button_Wares, 0);
+  for WT := WARE_MIN to WARE_MAX do
+    if length(gRes.Wares[WT].AtTerrainPic) > 0 then
+    begin
+      I := length(Button_Wares);
+      SetLength(Button_Wares, I + 1);
+      Button_Wares[I] := TKMButtonFlat.Create(Panel_WaresOnGround, 9 + I mod 5 * 34, 85 + I div 5 * 34, 30, 30, gRes.Wares[WT].GUIIcon);
+      Button_Wares[I].Tag := byte(WT);
+      Button_Wares[I].Hint := gRes.Wares[WT].Title;
+      Button_Wares[I].OnClick := Wares_Change;
+    end;
+end;
+
+procedure TKMMapEdTerrainObjects.SwitchPage(aPage: Byte);
+begin
+  Panel_Objects.Hide;
+  Panel_WaresOnGround.Hide;
+  if aPage = 0 then
+  begin
+    ObjectsRefresh(nil);
+    Panel_Objects.Show;
+  end else
+  if aPage = 1 then
+  begin
+    Scroll_Count.Position := 1;
+    Wares_Change(Button_Wares[0]);
+    Panel_WaresOnGround.Show;
+  end;
+
+end;
 
 procedure TKMMapEdTerrainObjects.ObjectsPalette_OnShow(Sender: TObject; aVisible: Boolean);
 begin
@@ -569,49 +677,145 @@ end;
 
 procedure TKMMapEdTerrainObjects.ObjectsPalette_Refresh(Sender: TObject);
 var
-  I, J, K, leftAdj, topAdj: Integer;
+  I, J, K, leftAdj, {topAdj,} L, obj: Integer;
 begin
   leftAdj := (PopUp_ObjectsPalette.Width - fObjPaletteTableSize.X*(OBJ_CELL_W + 1) - 25*Byte(Scroll_ObjectsPalette.Visible)) div 2;
-  topAdj := Image_ObjectsPalette.Top + 60;
+  //topAdj := Image_ObjectsPalette.Top + 60;
 
-  K := 0;
+  // Make invisible all palette buttons at the end of the list, after shown buttons 'page'
+  for I := 0 to fCountCompact - 1 do
+  begin
+    //ObjectsPaletteTable[I].Visible := False;
+    for J := Low(Image_ObjectAttributes) to High(Image_ObjectAttributes) do
+      Image_ObjectAttributes[J, I].Hide;
+  end;
 
   Button_ObjPaletteErase.Left := leftAdj;
   Button_ObjPaletteBlock.Left := leftAdj + OBJ_CELL_W + 1;
+  DropBox_SortType.Top := Button_ObjPaletteBlock.Top;
+  DropBox_SortType.Left := Button_ObjPaletteBlock.Right + 3;
 
-  for I := 0 to fObjPaletteTableSize.Y - 1 do
-    for J := 0 to fObjPaletteTableSize.X - 1 do
+  L := 0;
+  K := -1;
+  for I := 0 to fCountCompact - 1 do
     begin
-      K := (I + Scroll_ObjectsPalette.Position)*fObjPaletteTableSize.X + J;
+      //K := (I + Scroll_ObjectsPalette.Position)*fObjPaletteTableSize.X + J;
+      //K := I*fObjPaletteTableSize.X + J;
+      Inc(K);
+      obj := fCompactToMapElem[K];
+      ObjectsPaletteTable[K].Hide;
+
+      case DropBox_SortType.ItemIndex of
+        -1,
+        0 : ;//everything must be shown
+        //only trees
+        1: If not KM_ResMapElements.ObjectIsChoppableTree(obj, [caAge1, caAge2, caAge3, caAgeFull]) then
+            Continue;
+        //only Fruit trees
+        2: if gMapElements[obj].IsFruit = 0 then
+            Continue;
+        //only corn and grapes
+        3: if not ( (gMapElements[obj].IsCorn > 0)
+                or (gMapElements[obj].IsGrass > 0)
+                or (gMapElements[obj].IsVege > 0)
+                or (gMapElements[obj].IsWine > 0)
+                )
+            then
+            Continue;
+        //other objects
+        4: if not ((length(gMapElements[obj].VWares) > 0) or KM_ResMapElements.ObjectIsWare(obj) ) then
+          Continue;
+        5: if KM_ResMapElements.ObjectIsChoppableTree(obj, [caAge1, caAge2, caAge3, caAgeFull])
+              or (gMapElements[obj].IsFruit > 0)
+              or (gMapElements[obj].IsCorn > 0)
+              or (gMapElements[obj].IsGrass > 0)
+              or (gMapElements[obj].IsVege > 0)
+              or (gMapElements[obj].IsWine > 0)
+              or ((length(gMapElements[obj].VWares) > 0) or KM_ResMapElements.ObjectIsWare(obj) )
+            then
+              Continue;
+
+      end;
+
       if K < fCountCompact then
       begin
-        ObjectsPaletteTable[K].Left := J*(OBJ_CELL_PALETTE_W + 1) + leftAdj;
-        ObjectsPaletteTable[K].Top := 25 + I*(OBJ_CELL_PALETTE_H + 1)  + topAdj;
-        ObjectsPaletteTable[K].TexID := gMapElements[fCompactToMapElem[K]].Anim.Step[1] + 1;
-        ObjectsPaletteTable[K].Caption := IntToStr(fCompactToMapElem[K]);
+        ObjectsPaletteTable[K].Left := (L mod fObjPaletteTableSize.X) * (OBJ_CELL_PALETTE_W + 1){ + leftAdj};
+        ObjectsPaletteTable[K].Top := 25 + (L div fObjPaletteTableSize.X) *(OBJ_CELL_PALETTE_H + 1){  + topAdj};
+        ObjectsPaletteTable[K].TexID := gMapElements[obj].Anim.Step[1] + 1;
+        ObjectsPaletteTable[K].Caption := IntToStr(obj);
 
         UpdatePaletteButton(K);
 
         ObjectsPaletteTable[K].Visible := True;
       end;
+      Inc(L);
     end;
+  {for I := 0 to fObjPaletteTableSize.Y - 1 do
+    for J := 0 to fObjPaletteTableSize.X - 1 do
+    begin
+      //K := (I + Scroll_ObjectsPalette.Position)*fObjPaletteTableSize.X + J;
+      //K := I*fObjPaletteTableSize.X + J;
+      Inc(K);
+      obj := fCompactToMapElem[K];
+      case DropBox_SortType.ItemIndex of
+        -1,
+        0 : ;//everything must be shown
+        //only trees
+        1: If not KM_ResMapElements.ObjectIsChoppableTree(obj) then
+            Continue;
+        //only Fruit trees
+        2: if not gMapElements[obj].IsFruit > 0 then
+            Continue;
+        //only corn and grapes
+        3: if not ( (gMapElements[obj].IsCorn > 0)
+                or (gMapElements[obj].IsGrass > 0)
+                or (gMapElements[obj].IsVege > 0)
+                or (gMapElements[obj].IsWine > 0)
+                )
+            then
+            Continue;
+        //other objects
+        4: if KM_ResMapElements.ObjectIsChoppableTree(obj)
+              or (gMapElements[obj].IsFruit > 0)
+              or (gMapElements[obj].IsCorn > 0)
+              or (gMapElements[obj].IsGrass > 0)
+              or (gMapElements[obj].IsVege > 0)
+              or (gMapElements[obj].IsWine > 0)
+            then
+              Continue;
 
-  // Make invisible all palette buttons at the end of the list, after shown buttons 'page'
+      end;
+
+      if K < fCountCompact then
+      begin
+        ObjectsPaletteTable[K].Left := (L mod fObjPaletteTableSize.X) * (OBJ_CELL_PALETTE_W + 1) + leftAdj;
+        ObjectsPaletteTable[K].Top := 25 + (L div fObjPaletteTableSize.X) *(OBJ_CELL_PALETTE_H + 1)  + topAdj;
+        ObjectsPaletteTable[K].TexID := gMapElements[obj].Anim.Step[1] + 1;
+        ObjectsPaletteTable[K].Caption := IntToStr(obj);
+
+        UpdatePaletteButton(K);
+
+        ObjectsPaletteTable[K].Visible := True;
+      end;
+      Inc(L);
+    end;}
+
+  {// Make invisible all palette buttons at the end of the list, after shown buttons 'page'
   for I := K + 1 to fCountCompact - 1 do
   begin
     ObjectsPaletteTable[I].Visible := False;
     for J := Low(Image_ObjectAttributes) to High(Image_ObjectAttributes) do
       Image_ObjectAttributes[J, I].Hide;
   end;
-
+  }
   // Make invisible all palette buttons at the start of the list, before shown buttons 'page'
-  for I := 0 to Scroll_ObjectsPalette.Position - 1 do
+  {for I := 0 to Scroll_ObjectsPalette.Position - 1 do
     for J := 0 to fObjPaletteTableSize.X - 1 do
     begin
       K := I*fObjPaletteTableSize.X + J;
       if K < fCountCompact then
         ObjectsPaletteTable[K].Visible := False;
-    end;
+    end;}
 
   // Update palette buttons Down state
   for I := 0 to fCountCompact - 1 do
@@ -633,8 +837,8 @@ begin
 
   RowsCnt := Max(1, (PopUp_ObjectsPalette.Height - 80) div (OBJ_CELL_PALETTE_H + 1));
   //Calc cols count without Scroll first
-  ColsCnt := EnsureRange(PopUp_ObjectsPalette.Width div (OBJ_CELL_PALETTE_W + 1), 1, OBJECTS_PALETTE_MAX_COLS_CNT);
-  Scroll_ObjectsPalette.Visible := RowsCnt*ColsCnt < fCountCompact;
+  //ColsCnt := EnsureRange(PopUp_ObjectsPalette.Width div (OBJ_CELL_PALETTE_W + 1), 1, OBJECTS_PALETTE_MAX_COLS_CNT);
+  //Scroll_ObjectsPalette.Visible := RowsCnt*ColsCnt < fCountCompact;
   //Recalc ColsCount considering possible scroll width
   ColsCnt := EnsureRange((PopUp_ObjectsPalette.Width - 25*Byte(Scroll_ObjectsPalette.Visible)) div (OBJ_CELL_W + 1), 1, OBJECTS_PALETTE_MAX_COLS_CNT);
 
@@ -654,11 +858,11 @@ begin
   Button_ObjPaletteErase.Top := Image_ObjectsPalette.Bottom - 110;
   Button_ObjPaletteBlock.Top := Image_ObjectsPalette.Bottom - 110;
 
-  Scroll_ObjectsPalette.Left := Image_ObjectsPalette.Right - 50;
+  {Scroll_ObjectsPalette.Left := Image_ObjectsPalette.Right - 50;
   Scroll_ObjectsPalette.Top := Image_ObjectsPalette.Top + 80;
   Scroll_ObjectsPalette.Height := Image_ObjectsPalette.Height - 150;
 
-  Scroll_ObjectsPalette.MaxValue := ((fCountCompact - 1) div ColsCnt) + 1 - RowsCnt;
+  Scroll_ObjectsPalette.MaxValue := ((fCountCompact - 1) div ColsCnt) + 1 - RowsCnt;}
 
   ObjectsPalette_Refresh(nil);
 end;
@@ -778,11 +982,11 @@ begin
   ObjectsUpdate(objIndex);
 
   // Update Objects Palette scroll position
-  if (objIndex <> OBJ_BLOCK_TAG) and (objIndex <> OBJ_NONE_TAG)
+  {if (objIndex <> OBJ_BLOCK_TAG) and (objIndex <> OBJ_NONE_TAG)
     and not InRange(objIndex,
                     Scroll_ObjectsPalette.Position*fObjPaletteTableSize.X,
                     Scroll_ObjectsPalette.Position*fObjPaletteTableSize.X + fObjPaletteTableSize.X*fObjPaletteTableSize.Y - 1) then
-    Scroll_ObjectsPalette.Position := ((objIndex - 1) div fObjPaletteTableSize.X);
+    Scroll_ObjectsPalette.Position := ((objIndex - 1) div fObjPaletteTableSize.X);}
 end;
 
 
@@ -874,7 +1078,12 @@ end;
 
 
 procedure TKMMapEdTerrainObjects.Show;
+var I : integer;
 begin
+
+  for I := 0 to High(Buttons_SwitchPage) do
+    Buttons_SwitchPage[I].Show;
+
   gMain.FormMain.SuppressAltForMenu := True;
   
   case fLastObjectIndex of
@@ -887,16 +1096,13 @@ begin
           end;
   end;
 
-  Panel_Objects.Show;
-
-
-  Label_Panel_Name.Show;
+  SwitchPage(0);
 end;
 
 
 function TKMMapEdTerrainObjects.Visible: Boolean;
 begin
-  Result := Panel_Objects.Visible;
+  Result := Panel_Objects.Visible or Panel_WaresOnGround.Visible;
 end;
 
 
@@ -913,12 +1119,15 @@ end;
 
 
 procedure TKMMapEdTerrainObjects.Hide;
+var I : Integer;
 begin
   Panel_Objects.Hide;
   PopUp_ObjectsPalette.Hide;
+  Panel_WaresOnGround.Hide;
   gMain.FormMain.SuppressAltForMenu := False;
 
-  Label_Panel_Name.Hide;
+  for I := 0 to High(Buttons_SwitchPage) do
+    Buttons_SwitchPage[I].Hide;
 end;
 
 
@@ -1003,6 +1212,52 @@ end;
 procedure TKMMapEdTerrainObjects.UpdateState;
 begin
   ObjectsRefresh(nil);
+end;
+
+procedure TKMMapEdTerrainObjects.Button_Swith_Click(Sender : TObject);
+begin
+  SwitchPage(TKMControl(Sender).Tag);
+end;
+
+procedure TKMMapEdTerrainObjects.Wares_Change(Sender: TObject);
+var oldTag : Integer;
+  I : Integer;
+  WT : TKMWareType;
+  wasRandom : Boolean;
+begin
+  oldTag := gCursor.Tag1;
+  wasRandom := Scroll_Count.Position = Scroll_Count.MaxValue;
+
+  for I := 0 to High(Button_Wares) do
+    if Sender = Button_Wares[I] then
+    begin
+      gCursor.Tag1 := Button_Wares[I].Tag;
+      Break;
+    end;
+
+  for I := 0 to High(Button_Wares) do
+    Button_Wares[I].Down := gCursor.Tag1 = Button_Wares[I].Tag;
+
+  WT := TKMWareType(gCursor.Tag1);
+
+  if oldTag <> gCursor.Tag1 then
+    Scroll_Count.MaxValue := length(gRes.Wares[WT].AtTerrainPic) + 1; //max + 1 = random value
+
+  if wasRandom then
+    Scroll_Count.Position := Scroll_Count.MaxValue;
+
+  if Scroll_Count.Position = Scroll_Count.MaxValue then
+    Scroll_Count.ThumbText := 'Random'
+  else
+    Scroll_Count.ThumbText := IntToStr(Scroll_Count.Position);
+  gCursor.Mode := cmWaresOnGround;
+  gCursor.MapEd_WaresCount := Scroll_Count.Position;
+
+end;
+
+procedure TKMMapEdTerrainObjects.SortType_Change(Sender: TObject);
+begin
+  ObjectsPalette_Refresh(Sender);
 end;
 
 

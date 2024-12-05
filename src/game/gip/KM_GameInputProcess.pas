@@ -11,7 +11,8 @@ uses
   KM_HandTypes,
   KM_UnitGroupTypes,
   KM_GameTypes,
-  KM_ResTypes;
+  KM_ResTypes,
+  KM_Structure;
 
 { A. This unit takes and adjoins players input from TGame and TGamePlayInterfaces clicks and keys
   Then passes it on to game events.
@@ -58,6 +59,8 @@ type
     //II. Unit commands
     gicUnitDismiss,
     gicUnitDismissCancel,
+    gicGroupDismiss,
+    gicGroupDismissCancel,
 
     //III.     Building/road plans (what to build and where)
     gicBuildToggleFieldPlan,
@@ -121,9 +124,14 @@ type
     gicHouseShipDoWork,
     gicAssignToShip,
     gicUnloadShip,
-    gicPlaceBridgePlan,
-    gicPlaceBridgeRemove,
+    gicPlaceStructurePlan,
+    gicStructureRemove,
     gicPlaceDecoration,
+    gicAssignGroupToShip,
+    gicBoatCollectFish,
+    gicBoatCollectWares,
+    gicBoatUnloadWares,
+
 
     //V.     Delivery ratios changes (and other game-global settings)
     gicWareDistributionChange,   //Change of distribution for 1 ware
@@ -282,6 +290,8 @@ const
     //II.      Unit commands
     gicpt_Int1,     // gicUnitDismiss
     gicpt_Int1,     // gicUnitDismissCancel
+    gicpt_Int1,     // gicGroupDismiss
+    gicpt_Int1,     // gicGroupDismissCancel
     //III.     Building/road plans (what to build and where)
     gicpt_Int1Word3,//gicpt_Int3,     // gicBuildAddFieldPlan
     gicpt_Int2,     // gicBuildRemoveFieldPlan
@@ -306,7 +316,7 @@ const
     gicpt_Int2,     // gicHouseSchoolTrainChLastUOrder
 
     gicpt_Int3,     // gicHouseSiegeTrain
-    gicpt_Int2,     // gicHouseMerchantSetType
+    gicpt_Int3,     // gicHouseMerchantSetType
 
     gicpt_Int2,     // gicHouseBarracksAcceptFlag
     gicpt_Int2,     // gicHBarracksNotAllowTakeOutFlag
@@ -348,8 +358,12 @@ const
     gicpt_Int2,//gicAssignToShip
     gicpt_Int1,//gicUnloadShip
     gicpt_Int1SmInt3,//gicPlaceBridgePlan
-    gicpt_Int2,//gicPlaceBridgeRemove
-    gicpt_Int3,//gicPlaceBridgeRemove
+    gicpt_Int1,//gicPlaceBridgeRemove
+    gicpt_Int3,//gicPlaceDecoration
+    gicpt_Int2,//gicAssignGroupToShip
+    gicpt_Int1,//gicBoatCollectFish
+    gicpt_Int1,//gicBoatCollectWares
+    gicpt_Int1,//gicBoatUnloadWares
 
 
     //V.     Delivery ratios changes (and other game-global settings)
@@ -511,12 +525,14 @@ type
 
     procedure CmdUnit(aCommandType: TKMGameInputCommandType; aUnit: TKMUnit);overload;
     procedure CmdUnit(aCommandType: TKMGameInputCommandType; aUnit, aUnit2: TKMUnit);overload;
+    procedure CmdUnit(aCommandType: TKMGameInputCommandType; aUnit : TKMUnit; aGroup: TKMUnitGroup);overload;
 
     procedure CmdBuild(aCommandType: TKMGameInputCommandType; const aLoc: TKMPoint); overload;
     procedure CmdBuild(aCommandType: TKMGameInputCommandType; const aLoc: TKMPoint; aFieldType: TKMFieldType; aRoadType : TKMRoadType = rtNone); overload;
     procedure CmdBuild(aCommandType: TKMGameInputCommandType; const aLoc: TKMPoint; aHouseType: TKMHouseType); overload;
     procedure CmdBuild(aCommandType: TKMGameInputCommandType; const aLoc: TKMPoint; aBridgeType, aRotation: Integer); overload;
     procedure CmdBuild(aCommandType: TKMGameInputCommandType; const aLoc: TKMPoint; aParam: Integer); overload;
+    procedure CmdBuild(aCommandType: TKMGameInputCommandType; const aStr: TKMStructure); overload;
 
     procedure CmdHouse(aCommandType: TKMGameInputCommandType; aHouse: TKMHouse); overload;
     procedure CmdHouse(aCommandType: TKMGameInputCommandType; aHouse: TKMHouse; aItem, aAmountChange: Integer); overload;
@@ -580,7 +596,7 @@ implementation
 uses
   Classes, SysUtils, StrUtils, TypInfo, Math,
   KM_Entity,
-  KM_GameApp, KM_Game, KM_GameParams, KM_GameSettings,
+  KM_GameApp, KM_Game, KM_GameParams, KM_GameSettings, KM_CommonHelpers,
   KM_HandsCollection, KM_HandEntity,
   KM_HouseMarket, KM_HouseBarracks, KM_HouseSchool, KM_HouseTownHall, KM_HouseStore, KM_HouseArmorWorkshop,
   KM_HouseQueue,
@@ -1006,6 +1022,7 @@ var
   srcGroup, TgtGroup: TKMUnitGroup;
   tgtUnit: TKMUnit;
   srcHouse, tgtHouse: TKMHouse;
+  srcStructure : TKMStructure;
 begin
   //NOTE: gMySpectator.PlayerIndex should not be used for important stuff here, use P instead (commands must be executed the same for all players)
   isSilent := (aCommand.HandIndex <> gMySpectator.HandID);
@@ -1016,13 +1033,14 @@ begin
   srcHouse := nil;
   tgtHouse := nil;
   tgtUnit := nil;
+  srcStructure := nil;
 
   with aCommand do
   begin
     //It is possible that units/houses have died by now
     if CommandType in [gicArmyFeed, gicArmySplit, gicArmySplitSingle, gicArmyLink,
                        gicArmyAttackUnit, gicArmyAttackHouse, gicArmyHalt,
-                       gicArmyFormation, gicArmyWalk, gicArmyStorm, gicArmyAmmo]
+                       gicArmyFormation, gicArmyWalk, gicArmyStorm, gicArmyAmmo, gicGroupDismiss,gicGroupDismissCancel]
     then
     begin
       srcGroup := gHands.GetGroupByUID(IntParams[0]);
@@ -1060,13 +1078,22 @@ begin
       or (srcHouse.Owner <> aCommand.HandIndex) then //Potential exploit
         Exit;
     end;
+    if CommandType in [gicStructureRemove] then
+    begin
+      srcStructure := gHands.GetStructureByUID(IntParams[0]);
+      if (srcStructure = nil)
+      or srcStructure.IsDestroyed
+      or (srcStructure.Owner <> aCommand.HandIndex) then
+        Exit;
+    end;
     if CommandType in [gicArmyAttackHouse] then
     begin
       tgtHouse := gHands.GetHouseByUID(IntParams[1]);
       if (tgtHouse = nil) or tgtHouse.IsDestroyed then Exit; //House has been destroyed before command could be executed
     end;
 
-    if CommandType in [gicUnitDismiss, gicUnitDismissCancel, gicAssignToShip, gicUnloadShip] then
+    if CommandType in [gicUnitDismiss, gicUnitDismissCancel, gicAssignToShip, gicUnloadShip, gicAssignGroupToShip,
+                        gicBoatCollectFish, gicBoatCollectWares, gicBoatUnloadWares] then
     begin
       srcUnit := gHands.GetUnitByUID(IntParams[0]);
       if (srcUnit = nil) or srcUnit.IsDeadOrDying //Unit has died before command could be executed
@@ -1111,8 +1138,16 @@ begin
       gicUnitDismiss:        srcUnit.Dismiss;
       gicUnitDismissCancel:  srcUnit.DismissCancel;
 
+      gicGroupDismiss:        srcGroup.Dismiss;
+      gicGroupDismissCancel:  srcGroup.DismissCancel;
+
       gicUnloadShip:         TKMUnitWarriorShip(srcUnit).DoUnloadUnits;
-      gicAssignToShip:       TKMUnitWarriorShip(srcUnit).AssignToShip(gHands.GetUnitByUID(IntParams[1]));
+      gicAssignToShip:        gHands.GetUnitByUID(IntParams[1]).AssignToShip(srcUnit);  //TKMUnitWarriorShip(srcUnit).AssignToShip(gHands.GetUnitByUID(IntParams[1]));
+      gicAssignGroupToShip:       gHands.GetGroupByUID(IntParams[1]).OrderAssignToShip(srcUnit);
+
+      gicBoatCollectFish:       TKMUnitWarriorBoat(srcunit).CanCollectFish := not TKMUnitWarriorBoat(srcunit).CanCollectFish;
+      gicBoatCollectWares:       TKMUnitWarriorBoat(srcunit).CanCollectWares := not TKMUnitWarriorBoat(srcunit).CanCollectWares;
+      gicBoatUnloadWares:       TKMUnitWarriorBoat(srcunit).UnloadWares;
 
       gicBuildToggleFieldPlan:   P.ToggleFieldPlan(KMPoint(IntParams[0],WordParams[0]), TKMFieldType(WordParams[1]), not gGameParams.IsMultiPlayerOrSpec, TKMRoadType(WordParams[2])); //Make sound in singleplayer mode only
       gicBuildRemoveFieldPlan:   P.RemFieldPlan(KMPoint(IntParams[0],IntParams[1]), not gGameParams.IsMultiPlayerOrSpec); //Make sound in singleplayer mode only
@@ -1120,8 +1155,9 @@ begin
       gicBuildRemoveHousePlan:   P.RemHousePlan(KMPoint(IntParams[0],IntParams[1]));
       gicBuildHousePlan:         if P.CanAddHousePlan(KMPoint(IntParams[1],IntParams[2]), TKMHouseType(IntParams[0])) then
                                     P.AddHousePlan(TKMHouseType(IntParams[0]), KMPoint(IntParams[1],IntParams[2]));
-      gicPlaceBridgePlan:        if P.CanAddBridgePlan(KMPoint(SmallIntParams[0], SmallIntParams[1]), IntParams[0], SmallIntParams[2] ) then
-                                  P.AddBridgePlan(KMPoint(SmallIntParams[0], SmallIntParams[1]), IntParams[0], SmallIntParams[2]);
+      gicPlaceStructurePlan:     if P.CanAddStructurePlan(KMPoint(SmallIntParams[0], SmallIntParams[1]), IntParams[0], SmallIntParams[2] ) then
+                                    P.AddStructurePlan(KMPoint(SmallIntParams[0], SmallIntParams[1]), IntParams[0], SmallIntParams[2]);
+      gicStructureRemove:       srcStructure.DestroyPlan;
 
       gicPlaceDecoration:        if P.CanPlaceDecoration(KMPoint(IntParams[0],IntParams[1]), IntParams[2]) then
                                     P.PlaceDecoration(KMPoint(IntParams[0],IntParams[1]), IntParams[2]);
@@ -1205,7 +1241,7 @@ begin
                                        TKMHouseProdThatch(srcHouse).SetNextGrainType(IntParams[1], IntParams[2]);
       gicHouseFruitTreeToggleType:  TKMHouseAppleTree(srcHouse).SetNextFruitType(IntParams[1]);
 
-      gicHouseMerchantSetType      : srcHouse.SetWareSlot(IntParams[1]);
+      gicHouseMerchantSetType      : srcHouse.SetWareSlot(IntParams[1], IntParams[2] = 1);
       gicWareDistributionChange:  begin
                                     P.Stats.WareDistribution[TKMWareType(IntParams[0]), TKMHouseType(IntParams[1])] := IntParams[2];
                                     P.Houses.UpdateDemands;
@@ -1290,6 +1326,9 @@ var
 var
   doAddBeacon: Boolean;
 begin
+  if gGameParams.MBD.IsRealism then
+    Exit;
+  
   handId := aCommand.SmallIntParams[2];
   // Beacon script event must always be run by all players for consistency
   gScriptEvents.ProcBeacon(handId, 1 + (aCommand.SmallIntParams[0] div 10),
@@ -1307,7 +1346,6 @@ begin
     gmReplayMulti:    doAddBeacon := (handId <> HAND_NONE)  // Do not show spectators beacons in replay
                                     and gGameSettings.ReplayShowBeacons and DoAddPlayerBeacon;
   end;
-
   if doAddBeacon then
     gGame.GamePlayInterface.Alerts.AddBeacon(KMPointF(aCommand.SmallIntParams[0]/10,
                                                       aCommand.SmallIntParams[1]/10),
@@ -1319,7 +1357,8 @@ end;
 
 procedure TKMGameInputProcess.CmdArmy(aCommandType: TKMGameInputCommandType; aGroup: TKMUnitGroup);
 begin
-  Assert(aCommandType in [gicArmyFeed, gicArmySplit, gicArmySplitSingle, gicArmyStorm, gicArmyHalt, gicArmyAmmo]);
+  Assert(aCommandType in [gicArmyFeed, gicArmySplit, gicArmySplitSingle, gicArmyStorm, gicArmyHalt,
+                          gicArmyAmmo, gicGroupDismiss, gicGroupDismissCancel]);
   if aCommandType = gicArmyFeed then
     TakeCommand(MakeCommand(aCommandType, aGroup.UID, 0))
   else
@@ -1364,7 +1403,7 @@ end;
 
 procedure TKMGameInputProcess.CmdUnit(aCommandType: TKMGameInputCommandType; aUnit: TKMUnit);
 begin
-  Assert(aCommandType in [gicUnitDismiss, gicUnitDismissCancel, gicUnloadShip]);
+  Assert(aCommandType in [gicUnitDismiss, gicUnitDismissCancel, gicUnloadShip, gicBoatCollectFish, gicBoatCollectWares, gicBoatUnloadWares]);
   TakeCommand(MakeCommand(aCommandType, aUnit.UID));
 end;
 
@@ -1373,6 +1412,13 @@ begin
   Assert(aCommandType in [gicAssignToShip]);
   TakeCommand(MakeCommand(aCommandType, aUnit.UID, aUnit2.UID));
 end;
+
+procedure TKMGameInputProcess.CmdUnit(aCommandType: TKMGameInputCommandType; aUnit : TKMUnit; aGroup: TKMUnitGroup);
+begin
+  Assert(aCommandType in [ gicAssignGroupToShip]);
+  TakeCommand(MakeCommand(aCommandType, aUnit.UID, aGroup.UID));
+end;
+
 
 
 procedure TKMGameInputProcess.CmdBuild(aCommandType: TKMGameInputCommandType; const aLoc: TKMPoint);
@@ -1418,7 +1464,7 @@ end;
 
 procedure TKMGameInputProcess.CmdBuild(aCommandType: TKMGameInputCommandType; const aLoc: TKMPoint; aBridgeType, aRotation: Integer);
 begin
-  Assert(aCommandType = gicPlaceBridgePlan);
+  Assert(aCommandType = gicPlaceStructurePlan);
 
   if gGameParams.IsReplayOrSpectate then Exit;
 
@@ -1434,6 +1480,14 @@ begin
   TakeCommand(MakeCommand(aCommandType, aLoc.X, aLoc.Y, aParam));
 end;
 
+procedure TKMGameInputProcess.CmdBuild(aCommandType: TKMGameInputCommandType; const aStr: TKMStructure);
+begin
+  Assert(aCommandType = gicStructureRemove);
+
+  if gGameParams.IsReplayOrSpectate then Exit;
+  TakeCommand(MakeCommand(aCommandType, aStr.UID));
+end;
+
 
 procedure TKMGameInputProcess.CmdHouse(aCommandType: TKMGameInputCommandType; aHouse: TKMHouse);
 begin
@@ -1446,7 +1500,7 @@ end;
 procedure TKMGameInputProcess.CmdHouse(aCommandType: TKMGameInputCommandType; aHouse: TKMHouse; aItem, aAmountChange: Integer);
 begin
   Assert(aCommandType in [gicHouseOrderProduct, gicHouseSchoolTrainChOrder, gicHouseStallBuyCoin, gicHouseStallBuyItem, gicHousePalaceOrder,
-                          gicHouseQueueAdd, gicHouseFarmToggleGrain]);
+                          gicHouseQueueAdd, gicHouseFarmToggleGrain, gicHouseMerchantSetType]);
   TakeCommand(MakeCommand(aCommandType, aHouse.UID, aItem, aAmountChange));
 end;
 
@@ -1482,7 +1536,7 @@ end;
 procedure TKMGameInputProcess.CmdHouse(aCommandType: TKMGameInputCommandType; aHouse: TKMHouse; aValue: Integer);
 begin
   Assert(aCommandType in [gicHouseRemoveTrain, gicHouseSchoolTrainChLastUOrder, gicHouseTownHallMaxGold, gicHouseTransferWare,
-                          gicHouseMerchantSetType, gicHouseDontAcceptWorker, gicHouseQueueRem, gicHouseMerchantSendTo, gicHousePalaceCancelOrder,
+                          gicHouseDontAcceptWorker, gicHouseQueueRem, gicHouseMerchantSendTo, gicHousePalaceCancelOrder,
                           gicHouseFruitTreeToggleType, gicHouseShipType, gicHouseTownHallMaxBitin]);
   //Assert((aHouse is TKMHouseSchool) or (aHouse is TKMHouseTownHall) or (aHouse is TKMHouseSiegeWorkshop));
   TakeCommand(MakeCommand(aCommandType, aHouse.UID, aValue));

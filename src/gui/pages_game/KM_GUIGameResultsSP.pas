@@ -29,6 +29,7 @@ type
     fRepeatLocation: Byte;
     fRepeatColor: Cardinal;
     fRepeatDifficulty: TKMMissionDifficulty;
+    fRepeatBuiltInDifficulty: TKMMissionBuiltInDifficulty;
     fRepeatAIType: TKMAIType;
 
     fReinitedLastTime: Boolean;
@@ -154,6 +155,7 @@ begin
   fRepeatLocation := gGame.PlayerLoc;
   fRepeatColor := gGame.PlayerColor;
   fRepeatDifficulty := gGameParams.MissionDifficulty;
+  fRepeatBuiltInDifficulty := gGameParams.MBD;
   fRepeatAIType := gGame.AIType;
 
   // When exit mission update stats to build actual charts
@@ -543,7 +545,7 @@ procedure TKMGameResultsSP.RepeatClick(Sender: TObject);
 begin
   // Means replay last map
   gGameApp.NewRestartLast(fRepeatGameName, fRepeatMissionFileRel, fRepeatSave, fGameMode, fRepeatCampName, fRepeatCampMap,
-                          fRepeatLocation, fRepeatColor, fRepeatDifficulty, fRepeatAIType);
+                          fRepeatLocation, fRepeatColor, fRepeatDifficulty, fRepeatAIType, fRepeatBuiltInDifficulty);
 end;
 
 

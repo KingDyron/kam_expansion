@@ -2359,6 +2359,12 @@ begin
                       if CanEditTile(gCursor.Cell.X, gCursor.Cell.Y) then
                       if gCursor.MapEdOverrideObjectsSingle or (gTerrain.Land^[gCursor.Cell.Y, gCursor.Cell.X].Obj = OBJ_NONE) then
                        gTerrain.SetObject(gCursor.Cell, gCursor.Tag1);
+    cmWaresOnGround:  begin
+                        if ssLeft in gCursor.SState then
+                          if CanEditTile(gCursor.Cell.X, gCursor.Cell.Y) then
+                          gTerrain.SetWareOnGround(gCursor.Cell, TKMWareType(gCursor.Tag1), gCursor.MapEd_WaresCount);
+
+                      end;
 
     cmObjectsBrush: if (ssLeft in gCursor.SState) then
                     begin

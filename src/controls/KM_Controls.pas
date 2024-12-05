@@ -231,6 +231,7 @@ type
 
     procedure SetVisible(aValue: Boolean); virtual;
     procedure SetEnabled(aValue: Boolean); virtual;
+    function GetEnabled : Boolean; virtual;
     procedure SetAnchors(aValue: TKMAnchorsSet); virtual;
     procedure SetHitable(const aValue: Boolean); virtual;
     function GetIsPainted: Boolean; virtual;
@@ -263,6 +264,7 @@ type
     procedure SetMobilHint(aValue : Boolean); Virtual;
 
     function CanFocusNext: Boolean; virtual;
+    procedure HideOnClick(Sender : TObject);
   public
     AutoFocusable: Boolean; //Can we focus on this element automatically (f.e. if set to False we will able to Focus only by manual mouse click)
     HandleMouseWheelByDefault: Boolean; //Do control handle MW by default? Usually it is
@@ -279,6 +281,7 @@ type
     constructor Create(aParent: TKMPanel; aLeft, aTop, aWidth, aHeight: Integer);
     destructor Destroy; override;
     function HitTest(X, Y: Integer; aIncludeDisabled: Boolean = False; aIncludeNotHitable: Boolean = False): Boolean; virtual;
+    procedure HideParentOnClick;
 
     property Parent: TKMPanel read fParent;
     property MasterPanel: TKMPanel read GetMasterPanel;
@@ -332,7 +335,7 @@ type
     property Rect: TKMRect read GetControlRect write SetControlRect;
     property AbsRect: TKMRect read GetControlAbsRect write SetControlAbsRect;
     property Anchors: TKMAnchorsSet read fAnchors write SetAnchors;
-    property Enabled: Boolean read fEnabled write SetEnabled;
+    property Enabled: Boolean read GetEnabled write SetEnabled;
     property Visible: Boolean read GetVisible write SetVisible;
     property Focusable: Boolean read fFocusable write SetFocusable;
     property Hitable: Boolean read fHitable write SetHitable;
@@ -426,6 +429,10 @@ type
     destructor Destroy; override;
     function AddChild(aChild: TKMControl): Integer; virtual;
     procedure SetCanChangeEnable(aEnable: Boolean; aExceptControls: array of TKMControlClass; aAlsoSetEnable: Boolean = True);
+    procedure Centerize;virtual;
+    procedure SetHeightToChilds(aMargin : Integer = 5);virtual;
+    procedure SetWidthToChilds(aMargin : Integer = 5);virtual;
+    procedure SetRectToChilds(aMargin : Integer = 5);virtual;
 
     function FindFocusableControl(aFindNext: Boolean): TKMControl;
     procedure FocusNext;
@@ -509,7 +516,7 @@ begin
   if aParent <> nil then
     fControlIndex := aParent.AddChild(Self);
 
-  MobilHint     := false;
+  MobilHint     := true;
 end;
 
 destructor TKMControl.Destroy;
@@ -597,6 +604,11 @@ end;
 function TKMControl.CanFocusNext: Boolean;
 begin
   Result := True;
+end;
+
+procedure TKMControl.HideOnClick(Sender: TObject);
+begin
+  fParent.Hide;
 end;
 
 
@@ -800,6 +812,11 @@ begin
       Result := InRange(X, AbsLeft, AbsRight)
             and InRange(Y, AbsTop, AbsBottom);
   end;
+end;
+
+procedure TKMControl.HideParentOnClick;
+begin
+  OnClick := self.HideOnClick;
 end;
 
 procedure TKMControl.Repaint;
@@ -1268,6 +1285,13 @@ begin
   UpdateEnableStatus;
 end;
 
+function TKMControl.GetEnabled: Boolean;
+begin
+    Result := fEnabled;
+  if fParent <> nil then
+    Result := Result and fParent.Enabled;
+end;
+
 
 procedure TKMControl.SetFocusable(const aValue: Boolean);
 var
@@ -1646,6 +1670,35 @@ begin
     Enabled := aEnable;
 end;
 
+procedure TKMPanel.Centerize;
+begin
+  self.Left := Parent.Width div 2 - Width div 2;
+  self.Top := Parent.Height div 2 - Height div 2;
+end;
+
+procedure TKMPanel.SetHeightToChilds(aMargin : Integer = 5);
+var I, tmp : Integer;
+begin
+  tmp := 0;
+  for I := 0 to ChildCount - 1 do
+    tmp := Max(tmp, Childs[I].Bottom);
+  Height := tmp + aMargin;
+end;
+
+procedure TKMPanel.SetWidthToChilds(aMargin: Integer = 5);
+var I, tmp : Integer;
+begin
+  tmp := 0;
+  for I := 0 to ChildCount - 1 do
+    tmp := Max(tmp, Childs[I].Right);
+  Width := tmp + aMargin;
+end;
+
+procedure TKMPanel.SetRectToChilds(aMargin: Integer = 5);
+begin
+  SetHeightToChilds(aMargin);
+  SetWidthToChilds(aMargin);
+end;
 
 procedure TKMPanel.SetHeight(aValue: Integer);
 var

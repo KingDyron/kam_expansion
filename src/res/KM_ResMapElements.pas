@@ -47,6 +47,7 @@ type
     FallTreeAnimObj : Word;
 
     LightRadius, LightPower : Byte;
+    ObjectPrice : Single;
 
   end;
 
@@ -59,10 +60,11 @@ type
     property CRC: Cardinal read fCRC;
 
     procedure LoadFromFile(const aFileName: string);
-    function LoadFromJSON : Cardinal;
+    function LoadFromJSON(aPath : String) : Cardinal;
     procedure SaveToFile(const aFileName: string);
     procedure ExportToText(const aFileName: string);
     Procedure ReloadJSONData(UpdateCRC: Boolean);
+    procedure AfterResourceLoad;
   end;
 
   TKMGrainDat = packed record
@@ -76,6 +78,9 @@ type
               CanBeCut,
               CanBePlant : Boolean;
             end;
+    Dead : record
+          Obj, Terr : Word;// object and Terrain for each stage
+          end;
     Wine,
     Straw,
     Seeds,
@@ -119,6 +124,8 @@ type
   function ObjectIsGrass(aObjId: Integer): Boolean;
   function ObjectIsVege(aObjId: Integer): Boolean;
   function ObjectIsWine(aObjId: Integer): Boolean;
+  function ObjectIsWare(aObjId: Integer): Boolean;
+  function ObjectGetWare(aObjId: Integer): TKMWareType;
 
 var
   //MapElem is in global access because of the recursive FloodFill algorithm
@@ -173,7 +180,8 @@ const
   CORN_AGE_2 = 2200 div TERRAIN_PACE;   //Number measured from KaM ~195sec
   CORN_AGE_3 = 4400 div TERRAIN_PACE;
   CORN_AGE_FULL = 6400 div TERRAIN_PACE; //Corn ready to be cut
-  CORN_AGE_MAX = 255; //todo: Remove. We set it to this once it's fully grown
+  CORN_AGE_MAX  = 128; //todo: Remove. We set it to this once it's fully grown
+  CORN_AGE_DEAD = 148; //todo: Remove. We set it to this once it's fully grown
 
   //Wine values have been tweaked for balance. In KaM they matched corn.
   WINE_STAGES_COUNT = 4; //0..3
@@ -185,7 +193,7 @@ const
 
 implementation
 uses JsonDataObjects, KM_CommonUtils, KM_CommonClassesExt, Math, KM_JSONUtils,
-  TypInfo;
+  TypInfo, KM_Resource;
 const
   // We use Byte instead of TKMKillByRoad to have a shorter table
   OBJ_KILL_BY_ROAD: array [Byte] of Byte {TKMKillByRoad} = (
@@ -236,7 +244,7 @@ const
 
 var
   S: TMemoryStream;
-  I: Integer;
+  I, K: Integer;
   //stage : TKMChopableAge;
 begin
   if not FileExists(aFileName) then Exit;
@@ -516,7 +524,8 @@ begin
   gMapElements[22].SnowPic := 270;
   gMapElements[23].SnowPic := 271;
   gMapElements[24].SnowPic := 272;
-  fCRC := fCRC xor LoadFromJSON;
+  fCRC := fCRC xor LoadFromJSON(ExeDir + 'data' + PathDelim + 'defines' + PathDelim + 'objects.json');
+
 end;
 
 
@@ -531,7 +540,7 @@ begin
   S.Free;
 end;
 
-function TKMResMapElements.LoadFromJSON : Cardinal;
+function TKMResMapElements.LoadFromJSON(aPath : String) : Cardinal;
 var I, K, J, aID, MatureTreeAge : Integer;
   jsonPath: string;
   nObjects, nObject : TJSONObject;
@@ -545,7 +554,7 @@ var I, K, J, aID, MatureTreeAge : Integer;
   tmpCost : TKMVWarePlanCommon;
   DT : TKMDecorationType;
 begin
-  jsonPath :=  ExeDir + 'data' + PathDelim + 'defines' + PathDelim + 'objects.json';
+  jsonPath :=  aPath;
 
   if not FileExists(jsonPath) then
     Exit;
@@ -795,6 +804,11 @@ begin
     tmpGrain.Seeds := nObject.D['Seeds'];
     tmpGrain.Hay := nObject.D['Hay'];
     tmpGrain.Vege := nObject.D['Vege'];
+    tmpGrain.Dead.Obj := nObject.O['Dead'].I['Object'];
+
+    if tmpGrain.Dead.Obj = 255 then
+      tmpGrain.Dead.Obj := 0;
+    tmpGrain.Dead.Terr := nObject.O['Dead'].I['Terrain'];
 
     nArr2 := nObject.A['Stages'];
     SetLength(tmpGrain.Stage, nArr2.Count);
@@ -843,9 +857,11 @@ begin
 
     for K := 0 to nArr2.Count - 1 do
       gFruitTrees[I].Stage[K] := nArr2.I[K];
+    gFruitTrees[I].ClimateMulti[tcNone] := 1;
     for TT := Low(TKMTerrainClimat) to High(TKMTerrainClimat) do
-      if TKMEnumUtils.GetName<TKMTerrainClimat>(TT, S) then
-        gFruitTrees[I].ClimateMulti[TT] := nObject.D[S];
+      if TT <> tcNone then
+        if TKMEnumUtils.GetName<TKMTerrainClimat>(TT, S) then
+          gFruitTrees[I].ClimateMulti[TT] := nObject.D[S];
 
   end;
 
@@ -892,6 +908,19 @@ begin
   OBJECTS_CNT := 0;
   SetLength(gMapElements, 0);
   LoadFromFile(ExeDir + 'data' + PathDelim + 'defines' + PathDelim + 'mapelem.dat');
+end;
+
+procedure TKMResMapElements.AfterResourceLoad;
+var I, K : Integer;
+begin
+  for I := 0 to High(gMapElements) do
+    with gMapElements[I] do
+    begin
+      ObjectPrice := 0;
+      for K := 0 to High(VWares) do
+        ObjectPrice := ObjectPrice + (gRes.Wares.VirtualWares.WareS[VWares[K].W].CoinPrice * VWares[K].Cmax);
+    end;
+
 end;
 
 
@@ -988,7 +1017,8 @@ end;
 function TKMGrainDat.GetStage(aAge: Byte): Byte;
 var I : Integer;
 begin
-  if aAge = 255 then
+
+  if (aAge = 255) or InRange(aAge, CORN_AGE_MAX, CORN_AGE_DEAD) then
     Exit(CORN_AGE_MAX)
   else
     Result := 254;
@@ -1111,6 +1141,39 @@ end;
 function ObjectIsWine(aObjId: Integer): Boolean;
 begin
   Result := gMapElements[aObjId].IsWine > 0;
+end;
+
+function ObjectIsWare(aObjId: Integer): Boolean;
+begin
+  Result := (gMapElements[aObjId].Stone > 0)
+            or (gMapElements[aObjId].Clay > 0)
+            or (gMapElements[aObjId].Bitin > 0)
+            or (gMapElements[aObjId].Coal > 0)
+            or (gMapElements[aObjId].Gold > 0)
+            or (gMapElements[aObjId].Iron > 0);
+end;
+
+function ObjectGetWare(aObjId: Integer) : TKMWareType;
+begin
+  Result := wtNone;
+  if gMapElements[aObjId].Stone > 0 then
+    Result := wtStone
+  else
+  if gMapElements[aObjId].Clay > 0 then
+    Result := wtTile
+  else
+  if gMapElements[aObjId].Bitin > 0 then
+    Result := wtBitinOre
+  else
+  if gMapElements[aObjId].Coal > 0 then
+    Result := wtCoal
+  else
+  if gMapElements[aObjId].Gold > 0 then
+    Result := wtGoldOre
+  else
+  if gMapElements[aObjId].Iron > 0 then
+    Result := wtIronOre;
+
 end;
 
 end.

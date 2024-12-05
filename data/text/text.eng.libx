@@ -306,7 +306,7 @@
 307:Vertical Sync
 308:Fullscreen
 309:Apply
-310:Language:
+310:Language
 311:High shadow quality
 312:Ok
 313:|Hold Shift to place several houses
@@ -1987,3 +1987,92 @@
 2029:Max bitin armor
 2030:Deselect current selection
 2031:Guardians
+2032:Wares needed:
+2033:Start building ships
+2034:Stop building ships
+2035:Structures
+2036:Decorations
+2037:Demands
+2038:Delivered:
+2039:Structure
+2040:Start fishing
+2041:Start mining deposits
+2042:Stop fishing
+2043:Stop mining deposits
+2044:Wooden bridge
+2045:Drewniany most pozwoli na przejście przez wodę i dotarcie na drugi brzeg
+2046:Stone bridge
+2047:Kamienny most umożliwi połączenie ze sobą dwóch brzegów. Można na nim postawić drogę.
+2048:Stone room
+2049:Stone tarrace
+2050:Kamienny taras jest miejscem przeznaczonym do budowania na wodzie
+2051:Strawbush
+2052:Snow objects
+2053:Weather
+2054:Enable/disable weather
+2055:Max clouds on 50x50 map
+2056:Max spawned clouds on 50x50 map
+2057:Min spawn time in seconds
+2058:Mix spawn time in seconds
+2059:Lifetime
+2060:Clouds speed
+2061:Decrease particles
+2062:Spawn time (min / max)
+2063:Quantity (max / spawn) 
+2064:Lifetime of clouds in seconds
+2065:Enabled
+2066:Overwrite
+2067:Overwrite weather settigns
+2068:Decrease particles: 1 (all particles) -> 10 (no particles)
+2069:Environment
+2070:Day duration:
+2071:Time of day:
+2072:Default day duration [ 0 : stops time, 1: 60 minutes, 10: 30 minutes, 20: 5 minutes ] 
+2073:Default time of day at the start of the game [ 0-8: day, 9-12 : night, 13-24: day ]
+2074:Ware
+2075:Units
+2076:Wares
+2077:Unit type
+
+2078:Important Houses
+2079:Basic Houses
+2080:Economy Houses
+2081:Mines
+2082:Workshops
+2083:Defensive
+2084:Additional
+
+2085:Campfire with rocks
+2086:Campfire
+2087:Lamp
+2088:Lantern
+2089:Wares on ground
+
+2090:Sort
+2091:Everything
+2092:Trees
+2093:Fruit trees
+2094:Corn and grapes
+2095:Resources
+2096:Other
+2097:Sort by object attributes
+2098:Tools
+2099:Dynamic light
+2100:On/Off dynamic light form houses or objects
+2101:Eggs
+2102:Pyro
+2103:Lekter
+2104:Indestructible
+2105:Immortal
+2106:Realism
+2107:Built in difficulty level
+2108:Achievements
+2109:Have to pay with something|Produce 100 gold chests||Chests full of gold|Produce 1000 gold chests||Gold, gold everywhere|Produce 10 000 gold chests||Don't forget aboud food|Produce 1000 food||Jedzenie to zdrowie|Produce 10 000 food||Chow time!|Produce 100 000 food||Units for village|Train 500 units||Units for city|Train 1000 units||Units for kingdome|Train 5000 units||First Victory|Win any game||The battle is starting|Win 10 games||To thy weapons|Win 100 games||Play for every time, always.|Win 1000 games||Help of the specialists 1|Recruit in palace trained wolf||Help of the specialists 2|Recruit paladin in palace||Help of the specialists 3|Recruit spy in palace||Real life|Win a game in Realism mode||The crops are dying!|Win a game in Realism mode 15 times||Food rottens and animals dies?|Win a game in Realism mode 34 times||Hell on earth and people in graves|Win a game in Realism mode 666 times
+2110:Disables aging plants on tile
+2111:Changes resource amount in house under the cursor
+2112:Random amount
+2113:Minimum amount of wares
+2114:Maximum amount of wares
+2115:Min / max amount
+2116:Message list
+2117:Text from second language

@@ -17,9 +17,9 @@ type
   protected
     procedure Activate(aWasBuilt: Boolean); override;
   public
-
     NotAcceptFlag: array [TKMWareType] of Boolean;
     NotAllowTakeOutFlag: array [TKMWareType] of Boolean;
+    WareAIBlockAouto: array [TKMWareType] of Boolean;
     constructor Load(LoadStream: TKMemoryStream); override;
     procedure Demolish(aFrom: TKMHandID; IsSilent: Boolean = False); override;
 
@@ -44,7 +44,7 @@ type
     property MaxCount : Integer read fMaxCount write fMaxCount;
   end;
 const
-  MAX_STORE_CAPACITY = 3000;
+  MAX_STORE_CAPACITY = 4000;
   MAX_SMALL_STORE_CAPACITY = 1000;
   WARE_WEIGHT : array[WARE_MIN..WARE_MAX] of Byte =
   (
@@ -58,7 +58,7 @@ const
     3, 2, 1, 2, 3,//wtWheel .. wtTile
     1, 1, 1, 1, 1,
     1, 6, 6, 1, 6,
-    6
+    6, 2
   );
 
 implementation
@@ -88,13 +88,14 @@ begin
       begin
         NotAcceptFlag[RT] := FirstStore.NotAcceptFlag[RT];
         NotAllowTakeOutFlag[RT] := FirstStore.NotAllowTakeOutFlag[RT];
+        WareAIBlockAouto[RT] := false;
       end;
 
   if HouseType = htStore then
     fMaxCount := MAX_STORE_CAPACITY
   else
     fMaxCount := MAX_SMALL_STORE_CAPACITY;
-
+  //ChangedByAIBuildScript := false;
 end;
 
 
@@ -152,6 +153,7 @@ begin
   LoadStream.Read(fWaresCount, SizeOf(fWaresCount));
   LoadStream.Read(NotAcceptFlag, SizeOf(NotAcceptFlag));
   LoadStream.Read(NotAllowTakeOutFlag, SizeOf(NotAllowTakeOutFlag));
+  LoadStream.Read(WareAIBlockAouto, SizeOf(WareAIBlockAouto));
   LoadStream.Read(fMaxCount);
   LoadStream.Read(fTotalCount);
 end;
@@ -250,7 +252,11 @@ begin
   Assert(aWare in WARES_VALID);
 
   if aWare in WARES_VALID then
+  begin
     NotAcceptFlag[aWare] := not NotAcceptFlag[aWare];
+    WareAIBlockAouto[aWare] := true;
+  end;
+
 end;
 
 procedure TKMHouseStore.SetToggleNotAcceptFlag(aWare: TKMWareType; aAccept : Boolean);
@@ -288,6 +294,7 @@ begin
   SaveStream.Write(fWaresCount, SizeOf(fWaresCount));
   SaveStream.Write(NotAcceptFlag, SizeOf(NotAcceptFlag));
   SaveStream.Write(NotAllowTakeOutFlag, SizeOf(NotAllowTakeOutFlag));
+  SaveStream.Write(WareAIBlockAouto, SizeOf(WareAIBlockAouto));
   SaveStream.Write(fMaxCount);
   SaveStream.Write(fTotalCount);
 end;

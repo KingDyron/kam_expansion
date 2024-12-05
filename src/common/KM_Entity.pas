@@ -26,7 +26,6 @@ type
     function ObjToStringShort(const aSeparator: String = '|'): String; virtual;
   end;
 
-
 implementation
 uses
   SysUtils,

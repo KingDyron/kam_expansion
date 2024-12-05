@@ -700,11 +700,18 @@
 	
 	{"ID": 679, "Walkable": false, "Roadable": false, "NotBuildable": true,  "Wine": true, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},	
 	{"ID": 680, "Walkable": true, "Roadable": false, "NotBuildable": true, "Wine": true, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
-	{"ID": 681, "Walkable": true, "Roadable": false,"Wine": true, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
-	{"ID": 682, "Walkable": true, "Roadable": true, "Wine": true, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
-	{"ID": 683, "Walkable": true, "Roadable": true, "Wine": true, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
-	{"ID": 684, "Walkable": true, "Roadable": true, "Wine": true, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
-	{"ID": 685, "Walkable": true, "Roadable": true, "Wine": true, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
-	{"ID": 686, "Walkable": true, "Roadable": true, "Wine": true, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]}
+	{"ID": 681, "Walkable": true, "Roadable": false,"Wine": false, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
+	{"ID": 682, "Walkable": true, "Roadable": true, "Wine": false, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
+	{"ID": 683, "Walkable": true, "Roadable": true, "Wine": false, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
+	{"ID": 684, "Walkable": true, "Roadable": true, "Wine": false, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
+	{"ID": 685, "Walkable": true, "Roadable": true, "Wine": false, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
+	{"ID": 686, "Walkable": true, "Roadable": true, "Wine": false, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
+	{"ID": 687, "Walkable": true, "Roadable": true, "Wine": true, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
+	{"ID": 688, "Walkable": true, "Roadable": true, "Wine": true, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
+	{"ID": 689, "Walkable": true, "Roadable": true, "Wine": false, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
+	{"ID": 690, "Walkable": true, "Roadable": false, "IronMinable": true, "MineShaft": true, "Iron" : 1, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
+	{"ID": 691, "Walkable": true, "Roadable": false, "IronMinable": true, "MineShaft": true, "Iron" : 1, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
+	{"ID": 692, "Walkable": true, "Roadable": false, "MineShaft": false, "GoldMinable": true, "Gold" : 1, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
+	{"ID": 693, "Walkable": true, "Roadable": false, "MineShaft": false, "GoldMinable": true, "Gold" : 1, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]}
   ]
 }

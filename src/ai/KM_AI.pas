@@ -75,7 +75,7 @@ type
 implementation
 uses
   SysUtils, TypInfo, Math,
-  KM_GameParams,
+  KM_GameParams, KM_CommonHelpers,
   KM_GameApp, KM_Game, KM_Hand, KM_HandsCollection, KM_HandStats, KM_UnitGroup,
   KM_Resource,
   KM_ResSound, KM_ScriptingEvents, KM_Alerts,
@@ -210,7 +210,7 @@ procedure TKMHandAI.CheckGoals(aAllowResetGoals: Boolean = False);
                                                          htSiegeWorkshop, htPalace, htWallTower]) > 0);
       gcSerfsAndSchools:   Result := (stats.GetHouseQty([htSchool]) > 0) or (stats.GetUnitQty(utSerf) > 0);
       gcEconomyBuildings:  Result := (stats.GetHouseQty([htStore, htSchool, htInn]) > 0);
-      //gcBuildingsType:  Result := (stats.GetHouseQty(HOUSE_GUI_TAB_ORDER[aGoal.BuldingsType].H) > 0);
+      gcBuildingsType:      Result := (stats.GetHouseQty(HOUSE_VICTORY_ORDER[aGoal.BuldingsType].H) > 0);
       gcAllBuildings:  If aGoal.GoalType = gltSurvive then
                           Result := (stats.GetHousesLost = 0)
                        else
@@ -394,8 +394,11 @@ begin
   case gHands[fOwner].HandType of
     hndHuman:
       begin
+
         //No fight alerts in replays/spectating, and only show alerts for ourselves
+
         if not gGame.Params.IsReplayOrSpectate
+          and not gGame.Params.MBD.IsRealism
           and (fOwner = gMySpectator.HandID)
           and (aAttacker <> nil) then //Don't show alerts for annonymous attacks (e.g. script)
           gGame.GamePlayInterface.Alerts.AddFight(KMPointF(aHouse.Position), fOwner, anTown,
@@ -437,6 +440,8 @@ begin
     end;
   end;
   //}
+  if (aUnit = nil) or (aAttacker = nil) then
+    Exit;
   UnitAttackNotification(aUnit, aAttacker);//attack unit
   if aNotifyScript then
     gScriptEvents.ProcUnitWounded(aUnit, aAttacker); //At the end since it could kill the unit
@@ -452,10 +457,15 @@ var
   group: TKMUnitGroup;
   DP : TAIDefencePosition;
 begin
+
+  if (aUnit = nil) or (aAttacker = nil) then
+    Exit;
+
   case gHands[fOwner].HandType of
     hndHuman:
       //No fight alerts in replays, and only show alerts for ourselves
       if not gGame.Params.IsReplayOrSpectate
+        and not gGame.Params.MBD.IsRealism
         and (fOwner = gMySpectator.HandID) then
         gGame.GamePlayInterface.Alerts.AddFight(aUnit.PositionF, fOwner, NOTIFY_KIND[aUnit is TKMUnitWarrior],
                                                 gGameApp.GlobalTickCount + ALERT_DURATION[atFight]);

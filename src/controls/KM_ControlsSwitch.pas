@@ -240,21 +240,15 @@ end;
 
 procedure TKMCheckBoxTex.Paint;
 var
-  col, semiCol: TColor4;
+  col: TColor4;
   checkSize: Integer;
 begin
   Inherited;
 
   if Enabled then
-  begin
-    col := icWhite;
-    semiCol := $FFCCCCCC;
-  end
+    col := icWhite
   else
-  begin
     col := icGray2;
-    semiCol := $FF888888;
-  end;
 
   checkSize := Max(gRes.Sprites[RX].RXData.Size[TexID].Y, Height); //gRes.Fonts[fFont].GetTextSize('x').Y + 1;
 

@@ -17,7 +17,7 @@ uses
   KM_ResTileset,
   KM_ResUnits,
   KM_ResWares,
-  KM_ResBridges,
+  KM_ResStructures,
   KM_JsonData,
   KM_TerrainTypes;
 
@@ -39,7 +39,7 @@ type
     fSprites: TKMResSprites;
     fTileset: TKMResTileset;
     fMapElements: TKMResMapElements;
-    fBridges : TKMResBridges;
+    fStructures : TKMResStructures;
     procedure LoadPatterns;
 
   public
@@ -72,10 +72,12 @@ type
     property Houses: TKMResHouses read fHouses;
     property Units: TKMResUnits read fUnits;
     property Wares: TKMResWares read fWares;
-    property Bridges: TKMResBridges read fBridges;
+    property Structures: TKMResStructures read fStructures;
     procedure SavePatterns;
     procedure DeletePattern(aIndex : Integer);
     procedure ReloadJSONData(UpdateCRC : Boolean; aEvent : TAnsiStringEvent);
+
+    function OverloadJSONData(aMapFolder : String): Boolean;
 
     procedure UpdateStateIdle;
 
@@ -89,6 +91,7 @@ var
 
 implementation
 uses
+  IOUtils,
   TypInfo,
   {$IFNDEF NO_OGL}
   KM_System,
@@ -128,7 +131,7 @@ begin
   FreeAndNil(fTileset);
   FreeAndNil(fUnits);
   FreeAndNil(gResKeyFuncs);
-  FreeAndNil(fBridges);
+  FreeAndNil(fStructures);
 
   inherited;
 end;
@@ -160,7 +163,7 @@ begin
             fMapElements.CRC xor
             fTileset.CRC xor
             fWares.CRC xor
-            fBridges.CRC
+            fStructures.CRC
             //xor fSprites.CRC //skip it
             ;
 end;
@@ -207,7 +210,7 @@ begin
   fSprites.ClearTemp;
   fWares := TKMResWares.Create;
   fHouses := TKMResHouses.Create;
-  fBridges := TKMResBridges.Create;
+  fStructures := TKMResStructures.Create;
   fUnits.SetUnitHousesList;
   LoadPatterns;
   StepRefresh;
@@ -218,6 +221,7 @@ begin
   fUnits.ExportCSV(ExeDir+'Export\Units.csv');
   fWares.ExportCSV(ExeDir+'Export\Wares.csv');
   fHouses.ExportCSV(ExeDir+'Export\Houses.csv');
+  fMapElements.AfterResourceLoad;
 end;
 
 
@@ -369,7 +373,7 @@ begin
   if Assigned(aEvent) then aEvent('Reloading Data|Sprites|Houses');
   fHouses.ReloadJSONData(UpdateCRC);
   if Assigned(aEvent) then aEvent('Reloading Data|Sprites|Houses|Bridges');
-  fBridges.ReloadJSONData(UpdateCRC);
+  fStructures.ReloadJSONData(UpdateCRC);
   if Assigned(aEvent) then aEvent('Reloading Data|Sprites|Houses|Bridges|Units');
   fUnits.ReloadJSONData(UpdateCRC);
   if Assigned(aEvent) then aEvent('Reloading Data|Sprites|Houses|Bridges|Units|Objects');
@@ -378,6 +382,22 @@ begin
   fWares.ReloadJSONData(UpdateCRC);
   if Assigned(aEvent) then aEvent('Reloading Data|Sprites|Houses|Bridges|Units|Objects|Wares||DONE');
 
+  fMapElements.AfterResourceLoad;
+
 end;
+
+function TKMResource.OverloadJSONData(aMapFolder: string): Boolean;
+begin
+  Exit;
+  Result := false;
+  aMapFolder := ExtractFileDir(aMapFolder) + PathDelim + 'defines' + PathDelim;
+
+  Result := Result or (fHouses.LoadFromJSON(aMapFolder + 'Houses.json') > 0);
+  Result := Result or (fUnits.LoadFromJson(aMapFolder + 'Units.json') > 0);
+  Result := Result or (fWares.LoadWaresFromJson(aMapFolder + 'Wares.json') > 0);
+  Result := Result or (fWares.LoadWareDistribution(aMapFolder + 'WareDistribution.json') > 0);
+  Result := Result or (fMapElements.LoadFromJSON(aMapFolder + 'Objects.json') > 0);
+end;
+
 
 end.

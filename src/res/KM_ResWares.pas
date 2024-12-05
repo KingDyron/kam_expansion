@@ -75,7 +75,7 @@ type
     function GetWareOrderCost : TKMWareTypeArray;
     procedure SetMarketPriceMultiplier(aValue: Single);
   public
-    CoinPrice : Byte;
+    CoinPrice : Word;
     AtTerrainPic : TKMWordArray;
     constructor Create(aType: TKMWareType);
     function IsValid: Boolean;
@@ -100,8 +100,6 @@ type
     fVirtualWares: TKMVirtualWareList;
     procedure CalculateCostsTable;
     function GetWare(aIndex: TKMWareType): TKMWareSpec;
-    function LoadWareDistribution : Cardinal;
-    function LoadWaresFromJson(aPath : String) : Cardinal;
     procedure LoadWareFromJson(aJSONFile : TJsonObject);
     procedure LoadVirtualWaresFromJson(aJSONFile : TJsonObject);
   public
@@ -124,6 +122,8 @@ type
 
     function WaresArrToIconArr(aWares : TKMWareTypeArray) : TIntegerArray;
     procedure ExportCSV(const aPath : String);
+    function LoadWaresFromJson(aPath : String) : Cardinal;
+    function LoadWareDistribution(aPath : String) : Cardinal;
     Procedure ReloadJSONData(UpdateCRC: Boolean);
   end;
 
@@ -138,11 +138,11 @@ const
     28, 29, 30, 31, 32, 33, 34,
     35, 36, 37, 38, 39, 40,
     41, 42, 43, 44, 45, 46,
-    47, 48, 49, 50,
+    47, 48, 49, 50, 51,
 
     0, 0, 0 //rtAll, rtWarfare, rtFood
     );
-  RES_COUNT = 51;
+  RES_COUNT = 52;
   WARE_ID_TO_TYPE: array [0..RES_COUNT-1] of TKMWareType = (
     wtTrunk, wtStone, wtTimber, wtIronOre, wtGoldOre,//4
     wtCoal, wtIron, wtGold, wtWine, wtCorn,//9
@@ -153,7 +153,8 @@ const
     wtBitinOre,    wtStoneBolt,     wtLog,  wtSteelE,       wtBitinE,//34
     wtWheel,    wtBolt,          wtQuiver, wtWater, wtTile,//39
     wtSeed, wtSawDust, wtApple, wtJewerly, wtBoots, wtHay,
-    wtMace, wtFlail, wtFeathers, wtPlateArmor, wtBitinArmor
+    wtMace, wtFlail, wtFeathers, wtPlateArmor, wtBitinArmor,
+    wtEgg
     );
 
   ORE_DENSITY_MAX_TYPES = 5; // How many different ore densities there are
@@ -166,8 +167,8 @@ const
     1, 1, 1, 1, 1, 2, 1, //wtHorse..wtLog
     2, 1, 2, 2, 2, //wtSteelE..wtQuiver
     1, 2, 1, 2, 3, 1,//wtWater
-    1, 1, 1, 1, 1, 1,//wtBoots, wtHay..wtPlateArmor
-    1,
+    2, 1, 1, 1, 1, 1,//wtBoots, wtHay..wtPlateArmor
+    1, 1,//wtBitinArmor, wtEgg
     0, 0, 0//wtFood,wtAny, wtWarfare
 
   );
@@ -175,17 +176,17 @@ const
   //Measured on a test map RES_COUNT / TIME in minutes
   PRODUCTION_RATE: array [WARE_MIN..WARE_MAX] of Single = (
     88/120, 414/120, 390/120, 160/120,  160/120,
-    155/120, 218/120, 330/120, 78/120, 150/120,
-    336/120, 162/120, 324/120, 400/120, 300/120,
+    155/120, 218/120, 330/120, 78/120, 292/120,
+    336/120, 162/120, 324/120, 600/120, 300/120,
     84/180,  180/120, 155/120, 180/120, 155/120,
     200/120, 195/120, 200/120, 195/120, 200/120,
-    195/120, 69/120,  122/120, 199/120, 171/120,
+    195/120, 69/120,  122/120, 199/120, 250/120,
 
     65/120,  168/120,  84/120,  166/120,  83/120,
     168/120,  167/120,  160/120,  345/120,  102/120,
-    150/120, 219/120, 216/120,     1/300,     55/120,
-    195/120, 195/120, 195/120, 100/120, 195/120,
-    195/120
+    192/120, 219/120, 216/120,     1/400,     55/120,
+    195/120, 195/120, 195/120, 225/120, 195/120,
+    195/120, 22/120
     );
 
 implementation
@@ -313,17 +314,17 @@ begin
   fType := aType;
 
   case fType of
+    wtApple : CoinPrice := 4;
     wtGold : CoinPrice := 10;
-    wtBread : CoinPrice := 4;
-    wtSausage : CoinPrice := 6;
-    wtApple : CoinPrice := 2;
+    wtEgg : CoinPrice := 30;
+    wtJewerly : CoinPrice := 500;
     else CoinPrice := 1;
   end;
 
 
   fProduction.MinCount := WARES_PROD_COUNT[aType];
   fProduction.MaxCount := WARES_PROD_COUNT[aType];
-  self.fGuiIcon := GetGUIIcon;
+  fGuiIcon := GetGUIIcon;
   fProduction.OrderCost := GetWareOrderCost;
 end;
 
@@ -344,7 +345,7 @@ const
     $101080, $0080FF, $FFBF00, $FFBF00, $FFBF00,//wtTIle
     $FFBF00, $FFBF00, $00BFFF, $00BFFF, $00BFFF,
     $FFBF00, $FFBF00, $00BFFF, $00BFFF, $00BFFF,
-    $00BFFF,
+    $00BFFF, $FFBF00,
     $004080,$004080,$004080 //wtAll, wtFood, wtWarfare
     );
 begin
@@ -468,6 +469,7 @@ begin
     wtFeathers        : Result := 864;
     wtPlateArmor      : Result := 865;
     wtBitinArmor      : Result := 866;
+    wtEgg             : Result := 936;
   else
     Result := 0; // "Question mark"
   end;
@@ -505,6 +507,7 @@ begin
     wtFeathers: Result := 1979;
     wtPlateArmor: Result := 1980;
     wtBitinArmor: Result := 1981;
+    wtEgg: Result := 2101;
   else
     Result := -1;
   end;
@@ -541,7 +544,7 @@ begin
   // Calcuate the trade costs for marketplace once
   CalculateCostsTable;
   fCRC := LoadWaresFromJson(gRes.JsonData[dtWares]);
-  fCRC := fCRC xor LoadWareDistribution;
+  fCRC := fCRC xor LoadWareDistribution(ExeDir + 'data' + PathDelim + 'defines' + PathDelim + 'WareDistribution.json');
 
 
 
@@ -671,7 +674,7 @@ begin
   Wares[wtPig        ].fMarketPrice := (1/PRODUCTION_RATE[wtPig]) + (4*Wares[wtCorn].MarketPrice + 4*Wares[wtWater].MarketPrice) / 4; //1/2 because two products are made simultaneously
   Wares[wtSkin       ].fMarketPrice := (1/PRODUCTION_RATE[wtSkin]) + (4*Wares[wtCorn].MarketPrice + 4*Wares[wtWater].MarketPrice) / 4; //1/2 because two products are made simultaneously
   Wares[wtLeather    ].fMarketPrice := (1/PRODUCTION_RATE[wtLeather]) + (1/2)*Wares[wtSkin].MarketPrice;
-  Wares[wtSausage   ].fMarketPrice := (1/PRODUCTION_RATE[wtSausage]) + Wares[wtPig].MarketPrice;
+  Wares[wtSausage   ].fMarketPrice := (1/PRODUCTION_RATE[wtSausage]) + Wares[wtPig].MarketPrice / 3;
   Wares[wtWoodenShield     ].fMarketPrice := (1/PRODUCTION_RATE[wtWoodenShield]) + Wares[wtTimber].MarketPrice;
   Wares[wtIronShield].fMarketPrice := (1/PRODUCTION_RATE[wtIronShield]) + Wares[wtIron].MarketPrice + Wares[wtCoal].MarketPrice;
   Wares[wtLeatherArmor      ].fMarketPrice := (1/PRODUCTION_RATE[wtLeatherArmor]) + Wares[wtLeather].MarketPrice;
@@ -713,9 +716,10 @@ begin
   Wares[wtBitinArmor       ].fMarketPrice := (1/PRODUCTION_RATE[wtBitinArmor]) + Wares[wtCoal].MarketPrice * 2 + Wares[wtBitinE].MarketPrice ;
 
   Wares[wtBread      ].fMarketPrice := (1/PRODUCTION_RATE[wtBread]) + Wares[wtFlour].MarketPrice / 2 + Wares[wtVegetables].MarketPrice / 2 + Wares[wtWater].MarketPrice / 2;
+  Wares[wtEgg].fMarketPrice := (1/PRODUCTION_RATE[wtEgg]) + (Wares[wtSeed].MarketPrice * 10);
 end;
 
-function TKMResWares.LoadWareDistribution : Cardinal;
+function TKMResWares.LoadWareDistribution(aPath : String) : Cardinal;
 var
   I, J, K : Integer;
   jsonPath: string;
@@ -724,7 +728,7 @@ var
   H : TKMHouseType;
   W : TKMWareType;
 begin
-  jsonPath := ExeDir + 'data' + PathDelim + 'defines' + PathDelim + 'WareDistribution.json';
+  jsonPath := aPath;
   if not FileExists(jsonPath) then
     Exit(0);
 
@@ -814,7 +818,7 @@ var oldCRC : Cardinal;
 begin
   oldCRC := fCRC;
   fCRC := LoadWaresFromJson(gRes.JsonData[dtWares]);
-  fCRC := fCRC xor LoadWareDistribution;
+  fCRC := fCRC xor LoadWareDistribution(ExeDir + 'data' + PathDelim + 'defines' + PathDelim + 'WareDistribution.json');
   if not UpdateCRC then
     fCRC := oldCRC;
 end;
@@ -838,21 +842,26 @@ begin
 
   with fList[WT].fProduction do
   begin
-    MinCount := aJSONFile.I['MinCount'];
-    MaxCount := aJSONFile.I['MaxCount'];
 
-    nArr := aJSONFile.A['InHouses'];
+    if aJSONFile.Contains('MinCount') then MinCount := aJSONFile.I['MinCount'];
+    if aJSONFile.Contains('MaxCount') then MaxCount := aJSONFile.I['MaxCount'];
 
-    for I := 0 to nArr.Count - 1 do
+    if aJSONFile.Contains('InHouses') then
     begin
-      SetLength(Houses, length(Houses) + 1);
+      nArr := aJSONFile.A['InHouses'];
 
-      if not TKMEnumUtils.TryGetAs<TKMHouseType>(nArr[I].S['HouseType'],  Houses[high(Houses)].House) then
-        raise Exception.Create('Wrong HouseType');
+      for I := 0 to nArr.Count - 1 do
+      begin
+        SetLength(Houses, length(Houses) + 1);
 
-      Houses[high(Houses)].MinCount := nArr[I].I['MinCount'];
-      Houses[high(Houses)].MaxCount := nArr[I].I['MaxCount'];
+        if not TKMEnumUtils.TryGetAs<TKMHouseType>(nArr[I].S['HouseType'],  Houses[high(Houses)].House) then
+          raise Exception.Create('Wrong HouseType');
+
+        Houses[high(Houses)].MinCount := nArr[I].I['MinCount'];
+        Houses[high(Houses)].MaxCount := nArr[I].I['MaxCount'];
+      end;
     end;
+
     nArr := aJsONFile.A['OrderCost'];
     if nArr.Count > 0 then
       SetLength(OrderCost, 0);
@@ -981,6 +990,9 @@ var
   procedure AddField(aField: Integer); overload;
   begin S := S + IntToStr(aField) + ';'; end;
 begin
+  if IsFileInUse(aPath) then
+    Exit;
+
   SL := TStringList.Create;
 
   S := 'Ware Name; WareID;';

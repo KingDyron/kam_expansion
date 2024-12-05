@@ -75,6 +75,7 @@ uses
   KM_GameParams, KM_Cursor,
   KM_HandsCollection, KM_HandTypes,
   KM_Units, KM_UnitGroup, KM_UnitWarrior, KM_Houses, KM_ResTypes, KM_Resource,
+  KM_Structure,
   KM_CommonUtils,
   KM_ScriptingEvents,
   KM_GameTypes;
@@ -208,6 +209,14 @@ begin
     if (Result is TKMHouse) and TKMHouse(Result).IsDestroyed then
       Result := nil;
   end;
+
+  if Result = nil then
+  begin
+    Result := gHands.StructuresHitTest(gCursor.Cell.X, gCursor.Cell.Y);
+    if (Result is TKMStructure) and (TKMStructure(Result).IsDestroyed or TKMStructure(Result).IsComplete) then
+      Result := nil;
+
+  end;
 end;
 
 
@@ -316,7 +325,15 @@ begin
 
       if newSelected <> nil then
         gScriptEvents.ProcHouseSelected(HandID, TKMHouse(newSelected), true);
+    end;
+    if newSelected = nil then
+    begin
+      newSelected := gHands.StructuresHitTest(gCursor.Cell.X, gCursor.Cell.Y);
+      if newSelected.IsStructure then
+        UpdateNewSelected(newSelected);
 
+      if (newSelected is TKMStructure) and (TKMStructure(newSelected).IsDestroyed or TKMStructure(newSelected).IsComplete) then
+        newSelected := nil;
     end;
 
     //Don't clear the old selection unless we found something new

@@ -49,6 +49,7 @@ type
 
   //* Mission difficulty
   TKMMissionDifficulty = (mdNone, mdEasy3, mdEasy2, mdEasy1, mdNormal, mdHard1, mdHard2, mdHard3);
+  TKMMissionBuiltInDifficulty = (mdbEasy, mdbNormal, mdbHard, mdbRealism);
   //* Set of mission difficulties
   TKMMissionDifficultySet = set of TKMMissionDifficulty;
 
@@ -120,6 +121,18 @@ const
     icOrange,
     icDarkOrange,
     icRed
+  );
+  BDIFFICULTY_LEVELS_COLOR: array[TKMMissionBuiltInDifficulty] of Cardinal = (
+    icLightGreen,
+    icYellow,
+    icOrange,
+    icRed
+  );
+  BDIFFICULTY_TEXTS: array[TKMMissionBuiltInDifficulty] of Word = (
+    1174,
+    1175,
+    1176,
+    2106
   );
 
   //Map folder name by folder type. Containing single maps, for SP/MP/DL mode

@@ -306,7 +306,7 @@
 307:Synchronizacja pionowa
 308:Pełny ekran
 309:Zastosuj
-310:Język:
+310:Język
 311:Jakość cieni:
 314:Ładowanie... Proszę czekać
 315:Wystąpił Błąd!
@@ -1960,3 +1960,91 @@
 2029:Maksymalna ilość bitynowych kolczug
 2030:Odznacz zaznaczenie
 2031:Strażnicy
+2032:Potrzebne towary:
+2033:Rozpocznij budowę statków
+2034:Zatrzymaj budowę statków
+2035:Struktury
+2036:Dekoracje
+2037:Wymagane surowce:
+2038:Dostarczono:
+2039:Struktura
+2040:Rozpocznij połów ryb
+2041:Rozpocznij Wyszukiwanie surowców
+2042:Przerwij połów ryb
+2043:Przerwij Wyszukiwanie surowców
+2044:Drewniany most
+2045:Drewniany most pozwoli na przejście przez wodę i dotarcie na drugi brzeg
+2046:Kamienny most
+2047:Kamienny most umożliwi połączenie ze sobą dwóch brzegów. Można na nim postawić drogę.
+2048:Kamienny plac
+2049:Kamienny taras
+2050:Kamienny taras jest miejscem przeznaczonym do budowania na wodzie
+2051:Słomokrzak
+2052:Ośnieżone obiekty
+2053:Pogoda
+2054:Włącz/wyłącz pogodę
+2055:Maksymalna ilość chmur na mapie 50x50
+2056:Ilość spawnowanych chmur na mapie 50x50
+2057:Minimalny czas spawnu w sekundach
+2058:Maksymalny czas spawnu w sekundach
+2059:Żywotność chmur
+2060:Prędkość chmur
+2061:Zmniejsz cząsteczki 
+2062:Czas spawnu (min / maks)
+2063:Ilość chmur (maks / spawn) 
+2064:Żywotność chmur w sekundach
+2065:Włączona
+2066:Nadpisz
+2067:Nadpisz ustawienia pogody
+2068:Zmniejsz cząsteczki: 1 (wszystkie) -> 10 (wyłącz cząsteczki)
+2069:Środowisko
+2070:Długość dnia:
+2071:Pora dnia:
+2072:Domyślna długość dnia [ 0 : zatrzymuje czas, 1: 60 minut, 10: 30 minut, 20: 5 minut ] 
+2073:Domyślna pora dnia na rozpoczęciu rozgrywki [ 0-8: dzień, 9-12 : noc, 13-24: dzień ]
+2074:Towar
+2075:Jednostki
+2076:Towary
+2077:Jednostka
+
+2078:Ważne
+2079:Budowlane
+2080:Ekonomiczne
+2081:Kopalnie
+2082:Warsztaty
+2083:Obronne
+2084:Dodatkowe
+
+2085:Ognisko z kamyczkami
+2086:Ognisko
+2087:Lampa
+2088:Latarnia
+2089:Towary na ziemi
+2090:Sortuj
+2091:Wszystko
+2092:Drzewa
+2093:Drzewa owocowe
+2094:Zboża i owoce
+2095:Surowce
+2096:Inne
+2097:Sortuj według rodzaju obiektu
+2098:Narzędzia
+2099:Dynamiczne światło
+2100:Włącz/Wyłącz dynamiczne światło z budynków i obiektów
+2101:Jajka
+2102:Piroman
+2103:Lekter
+2104:Niezniszczalny
+2105:Nieśmiertelny
+2106:Realizm
+2107:Wbudowany poziom trudności
+2108:Osiągnięcia
+2109:Trzeba czymś płacić|Wyprodukuj 100 skrzyń ze złotem||Skrzynie pełne złota|Wyprodukuj 1000 skrzyń ze złotem||Złoto, złoto wszędzie|Wyprodukuj 10 000 skrzyń ze złotem||Pamiętaj o jedzeniu|Wyprodukuj 1000 jedzenia||Jedzenie to zdrowie|Wyprodukuj 10 000 jedzenia||Dawać ŻARCIE!|Wyprodukuj 100 000 jedzenia||Cywile dla Wioski|Wyszkól 500 jednostek||Cywile dla miasta|Wyszkól 1000 jednostek||Cywile dla królestwa|Wyszkól 5000 jednostek||Pierwsze zwycięstwo|Wygraj jakąkolwiek rozgrywkę||Rozpoczyna się pole bitwy|Wygraj 10 rozgrywek||Do Boju!|Wygraj 100 rozgrywek||Grać po wszystkie czasy, zawsze.|Wygraj 1000 rozgrywek||Pomoc specjalistów 1|Wyrekrutuj tresowanego wilka z Pałacu||Pomoc specjalistów 2|Wyrekrutuj paladyna w Pałacu||Pomoc specjalistów 3|Wyrekrutuj szpiega w Pałacu||Prawdziwe życie|Wygraj rozgrywkę w trybie Realizm||Rośliny mi gniją!|Wygraj rozgrywkę w trybie Realizm 15 razy||Jedzenie się psuje, a zwierzęta zdychają?|Wygraj rozgrywkę w trybie Realizm 34 razy||Piekło na ziemi i ludzie w grobowcach|Wygraj rozgrywkę w trybie Realizm 666 razy
+2110:Wyłącza rośnięcie roślin na danej płytce
+2111:Zmienia ilość towarów w budynku pod kursorem
+2112:Losowa ilość towarów
+2113:Minimalna ilość towarów
+2114:Maksymalna ilość towarów
+2115:Min / max ilość
+2116:Spis wiadomości
+2117:Tekst/ściąga z innego języka

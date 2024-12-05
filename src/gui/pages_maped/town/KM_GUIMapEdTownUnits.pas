@@ -39,11 +39,11 @@ type
   private
     procedure Town_UnitChange(Sender: TObject); override;
     procedure Town_UnitRefresh; override;
-    procedure CreateButtons; override;
   protected
       CheckBox_AddBoots: TKMCheckBox;
       Button_Citizen: array [0..high(School_Order)] of TKMButtonFlat;
       Button_AddUnitsToHouse:TKMButton;
+    procedure CreateButtons; override;
   public
 
     procedure UpdatePlayerColor; override;
@@ -57,10 +57,10 @@ type
     procedure Town_UnitChange(Sender: TObject); override;
     procedure Town_NumericChange(Sender: TObject); override;
     procedure Town_UnitRefresh; override;
-    procedure CreateButtons; override;
   protected
     Button_Warriors: array [0..high(MapEd_Order)] of TKMButtonFlat;
     NumEd_WarrCount, NumEd_WarrColumns: TKMNumericEdit;  //number of units in group + number of rows
+    procedure CreateButtons; override;
   public
 
     procedure UpdatePlayerColor; override;

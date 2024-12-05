@@ -3,6 +3,9 @@
     {
 		"Name": "htSchool",
 			"DescriptionID": 1741,
+			"WoodCost": 4,
+			"StoneCost": 4,
+			"TileCost": 5,
 			"WoodPileOffset" : {"MoveX" : -70, "MoveY" : 15}, 
 			"StonePileOffset" : {"MoveX" : -10, "MoveY" : 15}, 
 			"TilePileOffset" : {"MoveX" : 10, "MoveY" : 15}	
@@ -10,6 +13,9 @@
     {
 		"Name": "htStore",
 			"DescriptionID": 1742,
+			"WoodCost": 4,
+			"StoneCost": 5,
+			"TileCost": 5,
 			"WoodPileOffset" : {"MoveX" : -70, "MoveY" : 15}, 
 			"StonePileOffset" : {"MoveX" : -10, "MoveY" : 15}, 
 			"TilePileOffset" : {"MoveX" : 10, "MoveY" : 15},
@@ -23,6 +29,9 @@
     {
 		"Name": "htInn",
 			"DescriptionID": 1743,
+			"WoodCost": 4,
+			"StoneCost": 4,
+			"TileCost": 6,
 			"WareInput" : ["wtBread", "wtSausage", "wtWine", "wtFish", "wtApple", "wtVegetables"],
 			"WoodPileOffset" : {"MoveX" : -70, "MoveY" : 15}, 
 			"StonePileOffset" : {"MoveX" : -5, "MoveY" : 15}, 
@@ -59,6 +68,9 @@
     {
 		"Name": "htMarket",
 			"DescriptionID": 1747,
+			"WoodCost": 5,
+			"StoneCost": 4,
+			"TileCost": 4,
 			"WoodPileOffset" : {"MoveX" : -75, "MoveY" : 15}, 
 			"StonePileOffset" : {"MoveX" : -35, "MoveY" : 15}, 
 			"TilePileOffset" : {"MoveX" : -10, "MoveY" : 15}	
@@ -66,6 +78,9 @@
     {
 		"Name": "htArmorSmithy",
 			"DescriptionID": 1748,
+			"WoodCost": 4,
+			"StoneCost": 2,
+			"TileCost": 4,
 			"WoodPileOffset" : {"MoveX" : -80, "MoveY" : 20}, 
 			"StonePileOffset" : {"MoveX" : 10, "MoveY" : 20}, 
 			"TilePileOffset" : {"MoveX" : 40, "MoveY" : 20},
@@ -119,6 +134,9 @@
     {
 		"Name": "htBakery",	
 			"DescriptionID": 1750,
+			"WoodCost": 4,
+			"StoneCost": 4,
+			"TileCost": 0,
 			"WoodPileOffset" : {"MoveX" : -40, "MoveY" : 15}, 
 			"StonePileOffset" : {"MoveX" : -25, "MoveY" : 15}, 
 			"TilePileOffset" : {"MoveX" : -10, "MoveY" : 15},
@@ -145,11 +163,23 @@
     {
 		"Name": "htButchers",
 			"DescriptionID": 1751,
+			"WoodCost": 4,
+			"StoneCost": 3,
+			"TileCost": 2,
 			"WoodPileOffset" : {"MoveX" : -40, "MoveY" : 15}, 
 			"StonePileOffset" : {"MoveX" : -33, "MoveY" : 15}, 
 			"TilePileOffset" : {"MoveX" : -15, "MoveY" : 15},
 			"WorkAnim" : [
 							{ "WorkType" : "haWork1", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork4", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork4", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 1},
+							{ "WorkType" : "haWork3", "Cycles" : 1},
+							{ "WorkType" : "haWork4", "Cycles" : 1},
 							{ "WorkType" : "haWork2", "Cycles" : 1},
 							{ "WorkType" : "haWork3", "Cycles" : 1},
 							{ "WorkType" : "haWork4", "Cycles" : 1},
@@ -176,6 +206,9 @@
     {
 		"Name": "htGoldMine",
 			"DescriptionID": 1753,
+			"WoodCost": 2,
+			"StoneCost": 2,
+			"TileCost": 2,
 			"WoodPileOffset" : {"MoveX" : -40, "MoveY" : 15}, 
 			"StonePileOffset" : {"MoveX" : -20, "MoveY" : 15}, 
 			"TilePileOffset" : {"MoveX" : 0, "MoveY" : 15},
@@ -189,6 +222,9 @@
     {
 		"Name": "htIronMine",
 			"DescriptionID": 1754,
+			"WoodCost": 2,
+			"StoneCost": 2,
+			"TileCost": 2,
 			"WoodPileOffset" : {"MoveX" : -40, "MoveY" : 15}, 
 			"StonePileOffset" : {"MoveX" : -20, "MoveY" : 15}, 
 			"TilePileOffset" : {"MoveX" : 30, "MoveY" : 15},
@@ -202,6 +238,9 @@
     {
 		"Name": "htIronSmithy",	
 			"DescriptionID": 1755,
+			"WoodCost": 4,
+			"StoneCost": 2,
+			"TileCost": 4,
 			"WoodPileOffset" : {"MoveX" : -40, "MoveY" : 15}, 
 			"StonePileOffset" : {"MoveX" : 30, "MoveY" : 15}, 
 			"TilePileOffset" : {"MoveX" : -80, "MoveY" : 15},
@@ -216,7 +255,7 @@
 			"WoodPileOffset" : {"MoveX" : 30, "MoveY" : 15}, 
 			"StonePileOffset" : {"MoveX" : 10, "MoveY" : 15}, 
 			"TilePileOffset" : {"MoveX" : 50, "MoveY" : 15},	
-			"WorkerTypes": [{"UnitType" : "utCarpenter", "MaxCount" : 1}, {"UnitType" : "utOperator", "MaxCount" : 9}],
+			"WorkerTypes": [{"UnitType" : "utCarpenter", "MaxCount" : 1}, {"UnitType" : "utOperator", "MaxCount" : 4}],
 			"SupplyIn1" : [2342, 2343, 2344, 2345, 2346],
 			"SupplyIn3" : [2347, 2348, 2349, 2350, 2351],
 			"SupplyIn4" : [2352, 2353, 2354, 2355, 2356]
@@ -224,6 +263,9 @@
     {
 		"Name": "htMetallurgists",
 			"DescriptionID": 1757,
+			"WoodCost": 4,
+			"StoneCost": 3,
+			"TileCost": 2,
 			"WoodPileOffset" : {"MoveX" : -70, "MoveY" : 15}, 
 			"StonePileOffset" : {"MoveX" : -10, "MoveY" : 15}, 
 			"TilePileOffset" : {"MoveX" : 10, "MoveY" : 15},
@@ -247,6 +289,9 @@
     {
 		"Name": "htMill",
 			"DescriptionID": 1758,
+			"WoodCost": 4,
+			"StoneCost": 2,
+			"TileCost": 2,
 			"WoodPileOffset" : {"MoveX" : -30, "MoveY" : 15}, 
 			"StonePileOffset" : {"MoveX" : 0, "MoveY" : 15}, 
 			"TilePileOffset" : {"MoveX" : 10, "MoveY" : 15},
@@ -274,6 +319,9 @@
     {
 		"Name": "htStables",
 			"DescriptionID": 1760,
+			"WoodCost": 4,
+			"StoneCost": 4,
+			"TileCost": 6,
 			"WoodPileOffset" : {"MoveX" : -50, "MoveY" : 15}, 
 			"StonePileOffset" : {"MoveX" : -30, "MoveY" : 15}, 
 			"TilePileOffset" : {"MoveX" : 40, "MoveY" : 15},	
@@ -292,6 +340,9 @@
 		"Name": "htSwine",
 			"StonePic" : 367,
 			"DescriptionID": 1761,
+			"WoodCost": 4,
+			"StoneCost": 2,
+			"TileCost": 2,
 			"WoodPileOffset" : {"MoveX" : -70, "MoveY" : 15}, 
 			"StonePileOffset" : {"MoveX" : -50, "MoveY" : 15}, 
 			"TilePileOffset" : {"MoveX" : -20, "MoveY" : 15},	
@@ -328,6 +379,9 @@
     {
 		"Name": "htVineyard",
 			"DescriptionID": 1763,
+			"WoodCost": 2,
+			"StoneCost": 3,
+			"TileCost": 2,
 			"WoodPileOffset" : {"MoveX" : -35, "MoveY" : 15}, 
 			"StonePileOffset" : {"MoveX" : -18, "MoveY" : 15}, 
 			"TilePileOffset" : {"MoveX" : 0, "MoveY" : 15},
@@ -391,6 +445,9 @@
     {
 		"Name": "htWeaponSmithy",
 			"DescriptionID": 1768,
+			"WoodCost": 4,
+			"StoneCost": 3,
+			"TileCost": 3,
 			"WoodPileOffset" : {"MoveX" : -70, "MoveY" : 15}, 
 			"StonePileOffset" : {"MoveX" : 0, "MoveY" : 15}, 
 			"TilePileOffset" : {"MoveX" : 30, "MoveY" : 15},	

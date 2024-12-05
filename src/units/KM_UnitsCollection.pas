@@ -148,6 +148,8 @@ begin
                                     utSpikedTrap       : Result := TKMUnitWarriorSpikedTrap.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
                                     utMedic       : Result := TKMUnitWarriorMedic.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
                                     utBattleShip       : Result := TKMUnitWarriorBShip.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
+                                    utBoat       : Result := TKMUnitWarriorBoat.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
+                                    utLekter       : Result := TKMUnitWarriorLekter.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
                                     else Result := TKMUnitWarrior.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
                                   end;
     // Do not specify aAddInHouse, we want to call TKMUnitAnimal constructor
@@ -373,6 +375,8 @@ begin
                                   utSpikedTrap       : U := TKMUnitWarriorSpikedTrap.Load(LoadStream);
                                   utMedic       : U := TKMUnitWarriorMedic.Load(LoadStream);
                                   utBattleShip       : U := TKMUnitWarriorBShip.Load(LoadStream);
+                                  utBoat       : U := TKMUnitWarriorBoat.Load(LoadStream);
+                                  utLekter       : U := TKMUnitWarriorLekter.Load(LoadStream);
                                   else U := TKMUnitWarrior.Load(LoadStream);
                                 end;
       utWolf,

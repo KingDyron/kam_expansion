@@ -24,6 +24,7 @@ type
     fMissionFileRelSP: UnicodeString; //Relative pathname to mission we are playing, so it gets saved to crashreport. SP only, see GetMissionFile.
 
     fMissionDifficulty: TKMMissionDifficulty;
+    fMissionBuiltInDifficulty: TKMMissionBuiltInDifficulty;
 
     fDynamicFOW: Boolean;
 
@@ -67,6 +68,8 @@ type
     property MissionFileRelSP: UnicodeString read fMissionFileRelSP;
     property MissionFileRel: UnicodeString read GetMissionFileRel;
     property MissionDifficulty: TKMMissionDifficulty read fMissionDifficulty write fMissionDifficulty;
+    property MissionBuiltInDifficulty: TKMMissionBuiltInDifficulty read fMissionBuiltInDifficulty write fMissionBuiltInDifficulty;
+    property MBD: TKMMissionBuiltInDifficulty read fMissionBuiltInDifficulty write fMissionBuiltInDifficulty;
     property DynamicFOW: Boolean read GetDynamicFOW write SetDynamicFOW;
     property BlockPointerOperations: Boolean read fBlockPointerOperations;
 
@@ -127,6 +130,7 @@ begin
   fMode := aGameMode;
   fTick := 0;
   fMissionDifficulty := mdNone;
+  fMissionBuiltInDifficulty := mdbNormal;
   DynamicFOW := False;
 
   aSetGameTickEvent := SetTick;
@@ -358,6 +362,10 @@ function TKMGameParams.AllowPointerOperations: Boolean;
 begin
   Result := IsSingleplayerGame or IsMapEditor or not BlockPointerOperations {or SKIP_POINTER_REF_CHECK};
 end;
+
+
+
+
 
 
 end.

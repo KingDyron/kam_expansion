@@ -34,8 +34,8 @@
 							"Qty" : 4
 						},
 						{
-							"HouseName" : "htTailorsShop",
-							"Qty" : 3
+							"HouseName" : "htShipyard",
+							"Qty" : 2
 						}
 		
 					]
@@ -139,6 +139,10 @@
 						{
 							"HouseName" : "htTailorsShop",
 							"Qty" : 5
+						},
+						{
+							"HouseName" : "htShipyard",
+							"Qty" : 4
 						}
 		
 					]

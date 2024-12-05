@@ -109,6 +109,7 @@ type
     function GetHouseTotal(aType: TKMHouseType): Integer;
     function GetUnitQty(aType: TKMUnitType): Integer;overload;
     function GetUnitQty(aType: array of TKMUnitType): Integer;overload;
+    function GetUnitTrainedQty(aType: TKMUnitType): Integer;
     function GetUnitTraining(aType: TKMUnitType): Integer;
     function GetUnitDismissing(aType: TKMUnitType): Integer;
     function GetUnitKilledQty(aType: TKMUnitType): Integer;
@@ -488,6 +489,18 @@ begin
   end;
 end;
 
+function TKMHandStats.GetUnitTrainedQty(aType: TKMUnitType): Integer;
+var
+  UT: TKMUnitType;
+begin
+  Result := 0;
+  case aType of
+    utNone: ;
+    utAny:     for UT := HUMANS_MIN to HUMANS_MAX do
+                  Inc(Result, Units[UT].Trained);
+    else        Result := Units[aType].Trained;
+  end;
+end;
 
 function TKMHandStats.GetUnitDismissing(aType: TKMUnitType): Integer;
 var

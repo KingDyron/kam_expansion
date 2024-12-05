@@ -311,6 +311,9 @@ begin
   //Do not add extra cost if the tile is the target, as it can cause a longer route to be chosen
   if (aToX <> fLocB.X) or (aToY <> fLocB.Y) then
   begin
+    if gTerrain.AvoidTile(aToX, aToY) then//walk through that tile only when there is no other possibility
+      Result := Result + 999999999;
+    
     U := gTerrain.Land^[aToY,aToX].IsUnit;
 
     // Goind offroad, when unit has to walk on road is possible to avoid locked tiles,

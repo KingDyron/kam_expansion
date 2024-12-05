@@ -95,7 +95,7 @@ begin
         end;
         goalCondStr := Format(gResTexts[TX_GOAL_CONDITION_COND_DESC_BUILDINGS], [WrapWrappedColor(housesStr, aColBld)]);
       end;
-    gcBuildingsType : If aBuildingType <> -1 then goalCondStr := gResTexts[HOUSE_GUI_TAB_ORDER[aBuildingType].TextID];
+    gcBuildingsType : If aBuildingType <> -1 then goalCondStr := gResTexts[HOUSE_VICTORY_ORDER[aBuildingType].TextID];
     else
       goalCondStr := gResTexts[GOAL_CONDITION_LIBX[aGoalCondition, aGoalType]];
   end;

@@ -24,7 +24,8 @@ type
                         gpCredits,
                       gpLoading,
                       gpError,
-                      gpMapEdCampaign);
+                      gpMapEdCampaign,
+                      gpAchievements);
   TGUIEvent = procedure (Sender: TObject; Dest: TKMMenuPageType) of object;
   TKMMenuChangeEventText = procedure (Dest: TKMMenuPageType; const aText: UnicodeString = '') of object;
   TKMToggleLocaleEvent = procedure (const aLocale: AnsiString; aBackToMenuPage: TKMMenuPageType) of object;
@@ -35,6 +36,7 @@ type
     zbFull,       // Prevents the zoom from crossing both map boundaries
     zbLoose       // Limit the zoom to 1.1x the map width or height
   );
+
 
 const
   // Options sliders

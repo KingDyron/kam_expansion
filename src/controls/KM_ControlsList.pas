@@ -103,6 +103,7 @@ type
     function GetMouseOverRow: Integer; override;
   public
     ItemTags: array of Integer;
+    ItemsVisibility : array of Boolean;
     TextAlign : TKMTextAlign;
     constructor Create(aParent: TKMPanel; aLeft, aTop, aWidth, aHeight: Integer; aFont: TKMFont; aStyle: TKMButtonStyle);
     destructor Destroy; override;
@@ -210,6 +211,7 @@ type
       Pic: TKMPic;
     end;
     Tag: Integer;
+    Visible : Boolean;
   end;
 
   TKMListColumn = class
@@ -221,7 +223,7 @@ type
 
   TKMColumnBox = class(TKMSearchableList)
   const
-    COL_PAD_X = 4;
+    COL_PAD_X = 6;
     TXT_PAD_Y = 2;
   private
     fBackAlpha: Single; //Alpha of background
@@ -248,6 +250,7 @@ type
     procedure SetSortIndex(aIndex: Integer);
     function GetSortDirection: TKMSortDirection;
     procedure SetSortDirection(aDirection: TKMSortDirection);
+    function VisibleRowsCount : Word;
     procedure UpdateScrollBar;
     procedure SetShowHeader(aValue: Boolean);
     function GetOnColumnClick: TIntegerEvent;
@@ -381,6 +384,7 @@ begin
     Result.Cells[I].Color := $FFFFFFFF;
     Result.Cells[I].Enabled := True;
   end;
+  Result.Visible := true;
   Result.Tag := aTag;
 end;
 
@@ -399,6 +403,7 @@ begin
     Result.Cells[I].Color := $FFFFFFFF;
     Result.Cells[I].Enabled := True;
   end;
+  Result.Visible := true;
   Result.Tag := aTag;
 end;
 
@@ -416,6 +421,7 @@ begin
     Result.Cells[I].Color := aColor[I];
     Result.Cells[I].Enabled := True;
   end;
+  Result.Visible := true;
   Result.Tag := aTag;
 end;
 
@@ -435,6 +441,7 @@ begin
     Result.Cells[I].Color := aColor[I];
     Result.Cells[I].Enabled := True;
   end;
+  Result.Visible := true;
   Result.Tag := aTag;
 end;
 
@@ -455,6 +462,7 @@ begin
     Result.Cells[I].HighlightColor := aColorHighlight[I];
     Result.Cells[I].Enabled := True;
   end;
+  Result.Visible := true;
   Result.Tag := aTag;
 end;
 
@@ -476,6 +484,7 @@ begin
     Result.Cells[I].Pic := aPic[I];
     Result.Cells[I].Enabled := True;
   end;
+  Result.Visible := true;
   Result.Tag := aTag;
 end;
 
@@ -765,6 +774,7 @@ end;
 //fItems.Count has changed
 procedure TKMListBox.UpdateScrollBar;
 begin
+  SetLength(ItemsVisibility, fItems.Count);
   fScrollBar.MaxValue := fItems.Count - GetVisibleRows;
   fScrollBar.Visible := IsSetVisible and (not fAutoHideScrollBar or fScrollBar.Enabled);
   //Separators can not be used with scroll bar for now.
@@ -780,7 +790,12 @@ begin
   fItems.Add(aItem);
   SetLength(ItemTags, Length(ItemTags) + 1);
   ItemTags[Length(ItemTags)-1] := aTag;
+
+  SetLength(ItemsVisibility, Length(ItemsVisibility) + 1);
+  ItemsVisibility[Length(ItemsVisibility)-1] := true;
+
   UpdateScrollBar;
+
 end;
 
 
@@ -809,6 +824,7 @@ procedure TKMListBox.Clear;
 begin
   fItems.Clear;
   SetLength(ItemTags, 0);
+  SetLength(ItemsVisibility, 0);
   ClearSeparators;
   fItemIndex := -1;
   UpdateScrollBar;
@@ -1012,7 +1028,7 @@ end;
 
 procedure TKMListBox.Paint;
 var
-  I: Integer;
+  I, K: Integer;
   shapeColor, outlineColor: TColor4;
 begin
   inherited;
@@ -1021,7 +1037,7 @@ begin
   TKMRenderUI.WriteBevel(AbsLeft, AbsTop, PaintWidth, Height, 1, fBackAlpha);
 
   // Draw selection outline and rectangle (shape)
-  if (fItemIndex <> -1) and InRange(fItemIndex - TopIndex, 0, GetVisibleRows - 1) then
+  if (fItemIndex <> -1) and InRange(fItemIndex - TopIndex, 0, GetVisibleRows - 1) and ItemsVisibility[fItemIndex] then
   begin
     if IsFocused then
     begin
@@ -1036,9 +1052,13 @@ begin
   end;
 
   // Draw text lines
+  K := 0;
   for I := 0 to Min(fItems.Count, GetVisibleRows) - 1 do
-    TKMRenderUI.WriteText(AbsLeft + TXT_PAD_X, AbsTop + GetItemTop(I) + TXT_PAD_Y, RenderTextWidth, fItems.Strings[TopIndex+I] , fFont, TextAlign);
-
+    if ItemsVisibility[TopIndex + I] then
+    begin
+      TKMRenderUI.WriteText(AbsLeft + TXT_PAD_X, AbsTop + GetItemTop(K) + TXT_PAD_Y, RenderTextWidth, fItems.Strings[TopIndex+I] , fFont, TextAlign);
+      Inc(K);
+    end;
   // Draw separators
   for I := 0 to Length(fSeparatorPositions) - 1 do
   begin
@@ -1554,13 +1574,20 @@ begin
   Result := fHeader.SortIndex;
 end;
 
-
+function TKMColumnBox.VisibleRowsCount: Word;
+var I : Integer;
+begin
+  Result := 0;
+  for I := 0 to fRowCount - 1 do
+    if Rows[I].Visible then
+      Inc(Result);
+end;
 // fRowCount or Height has changed
 procedure TKMColumnBox.UpdateScrollBar;
 var
   oldScrollBarVisible: Boolean;
 begin
-  fScrollBar.MaxValue := fRowCount - (Height - fHeader.Height * Byte(ShowHeader)) div fItemHeight;
+  fScrollBar.MaxValue := {fRowCount} VisibleRowsCount - (Height - fHeader.Height * Byte(ShowHeader)) div fItemHeight;
   Assert(fScrollBar.MaxValue >= fScrollBar.MinValue);
   oldScrollBarVisible := fScrollBar.Visible;
   fScrollBar.Visible := IsSetVisible and (fScrollBar.MaxValue <> fScrollBar.MinValue);
@@ -1867,6 +1894,7 @@ end;
 function TKMColumnBox.GetHint: UnicodeString;
 var
   hintStr: String;
+  CW : Integer;
 begin
   Result := inherited GetHint;
   if Result = '' then
@@ -1881,7 +1909,9 @@ begin
       begin
         hintStr := Rows[fMouseOverCell.Y].Cells[fMouseOverCell.X].Caption;
         // Show hint, if caption does not fit into the cell
-        if gRes.Fonts[fFont].GetTextSize(hintStr).X > fHeader.ColumnWidth[fMouseOverCell.X] - COL_PAD_X then
+        CW := fHeader.ColumnWidth[fMouseOverCell.X] - COL_PAD_X;
+
+        if gRes.Fonts[fFont].GetTextSize(hintStr).X > CW then
           Result := hintStr;
       end;
     end;
@@ -2024,7 +2054,7 @@ end;
 
 procedure TKMColumnBox.Paint;
 var
-  I, paintWidth, maxItem, Y: Integer;
+  I, K, J, paintWidth, maxItem, Y: Integer;
   outlineColor, shapeColor: TColor4;
 begin
   inherited;
@@ -2051,7 +2081,8 @@ begin
   //Selection highlight
   if not HideSelection
     and (fItemIndex <> -1)
-    and InRange(ItemIndex - TopIndex, 0, maxItem) then
+    and InRange(ItemIndex - TopIndex, 0, maxItem)
+    and Rows[ItemIndex].Visible then
   begin
 
     if IsFocused then
@@ -2068,8 +2099,19 @@ begin
   end;
 
   //Paint rows text and icons above selection for clear visibility
-  for I := 0 to Math.min(fRowCount - TopIndex - 1, maxItem) do
-    DoPaintLine(TopIndex + I, AbsLeft, Y + I * fItemHeight, paintWidth);
+  K := 0;
+  J := 0;
+  //for I := 0 to Math.min(fRowCount - TopIndex - 1, maxItem) do
+  for I := 0 to fRowCount - 1 do
+    if Rows[I].Visible then
+    begin
+      if InRange(K, TopIndex, maxItem + TopIndex) then
+      begin
+        DoPaintLine(I, AbsLeft, Y + J * fItemHeight, paintWidth);
+        inc(J);
+      end;
+      Inc(K);
+    end;
 
   TKMRenderUI.ReleaseClipY;
 end;

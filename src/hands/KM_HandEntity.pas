@@ -39,6 +39,7 @@ type
     function IsUnit: Boolean;
     function IsGroup: Boolean;
     function IsHouse: Boolean;
+    function IsStructure: Boolean;
 
     function ObjToString(const aSeparator: String = '|'): String; override;
     function ObjToStringShort(const aSeparator: String = '|'): String; override;
@@ -166,6 +167,12 @@ begin
   Result := fType = etHouse;
 end;
 
+function TKMHandEntity.IsStructure: Boolean;
+begin
+  if Self = nil then Exit(False);
+
+  Result := fType = etStructure;
+end;
 
 procedure TKMHandEntity.SetOwner(const aOwner: TKMHandID);
 begin

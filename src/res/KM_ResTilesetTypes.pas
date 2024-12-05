@@ -100,7 +100,8 @@ const
                       tkGrassDirt, tkDirt, tkGravel, tkSnowOnGrass, tkSnowOnDirt];
 
   WINE_TERR_KINDS = [tkGrass, tkMoss, tkPaleGrass, tkGrassSand1, tkGrassSand2,tkGrassSand3, tkCoastSand,
-                      tkGrassDirt, tkDirt, tkGravel, tkSnowOnGrass, tkSnowOnDirt, tkSnow, tkCoal];
+                      tkGrassDirt, tkDirt, tkGravel, tkSnowOnGrass, tkSnowOnDirt, tkSnow, tkCoal,
+                      tkDeepSnow, tkSand];
 type
   TKMTileAnimLayer = record
     Frames: Byte;
@@ -251,6 +252,8 @@ type
     fVegetables: Boolean;
     fIronMinable: Boolean;
     fGoldMinable: Boolean;
+    fCoalMinable: Boolean;
+    fMineShaft: Boolean;
     // Not Saved
     fMainColor: TKMColor3b;
     function GetHasAnim: Boolean;
@@ -283,6 +286,8 @@ type
     property Vegetables: Boolean read fVegetables write fVegetables;
     property IronMinable: Boolean read fIronMinable write fIronMinable;
     property GoldMinable: Boolean read fGoldMinable write fGoldMinable;
+    property CoalMinable: Boolean read fCoalMinable write fCoalMinable;
+    property MineShaft: Boolean read fMineShaft write fMineShaft;
 
 //    Corner: Boolean;
 //    Edge: Boolean;

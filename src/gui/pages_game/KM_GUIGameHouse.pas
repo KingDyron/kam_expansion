@@ -126,9 +126,10 @@ type
       CostsRow_Costs: array [1..WARES_IN_OUT_COUNT] of TKMCostsRow; //3 bars is the maximum
       Label_DepletedMsg: TKMLabel;
       VirtualWares_Row: array [1..9] of TKMWaresRow; //Virtual wares show max 9 wares
-      ProgressBar_BigWare: TKMPercentBar;
-      Progress_BigWare : TKMImageAnimation;
+      ProgressBar_BigWare: TKMImageBar;
+      Progress_BigWare, Progress_BigWare2 : TKMImageAnimation;
       Progress_Beasts : TKMIconProgressBar;
+      CostsRow_Common : TKMCostsRowMulti;
 
     Panel_HouseMarket: TKMPanel;
       Button_Market: array of TKMButtonFlat;
@@ -148,7 +149,7 @@ type
       CheckBox_Store : TKMCheckBoxTex;
 
     Panel_House_School: TKMPanel;
-      WaresRow_School_Gold, WaresRow_School_Boots: TKMWaresRow;
+      //WaresRow_School_Gold, WaresRow_School_Boots: TKMWaresRow;
       Button_Workless: TKMButtonFlat;
       Button_School_UnitWIP: TKMButton;
       Button_School_UnitWIPBar: TKMPercentBar;
@@ -247,6 +248,7 @@ type
     Button_PlayerSelect: array [0..MAX_HANDS-1] of TKMFlatButtonShape;//select player in merchant
 
     Ship_ShipType, Ship_DoWork : TKMButton;
+    WaresOut_ShipYard : TKMWaresButtonsMulti;
 
   public
     AskDemolish: Boolean;
@@ -283,6 +285,7 @@ uses
   KM_HandsCollection, KM_HandTypes, KM_HandEntity,
   KM_RenderUI, KM_ResKeys, KM_ResMapElements,
   KM_Resource, KM_ResFonts, KM_ResHouses, KM_ResTexts, KM_ResUnits, KM_Utils, KM_UtilsExt, KM_Points,
+  KM_Cursor,
   KM_GameTypes, KM_MainSettings;
 
 const
@@ -305,7 +308,7 @@ begin
   self.fSelectNextHouse := aSelectNextEvent;
   fAnimStep := 0;
   fIsOrderRefreshed := false;
-  Panel_House := TKMScrollPanel.Create(aParent, TB_PAD, 44, TB_WIDTH + 25, aParent.MasterParent.Height - 350, [saVertical], bsMenu, ssCommon);
+  Panel_House := TKMScrollPanel.Create(aParent, TB_PAD, 44, TB_WIDTH + 9, aParent.MasterParent.Height - 350, [saVertical], bsMenu, ssCommon);
 
   Panel_House.DoScrollUpdate := false;
     //Thats common things
@@ -344,12 +347,12 @@ begin
     Button_Workless.CapOffsetY := 2;
     Button_Workless.Hint := gResTexts[1682];
 
-    Image_House_Logo := TKMImage.Create(Panel_House,90,41,32,32,338);
+    Image_House_Logo := TKMImage.Create(Panel_House,93,41,32,32,338);
     Image_House_Logo.ImageCenter;
     Image_House_Logo.HighlightOnMouseOver := True;
     Image_House_Logo.OnClick := HouseLogo_Click;
     Image_House_Logo.Hint := gResTexts[TX_HOUSE_LOGO_HINT];
-    HealthBar_House := TKMPercentBar.Create(Panel_House,120,50,55,15);
+    HealthBar_House := TKMPercentBar.Create(Panel_House,126,50,55,15);
     Label_House_UnderConstruction := TKMLabel.Create(Panel_House,0,110,TB_WIDTH,0,gResTexts[TX_HOUSE_UNDER_CONSTRUCTION],fntGrey,taCenter);
 
     Button_UpgradeHouse := TKMButton.Create(Panel_House, TB_WIDTH - 30, 14, 25, 25, 716, rxGui, bsGame);
@@ -414,7 +417,8 @@ begin
     Icons_Workers.MaxCountInRow := 5;
     Icons_Workers.StillSize := true;
     Icons_Workers.Width := 5 * Icons_Workers.HSpacing;
-    Icons_Workers.Height := 2 * Icons_Workers.VSpacing;
+    Icons_Workers.Height := 1 * Icons_Workers.VSpacing;
+
     Panel_House_Common := TKMPanel.Create(Panel_House,0,76,200,Panel_House.Height - 80);
     Panel_House_Common.Hitable := false;
       Label_Common_Demand := TKMLabel.Create(Panel_House_Common,0,2,TB_WIDTH,0,gResTexts[TX_HOUSE_NEEDS],fntGrey,taCenter);
@@ -473,15 +477,29 @@ begin
   end;
 
 
-  ProgressBar_BigWare := TKMPercentBar.Create(Panel_House_Common, 0, 0, TB_WIDTH, 40);
+  ProgressBar_BigWare := TKMImageBar.Create(Panel_House_Common, 0, 0, TB_WIDTH, 40, 928);
   ProgressBar_BigWare.LinesCount := 4;
   Progress_BigWare := TKMImageAnimation.Create(Panel_House_Common, 0, 0, TB_WIDTH, 40, 0, rxGui, []);
   Progress_BigWare.Hitable := false;
   Progress_BigWare.StopAnim := true;
   Progress_BigWare.AddBevel := false;
 
+  Progress_BigWare2 := TKMImageAnimation.Create(Panel_House_Common, 0, 0, TB_WIDTH, 40, 0, rxGui, []);
+  Progress_BigWare2.Hitable := false;
+  Progress_BigWare2.StopAnim := true;
+  Progress_BigWare2.AddBevel := false;
+
   Progress_Beasts := TKMIconProgressBar.Create(Panel_House_Common, 0, 0, TB_WIDTH, 30, false, [[490, 569, 403], [490, 569, 403], [490, 569, 403], [490, 569, 403], [490, 569, 403]]);
   Progress_Beasts.RX := rxHouses;
+
+  CostsRow_Common := TKMCostsRowMulti.Create(Panel_House_Common, 0, 0, TB_WIDTH, 21);
+  CostsRow_Common.MobilHint := true;
+  CostsRow_Common.WarePlan.Reset;
+  CostsRow_Common.Caption := gResTexts[2032];
+
+  WaresOut_ShipYard := TKMWaresButtonsMulti.Create(Panel_House_Common, 0, 0, Panel_House.Width - 18, 150);
+  WaresOut_ShipYard.WarePlan.Reset;
+  WaresOut_ShipYard.MobilHint := true;
 
   Create_HouseMarket;
   Create_HouseStore;
@@ -688,42 +706,44 @@ var
 begin
   Panel_House_School := TKMPanel.Create(Panel_House, 0, 76, TB_WIDTH, Panel_House.Height - 76);
 
-    TKMLabel.Create(Panel_House_School,0,2,TB_WIDTH,30,gResTexts[TX_HOUSE_NEEDS],fntGrey,taCenter);
+    //TKMLabel.Create(Panel_House_School,0,2,TB_WIDTH,30,gResTexts[TX_HOUSE_NEEDS],fntGrey,taCenter);
 
-    WaresRow_School_Gold := TKMWaresRow.Create(Panel_House_School, 0, 21, TB_WIDTH);
+   { WaresRow_School_Gold := TKMWaresRow.Create(Panel_House_School, 0, 21, TB_WIDTH);
     WaresRow_School_Gold.RX := rxGui;
     WaresRow_School_Gold.TexID := gRes.Wares[wtGold].GUIIcon;
     WaresRow_School_Gold.Caption := gRes.Wares[wtGold].Title;
     WaresRow_School_Gold.Hint := gRes.Wares[wtGold].Title;
+    WaresRow_School_Gold.Hide;
 
     WaresRow_School_Boots := TKMWaresRow.Create(Panel_House_School, 0, 42, TB_WIDTH);
     WaresRow_School_Boots.RX := rxGui;
     WaresRow_School_Boots.TexID := gRes.Wares[wtBoots].GUIIcon;
     WaresRow_School_Boots.Caption := gRes.Wares[wtBoots].Title;
     WaresRow_School_Boots.Hint := gRes.Wares[wtBoots].Title;
+    WaresRow_School_Boots.Hide;}
 
 
-    Button_School_UnitWIP := TKMButton.Create(Panel_House_School,  0,48 + 21,32,32,0, rxGui, bsGame);
+    Button_School_UnitWIP := TKMButton.Create(Panel_House_School,  0,0,32,32,0, rxGui, bsGame);
     Button_School_UnitWIP.Hint := gResTexts[TX_HOUSE_SCHOOL_WIP_HINT];
     Button_School_UnitWIP.Tag := 0;
     Button_School_UnitWIP.OnClickShift := House_SchoolUnitQueueClick;
-    Button_School_UnitWIPBar := TKMPercentBar.Create(Panel_House_School,34,54 + 21,146,20);
+    Button_School_UnitWIPBar := TKMPercentBar.Create(Panel_House_School,34,6,146,20);
     for I := 1 to 5 do
     begin
-      Button_School_UnitPlan[i] := TKMButtonFlat.Create(Panel_House_School, (I-1) * 36, 80 + 21, 32, 32, 0);
+      Button_School_UnitPlan[i] := TKMButtonFlat.Create(Panel_House_School, (I-1) * 36, 80 - 48, 32, 32, 0);
       Button_School_UnitPlan[i].Tag := I;
       Button_School_UnitPlan[i].OnClickShift := House_SchoolUnitQueueClick;
     end;
 
-    Label_School_Unit := TKMLabel.Create(Panel_House_School,   0,116 + 21,TB_WIDTH,30,'',fntOutline,taCenter);
-    Image_School_Left := TKMImage.Create(Panel_House_School,   0,136 + 21,54,80,521);
-    Image_School_Train := TKMImage.Create(Panel_House_School, 62,136 + 21,54,80,522);
-    Image_School_Right := TKMImage.Create(Panel_House_School,124,136 + 21,54,80,523);
+    Label_School_Unit := TKMLabel.Create(Panel_House_School,   0,116 - 48,TB_WIDTH,30,'',fntOutline,taCenter);
+    Image_School_Left := TKMImage.Create(Panel_House_School,   0,136 - 48,54,80,521);
+    Image_School_Train := TKMImage.Create(Panel_House_School, 62,136 - 48,54,80,522);
+    Image_School_Right := TKMImage.Create(Panel_House_School,124,136 - 48,54,80,523);
     Image_School_Left.Disable;
     Image_School_Right.Disable;
-    Button_School_Left  := TKMButton.Create(Panel_House_School,  0,222 + 21,54,40,35, rxGui, bsGame);
-    Button_School_Train := TKMButton.Create(Panel_House_School, 62,222 + 21,54,40,42, rxGui, bsGame);
-    Button_School_Right := TKMButton.Create(Panel_House_School,124,222 + 21,54,40,36, rxGui, bsGame);
+    Button_School_Left  := TKMButton.Create(Panel_House_School,  0,222 - 48,54,40,35, rxGui, bsGame);
+    Button_School_Train := TKMButton.Create(Panel_House_School, 62,222 - 48,54,40,42, rxGui, bsGame);
+    Button_School_Right := TKMButton.Create(Panel_House_School,124,222 - 48,54,40,36, rxGui, bsGame);
     Button_School_Left.OnClickShift  := House_SchoolUnitChange;
     Button_School_Train.OnClickShift := House_SchoolUnitChange;
     Button_School_Right.OnClickShift := House_SchoolUnitChange;
@@ -974,6 +994,7 @@ begin
   J := 0;
   LastID := 0;
   dY := -35;
+  rightIconStart := 0;
     for I := 0 to high(BarracksResOrder) do
     begin
       if BarracksResOrder[I] = wtNone then //make new line
@@ -1026,8 +1047,6 @@ begin
     end;
 
 
-    dX := 62;
-    dY := -37;
     Button_BarracksRecruit := TKMButtonFlat.Create(Panel_House, Button_HouseRepair.Right, Button_HouseRepair.Top - 3, 28, 38, 0);
     Button_BarracksRecruit.TexOffsetX := 1;
     Button_BarracksRecruit.TexOffsetY := 1;
@@ -1241,7 +1260,7 @@ begin
     Button_NotAcceptWares[I].OnClickShift := House_StallClick;
   end;
 
-  Button_Coin :=  TKMButtonFlat.Create(panel, Panel_House.Width - 70, 0, 28, 34, 0, rxGui);
+  Button_Coin :=  TKMButtonFlat.Create(panel, Panel_House.Width - 31, 0, 28, 34, 0, rxGui);
   Button_Coin.TexID := gRes.Wares.VirtualWares.WareS['vtCoin'].GUIIcon;
   Button_Coin.OnClickShift := House_StallClick;
 
@@ -1277,7 +1296,7 @@ begin
     Exit;
 
   T := gGame.TextMission.ParseTextMarkup(UnicodeString(H.Text));
-
+  gCursor.Hint := '';
   Panel_HouseSign.Show;
   Label_HouseSign.Caption := T;
   gMySpectator.Selected := nil;
@@ -1560,13 +1579,14 @@ begin
 
   Ship_ShipType.Visible := aHouse.HouseType = htShipYard;
   Ship_DoWork.Visible := aHouse.HouseType = htShipYard;
+  //WaresOut_ShipYard.Visible := aHouse.HouseType = htShipYard;
 
   if Ship_DoWork.Visible then
   begin
     Ship_ShipType.TexID := gRes.Units[TKMHouseShipYard(aHouse).NextShipType].GUIIcon;
     Ship_ShipType.Hint := gRes.Units[TKMHouseShipYard(aHouse).NextShipType].GUIName;
     Ship_DoWork.TexID := IfThen(TKMHouseShipYard(aHouse).DoWork, 33, 32);
-    Ship_DoWork.Hint := IfThen(TKMHouseShipYard(aHouse).DoWork, 'Stop building ships', 'Start building ships');
+    Ship_DoWork.Hint := IfThen(TKMHouseShipYard(aHouse).DoWork, gResTexts[2034], gResTexts[2033]);
   end;
 
 
@@ -1577,7 +1597,7 @@ begin
       if I < Length(gRes.Houses[aHouse.HouseType].WareInputSlots) then
       begin
         Button_MerchantType[I].Show;
-        Button_MerchantType[I].Enabled := aHouse.CanChangeWareInput;
+        Button_MerchantType[I].Enabled := aHouse.CanChangeWareInput or (GetKeyState(VK_SHIFT) < 0);
         Button_MerchantType[I].TexID := gRes.Houses[aHouse.HouseType].WareInputSlots[I].Icon;
         Button_MerchantType[I].ShowImageEnabled := (aHouse.WareInputSlot = I);
         Button_MerchantType[I].Top := 60 + 25 * (I div 5) + demandTop;
@@ -1644,8 +1664,19 @@ begin
 
                       end;
     htSchool:         begin
-                        WaresRow_School_Gold.WareCount := aHouse.CheckWareIn(wtGold) - Ord(TKMHouseSchool(aHouse).HideOneGold);
-                        WaresRow_School_Boots.WareCount := aHouse.CheckWareIn(wtBoots);
+                        {WaresRow_School_Gold.WareCount := aHouse.CheckWareIn(wtGold) - Ord(TKMHouseSchool(aHouse).HideOneGold);
+                        WaresRow_School_Boots.WareCount := aHouse.CheckWareIn(wtBoots);}
+
+                        //First thing - hide everything
+                        for I := 0 to Panel_House_Common.ChildCount - 1 do
+                          Panel_House_Common.Childs[I].Hide;
+                        rowRes := 1;
+                        line := 0;
+                        base := 2 + demandTop ;
+                        ShowCommonDemand(aHouse, base, line, rowRes);
+
+                        Panel_House_School.Top := 76 + base + line * 25;
+
                         Button_School_UnitWIP.FlagColor := gHands[aHouse.Owner].FlagColor;
                         for I := 1 to 5 do
                           Button_School_UnitPlan[I].FlagColor := gHands[aHouse.Owner].FlagColor;
@@ -1654,7 +1685,6 @@ begin
                         Image_School_Train.FlagColor := gHands[aHouse.Owner].FlagColor;
                         House_SchoolUnitChange(nil, []);
                         Panel_House_School.Show;
-                        Panel_House_School.Top := 76 + demandTop;
                       end;
     htBarracks:       begin
                         House_BarracksUnitChange(nil, []);
@@ -1784,9 +1814,9 @@ begin
                         //Panel_House_Common.Show;
                         Label_Common_Demand.Hide;
 
+                        base := self.WaresRow_Common[rowRes - 1].Bottom + 3;
                         rowRes := 1;
                         line := 0;
-                        base := 210 + demandTop;
 
                         for I := 0 to high(Button_PlayerSelect) do
                           if (I < gHands.Count)
@@ -2032,11 +2062,11 @@ begin
       ShowCommonOrders(aHouse, base, line, rowRes);
 
       Progress_Beasts.Shape := stSquare;
-      Progress_Beasts.Top :=  base + line * 25;
+      Progress_Beasts.Top := base + line * 25;
       Progress_Beasts.RX := rxGui;
-      Progress_Beasts.Show;
+      Progress_Beasts.Visible := aHouse.HouseType in [htSwine, htHovel, htStables, htFarm, htVineyard];
       case aHouse.HouseType of
-      htSwine :     begin
+        htSwine :   begin
                       Progress_Beasts.Progress := TKMHouseSwineStable(aHouse).GetBeastsProgresses;
                       Progress_Beasts.Colors := TKMHouseSwineStable(aHouse).GetBeastsProgressColors;
                       Progress_Beasts.TexID := [[0, 912, 912, 912, 912, 912]];
@@ -2049,19 +2079,27 @@ begin
         htHovel :   begin
                       Progress_Beasts.Progress := TKMHouseHovel(aHouse).GetBeastsProgresses;
                       Progress_Beasts.Colors := TKMHouseHovel(aHouse).GetBeastsProgressColors;
-                      //Progress_Beasts.RX := rxGui;
+
                       Progress_Beasts.TexID := [[0, 680, 680, 680, 680, 680, 680]];
                       Progress_Beasts.ColumnCount := 5;
                       Progress_BigWare.Show;
                       Progress_BigWare.Top := Progress_Beasts.Top;
+                      Progress_BigWare.Left := 0;
+                      Progress_BigWare.Width := TB_WIDTH div 2;
                       Progress_BigWare.Animation.Create(0, 0, 901, 11);
                       Progress_BigWare.AnimStep := EnsureRange(Round(Progress_BigWare.Animation.Count * TKMHouseHovel(aHouse).FeathersProgress) - 1, 0, 10);
+
+                      Progress_BigWare2.Show;
+                      Progress_BigWare2.Top := Progress_Beasts.Top;
+                      Progress_BigWare2.Left := TB_WIDTH div 2;
+                      Progress_BigWare2.Width := TB_WIDTH div 2;
+                      Progress_BigWare2.Animation.Create(0, 0, 937, 8);
+                      Progress_BigWare2.AnimStep := EnsureRange(Round(Progress_BigWare2.Animation.Count * TKMHouseHovel(aHouse).EggsProgress) - 1, 0, 7);
 
 
                       Progress_Beasts.Top := Progress_BigWare.Bottom + 3;
                     end;
         htFarm :    begin
-                      //Progress_Beasts.RX := rxGui;
                       Progress_Beasts.Progress := TKMHouseFarm(aHouse).GetProgressArray;
                       Progress_Beasts.Colors := [icLightGreen];
                       Progress_Beasts.TexID := TKMHouseFarm(aHouse).GetTexIDsArray;
@@ -2069,6 +2107,8 @@ begin
         htVineyard :  begin
                         Progress_BigWare.Show;
                         Progress_BigWare.Top := Progress_Beasts.Top;
+                        Progress_BigWare.Left := 0;
+                        Progress_BigWare.Width := TB_WIDTH;
                         Progress_BigWare.Animation.Create(0, 0, 892, 9);
                         Progress_BigWare.AnimStep := EnsureRange(Round(Progress_BigWare.Animation.Count * (TKMHouseVineyard(aHouse).WineToProduce / 5)) - 1, 0, 8);
 
@@ -2076,19 +2116,16 @@ begin
                         ProgressBar_BigWare.Position := TKMHouseVineyard(aHouse).WineProgress / 5;
                         ProgressBar_BigWare.Show;
 
-
                         Progress_Beasts.Hide;
-
-                        {Progress_Beasts.Top := Progress_BigWare.Bottom + 3;
-                        //Progress_Beasts.RX := rxGui;
-                        Progress_Beasts.Progress := TKMHouseVineyard(aHouse).GetProgressArray;
-                        Progress_Beasts.Colors := [icLightGreen];
-                        Progress_Beasts.TexID := [[359]];
-                        Progress_Beasts.Shape := stRound;
-                        Progress_Beasts.ColumnCount := 5;}
                       end;
-        else
-          Progress_Beasts.Hide;
+          htShipYard: begin
+                        CostsRow_Common.Top := base + line * 25 + 20;
+                        CostsRow_Common.WarePlan := TShipyard(fHouse).GetWarePlan;
+                        CostsRow_Common.Show;
+                        WaresOut_ShipYard.Top := CostsRow_Common.Bottom + 5;
+                        WaresOut_ShipYard.WarePlan := TShipyard(fHouse).WaresOut;
+                        WaresOut_ShipYard.Show;
+                      end;
       end;
 
 
@@ -2228,7 +2265,8 @@ begin
 
           case aHouse.HouseType of
             htHovel : If W = wtFeathers then WaresProdCt_Common[RowRes].Caption := '' else
-                      If W = wtSausage then WaresProdCt_Common[RowRes].Caption := 'x' + IntToStr(ord(TKMHouseHovel(aHouse).GetsSausage));
+                      If W = wtSausage then WaresProdCt_Common[RowRes].Caption := 'x' + IntToStr(ord(TKMHouseHovel(aHouse).GetsSausage)) else
+                      If W = wtEgg then WaresProdCt_Common[RowRes].Caption := 'x' + IntToStr(Trunc(TKMHouseHovel(aHouse).EggsProgress));
           end;
           WaresProdCt_Common[RowRes].Top       := Base + 3 + Line * LINE_HEIGHT;
           WaresProdCt_Common[RowRes].Show;
@@ -3383,7 +3421,7 @@ begin
   //don't set the same ware slot
   if HS.WareInputSlot = TKMButton(Sender).Tag then
     Exit;
-  gGame.GameInputProcess.CmdHouse(gicHouseMerchantSetType, HS, TKMButton(Sender).Tag);
+  gGame.GameInputProcess.CmdHouse(gicHouseMerchantSetType, HS, TKMButton(Sender).Tag, byte(GetKeyState(VK_SHIFT) < 0));
 
   for I := 0 to high(Button_MerchantType) do
     Button_MerchantType[I].ShowImageEnabled := HS.WareInputSlot = I;

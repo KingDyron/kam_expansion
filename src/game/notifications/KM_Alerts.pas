@@ -59,6 +59,7 @@ type
     procedure ClearBeaconsExcept(aOwner: TKMHandID);
     procedure AddBeacon(const aLoc: TKMPointF; aOwner: TKMHandID; aColor: Cardinal; aShowUntil: Cardinal);
     procedure AddFight(const aLoc: TKMPointF; aPlayer: TKMHandID; aAsset: TAttackNotification; aShowUntil: Cardinal);
+    procedure AddFood(const aLoc: TKMPointF; aPlayer: TKMHandID; aShowUntil: Cardinal);
     function GetLatestAlert: TKMAlert;
     property Count: Integer read GetCount;
     property Items[aIndex: Integer]: TKMAlert read GetAlert; default;
@@ -195,7 +196,10 @@ end;
 function TKMAlertAttacked.GetTexMinimap: TKMPic;
 begin
   Result.RX := rxGui;
-  Result.ID := 53;
+  if fAsset = anFood then
+    Result.ID := 659
+  else
+    Result.ID := 53;
 end;
 
 
@@ -240,7 +244,10 @@ begin
   //If alerts gets into view - mute it.
   //Alert will be unmuted when going out of view
   if KMInRect(fLoc, aView) then
-    fLastLookedAt := 0
+  begin
+    fLastLookedAt := 0;
+    fExpiration := 0;//remove it after player look at it
+  end
   else
   begin
     Inc(fLastLookedAt);
@@ -361,6 +368,26 @@ begin
 
   //Otherwise create a new alert
   fList.Add(TKMAlertAttacked.Create(aLoc, aPlayer, aAsset, aShowUntil));
+end;
+
+//Player belongings signal that they are under attack
+procedure TKMAlerts.AddFood(const aLoc: TKMPointF; aPlayer: TKMHandID; aShowUntil: Cardinal);
+var
+  I: Integer;
+begin
+  //Check previous alerts and see if there's one like that already
+  for I := 0 to fList.Count - 1 do
+    if fList[I] is TKMAlertAttacked then
+      with TKMAlertAttacked(fList[I]) do
+        if (Owner = aPlayer) and (Asset = anFood)
+        and (KMLength(Loc, aLoc) < 8) then
+        begin
+          Refresh(aShowUntil);
+          Exit;
+        end;
+
+  //Otherwise create a new alert
+  fList.Add(TKMAlertAttacked.Create(aLoc, aPlayer, anFood, aShowUntil));
 end;
 
 

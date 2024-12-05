@@ -9,7 +9,7 @@ type
     hndComputer
   );
 
-  TKMHandEntityType = (etNone, etUnit, etGroup, etHouse);
+  TKMHandEntityType = (etNone, etUnit, etGroup, etHouse, etStructure);
 
   //* House lock state
   TKMHandHouseLock = (
@@ -35,7 +35,8 @@ type
       cctNone,
       cctStartRecording,
       cctStopRecording ,
-      cctResetRecordings
+      cctResetRecordings,
+      cctSaveRecord
     );
 
 
@@ -43,7 +44,8 @@ const CONSOLE_COMMANDS_NAME : array[TKMConsolCommandType] of String = (
       '',
       'start_recording',
       'stop_recording',
-      'reset_recordings'
+      'reset_recordings',
+      'save_recording'
       );
 
 function GetAIConsolCommand(aName : String) : TKMConsolCommandType;

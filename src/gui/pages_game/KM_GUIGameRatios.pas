@@ -40,6 +40,7 @@ type
 implementation
 uses
   KM_GameInputProcess, KM_GameSettings, KM_RenderUI, KM_HandsCollection, KM_ResTexts, KM_Game,
+  KM_Points,
   KM_Resource, KM_ResFonts,
   KM_ResTypes;
 
@@ -149,6 +150,7 @@ begin
       begin
         Image_RatioPic[I].TexID := gRes.Houses[HT].GUIIcon;
         TrackBar_RatioValue[I].Enabled := fAllowEditing;
+        TrackBar_RatioValue[I].MaxValue := gRes.Houses[HT].MaxWareCount;
         TrackBar_RatioValue[I].Position := gMySpectator.Hand.Stats.WareDistribution[W, HT];{gRes.Wares.WareDistribution[aTab].Houses[I].Qty}
       end else
       begin

@@ -306,7 +306,7 @@
 	{
 		"Name":"vtManure",
 		"TextID" : 2010, 
-		"IconID" : 795, 
+		"IconID" : 945, 
 		"ProductionCountMin" : 1, 
 		"ProductionCountMax" : 1, 
 		"ProduceInHouses" : ["htSwine", "htVineyard", "htFarm", "htHovel", "htStables"],
@@ -338,9 +338,8 @@
 								"MinCount" : 2,
 								"MaxCount" : 5
 							}
-						]
-		
-		
+						],	
+		"TerrainPics" : [841, 842, 843, 844, 845]
 	}, 
 	{
 		"Name" : "wtSawDust",
@@ -430,7 +429,8 @@
 								"MinCount" : 2,
 								"MaxCount" : 2
 							}
-						]
+						],
+		"TerrainPics" : [830, 831, 832, 833, 834, 835]	
 	},   
 	{
 		"Name" : "wtBread",
@@ -457,15 +457,52 @@
 								"MaxCount" : 1
 							}
 						],
-		"TerrainPics" : [377, 378, 379, 380, 381]		
+		"TerrainPics" : [819, 820, 821, 822, 823, 824]		
 		
 		
+	}, 
+	{
+		"Name" : "wtWater",
+		"TerrainPics" : [846, 847, 848, 849, 850]	
+	},   
+	{
+		"Name" : "wtTrunk",
+		"TerrainPics" : [825, 826, 827, 828, 829]		
+	},  
+	{
+		"Name" : "wtStoneBolt",
+		"TerrainPics" : [851, 852, 853, 854, 855]		
+	},
+	{
+		"Name" : "wtWheel",
+		"TerrainPics" : [856, 857, 858, 859, 860]		
+	},  
+	{
+		"Name" : "wtBitin",
+		"TerrainPics" : [873, 874, 875, 876, 877]		
+	},  
+	{
+		"Name" : "wtSawDust",
+		"TerrainPics" : [890, 891, 892, 893, 894]		
+	}, 
+	{
+		"Name" : "wtIron",
+		"TerrainPics" : [895, 896, 897, 898, 899]		
+	}, 
+	{
+		"Name" : "wtCoal",
+		"TerrainPics" : [878, 879, 880, 881, 882, 883, 884]		
+	},  
+	{
+		"Name" : "wtBitinOre",
+		"TerrainPics" : [867, 868, 869, 870, 871, 872]		
 	},   
 	{
 		"Name" : "wtTile",
 		"MinCount" : 2,
 		"MaxCount" : 2,
-		"OrderCost" : ["wtAll"]	
+		"OrderCost" : ["wtAll"],	
+		"TerrainPics" : [836, 837, 838, 839, 840]	
 	},
 	{
 		"Name" : "wtCorn",
@@ -477,7 +514,8 @@
 		"Name" : "wtSeed",
 		"MinCount" : 1,
 		"MaxCount" : 1,
-		"OrderCost" : ["wtAll"]	
+		"OrderCost" : ["wtAll"],
+		"TerrainPics" : [885, 886, 887, 888, 889]			
 	},
 	{
 		"Name" : "wtHay",
@@ -489,7 +527,8 @@
 		"Name" : "wtWine",
 		"MinCount" : 1,
 		"MaxCount" : 1,
-		"OrderCost" : ["wtAll"]	
+		"OrderCost" : ["wtAll"],
+		"TerrainPics" : [900, 901, 902, 903, 904, 905, 906, 907, 908, 909]			
 	},
 	{
 		"Name" : "wtLeatherArmor",
@@ -499,8 +538,8 @@
 	},
 	{
 		"Name" : "wtBoots",
-		"MinCount" : 1,
-		"MaxCount" : 1,
+		"MinCount" : 2,
+		"MaxCount" : 2,
 		"OrderCost" : ["wtLeather", "wtFeathers"]	
 	},
 	{

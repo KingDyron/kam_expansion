@@ -63,6 +63,25 @@ type
   TKMPointDirArray = array of TKMPointDir;
   TKMTrisArray = array of array [0..2] of Integer;
 
+  TKMPointArrayHelper = record helper for TKMPointArray
+    function Add(aLoc : TKMPoint) : Integer; Overload;
+    function Add(aX, aY : Integer) : Integer; Overload;
+    function Delete(aLoc : TKMPoint) : Boolean;
+    function Contains(X, Y : Integer) : Boolean; Overload;
+    function Contains(aLoc : TKMPoint) : Boolean; Overload;
+    function IndexOf(aLoc : TKMPoint) : Integer;
+  end;
+
+  TKMPointDirArrayHelper = record helper for TKMPointDirArray
+    function Add(aLoc : TKMPointDir) : Integer; Overload;
+    function Add(aX, aY : Integer; aDir : TKMDirection) : Integer; Overload;
+    function Delete(aLoc : TKMPointDir) : Boolean;
+    function Contains(X, Y : Integer; aDir : TKMDirection) : Boolean; Overload;
+    function Contains(aLoc : TKMPointDir) : Boolean; Overload;
+    function IndexOf(aLoc : TKMPointDir) : Integer;
+  end;
+
+
   TKMPointFArray = array of TKMPointF;
 
   TKMTriMesh = record
@@ -257,6 +276,8 @@ uses
   KM_Defaults, KM_CommonUtils;
 
 
+
+
 class function TKMPoint.New(aX, aY: Integer): TKMPoint;
 begin
   Result.X := aX;
@@ -322,6 +343,100 @@ end;
 class operator TKMPointF.Add(const A, B: TKMPointF): TKMPointF;
 begin
   Result := KMPointF(A.X + B.X, A.Y + B.Y);
+end;
+{TKMPointArrayHelper}
+function TKMPointArrayHelper.Add(aLoc: TKMPoint): Integer;
+begin
+  Result := length(self); SetLength(self, length(self) + 1); self[high(self)] := aLoc;
+end;
+function TKMPointArrayHelper.Add(aX: Integer; aY: Integer): Integer;
+begin
+  Result := Add(KMPoint(aX, aY));
+end;
+function TKMPointArrayHelper.Delete(aLoc: TKMPoint): Boolean;
+var I, aIndex : Integer;
+begin
+  aIndex := -1;
+  for I := 0 to High(self) do
+    if self[I] = aLoc then
+    begin
+      aIndex := I;
+      Break;
+    end;
+  if aIndex = -1 then
+    Exit(false);
+  Result := true;
+  for I := aIndex to High(self) - 1 do
+    self[I] := self[I + 1];
+  SetLength(self, high(self));
+end;
+
+function TKMPointArrayHelper.Contains(aLoc: TKMPoint): Boolean;
+var I : integer;
+begin
+  Result := false;
+  for I := 0 to High(self) do
+    if self[I] = aLoc then
+      Exit(true);
+end;
+function TKMPointArrayHelper.Contains(X: Integer; Y: Integer): Boolean;
+begin
+  Result := Contains(KMPoint(X, Y));
+end;
+function TKMPointArrayHelper.IndexOf(aLoc: TKMPoint): Integer;
+var I : Integer;
+begin
+  Result := -1;
+  for I := 0 to High(self) do
+    if self[I] = aLoc then
+      Exit(I);
+end;
+{TKMPointDirArrayHelper}
+function TKMPointDirArrayHelper.Add(aLoc: TKMPointDir): Integer;
+begin
+  Result := length(self); SetLength(self, length(self) + 1); self[high(self)] := aLoc;
+end;
+function TKMPointDirArrayHelper.Add(aX: Integer; aY: Integer; aDir: TKMDirection): Integer;
+begin
+  Result := Add(KMPointDir(aX, aY, aDir));
+end;
+function TKMPointDirArrayHelper.Delete(aLoc: TKMPointDir): Boolean;
+var I, aIndex : Integer;
+begin
+  aIndex := -1;
+  for I := 0 to High(self) do
+    if (self[I].Loc = aLoc.Loc) and (self[I].Dir = aLoc.Dir) then
+    begin
+      aIndex := I;
+      Break;
+    end;
+  if aIndex = -1 then
+    Exit(false);
+  Result := true;
+  for I := aIndex to High(self) - 1 do
+    self[I] := self[I + 1];
+  SetLength(self, high(self));
+end;
+
+function TKMPointDirArrayHelper.Contains(aLoc: TKMPointDir): Boolean;
+var I : integer;
+begin
+  Result := false;
+  for I := 0 to High(self) do
+    if (self[I].Loc = aLoc.Loc) and (self[I].Dir = aLoc.Dir) then
+      Exit(true);
+end;
+function TKMPointDirArrayHelper.Contains(X: Integer; Y: Integer; aDir : TKMDirection): Boolean;
+begin
+  Result := Contains(KMPointDir(X, Y, aDir));
+end;
+function TKMPointDirArrayHelper.IndexOf(aLoc: TKMPointDir): Integer;
+var I : Integer;
+begin
+  Result := -1;
+  for I := 0 to High(self) do
+    if (self[I].Loc = aLoc.Loc) and (self[I].Dir = aLoc.Dir) then
+      Exit(I);
 end;
 
 
@@ -1354,6 +1469,8 @@ begin
   Result.X := aLoc.X + KamRandomS2(aRadius, 'KMPointFRandomInRadius');
   Result.Y := aLoc.Y + KamRandomS2(aRadius, 'KMPointFRandomInRadius');
 end;
+
+
 
 
 end.

@@ -72,7 +72,7 @@ begin
 
   for PT := Low(TKMPlayerTab) to High(TKMPlayerTab) do
   begin
-    Button_Player[PT] := TKMButton.Create(Panel_Player, 9 + SMALL_PAD_W * Byte(PT), 0, SMALL_PAD_W, SMALL_TAB_H,  TAB_GLYPH[PT], TAB_RXX[PT], bsPaper2);
+    Button_Player[PT] := TKMButton.Create(Panel_Player, 9 + SMALL_PAD_W * Byte(PT), 0, SMALL_PAD_W, SMALL_TAB_H,  TAB_GLYPH[PT], TAB_RXX[PT], bsPaper);
     Button_Player[PT].OnClick := PageChange;
   end;
 

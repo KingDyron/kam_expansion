@@ -11,6 +11,8 @@ type
     ID: Word;
     HighlightOnMouseOver: Boolean;
   end;
+const
+  PIC_CLEAR : TKMPic = (RX: rxGui; ID: 0; HighlightOnMouseOver: false);
 
   function MakePic(aRX: TRXType; aIndex: Word; aHighlightOnMouseOver: Boolean = False): TKMPic;
 

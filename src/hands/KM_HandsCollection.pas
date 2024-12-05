@@ -5,6 +5,7 @@ uses
   Classes, Math, Generics.Collections,
   KM_Hand, KM_HandSpectator, KM_HouseCollection,
   KM_Houses, KM_ResHouses, KM_Units, KM_UnitGroup, KM_UnitWarrior,
+  KM_Structure,
   KM_CommonClasses, KM_CommonTypes, KM_Defaults, KM_Points,
   KM_HandEntity,
   KM_HandTypes,
@@ -55,12 +56,14 @@ type
     function HousesHitTest(X,Y: Integer): TKMHouse;
     function UnitsHitTest(X, Y: Integer): TKMUnit;
     function GroupsHitTest(X, Y: Integer): TKMUnitGroup;
+    function StructuresHitTest(X, Y: Integer): TKMStructure;
 
     function GetClosestGroup(const aLoc: TKMPoint; aIndex: TKMHandID; aAlliance: TKMAllianceType; aTypes: TKMGroupTypeSet = GROUP_TYPES_VALID): TKMUnitGroup;
     function GetGroupsInRadius(const aLoc: TKMPoint; aSqrRadius: Single; aIndex: TKMHandID; aAlliance: TKMAllianceType; aTypes: TKMGroupTypeSet = GROUP_TYPES_VALID): TKMUnitGroupArray;
     function GetGroupsMemberInRadius(const aLoc: TKMPoint; aSqrRadius: Single; aIndex: TKMHandID; aAlliance: TKMAllianceType; var aUGA: TKMUnitGroupArray; aTypes: TKMGroupTypeSet = GROUP_TYPES_VALID): TKMUnitArray;
     function GetClosestUnit(const aLoc: TKMPoint; aIndex: TKMHandID; aAlliance: TKMAllianceType): TKMUnit;
-    function GetClosestHouse(const aLoc: TKMPoint; aIndex: TKMHandID; aAlliance: TKMAllianceType; aTypes: TKMHouseTypeSet = HOUSES_VALID; aOnlyCompleted: Boolean = True): TKMHouse;
+    function GetClosestHouse(const aLoc: TKMPoint; aIndex: TKMHandID; aAlliance: TKMAllianceType; aTypes: TKMHouseTypeSet = HOUSES_VALID; aOnlyCompleted: Boolean = True): TKMHouse;overload;
+    function GetClosestHouse(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aWareSet : TKMWareTypeSet = [wtAll]; aMaxDistance : Single = 999): TKMHouse;overload;
     function GetHousesInRadius(const aLoc: TKMPoint; aSqrRadius: Single; aIndex: TKMHandID; aAlliance: TKMAllianceType; aTypes: TKMHouseTypeSet = HOUSES_VALID; aOnlyCompleted: Boolean = True): TKMHouseArray;
     function DistanceToEnemyTowers(const aLoc: TKMPoint; aIndex: TKMHandID): Single;
 
@@ -71,6 +74,7 @@ type
     function GetHouseByUID(aUID: Integer): TKMHouse;
     function GetUnitByUID(aUID: Integer): TKMUnit;
     function GetGroupByUID(aUID: Integer): TKMUnitGroup;
+    function GetStructureByUID(aUID: Integer): TKMStructure;
     function GetObjectByUID(aUID: Integer): TKMHandEntity;
 
     function GetNextHouseWSameType(aHouse: TKMHouse): TKMHouse;
@@ -126,10 +130,6 @@ type
 
 
     procedure ExportGameStatsToCSV(const aPath: String; const aHeader: String = '');
-
-    procedure LoadFromFile(LoadStream: TKMemoryStream);//seperate file only for AI
-    procedure SaveToFile(SaveStream: TKMemoryStream);//seperate file only for AI
-    function DoSaveToFile : Boolean;
   end;
 
 var
@@ -465,6 +465,20 @@ begin
 end;
 
 
+function TKMHandsCollection.StructuresHitTest(X: Integer; Y: Integer): TKMStructure;
+var
+  I: Integer;
+begin
+  Result := nil;
+  for I := 0 to fCount - 1 do
+  begin
+    Result := fHandsList[I].StructuresHitTest(X, Y);
+    if Result <> nil then
+      Exit; //There can't be 2 groups on one tile
+  end;
+end;
+
+
 //Check opponents for closest Unit with given Alliance setting
 function TKMHandsCollection.GetClosestGroup(const  aLoc: TKMPoint; aIndex: TKMHandID; aAlliance: TKMAllianceType; aTypes: TKMGroupTypeSet = GROUP_TYPES_VALID): TKMUnitGroup;
 var
@@ -583,6 +597,23 @@ begin
   end;
 end;
 
+function TKMHandsCollection.GetClosestHouse(aLoc: TKMPoint; aHouseTypeSet: TKMHouseTypeSet;
+                                            aWareSet: TKMWareTypeSet = [wtAll]; aMaxDistance: Single = 999): TKMHouse;
+var I : Integer;
+  H : TKMHouse;
+begin
+  Result := nil;
+  for I := 0 to fCount - 1 do
+  begin
+    H := fHandsList[I].GetClosestHouse(aLoc, aHouseTypeSet, aWareSet, aMaxDistance);
+    if H <> nil then
+      if (Result = nil) or (KMLengthDiag(H.Position, aLoc) < KMLengthDiag(Result.Position, aLoc)) then
+        Result := H;
+
+
+  end;
+end;
+
 
 function TKMHandsCollection.GetHousesInRadius(const aLoc: TKMPoint; aSqrRadius: Single; aIndex: TKMHandID; aAlliance: TKMAllianceType;
                                               aTypes: TKMHouseTypeSet = HOUSES_VALID; aOnlyCompleted: Boolean = True): TKMHouseArray;
@@ -681,6 +712,19 @@ begin
   end;
 end;
 
+function TKMHandsCollection.GetStructureByUID(aUID: Integer): TKMStructure;
+var
+  I: Integer;
+begin
+  Result := nil;
+  if aUID = UID_NONE then Exit;
+
+  for I := 0 to fCount - 1 do
+  begin
+    Result := fHandsList[I].Structures.GetStructureByUID(aUID);
+    if Result <> nil then Exit; //else keep on testing
+  end;
+end;
 
 function TKMHandsCollection.GetObjectByUID(aUID: Integer): TKMHandEntity;
 begin
@@ -764,15 +808,18 @@ var
   H: TKMHouse;
   U: TKMUnit;
   G: TKMUnitGroup;
+  S: TKMStructure;
 begin
   //Houses have priority over units, so you can't select an occupant
   //Selection priority is as follows:
-  //BuiltHouses > UnitGroups > Units > IncompleteHouses
+  //BuiltHouses > UnitGroups > Units > Structures > IncompleteHouses
 
   H := HousesHitTest(X,Y);
+
   if (H <> nil) and (H.BuildingState in [hbsStone, hbsDone]) then
     Result := H
-  else begin
+  else
+  begin
     G := GroupsHitTest(X,Y);
     if (G <> nil) then
       Result := G
@@ -782,7 +829,13 @@ begin
       if (U <> nil) and (not U.IsDeadOrDying) then
         Result := U
       else
-        Result := H; //Incomplete house or nil
+      begin
+        S := StructuresHitTest(X, Y);
+        if S <> nil then
+          Result := S
+        else
+          Result := H; //Incomplete house or nil
+      end;
     end;
   end;
 end;
@@ -1219,14 +1272,8 @@ begin
 end;
 
 function TKMHandsCollection.HasBridgeBuiltAt(aLoc: TKMPoint): Boolean;
-var I : Integer;
 begin
   Result := false;
-  for I := 0 to fCount - 1 do
-    if fHandsList[I].Enabled then
-      if fHandsList[I].HasBridgeBuiltAt(aLoc) then
-        Exit(true);
-
 end;
 
 function TKMHandsCollection.MakeConsolCommands(aCommand: string): Boolean;
@@ -1304,42 +1351,6 @@ begin
   GetTeamsLazy;
 end;
 
-procedure TKMHandsCollection.LoadFromFile(LoadStream: TKMemoryStream);
-var
-  I: Integer;
-begin
-  if gGameParams.IsMapEditor then
-    Exit;
-
-  for I := 0 to fCount - 1 do
-    gHands[I].AI.Mayor.Recorder.LoadFromFile(LoadStream);
-end;
-
-procedure TKMHandsCollection.SaveToFile(SaveStream: TKMemoryStream);
-var
-  I: Integer;
-begin
-  if gGameParams.IsMapEditor then
-    Exit;
-
-  for I := 0 to fCount - 1 do
-    gHands[I].AI.Mayor.Recorder.SaveToFile(SaveStream);
-end;
-
-function TKMHandsCollection.DoSaveToFile: Boolean;
-var
-  I: Integer;
-begin
-  Result := false;
-
-  if gGameParams.IsMapEditor then
-    Exit;
-  Result := true;
-  Exit;
-  for I := 0 to fCount - 1 do
-    If gHands[I].AI.Mayor.Recorder.HasAnythingToSave then
-      Exit(true);
-end;
 
 procedure TKMHandsCollection.IncAnimStep;
 var

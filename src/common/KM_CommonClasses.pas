@@ -352,11 +352,12 @@ type
     fItems: array of TKMPointDir; //0..Count-1
     fCount: Integer;
     function GetItem(aIndex: Integer): TKMPointDir;
+    procedure SetItem(aIndex: Integer; aValue : TKMPointDir);
   public
     procedure Clear;
-    procedure Add(const aLoc: TKMPointDir); virtual;
     property Count: Integer read fCount;
-    property Items[aIndex: Integer]: TKMPointDir read GetItem; default;
+    procedure Add(const aLoc: TKMPointDir); virtual;
+    property Items[aIndex: Integer]: TKMPointDir read GetItem write SetItem; default;
     function GetRandom(out Point: TKMPointDir): Boolean; //overload;
 
 //    function GetRandom(aCloseToLoc: TKMPoint; out Point: TKMPointDir): Boolean; overload;
@@ -373,6 +374,7 @@ type
   public
     constructor Create(aCenter: TKMPoint);
     procedure Add(const aLoc: TKMPointDir); override;
+    procedure AddW(const aLoc: TKMPointDir; aWeight : Single);
     function GetWeightedRandom(out Point: TKMPointDir): Boolean;
     function  GetClosest(const aLoc: TKMPoint; out Point: TKMPointDir): Boolean;
   end;
@@ -1306,6 +1308,12 @@ begin
   Result := fItems[aIndex];
 end;
 
+procedure TKMPointDirList.SetItem(aIndex: Integer; aValue: TKMPointDir);
+begin
+  Assert(InRange(aIndex, 0, fCount - 1));
+  fItems[aIndex] := aValue;
+end;
+
 
 function TKMPointDirList.GetRandom(out Point: TKMPointDir):Boolean;
 begin
@@ -1365,13 +1373,24 @@ begin
 
   if fCount >= Length(fWeight) then
     SetLength(fWeight, fCount + 32);
-
   len := KMLength(fCenter, aLoc.Loc);
   //Special case when we aLoc is in the center
   if len = 0 then
     fWeight[fCount - 1] := BASE_VAL * 2
   else
     fWeight[fCount - 1] := BASE_VAL / len; //smaller weight for distant locs
+end;
+
+procedure TKMPointDirCenteredList.AddW(const aLoc: TKMPointDir; aWeight : Single);
+const
+  BASE_VAL = 100;
+begin
+  Inherited Add(aLoc);
+
+  if fCount >= Length(fWeight) then
+    SetLength(fWeight, fCount + 32);
+
+  fWeight[fCount - 1] := aWeight;
 end;
 
 

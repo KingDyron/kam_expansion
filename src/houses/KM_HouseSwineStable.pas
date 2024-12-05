@@ -13,6 +13,7 @@ type
   private
     BeastAge: array[1..5] of Single; //Each beasts "age". Once Best reaches age 3+1 it's ready
     HayBreeded : array[1..5] of Single;
+    BeastLastFeadTime : array[1..5] of Cardinal;
     fPigsProgress : Single;
   protected
     procedure MakeSound; override;
@@ -27,6 +28,7 @@ type
     function GetPigsCount : Byte;
 
     procedure Save(SaveStream: TKMemoryStream); override;
+    procedure UpdateState(aTick: Cardinal); override;
     procedure Paint; override;
   end;
 
@@ -34,8 +36,9 @@ type
   private
     fLast : byte;
     fSausage : Boolean;
-    fFillFeather : Single;
+    fFillFeather, fFillEggs : Single;
     BeastAge: array[1..3]of Single; //Each beasts "age". Once Best reaches age 3+1 it's ready
+    BeastLastFeadTime : array[1..3] of Cardinal;
     CornBreeded : array[1..3] of Byte;
 
     BeastAnim: array[1..3]of byte;
@@ -50,20 +53,24 @@ type
     property GetsSausage : Boolean read fSausage;
     property Beast[aIndex : Integer] : Single read GetBeastAge;
     property FeathersProgress : Single read fFillFeather;
+    property EggsProgress : Single read fFillEggs;
     function GetBeastsProgresses : TSingleArray;
     function GetBeastsProgressColors : TKMCardinalArray;
     function CanFeedWithWare(aWare : TKMWareType) : Boolean;
     procedure MakeFeathers;
     procedure Save(SaveStream: TKMemoryStream); override;
+    procedure UpdateState(aTick: Cardinal); override;
     procedure Paint; override;
   end;
 const
   HOVEL_MAX_AGE = 5;
+  DEAD_BEAST_TIME = 6000; //10 minutes
 implementation
 uses
   Math,
   KM_Sound,
   KM_ResSound,
+  KM_GameParams, KM_CommonHelpers,
   KM_Hand, KM_HandsCollection, KM_HandTypes, KM_HandEntity,
   KM_RenderPool,
   KM_Defaults, KM_CommonUtils;
@@ -77,6 +84,8 @@ begin
   LoadStream.CheckMarker('HouseSwineStable');
   LoadStream.Read(BeastAge, SizeOf(BeastAge));
   LoadStream.Read(HayBreeded, SizeOf(HayBreeded));
+  LoadStream.Read(BeastLastFeadTime, SizeOf(BeastLastFeadTime));
+  LoadStream.Read(fPigsProgress);
 end;
 
 
@@ -106,7 +115,7 @@ var foodMulti, hayMulti : Single;
 begin
   Result := KaMRandom(5, 'TKMHouseSwineStable.FeedBeasts') + 1;
 
-  hayMulti := 1;
+  hayMulti := 0;
 
   if HouseType = htSwine then
   begin
@@ -114,12 +123,9 @@ begin
     if aFood.HasWares([wtVegetables]) then
       inc(hayMulti, 0.45);
     if aFood.HasWares([wtCorn]) then
-      inc(hayMulti, 0.3);
+      inc(hayMulti, 0.30);
     if aFood.HasWares([wtHay]) then
       inc(hayMulti, 0.25);
-
-    if aFood.HasWares([wtCorn, wtHay, wtVegetables]) then
-      inc(hayMulti, 0.1);//give extra
   end else
   begin
     foodMulti := 0;
@@ -129,9 +135,6 @@ begin
       inc(hayMulti, 0.35);
     if aFood.HasWares([wtHay]) then
       inc(hayMulti, 0.45);
-
-    if aFood.HasWares([wtCorn, wtHay, wtVegetables]) then
-      inc(hayMulti, 0.1);//give extra
   end;
 
 
@@ -186,6 +189,7 @@ begin
     //Inc(fPigsProgress, hayMulti);
 
   end;
+  BeastLastFeadTime[Result] := Tick + DEAD_BEAST_TIME;
 end;
 
 function TKMHouseSwineStable.TakeBeast : Byte;
@@ -280,8 +284,25 @@ begin
   SaveStream.PlaceMarker('HouseSwineStable');
   SaveStream.Write(BeastAge, SizeOf(BeastAge));
   SaveStream.Write(HayBreeded, SizeOf(HayBreeded));
+  SaveStream.Write(BeastLastFeadTime, SizeOf(BeastLastFeadTime));
+  SaveStream.Write(fPigsProgress);
 end;
 
+
+procedure TKMHouseSwineStable.UpdateState(aTick: Cardinal);
+var I : Integer;
+begin
+  Inherited;
+  if not gGameParams.MBD.IsRealism then
+    Exit;
+  for I := low(BeastAge) to high(BeastAge) do
+    if BeastAge[I] >= 0 then
+      if aTick >= BeastLastFeadTime[I] then
+      begin
+        BeastAge[I] := 0;
+        HayBreeded[I] := 0;
+      end;
+end;
 
 procedure TKMHouseSwineStable.Paint;
 var
@@ -315,7 +336,10 @@ begin
   LoadStream.Read(fLast);
   LoadStream.Read(fSausage);
   LoadStream.Read(fFillFeather);
+  LoadStream.Read(fFillEggs);
   LoadStream.Read(CornBreeded, SizeOf(CornBreeded));
+  LoadStream.Read(BeastLastFeadTime, SizeOf(BeastLastFeadTime));
+  LoadStream.Read(BeastAnim, SizeOf(BeastAnim));
 end;
 
 function TKMHouseHovel.TakeChicken(aID: Integer) : Byte;
@@ -328,7 +352,7 @@ begin
 end;
 
 function TKMHouseHovel.FeedChicken(aFood : TKMWarePlan) : Byte;
-var I, J : Integer;
+var I : Integer;
   cornAdded : Boolean;
 begin
   Result := 0;
@@ -348,8 +372,13 @@ begin
   if BeastAge[fLast] = 0 then
     BeastAnim[fLast] := KaMRandom(3, 'TKMHouseHovel.FeedChicken:Hovel random anim2');
 
+  BeastLastFeadTime[fLast] := Tick + DEAD_BEAST_TIME;
+
   if aFood.HasWares([wtSeed]) then
+  begin
     Inc(BeastAge[fLast], 0.4);
+    Inc(fFillEggs, 0.1);
+  end;
 
   if aFood.HasWares([wtVegetables]) then
     Inc(BeastAge[fLast], 0.2);
@@ -397,8 +426,6 @@ begin
   for I := 1 to 3 do
     if BeastAge[I] > 0 then
       Inc(Result);
-
-
 end;
 
 function TKMHouseHovel.GetBeastAge(aIndex: Integer): Single;
@@ -445,8 +472,7 @@ begin
 end;
 
 procedure TKMHouseHovel.MakeFeathers;
-var count : Integer;
-  I : Integer;
+var I : Integer;
 begin
   for I := Low(BeastAge) to High(BeastAge) do
     if BeastAge[I] > 0 then
@@ -457,7 +483,11 @@ begin
     end;
 
   fFillFeather := fFillFeather + (0.1) * ChickenCount;
-  count := Trunc(fFillFeather);
+
+  ProduceWareFromFill(wtFeathers, fFillFeather);
+  ProduceWareFromFill(wtEgg, fFillEggs);
+
+ { count := Trunc(fFillFeather);
 
   if count > 0 then
   begin
@@ -465,7 +495,7 @@ begin
     IncProductionCycle(wtFeathers, count);
   end;
 
-  fFillFeather := fFillFeather - count;
+  fFillFeather := fFillFeather - count;}
 
 end;
 
@@ -478,8 +508,26 @@ begin
   SaveStream.Write(fLast);
   SaveStream.Write(fSausage);
   SaveStream.Write(fFillFeather);
+  SaveStream.Write(fFillEggs);
   SaveStream.Write(CornBreeded, SizeOf(CornBreeded));
+  SaveStream.Write(BeastLastFeadTime, SizeOf(BeastLastFeadTime));
+  SaveStream.Write(BeastAnim, SizeOf(BeastAnim));
 
+end;
+
+procedure TKMHouseHovel.UpdateState(aTick: Cardinal);
+var I : Integer;
+begin
+  Inherited;
+  if not gGameParams.MBD.IsRealism then
+    Exit;
+  for I := low(BeastAge) to high(BeastAge) do
+    if BeastAge[I] >= 0 then
+      if aTick > BeastLastFeadTime[I] + DEAD_BEAST_TIME then
+      begin
+        BeastAge[I] := 0;
+        CornBreeded[I] := 0;
+      end;
 end;
 
 

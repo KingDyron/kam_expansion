@@ -109,7 +109,7 @@ const
     htNone,           htNone,          htNone,           htNone,  htNone,       htNone,
     htNone,           htNone,          htPottery,        htFarm, htSawMill, htAppleTree,
     htCollectors,     htNone,          htNone,     htNone,          htNone,     htNone,          htNone,
-    htArmorSmithy
+    htArmorSmithy,    htHovel
   );
   // Array of wares which are consumed in specific amount to achieve specific production (because of exceptions in htWeaponWorkshop / htSwine / htStables etc.)
   CONSUMPTION_RATIO: array[wtTrunk..wtSkin] of array[0..3] of Single = (
@@ -829,8 +829,8 @@ const
     'Bitin Ore'#9#9,'Stone bolt'#9#9,'Log'#9#9 ,'Steel Element'#9#9,'Bitin Element'#9#9,
     'Wheel'#9#9,   'Ballista Bolt'#9#9,'Quiver'#9#9,  'Water'#9#9,  'Tile'#9#9 ,
     'Seed'#9#9,    'Saw Dust'#9#9, 'Apple'#9#9 , 'JEwerly'#9#9, 'JEwerly'#9#9,
-    'JEwerly'#9#9, 'Seed'#9#9,    'Saw Dust'#9#9, 'Apple'#9#9 , 'JEwerly'#9#9,
-    'JEwerly'#9#9
+    'Jewerly'#9#9, 'Seed'#9#9,    'Saw Dust'#9#9, 'Apple'#9#9 , 'JEwerly'#9#9,
+    'Jewerly'#9#9, 'Eggs'#9#9
   );
 
   procedure AddWare(aWT: TKMWareType; const aSpecificText: String);

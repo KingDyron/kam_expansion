@@ -1151,8 +1151,8 @@ end;
 procedure TKMSpritePack.ExportImage(const aFile: string; aIndex: Integer);
 var
   I, K: Integer;
-  M: Byte;
-  treatMask: Boolean;
+  //M: Byte;
+  //treatMask: Boolean;
   pngWidth, pngHeight: Word;
   pngData: TKMCardinalArray;
 begin
@@ -1920,6 +1920,7 @@ end;
 function TKMResSprites.GetCRC : Cardinal;
 var RX : TRXType;
 begin
+  Result := 0;
   for RX := Low(fSprites) to High(fSprites) do
     Result := Result xor fSprites[RX].CRC;
 end;

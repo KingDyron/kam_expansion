@@ -2,7 +2,7 @@ unit KM_GameOptions;
 {$I KaM_Remake.inc}
 interface
 uses
-  KM_CommonClasses, KM_MapTypes;
+  KM_CommonClasses, KM_CommonTypes, KM_MapTypes;
 
 
 type
@@ -15,6 +15,8 @@ type
     SpeedAfterPT: Single; //Game speed after peacetime (usually slower)
     RandomSeed: Integer;
     MissionDifficulty: TKMMissionDifficulty;
+    MissionBuiltInDifficulty: TKMMissionBuiltInDifficulty;
+    Weather : TKMSettingsWeather;
     constructor Create;
     procedure Reset;
     procedure Save(SaveStream: TKMemoryStream);
@@ -46,6 +48,8 @@ begin
   SpeedAfterPT := 1;
   RandomSeed := 0; //Must be init later on. 0 is an erroneous value for KaMSeed
   MissionDifficulty := mdNone;
+  MissionBuiltInDifficulty := mdbNormal;
+  Weather.SetDefault;
 end;
 
 
@@ -56,6 +60,8 @@ begin
   LoadStream.Read(SpeedAfterPT);
   LoadStream.Read(RandomSeed);
   LoadStream.Read(MissionDifficulty, SizeOf(MissionDifficulty));
+  LoadStream.Read(MissionBuiltInDifficulty, SizeOf(MissionBuiltInDifficulty));
+  LoadStream.Read(Weather, SizeOf(Weather));
 end;
 
 
@@ -66,6 +72,8 @@ begin
   SaveStream.Write(SpeedAfterPT);
   SaveStream.Write(RandomSeed);
   SaveStream.Write(MissionDifficulty, SizeOf(MissionDifficulty));
+  SaveStream.Write(MissionBuiltInDifficulty, SizeOf(MissionBuiltInDifficulty));
+  SaveStream.Write(Weather, SizeOf(Weather));
 end;
 
 

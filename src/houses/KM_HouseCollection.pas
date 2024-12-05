@@ -69,6 +69,7 @@ uses
   KM_HouseCottage,
   KM_Resource,
   KM_GameTypes,
+  KM_TerrainTypes,
   KM_Units;
 
 
@@ -268,7 +269,7 @@ var
 begin
   Result:= nil;
   for I := 0 to Count - 1 do
-    if Houses[I].HitTest(X, Y) and (not Houses[I].IsDestroyed) then
+    if Houses[I].HitTest(X, Y) and (Houses[I].IsValid) then
     begin
       Result := Houses[I];
       Break;

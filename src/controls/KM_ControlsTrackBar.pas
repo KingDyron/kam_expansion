@@ -28,6 +28,8 @@ type
     procedure UpdateThumbWidth;
     procedure SetThumbText(const Value: UnicodeString);
     procedure SetAutoThumbWidth(const aValue: Boolean);
+    procedure SetMaxValue(aValue : Word);
+    procedure SetMinValue(aValue : Word);
   protected
     function DoHandleMouseWheelByDefault: Boolean; override;
   public
@@ -42,8 +44,8 @@ type
     property Position: Word read fPosition write SetPosition;
     property Range: TKMRangeInt read fRange write SetRange;
     property Font: TKMFont read fFont write fFont;
-    property MinValue: Word read fMinValue;
-    property MaxValue: Word read fMaxValue;
+    property MinValue: Word read fMinValue write SetMinValue;
+    property MaxValue: Word read fMaxValue write SetMaxValue;
     property ThumbText: UnicodeString read fThumbText write SetThumbText;
     property AutoThumbWidth: Boolean read fAutoThumbWidth write SetAutoThumbWidth;
     property FixedThumbWidth: Boolean read fAutoThumbWidth write fFixedThumbWidth;
@@ -106,6 +108,26 @@ end;
 procedure TKMTrackBar.SetAutoThumbWidth(const aValue: Boolean);
 begin
   fAutoThumbWidth := aValue;
+  UpdateThumbWidth;
+end;
+
+procedure TKMTrackBar.SetMaxValue(aValue : Word);
+var newPos : Word;
+begin
+  newPos := EnsureRange(Position, MinValue, aValue);
+  fMaxValue := aValue;
+  ResetRange;//set range before position
+  Position := newPos;
+  UpdateThumbWidth;
+end;
+
+procedure TKMTrackBar.SetMinValue(aValue : Word);
+var newPos : Word;
+begin
+  newPos := EnsureRange(Position, aValue, MaxValue);
+  fMinValue := aValue;
+  ResetRange;//set range before position
+  Position := newPos;
   UpdateThumbWidth;
 end;
 
@@ -250,7 +272,7 @@ begin
   rangeMinPos := Round(Width*(fRange.Min-fMinValue) / (fMaxValue - fMinValue));
   rangeMaxPos := Round(Width*(fRange.Max-fMinValue) / (fMaxValue - fMinValue));
 
-  TKMRenderUI.WriteBevel(AbsLeft,               AbsTop+fTrackTop+1, rangeMinPos,               fTrackHeight-2, 0, 0.3);
+  TKMRenderUI.WriteBevel(AbsLeft,               AbsTop+fTrackTop+1, rangeMinPos,               fTrackHeight-2, 0.3, 0.4);
   TKMRenderUI.WriteBevel(AbsLeft + rangeMinPos, AbsTop+fTrackTop+2, rangeMaxPos - rangeMinPos, fTrackHeight-4);
   TKMRenderUI.WriteBevel(AbsLeft + rangeMaxPos, AbsTop+fTrackTop+1, Width - rangeMaxPos,       fTrackHeight-2, 0, 0.3);
 

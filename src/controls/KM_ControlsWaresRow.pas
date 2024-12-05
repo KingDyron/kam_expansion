@@ -87,6 +87,32 @@ type
     procedure Paint; override;
   end;
 
+  TKMCostsRowMulti = class(TKMControl)
+  public
+    WarePlan : TKMWarePlan;
+    Caption : UnicodeString;
+    procedure MouseOver(X,Y: Integer; Shift: TShiftState); override;
+    procedure Paint; override;
+    const MARGIN = 5;
+  end;
+
+  TKMWaresButtonsMulti = class(TKMControl)
+  public
+    WarePlan : TKMWarePlan;
+    Caption : UnicodeString;
+    procedure MouseOver(X,Y: Integer; Shift: TShiftState); override;
+    procedure Paint; override;
+  end;
+
+  TKMUnitsButtonsMulti = class(TKMControl)
+  public
+    UnitPlan : TKMUnitPlan;
+    Caption : UnicodeString;
+    procedure MouseOver(X,Y: Integer; Shift: TShiftState); override;
+    procedure Paint; override;
+  end;
+
+
   TKMWaresBlockRow = class(TKMControl)
   public
     RX: TRXType;
@@ -136,6 +162,7 @@ type
       Progress : TSingleArray;
       Colors : TKMCardinalArray;
       ColumnCount : Byte;
+      Center : Boolean;
     constructor Create(aParent: TKMPanel; aLeft, aTop, aWidth, aHeight: Integer; aRound : Boolean = false; aTexID : TKMWord2Array = []);
     procedure Paint; override;
   end;
@@ -463,7 +490,7 @@ var
   I, gap, baseLeft: Integer;
 begin
   inherited;
-
+  baseLeft := 0;
   if AddBevel then
   begin
     TKMRenderUI.WriteBevel(AbsLeft, AbsTop, Width, 40, 1, 0.35);
@@ -663,16 +690,23 @@ begin
   TexID := aTexID;
   Colors := [];
   ColumnCount := 5;
+  Center := true;
 end;
 
 procedure TKMIconProgressBar.Paint;
 var I, K, id : Integer;
   A : Single;
   C : Cardinal;
+  lS : Integer;
 begin
   Inherited;
   if not Visible then
     Exit;
+
+  if Center  then
+    lS := AbsLeft + (Width div 2) - (length(Progress) * 36) div 2
+  else
+    ls := AbsLeft;
 
   for I := 0 to High(Progress) do
   begin
@@ -680,16 +714,13 @@ begin
 
     //render frame first
     case Shape of
-      stSquare:   TKMRenderUI.WritePicture(AbsLeft + I mod ColumnCount * 36, AbsTop + I div ColumnCount * 36, 30, 30,
+      stSquare:   TKMRenderUI.WritePicture(ls + I mod ColumnCount * 36, AbsTop + I div ColumnCount * 36, 30, 30,
                               [], rxGui, 874, Enabled, $FFFF00FF);
-      stRound:   TKMRenderUI.WritePicture(AbsLeft + I mod ColumnCount * 36, AbsTop + I div ColumnCount * 36, 30, 30,
+      stRound:   TKMRenderUI.WritePicture(ls + I mod ColumnCount * 36, AbsTop + I div ColumnCount * 36, 30, 30,
                               [], rxGui, 879, Enabled, $FFFF00FF);
     end;
 
     K := I;
-    if length(TexID) = 0 then
-      id := 0
-    else
     if I > high(TexID) then
       K := high(TexID);
 
@@ -706,35 +737,172 @@ begin
       C := Colors[EnsureRange(I, 0, high(Colors))];
     //render bar in cpolor
     case Shape of
-      stSquare:   TKMRenderUI.WritePicture(AbsLeft + I mod ColumnCount * 36, AbsTop + I div ColumnCount * 36, 30, 30,
+      stSquare:   TKMRenderUI.WritePicture(ls + I mod ColumnCount * 36, AbsTop + I div ColumnCount * 36, 30, 30,
                               [], rxGui, 878, Enabled, C, 0, A);
-      stRound:   TKMRenderUI.WritePicture(AbsLeft + I mod ColumnCount * 36, AbsTop + I div ColumnCount * 36, 30, 30,
+      stRound:   TKMRenderUI.WritePicture(ls + I mod ColumnCount * 36, AbsTop + I div ColumnCount * 36, 30, 30,
                               [], rxGui, 880, Enabled, C, 0, A);
     end;
 
 
-    TKMRenderUI.WritePicture(AbsLeft + I mod ColumnCount * 36, AbsTop + I div ColumnCount * 36, 30, 30,
+    TKMRenderUI.WritePicture(ls + I mod ColumnCount * 36, AbsTop + I div ColumnCount * 36, 30, 30,
                               [], RX, id, Enabled);
 
   end;
 
 end;
 
+procedure TKMCostsRowMulti.MouseOver(X: Integer; Y: Integer; Shift: TShiftState);
+var I, J, lX: Integer;
+  wareWidth : Integer;
+begin
+  Inherited;
 
-{TKMIconProgressBar = class(TKMControl)
-  private
-  protected
-  public
-    RX: TRXType;
-    TexID : Integer;
-    Shape : (stSquare, stRound);
-    Color : Cardinal;//$FFFF00FF default
-    Count,
-    MaxCount : Byte;
+  J := WarePlan.Count;
 
-  constructor Create(aParent: TKMPanel; aLeft: Integer; aTop: Integer; aHSpacing: Integer = 20; aVSpacing: Integer = 20);
-  procedure Paint; override;
-end;}
+  Hint := '';
+  if J = 0 then
+  begin
+  end else
+  if J = 1 then
+    Hint := gRes.Wares[WarePlan[0].W].Title
+  else
+  begin
+    wareWidth := (Width div J) - MARGIN;
 
+    lX := AbsLeft;
+    for I := 0 to J - 1 do
+      if InRange(X, lX + (wareWidth + MARGIN) * I, lX + (wareWidth + MARGIN) * I + wareWidth) then
+      begin
+        Hint := gRes.Wares[WarePlan[I].W].Title + ': x' + IntToStr(WarePlan[I].C);
+        Exit;
+      end;
+
+  end;
+
+end;
+
+procedure TKMCostsRowMulti.Paint;
+var I, J, id, wareWidth : Integer;
+begin
+
+  TKMRenderUI.WriteText(AbsLeft, AbsTop - 17, Width, Caption, fntMetal, taLeft);
+
+  J := WarePlan.Count;
+  if J = 0 then
+  begin
+    TKMRenderUI.WriteBevel(AbsLeft, AbsTop, Width, Height, 1, 0.35); //render only bevel
+    Exit;
+  end;
+  wareWidth := (Width div J);
+  if J > 1 then
+    wareWidth := wareWidth - MARGIN;
+
+
+  for I := 0 to J - 1 do
+  begin
+    TKMRenderUI.WriteBevel(AbsLeft + (wareWidth + MARGIN) * I, AbsTop, wareWidth, Height, 1, 0.35); //render bevel for each ware
+
+    id := gRes.Wares[WarePlan[I].W].GUIIcon;
+    TKMRenderUI.WritePicture(AbsLeft + (wareWidth + MARGIN) * I, AbsTop - 1, 30, Height,
+                              [], rxGui, id, Enabled);
+
+    TKMRenderUI.WriteText(AbsLeft + (wareWidth + MARGIN) * I, AbsTop + 5, wareWidth - 5,'x' + IntToStr(WarePlan[I].C), fntGame, taRight);
+
+  end;
+    
+
+end;
+
+procedure TKMWaresButtonsMulti.MouseOver(X: Integer; Y: Integer; Shift: TShiftState);
+var I, J, lX, lY : Integer;
+begin
+  Inherited;
+  Hint := '';
+  lX := AbsLeft;
+  lY := AbsTop;
+  J := 0;
+  for I := 0 to WarePlan.Count - 1 do
+    if (WarePlan[I].W <> wtNone) and (WarePlan[I].C > 0) then
+    begin
+      if InRange(X, lX + (J mod 5) * 37, lX + (J mod 5) * 37 + 32)
+      and InRange(Y, lY + (J div 5) * 37, lY + (J div 5) * 37 + 36) then
+      begin
+        Hint := gRes.Wares[WarePlan[I].W].Title;
+        Exit;
+      end;
+
+      Inc(J);
+    end;
+
+end;
+
+procedure TKMWaresButtonsMulti.Paint;
+var I, J, id : Integer;
+begin
+  TKMRenderUI.WriteText(AbsLeft, AbsTop - 17, Width, Caption, fntMetal, taLeft);
+
+  J := 0;
+  for I := 0 to WarePlan.Count - 1 do
+    if (WarePlan[I].W <> wtNone) and (WarePlan[I].C > 0) then
+    begin
+
+      TKMRenderUI.WriteBevel(AbsLeft + (J mod 5) * 37, AbsTop + (J div 5) * 37, 32, 36, 1, 0.35); //render bevel for each ware
+
+      id := gRes.Wares[WarePlan[I].W].GUIIcon;
+      TKMRenderUI.WritePicture(AbsLeft + (J mod 5) * 37, AbsTop + (J div 5) * 37, 32, 32,
+                                [], rxGui, id, Enabled);
+
+      TKMRenderUI.WriteText(AbsLeft + (J mod 5) * 37, AbsTop + 22 + ((J div 5) * 37), 32,'x' + IntToStr(WarePlan[I].C), fntGame, taCenter);
+
+
+      Inc(J);
+    end;
+
+end;
+
+procedure TKMUnitsButtonsMulti.MouseOver(X: Integer; Y: Integer; Shift: TShiftState);
+var I, J, lX, lY : Integer;
+begin
+  Inherited;
+  Hint := '';
+  lX := AbsLeft;
+  lY := AbsTop;
+  J := 0;
+  for I := 0 to high(UnitPlan) do
+    if (UnitPlan[I].UnitType <> utNone) and (UnitPlan[I].Count > 0) then
+    begin
+      if InRange(X, lX + (J mod 5) * 37, lX + (J mod 5) * 37 + 32)
+      and InRange(Y, lY + (J div 5) * 37, lY + (J div 5) * 37 + 36) then
+      begin
+        Hint := gRes.Units[UnitPlan[I].UnitType].GUIName;
+        Exit;
+      end;
+
+      Inc(J);
+    end;
+
+end;
+
+procedure TKMUnitsButtonsMulti.Paint;
+var I, J, id : Integer;
+begin
+  TKMRenderUI.WriteText(AbsLeft, AbsTop - 17, Width, Caption, fntMetal, taLeft);
+
+  J := 0;
+  for I := 0 to high(UnitPlan) do
+    if (UnitPlan[I].UnitType <> utNone) and (UnitPlan[I].Count > 0) then
+    begin
+
+      TKMRenderUI.WriteBevel(AbsLeft + (J mod 5) * 37, AbsTop + (J div 5) * 37, 32, 36, 1, 0.35); //render bevel for each ware
+
+      id := gRes.Units[UnitPlan[I].UnitType].GUIIcon;
+      TKMRenderUI.WritePicture(AbsLeft + (J mod 5) * 37, AbsTop + (J div 5) * 37, 32, 32,
+                                [], rxGui, id, Enabled);
+
+      TKMRenderUI.WriteText(AbsLeft + (J mod 5) * 37, AbsTop + 22 + ((J div 5) * 37), 32,'x' + IntToStr(UnitPlan[I].Count), fntGame, taCenter);
+      Inc(J);
+    end;
+
+end;
 end.
 

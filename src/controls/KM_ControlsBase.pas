@@ -76,6 +76,7 @@ type
     procedure SetColor(aColor: Cardinal);
     property WordWrap: Boolean read fWordWrap write SetWordWrap;  //Whether to automatically wrap text within given text area width
     property Caption: UnicodeString read fCaption write SetCaption;
+    property WordWrapedText : UnicodeString read fText;
     property FontColor: TColor4 read fFontColor write fFontColor;
     property Strikethrough: Boolean read fStrikethrough write fStrikethrough;
     property TabWidth: Integer read fTabWidth write fTabWidth;
@@ -239,9 +240,10 @@ type
   // FlatButton
   TKMButtonFlatBlock = class(TKMButtonFlat)
   private
-    fBlock : byte;
+    fBlock : Integer;
   public
     procedure SetBlock(aValue : Integer);
+    property Block : Integer read fBlock write SetBlock;
     procedure Paint; override;
   end;
 
@@ -903,7 +905,7 @@ begin
   if TexID <> 0 then
     TKMRenderUI.WritePicture(AbsLeft + TexOffsetX,
                              AbsTop + TexOffsetY - 6 * Byte(Caption <> ''),
-                             Width, Height, [], RX, TexID, Enabled or fEnabledVisually, FlagColor);
+                             Width, Height, [], RX, TexID, Enabled or fEnabledVisually, FlagColor, 0, -1);
 
   textCol := IfThen(Enabled or fEnabledVisually, CapColor, $FF888888);
 

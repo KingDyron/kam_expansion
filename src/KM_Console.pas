@@ -229,13 +229,13 @@ begin
     if gScriptEvents.TryToCheat(cmdName)then
     begin
       if Assigned(fOnPostLocal) then
-        fOnPostLocal('local command: /' + cmdName + ' [Cheat Command]');
+        fOnPostLocal('local command: /' + String(cmdName) + ' [Cheat Command]');
       Exit(true);
     end else
-    if gHands.MakeConsolCommands(cmdName) then
+    if gHands.MakeConsolCommands(String(cmdName)) then
     begin
       if Assigned(fOnPostLocal) then
-        fOnPostLocal('local command: /' + cmdName + ' [Player Command]');
+        fOnPostLocal('local command: /' + String(cmdName) + ' [Player Command]');
       Exit(true);
     end;
 

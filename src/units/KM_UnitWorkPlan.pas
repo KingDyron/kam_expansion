@@ -66,11 +66,14 @@ type
 implementation
 uses
   SysUtils,
-  KM_Hand, KM_HandTypes, KM_Entity,
+  KM_Game,
+  KM_CommonHelpers,
+  KM_Hand, KM_HandTypes, KM_Entity, KM_HandEntity,
   KM_ResUnits,
   KM_Houses, KM_HouseWoodcutters, KM_HouseSiegeWorkshop, KM_HouseWoodBurner, KM_HouseQueue,
   KM_HouseSwineStable,
-  KM_Terrain, KM_ResWares, KM_Log, KM_ResMapElements,
+  KM_MapEditor, KM_MapEdTypes,
+  KM_Terrain, KM_ResWares, KM_Log, KM_ResMapElements, KM_ResTileset,
   KM_Resource, KM_CommonUtils, KM_HandsCollection, Math;
 
 
@@ -183,7 +186,7 @@ procedure TKMUnitWorkPlan.ClearPlan;
 var
   I : Integer;
 begin
-  for I := 0 to 3 do
+  for I := 0 to WARES_IN_OUT_COUNT - 1 do
   begin
     Res[I].W := wtNone;
     Res[I].C := 0;
@@ -197,7 +200,7 @@ end;
 procedure TKMUnitWorkPlan.DefaultPlan(aUnit: TKMUnit; aProduct : TKMWareType = wtNone);
 var H : TKMHouse;
   I, K : Integer;
-  NeededWare : array[1..4] of Byte;
+  NeededWare : array[1..WARES_IN_OUT_COUNT] of Byte;
   WArr : TKMWareTypeArray;
   allIsNone : Boolean;
 begin
@@ -228,12 +231,12 @@ begin
       //Count how many resources are needed
       for I := 0 to high(WArr) do
         if WArr[I] <> wtNone then
-          for K := 1 to 4 do
+          for K := 1 to WARES_IN_OUT_COUNT do
             if H.WareInput[K] = WArr[I] then
               Inc(NeededWare[K]);
 
 
-      for I := 0 to 3 do
+      for I := 0 to WARES_IN_OUT_COUNT - 1 do
         if NeededWare[I+1] > 0 then
         begin
           Res[I].W := H.WareInput[I+1];
@@ -274,7 +277,7 @@ begin
       Exit;
 
     //clean array
-    for K := 1 to 4 do
+    for K := 1 to WARES_IN_OUT_COUNT do
       NeededWare[K] := 0;
 
     //Count how many resources are needed
@@ -285,7 +288,7 @@ begin
             Inc(NeededWare[K]);
 
 
-    for I := 0 to 3 do
+    for I := 0 to WARES_IN_OUT_COUNT - 1 do
       if NeededWare[I+1] > 0 then
       begin
         Res[I].W := H.WareInput[I+1];
@@ -306,7 +309,7 @@ begin
     Exit;
   end;
 
-  for I := 0 to 3 do
+  for I := 0 to WARES_IN_OUT_COUNT - 1 do
   begin
     Res[I].W := H.WareInput[I+1];
 
@@ -338,7 +341,7 @@ function TKMUnitWorkPlan.ValidPlan: Boolean;
 var I : Integer;
 begin
   Result := false;
-  for I := 0 to 3 do
+  for I := 0 to WARES_IN_OUT_COUNT - 1 do
   begin
     if Res[I].W <> wtNone then
       Exit(true);
@@ -478,7 +481,7 @@ begin
 
   hasRes := true;
   //first check if it has enough resources
-  for I := 0 to 3 do
+  for I := 0 to WARES_IN_OUT_COUNT - 1 do
     with Res[I] do
     begin
       if not ((W = wtNone) or (H.CheckWareIn(W) >= C)) then
@@ -487,7 +490,7 @@ begin
 
   hasSpace := true;
   //then check if it has enough space in output
-  for I := 0 to 3 do
+  for I := 0 to WARES_IN_OUT_COUNT - 1 do
     with Prod[I] do
       if Prod[I].W <> wtNone then
         if (H.CheckWareOut(W) >= H.GetMaxOutWare) then
@@ -617,6 +620,10 @@ begin
         gsStoneCutter : WalkStyle(tmp, uaWalk,uaWork,8,0,uaWalkTool,gsStoneCutter);
         gsFisherCatch : WalkStyle(tmp, uaWalk,uaWork2,8,0,uaWalkTool,gsFisherCatch);
       end;
+      if gTerrain.TileIsMineShaft(Loc) then
+        ActSetByMultiplier(aUnit, 2.5);
+
+
     end else
     begin
       //try to find any ores
@@ -716,8 +723,8 @@ begin
                         begin
                           if TKMHouseCollectors(aUnit.Home).IsFlagPointSet then
                             aLoc := TKMHouseCollectors(aUnit.Home).FlagPoint;
-                          Prod[0].W := gTerrain.FindJewerly(aLoc, KMPOINT_ZERO, False, tmp.Loc);
-                          fIssued := (Prod[0].W <> wtNone) and (aUnit.Home.CheckWareIn(Prod[0].W) < 5);
+                          Prod[0].W := gTerrain.FindJewerly(aLoc, KMPOINT_ZERO, False, tmp);
+                          fIssued := not (Prod[0].W in [wtNone, wtAll]) and (aUnit.Home.CheckWareIn(Prod[0].W) < 5);
                           if fIssued then
                           begin
                             ResourcePlan(wtNone, 0, wtNone, 0, Prod[0].W);
@@ -726,7 +733,7 @@ begin
                             WalkStyle(tmp, uaWalk,uaWork,6,0,uaSpec,gsCollector);
                             SubActAdd(haWork3, 10);
                           end else
-                            ResourceDepleted := gTerrain.FindJewerly(aLoc, KMPOINT_ZERO, True, tmp.loc) = wtNone;
+                            ResourceDepleted := gTerrain.FindJewerly(aLoc, tmp.Loc, True, tmp) = wtNone;
                         end;
 
                       end;
@@ -764,7 +771,8 @@ begin
                         begin
                           if TKMHouseAppleTree(aUnit.Home).NeedWater(TMPInt) then
                           begin
-                            tmpHouse := gHands[aUnit.Owner].GetClosestHouse(aUnit.Home.Position, [htWell], []);
+                            //tmpHouse := gHands[aUnit.Owner].GetClosestHouse(aUnit.Home.Position, [htWell], []);
+                            tmpHouse := nil;
                             If (tmpHouse <> nil) and (KMLengthDiag(tmpHouse.Position, aUnit.Home.Position) <= 5) then //don't take water when well is nearby and has water in it
                             begin
                               //SubActAdd(haWork5, 5);
@@ -843,10 +851,10 @@ begin
                                             fIssued := false;
                                         end;
 
-                                        if gTerrain.TileIsGrassField(tmp.Loc) and (gTerrain.Land^[tmp.Loc.Y, tmp.Loc.X].FieldAge = CORN_AGE_MAX) then
+                                        if gTerrain.TileIsGrassField(tmp.Loc) and (gTerrain.Land^[tmp.Loc.Y, tmp.Loc.X].FieldAge >= CORN_AGE_MAX) then
                                           WalkStyle(KMPointDir(tmp.Loc, dirN), uaWalkTool2,uaWork2,6,0,uaWalkBooty2,gsFarmerCorn)
                                         else
-                                        if gTerrain.TileIsVegeField(tmp.Loc) and (gTerrain.Land^[tmp.Loc.Y, tmp.Loc.X].FieldAge = CORN_AGE_MAX) then
+                                        if gTerrain.TileIsVegeField(tmp.Loc) and (gTerrain.Land^[tmp.Loc.Y, tmp.Loc.X].FieldAge >= CORN_AGE_MAX) then
                                           WalkStyle(KMPointDir(tmp.Loc, dirN), uaWalkTool2,uaWork2,6,0,uaWalkBooty2,gsFarmerCorn)
                                         else
                                           WalkStyle(tmp, uaWalkTool,uaWork,10,0,uaWalkBooty,gsFarmerCorn);
@@ -905,7 +913,7 @@ begin
                           if srcHouse.Queue[0] <> utNone then
                           begin
                             Res := srcHouse.GetNeededWares;
-
+                            Res.SetCount(WARES_IN_OUT_COUNT);
                             SubActAdd(haWork1,1);
                             SubActAdd(haWork4,1);
                             SubActAdd(haWork2,SIEGE_CYCLES div 4);
@@ -931,7 +939,7 @@ begin
 
                         WalkStyle(tmp, uaWalk,uaWalk,0,50,uaWalk,gsMerchant);
 
-                        for I := 1 to 4 do
+                        for I := 1 to WARES_IN_OUT_COUNT do
                         begin
                           Res[I-1].W := aUnit.Home.WareInput[I];
                           Res[I-1].C := aUnit.Home.CheckWareIn(Res[I-1].W);
@@ -1002,28 +1010,10 @@ begin
                       end;
     gsShipyard:       begin
                         hardWritten := true;
+                        DefaultPlan(aUnit);
                         Res.Clear;
-
-                        //DefaultPlan(aUnit);
-                        case TKMHouseShipYard(aUnit.Home).ShipType of
-                          utBoat: begin
-                                    Res.AddWare(wtTimber, 1);
-                                    Res.AddWare(wtLog, 1);
-                                    Res.AddWare(wtLeather, 1);
-                                  end;
-                          utShip: begin
-                                    Res.AddWare(wtTimber, 1);
-                                    Res.AddWare(wtLog, 1);
-                                    Res.AddWare(wtLeather, 1);
-                                  end;
-                          utBattleShip: begin
-                                          Res.AddWare(wtTimber, 1);
-                                          Res.AddWare(wtLog, 1);
-                                          Res.AddWare(wtLeather, 1);
-                                          Res.AddWare(wtSteelE, 1);
-                                          //Res.AddWare(wtQuiver, 1);
-                                        end;
-                        end;
+                        Res.CopyFrom(TShipYard(aUnit.Home).GetWarePlan);
+                        Res.SetCount(WARES_IN_OUT_COUNT);
                         fIssued := TKMHouseShipYard(aUnit.Home).CanWork;
                       end;
   else
@@ -1054,6 +1044,21 @@ begin
           TKMHouseProdThatch(aUnit.Home).TakePoint(Loc);}
 
   ActSetByMultiplier(aUnit);
+  if gGame.Resource.SkipWater then
+    for I := 0 to High(Res) do
+      if Res[I].W = wtWater then
+      begin
+        Res[I].W := wtNone;
+        Res[I].C := 0;
+      end;
+
+  if gHands[aUnit.Owner].IsAffectedbyMBD then
+    if gGame.Params.MBD.IsEasy then
+      ActSetByMultiplier(aUnit, 0.75)
+    else
+    if gGame.Params.MBD.IsHardOrRealism then
+      ActSetByMultiplier(aUnit, 1.25);
+
 end;
 
 

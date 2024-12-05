@@ -215,7 +215,6 @@ type
     procedure CreateHouses;
     function GetHouse(aType: TKMHouseType): TKMHouseSpec; inline;
     function GetBeastAnim(aType: TKMHouseType; aBeast, aAge:integer): TKMAnimLoop;
-    function LoadFromJSON(aFileName : String) : Cardinal;
   public
     Palace_Flags : array[1..4] of TKMAnimLoop;
     Shool_Clock,
@@ -243,6 +242,7 @@ type
 
     procedure ExportCSV(const aPath: string);
 
+    function LoadFromJSON(aFileName : String) : Cardinal;
     procedure ReloadJSONData(UpdateCRC : Boolean);
   end;
 
@@ -311,6 +311,7 @@ const
       (TexStart: MARKET_WARES_TEX_START+305; Count: 19;), //wtBoots
       (TexStart: MARKET_WARES_TEX_START+305; Count: 19;), //wtBoots
       (TexStart: MARKET_WARES_TEX_START+305; Count: 19;), //wtBitinArmor
+      (TexStart: MARKET_WARES_TEX_START+305; Count: 19;), //wtEgg
 
       (TexStart: 0; Count: 0;), //rtAll
       (TexStart: 0; Count: 0;), //rtWarfare
@@ -358,6 +359,10 @@ Var
   HOUSE_GUI_TAB_ORDER : array of record
     TextID, GuiIcon : Word;
     H : TKMHouseTypeArray2;
+  end;
+  HOUSE_VICTORY_ORDER : array of record
+    TextID, GuiIcon : Word;
+    H : TKMHouseTypeArray;
   end;
 
 implementation
@@ -1149,13 +1154,17 @@ begin
 
   for I := 0 to 3 do
   for K := 0 to 3 do
-    tmp[I+1,K+1] := Byte(HOUSE_DAT_X[fHouseType].PlanYX[I+1,K+1] > 0);
+    tmp[I+1,K+1] := byte(BuildArea[I+1,K+1] > 0);
+    //tmp[I+1,K+1] := Byte(HOUSE_DAT_X[fHouseType].PlanYX[I+1,K+1] > 0);
 
   GenerateOutline(tmp, 2, outlines);
-  Assert(outlines.Count = 1, 'Houses are expected to have single outline');
-
-  for I := 0 to outlines.Shape[0].Count - 1 do
-    aList.Add(KMPoint(outlines.Shape[0].Nodes[I].X, outlines.Shape[0].Nodes[I].Y));
+  //Assert(outlines.Count = 1, 'Houses are expected to have single outline');
+  for K := 0 to outlines.Count - 1 do
+  begin
+    aList.Add(KMPoint(-1, -1));
+    for I := 0 to outlines.Shape[K].Count - 1 do
+      aList.Add(KMPoint(outlines.Shape[K].Nodes[I].X, outlines.Shape[K].Nodes[I].Y));
+  end;
 end;
 
 
@@ -2040,7 +2049,6 @@ function TKMResHouses.LoadFromJSON(aFileName : String) : Cardinal;
 
   function ConvertToHouseArray2(aHouses : TKMHouseTypeArray; aHouseType : TKMHouseType = htNone) : TKMHouseTypeArray2;
   var I, J, K : Integer;
-      H : TKMHouseType;
   begin
     J := 0;
     K := 0;
@@ -2104,6 +2112,22 @@ begin
 
         nAR.O[I].GetArray('Houses', HOUSE_GUI_TAB_ORDER[I].H[0]);
         HOUSE_GUI_TAB_ORDER[I].H := ConvertToHouseArray2(HOUSE_GUI_TAB_ORDER[I].H[0]);
+      end;
+    end;
+
+    nAR := nRoot.A['HousesVictoryOrder'];
+
+    if nAR.Count > 0 then
+    begin
+      //Inc(fCRC);
+      SetLength(HOUSE_VICTORY_ORDER, nAR.Count);
+      for I := 0 to nAR.Count - 1 do
+      begin
+        SetLength(HOUSE_VICTORY_ORDER[I].H, 1);
+        HOUSE_VICTORY_ORDER[I].TextID := nAR[I].I['TitleID'];
+        HOUSE_VICTORY_ORDER[I].GuiIcon := nAR[I].I['GuiIcon'];
+
+        nAR.O[I].GetArray('Houses', HOUSE_VICTORY_ORDER[I].H);
       end;
     end;
     nHouses := nRoot.A['Houses'];
@@ -2574,6 +2598,8 @@ var
   begin S := S + IntToStr(aField) + ';'; end;
 
 begin
+  if IsFileInUse(aPath) then
+    Exit;
   SL := TStringList.Create;
 
   S := 'House Name;HouseID;WoodCost;StoneCost;ResProductionX;WorkerRest;EntranceOffsetX';

@@ -11,7 +11,7 @@ type
   TKMAICommand = record
     CommandType : Word;// ordinal value of TKMGameInputCommandType
     Loc : TKMPoint;
-    HasWaited : Boolean;
+    HasWaited, Deleted : Boolean;
     Time : Cardinal;
     Params : array[0..3] of Integer;
     function IsValid : Boolean;
@@ -24,10 +24,10 @@ type
     private
       fOwner : TKMHandID;
       fCommands,//commands recorded
-      fCommandsStored : TKMAICommandArray; //command loaded from file
+      fCommandsStored: TKMAICommandArray; //tmp commands loaded from file
       fRecording : Boolean;
-      procedure StartRecording;
       procedure StopRecording;
+      procedure SaveRecording;
       procedure RemoveObj(aLoc : TKMPoint);
       procedure RemoveObjForHouse(aLoc : TKMPoint; aHouse : TKMHouseType);
       function MakeCommand(aIndex: Integer): Boolean;
@@ -45,12 +45,15 @@ type
       function HasRecording : Boolean;
       procedure UpdateState(aTick: Cardinal);
       function DebugStr : String;
+      procedure StartRecording;
+
+      procedure AfterMissionStart;
 
       procedure Load(LoadStream : TKMemoryStream);
       procedure Save(SaveStream : TKMemoryStream);
 
-      procedure LoadFromFile(LoadStream: TKMemoryStream);
-      procedure SaveToFile(SaveStream: TKMemoryStream);
+      procedure LoadFromFile;
+      procedure SaveToFile;
 
   end;
 
@@ -58,8 +61,8 @@ implementation
 
 uses Math, SysUtils,
   KM_GameParams, KM_GameInputProcess,
-  KM_HandsCollection,
-  KM_Houses, KM_HouseMarket, KM_HouseWoodcutters,
+  KM_Hand, KM_HandsCollection, KM_HandEntity,
+  KM_Houses, KM_HouseMarket, KM_HouseWoodcutters, KM_HouseStore,
   KM_Terrain,
   KM_Resource, KM_ResHouses
   ;
@@ -121,7 +124,7 @@ begin
       gicBuildRemoveHouse:        SetParams(IntParams[0], IntParams[1], []);//NoParams
       gicBuildRemoveHousePlan:    SetParams(IntParams[0], IntParams[1], []);//NoParams
       gicBuildHousePlan:          SetParams(IntParams[1], IntParams[2], [IntParams[0]]);//HouseType
-      gicPlaceBridgePlan:         SetParams(SmallIntParams[0], SmallIntParams[2], [IntParams[0], SmallIntParams[2]]);//bridge Index, Rotation
+      gicPlaceStructurePlan:         SetParams(SmallIntParams[0], SmallIntParams[2], [IntParams[0], SmallIntParams[2]]);//bridge Index, Rotation
       gicPlaceDecoration:         SetParams(IntParams[0], IntParams[1], [IntParams[2]]);//decoration ID
 
       gicHouseDeliveryModeNext,
@@ -148,6 +151,8 @@ begin
       gicHouseFruitTreeToggleType:   SetParams(HouseToLoc(command.IntParams[0]), [IntParams[1]]);//house ID, aDirection
       gicHouseMerchantSetType:       SetParams(HouseToLoc(command.IntParams[0]), [IntParams[1]]);//house ID, slotID
       gicWareDistributionChange:     SetParams(KMPOINT_INVALID_TILE, [IntParams[0],IntParams[1], IntParams[2]]);//houseType, wareType, aCount
+      gicHouseStoreNotAcceptFlag:    SetParams(HouseToLoc(command.IntParams[0]), [IntParams[1]]);//house ID, wareType
+      gicHouseDeliveryToggle:         SetParams(HouseToLoc(command.IntParams[0]), [IntParams[1], IntParams[2]]);//house ID, wareType, aCount
       else
         Exit;//don't add command if not used later
     end;
@@ -160,6 +165,44 @@ begin
   gTerrain.SetObject(aLoc, 255);
 end;
 
+procedure TKMAIRecorder.AfterMissionStart;
+  procedure SelectAround(aLoc : TkMPoint);
+  var I, K : Integer;
+  begin
+    for I := -1 to 1 do
+    for K := -1 to 1 do
+      gTerrain.ReserveForAI(KMPoint(aLoc.X + I,  aLoc.Y + K));
+      //gTerrain.SelectTile(aLoc.X + I, aLoc.Y + K, true);
+
+  end;
+
+var I, J, K : Integer;
+  HA : TKMHouseArea;
+  P1, P2 : TKMPoint;
+  HT : TKMHouseType;
+begin
+  for I := 0 to fCommandsStored.Count-1 do
+  begin
+    P1 := fCommandsStored[I].Loc;
+    case TKMGameInputCommandType(fCommandsStored[I].CommandType) of
+      gicBuildHousePlan:  begin
+                            HT := TKMHouseType(fCommandsStored[I].Params[0]);
+                            HA := gRes.Houses[HT].BuildArea;
+                            for J := 1 to 4 do
+                              for K := 1 to 4 do
+                              if HA[J, K] > 0 then
+                              begin
+                                P2.X := P1.X + K - 3 - gRes.Houses[HT].EntranceOffsetX;
+                                P2.Y := P1.Y + J - 4 - gRes.Houses[HT].EntranceOffsetY;
+                                SelectAround(P2);
+                              end;
+
+                          end;
+      gicBuildToggleFieldPlan: gTerrain.ReserveForAI(P1);//gTerrain.SelectTile(P1.X, P1.Y, true);
+    end;
+  end;
+end;
+
 procedure TKMAIRecorder.RemoveObjForHouse(aLoc : TKMPoint; aHouse : TKMHouseType);
 var I, K : Integer;
   HA : TKMHouseArea;
@@ -169,10 +212,20 @@ begin
 
   for I := 1 to 4 do
     for K := 1 to 4 do
+    if HA[I, K] > 0 then
     begin
-      P.X := aLoc.X + I - 3;
-      P.Y := aLoc.X + I - 4;
-      RemoveObj(P);
+      P.X := aLoc.X + K - 3 - gRes.Houses[aHouse].EntranceOffsetX;
+      P.Y := aLoc.Y + I - 4 - gRes.Houses[aHouse].EntranceOffsetY;
+
+      if gTerrain.TileInMapCoords(P.X, P.Y) then
+      begin
+        RemoveObj(P);
+        //if gTerrain.GetFieldType(P) <> ftRoad then
+        gTerrain.RemField(P);
+
+        //gTerrain.SelectTile(P.X, P.Y, true);
+        gTerrain.FlattenTerrain(P);
+      end;
     end;
 
 end;
@@ -182,9 +235,13 @@ var aCommand : TKMAICommand;
   procedure MakeCommandWait;
   begin
     Result := fCommandsStored[aIndex].HasWaited; //don't try to make command again
+    //if Result then
+    //  aCommand.Deleted := true;
+
     aCommand.HasWaited := true;
-    aCommand.Time := aCommand.Time + 1200;//Try to place after 2 minutes
+    aCommand.Time := gGameParams.Tick + 1200;//Try to place after 2 minutes
     fCommandsStored[aIndex] := aCommand;
+    Result := false;
   end;
 
 var srcHouse : TKMHouse;
@@ -200,13 +257,13 @@ begin
   Result := true;
 
   if not aCommand.IsValid then //do not make commad if its invalid. Delete command
-    Exit;
+    Exit(False);
 
   if TKMGameInputCommandType(aCommand.CommandType) in
     [gicHouseDeliveryModeNext, gicHouseDeliveryModePrev, gicHouseClosedForWorkerTgl, gicHouseOrderProduct,
      gicHouseMarketFrom, gicHouseMarketTo, gicHouseWoodcutterMode, gicHouseCollectorsRally, gicHouseWoodcuttersCutting,
      gicHouseStoreBell, gicHouseShipDoWork, gicHouseForceWork, gicHouseStallBuyCoin, gicHouseStallBuyItem, gicHouseMerchantSendTo,
-     gicHouseFarmToggleGrain, gicHouseFruitTreeToggleType, gicHouseMerchantSetType] then
+     gicHouseFarmToggleGrain, gicHouseFruitTreeToggleType, gicHouseMerchantSetType, gicHouseStoreNotAcceptFlag, gicHouseDeliveryToggle] then
     if not LocToHouse(aCommand.Loc) then
       Exit//house not found, delete command
     else
@@ -214,35 +271,33 @@ begin
       if not srcHouse.IsValid(htAny, false, true) then
       begin
         MakeCommandWait;
-        Exit;
+        Exit(False);
       end;
     end;
 
-
-
   with aCommand do
     case TKMGameInputCommandType(CommandType) of
-        gicBuildToggleFieldPlan :   gHands[fOwner].ToggleFieldPlan(Loc, TKMFieldType(Params[0]), true, TKMRoadType(Params[1])  );
-        gicBuildRemoveFieldPlan :   gHands[fOwner].RemFieldPlan(Loc, true);
+      gicBuildToggleFieldPlan :   gHands[fOwner].ToggleFieldPlan(Loc, TKMFieldType(Params[0]), true, TKMRoadType(Params[1])  );
+      gicBuildRemoveFieldPlan :   gHands[fOwner].RemFieldPlan(Loc, true);
 
-        gicBuildRemoveHouse:        gHands[fOwner].RemHouse(Loc, false);
-        gicBuildRemoveHousePlan:   gHands[fOwner].RemHousePlan(Loc);
-        gicBuildHousePlan:          begin
-                                      RemoveObjForHouse(Loc, TKMHouseType(Params[0]) );
-                                      If gHands[fOwner].CanAddHousePlan(Loc, TKMHouseType(Params[0])) then
-                                        gHands[fOwner].AddHousePlan(TKMHouseType(Params[0]), Loc)
-                                      else
-                                        MakeCommandWait;
-                                    end;
-        gicPlaceBridgePlan:       if gHands[fOwner].CanAddBridgePlan(Loc, Params[0], Params[1] ) then
-                                    gHands[fOwner].AddBridgePlan(Loc, Params[0], Params[1])
+      gicBuildRemoveHouse:        gHands[fOwner].RemHouse(Loc, false);
+      gicBuildRemoveHousePlan:   gHands[fOwner].RemHousePlan(Loc);
+      gicBuildHousePlan:          begin
+                                    RemoveObjForHouse(Loc, TKMHouseType(Params[0]) );
+                                    If gHands[fOwner].CanAddHousePlan(Loc, TKMHouseType(Params[0])) then
+                                      gHands[fOwner].AddHousePlan(TKMHouseType(Params[0]), Loc)
                                     else
                                       MakeCommandWait;
+                                  end;
+      gicPlaceStructurePlan:      if gHands[fOwner].CanAddStructurePlan(Loc, Params[0], Params[1] ) then
+                                    gHands[fOwner].AddStructurePlan(Loc, Params[0], Params[1])
+                                  else
+                                    MakeCommandWait;
 
-        gicPlaceDecoration:         if gHands[fOwner].CanPlaceDecoration(Loc, Params[0]) then
-                                    gHands[fOwner].CanPlaceDecoration(Loc, Params[0])
-                                    else
-                                      MakeCommandWait;
+      gicPlaceDecoration:         if gHands[fOwner].CanPlaceDecoration(Loc, Params[0]) then
+                                  gHands[fOwner].CanPlaceDecoration(Loc, Params[0])
+                                  else
+                                    MakeCommandWait;
 
       gicHouseDeliveryModeNext:   //Delivery mode has to be delayed, to avoid occasional delivery mode button clicks
                                   srcHouse.SetNextDeliveryMode;
@@ -274,11 +329,13 @@ begin
                                        TKMHouseProdThatch(srcHouse).SetNextGrainType(Params[0], Params[1]);
 
       gicHouseFruitTreeToggleType:   TKMHouseAppleTree(srcHouse).SetNextFruitType(Params[0]);
-      gicHouseMerchantSetType:       srcHouse.SetWareSlot(Params[0]);
+      gicHouseMerchantSetType:       srcHouse.SetWareSlot(Params[0], true);
       gicWareDistributionChange:     begin
                                         gHands[fOwner].Stats.WareDistribution[TKMWareType(Params[0]), TKMHouseType(Params[1])] := Params[2];
                                         gHands[fOwner].Houses.UpdateDemands;
                                      end;
+      gicHouseStoreNotAcceptFlag:    TKMHouseStore(srcHouse).ToggleNotAcceptFlag(TKMWareType(Params[0]));
+      gicHouseDeliveryToggle:        srcHouse.ToggleAcceptWaresIn(TKMWareType(Params[0]), Params[1]);
     end;
 end;
 
@@ -293,6 +350,7 @@ begin
       cctNone : ;
       cctStartRecording : StartRecording;
       cctStopRecording : StopRecording;
+      cctSaveRecord : SaveRecording;
       else
         Result := false;
   end;
@@ -315,17 +373,30 @@ begin
   fRecording := false;
 end;
 
+procedure TKMAIRecorder.SaveRecording;
+begin
+  //fTMPCommands := fCommands;//save commands to tmp so it can be saved into file later
+  SaveToFile;
+end;
+
 
 procedure TKMAIRecorder.UpdateState(aTick: Cardinal);
 var I : Integer;
+  tmp : TKMAICommand;
 begin
   if fRecording then
     Exit;
 
   for I := fCommandsStored.Count - 1 downto 0 do
-    if aTick >= fCommandsStored[I].Time then
-      If MakeCommand(I) then
-        fCommandsStored.Remove(I);
+    if not fCommandsStored[I].Deleted then
+      if aTick >= fCommandsStored[I].Time then
+        If MakeCommand(I) then
+        begin
+          //delete command
+          tmp := fCommandsStored[I];
+          tmp.Deleted := true;
+          fCommandsStored[I] := tmp;
+        end;
 
 end;
 
@@ -358,26 +429,43 @@ begin
   fCommandsStored.SaveToStream(SaveStream);
 end;
 
+
 function TKMAIRecorder.HasAnythingToSave: Boolean;
 begin
   Result := (fCommands.Count > 0){ or (fCommandsStored.Count > 0)};
 end;
+
 function TKMAIRecorder.HasRecording: Boolean;
 begin
   Result := fCommandsStored.Count > 0;
 end;
 
-procedure TKMAIRecorder.LoadFromFile(LoadStream: TKMemoryStream);
+procedure TKMAIRecorder.LoadFromFile;
+var S : TKMemoryStream;
+  path : String;
 begin
-  fCommandsStored.LoadFromStream(LoadStream);
+  path := ChangeFileExt(gGameParams.MissionFullFilePath, '.AISetup' + IntToStr(fOwner));
+  S := TKMemoryStreamBinary.Create;
+  if not FileExists(path) then
+    Exit;
+
+  S.LoadFromFile(path);
+  fCommandsStored.LoadFromStream(S);
+  S.Free;
 end;
 
-procedure TKMAIRecorder.SaveToFile(SaveStream: TKMemoryStream);
+procedure TKMAIRecorder.SaveToFile;
+var S : TKMemoryStream;
+  path : String;
 begin
-  if (fCommands.Count > 0) or IsRecording then
-    fCommands.SaveToStream(SaveStream)//save new recorded commands
-  else
-    fCommandsStored.SaveToStream(SaveStream);
+  S := TKMemoryStreamBinary.Create;
+  path := ChangeFileExt(gGameParams.MissionFullFilePath, '.AISetup' + IntToStr(fOwner));
+
+  fCommands.SaveToStream(S);
+
+  S.SaveToFile(path);
+  S.Free;
+
 end;
 
 end.

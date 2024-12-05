@@ -81,7 +81,7 @@ begin
 
   for TT := Low(TKMTownTab) to High(TKMTownTab) do
   begin
-    Button_Town[TT] := TKMButton.Create(Panel_Town, 9 + SMALL_PAD_W * Byte(TT), 0, SMALL_TAB_W, SMALL_TAB_H, TAB_GLYPH[TT], TAB_RXX[TT], bsPaper2);
+    Button_Town[TT] := TKMButton.Create(Panel_Town, 9 + SMALL_PAD_W * Byte(TT), 0, SMALL_TAB_W, SMALL_TAB_H, TAB_GLYPH[TT], TAB_RXX[TT], bsPaper);
     Button_Town[TT].OnClick := PageChange;
   end;
 

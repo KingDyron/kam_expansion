@@ -64,7 +64,7 @@ const
 constructor TKMMapEdTownAttack.Create(aParent: TKMPanel);
 const
   SIZE_X = 750;
-  SIZE_Y = 470;
+  SIZE_Y = 520;
 var
   GT: TKMGroupType;
 begin
@@ -106,7 +106,7 @@ begin
       NumEdit_AttackAmount[GT].OnChange := Attack_Change;
     end;
 
-    CheckBox_AttackRandomGroups := TKMCheckBox.Create(Panel_Attack, SIZE_X-20-320-10, 360, 320, 40, gResTexts[TX_MAPED_AI_ATTACK_TAKE_ANY], fntMetal);
+    CheckBox_AttackRandomGroups := TKMCheckBox.Create(Panel_Attack, SIZE_X-20-320-10, NumEdit_AttackAmount[GROUP_TYPE_MAX].Bottom + 3, 320, 40, gResTexts[TX_MAPED_AI_ATTACK_TAKE_ANY], fntMetal);
     CheckBox_AttackRandomGroups.Hint := gResTexts[TX_MAPED_AI_ATTACK_TAKE_ANY_HINT];
     CheckBox_AttackRandomGroups.OnClick := Attack_Change;
 

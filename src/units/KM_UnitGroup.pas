@@ -78,6 +78,7 @@ type
     procedure UpdateHungerMessage;
 
     procedure SelectNearestMember;
+    procedure Member_Dismissed(aMember: TKMUnitWarrior);
     procedure Member_Died(aMember: TKMUnitWarrior);
     procedure Member_PickedFight(aMember: TKMUnitWarrior; aEnemy: TKMUnit);
 
@@ -180,6 +181,9 @@ type
     procedure OrderStorm(aClearOffenders: Boolean);
     procedure OrderWalk(const aLoc: TKMPoint; aClearOffenders: Boolean; aOrderWalkKind: TKMOrderWalkKind;
                         aDir: TKMDirection = dirNA; aForced: Boolean = True);
+    procedure Dismiss;
+    function IsDismissCancelAvailable : Boolean;
+    procedure DismissCancel;
     procedure SetInfiniteAmmo;
     procedure OrderAssignToShip(aShip : Pointer);
     procedure OrderRepeat(aForced: Boolean = True);
@@ -246,7 +250,7 @@ implementation
 uses
   TypInfo,
   KM_Entity,
-  KM_Game, KM_GameParams, KM_GameUIDTracker,
+  KM_Game, KM_GameParams, KM_GameUIDTracker, KM_CommonHelpers,
   KM_Hand, KM_HandsCollection,
   KM_Terrain, KM_CommonUtils,
   KM_ResTexts, KM_RenderPool,
@@ -400,6 +404,7 @@ begin
   for I := 0 to Count - 1 do
   begin
     fMembers[I] := TKMUnitWarrior(gHands.GetUnitByUID(Integer(fMembers[I])));
+    fMembers[I].OnWarriorDismissed := Member_Dismissed;
     fMembers[I].OnWarriorDied := Member_Died;
     fMembers[I].OnPickedFight := Member_PickedFight;
   end;
@@ -720,6 +725,7 @@ begin
   //Member reports to Group if something happens to him, so that Group can apply its logic
   aWarrior.OnPickedFight := Member_PickedFight;
   aWarrior.OnWarriorDied := Member_Died;
+  aWarrior.OnWarriorDismissed := Member_Dismissed;
   aWarrior.SetGroup(Self);
   // Face warrior as at our orderLoc
   aWarrior.FaceDir := fOrderLoc.Dir;
@@ -851,6 +857,42 @@ begin
     OrderRepeat(False);
 end;
 
+//Member reports that he has died (or been killed)
+procedure TKMUnitGroup.Member_Dismissed(aMember: TKMUnitWarrior);
+var
+  I: Integer;
+  newSel: Integer;
+begin
+  if aMember = nil then
+    Exit;
+
+  if aMember.HitPointsInvulnerable then
+    Exit;
+
+  I := fMembers.IndexOf(aMember);
+  Assert(I <> -1, 'No such member');
+
+  if (aMember = fSelected) then
+    SelectNearestMember;
+
+  fMembers.Delete(I);
+
+  //Move nearest member to placeholders place
+  if I = 0 then
+  begin
+    newSel := GetNearestMember(aMember);
+    if newSel <> -1 then
+      fMembers.Exchange(newSel, 0);
+  end;
+
+  gHands.CleanUpUnitPointer(TKMUnit(aMember));
+
+  SetUnitsPerRow(fUnitsPerRow);
+
+  //If Group has died report to owner
+  if IsDead and Assigned(OnGroupDied) then
+    OnGroupDied(Self);
+end;
 
 //Member got in a fight
 //Remember who we are fighting with, to guide idle units to
@@ -1511,27 +1553,9 @@ end;
 
 //Forcefull termination of any activity
 procedure TKMUnitGroup.OrderHalt(aClearOffenders: Boolean; aForced: Boolean = True);
-var I : Integer;
-  doBlock : Boolean;
 begin
   if aClearOffenders and CanTakeOrders then
     ClearOffenders;
-
-  //Halt is not a True order, it is just OrderWalk
-  //hose target depends on previous activity
-  {doBlock := true;
-  for I := 0 to count - 1 do
-      if fMembers[I].UnitType = utMedic then
-        if fMembers[I].BlockWalking then
-        begin
-          doBlock := false;
-          Break;
-        end;}
-  {for I := 0 to count - 1 do
-      if fMembers[I].UnitType = utMedic then
-        fMembers[I].BlockWalking := doBlock;}
-        
-
       
   case fOrder of
     goNone:         if not KMSamePoint(fOrderLoc.Loc, KMPOINT_ZERO) then
@@ -1998,6 +2022,28 @@ begin
   gScriptEvents.ProcGroupOrderMove(Self, aLoc.X, aLoc.Y);
 end;
 
+procedure TKMUnitGroup.Dismiss;
+var I : Integer;
+begin
+  for I := 0 to Count - 1 do
+      Members[I].Dismiss;
+end;
+
+procedure TKMUnitGroup.DismissCancel;
+var I : Integer;
+begin
+  for I := 0 to Count - 1 do
+      Members[I].DismissCancel;
+
+end;
+
+function TKMUnitGroup.IsDismissCancelAvailable: Boolean;
+var I : Integer;
+begin
+  Result := false;
+  for I := 0 to Count - 1 do
+      Result := Result or Members[I].IsDismissCancelAvailable;
+end;
 
 function TKMUnitGroup.UnitType: TKMUnitType;
 begin
@@ -2119,8 +2165,14 @@ begin
     if fTimeSinceHungryReminder < 1 then
     begin
       gScriptEvents.ProcGroupHungry(Self);
-      if not fDisableHungerMessage then
-        gGame.ShowMessage(mkGroup, TX_MSG_TROOP_HUNGRY, Position, UID, Owner);
+      if not gHands[Owner].IsComputer
+      and not gGame.Params.MBD.IsRealism then
+        if not fDisableHungerMessage then
+        begin
+          gGame.ShowMessage(mkGroup, TX_MSG_TROOP_HUNGRY, Position, UID, Owner);
+          if (gMySpectator.HandID = self.Owner) then
+            gGame.GamePlayInterface.Alerts.AddFood(PositionF, Owner, gGameParams.Tick + 80);
+        end;
       fTimeSinceHungryReminder := TIME_BETWEEN_MESSAGES; //Don't show one again until it is time
     end;
   end
@@ -2432,7 +2484,8 @@ end;
 procedure TKMUnitGroup.OrderAssignToShip(aShip : Pointer);
 var I : Integer;
 begin
-
+  if self = nil then
+    Exit;
   for I := 0 to Count - 1 do
     fMembers[I].AssignToShip(aShip);
 end;

@@ -24,12 +24,14 @@ const
   MENU_DESIGN_Y         = 768;          //Thats the size menu was designed for. All elements are placed in this size
   MIN_RESOLUTION_WIDTH  = 1024;         //Lowest supported resolution X
   MIN_RESOLUTION_HEIGHT = 720;          //Lowest supported resolution Y
-  MIN_NIGHT_DARKNESS    = 0.2;
-  NIGHT_SPEED           = 1200 * 2;
+  MIN_NIGHT_DARKNESS    = 0.1;
+  NIGHT_SPEED           = 120 * 4;
+  MAX_NIGHT_SPEED           = 21;
   // It would be nice to have the declaration as:
   // GAME_REVISION_NUM = {$I KM_Revision.inc}
   // This would also allow to disuse the initialization section down below
   // However for some odd reason this kills Reys IDE ..
+  // kills mine too :D -> Dyron
   {$I KM_Revision.inc};
   {$I KM_NetProtocolRevision.inc};
 
@@ -38,8 +40,8 @@ var
   TERRAIN_DARK: Single;
 const
   GAME_VERSION_CUSTOM_POSTFIX = ''; // Custom postfix for the test builds
-  GAME_VERSION_PREFIX   = 'KaM Expansion: '; //Game version string displayed in menu corner
-  VERSION_NAME = 'v1.0';
+  GAME_VERSION_PREFIX   = 'KaM Expansion: Co-op & World Update'; //Game version string displayed in menu corner
+  VERSION_NAME = '';
 var
   //Game revision is set in initialisation block
   GAME_REVISION: AnsiString; //Should be updated for every release (each time save format is changed)
@@ -504,7 +506,9 @@ type
     cmBridges,
     cmAssignToShip,
     cmDecorations,
-    cmCustom);  //Tile overlays
+    cmCustom,
+    cmWaresOnGround,
+    cmChangeResCount);  //Tile overlays
 
 type
   // How cursor field placing will act (depends on which tile LMB was pressed)
@@ -659,26 +663,32 @@ type
     utTrainedWolf,  utAmmoCart,     utPikeMachine,   utShip,
     utClubMan,      utMaceFighter,  utFlailFighter,  utShieldBearer,
     utFighter,      utSpikedTrap,   utWoodenWall,    utTorchMan,
-    utMedic,        utBattleShip,   utBoat,
+    utMedic,        utBattleShip,   utBoat,          utPyro,
+    utLekter,
 
     utWolf,         utFish,         utWatersnake,    utSeastar,
     utCrab,         utWaterflower,  utWaterleaf,     utDuck);
   //* Unit type set
   TKMUnitTypeSet = set of TKMUnitType;
   TKMUnitTypeArray = array of TKMUnitType;
+
+  TKMUnitTypeArrayHelper = record helper for TKMUnitTypeArray
+    class operator Add(const A, B : TKMUnitTypeArray) : TKMUnitTypeArray;
+  end;
+
 const
   UNIT_MIN = utSerf;
   UNIT_MAX = utDuck;
   CITIZEN_MIN = utSerf;
   CITIZEN_MAX = utClayPicker;
   WARRIOR_MIN = utMilitia;
-  WARRIOR_MAX = utBoat;
+  WARRIOR_MAX = utLekter;
   WARRIOR_EQUIPABLE_BARRACKS_MIN = utMilitia; //Available from barracks
   WARRIOR_EQUIPABLE_BARRACKS_MAX = utKnight;
   WARRIOR_EQUIPABLE_TH_MIN = utBarbarian; //Available from Townhall
   WARRIOR_EQUIPABLE_TH_MAX =  utWarrior;
   HUMANS_MIN = utSerf;
-  HUMANS_MAX =  utBoat;
+  HUMANS_MAX =  utLekter;
   ANIMAL_MIN = utWolf;
   ANIMAL_MAX = utDuck;
   WARRIOR_BITIN_EQUIPABLE = [ utSwordFighter, utCrossbowman, utPikeman, utKnight, utCatapult,
@@ -689,22 +699,22 @@ const
   UNITS_WARRIORS = [WARRIOR_MIN..WARRIOR_MAX];
   UNITS_HUMAN = [HUMANS_MIN..HUMANS_MAX];
   UNITS_NEW = [utOperator, utClayPicker, utRam .. HUMANS_MAX];
-  WARRIORS_IRON = [utSwordFighter, utCrossbowman, utPikeman, utKnight, utWarrior];
-  SPECIAL_UNITS = [utPaladin, utTrainedWolf, utArcher, utSpy, utAmmoCart, utShip, utBoat, utBattleShip];
+  WARRIORS_IRON = [utSwordFighter, utCrossbowman, utPikeman, utKnight, utWarrior, utFlailFighter, utShieldBearer];
+  SPECIAL_UNITS = [utPaladin, utTrainedWolf, utArcher, utSpy, utAmmoCart, utShip, utBoat, utBattleShip, utPyro, utLekter];
 
   CITIZENS_CNT = Integer(CITIZEN_MAX) - Integer(CITIZEN_MIN) + 1;
   WARRIORS_CNT = Integer(WARRIOR_MAX) - Integer(WARRIOR_MIN) + 1;
-  SIEGE_MACHINES = [utBallista, utCatapult, utRam, utAmmoCart, utWoodenWall];
+  SIEGE_MACHINES = [utBallista, utCatapult, utRam, utAmmoCart, utWoodenWall, utSpikedTrap];
   UNITS_SHIPS = [utBoat, utShip, utBattleShip];
 
   OPERATORS_PER_MACHINE = 4;
 
 type
-  TKMUnitAmmoType = (uatNone, uatArrow, uatRogueStone, uatStoneBolt, uatBolt);
+  TKMUnitAmmoType = (uatNone, uatArrow, uatRogueStone, uatStoneBolt, uatBolt, uatAxe);
 
 const
-  AMMO_GUI_ICON : array[TKMUnitAmmoType] of Word = (0, 699, 695, 695, 696);
-  AMMO_GUI_TEXT : array[TKMUnitAmmoType] of Word = (0, 1874, 1874, 1875, 1876);
+  AMMO_GUI_ICON : array[TKMUnitAmmoType] of Word = (0, 699, 695, 695, 696, 371);
+  AMMO_GUI_TEXT : array[TKMUnitAmmoType] of Word = (0, 1874, 1874, 1875, 1876, 2098);
   AMMOCART_AMMO : set of TKMUnitAmmoType = [uatStoneBolt, uatBolt];
   AmmoCart_AmmoOrder : array[0..1] of TKMUnitAmmoType = (uatStoneBolt, uatBolt);
 
@@ -765,7 +775,9 @@ const
     gtWreckers,
     gtAny,
     gtShips,
-    gtShips
+    gtShips,
+    gtWreckers,
+    gtMelee
     );
 
 type
@@ -799,8 +811,9 @@ type
         uttSelfTrain, uttDeliver,         uttBuildRoad,  uttBuildWine,        uttBuildField,
         uttBuildHouseArea, uttBuildHouse, uttBuildHouseRepair, uttGoHome,    uttDismiss,
         uttGoEat,     uttMining,          uttDie,        uttGoOutShowHungry,  uttAttackHouse,
-        uttThrowRock, uttBuildPalisade, uttBuildRemove, uttBuildHouseUpgrade, uttGoGetBoots, uttBuildBridge,
-        uttGoToShip, uttBuildGrassLand, uttUnloadFromShip, uttGoToStore);
+        uttThrowRock, uttBuildPalisade, uttBuildRemove, uttBuildHouseUpgrade, uttGoGetBoots, uttBuildStructure,
+        uttGoToShip, uttBuildGrassLand, uttUnloadFromShip, uttGoToStore, uttGoToLoc, uttCollectWares, uttUnloadWares,
+        uttGoToWell, uttTakeOverHouse);
 
   TKMUnitActionName = (uanStay, uanWalkTo, uanGoInOut, uanAbandonWalk, uanFight, uanStormAttack, uanSteer);
 
@@ -825,10 +838,16 @@ const
 
 type
   TKMUnitMainData = record
-    aType : TKMUnitType;
+    UnitType : TKMUnitType;
     Condition : Integer;
     BoltCount : Word;
-    IsWarrior : Boolean;
+    Columns, Count : Byte;
+    function Valid : Boolean;
+    procedure TakeUnit;
+  end;
+  TKMUnitPlan = array of record
+    UnitType : TKMUnitType;
+    Count : Word;
   end;
 
   TKMGatheringScript = (
@@ -885,36 +904,37 @@ type
   TKMRoadType = (rtNone, rtStone, rtWooden, rtClay, rtExclusive);
 
 Type
-  TKMGrainType = (gftNone, gftWheat, gftRye, gftOat, gftRice, gftCorn, gftSunflower,
+  TKMGrainType = (gftNone, gftWheat, gftRye, gftOat, gftRice, gftCorn, gftSunflower, gftStrawBush,
                     gftGrass, gftClover, gftLucerne,
                     gftPumpkin, gftCarrots, gftCabbages, gftTomatos, gftPotatos,
                     gftWinePurple, gftWineWhite, gftWineBlack, gftWineRed, gftRaspberry, gftBlackberry,
-                    gftWildRose, gftWildStrawberry, gftPomegranate);
+                    gftWildRose, gftWildStrawberry, gftPomegranate, gftCactus, gftIceSticks);
   TKMGrainTypeSet = set of TKMGrainType;
 const
   ROAD_GUI_PIC : array[TKMRoadType] of Word = (0, 335, 822, 823, 824);
-  GRAIN_GUI_PIC : array[TKMGrainType] of Word = (0, 825, 826, 827, 828, 829, 830,//grain
+  GRAIN_GUI_PIC : array[TKMGrainType] of Word = (0, 825, 826, 827, 828, 829, 830, 931,//grain
                                                 832, 833, 834,//grass
                                                 831, 886, 887, 888, 889,
-                                                347, 348, 349, 350, 347, 348, 349, 350, 347);//wine
+                                                347, 348, 349, 350, 347, 348, 349, 350, 347,
+                                                926, 927);//wine
 
-  GRAIN_GUI_HINT : array[TKMGrainType] of Word = (0, 2000, 2001, 2002, 2003, 2004, 2005,//grain
+  GRAIN_GUI_HINT : array[TKMGrainType] of Word = (0, 2000, 2001, 2002, 2003, 2004, 2005, 2051,//grain
                                                 2007, 2008, 2009,//grass
                                                 2006, 2012, 2013, 2014, 2015,
-                                                0, 0, 0, 0, 0, 0, 0, 0, 0);//wine
+                                                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);//wine
   GRAIN_GRAIN_MIN = gftWheat;
-  GRAIN_GRAIN_MAX = gftSunflower;
+  GRAIN_GRAIN_MAX = gftStrawBush;
   GRAIN_GRASS_MIN = gftGrass;
   GRAIN_GRASS_MAX = gftLucerne;
   GRAIN_VEGE_MIN = gftPumpkin;
   GRAIN_VEGE_MAX = gftPotatos;
   GRAIN_WINE_MIN = gftWinePurple;
-  GRAIN_WINE_MAX = gftPomegranate;
+  GRAIN_WINE_MAX = gftIceSticks;
   GRAIN_MIN = gftWheat;
-  GRAIN_MAX = gftPomegranate;
+  GRAIN_MAX = gftIceSticks;
   GRAIN_VALID = [GRAIN_MIN..GRAIN_MAX];
 
-  GRAIN_GUI_ORDER : array[0..5] of TKMGrainType = (gftWheat, gftRye, gftOat, gftRice, gftCorn, gftSunflower);
+  GRAIN_GUI_ORDER : array[0..6] of TKMGrainType = (gftWheat, gftRye, gftOat, gftStrawBush, gftRice, gftCorn, gftSunflower);
   GRASS_GUI_ORDER : array[0..2] of TKMGrainType = (gftGrass, gftClover, gftLucerne);
   VEGE_GUI_ORDER : array[0..4] of TKMGrainType = (gftPumpkin, gftCarrots, gftCabbages, gftTomatos, gftPotatos);
 
@@ -948,6 +968,7 @@ type
         tlDigged,   // -        -         X       X          X     X      X
         tlHouse,    // -        -         -       -          X     X      -
         tlWall, tlWallFence, tlWallGate, tlWallEmpty,
+        tlStructure,
         //Used by workers making roads/fields to prevent you from building over them
         tlFieldWork,// -        X         X       X          -     X      -
         tlRoadWork  // -        X         X       X          -     X      -
@@ -965,7 +986,7 @@ const
   SB_ID_CTRL_ID      = 7;
 
 type
-  TKMMapSize = (msNone, msXS, msS, msM, msL, msXL, msXXL);
+  TKMMapSize = (msNone, msXS, msS, msM, msL, msXL, msXXL, msG);
 
 const
   MAP_SIZE_ENUM_MIN = msXS;
@@ -1264,7 +1285,7 @@ const
     0,
     1, 2.4, 6, 6,
     0.5, 10, 10,
-    2, 2, 2, 2
+    2, 2, 2, 2, 10, 10
   );
 
 const
@@ -1272,6 +1293,27 @@ const
 
 
 implementation
+
+class operator TKMUnitTypeArrayHelper.Add(const A, B : TKMUnitTypeArray) : TKMUnitTypeArray;
+var I : Integer;
+begin
+  Result := A;
+  SetLength(Result, length(A) + length(B));
+  for I := 0 to High(B) do
+    Result[I + length(A)] := B[I];
+end;
+
+function TKMUnitMainData.Valid : Boolean;
+begin
+  Result := (UnitType <> utNone)
+            and (Count > 0)
+            and (Condition > 0);
+end;
+
+procedure TKMUnitMainData.TakeUnit;
+begin
+  Dec(Count);
+end;
 
 initialization
 begin

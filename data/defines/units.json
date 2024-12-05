@@ -124,8 +124,13 @@
 				"PhaseCount" : 6,
 				"PhaseDuration" : 600,
 				"VirtualWares" : [ 
-							{"VirtualWareName" : "vtBitinFrag", "Count" : 0},
+							{"VirtualWareName" : "vtCopper", "Count" : 5},
+							{"VirtualWareName" : "vtSilver", "Count" : 0},
+							{"VirtualWareName" : "vtAmber", "Count" : 0},
 							{"VirtualWareName" : "vtPearl", "Count" : 0},
+							{"VirtualWareName" : "vtDiamond", "Count" : 0},							
+							
+							{"VirtualWareName" : "vtBitinFrag", "Count" : 0},
 							{"VirtualWareName" : "vtLeatherSheet", "Count" : 5},	
 							{"VirtualWareName" : "vtCoin", "Count" : 0}, 
 							{"VirtualWareName" : "vtIronFerrule", "Count" : 30},
@@ -138,7 +143,7 @@
 							{"VirtualWareName" : "vtHerbs", "Count" : 0}	
 						],
 				"Wares" : [ 
-							{"WareType" : "wtJewerly", "Count" : 1},
+							{"WareType" : "wtPig", "Count" : 1},
 							{"WareType" : "wtGold", "Count" : 0},
 							{"WareType" : "wtApple", "Count" : 2},
 							{"WareType" : "wtBoots", "Count" : 2}
@@ -165,8 +170,13 @@
 				"PhaseCount" : 1,
 				"PhaseDuration" : 3000,
 				"VirtualWares" : [ 
+							{"VirtualWareName" : "vtCopper", "Count" : 0},
+							{"VirtualWareName" : "vtSilver", "Count" : 0},
+							{"VirtualWareName" : "vtAmber", "Count" : 0},
+							{"VirtualWareName" : "vtPearl", "Count" : 1},
+							{"VirtualWareName" : "vtDiamond", "Count" : 0},		
+							
 							{"VirtualWareName" : "vtBitinFrag", "Count" : 1},
-							{"VirtualWareName" : "vtPearl", "Count" : 0},
 							{"VirtualWareName" : "vtLeatherSheet", "Count" : 20},	
 							{"VirtualWareName" : "vtCoin", "Count" : 200}, 
 							{"VirtualWareName" : "vtIronFerrule", "Count" : 20},
@@ -179,7 +189,101 @@
 							{"VirtualWareName" : "vtHerbs", "Count" : 0}	
 						],
 				"Wares" : [ 
-							{"WareType" : "wtJewerly", "Count" : 1},
+							{"WareType" : "wtPig", "Count" : 1},
+							{"WareType" : "wtGold", "Count" : 5},
+							{"WareType" : "wtApple", "Count" : 5},
+							{"WareType" : "wtBoots", "Count" : 1}
+						]
+			}
+		},
+		{
+			"UnitType":"utPyro",
+			"SchoolTime" : 20,
+			"Attack" : 1,
+			"UnitDamage" : 1,
+			"HouseDamage" : 1,
+			"HitPoints" : 5,
+			"Defence" : 1,
+			"Speed" : 28,
+			"CanAttackHouses" : true,
+			"CanAttackUnits" : False,
+			"FullUnitAnimations": [
+				{"ActionType" : "uaWalk", "StartStep" : 13726, "StepsCount" : 8},
+				{"ActionType" : "uaWork", "StartStep" : 13790, "StepsCount" : 11},
+				{"ActionType" : "uaStay", "StartStep" : 13878, "StepsCount" : 8}
+			],
+			"PalaceCost" : {
+				"PhaseCount" : 1,
+				"PhaseDuration" : 3000,
+				"VirtualWares" : [ 
+							{"VirtualWareName" : "vtCopper", "Count" : 0},
+							{"VirtualWareName" : "vtSilver", "Count" : 0},
+							{"VirtualWareName" : "vtAmber", "Count" : 0},
+							{"VirtualWareName" : "vtPearl", "Count" : 1},
+							{"VirtualWareName" : "vtDiamond", "Count" : 0},		
+							
+							{"VirtualWareName" : "vtBitinFrag", "Count" : 1},
+							{"VirtualWareName" : "vtLeatherSheet", "Count" : 20},	
+							{"VirtualWareName" : "vtCoin", "Count" : 200}, 
+							{"VirtualWareName" : "vtIronFerrule", "Count" : 20},
+							{"VirtualWareName" : "vtResin", "Count" : 100},
+							{"VirtualWareName" : "vtGemStone", "Count" : 0}, 
+							{"VirtualWareName" : "vtHoney", "Count" : 5}, 
+							{"VirtualWareName" : "vtCertificate", "Count" : 10},
+							{"VirtualWareName" : "vtNeedle", "Count" : 10}, 
+							{"VirtualWareName" : "vtWoodenPlate", "Count" : 0}, 
+							{"VirtualWareName" : "vtHerbs", "Count" : 0}	
+						],
+				"Wares" : [ 
+							{"WareType" : "wtPig", "Count" : 1},
+							{"WareType" : "wtGold", "Count" : 5},
+							{"WareType" : "wtApple", "Count" : 5},
+							{"WareType" : "wtBoots", "Count" : 1}
+						]
+			}
+		},
+		{
+			"UnitType":"utLekter",
+			"SchoolTime" : 20,
+			"Attack" : 1,
+			"UnitDamage" : 1,
+			"HouseDamage" : 1,
+			"HitPoints" : 5,
+			"Defence" : 1,
+			"Speed" : 20,
+			"CanAttackHouses" : true,
+			"CanAttackUnits" : False,
+			"FullUnitAnimations": [
+				{"ActionType" : "uaWalk", "StartStep" : 13942, "StepsCount" : 8},
+				{"ActionType" : "uaStay", "StartStep" : 14021, "StepsCount" : 8}
+			],
+			"Animations" : [
+				{"ActionType" : "uaWork", "Dir" : "DirN", "StepStart" : 14006, "Count" : 15, "Offset" : 0, "BackWard" : false}
+			],
+			"PalaceCost" : {
+				"PhaseCount" : 1,
+				"PhaseDuration" : 3000,
+				"VirtualWares" : [ 
+							{"VirtualWareName" : "vtCopper", "Count" : 0},
+							{"VirtualWareName" : "vtSilver", "Count" : 0},
+							{"VirtualWareName" : "vtAmber", "Count" : 0},
+							{"VirtualWareName" : "vtPearl", "Count" : 1},
+							{"VirtualWareName" : "vtDiamond", "Count" : 0},		
+							
+							{"VirtualWareName" : "vtBitinFrag", "Count" : 1},
+							{"VirtualWareName" : "vtLeatherSheet", "Count" : 20},	
+							{"VirtualWareName" : "vtCoin", "Count" : 200}, 
+							{"VirtualWareName" : "vtIronFerrule", "Count" : 20},
+							{"VirtualWareName" : "vtResin", "Count" : 100},
+							{"VirtualWareName" : "vtGemStone", "Count" : 0}, 
+							{"VirtualWareName" : "vtHoney", "Count" : 5}, 
+							{"VirtualWareName" : "vtCertificate", "Count" : 10},
+							{"VirtualWareName" : "vtNeedle", "Count" : 10}, 
+							{"VirtualWareName" : "vtWoodenPlate", "Count" : 0}, 
+							{"VirtualWareName" : "vtHerbs", "Count" : 0}	
+						],
+				"Wares" : [ 
+							{"WareType" : "wtPig", "Count" : 1},
 							{"WareType" : "wtGold", "Count" : 5},
 							{"WareType" : "wtApple", "Count" : 5},
 							{"WareType" : "wtBoots", "Count" : 1}
@@ -294,8 +398,13 @@
 				"PhaseCount" : 4,
 				"PhaseDuration" : 600,
 				"VirtualWares" : [ 
+							{"VirtualWareName" : "vtCopper", "Count" : 0},
+							{"VirtualWareName" : "vtSilver", "Count" : 0},
+							{"VirtualWareName" : "vtAmber", "Count" : 0},
+							{"VirtualWareName" : "vtPearl", "Count" : 0},
+							{"VirtualWareName" : "vtDiamond", "Count" : 1},	
+							
 							{"VirtualWareName" : "vtBitinFrag", "Count" : 0},
-							{"VirtualWareName" : "vtPearl", "Count" : 5},
 							{"VirtualWareName" : "vtLeatherSheet", "Count" : 30},	
 							{"VirtualWareName" : "vtCoin", "Count" : 145}, 
 							{"VirtualWareName" : "vtIronFerrule", "Count" : 5},
@@ -308,7 +417,7 @@
 							{"VirtualWareName" : "vtHerbs", "Count" : 165}	
 						],
 				"Wares" : [ 
-							{"WareType" : "wtJewerly", "Count" : 1},
+							{"WareType" : "wtPig", "Count" : 1},
 							{"WareType" : "wtGold", "Count" : 0},
 							{"WareType" : "wtApple", "Count" : 2},
 							{"WareType" : "wtBoots", "Count" : 2}
@@ -378,8 +487,13 @@
 				"PhaseCount" : 12,
 				"PhaseDuration" : 210,
 				"VirtualWares" : [ 
-							{"VirtualWareName" : "vtBitinFrag", "Count" : 0},
+							{"VirtualWareName" : "vtCopper", "Count" : 5},
+							{"VirtualWareName" : "vtSilver", "Count" : 0},
+							{"VirtualWareName" : "vtAmber", "Count" : 0},
 							{"VirtualWareName" : "vtPearl", "Count" : 0},
+							{"VirtualWareName" : "vtDiamond", "Count" : 0},	
+							
+							{"VirtualWareName" : "vtBitinFrag", "Count" : 0},
 							{"VirtualWareName" : "vtLeatherSheet", "Count" : 30},	
 							{"VirtualWareName" : "vtCoin", "Count" : 150}, 
 							{"VirtualWareName" : "vtIronFerrule", "Count" : 40},
@@ -392,7 +506,7 @@
 							{"VirtualWareName" : "vtHerbs", "Count" : 0}	
 						],
 				"Wares" : [ 
-							{"WareType" : "wtJewerly", "Count" : 1},
+							{"WareType" : "wtPig", "Count" : 1},
 							{"WareType" : "wtGold", "Count" : 2},
 							{"WareType" : "wtApple", "Count" : 5},
 							{"WareType" : "wtBoots", "Count" : 1}
@@ -417,8 +531,13 @@
 				"CanAttackHouses" : false,
 				"PhaseDuration" : 1800,
 				"VirtualWares" : [ 
-							{"VirtualWareName" : "vtBitinFrag", "Count" : 0},
+							{"VirtualWareName" : "vtCopper", "Count" : 0},
+							{"VirtualWareName" : "vtSilver", "Count" : 0},
+							{"VirtualWareName" : "vtAmber", "Count" : 1},
 							{"VirtualWareName" : "vtPearl", "Count" : 0},
+							{"VirtualWareName" : "vtDiamond", "Count" : 0},	
+							
+							{"VirtualWareName" : "vtBitinFrag", "Count" : 0},
 							{"VirtualWareName" : "vtLeatherSheet", "Count" : 10},	
 							{"VirtualWareName" : "vtCoin", "Count" : 10}, 
 							{"VirtualWareName" : "vtIronFerrule", "Count" : 1},
@@ -431,7 +550,7 @@
 							{"VirtualWareName" : "vtHerbs", "Count" : 150}		
 						],
 				"Wares" : [ 
-							{"WareType" : "wtJewerly", "Count" : 1},
+							{"WareType" : "wtPig", "Count" : 1},
 							{"WareType" : "wtGold", "Count" : 1},
 							{"WareType" : "wtBoots", "Count" : 3}
 						]
@@ -453,8 +572,13 @@
 				"PhaseCount" : 6,
 				"PhaseDuration" : 1000,
 				"VirtualWares" : [ 
+							{"VirtualWareName" : "vtCopper", "Count" : 0},
+							{"VirtualWareName" : "vtSilver", "Count" : 0},
+							{"VirtualWareName" : "vtAmber", "Count" : 0},
+							{"VirtualWareName" : "vtPearl", "Count" : 0},
+							{"VirtualWareName" : "vtDiamond", "Count" : 2},	
+							
 							{"VirtualWareName" : "vtBitinFrag", "Count" : 20},
-							{"VirtualWareName" : "vtPearl", "Count" : 10},
 							{"VirtualWareName" : "vtLeatherSheet", "Count" : 10},	
 							{"VirtualWareName" : "vtCoin", "Count" : 250}, 
 							{"VirtualWareName" : "vtIronFerrule", "Count" : 20},
@@ -467,7 +591,7 @@
 							{"VirtualWareName" : "vtHerbs", "Count" : 100}			
 						],
 				"Wares" : [ 
-							{"WareType" : "wtJewerly", "Count" : 1},
+							{"WareType" : "wtPig", "Count" : 1},
 							{"WareType" : "wtGold", "Count" : 5},
 							{"WareType" : "wtApple", "Count" : 4},
 							{"WareType" : "wtBoots", "Count" : 1}
@@ -482,8 +606,13 @@
 				"PhaseCount" : 9,
 				"PhaseDuration" : 650,
 				"VirtualWares" : [ 
-							{"VirtualWareName" : "vtBitinFrag", "Count" : 0},
+							{"VirtualWareName" : "vtCopper", "Count" : 0},
+							{"VirtualWareName" : "vtSilver", "Count" : 3},
+							{"VirtualWareName" : "vtAmber", "Count" : 0},
 							{"VirtualWareName" : "vtPearl", "Count" : 0},
+							{"VirtualWareName" : "vtDiamond", "Count" : 0},	
+							
+							{"VirtualWareName" : "vtBitinFrag", "Count" : 0},
 							{"VirtualWareName" : "vtLeatherSheet", "Count" : 15},	
 							{"VirtualWareName" : "vtCoin", "Count" : 125}, 
 							{"VirtualWareName" : "vtIronFerrule", "Count" : 10},
@@ -496,7 +625,7 @@
 							{"VirtualWareName" : "vtHerbs", "Count" : 199}		
 						],
 				"Wares" : [ 
-							{"WareType" : "wtJewerly", "Count" : 1},
+							{"WareType" : "wtPig", "Count" : 1},
 							{"WareType" : "wtGold", "Count" : 5},
 							{"WareType" : "wtApple", "Count" : 4},
 							{"WareType" : "wtBoots", "Count" : 4}
@@ -509,9 +638,13 @@
 				"PhaseCount" : 12,
 				"PhaseDuration" : 1500,
 				"VirtualWares" : [ 
+							{"VirtualWareName" : "vtCopper", "Count" : 0},
+							{"VirtualWareName" : "vtSilver", "Count" : 0},
+							{"VirtualWareName" : "vtAmber", "Count" : 0},
+							{"VirtualWareName" : "vtPearl", "Count" : 10},
+							{"VirtualWareName" : "vtDiamond", "Count" : 0},	
 							
 							{"VirtualWareName" : "vtBitinFrag", "Count" : 0},
-							{"VirtualWareName" : "vtPearl", "Count" : 10},
 							{"VirtualWareName" : "vtLeatherSheet", "Count" : 50},	
 							{"VirtualWareName" : "vtCoin", "Count" : 200}, 
 							{"VirtualWareName" : "vtIronFerrule", "Count" : 0},
@@ -524,7 +657,7 @@
 							{"VirtualWareName" : "vtHerbs", "Count" : 200}
 						],
 				"Wares" : [ 
-							{"WareType" : "wtJewerly", "Count" : 1},
+							{"WareType" : "wtPig", "Count" : 1},
 							{"WareType" : "wtGold", "Count" : 1},
 							{"WareType" : "wtApple", "Count" : 1},
 							{"WareType" : "wtBoots", "Count" : 1}
@@ -561,6 +694,12 @@
 				"PhaseCount" : 12,
 				"PhaseDuration" : 260,
 				"VirtualWares" : [ 
+							{"VirtualWareName" : "vtCopper", "Count" : 0},
+							{"VirtualWareName" : "vtSilver", "Count" : 3},
+							{"VirtualWareName" : "vtAmber", "Count" : 0},
+							{"VirtualWareName" : "vtPearl", "Count" : 0},
+							{"VirtualWareName" : "vtDiamond", "Count" : 0},	
+							
 							{"VirtualWareName" : "vtHoney", "Count" : 30}, 
 							{"VirtualWareName" : "vtGemStone", "Count" : 10}, 
 							{"VirtualWareName" : "vtResin", "Count" : 255},
@@ -568,14 +707,13 @@
 							{"VirtualWareName" : "vtNeedle", "Count" : 10}, 
 							{"VirtualWareName" : "vtCertificate", "Count" : 40}, 
 							{"VirtualWareName" : "vtWoodenPlate", "Count" : 100},
-							{"VirtualWareName" : "vtPearl", "Count" : 5},
 							{"VirtualWareName" : "vtIronFerrule", "Count" : 15},
 							{"VirtualWareName" : "vtLeatherSheet", "Count" : 15},
 							{"VirtualWareName" : "vtHerbs", "Count" : 0},
 							{"VirtualWareName" : "vtBitinFrag", "Count" : 0}		
 						],
 				"Wares" : [ 
-							{"WareType" : "wtJewerly", "Count" : 1},
+							{"WareType" : "wtPig", "Count" : 1},
 							{"WareType" : "wtGold", "Count" : 3},
 							{"WareType" : "wtApple", "Count" : 5},
 							{"WareType" : "wtBoots", "Count" : 5}
@@ -623,7 +761,6 @@
 			"UnitType":"utBoat",
 			"CanAttackHouses" : false,
 			"CanAttackUnits" : false,
-			"CanOrderAmmo" : false,
 			"DescriptionID" : 1919,
 			"FullUnitAnimations": [
 				{"ActionType" : "uaWalk", "StartStep" : 13486, "StepsCount" : 15}
@@ -635,8 +772,8 @@
 			"CanAttackUnits" : true,
 			"CanOrderAmmo" : true,
 			"DescriptionID" : 1919,
-			"Attack" : 500,
-			"UnitDamage" : 5,
+			"Attack" : 200,
+			"UnitDamage" : 3,
 			"AttackHorse" : 0,
 			"HouseDamage" : 10,
 			"FullUnitAnimations": [
@@ -648,7 +785,7 @@
 	"School Order" : ["utSerf","utBuilder","utStoneMason","utWoodcutter","utCarpenter", "utClayPicker","utFisher","utFarmer","utBaker","utAnimalBreeder","utButcher","utMiner","utMetallurgist","utSmith","utOperator", "utRecruit"],
 	"SiegeWorkshop Order" : ["utBallista", "utCatapult", "utRam", "utWoodenWall"],
 	"Townhall Order" : ["utFighter", "utRebel", "utRogue", "utClubMan", "utVagabond", "utShieldBearer", "utBarbarian", "utWarrior"],
-	"Palace Order" : ["utFighter", "utTorchMan", "utMedic", "utArcher","utPaladin", "utSpy", "utTrainedWolf", "utAmmoCart", "utPikeMachine", "utSpikedTrap"],
+	"Palace Order" : ["utFighter", "utTorchMan", "utPyro", "utLekter", "utMedic", "utArcher","utPaladin", "utSpy", "utTrainedWolf", "utAmmoCart", "utPikeMachine", "utSpikedTrap"],
 	"Barracks Order" : ["utFighter", "utMilitia", "utAxefighter", "utSwordfighter", "utBowMan", "utCrossbowMan", "utLanceCarrier", "utPikeman", "utMaceFighter", "utFlailFighter", "utScout", "utKnight"],
 	"Shipyard Order" : ["utBoat","utShip", "utBattleShip"]
 }

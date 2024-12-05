@@ -5,7 +5,9 @@ interface
 uses
   Windows, Messages, Classes, Controls, Dialogs, Forms, StdCtrls, StrUtils, SysUtils,
   FileCtrl,
-  KM_Defaults, KM_Scripting, shellapi;
+  KM_Defaults,
+  KM_JsonData,
+   KM_Scripting, shellapi;
 
 type
   TKMFileOrFolder = (fof_None, fof_File, fof_Folder);

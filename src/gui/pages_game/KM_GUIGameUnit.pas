@@ -29,6 +29,7 @@ type
     procedure OnPanelExpanded(sender : TObject);
     procedure Unit_AssignToShipClick(sender : TObject);
     procedure Unit_FlagClicked(Sender : TObject);
+    procedure Boat_Clicked(Sender : TObject);
   protected
     Panel_Unit: TKMPanel;
       Image_PlayerFlag: TKMImage;
@@ -43,6 +44,9 @@ type
       Image_CondBar : TKMImage;
 
       Button_AssignToShip: TKMButton;
+      Button_Boat_Fish : TKMButton;
+      Button_Boat_Wares : TKMButton;
+
       Panel_Unit_Dismiss: TKMPanel;
          Label_Unit_Dismiss: TKMLabel;
          Button_Unit_DismissYes,Button_Unit_DismissNo: TKMButton;
@@ -52,7 +56,7 @@ type
         Button_Army_RotCW,Button_Army_Storm,Button_Army_RotCCW: TKMButton;
         Button_Army_ForUp,Button_Army_ForDown: TKMButton;
         Button_Army_Ammo : TKMButton;
-        Button_Ship_Unload : TKMButton;
+        Button_Ship_Unload, Button_Boat_Unload : TKMButton;
         ImageStack_Army: TKMImageStack;
         Button_Army_Split,Button_Army_Join,Button_Army_Feed: TKMButton;
         Label_Army_MembersCount: TKMLabel;
@@ -60,6 +64,9 @@ type
         Row_Attack,
         Row_Defence,
         Row_Ammo : TKMWaresRow;
+
+        Wares_Boat : TKMWaresButtonsMulti;
+        Units_Ship : TKMUnitsButtonsMulti;
 
 
       Panel_AmmoCart : TKMExpandPanel;
@@ -140,11 +147,18 @@ begin
     Image_CondBar.AlphaStep := 0;
     Image_CondBar.HighlightOnMouseOver := true;
 
-    Button_Unit_Dismiss   := TKMButton.Create(Panel_Unit,65,41,30,30,667, rxGui, bsGame);
+    Button_Unit_Dismiss   := TKMButton.Create(Panel_Unit,32,145,28,28,667, rxGui, bsGame);
     Button_Unit_Dismiss.OnClick := Dismiss_Click;
 
     Button_AssignToShip           := TKMButton.Create(Panel_Unit, 0, 145, 28, 28, 820, rxGui, bsGame);
     Button_AssignToShip.OnClick   := Unit_AssignToShipClick;
+
+    Button_Boat_Fish  := TKMButton.Create(Panel_Unit, 0, 145, 28, 28, 820, rxGuiMain, bsGame);
+    Button_Boat_Wares := TKMButton.Create(Panel_Unit, 0 + 30, 145, 28, 28, 820, rxGuiMain, bsGame);
+    Button_Boat_Fish.MobilHint := true;
+    Button_Boat_Wares.MobilHint := true;
+    Button_Boat_Fish.OnClick := Boat_Clicked;
+    Button_Boat_Wares.OnClick := Boat_Clicked;
 
     Label_UnitTask        := TKMLabel.Create(Panel_Unit,65,110,116,60,'',fntGrey,taLeft);
     Label_UnitTask.WordWrap := True;
@@ -183,6 +197,9 @@ begin
     Button_Ship_Unload := TKMButton.Create(Panel_Army,  0,  0, 56, 40, 821, rxGui, bsGame);
     Button_Ship_Unload.Hint := gResTexts[1961];
 
+    Button_Boat_Unload := TKMButton.Create(Panel_Army,  0,  0, 56, 40, 821, rxGui, bsGame);
+    Button_Boat_Unload.Hint := gResTexts[1961];
+
     Button_Army_RotCCW := TKMButton.Create(Panel_Army,  0, 46, 56, 40, 23, rxGui, bsGame);
     Button_Army_Storm  := TKMButton.Create(Panel_Army, 62, 46, 56, 40, 28, rxGui, bsGame);
     Button_Army_RotCW  := TKMButton.Create(Panel_Army,124, 46, 56, 40, 24, rxGui, bsGame);
@@ -212,6 +229,12 @@ begin
     Row_Defence.WareCount := 1;
     Row_Ammo.WareCount := 1;
 
+    Wares_Boat := TKMWaresButtonsMulti.Create(Panel_Army, 0, Button_Army_Feed.Bottom + 5, Panel_Army.Width, 150);
+    Wares_Boat.WarePlan.Reset;
+    Wares_Boat.MobilHint := true;
+
+    Units_Ship := TKMUnitsButtonsMulti.Create(Panel_Army, 0, Button_Army_Feed.Bottom + 5, Panel_Army.Width, 150);
+    Units_Ship.MobilHint := true;
 
     // All one-click-action (i.e. not attack, move, link up) army controls have a single procedure
     // that decides what to do based on Sender
@@ -228,7 +251,7 @@ begin
     Button_Army_Join.OnClickShift    := Army_Issue_Order;
     Button_Army_Feed.OnClickShift    := Army_Issue_Order;
     Button_Ship_Unload.OnClickShift := Army_Issue_Order;
-
+    Button_Boat_Unload.OnClick := Boat_Clicked;
     // Disable not working buttons
     Button_Army_GoTo.Hide;
     Button_Army_Attack.Hide;
@@ -253,6 +276,7 @@ procedure TKMGUIGameUnit.ShowDismissBtn;
 const
   DISMISS_PADDING = 32;
 begin
+  Exit;
   if Button_Unit_Dismiss.Visible then
   begin
     Image_CondBar.Top := 80;
@@ -291,8 +315,25 @@ begin
   Label_UnitName.Caption      := gRes.Units[aUnit.UnitType].GUIName;
   Image_UnitPic.TexID         := gRes.Units[aUnit.UnitType].GUIScroll;
   Image_UnitPic.FlagColor     := gHands[aUnit.Owner].FlagColor;
-  //Button_AssignToShip.Visible := gRes.Units[aUnit.UnitType].ShipWeight > 0;
+
+  Button_AssignToShip.Visible := (gRes.Units[aUnit.UnitType].ShipWeight > 0) or (aUnit.UnitType = utShip);
   Button_AssignToShip.Enabled := not aUnit.IsAssigningToShip;
+
+  Button_Boat_Fish.Visible := (aUnit.UnitType = utBoat);
+  Button_Boat_Wares.Visible := (aUnit.UnitType = utBoat);
+  Button_Boat_Unload.Visible := (aUnit.UnitType = utBoat);
+  Button_Boat_Fish.TexID := IfThen(TKMUnitWarriorBoat(aUnit).CanCollectFish, 33, 32);
+  Button_Boat_Wares.TexID := IfThen(TKMUnitWarriorBoat(aUnit).CanCollectWares, 33, 32);
+  if TKMUnitWarriorBoat(aUnit).CanCollectFish then
+    Button_Boat_Fish.Hint :=gResTexts[2042]
+  else
+    Button_Boat_Fish.Hint := gResTexts[2040];
+
+  if TKMUnitWarriorBoat(aUnit).CanCollectWares then
+    Button_Boat_Wares.Hint :=gResTexts[2043]
+  else
+    Button_Boat_Wares.Hint := gResTexts[2041];
+
   ConditionBar_Unit.Position  := aUnit.Condition / UNIT_MAX_CONDITION;
   Image_CondBar.AlphaStep := aUnit.Condition / UNIT_MAX_CONDITION;
   hLabelWidth := gRes.Fonts[fntOutline].GetTextSize(Label_UnitName.Caption).X;
@@ -316,6 +357,19 @@ begin
     end;
 
   end;
+
+
+  Wares_Boat.Visible := aUnit.UnitType = utBoat;
+  if Wares_Boat.Visible then
+  begin
+    Wares_Boat.WarePlan := TKMUnitWarriorBoat(aUnit).Wares;
+  end;
+
+  Units_Ship.Visible := aUnit.UnitType = utShip;
+  if Units_Ship.Visible then
+  begin
+    Units_Ship.UnitPlan := TKMUnitWarriorShip(aUnit).GetAllUnitsInside;
+  end;
 end;
 
 
@@ -325,6 +379,11 @@ var
 begin
   Assert(gMySpectator.Selected = aUnit);
 
+  if (aUnit = nil) or aUnit.IsDeadOrDying then
+  begin
+    Hide;
+    Exit;
+  end;
   fAskDismiss  := aAskDismiss;
 
   Panel_Unit.Show;
@@ -374,19 +433,27 @@ begin
   Label_UnitDescription.Visible := not Panel_Unit_Dismiss.Visible;
 
   Label_UnitDescription.Caption := gRes.Units[aUnit.UnitType].Description;
+
 end;
 
 
 procedure TKMGUIGameUnit.ShowGroupInfo(Sender: TKMUnitGroup; aAskDismiss: Boolean = False);
 var
   W: TKMUnitWarrior;
+  hasBarracks : Boolean;
 begin
   Assert(gMySpectator.Selected = Sender);
   Image_HPBar.Show;
 
-  fAskDismiss := aAskDismiss;
+  fAskDismiss := false;
 
   W := Sender.SelectedUnit;
+  if (W = nil) or W.IsDeadOrDying then
+  begin
+    Hide;
+    Exit;
+  end;
+
   Panel_Unit.Show;
 
   Show_Common(TKMUnit(W));
@@ -404,7 +471,36 @@ begin
     Army_HideJoinMenu(nil); // Cannot be joining while in combat/charging
 
   Label_UnitDescription.Hide;
-  Button_Unit_Dismiss.Visible := FEAT_DISMISS_GROUP_BTN and not fAskDismiss and not fJoiningGroups;
+  Button_Unit_Dismiss.Visible := W.Dismissable and not fJoiningGroups;
+
+  if W.IsDismissing
+    or W.DismissInProgress then //Check if we started dismiss process
+  begin
+    Button_Unit_Dismiss.TexID := 668;
+    Button_Unit_Dismiss.Hint := gResTexts[TX_UNIT_TASK_DISMISS_CANCEL_HINT];
+    Button_Unit_Dismiss.Enabled := W.IsDismissCancelAvailable;
+    Panel_Unit_Dismiss.Visible := False;
+  end else begin
+    hasBarracks := gMySpectator.Hand.Stats.GetHouseQty(htBarracks) > 0;
+
+    if fAskDismiss and not W.IsDismissAvailable then
+      fAskDismiss := False; //Hide dismiss panel if dismiss is not available anymore
+
+    Button_Unit_Dismiss.Enabled := not fAskDismiss and hasBarracks and not W.IsHungry and W.IsDismissAvailable;
+    Button_Unit_Dismiss.TexID := 667;
+
+    if not hasBarracks then
+      Button_Unit_Dismiss.Hint := gResTexts[TX_UNIT_TASK_DISMISS_NOSCHOOLS_HINT]
+    else if W.IsHungry then
+      Button_Unit_Dismiss.Hint := gResTexts[TX_UNIT_TASK_DISMISS_HUNGRY_HINT]
+    else if not W.IsDismissAvailable then
+      Button_Unit_Dismiss.Hint := gResTexts[TX_UNIT_TASK_DISMISS_NOT_AVAIL_HINT]
+    else
+      Button_Unit_Dismiss.Hint := gResTexts[TX_UNIT_TASK_DISMISS_HINT];
+
+    Panel_Unit_Dismiss.Visible := False; //Do not show dismiss confirmation anymore
+  end;
+
   Panel_Army.Visible := not fAskDismiss and not fJoiningGroups;
   Panel_Army_JoinGroups.Visible := not fAskDismiss and fJoiningGroups;
   Panel_Unit_Dismiss.Visible := FEAT_DISMISS_GROUP_BTN and fAskDismiss and not fJoiningGroups;
@@ -436,37 +532,6 @@ begin
     else
       Image_HPBar.TexID := 797;
 
-    {if W.InstantKill then
-      Label_Attack_Count.Caption    := gResTexts[1600] + gResTexts[1604]
-    else
-    begin
-      if W.AttackHorse > 0 then
-        Label_Attack_Count.Caption    := gResTexts[1600] + IntToStr(W.Attack) + '/'+ IntToStr(W.AttackHorse)
-      else
-        Label_Attack_Count.Caption    := gResTexts[1600] + IntToStr(W.Attack);
-
-    end;}
-
-    {case W.UnitType of
-      utMilitia, utAxeFighter, utScout,
-      utVagabond: Row_Attack.TexID := gRes.Wares[wtAxe].GuiIcon;
-      utSwordFighter, utKnight :  Row_Attack.TexID := gRes.Wares[wtSword].GuiIcon;
-
-      utCatapult,
-      utBallista,
-      utCrossbowMan :  Row_Attack.TexID := gRes.Wares[wtCrossbow].GuiIcon;
-
-      utRogue,
-      utBowMan :  Row_Attack.TexID := gRes.Wares[wtBow].GuiIcon;
-
-      utRebel,
-      utLanceCarrier :  Row_Attack.TexID := gRes.Wares[wtLance].GuiIcon;
-
-      utPikeMachine,
-      utPikeman :  Row_Attack.TexID := gRes.Wares[wtPike].GuiIcon;
-      utWarrior,
-      utBarbarian :  Row_Attack.TexID := 166;
-    end;}
     Row_Ammo.Caption := '';
     Row_Defence.Caption := '';
     Row_Attack.Caption := '';
@@ -511,8 +576,13 @@ end;
 
 procedure TKMGUIGameUnit.SendUnitDismissCommand;
 begin
-  gGame.GameInputProcess.CmdUnit(gicUnitDismiss, TKMUnit(gMySpectator.Selected));
-  TKMUnit(gMySpectator.Selected).DismissStarted; //Mark this unit as waiting for dismiss GIC command (so player see proper UI)
+  if (gMySpectator.Selected is TKMUnitGroup) then
+    gGame.GameInputProcess.CmdArmy(gicGroupDismiss, TKMUnitGroup(gMySpectator.Selected))
+  else
+  begin
+    gGame.GameInputProcess.CmdUnit(gicUnitDismiss, TKMUnit(gMySpectator.Selected));
+    TKMUnit(gMySpectator.Selected).DismissStarted; //Mark this unit as waiting for dismiss GIC command (so player see proper UI)
+  end;
 end;
 
 procedure TKMGUIGameUnit.OnPanelExpanded(sender: TObject);
@@ -534,9 +604,9 @@ begin
   begin
     // DISMISS UNIT
     fAskDismiss := False;
-    if isGroup then
-      TKMUnitGroup(gMySpectator.Selected).SelectedUnit.Kill(HAND_NONE, True, False) //Debug option
-    else
+    {if isGroup then
+      SendUnitDismissCommand//TKMUnitGroup(gMySpectator.Selected).SelectedUnit.Kill(HAND_NONE, True, False) //Debug option
+    else}
       SendUnitDismissCommand;
   end
   else
@@ -605,8 +675,15 @@ end;
 procedure TKMGUIGameUnit.Dismiss_Click(Sender: TObject);
 begin
   if gMySpectator.Selected is TKMUnitGroup then
-    ShowGroupInfo(TKMUnitGroup(gMySpectator.Selected), True)
-  else if gMySpectator.Selected is TKMUnit then
+  begin
+    ShowGroupInfo(TKMUnitGroup(gMySpectator.Selected), True);
+    if TKMUnitGroup(gMySpectator.Selected).IsDismissCancelAvailable then
+      gGame.GameInputProcess.CmdArmy(gicGroupDismissCancel, TKMUnitGroup(gMySpectator.Selected))
+    else
+      Unit_Dismiss( Button_Unit_DismissYes ); // Call for Dismiss task immidiately
+  end
+  else
+  if gMySpectator.Selected is TKMUnit then
   begin
     ShowUnitInfo(TKMUnit(gMySpectator.Selected), not TKMUnit(gMySpectator.Selected).IsDismissing);
     if TKMUnit(gMySpectator.Selected).IsDismissCancelAvailable then
@@ -764,6 +841,26 @@ procedure TKMGUIGameUnit.Unit_FlagClicked(Sender: TObject);
 begin
   if Assigned(fSelectNextUnit) then
     fSelectNextUnit;
+end;
+
+procedure TKMGUIGameUnit.Boat_Clicked(Sender: TObject);
+var U : TKMUnit;
+begin
+  if gMySpectator.Selected is TKMUnitGroup then
+  begin
+    U := TKMUnitGroup(gMySpectator.Selected).SelectedUnit;
+    If U.UnitType = utBoat then
+      If Sender = Button_Boat_Fish then
+        gGame.GameInputProcess.CmdUnit(gicBoatCollectFish, U)
+      else
+      If Sender = Button_Boat_Wares then
+        gGame.GameInputProcess.CmdUnit(gicBoatCollectWares, U)
+      else
+      If Sender = Button_Boat_Unload then
+        gGame.GameInputProcess.CmdUnit(gicBoatUnloadWares, U);
+  end;
+
+
 end;
 
 procedure TKMGUIGameUnit.KeyDown(Key: Word; Shift: TShiftState; var aHandled: Boolean);

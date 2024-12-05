@@ -204,7 +204,7 @@ begin
 end;
 
 procedure TKMMinimap.SaveAsScreenShot(aMapName: string);
-var I, K, J : Integer;
+var I : Integer;
   bmp : TBitmap;
   fileName, dateStr : String;
 

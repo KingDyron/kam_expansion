@@ -81,7 +81,7 @@ var I, top : Integer;
 begin
   inherited Create;
   fOnShow := aOnShow;
-  Pin_Open := TKMButtonFlatPin.Create(aParent, 198, 20, 25, 32, 756);
+  Pin_Open := TKMButtonFlatPin.Create(aParent, 198, 20, 25, 32, 314);
   Pin_Open.OnClick := ClosePanel;
   Pin_Open.Hint := gResTexts[1947];
   Panel_Guide := TKMPanel.Create(aParent, 240, 0, 500, 900);

@@ -87,7 +87,6 @@ type
     procedure DoAnimations(aAnimStep: Integer; aFOW: TKMFogOfWarCommon);
     procedure DoShadows(aFOW: TKMFogOfWarCommon);
     function VBOSupported: Boolean;
-    procedure RenderFence(aFence: TKMFenceKind; Pos: TKMDirection; pX,pY: Integer);
     procedure RenderMarkup(pX, pY: Word; aFieldType: TKMFieldType; aRoadType : TKMRoadType);
     procedure DoRenderTile(aTerrainId: Word; pX,pY,Rot: Integer; aDoBindTexture: Boolean; aUseTileLookup: Boolean;
                            DoHighlight: Boolean = False; HighlightColor: Cardinal = 0; aBlendingLvl: Byte = 0); overload;
@@ -99,6 +98,8 @@ type
     constructor Create;
     destructor Destroy; override;
     property ClipRect: TKMRect read fClipRect write fClipRect;
+    procedure RenderFence(aFence: TKMFenceKind; Pos: TKMDirection; pX,pY: Integer);
+
     procedure RenderBase(aAnimStep: Integer; aFOW: TKMFogOfWarCommon);
     procedure RenderFences(aFOW: TKMFogOfWarCommon);
     procedure RenderPlayerPlans(aFieldsList: TKMPointTagList; aHousePlansList: TKMPointDirList; aBridgesPlansList: TKMPointDirTagList);

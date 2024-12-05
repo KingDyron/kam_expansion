@@ -142,7 +142,7 @@ const
   //GUIHouseOrderPageHint: array[0..6] of Integer = (1649, 1650, 1651, 1652, 1653, 1654, 1655);
 
   // Layout of resources in Store
-  STORE_RES_COUNT = 58;
+  STORE_RES_COUNT = 59;
 
 
   {StoreResType: array [1..STORE_RES_COUNT] of TKMWareType =
@@ -178,7 +178,7 @@ const
      wtGoldOre,       wtIronOre,        wtBitinOre,       wtCoal,//ores
      //new line
      wtNone,
-     wtIron,          wtGold,           wtBitin,          wtJewerly,
+     wtIron,          wtGold,           wtBitin,          wtEgg,        wtJewerly,
 
      //new line
      wtNone,
@@ -229,12 +229,12 @@ const
   TownHall_Order: array [0..6] of TKMUnitType = (
     utRebel, utRogue, utClubMan, utVagabond, utShieldBearer, utBarbarian, utWarrior);
 
-  Soldiers_Order: array[0..30] of TKMUnitType = (
+  Soldiers_Order: array[0..32] of TKMUnitType = (
     utMilitia, utAxeFighter, utSwordFighter, utBowman, utCrossbowman,
     utLanceCarrier, utPikeman, utScout, utKnight,
     utClubMan, utMaceFighter, utFlailFighter,
     utRebel, utRogue, utVagabond, utBarbarian, utWarrior, utCatapult, utBallista, utRam, utAmmoCart, utPikeMachine,
-    utPaladin, utMedic, utArcher, utSpy, utTrainedWolf, utShip, utSpikedTrap,
+    utPaladin, utPyro, utLekter, utMedic, utArcher, utSpy, utTrainedWolf, utShip, utSpikedTrap,
     utGolem, utGiant);
 
   // Stats get stacked by UI logic (so that on taller screens they all were
@@ -277,7 +277,7 @@ const
     (HouseType: (htStore, htSchool, htInn, htMarket, htNone);                             UnitType: (utSerf, utBuilder))
     ); }
 
-  MapEd_Order: array [0..36] of TKMUnitType = (
+  MapEd_Order: array [0..38] of TKMUnitType = (
     utFighter, utMilitia, utAxeFighter, utSwordFighter, utBowman, utCrossbowman,
     utLanceCarrier, utPikeman, utScout, utKnight,
     utClubMan, utMaceFighter, utFlailFighter,
@@ -286,7 +286,7 @@ const
     utShieldBearer,
     utCatapult, utBallista, utRam,   utWoodenWall,
     utAmmoCart, utPikeMachine,
-    utTorchMan, utMedic, utPaladin, utArcher, utSpy, utTrainedWolf, utSpikedTrap,
+    utTorchMan, utPyro, utLekter, utMedic, utPaladin, utArcher, utSpy, utTrainedWolf, utSpikedTrap,
     utBoat, utShip, utBattleShip, utGolem, utGiant);
 
   MapEd_Icon: array [0..26] of Word = (
@@ -321,6 +321,8 @@ const
   BUTTON_BLOCK_WARE_TRADE_TAG_2 = 4;
   BUTTON_BLOCK_UNIT_TAG_2 = 5;
   BUTTON_BLOCK_FIELD_TAG_2 = 6;
+  BUTTON_BLOCK_STRUCT_TAG_2 = 7;
+  BUTTON_BLOCK_DECOR_TAG_2 = 8;
 
 implementation
 uses

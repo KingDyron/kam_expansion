@@ -228,6 +228,19 @@ const
   procedure Inc(var X: Word; A : Word = 1); overload;
   procedure Inc(var X: Single; A : Single = 1); overload;
 
+  procedure Dec(var X: SmallInt; A : SmallInt = 1); overload;
+  procedure Dec(var X: ShortInt; A : ShortInt = 1); overload;
+  procedure Dec(var X: Int64; A : Int64 = 1); overload;
+  procedure Dec(var X: Integer; A : Integer = 1); overload;
+  procedure Dec(var X: Cardinal; A : Cardinal = 1); overload;
+  procedure Dec(var X: Byte; A : Byte = 1); overload;
+  procedure Dec(var X: Word; A : Word = 1); overload;
+  procedure Dec(var X: Single; A : Single = 1); overload;
+  function IsFileInUse(aPath : String) : Boolean;
+
+  function ToCell(A : Integer) : Single;//pixels / 40;
+  function ToPixels(A : Single) : Integer;//cels * 40
+
 implementation
 uses
   StrUtils, Types, UITypes,
@@ -237,7 +250,7 @@ uses
 
 const
   //Pretend these are understandable in any language
-  MAP_SIZES: array [TKMMapSize] of String = ('???', 'XS', 'S', 'M', 'L', 'XL', 'XXL');
+  MAP_SIZES: array [TKMMapSize] of String = ('???', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'G');
 
 var
   fKaMSeed: Integer;
@@ -631,6 +644,7 @@ begin
     128*128+1..176*176: Result := msL;
     176*176+1..224*224: Result := msXL;
     224*224+1..320*320: Result := msXXL;
+    320*320+1..512*512: Result := msXXL;
     else                Result := msNone;
   end;
 end;
@@ -2289,46 +2303,57 @@ begin
   Result := aObject = nil;
 end;
 
-procedure Inc(var X: SmallInt; A : SmallInt = 1);
+procedure Inc(var X: SmallInt; A : SmallInt = 1); begin  X := X + A; end;
+procedure Inc(var X: ShortInt; A : ShortInt = 1); begin  X := X + A; end;
+procedure Inc(var X: Int64; A : Int64 = 1); begin  X := X + A; end;
+procedure Inc(var X: Integer; A : Integer = 1); begin  X := X + A; end;
+procedure Inc(var X: Cardinal; A : Cardinal = 1); begin  X := X + A; end;
+procedure Inc(var X: Byte; A : Byte = 1); begin  X := X + A; end;
+procedure Inc(var X: Word; A : Word = 1); begin X := X + A; end;
+procedure Inc(var X: Single; A : Single = 1); begin X := X + A; end;
+
+procedure Dec(var X: SmallInt; A : SmallInt = 1); begin  X := X - A; end;
+procedure Dec(var X: ShortInt; A : ShortInt = 1); begin  X := X - A; end;
+procedure Dec(var X: Int64; A : Int64 = 1); begin  X := X - A; end;
+procedure Dec(var X: Integer; A : Integer = 1); begin  X := X - A; end;
+procedure Dec(var X: Cardinal; A : Cardinal = 1); begin  X := X - A; end;
+procedure Dec(var X: Byte; A : Byte = 1); begin  X := X - A; end;
+procedure Dec(var X: Word; A : Word = 1); begin X := X - A; end;
+procedure Dec(var X: Single; A : Single = 1); begin X := X - A; end;
+
+function IsFileInUse(aPath: string) : Boolean;
+var
+  HFileRes: HFILE;
 begin
-  X := X + A;
+  Result := False;
+  if not FileExists(aPath) then begin
+    Exit;
+  end;
+
+  HFileRes := CreateFile(PChar(aPath)
+    ,GENERIC_READ or GENERIC_WRITE
+    ,0
+    ,nil
+    ,OPEN_EXISTING
+    ,FILE_ATTRIBUTE_NORMAL
+    ,0);
+
+  Result := (HFileRes = INVALID_HANDLE_VALUE);
+
+  if not(Result) then begin
+    CloseHandle(HFileRes);
+  end;
 end;
 
-procedure Inc(var X: ShortInt; A : ShortInt = 1);
+
+function ToCell(A : Integer) : Single;
 begin
-  X := X + A;
+  Result := A / 40;
 end;
 
-procedure Inc(var X: Int64; A : Int64 = 1);
+function ToPixels(A : Single) : Integer;
 begin
-  X := X + A;
+  Result := Round(A * 40);
 end;
-
-procedure Inc(var X: Integer; A : Integer = 1);
-begin
-  X := X + A;
-end;
-
-
-procedure Inc(var X: Cardinal; A : Cardinal = 1);
-begin
-  X := X + A;
-end;
-
-procedure Inc(var X: Byte; A : Byte = 1);
-begin
-  X := X + A;
-end;
-
-procedure Inc(var X: Word; A : Word = 1);
-begin
-  X := X + A;
-end;
-
-procedure Inc(var X: Single; A : Single = 1);
-begin
-  X := X + A;
-end;
-
 
 end.

@@ -32,12 +32,12 @@ object FormMain: TFormMain
     Height = 20
     Panels = <
       item
-        Text = 'KMR r7000+ / OpenGL 4.0.0 - Build 9.99.99.99999'
-        Width = 275
-      end
-      item
         Text = 'Map size: 999x999'
         Width = 110
+      end
+      item
+        Text = 'KMR r7000+ / OpenGL 4.0.0 - Build 9.99.99.99999'
+        Width = 275
       end
       item
         Text = 'Cursor: 1999:1999'
@@ -82,13 +82,14 @@ object FormMain: TFormMain
     ParentDoubleBuffered = False
     TabOrder = 1
     object cpMisc: TCategoryPanel
-      Top = 385
+      Top = 581
       Height = 24
       Caption = 'Misc'
       Collapsed = True
       TabOrder = 0
       OnCollapse = cpCollapseChanged
       OnExpand = cpCollapseChanged
+      ExplicitTop = 385
       ExpandedHeight = 144
       object chkBevel: TCheckBox
         Left = 168
@@ -126,13 +127,14 @@ object FormMain: TFormMain
       end
     end
     object cpLogs: TCategoryPanel
-      Top = 361
+      Top = 557
       Height = 24
       Caption = 'Logs'
       Collapsed = True
       TabOrder = 1
       OnCollapse = cpCollapseChanged
       OnExpand = cpCollapseChanged
+      ExplicitTop = 361
       ExpandedHeight = 198
       object chkLogCommands: TCheckBox
         Left = 120
@@ -237,7 +239,7 @@ object FormMain: TFormMain
       end
     end
     object cpGraphicTweaks: TCategoryPanel
-      Top = 337
+      Top = 533
       Height = 24
       Caption = 'Graphic tweaks'
       Collapsed = True
@@ -246,6 +248,7 @@ object FormMain: TFormMain
       TabOrder = 2
       OnCollapse = cpCollapseChanged
       OnExpand = cpCollapseChanged
+      ExplicitTop = 337
       ExpandedHeight = 168
       object Label1: TLabel
         Left = 101
@@ -381,13 +384,14 @@ object FormMain: TFormMain
       end
     end
     object cpUserInreface: TCategoryPanel
-      Top = 313
+      Top = 509
       Height = 24
       Caption = 'User Interface'
       Collapsed = True
       TabOrder = 3
       OnCollapse = cpCollapseChanged
       OnExpand = cpCollapseChanged
+      ExplicitTop = 313
       ExpandedHeight = 114
       object chkUIControlsBounds: TCheckBox
         Left = 8
@@ -454,20 +458,20 @@ object FormMain: TFormMain
       end
     end
     object cpPerfLogs: TCategoryPanel
-      Top = 289
+      Top = 485
       Height = 24
       Caption = 'Perf Logs'
       Collapsed = True
       TabOrder = 4
       OnCollapse = cpCollapseChanged
       OnExpand = cpCollapseChanged
+      ExplicitTop = 289
       ExpandedHeight = 660
     end
     object cpAI: TCategoryPanel
       Top = 265
-      Height = 24
+      Height = 220
       Caption = 'AI'
-      Collapsed = True
       TabOrder = 5
       OnCollapse = cpCollapseChanged
       OnExpand = cpCollapseChanged
@@ -691,6 +695,24 @@ object FormMain: TFormMain
         TabOrder = 20
         Value = 0
         OnChange = ControlsUpdate
+      end
+      object btStartRecording: TButton
+        Left = 8
+        Top = 174
+        Width = 89
+        Height = 21
+        Caption = 'Start Recording'
+        TabOrder = 21
+        OnClick = btStartRecordingClick
+      end
+      object btSaveRecording: TButton
+        Left = 152
+        Top = 174
+        Width = 90
+        Height = 21
+        Caption = 'Save Recording'
+        TabOrder = 22
+        OnClick = btSaveRecordingClick
       end
     end
     object cpScripting: TCategoryPanel

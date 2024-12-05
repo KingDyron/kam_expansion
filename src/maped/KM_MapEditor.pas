@@ -49,6 +49,7 @@ type
     procedure PaintRevealFOW(aLayer: TKMPaintLayer);
     procedure PaintCenterScreen(aLayer: TKMPaintLayer);
     procedure PaintAIStart(aLayer: TKMPaintLayer);
+    procedure SetRandomRes;
 
     procedure UpdateMapEdCursorParams(aMode: TKMChangeDefenceTypeMode; aDirInc: Integer = 1);  //change units and def pos direction
 
@@ -690,6 +691,47 @@ begin
     end;
 end;
 
+procedure TKMMapEditor.SetRandomRes;
+var
+  P: TKMPoint;
+  H : TKMHouse;
+  I, C, lC, hC : Integer;
+  WT : TKMWareType;
+begin
+  P := gCursor.Cell;
+  H := gHands.HousesHitTest(P.X, P.Y);
+
+  if not H.IsValid(htAny, false, true) then
+    Exit;
+  lC := gCursor.MapEd_WaresMinCount;
+  hC := gCursor.MapEd_WaresMaxCount;
+
+  for I := 1 to WARES_IN_OUT_COUNT do
+  begin
+
+    WT := H.WareInput[I];
+    if not (WT in [wtNone ,wtAll, wtFood, wtWarfare]) then
+    begin
+      if gCursor.MapEd_WaresRandomCount and (lC < 6) then
+        C := lC + KaMRandom( IfThen(hc = 6, H.GetMaxInWare, hc) - lC + 1, 'TKMMapEditor.SetRandomRes 1')
+      else
+        C := IfThen(lC = 6, H.GetMaxOutWare, lc);
+      H.ResIn[I] := C;
+    end;
+
+    WT := H.WareOutput[I];
+    if not (WT in [wtNone ,wtAll, wtFood, wtWarfare]) then
+    begin
+      if gCursor.MapEd_WaresRandomCount and (lC < 6) then
+        C := lC + KaMRandom( IfThen(hc = 6, H.GetMaxOutWare, hc) - lC + 1, 'TKMMapEditor.SetRandomRes 1')
+      else
+        C := IfThen(lC = 6, H.GetMaxOutWare, lc);
+      H.ResOut[I] := C;
+    end;
+    
+  end;
+
+end;
 
 procedure TKMMapEditor.UpdateMapEdCursorParams(aMode: TKMChangeDefenceTypeMode; aDirInc: Integer = 1);
 begin
@@ -776,6 +818,7 @@ begin
                       fLastErasedObjectLoc := KMPOINT_INVALID_TILE;
                       fLastRemoveTxID := -1;
                     end;
+      cmChangeResCount:   SetRandomRes;
   end;
 end;
 
@@ -930,6 +973,7 @@ begin
                   end;
     cmPaintBucket:      ChangeOwner(ssShift in gCursor.SState);
     cmUniversalEraser:  EraseObject(ssShift in gCursor.SState);
+    cmChangeResCount:   SetRandomRes;
     cmHouses:    if (ssShift in gCursor.SState) then
                   if TKMHouseType(gCursor.Tag1) in WALL_HOUSES then
                     if gMySpectator.Hand.CanAddHousePlan(P, TKMHouseType(gCursor.Tag1)) then

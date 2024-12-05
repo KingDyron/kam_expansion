@@ -91,7 +91,7 @@ begin
   for I := 0 to high(Button_Tutorial) do
     Button_Tutorial[I].Hide;
 
-  gRes.JsonData.RefreshTutorials;
+  //gRes.JsonData.RefreshTutorials; //no need to refresh list of tutorials
   K := 0;
   if fIsBattle then
   begin
@@ -106,7 +106,7 @@ begin
       if K > high(Button_Tutorial) then //add new button if needed
       begin
         SetLength(Button_Tutorial, K + 1);
-        Button_Tutorial[K] := TKMButton.Create(Panel_Tutorials, 337, 200 + 40 * K, 350, 30, '', bsPaper2);
+        Button_Tutorial[K] := TKMButton.Create(Panel_Tutorials, 337, 200 + 40 * K, 350, 30, '', bsPaper);
         Button_Tutorial[K].Font := fntOutline;
       end;
       Button_Tutorial[K].Caption := mapInfo.MapName;
@@ -121,14 +121,14 @@ begin
   begin
     S := gRes.JsonData.GetTutorialPath(I);
     name := Copy(TPath.GetFileName(S), 1, length(TPath.GetFileName(S)) - 4 );
-
+    S := TPath.GetDirectoryName(S);
     mapInfo := TKMMapInfo.Create(ExeDir + TPath.GetDirectoryName(S) + PathDelim,
                                  name, true);
 
     if K > high(Button_Tutorial) then //add new button if needed
     begin
       SetLength(Button_Tutorial, K + 1);
-      Button_Tutorial[K] := TKMButton.Create(Panel_Tutorials, 337, 200 + 40 * K, 350, 30, '', bsPaper2);
+      Button_Tutorial[K] := TKMButton.Create(Panel_Tutorials, 337, 200 + 40 * K, 350, 30, '', bsPaper);
       Button_Tutorial[K].Font := fntOutline;
     end;
     Button_Tutorial[K].Caption := mapInfo.MapName;
@@ -199,13 +199,13 @@ begin
     S := gRes.JsonData.GetBattleTutorialPath(I);
 
     if Assigned(OnNewSingleMap) then
-      OnNewSingleMap(ExeDir + PathDelim + S, gRes.JsonData.BattleTutorial[I]);
+      OnNewSingleMap(ExeDir + S, gRes.JsonData.BattleTutorial[I]);
   end else
   begin
     S := gRes.JsonData.GetTutorialPath(I);
 
     if Assigned(OnNewSingleMap) then
-      OnNewSingleMap(ExeDir + PathDelim + S, gRes.JsonData.Tutorial[I]);
+      OnNewSingleMap(ExeDir + S, gRes.JsonData.Tutorial[I]);
 
   end;
 

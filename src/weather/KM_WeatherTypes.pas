@@ -29,7 +29,9 @@ type
   end;
 
 
-  TKMWeatherType = (wtNone, wtRain, wtStorm, wtSnow, wtSnowyStorm);
+  TKMWeatherType = (wtNone, wtCloudy1, wtCloudy2, wtRain, wtStorm, wtSnow, wtSnowyStorm, wtSandStorm1, wtSandStorm2);
+
+  TKMWeatherState = (wsStart, wsLoop, wsEnd);
 
 implementation
 

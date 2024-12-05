@@ -24,6 +24,7 @@ type
     LoadFullFonts: Boolean;
     InterpolatedRender: Boolean;
     AllowSnowHouses: Boolean;
+    AllowSnowObjects: Boolean;
     property InterpolatedAnimations: Boolean read GetInterpolatedAnimations write fInterpolatedAnimations;
     property Brightness: Byte read fBrightness write SetBrightness;
   end;
@@ -175,6 +176,7 @@ type
     GFX: TKMSettingsGFX;
     SFX: TKMSettingsSFX;
     Video: TKMSettingsVideo;
+    Weather: TKMSettingsWeather;
 
     constructor Create;
     destructor Destroy; override;
@@ -437,6 +439,7 @@ var
   nSFX,
   nMusic,
   nVideo,
+  nWeather,
   nGameCommon,
     nGameAutosave,
     nGameSavePoints,
@@ -486,6 +489,20 @@ begin
     Video.VideoStretch := nVideo.Attributes['Stretch'].AsBoolean(True);
     Video.PlayOnStartup := nVideo.Attributes['Startup'].AsBoolean(True);
     Video.VideoVolume  := nVideo.Attributes['Volume'].AsFloat(0.5);
+
+  // Weather
+  nWeather := nGameSettings.AddOrFindChild('Weather');
+    Weather.Enabled             := nWeather.Attributes['Enabled'].AsBoolean(true); //Disabled by default
+    Weather.MaxCount            := nWeather.Attributes['MaxCount'].AsInteger(10);
+    Weather.MaxSpawnCount       := nWeather.Attributes['MaxSpawnCount'].AsInteger(4);
+    Weather.MinInterval         := nWeather.Attributes['MinInterval'].AsInteger(100);
+    Weather.MaxInterval         := nWeather.Attributes['MaxInterval'].AsInteger(600);
+    Weather.MaxLifeTime         := nWeather.Attributes['MaxLifeTime'].AsInteger(600);
+    Weather.MaxCloudSpeed       := nWeather.Attributes['MaxCloudSpeed'].AsFloat(0.05);
+    Weather.DecParticles        := nWeather.Attributes['DecParticles'].AsInteger(0);
+    Weather.NightSpeed          := nWeather.Attributes['NightSpeed'].AsInteger(10);
+    Weather.NightTime           := nWeather.Attributes['NightTime'].AsInteger(0);
+    Weather.DynamicLight        := nWeather.Attributes['DynamicLight'].AsBoolean(true);
 
   // GameCommon
   nGameCommon := nGameSettings.AddOrFindChild('GameCommon');
@@ -553,6 +570,7 @@ begin
     // Tweaks
     nGameTweaks := nGameCommon.AddOrFindChild('Tweaks');
       GFX.AllowSnowHouses         := nGameTweaks.Attributes['AllowSnowHouses'].AsBoolean(True);
+      GFX.AllowSnowObjects         := nGameTweaks.Attributes['AllowSnowObjects'].AsBoolean(True);
       GFX.InterpolatedRender      := nGameTweaks.Attributes['InterpolatedRender'].AsBoolean(False);
       GFX.InterpolatedAnimations  := nGameTweaks.Attributes['InterpolatedAnimations'].AsBoolean(False);
 
@@ -649,6 +667,7 @@ var
   nSFX,
   nMusic,
   nVideo,
+  nWeather,
   nGameCommon,
     nGameAutosave,
     nGameSavePoints,
@@ -703,6 +722,20 @@ begin
     nVideo.Attributes['Startup']  := Video.PlayOnStartup;
     nVideo.Attributes['Volume']   := Video.VideoVolume;
 
+  // Weather
+  nWeather := nGameSettings.AddOrFindChild('Weather');
+    nWeather.Attributes['Enabled']        := Weather.Enabled;
+    nWeather.Attributes['MaxCount']       := Weather.MaxCount;
+    nWeather.Attributes['MaxSpawnCount']  := Weather.MaxSpawnCount;
+    nWeather.Attributes['MinInterval']    := Weather.MinInterval;
+    nWeather.Attributes['MaxInterval']    := Weather.MaxInterval;
+    nWeather.Attributes['MaxLifeTime']    := Weather.MaxLifeTime;
+    nWeather.Attributes['MaxCloudSpeed']  := Weather.MaxCloudSpeed;
+    nWeather.Attributes['DecParticles']   := Weather.DecParticles;
+    nWeather.Attributes['NightSpeed']     := Weather.NightSpeed;
+    nWeather.Attributes['NightTime']      := Weather.NightTime;
+    nWeather.Attributes['DynamicLight']   := Weather.DynamicLight;
+
   // GameCommon
   nGameCommon := nGameSettings.AddOrFindChild('GameCommon');
     nGameCommon.Attributes['Locale'] := UnicodeString(fLocale);
@@ -755,6 +788,7 @@ begin
     // Tweaks
     nGameTweaks := nGameCommon.AddOrFindChild('Tweaks');
       nGameTweaks.Attributes['AllowSnowHouses']         := GFX.AllowSnowHouses;
+      nGameTweaks.Attributes['AllowSnowObjects']         := GFX.AllowSnowObjects;
       nGameTweaks.Attributes['InterpolatedRender']      := GFX.InterpolatedRender;
       nGameTweaks.Attributes['InterpolatedAnimations']  := GFX.InterpolatedAnimations;
 

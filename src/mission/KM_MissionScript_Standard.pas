@@ -52,7 +52,7 @@ uses
   KM_UnitsCollection, KM_UnitWarrior,
   KM_HouseCollection, KM_HouseBarracks, KM_HouseStore,
   KM_AI,
-  KM_Resource, KM_ResHouses, KM_ResUnits, KM_ResWares,
+  KM_Resource, KM_ResHouses, KM_ResUnits, KM_ResWares, KM_ResMapElements,
   KM_CommonClasses, KM_CommonTypes, KM_Terrain,
   KM_HandTypes,
   KM_CommonExceptions,
@@ -1124,7 +1124,6 @@ begin
    ctSetBlockField: if fLastHand <> HAND_NONE then
                      begin
                       gHands[fLastHand].Locks.SetFieldLocked(TKMLockFieldType(P[0]), true);
-
                      end;
     ctAnimalSpawner:  begin
                         gHands.PlayerAnimals.AddSpawner(KMPoint(P[0], P[1]), P[2], P[3], P[4], []);
@@ -1132,6 +1131,56 @@ begin
     ctAddAnimalTypeToSpawner:   begin
                                   gHands.PlayerAnimals.AddAnimalTypeToLastSpawner(UNIT_ID_TO_TYPE[P[0]]);
                                 end;
+    ctAddUnitToShip: begin
+                      If (fLastTroop <> nil) and (fLastTroop.FlagBearer.UnitType = utShip) then
+                      begin
+                        TKMUnitWarriorShip(fLastTroop.FlagBearer).AddMapEdUnit(UNIT_ID_TO_TYPE[P[0]], P[1], P[2], P[3], P[4]);
+                      end else
+                      AddError('ctAddUnitToShip without prior declaration of Group');
+                     end;
+    ctAddWareToBoat: begin
+                      If (fLastTroop <> nil) and (fLastTroop.FlagBearer.UnitType = utBoat) then
+                      begin
+                        TKMUnitWarriorBoat(fLastTroop.FlagBearer).AddWare(WARE_ID_TO_TYPE[P[0]], P[1]);
+                      end else
+                      AddError('ctAddWareToBoat without prior declaration of Group');
+                     end;
+
+   ctBlockStructure: if fLastHand <> HAND_NONE then
+                     begin
+                      gHands[fLastHand].Locks.Structures[P[0]] := TKMHandUnitLock(P[1]);
+                     end;
+   ctBlockDecoration: if fLastHand <> HAND_NONE then
+                     begin
+                      gHands[fLastHand].Locks.Decoration[P[0]] := TKMHandUnitLock(P[1]);
+                     end;
+   ctSetHouseFlagColor:  if fLastHand <> HAND_NONE then
+                         begin
+                            if (fLastHouse <> nil) then
+                              fLastHouse.FlagColor := StrToInt64('$' + String(TextParam))
+                            else
+                              AddError('ct_SetHouseFlagColor without prior declaration of House');
+                         end;
+   ctSetHouseIndestructible:    if fLastHand <> HAND_NONE then
+                               begin
+                                  if (fLastHouse <> nil) then
+                                    fLastHouse.Indestructible := true
+                                  else
+                                    AddError('ct_SetHouseFlagColor without prior declaration of House');
+                               end;
+    ctSetUnitImmortal:  if fLastHand <> HAND_NONE then
+                       begin
+                          if fLastTroop <> nil then
+                          begin
+                            for I := 0 to fLastTroop.Count - 1 do
+                              fLastTroop.Members[I].Immortal := true;
+                          end else
+                          if fLastUnit <> nil then
+                            fLastUnit.Immortal := true
+                          else
+                            gHands[fLastHand].NeverHungry := true;
+
+                       end;
    end;
 end;
 
@@ -1147,6 +1196,7 @@ var
   WT: TKMWareType;
   G: TKMGroupType;
   U: TKMUnit;
+  W : TKMUnitWarrior;
   UT: TKMUnitType;
   H: TKMHouse;
   group: TKMUnitGroup;
@@ -1374,7 +1424,6 @@ begin
       if gHands[I].Locks.FieldLocked(FT) then
         AddCommand(ctSetBlockField, [byte(FT)]);
 
-
     for K := 0 to gHands[I].AI.General.Attacks.Count - 1 do
       with gHands[I].AI.General.Attacks[K] do
       begin
@@ -1435,6 +1484,15 @@ begin
       AddCommand(ctSetPLayerWorkless, [gHands[I].Workless]);
     if gHands[I].NeverHungry then
       AddCommand(ctSetNeverHungry, []);
+
+    for K := 0 to gRes.Structures.Count - 1 do
+      if gHands[I].Locks.Structures[K] <> ulUnlocked then
+        AddCommand(ctBlockStructure, [K, byte(gHands[I].Locks.Structures[K])]);
+
+    for K := 0 to high(gDecorations) do
+      if gHands[I].Locks.Decoration[K] <> ulUnlocked then
+        AddCommand(ctBlockDecoration, [K, byte(gHands[I].Locks.Decoration[K])]);
+
 
     if length(gHands[I].ShowMessage) > 0 then
       for K := 0 to High(gHands[I].ShowMessage) do
@@ -1542,6 +1600,11 @@ begin
             if TKMHouseMerchant(H).SendToHand[J] then
               AddCommand(ctSetMerchantPlayer, [J]);
 
+        if H.FlagColor > 0 then
+          AddCommand(ctSetHouseFlagColor, AnsiString(IntToHex(H.FlagColor)), []);
+        if H.Indestructible then
+          AddCommand(ctSetHouseIndestructible, []);
+
 
       end;
     end;
@@ -1596,6 +1659,8 @@ begin
           AddCommand(ctSetNeverHungry, []);
         if U.FlagColor > 0 then
           AddCommand(ctSetEntityColor, AnsiString(IntToHex(U.FlagColor)), []);
+        if U.Immortal then
+          AddCommand(ctSetUnitImmortal, []);
 
       end;
     end;
@@ -1624,6 +1689,9 @@ begin
       if group.NeverHungry then
         AddCommand(ctSetNeverHungry, []);
 
+      if group.FlagBearer.Immortal then
+        AddCommand(ctSetUnitImmortal, []);
+
       if group.FlagBearer.InfinityAmmo then
         AddCommand(ctSetUnitInfiniteAmmo, []);
       if group.FlagBearer.FlagColor > 0 then
@@ -1631,6 +1699,29 @@ begin
 
       if group.FlagBearer.BitinAdded then
           AddCommand(ctSetGroupBitin, [] );
+
+      if group.FlagBearer.UnitType = utBoat then
+      begin
+        W := group.FlagBearer;
+        with TKMUnitWarriorBoat(W) do
+          for J := 0 to Wares.Count - 1 do
+            if (Wares[J].W <> wtNone) and (Wares[J].C > 0) then
+            AddCommand(ctAddWareToBoat, [WARE_TY_TO_ID[Wares[J].W], Wares[J].C] );
+      end;
+
+      if group.FlagBearer.UnitType = utShip then
+      begin
+        W := group.FlagBearer;
+        with TKMUnitWarriorShip(W) do
+          for J := 0 to MapEdUnitsCount - 1 do
+            if MapEdUnits[J].Valid then
+            AddCommand(ctAddUnitToShip, [UNIT_TYPE_TO_ID[MapEdUnits[J].UnitType],
+                                          MapEdUnits[J].Condition,
+                                          MapEdUnits[J].BoltCount,
+                                          MapEdUnits[J].Count,
+                                          MapEdUnits[J].Columns
+                                          ] );
+      end;
     end;
 
 

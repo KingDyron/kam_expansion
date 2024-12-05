@@ -263,7 +263,7 @@ begin
       Shape_PlayerColor.Caption := IntToStr(G.HandIndex + 1);
       Edit_PlayerName.SetTextSilently(gHands[G.HandIndex].OwnerName);
       if Edit_BuildingType.Visible then
-        Edit_BuildingType.Text := gResTexts[HOUSE_GUI_TAB_ORDER[G.BuldingsType].TextID];
+        Edit_BuildingType.Text := gResTexts[HOUSE_VICTORY_ORDER[G.BuldingsType].TextID];
 
     end;
   end;

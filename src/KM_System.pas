@@ -86,8 +86,8 @@ const
   SF = 17; //Full width/height of a scroll cursor
   SH = 8; //Half width/height of a scroll cursor
   // Measured manually
-  CURSOR_OFFSET_X: array [TKMCursorImageType] of Integer = (0,0,20, 0, 0,-8, 9,0, 1,1,1,0,-1,-1,-1,0, SH,SF,SF,SF,SH, 0, 0,0, 0,0,0,27,0);
-  CURSOR_OFFSET_Y: array [TKMCursorImageType] of Integer = (0,9,10,18,20,44,13,0,-1,0,1,1, 1, 0,-1,0, 0 ,0 ,SH,SF,SF,SF,SH,0,28,0,0,28,0);
+  CURSOR_OFFSET_X: array [TKMCursorImageType] of Integer = (0,0,20, 0, 0,-8, 9,0, 1,1,1,0,-1,-1,-1,0, SH,SF,SF,SF,SH, 0, 0,0, 0,0,0,27, 21,0);
+  CURSOR_OFFSET_Y: array [TKMCursorImageType] of Integer = (0,9,10,18,20,44,13,0,-1,0,1,1, 1, 0,-1,0, 0 ,0 ,SH,SF,SF,SF,SH,0,28,0,0,28, 29, 0);
 
   CUSTOM_CUR_FILENAME: array[0..CUSTOM_CUR_CNT-1] of UnicodeString = ('cur1.ani');
 var
@@ -107,7 +107,7 @@ begin
   bm  := TBitmap.Create; bm.HandleType  := bmDIB; bm.PixelFormat  := pf32bit;
   bm2 := TBitmap.Create; bm2.HandleType := bmDIB; bm2.PixelFormat := pf32bit;
 
-  for C := Low(TKMCursorImageType) to kmcPaintBucket do
+  for C := Low(TKMCursorImageType) to kmcChangeResCount do
   begin
     // Special case for invisible cursor
     if C = kmcInvisible then

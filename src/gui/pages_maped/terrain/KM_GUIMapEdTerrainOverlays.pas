@@ -58,7 +58,8 @@ const
                              1708, 1709,
                              1710, 1711,
                              1712,
-                             0, 0, 0, 0, 0, 0, 0, 0);
+                             0, 0, 0, 0, 0, 0, 0, 0,
+                             2110);
   {TKMTileOverlay = (toNone, toDig1, toDig2, toDig3, toDig4, toRoad, toCoal1, toCoal2, toCoal3, toCoal4, toCoal5,
                     toClay1, toClay2, toClay3, toClay4, toClay5,
                     toFence1, toFence2, toFence3, toFence4, toFence5, toFence6, toInfinity);}

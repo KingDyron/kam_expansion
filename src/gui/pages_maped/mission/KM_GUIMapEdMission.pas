@@ -61,7 +61,7 @@ begin
 
   for MT := Low(TKMMissionTab) to High(TKMMissionTab) do
   begin
-    Button_Mission[MT] := TKMButton.Create(Panel_Mission, 9 + SMALL_PAD_W * Byte(MT), 0, SMALL_TAB_W, SMALL_TAB_H,  TAB_GLYPH[MT], rxGui, bsPaper2);
+    Button_Mission[MT] := TKMButton.Create(Panel_Mission, 9 + SMALL_PAD_W * Byte(MT), 0, SMALL_TAB_W, SMALL_TAB_H,  TAB_GLYPH[MT], rxGui, bsPaper);
     Button_Mission[MT].OnClick := PageChange;
   end;
 

@@ -59,6 +59,8 @@ type
     function ParseTextMarkup(const aText: UnicodeString; aParams: array of const): UnicodeString; overload;
     function HasText(aIndex: Word): Boolean;
     property Texts[aIndex: Word]: UnicodeString read GetTexts; default;
+    procedure SetText(aLocale, aIndex: Word; aText : UnicodeString);
+    function GetText(aLocale, aIndex: Word) : UnicodeString;
     // Unfortunally Lazarus could not compile constructions like:
     // - 2 properties with the same name
     // - 2 default properties
@@ -70,6 +72,8 @@ type
     property ForceDefaultLocale: Boolean read fForceDefaultLocale write fForceDefaultLocale;
     procedure Save(aStream: TKMemoryStream);
     procedure Load(LoadStream: TKMemoryStream);
+
+    procedure SaveToFile(aMissionPath : String);
   end;
 
 
@@ -147,7 +151,7 @@ begin
   // No strings were found
   if topId = -1 then Exit;
 
-  Assert(topId <= 2048, 'Don''t allow too many strings for no reason');
+  Assert(topId <= 2248, 'Don''t allow too many strings for no reason');
 
   // Don't shrink the array, we might be overloading base locale with a partial translation
   if Length(aArray) < topId + 1 then
@@ -422,6 +426,54 @@ begin
   end;
 
   InitLocaleIds;
+end;
+
+function TKMTextLibraryMulti.GetText(aLocale, aIndex: Word) : UnicodeString;
+begin
+  if InRange(aIndex, 0, high(fTexts[aLocale])) then
+    Result := fTexts[aLocale, aIndex]
+  else
+    Result := 'No text with index: ' + aIndex.ToString
+end;
+
+procedure TKMTextLibraryMulti.SetText(aLocale, aIndex: Word; aText : UnicodeString);
+begin
+  if InRange(aIndex, 0, high(fTexts[aLocale])) then
+    fTexts[aLocale, aIndex] := aText
+  else
+  begin
+    SetLength(fTexts[aLocale], aIndex + 1);
+    fTexts[aLocale, aIndex] := aText;
+  end;
+end;
+
+
+procedure TKMTextLibraryMulti.SaveToFile(aMissionPath: string);
+var I, K : Integer;
+  list : TStringList;
+  S : String;
+begin
+  list := TStringList.Create;
+
+  for I := 0 to High(fTexts) do //locales
+  begin
+    list.Clear;
+    if length(fTexts[I]) = 0 then //no texts to save, skip it
+      Continue;
+
+    for K := 0 to High(fTexts[I]) do//texts
+    begin
+      if fTexts[I, K] = '' then //make next line when there is no text
+        S := ''
+      else
+        S := IntToStr(K) + ':' + fTexts[I, K];
+
+      list.Add(S);
+    end;
+    list.SaveToFile(Format(ChangeFileExt(aMissionPath, '.%s.libx'), [gResLocales[I].Code]));
+  end;
+
+  list.Free;
 end;
 
 

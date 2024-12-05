@@ -82,7 +82,7 @@ begin
     for TT := Low(TKMTerrainTab) to High(TKMTerrainTab) do
     begin
       Button_Terrain[TT] := TKMButton.Create(Panel_Terrain, TB_PAD_TERRAIN_BTN_L + SMALL_PAD_W * Byte(TT), 0,
-                                            SMALL_TAB_W, SMALL_TAB_H, TAB_GLYPH[TT], rxGui, bsPaper2);
+                                            SMALL_TAB_W, SMALL_TAB_H, TAB_GLYPH[TT], rxGui, bsPaper);
       Button_Terrain[TT].OnClick := PageChange;
     end;
 

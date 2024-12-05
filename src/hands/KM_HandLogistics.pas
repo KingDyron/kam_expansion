@@ -13,7 +13,7 @@ uses
   Generics.Collections, Generics.Defaults, System.Hash,
   {$ENDIF}
   Math,
-  KM_Units, KM_Houses, KM_ResHouses,
+  KM_Units, KM_Houses, KM_ResHouses, KM_Structure,
   KM_HandEntity, KM_HandTypes,
   KM_CommonClasses, KM_Defaults, KM_Points,
   BinaryHeapGen,
@@ -70,7 +70,7 @@ type
     Importance: TKMDemandImportance; //How important demand is, e.g. Workers and building sites should be diHigh
     Loc_House: TKMHouse;
     Loc_Unit: TKMUnit;
-    Loc_Other: TKMPoint;
+    Loc_Structure: TKMStructure;
     BeingPerformed: Cardinal; //Can be performed multiple times for dtAlways
     IsDeleted: Boolean; //So we don't get pointer issues
     DeleteState: TKMDeliveryDemandDeleteState; // State of demand delete process
@@ -265,7 +265,7 @@ type
                                   aOwner: TKMHandID; var aBidBasicCost: TKMDeliveryBid; aSerf: TKMUnitSerf = nil;
                                   aAllowOffroad: Boolean = False): Boolean; overload;
     function TryCalcSerfBidValue(aCalcKind: TKMDeliveryCalcKind; aSerf: TKMUnitSerf; const aOfferPos: TKMPoint; var aBidBasicCost: TKMDeliveryBid): Boolean;
-    function TryCalcRouteCost(aCalcKind: TKMDeliveryCalcKind; aFromPos, aToPos: TKMPoint; aRouteStep: TKMDeliveryRouteStep; var aRoutCost: TKMDeliveryRouteCalcCost;
+    function TryCalcRouteCost(aCalcKind: TKMDeliveryCalcKind; aFromPos, aToPos: TKMPoint; aRouteStep: TKMDeliveryRouteStep; aDistance : Single; var aRoutCost: TKMDeliveryRouteCalcCost;
                               aSecondPass: TKMTerrainPassability = tpNone): Boolean;
 //    function GetUnitsCntOnPath(aNodeList: TKMPointList): Integer;
 
@@ -289,12 +289,13 @@ type
     function HasOffers(aHouse: TKMHouse; aWares : TKMWareTypeSet) : Word;
     function GetDemandsCnt(aHouse: TKMHouse; aWare: TKMWareType; aType: TKMDemandType; aImp: TKMDemandImportance): Integer;
     procedure AddDemand(aHouse: TKMHouse; aUnit: TKMUnit; aWare: TKMWareType; aCount: Integer; aType: TKMDemandType = dtOnce; aImp: TKMDemandImportance = diNorm); overload;
-    procedure AddDemand(aLoc: TKMPoint; aWare: TKMWareType; aCount: Integer; aType: TKMDemandType = dtOnce; aImp: TKMDemandImportance = diNorm); overload;
+    procedure AddDemand(aStruct: TKMStructure; aWare: TKMWareType; aCount: Integer; aType: TKMDemandType = dtOnce; aImp: TKMDemandImportance = diNorm); overload;
     function TryRemoveDemand(aHouse: TKMHouse; aWare: TKMWareType; aCount: Integer): Word; overload;
     function TryRemoveDemand(aHouse: TKMHouse; aWare: TKMWareType; aCount: Integer; out aPlannedToRemove: Integer): Word; overload;
     procedure RemDemand(aHouse: TKMHouse); overload;
     procedure RemDemand(aUnit: TKMUnit); overload;
     procedure RemDemand(aUnit: TKMUnit; aWares: TKMWareTypeSet); overload;
+    procedure RemDemand(aStructure: TKMStructure); overload;
 
     function HasDemand(aUnit: TKMUnit; aWares : TKMWareTypeSet) : Word;
 
@@ -306,8 +307,8 @@ type
     procedure ReAssignDelivery(iQ: Integer; aSerf: TKMUnitSerf);
     procedure AssignDelivery(oWT, dWT: TKMWareType; iO, iD: Integer; aSerf: TKMUnitSerf);
     function AskForDelivery(aSerf: TKMUnitSerf; aHouse: TKMHouse = nil): Boolean;
-    procedure CheckForBetterDemand(aDeliveryID: Integer; out aToHouse: TKMHouse; out aToUnit: TKMUnit; out aToLoc: TKMPoint;  aSerf: TKMUnitSerf);
-    procedure DeliveryFindBestDemand(aSerf: TKMUnitSerf; aDeliveryId: Integer; aWare: TKMWareType; out aToHouse: TKMHouse; out aToUnit: TKMUnit; out aForceDelivery: Boolean);
+    procedure CheckForBetterDemand(aDeliveryID: Integer; out aToHouse: TKMHouse; out aToUnit: TKMUnit; out aToStruc: TKMStructure;  aSerf: TKMUnitSerf);
+    procedure DeliveryFindBestDemand(aSerf: TKMUnitSerf; aDeliveryId: Integer; aWare: TKMWareType; out aToHouse: TKMHouse; out aToUnit: TKMUnit; out aToStruct: TKMStructure;  out aForceDelivery: Boolean);
     procedure TakenOffer(iQ: Integer);
     procedure GaveDemand(iQ: Integer);
     procedure AbandonDelivery(iQ: Integer); //Occurs when unit is killed or something alike happens
@@ -370,7 +371,9 @@ uses
   KM_Entity,
   KM_Terrain,
   KM_FormLogistics, KM_UnitTaskDelivery,
-  KM_Main, KM_Game, KM_GameParams, KM_Hand, KM_HandsCollection, KM_HouseBarracks, KM_HouseStore, KM_HouseMarket,
+  KM_Main, KM_Game, KM_GameParams,
+  KM_Hand, KM_HandsCollection,
+  KM_HouseBarracks, KM_HouseStore, KM_HouseMarket,
   KM_UnitWarrior,
   KM_Resource, KM_ResUnits,
   KM_Log, KM_Utils, KM_CommonUtils, KM_DevPerfLog, KM_DevPerfLogTypes;
@@ -1021,6 +1024,31 @@ begin
 
 end;
 
+procedure TKMDeliveries.RemDemand(aStructure: TKMStructure);
+var I, J : Integer;
+  WT : TKMWareType;
+begin
+  if gGameParams.IsMapEditor then
+    Exit;
+  Assert(aStructure <> nil);
+  for I := 0 to aStructure.Cost.Count - 1 do
+  begin
+    WT := aStructure.Cost[I].W;
+    for J := 0 to fDemandCount[WT] - 1 do
+      if fDemand[WT,J].Loc_Structure = aStructure then
+      begin
+        if fDemand[WT,J].BeingPerformed > 0 then
+          //Can't free it yet, some serf is using it
+          fDemand[WT,J].IsDeleted := True
+        else
+          CloseDemand(WT,J); //Clear up demand
+      end;
+
+
+  end;
+
+end;
+
 Function TKMDeliveries.HasDemand(aUnit: TKMUnit; aWares : TKMWareTypeSet) : Word;
 var  WT : TKMWareType;
   I : Integer;
@@ -1203,6 +1231,7 @@ begin
 
       if aUnit <> nil then
         Loc_Unit := aUnit.GetPointer;
+      Loc_Structure := nil;
 
       IsActive := True;
       DemandType := aType; //Once or Always
@@ -1225,7 +1254,7 @@ begin
   end;
 end;
 
-procedure TKMDeliveries.AddDemand(aLoc: TKMPoint; aWare: TKMWareType; aCount: Integer; aType: TKMDemandType = dtOnce; aImp: TKMDemandImportance = diNorm);
+procedure TKMDeliveries.AddDemand(aStruct: TKMStructure; aWare: TKMWareType; aCount: Integer; aType: TKMDemandType = dtOnce; aImp: TKMDemandImportance = diNorm);
 var
   I,K,J: Integer;
 begin
@@ -1233,8 +1262,6 @@ begin
     Exit;
   Assert(aWare <> wtNone, 'Demanding wtNone');
   if aCount <= 0 then Exit;
-  if aLoc = KMPOINT_ZERO then
-    Exit;
 
   for K := 0 to aCount - 1 do
   begin
@@ -1254,7 +1281,7 @@ begin
     begin
       Loc_House := nil;
       Loc_Unit := nil;
-      Loc_Other := aLoc;
+      Loc_Structure := aStruct;
 
       IsActive := True;
       DemandType := aType; //Once or Always
@@ -1305,12 +1332,6 @@ begin
   offer := @fOffer[oWT,iO];
   demand := @fDemand[dWT,iD];
 
-  if demand.Loc_Other <> KMPOINT_ZERO then
-  begin
-    Result := gTerrain.RouteCanBeMade(offer.Loc_House.PointBelowEntrance, demand.Loc_Other, tpWalk, 2);
-    Exit;
-  end;
-
 
   // Conditions are called in the frequency of a negative Result: most negative first
 
@@ -1327,6 +1348,11 @@ begin
             (demand.Loc_Unit <> nil) and
             (gTerrain.RouteCanBeMade(offer.Loc_House.PointBelowEntrance, demand.Loc_Unit.Position, tpWalk, 1)
             or ((demand.Loc_Unit.UnitType in UNITS_SHIPS) and gTerrain.RouteCanBeMade(offer.Loc_House.PointBelowEntrance, demand.Loc_Unit.Position, tpWalk, 4)))
+            )
+            or
+            ( //House-Structure delivery can be performed without connecting road
+            (demand.Loc_Structure <> nil) and
+            gTerrain.RouteCanBeMade(offer.Loc_House.PointBelowEntrance, demand.Loc_Structure.Position, tpWalk, 2)
             ));
 
   //If Demand house should abandon delivery
@@ -1433,6 +1459,11 @@ begin
                         or (offer.Loc_House.HouseType <> htBarracks)
                         or (offer.Loc_House.DeliveryMode = dmTakeOut));
 
+
+  //check structure
+  Result := Result and ((demand.Loc_Structure = nil)
+                        or not (demand.Loc_Structure.IsDestroyed or demand.Loc_Structure.IsComplete)
+                        );
 end;
 
 
@@ -1544,7 +1575,7 @@ begin
     aBidBasicCost.SerfToOffer.Pass := tpWalkRoad;
   //Also prefer deliveries near to the serf
   //Serf gets to first house with tpWalkRoad, if not possible, then with tpWalk
-  Result := TryCalcRouteCost(aCalcKind, GetSerfActualPos(aSerf), aOfferPos, drsSerfToOffer, aBidBasicCost.SerfToOffer, tpWalk);
+  Result := TryCalcRouteCost(aCalcKind, GetSerfActualPos(aSerf), aOfferPos, drsSerfToOffer, 0, aBidBasicCost.SerfToOffer, tpWalk);
   if not aSerf.BootsAdded then
     aBidBasicCost.SerfToOffer.Value := aBidBasicCost.SerfToOffer.Value + 10000;
 end;
@@ -1562,7 +1593,7 @@ end;
 
 //Try to Calc route cost
 //If destination is not reachable, then return False
-function TKMDeliveries.TryCalcRouteCost(aCalcKind: TKMDeliveryCalcKind; aFromPos, aToPos: TKMPoint; aRouteStep: TKMDeliveryRouteStep;
+function TKMDeliveries.TryCalcRouteCost(aCalcKind: TKMDeliveryCalcKind; aFromPos, aToPos: TKMPoint; aRouteStep: TKMDeliveryRouteStep; aDistance : Single;
                                         var aRoutCost: TKMDeliveryRouteCalcCost; aSecondPass: TKMTerrainPassability = tpNone): Boolean;
 
   function RouteCanBeMade(const LocA, LocB: TKMPoint; aPass: TKMTerrainPassability): Boolean;
@@ -1570,7 +1601,7 @@ function TKMDeliveries.TryCalcRouteCost(aCalcKind: TKMDeliveryCalcKind; aFromPos
     if aPass = tpNone then
       Exit(False);
 
-    Result := gTerrain.RouteCanBeMade(LocA, LocB, aPass);
+    Result := gTerrain.RouteCanBeMade(LocA, LocB, aPass, aDistance);
   end;
 
 var
@@ -1680,7 +1711,7 @@ begin
       if aCalcKind = dckFast then
         aBidBasicCost.OfferToDemand.Pass := tpWalkRoad;
 
-      Result := TryCalcRouteCost(aCalcKind, aOfferPos, fDemand[dWT,iD].Loc_House.PointBelowEntrance, drsOfferToDemand, aBidBasicCost.OfferToDemand, secondPass);
+      Result := TryCalcRouteCost(aCalcKind, aOfferPos, fDemand[dWT,iD].Loc_House.PointBelowEntrance, drsOfferToDemand, 0, aBidBasicCost.OfferToDemand, secondPass);
 
       // There is no route, Exit immidiately
       if not Result then
@@ -1694,16 +1725,21 @@ begin
     end;
   end
   else
-  if fDemand[dWT,iD].Loc_Other <> KMPOINT_ZERO then
+  if fDemand[dWT,iD].Loc_Structure <> nil then
   begin
     aBidBasicCost.OfferToDemand.Pass := tpWalk;
-    Result := TryCalcRouteCost(aCalcKind, aOfferPos, fDemand[dWT,iD].Loc_Other, drsOfferToDemand, aBidBasicCost.OfferToDemand);
+    Result := TryCalcRouteCost(aCalcKind, aOfferPos, fDemand[dWT,iD].Loc_Structure.Position, drsOfferToDemand, 2, aBidBasicCost.OfferToDemand);
+
+    // There is no route, Exit immidiately
+    if not Result then
+      Exit;
   end
   else
+  if fDemand[dWT,iD].Loc_Unit <> nil then
   begin
     aBidBasicCost.OfferToDemand.Pass := tpWalk;
     //Calc bid cost between offer house and demand Unit (digged worker or hungry warrior)
-    Result := TryCalcRouteCost(aCalcKind, aOfferPos, fDemand[dWT,iD].Loc_Unit.Position, drsOfferToDemand, aBidBasicCost.OfferToDemand);
+    Result := TryCalcRouteCost(aCalcKind, aOfferPos, fDemand[dWT,iD].Loc_Unit.Position, drsOfferToDemand, 0, aBidBasicCost.OfferToDemand);
 
     // There is no route, Exit immidiately
     if not Result then
@@ -1721,7 +1757,7 @@ begin
     aBidBasicCost.Addition := aBidBasicCost.Addition - 4*fDemand[dWT,iD].Loc_House.GetBuildResDeliveredPercent;
     //Only add a small amount so houses at different distances will be prioritized separately
     if dWT = wtStone then
-      aBidBasicCost.IncAddition(0.1);
+      aBidBasicCost.IncAddition(0.5);
   end
   else
     //For all other deliveries, add some random element so in the case of identical
@@ -1773,6 +1809,9 @@ begin
         aBidCost.IncAddition(2); //Add small value, so it will not have so big advantage above other houses
     end;
 
+    if oWT = wtWater then
+      aBidCost.IncAddition(100000);//water is the lowest possible priority, because citizen can go to well by himself
+    
     //Delivering weapons from store to barracks, make it lowest priority when there are >50 of that weapon in the barracks.
     //In some missions the storehouse has vast amounts of weapons, and we don't want the serfs to spend the whole game moving these.
     //In KaM, if the barracks has >200 weapons the serfs will stop delivering from the storehouse. I think our solution is better.
@@ -1808,7 +1847,7 @@ begin
 end;
 
 
-procedure TKMDeliveries.CheckForBetterDemand(aDeliveryID: Integer; out aToHouse: TKMHouse; out aToUnit: TKMUnit; out aToLoc: TKMPoint;  aSerf: TKMUnitSerf);
+procedure TKMDeliveries.CheckForBetterDemand(aDeliveryID: Integer; out aToHouse: TKMHouse; out aToUnit: TKMUnit; out aToStruc: TKMStructure;  aSerf: TKMUnitSerf);
 var
   iD, iO, bestD, oldD: Integer;
   oldDWT, dWT, bestDWT, oWT: TKMWareType;
@@ -1839,7 +1878,7 @@ begin
     begin
       aToHouse := fDemand[oldDWT,oldD].Loc_House;
       aToUnit := fDemand[oldDWT,oldD].Loc_Unit;
-      aToLoc := fDemand[oldDWT,oldD].Loc_Other;
+      aToStruc := fDemand[oldDWT,oldD].Loc_Structure;
       Exit;
     end;
 
@@ -1919,7 +1958,7 @@ begin
     //Return chosen unit and house
     aToHouse := fDemand[bestDWT, bestD].Loc_House;
     aToUnit := fDemand[bestDWT, bestD].Loc_Unit;
-    aToLoc := fDemand[bestDWT, bestD].Loc_Other;
+    aToStruc := fDemand[bestDWT,bestD].Loc_Structure;
   finally
     {$IFDEF PERFLOG}
     gPerfLogs.SectionLeave(psDelivery);
@@ -1929,7 +1968,7 @@ end;
 
 // Find best Demand for the given delivery. Could return same or nothing
 procedure TKMDeliveries.DeliveryFindBestDemand(aSerf: TKMUnitSerf; aDeliveryId: Integer; aWare: TKMWareType;
-                                               out aToHouse: TKMHouse; out aToUnit: TKMUnit; out aForceDelivery: Boolean);
+                                               out aToHouse: TKMHouse; out aToUnit: TKMUnit; out aToStruct: TKMStructure; out aForceDelivery: Boolean);
 
   function ValidBestDemand(dWT, oldDWT: TKMWareType; iD, iOldID: Integer): Boolean;
   var
@@ -1945,6 +1984,9 @@ procedure TKMDeliveries.DeliveryFindBestDemand(aSerf: TKMUnitSerf; aDeliveryId: 
                or (not demand.Loc_Unit.IsDeadOrDying and (demand.Loc_Unit <> oldDemand^.Loc_Unit))
                );
 
+    Result := Result and ((Demand.Loc_Structure = nil)
+                or not(Demand.Loc_Structure.IsDestroyed or Demand.Loc_Structure.IsComplete)
+                );
     //If Demand house should abandon delivery
     Result := Result and ((demand.Loc_House = nil)
                           or not demand.Loc_House.IsComplete
@@ -2096,6 +2138,7 @@ begin
       CloseDelivery(aDeliveryId);
       aToHouse := nil;
       aToUnit := nil;
+      aToStruct := nil;
     end
     else
     begin
@@ -2122,6 +2165,7 @@ begin
       // Return chosen unit and house
       aToHouse := fDemand[bestDWT,bestDemandId].Loc_House;
       aToUnit := fDemand[bestDWT,bestDemandId].Loc_Unit;
+      aToStruct := fDemand[bestDWT,bestDemandId].Loc_Structure;
     end;
   finally
     {$IFDEF PERFLOG}
@@ -2345,8 +2389,8 @@ begin
     gLog.LogDelivery('Creating delivery ID ' + IntToStr(I));
 
   //Now we have best job and can perform it
-  if fDemand[dWT,iD].Loc_Other <> KMPOINT_ZERO then
-    aSerf.Deliver(fOffer[oWT,iO].Loc_House, fDemand[dWT,iD].Loc_Other, oWT, I)
+  if fDemand[dWT,iD].Loc_Structure <> nil then
+    aSerf.Deliver(fOffer[oWT,iO].Loc_House, fDemand[dWT,iD].Loc_Structure, oWT, I)
   else
   if fDemand[dWT,iD].Loc_House <> nil then
     aSerf.Deliver(fOffer[oWT,iO].Loc_House, fDemand[dWT,iD].Loc_House, oWT, I)
@@ -2498,6 +2542,7 @@ begin
   fDemand[aWare,aID].Importance := Low(TKMDemandImportance);
   gHands.CleanUpHousePointer(fDemand[aWare,aID].Loc_House);
   gHands.CleanUpUnitPointer(fDemand[aWare,aID].Loc_Unit);
+  fDemand[aWare,aID].Loc_Structure := nil;
   fDemand[aWare,aID].IsDeleted := False;
 
   fDemand[aWare,aID].Cleanup;
@@ -2570,7 +2615,7 @@ begin
 
           SaveStream.Write(Loc_House.UID);
           SaveStream.Write(Loc_Unit.UID );
-          SaveStream.Write(Loc_Other);
+          SaveStream.Write(Loc_Structure.UID);
 
           SaveStream.Write(BeingPerformed);
           SaveStream.Write(IsDeleted);
@@ -2637,7 +2682,7 @@ begin
           LoadStream.Read(Importance, SizeOf(Importance));
           LoadStream.Read(Loc_House, 4);
           LoadStream.Read(Loc_Unit, 4);
-          LoadStream.Read(Loc_Other);
+          LoadStream.Read(Loc_Structure, 4);
           LoadStream.Read(BeingPerformed);
           LoadStream.Read(IsDeleted);
           LoadStream.Read(DeleteState, SizeOf(DeleteState));
@@ -2684,6 +2729,7 @@ begin
         begin
           Loc_House := gHands.GetHouseByUID(Integer(Loc_House));
           Loc_Unit := gHands.GetUnitByUID(Integer(Loc_Unit));
+          Loc_Structure := gHands.GetStructureByUID(Integer(Loc_Structure));
           Form_UpdateDemandNode(WT,I);
         end;
 
@@ -3269,7 +3315,7 @@ begin
   Importance := diNorm;
   Loc_House := nil;
   Loc_Unit := nil;
-  Loc_Other := KMPOINT_ZERO;
+  Loc_Structure := nil;
   BeingPerformed := 0;
   IsDeleted := False;
   DeleteState := ddtNone;

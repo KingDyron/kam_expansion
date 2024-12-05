@@ -30,6 +30,7 @@ type
     fSingleColor: Cardinal;
 
     fDifficulty: TKMMissionDifficulty;
+    fBuiltInDifficulty: TKMMissionBuiltInDifficulty;
     fAIType: TKMAIType;
 
     fLastColIndex: Integer; // Last index of color DropBox
@@ -71,6 +72,7 @@ type
         DropBox_Color: TKMDropColumns;
         Label_Difficulty: TKMLabel;
         DropBox_Difficulty: TKMDropList;
+        DropBox_BuiltInDifficulty: TKMDropList;
         Label_AIPlayerType: TKMLabel;
         DropBox_AIPlayerType: TKMDropList;
         Image_Allies: array [0..MAX_HANDS-1] of TKMImage;
@@ -102,6 +104,7 @@ type
 implementation
 uses
   KM_ResTexts, KM_ResFonts, KM_ResTypes,
+  KM_CommonHelpers,
   KM_CommonUtils, KM_RenderUI, KM_GameSettings,
   KM_MapUtils, KM_MapUtilsExt;
 
@@ -165,6 +168,7 @@ var
   L: TKMLabel;
   B: TKMBevel;
   backCol: TKMColor4f;
+  MDB : TKMMissionBuiltInDifficulty;
 begin
   Panel_Single := TKMPanel.Create(aParent, 0, 0, aParent.Width, aParent.Height);
   Panel_Single.AnchorsStretch;
@@ -251,6 +255,7 @@ begin
       DropBox_Difficulty.OnChange := OptionsChange;
       DropBox_Difficulty.Hide;
 
+
       Label_AIPlayerType := TKMLabel.Create(Panel_Desc, descL, 435, gResTexts[TX_AI_PLAYER_TYPE], fntMetal, taLeft);
       Label_AIPlayerType.Anchors := [anLeft, anBottom];
       Label_AIPlayerType.Hide;
@@ -258,6 +263,17 @@ begin
       DropBox_AIPlayerType.Anchors := [anLeft, anBottom];
       DropBox_AIPlayerType.OnChange := OptionsChange;
       DropBox_AIPlayerType.Hide;
+
+      DropBox_BuiltInDifficulty := TKMDropList.Create(Panel_Desc, descL, 475, 150, 20, fntMetal, gResTexts[TX_MISSION_DIFFICULTY], bsMenu);
+      DropBox_BuiltInDifficulty.Anchors := [anLeft, anBottom];
+      DropBox_BuiltInDifficulty.OnChange := OptionsChange;
+      DropBox_BuiltInDifficulty.Hint := gResTexts[2107];
+      for MDB := Low(TKMMissionBuiltInDifficulty) to High(TKMMissionBuiltInDifficulty) do
+      begin
+        DropBox_BuiltInDifficulty.Add(BDIFFICULTY_TEXTS[MDB].ToResText, byte(MDB));
+        if MDB = mdbNormal then
+          DropBox_BuiltInDifficulty.ItemIndex := DropBox_BuiltInDifficulty.Count - 1;
+      end;
 
       Button_SetupReadme := TKMButton.Create(Panel_Desc, descL, 523 - 25, half - descL, 25, gResTexts[TX_LOBBY_VIEW_README], bsMenu);
       Button_SetupReadme.Anchors := [anLeft,anBottom];
@@ -650,6 +666,10 @@ begin
   else
     fAIType := aitNone;
 
+  if DropBox_BuiltInDifficulty.IsSelected then
+    fBuiltInDifficulty := TKMMissionBuiltInDifficulty(DropBox_BuiltInDifficulty.GetSelectedTag)
+  else
+    fBuiltInDifficulty := mdbNormal;
   //Don't allow selecting separator
   if DropBox_Color.ItemIndex = 1 then
   begin
@@ -810,7 +830,7 @@ begin
 
         //Provide mission FileName mask and title here
         if Assigned(OnNewSingleMap) then
-          OnNewSingleMap(map.FullPath('.dat'), map.Name, fSingleLoc, fSingleColor, fDifficulty, fAIType);
+          OnNewSingleMap(map.FullPath('.dat'), map.Name, fSingleLoc, fSingleColor, fDifficulty, fAIType, fBuiltInDifficulty);
         Exit;
       end;
   finally

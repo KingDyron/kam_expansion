@@ -95,7 +95,6 @@ uses
   KM_Defaults;
 
 constructor TKMGridCommon.Create(aParent: TKMPanel; aLeft: Integer; aTop: Integer; aSizeX: Integer; aSizeY: Integer);
-var I, K : Integer;
 begin
   Inherited Create(aParent, aLeft, aTop, 0, 0);
 
@@ -134,10 +133,8 @@ begin
 end;
 
 procedure TKMGridCommon.MouseDown(X: Integer; Y: Integer; Shift: TShiftState; Button: TMouseButton);
-var oldDownItem: PKMGridItem;
 begin
   Inherited;
-  oldDownItem := fMouseDownItem;
 
   if fMouseOverItem = nil then
     Exit;
@@ -155,10 +152,8 @@ begin
 end;
 
 procedure TKMGridCommon.MouseMove(X: Integer; Y: Integer; Shift: TShiftState);
-var oldMoveItem: PKMGridItem;
 begin
   Inherited;
-  oldMoveItem := fMouseOverItem;
   fMouseOverItem := GetItemAtPos(X, Y);
   DoItemMove(fMouseOverItem);
 
@@ -247,7 +242,6 @@ end;
 
 procedure TKMGridCommon.Paint;
 var I, K : Integer;
-  aItem : PKMGridItem;
 begin
   Inherited;
   if not Visible then

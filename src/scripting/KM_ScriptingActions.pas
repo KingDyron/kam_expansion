@@ -1332,7 +1332,7 @@ var
   H: TKMHouse;
   I, K: Integer;
   HA: TKMHouseArea;
-  nonEntranceX, nonEntranceY: Integer;
+  nonEntranceX: Integer;
 begin
   try
     Result := -1;
@@ -1342,7 +1342,6 @@ begin
       and gTerrain.TileInMapCoords(X,Y) then
     begin
       nonEntranceX := X - gRes.Houses[aHouseType].EntranceOffsetX;
-      nonEntranceY := Y - gRes.Houses[aHouseType].EntranceOffsetY;
       if gTerrain.CanPlaceHouseFromScript(aHouseType, KMPoint(nonEntranceX, Y)) then
       begin
         H := gHands[aHand].AddHouseWIP(aHouseType, KMPoint(nonEntranceX, Y));
@@ -4746,6 +4745,8 @@ function TKMScriptActions.PlanFieldAdd(aHand: Integer; X: Integer; Y: Integer; a
       lftVegetablesField : Result := ftVegeField;
       lftWineField : Result := ftWine;
       lftRemove : Result := ftRemove;
+      else
+        Result := ftNone;
     end;
   end;
 
@@ -4762,6 +4763,8 @@ function TKMScriptActions.PlanFieldAdd(aHand: Integer; X: Integer; Y: Integer; a
       lftVegetablesField,
       lftWineField,
       lftRemove : Result := rtNone;
+      else
+        Result := rtNone;
     end;
   end;
 

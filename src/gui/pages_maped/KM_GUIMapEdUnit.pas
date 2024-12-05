@@ -4,7 +4,8 @@ interface
 uses
    Classes, KromUtils, Math, StrUtils, SysUtils,
    Controls,
-   KM_Controls, KM_ControlsBase, KM_ControlsDrop, KM_ControlsEdit, KM_ControlsProgressBar,
+   KM_Controls, KM_ControlsBase, KM_ControlsDrop, KM_ControlsEdit, KM_ControlsProgressBar, KM_ControlsList,
+   KM_ControlsPopUp,
    KM_Defaults, KM_Pics, KM_Units, KM_UnitGroup, KM_ControlsSwitch,
    KM_Points, KM_InterfaceGame;
 
@@ -25,6 +26,16 @@ type
     procedure UnitConditionsClickHold(Sender: TObject; AButton: TMouseButton; var aHandled: Boolean);
     procedure UnitFishCntChange(Sender: TObject);
     procedure ColorCodeChange(Sender : TObject);
+
+    procedure BoatWaresChange(Sender : TObject);
+    procedure RefreshBoat;
+    procedure UpdateWare;
+    procedure SelectBoatWare(aIndex : Integer);
+
+    procedure ShipClick(Sender : TObject);
+    procedure RefreshShipList;
+    procedure UpdateShipUnit;
+    procedure SelectShipUnit(aIndex : Integer);
   protected
     Panel_Unit: TKMPanel;
     Label_UnitName: TKMLabel;
@@ -36,6 +47,7 @@ type
     Label_FishCount : TKMLabel;
     Edit_FishCount: TKMNumericEdit;
     CheckBox_Boots: TKMCheckBox;
+    CheckBox_Immortal : TKMCheckBox;
     Label_FlagColor: TKMLabel;
     Edit_UnitFlagColor: TKMEdit;
     Shape_FlagColor: TKMShape;
@@ -53,6 +65,26 @@ type
     CheckBox_NeverHungry: TKMCheckBox;
     CheckBox_InfiniteAmmo: TKMCheckBox;
     CheckBox_BitinAdded: TKMCheckBox;
+
+    Button_Boat : TKMButton;
+    PopUp_Boat : TKMPopUpRectPanel;
+      ColumnBox_Wares : TKMColumnBox;
+      DropList_Ware : TKMDropColumns;
+      Edit_Count : TKMNumericEdit;
+      Button_Add : TKMButton;
+      Button_Remove : TKMButton;
+
+    Button_Ship : TKMButton;
+
+    PopUp_Ship : TKMPopUpRectPanel;
+      ColumnBox_Units : TKMColumnBox;
+      DropList_UnitType : TKMDropColumns;
+      Edit_UnitCount,
+      Edit_UnitColumns,
+      Edit_UnitBoltCount,
+      Edit_UnitCondition : TKMNumericEdit;
+      Button_AddUnits : TKMButton;
+      Button_RemoveUnits : TKMButton;
   public
     constructor Create(aParent: TKMPanel);
 
@@ -72,16 +104,22 @@ uses
   KM_ControlsTypes,
   KM_HandsCollection, KM_HandTypes, KM_HandEntity,
   KM_RenderUI,
-  KM_Resource, KM_ResFonts, KM_ResTexts, KM_ResUnits, KM_ResTypes,
+  KM_Resource, KM_ResFonts, KM_ResTexts, KM_ResUnits, KM_ResTypes, KM_ResWares,
   KM_Game,
   KM_UtilsExt, KM_Terrain,
-  KM_UnitGroupTypes,
+  KM_UnitGroupTypes, KM_UnitWarrior,
   KM_InterfaceTypes,
   KM_MapEdTypes;
 
 
 { TKMMapEdUnit }
 constructor TKMMapEdUnit.Create(aParent: TKMPanel);
+var I, K : Integer;
+  WT : TKMWareType;
+  rw : TKMListRow;
+  UT : TKMUnitType;
+  unitOrder : TKMUnitTypeArray;
+  unitAdded : array[TKMunitType] of Boolean;
 begin
   inherited Create;
 
@@ -102,6 +140,10 @@ begin
   CheckBox_Boots := TKMCheckBox.Create(Panel_Unit, 65, 128, Panel_Unit.Width - 65, 25, gResTexts[1819], fntMetal);
   CheckBox_Boots.OnClickShift := UnitConditionsChange;
   CheckBox_Boots.Hide;
+
+  CheckBox_Immortal := TKMCheckBox.Create(Panel_Unit, 65, 128, Panel_Unit.Width - 65, 25, gResTexts[2105], fntMetal);
+  CheckBox_Immortal.OnClickShift := UnitConditionsChange;
+  CheckBox_Immortal.Hide;
 
   CheckBox_InfiniteAmmo := TKMCheckBox.Create(Panel_Unit, 65, 128, Panel_Unit.Width - 65, 25, gResTexts[1870], fntMetal);
   CheckBox_InfiniteAmmo.OnClickShift := UnitConditionsChange;
@@ -186,6 +228,127 @@ begin
   TKMLabel.Create(Panel_Army, 110, 185, gResTexts[TX_MAPED_GROUP_ORDER_DIRECTION], fntGrey, taLeft);
   Edit_ArmyOrderDir := TKMNumericEdit.Create(Panel_Army, 110, 205, 0, 7);
   Edit_ArmyOrderDir.OnChange := Unit_ArmyChange1;
+
+  Button_Boat := TKMButton.Create(Panel_Army, 10, Edit_ArmyOrderDir.Bottom + 10, Panel_Army.Width - 20, 25, gResTexts[2076], bsMenu);
+  Button_Boat.OnClick := BoatWaresChange;
+
+
+  PopUp_Boat := TKMPopUpRectPanel.Create(Panel_Army.MasterPanel, 400, 400);
+
+  ColumnBox_Wares := TKMColumnBox.Create(PopUp_Boat, 10, 10, 200, 300, fntGrey, bsMenu);
+  ColumnBox_Wares.SetColumns(fntOutline, ['', gResTexts[2074], gResTexts[1040]], [0, 25, 125]);
+  ColumnBox_Wares.ShowHintWhenShort := true;
+  ColumnBox_Wares.OnClick := BoatWaresChange;
+  ColumnBox_Wares.OnChange := BoatWaresChange;
+
+
+  Button_Add := TKMButton.Create(PopUp_Boat, 10, ColumnBox_Wares.Bottom + 5, 25, 25, '+', bsGame);
+  Button_Add.OnClick := BoatWaresChange;
+  Button_Remove := TKMButton.Create(PopUp_Boat, 40, ColumnBox_Wares.Bottom + 5, 25, 25, 'X', bsGame);
+  Button_Remove.OnClick := BoatWaresChange;
+
+
+  DropList_Ware := TKMDropColumns.Create(PopUp_Boat, ColumnBox_Wares.Right + 10, 10, 180, 25, fntGrey, gResTexts[2074], bsMenu);
+  DropList_Ware.SetColumns(fntOutline, ['', gResTexts[2074]], [0, 30]);
+  DropList_Ware.OnChange := BoatWaresChange;
+  DropList_Ware.List.ShowHintWhenShort := true;
+  DropList_Ware.List.ItemHeight := 25;
+
+  for I := 2 to High(StoreResType) do
+  begin
+    WT := StoreResType[I];
+
+    if WT = wtNone then
+    begin
+      rw := MakeListRow(['', '- - - - - - - - -'],//captions
+                                    [$FFFFFFFF, $FFFFFFFF],//colors
+                                    [MakePic(rxGui, 0), MakePic(rxGui, 0)],
+                                    -1);
+
+      for K := 0 to High(rw.Cells) do
+        rw.Cells[K].Enabled := false;
+
+      DropList_Ware.Add(rw);
+      Continue;
+    end;
+
+    DropList_Ware.Add(MakeListRow(['', gRes.Wares[WT].Title],//captions
+                                  [$FFFFFFFF, $FFFFFFFF],//colors
+                                  [MakePic(rxGui, gRes.Wares[WT].GUIIcon), MakePic(rxGui, 0)], //pics
+                                  byte(WT))
+                      );
+  end;
+  TKMLabel.Create(PopUp_Boat, DropList_Ware.Left, 35, 150, 17, gResTexts[1040], fntGrey, taLeft);
+  Edit_Count := TKMNumericEdit.Create(PopUp_Boat, DropList_Ware.Left, 53, 1, 50);
+  Edit_Count.Width := 75;
+  Edit_Count.Value := 50;
+  Edit_Count.OnChange := BoatWaresChange;
+
+  Button_Ship := TKMButton.Create(Panel_Army, 10, Edit_ArmyOrderDir.Bottom + 10, Panel_Army.Width - 20, 25, gResTexts[2075], bsMenu);
+  Button_Ship.OnClick := ShipClick;
+
+
+  PopUp_Ship := TKMPopUpRectPanel.Create(Panel_Army.MasterPanel, 400, 400);
+
+  ColumnBox_Units := TKMColumnBox.Create(PopUp_Ship, 10, 10, 200, 300, fntGrey, bsMenu);
+  ColumnBox_Units.SetColumns(fntOutline, ['', gResTexts[2077], gResTexts[1040]], [0, 25, 125]);
+  ColumnBox_Units.ShowHintWhenShort := true;
+  ColumnBox_Units.OnClick := ShipClick;
+  ColumnBox_Units.OnChange := ShipClick;
+  ColumnBox_Units.ItemHeight := 25;
+
+  Button_AddUnits := TKMButton.Create(PopUp_Ship, 10, ColumnBox_Units.Bottom + 5, 25, 25, '+', bsGame);
+  Button_AddUnits.OnClick := ShipClick;
+  Button_RemoveUnits := TKMButton.Create(PopUp_Ship, 40, ColumnBox_Units.Bottom + 5, 25, 25, 'X', bsGame);
+  Button_RemoveUnits.OnClick := ShipClick;
+
+
+  DropList_UnitType := TKMDropColumns.Create(PopUp_Ship, ColumnBox_Units.Right + 10, 10, 180, 25, fntGrey, gResTexts[2077], bsMenu);
+  DropList_UnitType.SetColumns(fntOutline, ['', gResTexts[2074]], [0, 30]);
+  DropList_UnitType.OnChange := ShipClick;
+  DropList_UnitType.List.ShowHintWhenShort := true;
+  DropList_UnitType.List.ItemHeight := 25;
+
+  unitOrder := SCHOOL_GAME_ORDER + BARRACKS_GAME_ORDER + TH_GAME_ORDER + SIEGE_GAME_ORDER + PALACE_UNITS_ORDER + SHIPYARD_ORDER;
+
+  for I := 0 to High(unitOrder) do
+  begin
+    UT := unitOrder[I];
+
+    if (gRes.Units[UT].ShipWeight <= 0) or unitAdded[UT] then
+      Continue;
+
+    unitAdded[UT] := true;
+    DropList_UnitType.Add(MakeListRow(['', gRes.Units[UT].GUIName],//captions
+                                  [$FFFFFFFF, $FFFFFFFF],//colors
+                                  [MakePic(rxGui, gRes.Units[UT].GUIIcon), MakePic(rxGui, 0)], //pics
+                                  byte(UT))
+                      );
+  end;
+  TKMLabel.Create(PopUp_Ship, DropList_Ware.Left, 45, 150, 17, gResTexts[157], fntGrey, taLeft);
+  Edit_UnitCondition := TKMNumericEdit.Create(PopUp_Ship, DropList_Ware.Left, 63, 1, 100);
+  Edit_UnitCondition.Width := 75;
+  Edit_UnitCondition.Value := 1;
+  Edit_UnitCondition.OnChange := ShipClick;
+
+  TKMLabel.Create(PopUp_Ship, DropList_Ware.Left, 85, 150, 17, gResTexts[1040], fntGrey, taLeft);
+  Edit_UnitCount := TKMNumericEdit.Create(PopUp_Ship, DropList_Ware.Left, 103, 1, 15);
+  Edit_UnitCount.Width := 75;
+  Edit_UnitCount.Value := 1;
+  Edit_UnitCount.OnChange := ShipClick;
+
+  TKMLabel.Create(PopUp_Ship, DropList_Ware.Left, 125, 150, 17, gResTexts[450], fntGrey, taLeft);
+  Edit_UnitColumns := TKMNumericEdit.Create(PopUp_Ship, DropList_Ware.Left, 143, 1, 5);
+  Edit_UnitColumns.Width := 75;
+  Edit_UnitColumns.Value := 1;
+  Edit_UnitColumns.OnChange := ShipClick;
+
+  TKMLabel.Create(PopUp_Ship, DropList_Ware.Left, 165, 150, 17, gResTexts[1873], fntGrey, taLeft);
+  Edit_UnitBoltCount := TKMNumericEdit.Create(PopUp_Ship, DropList_Ware.Left, 183, 1, 500);
+  Edit_UnitBoltCount.Width := 75;
+  Edit_UnitBoltCount.Value := 50;
+  Edit_UnitBoltCount.OnChange := ShipClick;
+
 end;
 
 
@@ -201,6 +364,7 @@ begin
     Edit_UnitFlagColor.Hide;
   Label_FlagColor.Visible := Edit_UnitFlagColor.Visible;
   Shape_FlagColor.Visible := Edit_UnitFlagColor.Visible;
+
 
   if Edit_UnitFlagColor.Visible then
   begin
@@ -230,11 +394,14 @@ begin
   Panel_Army.Hide;
   CheckBox_InfiniteAmmo.Hide;
   CheckBox_BitinAdded.Hide;
+  CheckBox_Immortal.Hide;
   CheckBox_Boots.Visible := not fUnit.IsAnimal;
+  CheckBox_Immortal.Visible := not fUnit.IsAnimal;
   CheckBox_Boots.Checked := aUnit.BootsAdded;
   CheckBox_NeverHungry.Checked := fUnit.NeverHungry;
+  CheckBox_Immortal.Checked := fUnit.Immortal;
 
-  SortVisibleControls(65, 103, 0, 0, [CheckBox_NeverHungry, CheckBox_Boots]);
+  SortVisibleControls(65, 103, 0, 0, [CheckBox_NeverHungry, CheckBox_Boots, CheckBox_Immortal]);
 
 
   Edit_FishCount.Visible := fUnit is TKMUnitFish;
@@ -289,10 +456,15 @@ begin
   Label_FishCount.Hide;
   CheckBox_Boots.Hide;
   CheckBox_InfiniteAmmo.Hide;
+  CheckBox_Immortal.Show;
+  CheckBox_Immortal.Checked := fGroup.FlagBearer.Immortal;
   Panel_Army.Show;
 
   if fGroup = nil then Exit;
   CheckBox_BitinAdded.Visible := fGroup.UnitType in WARRIOR_BITIN_EQUIPABLE;
+
+  Button_Ship.Visible := fGroup.UnitType = utShip;
+  Button_Boat.Visible := fGroup.UnitType = utBoat;
 
   if fGroup.IsRanged then
   begin
@@ -300,7 +472,7 @@ begin
     CheckBox_InfiniteAmmo.Checked := fGroup.FlagBearer.InfinityAmmo;
   end;
   CheckBox_BitinAdded.Checked := fGroup.FlagBearer.BitinAdded;
-  SortVisibleControls(65, 103, 0, 0, [CheckBox_NeverHungry, CheckBox_Boots, CheckBox_InfiniteAmmo, CheckBox_BitinAdded]);
+  SortVisibleControls(65, 103, 0, 0, [CheckBox_NeverHungry, CheckBox_Boots, CheckBox_Immortal, CheckBox_InfiniteAmmo, CheckBox_BitinAdded]);
 
   Label_UnitName.Caption := gRes.Units[fGroup.UnitType].GUIName;
   Image_UnitPic.TexID := gRes.Units[fGroup.UnitType].GUIScroll;
@@ -353,6 +525,11 @@ begin
   if Sender = CheckBox_Boots then
   begin
     U.BootsAdded := CheckBox_Boots.Checked;
+    Exit;
+  end;
+  if Sender = CheckBox_Immortal then
+  begin
+    U.Immortal := CheckBox_Immortal.Checked;
     Exit;
   end;
   newCondition := U.Condition;
@@ -618,6 +795,273 @@ begin
     //Edit_UnitFlagColor.SetTextSilently( Format('%.6x', [C and $FFFFFF]) );
     //Shape_FlagColor.FillColor := C;
   end;
+end;
+
+procedure TKMMapEdUnit.RefreshBoat;
+var UB : TKMUnitWarriorBoat;
+  I, C, oldIndex : Integer;
+  wares : TKMWarePlan;
+  WT : TKMWareType;
+begin
+  if not (fGroup.FlagBearer is TKMUnitWarriorBoat) then
+    Exit;
+  UB := TKMUnitWarriorBoat(fGroup.FlagBearer);
+
+  wares := UB.Wares;
+  oldIndex := ColumnBox_Wares.ItemIndex;
+  ColumnBox_Wares.Clear;
+  for I := 0 to wares.Count - 1 do
+  begin
+    WT := wares[I].W;
+    C := wares[I].C;
+
+    ColumnBox_Wares.AddItem(MakeListRow(['', gRes.Wares[WT].Title, IntToStr(C)],//captions
+                                    [$FFFFFFFF, $FFFFFFFF, $FFFFFFFF],//colors
+                                    [MakePic(rxGui, gRes.Wares[WT].GUIIcon), PIC_CLEAR, PIC_CLEAR],
+                                    -1)
+                            );
+  end;
+
+  if oldIndex > ColumnBox_Wares.RowCount - 1 then
+    oldIndex := ColumnBox_Wares.RowCount - 1;
+
+  ColumnBox_Wares.ItemIndex := oldIndex;
+end;
+
+procedure TKMMapEdUnit.UpdateWare;
+var UB : TKMUnitWarriorBoat;
+  id : Integer;
+begin
+  if not (fGroup.FlagBearer is TKMUnitWarriorBoat) then
+    Exit;
+  UB := TKMUnitWarriorBoat(fGroup.FlagBearer);
+
+  id := ColumnBox_Wares.ItemIndex;
+
+  if DropList_Ware.Item[DropList_Ware.ItemIndex].Tag = -1 then
+    UB.Wares[id].W := wtNone
+  else
+    UB.Wares[id].W := TKMWareType(DropList_Ware.Item[DropList_Ware.ItemIndex].Tag);
+  UB.Wares[id].C := Edit_Count.Value;
+end;
+
+procedure TKMMapEdUnit.SelectBoatWare(aIndex : Integer);
+var UB : TKMUnitWarriorBoat;
+  I : Integer;
+  ware : TKMWarePlanSingle;
+begin
+  if not (fGroup.FlagBearer is TKMUnitWarriorBoat) then
+    Exit;
+  UB := TKMUnitWarriorBoat(fGroup.FlagBearer);
+
+  ColumnBox_Wares.ItemIndex := aIndex;
+  aIndex := ColumnBox_Wares.ItemIndex;
+  if aIndex = -1 then
+    Exit;
+
+  ware := UB.Wares[aIndex];
+
+  if ware.W = wtNone then
+    DropList_Ware.ItemIndex := -1
+  else
+    for I := 0 to DropList_Ware.List.RowCount - 1 do
+      if DropList_Ware.List.Rows[I].Tag = byte(ware.W) then
+      begin
+        DropList_Ware.ItemIndex := I;
+        Break;
+      end;
+
+  Edit_Count.Value := ware.C;
+end;
+
+procedure TKMMapEdUnit.BoatWaresChange(Sender: TObject);
+var UB : TKMUnitWarriorBoat;
+  id : Integer;
+begin
+  if not (fGroup.FlagBearer is TKMUnitWarriorBoat) then
+    Exit;
+  UB := TKMUnitWarriorBoat(fGroup.FlagBearer);
+
+
+  if Sender = Button_Boat then
+  begin
+    RefreshBoat;
+    PopUp_Boat.Show;
+  end;
+
+  if Sender = Button_Add then
+  begin
+    UB.Wares.AddWare(wtNone, 1, true);
+    RefreshBoat;
+    SelectBoatWare(UB.Wares.Count - 1);
+  end else
+  if Sender = Button_Remove then
+  begin
+    id := ColumnBox_Wares.ItemIndex;
+    if id = -1 then
+      Exit;
+    UB.Wares.Remove(id);
+    RefreshBoat;
+    SelectBoatWare(ColumnBox_Wares.ItemIndex);
+  end else
+  if (Sender = ColumnBox_Wares) then
+    SelectBoatWare(ColumnBox_Wares.ItemIndex)
+  else
+  if (Sender = Edit_Count) or (Sender = DropList_Ware) then
+  begin
+    UpdateWare;
+    RefreshBoat;
+  end;
+
+  DropList_Ware.Enabled := ColumnBox_Wares.ItemIndex >= 0;
+  Edit_Count.Enabled := ColumnBox_Wares.ItemIndex >= 0;
+  Button_Remove.Enabled := ColumnBox_Wares.ItemIndex >= 0;
+
+end;
+
+procedure TKMMapEdUnit.ShipClick(Sender: TObject);
+var
+  US : TKMUnitWarriorShip;
+  id : Integer;
+  UT : TKMUnitMainData;
+begin
+  if not (fGroup.FlagBearer is TKMUnitWarriorShip) then
+    Exit;
+  US := TKMUnitWarriorShip(fGroup.FlagBearer);
+
+  id := ColumnBox_Units.ItemIndex;
+  if Sender = Button_Ship then
+  begin
+    RefreshShipList;
+    PopUp_Ship.Show;
+  end
+  else
+  if Sender = Button_AddUnits then
+  begin
+    US.AddMapEdUnit(utNone, UNIT_MAX_CONDITION div 2, 100, 1, 1);
+    RefreshShipList;
+    SelectShipUnit(US.MapEdUnitsCount);
+  end else
+  if Sender = Button_RemoveUnits then
+  begin
+    US.MapEdUnitsArray.Remove(id);
+    RefreshShipList;
+  end else
+  if (Sender = ColumnBox_Units) then
+    SelectShipUnit(ColumnBox_Units.ItemIndex)
+  else
+  if (Sender = Edit_UnitCount)
+  or (Sender = Edit_UnitColumns)
+  or (Sender = Edit_UnitCondition)
+  or (Sender = Edit_UnitBoltCount)
+  or (Sender = DropList_UnitType)
+   then
+  begin
+    UpdateShipUnit;
+    RefreshShipList;
+  end;
+  id := ColumnBox_Units.ItemIndex;
+  if id >= 0 then
+    UT := US.MapEdUnitsArray[id];
+
+  DropList_UnitType.Enabled := ColumnBox_Units.ItemIndex >= 0;
+  Edit_UnitCondition.Enabled := ColumnBox_Units.ItemIndex >= 0;
+  Edit_UnitCount.Enabled := ColumnBox_Units.ItemIndex >= 0;
+  Edit_UnitColumns.Enabled := (ColumnBox_Units.ItemIndex >= 0) and gRes.Units[UT.UnitType].IsWarrior;
+  Edit_UnitBoltCount.Enabled := (ColumnBox_Units.ItemIndex >= 0) and gRes.Units[UT.UnitType].CanOrderAmmo;
+  Button_RemoveUnits.Enabled := ColumnBox_Units.ItemIndex >= 0;
+  Button_AddUnits.Enabled := US.MapEdUnitsCount < 8;
+
+  if not DropList_UnitType.Enabled then
+    DropList_UnitType.ItemIndex := -1;
+end;
+
+procedure TKMMapEdUnit.RefreshShipList;
+var I : Integer;
+  US : TKMUnitWarriorShip;
+  oldIndex : Integer;
+  UT : TKMUnitMainData;
+begin
+  if not (fGroup.FlagBearer is TKMUnitWarriorShip) then
+    Exit;
+  US := TKMUnitWarriorShip(fGroup.FlagBearer);
+
+  oldIndex := ColumnBox_Units.ItemIndex;
+  ColumnBox_Units.Clear;
+  for I := 0 to US.MapEdUnitsCount - 1 do
+  begin
+    UT := US.MapEdUnits[I];
+
+    ColumnBox_Units.AddItem(MakeListRow(['', gRes.Units[UT.UnitType].GUIName, IntToStr(UT.Count)],//captions
+                                    [$FFFFFFFF, $FFFFFFFF, $FFFFFFFF],//colors
+                                    [MakePic(rxGui, gRes.Units[UT.UnitType].GUIIcon), PIC_CLEAR, PIC_CLEAR],
+                                    -1)
+                            );
+  end;
+
+  if oldIndex > ColumnBox_Units.RowCount - 1 then
+    oldIndex := ColumnBox_Units.RowCount - 1;
+
+  ColumnBox_Units.ItemIndex := oldIndex;
+end;
+
+procedure TKMMapEdUnit.UpdateShipUnit;
+var
+  US : TKMUnitWarriorShip;
+  UT : TKMUnitMainData;
+  id : Integer;
+begin
+  if not (fGroup.FlagBearer is TKMUnitWarriorShip) then
+    Exit;
+  US := TKMUnitWarriorShip(fGroup.FlagBearer);
+
+  id := ColumnBox_Units.ItemIndex;
+  UT := US.MapEdUnitsArray[id];
+  if DropList_UnitType.ItemIndex = -1 then
+    UT.UnitType := utNone
+  else
+    UT.UnitType := TKMUnitType(DropList_UnitType.Item[DropList_UnitType.ItemIndex].Tag);
+
+  UT.Count := Edit_UnitCount.Value;
+  UT.Columns := Edit_UnitColumns.Value;
+  UT.Condition := Round((Edit_UnitCondition.Value / 100) * UNIT_MAX_CONDITION);
+  UT.BoltCount := Edit_UnitBoltCount.Value;
+
+  US.MapEdUnitsArray[id] := UT;
+end;
+
+procedure TKMMapEdUnit.SelectShipUnit(aIndex: Integer);
+var
+  US : TKMUnitWarriorShip;
+  UT : TKMUnitMainData;
+  I : Integer;
+begin
+  if not (fGroup.FlagBearer is TKMUnitWarriorShip) then
+    Exit;
+  US := TKMUnitWarriorShip(fGroup.FlagBearer);
+
+  ColumnBox_Units.ItemIndex := aIndex;
+  aIndex := ColumnBox_Units.ItemIndex;
+  if aIndex = -1 then
+    Exit;
+
+  UT := US.MapEdUnits[aIndex];
+
+  if UT.UnitType = utNone then
+    DropList_UnitType.ItemIndex := -1
+  else
+    for I := 0 to DropList_UnitType.Count - 1 do
+      if DropList_UnitType.Item[I].Tag = byte(UT.UnitType) then
+      begin
+        DropList_UnitType.ItemIndex := I;
+        Break;
+      end;
+
+  Edit_UnitCount.Value := UT.Count;
+  Edit_UnitColumns.Value := UT.Columns;
+  Edit_UnitCondition.Value := Round((UT.Condition / UNIT_MAX_CONDITION) * 100);
+  Edit_UnitBoltCount.Value := UT.BoltCount;
+
 end;
 
 end.

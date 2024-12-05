@@ -257,8 +257,7 @@ var
 begin
   id := lbSpritesList.ItemIndex + 1;
   if id = 0 then Exit;
-
-  fSprites.Delete(id);
+  fSprites.Delete(id, lbSpritesList.SelCount);
 
   UpdateList;
 end;

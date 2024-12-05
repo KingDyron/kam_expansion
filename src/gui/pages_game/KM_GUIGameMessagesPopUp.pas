@@ -45,9 +45,9 @@ constructor TKMGUIGameMessagesPopUp.Create(aParent: TKMPanel; aOnShow : TNotifyE
 begin
   inherited Create;
   fOnShow := aOnShow;
-  Pin_Open := TKMButtonFlatPin.Create(aParent, 198, 120, 25, 32, 794);
+  Pin_Open := TKMButtonFlatPin.Create(aParent, 198, 120, 25, 32, 953);
   Pin_Open.OnClick := ClosePanel;
-  Pin_Open.Hint := gResTexts[1948];
+  Pin_Open.Hint := gResTexts[2116];
   Panel_Messages := TKMPanel.Create(aParent, 240, 0, 600, 500);
 
   Image_Background := TKMImage.Create(Panel_Messages, 0, 0, Panel_Messages.Width, Panel_Messages.Height, 18, rxGuiMain);

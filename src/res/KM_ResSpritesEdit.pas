@@ -28,7 +28,7 @@ type
     procedure AdjoinHouseMasks(aResHouses: TKMResHouses);
     procedure GrowHouseMasks(aResHouses: TKMResHouses);
     procedure SoftWater(aTileset: TKMResTileset);
-    procedure Delete(aIndex: Integer);
+    procedure Delete(aIndex: Integer; aCount : integer);
     procedure LoadFromRXFile(const aFileName: string);
     procedure SaveToRXXFile(const aFileName: string; aFormat: TKMRXXFormat);
     procedure SaveToRXAFile(const aFileName: string; aFormat: TKMRXXFormat);
@@ -81,10 +81,14 @@ begin
 end;
 
 
-procedure TKMSpritePackEdit.Delete(aIndex: Integer);
+procedure TKMSpritePackEdit.Delete(aIndex: Integer; aCount : integer);
+var I : Integer;
 begin
   Assert(InRange(aIndex, 1, fRXData.Count));
-  fRXData.Flag[aIndex] := 0;
+  Assert(InRange(aIndex + aCount - 1, 1, fRXData.Count));
+
+  for I := 0 to aCount - 1 do
+    fRXData.Flag[aIndex + I] := 0;
 end;
 
 

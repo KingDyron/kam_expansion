@@ -1,34 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Root>
   <Main>
-    <GFX FullScreen="False" VSync="True" ResolutionWidth="1920" ResolutionHeight="1080" RefreshRate="60" FPSCap="60"/>
-    <Window Left="617" Top="-17" Width="1024" Height="768" State="2"/>
+    <GFX FullScreen="False" VSync="True" ResolutionWidth="1360" ResolutionHeight="768" RefreshRate="60" FPSCap="60"/>
+    <Window Left="472" Top="-14" Width="1024" Height="860" State="2"/>
     <Misc NoRenderMaxTime="1000"/>
   </Main>
   <Game>
-    <GFX Brightness="1" AlphaShadows="True" LoadFullFonts="False"/>
-    <SFX Volume="0.0500"/>
-    <Music Enabled="True" Volume="0.0000" Shuffle="False"/>
+    <GFX Brightness="0" AlphaShadows="True" LoadFullFonts="False"/>
+    <SFX Volume="0.3500"/>
+    <Music Enabled="True" Volume="0.2000" Shuffle="False"/>
     <Video Enabled="False" Stretch="True" Startup="True" Volume="0.5000"/>
+    <Weather Enabled="True" MaxCount="10" MaxSpawnCount="4" MinInterval="200" MaxInterval="3000" MaxLifeTime="1200" MaxCloudSpeed="0.1000" DecParticles="9" NightSpeed="10" NightTime="15" DynamicLight="True"/>
     <GameCommon Locale="pol">
       <UI DefaultZoom="1.0000" ZoomBehaviour="1"/>
-      <Speed Medium="3.0000" Fast="6.0000" VeryFast="10.0000" Pace="100" ScrollSpeed="5.0000"/>
+      <Speed Medium="3.0000" Fast="6.0000" VeryFast="10.0000" Pace="100" ScrollSpeed="20.0000"/>
       <Autosave Enabled="True" OnGameEnd="False" Frequency="600" Count="5"/>
       <SavePoints Enabled="True" Frequency="9000" Limit="30"/>
       <PlayersColor Mode="1" Self="0707FF" Ally="07FFFF" Enemy="FFFF00"/>
       <WareDistribution Value="" SavedBetweenGames="True"/>
-      <Misc SpecShowBeacons="False" ShowGameTime="False" ShowGameSpeed="False" DayGamesCount="6" LastDayGamePlayed="2024.4.20 0:0:0"/>
-      <Tweaks AllowSnowHouses="True" InterpolatedRender="True" InterpolatedAnimations="False"/>
+      <Misc SpecShowBeacons="False" ShowGameTime="False" ShowGameSpeed="False" DayGamesCount="10" LastDayGamePlayed="2024.12.1 0:0:0"/>
+      <Tweaks AllowSnowHouses="True" AllowSnowObjects="True" InterpolatedRender="True" InterpolatedAnimations="False"/>
     </GameCommon>
     <Campaign CampaignLastDifficulty="4"/>
     <Replay Autopause="False" ShowBeacons="False" Savepoint="True" SavepointFrequency="3000"/>
     <MapEd HistoryDepth="250" MaxTerrainHeight="150"/>
-    <Multiplayer Name="NoNam" LastIP="127.0.0.1" LastPort="56789" LastRoom="0" LastPassword="" FlashOnMessage="True"/>
-    <Misc AsyncGameResLoader="True" BeastPanelExpanded="False" WaresPanelExpanded="False False False False True True True False False False False " HousesPanelExpanded="False False False False False False False False False False False "/>
-    <Menu FavouriteMaps="" CampaignName="" LobbyMapType="2" CampaignID="9" CampaignMapID="9">
-      <Singleplayer Type="0" ScenarioMapCRC="348272594" MissionMapCRC="0" TacticMapCRC="0" SpecialMapCRC="0" SaveFileName="autosave"/>
-      <Replay Type="1" SPSaveName="K&amp;M Tower Defense" MPSaveName="autosave01"/>
-      <MapEd MapType="1" NewMapX="128" NewMapY="128" SPMapCRC="348272594" MPMapCRC="1929638820" MPMapName="Across the Desert" DLMapCRC="0"/>
+    <Multiplayer Name="NoName" LastIP="127.0.0.1" LastPort="56789" LastRoom="0" LastPassword="" FlashOnMessage="True"/>
+    <Misc AsyncGameResLoader="True" BeastPanelExpanded="False" WaresPanelExpanded="False False False False False False False False False False False " HousesPanelExpanded="False False False False False False False False False False False "/>
+    <Menu FavouriteMaps="" CampaignName="HKS" LobbyMapType="3" CampaignID="0" CampaignMapID="48">
+      <Singleplayer Type="0" ScenarioMapCRC="1097251786" MissionMapCRC="3221235012" TacticMapCRC="3221235012" SpecialMapCRC="3221235012" SaveFileName="autosave"/>
+      <Replay Type="0" SPSaveName="" MPSaveName=""/>
+      <MapEd MapType="1" NewMapX="32" NewMapY="32" SPMapCRC="1097251786" MPMapCRC="352931217" MPMapName="TMR04" DLMapCRC="0"/>
     </Menu>
     <Debug SaveRandomChecks="True" SaveGameAsText="False"/>
   </Game>

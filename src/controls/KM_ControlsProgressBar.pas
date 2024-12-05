@@ -7,7 +7,7 @@ uses
   Classes, Controls,
   KM_Controls,
   KM_RenderUI,
-  KM_ResFonts,
+  KM_ResFonts, KM_ResTypes,
   KM_Points,
   KM_CommonTypes;
 
@@ -56,6 +56,13 @@ type
     property Orientation : TKMProgressBarOrientation read fOrientation write fOrientation;
   end;
 
+  TKMImageBar = class(TKMPercentBar)
+  protected
+    procedure PaintBar; override;
+  public
+    TexID : Word;
+    constructor Create(aParent: TKMPanel; aLeft, aTop, aWidth, aHeight, aTexID: Integer);
+  end;
 
   TKMReplayBar = class(TKMPercentBar)
   private
@@ -194,7 +201,32 @@ end;
 
 procedure TKMPercentBar.PaintBar;
 begin
+  TKMRenderUI.WriteBevel(AbsLeft, AbsTop, Width, Height);
   TKMRenderUI.WritePercentBar(AbsLeft, AbsTop, Width, Height, fPosition, fSeam, fLinesCount, fOrientation, fMainColor, fAddColor);
+end;
+
+constructor TKMImageBar.Create(aParent: TKMPanel; aLeft: Integer; aTop: Integer; aWidth: Integer; aHeight: Integer; aTexID: Integer);
+begin
+  Inherited Create(aParent, aLeft, aTop, aWidth, aHeight);
+  TexID := aTexID;
+end;
+
+procedure TKMImageBar.PaintBar;
+var I, G : integer;
+begin
+  TKMRenderUI.WriteBevel(AbsLeft, AbsTop, Width, Height);
+  TKMRenderUI.WritePicture(AbsLeft - 1, AbsTop - 1, Width, Height, [], rxGui, TexID, Enabled, $FFFF00FF, 0, fPosition);
+
+  G := Width div (fLinesCount + 1);
+
+  for I := 1 to fLinesCount do
+  begin
+    TKMRenderUI.WritePicture(AbsLeft - 7 + G * I, AbsTop + Height - 7, 13, 6, [], rxGui, 929, Enabled, $FFFF00FF, 0, fPosition);
+    TKMRenderUI.WritePicture(AbsLeft - 7 + G * I, AbsTop - 1, 13, 6, [], rxGui, 930, Enabled, $FFFF00FF, 0, fPosition);
+  end;
+
+
+  //TKMRenderUI.WritePercentBar(AbsLeft, AbsTop, Width, Height, 0, fSeam, fLinesCount, fOrientation, fMainColor, fAddColor);
 end;
 
 

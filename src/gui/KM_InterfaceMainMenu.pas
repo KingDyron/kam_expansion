@@ -26,7 +26,8 @@ uses
   KM_GUIMenuSingleMap,
   KM_GUIMenuSinglePlayer,
   KM_GUIMapEdCampaignMap,
-  KM_GUIMenuTutorials;
+  KM_GUIMenuTutorials,
+  KM_GUIMenuAchievements;
 
 
 type
@@ -48,6 +49,7 @@ type
     fMenuSinglePlayer: TKMMenuSinglePlayer;
     fMenuMapEdCampaign: TKMCampaignMapEditor;
     fMenuTutorials: TKMMenuTutorial;
+    fMenuAchievements: TKMMenuAchievements;
 
     fMenuPage: TKMMenuPageCommon;
   protected
@@ -144,6 +146,7 @@ begin
   fMenuLoading       := TKMMenuLoading.Create(Panel_Menu, PageChange);
   fMenuMapEdCampaign := TKMCampaignMapEditor.Create(Panel_Menu, PageChange);
   fMenuTutorials     := TKMMenuTutorial.Create(Panel_Menu, PageChange);
+  fMenuAchievements  := TKMMenuAchievements.Create(Panel_Menu, PageChange);
 
   fMenuSingleMap.OnNewSingleMap     := aOnNewSingleMap;
   fMenuSinglePlayer.OnNewSingleMap  := aOnNewSingleMap;
@@ -205,6 +208,7 @@ begin
   fMenuSinglePlayer.Free;
   fMenuMapEdCampaign.Free;
   fMenuTutorials.Free;
+  fMenuAchievements.Free;
   inherited;
 end;
 
@@ -279,7 +283,7 @@ begin
 
   case Dest of
     gpMainMenu:     begin
-                      Label_Version.Caption := 'KaM Expansion : Knig Dyron mod - ' + version;
+                      Label_Version.Caption := GAME_VERSION;
                       fMenuMain.Show;
                       fMenuPage := fMenuMain;
                     end;
@@ -356,6 +360,10 @@ begin
                         fMenuTutorials.Show(true);
                         fMenuPage := fMenuTutorials;
                       end;
+    gpAchievements: begin
+                      fMenuAchievements.Show;
+                      fMenuPage := fMenuAchievements;
+                    end;
   end;
 end;
 

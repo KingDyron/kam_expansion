@@ -5,6 +5,7 @@ uses
   Classes, Math, SysUtils, KromUtils, Types,
   KM_CommonClasses, KM_CommonTypes, KM_Defaults, KM_Points, KM_CommonUtils, KM_UnitVisual,
   KM_ResHouses, KM_Houses, KM_HouseSchool, KM_HouseBarracks, KM_HouseInn, KM_ResUnits,
+  KM_Structure,
   KM_HandEntity,
   KM_ResTypes;
 
@@ -136,12 +137,14 @@ type
     function UpdateVisibility: Boolean;
     procedure UpdateHitPoints; virtual;
     procedure DoKill(aShowAnimation: Boolean);
-    procedure DoDismiss;
+    procedure DoDismiss;virtual;
     procedure SetDefence(aValue : SmallInt);
     function GetDefence : SmallInt;virtual;
     procedure SetAttack(aValue : SmallInt);
     function GetAttack : SmallInt; virtual;
     procedure UpdateLastTimeTrySetActionWalk;
+    function GetUnitSpec : TKMUnitSpec;
+    function IsSelected : Boolean; virtual;
   private
     function GetTask: TKMUnitTask;
     function GetInHouse: TKMHouse;
@@ -162,7 +165,8 @@ type
     Dismissable: Boolean; //Is it allowed to dismiss this unit ?
     BootsAdded : Boolean;
     InShip : Pointer;
-    BlockWalking : Boolean;
+    BlockWalking,
+    Immortal : Boolean;
     constructor Create(aID: Cardinal; aUnitType: TKMUnitType; const aLoc: TKMPointDir; aOwner: TKMHandID; aInHouse: TKMHouse);
     destructor Destroy; override;
 
@@ -249,9 +253,9 @@ type
     property  Sight : SmallInt read fSight write fSight ;
     function GetProjectileDefence(isBolt : Boolean) : Single;
     procedure SetSpeed(aValue : SmallInt; addTo : Boolean = false);
-    procedure AssignToShip(aShip : Pointer);
+    procedure AssignToShip(aShip : Pointer); virtual;
+    procedure UnloadFromShip(aShip : Pointer); virtual;
     function IsAssigningToShip : Boolean;
-    procedure UnloadFromShip(aShip : Pointer);
     function IsUnloadingFromShip : Boolean;
     procedure GoToStore(aLocTo : TKMPoint);
 
@@ -298,6 +302,8 @@ type
     function ObjToString(const aSeparator: String = '|'): String; override;
     function ObjToStringShort(const aSeparator: String = '|'): String; override;
 
+    property Spec : TKMUnitSpec read GetUnitSpec;
+
     function UpdateState: Boolean; virtual;
     procedure UpdateVisualState;
     procedure Paint(aTickLag: Single); virtual;
@@ -336,6 +342,7 @@ type
   //This is a common class for all units, who can work in house
   TKMUnitCitizen = class(TKMSettledUnit)
   protected
+    procedure TaskGetWater;
     procedure TaskGetWork; override;
   public
     function CanWorkAt(aLoc: TKMPoint; aGatheringScript: TKMGatheringScript): Boolean;
@@ -363,6 +370,7 @@ type
     procedure Deliver(aFrom: TKMHouse; toHouse: TKMHouse; aWare: TKMWareType; aID: integer); overload;
     procedure Deliver(aFrom: TKMHouse; toUnit: TKMUnit; aWare: TKMWareType; aID: integer); overload;
     procedure Deliver(aFrom: TKMHouse; aTo: TKMPoint; aWare: TKMWareType; aID: integer); overload;
+    procedure Deliver(aFrom: TKMHouse; aToStruc: TKMStructure; aWare: TKMWareType; aID: integer); overload;
     function TryDeliverFrom(aFrom: TKMHouse): Boolean;
     procedure DelegateDelivery(aToSerf: TKMUnitSerf);
 
@@ -381,14 +389,14 @@ type
   protected
     procedure PaintUnit(aTickLag: Single); override;
   public
-    procedure BuildBridge(aLoc : TKMPoint; aIndex: Integer);
+    procedure BuildStructure(aStructure : TKMStructure; aIndex: Integer);
     procedure BuildHouseUpgrade(aHouse: TKMHouse; aIndex: Integer);
     procedure BuildHouse(aHouse: TKMHouse; aIndex: Integer);
     procedure BuildHouseRepair(aHouse: TKMHouse; aIndex: Integer);
     procedure BuildField(aField: TKMFieldType; aLoc: TKMPoint; aIndex: Integer; aRoadType : TKMRoadType);
     procedure BuildHouseArea(aHouseType: TKMHouseType; aLoc: TKMPoint; aIndex: Integer);
     function PickRandomSpot(aList: TKMPointDirList; out Loc: TKMPointDir): Boolean;
-    function PickNextSpot(aList: TKMPointDirList; out Loc: TKMPointDir): Boolean;
+    function PickNextSpot(aList: TKMPointDirList; out Loc: TKMPointDir; var aLastCellID : Byte): Boolean;
 
     function UpdateState: Boolean; override;
   end;
@@ -431,7 +439,7 @@ type
     constructor Load(LoadStream: TKMemoryStream); override;
 
     property FishCount: Byte read fFishCount write fFishCount;
-    procedure ReduceFish;
+    function ReduceFish(aCount : Integer = 1) : Byte;
 
     procedure Save(SaveStream: TKMemoryStream); override;
 
@@ -466,10 +474,11 @@ implementation
 uses
   TypInfo,
   KM_Entity,
-  KM_Game, KM_GameParams, KM_RenderPool, KM_RenderAux, KM_ResTexts,
+  KM_Game, KM_GameParams, KM_GameApp,
+  KM_RenderPool, KM_RenderAux, KM_ResTexts,
   KM_HandsCollection, KM_UnitWarrior, KM_Resource,
   KM_Hand, KM_MapEdTypes,
-
+  KM_CommonHelpers,
   KM_UnitActionAbandonWalk,
   KM_UnitActionFight,
   KM_UnitActionGoInOut,
@@ -490,11 +499,13 @@ uses
   KM_UnitTaskMining,
   KM_UnitTaskSelfTrain,
   KM_UnitTaskThrowRock,
+  KM_UnitTaskCollectWares,
+  KM_UnitTaskGoToWell,
   KM_SpecialAnim,
   KM_GameTypes,
   KM_HandTypes,
   KM_CommonExceptions,
-  KM_Terrain,
+  KM_Terrain, KM_TerrainTypes,
   KM_Particles;
 
 
@@ -639,8 +650,14 @@ begin
 
   if fType = utClayPicker then
     if (fHome <> nil) and (fHome.HouseType = htCollectors) then
-      if fAction.fType in [uaWork..uaWork1] then
-        yPaintPos := yPaintPos - 25/CELL_SIZE_PX;
+      if fAction.fType in [uaWork, uaWork1] then
+        case Direction of
+          dirN : yPaintPos := yPaintPos - 25/CELL_SIZE_PX;
+          dirS: yPaintPos := yPaintPos + 15/CELL_SIZE_PX;
+          dirE: xPaintPos := xPaintPos + 20/CELL_SIZE_PX;
+          dirW: xPaintPos :=xPaintPos - 20/CELL_SIZE_PX;
+        end;
+
 
 
 
@@ -809,7 +826,13 @@ begin
       fIdleTimer := 0;
       if not gRes.Houses[fHome.HouseType].IsWorkshop
       or (fHome.CheckWareOut(wtAll) < MAX_WARES_OUT_WORKSHOP) then //Do not do anything if we have too many ready resources
+      begin
         TaskGetWork; //Unit is at home, so go get a job
+      end;
+      //maybe his home needs water
+      if fTask = nil then
+        If self is TKMUnitCitizen then
+         TKMUnitCitizen(self).TaskGetWater;
 
       if fTask = nil then //We didn't find any job to do - rest at home
         SetActionStay(Max(gRes.Houses[fHome.HouseType].WorkerRest,1)*10, uaWalk); //By default it's 0, don't scan that often
@@ -846,6 +869,30 @@ begin
   Result := Inherited GetActivityText; //Default
   if fTask is TKMTaskMining then
     Result := TKMTaskMining(fTask).GetActivityText;
+end;
+
+
+procedure TKMUnitCitizen.TaskGetWater;
+var well : TKMHouse;
+begin
+  fTask := nil;
+  if not Home.WareCanAddToIn(wtWater) then //this home needs no water
+    Exit;
+
+  if Home.CheckWareIn(wtWater) >= gHands[Owner].Stats.WareDistribution[wtWater,Home.HouseType] then //we have enough water
+    Exit;
+
+  if not KMSamePoint(fPositionRound, fHome.Entrance) then
+    raise ELocError.Create('Working from wrong spot', fPositionRound);
+
+  well := gHands.GetClosestHouse(fHome.Entrance, [htWell], [wtWater], 6);
+
+  //no well found
+  if well = nil then
+    Exit;
+
+  if well.IsValid then
+    fTask := TKMTaskGoToWell.Create(self, well);
 end;
 
 
@@ -898,6 +945,7 @@ begin
    then
     // If task can't be done - discard it
     FreeAndNil(fTask);
+
 end;
 
 
@@ -978,6 +1026,11 @@ begin
   fTask := TKMTaskDeliver.Create(Self, aFrom, aTo, aWare, aID);
 end;
 
+procedure TKMUnitSerf.Deliver(aFrom: TKMHouse; aToStruc: TKMStructure; aWare: TKMWareType; aID: integer);
+begin
+  fThought := thNone; //Clear ? thought
+  fTask := TKMTaskDeliver.Create(Self, aFrom, aToStruc, aWare, aID);
+end;
 
 function TKMUnitSerf.GetCarry: TKMWareType;
 begin
@@ -1160,9 +1213,9 @@ begin
   fTask := TKMTaskBuildHouseUpgrade.Create(Self, aHouse, aIndex);
 end;
 
-procedure TKMUnitWorker.BuildBridge(aLoc : TKMPoint; aIndex: Integer);
+procedure TKMUnitWorker.BuildStructure(aStructure : TKMStructure; aIndex: Integer);
 begin
-  fTask := TKMTaskBuildBridge.Create(Self, aLoc, aIndex);
+  fTask := TKMTaskBuildStructure.Create(Self, aStructure, aIndex);
 end;
 
 
@@ -1219,7 +1272,7 @@ begin
     Loc := aList[spots[KaMRandom(myCount, 'TKMUnitWorker.PickRandomSpot')]];
 end;
 
-function TKMUnitWorker.PickNextSpot(aList: TKMPointDirList; out Loc: TKMPointDir): Boolean;
+function TKMUnitWorker.PickNextSpot(aList: TKMPointDirList; out Loc: TKMPointDir; var aLastCellID : Byte): Boolean;
   function TileHasWorkingWorker(aLoc : TKMPoint) : Boolean;
   var W : TKMUnitWorker;
   begin
@@ -1231,27 +1284,14 @@ function TKMUnitWorker.PickNextSpot(aList: TKMPointDirList; out Loc: TKMPointDir
 var
   I, myCount, aSpot: Integer;
   spots: array of Word;
-  H : TKMHouse;//working house
 begin
   SetLength(spots, aList.Count);
-  H := nil;
-  if fTask <> nil then
-    if fTask is TKMTaskBuildHouseUpgrade then
-      H := TKMTaskBuildHouseUpgrade(fTask).House
-    else
-    if fTask is TKMTaskBuildHouseRepair then
-      H := TKMTaskBuildHouseRepair(fTask).House
-    else
-    if fTask is TKMTaskBuildHouse then
-      H := TKMTaskBuildHouse(fTask).House
-    else
-  else
-    H := nil;
 
   //Scan the list and pick suitable locations
   myCount := 0;
   for I := 0 to aList.Count - 1 do
   if CanWalkTo(aList[I].Loc, 0)
+  and not gTerrain.AvoidTile(aList[I].Loc)
   //and not TileHasWorkingWorker(aList[I].Loc)
   then
   begin
@@ -1261,30 +1301,18 @@ begin
   if aList.Count = 0 then
     Exit(false);
   //Scan the list and pick suitable locations
-  aSpot := UID mod aList.Count;
-  if H <> nil then
-  begin
-    I := 0;
-    aSpot := H.LastCellID mod aList.Count;
-    repeat
-      H.LastCellID := EnsureRange(H.LastCellID + 1, 0, high(byte));
-      if not TileHasWorkingWorker(aList[aSpot].Loc) then
-        Break
-      else
-        aSpot := H.LastCellID mod aList.Count;
+  I := 0;
+  aSpot := aLastCellID mod aList.Count;
+  repeat
+    aLastCellID := EnsureRange(aLastCellID + 1, 0, high(byte));
+    IncLoop(aLastCellID, 0, 255);
+    if not TileHasWorkingWorker(aList[aSpot].Loc) then
+      Break
+    else
+      aSpot := aLastCellID mod aList.Count;
 
-      Inc(I);
-    until I = 10;
-    //I := 0
-  end else
-  for I := 0 to aList.Count - 1 do
-    if KMSamePoint(aList[I].Loc, Position) then
-      if I + 1 >= aList.Count then
-        aSpot := 0
-      else
-        aSpot := I + 1;
-
-
+    Inc(I);
+  until I = 10;
 
   Result := (myCount > 0);
   if Result then
@@ -1512,10 +1540,12 @@ begin
 end;
 
 
-procedure TKMUnitFish.ReduceFish;
+function TKMUnitFish.ReduceFish(aCount : Integer = 1) : Byte;
 begin
-  if fFishCount > 1 then
-    Dec(fFishCount)
+  Result := Min(aCount, fFishCount);
+
+  if fFishCount > aCount then
+    Dec(fFishCount, aCount)
   else
     Kill(HAND_NONE, True, False);
 end;
@@ -1560,6 +1590,13 @@ begin
     fConditionPace := 20
   else
     fConditionPace := 10;
+
+  if gGameParams.MBD.IsEasy then
+    fConditionPace := Round(fConditionPace * 1.5)
+  else
+  if gGameParams.MBD.IsHardOrRealism then
+    fConditionPace := Round(fConditionPace * 0.8);
+
 
   //Units start with a random amount of condition ranging from 0.5 to 0.7 (KaM uses 0.6 for all units)
   //By adding the random amount they won't all go eat at the same time and cause crowding, blockages, food shortages and other problems.
@@ -1611,6 +1648,7 @@ begin
     Condition := UNIT_MAX_CONDITION;
     NeverHungry := true;
   end;
+  Immortal := false;
 
 end;
 
@@ -1665,11 +1703,16 @@ begin
       uttDie:             fTask := TKMTaskDie.Load(LoadStream);
       uttGoOutShowHungry: fTask := TKMTaskGoOutShowHungry.Load(LoadStream);
       uttGoGetBoots:      fTask := TKMTaskGoGetBoots.Load(LoadStream);
-      uttBuildBridge:     fTask := TKMTaskBuildBridge.Load(LoadStream);
+      uttBuildStructure:  fTask := TKMTaskBuildStructure.Load(LoadStream);
       uttGoToShip:        fTask := TKMTaskAssignToShip.Load(LoadStream);
       uttBuildGrassLand:  fTask := TKMTaskBuildGrassLand.Load(LoadStream);
-      uttUnloadFromShip:        fTask := TKMTaskUnloadFromShip.Load(LoadStream);
-      uttGoToStore:        fTask := TKMTaskGoToStore.Load(LoadStream);
+      uttUnloadFromShip:  fTask := TKMTaskUnloadFromShip.Load(LoadStream);
+      uttGoToStore:       fTask := TKMTaskGoToStore.Load(LoadStream);
+      uttGoToLoc:         fTask := TKMTaskGoToLoc.Load(LoadStream);
+      uttCollectWares:    fTask := TKMTaskCollectWares.Load(LoadStream);
+      uttUnloadWares:     fTask := TKMTaskUnloadWares.Load(LoadStream);
+      uttGoToWell:        fTask := TKMTaskGoToWell.Load(LoadStream);
+      uttTakeOverHouse:   fTask := TKMTaskTakeOverHouse.Load(LoadStream);
     else
       raise Exception.Create('TaskName can''t be handled');
     end;
@@ -1737,6 +1780,7 @@ begin
   LoadStream.Read(fNeverHungry);
   LoadStream.Read(FlagColor);
   LoadStream.Read(BlockWalking);
+  LoadStream.Read(Immortal);
 end;
 
 
@@ -1984,6 +2028,14 @@ begin
   // Should be saved in game save as well, since could be used later during our death (f.e. on next tick if fKillASAP)
   fKilledBy := aFrom;
 
+  //after killing someone we get some by-products
+  if aFrom >= 0 then
+  with gHands[aFrom] do
+  begin
+    VirtualWareTake('vtLeatherSheet', -1);
+    VirtualWareTake('vtCoin', -1);
+  end;
+
   if Assigned(OnUnitDied) then
     OnUnitDied(Self);
 
@@ -2103,6 +2155,8 @@ procedure TKMUnit.HitPointsDecrease(aAmount: Byte; aAttacker: TKMUnit);
 begin
   Assert(aAmount > 0, '0 damage should be handled outside so not to reset HPCounter');
 
+  if Immortal then
+    Exit;
   //When we are first hit reset the counter
   if fHitPoints = HitPointsMax then
     fHitPointCounter := 1;
@@ -2122,7 +2176,9 @@ end;
 procedure TKMUnit.HitPointsDecrease(aAttack, aDamage : Integer; aAttacker : TKMUnit; aInstantKill : Boolean = false);
 var att : Integer;
 begin
-  if InstantKill then
+  if Immortal then
+    Exit;
+  if aInstantKill then
     HitPointsDecrease(fHitPointsMax, aAttacker)
   else
   begin
@@ -2224,7 +2280,6 @@ begin
   CancelTask;
   if fTask = nil then
     fTask := TKMTaskUnloadFromShip.Create(self, TKMUnitWarriorShip(aShip));
-
 end;
 
 function TKMUnit.IsUnloadingFromShip : Boolean;
@@ -2332,7 +2387,15 @@ begin
   //  AnimStep := UnitStillFrames[fDirection];
 end;
 
+function TKMUnit.GetUnitSpec: TKMUnitSpec;
+begin
+  Result := gRes.Units[UnitType];
+end;
 
+function TKMUnit.IsSelected : Boolean;
+begin
+  Result := gMySpectator.Selected = self;
+end;
 //Assign the following Action to unit and set AnimStep
 procedure TKMUnit.SetAction(aAction: TKMUnitAction; aStep: Integer = 0);
 begin
@@ -2513,8 +2576,9 @@ end;
 
 procedure TKMUnit.SetCondition(aValue: Integer);
 begin
-  if Self.NeverHungry then
+  if NeverHungry or Immortal then
     Exit;
+
   fCondition := EnsureRange(aValue, 0, UNIT_MAX_CONDITION);
 end;
 
@@ -2659,7 +2723,7 @@ end;
 
 function TKMUnit.IsDismissing: Boolean;
 begin
-  Result := fDismissASAP or (fTask is TKMTaskDismiss);
+  Result := fDismissASAP or (fTask is TKMTaskDismiss) or (fTask is TKMTaskDismissWarrior);
 end;
 
 
@@ -2673,7 +2737,9 @@ function TKMUnit.IsDismissCancelAvailable: Boolean;
 begin
   Result := fDismissASAP
             or ((fTask is TKMTaskDismiss)
-              and TKMTaskDismiss(fTask).CouldBeCancelled);
+              and TKMTaskDismiss(fTask).CouldBeCancelled)
+            or ((fTask is TKMTaskDismissWarrior)
+              and TKMTaskDismissWarrior(fTask).CouldBeCancelled);
 end;
 
 
@@ -2737,6 +2803,7 @@ begin
   Result := gTerrain.TileInMapCoords(X,Y)
         and (gTerrain.Land^[Y,X].IsUnit = nil)
         and (gTerrain.CheckPassability(KMPoint(X,Y), aPass))
+        and not (gTerrain.AvoidTile(X, Y))
         and (not KMStepIsDiag(Position, KMPoint(X,Y)) //Only check vertex usage if the step is diagonal
              or (not gTerrain.HasVertexUnit(KMGetDiagVertex(Position, KMPoint(X,Y)))))
         and (gTerrain.CanWalkDiagonally(Position, X, Y));
@@ -2893,6 +2960,11 @@ const
       -1,                      //uttGoToShip
       TX_UNIT_TASK_ROAD,        //uttBuildGrassland
       -1,                      //uttUnloadFromShip
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
       -1
     );
 begin
@@ -2930,6 +3002,15 @@ begin
   if fCondition < 600 then
     Result := Result - 1;
 
+  if gHands[Owner].IsAffectedbyMBD then
+  begin
+    if gGameParams.MBD.IsEasy then
+      Result := Round(Result * 1.5)
+    else
+    if gGameParams.MBD.IsHardOrRealism then
+      Result := Round(Result * 0.8);
+  end;
+
   Result := Max(Result, 0);
 end;
 
@@ -2951,7 +3032,17 @@ begin
   if fCondition < 600 then
     Result := Round(Result * 0.75);
 
+  if gHands[Owner].IsAffectedbyMBD then
+  begin
+    if gGameParams.MBD.IsEasy then
+      Result := Round(Result * 1.5)
+    else
+    if gGameParams.MBD.IsHardOrRealism then
+      Result := Round(Result * 0.8);
+  end;
+
   Result := Max(Result, 1);
+
 end;
 
 Procedure TKMUnit.SetAttack(aValue : SmallInt);
@@ -3231,6 +3322,7 @@ begin
   SaveStream.Write(fNeverHungry);
   SaveStream.Write(FlagColor);
   SaveStream.Write(BlockWalking);
+  SaveStream.Write(Immortal);
 end;
 
 
@@ -3294,7 +3386,7 @@ begin
   Inc(fTicker);
 
   //Update hunger
-  if not fNeverHungry then
+  if not (fNeverHungry or Immortal) then
     if (fTicker mod Max(fConditionPace, 1) = 0) then
     begin
       If (fCondition > 0)
@@ -3309,6 +3401,14 @@ begin
     if gTerrain.TileHasPalisade(fPositionRound.X, fPositionRound.Y) then
       if gHands.CheckAlliance(Owner, gTerrain.Land^[fPositionRound.Y, fPositionRound.X].TileOwner) = atEnemy then
         HitPointsDecrease(45, 1, nil);
+    //check if unit is on locked tile;
+
+    if gTerrain.AvoidTile(Position) and IsIdle then
+    begin
+      CancelTask;
+      fTask := TKMTaskGoToLoc.Create(self, gTerrain.FindPlaceForUnit(Position, gRes.Units[fType].AllowedPassability, 7));
+    end;
+
   end;
 
   //Unit killing could be postponed by few ticks, hence fCondition could be <0
@@ -3413,6 +3513,12 @@ begin
     gRenderAux.CircleOnTerrain(fPositionF.X - 0.5 + GetSlide(axX), fPositionF.Y - 0.5 + GetSlide(axY), 0.35, GetRandomColorWSeed(UID));
   if Visible and (fAction <> nil) then
     PaintUnit(aTickLag);
+
+  if IsSelected then
+  begin
+    gRenderPool.AddSprite(fPositionF + KMPointF(0.4, -1.75 + sin(gGameApp.GlobalTickCount) * 0.1),
+                954, rxGui, FlagColor, true, false, 0, true);
+  end;
 
 end;
 
@@ -3627,12 +3733,13 @@ end;
 function TKMUnitsArray.Remove(aPointer: Pointer): Boolean;
 var I : Integer;
 begin
+  Result := false;
   if fCount = 0 then
-    Exit(false);
+    Exit;
 
   for I := fCount - 1 downto 0 do
     if fList[I] = aPointer then
-      Remove(I);
+      Result := Remove(I);
 end;
 
 function TKMUnitsArray.GetItem(aIndex : Integer) : TKMUnit;

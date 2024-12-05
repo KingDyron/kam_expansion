@@ -326,7 +326,7 @@ begin
   //pauses here until the user clicks ok. However for some reason we chose MessageBox
   //thus we need to pause the game manually
 
-  aCanClose := (gGameApp = nil) or (gGameApp.Game = nil) or gGameApp.Game.Params.IsReplay;
+  aCanClose := (gGameApp = nil) or (gGameApp.Game = nil) or gGameApp.Game.Params.IsReplay or gGameApp.IsGameFinished;
 
   if not aCanClose then
   begin

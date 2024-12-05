@@ -6,7 +6,7 @@ uses
   {$IFDEF Unix} LCLIntf, LCLType, {$ENDIF}
   Classes, Math, StrUtils, SysUtils,
   Controls,
-  KM_Controls, KM_ControlsBase, KM_ControlsList, KM_ControlsMinimapView, KM_ControlsPopUp,
+  KM_Controls, KM_ControlsBase, KM_ControlsList, KM_ControlsMinimapView, KM_ControlsPopUp, KM_ControlsEdit, KM_ControlsSwitch,
   KM_Defaults, KM_Pics, KM_Points,
   KM_Houses, KM_Units, KM_UnitGroup, KM_MapEditor,
   KM_InterfaceDefaults, KM_InterfaceGame, KM_Terrain, KM_Minimap, KM_Viewport, KM_Render,
@@ -72,6 +72,8 @@ type
     procedure Message_Click(Sender: TObject);
     procedure ChangeOwner_Click(Sender: TObject);
     procedure UniversalEraser_Click(Sender: TObject);
+    procedure ChangeResCount_Click(Sender: TObject);
+    procedure ChangeResCount_Changed(Sender: TObject);
 
     procedure UpdateMapEdCursor(X, Y: Integer; Shift: TShiftState);
     procedure Main_ButtonClick(Sender: TObject);
@@ -84,6 +86,7 @@ type
     procedure UpdatePlayerSelectButtons;
     procedure SetPaintBucketMode(aSetPaintBucketMode: Boolean);
     procedure SetUniversalEraserMode(aSetUniversalEraserMode: Boolean);
+    procedure SetChangeResCountMode(aSetChangeResCountMode: Boolean);
     procedure MoveObjectToCursorCell(aObjectToMove: TObject);
     procedure UpdateSelection;
     procedure DragHouseModeStart(const aHouseNewPos, aHouseOldPos: TKMPoint);
@@ -106,6 +109,7 @@ type
     procedure History_MouseWheel(Sender: TObject; WheelSteps: Integer; var aHandled: Boolean);
     procedure History_Close;
     procedure History_UpdatePos;
+    procedure Options_Close;
 
     function GetGuiTerrain: TKMMapEdTerrain;
 
@@ -122,6 +126,13 @@ type
     Button_Undo, Button_Redo: TKMButtonFlat;
     Button_ChangeOwner: TKMButtonFlat;
     Button_UniversalEraser: TKMButtonFlat;
+
+    Button_ChangeResCount: TKMButtonFlat;
+      PopUp_ChangeRes: TKMPopUpPanel;
+        Edit_MinCount,
+        Edit_MaxCount : TKMNumericEdit;
+        CheckBox_Random : TKMCheckBox;
+
 
     Panel_Common: TKMPanel;
       Button_Main: array [1..5] of TKMButton; //5 buttons
@@ -268,6 +279,41 @@ begin
   Button_UniversalEraser.BackAlpha := 1;
   Button_UniversalEraser.Down := False;
   Button_UniversalEraser.OnClick := UniversalEraser_Click;
+
+
+
+  Button_ChangeResCount := TKMButtonFlat.Create(Panel_Main, MAPED_TOOLBAR_WIDTH - 33, TOP_SIDE_BTN + 140, 30, 32, 717);
+  Button_ChangeResCount.BackAlpha := 1;
+  Button_ChangeResCount.Down := False;
+  Button_ChangeResCount.Hint := gResTexts[2111];
+  Button_ChangeResCount.OnClick := ChangeResCount_Click;
+
+    PopUp_ChangeRes := TKMPopUpPanel.Create(Panel_Main, 270, 100, gResTexts[110], pbPaper, True, False, False);
+    PopUp_ChangeRes.Left := Button_ChangeResCount.Right + 5;
+    PopUp_ChangeRes.Top  := Button_ChangeResCount.Top;
+    PopUp_ChangeRes.DragEnabled := True;
+    PopUp_ChangeRes.Hide; // History is hidden by default
+    //PopUp_ChangeRes.OnMouseWheel := History_MouseWheel;
+    PopUp_ChangeRes.OnClose := Options_Close;
+    PopUp_ChangeRes.Anchors := [anTop, anRight];
+
+    CheckBox_Random := TKMCheckBox.Create(PopUp_ChangeRes, 10, 25, 250, 20, gResTexts[2112], fntMetal);
+    CheckBox_Random.OnClick := ChangeResCount_Changed;
+
+    TKMLabel.Create(PopUp_ChangeRes, 0, 50, PopUp_ChangeRes.Width, 20, gResTexts[2115], fntMetal, taCenter);
+
+    Edit_MinCount := TKMNumericEdit.Create(PopUp_ChangeRes, 25, 75, 0, 6);
+    Edit_MinCount.Width := 85;
+    Edit_MinCount.TextAlign := taCenter;
+    Edit_MinCount.Hint := gResTexts[2113];
+    Edit_MinCount.OnChange := ChangeResCount_Changed;
+
+    Edit_MaxCount := TKMNumericEdit.Create(PopUp_ChangeRes, 140, 75, 0, 6);
+    Edit_MaxCount.Width := 85;
+    Edit_MaxCount.TextAlign := taCenter;
+    Edit_MaxCount.Value := 5;
+    Edit_MaxCount.Hint := gResTexts[2114];
+    Edit_MaxCount.OnChange := ChangeResCount_Changed;
 
   Image_Extra := TKMImage.Create(Panel_Main, MAPED_TOOLBAR_WIDTH, Panel_Main.Height - 48, 30, 48, 494);
   Image_Extra.Anchors := [anLeft, anBottom];
@@ -471,6 +517,12 @@ begin
   Button_History.Down := PopUp_History.Visible;
 end;
 
+procedure TKMMapEdInterface.Options_Close;
+begin
+  Button_ChangeResCount.Down := PopUp_ChangeRes.Visible;
+  SetChangeResCountMode(Button_ChangeResCount.Down);
+end;
+
 
 procedure TKMMapEdInterface.History_JumpTo(Sender: TObject);
 begin
@@ -516,6 +568,8 @@ begin
 
   Button_ChangeOwner.Down := gCursor.Mode = cmPaintBucket;
   Button_UniversalEraser.Down := gCursor.Mode = cmUniversalEraser;
+  Button_ChangeResCount.Down := gCursor.Mode = cmChangeResCount;
+  PopUp_ChangeRes.Visible := Button_ChangeResCount.Down;
 end;
 
   
@@ -677,6 +731,20 @@ begin
     gCursor.Mode := cmNone;
 end;
 
+procedure TKMMapEdInterface.SetChangeResCountMode(aSetChangeResCountMode: Boolean);
+begin
+  Button_ChangeResCount.Down := aSetChangeResCountMode;
+  PopUp_ChangeRes.Visible := aSetChangeResCountMode;
+  if aSetChangeResCountMode then
+  begin
+    gCursor.Mode := cmChangeResCount;
+    // Clear selected object, as it could be deleted
+    gMySpectator.Selected := nil;
+    HidePages;
+  end else
+    gCursor.Mode := cmNone;
+end;
+
 
 procedure TKMMapEdInterface.ChangeOwner_Click(Sender: TObject);
 begin
@@ -689,6 +757,32 @@ begin
   SetUniversalEraserMode(not Button_UniversalEraser.Down);
 end;
 
+procedure TKMMapEdInterface.ChangeResCount_Click(Sender: TObject);
+begin
+  SetChangeResCountMode(not Button_ChangeResCount.Down);
+  ChangeResCount_Changed(nil);
+end;
+
+procedure TKMMapEdInterface.ChangeResCount_Changed(Sender: TObject);
+begin
+  Edit_MaxCount.Enabled := CheckBox_Random.Checked;
+  Edit_MaxCount.ValueMin := Edit_MinCount.Value;
+  Edit_MaxCount.Value := Edit_MaxCount.Value;
+
+  if Edit_MaxCount.Value = Edit_MaxCount.ValueMax then
+    Edit_MaxCount.Text := 'MAX'
+  else
+    Edit_MaxCount.Text := IntToStr(Edit_MaxCount.Value);
+
+  if Edit_MinCount.Value = Edit_MinCount.ValueMax then
+    Edit_MinCount.Text := 'MAX'
+  else
+    Edit_MinCount.Text := IntToStr(Edit_MinCount.Value);
+
+  gCursor.MapEd_WaresMinCount := Edit_MinCount.Value;
+  gCursor.MapEd_WaresMaxCount := Edit_MaxCount.Value;
+  gCursor.MapEd_WaresRandomCount := CheckBox_Random.Checked;
+end;
 
 procedure TKMMapEdInterface.UnRedo_Click(Sender: TObject);
 begin
@@ -1111,20 +1205,22 @@ begin
     History_Click(Button_History);
 
   ManageExtrasKeys(Key, Shift);
-
-  if (ssCtrl in Shift) and (Key = Ord('Y')) then
+  if not (ssAlt in Shift) then
   begin
-    UnRedo_Click(Button_Redo); // Ctrl+Y = Redo
-    aHandled := True;
-  end;
+    if (ssCtrl in Shift) and (Key = Ord('Y')) then
+    begin
+      UnRedo_Click(Button_Redo); // Ctrl+Y = Redo
+      aHandled := True;
+    end;
 
-  if (ssCtrl in Shift) and (Key = Ord('Z')) then
-  begin
-    if ssShift in Shift then
-      UnRedo_Click(Button_Redo) //Ctrl+Shift+Z = Redo
-    else
-      UnRedo_Click(Button_Undo); //Ctrl+Z = Undo
-    aHandled := True;
+    if (ssCtrl in Shift) and (Key = Ord('Z')) then
+    begin
+      if ssShift in Shift then
+        UnRedo_Click(Button_Redo) //Ctrl+Shift+Z = Redo
+      else
+        UnRedo_Click(Button_Undo); //Ctrl+Z = Undo
+      aHandled := True;
+    end;
   end;
 
   gCursor.SState := Shift; // Update Shift state on KeyUp
@@ -1289,6 +1385,11 @@ begin
   if gCursor.Mode = cmPaintBucket then
   begin
     gSystem.Cursor := kmcPaintBucket;
+    Exit;
+  end;
+  if gCursor.Mode = cmChangeResCount then
+  begin
+    gSystem.Cursor := kmcChangeResCount;
     Exit;
   end;
 

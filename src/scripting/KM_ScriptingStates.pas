@@ -3762,7 +3762,6 @@ begin
 end;
 
 function TKMScriptStates.HouseEntranceOffset(aHouseType: Integer): TKMPoint;
-var I, K : Integer;
 begin
   try
     if InRange(aHouseType, low(HOUSE_ID_TO_TYPE), high(HOUSE_ID_TO_TYPE)) then

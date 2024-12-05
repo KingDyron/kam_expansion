@@ -153,7 +153,6 @@ type
     function GetItem(aType: TKMUnitType): TKMUnitSpec; inline;
     function GetSerfCarry(aType: TKMWareType; aDir: TKMDirection): TKMAnimLoop;
     procedure CalculateTroopTrainOrder;
-    function IsFileInUse(fName: string) : boolean;
   public
     BootsAnim : TKMAnimLoop;
     FishermansShipSketch,
@@ -195,11 +194,11 @@ const
     35, 36,
     14,15,16,17,18,19,20,21,22,23, //Warriors
     -1,-1,-1,-1, -1,-1, -1, -1, -1, -1, -1, - 1, -1, -1, -1, -1, //TPR warriors (can't be placed with SET_UNIT)
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     24,25,26,27,28,29,30,31); //Animals
 
   //This is a map of the valid values for !SET_GROUP, and the corresponing unit that will be created (matches KaM behavior)
-  UNIT_ID_TO_TYPE: array[0..63] of TKMUnitType = (
+  UNIT_ID_TO_TYPE: array[0..65] of TKMUnitType = (
     utSerf,utWoodcutter,utMiner,utAnimalBreeder,utFarmer,
     utCarpenter,utBaker,utButcher,utFisher,utBuilder,
     utStonemason,utSmith,utMetallurgist,utRecruit, //Units
@@ -215,6 +214,7 @@ const
     utOperator, utShieldBearer, utFighter,
     utSpikedTrap, utWoodenWall, utClayPicker,
     utTorchMan, utMedic, utBattleShip, utBoat,
+    utPyro, utLekter,
     utNone, utNone, utNone
     );
 
@@ -226,6 +226,7 @@ const
     24,25,26,27, 28,29,//TPR warriors
     38, 39, 40, 41, 42, 43, 44, 45, 46, 47,//My Warriors
     48, 49, 50, 52, 53, 54, 55, 57, 58, 59, 60,
+    61, 62,//pyro
     30,31,32,33,34,35,36,37); //Animals
 
 
@@ -257,7 +258,7 @@ const
     2, 1, 1, 2, 3,
     3, 3, 3, 1, 1,
     1, 2, 3, 1, 2,
-    3,
+    3, 1,
     0,0,0
   );
   UNITS_WITH_BOOTS : set of TKMUnitType = [utSerf, utWoodcutter, utStonemason, utFisher, utBuilder, utFarmer];
@@ -379,13 +380,14 @@ end;
 
 function TKMUnitSpec.GetCanOrderAmmo: Boolean;
 begin
-  Result := fUnitType in [utBowMan, utCrossbowMan, utBallista, utCatapult, utRogue, utAmmoCart, utArcher, utShip, utBattleShip];
+  Result := fUnitType in [utBowMan, utCrossbowMan, utBallista, utCatapult, utRogue,
+                          utAmmoCart, utArcher, utShip, utBattleShip, utBoat];
 end;
 
 function TKMUnitSpec.GetAmmoType: TKMUnitAmmoType;
 begin
   case fUnitType of
-    utBattleShip,
+    utBattleShip : Result := uatBolt;
     utArcher,
     utCrossbowMan,
     utBowMan : Result := uatArrow;
@@ -393,6 +395,7 @@ begin
     utGolem,
     utCatapult: Result := uatStoneBolt;
     utRogue :  Result := uatRogueStone;
+    utBoat :  Result := uatAxe;
     else
       Result := uatNone;
   end;
@@ -443,6 +446,7 @@ end;
 function TKMUnitSpec.GetShipWeight: Single;
 begin
   case fUnitType of
+    utNone, utAny : Result := -1;
     utBallista: Result := 6;
     utCatapult: Result := 8;
     utAmmoCart,
@@ -537,9 +541,11 @@ const
     [uaWalk, uaWork, uaDie, uaEat],//utSpikedTrap
     [uaWalk, uaWork, uaDie, uaEat],//utWoodenWall
     [uaWalk, uaWork, uaDie, uaEat, uaStay],//utTorchMan
-    [uaWalk, uaSpec, uaDie, uaEat],//utTorchMan
+    [uaWalk, uaSpec, uaDie, uaEat],//utSHIP
     [uaWalk, uaWork, uaDie, uaEat],//utBattleShip
     [uaWalk, uaWork, uaDie, uaEat],//utBoat
+    [uaWalk, uaWork, uaDie, uaEat, uaStay],//utPyro
+    [uaWalk, uaWork, uaDie, uaEat, uaStay],//utLekter
 
     [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk] //Animals
   );
@@ -598,6 +604,8 @@ const
     ftMelee,//utWoodenWall
     ftMelee,
     ftRanged,
+    ftMelee,
+    ftMelee,
     ftMelee
   );
 begin
@@ -626,8 +634,8 @@ begin
     utAmmoCart:    Result := 790;
     utPikeMachine:    Result := 793;
 
-    utBoat,
-    utBattleShip,
+    utBoat: Result := 917;
+    utBattleShip: Result := 916;
     utShip: Result := 848;
     utClubMan: Result := 849;
     utMaceFighter: Result := 850;
@@ -639,6 +647,8 @@ begin
     utOperator: Result := 857;
     utTorchman: Result := 859;
     utMedic: Result := 861;
+    utPyro: Result := 946;
+    utLekter: Result := 950;
 
     utWolf : Result := 71;
     utFish : Result := 72;
@@ -679,8 +689,8 @@ begin
       utTrainedWolf: Result := 783;
       utAmmoCart: Result := 784;
       utPikeMachine: Result := 792;
-      utBoat,
-      utBattleShip,
+      utBoat: Result := 948;
+      utBattleShip: Result := 949;
       utShip: Result := 840;
       utClubMan: Result := 841;
       utMaceFighter: Result := 842;
@@ -693,6 +703,8 @@ begin
       utTorchman: Result := 858;
       utClayPicker: Result := 881;
       utMedic: Result := 860;
+      utPyro: Result := 947;
+      utLekter: Result := 951;
     end;
   end;
 end;
@@ -709,7 +721,7 @@ const
     $B0B0B0,$B08000,$B08000,$80B0B0,$00B0B0,$B080B0,$00B000,$80B0B0,
     $80B0B0 ,$80B0B0,$80B0B0,$80B0B0,$80B0B0, $80B0B0, $80B0B0, $80B0B0, $80B0B0, $80B0B0,
     $80B0B0, $80B0B0 ,$80B0B0,$80B0B0, $80B0B0, $80B0B0 ,$80B0B0,$80B0B0,$80B0B0,$80B0B0,
-    $80B0B0,$80B0B0); //Exact colors can be tweaked
+    $80B0B0,$80B0B0,$80B0B0,$80B0B0); //Exact colors can be tweaked
 begin
   Result := MM_COLOR[fUnitType] or $FF000000;
 end;
@@ -723,6 +735,7 @@ begin
     utFarmer:      Result := 10;
     utStonemason:  Result := 16;
     utFisher:      Result := 14;
+    utBoat:        Result := 5;
   else
     raise Exception.Create(GUIName + ' has no mining range');
   end;
@@ -810,7 +823,9 @@ begin
     utTorchman:          Result := 1996;
     utMedic:             Result := 1997;
     utBattleShip:        Result := 2023;
-    utBoat:               Result := 2024;
+    utBoat:              Result := 2024;
+    utPyro:              Result := 2102;
+    utLekter:              Result := 2103;
   else
     Result := TX_UNITS_NAMES__29 + UNIT_TYPE_TO_ID[fUnitType];
   end;
@@ -1314,19 +1329,20 @@ begin
   fItems[utShip].fUnitDat.Defence := 3;
   fItems[utShip].fUnitDat.Attack := 0;
   fItems[utShip].fUnitDat.AttackHorse := 0;
-  fItems[utShip].fUnitDat.Speed := 30;
+  fItems[utShip].fUnitDat.Speed := 24;
   fItems[utShip].fUnitDat.Sight := 7;
 
   fItems[utBattleShip].fUnitDat := fItems[utMilitia].fUnitDat;
   fItems[utBattleShip].fUnitSprite := fItems[utCatapult].fUnitSprite;
   for dir := DirN to dirNW do
     fItems[utBattleShip].fUnitSprite.Act[uaWalkArm].Dir[dir].Count := 0;
+
   fItems[utBattleShip].fUnitDat.HitPoints := 6;
   fItems[utBattleShip].fUnitDat.Defence := 5;
   fItems[utBattleShip].fUnitDat.Attack := 500;
   fItems[utBattleShip].fUnitDat.AttackHorse := 0;
   fItems[utBattleShip].HouseDamage := 25;
-  fItems[utBattleShip].fUnitDat.Speed := 30;
+  fItems[utBattleShip].fUnitDat.Speed := 20;
   fItems[utBattleShip].fUnitDat.Sight := 7;
 
 
@@ -1338,7 +1354,7 @@ begin
   fItems[utBoat].fUnitDat.Defence := 1;
   fItems[utBoat].fUnitDat.Attack := 0;
   fItems[utBoat].fUnitDat.AttackHorse := 0;
-  fItems[utBoat].fUnitDat.Speed := 32;
+  fItems[utBoat].fUnitDat.Speed := 29;
   fItems[utBoat].fUnitDat.Sight := 7;
 
 
@@ -1370,7 +1386,10 @@ begin
   fItems[utWoodenWall].fUnitSprite := fItems[utCatapult].fUnitSprite;
 
   fItems[utTorchMan].fUnitDat := fItems[utRecruit].fUnitDat;
-  fItems[utTorchMan].fUnitSprite := fItems[utRecruit].fUnitSprite;
+  fItems[utTorchMan].fUnitSprite := fItems[utMilitia].fUnitSprite;
+
+  fItems[utPyro].fUnitDat := fItems[utRecruit].fUnitDat;
+  fItems[utPyro].fUnitSprite := fItems[utMilitia].fUnitSprite;
 
   fItems[utMedic].fUnitDat := fItems[utSwordFighter].fUnitDat;
   fItems[utMedic].fUnitSprite := fItems[utSwordFighter].fUnitSprite;
@@ -1633,30 +1652,6 @@ begin
   //fHouses
 end;
 
-function TKMResUnits.IsFileInUse(fName: string) : boolean;
-var
-  HFileRes: HFILE;
-begin
-  Result := False;
-  if not FileExists(fName) then begin
-    Exit;
-  end;
-
-  HFileRes := CreateFile(PChar(fName)
-    ,GENERIC_READ or GENERIC_WRITE
-    ,0
-    ,nil
-    ,OPEN_EXISTING
-    ,FILE_ATTRIBUTE_NORMAL
-    ,0);
-
-  Result := (HFileRes = INVALID_HANDLE_VALUE);
-
-  if not(Result) then begin
-    CloseHandle(HFileRes);
-  end;
-end;
-
 procedure TKMResUnits.ExportCSV(const aPath: UnicodeString);
 var
   ft: textfile;
@@ -1753,7 +1748,7 @@ const
   wtIron, wtIron, wtTimber, wtBow, wtBow, wtFish, //wtSteelE .. wtWater
   wtStone, wtCoal, wtWine, wtWine, wtStone, wtLeather, //wtTile..wtSawDust
   wtCorn, wtLance, wtPike, wtCoal, wtLeatherArmor,//wtHay..wtPlateArmor
-  wtIron
+  wtIron, wtIronOre
   );
 
 var
@@ -1791,9 +1786,9 @@ begin
       fSerfCarryNew[wtVegetables, dirN].Create(0, 0, 9464, 8);
       fSerfCarryNew[wtVegetables, dirNE].Create(0, 0, 9480, 8);
       fSerfCarryNew[wtVegetables, dirE].Create(0, 0, 9488, 8);
-      //fSerfCarryNew[wtEgg, dirSE].Create(0, 0, 9464, 8);
-      //fSerfCarryNew[wtEgg, dirS].Create(0, 0, 9464, 8);
-      //fSerfCarryNew[wtEgg, dirSW].Create(0, 0, 9464, 8);
+      fSerfCarryNew[wtEgg, dirSE].Create(0, 0, 9464, 8);
+      fSerfCarryNew[wtEgg, dirS].Create(0, 0, 9464, 8);
+      fSerfCarryNew[wtEgg, dirSW].Create(0, 0, 9464, 8);
       fSerfCarryNew[wtVegetables, dirW].Create(0, 0, 9496, 8);
       fSerfCarryNew[wtVegetables, dirNW].Create(0, 0, 9472, 8);
 
@@ -1863,13 +1858,13 @@ var I : Integer;
   nArr: TJsonArray;
   nRoot : TKMJson;
   UT : TKMUnitType;
-  tmp : TKMUnitTypeArray;
+  //tmp : TKMUnitTypeArray;
 begin
   if not FileExists(aPath) then
     Exit(0);
 
-  //nRoot := TJsonObject.ParseFromFile(aPath) as TJsonObject;
-  nRoot := gRes.JsonData['units'];
+  nRoot := TJsonObject.ParseFromFile(aPath) as TJsonObject;
+  //nRoot := gRes.JsonData['units'];
   Result := nRoot.CRC;
 
   nArr := nRoot.A['Units'];

@@ -105,8 +105,11 @@ begin
 
 
   DropList_HouseType := TKMDropList.Create(Panel_Goal, 480, 90, 150, 25, fntMetal, '', bsGame);
-  for I := 0 to High(HOUSE_GUI_TAB_ORDER) do
-    DropList_HouseType.Add(gResTexts[HOUSE_GUI_TAB_ORDER[I].TextID], I);
+  for I := 0 to High(HOUSE_VICTORY_ORDER) do
+  begin
+    DropList_HouseType.Add(gResTexts[HOUSE_VICTORY_ORDER[I].TextID], I);
+  end;
+
   DropList_HouseType.OnChange := Goal_Change;
 
   TKMLabel.Create(Panel_Goal, 480, 120, gResTexts[1892], fntMetal, taLeft);

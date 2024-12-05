@@ -6,12 +6,13 @@ uses
   KM_AI,
   KM_Units, KM_UnitsCollection, KM_UnitGroup, KM_UnitWarrior,
   KM_Houses, KM_HouseCollection, KM_HouseInn,
+  KM_Structure, KM_StructuresCollection,
   KM_HandLogistics, KM_HandLocks, KM_HandStats, KM_GameTypes,
   KM_FogOfWar, KM_HandConstructions, KM_MessageLog, KM_ResHouses,
   KM_CommonClasses, KM_CommonTypes, KM_Defaults, KM_Points,
   KM_HandEntity, KM_HandTypes, KM_CommonClassesExt,
   KM_ScriptingTypes,
-  KM_ResTypes, KM_ResFonts, KM_ResBridges;
+  KM_ResTypes, KM_ResFonts, KM_ResStructures;
 
 
 type
@@ -62,6 +63,7 @@ type
     fDeliveries: TKMHandLogistics;
     fFogOfWar: TKMFogOfWar; //Stores FOW info for current player, which includes
     fHouses: TKMHousesCollection;
+    fStructures: TKMStructuresCollection;
     fLocks: TKMHandLocks;
     fRoadsList: TKMPointTagList; //Used only once to speedup mission loading, then freed
     fStats: TKMHandStats;
@@ -97,7 +99,7 @@ type
     fUpdateHandEntities : Boolean;
     fNeverHungry : Boolean;
 
-    fBridgesBuilt : TKMBridgeBasicArray;
+    //fBridgesBuilt : TKMStructureBasicArray;
     fCustomPanelData : TKMCustomPanelInfo;
 
     function IsDisabled: Boolean;
@@ -136,6 +138,7 @@ type
     function GetVWareByID(aIndex : Integer) : Integer;
     procedure SetVWareByID(aIndex : Integer; aValue : Integer);
     procedure SetNeverHungry(aValue : Boolean);
+    procedure SetWorklessCitizens(aValue : Word);
   public
 
     MessageStack: array of record
@@ -163,6 +166,7 @@ type
     property Constructions: TKMHandConstructions read fConstructions;
     property Deliveries: TKMHandLogistics read GetDeliveries;
     property Houses: TKMHousesCollection read fHouses;
+    property Structures: TKMStructuresCollection read fStructures;
     property Locks: TKMHandLocks read fLocks;
     property Stats: TKMHandStats read fStats;
     property FogOfWar: TKMFogOfWar read fFogOfWar;
@@ -209,7 +213,7 @@ type
     function CanTrainSerfs : Integer;
     procedure TakeWorkless;
 
-    property Workless : Word read fWorklessCitizens write fWorklessCitizens;
+    property Workless : Word read fWorklessCitizens write SetWorklessCitizens;
     property OverlayText: UnicodeString read fOverlayText write fOverlayText;
     property OverlayTextSettings: TKMOverlayTextSettings read fOverlayTextSettings;
     property OverlayMarkup: AnsiString read fOverlayMarkup write fOverlayMarkup;
@@ -225,6 +229,8 @@ type
     function IsComputer: Boolean;
     function IsAdvancedAI: Boolean;
     function IsClassicAI: Boolean;
+    function IsAlliedWithHuman : Boolean;
+    function IsAffectedbyMBD : Boolean;
 
     function CanBeAI: Boolean;
 
@@ -258,7 +264,7 @@ type
     function CanRemFakeFieldPlan(const aLoc: TKMPoint; aFieldType: TKMFieldType): Boolean;
     function CanAddHousePlan(const aLoc: TKMPoint; aHouseType: TKMHouseType): Boolean;
     function CanAddHousePlanAI(aX, aY: Word; aHouseType: TKMHouseType; aCheckInfluence: Boolean): Boolean;
-    function CanAddBridgePlan(const aLoc : TKMPoint; aIndex, aRot : Word) : Boolean;
+    function CanAddStructurePlan(const aLoc : TKMPoint; aIndex, aRot : Word) : Boolean;
     function HasVWares(aCost : TKMVWarePlanCommon) : Boolean;
     function CanPlaceDecoration(const aLoc : TKMPoint; aIndex : Word) : Boolean;
     function CanBuildHouse(aHouseType : TKMHouseType) : Boolean;
@@ -275,7 +281,7 @@ type
     procedure ToggleFakeFieldPlan(const aLoc: TKMPoint; aFieldType: TKMFieldType; aRoadType : TKMRoadType);
     function AddHouse(aHouseType: TKMHouseType; PosX, PosY: Word; RelativeEntrace: Boolean): TKMHouse;
     procedure AddHousePlan(aHouseType: TKMHouseType; const aLoc: TKMPoint);
-    procedure AddBridgePlan(const aLoc : TKMPoint; aIndex, aRot: Word);
+    procedure AddStructurePlan(const aLoc : TKMPoint; aIndex, aRot: Word);
     procedure PlaceDecoration(const aLoc : TKMPoint; aIndex: Word);
 
     function HasHousePlan(const aLoc: TKMPoint): Boolean;
@@ -292,10 +298,12 @@ type
     function FindCityCenter: TKMPoint;
     function HitTest(X,Y: Integer): TObject;
     function HousesHitTest(X, Y: Integer): TKMHouse;
+    function StructuresHitTest(X, Y: Integer): TKMStructure;
     function GroupsHitTest(X, Y: Integer): TKMUnitGroup;
     function ObjectByUID(aUID: Integer): TObject;
     procedure GetHouseMarks(const aLoc: TKMPoint; aHouseType: TKMHouseType; aList: TKMPointTagList; aIgnoreFOW: Boolean = False; aIgnoreObjects: Boolean = false);
-    procedure GetBridgeMarks(const aLoc: TKMPoint; aIndex, aRot: Word; aList : TKMPointTagList; aIgnoreFOW: Boolean = false);
+    procedure GetStructureMarks(const aLoc: TKMPoint; aIndex, aRot: Word; aList : TKMPointTagList; aIgnoreFOW: Boolean = false);
+    procedure TakeOverHouse(aHouse : TKMHouse);
 
     function GetClosestHouse(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aWareSet : TKMWareTypeSet = [wtAll];  aMaxDistance : Single = 999) : TKMHouse;
     function GetClosestStore(aLoc : TKMPoint; aWare: TKMWareType) : TKMHouse;
@@ -305,7 +313,6 @@ type
     function GetFieldsCount: Integer;
     procedure GetFieldPlans(aList: TKMPointTagList; const aRect: TKMRect; aIncludeFake: Boolean);
     procedure GetHousePlans(aList: TKMPointDirList; const aRect: TKMRect);
-    procedure GetBridgePlans(aList: TKMPointDirTagList; const aRect: TKMRect);
     procedure GetPlansTablets(aList: TKMPointTagList; const aRect: TKMRect);
     function CanDoStatsUpdate(aTick: Cardinal): Boolean;
     function DoCheckGoals: Boolean;
@@ -325,8 +332,8 @@ type
     property CustomPanelData: TKMCustomPanelInfo read fCustomPanelData;
 
     procedure BuildBridge(aLoc : TKMPoint; aIndex, aRot : Word);
-    function HasBridgeBuiltAt(aLoc : TKMPoint) : Boolean;
-    property BridgesBuilt : TKMBridgeBasicArray read fBridgesBuilt;
+    //function HasBridgeBuiltAt(aLoc : TKMPoint) : Boolean;
+    //property BridgesBuilt : TKMStructureBasicArray read fBridgesBuilt;
     procedure Save(SaveStream: TKMemoryStream); override;
     procedure Load(LoadStream: TKMemoryStream); override;
     procedure SyncLoad; override;
@@ -532,6 +539,7 @@ begin
   fStats        := TKMHandStats.Create;
   fRoadsList    := TKMPointTagList.Create;
   fHouses       := TKMHousesCollection.Create;
+  fStructures   := TKMStructuresCollection.Create;
   fDeliveries   := TKMHandLogistics.Create(fID);
   fConstructions:= TKMHandConstructions.Create;
   fUnitGroups   := TKMUnitGroups.Create;
@@ -595,6 +603,7 @@ begin
 
   FreeThenNil(fRoadsList);
   FreeThenNil(fHouses);
+  FreeThenNil(fStructures);
 
   //Should be freed after Houses and Units, as they write Stats on Destroy
   FreeThenNil(fLocks);
@@ -640,22 +649,31 @@ begin
 end;
 
 function TKMHand.AddUnit(aUnitData: TKMUnitMainData; const aLoc: TKMPoint): TKMUnit;
+var I : integer;
+  G : TKMUnitGroup;
 begin
-  if aUnitData.IsWarrior then
+  Result := nil;
+  if aUnitData.UnitType in UNITS_WARRIORS then
   begin
     with aUnitData do
-      Result := AddUnitGroup(aType,
-                      aLoc,
-                      dirS,
-                      1,
-                      1).Members[0];
-    TKMUnitWarrior(Result).BoltCount := aUnitData.BoltCount;
+      G := AddUnitGroup(UnitType, aLoc, dirS, Columns, Count);
+
+    if G = nil then
+      Exit;
+
+    for I := 0 to G.Count - 1 do
+    begin
+      G.Members[I].BoltCount := aUnitData.BoltCount;
+      G.Members[I].Condition := aUnitData.Condition;
+    end;
+
+    Result := G.Members[0];
 
   end else
   begin
-  with aUnitData do
-    Result := AddUnit(aType, aLoc);
-
+    Result := AddUnit(aUnitData.UnitType, aLoc);
+    if Result <> nil then
+      Result.Condition := aUnitData.Condition;
   end;
 
   Result.Condition := aUnitData.Condition;
@@ -878,6 +896,21 @@ end;
 function TKMHand.IsClassicAI: Boolean;
 begin
   Result := IsComputer and not fAI.Setup.NewAI;
+end;
+
+function TKMHand.IsAlliedWithHuman: Boolean;
+var I : Integer;
+begin
+  Result := false;
+  for I := 0 to gHands.Count - 1 do
+    if gHands[I].Enabled and gHands[I].IsHuman then
+      if gHands[I].Alliances[ID] = atAlly then
+        Exit(true);
+end;
+
+function TKMHand.IsAffectedbyMBD: Boolean;
+begin
+  Result := IsHuman or IsAlliedWithHuman;
 end;
 
 
@@ -1256,7 +1289,7 @@ begin
     if (I <> fID) and (fAlliances[I] = atAlly) then
       Result := Result and (gHands[i].fConstructions.FieldworksList.HasField(aLoc) = ftNone)
                        and not gHands[i].fConstructions.HousePlanList.HasPlan(aLoc)
-                       and not gHands[i].fConstructions.BridgePlanList.HasPlan(aLoc);
+                       {and not gHands[i].fConstructions.BridgePlanList.HasPlan(aLoc)};
 end;
 
 
@@ -1297,8 +1330,9 @@ begin
   Result := gTerrain.CanAddField(aLoc.X, aLoc.Y, aFieldType, ID)
             and (fConstructions.FieldworksList.HasField(aLoc) = ftNone)
             and not fConstructions.HousePlanList.HasPlan(aLoc)
-            and not fConstructions.BridgePlanList.HasPlan(aLoc)
-            and LocHasNoAllyPlans(aLoc);
+            //and not fConstructions.BridgePlanList.HasPlan(aLoc)
+            and LocHasNoAllyPlans(aLoc)
+            and (IsComputer or not gTerrain.IsReservedForAI(aLoc));
 end;
 
 
@@ -1307,11 +1341,11 @@ end;
 //When the result effects the outcome of the game, the above function should be used instead.
 function TKMHand.CanAddFakeFieldPlan(const aLoc: TKMPoint; aFieldType: TKMFieldType): Boolean;
 begin
-  Result := gTerrain.CanAddField(aLoc.X, aLoc.Y, aFieldType, ID
-  )
+  Result := gTerrain.CanAddField(aLoc.X, aLoc.Y, aFieldType, ID)
+            and (IsComputer or not gTerrain.IsReservedForAI(aLoc))
             and (fConstructions.FieldworksList.HasFakeField(aLoc) = ftNone)
             and not fConstructions.HousePlanList.HasPlan(aLoc)
-            and not fConstructions.BridgePlanList.HasPlan(aLoc)
+            //and not fConstructions.BridgePlanList.HasPlan(aLoc)
             and LocHasNoAllyPlans(aLoc);
 end;
 
@@ -1358,6 +1392,9 @@ begin
     //This checks below require Tx;Ty to be within the map so exit immediately if they are not
     if not Result then exit;
 
+    if not IsComputer then
+      Result := Result and not gTerrain.IsReservedForAI(KMPoint(Tx,Ty));
+    if not Result then exit;
     //This tile must not contain fields/houses of allied players or self
     for J := 0 to gHands.Count - 1 do
       if fAlliances[J] = atAlly then
@@ -1369,13 +1406,14 @@ begin
         begin
         for S := -1 to 1 do
           for T := -1 to 1 do
+          begin
             Result := Result
-                      and not gHands[J].fConstructions.HousePlanList.HasPlan(KMPoint(Tx+S,Ty+T))
-                      and not gHands[J].fConstructions.BridgePlanList.HasPlan(KMPoint(Tx+S,Ty+T));
+                      and not gHands[J].fConstructions.HousePlanList.HasPlan(KMPoint(Tx+S,Ty+T));
+          end;
+
         end else
           Result := Result
-                      and not gHands[J].fConstructions.HousePlanList.HasPlan(KMPoint(Tx,Ty))
-                      and not gHands[J].fConstructions.BridgePlanList.HasPlan(KMPoint(Tx,Ty));
+                      and not gHands[J].fConstructions.HousePlanList.HasPlan(KMPoint(Tx,Ty));
 
         
       end;
@@ -1383,41 +1421,9 @@ begin
 
 end;
 
-function TKMHand.CanAddBridgePlan(const aLoc: TKMPoint; aIndex, aRot: Word): Boolean;
-var I, J, S, T : Integer;
-  //X, Y : Integer;
-  P : TKMPoint;
+function TKMHand.CanAddStructurePlan(const aLoc: TKMPoint; aIndex, aRot: Word): Boolean;
 begin
-  Result := gTerrain.CanPlaceBridge(aLoc, aIndex, aRot);
-  if not Result then Exit;
-  with gRes.Bridges[aIndex] do
-    for I := 0 to Count - 1 do
-      if Points[aRot, I] <> 0 then
-      begin
-        P.X := aLoc.X + Offset[aRot].X + I mod Size[aRot].X;
-        P.Y := aLoc.Y + Offset[aRot].Y + I div Size[aRot].X;
-
-        Result := Result and gTerrain.TileInMapCoords(P, 1)
-                         and (IsComputer
-                          or (NeedToChooseFirstStorehouseInGame and fFogOfWar.CheckTileInitialRevelation(P.X, P.Y)) //Use initial revelation for first storehouse
-                          or (not NeedToChooseFirstStorehouseInGame and (fFogOfWar.CheckTileRevelation(P.X, P.Y) > 0)));
-        if not Result then exit;
-
-        //This tile must not contain fields/houses of allied players or self
-        for J := 0 to gHands.Count - 1 do
-          if fAlliances[J] = atAlly then
-          begin
-            Result := Result and (gHands[J].fConstructions.FieldworksList.HasField(P) = ftNone);
-            //Surrounding tiles must not be a house
-
-            for S := -1 to 1 do
-              for T := -1 to 1 do
-                Result := Result
-                        and (not gHands[J].fConstructions.HousePlanList.HasPlan(KMPoint(P.X+S,P.Y+T)))
-                        and (not gHands[J].fConstructions.BridgePlanList.HasPlan(KMPoint(P.X+S,P.Y+T)));
-
-          end;
-      end;
+  Result := gTerrain.CanPlaceStructure(aLoc, aIndex, aRot);
 end;
 
 function TKMHand.HasVWares(aCost: TKMVWarePlanCommon): Boolean;
@@ -1431,7 +1437,6 @@ begin
 end;
 
 function TKMHand.CanPlaceDecoration(const aLoc: TKMPoint; aIndex: Word): Boolean;
-var I : Integer;
 begin
   Result := true;
 
@@ -1442,6 +1447,7 @@ begin
     dtTile : Result := gTerrain.Land[aLoc.Y, aLoc.X].BaseLayer.Terrain <> gDecorations[aIndex].ID;
     dtTileOverlay : Result := byte(gTerrain.Land[aLoc.Y, aLoc.X].TileOverlay2) <> gDecorations[aIndex].ID;
   end;
+  Result := Result and (not gTerrain.IsReservedForAI(aLoc) or IsComputer);
   if not Result then
     Exit;
   Result := Result and HasVWares(gDecorations[aIndex].Cost);
@@ -1517,8 +1523,7 @@ begin
         //Surrounding tiles must not be a house
         for S := -1 to 1 do
           for T := -1 to 1 do
-            if gHands[J].fConstructions.HousePlanList.HasPlan(KMPoint(Tx+S,Ty+T))
-              or gHands[J].fConstructions.BridgePlanList.HasPlan(KMPoint(Tx+S,Ty+T)) then
+            if gHands[J].fConstructions.HousePlanList.HasPlan(KMPoint(Tx+S,Ty+T)) then
               Exit;
       end;
   end;
@@ -1717,15 +1722,14 @@ begin
     gSoundPlayer.Play(sfxPlacemarker);
 end;
 
-procedure TKMHand.AddBridgePlan(const aLoc: TKMPoint; aIndex, aRot: Word);
+procedure TKMHand.AddStructurePlan(const aLoc: TKMPoint; aIndex, aRot: Word);
 var
   loc: TKMPoint;
 begin
-  loc.X := aLoc.X + gRes.Bridges[aIndex].Offset[aRot].X;
-  loc.Y := aLoc.Y + gRes.Bridges[aIndex].Offset[aRot].Y;
+  loc.X := aLoc.X + gRes.Structures[aIndex].Base[aRot].Offset.X;
+  loc.Y := aLoc.Y + gRes.Structures[aIndex].Base[aRot].Offset.Y;
 
-  gTerrain.SetBridgePlan(loc, aIndex, aRot, hbsStone);
-  fConstructions.BridgePlanList.AddPlan(loc, aIndex, aRot);
+  fConstructions.StructureList.AddStructure(fStructures.AddStructure(aLoc, aIndex, aRot, ID));
   if (ID = gMySpectator.HandID) and not gGameParams.IsReplayOrSpectate then
     gSoundPlayer.Play(sfxPlacemarker);
 end;
@@ -1744,7 +1748,6 @@ end;
 function TKMHand.HasHousePlan(const aLoc: TKMPoint): Boolean;
 begin
   Result := fConstructions.HousePlanList.HasPlan(aLoc)
-            or fConstructions.BridgePlanList.HasPlan(aLoc);
 end;
 
 
@@ -1773,12 +1776,7 @@ end;
 procedure TKMHand.RemHousePlan(const Position: TKMPoint);
 var
   hPlan: TKMHousePlan;
-  P : TKMBridgePlan;
 begin
-
-  P := fConstructions.BridgePlanList.RemPlan(Position);
-  if P.Loc <> KMPOINT_ZERO then
-    gTerrain.SetBridgePlan(P.Loc, P.Index, P.Rotation, hbsWood);
 
   if not fConstructions.HousePlanList.TryGetPlan(Position, hPlan) then //Due to network delays house might not exist now
     Exit;
@@ -2063,6 +2061,11 @@ begin
   Result:= fHouses.HitTest(X, Y);
 end;
 
+function TKMHand.StructuresHitTest(X: Integer; Y: Integer): TKMStructure;
+begin
+  Result:= fStructures.HitTest(X, Y);
+end;
+
 
 function TKMHand.GroupsHitTest(X, Y: Integer): TKMUnitGroup;
 begin
@@ -2323,16 +2326,6 @@ begin
       gHands[I].Constructions.HousePlanList.GetOutlines(aList, aRect);
 end;
 
-procedure TKMHand.GetBridgePlans(aList: TKMPointDirTagList; const aRect: TKMRect);
-var
-  I: TKMHandID;
-begin
-  //Include self and allies
-  for I := 0 to gHands.Count - 1 do
-    if gHands[fID].Alliances[I] = atAlly then
-      gHands[I].Constructions.BridgePlanList.GetOutlines(aList, aRect);
-end;
-
 procedure TKMHand.GetPlansTablets(aList: TKMPointTagList; const aRect: TKMRect);
 var
   I: TKMHandID;
@@ -2382,13 +2375,14 @@ begin
                       or (NeedToChooseFirstStorehouseInGame and fFogOfWar.CheckTileInitialRevelation(P2.X, P2.Y)) //Use initial revelation for first storehouse
                       or (not NeedToChooseFirstStorehouseInGame and (fFogOfWar.CheckTileRevelation(P2.X, P2.Y) > 0));
 
+        allowBuild := allowBuild and (IsComputer or not gTerrain.IsReservedForAI(P2));
+
         //This tile must not contain fields/houses of allied players or self
         if allowBuild then
           for J := 0 to gHands.Count - 1 do
             if (gHands[fID].Alliances[J] = atAlly)
               and ((gHands[J].fConstructions.FieldworksList.HasField(P2) <> ftNone)
-                or gHands[J].fConstructions.HousePlanList.HasPlan(P2)
-                or gHands[J].fConstructions.BridgePlanList.HasPlan(P2)) then
+                or gHands[J].fConstructions.HousePlanList.HasPlan(P2)) then
               allowBuild := False;
 
         //Check surrounding tiles in +/- 1 range for other houses pressence
@@ -2398,8 +2392,7 @@ begin
               if (S <> 0) or (T <> 0) then //This is a surrounding tile, not the actual tile
                 for J := 0 to gHands.Count - 1 do
                   if (gHands[fID].Alliances[J] = atAlly)
-                    and (gHands[J].fConstructions.HousePlanList.HasPlan(KMPoint(P2.X + S, P2.Y + T))
-                    or gHands[J].fConstructions.BridgePlanList.HasPlan(KMPoint(P2.X + S, P2.Y + T))) then
+                    and (gHands[J].fConstructions.HousePlanList.HasPlan(KMPoint(P2.X + S, P2.Y + T)) ) then
                   begin
                     BlockPoint(KMPoint(P2.X + S, P2.Y + T), TC_BLOCK); //Block surrounding points
                     allowBuild := False;
@@ -2418,7 +2411,7 @@ begin
       end;
 end;
 
-procedure TKMHand.GetBridgeMarks(const aLoc: TKMPoint; aIndex, aRot: Word; aList : TKMPointTagList; aIgnoreFOW: Boolean = false);
+procedure TKMHand.GetStructureMarks(const aLoc: TKMPoint; aIndex, aRot: Word; aList : TKMPointTagList; aIgnoreFOW: Boolean = false);
 
 var  allowBuild : Boolean;
   procedure BlockPoint(const aPoint : TKMPoint; aTag : Cardinal);
@@ -2444,11 +2437,7 @@ var  allowBuild : Boolean;
         if (I <> 0) or (K <> 0) then //This is a surrounding tile, not the actual tile
           for J := 0 to gHands.Count - 1 do
             if (gHands[fID].Alliances[J] = atAlly)
-              and (gHands[J].fConstructions.HousePlanList.HasPlan(KMPoint(aPoint.X + I, aPoint.Y + K))
-                  or gHands[J].fConstructions.BridgePlanList.HasPlan(KMPoint(aPoint.X + I, aPoint.Y + K))
-              )
-
-              then
+              and gHands[J].fConstructions.HousePlanList.HasPlan(KMPoint(aPoint.X + I, aPoint.Y + K))  then
               Exit(false);
 
   end;
@@ -2462,45 +2451,51 @@ var  allowBuild : Boolean;
     for J := 0 to gHands.Count - 1 do
       if (gHands[fID].Alliances[J] = atAlly)
         and (gHands[J].fConstructions.HousePlanList.HasPlan(KMPoint(aPoint.X, aPoint.Y))
-            or (gHands[J].fConstructions.FieldworksList.HasField(aPoint) <> ftNone)
-            or gHands[J].fConstructions.BridgePlanList.HasPlan(aPoint)) then
+            or (gHands[J].fConstructions.FieldworksList.HasField(aPoint) <> ftNone) ) then
         Exit(false);
 
   end;
 
-
-Var I: Integer;
-  P : TKMPoint;
 begin
-  gTerrain.GetBridgeMarks(aLoc, aIndex, aRot, aList);
-  with gRes.Bridges[aIndex] do
-    for I := 0 to Count - 1 do
-      if Points[aRot, I] > 0 then
-      begin
-        P.X := aLoc.X + (I mod Size[aRot].X) + Offset[aRot].X;
-        P.Y := aLoc.Y + (I div Size[aRot].X) + Offset[aRot].Y;
-        allowBuild := true;
-        if not gTerrain.TileInMapCoords(P) then
-          Continue;
-        if not gTerrain.TileInMapCoords(P, 1) then
-          allowBuild := false;
+  gTerrain.GetStructureMarks(aLoc, aIndex, aRot, aList);
+end;
 
-        //BlockPoint(P, 0);
-        allowBuild := allowBuild and (aIgnoreFOW
-                      or (NeedToChooseFirstStorehouseInGame and fFogOfWar.CheckTileInitialRevelation(P.X, P.Y)) //Use initial revelation for first storehouse
-                      or (not NeedToChooseFirstStorehouseInGame and (fFogOfWar.CheckTileRevelation(P.X, P.Y) > 0)));
+procedure TKMHand.TakeOverHouse(aHouse: TKMHouse);
+var aWaresIn, aWaresOut : array[WARE_MIN..WARE_MAX] of Word;
+  aType : TKMHouseType;
+  aLoc : TKMPoint;
+  aDamage, aStyle, aLevel : Word;
+  aWariant : Integer;
+  WT : TKMWareType;
+  H : TKMHouse;
+begin
 
-        allowBuild := allowBuild and CheckForPlans(P);
-        allowBuild := allowBuild and CheckForHousePlansAround(P);
+  aLoc := aHouse.Entrance;
+  aType := aHouse.HouseType;
+  aDamage := aHouse.GetDamage;
+  aStyle := aHouse.Style;
+  aWariant := aHouse.PicWariant;
+  aLevel := aHouse.CurrentLevel;
+  for WT := WARE_MIN to WARE_MAX do
+  begin
+    aWaresIn[WT] := aHouse.CheckWareIn(WT);
+    aWaresOut[WT] := aHouse.CheckWareOut(WT);
+  end;
 
-        if not allowBuild then
-          if Points[aRot, I] = 2 then
-            BlockPoint(P, TC_BLOCK_ENTRANCE)
-          else
-            BlockPoint(P, TC_BLOCK);
-          
+  aHouse.Demolish(ID, true);
 
-      end;
+  H := AddHouse(aType, aLoc.X, aLoc.Y, true);
+  H.Style := aStyle;
+  H.PicWariant := aWariant;
+  H.CurrentLevel := aLevel;
+  for WT := WARE_MIN to WARE_MAX do
+  begin
+    H.WareAddToIn(WT, aWaresIn[WT], true);
+    H.WareAddToOut(WT, aWaresOut[WT]);
+  end;
+  H.AddDamage(aDamage, nil, false);
+  H.TakeOver;
+
 
 end;
 
@@ -2707,6 +2702,7 @@ begin
   fDeliveries.Save(SaveStream);
   fFogOfWar.Save(SaveStream);
   fHouses.Save(SaveStream);
+  fStructures.Save(SaveStream);
   fLocks.Save(SaveStream);
   fStats.Save(SaveStream);
   fUnitGroups.Save(SaveStream);
@@ -2788,7 +2784,7 @@ begin
     end;
   end;
 
-  fBridgesBuilt.SaveToStream(SaveStream);
+  //fBridgesBuilt.SaveToStream(SaveStream);
 end;
 
 
@@ -2806,6 +2802,7 @@ begin
   fDeliveries.Load(LoadStream);
   fFogOfWar.Load(LoadStream);
   fHouses.Load(LoadStream);
+  fStructures.Load(LoadStream);
   fLocks.Load(LoadStream);
   fStats.Load(LoadStream);
   fUnitGroups.Load(LoadStream);
@@ -2887,7 +2884,7 @@ begin
       end;
   end;
 
-  fBridgesBuilt.LoadFromStream(LoadStream);
+  //fBridgesBuilt.LoadFromStream(LoadStream);
 
 end;
 
@@ -2916,6 +2913,7 @@ begin
     fUnitGroups[I].OnGroupDied := GroupDied;
 
   fHouses.SyncLoad;
+  //fStructures.SyncLoad;
 
   //Assign event handler after load
   for I := 0 to fHouses.Count - 1 do
@@ -3199,7 +3197,10 @@ begin
     fUnitGroups.Paint(aRect, aTickLag);
 
   if mlHouses in gGameParams.VisibleLayers then
+  begin
     fHouses.Paint(aRect);
+    fStructures.Paint(KMRectGrow(aRect, 1));
+  end;
 
   if not SKIP_RENDER AND OVERLAY_DEFENCES AND not fAI.Setup.NewAI then
     if gMySpectator.SelectedHandID = fID then
@@ -3332,6 +3333,11 @@ begin
 
 end;
 
+procedure TKMHand.SetWorklessCitizens(aValue: Word);
+begin
+  fWorklessCitizens := Min(aValue, high(Word));
+end;
+
 
 function TKMHand.AddControl(aInfo : TKMControlInfo) : Integer;
 var I : Integer;
@@ -3441,17 +3447,17 @@ end;
 
 procedure TKMHand.BuildBridge(aLoc: TKMPoint; aIndex: Word; aRot: Word);
 begin
-  fBridgesBuilt.Add(KMBridgeBase(aLoc, aIndex, aRot));
+  //fBridgesBuilt.Add(KMStructureBasic(aLoc, aIndex, aRot));
   //gTerrain.SetBridgePlan(aLoc, aIndex, aRot, hbsDone);
   //gTerrain.PlaceBridge(aLoc, aIndex, aRot);
 end;
 
-function TKMHand.HasBridgeBuiltAt(aLoc: TKMPoint): Boolean;
+{function TKMHand.HasBridgeBuiltAt(aLoc: TKMPoint): Boolean;
 var I, J, aRot : Integer;
 begin
   Result := false;
   for I := 0 to fBridgesBuilt.Count - 1 do
-    with gRes.Bridges[fBridgesBuilt[I].Index] do
+    with gRes.Structures[fBridgesBuilt[I].Index] do
     begin
       aRot := fBridgesBuilt[I].Rotation;
       for J := 0 to Count - 1 do
@@ -3463,7 +3469,7 @@ begin
       
     end;
         
-end;
+end;}
 {TKMAnimalSpawner}
 procedure TKMAnimalSpawner.IncludeAnimal(aType: TKMUnitType);
 var I, id : Integer;

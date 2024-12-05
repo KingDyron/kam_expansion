@@ -19,7 +19,7 @@ type
   TKMAnchors = (anLeft, anTop, anRight, anBottom);
   TKMAnchorsSet = set of TKMAnchors;
   TKMButtonStateSet = set of (bsOver, bsDown, bsDisabled);
-  TKMButtonStyle = (bsMenu, bsGame, bsPaper, bsPaper2); //Menu buttons are metal, game buttons are stone
+  TKMButtonStyle = (bsMenu, bsGame, bsBone, bsPaper); //Menu buttons are metal, game buttons are stone
   TKMTextAlign = (taLeft, taCenter, taRight);
   TKMTextVAlign = (tvaNone, tvaTop, tvaMiddle, tvaBottom);
 
@@ -216,12 +216,12 @@ begin
     backRX := rxGuiMain;
     backID := 9; //GuiMain-3 is a metal background used in main menu
   end else
-  if aStyle = bsPaper2 then
+  if aStyle = bsPaper then
   begin
     backRX := rxGuiMain;
     backID := 102; //GuiMain-3 is a metal background used in main menu
   end else
-  if aStyle = bsPaper then
+  if aStyle = bsBone then
   begin
     backRX := rxGuiMain;
     backID := 103; //GuiMain-3 is a metal background used in main menu
@@ -419,7 +419,7 @@ begin
   glPushMatrix;
   try  glTranslatef(aLeft, aTop, 0);
 
-    WriteBevel(0, 0, aWidth, aHeight);
+    //WriteBevel(0, 0, aWidth, aHeight);
 
     //At least 2px wide to show up from under the shadow
     barWidth := Round((aWidth - 2) * (aPos));

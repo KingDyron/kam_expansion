@@ -90,7 +90,6 @@ begin
 
   Panel_PlayerTypes := TKMPopUpPanel.Create(aParent.MasterParent, PANEL_W, panelH + 20, gResTexts[TX_MAPED_PLAYERS_TYPE],
                                             pbYellow, False, False);
-
   top := 0;
   TKMLabel.Create(Players_ScrollPanel,  13, top, 20, 20, '#', fntGrey, taLeft);
 
@@ -146,7 +145,7 @@ begin
 
   Label_PlayerTypesAll := TKMLabel.Create(Panel_PlayerTypes.ItemsPanel,  0, Panel_PlayerTypes.ItemsPanel.Height - 72, 90, 20,
                                           gResTexts[TX_MAPED_PLAYER_TYPE_ALLOW_ALL], fntOutline, taLeft);
-  Label_PlayerTypesAll.Anchors := [];
+  Label_PlayerTypesAll.Anchors := [anLeft, anRight, anBottom];
 
   for MPT := Low(ChkBox_PlayerTypesAll) to High(ChkBox_PlayerTypesAll) do
   begin

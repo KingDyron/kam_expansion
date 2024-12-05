@@ -32,6 +32,7 @@ type
     SaveTimestamp: TDateTime; //UTC time when the save was created (unused for maps)
     MissionMode: TKMissionMode; //Fighting or Build-a-City map
     MissionDifficulty: TKMMissionDifficulty;
+    MissionBuiltInDifficulty: TKMMissionBuiltInDifficulty;
     MapSizeX, MapSizeY: Integer;
 
     PlayerCount: Byte;
@@ -129,6 +130,7 @@ procedure TKMGameInfo.Load(LoadStream: TKMemoryStream);
     LoadStream.Read(SaveTimestamp);
     LoadStream.Read(MissionMode, SizeOf(MissionMode));
     LoadStream.Read(MissionDifficulty, SizeOf(MissionDifficulty));
+    LoadStream.Read(MissionBuiltInDifficulty, SizeOf(MissionBuiltInDifficulty));
     LoadStream.Read(MapSizeX);
     LoadStream.Read(MapSizeY);
     LoadStream.Read(CampaignID, SizeOf(CampaignID));
@@ -206,6 +208,7 @@ begin
 
   SaveStream.Write(MissionMode, SizeOf(MissionMode));
   SaveStream.Write(MissionDifficulty, SizeOf(MissionDifficulty));
+  SaveStream.Write(MissionBuiltInDifficulty, SizeOf(MissionBuiltInDifficulty));
   SaveStream.Write(MapSizeX);
   SaveStream.Write(MapSizeY);
   SaveStream.Write(CampaignID, SizeOf(CampaignID));

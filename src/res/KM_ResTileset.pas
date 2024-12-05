@@ -790,6 +790,8 @@ begin
 
       fTiles[I].IronMinable := nTile.B['IronMinable'];
       fTiles[I].GoldMinable := nTile.B['GoldMinable'];
+      fTiles[I].CoalMinable := nTile.B['CoalMinable'];
+      fTiles[I].MineShaft := nTile.B['MineShaft'];
 
       fTiles[I].Water    := nTile.B['Water'];
       fTiles[I].HasWater := nTile.B['HasWater'];

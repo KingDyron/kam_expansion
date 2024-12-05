@@ -679,7 +679,8 @@ begin
     if Top <> fClipRect.Top then
       SetTopSilently(fClipRect.Top); //Set directrly to avoid SetTop call
   end;
-
+  //fScrollBarV.Left := self.Width - fScrollBarV.Width;
+  fScrollBarV.Left := fClipRect.Left + Width + fScrollV_PadLeft;
   fScrollBarV.Height := Height - fScrollV_PadTop - fScrollV_PadBottom;
   if showScroll <> fScrollBarV.Visible then
   begin

@@ -50,9 +50,10 @@ type
 
   TKMNewSingleMapEvent = procedure (const aMissionFile, aGameName: UnicodeString; aDesiredLoc: ShortInt = -1;
                                     aDesiredColor: Cardinal = $00000000; aDifficulty: TKMMissionDifficulty = mdNone;
-                                    aAIType: TKMAIType = aitNone) of object;
+                                    aAIType: TKMAIType = aitNone; aBDifficulty: TKMMissionBuiltInDifficulty = mdbNormal) of object;
 
-  TKMNewCampaignMapEvent = procedure (aCampaign: TKMCampaignId; aMap: Byte; aDifficulty: TKMMissionDifficulty = mdNone) of object;
+  TKMNewCampaignMapEvent = procedure (aCampaign: TKMCampaignId; aMap: Byte; aDifficulty: TKMMissionDifficulty = mdNone;
+                                 aBDifficulty: TKMMissionBuiltInDifficulty = mdbNormal) of object;
 
   TKMNewMapEditorEvent = procedure (const aFileName: UnicodeString; aSizeX: Integer = 0; aSizeY: Integer = 0; aMapFullCRC: Cardinal = 0;
                                     aMapSimpleCRC: Cardinal = 0; aMultiplayerLoadMode: Boolean = False) of object;

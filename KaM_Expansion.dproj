@@ -621,7 +621,7 @@
         <DCCReference Include="src\gui\pages_maped\KM_GUIMapEdCampaignMap.pas"/>
         <DCCReference Include="src\units\tasks\KM_UnitTaskGoForBoots.pas"/>
         <DCCReference Include="src\gui\pages_game\KM_GUIGameMessagesPopUp.pas"/>
-        <DCCReference Include="src\res\KM_ResBridges.pas"/>
+        <DCCReference Include="src\res\KM_ResStructures.pas"/>
         <DCCReference Include="src\gui\pages_menu\KM_GUIMenuCampaignLobby.pas"/>
         <DCCReference Include="src\gui\pages_menu\KM_GUIMenuTutorials.pas"/>
         <DCCReference Include="src\controls\KM_ControlsGrid.pas"/>
@@ -632,6 +632,15 @@
         <DCCReference Include="src\weather\KM_WeatherTypes.pas"/>
         <DCCReference Include="src\weather\KM_Particles.pas"/>
         <DCCReference Include="src\ai\KM_AIRecordBuilding.pas"/>
+        <DCCReference Include="src\structures\KM_Structure.pas"/>
+        <DCCReference Include="src\structures\KM_StructuresCollection.pas"/>
+        <DCCReference Include="src\gui\pages_game\KM_GUIGameStructure.pas"/>
+        <DCCReference Include="src\units\tasks\KM_UnitTaskCollectWares.pas"/>
+        <DCCReference Include="src\units\tasks\KM_UnitTaskGoToWell.pas"/>
+        <DCCReference Include="src\common\KM_CommonHelpers.pas"/>
+        <DCCReference Include="src\KM_Achievements.pas"/>
+        <DCCReference Include="src\gui\pages_menu\KM_GUIMenuAchievements.pas"/>
+        <DCCReference Include="src\game\KM_GameDefines.pas"/>
         <None Include="KM_TextIDs.inc"/>
         <None Include="KaM_Remake.dpr"/>
         <None Include="KaM_Remake.inc"/>

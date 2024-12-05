@@ -22,7 +22,7 @@ type
     wtWheel,    wtBolt,          wtQuiver,     wtWater,        wtTile,
     wtSeed,     wtSawDust,       wtApple,      wtJewerly,      wtBoots,
     wtHay,      wtMace,          wtFlail,      wtFeathers,     wtPlateArmor,
-    wtBitinArmor,
+    wtBitinArmor, wtEgg,
     // Special ware types
     wtAll, wtWarfare, wtFood
   );
@@ -33,7 +33,7 @@ type
 
 const
   WARE_MIN = wtTrunk;
-  WARE_MAX = wtBitinArmor;
+  WARE_MAX = wtEgg;
   WARE_MAX_ALL = wtFood;
   WARFARE_MIN = wtWoodenShield;
   WEAPON_MIN = wtWoodenShield;
@@ -44,6 +44,7 @@ const
 
   WARES_WARFARE = [WARFARE_MIN..WARFARE_MAX, wtMace, wtFlail, wtPlateArmor, wtBitinArmor, wtBoots, wtQuiver];
   WARES_FOOD = [wtBread, wtSausage, wtFish, wtWine];
+  WARES_HOUSE_FOOD = [wtBread, wtSausage, wtFish, wtWine, wtApple, wtVegetables];
 
   WARE_CNT = Integer(WARE_MAX) - Integer(WARE_MIN) + 1;
   WARFARE_CNT = Integer(WARFARE_MAX) - Integer(WEAPON_MIN) + 1;
@@ -266,6 +267,7 @@ type
     kmcBeacon, kmcDrag,
     kmcInvisible, // for some reason kmcInvisible should be at its current position in enum. Otherwise 1px dot will appear while TroopSelection is on
     kmcPaintBucket,
+    kmcChangeResCount,
     kmcAnimatedDirSelector
   );
 
@@ -275,7 +277,7 @@ const
     1, 452, 457, 460, 450, 453, 449,
     511,  512, 513, 514, 515, 516, 517, 518, 519,
     4, 7, 3, 9, 5, 8, 2, 6,
-    456, 451, 999, 661, 0);
+    456, 451, 999, 661, 952, 0);
 
 type
   TRXUsage = (ruMenu, ruGame, ruCustom); //Where sprites are used
@@ -351,17 +353,26 @@ type
 
   TKMWarePlanSingle = record
       W : TKMWareType;
-      C : Byte;
+      C : Word;
     end;
   TKMWarePlan = array of TKMWarePlanSingle;
+  PKMWarePlan = ^TKMWarePlan;
 
   TKMWarePlanHelper = record helper for TKMWarePlan
-    function HasWare(aWare : TKMWareType) : Byte;
+    function Count : Byte;
+    function HasWare(aWare : TKMWareType) : Word;
     function HasWares(aWares : TKMWareTypeSet) : Boolean;
     function HasAnyWares(aWares : TKMWareTypeSet) : Boolean;
-    procedure SetCount(aCount : Byte);
-    procedure AddWare(aWare : TKMWareType; aCount: Integer = 1);
+    procedure SetCount(aCount : Byte; aDoClear : Boolean = false);
+    procedure AddWare(aWare : TKMWareType; aCount: Integer = 1; aKeepZero : Boolean = false);
+    function IndexOf(aWare : TKMWareType; aMinCount : Integer = 0) : Integer;
+    procedure Remove(aIndex : Integer);
+    procedure CopyFrom(aWare : TKMWarePlan);
+    procedure CopyTo(var aWare : TKMWarePlan);
     procedure Clear;
+    procedure Reset;
+    procedure Save(SaveStream : TKMemoryStream);
+    procedure Load(LoadStream : TKMemoryStream);
   end;
 
   TKMVWarePlanCommon = array of record
@@ -383,14 +394,6 @@ type
   TKMBuildCost = record
     W : TKMWareType;
     C : Byte;
-  end;
-
-  TKMBuildCostSet = record
-    Count : Integer;
-    Cost : array of TKMBuildCost;
-    procedure AddWare(aWare : TKMWareType; aCount : Word = 1);
-    procedure SaveToStream(SaveStream : TKMemoryStream);
-    procedure LoadFromStream(LoadStream : TKMemoryStream);
   end;
 
   TKMBridgeTile = record
@@ -435,50 +438,12 @@ begin
   end;
 end;
 
-procedure TKMBuildCostSet.AddWare(aWare: TKMWareType; aCount: Word = 1);
-var I : Integer;
+function TKMWarePlanHelper.Count: Byte;
 begin
-  I := 0;
-  while (I < length(Cost)) and (Cost[I].W <> aWare) do
-    Inc(I);
-
-  if I >= length(Cost) then
-  begin
-    SetLength(Cost, I + 1);
-    Count := I + 1;
-    Cost[I].W := wtNone;
-    Cost[I].C := 0;
-  end;
-
-  Cost[I].W := aWare;
-  Inc(Cost[I].C, aCount);
-
+  Result := length(self);
 end;
 
-procedure TKMBuildCostSet.SaveToStream(SaveStream : TKMemoryStream);
-var I : Integer;
-begin
-  SaveStream.Write(Count);
-  for I := 0 to Count - 1 do
-  begin
-    SaveStream.Write(Cost[I].W, SizeOf(Cost[I].W));
-    SaveStream.Write(Cost[I].C);
-  end;
-end;
-
-procedure TKMBuildCostSet.LoadFromStream(LoadStream : TKMemoryStream);
-var I : Integer;
-begin
-  LoadStream.Read(Count);
-  SetLength(Cost, Count);
-  for I := 0 to Count - 1 do
-  begin
-    LoadStream.Read(Cost[I].W, SizeOf(Cost[I].W));
-    LoadStream.Read(Cost[I].C);
-  end;
-end;
-
-function TKMWarePlanHelper.HasWare(aWare: TKMWareType): Byte;
+function TKMWarePlanHelper.HasWare(aWare: TKMWareType): Word;
 var I : integer;
 begin
   Result := 0;
@@ -515,24 +480,43 @@ begin
 end;
 
 
-procedure TKMWarePlanHelper.SetCount(aCount: Byte);
+procedure TKMWarePlanHelper.SetCount(aCount : Byte; aDoClear : Boolean = false);
 begin
-  SetLength(self, 0); //clear everything
+  if aDoClear then
+    SetLength(self, 0); //clear everything
   SetLength(self, aCount);
 end;
 
-procedure TKMWarePlanHelper.AddWare(aWare : TKMWareType; aCount: Integer = 1);
+function TKMWarePlanHelper.IndexOf(aWare : TKMWareType; aMinCount : Integer = 0) : Integer;
+var I : Integer;
+begin
+  Result := -1;
+  for I := 0 to Count - 1 do
+    if (self[I].W = aWare) and (self[I].C >= aMinCount) then
+      Exit(I);
+end;
+
+procedure TKMWarePlanHelper.AddWare(aWare : TKMWareType; aCount: Integer = 1; aKeepZero : Boolean = false);
 var I : Integer;
 begin
   for I := 0 to High(self) do
-    if (self[I].W = wtNone) or (self[I].C = 0) then
+    if (self[I].W = wtNone) or ((self[I].C = 0) and not aKeepZero) then
     begin
       self[I].W := aWare;
       self[I].C := aCount;
       Exit;
+    end else
+    if self[I].W = aWare then
+    begin
+      self[I].C := self[I].C + aCount;
+      Exit;
     end;
+  //no free space found, so add one
 
-
+  I := Count;
+  SetLength(self, I + 1);
+  self[I].W := aWare;
+  self[I].C := aCount;
 end;
 
 procedure TKMWarePlanHelper.Clear;
@@ -545,5 +529,60 @@ begin
   end;
 end;
 
+procedure TKMWarePlanHelper.Reset;
+begin
+  SetLength(self, 0);
+end;
+
+procedure TKMWarePlanHelper.Remove(aIndex: Integer);
+var I : integer;
+begin
+  for I := aIndex to High(self) - 1 do
+    self[I] := self[I+1];
+
+  SetLength(self, High(self));
+end;
+
+procedure TKMWarePlanHelper.CopyFrom(aWare: TKMWarePlan);
+var I : Integer;
+begin
+  self.Clear;
+  for I := 0 to High(aWare) do
+    self.AddWare(aWare[I].W, aWare[I].C);
+end;
+
+procedure TKMWarePlanHelper.CopyTo(var aWare: TKMWarePlan);
+var I : Integer;
+begin
+  aWare.Clear;
+  for I := 0 to High(self) do
+    aWare.AddWare(self[I].W, self[I].C);
+end;
+
+procedure TKMWarePlanHelper.Save(SaveStream: TKMemoryStream);
+var newCount, I : Integer;
+begin
+  newCount := self.Count;
+
+  SaveStream.Write(newCount);
+  for I := 0 to newCount - 1 do
+  begin
+    SaveStream.Write(self[I].W, sizeOf(self[I].W));
+    SaveStream.Write(self[I].C);
+  end;
+end;
+
+procedure TKMWarePlanHelper.Load(LoadStream: TKMemoryStream);
+var newCount, I : Integer;
+begin
+  LoadStream.Read(newCount);
+  self.SetCount(newCount);
+
+  for I := 0 to newCount - 1 do
+  begin
+    LoadStream.Read(self[I].W, sizeOf(self[I].W));
+    LoadStream.Read(self[I].C);
+  end;
+end;
 
 end.

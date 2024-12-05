@@ -5,7 +5,7 @@ uses
   {$IFDEF MSWindows} Windows, {$ENDIF}
   {$IFDEF Unix} LCLType, {$ENDIF}
   Classes, Math, SysUtils,
-  KM_Defaults, KM_NetworkTypes, KM_Console, KM_ResTexts,
+  KM_Defaults, KM_NetworkTypes, KM_Console, KM_ResTexts, KM_CommonTypes,
   KM_Controls, KM_ControlsBase, KM_ControlsDrop, KM_ControlsEdit, KM_ControlsList, KM_ControlsMemo, KM_ControlsMinimapView,
   KM_ControlsPopUp, KM_ControlsProgressBar, KM_ControlsSwitch, KM_ControlsTrackBar,
   KM_Maps, KM_Campaigns,
@@ -40,6 +40,8 @@ type
     fPanelDescBaseTop: Integer;
     fCampaignMenu : TKMMenuCampaignLobby;
 
+    fWeather : TKMSettingsWeather;
+
     procedure UpdateMappings;
     procedure UpdateSpectatorDivide;
 
@@ -47,6 +49,7 @@ type
     procedure CreateChatMenu(aParent: TKMPanel);
     procedure CreatePlayerMenus(aParent: TKMPanel);
     procedure CreateSettingsPopUp(aParent: TKMPanel);
+    procedure CreatePanelOptions(aParent: TKMPanel);
 
     procedure Reset(aKind: TKMNetPlayerKind; aPreserveMaps: Boolean = False);
     procedure GameOptionsTabSwitch(Sender: TObject);
@@ -141,6 +144,16 @@ type
     procedure RefreshCampaignsList;
     procedure CampaignChange(Sender: TObject);
     procedure CampaignMapSelected(Sender : TObject);
+
+
+    //options panel procedures
+    procedure ShowOptions(Sender : TObject);
+    procedure HideOptions(Sender : TObject);
+    procedure WeatherChange(Sender : TObject);
+    procedure RefreshWeatherControls;
+    procedure UpdateWeatherSettings;
+    procedure UpdateWeather;
+
   protected
     Panel_Lobby: TKMPanel;
       Panel_Settings: TKMPanel;
@@ -192,6 +205,8 @@ type
         Panel_SetupDesc: TKMPanel;
           Memo_MapDesc: TKMMemo;
           Button_SetupReadme: TKMButton;
+
+        Button_ShowOptions: TKMButton;
         Panel_SetupOptions: TKMPanel;
           Panel_Difficulty: TKMPanel;
             Label_Difficulty: TKMLabel;
@@ -199,6 +214,19 @@ type
           Panel_GameOptions: TKMPanel;
             TrackBar_LobbyPeacetime: TKMTrackBar;
             TrackBar_SpeedPT, TrackBar_SpeedAfterPT: TKMTrackBar;
+            DropBox_BuilInDifficulty: TKMDropList;
+
+          Panel_Weather: TKMPanel;
+            CheckBox_Enabled: TKMCheckBox;
+            TrackBar_MaxCount: TKMNumericEdit;
+            TrackBar_MaxSpawnCount: TKMNumericEdit;
+            TrackBar_MinInterval: TKMNumericEdit;
+            TrackBar_MaxInterval: TKMNumericEdit;
+            TrackBar_MaxLifeTime: TKMNumericEdit;
+            TrackBar_MaxCloudSpeed: TKMNumericEdit;
+            TrackBar_DecParticles: TKMNumericEdit;
+            TrackBar_NightSpeed, TrackBar_NightTime: TKMTrackBar;
+            CheckBox_DynamicLight: TKMCheckBox;
 
       Memo_Posts: TKMMemo;
       Button_Post: TKMButtonFlat;
@@ -224,7 +252,7 @@ var
 
 implementation
 uses
-  KM_Log, KM_CommonTypes, KM_Points, KM_CommonUtils,
+  KM_Log, KM_Points, KM_CommonUtils,
   KM_GameSettings,
   KM_ControlsTypes,
   KM_Sound,
@@ -272,6 +300,7 @@ begin
   CreateChatMenu(aParent);
   CreatePlayerMenus(aParent);
   CreateSettingsPopUp(aParent);
+  CreatePanelOptions(aParent);
   fCampaignMenu := TKMMenuCampaignLobby.Create(aParent, aCampaigns, nil);
   fCampaignMenu.OnMapSelected := CampaignMapSelected;
 end;
@@ -433,7 +462,7 @@ const
   TC2_ADD = 50;
   ALL_TXT_W_MIN = 35;
 var
-  I, K, offY, slotTxtWidth, allTxtWidth, speedsCnt: Integer;
+  I, K, offY, slotTxtWidth, allTxtWidth: Integer;
 begin
   Panel_Lobby := TKMPanel.Create(aParent,0,0,aParent.Width, aParent.Height);
   Panel_Lobby.AnchorsStretch;
@@ -589,6 +618,7 @@ begin
       DropCol_Maps.DropCount := 19;
       InitDropColMapsList;
       DropCol_Maps.ShowHintWhenShort := True;
+      DropCol_Maps.Searchable := true;
       DropCol_Maps.HintBackColor := TKMColor4f.New(87, 72, 37);
       DropCol_Maps.OnShowList := MapList_OnShow;
       DropCol_Maps.List.OnColumnClick := MapColumnClick;
@@ -644,37 +674,9 @@ begin
         Button_SetupReadme.OnClick := ReadmeClick;
         Button_SetupReadme.Hide;
 
-      Panel_SetupOptions := TKMPanel.Create(Panel_Setup, 0, PANEL_SETUP_OPTIONS_TOP, 270, PANEL_SETUP_OPTIONS_HEIGHT);
-      Panel_SetupOptions.Anchors := [anLeft,anBottom];
+      Button_ShowOptions := TKMButton.Create(Panel_Setup, 5, Panel_Setup.Height - 30, Panel_Setup.Width - 10, 25, 'Settings', bsMenu);
+      Button_ShowOptions.OnClick := ShowOptions;
 
-        Panel_Difficulty := TKMPanel.Create(Panel_SetupOptions, 0, 0, 270, 27);
-          Label_Difficulty := TKMLabel.Create(Panel_Difficulty, 10, 4, gResTexts[TX_MISSION_DIFFICULTY_CAMPAIGN], fntMetal, taLeft);
-          Label_Difficulty.Anchors := [anLeft, anBottom];
-          DropBox_Difficulty := TKMDropList.Create(Panel_Difficulty, 130, 2, 130, 20, fntMetal, gResTexts[TX_MISSION_DIFFICULTY], bsMenu);
-          DropBox_Difficulty.Anchors := [anLeft, anBottom];
-          DropBox_Difficulty.OnChange := GameOptionsChange;
-        Panel_Difficulty.Hide;
-
-        Panel_GameOptions := TKMPanel.Create(Panel_SetupOptions, 0, 0, 270, 150);
-          TrackBar_LobbyPeacetime := TKMTrackBar.Create(Panel_GameOptions, 10, 0, 250, 0, 120);
-          TrackBar_LobbyPeacetime.Anchors := [anLeft,anBottom];
-          TrackBar_LobbyPeacetime.Caption := gResTexts[TX_LOBBY_PEACETIME];
-          TrackBar_LobbyPeacetime.Step := 5; //Round to 5min steps
-          TrackBar_LobbyPeacetime.OnChange := GameOptionsChange;
-
-          speedsCnt := Round((GAME_MP_SPEED_MAX - 1) / SPEED_STEP) + 1;
-
-          TrackBar_SpeedPT := TKMTrackBar.Create(Panel_GameOptions, 10, 46, 250, 1, speedsCnt);
-          TrackBar_SpeedPT.Anchors := [anLeft,anBottom];
-          TrackBar_SpeedPT.Caption := gResTexts[TX_LOBBY_GAMESPEED_PEACETIME];
-          TrackBar_SpeedPT.ThumbWidth := 45; //Enough to fit 'x1.5' 'x1.25'
-          TrackBar_SpeedPT.OnChange := GameOptionsChange;
-
-          TrackBar_SpeedAfterPT := TKMTrackBar.Create(Panel_GameOptions, 10, 90, 250, 1, speedsCnt);
-          TrackBar_SpeedAfterPT.Anchors := [anLeft,anBottom];
-          TrackBar_SpeedAfterPT.Caption := gResTexts[TX_LOBBY_GAMESPEED];
-          TrackBar_SpeedAfterPT.ThumbWidth := 45; //Enough to fit 'x1.25'
-          TrackBar_SpeedAfterPT.OnChange := GameOptionsChange;
 
     Button_Back := TKMButton.Create(Panel_Lobby, 30, 723, 220, 30, gResTexts[TX_LOBBY_QUIT], bsMenu);
     Button_Back.Anchors := [anLeft, anBottom];
@@ -695,6 +697,166 @@ begin
   UpdateSpectatorDivide;
 end;
 
+
+procedure TKMMenuLobby.CreatePanelOptions(aParent: TKMPanel);
+var speedsCnt, Top : Integer;
+  MBD : TKMMissionBuiltInDifficulty;
+begin
+  Panel_SetupOptions := TKMPanel.Create(aParent, 0, 0, 600, 400);
+  Panel_SetupOptions.Centerize;
+  Panel_SetupOptions.Anchors := [anLeft,anBottom];
+  Panel_SetupOptions.Hide;
+
+  with TKMBevel.Create(Panel_SetupOptions, -2000, -2000, 5000, 5000) do
+    OnClick := HideOptions;
+
+  TKMBevel.Create(Panel_SetupOptions, -5, -5, Panel_SetupOptions.Width + 10, Panel_SetupOptions.Height + 10); //not clickable bevel
+  with TKMButton.Create(Panel_SetupOptions, -5, -5, Panel_SetupOptions.Width + 10, Panel_SetupOptions.Height + 10, '', bsPaper) do
+  begin
+    AnchorsStretch;
+    Hitable := false;
+  end;
+
+  Panel_Difficulty := TKMPanel.Create(Panel_SetupOptions, 0, 0, Panel_SetupOptions.Width, 27);
+  TKMBevel.Create(Panel_Difficulty, 0, 0, Panel_Difficulty.Width, Panel_Difficulty.Height);
+    Label_Difficulty := TKMLabel.Create(Panel_Difficulty, 10, 4, gResTexts[TX_MISSION_DIFFICULTY_CAMPAIGN], fntMetal, taLeft);
+    Label_Difficulty.Anchors := [anLeft, anBottom];
+    DropBox_Difficulty := TKMDropList.Create(Panel_Difficulty, 130, 2, 130, 20, fntMetal, gResTexts[TX_MISSION_DIFFICULTY], bsMenu);
+    DropBox_Difficulty.Anchors := [anLeft, anBottom];
+    DropBox_Difficulty.OnChange := GameOptionsChange;
+  Panel_Difficulty.Hide;
+
+  Panel_GameOptions := TKMPanel.Create(Panel_SetupOptions, 0, 0, Panel_SetupOptions.Width, 150);
+  TKMBevel.Create(Panel_GameOptions, 0, 0, Panel_GameOptions.Width, Panel_GameOptions.Height);
+    TrackBar_LobbyPeacetime := TKMTrackBar.Create(Panel_GameOptions, 10, 0, 250, 0, 120);
+    TrackBar_LobbyPeacetime.Anchors := [anLeft,anBottom];
+    TrackBar_LobbyPeacetime.Caption := gResTexts[TX_LOBBY_PEACETIME];
+    TrackBar_LobbyPeacetime.Step := 5; //Round to 5min steps
+    TrackBar_LobbyPeacetime.OnChange := GameOptionsChange;
+
+    speedsCnt := Round((GAME_MP_SPEED_MAX - 1) / SPEED_STEP) + 1;
+
+    TrackBar_SpeedPT := TKMTrackBar.Create(Panel_GameOptions, 10, 46, 250, 1, speedsCnt);
+    TrackBar_SpeedPT.Anchors := [anLeft,anBottom];
+    TrackBar_SpeedPT.Caption := gResTexts[TX_LOBBY_GAMESPEED_PEACETIME];
+    TrackBar_SpeedPT.ThumbWidth := 45; //Enough to fit 'x1.5' 'x1.25'
+    TrackBar_SpeedPT.OnChange := GameOptionsChange;
+
+    TrackBar_SpeedAfterPT := TKMTrackBar.Create(Panel_GameOptions, 10, 90, 250, 1, speedsCnt);
+    TrackBar_SpeedAfterPT.Anchors := [anLeft,anBottom];
+    TrackBar_SpeedAfterPT.Caption := gResTexts[TX_LOBBY_GAMESPEED];
+    TrackBar_SpeedAfterPT.ThumbWidth := 45; //Enough to fit 'x1.25'
+    TrackBar_SpeedAfterPT.OnChange := GameOptionsChange;
+
+    TKMLabel.Create(Panel_GameOptions, Panel_GameOptions.Width div 2, 2, Panel_GameOptions.Width div 2 - 3, 20, gResTexts[2107], fntMetal, taLeft);
+
+    DropBox_BuilInDifficulty := TKMDropList.Create(Panel_GameOptions, Panel_GameOptions.Width div 2, 22, 150, 20, fntMetal, gResTexts[TX_MISSION_DIFFICULTY], bsMenu);
+    DropBox_BuilInDifficulty.Anchors := [anLeft, anBottom];
+    DropBox_BuilInDifficulty.OnChange := GameOptionsChange;
+    DropBox_BuilInDifficulty.Hint := gResTexts[2107];
+
+
+    for MBD := Low(TKMMissionBuiltInDifficulty) to High(TKMMissionBuiltInDifficulty) do
+    begin
+      DropBox_BuilInDifficulty.Add(gResTexts[BDIFFICULTY_TEXTS[MBD]]);
+      if MBD = mdbNormal then
+        DropBox_BuilInDifficulty.ItemIndex := byte(MBD);
+    end;
+
+
+  Top := Panel_GameOptions.Bottom + 5;
+
+  Panel_Weather := TKMPanel.Create(Panel_SetupOptions, 5, Top, Panel_SetupOptions.Width, 110);
+    TKMLabel.Create(Panel_Weather,0, 0,100,20,gResTexts[2053] + ':', fntMetal,taLeft);
+    TKMBevel.Create(Panel_Weather,0,20,Panel_Weather.Width div 2 - 3,Panel_Weather.Height - 20);
+    TKMBevel.Create(Panel_Weather,Panel_Weather.Width div 2 + 2,20,Panel_Weather.Width div 2 - 5,Panel_Weather.Height - 20);
+
+    CheckBox_Enabled := TKMCheckBox.Create(Panel_Weather,100,0,150,20,gResTexts[2065], fntMetal);
+    CheckBox_Enabled.OnClick := WeatherChange;
+    CheckBox_Enabled.Hint := gResTexts[2054];
+    CheckBox_Enabled.MobilHint := true;
+
+    TKMLabel.Create(Panel_Weather,6,23,Panel_Weather.Width div 2,20,gResTexts[2063] + ':', fntMetal,taLeft);
+
+    TrackBar_MaxCount := TKMNumericEdit.Create(Panel_Weather, 10, 40, 1, 20);
+    TrackBar_MaxCount.OnChange := WeatherChange;
+    TrackBar_MaxCount.Width := 75;
+    TrackBar_MaxCount.TextAlign := taCenter;
+    TrackBar_MaxCount.Hint := gResTexts[2055];
+    TrackBar_MaxCount.MobilHint := true;
+
+    TrackBar_MaxSpawnCount := TKMNumericEdit.Create(Panel_Weather, 100, 40, 1, 10);
+    TrackBar_MaxSpawnCount.OnChange := WeatherChange;
+    TrackBar_MaxSpawnCount.Width := 75;
+    TrackBar_MaxSpawnCount.TextAlign := taCenter;
+    TrackBar_MaxSpawnCount.Hint := gResTexts[2056];
+    TrackBar_MaxSpawnCount.MobilHint := true;
+
+    TKMLabel.Create(Panel_Weather,6,65,Panel_Weather.Width div 2,20,gResTexts[2062] + ':', fntMetal,taLeft);
+
+    TrackBar_MinInterval := TKMNumericEdit.Create(Panel_Weather, 10, 85, 1, 60);
+    TrackBar_MinInterval.OnChange := WeatherChange;
+    TrackBar_MinInterval.Width := 75;
+    TrackBar_MinInterval.TextAlign := taCenter;
+    TrackBar_MinInterval.Hint := gResTexts[2057];
+    TrackBar_MinInterval.MobilHint := true;
+
+    TrackBar_MaxInterval := TKMNumericEdit.Create(Panel_Weather, 100, 85, 1, 300);
+    TrackBar_MaxInterval.OnChange := WeatherChange;
+    TrackBar_MaxInterval.Width := 75;
+    TrackBar_MaxInterval.TextAlign := taCenter;
+    TrackBar_MaxInterval.Hint := gResTexts[2058];
+    TrackBar_MaxInterval.MobilHint := true;
+
+    TKMLabel.Create(Panel_Weather, Panel_Weather.Width div 2 + 6, 23,Panel_Weather.Width div 2,20,gResTexts[2059] + ':', fntMetal,taLeft);
+
+    TrackBar_MaxLifeTime := TKMNumericEdit.Create(Panel_Weather, Panel_Weather.Width - 85, 23, 1, 120);
+    TrackBar_MaxLifeTime.OnChange := WeatherChange;
+    TrackBar_MaxLifeTime.Width := 75;
+    TrackBar_MaxLifeTime.TextAlign := taCenter;
+    TrackBar_MaxLifeTime.Hint := gResTexts[2064];
+    TrackBar_MaxLifeTime.Width := 75;
+    TrackBar_MaxLifeTime.MobilHint := true;
+
+    TKMLabel.Create(Panel_Weather, Panel_Weather.Width div 2 + 6, 53,Panel_Weather.Width div 2,20,gResTexts[2060] + ':', fntMetal,taLeft);
+    TrackBar_MaxCloudSpeed := TKMNumericEdit.Create(Panel_Weather, Panel_Weather.Width - 85, 50, 1, 20);
+    TrackBar_MaxCloudSpeed.OnChange := WeatherChange;
+    TrackBar_MaxCloudSpeed.Hint := gResTexts[2060];
+    TrackBar_MaxCloudSpeed.Width := 75;
+    TrackBar_MaxCloudSpeed.TextAlign := taCenter;
+    TrackBar_MaxCloudSpeed.MobilHint := true;
+
+    TKMLabel.Create(Panel_Weather, Panel_Weather.Width div 2 + 6, 83,Panel_Weather.Width div 2,20,gResTexts[2061] + ':', fntMetal,taLeft);
+    TrackBar_DecParticles := TKMNumericEdit.Create(Panel_Weather, Panel_Weather.Width - 85, 80, 1, 10);
+    TrackBar_DecParticles.OnChange := WeatherChange;
+    TrackBar_DecParticles.Hint := gResTexts[2068];
+    TrackBar_DecParticles.Width := 75;
+    TrackBar_DecParticles.TextAlign := taCenter;
+    TrackBar_DecParticles.MobilHint := true;
+
+    TKMBevel.Create(Panel_Weather,0,135,Panel_Weather.Width div 2 - 3,90);
+
+    TrackBar_NightSpeed := TKMTrackBar.Create(Panel_Weather, 5, 140, Panel_Weather.Width div 2 - 13, 0, MAX_NIGHT_SPEED - 1);
+    TrackBar_NightSpeed.Position := 10;
+    TrackBar_NightSpeed.OnChange := WeatherChange;
+    TrackBar_NightSpeed.Caption := gResTexts[2070];
+    TrackBar_NightSpeed.Hint := gResTexts[2072];
+    TrackBar_NightSpeed.MobilHint := true;
+
+
+    TrackBar_NightTime := TKMTrackBar.Create(Panel_Weather, 5, 180, Panel_Weather.Width div 2 - 13, 0, 24);
+    TrackBar_NightTime.Position := 12;
+    TrackBar_NightTime.OnChange := WeatherChange;
+    TrackBar_NightTime.Caption := gResTexts[2071];
+    TrackBar_NightTime.Hint := gResTexts[2073];
+    TrackBar_NightTime.MobilHint := true;
+
+    TKMBevel.Create(Panel_Weather,Panel_Weather.Width div 2 + 2,135,Panel_Weather.Width div 2 - 5,Panel_Weather.Height - 20);
+
+    CheckBox_DynamicLight := TKMCheckBox.Create(Panel_Weather,Panel_Weather.Width div 2 + 6,140,200,20,gResTexts[2099], fntGrey);
+    CheckBox_DynamicLight.OnClick := WeatherChange;
+    CheckBox_DynamicLight.Hint := gResTexts[2100];
+end;
 
 procedure TKMMenuLobby.CreateChatMenu(aParent: TKMPanel);
 begin
@@ -951,6 +1113,9 @@ begin
   gNetworking.OnSetPassword := Lobby_OnSetPassword;
   gNetworking.OnAbortAllTransfers := Lobby_AbortAllTransfers;
 
+  fWeather.SetDefault;
+  fWeather.NightTime := 0;
+
   Radio_MapType.ItemIndex := gGameSettings.MenuLobbyMapType;
   UpdateMapList(aKind = lpkHost);
 
@@ -980,23 +1145,24 @@ const
 var
   diffHeight: Integer; //Difficulty panel height
 begin
-  diffHeight := Panel_Difficulty.Height * Byte(Panel_Difficulty.IsSetVisible);
+  diffHeight := (Panel_Difficulty.Height + 10) * Byte(Panel_Difficulty.IsSetVisible);
   if Button_TabDesc.Visible then
   begin
     //Not enough space, so enabled tabbed view
     Panel_SetupDesc.Top := fPanelDescBaseTop + 25;
     Panel_SetupDesc.Height := fMainHeight - 415;
-    Panel_SetupOptions.Top := fPanelDescBaseTop + 25;
+    //Panel_SetupOptions.Top := fPanelDescBaseTop + 25;
   end
   else
   begin
     //We have enough space, so stack Options below Desc
     Panel_SetupDesc.Top := fPanelDescBaseTop;
     Panel_SetupDesc.Height := Panel_Setup.Height - Panel_SetupDesc.Top - diffHeight - PANEL_SETUP_OPTIONS_HEIGHT - PAD_Y;
-    Panel_SetupOptions.Top := Panel_SetupDesc.Bottom + PAD_Y;
+    //Panel_SetupOptions.Top := Panel_SetupDesc.Bottom + PAD_Y;
   end;
-  Panel_SetupOptions.Height := PANEL_SETUP_OPTIONS_HEIGHT + diffHeight;
+  //Panel_SetupOptions.Height := PANEL_SETUP_OPTIONS_HEIGHT + diffHeight;
   Panel_GameOptions.Top := diffHeight;
+  Panel_Weather.Top := Panel_GameOptions.Bottom + 10;
 end;
 
 
@@ -1011,7 +1177,7 @@ begin
     Button_TabDesc.Hide;
     Button_TabOptions.Hide;
     Panel_SetupDesc.Show;
-    Panel_SetupOptions.Show;
+    //Panel_SetupOptions.Show;
     UpdateDescNOptionsUI;
   end
   else
@@ -1177,6 +1343,7 @@ end;
 procedure TKMMenuLobby.GameOptionsChange(Sender: TObject);
 var
   MD: TKMMissionDifficulty;
+  MBD: TKMMissionBuiltInDifficulty;
 begin
   if DropBox_Difficulty.Visible
     and (DropBox_Difficulty.Count > 0)
@@ -1184,12 +1351,15 @@ begin
     MD := TKMMissionDifficulty(DropBox_Difficulty.GetSelectedTag)
   else
     MD := mdNone;
-
+  if DropBox_BuilInDifficulty.IsSelected then
+    MBD := TKMMissionBuiltInDifficulty(DropBox_BuilInDifficulty.ItemIndex)
+  else
+    MBD := mdbNormal;
   //Update the game options
   gNetworking.UpdateGameOptions(EnsureRange(TrackBar_LobbyPeacetime.Position, 0, 300),
                                 TrackBarPos2Speed(TrackBar_SpeedPT.Position),
                                 TrackBarPos2Speed(TrackBar_SpeedAfterPT.Position),
-                                MD);
+                                MD, MBD, fWeather);
 
   //Refresh the data to controls
   Lobby_OnGameOptions;
@@ -1232,7 +1402,8 @@ begin
   TrackBar_SpeedPT.Position  := Speed2TrackBarPos(gNetworking.NetGameOptions.SpeedPT);
 
   TrackBar_SpeedAfterPT.Position  := Speed2TrackBarPos(gNetworking.NetGameOptions.SpeedAfterPT);
-
+  fWeather := gNetworking.NetGameOptions.Weather;
+  UpdateWeather;
   MD := gNetworking.NetGameOptions.MissionDifficulty;
 
   if MD <> mdNone then
@@ -2070,6 +2241,7 @@ end;
 procedure TKMMenuLobby.InitDropColMapsList;
 begin
   DropCol_Maps.DropWidth := 460;
+  DropCol_Maps.List.SearchColumn := 1;
   DropCol_Maps.SetColumns(fntOutline,
                           ['', gResTexts[TX_MENU_MAP_TITLE], '#', gResTexts[TX_MENU_MAP_SIZE]],
                           [0, 20, 320, 350],
@@ -2122,6 +2294,7 @@ begin
         end;
     MAP_TYPE_INDEX_SAVE:  //Saved Game
         begin
+          DropCol_Maps.List.SearchColumn := 0;
           fSavesMP.Refresh(MapList_ScanUpdate, True);
           DropCol_Maps.DropWidth := 850;
           DropCol_Maps.DefaultCaption := gResTexts[TX_LOBBY_MAP_SELECT_SAVED];
@@ -2668,6 +2841,8 @@ begin
 
   DropBox_Difficulty.Enabled := gNetworking.IsHost and (gNetworking.SelectGameKind = ngkMap) and gNetworking.MapInfo.IsValid;
 
+  Button_ShowOptions.Enabled := (gNetworking.SelectGameKind = ngkMap) and gNetworking.MapInfo.IsValid;
+  Panel_SetupOptions.Enabled := gNetworking.IsHost and (gNetworking.SelectGameKind = ngkMap) and gNetworking.MapInfo.IsValid;
   //In case it was hidden during file transfer
   Panel_SetupTransfer.Hide;
   Panel_SetupMinimap.Show;
@@ -2748,6 +2923,11 @@ begin
   CheckBox_RandomizeTeamLocations.Enabled := gNetworking.IsHost and (gNetworking.SelectGameKind <> ngkSave);
 
   DropBox_Difficulty.Enabled := gNetworking.IsHost and (gNetworking.SelectGameKind = ngkMap) and gNetworking.MapInfo.IsValid;
+
+  Button_ShowOptions.Enabled := (gNetworking.SelectGameKind = ngkMap) and gNetworking.MapInfo.IsValid;
+  Panel_SetupOptions.Enabled := gNetworking.IsHost and (gNetworking.SelectGameKind = ngkMap) and gNetworking.MapInfo.IsValid;
+
+  RefreshWeatherControls;
 
   Label_MapName.Caption := gNetworking.MissingFileName;
   Memo_MapDesc.Text := aData; //aData is some error message
@@ -3107,6 +3287,75 @@ begin
     GameOptionsChange(nil); //Need to update GameOptions, since we could get new MissionDifficulty
     Button_Start.Caption := gResTexts[TX_LOBBY_START];
   end;
+end;
+
+procedure TKMMenuLobby.ShowOptions(Sender: TObject);
+begin
+  Panel_SetupOptions.Show;
+  UpdateWeather;
+end;
+
+procedure TKMMenuLobby.HideOptions(Sender: TObject);
+begin
+  Panel_SetupOptions.Hide;
+end;
+
+procedure TKMMenuLobby.WeatherChange(Sender: TObject);
+begin
+  if gNetworking.IsHost then
+    UpdateWeatherSettings;
+  RefreshWeatherControls;
+end;
+
+procedure TKMMenuLobby.RefreshWeatherControls;
+var I : Integer;
+begin
+  //skip fisrt label
+  for I := 1 to Panel_Weather.ChildCount - 1 do
+  begin
+    if Panel_Weather.Childs[I] <> CheckBox_Enabled then
+      Panel_Weather.Childs[I].Enabled := CheckBox_Enabled.Checked;
+    Panel_Weather.Childs[I].Enabled := Panel_Weather.Childs[I].Enabled and Panel_Weather.Enabled;
+  end;
+
+  TrackBar_NightSpeed.Enable;
+  TrackBar_NightTime.Enable;
+  CheckBox_DynamicLight.Enable;
+
+  TrackBar_MaxInterval.ValueMin := TrackBar_MinInterval.Value + 1;
+end;
+
+procedure TKMMenuLobby.UpdateWeatherSettings;
+begin
+  fWeather.Enabled := CheckBox_Enabled.Checked;
+  fWeather.MaxCount := TrackBar_MaxCount.Value;
+  fWeather.MaxSpawnCount := TrackBar_MaxSpawnCount.Value;
+  fWeather.MinInterval := TrackBar_MinInterval.Value * 10;
+  fWeather.MaxInterval := TrackBar_MaxInterval.Value * 10;
+  fWeather.MaxLifeTime := TrackBar_MaxLifeTime.Value * 10;
+  fWeather.MaxCloudSpeed := TrackBar_MaxCloudSpeed.Value / 200;
+  fWeather.DecParticles := TrackBar_DecParticles.Value - 1;
+  fWeather.NightSpeed := TrackBar_NightSpeed.Position;
+  fWeather.NightTime := TrackBar_NightTime.Position;
+  fWeather.DynamicLight := CheckBox_DynamicLight.Checked;
+  GameOptionsChange(nil);
+end;
+
+procedure TKMMenuLobby.UpdateWeather;
+begin
+  CheckBox_Enabled.Checked      := fWeather.Enabled;
+  TrackBar_MaxCount.Value       := fWeather.MaxCount;
+  TrackBar_MaxSpawnCount.Value  := fWeather.MaxSpawnCount;
+  TrackBar_MinInterval.Value    := fWeather.MinInterval div 10;
+  TrackBar_MaxInterval.Value    := fWeather.MaxInterval div 10;
+  TrackBar_MaxLifeTime.Value    := fWeather.MaxLifeTime div 10;
+  TrackBar_MaxCloudSpeed.Value  := Round(fWeather.MaxCloudSpeed * 200);
+  TrackBar_DecParticles.Value   := fWeather.DecParticles + 1;
+  TrackBar_NightSpeed.Position  := fWeather.NightSpeed;
+  TrackBar_NightTime.Position   := fWeather.NightTime;
+  CheckBox_DynamicLight.Checked := fWeather.DynamicLight;
+
+  RefreshWeatherControls;
 end;
 
 //Should update anything we want to be updated, obviously

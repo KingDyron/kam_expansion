@@ -7,7 +7,7 @@ uses
   KromUtils, KM_Defaults;
 
 type
-  TAttackNotification = (anCitizens, anTown, anTroops);
+  TAttackNotification = (anCitizens, anTown, anTroops, anFood);
 
   TSoundFX = (
     sfxNone=0,
@@ -161,7 +161,7 @@ const
     'rebel', 'rogue', 'warrior', 'vagabond', 'machines', 'machines', 'machines', '', '', 'paladin',
     'bowman', 'pikeman', 'wolf', 'machines', 'machines', 'machines',
     'swordman', 'bowman', 'crossbowman', 'vagabond', 'lanceman', 'machines', 'machines',
-    'knights', 'bowman', '', '');
+    'knights', 'bowman', '', '', 'knights', 'axeman');
 
   //TPR warriors reuse TSK voices in some languages, so if the specific ones don't exist use these
   WARRIOR_SFX_FOLDER_BACKUP: array[WARRIOR_MIN..WARRIOR_MAX] of string = (
@@ -170,14 +170,14 @@ const
     'bowman', 'lanceman', 'barbarian', 'cavalry', 'machines', 'machines', 'machines', '', '', 'paladin',
     'bowman', 'lanceman', 'wolf', 'machines', 'machines', 'machines',
     'swordman', 'bowman', 'crossbowman', 'vagabond', 'lanceman', 'machines', 'machines',
-    'knights', 'bowman', '', '');
+    'knights', 'bowman', '', '', 'crossbowman', 'axeman');
 
   WARRIOR_SFX: array[TWarriorSpeech] of string = (
     'select', 'eat', 'left', 'right', 'halve',
     'join', 'halt', 'send', 'attack', 'format',
     'death', 'battle', 'storm');
 
-  ATTACK_NOTIFICATION: array[TAttackNotification] of string = ('citiz', 'town', 'units');
+  ATTACK_NOTIFICATION: array[TAttackNotification] of string = ('citiz', 'town', 'units', 'food');
 
   CITIZEN_SFX: array[CITIZEN_MIN..CITIZEN_MAX] of record
     WarriorVoice: TKMUnitType;

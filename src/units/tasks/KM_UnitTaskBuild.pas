@@ -4,7 +4,7 @@ interface
 uses
   SysUtils,
   KM_CommonClasses, KM_Defaults, KM_Points,
-  KM_Houses, KM_Terrain, KM_Units, KM_ResHouses,
+  KM_Houses, KM_Terrain, KM_Units, KM_ResHouses, KM_Structure,
   KM_ResTypes;
 
 
@@ -113,24 +113,6 @@ type
     procedure Save(SaveStream: TKMemoryStream); override;
   end;
 
-  TKMTaskBuildBridge = class(TKMTaskBuild)
-  private
-    fBridgeIndex : Word;
-    fLoc: TKMPoint;
-    fBuildID: Integer;
-    fTileLockSet: Boolean;
-    fLastPoint : Byte;
-  public
-    constructor Create(aWorker: TKMUnitWorker; const aLoc: TKMPoint; aID: Integer);
-    constructor Load(LoadStream: TKMemoryStream); override;
-    destructor Destroy; override;
-    function WalkShouldAbandon: Boolean; override;
-    procedure CancelThePlan; override;
-    procedure DeliverWare(aWare : TKMWareType);
-    function Execute: TKMTaskResult; override;
-    procedure Save(SaveStream: TKMemoryStream); override;
-  end;
-
   TKMTaskBuildHouseArea = class(TKMTaskBuild)
   private
     fHouse: TKMHouse;
@@ -204,6 +186,24 @@ type
     procedure SyncLoad; override;
     destructor Destroy; override;
     property House: TKMHouse read fHouse;
+    function WalkShouldAbandon: Boolean; override;
+    function CouldBeCancelled: Boolean; override;
+    function Execute: TKMTaskResult; override;
+    procedure Save(SaveStream: TKMemoryStream); override;
+  end;
+
+  TKMTaskBuildStructure = class(TKMUnitTask)
+  private
+    fStructure: TKMStructure;
+    fBuildID: Integer; //Remember the house we repair to report if we died and let others take our place
+    fBuildFrom: TKMPointDir; //Current WIP location
+    fCells: TKMPointDirList; //List of surrounding cells and directions
+  public
+    constructor Create(aWorker: TKMUnitWorker; aStructure: TKMStructure; aBuildID: Integer);
+    constructor Load(LoadStream: TKMemoryStream); override;
+    procedure SyncLoad; override;
+    destructor Destroy; override;
+    property Structure: TKMStructure read fStructure;
     function WalkShouldAbandon: Boolean; override;
     function CouldBeCancelled: Boolean; override;
     function Execute: TKMTaskResult; override;
@@ -430,7 +430,8 @@ begin
     2: begin
          gTerrain.ResetDigState(fLoc); //Remove any dig over that might have been there (e.g. destroyed house) after first dig
          gTerrain.IncDigState(fLoc, fRoadType);
-         gTerrain.FlattenTerrain(fLoc, true, false, 0.25); //Flatten the terrain slightly on and around the road
+         if fRoadType <> rtWooden then
+          gTerrain.FlattenTerrain(fLoc, true, false, 0.25); //Flatten the terrain slightly on and around the road
          if BootsAdded then
           SetActionLockedStay(0,uaWork1,False) //skip this step
          else
@@ -477,7 +478,8 @@ begin
        end;
     7: begin
          gTerrain.IncDigState(fLoc, fRoadType);
-         gTerrain.FlattenTerrain(fLoc, true, false, 0.25); //Flatten the terrain slightly on and around the road
+         if fRoadType <> rtWooden then
+          gTerrain.FlattenTerrain(fLoc, true, false, 0.25); //Flatten the terrain slightly on and around the road
          if gMapElements[gTerrain.Land^[fLoc.Y,fLoc.X].Obj].WineOrCorn then
            gTerrain.RemoveObject(fLoc); //Remove corn/wine/grass as they won't fit with road
           SetActionLockedStay(11,uaWork2,False);
@@ -1165,153 +1167,6 @@ begin
   SaveStream.Write(fTileLockSet);
 end;
 
-destructor TKMTaskBuildBridge.Destroy;
-begin
-  //Yet unstarted
-  if fBuildID <> -1 then
-    gHands[fUnit.Owner].Constructions.BridgePlanList.RemWorker(fBuildID);
-
-  //if fTileLockSet then gTerrain.UnlockTile(fLoc);
-  inherited;
-end;
-
-constructor TKMTaskBuildBridge.Create(aWorker: TKMUnitWorker; const aLoc: TKMPoint; aID: Integer);
-begin
-  inherited Create(aWorker);
-
-  fType := uttBuildBridge;
-  fLoc      := aLoc;
-  fBuildID   := aID;
-  fTileLockSet := False;
-  aWorker.Thought := thBuild;
-  fBridgeIndex := gHands[fUnit.Owner].Constructions.BridgePlanList.Plans[fBuildID].Index;
-  fLastPoint := 255;
-end;
-
-constructor TKMTaskBuildBridge.Load(LoadStream: TKMemoryStream);
-begin
-  Inherited;
-  LoadStream.CheckMarker('TaskBuildBridge');
-  LoadStream.Read(fBridgeIndex);
-  LoadStream.Read(fLoc);
-  LoadStream.Read(fBuildID);
-  LoadStream.Read(fTileLockSet);
-end;
-
-
-procedure TKMTaskBuildBridge.DeliverWare(aWare: TKMWareType);
-begin
-  gHands[fUnit.Owner].Constructions.BridgePlanList.DeliverWares(fBuildID, aWare);
-end;
-function TKMTaskBuildBridge.WalkShouldAbandon: Boolean;
-begin
-  //Walk should abandon if other player has built something there before we arrived
-  Result := gHands[fUnit.Owner].Constructions.BridgePlanList.ShouldAbondonJob(fBuildID);
-end;
-
-procedure TKMTaskBuildBridge.CancelThePlan;
-begin
-  fBuildID := -1;
-end;
-
-function TKMTaskBuildBridge.Execute: TKMTaskResult;
-var phaseDone : Boolean;
-  oldPointID : Byte;
-begin
-
-  Result := trTaskContinues;
-
-  if WalkShouldAbandon then
-  begin
-    Result := trTaskDone;
-    gHands[fUnit.Owner].Deliveries.Queue.RemDemand(fUnit, [wtAll]);
-    Exit;
-  end;
-  phaseDone := true;
-  with fUnit do
-  case fPhase of
-    0: begin
-         SetActionWalkToSpot(fLoc);
-         Thought := thBuild;
-       end;
-
-    1: begin
-        gTerrain.SetTileLock(fLoc, tlFieldWork);
-        fTileLockSet := True;
-        //CancelThePlan;
-        with gHands[fUnit.Owner].Constructions.BridgePlanList do
-        begin
-          if not HasAllBuildingMaterials(fBuildID) then //If all materials are there, don't make more demands
-            AddCostDemands(fBuildID, TKMUnitWorker(fUnit));
-        end;
-        SetActionLockedStay(22,uaWalk, true);
-       end;
-    2: begin
-        //worker must stay in this position until he get all materials
-
-        with gHands[fUnit.Owner].Constructions.BridgePlanList do
-          if HasAllBuildingMaterials(fBuildID) then
-          begin
-            SetActionLockedStay(IfThen(BootsAdded, 7, 10),uaWork2,false);
-            IncBuildingProgress(fBuildID);
-            phaseDone := Plans[fBuildID].BuildingProgress >= (gRes.Bridges[fBridgeIndex].MaxProgress * 2);
-
-            if not Plans[fBuildID].BridgeBuilt then
-              if Plans[fBuildID].BuildingProgress >= gRes.Bridges[fBridgeIndex].MaxProgress then
-              begin
-                with Plans[fBuildID] do
-                begin
-                  gTerrain.PlaceBridge(Loc, Index, Rotation);
-                  gHands[fUnit.Owner].BuildBridge(Loc, Index, Rotation);
-                end;
-                Plans[fBuildID].BridgeBuilt := true;
-              end else
-              begin
-                oldPointID := fLastPoint;
-                with Plans[fBuildID] do
-                begin
-                  fLastPoint := Round(BuildingProgress / gRes.Bridges[fBridgeIndex].MaxProgress * (gRes.Bridges[fBridgeIndex].Count - 1));
-
-                  if oldPointID <> fLastPoint then
-                  begin
-                    gTerrain.FlattenTerrain(KMPointAdd(Loc,  gRes.Bridges[fBridgeIndex].PointOrder[Rotation][fLastPoint]));
-                  end;
-                end;
-
-              end;
-            
-          end else
-          begin
-            SetActionLockedStay(22,uaWalk,true);// wait until serfs deliver wares
-            phaseDone := false;
-          end;
-
-       end;
-    3: begin
-        Thought := thNone;
-        gHands[fUnit.Owner].Constructions.BridgePlanList.FinishBridge(fBuildID);
-
-        SetActionStay(5,uaWalk);
-        gTerrain.UnlockTile(fLoc);
-        fTileLockSet := False;
-       end;
-    else Result := trTaskDone;
-  end;
-  if phaseDone then
-    inc(fPhase);
-end;
-
-
-procedure TKMTaskBuildBridge.Save(SaveStream: TKMemoryStream);
-begin
-  inherited;
-  SaveStream.PlaceMarker('TaskBuildBridge');
-  SaveStream.Write(fBridgeIndex);
-  SaveStream.Write(fLoc);
-  SaveStream.Write(fBuildID);
-  SaveStream.Write(fTileLockSet);
-end;
-
 { TTaskBuildHouseArea }
 constructor TKMTaskBuildHouseArea.Create(aWorker: TKMUnitWorker; aHouseType: TKMHouseType; const aLoc: TKMPoint; aID: Integer);
 var
@@ -1641,7 +1496,7 @@ begin
 
   with TKMUnitWorker(fUnit) do
   case fPhase of
-    0:  if PickNextSpot(fCells, fBuildFrom) then
+    0:  if PickNextSpot(fCells, fBuildFrom, fHouse.LastCellID) then
         begin
           Thought := thBuild;
           SetActionWalkToSpot(fBuildFrom.Loc, uaWalk, 1.42);
@@ -1653,7 +1508,7 @@ begin
           Thought := thBuild;
           SetActionWalkToSpot(fBuildFrom.Loc);//walk directly to this place
         end else
-        if PickNextSpot(fCells, fBuildFrom) then
+        if PickNextSpot(fCells, fBuildFrom, fHouse.LastCellID) then
         begin
           Thought := thBuild;
           SetActionWalkToSpot(fBuildFrom.Loc, uaWalk, 1.42);//try to use different location
@@ -1661,9 +1516,6 @@ begin
         end
         else
           Result := trTaskDone;
-
-
-    //WARNING!!! THIS PHASE VALUE IS USED IN TKMTaskDelivery to construction !!!
     2:  begin
           //Face the building
           Direction := fBuildFrom.Dir;
@@ -1805,7 +1657,7 @@ begin
 
   with TKMUnitWorker(fUnit) do
   case fPhase of
-    0:  if PickNextSpot(fCells, fBuildFrom) then
+    0:  if PickNextSpot(fCells, fBuildFrom, fHouse.LastCellID) then
         begin
           Thought := thBuild;
           SetActionWalkToSpot(fBuildFrom.Loc, uaWalk, 1.42);
@@ -1817,7 +1669,7 @@ begin
           Thought := thBuild;
           SetActionWalkToSpot(fBuildFrom.Loc);//walk directly to this place
         end else
-        if PickNextSpot(fCells, fBuildFrom) then
+        if PickNextSpot(fCells, fBuildFrom, fHouse.LastCellID) then
         begin
           Thought := thBuild;
           SetActionWalkToSpot(fBuildFrom.Loc, uaWalk, 1.42);//try to use different location
@@ -1958,7 +1810,7 @@ begin
 
   with TKMUnitWorker(fUnit) do
     case fPhase of
-    0:  if PickNextSpot(fCells, fBuildFrom) then
+    0:  if PickNextSpot(fCells, fBuildFrom, fHouse.LastCellID) then
         begin
           Thought := thBuild;
           SetActionWalkToSpot(fBuildFrom.Loc, uaWalk, 1.42);
@@ -1970,7 +1822,7 @@ begin
           Thought := thBuild;
           SetActionWalkToSpot(fBuildFrom.Loc);//walk directly to this place
         end else
-        if PickNextSpot(fCells, fBuildFrom) then
+        if PickNextSpot(fCells, fBuildFrom, fHouse.LastCellID) then
         begin
           Thought := thBuild;
           SetActionWalkToSpot(fBuildFrom.Loc, uaWalk, 1.42);//try to use different location
@@ -2021,8 +1873,161 @@ begin
   fCells.SaveToStream(SaveStream);
 end;
 
+{ TTaskBuildStructure }
+constructor TKMTaskBuildStructure.Create(aWorker: TKMUnitWorker; aStructure: TKMStructure; aBuildID: Integer);
+begin
+  inherited Create(aWorker);
+  fType := uttBuildStructure;
+  fStructure    := aStructure;
+  fBuildID := aBuildID;
+  aWorker.Thought := thBuild;
 
-{ TKMTaskBuildRoad }
+  fCells := TKMPointDirList.Create;
+  fStructure.GetCellsAround(fCells);
+end;
+
+
+constructor TKMTaskBuildStructure.Load(LoadStream: TKMemoryStream);
+begin
+  inherited;
+  LoadStream.CheckMarker('TaskBuildHouseRepair');
+  LoadStream.Read(fStructure, 4);
+  LoadStream.Read(fBuildID);
+  LoadStream.Read(fBuildFrom);
+  fCells := TKMPointDirList.Create;
+  fCells.LoadFromStream(LoadStream);
+end;
+
+
+procedure TKMTaskBuildStructure.SyncLoad;
+begin
+  inherited;
+  fStructure := gHands.GetStructureByUID(Integer(fStructure));
+end;
+
+
+destructor TKMTaskBuildStructure.Destroy;
+begin
+  FreeAndNil(fCells);
+  gHands[fUnit.Owner].Constructions.StructureList.RemWorker(fBuildID);
+  inherited;
+end;
+
+
+function TKMTaskBuildStructure.WalkShouldAbandon: Boolean;
+begin
+  Result := not fStructure.CanBuild
+            or fStructure.IsComplete
+            or fStructure.IsDestroyed;
+end;
+
+
+function TKMTaskBuildStructure.CouldBeCancelled: Boolean;
+begin
+  Result := (fPhase - 1) //phase was increased at the end of execution
+                   <= 0; //Allow cancel task only at walking phases
+end;
+
+
+{Repair the house}
+function TKMTaskBuildStructure.Execute: TKMTaskResult;
+  function LocOccupied(aLoc : TKMPoint) : Boolean;
+  var W : TKMUnitWorker;
+  begin
+    if (gTerrain.GetUnit(aLoc) = nil) or not (gTerrain.GetUnit(aLoc) is TKMUnitWorker) then //unit must be worker
+      Exit(false);
+    W := TKMUnitWorker(gTerrain.GetUnit(aLoc));
+    Result := not W.IsDeadOrDying and (W <> fUnit); //ignore dead workers
+  end;
+begin
+  Result := trTaskContinues;
+
+  if WalkShouldAbandon then
+  begin
+    Result := trTaskDone;
+    Exit;
+  end;
+
+  with TKMUnitWorker(fUnit) do
+    case fPhase of
+    0:  if PickNextSpot(fCells, fBuildFrom, fStructure.LastCellID) then
+        begin
+          Thought := thBuild;
+          SetActionWalkToSpot(fBuildFrom.Loc, uaWalk, 1.42);
+        end
+        else
+          Result := trTaskDone;
+    1:  if not LocOccupied(fBuildFrom.Loc) then
+        begin
+          Thought := thBuild;
+          SetActionWalkToSpot(fBuildFrom.Loc);//walk directly to this place
+        end else
+        if PickNextSpot(fCells, fBuildFrom, fStructure.LastCellID) then
+        begin
+          Thought := thBuild;
+          SetActionWalkToSpot(fBuildFrom.Loc, uaWalk, 1.42);//try to use different location
+          fPhase := 0;
+        end
+        else
+        begin
+          if fCells.Count = 1 then
+            fStructure.GetCellsAround(fCells);
+          if fCells.Count = 1 then
+            Result := trTaskDone;
+        end;
+      2:  begin
+            Direction := fBuildFrom.Dir;
+            SetActionLockedStay(0, uaWalk);
+          end;
+      3:  begin
+            SetActionLockedStay(5, uaWork, False, 0, 0); //Start animation
+            Direction := fBuildFrom.Dir;
+          end;
+      4:  begin
+            fStructure.IncBuildingProgress;
+            if BootsAdded then
+              fStructure.IncBuildingProgress;
+
+
+            SetActionLockedStay(6, uaWork,False, 0, 5); //Do building and end animation
+            inc(fPhase2);
+            if fUnit.IsHungry then
+              Result := trTaskDone;
+
+          end;
+      5:  begin
+            Thought := thNone;
+            SetActionStay(1, uaWalk);
+          end;
+      else
+          Result := trTaskDone;
+    end;
+  inc(fPhase);
+
+  if fPhase = 5 then //If animation cycle is done
+    if fPhase2 mod 5 = 0 then //if worker did [5] hits from same spot
+    begin
+      fPhase := 0; //Then goto new spot
+      fPhase2 := 0;
+    end
+    else
+      fPhase := 3; //else do more hits
+end;
+
+
+procedure TKMTaskBuildStructure.Save(SaveStream: TKMemoryStream);
+begin
+  inherited;
+  SaveStream.PlaceMarker('TaskBuildHouseRepair');
+  SaveStream.Write(fStructure.UID); //Store ID, then substitute it with reference on SyncLoad
+  SaveStream.Write(fBuildID);
+  SaveStream.Write(fBuildFrom);
+  fCells.SaveToStream(SaveStream);
+end;
+
+
+
+{ TKMTaskBuildPalisade }
 constructor TKMTaskBuildPalisade.Create(aWorker: TKMUnitWorker; const aLoc: TKMPoint; aID: Integer);
 begin
   inherited Create(aWorker);

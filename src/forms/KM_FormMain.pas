@@ -262,6 +262,8 @@ type
     Housesrxa1: TMenuItem;
     Unitsrxa1: TMenuItem;
     ReloadJsonData1: TMenuItem;
+    btStartRecording: TButton;
+    btSaveRecording: TButton;
 
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -350,6 +352,8 @@ type
     procedure Unitsrxa1Click(Sender: TObject);
     procedure mnExportHDUnitThoughtsClick(Sender: TObject);
     procedure ReloadJsonData1Click(Sender: TObject);
+    procedure btStartRecordingClick(Sender: TObject);
+    procedure btSaveRecordingClick(Sender: TObject);
   private
     {$IFDEF MSWindows}
     fMenuItemHint: TKMVclMenuItemHint; // Custom hint over menu item
@@ -1154,6 +1158,16 @@ begin
   ActiveControl := nil; //Do not allow to focus on anything on debug panel
 end;
 
+
+procedure TFormMain.btSaveRecordingClick(Sender: TObject);
+begin
+  gGameApp.SaveRecording;
+end;
+
+procedure TFormMain.btStartRecordingClick(Sender: TObject);
+begin
+  gGameApp.StartRecording;
+end;
 
 // It is annoying to have Tab cycling through F11 controls. Hence we disable it (@Rey: Correct?)
 procedure TFormMain.ConstrolsDisableTabStops;

@@ -18,6 +18,8 @@ type
     fFieldBlocked: array[TKMLockFieldType] of Boolean;
     fHandHouseLock: array [TKMHouseType] of TKMHandHouseLock;
     fHandHouseMaxLvl: array [TKMHouseType] of Byte;
+    fStructureLock,
+    fDecorationLock : array of TKMHandUnitLock;
     procedure UpdateReqDone(aType: TKMHouseType);
 
     function GetHouseBlocked(aHouseType: TKMHouseType): Boolean;
@@ -27,6 +29,12 @@ type
 
     function GetHandHouseMaxLvl(aHouseType: TKMHouseType): Byte;
     procedure SetHandHouseMaxLvl(aHouseType: TKMHouseType; aValue: Byte);
+
+    function GetStructureLock(aIndex : Integer) : TKMHandUnitLock;
+    function GetDecorationLock(aIndex : Integer) : TKMHandUnitLock;
+
+    procedure SetStructureLock(aIndex : Integer; aValue : TKMHandUnitLock);
+    procedure SetDecorationLock(aIndex : Integer; aValue : TKMHandUnitLock);
   public
     AllowToTrade: array [WARE_MIN..WARE_MAX] of Boolean; //Allowance derived from mission script
     constructor Create;
@@ -35,6 +43,8 @@ type
     property HouseGranted[aHouseType: TKMHouseType]: Boolean read GetHouseGranted;
     property HouseLock[aHouseType: TKMHouseType]: TKMHandHouseLock read GetHandHouseLock write SetHandHouseLock;
     property HouseMaxLvl[aHouseType: TKMHouseType]: Byte read GetHandHouseMaxLvl write SetHandHouseMaxLvl;
+    property Structures[aIndex: Integer]: TKMHandUnitLock read GetStructureLock write SetStructureLock;
+    property Decoration[aIndex: Integer]: TKMHandUnitLock read GetDecorationLock write SetDecorationLock;
 
     procedure HouseCreated(aType: TKMHouseType);
     function HouseCanBuild(aType: TKMHouseType): Boolean;
@@ -53,7 +63,9 @@ type
 
 implementation
 uses
-  KM_Resource;
+  Math,
+  KM_Resource,
+  KM_ResMapElements;
 
 
 { TKMHandLocks }
@@ -61,6 +73,7 @@ constructor TKMHandLocks.Create;
 var
   W: TKMWareType;
   HT: TKMHouseType;
+  I : Integer;
 begin
   inherited;
 
@@ -73,6 +86,14 @@ begin
 
   for HT := Low(TKMHouseType) to High(TKMHouseType) do
     fHandHouseLock[HT] := hlDefault;
+  Setlength(fStructureLock, gRes.Structures.Count);
+  Setlength(fDecorationLock, length(gDecorations));
+
+  for I := 0 to High(fStructureLock) do
+    fStructureLock[I] := ulUnlocked;
+  for I := 0 to High(fDecorationLock) do
+    fDecorationLock[I] := ulUnlocked;
+
 end;
 
 
@@ -131,6 +152,35 @@ end;
 procedure TKMHandLocks.SetHandHouseMaxLvl(aHouseType: TKMHouseType; aValue : Byte);
 begin
   fHandHouseMaxLvl[aHouseType] := aValue;
+end;
+
+function TKMHandLocks.GetStructureLock(aIndex : Integer) : TKMHandUnitLock;
+begin
+  if not InRange(aIndex, 0, high(fStructureLock)) then
+    Exit(ulUnlocked);
+  Result := fStructureLock[aIndex];
+end;
+
+function TKMHandLocks.GetDecorationLock(aIndex : Integer) : TKMHandUnitLock;
+begin
+  if not InRange(aIndex, 0, high(fDecorationLock)) then
+    Exit(ulUnlocked);
+  Result := fDecorationLock[aIndex];
+end;
+
+procedure TKMHandLocks.SetStructureLock(aIndex : Integer; aValue : TKMHandUnitLock);
+begin
+  if not InRange(aIndex, 0, high(fStructureLock)) then
+    Exit;
+
+  fStructureLock[aIndex] := aValue;
+end;
+
+procedure TKMHandLocks.SetDecorationLock(aIndex : Integer; aValue : TKMHandUnitLock);
+begin
+  if not InRange(aIndex, 0, high(fDecorationLock)) then
+    Exit;
+  fDecorationLock[aIndex] := aValue;
 end;
 
 

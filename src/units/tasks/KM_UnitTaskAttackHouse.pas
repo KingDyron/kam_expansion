@@ -58,6 +58,23 @@ type
     procedure Save(SaveStream: TKMemoryStream); override;
   end;
 
+  // take over house
+  TKMTaskTakeOverHouse = class(TKMUnitTask)
+  private
+    fHouse: TKMHouse;
+  public
+    constructor Create(aWarrior: TKMUnit; aHouse: TKMHouse);
+    constructor Load(LoadStream: TKMemoryStream); override;
+    procedure SyncLoad; override;
+    destructor Destroy; override;
+
+    property House: TKMHouse read fHouse;
+
+    function WalkShouldAbandon: Boolean; override;
+    function Execute: TKMTaskResult; override;
+    procedure Save(SaveStream: TKMemoryStream); override;
+  end;
+
 
 implementation
 uses
@@ -262,25 +279,33 @@ begin
             else
             begin
               AnimLength := gRes.Units[UnitType].UnitAnim[uaWork, Direction].Count;
+              if fUnit.UnitType = utPyro then
+                fHouse.SetOnFire;
+
               if fUnit.UnitType = utTorchMan then
               begin
                 SetActionLockedStay(0, uaWork, true, 0, 1); // no pause for torchman
                 gSpecAnim.Add(gRes.Units.Explosion, fUnit.PositionF, 1, rxUnits, true);
-                gHands.HitAllInRadius(fUnit, fUnit, fUnit.PositionF, 2.5, 199, 2, 200);
-                gHands.HitAllInRadius(fUnit, fUnit, fUnit.PositionF, 1.43, 220, 5, 350);
-                fUnit.Kill(-1, false, false);
+                if not fUnit.IsDeadOrDying then
+                  gHands.HitAllInRadius(fUnit, fUnit, fUnit.PositionF, 2.5, 199, 2, 200);
+                if not fUnit.IsDeadOrDying then
+                  gHands.HitAllInRadius(fUnit, fUnit, fUnit.PositionF, 1.43, 220, 5, 350);
+                //if not fUnit.Immortal then
+                  fUnit.Kill(-1, false, false);
               end else
                 SetActionLockedStay(AnimLength - AnimLength div 2, uaWork, False, 0, AnimLength div 2); // Pause for next attack
               if fUnit is TKMUnitWarriorSpy then
                 TKMUnitWarriorSpy(fUnit).SetAttackedTime;//Spy can only attack house
 
               //All melee units do 2 damage per strike
-              if fUnit.UnitType <> utTorchMan then
-                if fHouse.HouseType in WALL_HOUSES then
-                  fHouse.AddDamage(Max(TKMUnitWarrior(fUnit).DamageHouse div 3, 1), fUnit)
-                else
-                  fHouse.AddDamage(TKMUnitWarrior(fUnit).DamageHouse, fUnit);
-
+              if not fUnit.IsDeadOrDying then
+                if fUnit.UnitType <> utTorchMan then
+                begin
+                  if fHouse.HouseType in WALL_HOUSES then
+                    fHouse.AddDamage(Max(TKMUnitWarrior(fUnit).DamageHouse div 3, 1), fUnit)
+                  else
+                    fHouse.AddDamage(TKMUnitWarrior(fUnit).DamageHouse, fUnit);
+                end;
               //Play a sound. We should not use KaMRandom here because sound playback depends on FOW and is individual for each player
               if gMySpectator.FogOfWar.CheckTileRevelation(Position.X, Position.Y) >= 255 then
                 gSoundPlayer.Play(MeleeSoundsHouse[Random(Length(MeleeSoundsHouse))], PositionF);
@@ -336,7 +361,7 @@ end;
 
 function TKMTaskAssignToShip.WalkShouldAbandon: Boolean;
 begin
-  Result := fShip.IsDeadOrDying or (fUnit is TKMUnitWarriorShip);
+  Result := fShip.IsDeadOrDying or (fUnit is TKMUnitWarriorShip) or (fUnit.InShip = fShip) or not fShip.IsCloseToWater;
 end;
 
 function TKMTaskAssignToShip.Execute: TKMTaskResult;
@@ -482,5 +507,81 @@ begin
   Inc(fPhase);
 end;
 
+constructor TKMTaskTakeOverHouse.Create(aWarrior: TKMUnit; aHouse: TKMHouse);
+begin
+  Inherited Create(aWarrior);
+  fType := uttTakeOverHouse;
+  fHouse := aHouse;
+end;
+
+
+constructor TKMTaskTakeOverHouse.Load(LoadStream: TKMemoryStream);
+begin
+  Inherited;
+  LoadStream.Read(fHouse, 4);
+end;
+
+destructor TKMTaskTakeOverHouse.Destroy;
+begin
+  Inherited;
+end;
+
+procedure TKMTaskTakeOverHouse.SyncLoad;
+begin
+  Inherited;
+  fHouse := TKMHouse(gHands.GetHouseByUID(Integer(fHouse)));
+end;
+
+procedure TKMTaskTakeOverHouse.Save(SaveStream: TKMemoryStream);
+begin
+  Inherited;
+  SaveStream.Write(fHouse.UID);
+end;
+
+function TKMTaskTakeOverHouse.WalkShouldAbandon: Boolean;
+begin
+  Result := not fHouse.IsValid(htAny, false, true) or (fHouse.HouseType in WALL_HOUSES);
+end;
+
+function TKMTaskTakeOverHouse.Execute: TKMTaskResult;
+begin
+  Result := trTaskContinues;
+
+  //If the house is destroyed drop the task
+  if WalkShouldAbandon then
+  begin
+    Result := trTaskDone;
+    Exit;
+  end;
+
+  with TKMUnitWarrior(fUnit) do
+    case fPhase of
+      0:  begin
+            SetActionWalkToSpot(fHouse.PointBelowEntrance);
+          end;
+
+      1:  begin
+            SetActionGoIn(uaWalk, gdGoInside, fHouse);//enter the well
+          end;
+      2:  begin
+            SetActionLockedStay(20, uaWalk);
+          end;
+      3:  begin
+            SetActionGoIn(uaWalk, gdGoOutside, fHouse);//enter the well
+          end;
+      4:  begin
+            Direction := dirN;
+            SetActionLockedStay(gRes.Units[fUnit.UnitType].UnitAnim[uaWork, dirN].Count - 1, uaWork, false);
+          end;
+      5:  begin
+            SetActionLockedStay(1, uaWalk);
+            gHands[Owner].TakeOverHouse(fHouse);
+          end;
+    else Result := trTaskDone;
+
+    end;
+
+  Inc(fPhase);
+end;
 
 end.

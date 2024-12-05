@@ -13,7 +13,8 @@ type
                     toClay1, toClay2, toClay3, toClay4, toClay5,
                     toFence1, toFence2, toFence3, toFence4, toFence5, toFence6, toInfinity, toInfinityClay,
                     toInfinityCoal, toBlock, toBlockBuilding,
-                    toDig3Wooden, toDig4Wooden, toDig3Clay, toDig4Clay, toDig3Exclusive, toDig4Exclusive);
+                    toDig3Wooden, toDig4Wooden, toDig3Clay, toDig4Clay, toDig3Exclusive, toDig4Exclusive,
+                    toStopGrowing);
 
 
   // Tile corners
@@ -106,7 +107,6 @@ type
     DefRotation: Byte;
     DefTile: Word;
     Obj: Word;
-    ObjDeposits: Word;
     IsCustom, IsHidden: Boolean; // Custom tile (rotated tile, atm)
     BlendingLvl: Byte; // Use blending for layers transitions
 
@@ -144,6 +144,7 @@ type
     GrainType: TKMGrainType;
     NightAffection: Single;
     Ware : TKMTerrainWare;
+    IsAiReserved : Boolean;
 
     property Height: Byte read fHeight write SetHeight;
 
@@ -207,11 +208,11 @@ const
   //overlays, that considered as road: basically road and dig4, which looks almost like a finished road
   ROAD_LIKE_OVERLAYS: set of TKMTileOverlay = [toDig4, toRoad];
   COAL_LIKE_OVERLAYS: set of TKMTileOverlay = [toCoal1..toCoal5, toInfinityCoal];
-  TILE_OVERLAY_IDS: array[toNone..toDig4Exclusive] of Integer = (0, 249, 251, 253, 255, 254,
+  TILE_OVERLAY_IDS: array[toNone..toStopGrowing] of Integer = (0, 249, 251, 253, 255, 254,
                                                           598, 599, 600, 601, 602,//toNone, toDig1, toDig2, toDig3, toDig4, toRoad
                                                           619, 620, 621, 622, 623,
                                                           603, 604, 605, 606, 607, 608, 617, 626, 627,
-                                                          679, 680, 681, 682, 683, 684, 685, 686);
+                                                          679, 680, 681, 682, 683, 684, 685, 686, 689);
 
   WINE_TERRAIN_ID = 55;
   CORN_STAGE5_OBJ_ID = 58;
@@ -389,6 +390,7 @@ begin
   case aOverlay of
     toInfinity,
     toBlock,
+    toStopGrowing,
     toBlockBuilding : Result := false;
     else Result := true;
 

@@ -18,9 +18,12 @@ type
     fButton: TKMButton;
     fShape: TKMShape;
     fAutoClose: Boolean;
+    fSearchText : String;
+    fSearchable : Boolean;
 
     fOnChange: TNotifyEvent;
     fOnShowList: TNotifyEvent;
+
 
     procedure UpdateDropPosition; virtual; abstract;
     procedure ButtonClick(Sender: TObject);
@@ -31,6 +34,10 @@ type
     function ListVisible: Boolean; virtual; abstract;
     function GetItemIndex: SmallInt; virtual; abstract;
     procedure SetItemIndex(aIndex: SmallInt); virtual; abstract;
+    procedure UpdateSearchText; virtual; abstract;
+
+    procedure AddSearchText(aKey : Char);
+    procedure DeleteSearchText;
   protected
     procedure DoClick(X,Y: Integer; Shift: TShiftState; Button: TMouseButton); override;
     procedure SetLeft(aValue: Integer); override;
@@ -38,6 +45,7 @@ type
     procedure SetEnabled(aValue: Boolean); override;
     procedure SetVisible(aValue: Boolean); override;
     function ListKeyDown(Sender: TObject; Key: Word; Shift: TShiftState): Boolean;
+    function ListKeyUp(Sender: TObject; Key: Word; Shift: TShiftState): Boolean;
     procedure UpdateVisibility; override;
   public
     constructor Create(aParent: TKMPanel; aLeft, aTop, aWidth, aHeight: Integer; aFont: TKMFont; aStyle: TKMButtonStyle;
@@ -50,10 +58,13 @@ type
     procedure SetOpenList(aOpen: Boolean);
     procedure SwitchOpen;
 
+
     property DropCount: Byte read fDropCount write fDropCount;
     property DropUp: Boolean read fDropUp write fDropUp;
     property ItemIndex: SmallInt read GetItemIndex write SetItemIndex;
     function IsOpen: Boolean; virtual;
+    property SearchText : String read fSearchText;
+    property Searchable : Boolean read fSearchable write fSearchable;
 
     property OnShowList: TNotifyEvent read fOnShowList write fOnShowList;
     property OnChange: TNotifyEvent read fOnChange write fOnChange;
@@ -81,6 +92,7 @@ type
     procedure SetDropWidth(aDropWidth: Integer);
     function GetShowHintWhenShort: Boolean;
     procedure SetShowHintWhenShort(const aValue: Boolean);
+    procedure UpdateSearchText; override;
   protected
     procedure SetEnabled(aValue: Boolean); override;
     procedure SetVisible(aValue: Boolean); override;
@@ -127,6 +139,7 @@ type
     procedure SetDropWidth(aDropWidth: Integer);
     function GetShowHintWhenShort: Boolean;
     procedure SetShowHintWhenShort(const aValue: Boolean);
+    procedure UpdateSearchText; override;
   protected
     procedure SetEnabled(aValue: Boolean); override;
     procedure SetVisible(aValue: Boolean); override;
@@ -153,7 +166,8 @@ implementation
 uses
   {$IFDEF MSWindows} Windows, {$ENDIF}
   {$IFDEF Unix} LCLIntf, LCLType, {$ENDIF}
-  Math,
+  Math, StrUtils, SysUtils,
+  KM_ControlsTypes, KM_ControlsUtils,
   KM_Defaults;
 
 
@@ -168,6 +182,7 @@ begin
   fDropCount := 10;
   fDropUp := False;
   fFont := aFont;
+  fSearchable := false;
 
   fButton := TKMButton.Create(aParent, aLeft+aWidth-aHeight, aTop, aHeight, aHeight, 590, rxGui, aStyle);
   fButton.OnClick := ButtonClick;
@@ -212,9 +227,13 @@ begin
   end;
 
   if fAutoClose and (Count > 0) then
+  begin
     fShape.Show;
+    UpdateSearchText;
+  end;
 
   if Assigned(fOnShowList) then fOnShowList(Self);
+
 end;
 
 
@@ -230,7 +249,8 @@ begin
     begin
       fButton.TexId := 591;
       ListShow(Self)
-    end else begin
+    end else
+    begin
       fButton.TexId := 590;
       ListHide(Self);
     end;
@@ -247,7 +267,20 @@ begin
     ListHide(nil);
     Result := True;
   end else
-    Result := False;
+  begin
+    Result := true;
+    //Exit;
+    case Key of
+      VK_BACK,
+      VK_DELETE : DeleteSearchText;
+      else AddSearchText(Char(key));
+    end;
+  end;
+end;
+
+function TKMDropCommon.ListKeyUp(Sender: TObject; Key: Word; Shift: TShiftState): Boolean;
+begin
+  Result := true;
 end;
 
 
@@ -268,6 +301,33 @@ end;
 procedure TKMDropCommon.ListHide(Sender: TObject);
 begin
   fShape.Hide;
+  fSearchText := '';
+end;
+
+procedure TKMDropCommon.AddSearchText(aKey: Char);
+begin
+  if not Searchable then
+    Exit;
+
+  if not IsCharAllowed(aKey, acText) then
+    Exit;
+  
+  if Length(fSearchText) >= 20 then
+    Exit;
+
+  Insert(AnsiLowerCase(aKey), fSearchText, length(fSearchText) + 1);
+  UpdateSearchText;
+end;
+
+procedure TKMDropCommon.DeleteSearchText;
+begin
+  if not Searchable then
+    Exit;
+
+  if Length(fSearchText) = 0 then
+    Exit;
+  Delete(fSearchText, Length(fSearchText), 1);
+  UpdateSearchText;
 end;
 
 
@@ -337,6 +397,7 @@ begin
   inherited;
 
   TKMRenderUI.WriteBevel(AbsLeft, AbsTop, Width, Height);
+  //TKMRenderUI.WriteText(AbsLeft, AbsTop, Width, fSearchText, fntGrey, taLeft);
 
   // Make sure the list stays where it needs to be relative DropBox (e.g. on window resize)
   UpdateDropPosition;
@@ -349,6 +410,7 @@ constructor TKMDropList.Create(aParent: TKMPanel; aLeft, aTop, aWidth, aHeight: 
 begin
   inherited Create(aParent, aLeft, aTop, aWidth, aHeight, aFont, aStyle, aAutoClose);
 
+  Focusable := true;
   fDefaultCaption := aDefaultCaption;
 
   fListTopIndex := 0;
@@ -359,11 +421,12 @@ begin
   fList.BackAlpha := aBackAlpha;
   fList.OnClick := ListClick;
   fList.OnChange := ListChange;
-
+  fList.SearchEnabled := false;
   DropWidth := aWidth;
 
   ListHide(nil);
   fList.OnKeyDown := ListKeyDown;
+  fList.OnKeyUp := ListKeyUp;
 end;
 
 
@@ -440,6 +503,13 @@ end;
 procedure TKMDropList.SetShowHintWhenShort(const aValue: Boolean);
 begin
   fList.ShowHintWhenShort := aValue;
+end;
+
+procedure TKMDropList.UpdateSearchText;
+var I : Integer;
+begin
+  for I := 0 to fList.Count - 1 do
+    fList.ItemsVisibility[I] := ContainsText(AnsiLowerCase(fList.Items[I]), fSearchText) or (fSearchText = '');
 end;
 
 
@@ -574,6 +644,15 @@ begin
     col := icGray2;
 
   TKMRenderUI.WriteText(AbsLeft+4, AbsTop+4, Width-8, fCaption, fFont, taLeft, col);
+
+  If IsOpen and (fSearchText <> '') then
+  begin
+    TKMRenderUI.WriteBevel(fList.AbsLeft, fList.AbsBottom+4, fList.Width, 20);
+    TKMRenderUI.WriteText(fList.AbsLeft, fList.AbsBottom+4, fList.Width, fSearchText, fFont, taLeft, col);
+  end;
+
+
+  //fList.AbsBottom
 end;
 
 
@@ -591,7 +670,7 @@ begin
   fList.OnClick := ListClick;
   fList.OnChange := ListChange;
   fList.ShowHeader := aShowHeader;
-
+  fList.SearchColumn := 0;
   DropWidth := aWidth;
 
   ListHide(nil);
@@ -672,6 +751,22 @@ end;
 procedure TKMDropColumns.SetShowHintWhenShort(const aValue: Boolean);
 begin
   fList.ShowHintWhenShort := aValue;
+end;
+
+procedure TKMDropColumns.UpdateSearchText;
+var I, K : Integer;
+  S : String;
+begin
+  K := fList.SearchColumn;
+  for I := 0 to fList.RowCount - 1 do
+  begin
+    S := AnsiLowerCase(fList.Rows[I].Cells[K].Caption);
+    if (fSearchText = '') or ContainsText(S, fSearchText) then
+      fList.Rows[I].Visible := true
+    else
+      fList.Rows[I].Visible := false;
+    //fList.Rows[I].Visible := (fSearchText = '') or ContainsText(AnsiLowerCase(fList.Rows[I].Cells[K].Caption), fSearchText);
+  end;
 end;
 
 
@@ -769,6 +864,12 @@ begin
     TKMRenderUI.WriteText(AbsLeft + 4, AbsTop + 4, Width - 8 - fButton.Width, fDefaultCaption, fFont, taLeft, col)
   else
     fList.DoPaintLine(ItemIndex, AbsLeft, AbsTop, Width - fButton.Width, fColumnsToShowWhenListHidden, False);
+
+  If IsOpen and (fSearchText <> '') then
+  begin
+    TKMRenderUI.WriteBevel(fList.AbsLeft, fList.AbsBottom+4, fList.Width, 20);
+    TKMRenderUI.WriteText(fList.AbsLeft, fList.AbsBottom+4, fList.Width, fSearchText, fFont, taLeft, col);
+  end;
 end;
 
 

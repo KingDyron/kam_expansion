@@ -22,7 +22,11 @@ type
     woAttackUnit, //Attack someone
     woAttackHouse, //Attack house
     woStorm, //Do Storm attack
-    woStay
+    woStay,
+    woShipBoatUnload,
+    woBoatCollectWares,
+    woAssignToShip,
+    woTakeOverHouse
   );
 
   TKMUnitWarrior = class(TKMUnit)
@@ -32,6 +36,7 @@ type
     fNextOrderForced: Boolean; //Next order considered not forced if it comes as "repeated order" after Split/Link orders/Die member/Link after training
     fOrder: TKMWarriorOrder; //Order we are performing
     fOrderLoc: TKMPoint; //Dir is the direction to face after order
+    fOrderTargetShip: TKMUnit; //Unit we are ordered to attack. This property should never be accessed, use GetOrderTarget instead.
     fOrderTargetUnit: TKMUnit; //Unit we are ordered to attack. This property should never be accessed, use GetOrderTarget instead.
     fAttackingUnit: TKMUnit; //Unit we are attacking or following to attack (f.e. group offenders). This property should never be accessed, use GetAttackingUnit instead.
     fOrderTargetHouse: TKMHouse; //House we are ordered to attack. This property should never be accessed, use GetOrderHouseTarget instead.
@@ -45,6 +50,8 @@ type
     fBoltCount : Word;
     fBitinAdded : Boolean;
     fRamTicker : Cardinal;
+    fDamageUnits : Word;
+    fDamageHouse : Word;
 
     procedure ClearOrderTarget(aClearAttackingUnit: Boolean = True);
     procedure ClearAttackingUnit;
@@ -54,9 +61,11 @@ type
     function GetOrderTargetUnit: TKMUnit;
     function GetOrderHouseTarget: TKMHouse;
     procedure SetOrderHouseTarget(aHouse: TKMHouse);
+    function GetOrderShipTarget: TKMUnit;
+    procedure SetOrderShipTarget(aShip: TKMUnit);
     procedure UpdateOrderTargets;
 
-    procedure TakeNextOrder;
+    procedure TakeNextOrder; virtual;
     function CanInterruptAction(aForced: Boolean = True): Boolean;
 
     function GetFiringDelay: Byte;
@@ -65,6 +74,10 @@ type
     function GetRangeMax: Single;
     function GetProjectileType: TKMProjectileType;
     function GetAimSoundDelay: Byte;
+
+    function GetDamageUnit : Word;
+    function GetDamageHouse : Word;
+    function IsSelected : Boolean; override;
   protected
     function GetAllowAllyToSelect: Boolean; override;
     procedure SetAllowAllyToSelect(aAllow: Boolean); override;
@@ -72,12 +85,12 @@ type
     function GetAttack : SmallInt; override;
     procedure UpdateHitPoints; override;
     procedure PaintUnit(aTickLag: Single); override;
+    procedure DoDismiss;override;
   public
+    OnWarriorDismissed: TKMWarriorEvent; //Separate event from OnUnitDied to report to Group
     OnWarriorDied: TKMWarriorEvent; //Separate event from OnUnitDied to report to Group
     OnPickedFight: TKMWarrior2Event;
     OnWarriorWalkOut: TKMWarriorEvent;
-    DamageUnits : Word;
-    DamageHouse : Word;
     // Todo: do we actually need it? Should not Group.OrderLoc.Dir be used for the same purpose ?
     FaceDir: TKMDirection; //Direction we should face after walking. Only check for enemies in this direction.
     constructor Create(aID: Cardinal; aUnitType: TKMUnitType; const aLoc: TKMPointDir; aOwner: TKMHandID; aInHouse: TKMHouse);
@@ -85,6 +98,7 @@ type
     procedure SyncLoad; override;
     procedure CloseUnit(aRemoveTileUsage: Boolean = True); override;
     destructor Destroy; override;
+    procedure KillInHouse;
 
     function GetPointer: TKMUnitWarrior; reintroduce;
 
@@ -107,8 +121,10 @@ type
     procedure OrderStorm(aDelay: Word; aForced: Boolean = True);
     procedure OrderWalk(const aLoc: TKMPoint; aUseExactTarget: Boolean = True; aForced: Boolean = True);
     procedure OrderStay(aForced: Boolean = True);
-    procedure OrderAttackHouse(aTargetHouse: TKMHouse; aForced: Boolean = True);
+    procedure OrderAttackHouse(aTargetHouse: TKMHouse; aForced: Boolean = True);virtual;
     procedure OrderFight(aTargetUnit: TKMUnit);
+    procedure AssignToShip(aShip : Pointer); override;
+    procedure UnloadFromShip(aShip : Pointer); override;
 
     //Ranged units properties
     property AimingDelay: Byte read GetAimingDelay;
@@ -118,6 +134,8 @@ type
     property ProjectileType: TKMProjectileType read GetProjectileType;
     property AimSoundDelay: Byte read GetAimSoundDelay;
     property BoltCount: Word read fBoltCount write fBoltCount;
+    property DamageUnits: Word read fDamageUnits write fDamageUnits;
+    property DamageHouse: Word read fDamageHouse write fDamageHouse;
     function TakeBolt : Boolean;
     property BitinAdded: Boolean read fBitinAdded write fBitinAdded;
     procedure SetActionFight(aAction: TKMUnitActionType; aOpponent: TKMUnit);
@@ -146,6 +164,8 @@ type
     procedure AddBitin(aCount : Integer = 1);
     function IsAttackingUnit(aUnit: TKMUnit): Boolean;
     function GetEffectiveWalkSpeed(aIsDiag: Boolean): Single; override;
+    property NextOrder : TKMWarriorOrder  read fNextOrder;
+    property CurrentOrder : TKMWarriorOrder  read fOrder;
 
     function CanJoinToGroup(aGroup : Pointer) : Boolean;
 
@@ -204,42 +224,6 @@ type
     function ObjToString(const aSeparator: String = '|'): String; override;
   end;
 
-  TKMUnitWarriorShip = class(TKMUnitWarrior)
-  private
-    fUnitsInside : TKMUnitsArray;
-    //fUnitsInside : TKMArray<TKMUnitMainData>;
-
-    fUnloading : Boolean;
-    fUnloadingPoint : TKMPoint;
-    fLastUnloadTick,
-    fLastAsignementTick : Cardinal;
-    fStoredUnits : Single;
-  public
-    function CanAssignWarrior(aWarrior : Pointer) : Boolean;
-    function WarriorMustWait : Boolean;
-    function WarriorMustWaitToUnload : Boolean;
-    function UnloadUnit(aUnit : TKMUnit; aLocTo : TKMPoint; aForceByKill : Boolean = false) : Boolean;
-    procedure RemoveUnit(aUnit : TKMUnit;  aForceByKill : Boolean = false);
-    function IsCloseToWater : Boolean;
-
-    procedure AssignWarrior(aWarrior : Pointer);
-    function GetClosestSpot : TKMPoint;
-
-    procedure OrderAmmo(aForceOrder : Boolean = false); override;
-    procedure DoUnloadUnits;
-    function GetUnloadingPoint : TKMPoint;
-
-    procedure CloseUnit(aRemoveTileUsage: Boolean = True); override;
-
-    constructor Create(aID: Cardinal; aUnitType: TKMUnitType; const aLoc: TKMPointDir; aOwner: TKMHandID; aInHouse: TKMHouse);
-
-    constructor Load(LoadStream: TKMemoryStream); override;
-
-    procedure Save(SaveStream: TKMemoryStream); override;
-    procedure SyncLoad; override;
-    function UpdateState : Boolean; override;
-  end;
-
   TKMUnitWarriorSpikedTrap = class(TKMUnitWarrior)
     private
       fAnimKill,
@@ -274,9 +258,97 @@ type
       function UpdateState : Boolean; override;
   end;
 
-  TKMUnitWarriorBShip = class(TKMUnitWarrior)
+  TKMUnitWarriorShipCommon = class (TKMUnitWarrior)
+  public
+    procedure UpdateHitPoints; override;
+  end;
+
+  TKMUnitWarriorShip = class(TKMUnitWarriorShipCommon)
+  private
+    fUnitsInside : TKMUnitsArray;
+    fUnitsFromMap : TKMArray<TKMUnitMainData>;
+
+    fUnloading : Boolean;
+    fUnloadingPoint : TKMPoint;
+    fLastUnloadTick,
+    fLastAsignementTick : Cardinal;
+    fStoredUnits : Single;
+    function GetMapEdUnit(aIndex : Integer) : TKMUnitMainData;
+    procedure SetMapEdUnit(aIndex : Integer; aValue : TKMUnitMainData);
+    function GetMapEdUnitCount : Byte;
+  public
+    function CanAssignWarrior(aWarrior : Pointer) : Boolean;
+    function WarriorMustWait : Boolean;
+    function WarriorMustWaitToUnload : Boolean;
+    function UnloadUnit(aUnit : TKMUnit; aLocTo : TKMPoint; aForceByKill : Boolean = false) : Boolean;
+    procedure RemoveUnit(aUnit : TKMUnit;  aForceByKill : Boolean = false);
+    function IsCloseToWater : Boolean;
+
+    procedure AssignWarrior(aWarrior : Pointer);
+    function GetClosestSpot : TKMPoint;
+
+    procedure OrderAmmo(aForceOrder : Boolean = false); override;
+    procedure DoUnloadUnits;
+    function GetUnloadingPoint : TKMPoint;
+
+    property MapEdUnitsCount : Byte read GetMapEdUnitCount;
+    property MapEdUnits[aIndex : Integer] : TKMUnitMainData read GetMapEdUnit write SetMapEdUnit;
+    property MapEdUnitsArray : TKMArray<TKMUnitMainData> read fUnitsFromMap;
+    procedure AddMapEdUnit(aUnitType : TKMUnitType; aCondition, aBoltCount, aMembersCount, aColumnsCount  : Integer);
+
+    function GetAllUnitsInside : TKMUnitPlan;
+
+    procedure CloseUnit(aRemoveTileUsage: Boolean = True); override;
+    constructor Create(aID: Cardinal; aUnitType: TKMUnitType; const aLoc: TKMPointDir; aOwner: TKMHandID; aInHouse: TKMHouse);
+
+    constructor Load(LoadStream: TKMemoryStream); override;
+
+    procedure Save(SaveStream: TKMemoryStream); override;
+    procedure SyncLoad; override;
+    function UpdateState : Boolean; override;
+  end;
+
+  TKMUnitWarriorBShip = class(TKMUnitWarriorShipCommon)
   public
     procedure OrderAmmo(aForceOrder : Boolean = false); override;
+  end;
+
+  TKMUnitWarriorBoat = class(TKMUnitWarriorShipCommon)
+  private
+    fWares : TKMWarePlan;
+    fIdleTimer : Byte;
+    fCollectWares, fCollectFish : Boolean;
+    function HasAnyWares : Boolean;
+    procedure StartCollectingWares;
+    procedure SetCollectingWares(aValue : Boolean);
+    procedure SetCollectingFish(aValue : Boolean);
+    function GetCanCollectWares : Boolean;
+  protected
+  public
+    function TotalWaresCount : Word;
+    procedure AddWare(aWare : TKMWareType; aCount : Integer);overload;
+    procedure AddWare(aWare : TKMWarePlanSingle);overload;
+    property Wares : TKMWarePlan read fWares;
+
+    procedure UnloadWares;
+    procedure UnloadWare(aShipyard : TKMHouse);
+    property CanCollectWares : Boolean read GetCanCollectWares write SetCollectingWares;
+    property CanCollectFish : Boolean read fCollectFish write SetCollectingFish;
+    procedure OrderAmmo(aForceOrder : Boolean = false); override;
+
+    constructor Create(aID: Cardinal; aUnitType: TKMUnitType; const aLoc: TKMPointDir; aOwner: TKMHandID; aInHouse: TKMHouse);
+    constructor Load(LoadStream: TKMemoryStream); override;
+    procedure Save(SaveStream: TKMemoryStream); override;
+    function UpdateState : Boolean; override;
+  end;
+
+  TKMUnitWarriorPyro = class(TKMUnitWarrior)
+
+  end;
+
+  TKMUnitWarriorLekter = class(TKMUnitWarrior)
+  public
+    procedure OrderAttackHouse(aTargetHouse: TKMHouse; aForced: Boolean = True);override;
   end;
 
 
@@ -289,8 +361,10 @@ uses
   KM_Hand, KM_HandLogistics, KM_HandTypes, KM_HandEntity,
   KM_UnitActionFight, KM_UnitActionGoInOut, KM_UnitActionWalkTo, KM_UnitActionStay,
   KM_UnitActionStormAttack, KM_Resource, KM_ResUnits, KM_UnitGroup,
+  KM_UnitTaskCollectWares, KM_UnitTaskDismiss,
+  KM_Game,
   KM_GameParams, KM_CommonUtils, KM_RenderDebug, KM_UnitVisual,
-  KM_CommonExceptions,
+  KM_CommonExceptions, KM_CommonHelpers,
   KM_UnitGroupTypes,
   KM_ScriptingEvents;
 
@@ -303,6 +377,7 @@ begin
   fGroup             := nil;
   fOrderTargetUnit   := nil;
   fOrderTargetHouse  := nil;
+  fOrderTargetShip   := nil;
   fRequestedFood     := False;
   fRequestedAmmo     := False;
   fInfinityAmmo      := False;
@@ -312,11 +387,14 @@ begin
   fBoltCount         := 0;
   fBitinAdded        := false;
   fLastShootTime     := 0;
-  DamageUnits := gRes.Units[aUnitType].UnitDamage;
-  DamageHouse := gRes.Units[aUnitType].HouseDamage;
+  fDamageUnits := gRes.Units[aUnitType].UnitDamage;
+  fDamageHouse := gRes.Units[aUnitType].HouseDamage;
 
   //if fType = utBattleShip then
   //  fInfinityAmmo := true;
+  if gGame.Resource.IsTSK or gGame.Resource.IsTPR then
+    fInfinityAmmo := true;
+
 
 end;
 
@@ -334,6 +412,7 @@ begin
   LoadStream.Read(fOrderTargetHouse, 4); //subst on syncload
   LoadStream.Read(fOrderTargetUnit, 4); //subst on syncload
   LoadStream.Read(fAttackingUnit, 4); //subst on syncload
+  LoadStream.Read(fOrderTargetShip, 4); //subst on syncload
   LoadStream.Read(fRequestedFood);
   LoadStream.Read(fStormDelay);
   LoadStream.Read(fUseExactTarget);
@@ -343,8 +422,8 @@ begin
   LoadStream.Read(fRequestedAmmo);
   LoadStream.Read(fInfinityAmmo);
   LoadStream.Read(fBitinAdded);
-  LoadStream.Read(DamageUnits);
-  LoadStream.Read(DamageHouse);
+  LoadStream.Read(fDamageUnits);
+  LoadStream.Read(fDamageHouse);
   LoadStream.Read(fRamTicker);
 
 end;
@@ -357,6 +436,7 @@ begin
   fGroup := TKMUnitGroup(gHands.GetGroupByUID(Integer(fGroup)));
   fOrderTargetUnit := TKMUnitWarrior(gHands.GetUnitByUID(Integer(fOrderTargetUnit)));
   fAttackingUnit := TKMUnitWarrior(gHands.GetUnitByUID(Integer(fAttackingUnit)));
+  fOrderTargetShip := TKMUnitWarrior(gHands.GetUnitByUID(Integer(fOrderTargetShip)));
   fOrderTargetHouse := gHands.GetHouseByUID(Integer(fOrderTargetHouse));
 
   if Action is TKMUnitActionGoInOut then
@@ -376,6 +456,7 @@ begin
   SaveStream.Write(fOrderTargetHouse.UID); //Store ID
   SaveStream.Write(fOrderTargetUnit.UID); //Store ID
   SaveStream.Write(fAttackingUnit.UID); //Store ID
+  SaveStream.Write(fOrderTargetShip.UID); //Store ID
   SaveStream.Write(fRequestedFood);
   SaveStream.Write(fStormDelay);
   SaveStream.Write(fUseExactTarget);
@@ -385,8 +466,8 @@ begin
   SaveStream.Write(fRequestedAmmo);
   SaveStream.Write(fInfinityAmmo);
   SaveStream.Write(fBitinAdded);
-  SaveStream.Write(DamageUnits);
-  SaveStream.Write(DamageHouse);
+  SaveStream.Write(fDamageUnits);
+  SaveStream.Write(fDamageHouse);
   SaveStream.Write(fRamTicker);
 end;
 
@@ -411,6 +492,21 @@ begin
   inherited;
 end;
 
+procedure TKMUnitWarrior.KillInHouse;
+begin
+  Assert(fInHouse <> nil, 'Unit could be silently killed only inside some House');
+  //Dispose of current action/task BEFORE we close the unit (action might need to check fPosition if recruit was about to walk out to eat)
+  //Normally this isn't required because TTaskDie takes care of it all, but recruits in barracks don't use TaskDie.
+  SetAction(nil);
+  FreeAndNil(fTask);
+
+
+  CloseUnit(False); //Don't remove tile usage, we are inside the barracks
+  //Report to Group that we have died
+  if Assigned(OnWarriorDismissed) then
+    OnWarriorDismissed(Self);
+end;
+
 
 function TKMUnitWarrior.GetPointer: TKMUnitWarrior;
 begin
@@ -425,23 +521,123 @@ begin
 end;
 
 
+procedure TKMUnitWarrior.DoDismiss;
+
+  procedure TryCreateDismissTask;
+  begin
+    FreeAndNil(fTask);
+    fTask := TKMTaskDismissWarrior.Create(Self); //Will create empty locked stay action
+    if TKMTaskDismissWarrior(fTask).ShouldBeCancelled then
+      FreeAndNil(fTask);
+  end;
+
+begin
+  //We can update existing Walk action with minimum changes
+  if (fAction is TKMUnitActionWalkTo)
+    and not TKMUnitActionWalkTo(fAction).DoingExchange then
+  begin
+    AbandonWalk;
+    TryCreateDismissTask;
+  end else
+  if fAction.CanBeInterrupted then
+  begin
+    SetActionLockedStay(0, uaWalk);
+    TryCreateDismissTask;
+    if fTask = nil then
+      SetActionStay(5, uaWalk);
+  end else
+    fDismissASAP := True; // Delay Dismiss for 1 more tick, until action interrupt could be possible
+end;
+
 procedure TKMUnitWarrior.Dismiss;
 begin
-  raise Exception.Create('Warrior unit can not be dismissed');
+  //raise Exception.Create('Warrior unit can not be dismissed');
+  if not Dismissable or IsDeadOrDying then
+    Exit;
+
+  fDismissInProgress := False;
+
+  if (fAction is TKMUnitActionWalkTo) and TKMUnitActionWalkTo(fAction).DoingExchange then
+  begin
+    fDismissASAP := True; //Unit will be dismissed ASAP, when unit is ready for it
+    Exit;
+  end;
+
+  DoDismiss;
 end;
 
 
 procedure TKMUnitWarrior.DismissCancel;
 begin
-  raise Exception.Create('Warrior unit can not be dismissed and can not cancel dismiss then');
+  fDismissInProgress := False; //remove fDismissInProgress mark, which is used only in UI
+
+  if not IsDismissing then Exit;
+
+  fThought := thNone; //Reset thought
+  fDismissASAP := False;
+
+  if (fAction is TKMUnitActionWalkTo)
+    and not TKMUnitActionWalkTo(fAction).DoingExchange then
+  begin
+    AbandonWalk;
+  end else
+  if fAction.CanBeInterrupted then
+  begin
+    SetActionLockedStay(0, uaWalk);
+    if fTask = nil then
+      SetActionStay(5, uaWalk);
+  end;
+
+  if fTask <> nil then
+    FreeAndNil(fTask);
 end;
 
 
 procedure TKMUnitWarrior.Kill(aFrom: TKMHandID; aShowAnimation, aForceDelay: Boolean);
 var
   alreadyDeadOrDying: Boolean;
+  I : Integer;
 begin
   alreadyDeadOrDying := IsDeadOrDying; //Inherited will kill the unit
+
+  //after killing someone we get some by-products
+  If not IsDead then
+    if aFrom >= 0 then
+    with gHands[aFrom] do
+    begin
+      if UnitType in WARRIORS_IRON then
+      begin
+        VirtualWareTake('vtIronFerrule', -2);
+        VirtualWareTake('vtNeedle', -1);
+      end else
+      if UnitType in SIEGE_MACHINES then
+      begin
+        VirtualWareTake('vtIronFerrule', -4);
+        VirtualWareTake('vtWoodenPlate', -10);
+      end else
+      if UnitType in UNITS_SHIPS then
+      begin
+        VirtualWareTake('vtIronFerrule', -2);
+        VirtualWareTake('vtWoodenPlate', -10);
+        VirtualWareTake('vtNeedle', -5);
+        VirtualWareTake('vtLeatherSheet', -10);
+        VirtualWareTake('vtPearl', -1);
+      end else
+      if UnitType in SPECIAL_UNITS then
+      begin
+        for I := 0 to high(gRes.Units[UnitType].PalaceCost.Wares) do
+          VirtualWareTake(gRes.Units[UnitType].PalaceCost.Wares[I].W, gRes.Units[UnitType].PalaceCost.Wares[I].C div 5);
+
+      end else
+      begin
+        VirtualWareTake('vtNeedle', -1);
+        VirtualWareTake('vtGemStone', -1);
+        VirtualWareTake('vtCoin', -1);
+        VirtualWareTake('vtLeatherSheet', -1);
+        VirtualWareTake('vtWoodenPlate', -2);
+      end;
+    end;
+
   inherited;
 
   //After inherited so script events can still check which group the warrior is from
@@ -612,7 +808,12 @@ end;
 procedure TKMUnitWarrior.ReloadAmmo(aWare : TKMWareType; doMax : Boolean = false);
 begin
   Assert(gRes.Units[UnitType].CanOrderAmmo, 'Non ranged warrior cant reload Ammo');
-
+  if UnitType = utBoat then
+    Inc(fBoltCount, 100)
+  else                  
+  if UnitType = utBattleShip then
+    Inc(fBoltCount, 500)
+  else
   case gRes.Units[UnitType].AmmoType of
     uatNone: ;
     uatArrow: Inc(fBoltCount, 90 + KamRandom(20, 'TKMUnitWarrior.ReloadAmmo1'));
@@ -654,6 +855,7 @@ begin
   //Set fOrderTargets to nil, removing pointer if it's still valid
   gHands.CleanUpUnitPointer(fOrderTargetUnit);
   gHands.CleanUpHousePointer(fOrderTargetHouse);
+  gHands.CleanUpUnitPointer(fOrderTargetShip);
   if aClearAttackingUnit then
     ClearAttackingUnit;
 end;
@@ -727,6 +929,22 @@ begin
     Result := fOrderTargetHouse;
 end;
 
+function TKMUnitWarrior.GetOrderShipTarget: TKMUnit;
+begin
+  if (fOrderTargetShip <> nil) and fOrderTargetShip.IsDeadOrDying then
+    Result := nil
+  else
+    Result := fOrderTargetShip;
+end;
+
+procedure TKMUnitWarrior.SetOrderShipTarget(aShip: TKMUnit);
+begin
+  //Remove previous value
+  ClearOrderTarget;
+  if (aShip <> nil) then
+    fOrderTargetShip := aShip.GetPointer;
+end;
+
 
 //Clear target unit/house if they are dead/destroyed
 procedure TKMUnitWarrior.UpdateOrderTargets;
@@ -736,6 +954,9 @@ begin
 
   if (fOrderTargetHouse <> nil) and fOrderTargetHouse.IsDestroyed then
     gHands.CleanUpHousePointer(fOrderTargetHouse);
+
+  if (fOrderTargetShip <> nil) and fOrderTargetShip.IsDeadOrDying then
+    gHands.CleanUpUnitPointer(fOrderTargetShip);
 end;
 
 
@@ -908,11 +1129,11 @@ end;
 
 procedure TKMUnitWarrior.SetActionGoIn(aAction: TKMUnitActionType; aGoDir: TKMGoInDirection; aHouse: TKMHouse);
 begin
-  Assert(aGoDir = gdGoOutside, 'Walking inside is not implemented yet');
-  Assert((aHouse.HouseType = htBarracks)
+  //Assert(aGoDir = gdGoOutside, 'Walking inside is not implemented yet');
+  {Assert((aHouse.HouseType = htBarracks)
           or (aHouse.HouseType = htTownHall)
           or (aHouse.HouseType = htSiegeWorkshop)
-          or (aHouse.HouseType = htPalace), 'Only Barracks and TownHall so far');
+          or (aHouse.HouseType = htPalace), 'Only Barracks and TownHall so far');}
   inherited;
 
   TKMUnitActionGoInOut(Action).OnWalkedOut := WalkedOut;
@@ -964,6 +1185,10 @@ begin
     woAttackHouse:  Result := (GetOrderHouseTarget = nil);
     woStorm:        Result := IsIdle;
     woStay:         Result := IsIdle;
+    woAssignToShip: Result := IsIdle;
+    woShipBoatUnload: Result := IsIdle;
+    woBoatCollectWares: Result := IsIdle;
+    woTakeOverHouse: Result := IsIdle;
   end;
 end;
 
@@ -983,6 +1208,17 @@ begin
   SetOrderTarget(aTargetUnit);
 end;
 
+procedure TKMUnitWarrior.AssignToShip(aShip: Pointer);
+begin
+  fNextOrder := woAssignToShip;
+  SetOrderShipTarget(TKMUnit(aShip));
+end;
+
+procedure TKMUnitWarrior.UnloadFromShip(aShip: Pointer);
+begin
+  fNextOrder := woShipBoatUnload;
+  SetOrderShipTarget(TKMUnit(aShip));
+end;
 
 function TKMUnitWarrior.PathfindingShouldAvoid: Boolean;
 begin
@@ -1339,6 +1575,37 @@ begin
     Result := SLINGSHOT_AIMING_SOUND_DELAY;
 end;
 
+function TKMUnitWarrior.GetDamageUnit: Word;
+begin
+  Result := fDamageUnits;
+  if gHands[Owner].IsAffectedbyMBD then
+  begin
+    if gGameParams.MBD.IsEasy then
+      Result := Round(Result * 1.5)
+    else    
+    if gGameParams.MBD.IsHardOrRealism then
+      Result := Max(Round(Result * 0.8), 1);
+  end;  
+end;
+
+function TKMUnitWarrior.GetDamageHouse: Word;
+begin
+  Result := fDamageHouse;
+  if gHands[Owner].IsAffectedbyMBD then
+  begin
+    if gGameParams.MBD.IsEasy then
+      Result := Round(Result * 1.5)
+    else    
+    if gGameParams.MBD.IsHardOrRealism then
+      Result := Max(Round(Result * 0.8), 1);
+  end;  
+end;
+
+function TKMUnitWarrior.IsSelected: Boolean;
+begin
+  Result := (gMySpectator.Selected = fGroup) and (self = TKMUnitGroup(Group).SelectedUnit);
+end;
+
 
 function TKMUnitWarrior.GetAllowAllyToSelect: Boolean;
 begin
@@ -1387,8 +1654,8 @@ begin
     utGolem,
     utArcher,
     utBowman:     Result := ptArrow;
-    utBattleShip,
     utCrossbowman: Result := ptBolt;
+    utBattleShip,
     utBallista : Result := ptBallistaBolt;
     utCatapult : Result := ptCatapultRock;
     utRogue:  Result := ptSlingRock;
@@ -1407,7 +1674,11 @@ var
 begin
   //Make sure attack orders are still valid
   if ((fNextOrder = woAttackUnit) and (GetOrderTargetUnit = nil))
-    or ((fNextOrder = woAttackHouse) and (GetOrderHouseTarget = nil)) then
+    or ((fNextOrder = woAttackHouse) and (GetOrderHouseTarget = nil))
+    or ( (UnitType <> utBoat) and (fNextOrder in [woAssignToShip, woShipBoatUnload]) and (GetOrderShipTarget = nil)) then
+    fNextOrder := woNone;
+
+  if (UnitType = utBoat) and (fNextOrder = woShipBoatUnload) and (GetOrderHouseTarget = nil) then
     fNextOrder := woNone;
 
   if (fNextOrder = woAttackHouse) and not gRes.Units[fType].CanAttackHouses then
@@ -1498,6 +1769,128 @@ begin
                         fOrder := woStorm;
                       end;
                     end;
+    woAssignToShip:  begin
+                      //No need to update order  if we are going to attack same house
+                      if (fOrder <> woAssignToShip)
+                          or (Task = nil)
+                          or not (Task is TKMTaskAssignToShip)
+                          or (TKMTaskAssignToShip(Task).Ship <> GetOrderShipTarget) then
+                      begin
+                        //Abandon walk so we can take attack house
+                        if (Action is TKMUnitActionWalkTo)
+                          and not TKMUnitActionWalkTo(Action).DoingExchange
+                          and not TKMUnitActionWalkTo(Action).WasPushed then
+                          AbandonWalk;
+
+                        //Take attack house order
+                        if CanInterruptAction(fNextOrderForced) then
+                        begin
+                          FreeAndNil(fTask); //e.g. TaskAttackHouse
+                          fTask := TKMTaskAssignToShip.Create(Self, TKMUnitWarriorShip(GetOrderShipTarget));
+                          fOrder := woAssignToShip;
+                          fOrderLoc := Position; //Once the house is destroyed we will position where we are standing
+                          fNextOrder := woNone;
+                        end;
+                      end;
+                    end;
+    woShipBoatUnload: if UnitType = utBoat then
+                      begin
+                        //No need to update order  if we are going to attack same house
+                        if (fOrder <> woShipBoatUnload)
+                            or (Task = nil)
+                            or not (Task is TKMTaskUnloadWares)
+                            or (TKMTaskUnloadWares(Task).ShipYard <> GetOrderHouseTarget) then
+                        begin
+                          //Abandon walk so we can take attack house
+                          if (Action is TKMUnitActionWalkTo)
+                            and not TKMUnitActionWalkTo(Action).DoingExchange
+                            and not TKMUnitActionWalkTo(Action).WasPushed then
+                            AbandonWalk;
+
+                          //Take attack house order
+                          if CanInterruptAction(fNextOrderForced) then
+                          begin
+                            FreeAndNil(fTask); //e.g. TaskAttackHouse
+                            fTask := TKMTaskUnloadWares.Create(Self, TKMHouseShipYard(GetOrderHouseTarget) );
+                            fOrder := woShipBoatUnload;
+                            fOrderLoc := Position; //Once the house is destroyed we will position where we are standing
+                            fNextOrder := woNone;
+                          end;
+                        end;
+
+                      end else
+                      begin
+                      //No need to update order  if we are going to attack same house
+                        if (fOrder <> woShipBoatUnload)
+                            or (Task = nil)
+                            or not (Task is TKMTaskUnloadFromShip)
+                            or (TKMTaskUnloadFromShip(Task).Ship <> GetOrderShipTarget) then
+                        begin
+                          //Abandon walk so we can take attack house
+                          if (Action is TKMUnitActionWalkTo)
+                            and not TKMUnitActionWalkTo(Action).DoingExchange
+                            and not TKMUnitActionWalkTo(Action).WasPushed then
+                            AbandonWalk;
+
+                          //Take attack house order
+                          if CanInterruptAction(fNextOrderForced) then
+                          if not (IsRanged and (fBoltCount <= 0)) then
+                          begin
+                            FreeAndNil(fTask); //e.g. TaskAttackHouse
+                            fTask := TKMTaskUnloadFromShip.Create(Self, TKMUnitWarriorShip(GetOrderShipTarget));
+                            fOrder := woShipBoatUnload;
+                            fOrderLoc := Position; //Once the house is destroyed we will position where we are standing
+                            fNextOrder := woNone;
+                          end;
+                        end;
+                      end;
+    woBoatCollectWares:   begin
+                            //No need to update order  if we are going to attack same house
+                            if (fOrder <> woBoatCollectWares)
+                                or (Task = nil)
+                                or not (Task is TKMTaskCollectWares) then
+                            begin
+                              //Abandon walk so we can take attack house
+                              if (Action is TKMUnitActionWalkTo)
+                                and not TKMUnitActionWalkTo(Action).DoingExchange
+                                and not TKMUnitActionWalkTo(Action).WasPushed then
+                                AbandonWalk;
+
+                              //Take attack house order
+                              if CanInterruptAction(fNextOrderForced) then
+                              begin
+                                FreeAndNil(fTask); //e.g. TaskAttackHouse
+                                fTask := TKMTaskCollectWares.Create(Self);
+                                fOrder := woBoatCollectWares;
+                                fOrderLoc := Position; //Once the house is destroyed we will position where we are standing
+                                fNextOrder := woNone;
+                              end;
+                            end;
+                          end;
+    woTakeOverHouse:  begin
+                        //No need to update order  if we are going to take over same house
+                        if (fOrder <> woTakeOverHouse)
+                            or (Task = nil)
+                            or not (Task is TKMTaskTakeOverHouse)
+                            or (TKMTaskTakeOverHouse(Task).House <> GetOrderHouseTarget) then
+                        begin
+                          //Abandon walk so we can take over house
+                          if (Action is TKMUnitActionWalkTo)
+                            and not TKMUnitActionWalkTo(Action).DoingExchange
+                            and not TKMUnitActionWalkTo(Action).WasPushed then
+                            AbandonWalk;
+
+                          //Take order
+                          if CanInterruptAction(fNextOrderForced) then
+                          begin
+                            FreeAndNil(fTask); //e.g. TaskAttackHouse
+                            fTask := TKMTaskTakeOverHouse.Create(Self, GetOrderHouseTarget);
+                            fOrder := woTakeOverHouse;
+                            fOrderLoc := Position; //Once the house is destroyed we will position where we are standing
+                            fNextOrder := woNone;
+                          end;
+                        end;
+                      end;
   end;
 end;
 
@@ -2043,6 +2436,29 @@ begin
                               );
 end;
 
+procedure TKMUnitWarriorShipCommon.UpdateHitPoints;
+var H : TKMHouse;
+begin
+  if HITPOINT_RESTORE_PACE = 0 then Exit; //0 pace means don't restore
+
+  if (fHitPointCounter mod (  HITPOINT_RESTORE_PACE) = 0)
+  and (fHitPoints < HitPointsMax) then
+  begin
+    if not gTerrain.IsTileNearLand(Position) then
+      Exit;
+
+    H := gHands[Owner].GetClosestHouse(Position, [htShipYard], [wtLog], 8);
+    if H.IsValid then
+    begin
+      H.WareTakeFromIn(wtLog, 1, true);
+      Inc(fHitPoints);
+    end;
+  end;
+
+  Inc(fHitPointCounter); //Increasing each tick by 1 would require 13,6 years to overflow Cardinal
+end;
+
+
 constructor TKMUnitWarriorShip.Create(aID: Cardinal; aUnitType: TKMUnitType; const aLoc: TKMPointDir; aOwner: ShortInt; aInHouse: TKMHouse);
 begin
   Inherited;
@@ -2061,6 +2477,8 @@ begin
   LoadStream.Read(fStoredUnits);
   fUnitsInside.Clear;
   fUnitsInside.LoadFromStream(LoadStream);
+  fUnitsFromMap.Clear;
+  fUnitsFromMap.LoadFromStream(LoadStream);
 end;
 
 procedure TKMUnitWarriorShip.Save(SaveStream: TKMemoryStream);
@@ -2072,6 +2490,7 @@ begin
   SaveStream.Write(fLastAsignementTick);
   SaveStream.Write(fStoredUnits);
   fUnitsInside.SaveToStream(SaveStream);
+  fUnitsFromMap.SaveToStream(SaveStream);
 end;
 
 procedure TKMUnitWarriorShip.SyncLoad;
@@ -2114,13 +2533,12 @@ begin
 end;
 function TKMUnitWarriorShip.WarriorMustWait: Boolean;
 begin
-  Result := gGameParams.Tick <= fLastAsignementTick + 25;
+  Result := gGameParams.Tick <= fLastAsignementTick + 10;
 end;
 
 function TKMUnitWarriorShip.WarriorMustWaitToUnload: Boolean;
 begin
-  Result := gGameParams.Tick <= fLastUnloadTick + 25;
-
+  Result := gGameParams.Tick <= fLastUnloadTick + 10;
 end;
 
 function TKMUnitWarriorShip.CanAssignWarrior(aWarrior : Pointer) : Boolean;
@@ -2183,7 +2601,6 @@ begin
 end;
 
 function TKMUnitWarriorShip.UnloadUnit(aUnit: TKMUnit; aLocTo : TKMPoint; aForceByKill : Boolean = false): Boolean;
-var I, aIndex : integer;
 begin
   Result := false;
   if IsNil(aUnit) then
@@ -2196,7 +2613,6 @@ begin
     Exit;
   Result := true;
   RemoveUnit(aUnit);
-  //TKMUnit(aUnit).Show;// it's made in TKMTaskUnloadFromShip
 
 end;
 
@@ -2220,6 +2636,7 @@ begin
         end;
 
       end;}
+  fUnloading := true;
   If fUnitsInside.Count = 0 then
     Exit;
 
@@ -2248,24 +2665,117 @@ begin
   fUnitsInside.Clear;}
 end;
 
+function TKMUnitWarriorShip.GetMapEdUnit(aIndex: Integer): TKMUnitMainData;
+begin
+  Assert(InRange(aIndex, 0, fUnitsFromMap.Count - 1), 'TKMUnitWarriorShip.GetMapEdUnit wrong ID: ' + IntToStr(aIndex));
+  Result := fUnitsFromMap[aIndex];
+end;
+
+procedure TKMUnitWarriorShip.SetMapEdUnit(aIndex: Integer; aValue: TKMUnitMainData);
+begin
+  Assert(InRange(aIndex, 0, fUnitsFromMap.Count - 1), 'TKMUnitWarriorShip.SetMapEdUnit wrong ID: ' + IntToStr(aIndex));
+  fUnitsFromMap[aIndex] := aValue;
+end;
+
+function TKMUnitWarriorShip.GetMapEdUnitCount: Byte;
+begin
+  Result := fUnitsFromMap.Count;
+end;
+
+procedure TKMUnitWarriorShip.AddMapEdUnit(aUnitType: TKMUnitType; aCondition: Integer; aBoltCount: Integer;
+                                          aMembersCount: Integer; aColumnsCount: Integer);
+var UD : TKMUnitMainData;
+begin
+  UD.UnitType := aUnitType;
+  UD.Condition := aCondition;
+  UD.Count := aMembersCount;
+  UD.Columns := aColumnsCount;
+  UD.BoltCount := aBoltCount;
+
+  fUnitsFromMap.Add(UD);
+end;
+
+function TKMUnitWarriorShip.GetAllUnitsInside: TKMUnitPlan;
+  function ContainsUnit(aUnit : TKMUnitType; aArray : TKMUnitPlan) : Integer;
+  var I : Integer;
+  begin
+    Result := -1;
+    for I := 0 to High(aArray) do
+      if aArray[I].UnitType = aUnit then
+        Exit(I);
+  end;
+var I, J, id : Integer;
+
+begin
+  SetLength(Result, 0);
+  for I := 0 to fUnitsFromMap.Count - 1 do
+  begin
+    id := ContainsUnit(fUnitsFromMap[I].UnitType, Result);
+
+    if id = -1 then
+    begin
+      J := length(Result);
+      SetLength(Result, J + 1);
+      Result[J].UnitType := fUnitsFromMap[I].UnitType;
+      Result[J].Count := fUnitsFromMap[I].Count;
+    end else
+      Inc(Result[id].Count, fUnitsFromMap[I].Count);
+  end;
+
+  for I := 0 to fUnitsInside.Count - 1 do
+  begin
+    id := ContainsUnit(fUnitsInside[I].UnitType, Result);
+
+    if id = -1 then
+    begin
+      J := length(Result);
+      SetLength(Result, J + 1);
+      Result[J].UnitType := fUnitsInside[I].UnitType;
+      Result[J].Count := 1;
+    end else
+      Inc(Result[id].Count, 1);
+  end;
+
+end;
+
 
 function TKMUnitWarriorShip.UpdateState: Boolean;
+var P : TKMpoint;
+  UT : TKMUnitMainData;
 begin
   Result := Inherited;
-  Exit;
   if gGameParams.Tick mod 25 <> 0 then
     Exit;
 
-  If fUnitsInside.Count = 0 then
+  If fUnitsFromMap.Count = 0 then
     Exit;
   if not fUnloading then
     Exit;
+
   if not gTerrain.IsTileNearLand(Position) then
   begin
     fUnloading := false;
     Exit;
   end;
-  if fUnitsInside[0] <> nil then
+  P := gTerrain.FindPlaceForUnit(Position, tpWalk, 5);
+
+  if P = KMPOINT_INVALID_TILE then //no free tile found, stop unloading
+  begin
+    fUnloading := false;
+    Exit;
+  end;
+  UT := fUnitsFromMap[0];
+  UT.Count := UT.Count - 1;
+  gHands[Owner].AddUnit(fUnitsFromMap[0], P);
+  Dec(fStoredUnits, gRes.Units[fUnitsFromMap[0].UnitType].ShipWeight);
+  fStoredUnits := Max(fStoredUnits, 0);
+  fUnitsFromMap[0] := UT;
+
+  if (fUnitsFromMap[0].Count = 0) or gRes.Units[fUnitsFromMap[0].UnitType].IsWarrior then
+    fUnitsFromMap.Remove(0);
+
+
+  {if fUnitsInside[0] <> nil then
   begin
     fStoredUnits := fStoredUnits - gRes.Units[TKMUnit(fUnitsInside[0]).UnitType].ShipWeight;
     TKMUnit(fUnitsInside[0]).SetUnitPositionFromShip(gTerrain.FindPlaceForUnit(fUnloadingPoint, tpWalk, 5));
@@ -2279,7 +2789,7 @@ begin
   begin
     fUnloading := false;
     fStoredUnits := 0;
-  end;
+  end;}
 
 end;
 
@@ -2310,9 +2820,10 @@ procedure TKMUnitWarriorSpikedTrap.HitEnemies;
     if aUnit.IsDeadOrDying then
       Exit;
 
-    if (aUnit.Owner = self.Owner) or (gHands[Owner].Alliances[aUnit.Owner] = atAlly) then
-      Exit;
-    aUnit.Kill(self.Owner, true, false);
+    if not aUnit.IsAnimal then
+      if (aUnit.Owner = self.Owner) or (gHands[Owner].Alliances[aUnit.Owner] = atAlly) then
+        Exit;
+    aUnit.Kill(Owner, true, false);
     Result := true;
   end;
 var
@@ -2339,9 +2850,9 @@ procedure TKMUnitWarriorSpikedTrap.CheckForEnemy;
       Exit;
     if aUnit.IsDeadOrDying then
       Exit;
-
-    if (aUnit.Owner = self.Owner) or (gHands[Owner].Alliances[aUnit.Owner] = atAlly) then
-      Exit;
+    if not aUnit.IsAnimal then
+      if (aUnit.Owner = self.Owner) or (gHands[Owner].Alliances[aUnit.Owner] = atAlly) then
+        Exit;
     Result := true;
   end;
 var
@@ -2536,7 +3047,7 @@ var
   V: TKMUnitVisualState;
   act: TKMUnitActionType;
   unitPos: TKMPointF;
-  fillColor, lineColor, animStep: Cardinal;
+  animStep: Cardinal;
   dir : TKMDirection;
 begin
 
@@ -2565,23 +3076,6 @@ begin
   if (gGameParams.IsMapEditor and BitinAdded) then
     gRenderPool.AddUnitThought(fType, act, V.Dir, thArmor, unitPos.X, unitPos.Y);
 
-
-
-  if SHOW_ATTACK_RADIUS or (mlUnitsAttackRadius in gGameParams.VisibleLayers) then
-    if IsRanged then
-    begin
-      fillColor := $40FFFFFF;
-      lineCOlor := icWhite;
-      if (gMySpectator.Selected = Self)
-        or ((gMySpectator.Selected is TKMUnitGroup)
-          and (TKMUnitGroup(gMySpectator.Selected).FlagBearer = Self)) then
-      begin
-        fillColor := icRed and fillColor;
-        lineColor := icCyan;
-      end;
-
-      gRenderPool.RenderDebug.RenderTiledArea(Position, GetFightMinRange, GetFightMaxRange, GetLength, fillColor, lineColor);
-    end;
 end;
 
 
@@ -2589,18 +3083,215 @@ procedure TKMUnitWarriorBShip.OrderAmmo(aForceOrder: Boolean = False);
 var HS : TKMHouse;//shipyard
 begin
 
-  if fBoltCount > 500 then
+  if fBoltCount >= 500 then
     Exit;
 
-  HS := gHands[Owner].GetClosestHouse(Position, [htShipYard], [wtBolt], 3);
+  HS := gHands[Owner].GetClosestHouse(Position, [htShipYard], [wtBolt], 8);
 
   if not HS.IsValid then
     Exit;
   if not HS.HasWorkerInside then
     Exit;
+  if not gTerrain.IsTileNearLand(Position) then
+    Exit;
+
 
   HS.WareTakeFromIn(wtBolt, 1, true);
   Inc(fBoltCount, 50)
+end;
+
+constructor TKMUnitWarriorBoat.Create(aID: Cardinal; aUnitType: TKMUnitType; const aLoc: TKMPointDir; aOwner: ShortInt; aInHouse: TKMHouse);
+begin
+  Inherited;
+
+end;
+
+constructor TKMUnitWarriorBoat.Load(LoadStream: TKMemoryStream);
+begin
+  Inherited;
+  fWares.Load(LoadStream);
+  LoadStream.Read(fIdleTimer);
+end;
+
+procedure TKMUnitWarriorBoat.Save(SaveStream: TKMemoryStream);
+begin
+  Inherited;
+  fWares.Save(SaveStream);
+  SaveStream.Write(fIdleTimer);
+end;
+
+procedure TKMUnitWarriorBoat.AddWare(aWare: TKMWareType; aCount: Integer);
+begin
+  if not (aWare in WARES_VALID) then
+    Exit;
+  if aCount = 0 then
+    Exit;
+
+  fWares.AddWare(aWare, aCount);
+end;
+
+procedure TKMUnitWarriorBoat.AddWare(aWare: TKMWarePlanSingle);
+var I : Integer;
+begin
+  if (aWare.C = 0) or (aWare.W = wtNone) then
+    Exit;
+
+  AddWare(aWare.W, aWare.C);
+
+  if aWare.W <> wtFish then
+    for I := 1 to aWare.C do
+      TakeBolt;
+  if TotalWaresCount > 20 then
+    SetCollectingWares(false);
+end;
+
+function TKMUnitWarriorBoat.HasAnyWares: Boolean;
+var I : Integer;
+begin
+  Result := false;
+  for I := 0 to fWares.Count - 1 do
+    Result := Result or ((fWares[I].W <> wtNone) and (fWares[I].C > 0));
+end;
+
+function TKMUnitWarriorBoat.TotalWaresCount: Word;
+var I : Integer;
+begin
+  Result := 0;
+  for I := 0 to High(fWares) do
+    if (fWares[I].W <> wtNone) then
+      Inc(Result, fWares[I].C);
+end;
+
+procedure TKMUnitWarriorBoat.StartCollectingWares;
+begin
+  if fTask is TKMTaskCollectWares then
+    Exit;
+  if fCollectWares or fCollectFish and not (fTask is TKMTaskCollectWares) then
+  begin
+    if TotalWaresCount < 20 then
+      if not (fTask is TKMTaskCollectWares) then
+        fNextOrder := woBoatCollectWares;
+      {
+      begin
+        CancelTask;
+        fTask := TKMTaskCollectWares.Create(self);
+      end;}
+  end;
+end;
+
+procedure TKMUnitWarriorBoat.SetCollectingWares(aValue: Boolean);
+begin
+  if TotalWaresCount >= 20 then
+  begin
+    fCollectWares := false;
+    fCollectFish := false;
+    Exit;
+  end;
+
+  fCollectWares := aValue;
+
+  StartCollectingWares;
+end;
+
+procedure TKMUnitWarriorBoat.SetCollectingFish(aValue: Boolean);
+begin
+  if TotalWaresCount >= 20 then
+  begin
+    fCollectWares := false;
+    fCollectFish := false;
+    Exit;
+  end;
+
+  fCollectFish := aValue;
+  StartCollectingWares;
+end;
+
+function TKMUnitWarriorBoat.GetCanCollectWares: Boolean;
+begin
+  Result := fCollectWares and (fBoltCount > 0);
+end;
+
+procedure TKMUnitWarriorBoat.UnloadWares;
+var H : TKMHouse;
+begin
+  if HasAnyWares then
+    if gTerrain.IsTileNearLand(Position) then
+    begin
+      H := gHands.GetClosestHouse(Position, [htShipYard], [wtAll], 7);
+      if H.IsValid(htShipYard, false, true) then
+      begin
+        fNextOrder := woShipBoatUnload;
+        SetOrderHouseTarget(H);
+
+        Exit;
+      end;
+    end;
+end;
+
+procedure TKMUnitWarriorBoat.UnloadWare(aShipyard: TKMHouse);
+var I : Integer;
+begin
+  if (aShipyard = nil) or (aShipyard.IsDestroyed) then
+    Exit;
+  if not HasAnyWares then
+    Exit;
+
+  for I := 0 to fWares.Count - 1 do
+    if (fWares[I].C > 0) and (fWares[I].W in WARES_VALID) then
+    begin
+      aShipyard.WareAddToOut(fWares[I].W, Min(fWares[I].C, 3));
+      fWares[I].C := Max(fWares[I].C - 3, 0);
+      if fWares[I].C = 0 then
+        fWares[I].W := wtNone;
+      Exit;
+    end;
+
+end;
+
+
+procedure TKMUnitWarriorBoat.OrderAmmo(aForceOrder: Boolean = False);
+var HS : TKMHouse;//shipyard
+begin
+
+  if fBoltCount >= 500 then
+    Exit;
+
+  HS := gHands[Owner].GetClosestHouse(Position, [htShipYard], [wtAxe], 8);
+
+  if not HS.IsValid then
+    Exit;
+  if not HS.HasWorkerInside then
+    Exit;
+  if not gTerrain.IsTileNearLand(Position) then
+    Exit;
+
+
+  HS.WareTakeFromIn(wtAxe, 1, true);
+  Inc(fBoltCount, 20)
+end;
+
+function TKMUnitWarriorBoat.UpdateState: Boolean;
+begin
+  Result := Inherited;
+  if IsIdle then
+  begin
+    IncLoop(fIdleTimer, 1, 200);
+    //fIdleTimer := Min(fIdleTimer + 1, high(byte));
+
+    if fIdleTimer mod 50 = 0 then
+      StartCollectingWares;
+
+
+  end
+  else
+    fIdleTimer := 0;
+end;
+
+procedure TKMUnitWarriorLekter.OrderAttackHouse(aTargetHouse: TKMHouse; aForced: Boolean = True);
+begin
+  fNextOrder := woTakeOverHouse;
+  fNextOrderForced := aForced;
+  SetOrderHouseTarget(aTargetHouse);
 end;
 
 end.

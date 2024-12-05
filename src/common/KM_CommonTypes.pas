@@ -68,6 +68,12 @@ type
   TCardinalEvent = procedure (aValue: Cardinal) of object;
   TObjectIntBoolEvent = procedure (Sender: TObject; aIntValue: Integer; aBoolValue: Boolean) of object;
   TCoordDistanceFn = function (X, Y: Integer): Single;
+
+  //local procedures
+  TKMPointEventSimple = procedure (const X, Y: Integer);
+  TKMPointEvent = procedure (const aLoc : TKMPoint);
+
+
   TPointerArray = array of Pointer;
   {$IFDEF FPC}
   TProc = procedure;
@@ -172,6 +178,21 @@ type
     function ToColor3f: TKMColor3f;
     function ToCardinal: Cardinal;
   end;
+  //settings for weather
+  //it's used in few files, not just in KM_GameSettings
+  TKMSettingsWeather = record
+    Overwrite,
+    Enabled : Boolean;
+    MaxCount, MaxSpawnCount : Integer;
+    MinInterval, MaxInterval, MaxLifeTime : Integer;
+    MaxCloudSpeed : Single;
+    DecParticles, NightTime : Integer;
+    NightSpeed: Byte;
+    DynamicLight : Boolean;
+    procedure SetDefault;
+    procedure SetRealism;
+  end;
+
 
 
   TKMColor3bArray = array of TKMColor3b;
@@ -193,7 +214,8 @@ const
 
 implementation
 uses
-  Math, SysUtils, KM_CommonUtils, KM_CommonClasses, KM_Resource;
+  Math, SysUtils, KM_CommonUtils, KM_CommonClasses, KM_Resource,
+  KM_Defaults;
 
 
 { TKMColor3f }
@@ -593,6 +615,38 @@ end;
 function Anim(aName : String) : TKMAnimation;
 begin
   Result.Create(aName);
+end;
+
+procedure TKMSettingsWeather.SetDefault;
+begin
+  Overwrite := false;
+  Enabled := false;
+  MaxCount := 10;
+  MaxSpawnCount := 4;
+  MinInterval := 100;
+  MaxInterval := 600;
+  MaxLifeTime := 600;
+  MaxCloudSpeed := 0.05;
+  DecParticles := 0;
+  NightSpeed := 10;
+  NightTime := 7;
+  DynamicLight := true;
+end;
+
+procedure TKMSettingsWeather.SetRealism;
+begin
+  Overwrite := false;
+  Enabled := true;
+  MaxCount := 10;
+  MaxSpawnCount := 4;
+  MinInterval := 100;
+  MaxInterval := 1200;
+  MaxLifeTime := 1200;
+  MaxCloudSpeed := 0.05;
+  DecParticles := 5;
+  NightSpeed := 10;
+  NightTime := 7;
+  DynamicLight := true;
 end;
 
 end.

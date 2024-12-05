@@ -52,7 +52,7 @@ type
     procedure ToggleAcceptRecruits;
     function EquipWarrior(aUnitType: TKMUnitType): Pointer;
     function Equip(aUnitType: TKMUnitType; aCount: Integer): Integer;
-    procedure CreateRecruitInside(aIsMapEd: Boolean);
+    function CreateRecruitInside(aIsMapEd: Boolean) : Pointer;
     Function WareAllowedToTakeOut(aWare : TKMWareType) : Boolean;
     Function WareAccepted(aWare : TKMWareType) : Boolean;
     function RecruitAccepted : Boolean;
@@ -474,10 +474,11 @@ begin
 end;
 
 
-procedure TKMHouseBarracks.CreateRecruitInside(aIsMapEd: Boolean);
+function TKMHouseBarracks.CreateRecruitInside(aIsMapEd: Boolean) : Pointer;
 var
   U: TKMUnit;
 begin
+  Result := nil;
   if aIsMapEd then
     Inc(MapEdRecruitCount)
   else
@@ -485,6 +486,7 @@ begin
     U := gHands[Owner].TrainUnit(utRecruit, Self);
     U.Visible := False;
     U.Home := Self; //When walking out Home is used to remove recruit from barracks
+    Result := U;
     RecruitsAdd(U);
     gHands[Owner].Stats.UnitCreated(utRecruit, False);
   end;

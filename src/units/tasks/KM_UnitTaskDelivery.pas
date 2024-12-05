@@ -4,12 +4,12 @@ interface
 uses
   Classes, SysUtils,
   KM_CommonClasses, KM_Defaults, KM_Points,
-  KM_Houses, KM_Units,
+  KM_Houses, KM_Units, KM_Structure,
   KM_ResTypes;
 
 
 type
-  TKMDeliverKind = (dkToHouse, dkToConstruction, dkToUnit, dkToWall, dkOther);
+  TKMDeliverKind = (dkToHouse, dkToConstruction, dkToUnit, dkToWall, dkToStructure, dkOther);
   TKMDeliverStage = (
     dsUnknown,
     dsToFromHouse,     //Serf is walking to the offer house
@@ -23,6 +23,7 @@ type
     fToHouse: TKMHouse;
     fToUnit: TKMUnit;
     fToLoc: TKMPoint;
+    fToStruct: TKMStructure;
     fWareType: TKMWareType;
     fDeliverID: Integer;
     fDeliverKind: TKMDeliverKind;
@@ -34,11 +35,13 @@ type
     function GetDeliverStage: TKMDeliverStage;
     property FromHouse: TKMHouse read fFrom write fFrom;
     property ToHouse: TKMHouse read fToHouse write fToHouse;
+    property ToStruct: TKMStructure read fToStruct write fToStruct;
     function CanAbandonWalk: Boolean;
   public
     constructor Create(aSerf: TKMUnitSerf; aFrom: TKMHouse; aToHouse: TKMHouse; aWare: TKMWareType; aID: Integer); overload;
     constructor Create(aSerf: TKMUnitSerf; aFrom: TKMHouse; aToUnit: TKMUnit; aWare: TKMWareType; aID: Integer); overload;
     constructor Create(aSerf: TKMUnitSerf; aFrom: TKMHouse; aTo: TKMPoint; aWare: TKMWareType; aID: Integer); overload;
+    constructor Create(aSerf: TKMUnitSerf; aFrom: TKMHouse; aTo: TKMStructure; aWare: TKMWareType; aID: Integer); overload;
     constructor Load(LoadStream: TKMemoryStream); override;
     procedure SyncLoad; override;
     destructor Destroy; override;
@@ -130,11 +133,30 @@ begin
 
   FromHouse := aFrom.GetPointer;
   ToUnit    := nil;
+  fToLoc := aTo;
   fDeliverKind := dkOther;
   fWareType := aWare;
   fDeliverID := aID;
 end;
 
+constructor TKMTaskDeliver.Create(aSerf: TKMUnitSerf; aFrom: TKMHouse; aTo: TKMStructure; aWare: TKMWareType; aID: Integer);
+begin
+  inherited Create(aSerf);
+  fType := uttDeliver;
+
+  Assert((aFrom <> nil) and (aWare <> wtNone), 'Serf '+inttostr(fUnit.UID)+': invalid delivery task');
+
+  if gLog.CanLogDelivery then
+    gLog.LogDelivery('Serf ' + IntToStr(fUnit.UID) + ' created delivery task ' + IntToStr(fDeliverID));
+
+  FromHouse := aFrom.GetPointer;
+  ToUnit    := nil;
+  ToHouse := nil;
+  ToStruct := aTo;
+  fDeliverKind := dkToStructure;
+  fWareType := aWare;
+  fDeliverID := aID;
+end;
 
 constructor TKMTaskDeliver.Load(LoadStream: TKMemoryStream);
 begin
@@ -143,6 +165,7 @@ begin
   LoadStream.Read(fFrom, 4);
   LoadStream.Read(fToHouse, 4);
   LoadStream.Read(fToUnit, 4);
+  LoadStream.Read(fToStruct, 4);
   LoadStream.Read(fToLoc); //Store ID, then substitute it with reference on SyncLoad
   LoadStream.Read(fForceDelivery);
   LoadStream.Read(fWareType, SizeOf(fWareType));
@@ -158,6 +181,7 @@ begin
   SaveStream.Write(fFrom.UID); //Store ID, then substitute it with reference on SyncLoad
   SaveStream.Write(fToHouse.UID); //Store ID, then substitute it with reference on SyncLoad
   SaveStream.Write(fToUnit.UID); //Store ID, then substitute it with reference on SyncLoad
+  SaveStream.Write(fToStruct.UID);
   SaveStream.Write(fToLoc); //Store ID, then substitute it with reference on SyncLoad
   SaveStream.Write(fForceDelivery);
   SaveStream.Write(fWareType, SizeOf(fWareType));
@@ -172,6 +196,7 @@ begin
   fFrom    := gHands.GetHouseByUID(Integer(fFrom));
   fToHouse := gHands.GetHouseByUID(Integer(fToHouse));
   fToUnit  := gHands.GetUnitByUID(Integer(fToUnit));
+  fToStruct  := gHands.GetStructureByUID(Integer(fToStruct));
 end;
 
 
@@ -230,24 +255,12 @@ begin
                           if (fToHouse.HouseType = htTownhall) and not fToHouse.IsValid then
                             Result := Result and (fPhase < 5);
                       end;
+    dkToStructure: Result := Result or fToStruct.IsComplete or fToStruct.IsDestroyed;
     dkToWall,
-    dkToConstruction: Result := Result or fToHouse.IsDestroyed;
+    dkToConstruction: if not fToHouse.IsUpgrading then
+                        Result := Result or fToHouse.IsComplete;
     dkToUnit:         begin
                         Result := Result or (fToUnit = nil) or fToUnit.IsDeadOrDying;
-                        {if not Result then
-                          if (fToUnit <> nil) and (fToUnit is TKMUnitWarrior) then
-                          begin
-                            case fWareType of
-                              wtApple,
-                              wtWine,
-                              wtBread,
-                              wtSausage,
-                              wtFish: Result := Result or (fToUnit.Condition > UNIT_MAX_CONDITION * 0.8);
-                            end;
-                            //if Result then
-                            //  gHands[fUnit.Owner].Deliveries.Queue.RemDemand(fToUnit);
-                          end;}
-
                       end;
   end;
 end;
@@ -266,9 +279,9 @@ procedure TKMTaskDeliver.CheckForBetterDestination;
 var
   NewToHouse: TKMHouse;
   NewToUnit: TKMUnit;
-  newLoc : TKMPoint;
+  newStruct : TKMStructure;
 begin
-  gHands[fUnit.Owner].Deliveries.Queue.CheckForBetterDemand(fDeliverID, NewToHouse, NewToUnit, newLoc, TKMUnitSerf(fUnit));
+  gHands[fUnit.Owner].Deliveries.Queue.CheckForBetterDemand(fDeliverID, NewToHouse, NewToUnit, newStruct, TKMUnitSerf(fUnit));
 
   gHands.CleanUpHousePointer(fToHouse);
   gHands.CleanUpUnitPointer(fToUnit);
@@ -293,9 +306,10 @@ begin
     ToUnit := NewToUnit.GetPointer; //Use Setter here to clean up fPointBelowToHouse
     fDeliverKind := dkToUnit;
   end else
+  if newStruct <> nil then
   begin
-    fDeliverKind := dkOther;
-    fToLoc := newLoc;
+    ToStruct := newStruct; //Use Setter here to clean up fPointBelowToHouse
+    fDeliverKind := dkToStructure;
   end;
 end;
 
@@ -305,6 +319,7 @@ function TKMTaskDeliver.FindBestDestination: Boolean;
 var
   NewToHouse: TKMHouse;
   NewToUnit: TKMUnit;
+  NewToStructure: TKMStructure;
 begin
   if fPhase <= 2 then
   begin
@@ -318,13 +333,13 @@ begin
   end;
 
   fForceDelivery := False; //Reset ForceDelivery from previous runs
-  gHands[fUnit.Owner].Deliveries.Queue.DeliveryFindBestDemand(TKMUnitSerf(fUnit), fDeliverID, fWareType, NewToHouse, NewToUnit, fForceDelivery);
+  gHands[fUnit.Owner].Deliveries.Queue.DeliveryFindBestDemand(TKMUnitSerf(fUnit), fDeliverID, fWareType, NewToHouse, NewToUnit, NewToStructure, fForceDelivery);
 
   gHands.CleanUpHousePointer(fToHouse);
   gHands.CleanUpUnitPointer(fToUnit);
 
   // New House
-  if (NewToHouse <> nil) and (NewToUnit = nil) then
+  if (NewToStructure = nil) and (NewToHouse <> nil) and (NewToUnit = nil) then
   begin
     ToHouse := NewToHouse.GetPointer; //Use Setter here to set up fPointBelowToHouse
     if fToHouse.IsComplete then
@@ -345,7 +360,7 @@ begin
   end
   else
   // New Unit
-  if (NewToHouse = nil) and (NewToUnit <> nil) then
+  if (NewToStructure = nil) and (NewToHouse = nil) and (NewToUnit <> nil) then
   begin
     ToUnit := NewToUnit.GetPointer; //Use Setter here to clean up fPointBelowToHouse
     fDeliverKind := dkToUnit;
@@ -354,6 +369,14 @@ begin
       fPhase := 4;
   end
   else
+  if (NewToStructure <> nil) and (NewToHouse = nil) and (NewToUnit = nil) then
+  begin
+    ToStruct := NewToStructure; //Use Setter here to clean up fPointBelowToHouse
+    fDeliverKind := dkToStructure;
+    Result := True;
+    if fPhase > 4 then
+      fPhase := 4;
+  end else
   // No alternative
   if (NewToHouse = nil) and (NewToUnit = nil) then
     Result := False
@@ -390,6 +413,7 @@ begin
                                 else  Result := dsAtDestination;
                               end;
                             end;
+        dkToStructure,
         dkToWall,
         dkToConstruction,
         dkToUnit:          begin
@@ -410,6 +434,7 @@ begin
     dkToWall,
     dkToConstruction:  Result := fPhase <= 7;
     dkToUnit:          Result := fPhase <= 6;
+    dkToStructure,
     dkOther:          Result := fPhase <= 6;
   else
     raise Exception.Create('Unexpected type');
@@ -640,9 +665,6 @@ begin
               //skip Phase to 11 so it costs only 1 timber
               fToUnit.Task.Phase := 11;//fToUnit.Task.Phase + 1;
             end else
-            if fToUnit.Task is TKMTaskBuildBridge then
-              TKMTaskBuildBridge(fToUnit.Task).DeliverWare(Carry)
-            else
             if fToUnit.Task is TKMTaskBuildRoad then
               TKMTaskBuildRoad(fToUnit.Task).AddSupply
             else
@@ -706,6 +728,26 @@ begin
               SetActionWalkToHouse(fFrom, 5);
           end else
             SetActionStay(0, uaWalk); //If we're not feeding a warrior then ignore this step
+        end;
+    else Result := trTaskDone;
+  end;
+
+  if (fDeliverKind = dkToStructure) then
+  with TKMUnitSerf(fUnit) do
+  case fPhase of
+    0..4:;
+        // First come close to point below house entrance
+    5:  SetActionWalkToSpot(ToStruct.Position, uaWalk, 2);
+    6:  SetActionStay(1, uaWalk);
+    7:  begin
+          Direction := KMGetDirection(PositionNext, fToLoc);
+          gHands[Owner].Stats.WareConsumed(Carry);
+          ToStruct.DeliverWare(Carry, 1);
+          CarryTake;
+          gHands[Owner].Deliveries.Queue.GaveDemand(fDeliverID);
+          gHands[Owner].Deliveries.Queue.AbandonDelivery(fDeliverID);
+          fDeliverID := DELIVERY_NO_ID; //So that it can't be abandoned if unit dies while staying
+          SetActionStay(1, uaWalk);
         end;
     else Result := trTaskDone;
   end;

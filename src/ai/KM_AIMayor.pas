@@ -53,6 +53,7 @@ type
     function WareFromMinCount(aWare : TKMWareType) : Integer;
     function HasHouses(aHouses : TKMHouseTypeSet) : Boolean;
     function HasUnits(aUnits : TKMUnitTypeSet) : Boolean;
+    function HouseConnectedToStore(aHouse : Pointer) : boolean;
   public
     constructor Create(aPlayer: TKMHandID; aSetup: TKMHandAISetup);
     destructor Destroy; override;
@@ -123,7 +124,8 @@ const // Sample list made by AntonP
     wtBitin,
     wtFish,
     wtHay,
-    wtBitinArmor
+    wtBitinArmor,
+    wtEgg
   );
 
   //Vital (Store, School, Inn)
@@ -177,6 +179,7 @@ begin
   CheckArmyDemand;
   CheckAutoRepair;
   fBalance.StoneNeed := GetMaxPlans * 2.5;
+  fRecorder.AfterMissionStart;
 end;
 
 
@@ -249,7 +252,6 @@ var
 
 var
   I,K, J: Integer;
-  H: TKMHouseType;
   UT: TKMUnitType;
   Schools: array of TKMHouseSchool;
   HS: TKMHouseSchool;
@@ -446,6 +448,9 @@ begin
     case H.HouseType of
       htProductionThatch: for K := 1 to WARES_IN_OUT_COUNT do
                           begin
+                            if H.WareOrder[K] = MAX_WARES_ORDER then
+                              Continue;
+
                             H.WareOrder[K] := 0;
                             case H.WareOutPut[K] of
                               wtHay,
@@ -487,13 +492,16 @@ begin
       htTailorsShop:If TKMHouseQueue(H).QueueIsEmpty then
                       for K := 1 to WARES_IN_OUT_COUNT do
                           case H.WareOutput[K] of
-                            wtBoots : if gHands[fOwner].Stats.Wares[wtBoots].ActualCnt < 10 then //we have made so many boots that everyone has, no need to make more
+                            //no need for AI to make boots
+                            wtBoots : if gHands[fOwner].Stats.Wares[wtBoots].ActualCnt < 10 then //we have made so many boots that everyone has, no need to make more   n
+                                        if gHands[fOwner].Stats.Wares[wtFeathers].ActualCnt > 10 then
                                       TKMHouseQueue(H).AddWareToQueue(wtBoots, 1, 1);
                             wtQuiver :  if gHands[fOwner].Stats.Wares[wtQuiver].ActualCnt < 25 * gHands[fOwner].Stats.GetHouseQty(htStore) then
+                                        if gHands[fOwner].Stats.Wares[wtFeathers].ActualCnt > 1 then
                                           TKMHouseQueue(H).AddWareToQueue(wtQuiver, 1, 1);
                             wtLeatherArmor : If WarfareRatios[wtLeatherArmor] > 0 then
                                               if (gHands[fOwner].Stats.Wares[wtLeatherArmor].ActualCnt < 100) or (gHands[fOwner].Stats.Wares[wtLeatherArmor].ActualCnt > 200) then
-                                                TKMHouseQueue(H).AddWareToQueue(wtLeatherArmor, 1, 4);
+                                                TKMHouseQueue(H).AddWareToQueue(wtLeatherArmor, 3, 1);
                           end;
       htIronFoundry:
                       for K := 1 to WARES_IN_OUT_COUNT do
@@ -611,6 +619,26 @@ begin
   for UT in aUnits do
     if gHands[fOwner].Stats.GetUnitQty(UT) > 0 then
       Exit(true);
+end;
+
+function TKMayor.HouseConnectedToStore(aHouse: Pointer): Boolean;
+var H, HS : TKMHouse;
+  I : Integer;
+begin
+  Result := false;
+  H := TKMHouse(aHouse);
+
+  for I := 0 to gHands[fOwner].Houses.Stores.Count - 1 do
+  begin
+    HS := gHands[fOwner].Houses.Stores[I];
+    if not HS.IsValid(htStore, false, true) then
+      Continue;
+
+    if gTerrain.RouteCanBeMade(H.PointBelowEntrance, HS.PointBelowEntrance, tpWalkRoad) then
+      Exit(true);
+  end;
+    
+
 end;
 
 procedure TKMayor.TryBuildDefenceTower;
@@ -862,11 +890,13 @@ var
 
   function BlockWare(aWare : TKMWareType; aHouses : TKMHouseTypeSet; Min1, Min2 : Integer) : Boolean;
   begin
-    Result := false;
+    if S.WareAIBlockAouto[aWare] then
+      Exit(false);
     if HasHouses(aHouses) then
       S.NotAcceptFlag[aWare] := S.CheckWareIn(aWare) >= Min1
     else
       S.NotAcceptFlag[aWare] := S.CheckWareIn(aWare) >= Min2;
+    Result := S.NotAcceptFlag[aWare];
   end;
 
 
@@ -894,26 +924,39 @@ begin
                   end;
       htStore : begin
                   S := TKMHouseStore(Houses[I]);
+                  //if S.ChangedByAIBuildScript then
+                  //  Continue;
 
-                  S.NotAcceptFlag[wtWater] := true;
+                  BlockWare(wtWater, [], 0, 0);
+                  BlockWare(wtBitin, [htIronFoundry], 0, 100);
+                  BlockWare(wtBitinOre, [htIronSmithy], 0, 100);
+                  BlockWare(wtBitinOre, [htIronSmithy], 0, 100);
+
+                  {S.NotAcceptFlag[wtWater] := true;
                   S.NotAcceptFlag[wtBitin] := HasHouses([htIronFoundry]);
-                  S.NotAcceptFlag[wtBitinOre] := HasHouses([htIronSmithy]);
+                  S.NotAcceptFlag[wtBitinOre] := HasHouses([htIronSmithy]);}
+
+                  BlockWare(wtTimber, [], 0, 50);
+                  BlockWare(wtStone, [], 0, 50);
+                  BlockWare(wtGold, [], 0, 50);
+                  BlockWare(wtTile, [], 0, 50);
+                  BlockWare(wtApple, [], 0, 50);
+                  BlockWare(wtVegetables, [], 0, 50);
 
                   //We like to always keep a supply of these
-                  S.NotAcceptFlag[wtTimber] := S.CheckWareIn(wtTimber) > 50;
+                  {S.NotAcceptFlag[wtTimber] := S.CheckWareIn(wtTimber) > 50;
                   S.NotAcceptFlag[wtStone] := S.CheckWareIn(wtStone) > 50;
                   S.NotAcceptFlag[wtGold] := S.CheckWareIn(wtGold) > 50;
                   S.NotAcceptFlag[wtTile] := S.CheckWareIn(wtTile) > 50;
                   S.NotAcceptFlag[wtApple] := S.CheckWareIn(wtApple) > 50;
-                  S.NotAcceptFlag[wtVegetables] := S.CheckWareIn(wtVegetables) > 50;
-
+                  S.NotAcceptFlag[wtVegetables] := S.CheckWareIn(wtVegetables) > 50;}
 
                   //Storing these causes lots of congestion with very little gain
                   //Auto build AI aims for perfectly balanced village where these goods don't need storing
                   //Keep them only until we have the house which consumes them.
                   //cannot be blocked because it also produce seeds
 
-                  BlockWare(wtTrunk, [htSawMill, htStoneWorkshop], 0, 20000 );
+                  BlockWare(wtTrunk, [htSawMill, htStoneWorkshop, htWoodBurner], 0, 20000 );
                   BlockWare(wtCoal, [htMetallurgists, htIronSmithy, htIronFoundry, htArmorSmithy, htWeaponSmithy], 0, 20000 );
                   BlockWare(wtIron, [htWeaponSmithy, htArmorSmithy], 0, 20000 );
                   BlockWare(wtIronOre, [htIronSmithy], 0, 20000 );
@@ -1239,7 +1282,8 @@ begin
         Houses[I].BuildingRepair := fSetup.IsRepairAlways;
         if fSetup.AutoBuild then
           if Houses[I].CanMakeUpgrade then
-            Houses[I].MakeUpgrade;
+            if HouseConnectedToStore(Houses[I]) then
+              Houses[I].MakeUpgrade;
 
       end;
 
@@ -1438,7 +1482,7 @@ var I, J : Integer;
   HM : TKMHouseMarket;
   WT, W, toW : TKMWareType;
   Wares : array[WARE_MIN..WARE_MAX] of Integer;
-  WaresTaken : array[WARE_MIN..WARE_MAX] of Word;
+  WaresTaken : array[WARE_MIN..WARE_MAX] of Integer;
 begin
   //Exit;
   If gHands[fOwner].Houses.Markets.Count = 0 then
@@ -1673,9 +1717,9 @@ begin
       CheckWareFlow;
 
 
-      //Build more roads if necessary
+      {//Build more roads if necessary
       if not Recorder.HasRecording then
-        CheckRoadsCount;
+        CheckRoadsCount;}
     end;
   finally
     {$IFDEF PERFLOG}

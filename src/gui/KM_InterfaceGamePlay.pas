@@ -12,14 +12,14 @@ uses
   KM_CommonClasses, KM_CommonTypes, KM_Defaults, KM_Pics, KM_Points, KM_CommonClassesExt,
   KM_InterfaceTypes, KM_InterfaceGame, KM_Terrain, KM_Houses, KM_Units, KM_Minimap, KM_Viewport, KM_Render,
   KM_UnitGroup, KM_UnitWarrior, KM_Saves, KM_MessageStack, KM_ResHouses, KM_Alerts, KM_Networking,
-  KM_HandEntity, KM_HandTypes,
+  KM_HandEntity, KM_HandTypes, KM_Structure,
   KM_GameTypes,
   KM_ResFonts, KM_ResTypes,
   KM_GUICommonGameOptions,
   KM_GUIGameResultsSP,
   KM_GUIGameResultsMP,
   KM_GUIGameBuild, KM_GUIGameChat, KM_GUIGameHouse, KM_GUIGameUnit, KM_GUIGameRatios, KM_GUIGameStats,
-  KM_GuiGameCustomPanel, KM_GUIGameGuide, KM_GUIGameGoalsPopUp, KM_GUIGameWaresPopUp,
+  KM_GuiGameCustomPanel, KM_GUIGameGuide, KM_GUIGameGoalsPopUp, KM_GUIGameWaresPopUp, KM_GUIGameStructure,
   KM_GUIGameMessagesPopUp,
   KM_GUIGameSpectator;
 
@@ -51,6 +51,7 @@ type
     fGuiGameWares: TKMGUIGameWaresPopUp;
     fGuiGameHouse: TKMGUIGameHouse;
     fGuiGameUnit: TKMGUIGameUnit;
+    fGuiGameStructure: TKMGUIGameStructure;
     fGuiGameRatios: TKMGUIGameRatios;
     fGuiGameStats: TKMGUIGameStats;
     fGuiMenuOptions: TKMGUICommonGameOptions;
@@ -144,6 +145,7 @@ type
     procedure Selection_Select(aId: Word);
     procedure SelectUnit(aUnit: TKMUnit);
     procedure SelectUnitGroup(aGroup: TKMUnitGroup);
+    procedure SelectStructure(aStructure: TKMStructure);
     procedure SelectNextGameObjWSameType;
     procedure SwitchPage(Sender: TObject);
     procedure OpenMenuPage(aPage: TKMTabButtons);
@@ -424,7 +426,8 @@ uses
   KM_GameParams,
   KM_Video, KM_Music, KM_Sound, KM_ScriptSound,
   KM_HandEntityHelper,
-  KM_Utils, KM_MapUtils;
+  KM_Utils, KM_MapUtils,
+  KM_StructuresCollection;
 
 const
   ALLIES_ROWS = 7;
@@ -601,6 +604,8 @@ begin
   fGuiGameRatios.Hide;
   fGuiGameStats.Hide;
   fGuiMenuOptions.Hide;
+  fGuiGameUnit.Hide;
+  fGuiGameStructure.Hide;
 end;
 
 
@@ -1003,6 +1008,7 @@ begin
   fGuiGameChat.Free;
   fGuiGameHouse.Free;
   fGuiGameUnit.Free;
+  fGuiGameStructure.Free;
   fGuiGameRatios.Free;
   fGuiGameStats.Free;
   fGuiMenuOptions.Free;
@@ -1345,7 +1351,7 @@ begin
 
     TKMImage.Create(Panel_Message, 0, 0, 600, 500, 409);
 
-    Label_MessageText := TKMLabel.Create(Panel_Message, 56, 58, 423, 112, '', fntAntiqua, taLeft);
+    Label_MessageText := TKMLabel.Create(Panel_Message, 56, 58, 423, Panel_Message.Height - 58, '', fntAntiqua, taLeft);
     Label_MessageText.WordWrap := True;
 
     Button_MessageGoTo := TKMButton.Create(Panel_Message, 490, 74, 100, 24, gResTexts[TX_MSG_GOTO], bsGame);
@@ -1482,6 +1488,8 @@ begin
   fGuiGameUnit.OnSelectingTroopDirection := IsSelectingTroopDirection;
   fGuiGameHouse := TKMGUIGameHouse.Create(Panel_Controls, SetViewportPos, SelectNextGameObjWSameType);
   fGuiGameHouse.OnHouseDemolish := House_Demolish;
+
+  fGuiGameStructure := TKMGUIGameStructure.Create(Panel_Controls);
 end;
 
 
@@ -1785,6 +1793,7 @@ end;
 procedure TKMGamePlayInterface.Message_Show(aIndex: Integer);
 var
   I: Integer;
+  txtSizeY : Integer;
 begin
   fShownMessage := aIndex;
 
@@ -1798,6 +1807,8 @@ begin
   Allies_Close(nil);
   fGuiGameChat.Hide;
   MessageLog_Close(nil);
+  txtSizeY := gRes.Fonts[Label_MessageText.Font].GetTextSize(Label_MessageText.WordWrapedText, false, false, Label_MessageText.Width).Y;
+  Panel_Message.Top := Panel_Main.Height - txtSizeY - (MESSAGE_AREA_HEIGHT div 2);
   Panel_Message.Show;
   // Must update top AFTER showing panel, otherwise Button_MessageGoTo.Visible will always return False
   Button_MessageDelete.Top := IfThen(Button_MessageGoTo.Visible, 104, 74);
@@ -1894,12 +1905,15 @@ begin
   if aMsg <> grGameContinues then
     gGame.GameResult := aMsg;
 
+
   showStats := False;
   reinitStatsLastTime := False;
 
   // Add victory / defeat videos to play
   if gGameParams.IsNormalGame then // Don't play Victory / Defeat videos for specs
   begin
+    {if aMsg = grWin then
+      gGame.Achievements.GameWon;}
     case aMsg of
       grWin:              gVideoPlayer.AddMissionVideo(gGameParams.MissionFileRel, 'Victory');
       grDefeat, grCancel: gVideoPlayer.AddMissionVideo(gGameParams.MissionFileRel, 'Defeat');
@@ -2358,7 +2372,8 @@ begin
   if aJumpToLoc then
   begin
     loc := msg.Loc;
-
+    gCursor.Mode := cmNone;
+    SwitchPage(Button_Back);
     case msg.Kind of
       mkHouse:  begin
                   // Find among houses for a spectator hand
@@ -2552,7 +2567,7 @@ var
   oldCenter: TKMPointF;
   oldZoom: Single;
   isPaused: Boolean;
-  guiSpecPage: Integer;
+  //guiSpecPage: Integer;
   isPlayerDropOpen: Boolean;
   playerDropItem, playersColorMode: Integer;
   showPlayerFOW: Boolean;
@@ -2565,7 +2580,7 @@ begin
   oldCenter := fViewport.Position;
   oldZoom := fViewport.Zoom;
   isPaused := gGame.IsPaused;
-  guiSpecPage := 0;//fGuiGameSpectator.GetOpenedPage;
+  //guiSpecPage := 0;//fGuiGameSpectator.GetOpenedPage;
   isPlayerDropOpen := Dropbox_ReplayFOW.IsOpen;
   playerDropItem := Dropbox_ReplayFOW.ItemIndex;
   showPlayerFOW := Checkbox_ReplayFOW.Checked;
@@ -3247,6 +3262,11 @@ begin
   aGroup.SelectFlagBearer;
   if (fUIMode in [umSP, umMP]) and not HasLostMPGame then
     gSoundPlayer.PlayWarrior(aGroup.SelectedUnit.UnitType, spSelect); // play unit group selection sound
+end;
+
+procedure TKMGamePlayInterface.SelectStructure(aStructure: TKMStructure);
+begin
+  gMySpectator.Selected := aStructure;
 end;
 
 
@@ -4264,7 +4284,6 @@ begin
       gSystem.Cursor := kmcJoinNo;
     Exit;
   end;
-
   if not gMySpectator.Hand.InCinematic then
   begin
     // Only own and ally units/houses can be selected
@@ -4277,9 +4296,13 @@ begin
        then
     begin
       gSystem.Cursor := kmcInfo;
+      if (entity.IsHouse and (TKMHouse(entity).HouseType = htSign)) then
+        gCursor.Hint := gGame.TextMission.ParseTextMarkup(UnicodeString(TKMHouse(entity).Text));
+
       Exit;
     end;
   end;
+  gCursor.Hint := '';
 
   if gMySpectator.Selected.IsGroup
     and gMySpectator.IsSelectedMyObj
@@ -4324,6 +4347,7 @@ var
   P, P2: TKMPoint;
   pbj: TObject;
   H: TKMHouse;
+  str : TKMStructure;
   group, group2: TKMUnitGroup;
   oldSelected: TObject;
   oldSelectedUnit: TKMUnitWarrior;
@@ -4443,6 +4467,12 @@ begin
                   fGuiGameHouse.Show(TKMHouse(gMySpectator.Selected), False);
                 end;
 
+                if (gMySpectator.Selected is TKMStructure) then
+                begin
+                  SwitchPage(nil); // Hide main back button if we were in e.g. stats
+                  fGuiGameStructure.Show(gMySpectator.Selected as TKMStructure);
+                end;
+
                 if (gMySpectator.Selected is TKMUnit) then
                 begin
                   SwitchPage(nil);
@@ -4486,15 +4516,9 @@ begin
 
             cmBridges:
               begin
-                if gMySpectator.Hand.CanAddBridgePlan(P, gCursor.Tag1, gCursor.MapEdDir) then
+                if gMySpectator.Hand.CanAddStructurePlan(P, gCursor.Tag1, gCursor.MapEdDir) then
                 begin
-                  gGame.GameInputProcess.CmdBuild(gicPlaceBridgePlan, P, gCursor.Tag1, gCursor.MapEdDir);
-                  //gMySpectator.Hand.AddBridgePlan(P, gCursor.Tag1, gCursor.MapEdDir);
-                  {gGame.GameInputProcess.CmdBuild(gicBuildHousePlan, P, TKMHouseType(gCursor.Tag1));
-                  // If shift pressed do not reset cursor (keep selected building)
-                  if not (ssShift in Shift)
-                    and not gMySpectator.Hand.NeedToChooseFirstStorehouseInGame then //Do not show Build menu after place first storehouse feature
-                    fGuiGameBuild.Show;}
+                  gGame.GameInputProcess.CmdBuild(gicPlaceStructurePlan, P, gCursor.Tag1, gCursor.MapEdDir);
 
                   if not (ssShift in Shift) then //Do not show Build menu after place first storehouse feature
                     fGuiGameBuild.Show;
@@ -4518,6 +4542,7 @@ begin
               if KMSamePoint(fLastDragPoint, KMPOINT_ZERO) then
               begin
                 H := gMySpectator.Hand.HousesHitTest(P.X, P.Y);
+                str := gMySpectator.Hand.StructuresHitTest(P.X, P.Y);
                 // Ask wherever player wants to destroy own house (don't ask about houses that are not started, they are removed below)
                 if H <> nil then
                 begin
@@ -4537,6 +4562,13 @@ begin
                   end;
                 end
                 else
+                if str <> nil then
+                begin
+                  str.DestroyPlan;
+                    gSoundPlayer.Play(sfxClick);
+                  gGame.GameInputProcess.CmdBuild(gicStructureRemove, str) // Remove plans
+                end
+                else
                 begin
                   // Now remove houses that are not started
                   if gMySpectator.Hand.Constructions.HousePlanList.HasPlan(P) then
@@ -4545,9 +4577,6 @@ begin
                   if gMySpectator.Hand.Constructions.FieldworksList.HasFakeField(P) <> ftNone then
                     gGame.GameInputProcess.CmdBuild(gicBuildRemoveFieldPlan, P) // Remove plans
                   else
-                  if gMySpectator.Hand.Constructions.BridgePlanList.HasPlan(P) then
-                    gGame.GameInputProcess.CmdBuild(gicBuildRemoveHousePlan, P)
-                  else
                   if gTerrain.CanAddField(P.X, P.Y, ftRemove, gMySpectator.HandID) then
                     HandleFieldLMBUp(P, ftRemove)
                   else
@@ -4555,7 +4584,7 @@ begin
 
                 end;
               end;
-            cmAssignToShip:   if gCursor.Tag1 = 1 then
+            cmAssignToShip:   if gCursor.Tag1 = 1 then//ship is calling
                               begin
                                 U := gMySpectator.Hand.UnitsHitTest(P, utAny);//Find unit at location
 
@@ -4567,13 +4596,12 @@ begin
                                   gSoundPlayer.Play(sfxCantPlace, P, False, 4) // there is no possible unit to assign to ship
                                 else
                                 begin
-                                  //U.AssignToShip(TKMUnitGroup(gMySpectator.Selected).SelectedUnit);
-                                  gGame.GameInputProcess.CmdUnit(gicAssignToShip, U, TKMUnitGroup(gMySpectator.Selected).SelectedUnit);
+                                  gGame.GameInputProcess.CmdUnit(gicAssignToShip, TKMUnitGroup(gMySpectator.Selected).SelectedUnit, U);
                                 end;
                                 
 
                               end else
-                              begin
+                              begin     //unit is calling
 
                                 U := gMySpectator.Hand.UnitsHitTest(P, utShip);//Find Ship at location
 
@@ -4582,15 +4610,16 @@ begin
                                 else
                                   if gMySpectator.Selected is TKMUnitGroup then
                                   begin
-                                    group := TKMUnitGroup(gMySpectator.Selected);
+                                    {group := TKMUnitGroup(gMySpectator.Selected);
 
-                                    group.OrderAssignToShip(U);
+                                    group.OrderAssignToShip(U);}
+                                    gGame.GameInputProcess.CmdUnit(gicAssignGroupToShip, U, TKMUnitGroup(gMySpectator.Selected));
                                     gCursor.Mode := cmNone;
                                   end else
                                   if gMySpectator.Selected is TKMUnit then
                                   begin
                                     //TKMUnit(gMySpectator.Selected).AssignToShip(U);
-                                    gGame.GameInputProcess.CmdUnit(gicAssignToShip, TKMUnit(gMySpectator.Selected), U);
+                                    gGame.GameInputProcess.CmdUnit(gicAssignToShip, U, TKMUnit(gMySpectator.Selected));
                                     gCursor.Mode := cmNone;
                                   end;
                               end;
@@ -4784,6 +4813,8 @@ procedure TKMGamePlayInterface.UpdateSelectedObject;
       fGuiGameHouse.Hide;
     if fGuiGameUnit.Visible then
       fGuiGameUnit.Hide;
+    if fGuiGameStructure.Visible then
+      fGuiGameStructure.Hide;
   end;
   
 var
@@ -4808,6 +4839,12 @@ begin
   begin
     HidePages;
     fGuiGameUnit.ShowUnitInfo(TKMUnit(gMySpectator.Selected), fGuiGameUnit.AskDismiss);
+    updateNewSelected := True;
+  end else
+  if gMySpectator.Selected is TKMStructure then
+  begin
+    HidePages;
+    fGuiGameStructure.Show(TKMStructure(gMySpectator.Selected));
     updateNewSelected := True;
   end else
   begin

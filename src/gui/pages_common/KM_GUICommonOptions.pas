@@ -4,6 +4,7 @@ interface
 uses
   Classes, Math, SysUtils,
   KM_Controls, KM_ControlsBase, KM_ControlsDrop, KM_ControlsSwitch, KM_ControlsTrackBar,
+  KM_ControlsEdit,
   KromOGLUtils,
   KM_MainSettings,
   KM_Pics, KM_Resolutions, KM_ResKeyFuncs, KM_GUICommonKeys,
@@ -38,6 +39,7 @@ type
     procedure FlagClick(Sender: TObject);
     procedure RefreshResolutions;
     procedure KeysClick(Sender: TObject);
+    procedure ShowEnviromentSettings(Sender: TObject);
 
     procedure CreateRes(var aTopBlock: Integer; var aLeftBlock: Integer);
     procedure CreateGraphics(var aTopBlock: Integer; var aLeftBlock: Integer);
@@ -48,6 +50,7 @@ type
     procedure CreateReplay(var aTopBlock: Integer; var aLeftBlock: Integer);
     procedure CreateMods(var aTopBlock: Integer; var aLeftBlock: Integer);
     procedure CreateLanguages(var aTopBlock: Integer; var aLeftBlock: Integer);
+    procedure CreateWeather;
 
     function NextBlock(var aTop: Integer; aCtrl: TKMControl; aAdj: Integer = 0): Integer;
     function NextTop(var aTop: Integer; const aInc: Integer = 20): Integer;
@@ -78,7 +81,6 @@ type
       Panel_Ctrl: TKMPanel;
         TrackBar_ScrollSpeed: TKMTrackBar;
         Button_OptionsKeys: TKMButton;
-        Button_OptionsPaths: TKMButton;
       Panel_Game: TKMPanel;
         Bevel_Game: TKMBevel;
         CheckBox_Autosave: TKMCheckBox;
@@ -93,6 +95,22 @@ type
         CheckBox_ReplayShowBeacons: TKMCheckBox;
       Panel_Mods: TKMPanel;
         CheckBox_SnowHouses: TKMCheckBox;
+        CheckBox_SnowObjects: TKMCheckBox;
+
+      Button_Weather : TKMButton;
+        Panel_Weather: TKMPanel;
+          CheckBox_Enabled: TKMCheckBox;
+          TrackBar_MaxCount: TKMNumericEdit;
+          TrackBar_MaxSpawnCount: TKMNumericEdit;
+          TrackBar_MinInterval: TKMNumericEdit;
+          TrackBar_MaxInterval: TKMNumericEdit;
+          TrackBar_MaxLifeTime: TKMNumericEdit;
+          TrackBar_MaxCloudSpeed: TKMNumericEdit;
+          TrackBar_DecParticles: TKMNumericEdit;
+          TrackBar_NightSpeed, TrackBar_NightTime: TKMTrackBar;
+          CheckBox_DynamicLight: TKMCheckBox;
+
+
       Panel_Sound: TKMPanel;
         Label_MusicOff: TKMLabel;
         TrackBar_SFX, TrackBar_Music: TKMTrackBar;
@@ -127,12 +145,13 @@ implementation
 uses
   KM_Main, KM_Music, KM_Sound, KM_RenderUI, KM_Resource, KM_ResTexts, KM_ResLocales, KM_ResFonts, KM_ResSound, KM_Video,
   KM_ResTypes,
+  KM_Defaults,
   KM_Game, KM_GameSettings, KM_GameParams, KM_GameTypes,
   KM_GameAppSettings;
 
 const
   SCROLL_SPEED_MULTIPLIER = 2.5;
-  BLOCK_SPAN = 18;
+  BLOCK_SPAN = 3;
 
 
 { TKMGUIMainOptions }
@@ -148,25 +167,23 @@ begin
   case fOptionsKind of
     guiOptMenu: begin
                   wid := 880;
-                  bottomLine := 30 + gResLocales.Count*20 + 10;
                   panelTop := (aParent.Height - 620) div 2 - 20;
                   backStr := gResTexts[TX_MENU_BACK];
                 end;
     guiOptGame: begin
                   wid := 600;
-                  bottomLine := aParent.Height - 30 - 20;
                   panelTop := 0;
                   backStr := gResTexts[TX_WORD_CLOSE];
                 end;
     else        begin
                   wid := 0;
                   panelTop := 0;
-                  bottomLine := 0;
                 end;
   end;
 
   Panel_Options := TKMPanel.Create(aParent,(aParent.Width - wid) div 2, panelTop, wid, aParent.Height - panelTop);
   Panel_Options.AnchorsStretch;
+  bottomLine := Panel_Options.Height - 30 - 20;
 
   if IsMenu then
     with TKMImage.Create(Panel_Options, 705 - Panel_Options.Left, 220 - Panel_Options.Top, Round(207*1.3), Round(295*1.3),6,rxGuiMain) do
@@ -185,6 +202,7 @@ begin
                     CreateGraphics(topBlock, leftBlock);
                     CreateVideos(topBlock, leftBlock);
 
+
                     //--- Column 2 --------------------------------------------------------------
                     topBlock := 0;
                     leftBlock := 300;
@@ -200,6 +218,7 @@ begin
                     leftBlock := 600;
 
                     CreateLanguages(topBlock, leftBlock);
+                    CreateWeather;
                   end;
       guiOptGame: begin
                     //--- Column 1 --------------------------------------------------------------
@@ -225,6 +244,8 @@ begin
     Button_OptionsBack := TKMButton.Create(Panel_Options, 0, bottomLine, 280, 30, backStr, bsMenu);
     Button_OptionsBack.Anchors := [anLeft];
     Button_OptionsBack.OnClick := BackClick;
+
+    Button_Weather.Visible := fOptionsKind = guiOptMenu;
 
     // Panel_Options_Keys
     // Last, to be above all other panels
@@ -385,7 +406,7 @@ end;
 procedure TKMGUICommonOptions.CreateControls(var aTopBlock: Integer; var aLeftBlock: Integer);
 begin
   // Controls section
-  Panel_Ctrl := TKMPanel.Create(Panel_Options, aLeftBlock, aTopBlock, 280, 155);
+  Panel_Ctrl := TKMPanel.Create(Panel_Options, aLeftBlock, aTopBlock, 280, 115);
   NextBlock(aTopBlock, Panel_Ctrl);
   Panel_Ctrl.Anchors := [anLeft];
     TKMLabel.Create(Panel_Ctrl,6,0,270,20,gResTexts[TX_MENU_OPTIONS_CONTROLS],fntOutline,taLeft);
@@ -399,11 +420,6 @@ begin
     Button_OptionsKeys := TKMButton.Create(Panel_Ctrl, 10, 77, 260, 30, gResTexts[TX_MENU_OPTIONS_KEYBIND], bsMenu);
     Button_OptionsKeys.Anchors := [anLeft];
     Button_OptionsKeys.OnClick := KeysClick;
-
-    Button_OptionsPaths := TKMButton.Create(Panel_Ctrl, 10, 77 + 40, 260, 30, 'Paths', bsMenu);
-    Button_OptionsPaths.Anchors := [anLeft];
-    Button_OptionsPaths.OnClick := KeysClick;
-    Button_OptionsPaths.Hide;
 end;
 
 
@@ -420,8 +436,8 @@ begin
   strAutosavePTEnd := gResTexts[TX_MENU_OPTIONS_AUTOSAVE_AT_GAME_END];
   gRes.Fonts[fntMetal].GetTextSize(strAutosavePTEnd, linesAutosavePTEnd);
 
-  if IsMenu then
-    Inc(aTopBlock, 40 - 20*(linesSavePT + linesAutosavePTEnd - 2));
+  {if IsMenu then
+    Inc(aTopBlock, 40 - 20*(linesSavePT + linesAutosavePTEnd - 2));}
 
   Panel_Game := TKMPanel.Create(Panel_Options, aLeftBlock, aTopBlock, 280, 50 + 20*(linesSavePT + linesAutosavePTEnd));
 
@@ -523,13 +539,121 @@ begin
 
   // Mods
 //  Panel_Options_Mods := TKMPanel.Create(Panel_Options,300,bottomLine-20,280,50);
-  Panel_Mods := TKMPanel.Create(Panel_Options, aLeftBlock, aTopBlock, 280, 50);
+  Panel_Mods := TKMPanel.Create(Panel_Options, aLeftBlock, aTopBlock, 280, 120);
   Panel_Mods.Anchors := [anLeft];
+  NextBlock(aTopBlock, Panel_Mods);
     TKMLabel.Create(Panel_Mods,6,0,270,20,gResTexts[TX_MENU_OPTIONS_MODS] + ':',fntOutline,taLeft);
-    TKMBevel.Create(Panel_Mods,0,20,280,30);
+    TKMBevel.Create(Panel_Mods,0,20,280,Panel_Mods.Height - 20);
 
     CheckBox_SnowHouses := TKMCheckBox.Create(Panel_Mods,10,27,256,20,gResTexts[TX_MENU_OPTIONS_MODS_SNOW_HOUSES], fntMetal);
     CheckBox_SnowHouses.OnClick := Change;
+
+    CheckBox_SnowObjects := TKMCheckBox.Create(Panel_Mods,10,47,256,20,gResTexts[2052], fntMetal);
+    CheckBox_SnowObjects.OnClick := Change;
+
+  Button_Weather := TKMButton.Create(Panel_Mods, 10, 75, Panel_Mods.Width - 20, 30, gResTexts[2069], bsMenu);
+  Button_Weather.OnClick := ShowEnviromentSettings;
+  Button_Weather.Hide;
+end;
+
+procedure TKMGUICommonOptions.CreateWeather;
+begin
+  Panel_Weather := TKMPanel.Create(Panel_Options, 0, 0, 580, 300);
+  Panel_Weather.Centerize;
+  Panel_Weather.Anchors := [anLeft];
+
+  with TKMBevel.Create(Panel_Weather, -2000, -2000, 6000, 6000) do
+    HideParentOnClick;
+  TKMBevel.Create(Panel_Weather, 0, 0, Panel_Weather.Width, Panel_Weather.Height);
+  with TKMButton.Create(Panel_Weather, -5, -5, Panel_Weather.Width + 10, Panel_Weather.Height + 10, '', bsPaper) do
+    Hitable := false;
+
+
+
+  with TKMButton.Create(Panel_Weather, 10, Panel_Weather.Height - 40, 100, 30, gResTexts[106], bsMenu) do
+    HideParentOnClick;
+
+    TKMBevel.Create(Panel_Weather,0,20,Panel_Weather.Width div 2 - 3,100);
+    TKMBevel.Create(Panel_Weather,Panel_Weather.Width div 2 + 2,20,Panel_Weather.Width div 2 - 5, 100);
+
+    CheckBox_Enabled := TKMCheckBox.Create(Panel_Weather,0,0,256,20,gResTexts[2053], fntOutline);
+    CheckBox_Enabled.OnClick := Change;
+    //CheckBox_Enabled.MobilHint := true;
+    CheckBox_Enabled.Hint := gResTexts[2054];
+
+    TKMLabel.Create(Panel_Weather,6,23,Panel_Weather.Width div 2,20,gResTexts[2063] + ':', fntMetal,taLeft);
+
+    TrackBar_MaxCount := TKMNumericEdit.Create(Panel_Weather, 10, 40, 1, 20);
+    TrackBar_MaxCount.OnChange := Change;
+    TrackBar_MaxCount.Width := 75;
+    TrackBar_MaxCount.TextAlign := taCenter;
+    TrackBar_MaxCount.Hint := gResTexts[2055];
+
+    TrackBar_MaxSpawnCount := TKMNumericEdit.Create(Panel_Weather, 100, 40, 1, 10);
+    TrackBar_MaxSpawnCount.OnChange := Change;
+    TrackBar_MaxSpawnCount.Width := 75;
+    TrackBar_MaxSpawnCount.TextAlign := taCenter;
+    TrackBar_MaxSpawnCount.Hint := gResTexts[2056];
+
+    TKMLabel.Create(Panel_Weather,6,65,Panel_Weather.Width div 2,20,gResTexts[2062] + ':', fntMetal,taLeft);
+
+    TrackBar_MinInterval := TKMNumericEdit.Create(Panel_Weather, 10, 85, 1, 60);
+    TrackBar_MinInterval.OnChange := Change;
+    TrackBar_MinInterval.Width := 75;
+    TrackBar_MinInterval.TextAlign := taCenter;
+    TrackBar_MinInterval.Hint := gResTexts[2057];
+
+    TrackBar_MaxInterval := TKMNumericEdit.Create(Panel_Weather, 100, 85, 1, 300);
+    TrackBar_MaxInterval.OnChange := Change;
+    TrackBar_MaxInterval.Width := 75;
+    TrackBar_MaxInterval.TextAlign := taCenter;
+    TrackBar_MaxInterval.Hint := gResTexts[2058];
+    TrackBar_MaxCount.Width := 75;
+
+    TKMLabel.Create(Panel_Weather, Panel_Weather.Width div 2 + 6, 23,Panel_Weather.Width div 2,20,gResTexts[2059] + ':', fntMetal,taLeft);
+
+    TrackBar_MaxLifeTime := TKMNumericEdit.Create(Panel_Weather, 490, 23, 1, 120);
+    TrackBar_MaxLifeTime.OnChange := Change;
+    TrackBar_MaxLifeTime.Width := 75;
+    TrackBar_MaxLifeTime.TextAlign := taCenter;
+    TrackBar_MaxLifeTime.Hint := gResTexts[2064];
+    TrackBar_MaxLifeTime.Width := 75;
+
+    TKMLabel.Create(Panel_Weather, Panel_Weather.Width div 2 + 6, 53,Panel_Weather.Width div 2,20,gResTexts[2060] + ':', fntMetal,taLeft);
+    TrackBar_MaxCloudSpeed := TKMNumericEdit.Create(Panel_Weather, 490, 50, 1, 20);
+    TrackBar_MaxCloudSpeed.OnChange := Change;
+    TrackBar_MaxCloudSpeed.Hint := gResTexts[2060];
+    TrackBar_MaxCloudSpeed.Width := 75;
+    TrackBar_MaxCloudSpeed.TextAlign := taCenter;
+    TKMLabel.Create(Panel_Weather, Panel_Weather.Width div 2 + 6, 83,Panel_Weather.Width div 2,20,gResTexts[2061] + ':', fntMetal,taLeft);
+
+    TrackBar_DecParticles := TKMNumericEdit.Create(Panel_Weather, 490, 80, 1, 10);
+    TrackBar_DecParticles.OnChange := Change;
+    TrackBar_DecParticles.Hint := gResTexts[2068];
+    TrackBar_DecParticles.Width := 75;
+    TrackBar_DecParticles.TextAlign := taCenter;
+
+    TKMBevel.Create(Panel_Weather,0,145,Panel_Weather.Width div 2 - 3,90);
+
+    TrackBar_NightSpeed := TKMTrackBar.Create(Panel_Weather, 5, 150, Panel_Weather.Width div 2 - 13, 0, MAX_NIGHT_SPEED - 1);
+    TrackBar_NightSpeed.Position := 10;
+    TrackBar_NightSpeed.OnChange := Change;
+    TrackBar_NightSpeed.Caption := gResTexts[2070];
+    TrackBar_NightSpeed.Hint := gResTexts[2072];
+
+    TrackBar_NightTime := TKMTrackBar.Create(Panel_Weather, 5, 190, Panel_Weather.Width div 2 - 13, 0, 24);
+    TrackBar_NightTime.Position := 12;
+    TrackBar_NightTime.OnChange := Change;
+    TrackBar_NightTime.Caption := gResTexts[2071];
+    TrackBar_NightTime.Hint := gResTexts[2073];
+
+    TKMBevel.Create(Panel_Weather,Panel_Weather.Width div 2 + 2,145,Panel_Weather.Width div 2 - 5, 90);
+
+    CheckBox_DynamicLight := TKMCheckBox.Create(Panel_Weather,Panel_Weather.Width div 2 + 6,150,200,20,gResTexts[2099], fntGrey);
+    CheckBox_DynamicLight.OnClick := Change;
+    CheckBox_DynamicLight.Hint := gResTexts[2100];
+
+  Panel_Weather.Hide;
 end;
 
 
@@ -586,6 +710,7 @@ begin
   CheckBox_ShuffleOn.Checked    := gGameSettings.SFX.ShuffleOn;
   CheckBox_ShuffleOn.Enabled    := not CheckBox_MusicOff.Checked;
   CheckBox_SnowHouses.Checked   := gGameSettings.GFX.AllowSnowHouses;
+  CheckBox_SnowObjects.Checked   := gGameSettings.GFX.AllowSnowObjects;
 
   CheckBox_VideoEnable.Checked   := gGameSettings.Video.Enabled;
   CheckBox_VideoStretch.Checked  := gGameSettings.Video.VideoStretch;
@@ -611,6 +736,18 @@ begin
 
     // We need to reset dropboxes every time we enter Options page
     RefreshResolutions;
+
+    CheckBox_Enabled.Checked := gGameSettings.Weather.Enabled;
+    TrackBar_MaxCount.Value := gGameSettings.Weather.MaxCount;
+    TrackBar_MaxSpawnCount.Value := gGameSettings.Weather.MaxSpawnCount;
+    TrackBar_MinInterval.Value := gGameSettings.Weather.MinInterval div 10;
+    TrackBar_MaxInterval.Value := gGameSettings.Weather.MaxInterval div 10;
+    TrackBar_MaxLifeTime.Value := gGameSettings.Weather.MaxLifeTime div 10;
+    TrackBar_MaxCloudSpeed.Value := Round(gGameSettings.Weather.MaxCloudSpeed * 200);
+    TrackBar_DecParticles.Value := gGameSettings.Weather.DecParticles + 1;
+    TrackBar_NightSpeed.Position := gGameSettings.Weather.NightSpeed;
+    TrackBar_NightTime.Position := gGameSettings.Weather.NightTime;
+    CheckBox_DynamicLight.Checked  := gGameSettings.Weather.DynamicLight;
   end
   else
   // Only in Game
@@ -640,6 +777,10 @@ begin
   // In Replay
   if (gGameParams <> nil) and gGameParams.IsReplay then
     CheckBox_ReplayAutopause.Enabled := (gGameParams.Mode = gmReplayMulti) and gGame.IsPeaceTime;
+
+
+
+
 end;
 
 
@@ -664,6 +805,7 @@ begin
   gGameSettings.SFX.MusicEnabled       := not CheckBox_MusicOff.Checked;
   gGameSettings.SFX.ShuffleOn          := CheckBox_ShuffleOn.Checked;
   gGameSettings.GFX.AllowSnowHouses    := CheckBox_SnowHouses.Checked;
+  gGameSettings.GFX.AllowSnowObjects    := CheckBox_SnowObjects.Checked;
 
   TrackBar_Music.Enabled      := not CheckBox_MusicOff.Checked;
   CheckBox_ShuffleOn.Enabled  := not CheckBox_MusicOff.Checked;
@@ -719,6 +861,25 @@ begin
         OnToggleLocale(gResLocales[Radio_Lang.ItemIndex].Code, gpOptions);
       Exit; // Exit ASAP because whole interface will be recreated
     end;
+
+    gGameSettings.Weather.Enabled := CheckBox_Enabled.Checked;
+    gGameSettings.Weather.MaxCount := TrackBar_MaxCount.Value;
+    gGameSettings.Weather.MaxSpawnCount := TrackBar_MaxSpawnCount.Value;
+    gGameSettings.Weather.MinInterval := TrackBar_MinInterval.Value * 10;
+    gGameSettings.Weather.MaxInterval := TrackBar_MaxInterval.Value * 10;
+    gGameSettings.Weather.MaxLifeTime := TrackBar_MaxLifeTime.Value * 10;
+    gGameSettings.Weather.MaxCloudSpeed := TrackBar_MaxCloudSpeed.Value / 200;
+    gGameSettings.Weather.DecParticles := TrackBar_DecParticles.Value - 1;
+    gGameSettings.Weather.NightSpeed := TrackBar_NightSpeed.Position;
+    gGameSettings.Weather.NightTime := TrackBar_NightTime.Position;
+    gGameSettings.Weather.DynamicLight := CheckBox_DynamicLight.Checked;
+
+
+    TrackBar_MaxInterval.ValueMin := TrackBar_MinInterval.Value + 1;
+
+    {for I := 0 to Panel_Weather.ChildCount - 1 do
+      if Panel_Weather.Childs[I] <> CheckBox_Enabled  then
+        Panel_Weather.Childs[I].Enabled := CheckBox_Enabled.Checked;}
   end
   else
   // Only in Game
@@ -929,6 +1090,11 @@ end;
 procedure TKMGUICommonOptions.KeysClick(Sender: TObject);
 begin
     fGuiCommonKeys.Show;
+end;
+
+procedure TKMGUICommonOptions.ShowEnviromentSettings(Sender: TObject);
+begin
+  Panel_Weather.Show;
 end;
 
 

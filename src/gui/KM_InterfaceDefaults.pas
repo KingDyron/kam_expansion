@@ -421,11 +421,10 @@ end;
 
 procedure TKMUserInterfaceCommon.UpdateHint(aGlobalTickCount: Cardinal);
 const
-  FADE_IN_TIME = 10;
-  FADE_RESET_TIME = 5;
+  FADE_IN_TIME = 5;
+  FADE_RESET_TIME = 3;
 begin
   fHintOver := fMyControls.CtrlOver;
-
   case fHintStage of
     hsFadeIn: // Hint was hidden a long time ago
               begin
@@ -544,6 +543,24 @@ var
   hintBackRect: TKMRect;
   left, top: Integer;
 begin
+  if gCursor.Hint <> '' then
+  begin
+    Label_MobilHint.FontColor := icWhite;
+    Label_MobilHint.Caption := '';
+    Label_MobilHint.Width := IfThen(length( gCursor.Hint) > 50,
+    length( gCursor.Hint) * 3, 200);
+    Label_MobilHint.Caption := gCursor.Hint;
+    Label_MobilHint.FontColor := icWhite;
+    Label_MobilHint.Left := gCursor.Pixel.X;
+    Label_MobilHint.Top := gCursor.Pixel.Y;
+
+    Label_MobilHint.Show;
+    Label_MobilHint.Paint;
+    Label_MobilHint.Hide;
+
+    Exit;
+  end;
+
   if DBG_UI_HINT_POS then
   begin
     fHintDebugLbl.Caption := gCursor.Pixel.ToString;
@@ -577,7 +594,6 @@ begin
     fHintDebugLbl.Hide;
     fHintDebug.Hide;
   end;
-
   if fHintCtrl = nil then Exit;
 
   if (Label_Hint = nil) or (Bevel_HintBG = nil) or (Label_MobilHint = nil) then

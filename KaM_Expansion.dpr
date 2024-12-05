@@ -420,7 +420,7 @@ uses
   KM_GUIMapEdCampaignMap in 'src\gui\pages_maped\KM_GUIMapEdCampaignMap.pas',
   KM_UnitTaskGoForBoots in 'src\units\tasks\KM_UnitTaskGoForBoots.pas',
   KM_GUIGameMessagesPopUp in 'src\gui\pages_game\KM_GUIGameMessagesPopUp.pas',
-  KM_ResBridges in 'src\res\KM_ResBridges.pas',
+  KM_ResStructures in 'src\res\KM_ResStructures.pas',
   KM_GUIMenuCampaignLobby in 'src\gui\pages_menu\KM_GUIMenuCampaignLobby.pas',
   KM_GUIMenuTutorials in 'src\gui\pages_menu\KM_GUIMenuTutorials.pas',
   KM_ControlsGrid in 'src\controls\KM_ControlsGrid.pas',
@@ -430,7 +430,16 @@ uses
   KM_WeatherCollection in 'src\weather\KM_WeatherCollection.pas',
   KM_WeatherTypes in 'src\weather\KM_WeatherTypes.pas',
   KM_Particles in 'src\weather\KM_Particles.pas',
-  KM_AIRecordBuilding in 'src\ai\KM_AIRecordBuilding.pas';
+  KM_AIRecordBuilding in 'src\ai\KM_AIRecordBuilding.pas',
+  KM_Structure in 'src\structures\KM_Structure.pas',
+  KM_StructuresCollection in 'src\structures\KM_StructuresCollection.pas',
+  KM_GUIGameStructure in 'src\gui\pages_game\KM_GUIGameStructure.pas',
+  KM_UnitTaskCollectWares in 'src\units\tasks\KM_UnitTaskCollectWares.pas',
+  KM_UnitTaskGoToWell in 'src\units\tasks\KM_UnitTaskGoToWell.pas',
+  KM_CommonHelpers in 'src\common\KM_CommonHelpers.pas',
+  KM_Achievements in 'src\KM_Achievements.pas',
+  KM_GUIMenuAchievements in 'src\gui\pages_menu\KM_GUIMenuAchievements.pas',
+  KM_GameDefines in 'src\game\KM_GameDefines.pas';
 
 //KM_PerfLog in 'src\unused\KM_PerfLog.pas', //unused
 
@@ -462,7 +471,6 @@ uses
 begin
   Application.Initialize;
   Application.Title := 'KaM Expansion';
-
   try
     gMain := TKMMain.Create;
     try

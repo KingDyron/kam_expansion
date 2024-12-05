@@ -8,11 +8,31 @@ uses
   KM_ControlsTypes,
   KM_Controls, KM_ControlsBase, KM_ControlsList, KM_ControlsTrackBar, KM_ControlsEdit,
   KM_ResFonts,
+  KM_RenderUI,
   KM_Points,
   KM_CommonTypes;
 
 
 type
+  TKMPopUpRectPanel = class(TKMPanel)
+    private
+      Button_Shape : TKMButton;
+      Button_Back : TKMButton;
+      Bevel_Back : TKMBevel;
+      Bevel_Big : TKMBevel;
+      fStyle : TKMButtonStyle;
+      fSkipChilds : Byte;
+    protected
+      procedure SetHeight(aValue: Integer); override;
+    public
+      constructor Create(aParent: TKMPanel; aWidth, aHeight: Integer; aStyle : TKMButtonStyle = bsPaper);
+
+      procedure SetHeightToChilds(aMargin : Integer = 5); override;
+      procedure SetWidthToChilds(aMargin : Integer = 5);override;
+
+      property Style : TKMButtonStyle read fStyle write fStyle;
+  end;
+
   TKMPopUpMenu = class(TKMPanel)
   private
     fShapeBG: TKMShape;
@@ -34,7 +54,7 @@ type
   end;
 
 
-  TKMPopUpBGImageType = (pbGray, pbYellow, pbScroll);
+  TKMPopUpBGImageType = (pbGray, pbYellow, pbScroll, pbPaper);
 
   TKMPopUpPanel = class(TKMPanel)
   const
@@ -162,14 +182,63 @@ type
     constructor Create(aParent: TKMPanel);
   end;
 
+
 implementation
 uses
   Math, SysUtils,
-  KM_RenderUI,
   KM_ResTexts, KM_ResKeys, KM_ResTypes,
   KM_Defaults,
   KM_CommonUtils;
 
+constructor TKMPopUpRectPanel.Create(aParent: TKMPanel; aWidth: Integer; aHeight: Integer; aStyle : TKMButtonStyle = bsPaper);
+begin
+  inherited Create(aParent, 0, 0, aWidth, aHeight);
+  fStyle := aStyle;
+  Centerize;
+
+  Bevel_Big := TKMBevel.Create(self, -2000, -2000, 5000, 5000);
+  Bevel_Big.HideParentOnClick;
+  Bevel_Back := TKMBevel.Create(self, -5, -5, Width + 10, Height + 10);
+
+  Button_Shape := TKMButton.Create(self, -5, -5, Width + 10, Height + 10, '', fStyle);
+  Button_Shape.Hitable := false;
+  Button_Shape.AnchorsStretch;
+
+
+
+  Button_Back := TKMButton.Create(self, 0, Height - 30, 150, 30, gResTexts[106], bsMenu);
+  Button_Back.HideParentOnClick;
+  fSkipChilds := ChildCount;
+
+  Hide;
+end;
+
+procedure TKMPopUpRectPanel.SetHeight(aValue: Integer);
+begin
+  Button_Back.Top := Height - 30;
+end;
+
+procedure TKMPopUpRectPanel.SetHeightToChilds(aMargin: Integer = 5);
+var I, tmp : Integer;
+begin
+  tmp := 0;
+  for I := fSkipChilds to ChildCount - 1 do
+    tmp := Max(tmp, Childs[I].Bottom);
+  Height := tmp + aMargin;
+
+
+  Centerize;
+end;
+
+procedure TKMPopUpRectPanel.SetWidthToChilds(aMargin: Integer = 5);
+var I, tmp : Integer;
+begin
+  tmp := 0;
+  for I := fSkipChilds to ChildCount - 1 do
+    tmp := Max(tmp, Childs[I].Right);
+  Width := tmp + aMargin;
+  Centerize;
+end;
 
 { TKMPopUpMenu }
 constructor TKMPopUpMenu.Create(aParent: TKMPanel; aWidth: Integer);
@@ -306,11 +375,17 @@ begin
 
   ImageBG := TKMImage.Create(Self, 0, 0, w, h, 15, rxGuiMain);
 
+  if fBGImageType = pbPaper then
+    with TKMBevel.Create(self, 0, 0, w, h) do
+      BackAlpha := 0;
+
+
   ItemsPanel := TKMPanel.Create(Self, margin, topMarg, Width - 2*margin, Height - topMarg - GetBottomMargin);
 
   case fBGImageType of
     pbGray:   ImageBG.TexId := 15;
     pbYellow: ImageBG.TexId := 18;
+    pbPaper: ImageBG.TexId := 102;
     pbScroll: begin
                 ImageBG.Rx := rxGui;
                 ImageBG.TexId := 409;
@@ -335,7 +410,7 @@ begin
 
   ImageBG.ImageStretch;
 
-  CaptionLabel := TKMLabel.Create(ItemsPanel, 0, -25, ItemsPanel.Width, 20, aCaption, DEF_FONT, taCenter);
+  CaptionLabel := TKMLabel.Create(ItemsPanel, 0, IfThen(fBGImageType = pbPaper, -18, -25), ItemsPanel.Width, 20, aCaption, DEF_FONT, taCenter);
 
   AnchorsCenter;
   Hide;
@@ -353,7 +428,7 @@ end;
 
 function TKMPopUpPanel.GetLeftRightMargin: Integer;
 const
-  MARGIN_SIDE: array [TKMPopUpBGImageType] of Byte = (20, 35, 20);
+  MARGIN_SIDE: array [TKMPopUpBGImageType] of Byte = (20, 35, 20, 3);
 begin
   Result := MARGIN_SIDE[fBGImageType];
 end;
@@ -361,7 +436,7 @@ end;
 
 function TKMPopUpPanel.GetTopMargin: Integer;
 const
-  MARGIN_TOP: array [TKMPopUpBGImageType] of Byte = (40, 80, 50);
+  MARGIN_TOP: array [TKMPopUpBGImageType] of Byte = (40, 80, 50, 20);
 begin
   Result := MARGIN_TOP[fBGImageType];
 end;
@@ -369,7 +444,7 @@ end;
 
 function TKMPopUpPanel.GetBottomMargin: Integer;
 const
-  MARGIN_BOTTOM: array [TKMPopUpBGImageType] of Byte = (20, 50, 20);
+  MARGIN_BOTTOM: array [TKMPopUpBGImageType] of Byte = (20, 50, 20, 5);
 begin
   Result := MARGIN_BOTTOM[fBGImageType];
 end;
@@ -377,7 +452,7 @@ end;
 
 function TKMPopUpPanel.GetCrossTop: Integer;
 const
-  CROSS_TOP: array [TKMPopUpBGImageType] of Byte = (24, 40, 24);
+  CROSS_TOP: array [TKMPopUpBGImageType] of Integer = (24, 40, 24, -15);
 begin
   Result := CROSS_TOP[fBGImageType];
 end;
@@ -386,7 +461,7 @@ end;
 function TKMPopUpPanel.GetCrossRight: Integer;
 const
   // We probably should calc those sizes as dependant of the Width
-  CROSS_RIGHT: array [TKMPopUpBGImageType] of Byte = (50, 130, 55);
+  CROSS_RIGHT: array [TKMPopUpBGImageType] of Byte = (50, 130, 55, 20);
 begin
   Result := CROSS_RIGHT[fBGImageType];
 end;

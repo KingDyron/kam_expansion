@@ -108,7 +108,14 @@ type
     ctSetVegeField,
     ctSetHouseBuildingProgress,
     ctAnimalSpawner,
-    ctAddAnimalTypeToSpawner
+    ctAddAnimalTypeToSpawner,
+    ctAddUnitToShip,
+    ctAddWareToBoat,
+    ctBlockStructure,
+    ctBlockDecoration,
+    ctSetHouseFlagColor,
+    ctSetHouseIndestructible,
+    ctSetUnitImmortal
     );
 
 const
@@ -207,7 +214,14 @@ const
     'SET_VEGE_FIELD',
     'SET_HOUSE_BUILDING_PROGRESS',
     'SET_ANIMAL_SPAWNER',
-    'ADD_ANIMAL_TYPE_TO_SPAWNER'
+    'ADD_ANIMAL_TYPE_TO_SPAWNER',
+    'ADD_UNIT_TO_SHIP',
+    'ADD_WARE_TO_BOAT',
+    'BLOCK_STRUCTURE',
+    'BLOCK_DECORATION',
+    'SET_HOUSE_FLAG_COLOR',
+    'SET_HOUSE_INDESTRUCTIBLE',
+    'SET_UNIT_IMMORTAL'
     );
 type
   TKMMissionParserCommon = class
@@ -298,7 +312,7 @@ begin
       if (num <= 0)
       or (
           (PWord(NativeUInt(F.Memory) + num-1)^ <> $2020) //Skip double spaces and !!
-      and (PWord(NativeUInt(F.Memory) + num-1)^ <> $2121)) then
+      {and (PWord(NativeUInt(F.Memory) + num-1)^ <> $2121)}) then
         Inc(num);
     end;
 
@@ -360,6 +374,7 @@ begin
 
             isMessage := false;
             strParam := '';
+
             repeat
 
               if (aText[I] = '@') and (strParam = '') then
@@ -367,10 +382,10 @@ begin
 
               if not isMessage or (isMessage and (aText[I] <> '@')) then
                 strParam := strParam + aText[I];
-
               Inc(I);
-            until((I >= Length(aText)) or (aText[I] = '!') or ((aText[I] = #32) and not isMessage) or (isMessage and (aText[I] = '@') ) ); //Until we find another ! OR we run out of data
 
+            until ((I >= Length(aText)) or (((aText[I] = #32) or (aText[I] = '!')) and not isMessage) or (isMessage and (aText[I] = '@') ) ); //Until we find another ! OR we run out of data
+            
             //Convert to an integer, if possible
             if TryStrToInt(string(strParam), intParam) then
               paramList[K] := intParam

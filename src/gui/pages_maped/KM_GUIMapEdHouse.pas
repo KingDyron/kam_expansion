@@ -5,7 +5,8 @@ uses
    Classes, Math, StrUtils, SysUtils,
    Controls,
    KM_Controls, KM_ControlsBase, KM_ControlsProgressBar, KM_ControlsWaresRow, KM_Points,
-   KM_Defaults, KM_Pics, KM_Houses, KM_InterfaceGame, KM_ResHouses, KM_ControlsPopUp, KM_ControlsEdit, KM_ControlsScroll;
+   KM_Defaults, KM_Pics, KM_Houses, KM_InterfaceGame, KM_ResHouses, KM_ControlsPopUp, KM_ControlsEdit, KM_ControlsScroll,
+   KM_ControlsSwitch;
 
 type
   TKMMapEdHouse = class
@@ -55,6 +56,7 @@ type
     procedure HouseSignClose(sender : TObject);
     Procedure HouseSignChange(sender : TObject);
     procedure HouseSetWareInput(Sender : TObject);
+    procedure HouseCheckBoxClick(Sender : TObject);
     procedure ChangeStyle(Sender : TObject);
     Procedure RefreshStyle(aID : Byte = 0);
     Procedure HouseSetLevel(Sender : TObject; Shift: TShiftState);
@@ -64,6 +66,7 @@ type
 
     procedure Panel_HouseContructionChange(Sender : TObject; Shift: TShiftState);
     procedure Panel_HouseBuildWaresChange(Sender : TObject; aCount : Integer);
+    procedure ColorCodeChange(Sender : TObject);
   protected
     Panel_HouseAdditional: TKMPanel;
       Button_HouseForceWork : TKMButton;
@@ -96,6 +99,11 @@ type
       Button_BlockWare: array[0..WARES_IN_OUT_COUNT - 1] of TKMButtonFlat;
       ResRow_Ware_Input: array [0..WARES_IN_OUT_COUNT - 1] of TKMWareOrderRow;
       ResRow_Ware_Output: array [0..WARES_IN_OUT_COUNT - 1] of TKMWareOrderRow;
+
+      Edit_HouseFlagColor: TKMEdit;
+      Shape_FlagColor: TKMFlatButtonShape;
+      CheckBox_Indestructible : TKMCheckBox;
+
 
     Panel_HouseWoodcutters: TKMPanel;
       Button_Woodcutters_CuttingPoint: TKMButtonFlat;
@@ -149,6 +157,7 @@ implementation
 uses
   {$IFDEF MSWindows} Windows, {$ENDIF}
   {$IFDEF Unix} LCLType, {$ENDIF}
+  KM_ControlsTypes,
   KM_GameSettings,
   KM_HandsCollection, KM_HandTypes, KM_HandEntity,
   KM_ResTexts, KM_Resource, KM_RenderUI, KM_ResUnits,
@@ -235,9 +244,25 @@ begin
     Button_HouseNoRes.Hint := gResTexts[1868];
 
 
+    Edit_HouseFlagColor := TKMEdit.Create(Panel_HouseAdditional, Panel_HouseAdditional.Width - 80, 75, 75, 20, fntMetal);
+    Edit_HouseFlagColor.AutoFocusable := False; // No need to make too much attention on that field
+    Edit_HouseFlagColor.Anchors := [anLeft, anTop, anRight];
+    Edit_HouseFlagColor.AllowedChars := acHex;
+    Edit_HouseFlagColor.MaxLen := 6;
+    Edit_HouseFlagColor.OnChange := ColorCodeChange;
+    Edit_HouseFlagColor.Hint := gResTexts[1884];
+    Shape_FlagColor := TKMFlatButtonShape.Create(Panel_HouseAdditional, Edit_HouseFlagColor.Left - 20, 76, 18, 18, '', fntGrey, 0);
+
+    CheckBox_Indestructible := TKMCheckBox.Create(Panel_HouseAdditional, Shape_FlagColor.Left, 100,
+                                                  Panel_HouseAdditional.Width - Shape_FlagColor.Left, 15,
+                                                  gResTexts[2104],fntGrey);
+    CheckBox_Indestructible.OnClick := HouseCheckBoxClick;
+    CheckBox_Indestructible.Hint := CheckBox_Indestructible.Caption;
+
     for I := 0 to High(Button_WareInputSlot) do
+
     begin
-      Button_WareInputSlot[I] := TKMButton.Create(Panel_HouseAdditional, 29 + 25 * (I mod 5), 80 + 25 * (I div 5), 22, 22, '', bsGame);
+      Button_WareInputSlot[I] := TKMButton.Create(Panel_HouseAdditional, 29 + 25 * (I mod 5), 100 + 25 * (I div 5), 22, 22, '', bsGame);
       Button_WareInputSlot[I].OnClick := HouseSetWareInput;
       Button_WareInputSlot[I].Tag := I;
       Button_WareInputSlot[I].Hint := gResTexts[1813];
@@ -273,7 +298,6 @@ begin
 
 
     end;
-
 
     Label_House_Input := TKMLabel.Create(Panel_House, 0, 125, Panel_House.Width, 0, gResTexts[TX_HOUSE_NEEDS], fntGrey, taCenter);
 
@@ -387,7 +411,7 @@ var
 
 begin
 
-  top := 90;
+  top := 110;
   Bevel_Store := TKMBevel.Create(Panel_HouseAdditional, 0, 16 + top, 112, 62);
   Bevel_Store.BackAlpha := 0.8;
   Bevel_Store.Color.SetColor(0.1, 0.2, 0.1);
@@ -525,8 +549,8 @@ begin
   top := 0;
   J := 0;
   LastID := 0;
-  dX := 0;
   dY := 0;
+  rightIconStart := 0;
     for I := 0 to high(BarracksResOrder) do
     begin
       if BarracksResOrder[I] = wtNone then //make new line
@@ -738,6 +762,11 @@ begin
     Label_SignMessage.Caption := gGame.TextMission.ParseTextMarkup(UnicodeString(fHouse.Text));
 end;
 
+procedure TKMMapEdHouse.HouseCheckBoxClick(Sender: TObject);
+begin
+  fHouse.Indestructible := CheckBox_Indestructible.Checked;
+end;
+
 
 procedure TKMMapEdHouse.HideAllCommonResources;
 var
@@ -838,6 +867,7 @@ procedure TKMMapEdHouse.Show(aHouse: TKMHouse);
 var
   houseSpec: TKMHouseSpec;
   I : Integer;
+  C: Cardinal;
 begin
   fHouse := aHouse;
   if fHouse = nil then Exit;
@@ -874,6 +904,21 @@ begin
     ShowCommonResources
   else
     HideAllCommonResources;
+
+  Edit_HouseFlagColor.Visible := fHouse.IsValid;
+  Shape_FlagColor.Visible := Edit_HouseFlagColor.Visible;
+  if Edit_HouseFlagColor.Visible then
+  begin
+    C := fHouse.FlagColor;
+    if C = 0 then
+      C := gHands[fHouse.Owner].FlagColor;
+    C := C or $FF000000;
+
+    Edit_HouseFlagColor.SetTextSilently( Format('%.6x', [C and $FFFFFF]) );
+    Shape_FlagColor.ShapeColor := C;
+  end;
+
+  CheckBox_Indestructible.Checked := fHouse.Indestructible;
 
   Label_SingCLickCTRL.Hide;
   House_RefreshCommon;
@@ -1073,7 +1118,7 @@ begin
     for I := 0 to high(Button_WareInputSlot) do
       if I < Length(houseSpec.WareInputSlots) then
       begin
-        Button_WareInputSlot[I].Top := 80 + (I div 5 * 25) + ((length(houseSpec.Styles) + 5) div 5) * 33;
+        Button_WareInputSlot[I].Top := 100 + (I div 5 * 25) + ((length(houseSpec.Styles) + 5) div 5) * 33;
         Button_WareInputSlot[I].Show;
         Button_WareInputSlot[I].Enabled := fHouse.CanChangeWareInput;
         Button_WareInputSlot[I].TexID := houseSpec.WareInputSlots[I].Icon;
@@ -1081,7 +1126,7 @@ begin
       end;
   end;
 
-  Panel_House.Top := 45 + addToTop;
+  Panel_House.Top := 60 + addToTop;
 
 end;
 
@@ -1597,7 +1642,6 @@ begin
   Panel_HouseContructionChange(Sender, []);
 end;
 procedure TKMMapEdHouse.Panel_HouseContructionChange(Sender: TObject; Shift: TShiftState);
-var I : Integer;
 begin
 
   if Sender = Button_BuildingProgressDec then fHouse.IncBuildingProgress(5 * GetMultiplicator(Shift));
@@ -1619,6 +1663,26 @@ begin
   HealthBar_BuildingProgress.Caption := IntToStr(fHouse.BuildingProgress) + ' / ' + IntToStr(fHouse.MaxHealth);
   HealthBar_BuildingProgress.Position := fHouse.BuildingProgress / fHouse.MaxHealth;
 
+end;
+
+
+procedure TKMMapEdHouse.ColorCodeChange(Sender: TObject);
+var C : Cardinal;
+begin
+  if Sender <> Edit_HouseFlagColor then
+    Exit;
+  Edit_HouseFlagColor.SetTextSilently(UpperCase(Edit_HouseFlagColor.Text));
+  if length(Edit_HouseFlagColor.Text) > 0 then
+  begin
+    C := StrToInt('$' + Edit_HouseFlagColor.Text);
+    C := C or $FF000000;
+
+    Shape_FlagColor.ShapeColor := C;
+    if fHouse <> nil then
+      fHouse.FlagColor := C;
+    //Edit_HouseFlagColor.SetTextSilently( Format('%.6x', [C and $FFFFFF]) );
+    //Shape_FlagColor.FillColor := C;
+  end;
 end;
 
 end.

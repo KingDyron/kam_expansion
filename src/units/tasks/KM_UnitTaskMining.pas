@@ -38,9 +38,11 @@ type
 implementation
 uses
   KM_CommonUtils,
+  KM_Game,
   KM_Houses, KM_HouseWoodcutters, KM_HouseSwineStable, KM_HouseSiegeWorkshop, KM_HouseWoodBurner, KM_HouseQueue,
   KM_HandsCollection, KM_HandTypes, KM_HandEntity,
-  KM_Resource, KM_ResMapElements, KM_ResTexts, KM_Log,
+  KM_MapEditor, KM_MapEdTypes,
+  KM_Resource, KM_ResMapElements, KM_ResTexts, KM_Log, KM_ResTileset, KM_ResTilesetTypes,
   KM_Hand, KM_ResUnits, KM_ScriptingEvents, KM_Terrain;
 
 
@@ -127,7 +129,7 @@ begin
                           Result := taPlant;
                     end;
 
-    htProductionThatch: if (not fUnit.Home.HasSpaceForWaresOut([wtCorn, wtSeed, wtVegetables{, wtHay}], false)) and not fUnit.Home.ForceWorking then
+    htProductionThatch: if (not fUnit.Home.HasSpaceForWaresOut([wtCorn, wtSeed, wtVegetables, wtHay], true)) and not fUnit.Home.ForceWorking then
                           Result := taPlant
                         else
                           Result := taAny;
@@ -223,7 +225,7 @@ begin
     gsFarmerCorn:      begin
                           stage := gFieldGrains[GetGrainType(WorkPlan.Loc)].GetStage(Land^[WorkPlan.Loc.Y, WorkPlan.Loc.X].FieldAge);
 
-                          Result := (stage <> 254) and ((stage = CORN_AGE_MAX) or gFieldGrains[GetGrainType(WorkPlan.Loc)].Stage[stage].CanBeCut);
+                          Result := (stage <> 254) and ((stage >= CORN_AGE_MAX) or gFieldGrains[GetGrainType(WorkPlan.Loc)].Stage[stage].CanBeCut);
                           {Result := (TileIsCornField(WorkPlan.Loc) and (Land^[WorkPlan.Loc.Y, WorkPlan.Loc.X].FieldAge = CORN_AGE_MAX))
                                     or (TileIsGrassField(WorkPlan.Loc) and (Land^[WorkPlan.Loc.Y, WorkPlan.Loc.X].FieldAge in [CORN_AGE_MAX, CORN_AGE_3]));}
 
@@ -241,7 +243,7 @@ begin
                               Prod[0].C := 0;
                             end;
                         end;
-    gsFarmerWine:      Result := TileIsWineField(WorkPlan.Loc) and (Land^[WorkPlan.Loc.Y, WorkPlan.Loc.X].FieldAge = CORN_AGE_MAX);
+    gsFarmerWine:      Result := TileIsWineField(WorkPlan.Loc) and (Land^[WorkPlan.Loc.Y, WorkPlan.Loc.X].FieldAge >= CORN_AGE_MAX);
     gsFisherCatch:     Result := CatchFish(KMPointDir(WorkPlan.Loc,WorkPlan.WorkDir),True);
     gsWoodCutterPlant: Result := TileGoodToPlantTree(WorkPlan.Loc.X, WorkPlan.Loc.Y);
     gsWoodCutterCut:   begin
@@ -300,10 +302,15 @@ begin
   case fPhase of
     0:  if WorkPlan.HasToWalk then
         begin
-
-
           if WorkPlan.GatheringScript = gsCollector then
-            fObjectType := gTerrain.Land^[WorkPlan.Loc.Y-1, WorkPlan.Loc.X].Obj;
+            case WorkPlan.WorkDir of
+              dirN : fObjectType := gTerrain.Land^[WorkPlan.Loc.Y - 1, WorkPlan.Loc.X].Obj;
+              dirS : fObjectType := gTerrain.Land^[WorkPlan.Loc.Y + 1, WorkPlan.Loc.X].Obj;
+              dirE : fObjectType := gTerrain.Land^[WorkPlan.Loc.Y, WorkPlan.Loc.X + 1].Obj;
+              dirW : fObjectType := gTerrain.Land^[WorkPlan.Loc.Y, WorkPlan.Loc.X - 1].Obj;
+            end;
+
+
           fDistantResAcquired := False; // we will set distant resource as acquired when we gather it
           Home.SetState(hstEmpty);
           SetActionGoIn(WorkPlan.ActionWalkTo, gdGoOutside, Home); //Walk outside the house
@@ -315,7 +322,7 @@ begin
           if (WorkPlan.GatheringScript = gsMerchant)then
           begin
 
-            for I := 0 to 3 do
+            for I := 0 to WorkPlan.Res.Count - 1 do
             begin
               if WorkPlan.Res[I].W <> wtNone then
               begin
@@ -444,11 +451,7 @@ begin
          case WorkPlan.GatheringScript of //Perform special tasks if required
            gsClayMiner:        fDistantResAcquired := gTerrain.DecOreDeposit(WorkPlan.Loc, wtTile);
            gsCollector:        begin
-                                  if WorkPlan.Prod[0].W = wtStone then
-                                    fDistantResAcquired := gTerrain.DecStoneDeposit(KMPoint(WorkPlan.Loc.X,WorkPlan.Loc.Y-1))
-                                  else
-                                    fDistantResAcquired := gTerrain.DecOreDeposit(KMPoint(WorkPlan.Loc.X,WorkPlan.Loc.Y-1), WorkPlan.Prod[0].W);
-
+                                fDistantResAcquired := gTerrain.DecCollectorsOre(KMPointDir(WorkPlan.Loc, WorkPlan.WorkDir));
                                end;
            gsStoneCutter:      fDistantResAcquired := gTerrain.DecStoneDeposit(KMPoint(WorkPlan.Loc.X,WorkPlan.Loc.Y-1));
            gsFarmerSow:         gTerrain.SowCorn(WorkPlan.Loc, WorkPlan.GrainType, gHands[fUnit.Owner].VirtualWareTake('vtManure'));
@@ -492,7 +495,7 @@ begin
           //give resources from mercahnt
           if WorkPlan.GatheringScript = gsMerchant then
             begin
-            TKMHouseMerchant(Home).SendToAlly(WorkPlan.Res);
+              TKMHouseMerchant(Home).SendToAlly(WorkPlan.Res);
 
               fUnit.SetSpeed(24);
             end;
@@ -508,6 +511,12 @@ begin
             fPhase2 := 0;
             Home.SetState(hstWork);
 
+            if WorkPlan.GatheringScript = gsShipyard then
+              if TShipYard(fUnit.Home).CanWork then
+                TShipYard(fUnit.Home).StartWorking
+              else
+                Exit(trTaskDone);
+
             if WorkPlan.GatheringScript = gsAppleTree then
               TKMHouseAppleTree(fUnit.Home).SetAnimation(WorkPlan.TMPInt);
 
@@ -521,7 +530,7 @@ begin
             if not (WorkPlan.GatheringScript in [gsMerchant]) then
             begin
               hasRes := true;
-              for I := 0 to 3 do
+              for I := 0 to high(WorkPlan.Res) do
                 if WorkPlan.Res[I].W <> wtNone then
                   if Home.CheckWareIn(WorkPlan.Res[I].W) < WorkPlan.Res[I].C then
                     hasRes := false;
@@ -530,7 +539,7 @@ begin
                 Result := trTaskDone
               else
               begin
-                for I := 0 to 3 do
+                for I := 0 to high(WorkPlan.Res) do
                 begin
                   if WorkPlan.Res[I].W <> wtNone then
                     Home.WareTakeFromIn(WorkPlan.Res[I].W, WorkPlan.Res[I].C);
@@ -540,9 +549,8 @@ begin
                 CalculateWorkingTime(Home);
                 if Home is TKMHouseProdThatch then
                 begin
-                  for I := 0 to 3 do
+                  for I := 0 to high(WorkPlan.Prod)  do
                     TKMHouseProdThatch(Home).ProduceStarts(WorkPlan.Prod[I].W);
-
                 end;
 
               end;
@@ -700,7 +708,7 @@ begin
                               end
                               else
                                 ResAcquired := true;
-              gsShipyard:   TKMHouseShipyard(fUnit.Home).IncSketchPhase;
+              gsShipyard:   TKMHouseShipyard(fUnit.Home).IncSketchPhase(fWorkPlan.Res);
 
               gsMerchant:     ResAcquired := false;
               else            ResAcquired := True;
@@ -708,7 +716,7 @@ begin
 
             if ResAcquired then
             begin
-              for I := 0 to 3 do
+              for I := 0 to high(WorkPlan.Prod) do
                 if WorkPlan.Prod[I].W <> wtNone then
                 begin
                   tmp := home.CheckWareIn(WorkPlan.Prod[I].W);

@@ -26,7 +26,8 @@ uses
 
   function GetTerrainTileBasic(aTile: TKMTerrainTile): TKMTerrainTileBasic;
 
-  procedure IterateOverArea(const aStartCell: TKMPoint; aSize: Integer; aIsSquare: Boolean; aOnCell: TPointEventSimple; aAroundArea: Boolean = False);
+  procedure IterateOverArea(const aStartCell: TKMPoint; aSize: Integer; aIsSquare: Boolean; aOnCell: TPointEventSimple; aAroundArea: Boolean = False); overload;
+  procedure IterateOverArea(const aStartCell: TKMPoint; aSize: Integer; aIsSquare: Boolean; aOnCell: TKMPointEventSimple; aAroundArea: Boolean = False); overload;
 
   function GetLocalizedFilePath(aPath: string; aLocale, aFallbackLocale, aExt: AnsiString): string;
 
@@ -107,6 +108,137 @@ end;
 // aOnCell - invoke that procedure on every iteration
 // aAroundArea - do we also iterate over surrounding tiles?
 procedure IterateOverArea(const aStartCell: TKMPoint; aSize: Integer; aIsSquare: Boolean; aOnCell: TPointEventSimple; aAroundArea: Boolean = False);
+type
+  TKMRoundingMode = (rOdd, rEven);
+
+  //Is point I;J inside iterating area
+  function IsInside(I,J,Rad: Integer; aRounding: TKMRoundingMode): Boolean;
+  begin
+    case aRounding of
+      rOdd:   Result := aIsSquare or (Sqr(I)    + Sqr(J)    < Sqr(Rad+0.5));
+      rEven:  Result := aIsSquare or (Sqr(I+0.5)+Sqr(J+0.5) < Sqr(Rad));
+      else    Result := False;
+    end;
+  end;
+
+  //Is Cell inside iterating area
+  function IsCellInside(aCell: TKMPoint; Rad: Integer; aRounding: TKMRoundingMode): Boolean;
+  var
+    I,J: Integer;
+  begin
+    I := aCell.X - aStartCell.X;
+    J := aCell.Y - aStartCell.Y;
+    Result := InRange(I, -Rad, Rad-1) and InRange(J, -Rad, Rad-1) and IsInside(I, J, Rad, aRounding);
+  end;
+
+var
+  BorderArea: TKMPointArray;
+  K: Integer;
+
+  procedure ProceedCell(X,Y: Integer; aIsBorderCell: Boolean);
+  begin
+    aOnCell(X, Y);
+    if aIsBorderCell and (Length(BorderArea) > K) then
+    begin
+      //Collect BorderArea cells
+      BorderArea[K] := KMPoint(X,Y);
+      Inc(K);
+    end;
+  end;
+
+var
+  AroundArea: TStringList;
+  I,J,MaxIJ,Rad,Size: Integer;
+  PointsAround: TKMPointArray;
+  P: TKMPoint;
+  RoundingMode: TKMRoundingMode;
+  FirstInRow, IsBorderCell: Boolean;
+begin
+  K := 0;
+  Size := aSize;
+  if aAroundArea and (Size <> 0) then
+  begin
+    if aIsSquare then
+      Inc(Size, 2)
+    else
+      SetLength(BorderArea, Max(1, 4*(Size - 1)));
+  end;
+
+  if Size = 0 then
+  begin
+    // size smaller than one cell
+    aOnCell(aStartCell.X, aStartCell.Y);
+    if aAroundArea then
+    begin
+      aOnCell(aStartCell.X-1, aStartCell.Y-1);
+      aOnCell(aStartCell.X-1, aStartCell.Y);
+      aOnCell(aStartCell.X,   aStartCell.Y-1);
+    end;
+    Exit;
+  end;
+
+  Rad := Size div 2;
+  // There are two brush types here, even and odd size
+  if Size mod 2 = 1 then
+  begin
+    RoundingMode := rOdd;
+    MaxIJ := Rad;
+  end else
+  begin
+    RoundingMode := rEven;
+    MaxIJ := Rad - 1;
+  end;
+
+  for I := -Rad to MaxIJ do
+  begin
+    FirstInRow := True;
+    for J := -Rad to MaxIJ do
+      // Rounding corners in a nice way
+      if IsInside(I,J,Rad,RoundingMode) then
+      begin
+        //Check if this tile is in 'border area'
+        IsBorderCell := FirstInRow or (I = -Rad) or (I = MaxIJ) or (J = -Rad) or (J = MaxIJ) // check if its first or at edges
+                          or not IsInside(I,J+1,Rad,RoundingMode);  // or if its last (next tile in row is not in area anymore)
+        ProceedCell(aStartCell.X+J, aStartCell.Y+I, IsBorderCell);
+        FirstInRow := False;
+      end;
+  end;
+
+  if aAroundArea and not aIsSquare then
+  begin
+    AroundArea := TStringList.Create; //todo: Replace with TKMPointList
+    try
+      AroundArea.Sort; //todo: Sorting empty list, why?
+      AroundArea.Duplicates := dupIgnore;
+
+      for I := 0 to K - 1 do
+      begin
+        //Get around cells for border cells
+        PointsAround := KMPointsAround(BorderArea[I]);
+        for J := 0 to High(PointsAround) do
+          // If border cell is outside of iterating area addthem to Around Area
+          if not IsCellInside(PointsAround[J], Rad, RoundingMode) then
+            AroundArea.Add(TypeToString(PointsAround[J]));
+      end;
+
+      // Iterate through around area.
+      // We assume, that iterating order is not important, so we do not care,
+      // that first were iterated Central cells, then around area
+      for I := 0 to AroundArea.Count - 1 do
+      begin
+        P := StringToType(AroundArea[I]);
+        aOnCell(P.X, P.Y);
+      end;
+    finally
+      AroundArea.Free;
+    end;
+  end;
+end;
+
+ // Iterate over area. Using different rounding (Circle/Square).
+// aOnCell - invoke that procedure on every iteration
+// aAroundArea - do we also iterate over surrounding tiles?
+procedure IterateOverArea(const aStartCell: TKMPoint; aSize: Integer; aIsSquare: Boolean; aOnCell: TKMPointEventSimple; aAroundArea: Boolean = False);
 type
   TKMRoundingMode = (rOdd, rEven);
 

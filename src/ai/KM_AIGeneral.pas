@@ -600,7 +600,7 @@ var
   procedure AddAvailable(aGroup: TKMUnitGroup);
   var
     I : Integer;
-    GT, GT2: TKMGroupType;
+    GT: TKMGroupType;
   begin
     GT := aGroup.GetMembersGroupType; //gtAny is only when there is no other unit that has different group types than gtAny
     if not (GT in GROUP_TYPES_VALID) then
@@ -784,7 +784,7 @@ begin
           if UnitsSent < Attacks[I].TotalMen then
           begin
             OrderAttack(AttackGroups[gtAny, K], Attacks[I].Target, Attacks[I].CustomPosition);
-            Inc(UnitsSent, AttackGroups[gtAny, J].Count);
+            Inc(UnitsSent, AttackGroups[gtAny, K].Count);
           end;
 
         //If we still haven't sent enough men, send more groups out of the types allowed until we have
@@ -1176,5 +1176,7 @@ end;
 
 
 end.
+
+
 
 
