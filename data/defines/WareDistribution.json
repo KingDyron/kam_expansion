@@ -1,0 +1,200 @@
+{
+  "Wares": [
+    {
+		"Ware": "wtTrunk",
+		"Houses" : 	[
+						{
+							"HouseName" : "htSawMill",
+							"Qty" : 5
+						},
+						{
+							"HouseName" : "htWoodBurner",
+							"Qty" : 4
+						},
+						{
+							"HouseName" : "htStoneWorkshop",
+							"Qty" : 5
+						},
+						{
+							"HouseName" : "htIronFoundry",
+							"Qty" : 5
+						}
+		
+					]
+	},
+    {
+		"Ware": "wtTimber",
+		"Houses" : 	[
+						{
+							"HouseName" : "htArmorWorkshop",
+							"Qty" : 3
+						},
+						{
+							"HouseName" : "htWeaponWorkshop",
+							"Qty" : 4
+						},
+						{
+							"HouseName" : "htShipyard",
+							"Qty" : 2
+						}
+		
+					]
+	},
+    {
+		"Ware": "wtWater",
+		"Houses" : 	[
+						{
+							"HouseName" : "htAppleTree",
+							"Qty" : 2
+						},
+						{
+							"HouseName" : "htHovel",
+							"Qty" : 3
+						},
+						{
+							"HouseName" : "htBakery",
+							"Qty" : 5
+						},
+						{
+							"HouseName" : "htSwine",
+							"Qty" : 4
+						},
+						{
+							"HouseName" : "htStables",
+							"Qty" : 3
+						}
+		
+					]
+	},
+    {
+		"Ware": "wtCorn",
+		"Houses" : 	[
+						{
+							"HouseName" : "htSwine",
+							"Qty" : 5
+						},
+						{
+							"HouseName" : "htStables",
+							"Qty" : 3
+						},
+						{
+							"HouseName" : "htWoodBurner",
+							"Qty" : 2
+						},
+						{
+							"HouseName" : "htHovel",
+							"Qty" : 1
+						}
+		
+					]
+	},
+    {
+		"Ware": "wtSeed",
+		"Houses" : 	[
+						{
+							"HouseName" : "htHovel",
+							"Qty" : 5
+						},
+						{
+							"HouseName" : "htMill",
+							"Qty" : 4
+						}
+		
+					]
+	},
+    {
+		"Ware": "wtHay",
+		"Houses" : 	[
+						{
+							"HouseName" : "htSwine",
+							"Qty" : 3
+						},
+						{
+							"HouseName" : "htStables",
+							"Qty" : 5
+						}		
+					]
+	},
+    {
+		"Ware": "wtVegetables",
+		"Houses" : 	[
+						{
+							"HouseName" : "htSwine",
+							"Qty" : 5
+						},
+						{
+							"HouseName" : "htStables",
+							"Qty" : 3
+						},
+						{
+							"HouseName" : "htHovel",
+							"Qty" : 3
+						}
+		
+					]
+	},
+    {
+		"Ware": "wtLeather",
+		"Houses" : 	[
+						{
+							"HouseName" : "htTailorsShop",
+							"Qty" : 5
+						},
+						{
+							"HouseName" : "htShipyard",
+							"Qty" : 4
+						}
+		
+					]
+	},
+    {
+		"Ware": "wtCoal",
+		"Houses" : 	[
+						{
+							"HouseName" : "htIronSmithy",
+							"Qty" : 5
+						},
+						{
+							"HouseName" : "htIronFoundry",
+							"Qty" : 2
+						},
+						{
+							"HouseName" : "htWeaponSmithy",
+							"Qty" : 4
+						},
+						{
+							"HouseName" : "htArmorSmithy",
+							"Qty" : 5
+						},
+						{
+							"HouseName" : "htMetallurgists",
+							"Qty" : 4
+						},
+						{
+							"HouseName" : "htWoodBurner",
+							"Qty" : 1
+						}
+		
+					]
+	},
+    {
+		"Ware": "wtIron",
+		"Houses" : 	[
+						{
+							"HouseName" : "htIronFoundry",
+							"Qty" : 3
+						},
+						{
+							"HouseName" : "htWeaponSmithy",
+							"Qty" : 4
+						},
+						{
+							"HouseName" : "htArmorSmithy",
+							"Qty" : 5
+						}
+		
+					]
+	}
+    
+  ]
+}

@@ -1,0 +1,784 @@
+﻿0:Píla
+1:Zlievareň
+2:Zbrojárňa
+3:Uhoľná baňa
+4:Železná baňa
+5:Zlatá baňa
+6:Rybárska chatrč
+7:Pekáreň
+8:Farma
+9:Drevorubačský zrub
+10:Kováčňa brnenia
+11:Sklad
+12:Stajňa
+13:Škola
+14:Kameneňolom
+15:Zlatnícka dielňa
+16:Prasacia farma
+17:Strážna veža
+18:Radnica
+19:Výrobňa zbraní
+20:Výrobňa brnenia
+21:Hrad
+22:Mlyn
+23:Ťažká zbrojáreň
+24:Mäsiarstvo
+25:Kožiarska dielňa
+26:Výcviková miestnosť
+27:Hostinec
+28:Vinica
+29:Tržnica
+30:Kmene stromov
+31:Kamene
+32:Dosky
+33:Železná ruda
+34:Zlatá ruda
+35:Uhlie
+36:Železo
+37:Zlato
+38:Sudy vína
+39:Obilie
+40:Chleby
+41:Múka
+42:Koža
+43:Klobásky
+44:Prasatá
+45:Usne
+46:Drevené štíty
+47:Železné štíty
+48:Kožené brnenia
+49:Železné brnenia
+50:Sekery
+51:Meče
+52:Kopije
+53:Halapartne
+54:Luky
+55:Kuše
+56:Kone
+57:Ryby
+58:Nevoľník
+59:Drevorubač
+60:Baník
+61:Chovateľ zvierat
+62:Farmár/Vinár
+63:Tesár
+64:Pekár/Mlynár
+65:Mäsiar
+66:Rybár
+67:Robotník
+68:Kamenár
+69:Kováč
+70:Hutník
+71:Regrút
+72:Domobrana
+73:Sekerník
+74:Bojovník s mečom
+75:Lukostrelec
+76:Strelec z kuše
+77:Kopijník
+78:Halapartník
+79:Špeh
+80:Rytier
+81:Barbar
+82:Rebel
+83:Strelec z praku
+84:Bojovník
+85:Tulák
+86:Katapult
+87:Balista
+88:Nevoľníci zásobujú vaše budovy potrebnými surovinami.||Nezabudnite, že budovy musia byť prepojené cestami.
+89:Aby ste mohli ťažiť drevo pre pílu, potrebujete drevorubača.||Drevorubač sa nezávisle stará o znovuzalesňovenie vyťažených plôch.
+90:Baník ťaží nerasty v uhoľných, železných a zlatých baniach.
+91:V strediskách chovu prasiat a koní vykrmuje váš chovateľ zvieratá obilím.
+92:Farmár pestuje a žne obilie na farme.||Lisuje tiež víno vypestované vo vinici.
+93:Tesár pracuje na píle, v zbrojárskej dielni a vo výrobni brnenia||Vyrába tiež katapulty a balisty v dielni obliehacích strojov.
+94:Pekár pečie chlieb v pekárni.||Melie tiež múku z obilia vo veternom mlyne.
+95:Mäsiar vyrába klobásky v mäsiarstve a kože v kožiarskej dielni.
+96:Rybár chytá ryby v tesnej blízkosti vodných plôch.
+97:Robotník stavia budovy a cesty. Stačí mu ukázať vybrané miesto a o splnenie vášho rozkazu sa už postará sám.||Opravuje tiež poškodené budovy.
+98:Aby mali robotníci dostatok materiálu na stavbu ciest a domov, kamenár pre nich ťaží a brúsi kameň.
+99:Železné brnenia a zbrane sú vyrábané kováčom v ťažkej zbrojárni a kováčni brnenia.
+100:Hutník vyrába truhlice zlata a oceľ z príslušných rúd.
+101:Regrút môže byť v hrade vycvičený za vojaka.||Obýva taktiež strážnu vežu.
+102:K výberu budov
+103:K rozdeleniu produktov
+104:Ku štatistike
+105:K voľbám
+106:Späť
+107:Výber|budov
+108:Rozdelenie|produktov
+109:Štatistiky
+110:Voľby
+111:Nahrať hru
+112:Uložiť hru
+113:Ste si istý|že chcete ukončiť|túto misiu?
+114:Koniec misie
+115:Späť
+116:Nastavenia
+117:Ukončiť editor
+118:Zvukové efekty
+119:Zmena hlasitosti
+120:Zmena hlasitosti
+121:Hudba
+122:Hudba zap/vyp
+123:Autouloženie
+124:CD prehrávač
+125:Predchádzajúca skladba
+126:Ďalšia skladba
+127:Zbúrať
+128:Odstrániť budovu/základy/plány
+129:Postaviť cestu
+130:Postaviť cestu
+131:Zorať pole
+132:Zorať pole
+133:Zasadiť vinič
+134:Zasadiť vinič
+135:Zrušiť
+136:Zrušiť súčasný výcvik
+137:Potreby:
+140:Dodávka
+141:Dom vo|výstavbe
+142:Zničiť
+143:Skutočne chcete|zničiť túto stavbu?
+144:Zničiť vybranú budovu
+145:Znížiť objednané množstvo
+146:Zvýšiť objednané množstvo
+147:Predchádzajúci typ vojaka
+148:Ďalší typ vojaka
+149:Vyzbrojiť aktuálny typ vojaka
+150:Ďalšie povolanie
+151:Predchádzajúce povolanie
+152:Pridať do fronty
+153:Zapnúť/Vypnúť dodávku tovaru
+154:Cena:
+155:Zapnúť/Vypnúť opravu domu
+156:Budova v súčasnosti nie je k dispozícii
+157:Stav
+158:Otočiť vojsko vľavo
+159:Otočiť vojsko vpravo
+160:Útok
+161:Premiestniť vojsko
+162:Zásobiť vojsko potravinami
+163:Zahájiť náhly útok!
+164:Pridať rad
+165:Zrušiť rad
+166:Výber|cieľovej|skupiny
+167:Opustiť
+168:Vymazať
+169:Vymazať túto správu
+170:Prejsť na
+171:Prejsť na miesto v správe
+172:Zatvoriť
+173:Zatvoriť okno
+174:Váš kamenár nemôže zohnať ďalšie zásoby kameňa.
+175:Zásoby uhlia sa zdajú byť vyčerpané.
+176:Vaše žily so železnou rudou sú vyčerpané.
+177:Vaše zlaté žily sú vyčerpané.
+178:Váš drovorubač nemohol v okolí nájsť žiadne stromy na zoťatie
+179:Táto budova nie je obývaná.
+180:Tento vojak je skutočne hladný. Mal by dostať čo najrýchlejšie niečo zajesť!
+181:PAUZA
+182:Plnenie
+183:Výstavba cesty
+184:Okopávanie poľa
+185:Stavba vyničného poľa
+186:Nivelizácia pôdy pre dom
+187:Výstavba budovy
+188:Oprava budovy
+189:Idem domov
+190:Idem do hostinca
+191:Útok na dom
+192:Strieľa
+193:Bojovanie
+194:Náhly útok
+195:Útočenie
+196:Presun
+197:Nečinný
+198:Ťažba kameňa
+199:Siatie kukurice
+200:Zber kukurice
+201:Zber hrozna
+202:Rybolov
+203:Pílenie stromu
+204:Sadenie stromu
+205:Prízrak
+206:Rušný
+207:Stredoveký roh
+208:Jar
+209:Lutna
+210:Žoldnier
+211:Princezná
+212:Kráľovná
+213:Na tržnici
+214:Na bitevnom poli
+215:Dvorný tanec
+216:Armáda
+217:V hrade
+218:Fanfáry
+219:Na dvore
+220:Hlavný vchod
+221:Hlboká modrá
+222:Zápas
+223:Kráľovské štvrte
+224:Aristokracia
+225:V prístave
+226:Jazda
+227:Kampane
+228:Kampane
+229:Začať kampaň!
+230:Hrať samostatnú mapu
+231:Štart misie
+232:Späť do menu
+233:Načítať uloženú hru
+234:Multiplayer
+235:Nastavenia
+236:Autori
+237:Ukončenie hry
+238:Pokračovať
+239:Opakovať misiu
+240:Video rozlíšenie:
+241:Nie je podporované
+242:Nie je podporované
+243:VÍŤAZSTVO!
+244:PORÁŽKA!
+245:Stratených jednotiek:
+246:Porazených jednotiek:
+247:Stratených budov:
+248:Zničených budov:
+249:Dokončených budov:
+250:Vycvičených jednotiek:
+251:Vyrobených zbraní:
+252:Vycvičených vojakov:
+253:Čas misie:
+254:Štatistiky
+255:Ekonomika
+256:Vycvičených|občanov
+257:Stratených|občanov
+258:Vycičených|vojakov
+259:Stratených|vojakov
+260:Vojaci|porazení
+261:Postavených|budov
+262:Stratených|budov
+263:Zničených|budov
+264:Vytvorených|produktov
+265:Vyrobených|zbraní
+266:Armáda
+267:Občania
+268:Budovy
+269:Suroviny
+270:Vyprodukované suroviny
+271:Žiadne dáta
+272:Vy
+273:Hráč %d
+274:Späť do Multiplayeru
+275:Späť k záznamom z hry
+276:Všetko
+277:Vojenstvo
+278:Potraviny
+279:JOYMANIA ENTERTAINMENT||PROGRAMOVANIE:|Peter Ohlmann||GRAFIKA HRY:|Adam Sprys||NÁVRH MISIÍ:|Adam Sprys|Andre Quaß||EDITÁCIA ZVUKU A MIXOVANIE:|Tonstudio Mannheim||HUDBA:|Gerd Hofmann|Joachim Schäfer|Jürgen Rebhann|Klaus Staendike|Steffen Schüngel||ILUSTRÁCIE:|Boleslaw Kasza|Christoph Werner||ZUXXEZ ENTERTAINMENT AG||PRODUCENT:|Uwe Schäfer||MANUÁL:|Peter Ohlmann|Uwe Schäfer||BETA TESTOVANIE:|Peter Ohlmann|Adam Sprys|Alexandra Constandache|Dirk P. Hassinger|Achim Heidelauf|Uwe Schäfer|Ingrid Schäfer|Dirk U. Jantz|Ion Constandache|Yaman Egeli|Roman Eich|Iris Mocsnek|Anke Jantz|Paul Hassinger|Liza Hassinger||HERNÝ REŽISÉR:|Achim Heidelauf||PUBLIKOVANÉ:|TopWare Interactive||VIDEA:||RÉŽIA:|Slawomir Jedrzejewski||Kajetan Czarnecki|Wojciech Drazek|Daniel Duplaga|Rafal Januszkiewicz|Andrzej Rams|Piotr Rulka|Krzysztof Rybczynski|Grzegorz Wisniwski||DABING:|Claus Boyen (Rozprávač)||Tim Timmermann|Peter Houska|Dirk Mühlbach|Ralf Ditze|Gerhard Piske|Gernot Wassmann||ARTWORK:|Boleslaw Kasza|Adam Sprys||ÚVODNÉ VIDEO:|Uwe Schäfer|Christian Bigalk|Additional 3D-Modelling:|Niels Horstmann||POĎAKOVANIE:|Tadeusz Zuber|Dieter Ohlmann|Alexandra Constandache|Ingrid Schäfer|Andrea Rumpelt||1.60 PATCH|'SERVICE RELEASE 3'||KOORDINÁCIA:|Tommi Räsänen (Litude)||PROGRAMOVANIE:|Lewin Hodgman|Stephen Hodgman|Tommi Räsänen (Litude)||ÚPRAVA MISIÍ:|Joost Bandsma (The Dark Lord)|Lewin Hodgman|Tommi Räsänen (Litude)||ÚPRAVA GRAFIKY:|Harold Aptroot||ZVUKOVÉ EFEKTY:|Lewin Hodgman|Mitchell Hodgman||OPRAVY TEXTOV:|Jakub Z. (kuba11100)|Jeroen Bos (JBSnorro)|Joost Bandsma (The Dark Lord)|Lars Stienen (Thunderwolf)|Lewin Hodgman|Tommi Räsänen (Litude)||PREKLAD:|Alexander B. (AZA)|Attila Arnold (The Knight)|Jakub Z. (kuba11100)|Joost Bandsma (The Dark Lord)|Lars Stienen (Thunderwolf)|'Merchator'|'Nick'|'M4RC0'||BETA TESTOVANIE:|Attila Arnold (The Knight)|Jakub Z. (kuba11100)|Lars Stienen (Thunderwolf)|'Michailoff'
+280:Misia ukončená
+281:Záznam ukončený
+282:Výuka stavby
+283:Výuka boja
+284:Hra pre jedného hráča
+285:Editor máp
+286:Začať misiu
+287:Názov
+288:Veľkosť
+289:Podmienky víťazstva:
+290:Podmienky porážky:
+291:Spojenci:
+292:Nepriatelia:
+293:Čas
+294:Veľkosť novej mapy
+295:Šírka
+296:Výška
+297:Vytvoriť novú mapu
+298:Dostupné mapy
+299:Načítať existujúcu mapu
+300:Pozícia
+301:Ovládanie:
+302:Hra:
+303:Zvuk:
+304:Stlmiť hudbu
+305:Grafika:
+306:Jas
+307:Vertikálna synchro.
+308:Celá obrazovka
+309:Použiť
+310:Jazyk:
+311:Kvalita tieňovania:
+312:Nízka
+313:Vysoká
+314:Nahrávam... Čakajte prosím
+315:Nastala chyba!
+316:Nahrávam novú lokáciu
+317:Zoznam uložených hier
+318:Názov súboru
+319:Popis
+320:Načítať
+321:Odstrániť
+322:Naozaj chcete odstrániť túto uloženú hru?
+323:Odstrániť
+324:Storno
+325:Názov
+326:Počet máp
+327:Odomknutých
+328:Zvíťazili ste!
+329:Pokračovať v hre
+330:Víťazstvo!
+331:Prehrali ste!
+332:Pokračovať
+333:Porážka
+334:Prehrávanie skončilo
+335:Pokračovať
+336:Späť do menu
+337:Nedostupné
+338:Stlačte %s pre pokračovanie v hre
+339:Informácie o hráčoch
+340:Chat
+341:Uložená hra už existuje
+342:Prepísať
+343:Uložiť
+344:Načítať
+345:Detekovaná stará verzia OpenGL, hra môže bežať pomaly alebo s grafickými chybami
+346:Aktualizujte prosím, svoje ovládače pre dosiahnutie lepšieho výkonu.
+347:Sieťová chyba:
+348:Chyba: Musíte zadať svoje meno
+349:Chyba: Meno hráča nesmie byť dlhšie ako %d znakov
+350:Chyba: Meno hráča obsahuje zakázané znaky
+351:Spojenie sa nepodarilo: %s
+352:Boli ste odpojený
+353:Misia %d
+354:Správy
+355:Váš rybár je príliš ďaleko od vody.
+356:Váš rybár nemôže chytiť žiadne ďalšie ryby vo vode, ktorú má nablízku.
+357:Prehrať záznam odznova
+358:Pozastaviť záznam
+359:Vpred o jeden krok
+360:Pokračovať v prehrávaní záznamu
+361:Zastaviť prehrávanie záznamu
+362:Prepnúť hráčsku perspektívu
+364:Použite ľavé tlačidlo myši na výber tovaru
+365:Použite pravé tlačidlo myši na výber tovaru
+366:Dám x%d
+367:Chcem x%d
+368:Editácia terénu
+369:Štetce
+370:Zmeniť výšku terénu
+371:Políčka
+372:Objekty
+373:Výšiny
+374:Tvar štetca
+375:Veľkosť
+376:Posunutím zmeníte veľkosť štetca
+377:Sklon
+378:Posunutím zmeníte sklon: 1 = plochý ... 15 = špicatý
+379:Rýchlosť
+380:Posunutím zmeníte rýchlosť stúpania: 1 = pomaly ... 15 = veľmi rýchlo
+381:Kruhový štetec
+382:Štvorcový štetec
+383:Zvýšiť / Znížiť
+384:Rozbrázdiť / Zarovnať
+385:Zvýšiť (ľavé tlačítko myši) / Znížiť (pravé tlačítko myši)
+386:Rozbrázdiť (ľavé tlačítko myši) / Zarovnať (pravé tlačítko myši)
+387:Štetec
+388:Náhodné prvky
+389:Náhodný smer
+390:Zaškrtnite pre náhodný smer políčka alebo kliknite pravým tlačítkom myši pre otočenie daného políčka
+392:Zablokovať prístup na dané políčko
+393:Odstrániť objekt
+394:Plánovanie dediny
+395:Vizuálne skripty
+396:Všeobecné skriptovanie
+397:Menu
+398:Objekty
+399:Zobraziť množstvo surovín
+400:Zobraziť jednotky
+401:Zobraziť budovy
+402:Zobraziť objekty
+403:Zobraziť priechodnosť
+404:Všetky neuložené|zmeny budú stratené
+405:Zrušiť
+406:Nahrať
+407:Nahrať mapu
+408:Zrušiť
+409:Uložiť
+410:Prepísať
+411:Mapa už existuje
+412:Hráči:
+413:Vých.
+414:Typy hráčov
+415:Symetricky
+416:Spojenectvá
+417:Taktická
+418:Budovateľská
+419:Typ misie
+420:Ísť na pozíciu
+421:Pozícia obrazovky na začiatku misie
+422:Centrovať obrazovku
+423:Odkryť všetko
+424:Odhaliť časť mapy
+425:Odhaliť časť mapy
+426:Zablokovať obchod
+427:Zablokovať budovy
+428:Výber farby
+429:Cieľ
+432:Hráč
+433:Ekonomické budovy
+434:Nevoľníci a školy
+435:Vojenské budovy
+436:Neznáma
+437:Vojaci
+438:Budovy
+439:Čas
+440:Tutoriál
+441:Žiadna
+442:Podmienka
+443:Prežitie
+444:Víťazstvo
+445:Žiadny
+446:Typ
+447:Ciele
+448:OK
+449:Zrušiť
+450:Rady
+451:Počet
+452:Formácie jednotiek
+453:Upraviť formácie
+454:Nastaví limit počtu vojakov pre aktuálnu AI
+455:Počet vojakov, koľko môže AI mať naraz
+456:Max. vojakov
+457:Počet regrútov, koľko môže mať AI v hrade
+458:Regrútov na hrad
+460:Vlastná pozícia
+463:Najbližšia jednotka
+465:Počet skupín
+466:Informácie o útoku
+468:Opakujúci sa
+469:Jednorazový
+470:Jazda
+471:Strelci
+472:Kopijníci
+473:Pechota
+474:Poz.
+475:Cieľ
+476:Poč.
+477:Odklad
+478:Typ
+479:Autoútok
+480:Útočná taktika AI
+481:Kožení vojaci
+482:Železní vojaci
+483:Autoobrana
+484:AI si vytvára a spravuje svoje obranné pozície automaticky
+485:Umiestni obrannú pozíciu pre AI
+486:Obranné pozície AI
+487:Robotníci
+488:Nevoľníkov/10 budov
+489:Autooprava
+490:Autovýstavba
+491:Nastavenia AI
+492:Budovy
+493:Cesta / Pôda
+494:Vertikálne prevrátenie výberu mapy
+495:Horizontálne prevrátenie výberu mapy
+496:Vertikálne
+497:Kopírovať terén
+498:Kopírovať/vložiť
+499:Nová misia
+500:Meno hráča
+501:Stav:
+502:Vytvoriť server
+503:VYTVORIŤ SERVER
+504:Meno
+505:Port
+506:Vytvoriť lokálny server
+507:Vytvoriť internetový server
+508:Storno
+509:Hľadať server podľa IP
+510:HĽADAŤ SERVER
+511:IP adresa
+512:Port
+513:Miesto
+514:Pripojiť
+515:Storno
+516:Miestnosť je chránená heslom
+517:Heslo
+518:Meno serveru
+519:Stav
+520:Hráči
+521:Ping
+522:Obnoviť zoznam serverov
+523:DETAILY SERVERU
+524:Zoznam hráčov:
+525:Pripojiť
+526:Pripájam sa, čakajte prosím...
+527:Načítavam...
+528:Obnovujem...
+529:Zoznam hráčov
+530:Začiatočná pozícia
+531:Tým
+532:Farba
+533:Pripravený
+534:Ping
+535:Ping / FPS
+536:Otvorené
+537:Počítač
+538:Vybrať...
+539:Náhodne
+540:Žiadna
+541:Uložená hra
+542:Vyberte mapu...
+543:Vyberte uloženú hru...
+544:Opustiť ponuku
+545:Pripravený
+546:Nepripravený
+547:Štart!
+548:Rýchlosť hry (doba mieru)
+549:Rýchlosť hry
+550:OK
+551:Späť
+552:Popis
+553:Heslo
+554:Nastavenia miestnosti
+556:Zakázať prístup
+557:Vykopnúť
+558:Náhodné pozície v rámci tímov
+559:Popis
+560:Nastavenia
+561:Pozícia %d
+562:Chyba: Vyberte prosím hráča z uloženej hry
+563:Chyba: Mapa sa nedá načítať alebo nebola žiadna vybraná
+564:Nie je možné začať: %s
+565:Nikto nie je pripravený na štart
+566:Nemožno priradiť náhodnú pozíciu
+567:Server Vám pridelil práva správcu
+568:Hra už začala
+569:Budovanie
+570:Bojovanie
+571:Kooperácia
+572:Špeciálne mapy
+573:Nastavenia hry:
+574:Doba mieru (minúty):
+575:Zatvorené
+576:Hostiteľ vykonáva nastavenia hráčov
+577:Čakanie na ostatných hráčov:
+578:Všetkým
+579:Tímu
+580:Autori KaM Remake
+581:Autori originálnej hry Knights & Merchants
+582:PROGRAMOVANIE:
+583:ĎALŠIE PROGRAMOVANIE:
+584:PRÍDAVNÁ GRAFIKA:
+585:OSTATNÉ ZVUKY:
+586:PRÍDAVNÚ HUDBU VYTVORIL:
+587:OSTATNÉ PREKLADY:
+588:ŠPECIÁLNE POĎAKOVANIE:
+589:Multiplayerové mapy
+590:Singleplayerové mapy
+591:Rýchlosť obrazovky
+592:Nenájdený žiadny server
+593:Vybrať skladby
+594:Info o hre:
+595:-
+596:Lobby
+597:Načítavanie
+598:Hra
+599:Výstavba a boj
+600:Bojovanie
+601:Pripravený
+602:Odlišná verzia: %s. Server používa: %s
+603:Zvýšiť množstvo
+604:Znížiť množstvo
+605:Ukladám hru...
+606:%s bol porazený!
+607:Vyhodiť hráča
+608:Hosť bude môcť vyhodiť tohoto hráča za %d sekúnd
+609:Hostiteľ teraz môže vyhodiť týchto hráčov
+610:Hostiteľ (%s) sa odpojil
+611:Spojenie zo serverom sa stratilo. Pokúšam sa opäť naviazať spojenie...
+612:Naozaj chcete skončiť?
+613:Ste si istý, že chcete vyhodiť týchto hráčov z hry?
+614:Storno
+615:Obchodovanie s týmto tovarom v tejto misii nie je možné
+616:Sadiť a stínať
+617:Iba stínať
+618:V období mieru je toto zakázané
+619:Koniec obdobia mieru za: %s
+620:Koniec obdobia mieru. Do zbrane!
+621:Čas hry:|%s
+622:Zastaviť oddiel
+623:Spojiť oddiel
+624:Samostatný vojak
+625:Záznamy z hry
+626:Ukázať záznam
+627:Nepodporovaný formát %s
+628:Nepodporovaná verzia %s
+629:Nepodporovaná modifikácia
+630:Nastala chyba pri analýze súboru %s
+631:inicializuje sa
+632:Načítavam skripty
+633:Načítavam jednotky
+634:Načítavam budovy
+635:Načítavam stromy
+636:Načítavam definície
+637:Načítavam prvky krajiny
+638:Mapa nenájdená: %s
+639:Uložená hra nenájdená: %s
+640:Mapa sa nezhoduje s hostiteľom: %s
+641:Uložená hra sa nezhoduje s hostiteľom: %s
+642:Zlyhala kontrola konzistencie prehrávania. Je to známa chyba, ktorá ovplyvňuje prehrávanie niektorých opakovaných záznamov. Chcete pokračovať v sledovaní?
+643:V multiplayeri môžete mať naraz spustenú len jednu aplikáciu KaM Remake
+644:Modifikácia hry nie je povolená v multiplayeri.|Prosim reinštalujte hru k obnoveniu pôvodných súborov
+645:V aplikácia nastala chyba. Kliknite prosím na Odoslať chybovové hlásenie aby sme mohli prešetriť tento problém. Ďakujeme za Vašu pomoc!
+646:Odoslať chybové hlásenie
+647:Zobraziť nespracované dáta
+648:Pokračovať v aplikácii
+649:Ukončiť aplikáciu
+650:Ďalej
+651:Kontaktné údaje
+652:Vaše meno: (nepovinné)
+653:Váš e-mail: (nepovinné)
+654:Zapamätať si
+655:Podrobnosti o chybe
+656:Pri akej situácii sa chyba vyskytla? Môžete poskytnúť akékoľvek ďalšie informácie?
+657:Screenshot
+658:Pripojte screenshot s hlásením o chybe
+659:(klikni na úpravu obrázku)
+660:Odoslať hlásenie
+661:Storno
+662:Odoslanie hlásenia o chybe...
+663:Pripojenie k serveru...
+664:Odosielanie dát...
+665:Odoslanie chybového hlásenia sa nepodarilo! Náš server môže byť zaneprázdnený, skúste to prosím poslať znova.
+666:Informácie
+667:Čakajte prosím...
+668:Uložiť mapu
+669:Doba v minútach, predtým ako AI začne trénovať regrútov
+670:Odkl. regrútov (min)
+671:Nastaví rovnaký smer pre všetky prepojené vodné políčka
+672:Magická voda
+673:Kopírovať
+674:Vložiť
+675:Ponechať vloženie
+676:Zrušiť vloženie
+677:Vertikálne
+678:Horizontálne
+679:Ťahaním určíte miesto na mape, s ktorým následne budete môcť manipuovať
+680:Obranná taktika AI
+681:Vyp.
+682:Rádius
+683:Vymazať tohto prieskumníka
+684:Návrat k časti odhalenia mapy
+685:Zavrieť
+686:Rozkaz pre jednnotku
+687:Žiadny
+688:Útočná pozícia
+689:Ísť na
+690:Orientácia
+693:Obranný rádius
+694:Zrušiť súčasnú obrannú pozíciu
+695:Návrat na stránku obrany
+696:Obranná pozícia
+697:Jednotky
+698:Vlk
+699:Ryba
+700:Vodný had
+701:Hviezdica
+702:Krab
+703:Lekno
+704:List lekna
+705:Kačka
+706:Tento typ vojaka je nedostupný
+707:Tento typ jednotky je nedostupný
+708:Zablokovať jednotky
+736:Stiahnuť
+737:sťahujem...
+738:Prepísať už existujúce súbory
+739:Hráč %s stratil spojenie
+740:Hráč %s sa odpojil
+741:Hráč %s obnovil spojenie
+742:Do bežiacej hry sa nemožno pripojiť
+743:Miestnosť je plná. Ďalší hráči sa už pripojiť nemôžu
+744:V miestnosti už je pripojený hráč s rovnakým menom
+746:Chyba: Hráč %s sa nemôže pripojiť do hry, pretože nemá dáta zhodné s hostom
+747:Vaše dáta sa nezhodujú s hostom
+748:Hostovacie práva boli prenesené na %s
+749:%s má rozdielnu verziu od %s
+750:Hráč %s nemá %s
+751:Čas vypršal
+752:Host vyhodil z hry hráča %
+753:Hráč %s bol vyhodený hostom
+754:Pokúšam sa znovu pripojiť do hry...
+755:Hráč %s sa pripojil
+756:Pokus o znovupripojenie zlyhal: %s
+757:Host sa rozhodol pokračovať v hre bez vás :(
+758:Odpojený serverom: Čas vypršal
+759:Boli ste vykopnutý hostom
+760:Server prestal odpovedať
+761:Chybné číslo miestnosti
+765:Súkromná správa hráčovi %s
+766:Hráčovi %s bol hostom zakázaný prístup
+767:Hostom Vám bol zakázaný prístup
+768:Resetovať zákazy prísupu
+769:Host resetoval všetký zákazy prístupu
+770:Dátum
+771:Zobraziť hmlu
+772:Sledovať
+773:Divák
+774:Dosah autoútoku
+775:AI vojaci automaticky zaútočia, pokiaľ ste bližšie, ako je určený počet políčok
+776:Brániť spojencov
+777:Aktivovaním bude AI brániť jednotky a budovy spojencov, ako keby boli jeho vlastné
+778:Povoliť divákov
+779:Povýšiť na hosta
+780:Diváci
+781:Nemožno zakázať sledovanie: Zoznam divákov musí byť prázdny
+782:Dopredu
+783:Späť
+784:Nastaví štartoviaciu pozíciu AI, ktorá je používaná pre určenie útokov
+785:Počiatoč. pozícia AI
+786:Poradie
+788:Odklad útoku (s)
+790:Dom najbližšie ku armáde
+791:Najbližší dom ku štartovacej pozícii
+792:Útočníci
+793:Obrancovia
+794:Diváci
+795:Pre opätovné hranie predošlej misie kliknite na príslušnú vlajku na mape počas brífingu
+796:%s hlasovali pre návrat do lobby (je potrebných ešte %s hlasov)
+797:Hlasovať pre návrat do lobby. Hra potom môže pokračovať alebo byť zmenená
+798:Hlasovať o lobby
+801:Vymazaním záznamu súčasne vymažete aj s ním spojenú uloženú hru. Ste si istý, že chcete záznam vymazať?
+802:Náhodný
+803:Počet útočiacich vojakov
+804:Vymazať záznam
+805:Vymazať mapu
+806:Ste si istý, že chcete vymazať túto mapu?
+807:Skryť skriptované pozadie
+808:Zobraziť skriptované pozadie
+810:AI si vytvára a riadi útoky automaticky
+811:Rýchly tréning
+812:Vojaci sú trénovaní tak rýchlo, ako je to možné. Rýchlosť tréningu ovplyvňuje naplánovanie mesta
+813:Východzie nast. AI
+814:Multiplayer staviteľ
+815:Použije agresívne nastavenia AI staviteľa pre všetkých hráčov (pre staviteľské mapy v multiplayeri)
+816:Upozornenie: Týmto budú prepísané všetky nastavenia AI pre všetkých hráčov. Chcete pokračovať?
+817:Typ vojska
+818:Ľahké násl. ťažké
+819:Ťažké (železné)
+820:Ľahké (kožené)
+821:Kombinované
+822:Stiahnuté mapy
+824:Presunúť
+825:Ukázať Readme PDF
+826:Spúštanie prehliadača PDF zlyhalo
+827:Nastaví počet nevoľníkov pripadajúcich na desať budov pre aktuálnu AI. Vybraný AI má %d budov
+828:Chyba: Pozastavený súbor hosta sa nezhoduje s lokálnym súborom. Objavila sa chyba alebo sa host mohol pokúsiť o cheat.
+829:Príkaz bol splnený
+830:Načítať ázijské fonty
+831:Odísť z downloadov
+1118:Multiplayerové mapy
+1119:Stlmiť hudbu
+1120:Vybrať skladby

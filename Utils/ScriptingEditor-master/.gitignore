@@ -1,0 +1,26 @@
+# Wildcards
+*.local
+*.res
+*.stat
+*.identcache
+*.dcu
+*.rar
+*.LOG.txt
+
+# Directories
+__history
+__recovery
+dcu
+Demos
+Logs
+gui/common
+gui/controls
+gui/game
+gui/maped
+
+# Specific files
+bin/ScriptingEditor.exe
+bin/ScriptingEditor.ini
+bin/ScriptingEditor.map
+bin/ScriptingEditor.drc
+bin/DictManagementUtil.exe

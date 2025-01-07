@@ -1,0 +1,836 @@
+﻿0:Saha
+1:Rautasulattamo
+2:Asesepän paja
+3:Hiilikaivos
+4:Rautakaivos
+5:Kultakaivos
+6:Kalastajan maja
+7:Leipomo
+8:Maatila
+9:Metsänhoitajan mökki
+10:Panssarisepän paja
+11:Varasto
+12:Hevostalli
+13:Koulurakennus
+14:Kaivos
+15:Kultasulattamo
+16:Sikatila
+17:Vartiotorni
+18:Raatihuone
+19:Aseverstas
+20:Varusteverstas
+21:Kasarmi
+22:Mylly
+23:Sotakonepaja
+24:Teurastamo
+25:Nahkatehdas
+26:Harjoitteluhalli
+27:Taverna
+28:Viinitila
+29:Kauppatori
+30:Puun rungot
+31:Kivet
+32:Puutavara
+33:Rautamalmi
+34:Kultamalmi
+35:Kivihiili
+36:Rauta
+37:Kulta
+38:Viinitynnyrit
+39:Vilja
+40:Leivät
+41:Jauho
+42:Nahka
+43:Makkarat
+44:Sian ruhot
+45:Taljat
+46:Puukilvet
+47:Rautakilvet
+48:Nahkahaarniska
+49:Haarniska
+50:Kirveet
+51:Miekat
+52:Keihäät
+53:Hilparit
+54:Pitkäjouset
+55:Jalkajouset
+56:Hevoset
+57:Kala
+58:Maaorja
+59:Metsänhoitaja
+60:Kaivostyöläinen
+61:Paimen
+62:Maanviljelijä
+63:Puuseppä
+64:Leipuri
+65:Teurastaja
+66:Kalastaja
+67:Työläinen
+68:Kivenhakkaaja
+69:Seppä
+70:Metallurgi
+71:Alokas
+72:Miliisi
+73:Kirvesmies
+74:Miekkamies
+75:Jousimies
+76:Varsijousimies
+77:Keihäsmies
+78:Hilparimies
+79:Tiedustelija
+80:Ritari
+81:Villi
+82:Kapinallinen
+83:Lurjus
+84:Soturi
+85:Kulkuri
+86:Katapultti
+87:Ballista
+88:Maaorja kuljettaa tarvittavat materiaalit rakennuksiisi.||Huomioi että tien täytyy yhdistää rakennukset.
+89:Jotta saat puunrunkoja sahallesi, tarvitset metsänhoitajan.||Metsänhoitaja istuttaa uuden metsän itsenäisesti.
+90:Kaivostyöläinen kerää hiilen ja malmit kaivoksista.
+91:Paimen käyttää viljaa kasvattaakseen sikoja sikatilalla ja hevosia hevostalleissa.
+92:Maanviljelijä istuttaa ja kerää viljan maatiloilla.||Hän myös tuottaa viinin viinitiloilla.
+93:Puuseppä työskentelee sahoilla, aseverstaalla ja (?)verstaalla.||Hän myös rakentaa katapultit ja ballistat sotakonepajalla.
+94:Leipuri tekee viljasta jauhoja myllyssä.||Hän myös leipoo leivät leipomossa.
+95:Teurastaja valmistaa makkaroita teurastamolla ja nahkaa nahkatehtaalla.
+96:Kalastaja kalastaa kaloja lähistön kalavesistä.
+97:Työläinen rakentaa rakennukset ja tiet, sekä korjaa vahingoittuneet rakennukset.||Korosta haluamasi sijainti ja hän toteuttaa käskysi automaattisesti.
+98:Toimittaaksesi työläisillesi tarpeeksi materiaalia teiden ja talojen rakentamiseksi, kivenhakkaaja louhii ja veistää kivet.
+99:Seppä takoo raudasta aseet ja panssarit ase- ja (?)pajalla
+100:Metallurgi käyttää hiiltä jalostaakseen kulta- ja rautamalmia
+101:Alokkaan voi varustaa kasarmilla sotilaaksi.||Hän myös toimii vartiotornissa.
+102:Rakennusvalikkoon
+103:Tavaranjakeluun
+104:Tilastoihin
+105:Asetuksiin
+106:Palaa
+107:Rakennusvalikko
+108:Tavaran jakelu
+109:Tilastot
+110:Asetukset
+111:Lataa peli
+112:Tallenna peli
+113:Haluatko|varmasti lopettaa|tämän tehtävän?
+114:Poistu
+115:Älä poistu
+116:Asetukset
+117:Poistu kartanmuokkaimesta
+118:Ääniefektit
+119:Muuta äänentasoa
+120:Muuta äänentasoa
+121:Musiikki
+122:Musiikki päälle/pois
+123:Automaattinen tallennus
+124:Musiikkisoitin
+125:Edellinen kappale
+126:Seuraava kappale
+127:Pura rakennus
+128:Pura rakennukset/pohjakaavat
+129:Rakenna tie
+130:Rakenna teitä
+131:Kyntää pelto
+132:Kyntää peltoja
+133:Levitä(?) viinipelto
+134:Levittää viinipellot
+135:Peruuta
+136:Peruuta tämänhetkinen koulutus
+137:Tarvitsee:
+140:Toimittaa:
+141:Rakennus rakenteilla
+142:Pura
+143:Halutako todellakin|purkaa rakennuksen?
+144:Purkaa valitun rakennuksen
+145:Vähennä tilauksen määrää
+146:Lisää tilauksen määrää
+147:Edellinen sotilas
+148:Seuraava sotilas
+149:Varusta valittu sotilas
+150:Seuraava ammatti
+151:Edellinen ammatti
+152:Lisää jonoon. Käytä RMB, Shift tai CTRL muokataksesi jonoa
+153:Vaihda tavaratoimituksien tilaa: Pyydä / Suljettu / Tarjoa. Käytä LMB / RMB vaihtaaksesi eteenpäin / Takaisinpäin
+154:Kustannus
+155:Rakennuksen korjaus päälle/pois
+156:Rakennus ei ole saatavilla
+157:Kunto
+158:Käännä joukkoa vasempaan
+159:Käännä joukkoa oikeaan
+160:Hyökkää
+161:Lähetä matkaan
+162:Ruoki joukko
+163:Aloita rynnäkkö
+164:Lisää rivi
+165:Vähennä rivi
+166:Valitse ryhmä
+167:Peruuta
+168:Poista
+169:Poistaa nykyisen viestin
+170:Mene
+171:Siirtyy viestin sijaintiin
+172:Sulje
+173:Sulkee ikkunan
+174:Kivenhakkaajasi ei yllä kiviesiintymiin
+175:Hiilikaivoksesi on kuihtunut.
+176:Rautakaivoksesi on kuihtunut.
+177:Kultakaivoksesi on kuihtunut.
+178:Metsänhoitajasi ei löydä puita kaadettavaksi.
+179:Rakennuksessa ei ole asukkia.
+180:Joukkosi ovat nälkäisiä, heidän on saatava ruokaa nopeasti.
+181:TAUKO
+182:Kuljettaa
+183:Rakentaa tietä
+184:Kaivaa peltoa
+185:Rakentaa viinipeltoa
+186:Tasoittaa rakennustyömaata
+187:Rakentaa rakennusta
+188:Korjaa rakennusta
+189:Menee kotiin
+190:Menee tavernaan
+191:Hyökkää rakennuksen kimppuun
+192:Ampuu
+193:Taistelee
+194:Rynnäköi
+195:Hyökkää
+196:Liikkuu
+197:Vetelehtii
+198:Kaivaa kiveä
+199:Istuttaa viljaa
+200:Korjaa sadon
+201:Kerää rypäleitä
+202:Kalastaa
+203:Kaataa puuta
+204:Istuttaa puita
+205:Spirit
+206:Busy
+207:Middle Ages Horn
+208:Spring
+209:Lute
+210:Mercenary
+211:The Princess
+212:The Queen
+213:In the Marketplace
+214:On the Battlefield
+215:Court Dance
+216:The Army
+217:In the Castle
+218:Fanfares
+219:At Court
+220:Entree
+221:Deep Blue
+222:Struggle
+223:Royal Quarters
+224:Aristocracy
+225:At the Harbor
+226:Journey
+227:Kampanjat
+228:Kampanjat
+229:Aloita kampanja!
+230:Karttavalikko
+231:Aloita kartta
+232:Takaisin valikkoon
+233:Lataa tallennus
+234:Moninpeli
+235:Asetukset
+236:Lopputekstit
+237:Poistu pelistä
+238:Jatka
+239:Aloita Uudelleen
+240:Resoluutio:
+241:Ei tuettu
+242:Ei tuettu
+243:VOITTO!
+244:TAPPIO!
+245:Yksiköitä menetetty:
+246:Yksiköitä kukistettu:
+247:Rakennuksia menetetty:
+248:Rakennuksia tuhottu:
+249:Rakennuksia rakennettu:
+250:Yksiköitä koulutettu:
+251:Aseita tuotettu:
+252:Sotilaita varustettu:
+253:Tehtävä suoritettu ajassa:
+254:Tilastot
+255:Ekonomia
+256:Kyläläisiä|koulutettu
+257:Kyläläisiä|menetetty
+258:Sotilaita|varustettu
+259:Sotilaita|menetetty
+260:Sotilaita|kukistettu
+261:Rakennuksia|rakennettu
+262:Rakennuksia|menetetty
+263:Rakennuksia|tuhottu
+264:Tavaroita|tuotettu
+265:Aseita|tuotettu
+266:Armeija
+267:Kyläläiset
+268:Rakennukset
+269:Resurssit
+270:Tuotettu määrä
+271:Ei dataa
+272:Sinä
+273:Pelaaja %d
+274:Takaisin moninpeliin
+275:Takaisin uusintoihin
+276:Kaikki tavarat
+277:Sodankäynti
+278:Ruoka
+279:JOYMANIA ENTERTAINMENT||OHJELMOINTI:|Peter Ohlmann||PELIGRAFIIKAT:|Adam Sprys||KENTTÄ SUUNNITTELU:|Adam Sprys|André Quaß||ÄÄNEN EDITOINTI JA MIKSAUS:|Tonstudio Mannheim||MUSIIKKI:|Gerd Hofmann|Joachim Schäfer|Jürgen Rebhann|Klaus Staendike|Steffen Schüngel||ILLUSTRAATIO:|Boleslaw Kasza|Christoph Werner||KÄÄNNÖKSET:|Ronnie Shankland|Patricia Bellantuono|Andrea Rumpelt|||ZUXXEZ ENTERTAINMENT AG||TUOTTAJA:|Uwe Schäfer||OHJEKIRJA:|Peter Ohlmann|Uwe Schäfer||BETA TESTAUS:|Peter Ohlmann|Adam Sprys|Alexandra Constandache|Dirk P. Hassinger|Achim Heidelauf|Uwe Schäfer|Ingrid Schäfer|Dirk U. Jantz|Ion Constandache|Yaman Egeli|Roman Eich|Iris Mocsnek|Anke Jantz|Paul Hassinger|Liza Hassinger||PELIN OHJAAJA:|Achim Heidelauf||JULKAISIJA:|TopWare Interactive||VÄLIANIMAATIOT:||OHJAUS:|Slawomir Jedrzejewski||Kajetan Czarnecki|Wojciech Drazek|Daniel Duplaga|Rafal Januszkiewicz|Andrzej Rams|Piotr Rulka|Krzysztof Rybczynski|Grzegorz Wisniewski||ÄÄNET:|Claus Boyen (Storyteller)||Tim Timmermann|Peter Houska|Dirk Mühlbach|Ralf Ditze|Gerhard Piske|Gernot Wassmann||TAIDETEOS:|Boleslaw Kasza|Adam Sprys||AVAUSANIMAATIO:|Uwe Schäfer|Christian Bigalk|Lisä 3D-Mallinnus:|Niels Horstmann||ERIKOISKIITOKSET:|Tadeusz Zuber|Dieter Ohlmann|Alexandra Constandache|Ingrid Schäfer
+280:Tehtävä peruutettu
+281:Uusinta päättyi
+282:Kaupunkitutoriaali
+283:Taistelututoriaali
+284:Yksinpeli
+285:Karttaeditori
+286:Käynnistä tehtävä
+287:Nimi
+288:Koko
+289:Voittoehdot:
+290:Häviön ehdot:
+291:Liittoutuneet:
+292:Vastustajat:
+293:Aika
+294:Uusi kartan koko
+295:Leveys
+296:Korkeus
+297:Luo uusi kartta
+298:Saatavilla olevat kartat
+299:Lataa olemassa oleva kartta
+300:Sijainti
+301:Näppäinasetukset:
+302:Peliasetukset:
+303:Äänet
+304:Hiljennä musiikki
+305:Grafiikat
+306:Kirkkaus
+307:Pystytahdistus
+308:Kokoruutu
+309:Aseta
+310:Kieli
+311:Korkea varjojen laatu
+314:Lataa... Odottakaa, olkaa hyvät
+315:Virhe on tapahtunut
+317:Lista tallennuksista
+318:Tiedoston nimi
+319:Kuvaus
+320:Lataa
+321:Poista
+322:Oletko varma että haluat poistaa tallennuksen?
+323:Poista
+324:Peruuta
+325:Nimi
+326:Kartat
+327:Avattu
+328:Olette voittaneet!
+329:Jatka pelaamista
+330:Voitto!
+331:Olette hävinneet!
+332:Jatka katsomista
+333:Tappio
+334:Uusinta on päättynyt
+335:Jatka katsomista
+336:Poistu valikkoon
+337:Ei saatavilla
+338:Paina %s jatkaaksesi peliä
+339:Pelaajien tiedot
+340:Keskustelu
+341:Tallennus on jo olemassa
+342:Tallenna päälle
+343:Tallenna
+344:Lataa
+345:Vanha OpenGL versio havaittu, peli saattaa pyöriä hitaasti ja/tai grafiikkavirheiden kanssa.
+346:Päivitä ajurisi saadaksesi paremman suorituskyvyn
+347:Verkkovirhe:
+348:Virhe: Pelaajan nimi ei voi olla tyhjä
+349:Virhe: Pelaajan nimi ei voi olla pidempi kuin %d merkkiä
+350:Virhe: Pelaajan nimi sisältää kiellettyjä merkkejä
+351:Yhteys epäonnistui: %s
+352:Yhteytesi on katkennut
+353:Tehtävä %d
+354:Viestilogi
+355:Kalastajan maja on liian kaukana vedestä
+356:Kalastajasi ei voi kalastaa enempää kaloja vedestä.
+357:Toista uudelleen
+358:Keskeytä uusinta
+359:Siirry 1 tick eteenpäin
+360:Jatka keskeytettyä uusintaa
+361:Poistu uusinnasta
+362:Vaihda pelaajanäkymää
+364:Valitse vasemmalla hiirennäppäimellä tavara jonka haluat vaihtaa
+365:Valitse oikealla hiirennäppäimellä tavara johon haluat vaihtaa
+366:x%d
+367:x%d
+413:Oletuspelaaja
+457:Klassinen AI: Monta alokasta tekoälyllä pitää olla kasarmissa|\nEdistynyt AI: Parametri ei käytössä
+485:Aseta puolustussijainti tekoälylle.|Vaihtaaksesi parametrejä, käytä:| RMB - Suunta, CTRL + RMB - Ryhmät tyyppi, ALT + RMB - Puolustava / Hyökkäävä
+500:Pelaajan nimi
+501:Tila:
+502:Luo palvelin
+503:Luo palvelin
+504:Nimi
+505:Portti
+506:Luo Paikallinen Palvelin
+507:Luo Internet Palvelin
+508:Peruuta
+509:Etsi palvelinta IP-osoitteella
+510:Etsi palvelin
+511:Osoite
+512:Portti
+513:Huone
+514:Yhdistä
+515:Peruuta
+516:Salasanalla suojattu huone
+517:Salasana
+518:Palvelimen nimi
+519:Tila
+520:Pelaajat
+521:Viive
+522:Päivitä Lista Palvelimista
+523:Palvelimen tiedot
+524:Pelaajat:
+525:Liity
+526:Yhdistään, olkaa hyvät ja odottakaa...
+527:Ladataan tiedotuksia...
+528:Päivitetään...
+529:Pelaajat
+530:Aloituspaikka
+531:Joukkue
+532:Väri
+533:Valmius
+534:Viive
+535:Viive / FPS
+536:Avoin
+537:AI Pelaaja
+538:Valitse...
+539:Satunnainen
+540:Ei valittu
+541:Tallennettu Peli
+542:Valitse kartta...
+543:Valitse tallennus...
+544:Poistu aulasta
+545:Valmis
+546:Ei valmis
+547:Aloita!
+548:Pelinopeus (Rauha) [real]
+549:Pelinopeus [real]
+550:OK
+551:Peruuta
+552:Kuvaus
+553:Salasana
+554:Huoneen asetukset
+556:Anna porttikielto
+557:Potkaise
+558:Valitse sijainnit satunnaisesti joukkueiden kesken
+559:Kuvaus
+560:Asetukset
+561:Sijainti %d
+562:Virhe: Valitse pelaaja tallennuksesta ohjattavaksi
+563:Virhe: Karttaa ei pystynyt lataamaan tai karttaa ei ole valittu
+564:Ei pysty aloittamaan: %s
+565:Kaikki eivät ole valmiita aloittamaan
+566:Ei pystynyt asettamaan satunnaisia paikkoja
+567:Palvelimen isännöintioikeudet on annettu sinulle
+568:Peli on alkanut
+569:Rakennuskartat
+570:Taistelukartat
+571:Yhteistyökartat
+572:Erikoiskartat
+573:Pelin asetukset:
+574:Rauhan aika (Minuutteina)
+575:Suljettu
+576:Isäntä hoitaa pelaajien järjestelyn.
+577:Odotetaan pelaajia:
+578:Kaikki
+579:Joukkue
+580:KaM Remake- lopputekstit
+581:Alkuperäiset Knights & Merchants lopputekstit
+582:OHJELMOINTI:
+583:LISÄOHJELMOINTI:
+584:LISÄGRAFIIKKA:
+585:LISÄ-ÄÄNET:
+586:LISÄMUSIIKKI:
+587:LISÄKÄÄNNÖKSET:
+588:ERITYISKIITOKSET:
+591:Vieritysnopeus
+592:Palvelimia ei löydetty
+593:Sekoita kappaleet
+594:Pelin tiedot:
+595:-
+596:Aula
+597:Lataa
+598:Pelissä
+599:Rakennus ja taistelu
+600:Taistelu
+601:Valmis
+602:Väärä protokollaversio: %s. Palvelin käyttää: %s
+603:Lisää vaihdon määrää
+604:Vähennä vaihdon määrää
+605:Tallenetaan peliä...
+606:%s kukistettiin!
+607:Pudota Pelaajat
+608:Isäntä voi pudottaa pelaajat %d sekunnin jälkeen.
+609:Isäntä voi nyt pudottaa nämä pelaajat.
+610:Isäntä (%s) poistui pelistä
+611:Yhteys palvelimelle on menetetty. Yritetään uudelleenyhdistystä...
+612:Haluatko varmasti lopettaa?
+613:Oletko varma että haluat pysyvästi pudottaa nämä pelaajat?
+614:Peruuta
+615:Tämän resurssin vaihto ei ole saatavilla tässä tehtävässä
+616:Kaada ja istuta
+617:Puiden kaato
+618:Ei sallittu rauhan aikana
+619:Rauhan aikaa jäljellä: %s
+620:Rauhan aika on ohi. Tarttukaa aseisiin!
+621:Pelin kesto:|%s
+622:Pysäytä ryhmä
+623:Liitä ryhmä
+624:Jaa ryhmä (%s). Erota yksi sotilas ryhmästä (CTRL + %s)
+625:Uusinnat
+626:Katso uusintoja
+627:Ei tuettu formaatti %s
+628:Ei tuettu versio %s
+629:Ei tuettuja muokkauksia
+630:Virhe tapahtui tiedoston jäsentämisen aikana %s
+631:Alkuvalmistelee
+632:Komentosarja
+633:Yksiköt
+634:Talot
+635:Puut
+636:Määritteet
+637:Laattasarjat
+638:Kartta ei löytynyt: %s
+639:Tallennus ei löytynyt: %s
+640:Kartta ei täsmää isännän kanssa: %s
+641:Tallennus ei täsmää isännän kanssa: %s
+642:Uusinta ei läpäissyt yhteinäisyystestiä. Tämä on tunnettu bugi joka vaikuttaa osaan uusinnoista.\nJos haluat jatkaa uusinnan katsomista, se ei enää täsmää pelatun pelin kanssa ja peli saattaa kaatua.\nHaluatko varmasti jatkaa katsomista? Valitse "Yes to All" välttääksesi viestin jatkossa.
+643:Sinulla voi olla yksi pelin instanssi moninpelitilassa kerrallaan.
+644:Muokkaukset ei ole sallittuja moninpelissä.|Asenna peli uudelleen palauttaaksesi alkuperäiset tiedostot.
+645:Virhe on tapahtunut ohjelmistossa. Painamalla "Lähetä bugiraportti" saamme tiedon virheestä ja voimme tutkia ongelman. Kiitoksia avustasi!
+646:Lähetä bugiraportti
+647:Näytä raakadata
+648:Jatka ohjelmiston käyttöä
+649:Lopeta ohjelmisto
+650:Seuraava
+651:Yhteystiedot
+652:Nimesi: (Vapaaehtoinen)
+653:Sähköpostisi: (Vapaaehtoinen)
+654:Muista minut
+655:Virheen tiedot
+656:Missä tilanteessa virhe tapahtui? Pystytkö antamaan lisätietoja? (Mieluummin Englanniksi)
+657:Ruudunkaappaus
+658:Lisää ruudunkauppaus bugiraporttiisi
+659:(Paina muokataksesi kuvaa)
+660:Lähetä Raportti
+661:Peruuta
+662:Lähetetään bugiraporttia...
+663:Yhdistetään palvelimelle...
+664:Lähetetään dataa...
+665:Raportin lähetys epäonnistui! Palvelin saattaa olla varattu, yritä myöhemmin uudelleen.
+666:Informaatio
+667:Odotathan, pieni hetki...
+698:Susi
+699:Kala
+700:Merikäärme
+701:Meritähti
+702:Rapu
+703:Lumpeenkukka
+704:Lumme
+705:Ankka
+706:Tämä sotilas ei ole saatavilla
+707:Tämä yksikkö ei ole saatavilla
+736:Lataa
+737:Ladataan...
+738:Ylikirjoita olemassaolevat tiedostot
+739:%s menetti yhteyden
+740:%s on poistunut pelistä
+741:%s on yhdistänyt peliin uudelleen
+742:Et voi liittyä kesken pelin
+743:Huone on täynnä. Peliin ei voi liittyä enempää pelaajia
+744:Pelaaja jolla on sama nimi on liittynyt jo huoneeseen
+746:Virhe: Pelaajalla %s on eri tiedostot verrattuna isäntään ja ei voi liittyä peliin.
+747:Tiedostosi eivät täsmää verrattuna isäntään.
+748:Isännöintioikeudet on palautettu pelaajalle %s
+749:Pelaajan %s versio ei täsmää pelaajaan %s
+750:Pelaajalla %s puuttuu tiedostot %s
+751:Kyselyn aikakatkaisu
+752:Isäntä on pudottanu pelaajan %s pois pelistä
+753:Pelaaja %s on potkittu ulos isännän toimesta.
+754:Yritetään liittyä uudelleen peliin...
+755:Pelaaja %s on liittynyt peliin
+756:Uudelleenyhdistys epäonnistui: %s
+757:Isäntä jatkoi peliä ilman sinua.
+758:Yhteys katkaistu serveriltä: Aikakatkaisu
+759:Isäntä potkaisi sinut ulos
+760:Palvelin lakkasi vastaamasta
+761:Kelvoton huoneen numero
+765:Kuiskaa pelaajalle %s
+766:Pelaajalle %s on annettu porttikielto isännän toimesta
+767:Isäntä antoi teille porttikiellon.
+768:Nollaa porttikiellot
+769:Isännöitsijä nollasi porttikiellot aulasta.
+770:Päiväys
+771:Näytä sumu
+772:Katsele
+773:Katselija
+775:Tekoälyn ryhmät hyökkäävät automaattisesti jos olet lähempänä kuin näin monta tiiltä
+778:Salli katsojat
+779:Ylennä isännäksi
+780:Katsoja
+781:Ei voinut ottaa pois katselijoita. Katselijalista täytyy olla tyhjä
+794:Katselijat
+795:Aloitaaksesi aiemmin avattu tehtävä kampanjasta, valitse tehtävän lippu kampanjan kartalta
+796:%s äänesti aulaan palaamisesta (Tarvitaan lisää ääniä %s)
+797:Äänestä aulaan palaamisesta. Peliä voidaan jatkaa tai muuttaa sen jälkeen.
+798:Palaa aulaan
+799:%s äänesti aulaan palaamisesta (Äänestys onnistui)
+800:Äänestys aulaan palaamisesta epäonnistui
+801:Uusinnan poistaminen poistaa myös siihen liitetyn tallennuksen. Oletko varma että haluat poistaa tallennuksen?
+804:Poista Uusinta
+805:Poista kartta
+806:Oletko varma että haluat poistaa kartan?
+807:Piilota skriptattu kerros
+808:Näytä skriptattu kerros
+809:Isäntää ei voi vaihtaa kun pelipalvelin pyörii asiakasohlelmassa.
+824:Siirrä
+825:Avaa Lueminut PDF
+826:PDF tiedostoa ei pystynyt avaamaan
+828:Virhe: Keskeytetty tiedosto ei täsmää paikalliseen keskeytettyyn tiedostoon. On tapahtunut virhe tai isäntä yrittää huijata.
+829:Tilauksesi ovat valmistuneet
+830:Aasialaiset fontit
+831:Siirrä ladatuista
+832:Uudelleennimeä uusinta
+833:Uudelleennimeä uusinta
+834:Poista uusinta
+835:Nimi:
+836:Varmista
+837:Aseta näppäin
+838:Näppäinsidonnat
+839:OK
+840:Toiminto
+841:Näppäin
+844:Palauta
+964:Odottaa pelistä poistuneiden pelaajien tietoa:
+966:Tämä (?)paja ei ole asutettu
+967:Tämä (?)verstas ei ole asutettu
+968:Tämä leipomo ei ole asutettu
+969:Tämä teurastamo ei ole asutettu
+970:Tämä hiilikaivos ei ole asutettu
+971:Tämä maatila ei ole asutettu
+972:Tämä kalastajan maja ei ole asutettu
+973:Tämä kultakaivos ei ole asutettu
+974:Tämä rautukaivos ei ole asutettu
+975:Tämä rautasulattamo ei ole asutettu
+976:Tämä kultasulattamo ei ole asutettu
+977:Tämä mylly ei ole asutettu
+978:Tämä kaivos ei ole asutettu
+979:Tämä saha ei ole asutettu
+980:Tämä sotakoneverstas ei ole asutettu
+981:Tämä talli ei ole asutettu
+982:Tämä sikatila ei ole asutettu
+983:Tämä nahkatehdas ei ole asutettu
+984:Tämä vartiotorni ei ole asutettu
+985:Tämä asepaja ei ole asutettu
+986:Tämä aseverstas ei ole asutettu
+987:Tämä viinitila ei ole asutettu
+988:Tämä metsänhoitajan mökki ei ole asutettu
+989:%s poistui ja on kukistettu
+990:Isäntä (%s) poistui ja on kukistettu!
+991:Peruuta
+992:Tyhjää näppäin
+1019:%s hiljensi sinut. Et voi enää lähettää ilmoituksia tai merkkejä hänelle.
+1022:Metsänhoitajasi ei löydä tilaa istuttaa puita.
+1023:PT-
+1024:%s on voittaja!
+1025:%s ei ole enää yhteydessä peliin
+1026:Kulta
+1027:Suurin määrä kultaa joka toimitetaan raatihuoneelle
+1028:Puiden istutus
+1029:Avaa / Sulje rakennus %s
+1030:Kaikki
+1031:Kaikki
+1032:Kaikki
+1033:Uudelleenimeä Kartta
+1034:Tauko rauhan päättyessä
+1035:Pelin kesto
+1036:Nimi
+1037:Armeijan vahvuus
+1038:Kaikki sotilaat
+1039:Kaavion tyyppi
+1040:Määrät
+1041:BKT
+1043:Kaikki varustetut
+1044:Kukistettu
+1045:Menetetty
+1046:Takaisin pelin tuloksiin
+1047:Pelaajien mukaan
+1048:Joukkueiden mukaan
+1049:Lisää|tilastoja
+1052:Haluatko varmasti|lopettaa uusinnan|katsomisen?
+1053:Kartta on epäkelpo
+1054:Valittu kartta ei kelpaa, valitse toinen kartta
+1055:Ladatut kartta-tiedostot ovat vaihtuneet
+1056:Valittu ladattu kartta, jonka tiedostot ovat muuttuneet. Siirrä se ensin pois ladatuista.
+1057:Kartan tiedostot ovat muuttuneet, valitse kartta uudelleen
+1060:Kaikki
+1064:Työskentelyalue
+1065:Aseta metsänhoitajan työskentelyalue. Voit asettaa sen myös käyttämällä SHIFT + RMB
+1066:Kokoontumispaikka
+1090:Uusinnan|automaattinen tauko
+1091:Automaattisesti keskeytä uusinta rauhan ajan päätyttyä
+1092:Näytä merkit
+1093:Näytä pelaajien merkit
+1094:Hiljennä pelaaja
+1095:Poista hiljennys
+1096:Muista tämä salasana
+1097:Käytä edellistä salasanaa
+1098:Mene edelliseen valikkoon
+1099:Kyllä
+1100:Ei
+1101:Peruuta
+1102:Kartta
+1103:Uusinta
+1104:Pelaajat
+1105:Joukkueet
+1113:Omistaja: %s
+1117:Sulje
+1119:Hiljennä musiikki
+1120:Sekoita kappaleet
+1121:Sekoita kappaleet päälle/pois
+1122:Kartan tyyppi
+1123:Skenaariokartat
+1124:Yksinpeli mahdollinen
+1139:Poistuu
+1140:Häädä
+1141:Haluatko varmasti häätää yksikön?|Hän palaa kouluun ja poistuu kaupungista ikuisesti.
+1142:Häätää yksikön
+1143:Peruuta yksikön häätäminen
+1144:Et voi häätää yksikköä koska kaupungistasi puuttuu koulu
+1159:Teksti
+1168:Karttafiltteri
+1169:Nollaa filtteri
+1170:Pelaajien määrä
+1171:Takaisin
+1172:Näytä yksityiskohtaiset tiedot pelistä
+1173:Vaikeustaso
+1174:Helppo
+1175:Normaali
+1176:Vaikea
+1179:Edistynyt AI-pelaaja
+1180:Edistynyt AI
+1181:Klassinen AI
+1182:Voittaja
+1183:Kukistettu
+1184:Isäntä
+1185:Mene valitun rakennuksen luokse
+1186:Mene valitun yksikön luokse
+1187:Liittouma / Vastustaja|väritila
+1188:Oma/liittouttouma/vastustaja värit pelaajille omien valintojen sijasta
+1189:[$404040]Isäntä on valmis aloittamaan. Paina '[][$0707FF]%s[][$404040]'[]
+1190:Valmiustarkistus
+1191:Valmiustarkistus lähetetty %s pelaajalle
+1192:Vaihda pelaajien väritilaa
+1193:Häätö ei onnistu tämän toiminnon aikana
+1204:Kustomisoitu Raatihuone-kustannukset
+1205:Kustomisoidut Kauppatorin hinnat
+1214:Ihmispelaaja
+1215:Klassinen AI-pelaaja %d
+1216:Edistynyt AI-pelaaja %d
+1217:Klassinen AI %d
+1218:Edistynyt AI %d
+1219:Klassinen AI-pelaaja
+1220:Tekoäly-pelaajan tyyppi
+1221:Automaattinen tallennus|pelin päättyessä
+1222:Ei ole
+1223:Resurssit
+1224:Talot
+1225:Rakentaa
+1226:Kyläläiset
+1227:Armeija
+1228:Häätö ei ole sallittu nälkäisille yksiköille
+1233:Vaikeustaso
+1234:%s on poissa koneelta, kesto %s [$00B0FF]minuuttia[]
+1235:Datan vienti voi kestää useita minuutteja.\nData viedään kansioon '%s'.\nHaluatko jatkaa?
+1236:Proseduuri [ %s ] ilmoitti että skriptin komento /%s ei löytynyt
+1237:Väärä parametri skriptin komennolle /%s: [%s]
+1238:Väärä ensimäinen parametri skriptin komennossa /%s. Odotettu: [ %s ], todellisuudessa: [ %s ]
+1239:Liian monta parametriä skriptin komennossa /%s: [ /%s ]. Maksimi määrä parametrejä on [ %s ] (Sisältäen pakollisen HandID parametrin)
+1240:Väärät parametrit skriptin komennossa /%s. Odotetut parametri-tyypit ovat: [ %s ]
+1241:Liian monta parametriä asetettu skriptin komennolle /%s: Odotettu parametrien luku [ %s ], todellisuudessa: [ %s ]
+1242:Komento kutsuttu: /%s(%s)
+1243:Virhe kutsuessa komentoa skriptistä /%s(%s)|
+1244:Skriptin komentoa /%s ei löytynyt
+1245:Chatin historia ja siitä kopiointi Sallittu/Ei sallittu
+1246:Tallenna uusinnan tila
+1247:Lataa uusinta kohdasta %s
+1248:Pelaajien värit
+1249:Oletus
+1250:Liittoutunut / Vastustaja
+1251:Joukkueet
+1252:Näytä pelaajavärit aulan valintojen mukaan
+1253:Näytä 3 eri väriä (sinun, liittoutuneiden ja vastustajien) kyläläisissä ja rakennuksissa
+1254:Näytä värit joukkueiden perusteella
+1255:Virhe: Pelaajan nimi '%s' on varattu
+1256:Kyläläiset (M/T/A)
+1257:Kyläläiset (Muut)
+1259:Tuotteen %s kuljetus on kielletty
+1260:%s toimitus ei ole sallittu
+1261:Alokas ei ole sallittu menemään kasarmille
+1262:Etsi tiili ID:n mukaan
+1356:Kartan koko:
+1358:Helpompi
+1359:Tutti suussa
+1360:Vaikeampi
+1361:Yoda ja CBT
+1362:Isännän peliversio on eri kuin sinun.
+1369:Satunnainen kartta
+1370:Kartta on generoitu automaattisesti karttageneraattorilla
+1377:Yritä käynnistää
+1378:Yritä ladata tallennus
+1379:Yritä katsoa uusinta
+1380:Virhe ladatessa ei tuettua versiota %s tallennusta %s
+1381:Virhe ladatessa ei tuettua uusintaa versiosta %s uusinnasta %s
+1382:Kartan nimi
+1383:Aika
+1384:Versio
+1385:Ei tuetun version lataaminen voi aiheuttaa latausvirheitä tai aiheuttaa pelin kaatumisen
+1386:Ei tuettu versio
+1387:Haluatko avata kaikki kampanjat?\nTätä ei voi kumota.\n\nJos haluat tallentaa kampanjan edistymisen, varmista että olet tehnyt varmuuskopion tiedostosta 'Campaigns.dat'\nsijainnissa '%s'\n\nHaluatko suorittaa operaation?
+1398:Videoleikkeet
+1399:Aktivoi
+1400:Venytä
+1401:Näytä käynnistyksen aikana
+1402:Äänenvoimakkuus
+1403:Kokeile videoa
+1404:Muokkaukset
+1405:Lumiset talot
+1419:Tie
+1420:Viljapelto
+1421:Viinipelto
+1422:kerrosvalikko
+1423:Esine
+1424:Sinulla ei ole tarpeeksi korkeat oikeudet KaM Remaken asennuskansiossa: \n'%s'\n\nYritä käynnistää peli pääkäyttäjän oikeuksilla, asenna peli uudelleen toiseen kansioon tai poista KaM_Remake.exe antivirustarkastuksesta
+1429:Tee uusinnan tallennuspisteitäe
+1437:Pelin nopeuden vaihto onnistuu vain isännältä, jos ei ole muita pelaajia paikalla.
+1438:Resurssien vienti valmis [ %s ]
+1512:Tehtävän kesto:
+1513:Nykyinen pelin nopeus
+1514:Nykyinen uusinnan nopeus
+1515:Tallennettu pelinnopeus
+1516:HD Liikehdintä
+1517:HD Liikehdintä
+1518:Lisää yksiköiden ja ammusten liikkeen resoluutiota
+1519:Jotta pelaaja %0:s %1:s pelaajan/pelaajien %2:s %3:s täytyy olla %4:s
+1520:Voittaa
+1521:Selviydy
+1522:Tuhottu
+1523:Pelastettu
+1524:Päärakennukset ( %s )
+1526:HD Animaatiot
+1527:HD Animaatiot
+1528:Lisää animaatioissa käytettävien kehysten määrää.
+1531:Pelin asetukset
+1532:Uusintojen asetukset
+1533:Karttaeditorin asetukset
+1535:Kampanjan karttaan
+1537:Heikko
+1547:Toinen pelaaja sai Desync-virheen. Lähettäkää meille tämä kaatumisraportti, se auttaa meitä korjaamaan virheen.%sToisen pelaajan virheviesti on:%s

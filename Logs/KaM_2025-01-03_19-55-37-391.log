@@ -1,0 +1,73 @@
+   Timestamp    Elapsed     Delta  Thread    Description
+========================
+    Date: 2025.01.03
+========================
+19:55:37.393     0,001s       1ms  19908    Log is up and running. Game version: KaM Expansion: Co-op & World Update
+19:55:37.398     0,006s       5ms  19908    Game Load started
+19:55:37.409     0,017s      11ms  19908    Start loading 'GameApp settings' from 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'
+19:55:37.414     0,022s       5ms  19908    'GameApp settings' was successfully loaded from 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'
+19:55:37.430     0,037s       5ms  19908    Start saving 'GameApp settings' to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'
+00cb81a4 KaM_Expansion.exe KM_Settings        106 TKMSettings.SaveToDefaultFile
+00cb8277 KaM_Expansion.exe KM_Settings        113 TKMSettings.SaveToDefaultFile
+00cb7e75 KaM_Expansion.exe KM_Settings         59 TKMSettings.Create
+00cb85b2 KaM_Expansion.exe KM_SettingsXML      38 TKMSettingsXML.Create
+00cb88f3 KaM_Expansion.exe KM_GameAppSettings  51 TKMGameAppSettings.Create
+00ece4c8 KaM_Expansion.exe KM_Main            258 TKMMain.Start
+00ece737 KaM_Expansion.exe KM_Main            305 TKMMain.Start
+01150b2b KaM_Expansion.exe KaM_Expansion      480 initialization
+01150b5a KaM_Expansion.exe KaM_Expansion      483 initialization
+762b7ba7 KERNEL32.DLL                             BaseThreadInitThunk
+
+19:55:37.468     0,075s      38ms  19908    'GameApp settings' was successfully saved to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'
+19:55:37.500     0,107s      32ms  19908    Start loading 'Server settings' from 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+19:55:37.505     0,112s       5ms  19908    'Server settings' was successfully loaded from 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+19:55:37.513     0,120s       6ms  19908    Start saving 'Server settings' to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+00cb81a4 KaM_Expansion.exe KM_Settings       106 TKMSettings.SaveToDefaultFile
+00cb8277 KaM_Expansion.exe KM_Settings       113 TKMSettings.SaveToDefaultFile
+00cb7e75 KaM_Expansion.exe KM_Settings        59 TKMSettings.Create
+00df7774 KaM_Expansion.exe KM_ServerSettings 109 TKMServerSettings.Create
+00ec387c KaM_Expansion.exe KM_GameApp        213 TKMGameApp.Create
+00ec3cce KaM_Expansion.exe KM_GameApp        295 TKMGameApp.Create
+00ecf73e KaM_Expansion.exe KM_Main           635 TKMMain.ReinitRender
+00ecf94a KaM_Expansion.exe KM_Main           689 TKMMain.ReinitRender
+00ece5de KaM_Expansion.exe KM_Main           281 TKMMain.Start
+00ece737 KaM_Expansion.exe KM_Main           305 TKMMain.Start
+01150b2b KaM_Expansion.exe KaM_Expansion     480 initialization
+01150b5a KaM_Expansion.exe KaM_Expansion     483 initialization
+762b7ba7 KERNEL32.DLL                            BaseThreadInitThunk
+
+19:55:37.527     0,134s      14ms  19908    'Server settings' was successfully saved to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+19:55:37.533     0,140s       6ms  19908    Init Render started
+19:55:37.665     0,273s     132ms  19908    GL_MAX_TEXTURE_SIZE = 32768
+19:55:37.673     0,280s       7ms  19908    GL_MAX_VIEWPORT_DIM = 32768
+                                      OpenGL Vendor: NVIDIA Corporation
+                                      OpenGL Renderer: NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2
+                                      OpenGL Version: 4.6.0 NVIDIA 560.94
+19:55:37.699     0,307s      27ms  19908    Init Render Done
+19:55:37.705     0,312s       5ms  19908    Resource loading state - None
+19:55:37.712     0,320s       6ms  19908    Reading palettes ... done
+19:55:37.721     0,328s       8ms  19908    Reading GUI.rx
+19:55:37.727     0,335s       7ms  19908    Load Sprites started
+19:55:37.734     0,342s       7ms  19908    GUI - 966
+19:55:37.754     0,362s      20ms  19908    Load Sprites Done
+19:55:37.789     0,397s      35ms  19908    Reading GUIMain.rx
+19:55:37.795     0,403s       6ms  19908    Load Sprites started
+19:55:37.802     0,409s       5ms  19908    GUIMain - 105
+19:55:37.855     0,462s      53ms  19908    Load Sprites Done
+19:55:37.910     0,517s      55ms  19908    Reading Tileset.rx
+19:55:37.917     0,525s       8ms  19908    Load Sprites started
+19:55:37.923     0,531s       6ms  19908    Tileset - 5449
+19:55:37.960     0,568s      36ms  19908    Load Sprites Done
+19:55:37.968     0,575s       7ms  19908    GenerateTerrainTransitions started. Legacy = False
+19:55:37.976     0,583s       8ms  19908    TexId = 5451 GenTilesCnt = 2100
+19:55:37.983     0,590s       7ms  19908    TexId = 6051; TexId - fGenTexIdStartI = 600; uniqueTex = 600; totalTex = 1350
+19:55:37.990     0,598s       7ms  19908    GeneratedMasks cnt = 20
+19:55:37.998     0,605s       7ms  19908    GenerateTerrainTransitions Done
+19:55:38.005     0,613s       8ms  19908    GenerateTerrainTransitions started. Legacy = True
+19:55:38.013     0,620s       7ms  19908    Legacy: TexId = 4999 GenTilesCntTemp = 2030
+19:55:38.020     0,628s       8ms  19908    TexId = 5463; TexId - fGenTexIdStartILegacy = 464; uniqueTex = 464; totalTex = 1044
+19:55:38.028     0,635s       7ms  19908    GeneratedMasks cnt = 16
+19:55:38.035     0,642s       7ms  19908    GenerateTerrainTransitions Done
+19:55:38.143     0,750s     108ms  19908    Load font started
+19:55:38.180     0,788s      37ms  19908    Font load took 37ms
+19:55:38.187     0,794s       6ms  19908    Read fonts is done

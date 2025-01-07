@@ -1,0 +1,1216 @@
+{
+	"HousesOrder" : [
+		{
+			"TitleID" : 1649, 
+			"GuiIcon" : 312,
+			"Houses" : [
+						"htNone", "htSchool", "htInn", "htCottage",  "htHouse", "htStore",
+						"htNone", "htQuarry", "htWoodcutters", "htSawmill", "htPottery", "htCollectors",
+						"htNone", "htWell", "htAppleTree", "htFarm", "htVineyard", "htFishermans",
+						"htNone", "htSmallStore", "htGoldMine", "htIronMine", "htBitinMine", "htCoalMine",
+						"htNone", "htMarket", "htMerchant", "htStall", "htSign"
+						]
+		},
+		{
+			"TitleID" : 1650, 
+			"GuiIcon" : 308,
+			"Houses" : [
+						"htNone", "htMill", "htBakery", "htSwine", "htButchers", "htTannery",   
+						"htNone", "htStables", "htHovel", "htWeaponWorkshop", "htArmorWorkshop", "htTailorsShop",
+						"htNone", "htMetallurgists", "htIronSmithy", "htWeaponSmithy", "htArmorSmithy", "htIronFoundry",
+						"htNone", "htStoneWorkshop", "htWoodBurner", "htProductionThatch"
+						]
+		},
+		{
+			"TitleID" : 1651, 
+			"GuiIcon" : 322,
+			"Houses" : [
+						"htNone", "htBarracks", "htTownhall", "htPalace", "htSiegeWorkshop", "htShipYard",
+						"htNone", "htWall", "htWall2", "htWall3", "htWall4", "htWall5",
+						"htNone", "htWallTower", "htWatchTower"
+						]
+		}
+	],
+	"HousesVictoryOrder" : [
+		{
+			"TitleID" : 2078,
+			"ShowExpanded" : true,
+			"Houses" : ["htSchool", "htInn", "htBarracks", "htTownHall",  "htStore", "htSmallStore", "htCottage", "htHouse", "htPalace"]
+		},
+		{
+			"TitleID" : 2079,
+			"ShowExpanded" : true,
+			"Houses" : ["htQuarry", "htWoodcutters", "htSawmill", "htPottery", "htFarm", "htWell"]
+		},
+		{
+			"TitleID" : 2080,
+			"ShowExpanded" : false,
+			"Houses" : ["htHovel", "htMill", "htBakery", "htSwine", "htButchers", "htVineyard", "htAppleTree", "htFishermans",  "htStables", "htTannery"]
+		},
+		{
+			"TitleID" : 2081,
+			"ShowExpanded" : false,
+			"Houses" : ["htGoldMine", "htIronMine", "htBitinMine", "htCoalMine"]
+		},
+		{
+			"TitleID" : 2082,
+			"ShowExpanded" : false,
+			"Houses" : ["htWeaponWorkshop", "htArmorWorkshop", "htMetallurgists", "htIronSmithy", "htIronFoundry", "htWeaponSmithy", "htArmorSmithy", "htSiegeWorkshop","htStoneWorkshop", "htWoodBurner"]
+		},
+		{
+			"TitleID" : 2083,
+			"ShowExpanded" : false,
+			"Houses" : ["htWall", "htWall2", "htWall3", "htWall4", "htWall5", "htWallTower", "htWatchTower"]
+		},
+		{
+			"TitleID" : 2084,
+			"ShowExpanded" : false,
+			"Houses" : ["htMarket", "htMerchant", "htCollectors", "htTailorsShop", "htSign"]
+		}
+	],
+  "Houses": [
+    {
+		"Name": "htWall", 
+			"WoodPileOffset" : {"X" : -45, "Y" : 15}, 
+			"StonePileOffset" : {"X" : -5, "Y" : 15}, 
+			"TilePileOffset" : {"X" : 20, "Y" : 15},
+			"MaxHealth": 100,
+			"WoodCost": 4,
+			"StoneCost": 0,
+			"TileCost": 0,
+			"WoodPic": 2114,
+			"StonePic": 2428,
+			"Sight": 3,
+			"DescriptionID": 1723,
+			"EntranceOffsetX": 0,
+			"EntranceOffsetXpx": 20,
+			"EntranceOffsetYpx": 0,
+			"WorkerType": -1,
+			"TextID": 1617,
+			"ha_Fire1": {"X": 18, "Y": -43, "Steps": [1623,1624,1625,1620,1621,1622]},
+			"ha_Fire2": {"X": 78, "Y": -37, "Steps": [1637,1632,1633,1634,1635,1636]},
+			"ha_Fire3": {"X": -40, "Y": -33, "Steps": [1620,1621,1622,1623,1624,1625]},
+			"ha_Fire4": {"X": 20, "Y": -14, "Steps": [1617,1618,1619,1614,1615,1616]},
+			"ha_Fire5": {"X": 32, "Y": -28, "Steps": [1632,1633,1634,1635,1636,1637]},
+			"ha_Fire6": {"X": 39, "Y": -47, "Steps": [1629,1630,1631,1626,1627,1628]},
+			"ha_Fire7": {"X": 25, "Y": 13, "Steps": [1635,1636,1637,1632,1633,1634]},
+			"ha_Fire8": {"X": -42, "Y": -40, "Steps": [1621,1622,1623,1624,1625,1620]},
+			"Levels" : [
+							{
+								"StonePic": 2079, "SnowPic": 2475, "WoodCost" : 1, "StoneCost" : 6, "TileCost" : 0, "AddHealth": 300
+							}
+						],
+			"UnlockAfter" : ["htBarracks", "htPalace", "htTownhall"]
+		
+	},
+    {
+		"Name": "htWall2", 
+			"WoodPileOffset" : {"X" : -45, "Y" : 15}, 
+			"StonePileOffset" : {"X" : -5, "Y" : 15}, 
+			"TilePileOffset" : {"X" : 20, "Y" : 15},
+			"MaxHealth": 150,
+			"WoodCost": 5,
+			"StoneCost": 0,
+			"TileCost": 0,
+			"WoodPic": 2115,
+			"StonePic": 2429,
+			"Sight": 3,
+			"DescriptionID": 1723,
+			
+			"EntranceOffsetX": 1,
+			"EntranceOffsetXpx": 20,
+			"EntranceOffsetYpx": 0,
+			"WorkerType": -1,
+			"TextID": 1618,
+			"ha_Fire1": {"X": 18, "Y": -43, "Steps": [1623,1624,1625,1620,1621,1622]},
+			"ha_Fire2": {"X": 78, "Y": -37, "Steps": [1637,1632,1633,1634,1635,1636]},
+			"ha_Fire3": {"X": -65, "Y": -33, "Steps": [1620,1621,1622,1623,1624,1625]},
+			"ha_Fire4": {"X": -40, "Y": -14, "Steps": [1617,1618,1619,1614,1615,1616]},
+			"ha_Fire5": {"X": -22, "Y": -28, "Steps": [1632,1633,1634,1635,1636,1637]},
+			"ha_Fire6": {"X": 70, "Y": -37, "Steps": [1629,1630,1631,1626,1627,1628]},
+			"ha_Fire7": {"X": -35, "Y": 33, "Steps": [1635,1636,1637,1632,1633,1634]},
+			"ha_Fire8": {"X": -82, "Y": -40, "Steps": [1621,1622,1623,1624,1625,1620]},
+			"Levels" : [
+							{
+								"StonePic": 2080,"SnowPic": 2476, "WoodCost" : 1, "StoneCost" : 8, "TileCost" : 1, "AddHealth": 500
+							}
+						],
+			"UnlockAfter" : ["htBarracks", "htPalace", "htTownhall"]
+	},
+    {
+		"Name": "htWall3", 
+			"MaxHealth": 100,
+			"WoodCost": 4,
+			"StoneCost": 0,
+			"TileCost": 0,
+			"WoodPic": 2116,
+			"StonePic": 2430,
+			"Sight": 3,
+			"DescriptionID": 1723,
+			
+			"EntranceOffsetX": 0,
+			"EntranceOffsetY": 0,
+			"EntranceOffsetXpx": 20,
+			"EntranceOffsetYpx": 0,
+			"WorkerType": -1,
+			"TextID": 1619,
+			"WoodPileOffset" : {"X" : 0, "Y" : 15}, 
+			"StonePileOffset" : {"X" : 20, "Y" : 15}, 
+			"TilePileOffset" : {"X" : 40, "Y" : 15},
+			"ha_Fire1": {"X": -18, "Y": -43, "Steps": [1623,1624,1625,1620,1621,1622]},
+			"ha_Fire2": {"X": 20, "Y": -60, "Steps": [1623,1624,1625,1620,1621,1622]},
+			"ha_Fire3": {"X": -10, "Y": -83, "Steps": [1620,1621,1622,1623,1624,1625]},
+			"ha_Fire4": {"X": 20, "Y": -74, "Steps": [1617,1618,1619,1614,1615,1616]},
+			"ha_Fire5": {"X": 55, "Y": -48, "Steps": [1632,1633,1634,1635,1636,1637]},
+			"ha_Fire6": {"X": 23, "Y": -187, "Steps": [1629,1630,1631,1626,1627,1628]},
+			"ha_Fire7": {"X": 55, "Y": -73, "Steps": [1635,1636,1637,1632,1633,1634]},
+			"ha_Fire8": {"X": 2, "Y": -80, "Steps": [1621,1622,1623,1624,1625,1620]},
+			"Levels" : [
+							{
+								"StonePic": 2081,"SnowPic": 2477, "WoodCost" : 1, "StoneCost" : 6, "TileCost" : 0, "AddHealth": 300
+							}
+						],
+			"UnlockAfter" : ["htBarracks", "htPalace", "htTownhall"]
+	},
+    {
+		"Name": "htWall4", 
+			"MaxHealth": 150,
+			"WoodCost": 5,
+			"StoneCost": 0,
+			"TileCost": 0,
+			"WoodPic": 2117,
+			"StonePic": 2431,
+			"Sight": 3,
+			"DescriptionID": 1723,
+			
+			"EntranceOffsetX": 0,
+			"EntranceOffsetXpx": 20,
+			"EntranceOffsetYpx": 0,
+			"WorkerType": -1,
+			"TextID": 1620,
+			"WoodPileOffset" : {"X" : 0, "Y" : 15}, 
+			"StonePileOffset" : {"X" : 20, "Y" : 15}, 
+			"TilePileOffset" : {"X" : 40, "Y" : 15},
+			"ha_Fire1": {"X": -18, "Y": -43, "Steps": [1623,1624,1625,1620,1621,1622]},
+			"ha_Fire2": {"X": 20, "Y": -60, "Steps": [1623,1624,1625,1620,1621,1622]},
+			"ha_Fire3": {"X": -10, "Y": -83, "Steps": [1620,1621,1622,1623,1624,1625]},
+			"ha_Fire4": {"X": 20, "Y": -74, "Steps": [1617,1618,1619,1614,1615,1616]},
+			"ha_Fire5": {"X": 55, "Y": -48, "Steps": [1632,1633,1634,1635,1636,1637]},
+			"ha_Fire6": {"X": 23, "Y": -187, "Steps": [1629,1630,1631,1626,1627,1628]},
+			"ha_Fire7": {"X": 55, "Y": -73, "Steps": [1635,1636,1637,1632,1633,1634]},
+			"ha_Fire8": {"X": 2, "Y": -80, "Steps": [1621,1622,1623,1624,1625,1620]},
+			"Levels" : [
+							{
+								"StonePic": 2082,"SnowPic": 2478, "WoodCost" : 1, "StoneCost" : 8, "TileCost" : 1, "AddHealth": 500
+							}
+						],
+			"UnlockAfter" : ["htBarracks", "htPalace", "htTownhall"]
+	},
+    {
+		"Name": "htWall5", 
+			"MaxHealth": 100,
+			"WoodCost": 2,
+			"StoneCost": 0,
+			"TileCost": 0,
+			"WoodPic": 2118,
+			"StonePic": 2432,
+			"Sight": 3,
+			"DescriptionID": 1723,
+			
+			"EntranceOffsetX": 0,
+			"EntranceOffsetXpx": 20,
+			"EntranceOffsetYpx": 0,
+			"WorkerType": -1,
+			"TextID": 1621,
+			"WoodPileOffset" : {"X" : 0, "Y" : 15}, 
+			"StonePileOffset" : {"X" : 20, "Y" : 15}, 
+			"TilePileOffset" : {"X" : 40, "Y" : 15},
+			"ha_Fire1": {"X": 0, "Y": -43, "Steps": [1623,1624,1625,1620,1621,1622]},
+			"ha_Fire2": {"X": 60, "Y": -57, "Steps": [1637,1632,1633,1634,1635,1636]},
+			"ha_Fire3": {"X": -20, "Y": -33, "Steps": [1620,1621,1622,1623,1624,1625]},
+			"ha_Fire4": {"X": 20, "Y": 0, "Steps": [1617,1618,1619,1614,1615,1616]},
+			"ha_Fire5": {"X": 62, "Y": 20, "Steps": [1632,1633,1634,1635,1636,1637]},
+			"ha_Fire6": {"X": 9, "Y": -57, "Steps": [1629,1630,1631,1626,1627,1628]},
+			"ha_Fire7": {"X": 55, "Y": -13, "Steps": [1635,1636,1637,1632,1633,1634]},
+			"ha_Fire8": {"X": 2, "Y": -40, "Steps": [1621,1622,1623,1624,1625,1620]},
+			"Levels" : [
+							{
+								"StonePic": 2083,"SnowPic": 2479, "WoodCost" : 0, "StoneCost" : 4, "TileCost" : 0, "AddHealth": 200
+							}
+						],
+			"Styles" : [
+						{"GuiIcon" : 333, "StonePic" : 2485,"SnowPic": 2487},
+						{"GuiIcon" : 332, "StonePic" : 2486,"SnowPic": 2488}
+						],
+			"UnlockAfter" : ["htBarracks", "htPalace", "htTownhall"]
+	},
+    {
+		"Name": "htHovel",
+			"WoodPileOffset" : {"X" : -35, "Y" : 15}, 
+			"StonePileOffset" : {"X" : -18, "Y" : 15}, 
+			"TilePileOffset" : {"X" : 0, "Y" : 15},
+			"MaxHealth": 200,
+			"WoodCost": 4,
+			"StoneCost": 1,
+			"TileCost": 1,
+			"WoodPic": 2086,
+			"StonePic": 2085,
+			"Sight": 5,
+			"DescriptionID": 1724, 	
+			"WorkerTypes": [{"UnitType" : "utAnimalBreeder", "MaxCount" : 1}],
+			"WareInput": ["wtSeed", "wtWater", "wtVegetables", "wtCorn"],
+			"WareOutput": ["wtFeathers", "wtSausage", "wtEgg"],
+			
+			"EntranceOffsetX": 1,
+			"EntranceOffsetXpx": 20,
+			"EntranceOffsetYpx": 0,
+			"WorkerType": 3,
+			"TextID": 1622,
+			
+			"SupplyIn1" : [2636, 2637, 2638, 2639, 2640], 
+			  "SupplyIn2" : [2317, 2318, 2319, 2320, 2321], 
+			"SupplyIn3" : [2646, 2647, 2648, 2649, 2650], 
+			"SupplyIn4" : [2641, 2642, 2643, 2644, 2645], 
+			"SupplyOut1" : [2651, 2652, 2653, 2654, 2655], 
+			"SupplyOut2" : [2656, 2657, 2658, 2659, 2660], 
+			"SupplyOut3" : [2661, 2662, 2663, 2664, 2665], 
+			"WorkAnim" : [
+							{ "WorkType" : "haWork2", "Cycles" : 5},
+							{ "WorkType" : "haWork3", "Cycles" : 20}
+						],			
+						
+			"ha_Idle": {
+							"X": -31, 
+							"Y": -4, 
+							"Steps": [2388, 2389, 2390, 2391, 2392, 2392,2392, 2391, 2390, 2389, 2388]
+						}, 
+			"ha_Work2": {
+							"X": 34, 
+							"Y": 42, 
+							"Steps": [2378, 2379, 2380, 2381, 2382, 2383, 2384, 2385, 2386, 2387]
+						}, 
+			"ha_Work3": {
+							"X": -31, 
+							"Y": -4, 
+							"Steps": [2388, 2389, 2390, 2391, 2392, 2392,2392, 2391, 2390, 2389, 2388]
+						},
+			
+			"ha_Flag1": {"X": -28, "Y": -22, "Steps": [1165,1166,1167,1163,1164]},
+			
+			"ha_Fire1": {"X": 18, "Y": -43, "Steps": [1623,1624,1625,1620,1621,1622]},
+			"ha_Fire2": {"X": 80, "Y": -37, "Steps": [1637,1632,1633,1634,1635,1636]},
+			"ha_Fire3": {"X": -40, "Y": -33, "Steps": [1620,1621,1622,1623,1624,1625]},
+			"ha_Fire4": {"X": 20, "Y": -14, "Steps": [1617,1618,1619,1614,1615,1616]},
+			"ha_Fire5": {"X": 42, "Y": -38, "Steps": [1632,1633,1634,1635,1636,1637]},
+			"ha_Fire6": {"X": 69, "Y": -47, "Steps": [1629,1630,1631,1626,1627,1628]},
+			"ha_Fire7": {"X": 55, "Y": -13, "Steps": [1635,1636,1637,1632,1633,1634]},
+			"ha_Fire8": {"X": 2, "Y": -40, "Steps": [1621,1622,1623,1624,1625,1620]},
+			"CanForceWork" : true
+	},
+    {
+		"Name": "htSign",
+			"MaxHealth": 100,
+			"WoodCost": 2,
+			"StoneCost": 2,
+			"TileCost": 2,
+			"WoodPic": 2111,
+			"StonePic": 2111,
+			"Sight": 0,
+			"WorkerType": -1,
+			"TextID": 1623,
+			"DescriptionID": 1725,
+			"Styles" : [
+						{"GuiIcon" : 333, "StonePic" : 2709,"SnowPic": 2709}
+						]
+			
+			
+	},
+    {
+		"Name": "htBitinMine",
+			"MaxHealth": 250,
+			"WoodCost": 2,
+			"StoneCost": 4,
+			"TileCost": 1,
+			"WoodPic": 2113,
+			"StonePic": 2112,
+			"Sight": 4,
+			"WorkerType": 2,
+			"WorkerTypes": [{"UnitType" : "utMiner", "MaxCount" : 1}],
+			"TextID": 1624,
+			"EntranceOffsetX": 1,
+			"EntranceOffsetXpx": 20,
+			"DescriptionID": 1726,
+			"UnlockAfter" : ["htPottery"],
+			"CanForceWork" : true,	 
+			
+			"SupplyIn1" : [2105, 2106, 2107, 2108, 2109], 
+			"SupplyOut1" : [2141, 2142, 2143, 2144, 2145], 
+			
+			"WoodPileOffset" : {"X" : -30, "Y" : 15}, 
+			"StonePileOffset" : {"X" : -13, "Y" : 15}, 
+			"TilePileOffset" : {"X" : 0, "Y" : 15},  
+			
+			"WorkAnim" : [
+							{ "WorkType" : "haWork1", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 40},
+							{ "WorkType" : "haWork5", "Cycles" : 1}
+						],	
+			
+			
+			"ha_Idle": {"X": 69, "Y": 13, "Steps": [1133, 1134, 1135, 1136, 1137, 1138, 1138, 1138, 1138, 1138, 1138, 1137, 1136, 1135, 1134, 1133, 1133, 1133, 1133, 1133]},
+			"ha_Work2": {"X": 69, "Y": 23, "Steps": [2137, 2137, 2137, 2138, 2139, 2140, 2139, 2138, 2138, 2139, 2140, 2139, 2138]},
+			"ha_Flag1": {"X": -31, "Y": 0, "Steps": [1165,1166,1167,1163,1164]},
+			"ha_Flag2": {"X": 15, "Y": -34, "Steps": [1165,1166,1167,1163,1164]},
+			
+			"ha_Fire1": {"X": 18, "Y": -43, "Steps": [1623,1624,1625,1620,1621,1622]},
+			"ha_Fire2": {"X": 98, "Y": -37, "Steps": [1637,1632,1633,1634,1635,1636]},
+			"ha_Fire3": {"X": -40, "Y": -33, "Steps": [1620,1621,1622,1623,1624,1625]},
+			"ha_Fire4": {"X": 20, "Y": -14, "Steps": [1617,1618,1619,1614,1615,1616]},
+			"ha_Fire5": {"X": 22, "Y": -38, "Steps": [1632,1633,1634,1635,1636,1637]},
+			"ha_Fire6": {"X": 59, "Y": -47, "Steps": [1629,1630,1631,1626,1627,1628]},
+			"ha_Fire7": {"X": 55, "Y": -13, "Steps": [1635,1636,1637,1632,1633,1634]},
+			"ha_Fire8": {"X": 2, "Y": -40, "Steps": [1621,1622,1623,1624,1625,1620]}
+			
+			
+	},
+    { 
+		"Name": "htWallTower",
+			"MaxHealth": 120,
+			"WoodCost": 6,
+			"StoneCost": 0,
+			"TileCost": 2,
+			"WoodPic": 2120,
+			"StonePic": 2119,
+			"Sight": 18,
+			"WorkerType": 13,
+			"WorkerTypes": [{"UnitType" : "utRecruit", "MaxCount" : 2}],
+			"TextID": 1625,
+			"EntranceOffsetXpx": 20,
+			"MaxWorkersCount": 2,
+			"UniqueWorkers": false,
+			"WoodPileOffset" : {"X" : -40, "Y" : 15}, 
+			"StonePileOffset" : {"X" : -20, "Y" : 15}, 
+			"TilePileOffset" : {"X" : -5, "Y" : 15},	
+			"DescriptionID": 1727,
+			"UnlockAfter" : ["htPottery"],
+			
+			"ha_Idle": {"X": 0, "Y": 0, "Steps": [5]},
+			"ha_Work1": {"X": 0, "Y": 0, "Steps": [5]},
+			
+			"ha_Flag1": {"X": 0, "Y": -158, "Steps": [1161,1162,1158,1159,1160]},
+			
+			"ha_Fire1": {"X": 0, "Y": -27, "Steps": [1623,1624,1625,1620,1621,1622]},
+			"ha_Fire2": {"X": 40, "Y": -67, "Steps": [1637,1632,1633,1634,1635,1636]},
+			"ha_Fire3": {"X": -40, "Y": -33, "Steps": [1620,1621,1622,1623,1624,1625]},
+			"ha_Fire4": {"X": 20, "Y": 0, "Steps": [1617,1618,1619,1614,1615,1616]},
+			"ha_Fire5": {"X": 38, "Y": -40, "Steps": [1632,1633,1634,1635,1636,1637]},
+			"ha_Fire6": {"X": -15, "Y": -157, "Steps": [1629,1630,1631,1626,1627,1628]},
+			"ha_Fire7": {"X": 55, "Y": -13, "Steps": [1635,1636,1637,1632,1633,1634]},
+			"ha_Fire8": {"X": 2, "Y": -40, "Steps": [1621,1622,1623,1624,1625,1620]},
+			"Wariants" : [2132, 2133, 2134]			
+			
+	},
+    {
+		"Name": "htWell",
+			"MaxHealth": 50,
+			"WoodCost": 1,
+			"StoneCost": 1,
+			"TileCost": 1,
+			"WoodPic": 2164,
+			"StonePic": 2162,
+			"Sight": 1,
+			"WorkerType": -1,
+			"TextID": 1626,
+			"EntranceOffsetXpx": 20,
+			"EntranceOffsetYpx": 10,
+			"SupplyOut1" : [2163, 2163, 2163, 2163, 2163],
+			"WoodPileOffset" : {"X" : -10, "Y" : 15}, 
+			"StonePileOffset" : {"X" : 0, "Y" : 15}, 
+			"TilePileOffset" : {"X" : 10, "Y" : 15}, 
+			"DescriptionID": 1728,
+			"UnlockAfter" : ["htPottery", "htAppleTree"]
+			
+	},
+    {
+		"Name": "htStoneWorkshop",
+			"MaxHealth": 350,
+			"WoodCost": 4,
+			"StoneCost": 3,
+			"TileCost": 0,
+			"WoodPic": 2166,
+			"StonePic": 2165,
+			"Sight": 3,
+			"WorkerType": 5,
+			"TextID": 1627,
+			"EntranceOffsetX": 1,
+			"EntranceOffsetXpx": 20,
+			"EntranceOffsetYpx": 10,
+			"DescriptionID": 1729,
+			"MaxWorkersCount": 2,
+			"UniqueWorkers": true,
+			"WorkerTypes": [{"UnitType" : "utStoneMason", "MaxCount" : 1}, {"UnitType" : "utCarpenter", "MaxCount" : 1}],
+			"UnlockAfter" : ["htSawmill"],	
+			
+			"SupplyIn1" : [2244, 2245, 2246, 2247, 2248], 
+			"SupplyIn2" : [2239, 2240, 2241, 2242, 2243], 
+			
+			"SupplyOut1" : [2249, 2250, 2251, 2252, 2253], 
+			"SupplyOut2" : [2254, 2255, 2256, 2257, 2258], 
+			"SupplyOut3" : [2259, 2260, 2261, 2262, 2263], 
+			"SupplyOut4" : [2264, 2265, 2266, 2267, 2268],
+			
+			"WoodPileOffset" : {"X" : -40, "Y" : 15}, 
+			"StonePileOffset" : {"X" : -15, "Y" : 15}, 
+			"TilePileOffset" : {"X" : 10, "Y" : 15}, 
+						
+			"WorkAnim" : [
+							{ "WorkType" : "haWork1", "Cycles" : 1},
+							{ "WorkType" : "haWork2", "Cycles" : 20},
+							{ "WorkType" : "haWork5", "Cycles" : 1}
+						],
+			
+			"ha_Flag1": {"X": -59, "Y": -48, "Steps": [1165,1166,1167,1163,1164]},
+			"ha_Flag2": {"X": -43, "Y": -28, "Steps": [1165,1166,1167,1163,1164]},
+			
+			"ha_Fire1": {"X": 0, "Y": -43, "Steps": [1623,1624,1625,1620,1621,1622]},
+			"ha_Fire2": {"X": 60, "Y": -57, "Steps": [1637,1632,1633,1634,1635,1636]},
+			"ha_Fire3": {"X": 50, "Y": -33, "Steps": [1620,1621,1622,1623,1624,1625]},
+			"ha_Fire4": {"X": 50, "Y": 0, "Steps": [1617,1618,1619,1614,1615,1616]},
+			"ha_Fire5": {"X": 62, "Y": 20, "Steps": [1632,1633,1634,1635,1636,1637]},
+			"ha_Fire6": {"X": -20, "Y": -57, "Steps": [1629,1630,1631,1626,1627,1628]},
+			"ha_Fire7": {"X": 55, "Y": -13, "Steps": [1635,1636,1637,1632,1633,1634]},
+			"ha_Fire8": {"X": 50, "Y": -40, "Steps": [1621,1622,1623,1624,1625,1620]}
+			
+	},
+    {
+		"Name": "htIronFoundry",
+			"MaxHealth": 400,
+			"WoodCost": 4,
+			"StoneCost": 4,
+			"TileCost": 4,
+			"WoodPic": 2168,
+			"StonePic": 2167,
+			"Sight": 5,
+			"WorkerType": 12,
+			"WorkerTypes": [{"UnitType" : "utMetallurgist", "MaxCount" : 1}],
+			"TextID": 1628,
+			"EntranceOffsetX": 0,
+			"EntranceOffsetXpx": 20,
+			"EntranceOffsetYpx": 0,			
+			"DescriptionID": 1730,
+			
+			"SupplyIn1" : [2666, 2667, 2668, 2669, 2670], 
+			"SupplyIn2" : [2671, 2672, 2673, 2674, 2675], 
+			"SupplyIn3" : [2174, 2175, 2176, 2177, 2178], 
+			"SupplyIn4" : [2179, 2180, 2181, 2181, 2181], 
+			
+			"SupplyOut1" : [2676, 2677, 2678, 2679, 2680], 
+			"SupplyOut2" : [2169, 2170, 2171, 2172, 2173], 
+			"SupplyOut3" : [2681, 2682, 2683, 2684, 2685], 
+			
+			"WoodPileOffset" : {"X" : -50, "Y" : 15}, 
+			"StonePileOffset" : {"X" : -33, "Y" : 15}, 
+			"TilePileOffset" : {"X" : -15, "Y" : 15},  
+			
+			"WorkAnim" : [
+							{ "WorkType" : "haWork2", "Cycles" : 20},
+							{ "WorkType" : "haWork5", "Cycles" : 1}
+						],	
+			
+			"ha_Flag1": {"X": 63, "Y": -29, "Steps": [1165,1166,1167,1163,1164]},
+			
+			"ha_Fire1": {"X": 0, "Y": -43, "Steps": [1623,1624,1625,1620,1621,1622]},
+			"ha_Fire2": {"X": 60, "Y": -57, "Steps": [1637,1632,1633,1634,1635,1636]},
+			"ha_Fire3": {"X": -60, "Y": -33, "Steps": [1620,1621,1622,1623,1624,1625]},
+			"ha_Fire4": {"X": -40, "Y": -15, "Steps": [1617,1618,1619,1614,1615,1616]},
+			"ha_Fire5": {"X": -12, "Y": -25, "Steps": [1632,1633,1634,1635,1636,1637]},
+			"ha_Fire6": {"X": -20, "Y": -67, "Steps": [1629,1630,1631,1626,1627,1628]},
+			"ha_Fire7": {"X": 45, "Y": -33, "Steps": [1635,1636,1637,1632,1633,1634]},
+			"ha_Fire8": {"X": -40, "Y": -40, "Steps": [1621,1622,1623,1624,1625,1620]}
+	},
+    {
+		"Name": "htMerchant",
+			"MaxHealth": 650,
+			"WoodCost": 5,
+			"StoneCost": 6,
+			"TileCost": 6,
+			"WoodPic": 2237,
+			"StonePic": 2215,
+			"Sight": 5,
+			"WorkerType":13,
+			"WorkerTypes": [{"UnitType" : "utRecruit", "MaxCount" : 1}],
+			"TextID": 1644,
+			"EntranceOffsetX": -1,
+			"EntranceOffsetXpx": 25,
+			"EntranceOffsetYpx": -20,
+			"WorkerRest": 10,		
+			"DescriptionID": 1731,
+			"UnlockAfter" : ["htPottery"],	
+			
+			"WoodPileOffset" : {"X" : -40, "Y" : 15}, 
+			"StonePileOffset" : {"X" : 0, "Y" : 15}, 
+			"TilePileOffset" : {"X" : 40, "Y" : 15},
+			
+			"ha_Idle": {"X": 0, "Y": 0, "Steps": [2367,2367, 2367, 2367, 2367, 2367,2367, 2368, 2369, 2370, 2371, 2371, 2371, 2371, 2371, 2371, 2370, 2369, 2368]},
+			"ha_Work1": {"X": 0, "Y": 0, "Steps": [5,5,5,5,5,5, 5, 5, 5, 5]},
+			
+			"ha_Fire1": {"X": 0, "Y": -83, "Steps": [1623,1624,1625,1620,1621,1622]},
+			"ha_Fire2": {"X": 60, "Y": -77, "Steps": [1637,1632,1633,1634,1635,1636]},
+			"ha_Fire3": {"X": -50, "Y": -83, "Steps": [1620,1621,1622,1623,1624,1625]},
+			"ha_Fire4": {"X": -20, "Y": -45, "Steps": [1617,1618,1619,1614,1615,1616]},
+			"ha_Fire5": {"X": 82, "Y": -25, "Steps": [1632,1633,1634,1635,1636,1637]},
+			"ha_Fire6": {"X": 60, "Y": -147, "Steps": [1629,1630,1631,1626,1627,1628]},
+			"ha_Fire7": {"X": 45, "Y": -33, "Steps": [1635,1636,1637,1632,1633,1634]},
+			"ha_Fire8": {"X": -40, "Y": -160, "Steps": [1621,1622,1623,1624,1625,1620]},
+			
+			"Build_Area": {
+							"Y1": [0, 1, 1, 1], 
+							"Y2": [0, 1, 1, 1],
+							"Y3": [0, 1, 1, 1],
+							"Y4": [0, 2, 1, 1]
+						},
+			"WareSlots" : [
+								{  "GuiIcon" : 352, "WareInput" : ["wtTrunk", "wtStone", "wtTimber", "wtTile", "wtSawDust"] },
+								{  "GuiIcon" : 354, "WareInput" : ["wtGoldOre", "wtIronOre", "wtBitinOre", "wtCoal"] },
+								{  "GuiIcon" : 659, "WareInput" : ["wtBread", "wtWine", "wtSausage", "wtFish", "wtApple"]} ,
+								{  "GuiIcon" : 358, "WareInput" : ["wtGold", "wtIron", "wtBitin", "wtJewerly"] },
+								{  "GuiIcon" : 360, "WareInput" : ["wtCorn", "wtSeed", "wtHay", "wtVegetables"] },
+								{  "GuiIcon" : 864, "WareInput" : ["wtFlour", "wtPig", "wtSkin", "wtFeathers", "wtWater"] },
+								{  "GuiIcon" : 371, "WareInput" : ["wtAxe", "wtLance", "wtBow", "wtMace", "wtQuiver"] },
+								{  "GuiIcon" : 372, "WareInput" : ["wtSword", "wtPike", "wtCrossbow", "wtFlail", "wtHorse"] },
+								{  "GuiIcon" : 370, "WareInput" : ["wtWoodenShield", "wtPlateArmor", "wtLeatherArmor", "wtIronShield", "wtIronArmor"] },
+								{  "GuiIcon" : 695, "WareInput" : ["wtStoneBolt", "wtBolt", "wtBitinE", "wtBitinArmor"] }
+								]
+	},
+    {
+		"Name": "htPottery",
+			"MaxHealth": 400,
+			"WoodCost": 4,
+			"StoneCost": 1,
+			"TileCost": 3,
+			"WoodPic": 2216,
+			"StonePic": 2182,
+			"Sight": 5,
+			"WorkerType": 10,
+			"TextID": 1632,
+			"EntranceOffsetXpx": 10,		
+			"DescriptionID": 1732,
+			"CanForceWork" : true,
+			"WorkerTypes": [{"UnitType" : "utClayPicker", "MaxCount" : 1}],
+			
+			"SupplyOut1" : [2221, 2222, 2223, 2224, 2225], 
+			"Wariants" : [2284, 2285, 2286], 
+			
+			"MakeSound_ha_Work2": {"SoundID": 1, "Steps" : [1]},
+			
+			"WoodPileOffset" : {"X" : -30, "Y" : 15}, 
+			"StonePileOffset" : {"X" : 0, "Y" : 15}, 
+			"TilePileOffset" : {"X" : 35, "Y" : 15},
+			
+			"WorkAnim" : [
+							{ "WorkType" : "haWork2", "Cycles" : 10},
+							{ "WorkType" : "haWork5", "Cycles" : 1}
+						],
+			
+			"ha_Fire1": {"X": 0, "Y": -43, "Steps": [1623,1624,1625,1620,1621,1622]},
+			"ha_Fire2": {"X": 60, "Y": -57, "Steps": [1637,1632,1633,1634,1635,1636]},
+			"ha_Fire3": {"X": -60, "Y": -33, "Steps": [1620,1621,1622,1623,1624,1625]},
+			"ha_Fire4": {"X": -40, "Y": -15, "Steps": [1617,1618,1619,1614,1615,1616]},
+			"ha_Fire5": {"X": 30, "Y": -25, "Steps": [1632,1633,1634,1635,1636,1637]},
+			"ha_Fire6": {"X": -20, "Y": -67, "Steps": [1629,1630,1631,1626,1627,1628]},
+			"ha_Fire7": {"X": 85, "Y": -33, "Steps": [1635,1636,1637,1632,1633,1634]},
+			"ha_Fire8": {"X": 30, "Y": -40, "Steps": [1621,1622,1623,1624,1625,1620]}
+	},
+    {
+		"Name": "htWoodBurner",
+			"MaxHealth": 300,
+			"WoodCost": 3,
+			"StoneCost": 4,
+			"TileCost": 3,
+			"WoodPic": 2184,
+			"StonePic": 2183,
+			"Sight": 5,
+			"WorkerType": 12,
+			"CanOverfill" : true,
+			"WorkerTypes": [{"UnitType" : "utMetallurgist", "MaxCount" : 1}],
+			"TextID": 1639,
+			"EntranceOffsetXpx": 20,		
+			"DescriptionID": 1733,
+			"UnlockAfter" : ["htPottery"],
+			"CanForceWork" : true,	 	
+			
+			"SupplyIn1" : [2197, 2198, 2199, 2200, 2201], 
+			"SupplyIn2" : [2362, 2363, 2364, 2365, 2366], 
+			"SupplyIn3" : [2357, 2358, 2359, 2360, 2361], 
+			"SupplyOut1" : [2202, 2203, 2204, 2205, 2206], 
+			"WoodPileOffset" : {"X" : -50, "Y" : 15}, 
+			"StonePileOffset" : {"X" : -33, "Y" : 15}, 
+			"TilePileOffset" : {"X" : -15, "Y" : 15}, 
+			
+			"ha_Smoke": {"X": 32, "Y": -60, "Steps": [2192, 2193, 2194, 2195]},
+			"ha_Idle": {"X": 0, "Y": 0, "Steps": [2186, 2186, 2186, 2186, 2186, 2186, 2187, 2188, 2189, 2190, 2191, 2191, 2191, 2191, 2191, 2191, 2190, 2189, 2188, 2187]},
+			
+			"ha_Fire1": {"X": 0, "Y": -43, "Steps": [1623,1624,1625,1620,1621,1622]},
+			"ha_Fire2": {"X": 60, "Y": -57, "Steps": [1637,1632,1633,1634,1635,1636]},
+			"ha_Fire3": {"X": -60, "Y": -33, "Steps": [1620,1621,1622,1623,1624,1625]},
+			"ha_Fire4": {"X": -40, "Y": -15, "Steps": [1617,1618,1619,1614,1615,1616]},
+			"ha_Fire5": {"X": -12, "Y": -25, "Steps": [1632,1633,1634,1635,1636,1637]},
+			"ha_Fire6": {"X": -20, "Y": -67, "Steps": [1629,1630,1631,1626,1627,1628]},
+			"ha_Fire7": {"X": 45, "Y": -33, "Steps": [1635,1636,1637,1632,1633,1634]},
+			"ha_Fire8": {"X": -40, "Y": -40, "Steps": [1621,1622,1623,1624,1625,1620]}
+	},
+    {
+		"Name": "htAppleTree",
+			"MaxHealth" : 20,
+			"WoodPic" : 2238,
+			"StonePic" : 2207,
+			"Sight" : 3,
+			"WoodCost" : 2,
+			"StoneCost" : 0,
+			"TileCost" : 0,
+			"WorkerTypes": [{"UnitType" : "utFarmer", "MaxCount" : 1}],
+			"EntranceOffsetXpx" : 20,
+			"EntranceOffsetX" : 0,
+			"MaxOutWares" : 10,
+			"WareInput" : ["wtWater"], 
+			"WareOutput" : ["wtApple"], 
+			"TextID": 1640,		
+			"DescriptionID": 1734,
+			"UnlockAfter" : ["htSawmill", "htWell"],	
+			
+			"SupplyIn1" : [2231, 2232, 2233, 2234, 2235], 
+			"SupplyOut1" : [2226, 2227, 2228, 2229, 2230], 
+			
+			"WoodPileOffset" : {"X" : -45, "Y" : 15}, 
+			"StonePileOffset" : {"X" : -20, "Y" : 15}, 
+			"TilePileOffset" : {"X" : -20, "Y" : 15},
+			
+			"ha_Work2": {
+							"X": 0, 
+							"Y": 0, 
+							"Steps": [2269, 2270, 2271, 2272, 2273, 2274, 2275, 2276, 2276, 2276, 2275, 2274, 2273, 2272, 2271, 2270, 2269, 2269, 2269]
+						},
+			"ha_Work5": {
+							"X": 0, 
+							"Y": 0, 
+							"Steps": [5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+						},
+			"ha_Idle": {
+							"X": -53, 
+							"Y": 15, 
+							"Steps": [2277, 2277, 2277, 2277, 2278, 2279, 2280, 2281, 2282, 2282, 2282, 2282, 2282, 2281, 2280, 2279, 2278, 2277]
+						},
+			"ha_Work1": {
+							"X": -7, 
+							"Y": 15, 
+							"Steps": [2437, 2438, 2439, 2440, 2441, 2442, 2443, 2444]
+						},
+			"Build_Area": {
+							"Y1": [0, 0, 0, 0], 
+							"Y2": [0, 0, 0, 0],
+							"Y3": [0, 1, 1, 0],
+							"Y4": [0, 1, 2, 0]
+						},
+			"Wariants": [2207, 2208, 2209, 2210, 2211, 2212, 2213, 2214],
+			"ha_Fire1": {"X": -40, "Y": -43, "Steps": [1623,1624,1625,1620,1621,1622]},
+			"ha_Fire5": {"X": 35, "Y": -35, "Steps": [1632,1633,1634,1635,1636,1637]},
+			"CanForceWork" : true
+	},
+    {
+		"Name": "htCollectors",
+			"MaxHealth" : 450,
+			"WoodCost": 6,
+			"StoneCost": 0,
+			"TileCost": 0,
+			"WoodPic": 2399,
+			"StonePic": 2400,
+			"WorkerType": 10,
+			"WorkerRest": 1,
+			"TextID": 1675,
+			"EntranceOffsetXpx" : 20,
+			"EntranceOffsetX" : -1,		
+			"DescriptionID": 1735,
+			"WorkerTypes": [{"UnitType" : "utClayPicker", "MaxCount" : 2}],
+			"WareInput": ["wtVegetables", "wtLance"],
+			"WareOutput": ["wtNone", "wtNone", "wtNone", "wtNone"],
+			"MaxOutWares": 10,
+			
+			"WoodPileOffset" : {"X" : -45, "Y" : 15}, 
+			"StonePileOffset" : {"X" : -20, "Y" : 15}, 
+			"TilePileOffset" : {"X" : -20, "Y" : 15},
+			"Build_Area": {
+							"Y1": [0, 0, 0, 0], 
+							"Y2": [1, 1, 1, 1],
+							"Y3": [1, 1, 1, 1],
+							"Y4": [1, 2, 1, 1]
+						},
+			"ha_Work2": {
+							"X": 0, 
+							"Y": 0, 
+							"Steps": [5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+						},
+			"ha_Work3": {
+							"X": 0, 
+							"Y": 0, 
+							"Steps": [5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+						},
+			"WorkAnim" : [
+							{ "WorkType" : "haWork2", "Cycles" : 10}
+						],
+			"MakeSound_ha_Work2": {"SoundID": 1, "Steps" : [5]},
+			"MakeSound_ha_Work3": {"SoundID": 1, "Steps" : [1]},
+			"ha_Flag1": {"X": -86, "Y": 10, "Steps": [1165,1166,1167,1163,1164]},
+			"ha_Flag2": {"X": -47, "Y": 26, "Steps": [1165,1166,1167,1163,1164]},
+			"ha_Fire1": {"X": 0, "Y": -43, "Steps": [1623,1624,1625,1620,1621,1622]},
+			"ha_Fire2": {"X": 60, "Y": -57, "Steps": [1637,1632,1633,1634,1635,1636]},
+			"ha_Fire3": {"X": -60, "Y": -33, "Steps": [1620,1621,1622,1623,1624,1625]},
+			"ha_Fire4": {"X": -40, "Y": -15, "Steps": [1617,1618,1619,1614,1615,1616]},
+			"ha_Fire5": {"X": -12, "Y": -25, "Steps": [1632,1633,1634,1635,1636,1637]},
+			"ha_Fire6": {"X": -5, "Y": -67, "Steps": [1629,1630,1631,1626,1627,1628]},
+			"ha_Fire7": {"X": 45, "Y": -33, "Steps": [1635,1636,1637,1632,1633,1634]},
+			"ha_Fire8": {"X": 15, "Y": -60, "Steps": [1621,1622,1623,1624,1625,1620]}
+			
+	},
+    {
+		"Name": "htTailorsShop",
+			"MaxHealth" : 250,
+			"WoodCost": 3,
+			"StoneCost": 2,
+			"TileCost": 2,
+			"WoodPic" : 2409,
+			"StonePic" : 2401,
+			"TextID": 1676,
+			"WorkerType": 5,
+			"WorkerRest": 5,
+			"EntranceOffsetXpx" : 5,
+			"EntranceOffsetX" : 1,		
+			"DescriptionID": 1736,
+			"MaxOutWares": 15,
+			"SupplyIn1": [2583, 2584, 2585, 2586, 2587],
+			"SupplyIn2": [2588, 2589, 2590, 2591, 2592],
+			"SupplyOut1": [2593, 2594, 2595, 2596, 2597],
+			"SupplyOut2": [2598, 2599, 2600, 2601, 2602],
+			"SupplyOut3": [2603, 2604, 2605, 2606, 2607],
+			"WorkerTypes": [{"UnitType" : "utCarpenter", "MaxCount" : 1}],
+			
+			"WoodPileOffset" : {"X" : -45, "Y" : 15}, 
+			"StonePileOffset" : {"X" : -20, "Y" : 15}, 
+			"TilePileOffset" : {"X" : -20, "Y" : 15},
+			"WareInput" : ["wtLeather", "wtFeathers"],
+			"WareOutput" : ["wtBoots", "wtLeatherArmor", "wtQuiver"],
+			"Build_Area": {
+							"Y1": [0, 0, 0, 0], 
+							"Y2": [0, 0, 0, 0],
+							"Y3": [0, 0, 1, 1],
+							"Y4": [0, 1, 1, 2]
+						},
+			"ha_Work2": {
+							"X": 0, 
+							"Y": 0, 
+							"Steps": [5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+						},
+			"ha_Work3": {
+							"X": 0, 
+							"Y": 0, 
+							"Steps": [5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+						},
+			"WorkAnim" : [
+							{ "WorkType" : "haWork2", "Cycles" : 30},
+							{ "WorkType" : "haWork3", "Cycles" : 1}
+						],
+			"MakeSound_ha_Work2": {"SoundID": 1, "Steps" : [5]},
+			"MakeSound_ha_Work3": {"SoundID": 1, "Steps" : [1]},
+			"ha_Flag1": {"X": 36, "Y": -52, "Steps": [1165,1166,1167,1163,1164]},
+			"ha_Fire1": {"X": 0, "Y": -43, "Steps": [1623,1624,1625,1620,1621,1622]},
+			"ha_Fire2": {"X": 75, "Y": -45, "Steps": [1637,1632,1633,1634,1635,1636]},
+			"ha_Fire3": {"X": -60, "Y": -33, "Steps": [1620,1621,1622,1623,1624,1625]},
+			"ha_Fire4": {"X": -40, "Y": 33, "Steps": [1617,1618,1619,1614,1615,1616]},
+			"ha_Fire5": {"X": 50, "Y": -25, "Steps": [1632,1633,1634,1635,1636,1637]},
+			"ha_Fire6": {"X": 60, "Y": -47, "Steps": [1629,1630,1631,1626,1627,1628]},
+			"ha_Fire7": {"X": 95, "Y": -33, "Steps": [1635,1636,1637,1632,1633,1634]},
+			"ha_Fire8": {"X": -20, "Y": -50, "Steps": [1621,1622,1623,1624,1625,1620]}
+			
+	},
+    {
+		"Name": "htSmallStore",
+			"MaxHealth" : 250,
+			"WoodCost": 4,
+			"StoneCost": 0,
+			"TileCost": 0,
+			"WoodPic" : 2436,
+			"StonePic" : 2436,
+			"TextID": 1677,
+			"WorkerType":-1,
+			"WorkerRest": 5,
+			"EntranceOffsetXpx" : 20,
+			"EntranceOffsetX" : 0,
+			"MaxInWares" : 50,
+			"UnlockAfter" : ["htStore", "htSawmill"],		
+			"DescriptionID": 1737,
+			
+			"Levels" : [
+							{
+								"StonePic": 2435, "SnowPic": 2470, "WoodCost" : 2, "StoneCost" : 0, "TileCost" : 1, "AddHealth": 100, "ReplaceAnim" : false, 
+								"MaxInWares" : 100,
+								"Anim" : [
+											{"X": 62, "Y": -87, "Steps": [1165,1166,1167,1163,1164]}
+										]
+							},
+							{
+								"StonePic": 2460, "SnowPic": 2471, "WoodCost" : 0, "StoneCost" : 5, "TileCost" : 3, "AddHealth": 250, "ReplaceAnim" : false, 
+								"MaxInWares" : 200,
+								"Anim" : [
+											{"X": 62, "Y": -87, "Steps": [1165,1166,1167,1163,1164]}
+										]
+							}
+						],
+			"Build_Area": {
+							"Y1": [0, 0, 0, 0], 
+							"Y2": [0, 0, 0, 0],
+							"Y3": [0, 0, 1, 1],
+							"Y4": [0, 0, 2, 1]
+						},
+			
+			
+			"WoodPileOffset" : {"X" : 83, "Y" : 15}, 
+			"StonePileOffset" : {"X" : 60, "Y" : 15}, 
+			"TilePileOffset" : {"X" : 40, "Y" : 15},
+			
+			"WareSlots" : [
+								{  "GuiIcon" : 351, "WareInput" : ["wtTrunk", "wtTimber", "wtSawDust"], "WareOutput" : ["wtTrunk", "wtTimber", "wtSawDust"] },
+								{  "GuiIcon" : 352, "WareInput" : ["wtStone", "WtTile"], 				"WareOutput" : ["wtStone", "WtTile"] },
+								{  "GuiIcon" : 361, "WareInput" : ["wtBread", "wtSausage", "wtFish"], 	"WareOutput" : ["wtBread", "wtSausage", "wtFish"] },
+								{  "GuiIcon" : 359, "WareInput" : ["wtWine", "wtApple"], 				"WareOutput" : ["wtWine", "wtApple"]} ,
+								{  "GuiIcon" : 360, "WareInput" : ["wtCorn", "wtSeed", "wtFlour", "wtVegetables", "wtHay"], 		"WareOutput" : ["wtCorn", "wtSeed", "wtFlour", "wtVegetables", "wtHay"] },
+								{  "GuiIcon" : 681, "WareInput" : ["wtWater", "wtFeathers"], 				"WareOutput" : ["wtWater", "wtFeathers"] },
+								{  "GuiIcon" : 366, "WareInput" : ["wtSkin", "wtLeather"], 				"WareOutput" : ["wtSkin", "wtLeather"] },
+								{  "GuiIcon" : 355, "WareInput" : ["wtCoal", "wtGoldOre"], 				"WareOutput" : ["wtCoal", "wtGoldOre"] },
+								{  "GuiIcon" : 354, "WareInput" : ["wtIronOre", "wtBitinOre"], 			"WareOutput" : ["wtIronOre", "wtBitinOre"] },
+								{  "GuiIcon" : 695, "WareInput" : ["wtBolt", "wtStoneBolt"], 			"WareOutput" : ["wtBolt", "wtStoneBolt"] }
+								],
+			"ha_Fire1": {"X": 0, "Y": -43, "Steps": [1623,1624,1625,1620,1621,1622]},
+			"ha_Fire2": {"X": 60, "Y": -47, "Steps": [1637,1632,1633,1634,1635,1636]},
+			"ha_Fire3": {"X": 45, "Y": -33, "Steps": [1620,1621,1622,1623,1624,1625]},
+			"ha_Fire4": {"X": 20, "Y": -15, "Steps": [1617,1618,1619,1614,1615,1616]},
+			"ha_Fire5": {"X": 85, "Y": -25, "Steps": [1632,1633,1634,1635,1636,1637]},
+			"ha_Fire6": {"X": 60, "Y": -67, "Steps": [1629,1630,1631,1626,1627,1628]},
+			"ha_Fire7": {"X": 85, "Y": 13, "Steps": [1635,1636,1637,1632,1633,1634]},
+			"ha_Fire8": {"X": 35, "Y": -33, "Steps": [1621,1622,1623,1624,1625,1620]}
+			
+			
+	},
+    {
+		"Name": "htCottage",
+			"MaxHealth" : 300,
+			"WoodCost": 4,
+			"StoneCost": 3,
+			"TileCost": 0,
+			"WoodPic" : 2407,
+			"StonePic" : 2406,
+			"TextID": 1678,
+			"WorkerType":-1,
+			"WorkerRest": 5,
+			"EntranceOffsetXpx" : 5,
+			"EntranceOffsetX" : 1,		
+			"DescriptionID": 1738,
+			
+			"WoodPileOffset" : {"X" : -45, "Y" : 15}, 
+			"StonePileOffset" : {"X" : -20, "Y" : 15}, 
+			"TilePileOffset" : {"X" : -20, "Y" : 15}, 
+			"WareInput" : ["wtApple"],
+			"Build_Area": {
+							"Y1": [0, 0, 0, 0], 
+							"Y2": [0, 0, 0, 0],
+							"Y3": [0, 1, 1, 1],
+							"Y4": [0, 1, 1, 2]
+						},
+			"ha_Flag3": {"X": 105, "Y": -88, "Steps": [2192, 2193, 2194, 2195]},
+			"ha_Flag1": {"X": 25, "Y": -15, "Steps": [1165,1166,1167,1163,1164]},
+			"ha_Fire1": {"X": 0, "Y": -43, "Steps": [1623,1624,1625,1620,1621,1622]},
+			"ha_Fire2": {"X": 60, "Y": -57, "Steps": [1637,1632,1633,1634,1635,1636]},
+			"ha_Fire3": {"X": -60, "Y": -33, "Steps": [1620,1621,1622,1623,1624,1625]},
+			"ha_Fire4": {"X": -40, "Y": 20, "Steps": [1617,1618,1619,1614,1615,1616]},
+			"ha_Fire5": {"X": 30, "Y": -25, "Steps": [1632,1633,1634,1635,1636,1637]},
+			"ha_Fire6": {"X": 60, "Y": -67, "Steps": [1629,1630,1631,1626,1627,1628]},
+			"ha_Fire7": {"X": 45, "Y": -33, "Steps": [1635,1636,1637,1632,1633,1634]},
+			"ha_Fire8": {"X": -40, "Y": -40, "Steps": [1621,1622,1623,1624,1625,1620]}
+			
+			
+	},
+    {
+		"Name": "htHouse",
+			"MaxHealth" : 650,
+			"WoodCost": 5,
+			"StoneCost": 4,
+			"TileCost": 5,
+			"WoodPic" : 2408,
+			"StonePic" : 2402,
+			"TextID": 1679,
+			"WorkerType":-1,
+			"WorkerRest": 5,
+			"EntranceOffsetXpx" : 5,
+			"EntranceOffsetX" : 1,		
+			"DescriptionID": 1739,
+			
+			"WoodPileOffset" : {"X" : -45, "Y" : 15}, 
+			"StonePileOffset" : {"X" : -20, "Y" : 15}, 
+			"TilePileOffset" : {"X" : -20, "Y" : 15}, 
+			"WareInput" : ["wtApple"],
+			
+			"Wariants": [2403, 2404, 2405],
+			"Build_Area": {
+							"Y1": [0, 1, 1, 1], 
+							"Y2": [1, 1, 1, 1],
+							"Y3": [1, 1, 1, 1],
+							"Y4": [1, 1, 1, 2]
+						},
+						
+			"ha_Fire1": {"X": 0, "Y": -43, "Steps": [1623,1624,1625,1620,1621,1622]},
+			"ha_Fire2": {"X": 60, "Y": -75, "Steps": [1637,1632,1633,1634,1635,1636]},
+			"ha_Fire3": {"X": -60, "Y": -33, "Steps": [1620,1621,1622,1623,1624,1625]},
+			"ha_Fire4": {"X": -40, "Y": -15, "Steps": [1617,1618,1619,1614,1615,1616]},
+			"ha_Fire5": {"X": -12, "Y": -10, "Steps": [1632,1633,1634,1635,1636,1637]},
+			"ha_Fire6": {"X": -20, "Y": -137, "Steps": [1629,1630,1631,1626,1627,1628]},
+			"ha_Fire7": {"X": 45, "Y": -33, "Steps": [1635,1636,1637,1632,1633,1634]},
+			"ha_Fire8": {"X": -40, "Y": -40, "Steps": [1621,1622,1623,1624,1625,1620]},
+			"ha_Flag1": {"X": 43, "Y": -84, "Steps": [1165,1166,1167,1163,1164]},
+			"ha_Flag2": {"X": 13, "Y": -34, "Steps": [1165,1166,1167,1163,1164]}
+			
+	},
+    {
+		"Name": "htPalace",
+			"MaxHealth" : 800,
+			"WoodCost": 5,
+			"StoneCost": 6,
+			"TileCost": 8,
+			"WoodPic" : 2427,
+			"StonePic" : 2410,
+			"TextID": 1681,
+			"WorkerType":-1,
+			"WorkerRest": 5,
+			"EntranceOffsetXpx" : 5,
+			"EntranceOffsetX" : 1,
+			"MaxInWares" : 5,
+			"Sight": 30,		
+			"DescriptionID": 1740,
+			"WareInput" : ["wtPig","wtGold","wtApple","wtBoots"],
+			
+			"WoodPileOffset" : {"X" : -45, "Y" : 15}, 
+			"StonePileOffset" : {"X" : -20, "Y" : 15}, 
+			"TilePileOffset" : {"X" : -20, "Y" : 15}, 
+			
+			"Build_Area": {
+							"Y1": [1, 1, 1, 1], 
+							"Y2": [1, 1, 1, 1],
+							"Y3": [1, 1, 1, 1],
+							"Y4": [1, 1, 1, 2]
+						},
+						
+			"ha_Fire1": {"X": 0, "Y": -73, "Steps": [1623,1624,1625,1620,1621,1622]},
+			"ha_Fire2": {"X": 20, "Y": -57, "Steps": [1637,1632,1633,1634,1635,1636]},
+			"ha_Fire3": {"X": -60, "Y": -53, "Steps": [1620,1621,1622,1623,1624,1625]},
+			"ha_Fire4": {"X": 40, "Y": -15, "Steps": [1617,1618,1619,1614,1615,1616]},
+			"ha_Fire5": {"X": 12, "Y": -95, "Steps": [1632,1633,1634,1635,1636,1637]},
+			"ha_Fire6": {"X": 40, "Y": -147, "Steps": [1629,1630,1631,1626,1627,1628]},
+			"ha_Fire7": {"X": -20, "Y": -80, "Steps": [1635,1636,1637,1632,1633,1634]},
+			"ha_Fire8": {"X": 40, "Y": -75, "Steps": [1621,1622,1623,1624,1625,1620]},
+			"ha_Flag1": {"X": 31, "Y": -232, "Steps": [1183, 1184, 1185, 1186, 1187, 1188, 1189, 1190, 1191, 1192]},
+			"ha_Flag3": {"X": -15, "Y": -152, "Steps": [1168,1169,1170,1171,1172,1173,1174,1175,1176,1177]},
+			"ha_Flag2": {"X": 73, "Y": -130, "Steps": [1178,1179,1180,1181,1182, 1203, 1204, 1205, 1206, 1207]}
+			
+	},
+    {
+		"Name": "htStall",
+			"MaxHealth": 50,
+			"WoodCost": 3,
+			"StoneCost": 1,
+			"TileCost": 0,
+			"WoodPic": 2489,
+			"StonePic": 2489,
+			"Sight": 3,
+			"WorkerType": -1,
+			"TextID": 1974,
+			"EntranceOffsetXpx": 20,
+			"EntranceOffsetYpx": 10,
+			"EntranceOffsetX" : 0,
+			"WorkerType": 13,
+			"WorkerTypes": [{"UnitType" : "utRecruit", "MaxCount" : 1}],
+			"SupplyIn1" : [5, 5, 5, 5, 5],
+			"SupplyIn2" : [5, 5, 5, 5, 5],
+			"SupplyIn3" : [5, 5, 5, 5, 5],
+			"SupplyIn4" : [5, 5, 5, 5, 5],
+			"SupplyOut1" : [5, 5, 5, 5, 5],
+			"SupplyOut2" : [5, 5, 5, 5, 5],
+			"SupplyOut3" : [5, 5, 5, 5, 5],
+			"SupplyOut4" : [5, 5, 5, 5, 5],
+			"WareInput" : ["wtApple", "wtGold", "wtEgg", "wtJewerly"],
+			"MaxInWares" : 15, 
+			"WoodPileOffset" : {"X" : -10, "Y" : 15}, 
+			"StonePileOffset" : {"X" : 0, "Y" : 15}, 
+			"TilePileOffset" : {"X" : 10, "Y" : 15}, 
+			"DescriptionID": 2171,
+			"UnlockAfter" : ["htPottery", "htMarket"],
+			"Wariants" : [2489, 2508, 2509, 2510, 2511, 2512, 2513, 2514, 2515, 2516, 2517],
+			
+			"ha_Flag2": {"X": 6, "Y": -14, "Steps": [1165,1166,1167,1163,1164]},
+			
+			"ha_Fire1": {"X": 29, "Y": -63, "Steps": [1623,1624,1625,1620,1621,1622]},
+			"ha_Fire4": {"X": 16, "Y": 10, "Steps": [1617,1618,1619,1614,1615,1616]},
+			"ha_Fire8": {"X": 2, "Y": -61, "Steps": [1621,1622,1623,1624,1625,1620]},
+			
+			"Build_Area": {
+							"Y1": [0, 0, 0, 0], 
+							"Y2": [0, 0, 0, 0],
+							"Y3": [0, 0, 0, 0],
+							"Y4": [0, 0, 2, 1]
+						}
+			
+	},
+    {
+		"Name": "htProductionThatch",
+			"MaxHealth": 600,
+			"WoodCost": 5,
+			"StoneCost": 5,
+			"TileCost": 8,
+			"WoodPic": 2530,
+			"StonePic": 2518,
+			"Sight": 6,
+			"WorkerRest": 10,
+			"WorkerType": -1,
+			"WorkerTypes": [
+							{"UnitType" : "utCarpenter", "MaxCount" : 5}, 
+							{"UnitType" : "utMetallurgist", "MaxCount" : 5}, 
+							{"UnitType" : "utBaker", "MaxCount" : 5}, 
+							{"UnitType" : "utStoneMason", "MaxCount" : 5}, 
+							{"UnitType" : "utFarmer", "MaxCount" : 5}, 
+							{"UnitType" : "utClayPicker", "MaxCount" : 5} 
+							],
+			"MaxWorkersCount": 5,
+			"MaxInWares": 15,
+			"MaxOutWares": 30,
+			"CanOverfill" : true,
+			"UniqueWorkers" : false,
+			"TextID": 1975,
+			"DescriptionID": 2169,
+			"EntranceOffsetXpx": 20,
+			"EntranceOffsetYpx": 10,
+			"EntranceOffsetX" : 0,
+			"SupplyIn1" : [5, 5, 5, 5, 5],
+			"SupplyIn2" : [5, 5, 5, 5, 5],
+			"SupplyIn3" : [5, 5, 5, 5, 5],
+			"SupplyIn4" : [5, 5, 5, 5, 5],
+			"SupplyOut1" : [5, 5, 5, 5, 5],
+			"SupplyOut2" : [5, 5, 5, 5, 5],
+			"SupplyOut3" : [5, 5, 5, 5, 5],
+			"SupplyOut4" : [5, 5, 5, 5, 5],
+			"WareInput" : ["wtTrunk", "wtNone", "wtNone", "wtNone"],
+			"WareOutput" : ["wtTimber", "wtWheel", "wtLog", "wtSawDust"],
+			"WoodPileOffset" : {"X" : -10, "Y" : 15}, 
+			"StonePileOffset" : {"X" : 0, "Y" : 15}, 
+			"TilePileOffset" : {"X" : 10, "Y" : 15}, 
+			"UnlockAfter" : ["htPottery", "htMarket"],
+			"CanForceWork" : true,
+			"ha_Fire1": {"X": 39, "Y": -100, "Steps": [1623,1624,1625,1620,1621,1622]},
+			"ha_Fire2": {"X": 0, "Y": 0, "Steps": [1637,1632,1633,1634,1635,1636]},
+			"ha_Fire3": {"X": 14, "Y": -168, "Steps": [1620,1621,1622,1623,1624,1625]},
+			"ha_Fire4": {"X": 0, "Y": 0, "Steps": [1617,1618,1619,1614,1615,1616]},
+			"ha_Fire5": {"X": -12, "Y": -74, "Steps": [1632,1633,1634,1635,1636,1637]},
+			"ha_Fire6": {"X": 7, "Y": -109, "Steps": [1629,1630,1631,1626,1627,1628]},
+			"ha_Fire7": {"X": 46, "Y": -71, "Steps": [1635,1636,1637,1632,1633,1634]},
+			"ha_Fire8": {"X": -27, "Y": -160, "Steps": [1621,1622,1623,1624,1625,1620]},
+			
+			"Build_Area": {
+							"Y1": [1, 1, 1, 1], 
+							"Y2": [1, 1, 1, 1],
+							"Y3": [1, 1, 1, 1],
+							"Y4": [1, 1, 2, 1]
+						},
+			"ha_Work2": {
+							"X": 0, 
+							"Y": 0, 
+							"Steps": [5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+						},
+			"ha_Work3": {
+							"X": 0, 
+							"Y": 0, 
+							"Steps": [5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+						},
+			"WorkAnim" : [
+							{ "WorkType" : "haWork2", "Cycles" : 30},
+							{ "WorkType" : "haWork3", "Cycles" : 30}
+						],
+			"WareSlots" : [
+								{  "GuiIcon" : 360, "WareInput" : ["wtNone", "wtNone", "wtNone", "wtNone"], "WareOutput" : ["wtCorn", "wtSeed"] },
+								{  "GuiIcon" : 359, "WareInput" : ["wtNone", "wtNone", "wtNone", "wtNone"], "WareOutput" : ["wtWine"] },
+								{  "GuiIcon" : 837, "WareInput" : ["wtNone", "wtNone", "wtNone", "wtNone"], "WareOutput" : ["wtHay", "wtVegetables"] },
+								{  "GuiIcon" : 352, "WareInput" : ["wtStone"], "WareOutput" : ["wtTile", "wtStone", "wtStoneBolt"] },
+								{  "GuiIcon" : 351, "WareInput" : ["wtTrunk"], "WareOutput" : ["wtTimber", "wtWheel", "wtLog", "wtSawDust"] },
+								{  "GuiIcon" : 355, "WareInput" : ["wtGoldOre", "wtIronOre", "wtBitinOre", "wtCoal"],  "WareOutput" : ["wtGold", "wtIron", "wtBitin"] },
+								{  "GuiIcon" : 357, "WareInput" : ["wtIron", "wtBitin", "wtCoal"], "WareOutput" : ["wtSteelE", "wtBitinE"] },
+								{  "GuiIcon" : 362, "WareInput" : ["wtSeed", "wtFlour", "wtWater"], "WareOutput" : ["wtFlour", "wtBread"] }
+							]
+			
+	},
+    {
+		"Name": "htShipYard",
+			"MaxHealth": 600,
+			"WoodCost": 6,
+			"StoneCost": 0,
+			"TileCost": 4,
+			"WoodPic": 2532,
+			"StonePic": 2531,
+			"Sight": 6,
+			"WorkerRest": 10,
+			"WorkerType": 5,
+			"WorkerTypes": [{"UnitType" : "utCarpenter", "MaxCount" : 1}],
+			"MaxWorkersCount": 1,
+			"MaxInWares":  5,
+			"TextID": 1983,
+			"EntranceOffsetXpx": 20,
+			"EntranceOffsetYpx": 10,
+			"EntranceOffsetX" : -1,
+			"EntranceOffsetY" : -2,
+			"SupplyIn1" : [5, 5, 5, 5, 5],
+			"WareInput" : ["wtLog", "wtSkin", wtSteelE, "wtBitinE", "wtBolt", "wtAxe"],
+			"WoodPileOffset" : {"X" : -10, "Y" : 15}, 
+			"StonePileOffset" : {"X" : 0, "Y" : 15}, 
+			"TilePileOffset" : {"X" : 10, "Y" : 15}, 
+			"DescriptionID": 2170,
+			"UnlockAfter" : ["htPottery", "htMarket"],
+			
+			"Build_Area": {
+							"Y1": [0, 1, 1, 0], 
+							"Y2": [0, 2, 1, 0],
+							"Y3": [0, 0, 0, 0],
+							"Y4": [1, 1, 1, 1]
+						},
+			"ha_Flag1": {"X": -15, "Y": -170, "Steps": [1183, 1184, 1185, 1186, 1187, 1188, 1189, 1190, 1191, 1192]},
+			"ha_Work2": {
+							"X": 0, 
+							"Y": 0, 
+							"Steps": [5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+						},
+			"ha_Work3": {
+							"X": 0, 
+							"Y": 0, 
+							"Steps": [5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+						},
+			"WorkAnim" : [
+							{ "WorkType" : "haWork2", "Cycles" : 5},
+							{ "WorkType" : "haWork3", "Cycles" : 5}
+						],
+			"ha_Fire1": {"X": -68, "Y": -177, "Steps": [1623,1624,1625,1620,1621,1622]},
+			"ha_Fire2": {"X": 0, "Y": 0, "Steps": [1637,1632,1633,1634,1635,1636]},
+			"ha_Fire3": {"X": -15, "Y": -185, "Steps": [1620,1621,1622,1623,1624,1625]},
+			"ha_Fire4": {"X": 63, "Y": 32, "Steps": [1617,1618,1619,1614,1615,1616]},
+			"ha_Fire5": {"X": 20, "Y": -109, "Steps": [1632,1633,1634,1635,1636,1637]},
+			"ha_Fire6": {"X": 25, "Y": -54, "Steps": [1629,1630,1631,1626,1627,1628]},
+			"ha_Fire7": {"X": 37, "Y": -100, "Steps": [1635,1636,1637,1632,1633,1634]},
+			"ha_Fire8": {"X": 0, "Y": -123, "Steps": [1621,1622,1623,1624,1625,1620]}
+			
+	}
+    
+  ]
+}
+
+

@@ -1,0 +1,1 @@
+erase /F /Q /S *.mi

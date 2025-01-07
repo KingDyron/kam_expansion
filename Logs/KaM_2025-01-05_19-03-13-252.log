@@ -1,0 +1,48 @@
+   Timestamp    Elapsed     Delta  Thread    Description
+========================
+    Date: 2025.01.05
+========================
+19:03:13.269     0,017s      17ms  13416    Log is up and running. Game version: KaM Expansion: Co-op & World Update
+19:03:13.275     0,023s       6ms  13416    Game Load started
+19:03:13.295     0,043s      20ms  13416    Start loading 'GameApp settings' from 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'
+19:03:13.300     0,048s       5ms  13416    'GameApp settings' was successfully loaded from 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'
+19:03:13.306     0,053s       5ms  13416    Start saving 'GameApp settings' to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'
+008e8298 KaM_Expansion.exe KM_Settings        106 TKMSettings.SaveToDefaultFile
+008e836b KaM_Expansion.exe KM_Settings        113 TKMSettings.SaveToDefaultFile
+008e7f69 KaM_Expansion.exe KM_Settings         59 TKMSettings.Create
+008e86a6 KaM_Expansion.exe KM_SettingsXML      38 TKMSettingsXML.Create
+008e89e7 KaM_Expansion.exe KM_GameAppSettings  51 TKMGameAppSettings.Create
+00afc868 KaM_Expansion.exe KM_Main            258 TKMMain.Start
+00afcad7 KaM_Expansion.exe KM_Main            305 TKMMain.Start
+00d7db2b KaM_Expansion.exe KaM_Expansion      480 initialization
+00d7db5a KaM_Expansion.exe KaM_Expansion      483 initialization
+76c97ba7 KERNEL32.DLL                             BaseThreadInitThunk
+
+19:03:13.343     0,090s      37ms  13416    'GameApp settings' was successfully saved to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'
+19:03:13.390     0,138s      48ms  13416    Start loading 'Server settings' from 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+19:03:13.397     0,145s       7ms  13416    'Server settings' was successfully loaded from 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+19:03:13.403     0,151s       6ms  13416    Start saving 'Server settings' to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+008e8298 KaM_Expansion.exe KM_Settings       106 TKMSettings.SaveToDefaultFile
+008e836b KaM_Expansion.exe KM_Settings       113 TKMSettings.SaveToDefaultFile
+008e7f69 KaM_Expansion.exe KM_Settings        59 TKMSettings.Create
+00a25b28 KaM_Expansion.exe KM_ServerSettings 109 TKMServerSettings.Create
+00af1c1c KaM_Expansion.exe KM_GameApp        213 TKMGameApp.Create
+00af206e KaM_Expansion.exe KM_GameApp        295 TKMGameApp.Create
+00afdade KaM_Expansion.exe KM_Main           635 TKMMain.ReinitRender
+00afdcea KaM_Expansion.exe KM_Main           689 TKMMain.ReinitRender
+00afc97e KaM_Expansion.exe KM_Main           281 TKMMain.Start
+00afcad7 KaM_Expansion.exe KM_Main           305 TKMMain.Start
+00d7db2b KaM_Expansion.exe KaM_Expansion     480 initialization
+00d7db5a KaM_Expansion.exe KaM_Expansion     483 initialization
+76c97ba7 KERNEL32.DLL                            BaseThreadInitThunk
+
+19:03:13.417     0,164s      13ms  13416    'Server settings' was successfully saved to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+19:03:13.423     0,171s       7ms  13416    Init Render started
+19:03:13.820     0,568s     397ms  13416    GL_MAX_TEXTURE_SIZE = 32768
+19:03:13.827     0,575s       7ms  13416    GL_MAX_VIEWPORT_DIM = 32768
+                                      OpenGL Vendor: NVIDIA Corporation
+                                      OpenGL Renderer: NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2
+                                      OpenGL Version: 4.6.0 NVIDIA 560.94
+19:03:13.852     0,600s      25ms  13416    Init Render Done
+19:03:13.859     0,607s       7ms  13416    Resource loading state - None
+19:03:13.866     0,613s       6ms  13416    Reading palettes ... done

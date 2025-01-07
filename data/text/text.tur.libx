@@ -1,0 +1,779 @@
+﻿0:Marangozhane
+1:Demir Dökümhanesi
+2:Silah Dökümhanesi
+3:Kömür Madeni
+4:Demir Madeni
+5:Altın Madeni
+6:Balıkçı
+7:Fırın
+8:Çiftlik
+9:Oduncu
+10:Zırh Dökümhanesi
+11:Depo
+12:Ahır
+13:Okul
+14:Taş Ocağı
+15:Darphane
+16:Domuz Çifliği
+17:Kule
+18:Şehir Merkezi
+19:Silah Atölyesi
+20:Zırh Atölyesi
+21:Kale
+22:Değirmen
+23:Savaş Atölyesi
+24:Kasap
+25:Tabakhane
+26:Eğitim Merkezi
+27:Yemekhane
+28:Şarap Mahzeni
+29:Market
+30:Odun
+31:Taş
+32:Tahta
+33:Demir Cevheri
+34:Altın Cevheri
+35:Kömür
+36:Demir
+37:Altın
+38:Şarap
+39:Mısır
+40:Ekmek
+41:Un
+42:Kumaş
+43:Sucuk
+44:Domuz
+45:Deri
+46:Tahta Kalkan
+47:Demir Kalkan
+48:Kumaş Zırh
+49:Demir Zırh
+50:Balta
+51:Kılıç
+52:Tahta Mızrak
+53:Demir Mızrak
+54:Yay
+55:Arbalet
+56:At
+57:Balık
+58:Hamal
+59:Oduncu
+60:Madenci
+61:Hayvan Yetiştiricisi
+62:Çiftçi
+63:Marangoz
+64:Fırıncı
+65:Kasap
+66:Balıkçı
+67:İşçi
+68:Taşçı
+69:Demirci
+70:Metalurjici
+71:Asker
+72:Milis
+73:Balta Savaşçısı
+74:Kılıç Savaşçısı
+75:Okçu
+76:Arbaletçi
+77:Tahta Mızrakçı
+78:Demir Mızrakçı
+79:Süvari
+80:Şovalye
+81:Barbar
+82:Asi
+83:Haydut
+84:Savaşçı
+85:Serseri
+86:Mancınık
+87:Ballista
+88:Hamallar binalarınız için gerekli malzemeleri taşırlar.||Binalar yollarla birbirine bağlanmalıdır.
+89:Oduncular marangozhane için gerekli odunu sağlarlar.
+90:Madenciler kömür, demir ve altın madeninden cevherler toplarlar.
+91:Hayvan yetiştiricileri mısır kullanarak domuz veya at yetiştirirler.
+92:Çiftçiler mısır veya üzüm yetiştirebilirler.
+93:Marangozlar odun veya tahta işleyerek marangozhane, silah atölyesi veya zirh atölyesinde çalışırlar.||Ayrıca savaş atölyesinde mancınık veya ballista yapabilirler.
+94:Fırıncılar değirmende mısırdan un yaparlar.||Ayrıca fırında da undan ekmek yaparlar.
+95:Kasaplar domuzdan sucuk, deriden kumaş yaparlar.
+96:Balıkçılar yakın su kıyılarında balık tutarlar.
+97:İşçiler binalar ve binalar için gerekli yolları yaparlar.||Ayrıca hasar görmüş binaları onarırlar.
+98:Taşçılar yol ve bina yapımı için gerekli taşı kazarlar.
+99:Demirciler demirden silah ve zırh yaparlar.
+100:Metalurjiciler kömür kullanarak demir veya altını rafine ederler.
+101:Askerler kalede yetiştirilmek için kullanılırlar.||Ayrıca kulelerde de görevli olurlar.
+102:Bina seçimi
+103:Kaynak dağılımı
+104:İstatistikler
+105:Seçenekler
+106:Geri
+107:Binalar
+108:Kaynak||Dağılımı
+109:İstatistikler
+110:Seçenekler
+111:Oyunu Yükle
+112:Oyunu Kaydet
+113:Çıkmak istediğinize|emin misiniz?
+114:Çıkış
+115:Geri
+116:Ayarlar
+117:Düzenleyiciden Çık
+118:SFX
+119:Sesi değiştir
+120:Sesi değiştir
+121:Müzik
+122:Müzik aç/kapa
+123:Otomatik kayıt
+124:Müzik Oynatıcı
+125:Önceki Şarkı
+126:Sonraki Şarkı
+127:Yık
+128:Binaları yık
+129:Yol yap
+130:Yol yap
+131:Tarla kaz
+132:Tarla kaz
+133:Üzüm bağı yap
+134:Üzüm bağı yap
+135:İptal
+136:Eğitimi iptal et
+137:İhtiyaçlar:
+140:Üretim
+141:Bina yapım|aşamasında
+142:Yık
+143:Yıkmak istediğinize|emin misiniz?
+144:Seçilen binayı yık
+145:Miktarı azalt
+146:Miktarı arttır
+147:Önceki asker tipi
+148:Sonraki asker tipi
+149:Seçilen askeri eğit
+150:Sonraki meslek
+151:Önceki meslek
+152:Sıraya ekle
+153:Kaynak dağılımını aç/kapa
+154:Maliyet:
+155:Bina onarımını aç/kapa
+156:Bina şu anda uygun değil
+157:Durum
+158:Sola döne
+159:Sağa dön
+160:Saldır
+161:Ayır
+162:Besle
+163:Hızlı saldırı başlat
+164:Sıra ekle
+165:Sıra düşür
+166:Grup|seç
+167:İptal
+168:Sil
+169:Seçili mesajı sil
+170:Git
+171:Seçili mesaj konumuna git
+172:Kapat
+173:Pencereyi kapat
+174:Taşçınız daha fazla taş kaynağına ulaşamıyor.
+175:Kömür madeniniz tükenmiş.
+176:Demir madeniniz tükenmiş.
+177:Altın madeniniz tükenmiş.
+178:Oduncunuz ağaç dikip kesecek yer bulamıyor.
+179:Bu ev kullanılmıyor.
+180:Askerleriniz acıktı, beslemeniz gerekiyor.
+181:Bekle
+182:Taşıyor
+183:Yol yapıyor
+184:Tarla kazıyor
+185:Üzüm bağı yapıyor
+186:Bina zemini hazırlıyor
+187:Bina yapıyor
+188:Binayı onarıyor
+189:Evine gidiyor
+190:Yemekhaneye gidiyor
+191:Binaya saldırıyor
+192:Ok atıyor
+193:Savaşıyor
+194:Hızlı saldırıya çıkmış
+195:Saldırıyor
+196:Yürüyor
+197:Boşta
+198:Taş kazıyor
+199:Mısır ekiyor
+200:Mısır biçiyor
+201:Üzüm topluyor
+202:Balık tutuyor
+203:Ağaç kesiyor
+204:Ağaç ekiyor
+205:Ruh
+206:Meşgul
+207:Orta Çağ Kornaları
+208:Bahar
+209:Ut
+210:Paralı Asker
+211:Prenses
+212:Kraliçe
+213:Pazar Yerinde
+214:Savaş Alanında
+215:Avluda Dans
+216:Ordu
+217:Kalede
+218:Kornalar
+219:Avluda
+220:Üniforma
+221:Derin Mavi
+222:Mücadele
+223:Kraliyet Meydanı
+224:Aristokrasi
+225:Limanda
+226:Yolculuk
+227:Seferler
+228:Özel Seferler
+229:Seferi Başlat!
+230:Tek Oyunculu Harita
+231:Haritayı Başlat
+232:Menüye Dön
+233:Kayıtlı Oyunu Yükle
+234:Çok Oyunculu
+235:Seçenekler
+236:Credits
+237:Oyundan Çık
+238:Devam Et
+239:Baştan Başlat
+240:Çözünürlük:
+241:Desteklenmiyor
+242:Desteklenmiyor
+243:ZAFER!
+244:MAĞLUBİYET!
+245:Öldürülen askerler:
+246:Öldürülen birimler:
+247:Kaybedilen binalar:
+248:Yıkılan binalar:
+249:Yapılan binalar:
+250:Eğitilen birimler:
+251:Üretilen silahlar:
+252:Eğitilen askerler:
+253:Görev tamamlandı:
+254:İstatistikler
+255:Ekonomi
+256:Yetiştirilen|köylüler
+257:Kaybedilen|köylüler
+258:Yetiştirilen|askerler
+259:Kaybedilen|askerler
+260:Öldürülen|askerler
+261:Yapılan|binalar
+262:Kaybedilen|binalar
+263:Yıkılan|binalar
+264:Üretilen|kaynaklar
+265:Üretilen|silahlar
+266:Ordu
+267:Köylüler
+268:Binalar
+269:Kaynaklar
+270:Üretilen malzemeler
+271:Bilgi yok
+272:Siz
+273:Oyuncu %d
+274:Çoklu Oyuncuya Geri Dön
+275:Kayıtları Geri Dön
+276:Hepsi
+277:Savaş
+278:Yemek
+279:JOYMANIA ENTERTAINMENT||PROGRAMMING:|Peter Ohlmann||GAME GRAPHICS:|Adam Sprys||LEVEL DESIGN:|Adam Sprys|André Quaß||SOUND EDITING AND MIXING:|Tonstudio Mannheim||MUSIC:|Gerd Hofmann|Joachim Schäfer|Jürgen Rebhann|Klaus Staendike|Steffen Schüngel||ILLUSTRATIONS:|Boleslaw Kasza|Christoph Werner||TRANSLATION:|Ronnie Shankland|Patricia Bellantuono|Andrea Rumpelt|||ZUXXEZ ENTERTAINMENT AG||PRODUCER:|Uwe Schäfer||MANUAL:|Peter Ohlmann|Uwe Schäfer||BETA TESTING:|Peter Ohlmann|Adam Sprys|Alexandra Constandache|Dirk P. Hassinger|Achim Heidelauf|Uwe Schäfer|Ingrid Schäfer|Dirk U. Jantz|Ion Constandache|Yaman Egeli|Roman Eich|Iris Mocsnek|Anke Jantz|Paul Hassinger|Liza Hassinger||GAMES DIRECTOR:|Achim Heidelauf||PUBLISHED BY:|TopWare Interactive||CUTSCENES:||DIRECTION:|Slawomir Jedrzejewski||Kajetan Czarnecki|Wojciech Drazek|Daniel Duplaga|Rafal Januszkiewicz|Andrzej Rams|Piotr Rulka|Krzysztof Rybczynski|Grzegorz Wisniewski||VOICES:|Claus Boyen (Storyteller)||Tim Timmermann|Peter Houska|Dirk Mühlbach|Ralf Ditze|Gerhard Piske|Gernot Wassmann||ARTWORK:|Boleslaw Kasza|Adam Sprys||OPENING ANIMATION:|Uwe Schäfer|Christian Bigalk|Additional 3D-Modelling:|Niels Horstmann||SPECIAL THANKS TO:|Tadeusz Zuber|Dieter Ohlmann|Alexandra Constandache|Ingrid Schäfer
+280:Görev iptal edildi
+281:Kayıt bitti
+282:Yapım Eğitimi
+283:Savaş Eğitimi
+284:Tek Oyunculu
+285:Harita Düzenleyici
+286:Yeni Görev
+287:Başlık
+288:Boyut
+289:Kazanma şartları: %s
+290:Yenilgi şartları: %s
+291:Dostlar:
+292:Düşmanlar:
+293:Zaman
+294:Yeni harıta boyutu
+295:Genişlik
+296:Yükseklik
+297:Yeni Harita Oluştur
+298:Uygun haritalar
+299:Var Olan Haritayı Yükle
+300:Konum
+301:Kontroller:
+302:Oynayış:
+303:Ses:
+304:Müziği kapat
+305:Grafikler:
+306:Parlaklık
+307:Vertical Sync
+308:Tam Ekran
+309:Uygula
+310:Dil:
+311:Gölge kalitesi:
+312:Düşük
+313:Yüksek
+314:Yükleniyor... Lütfen bekleyiniz
+315:Bir hata oluştu!
+316:Loading new locale
+317:Kayıtların listesi
+318:Dosya adı
+319:Açıklama
+320:Yükle
+321:Sil
+322:Bu kaydı silmek istediğinize emin misiniz?
+323:Sil
+324:İptal
+325:Başlık
+326:Haritalar
+327:Kilitli değil
+328:Kazandınız!
+329:Oynamaya devam et
+330:Zafer!
+331:Kaybettiniz!
+332:İzlemeye devam et
+333:Mağlubiyet
+334:Kayıt bitti
+335:İzlemeye Devam Et
+336:Menüye Dön
+337:Uygun değil
+338:Oyuna devam etmek için %s e basınız
+339:Oyuncu bilgisi
+340:Sohbet
+341:Kayıt zaten var
+342:Üstüne Kaydet
+343:Kaydet
+344:Yükle
+345:Eski OpenGL versiyonu tespit edildi, oyunda yavaşlamalara neden olabilir
+346:Daha iyi bir performans için lütfen grafik sürücünüzü güncelleyiniz
+347:Network hatası:
+348:Hata: Oyuncu ismi boş kalamaz
+349:Hata: Oyuncu ismi %d karakterden uzun olamaz
+350:Hata: Oyuncu ismi uygun olmayan karakter içeriyor
+351:Bağlantı başarısız oldu: %s
+352:Bağlantınız koptu
+353:Görev %d
+354:Mesaj kaydı
+355:Balıkçınız suya çok uzak.
+356:Balıkçınız daha fazla balığa ulaşamıyor.
+357:Kaydı baştan başlat
+358:Kaydı durdur
+359:Adım 1 ileri
+360:Kaydı oynatmaya devam et
+361:Kayıttan çık
+362:Toggle individual player perspective
+364:Vermek istediğiniz malzeme için sol tıklayınız
+365:Almak istediğiniz malzeme için sağ tıklayınız
+366:From x%d
+367:To x%d
+368:Arazi düzenleme
+369:Fırçalar
+370:Yükseltiler
+371:Döşemeler
+372:Nesneler
+373:Yükseklikler
+374:Fırça şekli
+375:Boyut
+376:Fırça boyutunu değiştirmek için sürükleyiniz
+377:Eğim
+378:Yükselti eğimini değiştirmek için sürükleyiniz: 1 = alçak... 15 = yüksek
+379:Hız
+380:Yükselti hızını değiştirmek için sürükleyiniz: 1 = yavaş... 15 = hızlı
+381:Daire fırça
+382:Kare fırça
+383:Yükselt / Alçalt
+384:Dağıt / Düzleştir
+385:Yükselt (sol tık) / Alçalt (sağ tık)
+386:Dağıt (sol tık) / Düzleştir (sağ tık)
+387:Fırça
+388:Rastgele elementler
+389:Rastgele Yön
+390:Rastgele yönlendirme için işaretle veya seçili döşemeyi çevirmek için sağ tıkla
+392:Yürümeyi engelle
+393:Bir nesneyi kaldır
+394:Köy planlama
+395:Görsel kodlama
+396:Global kodlama
+397:Menü
+398:Nesneler
+399:Kaynakları göster
+400:Birimleri göster
+401:Binaları göster
+402:Nesneleri göster
+403:Geçilebilirliği gör
+404:Kaydedilmeyen değişiklikler|kaybedilecektir
+405:İptal
+406:Yükle
+407:Harita yükle
+408:İptal
+409:Kaydet
+410:Üzerine yaz
+411:Harita zaten var
+412:Oyuncular:
+413:Varsayılan
+414:Oyuncu tipleri
+415:Simetrik
+416:Dostlar
+417:Taktik
+418:Normal
+419:Görev modu
+420:Konuma git
+421:Oyun başlangıcındaki merkez ekran
+422:Merkez ekran
+423:Tüm haritayı görünür yap
+424:Haritanın bir kısmını görünür yap
+425:Görülebilir sınır
+426:Ticareti engelle
+427:Binalara engel/izin
+428:Renkler
+429:Hedef
+432:Oyuncu
+433:Ekonomi binaları
+434:Hamallar ve okullar
+435:Askeri varlıklar
+436:Bilinmiyor
+437:Askerler
+438:Binalar
+439:Zaman
+440:Yapım Eğitimi
+441:Yok
+442:Durum
+443:Hayatta Kalma
+444:Zafer
+445:Yok
+446:Tip
+447:Hedef
+448:Tamam
+449:İptal
+450:Sütun
+451:Sayı
+452:Asker Düzeni
+453:Asker düzenini düzenle
+454:YZ'nin sahip olabileceği asker sayısını sınırla
+455:YZ aynı zamanda kaç tane askere sahip olsun
+456:En fazla asker sayısını ayarla
+457:YZ kalede ne kadar asker bulundursun
+458:Kale başına asker
+460:Özel konuma
+463:En yakın ünite
+465:Grup sayısı
+466:Saldırı bilgisi
+468:Tekrarla
+469:Bir kere
+470:Atlı
+471:Menzilli
+472:Mızraklı
+473:Yakın dövüş
+474:Konum
+475:Hedef
+476:Adam
+477:Gecikme
+478:Tip
+479:Otomatik Saldırı
+480:YZ saldırı
+481:Deri kullanım oranı
+482:Demir kullanım oranı
+483:Otomatik Savunma
+484:YZ savunma pozisyonlarını otomatik olarak oluşturup yönetsin
+485:YZ için savunma pozisyonu ekle
+486:YZ savunma pozisyonları
+487:İşçiler
+488:Her 10 bina başına hamal sayısı
+489:Otomatik Tamir
+490:Otomatik Yapılanma
+491:YZ ayarları
+492:Binalar
+493:Yol çalışmaları
+494:Araziyi düşey olarak çevirerek yapıştır
+495:Araziyi yatay olarak çevirerek yapıştır
+496:Araziyi yapıştır
+497:Araziyi kopyala
+498:Kopyala/yapıştır
+499:Yeni Oyun
+500:Oyuncu adı
+501:Durum:
+502:Sunucu Oluştur
+503:SUNUCU OLUŞTUR
+504:İsim
+505:Port
+506:Yerel Sunucu Oluştur
+507:İnternet Sunucusu Oluştur
+508:İptal
+509:IP ile Sunucu Bul
+510:SUNUCU BUL
+511:Adres
+512:Port
+513:Oda
+514:Bağlan
+515:İptal
+516:Şifre korumalı oda
+517:Şifre
+518:Sunucu ismi
+519:Durum
+520:Oyuncular
+521:Ping
+522:Sunucu Listesini Güncelle
+523:SUNUCU DETAYLARI
+524:Oyuncu listesi:
+525:Katıl
+526:Bağlanıyor, lütfen bekleyiniz...
+527:Duyurular yükleniyor...
+528:Güncelleniyor...
+529:Oyuncu listesi
+530:Başlama pozisyonu
+531:Takım
+532:Renk
+533:Hazır
+534:Ping
+535:Ping / FPS
+536:Açık
+537:YZ Oyuncu
+538:Seç...
+539:Rastgele
+540:Boş
+541:Kayıtlı Oyun
+542:Bir harita seçin...
+543:Bir kayıt seçin...
+544:Lobiye dön
+545:Hazır
+546:Hazır değil
+547:Başla!
+548:Oyun hızı (barış süresi)
+549:Oyun hızı
+550:Tamam
+551:İptal
+552:Açıklama
+553:Şifre
+554:Oda ayarları
+556:Bu odadan uzaklaştır
+557:Oyunda At
+558:Takım içinde konumlar rastgele ayarla
+559:Açıklama
+560:Seçenekler
+561:Pozisyon %d
+562:Hata: Lütfen kontrol etmek için kayıttan bir oyuncu seçiniz
+563:Hata: Harıta yüklenmesi başarısız veya bir harita seçilmedi
+564:Başlayamıyor: %s
+565:Herkes başlamak için hazır değil
+566:Rastgele konumlandırma yapılamıyor
+567:Sunucu, ev sahibi haklarını bize verdi
+568:Oyun başladı
+569:Yapım Haritası
+570:Savaş Haritası
+571:İş Birliği Haritası
+572:Özel Harita
+573:Oyun seçenekleri:
+574:Barış süresi (dakika)
+575:Kapalı
+576:Oyuncu ayarlarını ev sahibi yapıyor
+577:Bu oyuncular için bekleniyor:
+578:Herkes
+579:Takım
+580:KaM Remake
+581:Orjinal Knights & Merchants
+582:PROGRAMLAMA:
+583:EK PROGRAMLAMA:
+584:EK GRAFİKLER:
+585:EK SESLER:
+586:EK MÜZİK:
+587:EK ÇEVİRİLER:
+588:ÖZEL TEŞEKKÜRLER:
+589:Çok oyunculu haritalar
+590:Tek oyunculu haritalar
+591:Kaydırma hızı
+592:Hiçbir sunucu bulunamadı
+593:Parçaları karıştır
+594:Oyun bilgisi:
+595:-
+596:Lobi
+597:Yükleniyor
+598:Oyun
+599:Yapım ve Savaş
+600:Savaş
+601:Hazır
+602:Yanlış protokol versiyonu: %s. Sunucunun versiyonu: %s
+603:Ticaret miktarını arttır
+604:Ticaret miktarını azalt
+605:Oyun kaydediliyor...
+606:%s yok edildi!
+607:Oyuncuları düşür
+608:Ev sahibi %d saniye sonra bu oyuncuları düşürebilecek
+609:Ev sahibi şimdi bu oyuncuları düşürebilir
+610:Ev sahibi (%s) oyundan çıktı
+611:Sunucu ile bağlantı kesildi. Tekrar bağlanmaya çalışılıyor...
+612:Çıkmak istediğinize emin misiniz?
+613:Bu oyuncuyu kalıcı olarak düşürmek istediğinize emin misiniz?
+614:İptal
+615:Bu kaynağın ticaretine bu görevde izin verilmiyor
+616:Kes ve dik
+617:Sadece kes
+618:Barış süresince buna izin verilmez
+619:Kalan barış süresi: %s
+620:Barış süresi bitti. Silahları kuşanın!
+621:Oyun süresi:|%s
+622:Birliği durdur
+623:Birliği birleştir
+624:Birliği ayır
+625:Kayıt İzleyici
+626:Kayıt İzle
+627:Desteklenmeyen biçim %s
+628:Desteklenmeyen versiyon %s
+629:Desteklenmeyen değişiklikler
+630:Dosya ayrıştırılırken bir hata oluştu %s
+631:başlatılıyor
+632:komut
+633:birimler
+634:evler
+635:ağaçlar
+636:tanımlamalar
+637:döşemeler
+638:Harita bulunamadı: %s
+639:Kayıt bulunamadı: %s
+640:Harita dosyası ev sahibi ile uygun değil: %s
+641:Kayıt dosyası ev sahibi ile uygun değil: %s
+642:Tekrar oynatma tutarlılık hatası oldu. Bu hatanın bazı oyuncuların tekrar oynatılmasına etkileri olduğu biliniyor. İzlemeye devam etmek ister misiniz?
+643:Aynı anda sadece bir tane çoklu oyuncu moduna girebilirsiniz
+644:Oyun içi değişikliklere çoklu oyuncu modunda izin verilmiyor.|Lütfen orjinal oyun dosyalarını tekrar yükleyiniz.
+645:Uygulamada hata oluştu. Lütfen hata raporu gönderiniz. Yardımlarınız için teşekkürler.
+646:Hata Raporu Gönder
+647:Kaynak Bilgiyi Göster
+648:Uygulamaya Devam Et
+649:Uygulamayı Kapat
+650:Sonraki
+651:İletişim Bilgileri
+652:Adınız: (opsiyonel)
+653:Email adresiniz: (opsiyonel)
+654:Beni hatırla
+655:Hata Ayrıntıları
+656:Hangi durumda oluştu? Ek bilgi sağlayabilir misiniz? (tercihen İngilizce)
+657:Ekran görüntüsü
+658:Hata raporuna ekran görüntüsü ekle
+659:(düzenlemek için resme tıklayın)
+660:Hata Raporu Gönder
+661:İptal
+662:Hata raporu gönderiliyor...
+663:Sunucuya bağlanılıyor...
+664:Bilgi gönderiliyor...
+665:Hata raporu gönderimi başarısız! Sunucularımız meşgul olabilir, lütfen tekrar deneyiniz.
+666:Bilgi
+667:Lütfen bekleyiniz...
+668:Haritayı Kaydet
+669:YZ'nin asker yetiştirmeye başlama süresi (dakika)
+670:Asker gecikmesi (dakika)
+671:Sudaki döşemelerin yönlerini düzenler
+672:Sihirli Su
+673:Kopyala
+674:Yapıştır
+675:Yapıştırı uygula
+676:Yapıştırı iptal et
+677:Dikey olarak çevir
+678:Yatay olarak çevir
+679:Haritadan bir bölge seçmek için fareyi sürükle
+680:YZ savunma seçenekleri
+681:Kapalı
+682:Yarıçap
+683:Mevcut görünürlüğü sil
+684:Görünürlük sayfasına geri dön
+685:Kapat
+686:Grup sırası
+687:Yok
+688:Saldırı pozisyonu
+689:Yürü
+690:Yön
+693:Savunma yarıçapı
+694:Mevcut savunma pozisyonunu sil
+695:Savunma sayfasına geri dön
+696:Savunma pozisyonu
+697:Birimler
+698:Kurt
+699:Balık
+700:Su Yılanı
+701:Deniz Yıldızı
+702:Yengeç
+703:Su Çiçeği
+704:Su Yaprağı
+705:Ördek
+706:Bu asker tipi mevcut değil
+707:Bu birim tipi mevcut değil
+708:Birimleri engelle
+736:İndir
+737:indiriliyor...
+738:Var olan dosyanın üzerine yaz
+739:%s'in bağlantısı koptu
+740:%s oyundan çıktı
+741:%s tekrar bağlandı
+742:Oyun oyanırken bağlanamazsınız
+743:Oda dolu. Daha fazla oyuncu oyuna giremez
+744:Odada aynı isimli bir oyuncu var
+748:Ev sahibi hakları %s'e verildi
+749:%s, %s'nin faklı bir versiyonuna sahip
+750:%s, %s dosyalarına sahip değil
+751:Sorgu süresi doldu
+752:Ev sahibi %s'i oyundan düşürdü
+753:%s, ev sahibi tarafından atıldı
+754:Oyuna tekrar bağlanılmaya çalışılıyor...
+755:%s katıldı
+756:Tekrar bağlanma başarısız oldu: %s
+757:Ev sahibi sizsiz oynamaya karar verdi :(
+758:Sunucu tarafından bağlantı koparıldı
+759:Ev sahibi tarafından atıldınız
+760:Sunucu yanıt vermeyi kesti
+761:Geçersiz oda numarası
+765:%s'e fısılda
+766:%s, ev sahibi tarafından uzaklaştırıldı
+767:Ev sahibi tarafından uzaklaştırıldınız
+768:Tüm yasaklamaları sil
+770:Tarih
+771:Sisi göster
+772:İzle
+773:İzleyici
+774:Oto saldırı mesafesi
+775:Eğer belirlenen mesafeden daha yakın olursanız YZ grupları otomatik olarak saldıracaktır
+776:Müttefikleri koru
+777:YZ müttefiklerinin bina ve birimlerini korur
+778:İzleyicilere izin ver
+779:Ev sahibi yetkisi ver
+780:İzleyiciler
+781:İzleyiciler engellenemez: İzleyici listesinin boş olması lazım
+782:İleri al
+783:Geri al
+784:YZ'nin saldırıları için YZ'nin başlangıç konumunu düzenler
+785:YZ başlangıç konumu
+786:Sıra
+788:İlk gecikme (saniye)
+790:Orduya en yakın ev
+791:Başlangıç pozisyonuna en yakın ev
+792:Saldıranlar
+793:Savunanlar
+794:İzleyiciler
+795:Önceki sefer görevlerini oynamak için haritadan ilgili görevin bayrağını seçiniz
+797:Lobiye dönmek için oyla. Oyun devam ettirilebilir veya değiştirilebilir.
+798:Odaya geri dönmek için oyla
+801:Bir izleme kaydını silmek aynı zamanda ilgili oyun kaydını da siler. Silmek istediğinize emin misiniz?
+802:Rastgele
+803:Saldıracak asker sayısı
+804:İzleme Kaydını Sil
+805:Haritayı Sil
+806:Haritayı silmek istediğinize emin misiniz?
+807:Hide scripted overlay
+808:Show scripted overlay
+810:YZ otomatik olarak saldırı üretir ve yönetir
+811:Hızlıca donat
+812:Askerler mümkün olduğunca hızlıca donatılır. Donatma oranı köy planını etkiler
+813:Varsayılan YZ ayarlarını uygula
+814:Çokoyunculu yapıcı
+815:Tüm oyuncular için YZ'nin agresiv davranmasını sağlar (çok oyunculu yapım haritaları için)
+816:Uyarı: Mevcut YZ ayarlarının üzerine yazılacak. Devam etmek ister misiniz?
+817:Ordu tipi
+818:Deriden sonra demir
+819:Demir
+820:Deri
+821:Karışık
+824:Taşı
+825:Benioku dosyasını gör
+826:PDF okuyucu çalıştırma hatası
+827:YZ'nin 10 bina başına sahip olacağı hamal sayısını düzenler. Seçili YZ'nin %d binası var
+828:Hata: Ev sahibi kayıtlı dosyası ile yerel kayıtlı dosya tutarlı değil. Bir hata oluştu veya ev sahibi hile yapmaya çalıştı.
+829:İstek tamamlandı
+830:Asya yazı tiplerini yükle
+831:İndirilenlerden kaldır
+1118:Çok oyunculu haritalar
+1119:Müziği kapat
+1120:Parçaları karıştır

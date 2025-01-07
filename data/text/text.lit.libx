@@ -1,0 +1,429 @@
+﻿0:Lentpjūvė
+1:Geležies kalvė
+2:Ginklų kalvė
+3:Anglies kasykla
+4:Geležies kasykla
+5:Aukso kasykla
+6:Žvejo namai
+7:Kepykla
+8:Ferma
+9:Medkirčio namai
+10:Šarvų kalvė
+11:Sandėlis
+12:Arklidės
+13:Mokykla
+14:Akmens kasykla
+15:Metalurgo namai
+16:Kiaulių ferma
+17:Bokštas
+18:Miesto halė
+19:Ginklų dirbtuvės
+20:Šarvų dirbtuvės
+21:Kareivinės
+22:Malūnas
+23:Apgulties dirbtuvės
+24:Mėsinė
+25:Odų gamykla
+26:Treniruočių halė
+27:Valgykla
+28:Vyno spaudykla
+29:Turgavietė
+30:Rąstai
+31:Akmenys
+32:Lenta
+33:Geležies rūda
+34:Aukso rūda
+35:Anglis
+36:Geležis
+37:Auksas
+38:Vyno statinės
+39:Grūdai
+40:Kepalai
+41:Miltai
+42:Išdirbta oda
+43:Dešros
+44:Kiaulės
+45:Odos
+46:Medinis skydas
+47:Geležinis skydas
+48:Odiniai šarvai
+49:Geležiniai šarvai
+50:Kirvis
+51:Kalavijas
+52:Ietis
+53:Alebarda
+54:Lankas
+55:Arbaletas
+56:Arkliai
+57:Žuvis
+58:Nešėjas
+59:Medkirtys
+60:Šachtininkas
+61:Gyvulių augintojas
+62:Fermeris
+63:Stalius
+64:Kepėjas
+65:Mėsininkas
+66:Žvejas
+67:Statybininkas
+68:Kalnakasys
+69:Kalvis
+70:Metalurgas
+71:Rekrutas
+72:Milicija
+73:Kovotojas su kirviu
+74:Fechtuotojas
+75:Lankininkas
+76:Arbaletininkas
+77:Ietininkas
+78:Alebardininkas
+79:Skautas
+80:Riteris
+81:Barbaras
+82:Sukilėlis
+83:Plėšikas
+84:Kovotojas
+85:Klajoklis
+86:Katapulta
+87:Balista
+88:Nešėjas aprūpina jūsų pastatus reikalingomis žaliavomis.||Takas turi būti tarp pastatų.
+89:Norint išgauti rąstus lentpjūvei, reikalingas medkirtys.||Medkirtys sodina medžius savarankiškai.
+90:Šachtininkas išgauna iškasenas iš anglies, geležies ir aukso šachtų.
+91:Gyvulių augintojas naudoja grūdus veisiant kiaules fermoje ir arklius arklidėse.
+92:Fermeris sodina ir pjauna grūdus fermoje.||Be to, jis spaudžia vyną vyno spaudykloje.
+93:Stalius dirba lentpjūvėje, ginklų bei šarvų dirbtuvėje.||Be to, jis stato katapultas ir balistas apgulties dirbtuvėje.
+94:Kepėjas mala grūdus malūne.||Jis taip pat kepa duoną kepykloje.
+95:Mėsininkas gamina dešras mėsinėje ir išdirba odą odų gamykloje.
+96:Žvejas žvejoja žuvis vandens telkiniuose.
+97:Statybininkas stato pastatus ir kasa takus. Pažymėk norimą vietą ir jis dirbs automatiškai.||Be to, jis remontuoja pastatus.
+98:Kalnakasys aprūpina statybininkus akmeniu statant pastatus ir kasant takus.
+99:Kalvis kaldina geležinius ginklus ir šarvus ginklų ir šarvų kalvėse.
+100:Metalurgas naudoja anglį lydant auksą ir geležį.
+101:Rekrutas gali tapti kareiviu kareivinėse.||Jis taip pat užima bokštą.
+102:Į pastatų sąrašą
+103:Į resursų paskirstymą
+104:Į statistiką
+105:Į nustatymus
+106:Atgal
+107:Pastato|Pasirinkimas
+108:Resursų|Paskirstymas
+109:Statistika
+110:Nustatymai
+111:Įkelti Žaidimą
+112:Išsaugoti Žaidimą
+113:Ar tikrai norite|baigti šią|misiją?
+114:Baigti Misiją
+115:Atgal
+116:Nuostatos
+118:Garso efektai
+119:Keisto garsą
+120:Keisto garsą
+121:Muzika
+122:Muzika įj./išj.
+123:Autoišsaugojimas
+124:Muzikos Grotuvas
+125:Ankstesnis takelis
+126:Sekantis takelis
+127:Sunaikinti
+128:Pašalinti pastatus/žymėjimus
+129:Kasti taką
+130:Kasti takus
+131:Išarti lauką
+132:Išarti laukus
+133:Išdėstyti vyno lauką
+134:Išdėstyti vyno laukus
+135:Atšaukti
+136:Stabdyti mokymą
+137:Reikia:
+140:Gamina
+141:Pastatas|statomas
+142:Sugriauti
+143:Tikrai norite sunaikinti|šį pastatą?
+144:Sugriauti pasirinktą pastatą
+145:Sumažinti užsakymo kiekį
+146:Padidinti užsakymo kiekį
+147:Ankstesnis karys
+148:Sekantis karys
+149:Parengti dabartinį karį
+150:Sekanti profesija
+151:Ankstesnė profesija
+152:Pridėti į eilę
+154:Kainuoja:
+155:Įj./išj. namo remontą
+156:Pastatas dabar negalimas
+157:Būklė
+158:Pasisukti kairėn
+159:Pasisukti dešinėn
+160:Pulti
+161:Išskirti būrį
+162:Pamaitinti būrį
+163:Pradėti šturmavimą
+164:Pridėti liniją
+165:Panaikinti liniją
+166:Pasirinkti|grupę
+167:Atšaukti
+168:Ištrinti
+169:Ištrina dabartinę žinutę
+170:Eiti į
+171:Peršoka į žinutės vietą
+172:Uždaryti
+173:Uždaro langą
+174:Jūsų kalnakasys negali išgauti akmens.
+175:Tavo anglies šaltinis išseko.
+176:Tavo geležies šaltinis išseko.
+177:Tavo aukso šaltinis išseko.
+179:Šitas namas negyvenamas.
+180:Šitas būrys labai alkanas, jis turi greitai gauti valgyti!
+181:PAUZĖ
+205:Spirit
+206:Busy
+207:Middle Ages Horn
+208:Spring
+209:Lute
+210:Mercenary
+211:The Princess
+212:The Queen
+213:In the Marketplace
+214:On the Battlefield
+215:Court Dance
+216:The Army
+217:In the Castle
+218:Fanfares
+219:At Court
+220:Entree
+221:Deep Blue
+222:Struggle
+223:Royal Quarters
+224:Aristocracy
+225:At the Harbor
+226:Journey
+230:Žaisti Vienam
+232:Atgal į Meniu
+233:Įkelti Žaidimą
+234:Žaisti Internete
+235:Nustatymai
+236:Kreditai
+237:Išeiti
+238:Tęsti
+239:Žaisti iš Naujo
+240:Rezoliucija:
+241:Nepalaikoma
+242:Nepalaikoma
+243:PERGALĖ!
+244:PRALAIMĖJIMAS!
+245:Vienetų prarasta:
+246:Vienetų nugalėta:
+247:Pastatų prarasta:
+248:Pastatų sunaikinta:
+249:Pastatų pastatyta:
+250:Vienetų treniruota:
+251:Pagaminta ginklų:
+252:Treniruota karių:
+253:Misija įvykdyta per:
+256:Treniruota|gyventojų
+257:Prarasta|gyventojų
+258:Paruošta|karių
+259:Prarasta|karių
+261:Pastatyta|pastatų
+262:Prarasta|pastatų
+263:Sunaikinta|pastatų
+264:Pagaminta|prekių
+265:Pagaminta|ginklų
+279:JOYMANIA ENTERTAINMENT||PROGRAMAVIMAS:|Peter Ohlmann||ŽAIDIMO GRAFIKOS:|Adam Sprys||LYGIŲ DIZAINAS:|Adam Sprys|Andre Quaß||GARSO REDAGAVIMAS IR MAIŠYMAS:|Tonstudio Mannheim||MUZIKA:|Gerd Hofmann|Joachim Schäfer|Jürgen Rebhann|Klaus Staendike|Steffen Schüngel||ILIUSTRACIJOS:|Boleslaw Kasza|Christoph Werner||ZUXXEZ ENTERTAINMENT AG||GAMINTOJAS:|Uwe Schäfer||ŽINYNAS:|Peter Ohlmann|Uwe Schäfer||BETA TESTAVIMAS:|Peter Ohlmann|Adam Sprys|Alexandra Constandache|Dirk P. Hassinger|Achim Heidelauf|Uwe Schäfer|Ingrid Schäfer|Dirk U. Jantz|Ion Constandache|Yaman Egeli|Roman Eich|Iris Mocsnek|Anke Jantz|Paul Hassinger|Liza Hassinger||ŽAIDIMŲ DIREKTORIUS:|Achim Heidelauf||IŠLEIDO:|TopWare Interactive||VAIZDAI:||DIREKCIJA:|Slawomir Jedrzejewski||Kajetan Czarnecki|Wojciech Drazek|Daniel Duplaga|Rafal Januszkiewicz|Andrzej Rams|Piotr Rulka|Krzysztof Rybczynski|Grzegorz Wisniwski||BALSAI:|Claus Boyen (Storyteller)||Tim Timmermann|Peter Houska|Dirk Mühlbach|Ralf Ditze|Gerhard Piske|Gernot Wassmann||ARTWORK:|Boleslaw Kasza|Adam Sprys||PRADINĖ ANIMACIJA:|Uwe Schäfer|Christian Bigalk|Additional 3D-Modelling:|Niels Horstmann||SPECIALŪS DĖKOJIMAI:|Tadeusz Zuber|Dieter Ohlmann|Alexandra Constandache|Ingrid Schäfer|Andrea Rumpelt
+280:Misija atšaukta
+282:Miesto Mokymas
+283:Mūšio Mokymas
+284:Vieno Žaidėjo Režimas
+285:Žemėlapio Redaktorius
+286:Pradėti Misiją
+287:Titulas
+288:Dydis
+289:Pergalės būklė:
+290:Pralaimėjimo būklė:
+291:Sąjungininkai:
+292:Priešai:
+294:Naujas žemėlapio dydis
+295:Plotis
+296:Aukštis
+297:Sukurti Naują Žemėlapį
+298:Galimi žemėlapiai
+299:Įkelti Esanti Žemėlapį
+301:Valdymai:
+302:Žaidimas:
+303:Garsas:
+304:Išj. muzika
+305:Grafikos:
+306:Ryškumas
+308:Visas ekranas
+309:Tinkinti
+310:Kalba:
+311:Šešėlių Kokybė:
+312:Žema
+313:Aukšta
+314:Kraunama... Prašome palaukti
+315:Įvyko Klaida!
+316:Kraunama nauja vieta
+317:Išsaugoti žaidimai
+318:Failo vardas
+319:Aprašymas
+320:Įkelti
+321:Ištrinti
+322:Ar tikrai norite ištrinti šį įrašą?
+323:Ištrinti
+324:Atšaukti
+328:Tu laimėjai!
+329:Žaisti toliau
+330:Pergalė!
+331:Tu pralaimėjai!
+332:Žiūrėti toliau
+333:Pralaimėjimas
+334:Pakartojimas baigėsi
+335:Žiūrėti Toliau
+336:Išeiti į Meniu
+337:Neprieinamas
+338:Spausk %s norint tęsti žaidimą
+339:Žaidėjų informacija
+340:Pokalbis
+341:Įrašas jau egzistuoja
+342:Perrašyti
+343:Išsaugoti
+344:Įkelti
+345:Aptikta sena OpenGL versija, žaidimas gali būti lėtas ir/arba su grafikos trikčiais
+347:Ryšio klaida:
+348:Klaida: Žaidėjo vardas negali būti tuščias
+349:Klaida: Žaidėjo vardas neturi būti ilgesnis nei %d simboliai
+350:Klaida: Žaidėjo varde yra negalimi simboliai
+351:Prisijungimas nepavyko: %s
+352:Tu atsijungei
+353:Misija %d
+355:Tavo žvejo namas per toli nuo vandens.
+356:Tavo žvejas nepasiekia žuvų vandenyje.
+364:Paspausk kairyjį pelės klavišą, kad pasirinkti prekę
+365:Paspausk dešinį pelės klavišą, kad pasirinkti prekę
+366:Iš x%d
+367:Į x%d
+368:Paviršiaus redagavimas
+394:Kaimo planavimas
+395:Vizualiniai skriptai
+396:Globalinis skriptingas
+397:Meniu
+499:Nauja Misija
+500:Žaidėjo vardas
+501:Būsena:
+502:Sukurti Serverį
+503:SUKURTI SERVERĮ
+504:Pavadinimas
+505:Portas
+506:Sukurti Vietinį Serverį
+507:Sukurti Internetinį Serverį
+508:Atšaukti
+509:Rasti Serverį
+510:RASTI SERVERĮ
+511:Adresas
+512:Portas
+513:Kambarys
+514:Rasti Serverį
+515:Atšaukti
+518:Serverio pavadinimas
+519:Būsena
+520:Žaidėjai
+521:Pingas
+522:Atnaujinti Serverių Sąrašą
+523:SERVERIO DETALĖS
+524:Žaidėjų sąrašas:
+525:Prisijungti
+526:Jungiamasi, prašome palaukti ...
+527:Kraunami paskelbimai...
+528:Atnaujinama...
+529:Žaidėjų sąrašas
+530:Pradinė vieta
+531:Komanda
+532:Spalva
+533:Pasiruošęs
+534:Pingas
+536:Laisva
+537:Kompiuteris
+538:Pasirinkti...
+539:Atsitiktinis
+540:Nėra
+541:Išsaugotas Žaidimas
+542:Pasirinkti žemėlapį...
+543:Pasirinkti įrašą...
+544:Išeiti iš laukimo
+545:Pasiruošęs
+546:Nepasiruošęs
+547:Pradėti!
+561:Vieta %d
+562:Klaida: Prašome pasirinkti žaidėją iš įrašo, kad valdyti
+563:Klaida: Nepavyko įkelti žemėlapį arba jis neparinktas
+564:Negalima pradėti: %s
+565:Ne visi pasiruošę pradėti
+567:Serveris perleido kūrimo teises mums
+568:Žaidimas prasidėjo
+569:Statybų Žemėlapis
+570:Kovojimo Žemėlapis
+571:Kooperatyvinis Žemėlapis
+573:Žaidimo nustatymai:
+574:Taikos laikas (minutės)
+575:Uždaryta
+576:Kūrėjas tvarko nustatymus
+577:Laukiama žaidėjų:
+580:KaM Remake Kreditai
+581:Originalūs Knights & Merchants Kreditai
+582:PROGRAMAVIMAS:
+583:PAPILDOMAS PROGRAMAVIMAS:
+584:PAPILDOMOS GRAFIKOS:
+585:PAPILDOMI GARSAI:
+587:PAPILDOMI VERTIMAI:
+588:SPECIALI PADĖKA:
+589:Žemėlapiai keliems
+590:Žemėlapiai vienam
+591:Slinkimo greitis
+592:Serverių nerasta
+593:Maišyti takelius
+594:Žaidimo informacija:
+595:-
+596:Laukiama
+597:Kraunasi
+598:Žaidimas
+599:Statymas ir Kovojimas
+600:Kovojimas
+601:Pasiruošęs
+602:Klaidinga protokolo versija: %s. Serveris naudoja: %s
+603:Padidinti mainoma kiekį
+604:Sumažinti mainoma kiekį
+605:Žaidimas išsaugojamas...
+606:%s buvo nugalėtas!
+607:Išmesti Žaidėjus
+608:Kūrėjas galės išmesti tuos žaidėjus po %d sekundžių
+609:Kūrėjas jau gali išmesti šiuos žaidėjus
+610:Kūrėjas (%s) išėjo
+611:Ryšys nutrūko. Bandoma persijungti...
+612:Ar tikrai nori išeiti?
+613:Ar tikrai nori išmesti šiuos žaidėjus visam laikui?
+614:Atšaukti
+615:Šio resurso negalima mainyti šioje misijoje
+616:Sodinti ir kirsti
+617:Tik kirsti
+618:Tu negali daryti šito taikos metu
+619:Taikos laiko liko: %s
+620:Taikos laikas baigėsi. Prie ginklų!
+621:Žaidimo laikas:|%s
+622:Sustabdyti būrį
+623:Sujungti būrį
+624:Atskirti būrį
+625:Pakartojimų Grotuvas
+626:Rodyti Pakartojimą
+627:Nepalaikomas formatas %s
+628:Nepalaikoma versija %s
+630:Įvyko klaida nagrinėjant failą %s
+631:inicializuojama
+632:skriptas
+633:vienetai
+634:namai
+635:medžiai
+636:reikšmės
+637:pagrindai
+1118:Žemėlapiai keliems
+1119:Išj. muzika
+1120:Maišyti takelius

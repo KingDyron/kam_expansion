@@ -1,0 +1,1546 @@
+﻿0:Houtzagerij
+1:IJzersmelterij
+2:Wapensmederij
+3:Kolenmijn
+4:IJzermijn
+5:Goudmijn
+6:Vissershut
+7:Bakkerij
+8:Boerderij
+9:Houthakkershut
+10:Wapentuigsmederij
+11:Magazijn
+12:Stallen
+13:Schoolgebouw
+14:Steengroeve
+15:Goudsmelterij
+16:Varkensfokkerij
+17:Uitkijktoren
+18:Stadhuis
+19:Wapenmakerij
+20:Wapentuigmakerij
+21:Kazerne
+22:Molen
+23:Schiettuigmakerij
+24:Slagerij
+25:Leerlooierij
+26:Trainingshal
+27:Herberg
+28:Wijngaard
+29:Markt
+30:Boomstammen
+31:Stenen
+32:Timmerhout
+33:IJzererts
+34:Gouderts
+35:Kolen
+36:IJzer
+37:Goud
+38:Wijnvaten
+39:Koren
+40:Broden
+41:Meel
+42:Leer
+43:Worsten
+44:Varkens
+45:Huiden
+46:Houten schild
+47:IJzeren schild
+48:Leren harnas
+49:IJzeren harnas
+50:Handbijlen
+51:Zwaarden
+52:Lansen
+53:Pieken
+54:Handboog
+55:Kruisboog
+56:Paarden
+57:Vissen
+58:Bediende
+59:Houthakker
+60:Mijnwerker
+61:Veefokker
+62:Boer/Wijnboer
+63:Schrijnwerker
+64:Bakker/Molenaar
+65:Slager/Leerlooier
+66:Visser
+67:Bouwvakker
+68:Steenhouwer
+69:Smid
+70:Smelter
+71:Rekruut
+72:Militie
+73:Bijlvechter
+74:Zwaardvechter
+75:Boogschutter
+76:Kruisboogschutter
+77:Lansier
+78:Piekenier
+79:Spion
+80:Riddergarde
+81:Barbaar
+82:Rebel
+83:Schildknaap
+84:Krijger
+85:Vagebond
+86:Katapult
+87:Ballista
+88:De bediende voorziet je gebouwen van de nodige grondstoffen.||Let erop dat er een wegenverbinding tussen de huizen is.
+89:Om boomstammen voor de houtzagerij te produceren, heb je de houthakker nodig.||De houthakker beplant het bos vanzelf opnieuw.
+90:De mijnwerker delft ertsen in de kolen-, ijzer- en goudmijn.
+91:In de varkensfokkerij en de stallen fokt de veefokker met behulp van koren het vee.
+92:De boer zaait en oogst het koren op de boerderij.||Bovendien perst hij wijn in de wijngaard.
+93:De schrijnwerker werkt in de houtzagerij, de wapen-, wapentuig en schiettuigmakerij.
+94:De bakker bakt brood in de bakkerij.||Bovendien verwerkt hij koren tot meel in de molen.
+95:De slager produceert worsten in de slagerij en leer in de leerlooierij.
+96:De visser vangt vis in nabijgelegen wateren.
+97:De bouwvakker maakt gebouwen en wegen. Plaats de markeringen en hij voert je opdrachten automatisch uit.||Bovendien repareert hij beschadigde huizen.
+98:Omdat je bouwvakkers voldoende stenen voor het maken van wegen en huizen nodig hebben, wint de steenhouwer stenen.
+99:Zware wapenuitrustingen en wapens worden door de smid in de wapen- en wapentuigsmederij vervaardigd.
+100:De smelter vervaardigt van goud- en ijzererts kisten goud en ijzer.
+101:De rekruut kan in de kazerne als soldaat worden bewapend.||Bovendien bemant hij de uitkijktoren.
+102:Naar de keuze van gebouwen
+103:Naar de verdeling van producten
+104:Naar de statistieken
+105:Naar de opties
+106:Terug
+107:Keuze van de bouw
+108:Verdeling van|de producten
+109:Statistieken
+110:Opties
+111:Spel laden
+112:Spel opslaan
+113:Wil je|deze missie|werkelijk beëindigen?
+114:Missie beëindigen
+115:Terug
+116:Instellingen
+117:Afsluiten
+118:Geluiden
+119:Volume wijzigen
+120:Volume wijzigen
+121:Muziek
+122:Muziek in-/uitschakelen
+123:Auto-opslaan
+124:Muziekspeler
+125:Vorige lied
+126:Volgende lied
+127:Vernietigen
+128:Afbreken van huizen/markeringen|Hou Shift en Ctrl ingedrukt om gebouwen te vernietigen zonder bevestiging
+129:Weg aanleggen
+130:Wegenbouw
+131:Akker ploegen
+132:Akkerbouw
+133:Wijngaard bouwen
+134:Wijngaard
+135:Annuleren
+136:Huidige opleiding afbreken
+137:Voorradig:
+140:Levert
+141:Huis in aanbouw
+142:Vernietigen
+143:Wil je het gebouw|werkelijk vernietigen?
+144:Vernietig gekozen gebouw
+145:Bestellingen verlagen
+146:Bestellingen verhogen
+147:Vorig type eenheid. Gebruik RMK of Alt om de eerste eenheid type te krijgen
+148:Volgend type eenheid. Gebruik RMK of Alt om de laatste eenheid type te krijgen
+149:Huidig type eenheid bewapenen. Gebruik RMK of Alt om 10 eenheden te bewapenen
+150:Volgend beroep. Gebruik RMK of Alt om het laatste beroep te krijgen
+151:Vorig beroep. Gebruik RMK of Alt om het eerste beroep te krijgen
+152:Aan wachtrij toevoegen.|Gebruik Shift of Ctrl om de wachtrij te bewerken en RMK of Alt om het te vullen
+153:Wissel tussen leveringswijzen van producten: vraag / gesloten / aanbod|Gebruik LMK / RMK om vooruit / achteruit te veranderen
+154:Kosten:
+155:Huis reparatie in-/uitschakelen
+156:Gebouw nu niet beschikbaar
+157:Uith. vermogen
+158:Eenheid linksom draaien|Klik RMK of gebruik Shift om 90 graden te draaien, gebruik Ctrl om 180 graden te draaien
+159:Eenheid rechtsom draaien|Klik RMK of gebruik Shift om 90 graden te draaien, gebruik Ctrl om 180 graden te draaien
+160:Eenheid aanvallen
+161:Eenheid zenden
+162:Eenheid van voedsel voorzien
+163:Stormaanval starten
+164:Een rij toevoegen|Klik RMK of gebruik Shift om 5 rijen toe te voegen
+165:Een rij verwijderen|Klik RMK of gebruik Shift om 5 rijen toe te verwijderen
+166:Doelgroep|kiezen
+167:Stoppen
+168:Wissen
+169:Wist het huidige bericht
+170:Ga naar
+171:Springt naar de plaats van het huidige bericht
+172:Sluiten
+173:Venster sluiten
+174:Je steenhouwer heeft geen steengroeven meer.
+175:Je kolenmijn is uitgeput.
+176:Je ijzermijn is uitgeput.
+177:Je goudmijn is uitgeput.
+178:Je houthakker kan geen bomen meer vinden om te kappen
+179:Dit huis is niet bewoond.
+180:Deze eenheid heeft erg veel honger en moet zeer snel voedsel krijgen!
+181:PAUZE
+182:Bezorgen
+183:Straat bouwen
+184:Akker bouwen
+185:Wijnveld bouwen
+186:Bouwterrein afgraven
+187:Gebouw bouwen
+188:Gebouw repareren
+189:Gaat naar huis
+190:Gaat naar herberg
+191:Gebouw aanvallen
+192:Vuren
+193:Vechten
+194:Stormaanval
+195:Aanvallen
+196:Op weg
+197:Werkloos
+198:Steenhouwen
+199:Koren zaaien
+200:Koren oogsten
+201:Druiven oogsten
+202:Vissen
+203:Boom kappen
+204:Boom planten
+205:Spirit
+206:Busy
+207:Middleage Horn
+208:Spring
+209:Middleage Guitar
+210:Lansknechten
+211:De Prinses
+212:De Koningin
+213:Op de markt
+214:In het veld
+215:Dans aan het hof
+216:Het leger
+217:In het kasteel
+218:Fanfares
+219:Aan het hof
+220:Entree
+221:Deep Blue
+222:Struggle
+223:Koninklijke vertrekken
+224:Aristocratie
+225:Bij de Haven
+226:Reis
+227:Campagnes
+228:Campagnes
+229:Start Campagne!
+230:Speel enkelvoudige kaart
+231:Begin missie
+232:Terug naar menu
+233:Laad opgeslagen spel
+234:Multiplayer
+235:Opties
+236:Credits bekijken
+237:Verlaat programma
+238:Ga verder
+239:Missie herhalen
+240:Resolutie:
+241:Niet ondersteund
+242:Niet ondersteund
+243:MISSIE GEWONNEN!
+244:MISSIE VERLOREN!
+245:Verloren eenheden:
+246:Overwonnen eenheden:
+247:Verloren gebouwen:
+248:Verwoeste gebouwen:
+249:Opgerichte gebouwen:
+250:Opgeleide eenheden:
+251:Geproduceerde wapens:
+252:Bewapende soldaten:
+253:Speelduur:
+254:Statistieken
+255:Economie
+256:Burgers|opgeleid
+257:Burgers|verloren
+258:Soldaten|uitgerust
+259:Soldaten|verloren
+260:Soldaten verslagen
+261:Gebouwen|opgericht
+262:Gebouwen|verloren
+263:Gebouwen|vernietigd
+264:Producten|geproduceerd
+265:Wapens|geproduceerd
+266:Leger
+267:Burgers
+268:Gebouwen
+269:Producten
+270:Geproduceerde hoeveelheid
+271:Geen gegevens
+272:Jij
+273:Speler %d
+274:Terug naar Multiplayer
+275:Terug naar Herhalingen
+276:Alle producten
+277:Oorlogsvoering
+278:Voedsel
+279:JOYMANIA ENTERTAINMENT||PROGRAMMERING:|Peter Ohlmann||SPELGRAFIEK:|Adam Sprys||LEVELDESIGN:|Adam Sprys|Andre Quaß||GELUIDSMONTAGE:|Tonstudio Mannheim||MUZIEK:|Gerd Hofmann|Joachim Schäfer|Jürgen Rebhann|Klaus Staendike|Steffen Schüngel||ILLUSTRATIES:|Boleslaw Kasza|Christoph Werner|||ZUXXEZ ENTERTAINMENT AG||PRODUCER:|Uwe Schäfer||HANDBOEK:|Peter Ohlmann|Uwe Schäfer||BETA TESTING:|Alexandra Constandache|Dirk P. Hassinger|Achim Heidelauf|Uwe Schäfer|Ingrid Schäfer|Dirk U. Jantz|Ion Constandache|Yaman Egeli|Roman Eich|Iris Mocsnek|Anke Jantz|Liza Hassinger|Paul Hassinger||GAMES DIRECTOR:|Achim Heidelauf||PUBLISHED BY:|Best Buys Interactive||CUTSCENES:||DIRECTION:|Slawomir Jedrzejewski||Kajetan Czarnecki|Wojciech Drazek|Daniel Duplaga|Rafal Januszkiewicz|Andrzej Rams|Piotr Rulka|Krzysztof Rybczynski|Grzegorz Wisniwski||STEMMEN:|Claus Boyen (Verteller)||Tim Timmermann|Peter Houska|Dirk Mühlbach|Ralf Ditze|Gerhard Piske|Gernot Wassmann||HANDBOEK ONTWERP:|Uwe Schäfer|Alexandra Constandache||HANDBOEK TEKSTEN:|Peter Ohlmann|Uwe Schäfer||ARTWORK:|Boleslaw Kasza|Adam Sprys||OPENINGSANIMATIE:|Uwe Schäfer|Christian Bigalk|Aanvullende 3D-Modelling:|Niels Horstmann||SPECIALE DANK AAN:|Tadeusz Zuber|Dieter Ohlmann|Alexandra Constandache|Ingrid Schäfer|Andrea Rumpelt|Frits van Ens
+280:Missie geannuleerd
+281:Einde herhaling
+282:Stad oefenscenario
+283:Strijd oefenscenario
+284:Alleen spelen
+285:Kaartbewerker
+286:Missie starten
+287:Titel
+288:Gr.
+289:Overwinningconditie:
+290:Nederlaagconditie:
+291:Bondgenoten:
+292:Vijanden:
+293:Tijd
+294:Nieuwe kaartgrootte
+295:Breedte
+296:Hoogte
+297:Nieuwe kaart creëren
+298:Beschikbare kaarten
+299:Bestaande kaart inladen
+300:Locatie
+301:Besturing:
+302:Spelinstellingen:
+303:Geluid:
+304:Muziek uit
+305:Weergave:
+306:Helderheid
+307:Vertical Sync
+308:Volledig scherm
+309:Toepassen
+310:Taal:
+311:Hoge schaduw kwaliteit
+312:Oké
+313:|Hou Shift ingedrukt om meerdere gebouwen te plaatsen
+314:Aan het laden... Een ogenblik geduld
+315:Er is een fout opgetreden!
+316:Nieuwe taalinstellingen laden
+317:Lijst van opgeslagen spellen
+318:Bestandsnaam
+319:Omschrijving
+320:Laden
+321:Verwijderen
+322:Weet je zeker dat je dit opgeslagen|spel wilt verwijderen?
+323:Verwijder
+324:Annuleren
+325:Naam
+326:Kaarten
+327:Vrijgespeeld
+328:Je hebt gewonnen!
+329:Doorspelen
+330:Victorie!
+331:Je hebt verloren!
+332:Blijven kijken
+333:Nederlaag
+334:Herhaling is geëindigd
+335:Blijven kijken
+336:Afsluiten naar menu
+337:Niet beschikbaar
+338:Druk op %s om verder te spelen
+339:Spelersinformatie
+340:Chat
+341:Opgeslagen spel bestaat al
+342:Overschrijven
+343:Opslaan
+344:Laden
+345:Verouderde OpenGL versie gedetecteerd. Het spel kan mogelijk langzaam draaien en/of grafisch niet optimaal werken.
+346:Update a.u.b. de drivers voor betere prestaties.
+347:Netwerkfout:
+348:Fout: spelernaam moet ingevuld zijn
+349:Fout: spelernaam mag niet langer dan %d tekens zijn
+350:Fout: spelernaam bevat verboden karakters
+351:Verbindingsfout: %s
+352:Je bent verbroken met het spel
+353:Missie %d
+354:Bericht log
+355:Je vissershut is te ver weg van het water.
+356:De visser kan geen vis meer vangen rondom zijn vissershut.
+357:Herhaling herstarten
+358:Herhaling pauzeren
+359:1 Tick vooruit
+360:Herhaling hervatten
+361:Herhaling beëindigen
+362:Individueel spelersperspectief inschakelen
+364:Gebruik de linkermuisknop om de goederen te selecteren
+365:Gebruik de rechtermuisknop om de goederen te selecteren
+366:Van x%d
+367:Naar x%d
+368:Terrein bewerken
+369:Borstels
+370:Hoogtes
+371:Tegels
+372:Voorwerpen
+373:Hoogte
+374:Borstelvorm
+375:Grootte
+376:Slepen om borstelgrootte te wijzigen
+377:Helling
+378:Slepen om hellingshoogte te wijzigen: 1 = plateau ... 15 = piek
+379:Snelheid
+380:Slepen om verhogingssnelheid te wijzigen: 1 = traag ... 15 = heel snel
+381:Cirkelvormige borstel
+382:Vierkante borstel
+383:Verhogen / Verlagen
+384:Ongelijk- / Platmaken
+385:Verhogen (linkermuisknop) / Verlagen (rechtermuisknop)
+386:Ongelijk maken (linkermuisknop) / Plat maken (rechtermuisknop)
+387:Borstel & Maskers
+388:Willek. elementen
+389:Willek. richting
+390:Vink aan voor willekeurige tegelrichting of gebruik de rechtermuisknop om de geselecteerde tegel te draaien
+392:Blokkeer lopen
+393:Voorwerp verwijderen
+394:Stadsplanning
+395:Visuele scripts
+396:Globale scripts
+397:Menu
+398:Voorwerpen
+399:Aantallen tonen
+400:Eenheden tonen
+401:Gebouwen tonen
+402:Voorwerpen tonen
+403:Doorgang weergeven
+404:Niet opgeslagen|wijzigingen zullen|verloren gaan
+405:Annuleren
+406:Laden
+407:Kaart laden
+408:Annuleren
+409:Opslaan
+410:Overschrijven
+411:Kaart bestaat al
+412:Spelers:
+413:Standaard menselijke speler
+414:Spelertypes
+415:Symmetrisch
+416:Bondgenootschappen
+417:Tactiek
+418:Normaal
+419:Missiemodus
+420:Spring naar locatie
+421:Scherm centreren bij start missie
+422:Scherm centreren
+423:Onthul alles
+424:Een deel van de kaart onthullen
+425:Mist onthullen
+426:Handelen blokkeren
+427:Blokkeren/Ontgrendelen
+428:Kleuren
+429:Doel
+432:Speler
+433:Economische gebouwen
+434:Bedienden en scholen
+435:Militaire eigendommen
+436:Onbekend
+437:Troepen
+438:Gebouwen
+439:Tijd
+440:Bouw Tutorial
+441:Geen
+442:Voorwaarde
+443:Overleven
+444:Overwinning
+445:Geen
+446:Type
+447:Doelen
+448:OK
+449:Annuleren
+450:Kolommen
+451:Aantal
+452:Troepformatie
+453:Formatie wijzigen
+454:Stel een limiet in op hoeveel soldaten de AI kan hebben
+455:Hoeveel soldaten de AI tegelijk kan hebben
+456:Zet max. soldaten
+457:Klassieke AI: Hoeveel recruten de AI in de Kazerne zou moeten hebben|Gevorderde AI: Parameter wordt niet gebruikt
+458:Recruten / kazerne
+460:Handmatige positie
+463:Dichtstbijzijnde eenheid
+465:Aantal groepen
+466:Aanvalsinfo
+468:Herhaling
+469:Enkele aanval
+470:Ruiters
+471:Bogen
+472:Anti-cavalerie
+473:Infanterie
+474:Loc.
+475:Doelwit
+476:Manschappen
+477:Vertraging
+478:Type
+479:Autoaanvallen
+480:AI aanvallen
+481:Trainratio leer
+482:Trainratio ijzer
+483:Autoverdediging
+484:AI creëert en beheert verdedigingsposities automatisch. Negeert alle handmatig ingestelde verdedigings posities
+485:Plaats verdedigingspositie voor AI.|Om de verdedigingspositie parameters te veranderen gebruik:|RMK - richting, Ctrl + RMK - groepstype, Alt + RMK - verdedigend / aanvallend
+486:AI verdedigingsposities
+487:Bouwvakkers
+488:Bedienden per 10 gebouwen
+489:Autorepareren
+490:Autobouwen
+491:AI instellingen
+492:Gebouwen
+493:Straten
+494:Selectie verticaal kantelen
+495:Selectie horizontaal kantelen
+496:Terrein plakken
+497:Terrein kopiëren
+498:Kopiëren/plakken
+499:Nieuwe missie
+500:Spelernaam
+501:Status:
+502:Server aanmaken
+503:SERVER AANMAKEN
+504:Naam
+505:Poort
+506:Lokale server aanmaken
+507:Internetserver aanmaken
+508:Annuleren
+509:Vind server met IP
+510:VIND SERVER
+511:Adres
+512:Poort
+513:Kamer
+514:Verbinden
+515:Annuleren
+516:Wachtwoordbeveiligde kamer
+517:Wachtwoord
+518:Servernaam
+519:Status
+520:Spelers
+521:Ping
+522:Serverlijst vernieuwen
+523:SERVERINFORMATIE
+524:Spelerslijst:
+525:Meedoen
+526:Verbinding maken, een ogenblik geduld ...
+527:Mededelingen laden...
+528:Vernieuwen...
+529:Spelerslijst
+530:Startlocatie
+531:Team
+532:Kleur
+533:Gereed
+534:Ping
+535:Ping / FPS
+536:Open
+537:AI Speler
+538:Selecteer...
+539:Willekeurig
+540:Geen
+541:Opgeslagen spel
+542:Selecteer een kaart...
+543:Selecteer een opgeslagen spel...
+544:Lobby verlaten
+545:Gereed
+546:Niet gereed
+547:Start!
+548:Spelsnelheid (VT) [echt]
+549:Spelsnelheid [echt]
+550:OK
+551:Annuleren
+552:Omschrijving
+553:Wachtwoord
+554:Kamerinstellingen
+556:Uit deze lobby verbannen
+557:Kick
+558:Willekeurige locaties binnen teams
+559:Omschrijving
+560:Opties
+561:Locatie %d
+562:Fout: Kies a.u.b. een speler uit het opgeslagen spel om te besturen
+563:Fout: laden van de kaart mislukt of er is geen map geselecteerd.
+564:Kan niet starten: %s
+565:Niet iedereen is gereed om te starten
+566:Kan geen willekeurige locaties toewijzen
+567:Server heeft ons hostingrechten toegewezen
+568:Spel gestart
+569:Bouwkaart
+570:Gevechtskaart
+571:Co-op kaart
+572:Speciale kaart
+573:Spelopties:
+574:Vredestijd (minuten)
+575:Gesloten
+576:Host regelt spelerinstellingen
+577:Wachten op spelers:
+578:Iedereen
+579:Team
+580:KaM Remake Credits
+581:Orginele Knights & Merchants Credits
+582:PROGRAMMERING:
+583:AANVULLENDE PROGRAMMERING:
+584:AANVULLENDE GRAFISCHE WERKEN:
+585:AANVULLENDE GELUIDEN:
+586:AANVULLENDE MUZIEK:
+587:AANVULLENDE VERTALINGEN:
+588:SPECIALE DANK AAN:
+589:Multiplayer kaarten
+590:Alleen-spelen kaarten
+591:Scrollsnelheid
+592:Geen servers gevonden
+593:Willekeurig
+594:Spelinformatie:
+595:-
+596:Lobby
+597:Laden
+598:Spel
+599:Bouwen en Vechten
+600:Vechten
+601:Gereed
+602:Verkeerde protocol versie: %s. De server gebruikt: %s
+603:Aantal verhogen
+604:Aantal verlagen
+605:Spel opslaan...
+606:%s werd verslagen!
+607:Spelers verwijderen
+608:De host mag deze spelers na %d seconden verwijderen
+609:De host mag nu deze spelers verwijderen
+610:De host (%s) heeft het spel verlaten
+611:De verbinding met de server is verbroken. Poging tot herverbinden...
+612:Weet je zeker dat je wilt afsluiten?
+613:Weet je zeker dat je deze spelers permanent wilt verwijderen?
+614:Annuleren
+615:Het verhandelen van dit product is niet beschikbaar in deze missie
+616:Planten en kappen
+617:Alleen kappen
+618:Het is niet toegestaan om dat te doen tijdens vredestijd.
+619:Resterende vredestijd: %s
+620:De vrede is voorbij. Grijp de wapens!
+621:Speeltijd:|%s
+622:Troep stoppen
+623:Troep samenvoegen|Hou Shift ingedrukt om meerdere troepen samen te voegen
+624:Troep splitsen (%s). Splits één eenheid van de troep (Ctrl + %s)
+625:Herhalingen
+626:Herhaling weergeven
+627:Niet-ondersteund formaat %s
+628:Niet-ondersteunde versie %s
+629:Niet-ondersteunde aanpassingen
+630:Er is een fout opgetreden tijdens het ontleden van het %s bestand
+631:initialiseren
+632:script
+633:eenheden
+634:gebouwen
+635:bomen
+636:definities
+637:tegelset
+638:Kaart niet gevonden: %s
+639:Opgeslagen spel niet gevonden: %s
+640:Kaartbestanden zijn niet gelijk aan die van de host: %s
+641:Opgeslagen bestand is niet gelijk aan dat van de host: %s
+642:De herhaling is gefaald op een consistentie controle. Dit is een bekende fout die effect heeft op het afspelen van sommige herhalingen. \nAls je doorgaat met kijken zal de herhaling niet langer meer accuraat zijn en het spel kan crashen.\nWil je doorgaan met het kijken van de herhaling? Kies 'Yes to All' om alle toekomstig gefaalde consistentie controles te negeren.
+643:Je mag maar één instantie van het spel actief hebben tijdens multiplayer
+644:Aanpassingen aan het spel zijn niet toegestaan in multiplayer.|Herinstalleer het spel om de originele bestanden te herstellen.
+645:Er is een fout opgetreden in de applicatie. Klik op "Foutenrapport verzenden" zodat we de fout kunnen onderzoeken. Bedankt voor je hulp!
+646:Foutenrapport verzenden
+647:Ruwe data weergeven
+648:Applicatie hervatten
+649:Applicatie beëindigen
+650:Volgende
+651:Contact details
+652:Je naam (optioneel):
+653:Je e-mail (optioneel):
+654:Onthoud mij
+655:Fout details
+656:In welke situatie deed de fout zich voor? Kun je ons van extra informatie voorzien? (Antwoord in het Engels aub)
+657:Screenshot
+658:Een screenshot toevoegen aan het foutenrapport
+659:(klik om afbeelding aan te passen)
+660:Rapport verzenden
+661:Annuleren
+662:Foutenrapport verzenden...
+663:Verbinden met de server...
+664:Data verzenden...
+665:Het versturen van het foutenrapport is mislukt! Het kan zijn dat onze server druk bezig is. Probeer het alstublieft opnieuw.
+666:Informatie
+667:Een ogenblik geduld...
+668:Kaart opslaan
+669:Vertraging in minuten voordat de AI rekruten gaat trainen. Rekruten voor Uitkijktorens worden niet beïnvloed
+670:Trainingsvertraging
+671:Magisch water: Zet de richting voor alle tegels in een waterlichaam
+672:Magisch water
+673:Kopiëren
+674:Plakken
+675:Plakken toepassen
+676:Plakken annuleren
+677:Vert. kantelen
+678:Horiz. kantelen
+679:Sleep om een gebied op de kaart te selecteren
+680:AI verdedigingsopties
+681:Uit
+682:Radius
+683:Huidige onthuller verwijderen
+684:Keer terug naar de onthul mist pagina
+685:Sluiten
+686:Groep opdracht
+687:Geen
+688:Aanvalspositie
+689:Loop naar
+690:Richting
+693:Verdedigingsradius
+694:Huidige verdedigingspositie verwijderen
+695:Terug naar de verdedigingspagina
+696:Verdedigingspositie
+697:Eenheden & Dieren
+698:Wolf
+699:Vis
+700:Waterslang
+701:Zeester
+702:Krab
+703:Waterbloem
+704:Waterlely
+705:Eend
+706:Dit type soldaat is niet beschikbaar
+707:Dit type eenheid is niet beschikbaar
+708:Eenheden blokkeren
+736:Downloaden
+737:Downloaden...
+738:Bestanden overschijven
+739:%s verloor de verbinding
+740:%s is gestopt
+741:%s is weer verbonden
+742:Kan niet deelnemen terwijl het spel aan de gang is
+743:Kamer is vol. Er kunnen geen spelers meer deelnemen
+744:Een speler met dezelfde naam is al aanwezig
+746:Fout: %s heeft andere databestanden dan de host en kan daarom niet deelnemen aan dit spel
+747:Je databestanden komen niet overeen met de host
+748:Hostrechten toegewezen aan %s
+749:%s heeft een andere versie van %s
+750:%s heeft %s niet
+751:Query timed out
+752:De host heeft %s verwijderd van het spel
+753:%s werd gekickt door de host
+754:Poging tot herverbinden...
+755:%s is binnengekomen
+756:Herverbinden mislukt: %s
+757:De host heeft besloten om zonder jou verder te spelen :(
+758:Verbinding verbroken door de server: timeout gedetecteerd
+759:Je bent gekickt door de host
+760:Server reageert niet meer
+761:Ongeldig kamernummer
+765:Fluister naar %s
+766:%s is verbannen van deze lobby door de host
+767:Je bent verbannen door de host
+768:Alle bans resetten
+769:De host heeft alle bans gereset voor deze lobby
+770:Datum
+771:Mist weergeven
+772:Toeschouwen
+773:Toeschouwer
+774:Bereik autoaanvallen
+775:AI groepen vallen automatisch aan als je dichterbij bent dan dit aantal tegels
+776:Verdedig bondg.
+777:Indien ingeschakeld zal de AI gebouwen en eenheden van bondgenoten verdedigen
+778:Toeschouwers toestaan
+779:Promoveren tot host
+780:Toeschouwers
+781:Kan toeschouwers niet uitschakelen: Er mogen geen toeschouwers in de lijst staan
+782:Herhalen
+783:Ongedaan maken
+784:Bepaalt de AI startpositie welke gebruikt wordt voor AI aanvallen
+785:AI startpositie
+786:Volgorde
+788:Initiele vertraging
+790:Dichtstbijzijnde huis bij leger
+791:Dichtstbijzijnde huis bij startpositie
+792:Aanvallers
+793:Verdedigers
+794:Toeschouwers
+795:Om een eerder vrijgespeelde missie te spelen, klik je op de missievlag op de kaart tijdens de briefing.
+796:%s heeft gestemd om terug te keren naar de lobby (nog %s stemmen nodig)
+797:Stem om terug naar de lobby te gaan. Het spel kan dan hervat of aangepast worden.
+798:Stem 'Naar lobby'
+799:%s heeft gestemd om terug te keren naar de lobby (stemmen aangenomen)
+800:Het stemmen om terug te keren naar de lobby is mislukt
+801:Het verwijderen van een herhaling verwijderd ook het bijbehorende opgeslagen spel. Weet je zeker dat je dit spel wil verwijderen?
+802:Gebruik allemaal
+803:Minimum aantal eenheden om aan te vallen
+804:Herhaling verwijderen
+805:Kaart verwijderen
+806:Weet je zeker dat je deze kaart wil verwijderen?
+807:Gescripte overlay verbergen
+808:Gescripte overlay tonen
+809:Je kunt niet van host veranderen als de server in je spel draait
+810:AI maakt en beheert aanvallen automatisch. Negeert handmatig ingestelde aanvallen
+811:Onbeperkt trainen
+812:Klassieke AI: Soldaten worden zo snel mogelijk getraind. Trainingsratio heeft nog steeds invloed op stadsplanning|Gevorderde AI: Geen trainings limiet
+813:AI standaardwaarden
+814:Multiplayer bouwer
+815:Past aggressieve AI bouwinstellingen toe op alle spelers (voor alle multiplayer bouwkaarten)
+816:Let op: dit zal alle AI instellingen voor alle spelers overrulen. Doorgaan?
+817:Type leger
+818:IJzer, dan leer
+819:IJzer
+820:Leer
+821:Gevarieerd
+822:Gedownloade kaarten
+823:Opmerking: de eerste "Herhaling" aanval zal alle troepen sturen die de AI speler heeft naar de nederzetting die wordt aangevallen. Echter, voor elke volgende "Herhaling" aanval (net als bij "Enkele aanval"), zal het genoeg troepen sturen om over het "Minimaal aantal eenheden om aan te vallen" te komen
+824:Verplaatsen
+825:Readme PDF openen
+826:PDF openen mislukt
+827:Bepaalt aantal bedienden per 10 huizen voor geselecteerde AI. Geselecteerde AI heeft %d huizen.
+828:Fout: Het pauze-bestand van de host komt niet overeen met het lokale pauze-bestand. Er is een fout opgetreden of de host probeert mogelijk vals te spelen.
+829:De opdracht is uitgevoerd.
+830:Aziatische lettertypen laden
+831:Uit Downloads verplaatsen
+832:Hernoem deze herhaling
+833:Herhaling hernoemen
+834:Verwijder deze herhaling
+835:Naam:
+836:Bevestigen
+838:Sneltoetsen
+839:Oké
+840:Functie
+841:Toets
+844:Sneltoetsen resetten
+845:Links scrollen
+846:Rechts scrollen
+847:Omhoog scrollen
+848:Omlaag scrollen
+849:Bouw Menu
+850:Ratio Menu
+851:Statistieken Menu
+852:Hoofd Menu
+853:Halt Commando
+854:Opsplits Commando
+855:Samenvoeg Commando
+856:Voedsel Commando
+857:Storm Commando
+858:Formatie Vergroten
+859:Formatie Inkrimpen
+860:Draai Met De Klok Mee
+861:Draai Tegen De Klok In
+862:Normale Spel Snelheid (x1)
+863:Spel Snelheid x%s
+864:Spel Snelheid x%s
+865:Spel Snelheid x%s
+866:Baken
+867:Pauze
+868:Laat Teams Zien (MP)
+869:In Zoomen
+870:Uit Zoomen
+871:Zoom Resetten
+872:Groep 1 Selecteren
+873:Groep 2 Selecteren
+874:Groep 3 Selecteren
+875:Groep 4 Selecteren
+876:Groep 5 Selecteren
+877:Groep 6 Selecteren
+878:Groep 7 Selecteren
+879:Groep 8 Selecteren
+880:Groep 9 Selecteren
+881:Groep 10 Selecteren
+882:Centreren op Waarschuwing
+883:Bericht Verwijderen
+884:Game Chat Openen (MP)
+885:Menu's sluiten
+886:Debug Map Openen
+887:Debug Overwinning
+888:Debug Verlies
+889:Debug Scout Toevoegen
+890:Extra's Menu
+891:Terein bewerker
+892:Dorps Planning
+893:Visuele Scripting
+894:Globale Scripting
+895:Hoofd Menu
+896:Sub-menu 1
+897:Sub-menu 2
+898:Sub-menu 3
+899:Sub-menu 4
+900:Sub-menu 5
+901:Sub-menu 6
+902:Ctrl en Shift zijn onbindbaar
+903:~~~ Onbekende waarde
+904:Linken Muisknop
+905:Middelste Muisknop
+906:Rechter Muisknop
+907:Break
+908:Backspace
+909:TAB
+910:Clear
+911:Enter
+912:Shift
+913:Control
+914:Alt
+915:Pause
+916:Caps Lock
+917:Escape
+918:Spatie Balk
+919:Page Up
+920:Page Down
+921:End
+922:Home
+923:Linker Pijl
+924:Pijl Omhoog
+925:Rechter Pijl
+926:Pijl Omlaag
+927:Select
+928:Print
+929:Execute
+930:Print Screen
+931:Insert
+932:Delete
+933:Help
+934:Numeriek Blok 0
+935:Numeriek Blok 1
+936:Numeriek Blok 2
+937:Numeriek Blok 3
+938:Numeriek Blok 4
+939:Numeriek Blok 5
+940:Numeriek Blok 6
+941:Numeriek Blok 7
+942:Numeriek Blok 8
+943:Numeriek Blok 9
+944:Numeriek Blok *
+945:Separator
+946:Numeriek Blok -
+947:Numeriek Blok .
+948:Numeriek Blok /
+949:Num Lock
+950:Scroll Lock
+951:Linker Shift
+952:Rechter Shift
+953:Linker Control
+954:Rechter Control
+955:Linker Alt
+956:Rechter Alt
+957:Play
+958:Zoom
+960:Numeriek Blok +
+961:Generieke Toetsen
+962:Spel Toetsen
+963:Kaartbewerker Toetsen
+964:Wachten op niet-verbonden spelers gegevens:
+965:Pipet: Selecteeer het type tegel onder de cursor
+966:Deze wapentuigsmederij is niet bezet
+967:Deze wapentuigmakerij is niet bezet
+968:Deze bakkerij is niet bezet
+969:Deze slagerij is niet bezet
+970:Deze kolenmijn is niet bezet
+971:Deze boerderij is niet bezet
+972:Deze vissershut is niet bezet
+973:Deze goudmijn is niet bezet
+974:Deze ijzermijn is niet bezet
+975:Deze ijzersmelterij is niet bezet
+976:Deze goudsmelterij is niet bezet
+977:Deze molen is niet bezet
+978:Deze steengroeve is niet bezet
+979:Deze houtzagerij is niet bezet
+980:Deze schiettuigmakerij is niet bezet
+981:Deze stallen is niet bezet
+982:Deze varkensfokkerij is niet bezet
+983:Deze leerlooierij is niet bezet
+984:Deze uitkijktoren is niet bezet
+985:Deze wapensmederij is niet bezet
+986:Deze wapenmakerij is niet bezet
+987:Deze wijngaard is niet bezet
+988:Deze houthakkershut is niet bezet
+989:%s is gestopt en verslagen
+990:De host (%s) is gestopt en verslagen
+991:Annuleren
+992:Toets verwijderen
+993:Groep 11 Selecteren
+994:Groep 12 Selecteren
+995:Groep 13 Selecteren
+996:Groep 14 Selecteren
+997:Groep 15 Selecteren
+998:Groep 16 Selecteren
+999:Groep 17 Selecteren
+1000:Groep 18 Selecteren
+1001:Groep 19 Selecteren
+1002:Groep 20 Selecteren
+1003:Weg aanleggen
+1004:Akker ploegen
+1005:Wijngaard bouwen
+1006:Afbreken gebouw/markering
+1007:Selecteer volgende gebouw/eenheid van hetzelfde type
+1008:Debug venster
+1009:Bekijk speler 1
+1010:Bekijk speler 2
+1011:Bekijk speler 3
+1012:Bekijk speler 4
+1013:Bekijk speler 5
+1014:Bekijk speler 6
+1015:Bekijk speler 7
+1016:Bekijk speler 8
+1017:Kaart slepen
+1018:Toeschouwen/Herhaling toetsen
+1019:%s heeft je gedempt. Je kan geen berichten of bakens naar hem sturen
+1020:Voorwerpen palet
+1021:Universele gum
+1022:Je houthakker kan geen vrije plek vinden om bomen te planten
+1023:VT-
+1024:%s heeft gewonnen!
+1025:%s is niet meer verbonden met het spel
+1026:Max Goud
+1027:Maximale hoeveelheid goud in stadhuis
+1028:Alleen planten
+1029:Open / Sluit gebouw voor %s
+1030:Alle
+1031:Alle
+1032:Alle
+1033:Kaart Hernoemen
+1034:Pauze bij einde vredestijd
+1035:Spel tijd
+1036:Naam
+1037:Legermacht
+1038:Alle soldaten
+1039:Grafiek type
+1040:Hoeveelheid
+1041:BBP
+1042:Momenteel
+1043:Totaal uitgerust
+1044:Verslagen
+1045:Verloren
+1046:Terug naar spel resultaten
+1047:per Speler
+1048:per Team
+1049:Meer|statistieken
+1050:Terug naar Editor
+1051:Terug naar Kaartbewerker
+1052:Weet je zeker dat|je deze herhaling|wilt stoppen?
+1053:Kaart is ongeldig
+1054:Geselecteerde kaart is ongeldig. Selecteer een andere kaart
+1055:Bestanden gedownloade kaart zijn veranderd
+1056:Gedownloade kaart geselecteerd waarbij bestanden zijn veranderen. Verwijder eerst de kaart uit de downloads
+1057:Kaart bestanden zijn veranderd. Herselecteer de kaart
+1058:Muisknop vooruit
+1059:Muisknop achteruit
+1060:Alle
+1061:Universele gum
+1062:Toon tegel eigenaars
+1063:Toon tegels raster
+1064:Kap punt
+1065:Kap punt voor houthakkershut instellen. Als alternatief kan je het instellen met Shift + Rechter muisknop
+1066:Verzamelplaats
+1067:Stel verzamelplaats van %s in. Als alternatief kan je het instellen met Shift + Rechter muisknop
+1068:Formaat Wijzigen
+1069:Verplaats grenzen
+1070:Wijzig Formaat|en Opslaan
+1071:Kaart formaat wijzigen en opslaan
+1072:Kaart formaat wijzigen
+1073:Weet je zeker dat je het formaat van deze kaart wilt wijzigen?||Het zal automatisch de huidige kaart overschrijven
+1074:Formaat wijzigen is niet beschikbaar||Je moet eerst de nieuwe kaart opslaan
+1075:Verander eigenaar voor dit voorwerp
+1076:Snel spelen
+1077:Start alleen spelen spel met huidige kaart
+1078:Selecteer speler:
+1079:Selecteer speler om het spel mee te starten
+1080:Start zonder opslaan
+1081:Veranderingen weggooien en start spel as geselecteerde speler
+1082:Opslaan en starten
+1083:Sla kaart op en start spel als geselecteerde speler
+1084:In Kazerne:
+1085:In Stadhuis:
+1086:Draai tegel op de kaart
+1087:Voorwerpen palet
+1088:Sluit palet
+1089:Verwijder eenheden/groepen
+1090:Herhaling automatisch pauzeren
+1091:Automatisch herhaling pauzeren wanneer vredestijde eindigt
+1092:Toon bakens
+1093:Spelers bakens laten zien
+1094:Speler dempen
+1095:Speler ontdempen
+1096:Onthoud dit wachtwoord
+1097:Gebruik laatst bekende wachtwoord
+1098:Naar vorig menu
+1099:Ja
+1100:Nee
+1101:Annuleren
+1102:Kaart
+1103:Herhaling
+1104:Spelers
+1105:Teams
+1106:Bekijk speler 9
+1107:Bekijk speler 10
+1108:Bekijk speler 11
+1109:Bekijk speler 12
+1110:Huidige kaart grootte:|[ %d : %d ]
+1111:Nieuwe kaart grootte:|[ %d : %d ]
+1112:Kaart Formaat Wijzigen
+1113:Eigenaar: %s
+1114:Verwijder Speler %d
+1115:Verwijder Speler %d
+1116:Weet je zeker dat je deze speler wilt wissen?|Al zijn data zal worden verwijderd!
+1117:Sluiten
+1118:Multiplayer kaarten
+1119:Muziek uit
+1120:Willekeurig
+1121:Willekeurig aan/uit
+1122:Kaartsoort
+1123:Scenariokaart
+1124:Speelbaar als SP
+1125:Hakbare boom
+1126:Blokkeer diagonaal lopen
+1127:Blokkeert alles behalve bouwen
+1128:Toon wegen/akkers/wijngaarden
+1129:Submenu actie 1
+1130:Submenu actie 2
+1131:Submenu actie 3
+1132:Submenu actie 4
+1133:Submenu actie 5
+1134:Submenu actie 6
+1135:Submenu actie 7
+1136:Verf emmer (verander eigenaar)
+1137:AI aanval toevoegen
+1138:AI aanval verwijderen
+1139:Gaat met pensioen
+1140:Wegzenden
+1141:Weet je zeker dat je deze eenheid wilt wegzenden?|Hij gaat naar je schoolgebouw en verlaat je stad voor altijd
+1142:Eenheid wegzenden
+1143:Annuleer wegzenden eenheid
+1144:Wegzenden is niet beschikbaar door afwezigheid van schoolgebouwen in je stad
+1145:Missie|parameters
+1146:Wijzig missie parameters
+1147:Missie parameters
+1148:Auteur
+1149:Kleine beschrijving
+1150:Grote beschrijving
+1151:Libx text ID
+1152:Deze kaart zal altijd zichtbaar zijn in de alleen-spelen kaart lijst
+1153:Blokkeer team selectie
+1154:Blokkeert team selectie in de lobby
+1155:Blokkeer vredestijd
+1156:Blokkeert vredestijd wijziging in de lobby
+1157:Blokkeer volledig kaartvoorbeeld
+1158:Blokkeert volledige kaart voorbeeld in de lobby
+1159:Tekst
+1160:Toon mijn straal
+1161:Toon toren aanvalsstraal
+1162:Toon eenheden aanvalsstraal
+1163:Kleur code:
+1164:Blauw / Groen / Rood
+1165:Rood / Groen / Blauw
+1166:Tekst kleur:
+1167:Onverzadigde kleur die gebruikt kan worden voor teksten (bijv. in scripts overlay) [alleen-lezen]
+1168:Kaart filter
+1169:Reset filter
+1170:Hoeveelheid spelers
+1171:Terug naar spel
+1172:Toon gedetailleerde spel statistieken
+1173:Moeilijkheidsgraad
+1174:Makkelijk
+1175:Normaal
+1176:Moeilijk
+1177:Moeilijkheidsgraden
+1178:Stel verschillende moeilijkheidsgraden in, die in het script gebruikt kunnen worden om de missielogica en moeilijkheidsgraad aan te passen
+1179:Gevorderde AI Speler
+1180:Gevorderde AI
+1181:Klassieke AI
+1182:Winnaar
+1183:Verslagen
+1184:Host
+1185:Ga naar geselecteerd gebouw
+1186:Ga naar geselecteerd eenheid
+1187:Bondgenoot / Vijand kleur modus
+1188:Zelf / Bondgenoot / Vijand kleuren voor spelers in plaats van aanvankelijke kleuren
+1189:[$404040]Host is klaar om te beginnen. Druk op '[][$0707FF]%s[][$404040]'[]
+1190:Vraag om op Gereed te drukken
+1191:Waarschuwing om gereed te maken is gestuurd naar %s spelers
+1192:Wissel spelers kleur modus
+1193:Wegzenden is niet beschikbaar tijdens huidige eenheid actie
+1194:Ctrl + Muis wiel
+1195:Alt + Muis wiel
+1196:Shift + Muis wiel
+1197:Vervang handmatig|gezette tegels
+1198:Forceer vervangen handmatige gezette tegels van tegel tabel tijdens schilderen met borstels (zo mogelijk)
+1199:Magische borstel: Met gekozen masker, repareert tegel overgangen voor tegels die geen overgang afbeeldingen hebben tussen twee type terrein.
+1200:Geen masker - gebruik huidige tegels voor overgangen
+1201:Zacht1 masker - gebruik automatisch gemaakte overgangen
+1202:Zacht2 masker - gebruik automatisch gemaakte overgangen
+1203:Zacht3 masker - gebruik automatisch gemaakte overgangen
+1204:Aangepaste Stadhuis eenheid kosten
+1205:Aangepaste markt prijzen
+1209:Fix terrein borstels
+1210:Probeer de interne terrein informatie te repareren om de borstels te laten werken
+1211:Repareer terrein borstels
+1212:Weet je zeker dat je alle terrein|borstels interne informatie wilt repareren?||Dat maakt het mogelijk om borstels|te gebruiken waar handmatige tegels gebruikt zijn
+1213:St.
+1214:Menselijke speler
+1215:Klassieke AI Speler %d
+1216:Gevorderde AI Speler %d
+1217:Klassieke AI %d
+1218:Gevorderde AI %d
+1219:Klassieke AI Speler
+1220:AI Spelertype
+1221:Auto-opslaan bij spel eind
+1222:Geen
+1223:Producten
+1224:Gebouwen
+1225:Bouwen
+1226:Burgers
+1227:Leger
+1228:Wegzenden is niet beschikbaar voor hongerige eenheden
+1229:Klassieke AI|Parameters
+1230:Stel AI parameters in die alleen door de Klassieke AI gebruikt worden
+1231:Klassieke AI Parameters
+1232:Willekeurig groep types kiezen
+1233:Moeilijkheid
+1234:%s is weg van keyboard voor laatste %s [$00B0FF]minuten[]
+1235:Gegevens exporteren kan enkele minuten duren.\nGeëxporteerde gegevens worden opgeslagen in '%s' map.\nWil je verder gaan?
+1236:De procedure [ %s ] gedeclareerd voor het script console commando /%s kan niet worden gevonden
+1237:Verkeerde parameter type voor script console commando /%s: [%s]
+1238:Verkeerde eerste parameter type voor script commando /%s. Verwachtte: [ %s ], kreeg: [ %s ]
+1239:Te veel parameters voor script commando /%s: [ %s ]. Maximale hoeveelheid parameters is [ %s ] (inclusief verplichte HandID parameter)
+1240:Verkeerde parameters voor script commando /%s. Verwachte parameter types zijn: [ %s ]
+1241:Te veel parameters gegeven voor script commando /%s: Verwachte parameter hoeveelheid [ %s ], kreeg: [ %s ]
+1242:Commando aangeroepen: /%s(%s)
+1243:Fout tijdens aanroep script commando /%s(%s)|
+1244:Script console commando /%s niet gevonden
+1245:Chatgeschiedenis en kopiëren van chatvenster in-/uitschakelen
+1246:Sla herhaling staat op om te kunnen laden tijdens het kijken naar deze herhaling
+1247:Laad herhaling op tijdstip %s
+1248:Spelers kleuren:
+1249:Standaard
+1250:Bondgenoot / Vijand
+1251:Teams
+1252:Toon spelerskleuren volgens hun keuze in de lobby
+1253:Toon 3 verschillende kleuren (jouw, bondgenoten, vijanden) voor burgers en gebouwen
+1254:Toon kleuren volgens team samenstelling
+1255:Fout: Spelernaam '%s' is gereserveerd
+1256:Burgers (B/B/R)
+1257:Burgers (Andere)
+1258:Open/Sluit toeschouwer statistiek paneel
+1259:Levering van %s is verboden
+1260:Toevoer van %s is verboden
+1261:Rekruut mag niet bij Kazerne naar binnen
+1262:Zoek tegel met ID
+1263:Random Kaart Generator - Instellingen
+1264:Random kaart generator instellingen
+1265:RKG Instellingen
+1266:Grootte:
+1267:Locaties
+1268:Schakel locaties met bronnen in
+1269:Hoeveelheid locaties
+1270:Stel hoeveelheid locaties in
+1271:Beschermde straal
+1272:Specificeer de grootte van de beschermde straal. Het beveiligt het bebouwbare gebied rond elke locatie.
+1273:Verbonden locaties
+1274:Creër weg tussen locaties
+1275:Indeling
+1276:De indeling van de locaties
+1277:Rechthoek
+1278:Verticaal
+1279:Horizontaal
+1280:Willekeurig
+1281:Scherm centreren
+1282:Bronnen
+1283:Schakel bronnen in op elke locatie (steenkool wordt automatisch berekend)
+1284:Mijn
+1285:Zorgt ervoor dat bronnen mijnbaar zijn (goudmijn en ijzermijn)
+1286:Bronhoeveelheid: stenen
+1287:Bronhoeveelheid: gouderts
+1288:Bronhoeveelheid: ijzererts
+1289:Obstakels
+1290:Obstakels toestaan (bergen, rivieren, moerassen, enz.)
+1291:Grootte
+1292:De gemiddelde grootte van de gegenereerde obstakels
+1293:Dichtheid
+1294:De dichtheid van de gegenereerde obstakels
+1295:Variantie
+1296:De variantie in grootte van de gegenereerde obstakels
+1297:Verhouding
+1298:Type en verhouding van gegenereerde obstakels
+1299:Lege goudberg
+1300:Lege goudberg verhouding
+1301:Lege ijzerberg
+1302:Lege ijzerberg verhouding
+1303:Moeras
+1304:Moeras verhouding
+1305:Watergebied
+1306:Watergebied verhouding
+1307:Water
+1308:Water verhouding
+1309:Biomen
+1310:Schakel biomen in
+1311:Bioom type
+1312:Selecteer benodigde biomen
+1313:Gras
+1314:Gras is een standaard bioom en kan niet worden verwijderd
+1315:Aarde
+1316:Schakel aarde
+1317:Sneeuw
+1318:Schakel sneeuw in
+1319:Zand
+1320:Schakel zand in
+1321:Eerste laag
+1322:De eerste laag bioom (eigenschappen van de primaire textuur)
+1323:Tweede laag
+1324:De tweede laag bioom (eigenschappen van de secundaire textuur)
+1325:Stap
+1326:Stap grootte van de primaire textuur (hogere waarde = grotere bioom)
+1327:Stap grootte van de secundaire textuur (hogere waarde = grotere bioom)
+1328:Limiet
+1329:Limitatie van de bioom grenzen (hogere waarde = grotere bioom)
+1330:Hoogte
+1331:Schakel hoogte in
+1332:Verberg gekarteld
+1333:Pas terrein hoogte aan zodat ruwe textuur overgangen verborgen worden
+1334:Onbereikbaar
+1335:Behandeling van onbereikbare plaatsen
+1336:Blokkeer lopen
+1337:Blokkeer lopen (verbetert het spels padvind algoritme en generatie van het navigatienetwerk)
+1338:Textuur wijzigen
+1339:Terrein vervangen met speciale biomen
+1340:Voorwerpen
+1341:Schakel voorwerpen in
+1342:Dieren
+1343:Schakel dieren in
+1344:Voorwerpen dichtheid
+1345:Bos dichtheid
+1346:Bos dichtheid
+1347:Bomen
+1348:Hoeveelheid bomen in het bos
+1349:Seed
+1350:Een nummer dat wordt gebruikt als identificatie om een kaart met specifieke configuratie te genereren
+1351:Willekeurige seed
+1352:Genereer kaart met nieuwe Seed
+1353:Genereer kaart
+1354:Genereer kaart met huidige Seed
+1355:Sluit Random Kaart Generator
+1356:M
+1357:Speel volgende tick in herhaling
+1358:Makkelijker
+1359:Erg makkelijk
+1360:Moeilijker
+1361:Heel moeilijk
+1362:Host's spel versie komt niet overeen met jouw spel versie
+1363:Alle
+1364:Sta '%s' toe voor alle beschikbare locaties
+1365:Verbied '%s' voor alle beschikbare locaties
+1366:Stap grootte van het hoogte algoritme
+1367:Helling van de hoogte evaluatie (1 = plateau, 100 = piek)
+1368:Maximum hoogte van loopbare tegels
+1369:Random kaart
+1370:Kaart is automatisch gegenereerd met random kaart generator
+1371:Initiële producten
+1372:Hoeveelheid initiële producten in magazijn
+1373:Laag
+1374:Gemiddeld
+1375:Hoog
+1376:Selecteer kaart grootte
+1377:Probeer te starten
+1378:Probeer opgeslagen spel te laden
+1379:Probeer herhaling te zien
+1380:Fout tijdens laden niet-ondersteunde versie %s opgelagen spel van %s
+1381:Fout tijdens laden niet-ondersteunde versie %s herhaling van %s
+1382:Kaart naam
+1383:Tijd
+1384:Versie
+1385:Laden niet-ondersteunde versie kan ervoor zorgen dat het spel niet goed laadt of zelfs dat het spel crasht
+1386:Niet-ondersteunde versie
+1387:Weet je zeker dat je alle campagnes wilt ontgrendelen?\nDit kan niet ongedaan worden gemaakt.\n\nAls je je campagnes voortgang wilt bewaren wees er dan zeker van dat je 'Campaigns.dat' bestand geloceerd in %s is gebackupt.\n\nBevestig je deze bewerking?
+1388:Hard masker - gebruik automatisch gemaakte overgangen
+1389:Vertraging in spel ticks voordat AI leer troepen traint
+1390:Vertraging in spel ticks voordat AI ijzer troepen traint
+1391:Stel hoeveelheid AI bouwvakkers in
+1392:Mengniveau
+1393:Mengniveau van terrein overgangen met maskers
+1394:Blokkeert bouwen
+1395:Blokkeert lopen en bouwen
+1396:Tegel overlay
+1397:Tegel overlay instellen.|Gebruik LMK voor veilege modus en LMK+Shift om wegen te vervangen
+1398:Videoclips:
+1399:Inschakelen
+1400:Uitrekken
+1401:Tonen bij opstarten
+1402:Volume
+1403:Test video
+1404:mods
+1405:Sneeuw gebouwen
+1406:Blokkeer kleur selectie speler
+1407:Blokkeert kleur selectie speler
+1408:Geschiedenis
+1409:Geschiedenis van veranderingen op de kaart
+1410:Geschiedenis
+1411:Ga naar
+1412:Ga naar geselecteerde punt in de geschiedenis
+1413:Initieel
+1414:Voeg %s toe %s
+1415:Verwijder %s %s
+1416:Bijwerken %s %s
+1417:Verplaats %s %s
+1418:Wijzig eigenaar: %s %s
+1419:weg
+1420:akker veld
+1421:wijngaard
+1422:overlay
+1423:voorwerp
+1424:Je hebt niet genoeg rechten voor de KaM Remake installatie folder:\n'%s'\n\nProbeer het spel te starten met admin rechten, herinstalleer het spel in een andere folder of sluit KaM_Remake.exe uit van antiviruscontrole
+1425:Tegels palet
+1426:Tegels palet
+1427:Versie
+1428:Fix terrein borstels
+1429:Auto-opslaan herhaling
+1430:Ga naar vorige eenheid
+1431:Train eenheid
+1432:Ga naar volgende eenheid
+1433:Eenheid commando Toetsen
+1434:Huis Toetsen
+1435:Toon verdedigings posities
+1436:Toon plat terrein
+1437:Spelsnelheid kan alleen door de host worden aangespast als er geen actieve spelers op de kaart zijn
+1438:Bron export compleet: [ %s ]
+1439:Browser terug
+1440:Browser vooruit
+1441:Browser verversen
+1442:Browser stop
+1443:Browser zoeken
+1444:Browser favorieten
+1445:Browser startpagina
+1446:Volume dempen
+1447:Volume omlaag
+1448:Volume omhoog
+1449:Media volgende lied
+1450:Media vorige lied
+1451:Media stop
+1452:Media spelen/pauzeren
+1453:Start e-mail
+1454:Start media selecteren
+1455:Start applicatie 1
+1456:Start applicatie 2
+1457:Muziek vorige lied
+1458:Muziek volgende lied
+1459:Muziek uitzetten
+1460:Willekeurige muziek
+1461:Muziek volume omhoog
+1462:Muziek volume omlaag
+1463:Muziek dempen
+1464:Geluid volume omhoog
+1465:Geluid volume omlaag
+1466:Geluid dempen
+1467:Alles dempen (muziek en geluid)
+1468:Voorwerp Borstels
+1469:Bomen
+1470:Alle voorwerpen behalve bomen
+1471:Stenen
+1472:Bloemen
+1473:Paddestoelen
+1474:Stronk
+1475:Dode bomen
+1476:Cactus
+1477:Woestijnstruik
+1478:Ruïnes
+1479:Terrein voorwerpen
+1480:Tijdens het schilderen, plaats voorwerpen overeenkomend met geselecteerde terrein borstel
+1481:Dichtheid
+1482:Voorwerpen / bos dichtheid
+1483:Bos leeftijd
+1484:Borstel schoonmaken, verwijdert alle voorwerpen
+1485:Alle
+1486:Jong
+1487:Gemiddeld
+1488:Hakken
+1489:Alle leeftijden
+1490:Jonge bomen
+1491:Gemiddelde bomen
+1492:Hakbare bomen
+1493:Terrein toepassen van gekopieerde gebied
+1494:Hoogte toepassen van gekopieerde gebied
+1495:Voorwerpen toepassen van gekopieerde gebied
+1496:Tegel overlays toepassen van gekopieerde gebied
+1497:Constante Hoogte
+1498:Borstel constante hoogte niveau
+1499:Hoogte niveau
+1500:Hoogte niveau wordt gebruikt voor 'Constante Hoogte'
+1501:Verhoog alles
+1502:Verhoog (links klikken) / Verlaag (rechts klikken) alle tegels op de kaart met terrein type bij spel cursor
+1503:Voorwerpen|vervangen
+1504:Voorwerpen worden vervangen door andere voorwerpen of verwijderd
+1505:Overgang masker - gebruik automatisch gemaakte overgangen
+1506:Groot
+1507:Grote bomen
+1508:Stronk
+1509:Stronken
+1510:Alle-
+1511:Alle, behalve stronken
+1512:Missie tijd:
+1513:Huidige speel snelheid
+1514:Huidige herhaling snelheid
+1515:Opgenomen spel snelheid
+1516:HD bewegingen
+1517:HD bewegingen
+1518:Verhoog eenheid en projectielen bewegings resolutie
+1519:Voor speler %0:s om te %1:s spelers %2:s %3:s moeten zijn %4:s
+1520:winnen
+1521:overleven
+1522:vernietigd
+1523:gered
+1524:hoofdgebouwen ( %s )
+1525:Alleen symmetrische bondgenootschappen toegestaan
+1526:HD animaties
+1527:HD animaties
+1528:Verhoog hoeveelheid frames gebruikt voor animaties
+1529:Gladde pieken
+1530:Maakt berg pieken gladder
+1531:Spel Instellingen
+1532:Herhaling Instellingen
+1533:Kaartbewerker Instellingen
+1534:Waarschuwing: Gevorderde AI gebruikt zijn eigen formatie parameters en zal deze instellingen negeren
+1535:Naar Campagne Kaart
+1536:Willekeurig groep types kiezen
+1537:Zwak
+1538:Eenheden zonder harnas, Leer gepantserde eenheden of Ijzer gepantserde eenheden
+1539:Voeg groep toe
+1540:Voeg groep toe na plaatsen verdedigingspositie. Group wordt bepaalt door AI formaties
+1541:Aantal
+1542:Aantal eenheden in de groep. Bij 0 worden de AI formaties gebruikt
+1543:Kolommen
+1544:Aantal kolommen in de groep. Als aantal eenheden 0 is worden de AI formaties gebruikt.
+1545:Kool gelijkmatig maken
+1546:Steenkool bronnen binnen het geselecteerde gebied worden automatisch omgezet naar een laag aantal steenkool bij de randen en een hoog aantal steenkool in het midden
+1547:Een andere speler kreeg een desync fout. Stuur ons alsjeblieft dit foutenrapport, het helpt ons dit op te lossen.%sAndere speler fout bericht is:%s
+1548:Ongedaan
+1549:Opnieuw
+1550:Gras
+1551:Mos
+1552:Bleek gras
+1553:Gras op aarde
+1554:Aarde
+1555:Kustzand
+1556:Gras op zand 1
+1557:Gras op zand 2
+1558:Gras op zand 3
+1559:Zand
+1560:Moeras
+1561:Grasachtig water
+1562:Water
+1563:Snel water
+1564:Aangepast
+1565:Sneeuw op gras
+1566:Sneeuw op aarde
+1567:Sneeuw
+1568:Diepe sneeuw
+1569:Ijs
+1570:Steen
+1571:Goudberg
+1572:Ijzerberg
+1573:Straatsteen
+1574:Grind
+1575:Steenkool
+1576:Goud
+1577:Ijzer
+1578:Lava
+1579:Afgrond
+1580:Niet opgeslagen wijzigingen zullen verloren gaan. Afsluiten?
+1581:Waarschuwing
+1582:Geen overlay
+1583:Graaf overlay fase 1
+1584:Graaf overlay fase 2
+1585:Graaf overlay fase 3
+1586:Graaf overlay fase 4
+1587:Weg overlay
+1588:Stand.
+1589:Pas multiplayer AI instellingen toe op speler %d
+1590:Multiplayer instellingen voor AI speler %d
+1591:Waarschuwing: Hiermee worden alle bestaande AI instellingen voor speler %d overschreven. Doorgaan?
+1592:Slaat het huidige wachtwoord op voor toekomstig gebruik
+1593:Hoeveelheid vis
+1594:Kaart opslaan
+1595:Kaart opgeslagen
+1596:Kaart opslaan...
+1597:Plat terrein
+1598:Tegels grid
+1599:Opgeslagen bestand bestaat niet

@@ -1,0 +1,84 @@
+   Timestamp    Elapsed     Delta  Thread    Description
+========================
+    Date: 2025.01.05
+========================
+19:33:53.939     0,001s       1ms  15996    Log is up and running. Game version: KaM Expansion: Co-op & World Update
+19:33:53.944     0,007s       6ms  15996    Game Load started
+19:33:53.964     0,027s      20ms  15996    Start loading 'GameApp settings' from 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'
+19:33:53.970     0,033s       6ms  15996    'GameApp settings' was successfully loaded from 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'
+19:33:53.986     0,049s       5ms  15996    Start saving 'GameApp settings' to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'
+01408298 KaM_Expansion.exe KM_Settings        106 TKMSettings.SaveToDefaultFile
+0140836b KaM_Expansion.exe KM_Settings        113 TKMSettings.SaveToDefaultFile
+01407f69 KaM_Expansion.exe KM_Settings         59 TKMSettings.Create
+014086a6 KaM_Expansion.exe KM_SettingsXML      38 TKMSettingsXML.Create
+014089e7 KaM_Expansion.exe KM_GameAppSettings  51 TKMGameAppSettings.Create
+0161c700 KaM_Expansion.exe KM_Main            258 TKMMain.Start
+0161c96f KaM_Expansion.exe KM_Main            305 TKMMain.Start
+0189db2b KaM_Expansion.exe KaM_Expansion      480 initialization
+0189db5a KaM_Expansion.exe KaM_Expansion      483 initialization
+76c97ba7 KERNEL32.DLL                             BaseThreadInitThunk
+
+19:33:54.024     0,087s      38ms  15996    'GameApp settings' was successfully saved to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'
+19:33:54.064     0,126s      39ms  15996    Start loading 'Server settings' from 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+19:33:54.072     0,134s       8ms  15996    'Server settings' was successfully loaded from 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+19:33:54.078     0,140s       6ms  15996    Start saving 'Server settings' to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+01408298 KaM_Expansion.exe KM_Settings       106 TKMSettings.SaveToDefaultFile
+0140836b KaM_Expansion.exe KM_Settings       113 TKMSettings.SaveToDefaultFile
+01407f69 KaM_Expansion.exe KM_Settings        59 TKMSettings.Create
+01545b28 KaM_Expansion.exe KM_ServerSettings 109 TKMServerSettings.Create
+01611c1f KaM_Expansion.exe KM_GameApp        213 TKMGameApp.Create
+01611f39 KaM_Expansion.exe KM_GameApp        297 TKMGameApp.Create
+0161d976 KaM_Expansion.exe KM_Main           635 TKMMain.ReinitRender
+0161db82 KaM_Expansion.exe KM_Main           689 TKMMain.ReinitRender
+0161c816 KaM_Expansion.exe KM_Main           281 TKMMain.Start
+0161c96f KaM_Expansion.exe KM_Main           305 TKMMain.Start
+0189db2b KaM_Expansion.exe KaM_Expansion     480 initialization
+0189db5a KaM_Expansion.exe KaM_Expansion     483 initialization
+76c97ba7 KERNEL32.DLL                            BaseThreadInitThunk
+
+19:33:54.092     0,154s      13ms  15996    'Server settings' was successfully saved to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+19:33:54.098     0,160s       6ms  15996    Init Render started
+19:33:54.473     0,535s     375ms  15996    GL_MAX_TEXTURE_SIZE = 32768
+19:33:54.480     0,542s       7ms  15996    GL_MAX_VIEWPORT_DIM = 32768
+                                      OpenGL Vendor: NVIDIA Corporation
+                                      OpenGL Renderer: NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2
+                                      OpenGL Version: 4.6.0 NVIDIA 560.94
+19:33:54.506     0,569s      27ms  15996    Init Render Done
+19:33:54.512     0,574s       5ms  15996    Resource loading state - None
+19:33:54.519     0,582s       8ms  15996    Reading palettes ... done
+19:33:54.528     0,590s       8ms  15996    Reading GUI.rx
+19:33:54.535     0,598s       8ms  15996    Load Sprites started
+19:33:54.541     0,604s       6ms  15996    GUI - 966
+19:33:54.563     0,626s      22ms  15996    Load Sprites Done
+19:33:54.605     0,667s      41ms  15996    Reading GUIMain.rx
+19:33:54.612     0,675s       8ms  15996    Load Sprites started
+19:33:54.619     0,681s       6ms  15996    GUIMain - 105
+19:33:54.672     0,734s      53ms  15996    Load Sprites Done
+19:33:54.726     0,788s      53ms  15996    Reading Tileset.rx
+19:33:54.733     0,796s       8ms  15996    Load Sprites started
+19:33:54.739     0,802s       6ms  15996    Tileset - 5449
+19:33:54.776     0,839s      37ms  15996    Load Sprites Done
+19:33:54.784     0,846s       7ms  15996    GenerateTerrainTransitions started. Legacy = False
+19:33:54.790     0,853s       7ms  15996    TexId = 5451 GenTilesCnt = 2100
+19:33:54.805     0,867s       6ms  15996    TexId = 6051; TexId - fGenTexIdStartI = 600; uniqueTex = 600; totalTex = 1350
+19:33:54.810     0,872s       5ms  15996    GeneratedMasks cnt = 20
+19:33:54.818     0,881s       9ms  15996    GenerateTerrainTransitions Done
+19:33:54.824     0,887s       6ms  15996    GenerateTerrainTransitions started. Legacy = True
+19:33:54.830     0,893s       6ms  15996    Legacy: TexId = 4999 GenTilesCntTemp = 2030
+19:33:54.837     0,900s       7ms  15996    TexId = 5463; TexId - fGenTexIdStartILegacy = 464; uniqueTex = 464; totalTex = 1044
+19:33:54.843     0,906s       6ms  15996    GeneratedMasks cnt = 16
+19:33:54.849     0,912s       6ms  15996    GenerateTerrainTransitions Done
+19:33:54.960     1,023s     110ms  15996    Load font started
+19:33:54.998     1,061s      38ms  15996    Font load took 38ms
+19:33:55.006     1,068s       7ms  15996    Read fonts is done
+19:33:55.022     1,084s      16ms  15996    ReadGFX is done
+19:33:55.029     1,092s       8ms  15996    Resource loading state - Menu
+19:33:55.041     1,104s      12ms  18236    OpenAL init started
+19:33:55.202     1,265s     161ms  15996    Music init done, 24 tracks found
+19:33:55.323     1,385s     120ms  15996    Main menu init done
+                                      Loading campaign images.rxx for HKS
+19:33:55.341     1,404s      19ms  13676    Custom - 1
+19:33:55.365     1,428s      24ms  18236    Pre-LoadSFX init ... done
+19:33:55.373     1,436s       8ms  18236    ALC_MONO_SOURCES 255
+19:33:55.379     1,442s       6ms  18236    ALC_STEREO_SOURCES 1
+19:33:55.386     1,449s       6ms  18236    OpenAL init done

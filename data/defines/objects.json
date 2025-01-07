@@ -1,0 +1,4003 @@
+{
+  "Objects": [ 
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [361],
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : false,
+		"AllBlocked" : true,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"DontPlantNear" : false,
+		"PlaceableInEditor" : true,
+		"SnowPic" : 281,
+		"RenderAsTileOverlay" : false,
+		"RotateToTile" : false,
+		"Clay" : 0,
+		"Stone" : 1,
+		"Bitin" : 0,
+		"Iron" : 0,
+		"Gold" : 0,
+		"Coal" : 0	
+	  },
+	  {
+		"ObjectID" : 8,
+		"MainGettingChance" : 100,
+		"VirtualWares" : [
+			{"Type" : "vtDiamond", "Min" : 1, "Max" : 1, "Chance" : 5},
+			{"Type" : "vtAmber", "Min" : 1, "Max" : 2, "Chance" : 10},
+			{"Type" : "vtSilver", "Min" : 1, "Max" : 2, "Chance" : 35},
+			{"Type" : "vtCopper", "Min" : 1, "Max" : 3, "Chance" : 50}
+		]
+	  },
+	  {
+		"ObjectID" : 9,
+		"MainGettingChance" : 100,
+		"VirtualWares" : [
+			{"Type" : "vtDiamond", "Min" : 1, "Max" : 2, "Chance" : 5},
+			{"Type" : "vtAmber", "Min" : 1, "Max" : 2, "Chance" : 20},
+			{"Type" : "vtSilver", "Min" : 1, "Max" : 3, "Chance" : 40},
+			{"Type" : "vtCopper", "Min" : 1, "Max" : 2, "Chance" : 35}
+		]
+	  },
+	  {
+		"ObjectID" : 278,
+		"SnowPic" : 749,
+		"MainGettingChance" : 100,
+		"VirtualWares" : [
+			{"Type" : "vtDiamond", "Min" : 1, "Max" : 1, "Chance" : 10},
+			{"Type" : "vtAmber", "Min" : 1, "Max" : 3, "Chance" : 40},
+			{"Type" : "vtSilver", "Min" : 1, "Max" : 2, "Chance" : 30},
+			{"Type" : "vtCopper", "Min" : 1, "Max" : 3, "Chance" : 20}
+		]
+	  },
+	  {
+		"ObjectID" : 279,
+		"SnowPic" : 750,
+		"MainGettingChance" : 100,
+		"VirtualWares" : [
+			{"Type" : "vtDiamond", "Min" : 1, "Max" : 2, "Chance" : 30},
+			{"Type" : "vtAmber", "Min" : 1, "Max" : 2, "Chance" : 25},
+			{"Type" : "vtSilver", "Min" : 1, "Max" : 2, "Chance" : 25},
+			{"Type" : "vtCopper", "Min" : 1, "Max" : 4, "Chance" : 20}
+		]
+	  },
+	  {
+		"ObjectID" : 285,
+		"SnowPic" : 750,
+		"MainGettingChance" : 100,
+		"Clay" : 0,
+		"Stone" : 0,
+		"Bitin" : 0,
+		"Iron" : 0,
+		"Gold" : 0,
+		"Coal" : 0,	
+		"VirtualWares" : [
+			{"Type" : "vtDiamond", "Min" : 1, "Max" : 2, "Chance" : 30},
+			{"Type" : "vtAmber", "Min" : 1, "Max" : 2, "Chance" : 25},
+			{"Type" : "vtSilver", "Min" : 1, "Max" : 2, "Chance" : 25},
+			{"Type" : "vtCopper", "Min" : 1, "Max" : 4, "Chance" : 20}
+		]
+	  },
+	  {
+		"ObjectID" : 3,
+		"MainGettingChance" : 50,
+		"VirtualWares" : [
+			{"Type" : "vtDiamond", "Min" : 1, "Max" : 1, "Chance" : 50},
+			{"Type" : "vtAmber", "Min" : 1, "Max" : 1, "Chance" : 35},
+			{"Type" : "vtSilver", "Min" : 1, "Max" : 1, "Chance" : 10},
+			{"Type" : "vtCopper", "Min" : 1, "Max" : 1, "Chance" : 5}
+		]
+	  },
+	  {
+		"ObjectID" : 4,
+		"MainGettingChance" : 50,
+		"VirtualWares" : [
+			{"Type" : "vtDiamond", "Min" : 1, "Max" : 1, "Chance" : 50},
+			{"Type" : "vtAmber", "Min" : 1, "Max" : 1, "Chance" : 35},
+			{"Type" : "vtSilver", "Min" : 1, "Max" : 1, "Chance" : 10},
+			{"Type" : "vtCopper", "Min" : 1, "Max" : 1, "Chance" : 5}
+		]
+	  },
+	  {
+		"ObjectID" : 10,
+		"MainGettingChance" : 50,
+		"VirtualWares" : [
+			{"Type" : "vtWoodenPlate", "Min" : 1, "Max" : 2, "Chance" : 100}
+		]
+	  },
+	  {
+		"ObjectID" : 11,
+		"MainGettingChance" : 50,
+		"VirtualWares" : [
+			{"Type" : "vtWoodenPlate", "Min" : 1, "Max" : 2, "Chance" : 100}
+		]
+	  },
+	  {
+		"ObjectID" : 12,
+		"MainGettingChance" : 50,
+		"VirtualWares" : [
+			{"Type" : "vtWoodenPlate", "Min" : 1, "Max" : 2, "Chance" : 100}
+		]
+	  },
+	  {
+		"ObjectID" : 72,
+		"MainGettingChance" : 50,
+		"VirtualWares" : [
+			{"Type" : "vtWoodenPlate", "Min" : 1, "Max" : 2, "Chance" : 100}
+		]
+	  },
+	  {
+		"ObjectID" : 73,
+		"MainGettingChance" : 50,
+		"VirtualWares" : [
+			{"Type" : "vtWoodenPlate", "Min" : 1, "Max" : 2, "Chance" : 100}
+		]
+	  },
+	  {
+		"ObjectID" : 90,
+		"AxeHitTimes" : 18
+	  },
+	  {
+		"ObjectID" : 107,
+		"IsFruit" : 1
+	  },
+	  {
+		"ObjectID" : 108,
+		"IsFruit" : 1
+	  },
+	  {
+		"ObjectID" : 109,
+		"IsFruit" : 1
+	  },
+	  {
+		"ObjectID" : 110,
+		"IsFruit" : 1
+	  },
+	  {
+		"ObjectID" : 110,
+		"IsFruit" : 1,
+		"AxeHitTimes" : 20,
+		"NextTreeAgeObj" : 365,
+		"TreeGrowAge" : 26
+	  },
+	  {
+		"ObjectID" : 100,
+		"AxeHitTimes" : 20,
+		"TrunksCount" : 2
+	  },
+	  {
+		"ObjectID" : 105,
+		"AxeHitTimes" : 22,
+		"TrunksCount" : 2
+	  },
+	  {
+		"ObjectID" : 114,
+		"AxeHitTimes" : 12
+	  },
+	  {
+		"ObjectID" : 119,
+		"AxeHitTimes" : 12
+	  },
+	  {
+		"ObjectID" : 124,
+		"AxeHitTimes" : 16
+	  },
+	  {
+		"ObjectID" : 160,
+		"AxeHitTimes" : 16
+	  },
+	  {
+		"ObjectID" : 170,
+		"AxeHitTimes" : 16,
+		"TrunksCount" : 2
+	  },
+	  {
+		"ObjectID" : 172,
+		"AxeHitTimes" : 16,
+		"TrunksCount" : 2,
+		"Stump" : 25,
+		"IsCuttableTree" : true
+	  },
+	  {
+		"ObjectID" : 190,
+		"MainGettingChance" : 50,
+		"VirtualWares" : [
+			{"Type" : "vtWoodenPlate", "Min" : 1, "Max" : 2, "Chance" : 100}
+		]
+	  },
+	  {
+		"ObjectID" : 191,
+		"MainGettingChance" : 50,
+		"VirtualWares" : [
+			{"Type" : "vtWoodenPlate", "Min" : 1, "Max" : 2, "Chance" : 100}
+		]
+	  },
+	  {
+		"ObjectID" : 192,
+		"MainGettingChance" : 50,
+		"VirtualWares" : [
+			{"Type" : "vtWoodenPlate", "Min" : 1, "Max" : 2, "Chance" : 100}
+		]
+	  },
+	  {
+		"ObjectID" : 193,
+		"MainGettingChance" : 50,
+		"VirtualWares" : [
+			{"Type" : "vtWoodenPlate", "Min" : 1, "Max" : 2, "Chance" : 100}
+		]
+	  },
+	  {
+		"ObjectID" : 194,
+		"MainGettingChance" : 50,
+		"VirtualWares" : [
+			{"Type" : "vtWoodenPlate", "Min" : 1, "Max" : 2, "Chance" : 100}
+		]
+	  },
+	  {
+		"ObjectID" : 200,
+		"AxeHitTimes" : 12,
+		"Stump" : 25,
+		"IsCuttableTree" : true
+	  },
+	  {
+		"ObjectID" : 201,
+		"AxeHitTimes" : 12,
+		"Stump" : 25,
+		"IsCuttableTree" : true
+	  },
+	  {
+		"ObjectID" : 202,
+		"AxeHitTimes" : 14,
+		"Stump" : 25,
+		"IsCuttableTree" : true
+	  },
+	  {
+		"ObjectID" : 203,
+		"AxeHitTimes" : 22,
+		"Stump" : 25,
+		"TrunksCount" : 3,
+		"IsCuttableTree" : true
+	  },
+	  {
+		"ObjectID" : 204,
+		"AxeHitTimes" : 14,
+		"Stump" : 25,
+		"IsCuttableTree" : true
+	  },
+	  {
+		"ObjectID" : 205,
+		"AxeHitTimes" : 14,
+		"Stump" : 25,
+		"IsCuttableTree" : true
+	  },
+	  {
+		"ObjectID" : 206,
+		"AxeHitTimes" : 18,
+		"Stump" : 25,
+		"TrunksCount" : 2,
+		"IsCuttableTree" : true
+	  },
+	  {
+		"ObjectID" : 13,
+		"MainGettingChance" : 50,
+		"VirtualWares" : [
+			{"Type" : "vtResin", "Min" : 1, "Max" : 2, "Chance" : 100}
+		]
+	  },
+	  {
+		"ObjectID" : 14,
+		"MainGettingChance" : 50,
+		"VirtualWares" : [
+			{"Type" : "vtResin", "Min" : 1, "Max" : 2, "Chance" : 100}
+		]
+	  },
+	  {
+		"ObjectID" : 15,
+		"MainGettingChance" : 50,
+		"VirtualWares" : [
+			{"Type" : "vtResin", "Min" : 1, "Max" : 2, "Chance" : 100}
+		]
+	  },
+	  {
+		"ObjectID" : 16,
+		"MainGettingChance" : 50,
+		"VirtualWares" : [
+			{"Type" : "vtResin", "Min" : 1, "Max" : 2, "Chance" : 100}
+		]
+	  },
+	  {
+		"ObjectID" : 20,
+		"MainGettingChance" : 50,
+		"VirtualWares" : [
+			{"Type" : "vtResin", "Min" : 1, "Max" : 2, "Chance" : 100}
+		]
+	  },
+	  {
+		"ObjectID" : 5,
+		"MainGettingChance" : 75,
+		"VirtualWares" : [
+			{"Type" : "vtHerbs", "Min" : 1, "Max" : 2, "Chance" : 100}
+		]
+	  },
+	  {
+		"ObjectID" : 6,
+		"MainGettingChance" : 75,
+		"VirtualWares" : [
+			{"Type" : "vtHerbs", "Min" : 1, "Max" : 2, "Chance" : 100}
+		]
+	  },
+	  {
+		"ObjectID" : 7,
+		"MainGettingChance" : 75,
+		"VirtualWares" : [
+			{"Type" : "vtHerbs", "Min" : 1, "Max" : 2, "Chance" : 100}
+		]
+	  },
+	  {
+		"ObjectID" : 54,
+		"RenderAsTwo" : true,
+		"IsWine" : 1
+	  },
+	  {
+		"ObjectID" : 55,
+		"RenderAsTwo" : true,
+		"IsWine" : 2
+	  },
+	  {
+		"ObjectID" : 56,
+		"RenderAsTwo" : true,
+		"IsWine" : 3
+	  },
+	  {
+		"ObjectID" : 57,
+		"RenderAsTwo" : true,
+		"IsWine" : 4
+	  },
+	  {
+		"ObjectID" : 58,
+		"RenderAsTwo" : false,
+		"IsCorn" : 4
+	  },
+	  {
+		"ObjectID" : 59,
+		"RenderAsTwo" : false,
+		"IsCorn" : 5
+	  },
+	  {
+		"ObjectID" : 60,
+		"MainGettingChance" : 75,
+		"VirtualWares" : [
+			{"Type" : "vtHerbs", "Min" : 1, "Max" : 3, "Chance" : 100}
+		]
+	  },
+	  {
+		"ObjectID" : 62,
+		"MainGettingChance" : 75,
+		"VirtualWares" : [
+			{"Type" : "vtHerbs", "Min" : 1, "Max" : 1, "Chance" : 100}
+		]
+	  },
+	  {
+		"ObjectID" : 63,
+		"MainGettingChance" : 75,
+		"VirtualWares" : [
+			{"Type" : "vtHerbs", "Min" : 1, "Max" : 1, "Chance" : 100}
+		]
+	  },
+	  {
+		"ObjectID" : 276,
+		"MainGettingChance" : 100,
+		"VirtualWares" : [
+			{"Type" : "vtHerbs", "Min" : 1, "Max" : 2, "Chance" : 100}
+		]
+	  },
+	  {
+		"ObjectID" : 277,
+		"MainGettingChance" : 100,
+		"IsGrass" : 4
+	  },
+	  {
+		"ObjectID" : 68,
+		"Stone" : 1
+	  },
+	  {
+		"ObjectID" : 69,
+		"Stone" : 2
+	  },
+	  {
+		"ObjectID" : 70,
+		"Stone" : 1
+	  },
+	  {
+		"ObjectID" : 73,
+		"Stone" : 1
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [377],
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : false,
+		"AllBlocked" : false,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"DontPlantNear" : false,
+		"PlaceableInEditor" : true,
+		"RenderAsTileOverlay" : false,
+		"RotateToTile" : false,
+		"CanBeRemoved" : true,
+		"RandomPos" : true,
+		"Clay" : 0,
+		"Stone" : 1,
+		"Bitin" : 0,
+		"Iron" : 0,
+		"Gold" : 0,
+		"Coal" : 0	
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [378],
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : false,
+		"AllBlocked" : false,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"DontPlantNear" : false,
+		"PlaceableInEditor" : true,
+		"RenderAsTileOverlay" : false,
+		"RotateToTile" : false,
+		"CanBeRemoved" : true,
+		"RandomPos" : true,
+		"Clay" : 0,
+		"Stone" : 2,
+		"Bitin" : 0,
+		"Iron" : 0,
+		"Gold" : 0,
+		"Coal" : 0	
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [379],
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : false,
+		"AllBlocked" : false,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"DontPlantNear" : false,
+		"PlaceableInEditor" : true,
+		"RenderAsTileOverlay" : false,
+		"RotateToTile" : false,
+		"CanBeRemoved" : false,
+		"RandomPos" : true,
+		"Clay" : 0,
+		"Stone" : 3,
+		"Bitin" : 0,
+		"Iron" : 0,
+		"Gold" : 0,
+		"Coal" : 0	
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [380],
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : false,
+		"AllBlocked" : true,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"DontPlantNear" : false,
+		"PlaceableInEditor" : true,
+		"RenderAsTileOverlay" : false,
+		"RotateToTile" : false,
+		"CanBeRemoved" : false,
+		"Clay" : 0,
+		"Stone" : 4,
+		"Bitin" : 0,
+		"Iron" : 0,
+		"Gold" : 0,
+		"Coal" : 0	
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [381],
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : false,
+		"AllBlocked" : true,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"DontPlantNear" : false,
+		"PlaceableInEditor" : true,
+		"RenderAsTileOverlay" : false,
+		"RotateToTile" : false,
+		"CanBeRemoved" : false,
+		"Clay" : 0,
+		"Stone" : 5,
+		"Bitin" : 0,
+		"Iron" : 0,
+		"Gold" : 0,
+		"Coal" : 0	
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [367],
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : false,
+		"AllBlocked" : false,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"DontPlantNear" : false,
+		"PlaceableInEditor" : true,
+		"RenderAsTileOverlay" : false,
+		"RotateToTile" : false,
+		"CanBeRemoved" : true,
+		"RandomPos" : true,
+		"Clay" : 0,
+		"Stone" : 0,
+		"Bitin" : 0,
+		"Iron" : 1,
+		"Gold" : 0,
+		"Coal" : 0	
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [368],
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : false,
+		"AllBlocked" : false,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"DontPlantNear" : false,
+		"PlaceableInEditor" : true,
+		"RenderAsTileOverlay" : false,
+		"RotateToTile" : false,
+		"CanBeRemoved" : true,
+		"RandomPos" : true,
+		"Clay" : 0,
+		"Stone" : 0,
+		"Bitin" : 0,
+		"Iron" : 2,
+		"Gold" : 0,
+		"Coal" : 0	
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [369],
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : false,
+		"AllBlocked" : false,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"DontPlantNear" : false,
+		"PlaceableInEditor" : true,
+		"RenderAsTileOverlay" : false,
+		"RotateToTile" : false,
+		"CanBeRemoved" : false,
+		"RandomPos" : true,
+		"Clay" : 0,
+		"Stone" : 0,
+		"Bitin" : 0,
+		"Iron" : 3,
+		"Gold" : 0,
+		"Coal" : 0	
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [370],
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : false,
+		"AllBlocked" : true,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"DontPlantNear" : false,
+		"PlaceableInEditor" : true,
+		"RenderAsTileOverlay" : false,
+		"RotateToTile" : false,
+		"CanBeRemoved" : false,
+		"Clay" : 0,
+		"Stone" : 0,
+		"Bitin" : 0,
+		"Iron" : 4,
+		"Gold" : 0,
+		"Coal" : 0	
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [371],
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : false,
+		"AllBlocked" : true,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"DontPlantNear" : false,
+		"PlaceableInEditor" : true,
+		"RenderAsTileOverlay" : false,
+		"RotateToTile" : false,
+		"CanBeRemoved" : false,
+		"Clay" : 0,
+		"Stone" : 0,
+		"Bitin" : 0,
+		"Iron" : 5,
+		"Gold" : 0,
+		"Coal" : 0	
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [372],
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : false,
+		"AllBlocked" : false,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"DontPlantNear" : false,
+		"PlaceableInEditor" : true,
+		"RenderAsTileOverlay" : false,
+		"RotateToTile" : false,
+		"CanBeRemoved" : true,
+		"RandomPos" : true,
+		"Clay" : 0,
+		"Stone" : 0,
+		"Bitin" : 0,
+		"Iron" : 0,
+		"Gold" : 1,
+		"Coal" : 0	
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [373],
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : false,
+		"AllBlocked" : false,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"DontPlantNear" : false,
+		"PlaceableInEditor" : true,
+		"RenderAsTileOverlay" : false,
+		"RotateToTile" : false,
+		"CanBeRemoved" : true,
+		"RandomPos" : true,
+		"Clay" : 0,
+		"Stone" : 0,
+		"Bitin" : 0,
+		"Iron" : 0,
+		"Gold" : 2,
+		"Coal" : 0	
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [374],
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : false,
+		"AllBlocked" : false,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"DontPlantNear" : false,
+		"PlaceableInEditor" : true,
+		"RenderAsTileOverlay" : false,
+		"RotateToTile" : false,
+		"CanBeRemoved" : false,
+		"RandomPos" : true,
+		"Clay" : 0,
+		"Stone" : 0,
+		"Bitin" : 0,
+		"Iron" : 0,
+		"Gold" : 3,
+		"Coal" : 0	
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [375],
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : false,
+		"AllBlocked" : true,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"DontPlantNear" : false,
+		"PlaceableInEditor" : true,
+		"RenderAsTileOverlay" : false,
+		"RotateToTile" : false,
+		"CanBeRemoved" : false,
+		"Clay" : 0,
+		"Stone" : 0,
+		"Bitin" : 0,
+		"Iron" : 0,
+		"Gold" : 4,
+		"Coal" : 0	
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [376],
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : false,
+		"AllBlocked" : true,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"DontPlantNear" : false,
+		"PlaceableInEditor" : true,
+		"RenderAsTileOverlay" : false,
+		"RotateToTile" : false,
+		"CanBeRemoved" : false,
+		"Clay" : 0,
+		"Stone" : 0,
+		"Bitin" : 0,
+		"Iron" : 0,
+		"Gold" : 5,
+		"Coal" : 0	
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [384],
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : false,
+		"AllBlocked" : false,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"DontPlantNear" : false,
+		"PlaceableInEditor" : true,
+		"RenderAsTileOverlay" : false,
+		"RotateToTile" : false,
+		"CanBeRemoved" : true,
+		"RandomPos" : true,
+		"Clay" : 0,
+		"Stone" : 0,
+		"Bitin" : 0,
+		"Iron" : 0,
+		"Gold" : 0,
+		"Coal" : 1	
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [385],
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : false,
+		"AllBlocked" : false,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"DontPlantNear" : false,
+		"PlaceableInEditor" : true,
+		"RenderAsTileOverlay" : false,
+		"RotateToTile" : false,
+		"CanBeRemoved" : true,
+		"RandomPos" : true,
+		"Clay" : 0,
+		"Stone" : 0,
+		"Bitin" : 0,
+		"Iron" : 0,
+		"Gold" : 0,
+		"Coal" : 2	
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [386],
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : false,
+		"AllBlocked" : false,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"DontPlantNear" : false,
+		"PlaceableInEditor" : true,
+		"RenderAsTileOverlay" : false,
+		"RotateToTile" : false,
+		"CanBeRemoved" : true,
+		"RandomPos" : true,
+		"Clay" : 0,
+		"Stone" : 0,
+		"Bitin" : 0,
+		"Iron" : 0,
+		"Gold" : 0,
+		"Coal" : 3	
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [387],
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : false,
+		"AllBlocked" : false,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"DontPlantNear" : false,
+		"PlaceableInEditor" : true,
+		"RenderAsTileOverlay" : false,
+		"RotateToTile" : false,
+		"CanBeRemoved" : false,
+		"RandomPos" : false,
+		"Clay" : 0,
+		"Stone" : 0,
+		"Bitin" : 0,
+		"Iron" : 0,
+		"Gold" : 0,
+		"Coal" : 4	
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [388],
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : false,
+		"AllBlocked" : false,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"DontPlantNear" : false,
+		"PlaceableInEditor" : true,
+		"RenderAsTileOverlay" : false,
+		"RotateToTile" : false,
+		"CanBeRemoved" : false,
+		"RandomPos" : false,
+		"Clay" : 0,
+		"Stone" : 0,
+		"Bitin" : 0,
+		"Iron" : 0,
+		"Gold" : 0,
+		"Coal" : 5	
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [394, 394, 394, 393, 393, 393, 394, 394, 394, 392, 392, 392],
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : false,
+		"AllBlocked" : false,
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"DontPlantNear" : false,
+		"PlaceableInEditor" : true,
+		"RenderAsTileOverlay" : false,
+		"RotateToTile" : false,
+		"CanBeRemoved" : false,
+		"RandomPos" : false,
+		"Clay" : 0,
+		"Stone" : 0,
+		"Bitin" : 0,
+		"Iron" : 0,
+		"Gold" : 0,
+		"Coal" : 0,	
+		"IsCorn" : 4,
+		"IsWine" : 0
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [391, 391, 391, 390, 390, 390, 391, 391, 391, 389, 389, 389],
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : false,
+		"AllBlocked" : false,
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"DontPlantNear" : false,
+		"PlaceableInEditor" : true,
+		"RenderAsTileOverlay" : false,
+		"RotateToTile" : false,
+		"CanBeRemoved" : false,
+		"RandomPos" : false,
+		"Clay" : 0,
+		"Stone" : 0,
+		"Bitin" : 0,
+		"Iron" : 0,
+		"Gold" : 0,
+		"Coal" : 0,
+		"IsCorn" : 5,
+		"IsWine" : 0
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [395, 395, 395, 396, 396, 396, 397, 397, 397, 398, 398, 398],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"RenderAsTwo" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsWine" : 4
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [399, 399, 399, 400, 400, 400, 401, 401, 401, 402, 402, 402],
+		"WineOrCorn" : true,
+		"RenderAsTwo" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsWine" : 4
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [404, 404, 404, 405, 405, 405, 406, 406, 406, 403, 403, 403],
+		"WineOrCorn" : true,
+		"RenderAsTwo" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsWine" : 4
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [408, 408, 408, 409, 409, 409, 410, 410, 410, 407, 407, 407],
+		"WineOrCorn" : true,
+		"RenderAsTwo" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsWine" : 3
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [411, 411, 411, 412, 412, 412, 413, 413, 413, 414, 414, 414],
+		"WineOrCorn" : true,
+		"RenderAsTwo" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsWine" : 3
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [415, 415, 415, 416, 416, 416, 417, 417, 417, 418, 418, 418],
+		"WineOrCorn" : true,
+		"RenderAsTwo" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsWine" : 3
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [422, 422, 422, 423, 423, 423, 422, 422, 422, 424, 424, 424],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsCorn" : 4
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [420, 420, 420, 419, 419, 419, 420, 420, 420, 421, 421, 421],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsCorn" : 5
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [428, 428, 428, 428, 429, 429, 429, 429, 429, 429, 428, 428, 428, 428, 428, 430, 430, 430, 430, 430],
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsCorn" : 4
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [425, 425, 425, 425, 425, 426, 426, 426, 426, 426, 425, 425, 425, 425, 425, 427, 427, 427, 427, 427],
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsCorn" : 5
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [435],
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsCorn" : 1
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [434],
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsCorn" : 2
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [431, 431, 431, 431, 431, 432, 432, 432, 432, 432, 431, 431, 431, 431, 431, 433, 433, 433, 433, 433],
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsCorn" : 3
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [436],
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsCorn" : 6
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [441, 472, 441, 473],
+		"SlowAnim" : 3,
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsGrass" : 2
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [437, 437, 437, 438, 438, 438, 437, 437, 437, 439, 439, 439],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsGrass" : 3
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [440],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsGrass" : 1
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [442],
+		"WineOrCorn" : false,
+		"RenderAsTileOverlay" : true,
+		"RotateToTile" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsGrass" : 5
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [443],
+		"RenderAsTileOverlay" : true,
+		"RotateToTile" : true,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsGrass" : 6
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [444, 444, 444, 445, 445, 445, 444, 444, 444, 446, 446, 446],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsGrass" : 3
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [447, 447, 447, 448, 448, 448, 447, 447, 447, 449, 449, 449],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsGrass" : 4
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [470],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsCorn" : 2
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [456, 457, 456, 458],
+		"SlowAnim" : 3,
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsCorn" : 3
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [453, 454, 453, 455],
+		"SlowAnim" : 3,
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsCorn" : 4
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [450, 451, 450, 452],
+		"SlowAnim" : 3,
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsCorn" : 5
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [469],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsCorn" : 2
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [465, 466, 465, 467],
+		"SlowAnim" : 3,
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsCorn" : 3
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [462, 463, 462, 464],
+		"SlowAnim" : 3,
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsCorn" : 4
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [459, 460, 459, 461],
+		"SlowAnim" : 3,
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsCorn" : 5
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [474],
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsVege" : 1
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [475],
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsVege" : 2
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [476],
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsVege" : 3
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [477],
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsVege" : 4
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [478],
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsVege" : 5
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [479],
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsVege" : 6
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [480],
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [484, 485, 484, 486],
+		"SlowAnim" : 3,
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsGrass" : 3
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [481, 482, 481, 483],
+		"SlowAnim" : 3,
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsGrass" : 4
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [487],
+		"WineOrCorn" : false,
+		"RenderAsTileOverlay" : true,
+		"RotateToTile" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsGrass" : 5
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [488],
+		"WineOrCorn" : false,
+		"RenderAsTileOverlay" : true,
+		"RotateToTile" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsGrass" : 5
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [489],
+		"RenderAsTileOverlay" : true,
+		"RotateToTile" : true,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsWine" : 1
+	  },  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [500],
+		"RenderAsTileOverlay" : true,
+		"RotateToTile" : true,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsWine" : 2
+	  },  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [501],
+		"RenderAsTileOverlay" : true,
+		"RotateToTile" : true,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsWine" : 3
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [490],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsWine" : 1
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [502],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsWine" : 2
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [503],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsWine" : 3
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [491, 496, 491, 497],
+		"SlowAnim" : 3,
+		"WineOrCorn" : true,
+		"RenderAsTwo" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsWine" : 1
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [504, 505, 504, 506],
+		"SlowAnim" : 3,
+		"WineOrCorn" : true,
+		"RenderAsTwo" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsWine" : 2
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [507, 508, 507, 509],
+		"SlowAnim" : 3,
+		"WineOrCorn" : true,
+		"RenderAsTwo" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsWine" : 3
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [492, 498, 492, 499],
+		"SlowAnim" : 3,
+		"WineOrCorn" : true,
+		"RenderAsTwo" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsWine" : 1
+	  },  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [510, 511, 510, 512],
+		"SlowAnim" : 3,
+		"WineOrCorn" : true,
+		"RenderAsTwo" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsWine" : 2
+	  },  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [513, 514, 513, 515],
+		"SlowAnim" : 3,
+		"WineOrCorn" : true,
+		"RenderAsTwo" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsWine" : 3
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [493, 494, 493, 495],
+		"SlowAnim" : 3,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsWine" : 1
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [516, 517, 516, 518],
+		"SlowAnim" : 3,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsWine" : 2
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [519, 520, 519, 521],
+		"SlowAnim" : 3,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsWine" : 3
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [522, 523, 524, 523],
+		"SlowAnim" : 2,
+		"SnowPic" : 751,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : true,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [525, 526, 527, 526],
+		"SlowAnim" : 2,
+		"SnowPic" : 752,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : true,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [528],
+		"IsFruit": 1,
+		"SlowAnim" : 2,
+		"SnowPic" : 300,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : true,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"NextTreeAgeObj" : 366,
+		"TreeGrowAge" : 30,
+		"TrunksCount" : 1,
+		"Stump" : 16
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [529],
+		"IsFruit": 1,
+		"SlowAnim" : 2,
+		"SnowPic" : 300,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : true,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"NextTreeAgeObj" : 367,
+		"TreeGrowAge" : 35,
+		"TrunksCount" : 1,
+		"Stump" : 16
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [530],
+		"IsFruit": 1,
+		"SlowAnim" : 2,
+		"SnowPic" : 300,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : true,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"NextTreeAgeObj" : 0,
+		"TreeGrowAge" : 40,
+		"TrunksCount" : 1,
+		"Stump" : 16
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [537, 538, 539, 538],
+		"IsFruit": 0,
+		"SlowAnim" : 2,
+		"SnowPic" : 755,
+		"TrunksCount" : 0,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"TreeGrowAge" : 12,
+		"FallTreeAnimObj" : 0,
+		"Stump" : 0,
+		"NextTreeAgeObj" : 369
+	  },  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [534, 535, 536, 535],
+		"IsFruit": 0,
+		"SlowAnim" : 2,
+		"SnowPic" : 754,
+		"TrunksCount" : 0,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"TreeGrowAge" : 24,
+		"FallTreeAnimObj" : 0,
+		"Stump" : 0,
+		"NextTreeAgeObj" : 370
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [531, 532, 533, 532],
+		"IsFruit": 0,
+		"SlowAnim" : 2,
+		"SnowPic" : 753,
+		"TrunksCount" : 1,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : true,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"AxeHitTimes" : 15,
+		"TreeGrowAge" : 0,
+		"FallTreeAnimObj" : 447,
+		"Stump" : 15,
+		"NextTreeAgeObj" : 0
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [546, 547, 548, 547],
+		"IsFruit": 0,
+		"SlowAnim" : 2,
+		"SnowPic" : 758,
+		"TrunksCount" : 0,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"TreeGrowAge" : 12,
+		"FallTreeAnimObj" : 0,
+		"Stump" : 0,
+		"NextTreeAgeObj" : 372
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [543, 544, 545, 544],
+		"IsFruit": 0,
+		"SlowAnim" : 2,
+		"SnowPic" : 757,
+		"TrunksCount" : 0,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"TreeGrowAge" : 24,
+		"FallTreeAnimObj" : 0,
+		"Stump" : 0,
+		"NextTreeAgeObj" : 373
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [540, 541, 542, 541],
+		"IsFruit": 0,
+		"SlowAnim" : 2,
+		"SnowPic" : 756,
+		"TrunksCount" : 1,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : true,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"AxeHitTimes" : 15,
+		"TreeGrowAge" : 0,
+		"FallTreeAnimObj" : 446,
+		"Stump" : 15,
+		"NextTreeAgeObj" : 0
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [558, 559, 560, 559],
+		"IsFruit": 0,
+		"SlowAnim" : 2,
+		"SnowPic" : 762,
+		"TrunksCount" : 0,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"TreeGrowAge" : 9,
+		"FallTreeAnimObj" : 0,
+		"Stump" : 0,
+		"NextTreeAgeObj" : 375
+	  },  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [555, 556, 557, 556],
+		"IsFruit": 0,
+		"SlowAnim" : 2,
+		"SnowPic" : 761,
+		"TrunksCount" : 0,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"TreeGrowAge" : 19,
+		"FallTreeAnimObj" : 0,
+		"Stump" : 0,
+		"NextTreeAgeObj" : 376
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [552, 553, 554, 553],
+		"IsFruit": 0,
+		"SlowAnim" : 2,
+		"SnowPic" : 760,
+		"TrunksCount" : 0,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"TreeGrowAge" : 32,
+		"FallTreeAnimObj" : 0,
+		"Stump" : 0,
+		"NextTreeAgeObj" : 377
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [549, 550, 551, 550],
+		"IsFruit": 0,
+		"SlowAnim" : 2,
+		"SnowPic" : 759,
+		"TrunksCount" : 1,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : true,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"AxeHitTimes" : 15,
+		"TreeGrowAge" : 0,
+		"FallTreeAnimObj" : 443,
+		"Stump" : 15,
+		"NextTreeAgeObj" : 0
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [570, 571, 572, 571],
+		"IsFruit": 0,
+		"SlowAnim" : 2,
+		"TrunksCount" : 0,
+		"SnowPic" : 766,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"TreeGrowAge" : 8,
+		"FallTreeAnimObj" : 0,
+		"NextTreeAgeObj" : 379
+	  }, 	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [567, 568, 569, 568],
+		"IsFruit": 0,
+		"SlowAnim" : 2,
+		"SnowPic" : 765,
+		"TrunksCount" : 0,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"TreeGrowAge" : 16,
+		"FallTreeAnimObj" : 0,
+		"NextTreeAgeObj" : 380
+	  },  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [564, 565, 566, 565],
+		"IsFruit": 0,
+		"SlowAnim" : 2,
+		"SnowPic" : 764,
+		"TrunksCount" : 0,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"TreeGrowAge" : 24,
+		"FallTreeAnimObj" : 0,
+		"NextTreeAgeObj" : 381
+	  },	  
+	  {
+		"ObjectID" : 381,
+		"AddObject" : true,
+		"AnimSteps" : [561, 562, 563, 562],
+		"IsFruit": 0,
+		"SlowAnim" : 2,
+		"SnowPic" : 763,
+		"TrunksCount" : 3,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : true,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"AxeHitTimes" : 15,
+		"TreeGrowAge" : 0,
+		"FallTreeAnimObj" : 441,
+		"Stump" : 15,
+		"NextTreeAgeObj" : 0
+	  },	  
+	  {
+		"ObjectID" : 382,
+		"AddObject" : true,
+		"AnimSteps" : [591, 592, 593, 592],
+		"IsFruit": 2,
+		"SlowAnim" : 2,
+		"SnowPic" : 770,
+		"TrunksCount" : 0,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"AxeHitTimes" : 0,
+		"TreeGrowAge" : 4,
+		"FallTreeAnimObj" : 0,
+		"Stump" : 0,
+		"NextTreeAgeObj" : 383
+	  },	  
+	  {
+		"ObjectID" : 383,
+		"AddObject" : true,
+		"AnimSteps" : [590, 589, 588, 589],
+		"IsFruit": 2,
+		"SlowAnim" : 2,
+		"SnowPic" : 769,
+		"TrunksCount" : 0,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"AxeHitTimes" : 0,
+		"TreeGrowAge" : 8,
+		"FallTreeAnimObj" : 0,
+		"Stump" : 0,
+		"NextTreeAgeObj" : 384
+	  },	  
+	  {
+		"ObjectID" : 384,
+		"AddObject" : true,
+		"AnimSteps" : [587, 586, 585, 586],
+		"IsFruit": 2,
+		"SlowAnim" : 2,
+		"SnowPic" : 768,
+		"TrunksCount" : 0,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"AxeHitTimes" : 0,
+		"TreeGrowAge" : 12,
+		"FallTreeAnimObj" : 0,
+		"Stump" : 0,
+		"NextTreeAgeObj" : 385
+	  },	  
+	  {
+		"ObjectID" : 385,
+		"AddObject" : true,
+		"AnimSteps" : [584, 583, 582, 583],
+		"IsFruit": 2,
+		"SlowAnim" : 2,
+		"TrunksCount" : 0,
+		"SnowPic" : 767,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : true,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"AxeHitTimes" : 15,
+		"TreeGrowAge" : 16,
+		"FallTreeAnimObj" : 444,
+		"Stump" : 15,
+		"NextTreeAgeObj" : 386
+	  },	  
+	  {
+		"ObjectID" : 386,
+		"AddObject" : true,
+		"AnimSteps" : [581, 580, 579, 580],
+		"IsFruit": 2,
+		"SlowAnim" : 2,
+		"SnowPic" : 767,
+		"TrunksCount" : 0,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : true,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"AxeHitTimes" : 15,
+		"TreeGrowAge" : 20,
+		"FallTreeAnimObj" : 444,
+		"Stump" : 15,
+		"NextTreeAgeObj" : 387
+	  },	  
+	  {
+		"ObjectID" : 387,
+		"AddObject" : true,
+		"AnimSteps" : [578, 577, 576, 577],
+		"IsFruit": 2,
+		"SlowAnim" : 2,
+		"SnowPic" : 767,
+		"TrunksCount" : 0,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : true,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"AxeHitTimes" : 15,
+		"TreeGrowAge" : 24,
+		"FallTreeAnimObj" : 444,
+		"Stump" : 15,
+		"NextTreeAgeObj" : 388
+	  },	  
+	  {
+		"ObjectID" : 388,
+		"AddObject" : true,
+		"AnimSteps" : [575, 574, 573, 574],
+		"IsFruit": 2,
+		"SlowAnim" : 2,
+		"SnowPic" : 767,
+		"TrunksCount" : 0,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : true,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"AxeHitTimes" : 15,
+		"TreeGrowAge" :28,
+		"FallTreeAnimObj" : 444,
+		"Stump" : 15,
+		"NextTreeAgeObj" : 389
+	  },	  
+	  {
+		"ObjectID" : 389,
+		"AddObject" : true,
+		"AnimSteps" : [594, 595, 596, 595],
+		"IsFruit": 2,
+		"SlowAnim" : 2,
+		"SnowPic" : 767,
+		"TrunksCount" : 0,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : true,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"AxeHitTimes" : 15,
+		"TreeGrowAge" : 0,
+		"FallTreeAnimObj" : 1,
+		"Stump" : 15,
+		"NextTreeAgeObj" : 0
+	  },  
+	  {
+		"ObjectID" : 390,
+		"AddObject" : true,
+		"AnimSteps" : [597],
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"SnowPic" : 771,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,	
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : false,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"AxeHitTimes" : 0,
+		"TreeGrowAge" : 4,
+		"FallTreeAnimObj" : 0,
+		"Stump" : 0,
+		"NextTreeAgeObj" : 0
+	  },  
+	  
+	  
+	  
+	  
+	  {
+		"ObjectID" : 391,
+		"AddObject" : true,
+		"AnimSteps" : [598, 599, 600, 599],
+		"SlowAnim" : 2,
+		"SnowPic" : 772,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"IsFruit" : 3, 
+		"AxeHitTimes" : 0,
+		"TreeGrowAge" : 12,
+		"FallTreeAnimObj" : 0,
+		"Stump" : 0,
+		"NextTreeAgeObj" : 392
+	  },
+	  {
+		"ObjectID" : 392,
+		"AddObject" : true,
+		"AnimSteps" : [601, 602, 603, 602],
+		"SlowAnim" : 2,
+		"SnowPic" : 773,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"IsFruit" : 3, 
+		"AxeHitTimes" : 0,
+		"TreeGrowAge" : 20,
+		"FallTreeAnimObj" : 0,
+		"Stump" : 0,
+		"NextTreeAgeObj" : 393
+	  },
+	  {
+		"ObjectID" : 393,
+		"AddObject" : true,
+		"AnimSteps" : [604, 605, 606, 605],
+		"SlowAnim" : 2,
+		"SnowPic" : 774,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : false,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"IsFruit" : 3, 
+		"AxeHitTimes" : 0,
+		"TreeGrowAge" : 28,
+		"FallTreeAnimObj" : 0,
+		"Stump" : 0,
+		"NextTreeAgeObj" : 394
+	  },
+	  {
+		"ObjectID" : 394,
+		"AddObject" : true,
+		"AnimSteps" : [607, 608, 609, 608],
+		"SlowAnim" : 2,
+		"SnowPic" : 775,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : true,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"IsFruit" : 3, 
+		"AxeHitTimes" : 15,
+		"TrunksCount" : 1,
+		"TreeGrowAge" : 34,
+		"FallTreeAnimObj" : 0,
+		"Stump" : 15,
+		"NextTreeAgeObj" : 395
+	  },
+	  {
+		"ObjectID" : 395,
+		"AddObject" : true,
+		"AnimSteps" : [610, 611, 612, 611],
+		"SlowAnim" : 2,
+		"SnowPic" : 776,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : true,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"IsFruit" : 3, 
+		"AxeHitTimes" : 15,
+		"TrunksCount" : 1,
+		"TreeGrowAge" : 42,
+		"FallTreeAnimObj" : 448,
+		"Stump" : 15,
+		"NextTreeAgeObj" : 396
+	  },
+	  {
+		"ObjectID" : 396,
+		"AddObject" : true,
+		"AnimSteps" : [613, 614, 615, 614],
+		"SlowAnim" : 2,
+		"SnowPic" : 776,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : true,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"IsFruit" : 3, 
+		"AxeHitTimes" : 15,
+		"TrunksCount" : 1,
+		"TreeGrowAge" : 50,
+		"FallTreeAnimObj" : 448,
+		"Stump" : 15,
+		"NextTreeAgeObj" : 397
+	  },
+	  {
+		"ObjectID" : 397,
+		"AddObject" : true,
+		"AnimSteps" : [616, 617, 618, 617],
+		"SlowAnim" : 2,
+		"SnowPic" : 776,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : true,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		
+		"IsFruit" : 3, 
+		"AxeHitTimes" : 15,
+		"TrunksCount" : 1,
+		"TreeGrowAge" : 58,
+		"FallTreeAnimObj" : 448,
+		"Stump" : 15,
+		"NextTreeAgeObj" : 398
+	  },
+	  {
+		"ObjectID" : 398,
+		"AddObject" : true,
+		"AnimSteps" : [619, 620, 621, 620],
+		"SlowAnim" : 2,
+		"SnowPic" : 776,
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,	
+		"IsCuttableTree" : true,
+		"DiagonalBlocked" : true,
+		"AllBlocked" : false,
+		"DontPlantNear" : true,
+		"IsFruit" : 3, 
+		"AxeHitTimes" : 15,
+		"TrunksCount" : 1,
+		"TreeGrowAge" : 64,
+		"FallTreeAnimObj" : 448,
+		"Stump" : 15,
+		"NextTreeAgeObj" : 0
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [634],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsVege" : 1
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [635],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsVege" : 2
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [636],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsVege" : 3
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [637],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsVege" : 4
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [638],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsVege" : 5
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [639],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsVege" : 6
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [640],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsVege" : 1
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [641],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsVege" : 2
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [642],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsVege" : 3
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [643],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsVege" : 4
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [644],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsVege" : 5
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [645],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsVege" : 6
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [646],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsVege" : 1
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [647],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsVege" : 2
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [648],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsVege" : 3
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [649],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsVege" : 4
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [650],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsVege" : 5
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [651],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsVege" : 6
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [652],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsVege" : 1
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [653],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsVege" : 2
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [654],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsVege" : 3
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [655],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsVege" : 4
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [656],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsVege" : 5
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [657],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsVege" : 6
+	  },
+	  {
+		"AddGrowableTree" : true,
+		"AxeHitTimes" : 15, "TrunksCount" : 1, "TreeGrowAge" : 8, "FallTreeAnimObj" : 0, "Stump" : 15, "IsFruit" : 0, "MatureTree" : 3,
+		"Stages": [
+					{"SnowPic" : 777, "AnimSteps" : [622, 623, 624, 623]},   
+					{"SnowPic" : 778, "AnimSteps" : [625, 626, 627, 626]},   
+					{"SnowPic" : 779, "AnimSteps" : [628, 629, 630, 629]},   
+					{"SnowPic" : 780, "AnimSteps" : [631, 632, 633, 632]}   
+		]
+	  },
+	  {
+		"AddGrowableTree" : true,
+		"AxeHitTimes" : 15, "TrunksCount" : 1, "TreeGrowAge" : 8, "FallTreeAnimObj" : 442, "Stump" : 15, "IsFruit" : 4, "MatureTree" : 4,
+		"Stages": [
+					{"SnowPic" : 255, "AnimSteps" : [658, 659, 660, 659]},   
+					{"SnowPic" : 255, "AnimSteps" : [661, 662, 663, 662]},   
+					{"SnowPic" : 255, "AnimSteps" : [664, 665, 666, 665]},   
+					{"SnowPic" : 255, "AnimSteps" : [667, 668, 669, 668]},   
+					{"SnowPic" : 255, "AnimSteps" : [670, 671, 672, 671]},   
+					{"SnowPic" : 255, "AnimSteps" : [673, 674, 675, 674]},   
+					{"SnowPic" : 255, "AnimSteps" : [676, 677, 678, 677]}   
+		]
+	  },
+	  {
+		"AddGrowableTree" : true,
+		"AxeHitTimes" : 15, "TrunksCount" : 1, "TreeGrowAge" : 8, "FallTreeAnimObj" : 445, "Stump" : 15, "IsFruit" : 5, "MatureTree" : 4,
+		"Stages": [
+					{"SnowPic" : 255, "AnimSteps" : [679, 680, 681, 680]},   
+					{"SnowPic" : 255, "AnimSteps" : [682, 683, 684, 683]},   
+					{"SnowPic" : 255, "AnimSteps" : [685, 686, 687, 686]},   
+					{"SnowPic" : 255, "AnimSteps" : [688, 689, 690, 689]},   
+					{"SnowPic" : 255, "AnimSteps" : [691, 692, 693, 692]},   
+					{"SnowPic" : 255, "AnimSteps" : [694, 695, 696, 695]},   
+					{"SnowPic" : 255, "AnimSteps" : [697, 698, 699, 698]}   
+		]
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [700, 701, 702, 703, 704, 704, 704, 704, 704, 704, 704],
+		"PlaceableInEditor" : false,
+		"CanBeRemoved" : true
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [705, 706, 707, 708, 709, 709, 709, 709, 709, 709, 709],
+		"PlaceableInEditor" : false,
+		"CanBeRemoved" : true
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [710, 711, 712, 713, 714, 714, 714, 714, 714, 714, 714],
+		"PlaceableInEditor" : false,
+		"CanBeRemoved" : true
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [715, 716, 717, 718, 719, 719, 719, 719, 719, 719, 719],
+		"PlaceableInEditor" : false,
+		"CanBeRemoved" : true
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [720, 721, 722, 723, 724, 724, 724, 724, 724, 724, 724],
+		"PlaceableInEditor" : false,
+		"CanBeRemoved" : true
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [725, 726, 727, 728, 729, 729, 729, 729, 729, 729, 729],
+		"PlaceableInEditor" : false,
+		"CanBeRemoved" : true
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [730, 731, 732, 733, 734, 734, 734, 734, 734, 734, 734],
+		"PlaceableInEditor" : false,
+		"CanBeRemoved" : true
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [735, 736, 737, 738, 739, 739, 739, 739, 739, 739, 739],
+		"PlaceableInEditor" : false,
+		"CanBeRemoved" : true
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [781],
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [782],
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [783],
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [784],
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [785, 786, 787, 788, 789, 790],
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"LightRadius" : 8,
+		"LightPower" : 200
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [791, 792, 793, 794, 795, 796],
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"LightRadius" : 8,
+		"LightPower" : 200
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [797, 798, 799, 800, 801, 802],
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"LightRadius" : 5,
+		"LightPower" : 150
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [803, 804, 805, 806, 807, 808],
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"LightRadius" : 3,
+		"LightPower" : 100
+		
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [810, 811, 812, 813, 812, 811],
+		"SlowAnim" : 2,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"DiagonalBlocked" : true,
+		"LightRadius" : 6,
+		"LightPower" : 200
+		
+	  },	  
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [814, 815, 816, 815],
+		"SlowAnim" : 3,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"DiagonalBlocked" : true,
+		"LightRadius" : 8,
+		"LightPower" : 250		
+	  },	  
+	  {
+		"AddObject" : true,
+		"ObjectID" : 459,
+		"AnimSteps" : [910],
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,
+		"AllBlocked" : true,
+		"NextTreeAgeObj" : 460,	
+		"VirtualWares" : [
+			{"Type" : "vtDiamond", "Min" : 1, "Max" : 3, "Chance" : 50}
+		]
+		
+	  },	  
+	  {
+		"AddObject" : true,
+		"ObjectID" : 460,
+		"AnimSteps" : [911],
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,
+		"AllBlocked" : true,
+		"NextTreeAgeObj" : 461,	
+		"VirtualWares" : [
+			{"Type" : "vtDiamond", "Min" : 2, "Max" : 3, "Chance" : 60}
+		]	
+	  },	  
+	  {
+		"AddObject" : true,
+		"ObjectID" : 461,
+		"AnimSteps" : [912],
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,
+		"AllBlocked" : true,
+		"NextTreeAgeObj" : 462,	
+		"VirtualWares" : [
+			{"Type" : "vtDiamond", "Min" : 2, "Max" : 3, "Chance" : 75}
+		]	
+	  },	  
+	  {
+		"AddObject" : true,
+		"ObjectID" : 462,
+		"AnimSteps" : [913],
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,
+		"AllBlocked" : true,
+		"NextTreeAgeObj" : 463,	
+		"VirtualWares" : [
+			{"Type" : "vtDiamond", "Min" : 2, "Max" : 3, "Chance" : 75}
+		]	
+	  },	  
+	  {
+		"AddObject" : true,
+		"ObjectID" : 463,
+		"AnimSteps" : [914],
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,
+		"AllBlocked" : true,
+		"NextTreeAgeObj" : 464,	
+		"VirtualWares" : [
+			{"Type" : "vtDiamond", "Min" : 2, "Max" : 4, "Chance" : 75}
+		]	
+	  },	  
+	  {
+		"AddObject" : true,
+		"ObjectID" : 464,
+		"AnimSteps" : [915],
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,
+		"AllBlocked" : true,
+		"NextTreeAgeObj" : 0,	
+		"VirtualWares" : [
+			{"Type" : "vtDiamond", "Min" : 2, "Max" : 5, "Chance" : 75}
+		]	
+	  },
+	  {
+		"AddObject" : true,
+		"ObjectID" : 465,
+		"AnimSteps" : [1074],
+		"WineOrCorn" : true,
+		"RenderAsTwo" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsWine" : 1
+	  },
+	  {
+		"AddObject" : true,
+		"ObjectID" : 466,
+		"AnimSteps" : [1075],
+		"WineOrCorn" : true,
+		"RenderAsTwo" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsWine" : 2
+	  },
+	  {
+		"AddObject" : true,
+		"ObjectID" : 467,
+		"AnimSteps" : [1076],
+		"WineOrCorn" : true,
+		"RenderAsTwo" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsWine" : 3
+	  },
+	  {
+		"AddObject" : true,
+		"ObjectID" : 468,
+		"AnimSteps" : [1077],
+		"WineOrCorn" : true,
+		"RenderAsTwo" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsWine" : 4
+	  },
+	  {
+		"AddObject" : true,
+		"ObjectID" : 469,
+		"AnimSteps" : [1078],
+		"WineOrCorn" : false,
+		"RenderAsTwo" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsWine" : 1
+	  },
+	  {
+		"AddObject" : true,
+		"ObjectID" : 470,
+		"AnimSteps" : [1079],
+		"WineOrCorn" : false,
+		"RenderAsTwo" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsWine" : 2
+	  },
+	  {
+		"AddObject" : true,
+		"ObjectID" : 471,
+		"AnimSteps" : [1080],
+		"WineOrCorn" : false,
+		"RenderAsTwo" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsWine" : 3
+	  },
+	  {
+		"AddObject" : true,
+		"ObjectID" : 472,
+		"AnimSteps" : [1081],
+		"WineOrCorn" : false,
+		"RenderAsTwo" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsWine" : 4
+	  },
+	  {
+		"AddObject" : true,
+		"ObjectID" : 473,
+		"AnimSteps" : [1088],
+		"SlowAnim" : 3,
+		"WineOrCorn" : true,
+		"RenderAsTwo" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsCorn" : 3
+	  },
+	  {
+		"AddObject" : true,
+		"ObjectID" : 473,
+		"AnimSteps" : [1085, 1086, 1085, 1087],
+		"SlowAnim" : 3,
+		"WineOrCorn" : true,
+		"RenderAsTwo" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsCorn" : 4
+	  },
+	  {
+		"AddObject" : true,
+		"ObjectID" : 473,
+		"AnimSteps" : [1082, 1083, 1082, 1084],
+		"SlowAnim" : 3,
+		"WineOrCorn" : true,
+		"RenderAsTwo" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsCorn" : 5
+	  },
+	  {
+		"AddObject" : true,
+		"ObjectID" : 473,
+		"AnimSteps" : [1089],
+		"WineOrCorn" : true,
+		"RenderAsTwo" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true,
+		"IsCorn" : 6
+	  }, 
+	  {
+		"AddObject" : true,
+		"ObjectID" : 477,
+		"AnimSteps" : [1090],
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,
+		"AllBlocked" : true,
+		"NextTreeAgeObj" : 478,	
+		"VirtualWares" : [
+			{"Type" : "vtCopper", "Min" : 1, "Max" : 10, "Chance" : 50}
+		]
+		
+	  },	  
+	  {
+		"AddObject" : true,
+		"ObjectID" : 478,
+		"AnimSteps" : [1091],
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,
+		"AllBlocked" : true,
+		"NextTreeAgeObj" : 479,	
+		"VirtualWares" : [
+			{"Type" : "vtCopper", "Min" : 2, "Max" : 10, "Chance" : 60}
+		]	
+	  },	  
+	  {
+		"AddObject" : true,
+		"ObjectID" : 479,
+		"AnimSteps" : [1092],
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,
+		"AllBlocked" : true,
+		"NextTreeAgeObj" : 480,	
+		"VirtualWares" : [
+			{"Type" : "vtCopper", "Min" : 3, "Max" : 10, "Chance" : 75}
+		]	
+	  },	  
+	  {
+		"AddObject" : true,
+		"ObjectID" : 480,
+		"AnimSteps" : [1093],
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,
+		"AllBlocked" : true,
+		"NextTreeAgeObj" : 481,	
+		"VirtualWares" : [
+			{"Type" : "vtCopper", "Min" : 3, "Max" : 10, "Chance" : 75}
+		]	
+	  },	  
+	  {
+		"AddObject" : true,
+		"ObjectID" : 481,
+		"AnimSteps" : [1094],
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,
+		"AllBlocked" : true,
+		"NextTreeAgeObj" : 0,	
+		"VirtualWares" : [
+			{"Type" : "vtCopper", "Min" : 3, "Max" : 10, "Chance" : 75}
+		]	
+	  },
+	  {
+		"AddObject" : true,
+		"ObjectID" : 482,
+		"AnimSteps" : [1095],
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,
+		"AllBlocked" : true,
+		"NextTreeAgeObj" : 483,	
+		"VirtualWares" : [
+			{"Type" : "vtAmber", "Min" : 1, "Max" : 5, "Chance" : 50}
+		]
+		
+	  },	  
+	  {
+		"AddObject" : true,
+		"ObjectID" : 483,
+		"AnimSteps" : [1096],
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,
+		"AllBlocked" : true,
+		"NextTreeAgeObj" : 484,	
+		"VirtualWares" : [
+			{"Type" : "vtAmber", "Min" : 2, "Max" : 5, "Chance" : 60}
+		]	
+	  },	  
+	  {
+		"AddObject" : true,
+		"ObjectID" : 484,
+		"AnimSteps" : [1097],
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,
+		"AllBlocked" : true,
+		"NextTreeAgeObj" : 485,	
+		"VirtualWares" : [
+			{"Type" : "vtAmber", "Min" : 3, "Max" : 5, "Chance" : 75}
+		]	
+	  },	  
+	  {
+		"AddObject" : true,
+		"ObjectID" : 485,
+		"AnimSteps" : [1098],
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,
+		"AllBlocked" : true,
+		"NextTreeAgeObj" : 486,	
+		"VirtualWares" : [
+			{"Type" : "vtAmber", "Min" : 3, "Max" : 5, "Chance" : 75}
+		]	
+	  },	  
+	  {
+		"AddObject" : true,
+		"ObjectID" : 486,
+		"AnimSteps" : [1099],
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,
+		"AllBlocked" : true,
+		"NextTreeAgeObj" : 0,	
+		"VirtualWares" : [
+			{"Type" : "vtAmber", "Min" : 3, "Max" : 5, "Chance" : 75}
+		]	
+	  },
+	  {
+		"AddObject" : true,
+		"ObjectID" : 487,
+		"AnimSteps" : [1100],
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,
+		"AllBlocked" : true,
+		"NextTreeAgeObj" : 488,	
+		"VirtualWares" : [
+			{"Type" : "vtSilver", "Min" : 1, "Max" : 7, "Chance" : 50}
+		]
+		
+	  },	  
+	  {
+		"AddObject" : true,
+		"ObjectID" : 488,
+		"AnimSteps" : [1101],
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,
+		"AllBlocked" : true,
+		"NextTreeAgeObj" : 489,	
+		"VirtualWares" : [
+			{"Type" : "vtSilver", "Min" : 2, "Max" : 7, "Chance" : 60}
+		]	
+	  },	  
+	  {
+		"AddObject" : true,
+		"ObjectID" : 489,
+		"AnimSteps" : [1102],
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,
+		"AllBlocked" : true,
+		"NextTreeAgeObj" : 490,	
+		"VirtualWares" : [
+			{"Type" : "vtSilver", "Min" : 3, "Max" : 7, "Chance" : 75}
+		]	
+	  },	  
+	  {
+		"AddObject" : true,
+		"ObjectID" : 490,
+		"AnimSteps" : [1103],
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,
+		"AllBlocked" : true,
+		"NextTreeAgeObj" : 491,	
+		"VirtualWares" : [
+			{"Type" : "vtSilver", "Min" : 3, "Max" : 7, "Chance" : 75}
+		]	
+	  },	  
+	  {
+		"AddObject" : true,
+		"ObjectID" : 491,
+		"AnimSteps" : [1104],
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false,
+		"AllBlocked" : true,
+		"NextTreeAgeObj" : 0,	
+		"VirtualWares" : [
+			{"Type" : "vtSilver", "Min" : 3, "Max" : 5, "Chance" : 75}
+		]	
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1105],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1107],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1108],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1109],
+		"WineOrCorn" : false,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1110],
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"RenderAsTileOverlay" : true,
+		"RotateToTile" : true,
+		"CanBeRemoved" : true
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1111],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1112],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1113],
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1114],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : false,
+		"CanBeRemoved" : true
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1115],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1116],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1117],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1118],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1119],
+		"WineOrCorn" : true,
+		"CanGrow" : true,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1120],
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1121],
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1122],
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1123, 1124, 1125, 1124],
+		"SlowAnim" : 4,
+		"WineOrCorn" : true,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1123, 1124, 1125, 1124],
+		"SlowAnim" : 4,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1126, 1127, 1128, 1127],
+		"SlowAnim" : 4,
+		"WineOrCorn" : true,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1126, 1127, 1128, 1127],
+		"SlowAnim" : 4,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1129, 1130, 1131, 1132],
+		"SlowAnim" : 2,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"AllBlocked" : true,
+		"CanBeRemoved" : false
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1133, 1134, 1135, 1134],
+		"SlowAnim" : 2,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"AllBlocked" : true,
+		"CanBeRemoved" : false
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1136, 1137, 1138, 1137],
+		"SlowAnim" : 2,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"AllBlocked" : true,
+		"CanBeRemoved" : false
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1139, 1140, 1141, 1140],
+		"SlowAnim" : 2,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"AllBlocked" : true,
+		"CanBeRemoved" : false
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1142, 1143, 1144, 1143],
+		"SlowAnim" : 2,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"AllBlocked" : true,
+		"CanBeRemoved" : false
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1145, 1146, 1147, 1148],
+		"SlowAnim" : 2,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"AllBlocked" : true,
+		"CanBeRemoved" : false
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1149, 1150, 1151, 1152],
+		"SlowAnim" : 2,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"AllBlocked" : true,
+		"CanBeRemoved" : false
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1169, 1170, 1171, 1172],
+		"SlowAnim" : 2,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"AllBlocked" : false,
+		"CanBeRemoved" : false
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1161, 1162, 1163, 1164],
+		"SlowAnim" : 2,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"AllBlocked" : true,
+		"CanBeRemoved" : false
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1157, 1158, 1159, 1160],
+		"SlowAnim" : 2,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"AllBlocked" : true,
+		"CanBeRemoved" : false
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1153, 1154, 1155, 1156],
+		"SlowAnim" : 2,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"AllBlocked" : true,
+		"CanBeRemoved" : false
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1165, 1166, 1167, 1168],
+		"SlowAnim" : 2,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"AllBlocked" : true,
+		"CanBeRemoved" : false
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1173, 1174, 1175, 1176],
+		"SlowAnim" : 2,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"AllBlocked" : false,
+		"CanBeRemoved" : false
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1177, 1178, 1179, 1180],
+		"SlowAnim" : 2,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"AllBlocked" : false,
+		"CanBeRemoved" : false
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1181, 1182, 1183, 1184],
+		"SlowAnim" : 2,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"AllBlocked" : true,
+		"CanBeRemoved" : false
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1185, 1186, 1187, 1188],
+		"SlowAnim" : 2,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"AllBlocked" : true,
+		"CanBeRemoved" : false
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1189, 1190, 1191, 1192],
+		"SlowAnim" : 2,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"AllBlocked" : true,
+		"CanBeRemoved" : false
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1194, 1195, 1196, 1195],
+		"SlowAnim" : 3,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"AllBlocked" : true,
+		"CanBeRemoved" : false
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1197, 1198, 1199],
+		"SlowAnim" : 3,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"DiagonalBlocked" : true,
+		"CanBeRemoved" : false
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1200, 1201, 1202],
+		"SlowAnim" : 3,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"DiagonalBlocked" : true,
+		"CanBeRemoved" : false
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1203, 1204, 1205],
+		"SlowAnim" : 3,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"DiagonalBlocked" : true,
+		"CanBeRemoved" : false
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1206, 1207, 1208],
+		"SlowAnim" : 3,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"DiagonalBlocked" : true,
+		"CanBeRemoved" : false
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1209, 1210, 1211],
+		"SlowAnim" : 3,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"DiagonalBlocked" : true,
+		"CanBeRemoved" : false
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1212, 1213, 1214],
+		"SlowAnim" : 3,
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"DiagonalBlocked" : true,
+		"CanBeRemoved" : false
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1215],
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1216],
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1217],
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"RenderAsTileOverlay" : true,
+		"CanBeRemoved" : true
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1218],
+		"WineOrCorn" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true
+	  },
+	  {
+		"DuplicateFromLast" : [ [1219], [1220], [1221], [1223], [1224], [1225], [1226], [1227]]  
+	  }
+  ],
+  "Grain Types" : [
+	{
+		"GrainType" : "gftNone",
+		"GuiIcon"	: 825,
+		"TextID"	: 1,
+		"Straw"		: 1,
+		"Seeds"		: 1.4,
+		"Hay"		: 0,
+		"Dead"		: {"Object" : 329, "Terrain": 62},
+		"Stages"	: [
+						{"Object" : 0, "Terrain": 62, "NextStage" : 0, "Age" : 0, "GivesWares" : false, "CanBeCut": false, "CanBePlant" : true},
+						{"Object" : 0, "Terrain": 61, "NextStage" : 0, "Age" : 200, "GivesWares" : false, "CanBeCut": false, "CanBePlant" : false},
+						{"Object" : 0, "Terrain": 59, "NextStage" : 0, "Age" : 1400, "GivesWares" : false, "CanBeCut": false, "CanBePlant" : false},
+						{"Object" : 0, "Terrain": 59, "NextStage" : 0, "Age" : 2200, "GivesWares" : false, "CanBeCut": false, "CanBePlant" : false},
+						{"Object" : 58, "Terrain": 60, "NextStage" : 0, "Age" : 4400, "GivesWares" : false, "CanBeCut": false, "CanBePlant" : false},
+						{"Object" : 59, "Terrain": 60, "NextStage" : 0, "Age" : 6400, "GivesWares" : true, "CanBeCut": true, "CanBePlant" : false},
+						{"Object" : 0, "Terrain": 63, "NextStage" : 0, "Age" : 0, "GivesWares" : false, "CanBeCut": false, "CanBePlant" : true}
+					]
+	
+	},
+	{
+		"GrainType" : "gftWheat",
+		"GuiIcon"	: 825,
+		"TextID"	: 1,
+		"Straw"		: 1,
+		"Seeds"		: 1.4,
+		"Hay"		: 0,
+		"Dead"		: {"Object" : 492, "Terrain": 62},
+		"Stages"	: [
+						{"Object" : 0, "Terrain": 62, "NextStage" : 0, "Age" : 0, "GivesWares" : false, "CanBeCut": false, "CanBePlant" : true},
+						{"Object" : 0, "Terrain": 61, "NextStage" : 0, "Age" : 200, "GivesWares" : false, "CanBeCut": false, "CanBePlant" : false},
+						{"Object" : 0, "Terrain": 59, "NextStage" : 0, "Age" : 1400, "GivesWares" : false, "CanBeCut": false, "CanBePlant" : false},
+						{"Object" : 322, "Terrain": 59, "NextStage" : 0, "Age" : 2200, "GivesWares" : false, "CanBeCut": false, "CanBePlant" : false},
+						{"Object" : 58, "Terrain": 60, "NextStage" : 0, "Age" : 4400, "GivesWares" : false, "CanBeCut": false, "CanBePlant" : false},
+						{"Object" : 59, "Terrain": 60, "NextStage" : 0, "Age" : 6400, "GivesWares" : true, "CanBeCut": true, "CanBePlant" : false},
+						{"Object" : 0, "Terrain": 63, "NextStage" : 0, "Age" : 0, "GivesWares" : false, "CanBeCut": false, "CanBePlant" : true}
+					]
+	
+	},
+	{
+		"GrainType" : "gftRye",
+		"GuiIcon"	: 826,
+		"TextID"	: 1,
+		"Straw"		: 2.4,
+		"Seeds"		: 1,
+		"Hay"		: 0,
+		"Dead"		: {"Object" : 493, "Terrain": 62},
+		"Stages"	: [
+						{"Object" : 0, "Terrain": 62, "NextStage" : 0, "Age" : 0, "GivesWares" : false, "CanBeCut": false, "CanBePlant" : true},
+						{"Object" : 0, "Terrain": 61, "NextStage" : 0, "Age" : 200, "GivesWares" : false, "CanBeCut": false, "CanBePlant" : false},
+						{"Object" : 0, "Terrain": 59, "NextStage" : 0, "Age" : 1400, "GivesWares" : false, "CanBeCut": false, "CanBePlant" : false},
+						{"Object" : 322, "Terrain": 59, "NextStage" : 0, "Age" : 3600, "GivesWares" : false, "CanBeCut": false, "CanBePlant" : false},
+						{"Object" : 306, "Terrain": 60, "NextStage" : 0, "Age" : 7000, "GivesWares" : false, "CanBeCut": false, "CanBePlant" : false},
+						{"Object" : 307, "Terrain": 60, "NextStage" : 0, "Age" : 12000, "GivesWares" : true, "CanBeCut": true, "CanBePlant" : false},
+						{"Object" : 0, "Terrain": 63, "NextStage" : 0, "Age" : 0, "GivesWares" : false, "CanBeCut": false, "CanBePlant" : true}
+					]
+	
+	},
+	{
+		"GrainType" : "gftOat",
+		"GuiIcon"	: 827,
+		"TextID"	: 1,
+		"Straw"		: 0.8,
+		"Seeds"		: 1.5,
+		"Hay"		: 0,
+		"Dead"		: {"Object" : 494, "Terrain": 62},
+		"Stages"	: [
+						{"Object" : 0, "Terrain": 62, "NextStage" : 0, "Age" : 0, "GivesWares" : false, "CanBeCut": false, "CanBePlant" : true},
+						{"Object" : 0, "Terrain": 61, "NextStage" : 0, "Age" : 200, "GivesWares" : false, "CanBeCut": false, "CanBePlant" : false},
+						{"Object" : 0, "Terrain": 59, "NextStage" : 0, "Age" : 1000, "GivesWares" : false, "CanBeCut": false, "CanBePlant" : false},
+						{"Object" : 322, "Terrain": 59, "NextStage" : 0, "Age" : 2400, "GivesWares" : false, "CanBeCut": false, "CanBePlant" : false},
+						{"Object" : 314, "Terrain": 60, "NextStage" : 0, "Age" : 4000, "GivesWares" : false, "CanBeCut": false, "CanBePlant" : false},
+						{"Object" : 315, "Terrain": 60, "NextStage" : 0, "Age" : 6000, "GivesWares" : true, "CanBeCut": true, "CanBePlant" : false},
+						{"Object" : 0, "Terrain": 63, "NextStage" : 0, "Age" : 0, "GivesWares" : false, "CanBeCut": false, "CanBePlant" : true}
+					]
+	
+	},
+	{
+		"GrainType" : "gftRice",
+		"GuiIcon"	: 828,
+		"TextID"	: 1,
+		"Straw"		: 1,
+		"Seeds"		: 2,
+		"Hay"		: 0,
+		"Dead"		: {"Object" : 495, "Terrain": 62},
+		"Stages"	: [
+						{"Object" : 0, 		"Terrain": 658, 		"NextStage" : 0, "Age" : 0, 	"GivesWares" : false, 	"CanBeCut": false,	"CanBePlant" : true},
+						{"Object" : 318, 	"Terrain": 658, 	"NextStage" : 0, "Age" : 200, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 319, 	"Terrain": 658, 	"NextStage" : 0, "Age" : 2000, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 320, 	"Terrain": 658, 	"NextStage" : 0, "Age" : 4000, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 316, 	"Terrain": 658, 	"NextStage" : 0, "Age" : 6000, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 317, 	"Terrain": 658, 	"NextStage" : 0, "Age" : 8400, 	"GivesWares" : true, 	"CanBeCut": true, 	"CanBePlant" : false},
+						{"Object" : 321, 	"Terrain": 659, 	"NextStage" : 0, "Age" : 0, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : true}
+					]
+	
+	},
+	{
+		"GrainType" : "gftCorn",
+		"GuiIcon"	: 829,
+		"TextID"	: 1,
+		"Straw"		: 0,
+		"Seeds"		: 3,
+		"Hay"		: 0,
+		"Dead"		: {"Object" : 497, "Terrain": 62},
+		"Stages"	: [
+						{"Object" : 0, 		"Terrain": 62, 	"NextStage" : 0, "Age" : 0, 	"GivesWares" : false, 	"CanBeCut": false,	"CanBePlant" : true},
+						{"Object" : 0, 		"Terrain": 664, 	"NextStage" : 0, "Age" : 200, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 329, 	"Terrain": 665, 	"NextStage" : 0, "Age" : 2000, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 330, 	"Terrain": 665, 	"NextStage" : 0, "Age" : 3600, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 331, 	"Terrain": 665, 	"NextStage" : 0, "Age" : 5800, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 332, 	"Terrain": 665, 	"NextStage" : 0, "Age" : 7200, 	"GivesWares" : true, 	"CanBeCut": true, 	"CanBePlant" : false},
+						{"Object" : 0, 		"Terrain": 666, 	"NextStage" : 0, "Age" : 0, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : true}
+					]
+	
+	},
+	{
+		"GrainType" : "gftSunflower",
+		"GuiIcon"	: 830,
+		"TextID"	: 1,
+		"Straw"		: 0,
+		"Seeds"		: 1.3,
+		"Hay"		: 0,
+		"Vege"		: 0,
+		"Dead"		: {"Object" : 498, "Terrain": 62},
+		"Stages"	: [
+						{"Object" : 0, 		"Terrain": 62, 	"NextStage" : 0, "Age" : 0, 	"GivesWares" : false, 	"CanBeCut": false,	"CanBePlant" : true},
+						{"Object" : 0, 		"Terrain": 664, "NextStage" : 0, "Age" : 200, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 333, 	"Terrain": 665, "NextStage" : 0, "Age" : 600, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 334, 	"Terrain": 665, "NextStage" : 0, "Age" : 1600, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 335, 	"Terrain": 665, "NextStage" : 0, "Age" : 2800, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 336, 	"Terrain": 665, "NextStage" : 0, "Age" : 3600, 	"GivesWares" : true, 	"CanBeCut": true, 	"CanBePlant" : false},
+						{"Object" : 0, 		"Terrain": 666, "NextStage" : 0, "Age" : 0, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : true}
+					]
+	
+	},
+	{
+		"GrainType" : "gftStrawBush",
+		"GuiIcon"	: 829,
+		"TextID"	: 1,
+		"Straw"		: 3,
+		"Seeds"		: 0.1,
+		"Hay"		: 0,
+		"Dead"		: {"Object" : 505, "Terrain": 62},
+		"Stages"	: [
+						{"Object" : 0, 		"Terrain": 62, 	"NextStage" : 0, "Age" : 0, 	"GivesWares" : false, 	"CanBeCut": false,	"CanBePlant" : true},
+						{"Object" : 0, 		"Terrain": 664, 	"NextStage" : 0, "Age" : 200, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 329, 	"Terrain": 665, 	"NextStage" : 0, "Age" : 2000, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 473, 	"Terrain": 665, 	"NextStage" : 0, "Age" : 3600, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 474, 	"Terrain": 665, 	"NextStage" : 0, "Age" : 5800, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 475, 	"Terrain": 665, 	"NextStage" : 0, "Age" : 7200, 	"GivesWares" : true, 	"CanBeCut": true, 	"CanBePlant" : false},
+						{"Object" : 476, 		"Terrain": 666, 	"NextStage" : 0, "Age" : 0, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : true}
+					]
+	
+	},
+	{
+		"GrainType" : "gftGrass",
+		"GuiIcon"	: 832,
+		"TextID"	: 1,
+		"Straw"		: 0,
+		"Seeds"		: 0,
+		"Hay"		: 2,
+		"Dead"		: {"Object" : 496, "Terrain": 663},
+		"Stages"	: [
+						{"Object" : 0, 		"Terrain": 660, 	"NextStage" : 0, "Age" : 0, 	"GivesWares" : false, 	"CanBeCut": false,	"CanBePlant" : true},
+						{"Object" : 324, 	"Terrain": 661, 	"NextStage" : 0, "Age" : 200, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 322, 	"Terrain": 662, 	"NextStage" : 0, "Age" : 2600, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 323, 	"Terrain": 663, 	"NextStage" : 0, "Age" : 6000, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 277, 	"Terrain": 663, 	"NextStage" : 0, "Age" : 8600, 	"GivesWares" : false, 	"CanBeCut": true, 	"CanBePlant" : false},
+						{"Object" : 325, 	"Terrain": 663, 	"NextStage" : 0, "Age" : 8800, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 326, 	"Terrain": 663, 	"NextStage" : 2, "Age" : 11200, "GivesWares" : true, 	"CanBeCut": true, 	"CanBePlant" : false},
+						{"Object" : 324, 	"Terrain": 663, 	"NextStage" : 0, "Age" : 0, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false}
+					]
+	
+	},
+	{
+		"GrainType" : "gftClover",
+		"GuiIcon"	: 833,
+		"TextID"	: 1,
+		"Straw"		: 0,
+		"Seeds"		: 0,
+		"Hay"		: 1.5,
+		"Dead"		: {"Object" : 496, "Terrain": 663},
+		"Stages"	: [
+						{"Object" : 0, 		"Terrain": 660, 	"NextStage" : 0, "Age" : 0, 	"GivesWares" : false, 	"CanBeCut": false,	"CanBePlant" : true},
+						{"Object" : 324, 	"Terrain": 661, 	"NextStage" : 0, "Age" : 200, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 322, 	"Terrain": 662, 	"NextStage" : 0, "Age" : 5000, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 327, 	"Terrain": 663, 	"NextStage" : 0, "Age" : 7200, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 328, 	"Terrain": 663, 	"NextStage" : 0, "Age" : 9200, 	"GivesWares" : false, 	"CanBeCut": true, 	"CanBePlant" : false},
+						{"Object" : 346, 	"Terrain": 663, 	"NextStage" : 0, "Age" : 9400, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 326, 	"Terrain": 663, 	"NextStage" : 2, "Age" : 11600, "GivesWares" : true, 	"CanBeCut": true, 	"CanBePlant" : false},
+						{"Object" : 324, 	"Terrain": 663, 	"NextStage" : 0, "Age" : 0, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false}
+					]
+	
+	},
+	{
+		"GrainType" : "gftLucerne",
+		"GuiIcon"	: 834,
+		"TextID"	: 1,
+		"Straw"		: 0,
+		"Seeds"		: 0,
+		"Hay"		: 1,
+		"Dead"		: {"Object" : 496, "Terrain": 663},
+		"Stages"	: [
+						{"Object" : 0, 		"Terrain": 660, 	"NextStage" : 0, "Age" : 0, 	"GivesWares" : false, 	"CanBeCut": false,	"CanBePlant" : true},
+						{"Object" : 324, 	"Terrain": 661, 	"NextStage" : 0, "Age" : 200, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 322, 	"Terrain": 662, 	"NextStage" : 0, "Age" : 7400, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 344, 	"Terrain": 663, 	"NextStage" : 0, "Age" : 9000, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 345, 	"Terrain": 663, 	"NextStage" : 0, "Age" : 10400, "GivesWares" : false, 	"CanBeCut": true, 	"CanBePlant" : false},
+						{"Object" : 347, 	"Terrain": 663, 	"NextStage" : 0, "Age" : 10600, "GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 326, 	"Terrain": 663, 	"NextStage" : 2, "Age" : 13000, "GivesWares" : true, 	"CanBeCut": true, 	"CanBePlant" : false},
+						{"Object" : 324, 	"Terrain": 663, 	"NextStage" : 0, "Age" : 0, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false}
+					]
+	
+	},
+	{
+		"GrainType" : "gftPumpkin",
+		"GuiIcon"	: 831,
+		"TextID"	: 1,
+		"Straw"		: 0,
+		"Seeds"		: 0,
+		"Hay"		: 0,
+		"Vege"		: 2,
+		"Dead"		: {"Object" : 499, "Terrain": 667},
+		"Stages"	: [
+						{"Object" : 0, 		"Terrain": 667, "NextStage" : 0, "Age" : 0, 	"GivesWares" : false, 	"CanBeCut": false,	"CanBePlant" : true},
+						{"Object" : 337, 	"Terrain": 668, "NextStage" : 0, "Age" : 200, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 338, 	"Terrain": 668, "NextStage" : 0, "Age" : 1200, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 339, 	"Terrain": 668, "NextStage" : 0, "Age" : 3000, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 340, 	"Terrain": 668, "NextStage" : 0, "Age" : 4800, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 341, 	"Terrain": 668, "NextStage" : 0, "Age" : 6200, 	"GivesWares" : true, 	"CanBeCut": true, 	"CanBePlant" : false},
+						{"Object" : 342, 	"Terrain": 669, "NextStage" : 0, "Age" : 0, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : true}
+					]
+	
+	},
+	{
+		"GrainType" : "gftCarrots",
+		"GuiIcon"	: 831,
+		"TextID"	: 1,
+		"Straw"		: 0,
+		"Seeds"		: 0,
+		"Hay"		: 0,
+		"Vege"		: 1.2,
+		"Dead"		: {"Object" : 502, "Terrain": 667},
+		"Stages"	: [
+						{"Object" : 0, 		"Terrain": 667, "NextStage" : 0, "Age" : 0, 	"GivesWares" : false, 	"CanBeCut": false,	"CanBePlant" : true},
+						{"Object" : 405, 	"Terrain": 668, "NextStage" : 0, "Age" : 200, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 406, 	"Terrain": 668, "NextStage" : 0, "Age" : 600, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 407, 	"Terrain": 668, "NextStage" : 0, "Age" : 1600, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 408, 	"Terrain": 668, "NextStage" : 0, "Age" : 2400, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 409, 	"Terrain": 668, "NextStage" : 0, "Age" : 3000, 	"GivesWares" : true, 	"CanBeCut": true, 	"CanBePlant" : false},
+						{"Object" : 410, 	"Terrain": 669, "NextStage" : 0, "Age" : 0, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : true}
+					]
+	
+	},
+	{
+		"GrainType" : "gftCabbages",
+		"GuiIcon"	: 831,
+		"TextID"	: 1,
+		"Straw"		: 0,
+		"Seeds"		: 0,
+		"Hay"		: 0,
+		"Vege"		: 1.8,
+		"Dead"		: {"Object" : 503, "Terrain": 667},
+		"Stages"	: [
+						{"Object" : 0, 		"Terrain": 667, "NextStage" : 0, "Age" : 0, 	"GivesWares" : false, 	"CanBeCut": false,	"CanBePlant" : true},
+						{"Object" : 411, 	"Terrain": 668, "NextStage" : 0, "Age" : 200, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 412, 	"Terrain": 668, "NextStage" : 0, "Age" : 1000, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 413, 	"Terrain": 668, "NextStage" : 0, "Age" : 2800, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 414, 	"Terrain": 668, "NextStage" : 0, "Age" : 4800, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 415, 	"Terrain": 668, "NextStage" : 0, "Age" : 5600, 	"GivesWares" : true, 	"CanBeCut": true, 	"CanBePlant" : false},
+						{"Object" : 416, 	"Terrain": 669, "NextStage" : 0, "Age" : 0, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : true}
+					]
+	
+	},
+	{
+		"GrainType" : "gftTomatos",
+		"GuiIcon"	: 831,
+		"TextID"	: 1,
+		"Straw"		: 0,
+		"Seeds"		: 0,
+		"Hay"		: 0,
+		"Vege"		: 2,
+		"Dead"		: {"Object" : 501, "Terrain": 667},
+		"Stages"	: [
+						{"Object" : 0, 		"Terrain": 667, "NextStage" : 0, "Age" : 0, 	"GivesWares" : false, 	"CanBeCut": false,	"CanBePlant" : true},
+						{"Object" : 399, 	"Terrain": 668, "NextStage" : 0, "Age" : 200, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 400, 	"Terrain": 668, "NextStage" : 0, "Age" : 1400, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 401, 	"Terrain": 668, "NextStage" : 0, "Age" : 2200, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 402, 	"Terrain": 668, "NextStage" : 0, "Age" : 3000, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 403, 	"Terrain": 668, "NextStage" : 0, "Age" : 3600, 	"GivesWares" : true, 	"CanBeCut": true, 	"CanBePlant" : false},
+						{"Object" : 404, 	"Terrain": 669, "NextStage" : 0, "Age" : 0, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : true}
+					]
+	
+	},
+	{
+		"GrainType" : "gftPotatos",
+		"GuiIcon"	: 831,
+		"TextID"	: 1,
+		"Straw"		: 0,
+		"Seeds"		: 0,
+		"Hay"		: 0,
+		"Vege"		: 1.5,
+		"Dead"		: {"Object" : 504, "Terrain": 667},
+		"Stages"	: [
+						{"Object" : 0, 		"Terrain": 667, "NextStage" : 0, "Age" : 0, 	"GivesWares" : false, 	"CanBeCut": false,	"CanBePlant" : true},
+						{"Object" : 417, 	"Terrain": 668, "NextStage" : 0, "Age" : 200, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 418, 	"Terrain": 668, "NextStage" : 0, "Age" : 1600, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 419, 	"Terrain": 668, "NextStage" : 0, "Age" : 3000, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 420, 	"Terrain": 668, "NextStage" : 0, "Age" : 4800, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 421, 	"Terrain": 668, "NextStage" : 0, "Age" : 5400, 	"GivesWares" : true, 	"CanBeCut": true, 	"CanBePlant" : false},
+						{"Object" : 422, 	"Terrain": 669, "NextStage" : 0, "Age" : 0, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : true}
+					]
+	
+	},
+	{
+		"GrainType" : "gftWinePurple",
+		"GuiIcon"	: 834,
+		"TextID"	: 1,
+		"Wine"		: 1.4,
+		"Dead"		: {"Object" : 329, "Terrain": 62},
+		"Stages"	: [
+						{"Object" : 54, 	"Terrain": 670, 	"NextStage" : 0, "Age" : 200, 	"GivesWares" : false, 	"CanBeCut": false,	"CanBePlant" : false},
+						{"Object" : 55, 	"Terrain": 670, 	"NextStage" : 0, "Age" : 2000, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 56, 	"Terrain": 670, 	"NextStage" : 0, "Age" : 2600, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 57, 	"Terrain": 670, 	"NextStage" : 0, "Age" : 5000, 	"GivesWares" : true, 	"CanBeCut": true, 	"CanBePlant" : false}
+					]
+	
+	},
+	{
+		"GrainType" : "gftWineRed",
+		"GuiIcon"	: 834,
+		"TextID"	: 1,
+		"Wine"		: 1.4,
+		"Dead"		: {"Object" : 329, "Terrain": 62},
+		"Stages"	: [
+						{"Object" : 54, 	"Terrain": 672, 	"NextStage" : 0, "Age" : 200, 	"GivesWares" : false, 	"CanBeCut": false,	"CanBePlant" : false},
+						{"Object" : 55, 	"Terrain": 672, 	"NextStage" : 0, "Age" : 2000, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 313, 	"Terrain": 672, 	"NextStage" : 0, "Age" : 2600, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 310, 	"Terrain": 672, 	"NextStage" : 0, "Age" : 5000, 	"GivesWares" : true, 	"CanBeCut": true, 	"CanBePlant" : false}
+					]
+	
+	},
+	{
+		"GrainType" : "gftWineBlack",
+		"GuiIcon"	: 834,
+		"TextID"	: 1,
+		"Wine"		: 1.4,
+		"Dead"		: {"Object" : 329, "Terrain": 62},
+		"Stages"	: [
+						{"Object" : 54, 	"Terrain": 671, 	"NextStage" : 0, "Age" :200, 	"GivesWares" : false, 	"CanBeCut": false,	"CanBePlant" : false},
+						{"Object" : 55, 	"Terrain": 671, 	"NextStage" : 0, "Age" : 2000, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 312, 	"Terrain": 671, 	"NextStage" : 0, "Age" : 2600, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 309, 	"Terrain": 671, 	"NextStage" : 0, "Age" : 5000, 	"GivesWares" : true, 	"CanBeCut": true, 	"CanBePlant" : false}
+					]
+	
+	},
+	{
+		"GrainType" : "gftWineWhite",
+		"GuiIcon"	: 834,
+		"TextID"	: 1,
+		"Wine"		: 1.4,
+		"Dead"		: {"Object" : 329, "Terrain": 62},
+		"Stages"	: [
+						{"Object" : 54, 	"Terrain": 673, 	"NextStage" : 0, "Age" : 200, 	"GivesWares" : false, 	"CanBeCut": false,	"CanBePlant" : false},
+						{"Object" : 55, 	"Terrain": 673, 	"NextStage" : 0, "Age" : 2000, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 311, 	"Terrain": 673, 	"NextStage" : 0, "Age" : 2600, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 308, 	"Terrain": 673, 	"NextStage" : 0, "Age" : 5000, 	"GivesWares" : true, 	"CanBeCut": true, 	"CanBePlant" : false}
+					]
+	
+	},
+	{
+		"GrainType" : "gftRaspberry",
+		"GuiIcon"	: 834,
+		"TextID"	: 1,
+		"Wine"		: 1.2,
+		"Dead"		: {"Object" : 329, "Terrain": 62},
+		"Stages"	: [
+						{"Object" : 357, 	"Terrain": 677, 	"NextStage" : 0, "Age" : 200, 	"GivesWares" : false, 	"CanBeCut": false,	"CanBePlant" : false},
+						{"Object" : 358, 	"Terrain": 677, 	"NextStage" : 0, "Age" : 2000, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 359, 	"Terrain": 677, 	"NextStage" : 0, "Age" : 5000, 	"GivesWares" : true, 	"CanBeCut": true, 	"CanBePlant" : false}
+					]
+	
+	},
+	{
+		"GrainType" : "gftBlackberry",
+		"GuiIcon"	: 834,
+		"TextID"	: 1,
+		"Wine"		: 1,
+		"Dead"		: {"Object" : 329, "Terrain": 62},
+		"Stages"	: [
+						{"Object" : 348, 	"Terrain": 676, 	"NextStage" : 0, "Age" : 200, 	"GivesWares" : false, 	"CanBeCut": false,	"CanBePlant" : false},
+						{"Object" : 349, 	"Terrain": 676, 	"NextStage" : 0, "Age" : 2000, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 350, 	"Terrain": 676, 	"NextStage" : 0, "Age" : 6000, 	"GivesWares" : true, 	"CanBeCut": true, 	"CanBePlant" : false}
+					]
+	
+	},
+	{
+		"GrainType" : "gftWildRose",
+		"GuiIcon"	: 834,
+		"TextID"	: 1,
+		"Wine"		: 1.1,
+		"Dead"		: {"Object" : 329, "Terrain": 62},
+		"Stages"	: [
+						{"Object" : 354, 	"Terrain": 678, 	"NextStage" : 0, "Age" : 200, 	"GivesWares" : false, 	"CanBeCut": false,	"CanBePlant" : false},
+						{"Object" : 355, 	"Terrain": 678, 	"NextStage" : 0, "Age" : 2000, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 356, 	"Terrain": 678, 	"NextStage" : 0, "Age" : 6000, 	"GivesWares" : true, 	"CanBeCut": true, 	"CanBePlant" : false}
+					]
+	
+	},
+	{
+		"GrainType" : "gftPomegranate",
+		"GuiIcon"	: 834,
+		"TextID"	: 1,
+		"Wine"		: 2,
+		"Dead"		: {"Object" : 329, "Terrain": 62},
+		"Stages"	: [
+						{"Object" : 360, 	"Terrain": 675, 	"NextStage" : 0, "Age" : 200, 	"GivesWares" : false, 	"CanBeCut": false,	"CanBePlant" : false},
+						{"Object" : 361, 	"Terrain": 675, 	"NextStage" : 0, "Age" : 2000, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 362, 	"Terrain": 675, 	"NextStage" : 0, "Age" : 6000, 	"GivesWares" : true, 	"CanBeCut": true, 	"CanBePlant" : false}
+					]
+	
+	},
+	{
+		"GrainType" : "gftWildStrawberry",
+		"GuiIcon"	: 834,
+		"TextID"	: 1,
+		"Wine"		: 0.8,
+		"Dead"		: {"Object" : 329, "Terrain": 62},
+		"Stages"	: [
+						{"Object" : 351, 	"Terrain": 674, 	"NextStage" : 0, "Age" : 200, 	"GivesWares" : false, 	"CanBeCut": false,	"CanBePlant" : false},
+						{"Object" : 352, 	"Terrain": 674, 	"NextStage" : 0, "Age" : 2000, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 353, 	"Terrain": 674, 	"NextStage" : 0, "Age" : 6000, 	"GivesWares" : true, 	"CanBeCut": true, 	"CanBePlant" : false}
+					]
+	
+	},
+	{
+		"GrainType" : "gftCactus",
+		"GuiIcon"	: 834,
+		"TextID"	: 1,
+		"Wine"		: 0.5,
+		"Dead"		: {"Object" : 329, "Terrain": 62},
+		"Stages"	: [
+						{"Object" : 469, 	"Terrain": 688, 	"NextStage" : 0, "Age" : 200, 	"GivesWares" : false, 	"CanBeCut": false,	"CanBePlant" : false},
+						{"Object" : 470, 	"Terrain": 688, 	"NextStage" : 0, "Age" : 2000, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 471, 	"Terrain": 688, 	"NextStage" : 0, "Age" : 2600, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 472, 	"Terrain": 688, 	"NextStage" : 0, "Age" : 5000, 	"GivesWares" : true, 	"CanBeCut": true, 	"CanBePlant" : false}
+					]
+	
+	},
+	{
+		"GrainType" : "gftIceSticks",
+		"GuiIcon"	: 834,
+		"TextID"	: 1,
+		"Wine"		: 0.5,
+		"Dead"		: {"Object" : 329, "Terrain": 62},
+		"Stages"	: [
+						{"Object" : 465, 	"Terrain": 687, 	"NextStage" : 0, "Age" : 200, 	"GivesWares" : false, 	"CanBeCut": false,	"CanBePlant" : false},
+						{"Object" : 466, 	"Terrain": 687, 	"NextStage" : 0, "Age" : 4000, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 467, 	"Terrain": 687, 	"NextStage" : 0, "Age" : 6200, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 468, 	"Terrain": 687, 	"NextStage" : 0, "Age" : 10000, 	"GivesWares" : true, 	"CanBeCut": true, 	"CanBePlant" : false}
+					]
+	
+	}
+  ],
+  "Fruit Trees" : [
+	{
+		"MatureTreeStage" : 4,
+		"ProgressPerStage" : 800,
+		"Fruits" : 3,
+		"GuiIcon" : 918,
+		"HintID" : 2017,
+		"Stages" : [390, 107, 108, 109, 110, 365, 366, 367],
+		
+		"tcDry1" : 0.6,
+		"tcDry2" : 0.5,
+		"tcWarm1" : 1.25,
+		"tcWarm2" : 1.5,
+		"tcWet1" : 0.75,  
+		"tcWet2" : 0.7,  
+		"tcNeutral" : 1,  
+		"tcCold1" : 0.7,  
+		"tcCold2" : 0.5  
+	},
+	{
+		"MatureTreeStage" : 4,
+		"ProgressPerStage" : 1200,
+		"Fruits" : 4,
+		"GuiIcon" : 919,
+		"HintID" : 2018,
+		"Stages" : [390, 382, 383, 384, 385, 386, 387, 388, 389],
+		
+		"tcDry1" : 0.6,
+		"tcDry2" : 0.5,
+		"tcWarm1" : 1.25,
+		"tcWarm2" : 1.5,
+		"tcWet1" : 0.75,  
+		"tcWet2" : 0.7,  
+		"tcNeutral" : 1,  
+		"tcCold1" : 0.7,  
+		"tcCold2" : 0.5  
+	},
+	{
+		"MatureTreeStage" : 5,
+		"ProgressPerStage" : 1800,
+		"Fruits" : 5,
+		"GuiIcon" : 920,
+		"HintID" : 2019,
+		"Stages" : [390, 391, 392, 393, 394, 395, 396, 397, 398],
+		
+		"tcDry1" : 1,
+		"tcDry2" : 0.85,
+		"tcWarm1" : 0.8,
+		"tcWarm2" : 0.7,
+		"tcWet1" : 0.5,  
+		"tcWet2" : 0.4,  
+		"tcNeutral" : 1.25,  
+		"tcCold1" : 1.35,  
+		"tcCold2" : 1.5  
+	},
+	{
+		"MatureTreeStage" : 4,
+		"ProgressPerStage" : 1200,
+		"Fruits" : 3,
+		"GuiIcon" : 921,
+		"HintID" : 2025,
+		"Stages" : [427, 428, 429, 430, 431, 432, 433],
+		
+		"tcDry1" : 1.1,
+		"tcDry2" : 1.15,
+		"tcWarm1" : 1.2,
+		"tcWarm2" : 1.3,
+		"tcWet1" : 1.4,  
+		"tcWet2" : 1.5,  
+		"tcNeutral" : 0.8,  
+		"tcCold1" : 0.65,  
+		"tcCold2" : 0.5  
+	},
+	{
+		"MatureTreeStage" : 4,
+		"ProgressPerStage" : 900,
+		"Fruits" : 2,
+		"GuiIcon" : 922,
+		"HintID" : 2026,
+		"Stages" : [434, 435, 436, 437, 438, 439, 440],
+		
+		"tcDry1" : 1.45,
+		"tcDry2" : 1.5,
+		"tcWarm1" : 1,
+		"tcWarm2" : 1.1,
+		"tcWet1" : 1.2,  
+		"tcWet2" : 1.3,  
+		"tcNeutral" : 0.8,  
+		"tcCold1" : 0.65,  
+		"tcCold2" : 0.5  
+	}
+  ],
+  "tcNone" : [],
+  "tcDry1" : [378, 434, 121, 425],
+  "tcDry2" : [378, 427, 434],
+  "tcWarm1" : [382, 107, 375, 97],
+  "tcWarm2" : [382, 371, 107, 112, 116],
+  "tcWet1" : [368, 374, 88, 92],  
+  "tcWet2" : [368, 427, 102],  
+  "tcNeutral" : [102, 97, 374, 149, 153, 157, 162],  
+  "tcCold1" : [162, 167, 157],  
+  "tcCold2" : [391, 425, 162, 167],  
+  
+  "Decorations" : [
+	{
+		"Type" : dtObject,
+		"ID": 453,
+		"GuiIcon": 933,
+		"TextID": 2085,
+		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
+	},
+	{
+		"Type" : dtObject,
+		"ID": 455,
+		"GuiIcon": 932,
+		"TextID": 2086,
+		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
+	},
+	{
+		"Type" : dtObject,
+		"ID": 457,
+		"GuiIcon": 934,
+		"TextID": 2087,
+		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
+	},
+	{
+		"Type" : dtObject,
+		"ID": 458,
+		"GuiIcon": 935,
+		"TextID": 2088,
+		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
+	}
+  ]
+}

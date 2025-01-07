@@ -1,0 +1,2140 @@
+﻿0:Sawmill
+1:Iron smithy
+2:Weapon smithy
+3:Coal mine
+4:Iron mine
+5:Gold mine
+6:Fisherman's
+7:Bakery
+8:Farm
+9:Woodcutter's
+10:Armor smithy
+11:Storehouse
+12:Stables
+13:Schoolhouse
+14:Quarry
+15:Metallurgist's
+16:Swine farm
+17:Watchtower
+18:Town hall
+19:Weapons workshop
+20:Armory workshop
+21:Barracks
+22:Mill
+23:Siege workshop
+24:Butcher's
+25:Tannery
+26:Training hall
+27:Inn
+28:Vineyard
+29:Marketplace
+30:Tree trunks
+31:Stones
+32:Planks
+33:Iron ore
+34:Gold ore
+35:Coal
+36:Iron
+37:Gold
+38:Wine barrels
+39:Corn
+40:Loaves
+41:Flour
+42:Leather
+43:Sausages
+44:Meat
+45:Skins
+46:Wooden shields
+47:Iron shields
+48:Leather armor
+49:Iron armor
+50:Hand axes
+51:Swords
+52:Lances
+53:Pikes
+54:Longbows
+55:Crossbows
+56:Horses
+57:Fish
+58:Serf
+59:Woodcutter
+60:Miner
+61:Animal breeder
+62:Farmer
+63:Carpenter
+64:Baker
+65:Butcher
+66:Fisherman
+67:Laborer
+68:Stonemason
+69:Blacksmith
+70:Metallurgist
+71:Recruit
+72:Militia
+73:Axe fighter
+74:Sword fighter
+75:Bowman
+76:Crossbowman
+77:Lance carrier
+78:Pikeman
+79:Scout
+80:Knight
+81:Barbarian
+82:Rebel
+83:Rogue
+84:Warrior
+85:Vagabond
+86:Catapult
+87:Ballista
+88:The serf supplies your buildings with the necessary raw materials.||Note that a connecting road must exist between the buildings.
+89:To produce tree trunks for the sawmill, you need the woodcutter.||The woodcutter carries out reforesting independently.
+90:The miner mines ore from the coal, iron and gold mines.
+91:The animal breeder uses corn to raise pigs in the swine farm and horses in the stables.
+92:The farmer plants and harvests corn on the farm.||He also produces wine in the vineyard.
+93:The carpenter works in the sawmill, the weapons workshop and in the armory workshop.||He also builds catapults and ballistae in the siege workshop.
+94:The baker grinds corn into flour in the mill.||He also bakes bread in the bakery.
+95:The butcher makes sausages in the butchery and leather in the tannery.
+96:The fisherman catches fish in nearby water bodies.
+97:The laborer constructs buildings and roads. Simply highlight your preferred location and he will carry out your commands automatically.||He also repairs damaged buildings.
+98:To supply your laborers with enough material to construct roads and buildings, the stonemason will hew and cut stones.
+99:The blacksmith forges iron weapons and armor in the weapons and armor smithies.
+100:The metallurgist uses coal to refine gold and iron ore.
+101:The recruit can be equipped as a soldier in the barracks.||He also occupies the watchtower.
+102:To selection of buildings
+103:To distribution of wares
+104:To statistics
+105:To options
+106:Go back
+107:Building|Selection
+108:Distribution|of Wares
+109:Statistics
+110:Options
+111:Load Game
+112:Save Game
+113:Are you sure you|want to quit|this mission?
+114:Quit Mission
+115:Go Back
+116:Settings
+117:Quit Editor
+118:SFX
+119:Change volume
+120:Change volume
+121:Music
+122:Music on/off
+123:Autosave
+124:Music Player
+125:Previous track
+126:Next track
+127:Demolish
+128:Remove buildings/plans|Hold Shift and Ctrl to delete buildings without confirmation
+129:Stone road
+130:Stone road
+131:Grain field
+132:Grain field
+133:Wine field
+134:Wine field
+135:Cancel
+136:Cancel current training
+137:Needs:
+140:Delivers
+141:House under|construction
+142:Destroy
+143:Do you really want to|demolish this building?
+144:Destroy selected building
+145:Decrease order amount
+146:Increase order amount
+147:Previous soldier type. Use RMB or Alt to get to the first soldier type
+148:Next soldier type. Use RMB or Alt to get to the last soldier type
+149:Equip current soldier type. Use RMB or Alt to equip 10 soldiers
+150:Next profession. Use RMB or Alt to get to the last profession
+151:Previous profession. Use RMB or Alt to get to the first profession
+152:Add to queue.|Use Shift or Ctrl to modify the queue and RMB or Alt to fill it
+153:Switch between delivery modes of wares: demand / closed / offer|Use LMB / RMB to switch forward / backward
+154:Cost:
+155:Switch on/off house repair
+156:Building not available at this time
+157:Condition
+158:Turn troop left|Click RMB or press Alt to turn 90 degrees, press Shift to turn 180 degrees
+159:Turn troop right|Click RMB or press Alt to turn 90 degrees, press Shift to turn 180 degrees
+160:Attack
+161:Dispatch troop
+162:Supply troop with food
+163:Start storm attack
+164:Add line|Click RMB or press Shift to add 5 lines
+165:Withdraw line|Click RMB or press Shift to withdraw 5 lines
+166:Select|group
+167:Cancel
+168:Delete
+169:Deletes current message
+170:Go to
+171:Jumps to current message position
+172:Close
+173:Closes window
+174:Your stonemason cannot reach any further deposits of stone.
+175:Your coal mine seams are exhausted.
+176:Your iron mine veins are exhausted.
+177:Your gold mine veins are exhausted.
+178:Your woodcutter cannot find any further trees to fell
+179:This house is not occupied.
+180:This troop is really hungry, they better get something to eat soon!
+181:PAUSE
+182:Delivering
+183:Constructing road
+184:Digging field
+185:Constructing winefield
+186:Flattening house site
+187:Constructing house
+188:Repairing house
+189:Going home
+190:Going to the inn
+191:Attacking house
+192:Firing
+193:Fighting
+194:Storm attack
+195:Attacking
+196:Moving
+197:Idle
+198:Mining stone
+199:Sowing corn
+200:Harvesting corn
+201:Harvesting grapes
+202:Fishing
+203:Cutting tree
+204:Planting tree
+205:Spirit
+206:Busy
+207:Middle Ages Horn
+208:Spring
+209:Lute
+210:Mercenary
+211:The Princess
+212:The Queen
+213:In the Marketplace
+214:On the Battlefield
+215:Court Dance
+216:The Army
+217:In the Castle
+218:Fanfares
+219:At Court
+220:Entree
+221:Deep Blue
+222:Struggle
+223:Royal Quarters
+224:Aristocracy
+225:At the Harbor
+226:Journey
+227:Campaigns
+228:Campaigns
+229:Start Campaign!
+230:Play Single Map
+231:Start Map
+232:Back to Menu
+233:Load Saved Game
+234:Multiplayer
+235:Options
+236:Credits
+237:Exit Game
+238:Continue
+239:Restart Mission
+240:Resolution:
+241:Not supported
+242:Not supported
+243:VICTORY!
+244:DEFEAT!
+245:Units lost:
+246:Units defeated:
+247:Buildings lost:
+248:Buildings destroyed:
+249:Buildings constructed:
+250:Units trained:
+251:Weapons produced:
+252:Soldiers equipped:
+253:Mission completed in:
+254:Statistics
+255:Economy
+256:Citizens|trained
+257:Citizens|lost
+258:Soldiers|equipped
+259:Soldiers|lost
+260:Soldiers|defeated
+261:Buildings|constructed
+262:Buildings|lost
+263:Buildings|destroyed
+264:Wares|produced
+265:Weapons|produced
+266:Army
+267:Citizens
+268:Houses
+269:Resources
+270:Produced quantity
+271:No data
+272:You
+273:Player %d
+274:Back to Multiplayer
+275:Back to Replays
+276:All wares
+277:Warfare
+278:Food
+279:JOYMANIA ENTERTAINMENT||PROGRAMMING:|Peter Ohlmann||GAME GRAPHICS:|Adam Sprys||LEVEL DESIGN:|Adam Sprys|André Quaß||SOUND EDITING AND MIXING:|Tonstudio Mannheim||MUSIC:|Gerd Hofmann|Joachim Schäfer|Jürgen Rebhann|Klaus Staendike|Steffen Schüngel||ILLUSTRATIONS:|Boleslaw Kasza|Christoph Werner||TRANSLATION:|Ronnie Shankland|Patricia Bellantuono|Andrea Rumpelt|||ZUXXEZ ENTERTAINMENT AG||PRODUCER:|Uwe Schäfer||MANUAL:|Peter Ohlmann|Uwe Schäfer||BETA TESTING:|Peter Ohlmann|Adam Sprys|Alexandra Constandache|Dirk P. Hassinger|Achim Heidelauf|Uwe Schäfer|Ingrid Schäfer|Dirk U. Jantz|Ion Constandache|Yaman Egeli|Roman Eich|Iris Mocsnek|Anke Jantz|Paul Hassinger|Liza Hassinger||GAMES DIRECTOR:|Achim Heidelauf||PUBLISHED BY:|TopWare Interactive||CUTSCENES:||DIRECTION:|Slawomir Jedrzejewski||Kajetan Czarnecki|Wojciech Drazek|Daniel Duplaga|Rafal Januszkiewicz|Andrzej Rams|Piotr Rulka|Krzysztof Rybczynski|Grzegorz Wisniewski||VOICES:|Claus Boyen (Storyteller)||Tim Timmermann|Peter Houska|Dirk Mühlbach|Ralf Ditze|Gerhard Piske|Gernot Wassmann||ARTWORK:|Boleslaw Kasza|Adam Sprys||OPENING ANIMATION:|Uwe Schäfer|Christian Bigalk|Additional 3D-Modelling:|Niels Horstmann||SPECIAL THANKS TO:|Tadeusz Zuber|Dieter Ohlmann|Alexandra Constandache|Ingrid Schäfer
+280:Mission canceled
+281:Replay ended
+282:Town Tutorial
+283:Battle Tutorial
+284:Single Player
+285:Map Editor
+286:Start Mission
+287:Title
+288:Size
+289:Win condition:
+290:Defeat condition:
+291:Allies:
+292:Enemies:
+293:Time
+294:New map size
+295:Width
+296:Height
+297:Create New Map
+298:Available maps
+299:Load Existing Map
+300:Location
+301:Controls:
+302:Gameplay:
+303:Sound:
+304:Disable music
+305:Graphics:
+306:Brightness
+307:Vertical Sync
+308:Fullscreen
+309:Apply
+310:Language
+311:High shadow quality
+312:Ok
+313:|Hold Shift to place several houses
+314:Loading... Please wait
+315:An Error Has Occurred!
+316:Loading new locale
+317:List of savegames
+318:File name
+319:Description
+320:Load
+321:Delete
+322:Are you sure you want to delete this save?
+323:Delete
+324:Cancel
+325:Title
+326:Maps
+327:Unlocked
+328:You've won!
+329:Continue playing
+330:Victory!
+331:You've lost!
+332:Continue watching
+333:Defeat
+334:Replay has ended
+335:Continue Watching
+336:Quit to Menu
+337:Not available
+338:Press %s to resume the game
+339:Players info
+340:Chat
+341:Save already exists
+342:Overwrite
+343:Save
+344:Load
+345:Old OpenGL version detected, game may run slowly and/or with graphic flaws
+346:Please update your graphic drivers to get better performance
+347:Network error:
+348:Error: Player name must not be blank
+349:Error: Player name must be no more than %d characters long
+350:Error: Player name contains illegal characters
+351:Connection failed: %s
+352:You have disconnected
+353:Mission %d
+354:Message log
+355:Your fisherman's hut is too far away from the water.
+356:Your fisherman cannot catch any further fish in nearby water.
+357:Restart replay
+358:Pause replay
+359:Step 1 tick forward
+360:Resume paused replay
+361:Quit replay
+362:Toggle individual player perspective
+364:Use the left mouse button to select the ware to trade
+365:Use the right mouse button to select the ware to trade
+366:From x%d
+367:To x%d
+368:Terrain editing
+369:Brushes
+370:Heights
+371:Tiles
+372:Objects
+373:Elevations
+374:Brush shape
+375:Size
+376:Slide to change brush size
+377:Slope
+378:Slide to change elevation slope: 1 = plateau ... 15 = peak
+379:Speed
+380:Slide to change elevation speed: 1 = slow ... 15 = very fast
+381:Circle-shaped brush
+382:Square-shaped brush
+383:Elevate / Lower
+384:Unequalize / Flatten
+385:Elevate (left click) / Lower (right click)
+386:Unequalize (left click) / Flatten (right click)
+387:Brush & Masks
+388:Random elements
+389:Random Direction
+390:Tick for randomized tile direction or use right click to rotate the selected tile
+392:Block walking
+393:Remove object
+394:Village planning
+395:Visual scripts
+396:Global scripting
+397:Menu
+398:Objects
+399:Show deposits
+400:Show units
+401:Show houses
+402:Show objects
+403:View passability
+404:Any unsaved|changes will be lost
+405:Cancel
+406:Load
+407:Load Map
+408:Cancel
+409:Save
+410:Overwrite
+411:Map already exists
+412:Players:
+413:Default human player
+414:Player types
+415:Symmetrical
+416:Alliances
+417:Tactic
+418:Normal
+419:Mission mode
+420:Jump to location
+421:Center screen on mission start
+422:Center screen
+423:Reveal all
+424:Reveal a portion of the map
+425:Reveal fog
+426:Block trade
+427:Block/Enable houses
+428:Colors
+429:Goal
+432:Player
+433:Economy buildings
+434:Serfs and schools
+435:Military assets
+436:Unknown
+437:Troops
+438:Buildings
+439:Time
+440:Build Tutorial
+441:None
+442:Condition
+443:Survive
+444:Victory
+445:None
+446:Type
+447:Goals
+448:OK
+449:Cancel
+450:Columns
+451:Count
+452:Troop Formations
+453:Edit formations
+454:Set a limit on how many soldiers the AI can have
+455:How many soldiers AI can have at once
+456:Set max. soldiers
+457:Classic AI: How many recruits AI should have in barracks|Advanced AI: Parameter not used
+458:Recruits per Barracks
+460:Custom position
+463:Closest unit
+465:Group count
+466:Attack info
+468:Repeating
+469:Single attack
+470:Mounted
+471:Ranged
+472:Antihorse
+473:Melee
+474:Loc.
+475:Target
+476:Men
+477:Delay
+478:Type
+479:Autoattack
+480:AI attacks
+481:Equip rate leather
+482:Equip rate iron
+483:Autodefence
+484:AI creates and manages defense positions automatically. Ignores all manually set defense positions
+485:Place defence position for AI.|To change defence position parameters use:|RMB - direction, Ctrl + RMB - group type, Alt + RMB - defensive / attacking
+486:AI defence positions
+487:Laborers
+488:Serfs per 10 houses
+489:Autorepair
+490:AI Improvements
+491:AI settings
+492:Houses
+493:Roadworks
+494:Vertically flip selection
+495:Horizontally flip selection
+496:Paste terrain
+497:Copy terrain
+498:Copy/paste
+499:New Mission
+500:Player name
+501:Status:
+502:Create Server
+503:CREATE SERVER
+504:Name
+505:Port
+506:Create Local Server
+507:Create Internet Server
+508:Cancel
+509:Find Server by IP
+510:FIND SERVER
+511:Address
+512:Port
+513:Room
+514:Connect
+515:Cancel
+516:Password protected room
+517:Password
+518:Server name
+519:State
+520:Players
+521:Ping
+522:Refresh Server List
+523:SERVER DETAILS
+524:Player list:
+525:Join
+526:Connecting, please wait ...
+527:Loading announcements...
+528:Refreshing...
+529:Players list
+530:Start location
+531:Team
+532:Color
+533:Ready
+534:Ping
+535:Ping / FPS
+536:Open
+537:AI Player
+538:Select...
+539:Random
+540:None
+541:Saved Game
+542:Select a map...
+543:Select a save...
+544:Quit lobby
+545:Ready
+546:Not ready
+547:Start!
+548:Game speed (PT) [real]
+549:Game speed [real]
+550:OK
+551:Cancel
+552:Description
+553:Password
+554:Room settings
+556:Ban from this lobby
+557:Kick
+558:Randomize locations within teams
+559:Description
+560:Options
+561:Location %d
+562:Error: Please select a player from the save to control
+563:Error: Map failed to load or no map selected
+564:Cannot start: %s
+565:Not everyone is ready to start
+566:Unable to assign random locations
+567:Server has assigned hosting rights to you
+568:Game started
+569:Building map
+570:Fighting map
+571:Co-operative map
+572:Special map
+573:Game options:
+574:Peacetime (minutes)
+575:Closed
+576:Host does player setup
+577:Waiting for players:
+578:All
+579:Team
+580:KaM Remake Credits
+581:Original Knights & Merchants Credits
+582:PROGRAMMING:
+583:ADDITIONAL PROGRAMMING:
+584:ADDITIONAL GRAPHICS:
+585:ADDITIONAL SOUNDS:
+586:ADDITIONAL MUSIC:
+587:ADDITIONAL TRANSLATIONS:
+588:SPECIAL THANKS TO:
+589:Multiplayer maps
+590:Singleplayer maps
+591:Scroll speed
+592:No servers found
+593:Shuffle tracks
+594:Game information:
+595:-
+596:Lobby
+597:Loading
+598:Game
+599:Building and Fighting
+600:Fighting
+601:Ready
+602:Wrong protocol version: %s. Server uses: %s
+603:Increase trade amount
+604:Decrease trade amount
+605:Saving game...
+606:%s was defeated!
+607:Drop Players
+608:The host will be allowed to drop these players after %d seconds
+609:The host is now allowed to drop these players
+610:The host (%s) has quit
+611:The connection to the server was lost. Attempting to reconnect...
+612:Are you sure you want to quit?
+613:Are you sure you want to permanently drop these players?
+614:Cancel
+615:Trading this resource is not available in this mission
+616:Plant and fell
+617:Fell only
+618:You are not allowed to do that during peacetime
+619:Peacetime remaining: %s
+620:Peacetime is over. To thy weapons!
+621:Game time:|%s
+622:Halt troop
+623:Link up troop|Hold Shift to link several groups
+624:Separate troop (%s). Separate one unit from troop (Ctrl + %s)
+625:Replay Viewer
+626:View Replay
+627:Unsupported format %s
+628:Unsupported version %s
+629:Unsupported modifications
+630:An error has occurred while parsing the file %s
+631:initializing
+632:script
+633:units
+634:houses
+635:trees
+636:definitions
+637:tileset
+638:Map not found: %s
+639:Save not found: %s
+640:Map files do not match the host for the map: %s
+641:Save file does not match the host for the save: %s
+642:The replay failed a consistency check. This is a known bug which affects playback of some replays.\nIf you continue watching the replay will no longer be accurate and the game may crash.\nDo you want to continue watching? Choose 'Yes to All' to ignore future consistency check failures.
+643:You may only have one instance of the game in multiplayer mode at once
+644:Modifications to the game are not allowed in multiplayer.|Please reinstall to restore the original files.
+645:An error occurred in the application. Please click Send Bug Report so we can investigate this issue. Thanks for your help!
+646:Send Bug Report
+647:Show Raw Data
+648:Resume Application
+649:Terminate Application
+650:Next
+651:Contact Details
+652:Your name: (optional)
+653:Your email: (optional)
+654:Remember me
+655:Error Details
+656:In what situation did the error occur? Can you provide any additional information? (English preferred)
+657:Screenshot
+658:Attach a screenshot to the bug report
+659:(click to edit image)
+660:Send Report
+661:Cancel
+662:Sending bug report...
+663:Connecting to server...
+664:Sending data...
+665:Sending the crash report failed! Our server might be busy, please try sending it again.
+666:Information
+667:Please wait a moment...
+668:Save Map
+669:Delay in minutes before the AI starts training soldiers.
+670:Recruit delay (mins)
+671:Magic water: Sets the direction for all tiles in a body of water
+672:Magic water
+673:Copy
+674:Paste
+675:Paste apply
+676:Paste cancel
+677:Flip vertically
+678:Flip horizontally
+679:Drag to select an area on the map
+680:AI defence options
+681:Off
+682:Radius
+683:Delete current revealer
+684:Return to the reveal fog page
+685:Close
+686:Group order
+687:None
+688:Attack position
+689:Walk to
+690:Direction
+693:Defence radius
+694:Delete current defence position
+695:Return to the defence page
+696:Defence position
+697:Units & Animals
+698:Wolf
+699:Fish
+700:Watersnake
+701:Seastar
+702:Crab
+703:Waterflower
+704:Waterleaf
+705:Duck
+706:This soldier type is not available
+707:This unit type is not available
+708:Block units
+736:Download
+737:downloading...
+738:Overwrite existing files
+739:%s lost connection
+740:%s has quit
+741:%s has reconnected
+742:Cannot join while the game is in progress
+743:Room is full. No more players can join the game
+744:Player with the same name has already joined the room
+746:Error: %s has different data files to the host and so cannot join this game
+747:Your data files do not match the host
+748:Hosting rights reassigned to %s
+749:%s has a different version of %s
+750:%s does not have %s
+751:Query timed out
+752:The host dropped %s from the game
+753:%s was kicked by the host
+754:Attempting to reconnect to the game...
+755:%s has joined
+756:Reconnection failed: %s
+757:The host decided to continue playing without you :(
+758:Disconnected by the server: Timeout detected
+759:You were kicked by the host
+760:Server stopped responding
+761:Invalid room number
+765:Whisper to %s
+766:%s was banned from this lobby by the host
+767:You were banned by the host
+768:Reset all bans
+769:The host reset all bans for this lobby
+770:Date
+771:Show fog
+772:Spectate
+773:Spectator
+774:Auto attack range
+775:AI groups will automatically attack if you are closer than this many tiles
+776:Defend allies
+777:If enabled the AI will defend units and houses of allies as if they were its own
+778:Allow spectators
+779:Promote to host
+780:Spectators
+781:Cannot disable spectators: Spectators list must be empty
+782:Redo
+783:Undo
+784:Sets the AI start position which is used for targeting AI attacks
+785:AI start position
+786:Order
+788:Initial delay (seconds)
+790:Closest house from army
+791:Closest house from start position
+792:Attackers
+793:Defenders
+794:Spectators
+795:To play a previously unlocked campaign mission, select the mission flag on the campaign briefing map
+796:%s voted to return to the lobby (need %s more votes)
+797:Vote to return this room to the lobby. The game can then be resumed or changed
+798:Vote Go to Lobby
+799:%s voted to return to the lobby (vote passed)
+800:The vote to return to the lobby failed
+801:Deleting a replay also deletes the associated save. Are you sure you want to delete this save?
+802:Take all
+803:Minimum number of units to attack
+804:Delete Replay
+805:Delete Map
+806:Are you sure you want to delete this map?
+807:Hide scripted overlay
+808:Show scripted overlay
+809:You cannot change host when the server is running in your client
+810:AI creates and manages attacks automatically. Ignores manually set attacks
+811:Unlimited equip
+812:Classic AI: Soldiers are equipped as fast as possible. Equip rates still affect village planning|Advanced AI: No equip limit
+813:Apply AI defaults
+814:Multiplayer builder
+815:Applies aggressive AI builder settings to all players (for multiplayer building maps)
+816:Warning: This will override all existing AI settings for all players. Continue?
+817:Army type
+818:Iron then leather
+819:Iron
+820:Leather
+821:Mixed
+822:Downloaded maps
+823:Notice: the first "Repeating" attack will send all the troops that AI player has at the attacking outposts. However, for every next "Repeating" attack (as well as for "Single Attack"), it sends enough groups to exceed the "Minimum number of units to attack"
+824:Move
+825:View Readme PDF
+826:Failed to launch PDF viewer
+827:Sets serfs count per 10 houses for specified AI player. Selected AI has %d houses
+828:Error: Host's paused file does not match local paused file. An error has occurred or the host might be attempting to cheat.
+829:The order has been completed
+830:Load Asian fonts
+831:Move out of downloads
+832:Rename this Replay
+833:Rename Replay
+834:Delete this Replay
+835:Name:
+836:Confirm
+838:Key-bindings
+839:OK
+840:Function
+841:Key
+844:Reset key-bindings
+845:Scroll Left
+846:Scroll Right
+847:Scroll Up
+848:Scroll Down
+849:Build Menu
+850:Ratio Menu
+851:Statistics Menu
+852:Options Menu
+853:Halt Command
+854:Splitup Command
+855:Linkup Command
+856:Food Command
+857:Storm Command
+858:Increase Formation
+859:Decrease Formation
+860:Turn Clockwise
+861:Turn Counterclockwise
+862:Normal Game Speed (x1)
+863:Game Speed x%s
+864:Game Speed x%s
+865:Game Speed x%s
+866:Beacon
+867:Pause
+868:Show Teams (MP)
+869:Zoom In
+870:Zoom Out
+871:Reset Zoom
+872:Select Group 1
+873:Select Group 2
+874:Select Group 3
+875:Select Group 4
+876:Select Group 5
+877:Select Group 6
+878:Select Group 7
+879:Select Group 8
+880:Select Group 9
+881:Select Group 10
+882:Center to Alert
+883:Delete Message
+884:Show Game Chat (MP)
+885:Close Menu's
+886:Debug Show Map
+887:Debug Victory
+888:Debug Defeat
+889:Debug Add Scout
+890:Extra's Menu
+891:Terrain Editor
+892:Village Planning
+893:Visual Scripting
+894:Global Scripting
+895:Main Menu
+896:Sub-menu 1
+897:Sub-menu 2
+898:Sub-menu 3
+899:Sub-menu 4
+900:Sub-menu 5
+901:Sub-menu 6
+902:Ctrl and Shift are unassignable
+903:~~~ Unknown value
+904:Left Mouse Button
+905:Middle Mouse Button
+906:Right Mouse Button
+907:Break
+908:Backspace
+909:TAB
+910:Clear
+911:Return
+912:Shift
+913:Control
+914:Alt
+915:Pause
+916:Caps Lock
+917:Escape
+918:Space Bar
+919:Page Up
+920:Page Down
+921:End
+922:Home
+923:Left Arrow Key
+924:Up Arrow Key
+925:Right Arrow Key
+926:Down Arrow Key
+927:Select
+928:Print
+929:Execute
+930:Print Screen
+931:Insert
+932:Delete
+933:Help
+934:Num Pad 0
+935:Num Pad 1
+936:Num Pad 2
+937:Num Pad 3
+938:Num Pad 4
+939:Num Pad 5
+940:Num Pad 6
+941:Num Pad 7
+942:Num Pad 8
+943:Num Pad 9
+944:Num Pad *
+945:Separator
+946:Num Pad -
+947:Num Pad .
+948:Num Pad /
+949:Num Lock
+950:Scroll Lock
+951:Left Shift
+952:Right Shift
+953:Left Control
+954:Right Control
+955:Left Alt
+956:Right Alt
+957:Play
+958:Zoom
+960:Num Pad +
+961:Common Keys
+962:Game Keys
+963:Map Editor Keys
+964:Waiting for disconnected players data:
+965:Eyedropper: Select the type of tile under the cursor
+966:This armor smithy is not occupied
+967:This armory workshop is not occupied
+968:This bakery is not occupied
+969:This butcher's is not occupied
+970:This coal mine is not occupied
+971:This farm is not occupied
+972:This fisherman's is not occupied
+973:This gold mine is not occupied
+974:This iron mine is not occupied
+975:This iron smithy is not occupied
+976:This metallurgist's is not occupied
+977:This mill is not occupied
+978:This quarry is not occupied
+979:This sawmill is not occupied
+980:This siege workshop is not occupied
+981:These stables are not occupied
+982:This swine farm is not occupied
+983:This tannery is not occupied
+984:This watchtower is not occupied
+985:This weapon smithy is not occupied
+986:This weapons workshop is not occupied
+987:This vineyard is not occupied
+988:This woodcutter's is not occupied
+989:%s has quit and is defeated
+990:The host (%s) has quit and is defeated
+991:Cancel
+992:Clear key
+993:Select Group 11
+994:Select Group 12
+995:Select Group 13
+996:Select Group 14
+997:Select Group 15
+998:Select Group 16
+999:Select Group 17
+1000:Select Group 18
+1001:Select Group 19
+1002:Select Group 20
+1003:Construct road
+1004:Plough field
+1005:Lay out wine field
+1006:Remove building/highlights
+1007:Select next house/unit with same type
+1008:Debug window
+1009:Spectate player 1
+1010:Spectate player 2
+1011:Spectate player 3
+1012:Spectate player 4
+1013:Spectate player 5
+1014:Spectate player 6
+1015:Spectate player 7
+1016:Spectate player 8
+1017:Map drag scroll
+1018:Spectate/Replay view Keys
+1019:%s has muted you. You can no longer send messages or beacons to him
+1020:Objects palette
+1021:Universal eraser
+1022:Your woodcutter cannot find any free place to plant a tree
+1023:PT-
+1024:%s has won!
+1025:%s is not connected to game anymore
+1026:Max Gold
+1027:Maximum amount of gold to deliver into townhall
+1028:Plant only
+1029:Open / Close house for %s
+1030:All
+1031:All
+1032:All
+1033:Rename Map
+1034:Pause at peacetime end
+1035:Game time
+1036:Name
+1037:Army power
+1038:All soldiers
+1039:Chart type
+1040:Quantity
+1041:GDP
+1042:Instantaneous
+1043:Total equipped
+1044:Defeated
+1045:Lost
+1046:Back to game results
+1047:by Players
+1048:by Teams
+1049:More|statistics
+1050:Return to MapEd
+1051:Return to Map Editor
+1052:Are you sure you|want to quit|this replay?
+1053:Map is invalid
+1054:Selected map is invalid. Please select another map
+1055:Downloaded map files have changed
+1056:Selected DL map, which files have changed. Please move it out of downloads first
+1057:Map files have changed. Please reselect the map
+1058:Forward mouse button
+1059:Backward mouse button
+1060:All
+1061:Universal eraser
+1062:Show tile owners
+1063:Show tiles grid
+1064:Cutting point
+1065:Set woodcutters cutting point. Alternatively you can set it via Shift + Right mouse button
+1066:Rally point
+1067:Set %s rally point. Alternatively you can set it via Shift + Right mouse button
+1068:Resize Map
+1069:Move borders:
+1070:Resize and Save
+1071:Resize map and then save it
+1072:Map resize
+1073:Are you sure want to resize the map?||It will automatically override current map
+1074:Resize is not available||You need to save new map first
+1075:Change owner for object
+1076:Quick Play
+1077:Start singleplayer game on current map
+1078:Select player:
+1079:Select player to start map as
+1080:Start without save
+1081:Discard changes and start game as selected player
+1082:Save and start
+1083:Save map and start game as selected player
+1084:In Barracks:
+1085:In TownHall:
+1086:Rotate tile on map
+1087:Objects palette
+1088:Close palette
+1089:Remove units/groups
+1090:Replay autopause
+1091:Automatically pause replay when peacetime ends
+1092:Show beacons
+1093:Show players beacons
+1094:Mute player
+1095:Unmute player
+1096:Remember this password
+1097:Use last known password
+1098:Go previous menu
+1099:Yes
+1100:No
+1101:Cancel
+1102:Map
+1103:Replay
+1104:Players
+1105:Teams
+1106:Spectate player 9
+1107:Spectate player 10
+1108:Spectate player 11
+1109:Spectate player 12
+1110:Current map size:|[ %d : %d ]
+1111:New map size:|[ %d : %d ]
+1112:Resize Map
+1113:Owner: %s
+1114:Delete Player %d
+1115:Delete Player %d
+1116:Are you sure you want to clear the player?|All his data will be erased!
+1117:Close
+1118:Multiplayer maps
+1119:Disable music
+1120:Shuffle tracks
+1121:Shuffle tracks on/off
+1122:Map type
+1123:Scenario map
+1124:Playable as SP
+1125:Choppable tree
+1126:Blocks diagonal walking
+1127:Blocks everything except building
+1128:Show roads/fields/winefields
+1129:Sub-menu action 1
+1130:Sub-menu action 2
+1131:Sub-menu action 3
+1132:Sub-menu action 4
+1133:Sub-menu action 5
+1134:Sub-menu action 6
+1135:Sub-menu action 7
+1136:Paint bucket (change owner)
+1137:Add AI attack
+1138:Remove AI attack
+1139:Retiring
+1140:Dismiss
+1141:Do you really want to dismiss this unit?|He will go to school and leave your town forever
+1142:Dismiss unit
+1143:Cancel unit dismiss
+1144:Dismiss is not available because of lack of schools in your town
+1145:Mission|parameters
+1146:Modify mission parameters
+1147:Mission parameters
+1148:Author
+1149:Small description
+1150:Long description
+1151:Libx text ID
+1152:This map will be always visible in singleplayer maps list
+1153:Block team selection
+1154:Blocks team selection in lobby
+1155:Block peacetime
+1156:Blocks peacetime change in lobby
+1157:Block full map preview
+1158:Blocks full map preview in lobby
+1159:Text
+1160:Show mining radius
+1161:Show towers attack radius
+1162:Show units attack radius
+1163:Color code:
+1164:Blue / Green / Red
+1165:Red / Green / Blue
+1166:Text color:
+1167:Desaturated color, that could be used for texts (f.e. in scripts overlay) [readonly]
+1168:Maps filter
+1169:Reset filter
+1170:Number of players
+1171:Back to game
+1172:Show detailed game statistics
+1173:Difficulty level
+1174:Easy
+1175:Normal
+1176:Hard
+1177:Difficulty levels
+1178:Setup different difficulty levels, which could be used in the script to modify mission logic and difficulty
+1179:Advanced AI Player
+1180:Advanced AI
+1181:Classic AI
+1182:Winner
+1183:Defeated
+1184:Host
+1185:Go to selected house
+1186:Go to selected unit
+1187:Ally / Enemy color mode
+1188:Self / Ally / Enemy colors for players instead of initial player colors
+1189:[$404040]Host is ready to start. Please press '[][$0707FF]%s[][$404040]'[]
+1190:Ask to press Ready
+1191:Alert to get ready was sent to %s players
+1192:Switch players color mode
+1193:Dismiss is not available during current unit action
+1194:Ctrl + Mouse wheel
+1195:Alt + Mouse wheel
+1196:Shift + Mouse wheel
+1197:Override manually|set tiles
+1198:Force to override manually set tiles from tiles table while painting with brushes (if possible)
+1199:Magic brush: Using chosen mask, fixes tile transitions, for tiles that don't have transition graphics from one to the other type of terrain
+1200:No mask - use exiting tiles for transitions
+1201:Soft1 mask - use automatically created transitions
+1202:Soft2 mask - use automatically created transitions
+1203:Soft3 mask - use automatically created transitions
+1204:Custom TownHall units cost
+1205:Custom gold market prices
+1209:Fix terrain brushes
+1210:Try to repair internal terrain information to make brushes work
+1211:Fix terrain brushes
+1212:Are you sure want to repair|all terrain brushes internal info?||That will allow to use brushes|in spots where manual tiles were used
+1213:Def.
+1214:Human player
+1215:Classic AI Player %d
+1216:Advanced AI Player %d
+1217:Classic AI %d
+1218:Advanced AI %d
+1219:Classic AI Player
+1220:AI Player Type
+1221:Autosave at game end
+1222:None
+1223:Resources
+1224:Houses
+1225:Constructing
+1226:Citizens
+1227:Army
+1228:Dismiss is not available for hungry units
+1229:Classic AI|Parameters
+1230:Setup AI Parameters used only by Classic AI
+1231:Classic AI Parameters
+1232:Take any group type
+1233:Difficulty
+1234:%s is away from keyboard for last %s [$00B0FF]minutes[]
+1235:Data export could take up to several minutes.\nExported data will be stored in '%s' folder.\nDo you wish to proceed?
+1236:The procedure [ %s ] declared for the script console command /%s was not found
+1237:Wrong parameter type for script console command /%s: [%s]
+1238:Wrong first parameter type for script command /%s. Expected: [ %s ], actual: [ %s ]
+1239:Too many parameters for script command /%s: [ %s ]. Max number of parameters is [ %s ] (including mandatory HandID parameter)
+1240:Wrong parameters for script command /%s. Expected parameters types are: [ %s ]
+1241:Too many parameters passed to script command /%s: Expected parameters count [ %s ], actual: [ %s ]
+1242:Command called: /%s(%s)
+1243:Error while calling script command /%s(%s)|
+1244:Script console command /%s not found
+1245:Enable/disable chat history and copy from chat window
+1246:Save replay state to be able to load while watching this replay
+1247:Load replay at %s
+1248:Players colors:
+1249:Default
+1250:Ally / Enemy
+1251:Teams
+1252:Show player colors according to their choice in lobby
+1253:Show 3 different colors (yours, allied, hostile) for citizens and buildings
+1254:Show colors according to team membership
+1255:Error: Player name '%s' is reserved
+1256:Citizens (S/L/R)
+1257:Citizens (Others)
+1258:Open/Close spectator stats panel
+1259:Delivery of %s is prohibited
+1260:Supply of %s is prohibited
+1261:Recruit is not allowed to enter Barracks
+1262:Search tile by ID
+1263:Random Map Generator - Settings
+1264:Random map generator settings
+1265:RMG Settings
+1266:Map size:
+1267:Locations
+1268:Enable locations with resources
+1269:Number of locations
+1270:Set number of locations
+1271:Protected radius
+1272:Specify the size of the protected area. It secures the buildable area around each location.
+1273:Connect locations
+1274:Create walking paths between locations
+1275:Layout
+1276:The layout of the locations
+1277:Rectangle
+1278:Vertical
+1279:Horizontal
+1280:Random
+1281:Center Screen
+1282:Resources
+1283:Enable resources in each location (coal is computed automatically)
+1284:Mine fix
+1285:Secure that resources are mineable (gold mine and iron mine)
+1286:Resource quantity: stones
+1287:Resource quantity: gold
+1288:Resource quantity: iron
+1289:Obstacles
+1290:Enable obstacles (mountains, rivers, swamps, etc.)
+1291:Size
+1292:The average size of generated obstacles
+1293:Density
+1294:The density of generated obstacles
+1295:Variance
+1296:The variance in size of generated obstacles
+1297:Ratio
+1298:Type and ratio of generated obstacles
+1299:Empty gold
+1300:Empty gold ratio
+1301:Empty iron
+1302:Empty iron ratio
+1303:Swamp
+1304:Swamp ratio
+1305:Wetland
+1306:Wetland ratio
+1307:Water
+1308:Water ratio
+1309:Biomes
+1310:Enable biomes
+1311:Type of biome
+1312:Select required biomes
+1313:Grass
+1314:The grass is default biome and cannot be removed
+1315:Ground
+1316:Enable ground
+1317:Snow
+1318:Enable snow
+1319:Sand
+1320:Enable sand
+1321:First layer
+1322:The first layer of biome (properties of the primary texture)
+1323:Second layer
+1324:The second layer of biome (properties of secondary textures)
+1325:Step
+1326:Step of the primary texture (higher value = larger biome)
+1327:Step of secondary textures (higher value = larger biome)
+1328:Limit
+1329:Limitation of biome borders (higher value = larger biome)
+1330:Height
+1331:Enable height
+1332:Hide jagged edges
+1333:Adjust terrain height so rough texture transitions are hidden
+1334:Inaccesible places
+1335:Treatment of inaccessible places
+1336:Block walking
+1337:Block walking (improves game pathfinding and generation of the navigation mesh)
+1338:Change texture
+1339:Replace terrain with special biomes
+1340:Objects
+1341:Enable objects
+1342:Animals
+1343:Enable animals
+1344:Object density
+1345:Forests density
+1346:Forests density
+1347:Trees
+1348:Number of trees in the forest
+1349:Seed
+1350:A number that is used as an identifier to generate a map with a specific configuration
+1351:Randomize Seed
+1352:Generate map with new Seed
+1353:Generate map
+1354:Generate map with current Seed
+1355:Close Random Map Generator
+1356:H
+1357:Play next tick in replay
+1358:Easier
+1359:Very easy
+1360:Harder
+1361:Very hard
+1362:Host's game version doesn't match your game version
+1363:All
+1364:Allow '%s' for all available locs
+1365:Prohibit '%s' for all available locs
+1366:Step of the height algorithm
+1367:Slope of the height evaluation (0 = plateau, 100 = peak)
+1368:Maximum height of walkable tiles
+1369:Random map
+1370:Map was generated automatically with random map generator
+1371:Initial resources
+1372:Amount of initial resources in the storehouse
+1373:Low
+1374:Medium
+1375:High
+1376:Select size of the map
+1377:Try to start
+1378:Try to load save
+1379:Try to view replay
+1380:Error loading unsupported version %s save from %s
+1381:Error loading unsupported version %s replay from %s
+1382:Map name
+1383:Time
+1384:Version
+1385:Loading unsupported version could cause game not being properly loaded or even cause game crash
+1386:Unsupported version
+1387:Are you sure want to unlock all campaigns?\nThis can't be undone.\n\nIf you want to save your campaigns progress be sure you backed up your 'Campaigns.dat' file located at\n'%s'\n\nDo you confirm this operation?
+1388:Hard mask - use automatically created transitions
+1389:Delay in game ticks before AI equips a leather troops
+1390:Delay in game ticks before AI equips an iron troops
+1391:Sets the number of AI workers
+1392:Blending level
+1393:Blending level of terrain transitions via masks
+1394:Blocks building
+1395:Blocks walking and building
+1396:Tile overlays
+1397:Set tile overlays.|Use LMB for safe mode and LMB+Shift to overwrite roads
+1398:Video clips:
+1399:Enable
+1400:Stretch
+1401:Show at startup
+1402:Volume
+1403:Test video
+1404:Mods
+1405:Snow houses
+1406:Block player color selection
+1407:Blocks player color selection
+1408:History
+1409:History of changes on the map
+1410:History
+1411:Jump to
+1412:Go to the selected point in history
+1413:Initial
+1414:Add %s %s
+1415:Remove %s %s
+1416:Update %s %s
+1417:Move %s %s
+1418:Change owner: %s %s
+1419:road
+1420:corn field
+1421:wine field
+1422:overlay
+1423:object
+1424:You do not have enough permissions on the KaM Remake installation directory:\n'%s'\n\nTry to run it with administrative rights, reinstall the game into another directory or exclude KaM_Remake.exe from antivirus check
+1425:Tiles palette
+1426:Tiles palette
+1427:Version
+1428:Fix terrain brushes
+1429:Make replay savepoints
+1430:Go to previous unit
+1431:Train or Equip unit
+1432:Go to next unit
+1433:Unit orders Keys
+1434:House Keys
+1435:Show defence positions
+1436:Show flat terrain
+1437:Game speed could be changed by host only if there are no active player on the map
+1438:Resource export complete: [ %s ]
+1439:Browser back
+1440:Browser forward
+1441:Browser refresh
+1442:Browser stop
+1443:Browser search
+1444:Browser favorites
+1445:Browser home
+1446:Volume mute
+1447:Volume down
+1448:Volume up
+1449:Media next track
+1450:Media previous track
+1451:Media stop
+1452:Media play/pause
+1453:Launch mail
+1454:Launch media select
+1455:Launch application 1
+1456:Launch application 2
+1457:Music previous track
+1458:Music next track
+1459:Disable music
+1460:Shuffle music
+1461:Music volume up
+1462:Music volume down
+1463:Mute music
+1464:Sound volume up
+1465:Sound volume down
+1466:Mute sounds
+1467:Mute all (music and sounds)
+1468:Object Brushes
+1469:Trees
+1470:All objects except trees
+1471:Stones
+1472:Flowers
+1473:Mushrooms
+1474:Trunks
+1475:Dead trees
+1476:Cactus
+1477:Desert bushes
+1478:Ruins
+1479:Terrain objects
+1480:When painting, place objects matching the selected terrain brush
+1481:Density
+1482:Objects / forest density
+1483:Forest age
+1484:Cleaning brush, removes all objects
+1485:All
+1486:Young
+1487:Medium
+1488:Chop
+1489:All ages
+1490:Young trees
+1491:Medium trees
+1492:Trees ready to chop
+1493:Apply terrain from copied area
+1494:Apply heights from copied area
+1495:Apply objects from copied area
+1496:Apply terrain overlays from copied area
+1497:Constant Height
+1498:Brush constant height level
+1499:Height level
+1500:Height level is used in 'Constant Height'
+1501:Elevate all
+1502:Elevate (left click) / Lower (right click) all tiles on map with terrain kind at game cursor
+1503:Override Objects
+1504:Objects will be replaced by other objects or deleted
+1505:Gradient mask - use automatically created transitions
+1506:Big
+1507:Big trees
+1508:Stomps
+1509:Stomps
+1510:All-
+1511:All ages, except stomps
+1512:Mission time:
+1513:Current game speed
+1514:Current replay speed
+1515:Recorded game speed
+1516:HD movements
+1517:HD movements
+1518:Increase units and projectiles movement resolution
+1519:For player %0:s to %1:s player's %2:s %3:s must be %4:s
+1520:win
+1521:survive
+1522:destroyed
+1523:saved
+1524:main buildings ( %s )
+1525:Only symmetrical alliances are allowed
+1526:HD animations
+1527:HD animations
+1528:Increase number of frames used in animations
+1529:Smooth peaks
+1530:Make mountains peaks smoother
+1531:Game Settings
+1532:Replay Settings
+1533:Map Editor Settings
+1534:Notice: Advanced AI use its own formation parameters and will ignore these settings
+1535:To Campaign Map
+1536:Take any group type
+1537:Weak
+1538:Soldiers withour armor, leather armored units or iron armored units
+1539:Add group
+1540:Add group after placing defence position. Group  depends on AI formations
+1541:Count
+1542:Number of units in group. At 0 it takes the AI formations
+1543:Columns
+1544:Number of columns in group. If number of units is 0 it takes the AI formations columns count
+1545:Make coal smooth
+1546:Coal deposits in the selection will be automatically set from the tiles with lowest coal count at the edges to the highest in the center
+1547:Other player got desync error. Please send us this crashreport, it will help us to fix it.%sOther player error message is:%s
+1548:Undo
+1549:Redo
+1550:Grass
+1551:Moss
+1552:Pale grass
+1553:Grass on dirt
+1554:Dirt
+1555:Coast sand
+1556:Grass sand 1
+1557:Grass sand 2
+1558:Grass sand 3
+1559:Sand
+1560:Swamp
+1561:Grassy water
+1562:Water
+1563:Fast water
+1564:Custom
+1565:Snow on grass
+1566:Snow on dirt
+1567:Snow
+1568:Deep snow
+1569:Ice
+1570:Stone
+1571:Gold mountain
+1572:Iron mountain
+1573:Cobble stone
+1574:Gravel
+1575:Coal
+1576:Gold
+1577:Iron
+1578:Lava
+1579:Abyss
+1580:Any unsaved changes will be lost. Exit?
+1581:Warning
+1582:No overlay
+1583:Dig overlay stage 1
+1584:Dig overlay stage 2
+1585:Dig overlay stage 3
+1586:Dig overlay stage 4
+1587:Road overlay
+1588:Default
+1589:Apply multiplayer AI builder settings to player %d
+1590:Multiplayer setup for AI player %d
+1591:Warning: This will override all existing AI settings for player %d. Continue?
+1592:Stores the current password for future use
+1593:Fish count
+1594:Save map
+1595:Map saved
+1596:Saving map...
+1597:Flat terrain
+1598:Tiles grid
+1599:Save file does not exist
+1600:Attack: 
+1601:Defense: 
+1602:Ammo: 
+1603:Health: 
+1604:Instant Kill
+1605:Store filled:
+
+1606:Bitin Steel
+1607:Bitin Ore
+1608:Vegetables
+1609:Stone Bolt
+1610:Ballista Bolt
+1611:Wheel
+1612:Log
+1613:Quiver
+1614:Steel part
+1615:Bitin plate
+1616:Water
+
+1617:Horizontal Wall
+1618:Horizontal Wall Gate
+1619:Vertical Wall
+1620:Vertical Wall Gate
+1621:Wall End
+1622:Hovel
+1623:Stone Sign
+1624:Bitin Mine
+1625:Archery tower
+1626:Well
+1627:Carpenter's Workshop
+1628:Iron Foundry
+1629:Equip from TownHall
+1630:Tile
+1631:Seed
+1632:Pottery
+1633:Wooden Entanglements
+
+1634:Base Resources
+1635:Ores
+1636:Wooden weapons
+1637:Iron weapons
+1638:Defense
+1639:Charcoal Factory
+1640:Fruit Tree
+1641:Shavings
+1642:Fruits
+1643:Machines Ranged
+1644:Emissary's house
+1645:Valuable Metals 
+1646:Siege Ammo
+1647:Economy products V1
+1648:Economy products V2
+
+1649:Important Houses
+1650:Basic Houses
+1651:Economy Houses
+1652:Mines
+1653:Workshops
+1654:Defensive
+1655:Additional
+
+
+1657:Basic
+1658:Food
+1659:Products
+1660:Ores
+1661:Valuable
+1662:Warfare
+1663:Machines
+1664:[LMB] Disable Delivery [RMB] Allow Take Out
+1665:Copper
+1666:Silver
+1667:Amber
+1668:Diamonds
+1669:Jewelry
+1670:Boots
+1671:On the plate it says
+1672:GOLEM
+1673:GIANT
+1674:Ram
+1675:Collector's hut
+1676:Tailor's hut 
+1677:Silo
+1678:Cottage
+1679:Residential house
+1680:Paladin
+1681:Palace
+1682:Civilians
+
+1683:This pottery is not occupied
+1684:This hovel is not occupied
+1685:This apple tree is not occupied
+1686:This bitin mine is not occupied
+1687:This iron foundry is not occupied
+1688:This carpenter's workshop is not occupied
+1689:This charcoal factory is not occupied
+1690:This archery tower is not occupied
+1691:This emissary's house is not occupied
+1692:This Collector's hut is not occupied
+1693:This Tailor's is not occupied
+
+1694:Coal lv.1
+1695:Coal lv.2
+1696:Coal lv.3
+1697:Coal lv.4
+1698:Coal lv.5
+1699:Clay lv.1
+1700:Clay lv.2
+1701:Clay lv.3
+1702:Clay lv.4
+1703:Clay lv.5
+1704:Fence 1
+1705:Fence 2
+1706:Fence 3
+1707:Fence 4
+1708:Fence 5
+1709:Fence 6
+1710:Infinite Resource
+1711:Infinite Clay
+1712:Infinite Coal
+1713:Date
+1714:Hour
+1715:Game time
+1716:Transfer ware to outpuy
+1717:Cancel transfering
+1718:Set the player to whom merchant will send wares: 
+1719:Upgrade this house
+1720:Cancel upgrading this house
+1721:This house is fully upgraded
+1722:Mounted archer
+
+1723:You can defend your city whith walls.||Can be built without connecting to road.
+1724:In the hovel you can obtain feathers, which are needed to produce bread.
+1725:The stone sign is used to convey information to players.1726:With this building you can mine the rare mineral bityne ore.
+1727:The archery tower reveals a large area of land. Recruits' accuracy is very good and they can kill an enemy with one shot.
+1728:You will find a lot of water in the well. Pigs, horses and chickens will need it in their development. The Bakery and apple tree also require it.||The worker will go to fetch water himself if a well is built close to him.
+1729:Here you can produce: stone projectiles needed for watch towers, logs and wheels for siege machines, as well as sawdust used in the burner.
+1730:The Iron Foundry processes iron into parts needed to build siege machines. It also produces bitin plates used to strengthen machines and units in the barracks.
+1731:With the emissary, you can transfer selected goods to your allies.|Can ship goods to distant parts of the map as long as a shipyard is built.
+1732:Roof tiles required for the expansion of the city are produced in the pottery.
+1733:This is the only building that can produce coal from the renewable raw material - wood. It needs kindling in the form of corn and fuel, i.e. sawdust or coal.
+1734:The tree grows a lot of fruit. People in the houses need them for food. It is a modular building, so you can create a huge orchard.
+1735: In this building, a collector extracts valuable materials from stones, rocks and ruins. They can be used to make a jewerly, which is valuable when exchanged at the marketplace. It is also required in the training of elite units in the palace.
+1736: A tailor sews boots thanks to his skills. Any citizen who works in constant motion can get them in school. He can also produce leather armor and quivers.
+1737:The silo can store various raw materials. They will not be touched until you give such an order. The building can be expanded to the third level.
+1738:A small residential building housing workless citizens ready for training.
+1739:A Residential House can accommodate many more people than a Cottage.
+1740:Elite units are trained here, they will support your troops in battle and provide them with additional bonuses.
+1741:The school may train workless citizens for designated professions.
+1742:The store house is the most important building because it will store all the raw materials produced, as long as there is space in it.
+1743:Hungry civilians will come here to be fed. Provided with dishes or apple juice, it contributes to the efficiency of food.
+1744:Soldiers are trained in the barracks. Strategically use your possessions.
+1745:All sorts of warriors are brought to the town hall. Everyone has a price for their services.
+1746:A fisherman requires a nearby reservoir to catch fish.
+1747:A place where you can exchange goods for more necessary ones.
+1748:Here, a blacksmith will produce iron weapons for new recruits.
+1749:Thanks to the crafted wooden shields and plate armor, your units will be more durable in battle.
+1750:With flour and water, the baker will bake fresh bread for your people.
+1751:The butcher will prepare sausages.
+1752:Coal is required to burn metals.
+1753:A miner extracts gold ore.
+1754:A miner extracts iron ore.
+1755:Iron and bitin ores are smelted into iron and bitin.
+1756:Use the siege workshop to build powerful siege machines. Each machine has its own construction scheme.
+1757:Chests of gold are delivered to the school to pay for the training of new civilians.
+1758:The mill processes grain previously collected by peasants into pure flour.
+1759:The sawmill is one of the most important buildings. Produces timber for construction and weapon production. Sawdust is produced as a by-product and can be used in a wood burner.
+1760:Horses bred in stables are required to recruit riders. You can speed up their breeding by using a varied diet. Horses will definitely be happy with hay.
+1761:Bred pigs are intended for the production of sausages and leather. They can be fattened by using a varied diet. Pigs will certainly be satisfied with vegetables.
+1762:Tanner processes skin sheets into leather needed for the production of armor and boots.
+1763:Wine is the easiest food to obtain. They can replace bread or fish in large quantities. A peasant working in a vineyard needs at least 9 fields of wine.
+1764:A woodcutter cuts down nearby trees and stores the trunks in his hut. Tree trunks are used to produce many materials.
+1765:Watch Tower. Certainly the best for defending the city. One stone projectile fired from it kills an enemy and injures several nearby ones. The ballistic slingshots at the top of the tower have a long range. Take reload time into account. It also won't hit nearby targets.
+1766:Stone brought by a stonemason from the nearby mountains is processed in this house. Stone is an important building material. Can be crafted into stone projectiles.
+1767:The farm is very important to provide food for animals.
+1768:A well-armed army needs good weapons.
+1769:Here you will commission the production of basic weapons.
+
+1770:The Recruit with an axe is not an expensive unit. They can show their value in large numbers.||This unit has the "Storm" skill, which gives a temporary, uncontrolled acceleration.
+1771:A recruit armed with leather armor, a wooden shield and an axe is good at hand-to-hand combat. Its shield also protects him from enemy arrows.||This unit has the "Storm" skill, which gives a temporary, uncontrolled acceleration.
+1772:Iron armor and a long sword are the recipe for a soldier who can deal with pikemen. It will defend itself against all air arrows with his shield.||This unit has the "Storm" skill, which gives a temporary, uncontrolled acceleration.
+1773:His arrows are not very powerful, but they will be perfect as frontline support.||Requires quivers
+1774:The crossbow is a deadly weapon. Bolts take a long time to reload, but they make up for it with their impact power.||Requires quivers
+1775:Riders have always been a big threat. Lances will resist them much better than swords or axes.
+1776:A pikeman with iron armor will last much longer than a lance carrier.
+1777:Light cavalry will help you explore much more terrain than other soldiers. He's great at dealing with melee units.
+1778:Due to its armor, the horse is slower, but much more durable. He is able to survive a volley of arrows.
+1779:The Barbarian can be bought at the Town Hall. Its strength is superior to all units in the barracks.
+1780:Rebels with pitchforks are the cheapest unit that can be purchased. Their quantity helps to stop the enemy while the real knights begin their training.
+1781:Sling shooters shoot stones at opponents.||Require stone bolts.
+1782:The Warrior is the most powerful basic unit. Thanks to his armor, he can withstand heavy hits and is effective against buildings.
+1783:The lack of armor on the rider allows him to cover long distances in less time.
+1784:Siege engine adapted to destroy buildings from a long distance. It is not accurate against moving targets. Requires long bullet reload time.||Requires delivery of stone bullets.
+1785:Bolts fired from this machine will pierce through any armor and bring death. Not effective for destroying buildings.||Requires bolts.
+1786:The durability and tenacity of this machine is able to pass through a volley of arrows and units standing in its path, just to destroy massive walls and buildings.
+1787:GOLEM was created for the KamStar campaign. He cannot be trained.
+1788:GIGANT was created for the KamStar campaign. He cannot be trained.
+1789:The Paladin is armed with bitin steel armor. Ordinary bullets have no effect on him. His powerful sword will easily defeat any type of unit. Heavy armor slows down his speed, but it will protect him from almost any blow.||When in an melee unit, he will support the others with a defense bonus.|Has skill "Rage".
+1790:Mounted archer can escape from any risky situation.||Requires quivers.||Being in a group of ranged units will increase their shooting range and reduce the minimum range.
+1791:Additional player settings
+1792:Sub-menu 7
+1793:Patterns
+1794:Set game speed
+
+1795:Scroll: Default
+1796:Scroll: Houser
+1797:Scroll: Unit
+1798:Scroll: Feather
+1799:Scroll: Closed
+1800:Scroll: Closed with stamp
+1801:Scroll with stamp 1
+1802:Scroll with stamp 2
+1803:Scroll with shield 1
+1804:Scroll with shield 2
+1805:Scroll with coin
+1806:Big scroll with stamps
+1807:Big scroll with feather
+1808:Palace: Melee
+1809:PalaceL: Ranged
+1810:Saturation
+1811:Press [ctrl] and click the sign to edit message;
+1812:Set look of a new placed house
+1813:Change ware input and output
+1814:Set look of selected houes
+1815:Dishes
+1816:Force working. The worker will make his job even when his house is full.
+1817:Stop force working
+1818:Enable/Disable force working. The worker will make his job even when his house is full.
+1819:Add boots
+1820:Spy
+1821:A spy can sneak between enemy defense lines. He will discover the area for you and collect important information about the enemy's location. He is quiet and clever, but he is not durable.
+1822:Terrain brush
+1823:Terrain mask
+1824:Add objects pattern
+1825:Add height pattern
+1826:Patterns
+1827:Use pattern
+1828:Add workers
+1829:Save patterns
+1830:Refresh
+1831:Rename
+1832:Delete
+1833:Override objects
+1834:Patterns
+1835:Delete pattern
+1836:Are you sure to delete this pattern : 
+1837:Use terrain mask
+1838:Join group
+1839:Size of the eraser
+1839:Citizens
+1840:Remove all defenses
+1841:In siege workshop
+1842:Workless citizens
+1843:Edit message stack
+1844:Messages
+1845:Message ID
+1846:Time
+1847:Text ID (.libx file)
+1848:Time (in ticks)
+1849:Add message
+1850:Delete message
+1851:Message text
+1852:Message scroll
+1853:Save map layers
+1854:Load map layers
+1855:Full terrain
+1856:Deleting this pattern will be permanent.|Are you sure to do it?
+1857:Layers
+1858:Disable player
+1859:Set maximum levels for houses to be build by player. [--] or [max] means no limits 
+1860:Fruit juice
+1861:Bitin parts
+1862:Pearls
+1863:Leather sheet
+1864:Coin
+1865:Iron ferrule
+1866:Resin
+1867:Gemstone
+1868:House won't need resources to produce wares
+1869:Fill new placed house automatically. [LMB + SHIFT] Switch to random.
+1870:Infinite
+1871:Enable/Disable infinite ammo
+1872:Ammo cart
+1873:Ammunition
+1874:Arrows
+1875:Stone bolts
+1876:Ballista bolts
+1877:Honey
+1878:Certificate
+1879:Needle
+1880:Wooden plate
+1881:Rocks
+1882:from Palace
+1883:Machines Melee
+1884:FlagColor:
+1885:Buildings from tab:
+1888:Reach a place
+1889:Reveal a place
+1890:Location X
+1891:Location Y
+1892:Location (X,Y):
+1893:Herbs
+
+1894:Time
+1895:Buildings
+1896:Troops
+1897:Military assets
+1898:Serfs and schools
+1899:Economy buildings
+1900:Buildings of type
+1901:All buildings
+1902:All units/citizens
+1903:Reach place
+1904:Reveal place
+1905:Victory goal has been made: 
+1906:Survival goal not completed: 
+
+1907:Cost
+1908:Demands
+1909:Offers
+1910:Unlocked after:
+1911:By-porducts
+1912:Unit cost: 
+1913:Horse attack: 
+1914:Speed: 
+1915:Reveal range: 
+1916:House attack: 
+1917:Click to find house that produces this ware
+1918:Pike machine
+1919:A durable machine that strengthens the antihorse group in which it is located. Multiple spears will make short work of cavalry.||Attack three units at once
+1920:The ammunition cart can be loaded with ballistic missiles and stones. All ballistas and catapults in the group will not need to bring resorces if the cart has them.
+1921:The wolf is very dangerous and predatory. Once trained, it will serve you in the fight against your opponent. He is agile and can easily avoid arrows. He attacks quickly, but is easily injured.
+1923:Bitin shield
+1924:Group will be automatically equipped with bitin plates.
+1925:Show message
+1926:Message will appear after finishing or failing the goal. 
+1927:Disable/Enable ware delivery
+1928:Destroy:
+1929:Kill:
+1930:Complete all victory goals to time: 
+1931:Survive to time: 
+1932:Defend buildings:
+1933:Defend units:
+1934:Of player:
+1935:Trained wolf
+1936:Defence position radius
+1937:All citizens
+1938:Specified house
+1939:Organize positions
+1940:Enable/Disable moving groups between free defense position from last to first.
+1941:Fog Of War
+1942:Select tiles for patterns
+1943:Delete terrain selection
+1944:Draw the boundaries of the fog of war
+1945:Delete the boundaries of the fog of war
+1946:By-products
+1947:Guide
+1948:Goals
+1949:Your bitin mine veins are exhausted.
+1950:Collector can't find more resources.
+1951:Your pottery veins are exhausted.
+1952:Completed
+1953:Set Color
+1954:Animals age
+1955:Swine
+1956:Horse
+1957:Chicken
+1958:Sell wares
+1959:Buy by-products
+1960:Workers
+1961:Unload units/wares
+1962:Assign to ship
+1962:No resources found
+1963:Wreckers
+
+1964:Clubman
+1965:Mace fighter
+1966:Wrecker
+1967:Operator
+1968:Transporting Ship
+1969:Shield bearer
+1970:Hand fighter
+1971:Spiked trap
+1972:Mobile wall
+1973:Hay
+1974:Stall
+1975:Production thatch
+1976:Collector
+1977:Mace
+1978:Flail
+1979:Feathers
+1980:Plate armor
+1981:Bitin chainmail
+1982:Town Tutorials
+1983:Shipyard
+1984:Start tutorial
+1985:Map name
+1986:Sell every ware for: %d. Right click to sell evrything for: %d
+1987:Sell: [ %s x %d ] for: [ %s x %d ]
+1988:Exchange: [ %s x %d ] for : [ %s x %d ]
+1989:Battle Tutorials
+1990:Grass field
+1991:Vegetableland
+1992:Stone road
+1993:Wooden path
+1994:Cobblestone
+1995:Exclusive road
+1996:Destroyer
+1997:Medic
+1998:Hide all wares that are not in store house
+1999:Hide
+2000:Wheat
+2001:Rye
+2002:Oat
+2003:Rice
+2004:Corn
+2005:Sunflower
+2006:Pumpkin
+2007:Grass
+2008:Clover
+2009:Lucerne
+2010:Manure
+2011:Summon the non-working citizens to this building
+2012:Carrots
+2013:Cabbages
+2014:Tomatos
+2015:Potatos
+2017:Apple
+2018:Cherry
+2019:Black apple
+2020:Set as house site
+2021:Building progress
+2022:Ships
+2023:Battle ship
+2024:Boat
+2025:Banana tree
+2026:Coconut tree
+2027:Animal spawner
+2028:Army
+2029:Max bitin armor
+2030:Deselect current selection
+2031:Guardians
+2032:Wares needed:
+2033:Start building ships
+2034:Stop building ships
+2035:Structures
+2036:Decorations
+2037:Demands
+2038:Delivered:
+2039:Structure
+2040:Start fishing
+2041:Start mining deposits
+2042:Stop fishing
+2043:Stop mining deposits
+2044:Wooden bridge
+2045:Drewniany most pozwoli na przejście przez wodę i dotarcie na drugi brzeg
+2046:Stone bridge
+2047:Kamienny most umożliwi połączenie ze sobą dwóch brzegów. Można na nim postawić drogę.
+2048:Stone room
+2049:Stone tarrace
+2050:Kamienny taras jest miejscem przeznaczonym do budowania na wodzie
+2051:Strawbush
+2052:Snow objects
+2053:Weather
+2054:Enable/disable weather
+2055:Max clouds on 50x50 map
+2056:Max spawned clouds on 50x50 map
+2057:Min spawn time in seconds
+2058:Mix spawn time in seconds
+2059:Lifetime
+2060:Clouds speed
+2061:Decrease particles
+2062:Spawn time (min / max)
+2063:Quantity (max / spawn) 
+2064:Lifetime of clouds in seconds
+2065:Enabled
+2066:Overwrite
+2067:Overwrite weather settigns
+2068:Decrease particles: 1 (all particles) -> 10 (no particles)
+2069:Environment
+2070:Day duration:
+2071:Time of day:
+2072:Default day duration [ 0 : stops time, 1: 60 minutes, 10: 30 minutes, 20: 5 minutes ] 
+2073:Default time of day at the start of the game [ 0-8: day, 9-12 : night, 13-24: day ]
+2074:Ware
+2075:Units
+2076:Wares
+2077:Unit type
+
+2078:Important Houses
+2079:Basic Houses
+2080:Economy Houses
+2081:Mines
+2082:Workshops
+2083:Defensive
+2084:Additional
+
+2085:Campfire with rocks
+2086:Campfire
+2087:Lamp
+2088:Lantern
+2089:Wares on ground
+
+2090:Sort
+2091:Everything
+2092:Trees
+2093:Fruit trees
+2094:Corn and grapes
+2095:Resources
+2096:Other
+2097:Sort by object attributes
+2098:Tools
+2099:Dynamic light
+2100:On/Off dynamic light form houses or objects
+2101:Eggs
+2102:Pyro
+2103:Lecter
+2104:Indestructible
+2105:Immortal
+2106:Realism
+2107:Built in difficulty level
+2108:Achievements
+2109:Have to pay with something|Produce 100 gold chests||Chests full of gold|Produce 1000 gold chests||Gold, gold everywhere|Produce 10 000 gold chests||Don't forget aboud food|Produce 1000 food||Jedzenie to zdrowie|Produce 10 000 food||Chow time!|Produce 100 000 food||Units for village|Train 500 units||Units for city|Train 1000 units||Units for kingdome|Train 5000 units||First Victory|Win any game||The battle is starting|Win 10 games||To thy weapons|Win 100 games||Play for every time, always.|Win 1000 games||Help of the specialists 1|Recruit in palace trained wolf||Help of the specialists 2|Recruit paladin in palace||Help of the specialists 3|Recruit spy in palace||Real life|Win a game in Realism mode||The crops are dying!|Win a game in Realism mode 15 times||Food rottens and animals dies?|Win a game in Realism mode 34 times||Hell on earth and people in graves|Win a game in Realism mode 666 times
+2110:Disables aging plants on tile
+2111:Changes resource amount in house under the cursor
+2112:Random amount
+2113:Minimum amount of wares
+2114:Maximum amount of wares
+2115:Min / max amount
+2116:Message list
+2117:Text from second language
+2118:Set protected area
+2119:Protected area
+2120:Stored wares
+2121:Gold ore deposits hidden under the ground
+2122:Iron ore deposits hidden under the ground
+2123:Bitin ore deposits hidden under the ground
+2124:Mineshaft for gold mine
+2125:Mineshaft for iron mine
+2126:In shipyard
+2127:Cut and sew
+2128:Cut only
+2129:Sew only
+2130:Duplicate
+2131:Add goal
+2132:Coal deposits hidden under the ground
+2133:Total units from every defence positions
+2134:Total units from attacking positions
+2135:Attacking positions
+2136:Total attacking positions of type : 
+2137:Units count based on defence positions
+2138:Override overlays
+2139:Work suspended with a this plant type
+2140:Sew random plants
+2141:Collector: finds and collects wares
+2142:Hunter: sets traps to kill animals and gather their skin and meat
+2143:Barren land
+2144:Deer
+2145:Roe
+2146:Fox
+2147:Boar
+2148:Bear
+2149:Land Duck
+2150:Rabbit
+2151:Polar Bear
+2152:Snake
+2153:Spider
+2154:Spawner radius
+2155:Max. amount of animals
+2156:Spawner pace
+2157:Building progress
+2158:With his club, the Clubman will quickly deal with enemy buildings and will also destroy opponents armor.
+2159:Armed with a club and plate armor, this Mace fighter is perfect for taking down enemy buildings while others fight enemy soldiers.
+2160:With a single attack of his flail he can destroy any foundation. Iron armor is no obstacle for him in defeating the enemy.
+2161:As soon as a Pyro brings his torch near a building, it will burn until only ashes remain.
+2162:The Lecter will take over any enemy building, which will then belong to you.
+2163:With a medic, you gain the ability to heal units during combat. The more of them you have in your group, the more visible their effect is.
+2164:With the boat you will be able to cross the waters to catch delicious fish. Also if it is near land, it will collect resources for you.
+2165:The ship will transport your units to the other side of the sea. It can even accommodate machines, but be aware that its space is limited.
+2166:A ship armed with large crossbows and with a durable hull structure, it will prove ideal during combat.
+2167:Once deployed, the spike trap is nearly invisible. Whenever it finds an opportunity to kill an enemy, it will use it.
+2168:It is the only one-time use unit. When it hits a building, it will damage its structure or even destroy it entirely.
+2169:This building can only be placed once, but it can house up to five workers who will work hard to gather the required resources as quickly as possible.
+2170:In the shipyard you will build boats that can cross the waters to gather resources, transport units, or attack the enemy.
+2171:Thanks to the stall you will be able to buy by-products for coins.
+2172:Flag count
+2173:Nodes count
+2174:Text position
+2175:Left
+2176:Right
+2177:Unlock after:
+2178:Set flag color
+2179:Edit map
+2180:Campaigns

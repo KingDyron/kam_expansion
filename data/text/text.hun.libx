@@ -1,0 +1,1065 @@
+﻿0:Fűrészmalom
+1:Vasolvasztó
+2:Fegyverkovács
+3:Szénbánya
+4:Vasércbánya
+5:Aranybánya
+6:Horgászház
+7:Pékség
+8:Földműves háza
+9:Favágókunyhó
+10:Páncélkovács
+11:Raktár
+12:Istálló
+13:Iskola
+14:Kőfejtő
+15:Öntöde
+16:Sertéshizlalda
+17:Őrtorony
+18:Városháza
+19:Fegyverműhely
+20:Páncélműhely
+21:Erőd
+22:Malom
+23:Járműgyár
+24:Vágóhíd
+25:Tímárműhely
+26:Gyakorlóterem
+27:Fogadó
+28:Pincészet
+29:Piactér
+30:Farönk
+31:Kő
+32:Gerenda
+33:Vasérc
+34:Aranyérc
+35:Szén
+36:Nyersvas
+37:Arany
+38:Boroshordó
+39:Gabona
+40:Kenyér
+41:Liszt
+42:Bőr
+43:Kolbász
+44:Sertés
+45:Nyersbőr
+46:Fapajzs
+47:Acélpajzs
+48:Bőrpáncél
+49:Acélvért
+50:Fejsze
+51:Kard
+52:Lándzsa
+53:Pika
+54:Hosszúíj
+55:Számszeríj
+56:Ló
+57:Hal
+58:Inas
+59:Favágó
+60:Bányász
+61:Állattenyésztő
+62:Földműves/Vincellér
+63:Asztalos
+64:Pék/Molnár
+65:Hentes/Tímár
+66:Horgász
+67:Munkás
+68:Kőfaragó
+69:Kovács
+70:Kohász
+71:Újonc
+72:Nemzetőr
+73:Fejszés
+74:Kardforgató
+75:Íjász
+76:Számszeríjász
+77:Lándzsás
+78:Pikás
+79:Felderítő
+80:Lovag
+81:Barbár
+82:Lázadó
+83:Gazfickó
+84:Harcos
+85:Csavargó
+86:Katapult
+87:Dárdavető
+88:Az inasok szállítják a szükséges nyersanya- gokat az épületek között.||Az épületeket mindig úttal kell összekötni.
+89:A fűrészmalom részére a favágó vágja a farönköket.||A kivágott erdőt önállóan újratelepíti.
+90:A bányász fejti az ércet a szén-, vas- és arany- bányában.
+91:Az állattenyésztő gabona felhasználásával neveli a sertéseket és a lovakat a hizlaldában és az istállóban.
+92:A földműves gabonát vet és arat háza környékén.||A vincellér préseli a szőlőt a pincészetben.
+93:Az asztalos a fűrészma- lomban, a fegyver- és páncélműhelyben dolgozik.||Az asztalos a járműké- szítő üzemben dárdavetőt és katapultot készít.
+94:A pék kenyérrel látja el a lakosságot.||A molnár lisztet őröl a malomban.
+95:A hentes készíti a kol- bászt a vágóhídon.||A tímár állítja elő a bőrt a műhelyében.
+96:A horgász fogja ki a halakat a közeli vizekből.
+97:A munkás építi az utakat és az épületeket, felszántja a termőföldet és szőlőt telepít. Egyszerűen jelöld ki a helyet, és automatikusan végrehajtja a parancsodat. A megsérült épületek javítására is képes, ha ezt engedélyezed az adott épületnél.
+98:A kőfaragó biztosítja a kőutánpótlást a munkások számára.
+99:A kovács készíti a nehézfegyvereket és -páncélokat a műhelyekben.
+100:Az kohász arany- rudakat és nyersvasat önt az ércekből.
+101:Az újoncok az erődben, felszerelésük után válnak katonákká.||Ők teljesítenek szolgálatot az őrtornyokban is.
+102:Építmények
+103:Áruelosztás
+104:Statisztika
+105:Opciók
+106:Vissza
+107:Építmény|kiválasztása
+108:Áruk|elosztása
+109:Statisztika
+110:Opciók
+111:Játék betöltése
+112:Játék kimentése
+113:Valóban|ki akarsz lépni|ebből a küldetésből?
+114:Kilépés
+115:Vissza
+116:Beállítások
+117:Szerkesztő elhagyás
+118:Hangok
+119:Hangerő
+120:Hangerő
+121:Zene
+122:Zene be/ki
+123:Automata mentés
+124:Zenelejátszó
+125:Előző zene
+126:Következő zene
+127:Lerombol
+128:Épület kijelölés megszüntetése
+129:Útépítés
+130:Útépítés
+131:Szántás
+132:Földművelés
+133:Szőlőtelepítés
+134:Szőlőtelepítés
+135:Mégsem
+136:Gyakorlat leállítása
+137:Szükséges:
+140:Szállít
+141:Építés alatt
+142:Lerombolás
+143:Valóban lerombolod|ezt az épületet?
+144:A kijelölt épület lerombolása
+145:Mennyiség csökkentése
+146:Mennyiség növelése
+147:Előző egység
+148:Következő egység
+149:Az aktuális egység felszerelése
+150:Következő szakma
+151:Előző szakma
+152:Beállít a sorba
+153:Áruszállítás be/ki
+154:Zsold:
+155:Épületjavítás be/ki
+156:Most nem építhető
+157:Jóllakottság
+158:Balra át!
+159:Jobbra át!
+160:Támadás!
+161:Csapat mozgatása
+162:Csapat élelmezése
+163:Roham indítása
+164:Alakzatban sorakozó
+165:Alakzatváltás
+166:Jelöld ki a|csapatot
+167:Kilépés
+168:Törlés
+169:Aktuális üzenet törlése
+170:Oda lép
+171:Az aktuális üzenet helyszínére ugrik
+172:Bezár
+173:Ablak bezárása
+174:A kőfaragód nem képes több követ kifejteni.
+175:Szénbányád kimerült.
+176:Vasércbányád kimerült.
+177:Aranybányád kimerült.
+178:Favágód nem talál több kivágásra alkalmas fát
+179:Ez a ház nincs birtokba véve.
+180:Ez a csapat valóban éhes, legjobb lenne gyorsan enni adni nekik!
+181:SZÜNET
+182:Szállít
+183:Utat épít
+184:Felássa a területet
+185:Szőlőtőkét ültet
+186:Ház területet egyenget
+187:Házat épít
+188:Házat javít
+189:Hazamegy
+190:Enni megy
+191:Házat támad
+192:Tüzel
+193:Harcol
+194:Rohamoz
+195:Támad
+196:Megy
+197:Várakozik
+198:Követ bányász
+199:Gabonát ültet
+200:Gabonát arat
+201:Szőlőt szüretel
+202:Halászik
+203:Fát vág
+204:Fát ültet
+205:Szellem
+206:Munka
+207:Középkori kürt
+208:Tavasz
+209:Lant
+210:Zsoldos
+211:A Hercegnö
+212:A Királynö
+213:A piacon
+214:A csatamezön
+215:Udvari tánc
+216:A hadsereg
+217:A kastélyban
+218:Fanfárok
+219:Az Udvarban
+220:Föfogás
+221:Mélykék
+222:Csata
+223:Királyi Negyedek
+224:Arisztokrácia
+225:A kikötőnél
+226:Utazás
+227:Hadjáratok
+228:Hadjáratok
+229:Hadjárat Indítása!
+230:Egyéni küldetés
+231:Játék indítása
+232:Vissza a menübe
+233:Játék betöltése
+234:Hálózati játék
+235:Opciók
+236:Készítők
+237:Kilépés a programból
+238:Tovább
+239:A küldetés újrajátszása
+240:Felbontás:
+241:Nem támogatott
+242:Nem támogatott
+243:GYŐZELEM!
+244:VERESÉG!
+245:Elveszített egységek:
+246:Legyőzött egységek:
+247:Elveszített épületek:
+248:Lerombolt épületek:
+249:Felépített épületek:
+250:Kiképzett egységek:
+251:Gyártott fegyverek:
+252:Kiképzett katonák:
+253:Küldetés időtartama:
+254:Statisztika
+255:Gazdaság
+256:Polgárok|képzett
+257:Polgárok|elvesztett
+258:Katonák|felszerelt
+259:Katonák|elvesztett
+260:Katonák|legyőzött
+261:Épületek|építve
+262:Épületek|elvesztve
+263:Épületek|megsemmisítve
+264:Áruk|előállítva
+265:Fegyverek|előállítva
+266:Hadsereg
+267:Lakosok
+268:Házak
+269:Nyersanyagok
+270:Termelt nyersanyagok
+271:Nincs adat
+272:Te
+273:Játékos %d
+274:Vissza a hálózati játékhoz
+275:A visszajátszásokhoz
+276:Összes
+277:Hadviselés
+278:Élelmiszer
+279:JOYMANIA ENTERTAINMENT||PROGRAMOZÁS:|Peter Ohlmann||JÁTÉK GRAFIKA:|Adam Sprys||PÁLYATERVEZÉS:|Adam Sprys|André Quass||HANGSZERKESZTÉS ÉS|KEVERÉS:|Tonstudio Mannheim||ZENE:|Gerd Hofmann|Joachim Schäfer|Jürgen Rebhann|Klaus Staendike|Steffen Schüngel||ILLUSZTRÁCIÓK:|Boleslaw Kasza|Christoph Werner||ZUXXEZ ENTERTAINMENT AG||GYÁRTÁSVEZETŐ:|Uwe Schäfer||SZÖVEG:|Peter Ohlmann|Uwe Schäfer||BÉTA TESZT:|Peter Ohlmann|Adam Sprys|Alexandra Constandache|Dirk P. Hassinger|Achim Heidelauf|Uwe Schäfer|Ingrid Schäfer|Dirk U. Jantz|Ion Constandache|Yaman Egeli|Roman Eich|Iris Mocsnek|Anke Jantz|Paul Hassinger|Liza Hassinger||JÁTÉK IGAZGATÓ:|Achim Heidelauf||ÁTVEZETŐK:||IGAZGATÓ:|Slawomir Jedrzejewski||Kajetan Czarnecki|Wojciech Drazek|Daniel Duplaga|Rafal Januszkiewicz|Andrzej Rams|Piotr Rulka|Krzysztof Rybczynski|Grzegorz Wisniewski||HANGOK:|Claus Boysen (Mesélö)||Tim Timmermann|Peter Houska|Dirk Mühlbach|Ralf Ditze|Gerhard Piske|Gernot Wassmann||KÉZIKÖNYV GRAFIKÁI:|Uwe Schäfer|Alexandra Constandache||KÉZIKÖNYV SZÖVEGEI:|Peter Ohlmann|Uwe Schäfer||MŰREMEK:|Boleslaw Kasza|Adam Sprys||ANIMÁCIÓK:|Uwe Schäfer|Christian Bigalk|További 3D Modellezés:|Niels Horstmann||KÖSZÖNET TOVÁBI|MUNKATÁRSAINKNAK:|Tadeusz Zuber|Dieter Ohlmann|Alexandra Constandache|Ingrid Schäfer|Andrea Rumpelt
+280:Küldetés megszakítva
+281:Visszajátszás véget ért
+282:Oktató Küldetés (Város)
+283:Oktató Küldetés (Csata)
+284:Egyjátékos mód
+285:Pálya Szerkesztő
+286:Küldetés Indítása
+287:Cím
+288:Méret
+289:Győzelmi feltétel:
+290:Vereség feltétel:
+291:Szövetségesek:
+292:Elenségek:
+293:Idő
+294:Térkép mérete
+295:Szélesség
+296:Magasság
+297:Új Térkép Készítése
+298:Elérhető térképek
+299:Térkép Betöltése
+300:Hely
+301:Vezérlők:
+302:Játékmenet:
+303:Hangok:
+304:Zene kikapcsolása
+305:Grafika:
+306:Fényerősség
+307:Függőleges szinkronizálás
+308:Teljes képernyő
+309:Alkalmaz
+310:Nyelv:
+311:Árnyék Minősége:
+312:Alacsony
+313:Magas
+314:Betöltés... Kérem várjon
+315:Hiba történt!
+316:Új nyelv betöltése
+317:Mentett állások
+318:Fájlnév
+319:Leírás
+320:Töltés
+321:Törlés
+322:Biztosan akarod törölni ezt a mentett állást?
+323:Törlés
+324:Mégse
+325:Cím
+326:Pályák
+327:Feloldva
+328:Megnyerted a játékot!
+329:Játék folytatása
+330:Győzelem!
+331:Elvesztetted a játékot!
+332:Játék megfigyelése
+333:Vereség
+334:A visszajátszás végetért
+335:Játék megfigyelése
+336:Vissza a menübe
+337:Nem elérhető
+338:Nyomj %s billentyűt a játék folytatásához
+339:Játékos információk
+340:Chat
+341:A mentett állás már létezik
+342:Felülír
+343:Mentés
+344:Töltés
+345:Régi OpenGL verzió érzékelve, a játék lassabban futhat és/vagy Grafikus hibák történhetnek
+346:Kérlek frissítsd a videokártya drivereidet a jobb teljesítményért
+347:Hálózati hiba:
+348:Hiba: A játékos neve nem lehet üres
+349:Hiba: A Játékos neve nem lehet %d karakternél hosszabb
+350:Hiba: A játékos neve érvénytelen karaktereket tartalmaz
+351:Kapcsolódási hiba: %s
+352:Megszakadt a kapcsolat
+353:Küldetés %d
+354:Értesítések
+355:A halászkunyhód túl messze van a víztől.
+356:A halászod nem tud több halat fogni a közeli vízből.
+357:Visszajátszás újraindítása
+358:Visszajátszás megállítása
+359:1 egységet léptet előre
+360:Megállított visszajátszás folytatása
+361:Kilépés a visszajátszásból
+362:Váltás másik játékos nézőpontjára
+364:Eladni kívánt áru kiválasztása a bal egér gombal
+365:Vásárolni kívánt áru kiválasztása a jobb egér gombal
+366:Elad x%d
+367:Vesz x%d
+368:Tereprendezés
+369:Ecset
+370:Domborzat
+371:Textúrák
+372:Objektumok
+373:Domborzat
+374:Ecset forma
+375:Méret
+376:Csúsztasd az ecset méret változtatáshoz
+377:Lejtés
+378:Csúsztasd a meredekség változtatásához: 1 = fennsík ... 15 = hegycsúcs
+379:Sebesség
+380:Csúsztasd az emelkedés sebességének változtatásához: 1 = lassú ... 15 = gyors
+381:Kör alakú ecset
+382:Négyzet alakú ecset
+383:Emel / Süllyeszt
+384:Egyenetlenít / Lapít
+385:Emel (bal egér) / Süllyeszt (jobb egér)
+386:Egyenetlenít (bal egér) / Lapít (jobb egér)
+387:Ecset
+388:Véletlenszerű részek
+389:Véletlenszerű irány
+390:Jelöld be a véletlenszerű irányú elhelyezéshez, vagy használd a jobb egérgombot a forgatáshoz
+392:Láthatatlan fal
+393:Objektum eltávolítása
+394:Település tervezés
+395:Vizuális szkriptek
+396:Globális szkriptek
+397:Menü
+398:Objektumok
+399:Mennyiségek megjelenítése
+400:Egységek megjelenítése
+401:Épületek megjelenítése
+402:Objektumok megjelenítése
+403:Megfelelő területek
+404:A nem mentett|változtatások elvesznek
+405:Mégse
+406:Betöltés
+407:Térkép betöltése
+408:Mégse
+409:Mentés
+410:Felülírás
+411:A térkép már létezik
+412:Játékosok:
+413:Alapértelmezett
+414:Játékos típusok
+415:Szimmetrikus
+416:Szövetségek
+417:Taktikai
+418:Normál
+419:Küldetés mód
+420:Ugrás a megadott pontra
+421:A kamera kezdőpontja a küldetés indításakor
+422:Képernyő középpont
+423:Minden felfedése
+424:Felfedi a térkép egy részét
+425:Köd felfedése
+426:Kereskedelem tiltása
+427:Épületek engedélyezése/tiltása
+428:Színek
+429:Cél
+432:Játékos
+433:Gazdasági épületek
+434:Inasok és iskolák
+435:Katonai eszközök
+436:Ismeretlen
+437:Katonák
+438:Épületek
+439:Idő
+440:Építési oktató
+441:Nincs
+442:Feltétel
+443:Túlélés
+444:Győzelem
+445:Nincs
+446:Típus
+447:Célok
+448:OK
+449:Mégse
+450:Oszlopok
+451:Mennyiség
+452:Katonai formációk
+453:Formációk módosítása
+454:Határozd meg, hogy az AI mennyi katonával rendelkezhet maximum
+455:Mennyi katonával rendelkezhet egyszerre az AI
+456:Max. katonák
+457:Mennyi újonc legyen az AI erődjében
+458:Újonc per erőd
+460:Meghatátozott pozíció
+463:A legközelebbi egység
+465:Csapat darabszám
+466:Támadási infó
+468:Ismétlés
+469:Egyszer
+470:Lovas
+471:Távolsági
+472:Anti-lovasság
+473:Közelharci
+474:Poz.
+475:Cél
+476:Egys.
+477:Késl.
+478:Típus
+479:Auto. támadás
+480:AI támadások
+481:Bőr felszerelés aránya
+482:Vas felszerelés aránya
+483:Auto. védekezés
+484:AI automatikusan létrehozza és kezeli a védelmi pontokat
+485:Védelmi pontok elhelyezése az AI számára
+486:AI védelmi pontok
+487:Munkások
+488:Inas per 10 ház
+489:Auto. javítás
+490:Auto. építés
+491:AI beállítások
+492:Épületek
+493:Földmunkálatok
+494:A kijelölt terület függőleges tükrözése
+495:A kijelölt terület vízszintes tükrözése
+496:Felszín beillesztése
+497:Felszín másolása
+498:Másolás/beillesztés
+499:Új Küldetés
+500:Játékos neve
+501:Állapot:
+502:Szerver Készítése
+503:SZERVER LÉTREHOZÁSA
+504:Szerver név
+505:Port
+506:Lokális Szerver Létrehozása
+507:Internet Szerver Létrehozás
+508:Mégsem
+509:Szerver keresése IP alapján
+510:SZERVER KERESÉSE
+511:Cím
+512:Port
+513:Szoba
+514:Kapcsolódás
+515:Mégsem
+516:Jelszóval védett szoba
+517:Jelszó
+518:Szerver név
+519:Állapot
+520:Játékosok
+521:Ping
+522:Szerver Lista Frissítése
+523:Szerver Részletek
+524:Játékos lisa:
+525:Csatlakozás
+526:Kapcsolódás, kérem várjon ...
+527:Események töltése...
+528:Frissítés...
+529:Játékosok
+530:Kezdőhely
+531:Csapat
+532:Szín
+533:Kész
+534:Ping
+535:Ping / FPS
+536:Nyitva
+537:Számítógép
+538:Válassz...
+539:Véletlen
+540:Nincs
+541:Mentett játék
+542:Válassz egy térképet...
+543:Válassz egy mentést...
+544:Kilépés
+545:Kész
+546:Nincs kész
+547:Indítás!
+548:Játék sebessége (békeidő)
+549:Játék sebessége
+550:OK
+551:Mégse
+552:Leírás
+553:Jelszó
+554:Szoba beállítások
+556:Kitiltás
+557:Kidobás
+558:Véletlenszerű csapat elhelyezkedés
+559:Leírás
+560:Opciók
+561:Kezdőhely %d
+562:Hiba: Kérem válasszon egy játékost a mentésből, hogy irányíthassa
+563:Hiba: Nem sikerült betölteni a térképet vagy nincs térkép kiválasztva
+564:Nem lehet indítani: %s
+565:Nem áll mindenki készen a kezdésre
+566:Nem lehet véletlenszerű elhelyezkedést beállítani
+567:A szerver átadta a házigazda szerepét nekünk
+568:A játék elkezdődött
+569:Építkezés
+570:Csata
+571:Kooperatív
+572:Speciális térkép
+573:Játék beállítások:
+574:Békeidő (percben)
+575:Zárva
+576:A hoszt állítja be a játékosokat
+577:Várakozás a játékosokra:
+578:Mind
+579:Csapat
+580:KaM Remake Készítők
+581:Eredeti Knights & Merchants Készítők
+582:PROGRAMOZÁS:
+583:TOVÁBBI PROGRAMOZÁS:
+584:TOVÁBBI GRAFIKA:
+585:TOVÁBBI HANGOK:
+586:TOVÁBBI ZENE:
+587:TOVÁBBI FORDÍTÓK:
+588:KÜLÖN KÖSZÖNET:
+589:Többjátékos pályák
+590:Egyjátékos pályák
+591:Görgetési sebesség
+592:Nem található szerver
+593:Véletlenszerű zenelejátszás
+594:Játék információ
+595:-
+596:Lobby
+597:Betöltés
+598:Játék
+599:Építkezés és Csata
+600:Csata
+601:Kész
+602:Hibás protokol verzió: %s. A szerver által használt: %s
+603:Mennyiség növelése
+604:Mennyiség csökkentése
+605:Játék mentése...
+606:%s megsemmisült!
+607:Játékos kidobása
+608:A hosztnak lehetősége lesz ezeket a játékosokat kidobni a játékból %d másodperc múlva
+609:A hoszt most már kidobhatja ezeket a játékosokat
+610:A hoszt (%s) kilépett a játékból
+611:A kapcsolat a szerverhez elveszett. Újracsatlakozás folyamatban...
+612:Biztosan ki szeretnél lépni?
+613:Biztos véglegesen ki szeretnéd zárni ezeket a játékosokat?
+614:Mégsem
+615:Ennek a nyersanyagnak a kereskedelme ezen a pályán nem engedélyezett
+616:Ültet és kivág
+617:Csak kivág
+618:Nem tehetsz ilyet békeidőben
+619:Békeidőből hátra van: %s
+620:A békeidő végetért. Fegyverbe!
+621:Játék idő:|%s
+622:Csapat állj
+623:Csapatok összekapcsolása
+624:Csapatok szétválasztása
+625:Visszajátszások
+626:Visszajátszás megtekintése
+627:Nem támogatott formátum %s
+628:Nem támogatott verzió %s
+629:Nem támogatott módosítások
+630:Hiba történt a %s fájl beolvasása közben
+631:felkészülés
+632:szkript
+633:egységek
+634:házak
+635:fák
+636:definíciók
+637:terep grafikák
+638:Térkép nem található: %s
+639:Mentés nem található: %s
+640:A térkép verziószáma nem egyezik a szerver térképverziójával: %s
+641:A mentés nem egyezik a szerver mentésével: %s
+642:Az összetétel ellenőrzés nem sikerült a visszajátszásnál. Ez egy ismert hiba, ami hatással van némelyik visszajátszásra. Szeretnéd folytatni a megtekintést?
+643:Csak egyetlen példányt futtathatsz a játékból többjátékos módban egyszerre
+644:A módosítások nem engedélyezettek hálózati játékban.|Telepítsd újra, vagy állítsd vissza az eredeti fájlokat.
+645:Hiba történt az alkalmazásban. Kérlek kattints Hibajelentés Küldésére, hogy utánajárhassunk a problémának. Köszönjük a segítséged!
+646:Hibajelentés Küldése
+647:Nyers Adatok Megtekintése
+648:Alkalmazás Folytatása
+649:Alkalmazás Bezárása
+650:Következő
+651:Kapcsolati Adatok
+652:A neved: (opcionális)
+653:Az email címed: (opcionális)
+654:Emlékezz rám
+655:Hiba Részletei
+656:Milyen helyzetben történt a hiba? Meg tudnál adni további információkat? (Lehetőleg angolul)
+657:Képernyőmentés
+658:Képernyőmentés hozzáadása a hibajelentéshez
+659:(kattints a kép szerkesztéséhez)
+660:Jelentés Küldése
+661:Mégsem
+662:Hibajelentés küldése folyamatban...
+663:Kapcsolódás a szerverhez...
+664:Adatok küldése...
+665:A hibajelentés elküldése sikertelen! A szerverünk valószínűleg túlterhelt, kérlek próbáld meg újra.
+666:Információ
+667:Kérlek várj egy pillanatot...
+668:Térkép mentése
+669:A késleltetés percekben, mielőtt az AI újoncokat képez
+670:Újonc késleltetés (perc)
+671:Összefüggő vízfelületek folyásirányának módosítása
+672:Folyásirány
+673:Másolás
+674:Beillesztés
+675:Elfogadás
+676:Elvetés
+677:Függ. tükrözés
+678:Vízsz. tükrözés
+679:Húzd a terület kijelöléséhez
+680:AI védelmi opciók
+681:Ki
+682:Sugár
+683:Jelenlegi felfedés törlése
+684:Vissza a köd felfedése menüponthoz
+685:Bezárás
+686:Csapat utasítás
+687:Nincs
+688:Támad
+689:Menetel
+690:Irány
+693:Védelmi sugár
+694:A jelenlegi védelmi pont törlése
+695:Vissza a védelem menüponthoz
+696:Védelmi pontok
+697:Egységek
+698:Farkas
+699:Hal
+700:Vízisikló
+701:Tengeri csillag
+702:Rák
+703:Tavirózsa
+704:Tavirózsa
+705:Kacsa
+706:Ez az egység nem képezhető
+707:Ez az egység nem képezhető
+708:Egységek tiltása
+736:Letöltés
+737:letöltés...
+738:Meglévő fájlok felülírása
+739:%s elveszítette a kapcsolatot
+740:%s kilépett
+741:%s visszatért
+742:Nem lehet csatlakozni, ameddig folyik a játék
+743:A szoba tele van. Több játékos nem csatlakozhat
+744:Ilyen nevű játékos már csatlakozott a szobához
+746:Hiba: %s eltérő fájlokkal rendelkezik a hoszthoz képest, így nem csatlakozhat a játékhoz
+747:Hoszttól eltérő fájlokkal rendelkezel
+748:%s hoszt jogot kapott
+749:%s ettől eltérő verzióval rendelkezik: %s
+750:%s nem rendelkezik ezzel: %s
+751:Lekérdezés túllépte az időkorlátot
+752:A hoszt kidobta %s -t a játékból
+753:%s ki lett rúgva a játékból a hoszt által
+754:Csatlakozási kísérlet...
+755:%s csatlakozott
+756:Újracsatlakozás sikertelen: %s
+757:A hoszt úgy döntött, hogy a játék nélküled megy tovább :(
+758:A szerverrel történő kapcsolat megszűnt: Időtúllépés
+759:A hoszt kirúgott téged
+760:A szerver nem válaszol
+761:Érvénytelen szoba azonosító
+765:Suttogás neki: %s
+766:%s ki lett tiltva a játékból a hoszt által
+767:A hoszt kitiltott téged
+768:Kitiltások resetelése
+769:A hoszt minden kitiltást resetelt ebben a lobbyban
+770:Dátum
+771:Köd megjelenítése
+772:Szemlélés
+773:Szemlélő
+774:Auto. támadási távolság
+775:AI csapatok automatikusan támadásba indulnak, ha ennyi egységnél közelebb vagy
+776:Szövetséges védelme
+777:Ha engedélyezve van, az AI védeni fogja szövetségeseinek épületeit és egységeit, mintha sajátjai volnának
+778:Szemlélők engedélyezése
+779:Kinevezés hosztnak
+780:Szemlélők
+781:Nem lehet tiltani a szemlélőket: A szemlélő listának üresnek kell lennie
+782:Előre
+783:Visszavon
+784:Meghatározza az AI kezdőpontját, ami befolyásolja az AI támadások célpontját
+785:AI kezdőpont
+786:Sorrend
+788:Kezdő késleltetés (másodperc)
+790:A hadsereghez legközelebb eső épület
+791:A kezdőponthoz legközelebbi épület
+792:Támadók
+793:Védők
+794:Szemlélők
+795:A korábban feloldott küldetés újrajátszásához válaszd ki a hozzá tartozó zászlót az eligazító térképen
+796:%s szavazott a lobbyba való visszatérésre (még %s szavazat szükséges)
+797:Szavazz a Lobbyba való visszatéréshez. A játék folytatható, vagy megváltoztatható
+798:Vissza a Lobbyba
+799:%s szavazott a lobbyba való visszatérésre (megszavazva)
+800:Sikertelen szavazás
+801:A visszajátszás törlése törli a hozzá tartozó mentést is. Folytatod a műveletet?
+802:Véletlenszerű választás
+803:Támadó katonák száma
+804:Visszajátszás törlése
+805:Térkép törlése
+806:Biztosan törölni akarod a térképet?
+807:Szöveges takarás elrejtése
+808:Szöveges takarás megjelenítése
+809:Nem tudsz hosztot váltani, hogyha a szerver a te klienseden fut
+810:AI automatikusan létrehozza és kezeli a támadásokat
+811:Gyors felszerelés
+812:A katonák a lehető leggyorsabban fel lesznek szerelve. A felszerelési arányok befolyásolják a település tervezést
+813:AI alapértelmezések alkalmazása
+814:Többjátékos építő
+815:Agresszív AI építő beállításokat alkalmaz minden játékosra (többjátékos építő térképekre)
+816:Figyelem: Ez minden létező AI beállítást felül fog írni minden játékosnál. Folytatod?
+817:Hadsereg típus
+818:Vas aztán bőr
+819:Vas
+820:Bőr
+821:Vegyes
+822:Letöltött térképek
+824:Mozgatás
+825:"Olvass el" PDF megtekintése
+826:PDF megtekintő indítása sikertelen
+827:Inasok számának meghatározása 10 házanként a megadott AI számára. A kiválasztott AI %d házzal rendelkezik
+828:Hiba: A hoszt szüneteltetett fájlja nem egyezik meg a lokális szüneteltetett fájllal. Hiba történt, vagy a hoszt csalni próbál.
+829:A megrendelés teljesítve
+830:Ázsiai karakterkészlet betöltése
+831:Mozgatás a letöltések közül
+832:Visszajátszás átnevezése
+833:Visszajátszás Átnevezése
+834:Visszajátszás törlése
+835:Név:
+836:Átnevez
+837:Gyorsbillentyűk beállítása
+838:Gyorsbillentyűk
+839:OK
+840:Műveletek
+841:Gomb
+842:Nem szerkeszthető Speciális gyorbillentyűk
+843:Speciális Gyorbillentyűk
+844:Alaphelyzetbe álltás
+845:Mozgatás Balra
+846:Mozgatás Jobbra
+847:Mozgatás Fel
+848:Mozgatás  Le
+849:Építkezés
+850:Áruelosztás
+851:Statisztika
+852:Opciók
+853:Állj!
+854:Csapatok szétvélasztása
+855:Csapatok összekapcsolása
+856:Csapat Élelmezése
+857:Roham indítása
+858:Alakzat váltás-Oszlopba
+859:Alakzatváltás-Sorba
+860:Jobbra át
+861:Balra át
+862:Játék sebesség (x1)
+863:Játék sebesség x%s
+864:Játék sebesség x%s
+865:Játék sebesség x%s
+866:Ping/Beacon
+867:Szünet
+868:Csapatok mutatása (MP)
+869:Zoom In
+870:Zoom Out
+871:Nézet Alapba állítása
+872:Kiválasztott csapat 1
+873:Kiválasztott csapat 2
+874:Kiválasztott csapat 3
+875:Kiválasztott csapat 4
+876:Kiválasztott csapat 5
+877:Kiválasztott csapat 6
+878:Kiválasztott csapat 7
+879:Kiválasztott csapat 8
+880:Kiválasztott csapat 9
+881:Kiválasztott csapat 10
+882:Ugrás a figyelmeztetés helyére
+883:Üzenet Törlése
+884:Chat mutatása (MP)
+885:Kilépés a Menüből
+886:Hibabekerés Térkép Mutatása
+887:Hibakeresés Győzelem
+888:Hibakeresés Vereség
+889:Hibakeresés Felderítő hozzáadása
+890:Extrák Menü
+891:Terep Szerkesztő
+892:Település Tervező
+893:Vizuális Szkriptek
+894:Globális Szkriptek
+895:Menü
+896:Al menü 1
+897:Al menü 2
+898:Al menü 3
+899:Al menü 4
+900:Al menü 5
+901:Al menü 6
+902:A CTRL és SHIFT nem hozzárendelhető gombok
+903:~~~ Ismeretlen érték
+904:Bal Egér Gomb
+905:Középső Egér Gomb
+906:Job Egér Gomb
+907:Break
+908:Backspace
+909:TAB
+910:Clear
+911:ENTER
+912:SHIFT
+913:CTRL
+914:ALT
+915:PAUSE
+916:CAPS LOCK
+917:ESC
+918:SPACE
+919:Page UP
+920:Page Down
+921:END
+922:Home
+923:Balra nyíl gomb
+924:Fel nyíl gomb
+925:Jobbra Nyíl gomb
+926:Le Nyíl Gomb
+927:Select
+928:Print
+929:Végrehajt
+930:Print Screen
+931:Insert
+932:Delete
+933:Segítség
+934:Num Pad 0
+935:Num Pad 1
+936:Num Pad 2
+937:Num Pad 3
+938:Num Pad 4
+939:Num Pad 5
+940:Num Pad 6
+941:Num Pad 7
+942:Num Pad 8
+943:Num Pad 9
+944:Num Pad *
+945:Elválasztó
+946:Num Pad -
+947:Num Pad .
+948:Num Pad /
+949:Num Lock
+950:Scroll Lock
+951:Bal Shift
+952:Jobb Shift
+953:Bal CTRL
+954:Jobb CTRL
+955:Bal Alt
+956:Jobb Alt
+957:Play
+958:Zoom
+960:Num Pad +
+961:Gyakori Billentyűk
+962:Játék közbeni gyorsbill.
+963:térképszerkesztő gyorsbill.
+965:A kurzor alatti mező típusának a kiválasztása.
+966:Ez a páncélkovács nem lakott.
+967:Ez apéncélműhely  nem lakott.
+968:Ez a Pékség  nem lakott.
+969:Ez a Hentes nem lakott.
+970:Ez a szénbánya  nem lakott.
+971:Ez a Földművesház  nem lakott.
+972:Ez a Halászház nem lakott.
+973:Ez az aranybánya nem lakott.
+974:Ez a vasbánya nem lakott.
+975:Ez a vasolvasztó nem lakott.
+976:Ez az öntöde nem lakott.
+977:Ez a malom nem lakott.
+978:Ez a kőfejtő nem lakott.
+979:Ez a fűrészmalom nem lakott.
+980:Ez a járműgyártó nem lakott.
+981:Ez az istálló nem lakott.
+982:Ez a sertéshizlalda nem lakott.
+983:Ez a tímárműhely nem lakott.
+984:Ez az őrtorony nem lakott.
+985:Ez a fegyverkovács nem lakott.
+986:Ez a fegyverműhely nem lakott.
+987:Ez a pincészet nem lakott.
+988:Ez a Favágóház nem lakott.
+989:%s kilépett és veszített
+990:A hoszt (%s) kilépett és veszített.
+991:Vissza
+992:Beállítás törlése
+993:Kiválasztott csapat 11
+994:Kiválasztott csapat 12
+995:Kiválasztott csapat 13
+996:Kiválasztott csapat 14
+997:Kiválasztott csapat 15
+998:Kiválasztott csapat 16
+999:Kiválasztott csapat 17
+1000:Kiválasztott csapat 18
+1001:Kiválasztott csapat19
+1002:Kiválasztott csapat 20
+1003: Út építés
+1004:Földművelés
+1005:Szőlőtelepítés
+1006:Épület kijelölés megszüntetése
+1007:Ugrás a következő azonos házra/egységre
+1008:Hibakeresés Ablak
+1009:Játékos Figyelése 1
+1010:Játékos Figyelése 2
+1011:Játékos Figyelése 3
+1012:Játékos Figyelése 4
+1013:Játékos Figyelése 5
+1014:Játékos Figyelése 6
+1015:Játékos Figyelése 7
+1016:Játékos Figyelése 8
+1017:Térkép Görgetése
+1018:Nézőmód/Visszajátszás gyorsbill.
+1019:%s elnémított. Többé nem tudsz üzenetet és pingeket küldeni neki.
+1020:Objektumok
+1021:Univerzális törlés
+1022:A favágód nem talál szabad helye fátültetni.
+1023:PT-
+1024:%s győzött!
+1025:%s nem csatlakozik a játékhoz.
+1026:Max Arany
+1027:A maximum behozható arany a városházába.
+1028:Csak ültet
+1029:A ház nyitása/zárása %s számára
+1030:Mind
+1031:Mind
+1032:Mind
+1033:Térkép Átnevezése
+1034:Szünet a Békeidő végénél
+1035:Játék idő
+1036:Név
+1037:Sereg Ereje
+1038:Minden katona
+1039:A diagram típusa
+1040:Mennyiség
+1041:GDP
+1042:Azonnaly
+1043:Teljes felszerelt
+1044:Legyőzött
+1045:Elvesztett
+1046:Vissza a játék eredményéhez
+1047:Játékosonként
+1048:Csapatonként
+1049:Több|statisztika
+1050:Vissza a szerkesztőbe
+1051:Vissza a térképszerkesztőbe
+1052:Biztos, hogy|ki akar lépni|ebből a viszajátszásból?
+1053:A térkép érvénytelen
+1054:Akivásaztott térkép érvénytelen. Kérem válasszon másikat!
+1055:A letöltött térkép fájljai megváltoztak
+1056:Kiválaszott letöltött térkép, amelynek fájljai megváltoztak. Kérem másolja először másolja ki a letöltött mappából
+1057:A térkép fájljai megváltoztak. Kérem jelölje ki újra.
+1058:Egér Előre Gomb
+1059:Egér Hátra Gomb
+1060:Mind
+1061:Univerzáils törlés
+1062:A mező tulajának mutatása
+1063:Rács mutatása
+1064:Kivágási pont
+1065:Jelölje ki a kivágási pontot. Kijelölhető a SHIFT+egér jobb gomb nyomvatartásával is.
+1066:Gyülekezési pont
+1067:A %s Gyülekezési pont beállítása. Kijelölhető a SHIFT+egér jobb gomb nyomvatartásával is.
+1068:Térkép átméretezése
+1069:Szélek mozgatása
+1070:Átméretezés és mentés
+1071:Térkép átméretezése és utána mentése
+1073:Biztos, hogy átméretezi a térképet?||Ez automatikus felülírja az aktuális méreteket
+1074:Átméretezés nem lehetséges||Először mentenie kell a térképet
+1075:A tárgy tulajának megváltoztatása
+1076:Gyors játék
+1077:Egyjátékos mód játszása a kiválasztott pályán
+1078:Kiválasztott játékos:
+1079:Válasszon játékost, hogy játszhasson
+1080:Játék mentés nélkül
+1081:Változtatások elvetése és játék kezdése a kiválasztott játékossal
+1082:Mentés és start
+1083:Térkép mentése és játék kezdése a kiválasztott játékossal
+1084:Barrakokban:
+1085:Városházában
+1086:Mező elforgatása
+1087:Objektumok palettája
+1088:Bezárás
+1089:Egységek/csapatok eltávolítása
+1090:Visszajátszás automatikusszünet
+1091:Autmatikus szünet a békeidő végénél
+1092:Pingek mutatása
+1093:Játékos pingek mutatása
+1094:Játékos elnémítása
+1095:Játékos Némításának felodása
+1096:Jelszó megjegyzése
+1097:Utoljára használt jelszó
+1098:Vissza az előző menübe
+1099:Igen
+1100:Nem
+1101:Törlés
+1102:Térkép
+1103:Visszajátszás
+1104:Játékosok
+1105:Csapatok
+1106:Játékos Figyelése 9
+1107:Játékos Figyelése 10
+1108:Játékos Figyelése 11
+1109:Játékos Figyelése 12
+1110:Az aktuális méret:|[ %d : %d ]
+1111:Az új méret:|[ %d : %d ]
+1112:Térkép Átméretezése
+1118:Többjátékos pályák
+1119:Zene kikapcsolása
+1120:Véletlenszerű zenelejátszás

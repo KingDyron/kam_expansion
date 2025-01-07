@@ -1,0 +1,892 @@
+   Timestamp    Elapsed     Delta  Thread    Description
+========================
+    Date: 2024.12.29
+========================
+19:36:10.423     0,002s       2ms   4440    Log is up and running. Game version: KaM Expansion: Co-op & World Update
+19:36:10.428     0,007s       5ms   4440    Game Load started
+19:36:10.438     0,017s      10ms   4440    Start loading 'GameApp settings' from 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'
+19:36:10.443     0,022s       5ms   4440    'GameApp settings' was successfully loaded from 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'
+19:36:10.461     0,040s       5ms   4440    Start saving 'GameApp settings' to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'
+00c84704 KaM_Expansion.exe KM_Settings        106 TKMSettings.SaveToDefaultFile
+00c847d7 KaM_Expansion.exe KM_Settings        113 TKMSettings.SaveToDefaultFile
+00c843d5 KaM_Expansion.exe KM_Settings         59 TKMSettings.Create
+00c84b12 KaM_Expansion.exe KM_SettingsXML      38 TKMSettingsXML.Create
+00c84e53 KaM_Expansion.exe KM_GameAppSettings  51 TKMGameAppSettings.Create
+00e9e278 KaM_Expansion.exe KM_Main            258 TKMMain.Start
+00e9e4fc KaM_Expansion.exe KM_Main            305 TKMMain.Start
+0111bb2b KaM_Expansion.exe KaM_Expansion      479 initialization
+0111bb5a KaM_Expansion.exe KaM_Expansion      482 initialization
+774c7ba7 KERNEL32.DLL                             BaseThreadInitThunk
+
+19:36:10.499     0,078s      38ms   4440    'GameApp settings' was successfully saved to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'
+19:36:10.527     0,106s      28ms   4440    Start loading 'Server settings' from 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+19:36:10.534     0,113s       7ms   4440    'Server settings' was successfully loaded from 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+19:36:10.544     0,123s      10ms   4440    Start saving 'Server settings' to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+00c84704 KaM_Expansion.exe KM_Settings       106 TKMSettings.SaveToDefaultFile
+00c847d7 KaM_Expansion.exe KM_Settings       113 TKMSettings.SaveToDefaultFile
+00c843d5 KaM_Expansion.exe KM_Settings        59 TKMSettings.Create
+00dc74f0 KaM_Expansion.exe KM_ServerSettings 109 TKMServerSettings.Create
+00e935f8 KaM_Expansion.exe KM_GameApp        213 TKMGameApp.Create
+00e93a4a KaM_Expansion.exe KM_GameApp        295 TKMGameApp.Create
+00e9f522 KaM_Expansion.exe KM_Main           635 TKMMain.ReinitRender
+00e9f72e KaM_Expansion.exe KM_Main           689 TKMMain.ReinitRender
+00e9e38e KaM_Expansion.exe KM_Main           281 TKMMain.Start
+00e9e4fc KaM_Expansion.exe KM_Main           305 TKMMain.Start
+0111bb2b KaM_Expansion.exe KaM_Expansion     479 initialization
+0111bb5a KaM_Expansion.exe KaM_Expansion     482 initialization
+774c7ba7 KERNEL32.DLL                            BaseThreadInitThunk
+
+19:36:10.559     0,138s      15ms   4440    'Server settings' was successfully saved to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+19:36:10.566     0,145s       6ms   4440    Init Render started
+19:36:10.697     0,276s     130ms   4440    GL_MAX_TEXTURE_SIZE = 32768
+19:36:10.704     0,283s       7ms   4440    GL_MAX_VIEWPORT_DIM = 32768
+                                      OpenGL Vendor: NVIDIA Corporation
+                                      OpenGL Renderer: NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2
+                                      OpenGL Version: 4.6.0 NVIDIA 560.81
+19:36:10.731     0,310s      27ms   4440    Init Render Done
+19:36:10.737     0,316s       6ms   4440    Resource loading state - None
+19:36:10.745     0,324s       8ms   4440    Reading palettes ... done
+19:36:10.753     0,332s       8ms   4440    Reading GUI.rx
+19:36:10.760     0,339s       7ms   4440    Load Sprites started
+19:36:10.767     0,346s       6ms   4440    GUI - 966
+19:36:10.785     0,364s      18ms   4440    Load Sprites Done
+19:36:10.821     0,400s      36ms   4440    Reading GUIMain.rx
+19:36:10.828     0,407s       7ms   4440    Load Sprites started
+19:36:10.835     0,414s       7ms   4440    GUIMain - 105
+19:36:10.885     0,464s      50ms   4440    Load Sprites Done
+19:36:10.940     0,519s      55ms   4440    Reading Tileset.rx
+19:36:10.947     0,526s       7ms   4440    Load Sprites started
+19:36:10.964     0,543s       6ms   4440    Tileset - 5449
+19:36:10.999     0,578s      34ms   4440    Load Sprites Done
+19:36:11.006     0,585s       7ms   4440    GenerateTerrainTransitions started. Legacy = False
+19:36:11.013     0,592s       7ms   4440    TexId = 5451 GenTilesCnt = 2100
+19:36:11.019     0,598s       6ms   4440    TexId = 6051; TexId - fGenTexIdStartI = 600; uniqueTex = 600; totalTex = 1350
+19:36:11.026     0,605s       7ms   4440    GeneratedMasks cnt = 20
+19:36:11.033     0,612s       7ms   4440    GenerateTerrainTransitions Done
+19:36:11.039     0,618s       6ms   4440    GenerateTerrainTransitions started. Legacy = True
+19:36:11.045     0,624s       6ms   4440    Legacy: TexId = 4999 GenTilesCntTemp = 2030
+19:36:11.051     0,630s       6ms   4440    TexId = 5463; TexId - fGenTexIdStartILegacy = 464; uniqueTex = 464; totalTex = 1044
+19:36:11.057     0,636s       6ms   4440    GeneratedMasks cnt = 16
+19:36:11.063     0,642s       6ms   4440    GenerateTerrainTransitions Done
+19:36:11.174     0,753s     111ms   4440    Load font started
+19:36:11.210     0,789s      36ms   4440    Font load took 36ms
+19:36:11.217     0,796s       7ms   4440    Read fonts is done
+19:36:11.234     0,813s      17ms   4440    ReadGFX is done
+19:36:11.241     0,820s       7ms   4440    Resource loading state - Menu
+19:36:11.248     0,827s       7ms   6056    OpenAL init started
+19:36:11.269     0,848s      21ms   4440    Music init done, 24 tracks found
+                                      Loading campaign images.rxx for HKS
+19:36:11.293     0,872s      24ms  18988    Custom - 1
+19:36:11.306     0,885s      13ms   4440    Main menu init done
+19:36:11.313     0,892s       7ms   6056    Pre-LoadSFX init ... done
+19:36:11.320     0,899s       7ms   6056    ALC_MONO_SOURCES 255
+19:36:11.326     0,906s       7ms   6056    ALC_STEREO_SOURCES 1
+19:36:11.332     0,912s       6ms   6056    OpenAL init done
+19:36:11.338     0,918s       6ms   4440    Check game folder 'E:\programowanie\projekty delphi\kam_expansion\' generic permissions: READ: granted; WRITE: granted; EXECUTE: granted; folder is writable: 
+19:36:11.345     0,925s       7ms   4440    LoadGameResources ... AlphaShadows: True. Forced: True
+19:36:11.352     0,931s       6ms   4440    TKMResSprites.LoadGameResources
+19:36:11.359     0,939s       8ms   4440    [AsyncGameResLoader Thread] Started
+19:36:11.365     0,945s       6ms   4440    Resource loading state - Game
+19:36:11.371     0,951s       6ms   4440    ToggleFullscreen
+19:36:11.378     0,957s       6ms   4440    Form Width/Height: 1040:853
+19:36:11.383     0,962s       5ms   4440    Panel Width/Height: 1024:814
+19:36:11.389     0,969s       7ms   4316    [AsyncGameResLoader Thread] RT = rxTrees Stage = lsLoad
+19:36:11.396     0,975s       5ms   4316    [AsyncGameResLoader Thread] Start Load RXX 'Trees.rxx'
+19:36:11.402     0,981s       6ms   4316    Load Sprites started
+19:36:11.410     0,990s       9ms   4316    Trees - 1216
+19:36:11.423     1,002s      12ms   4440    Saving dev settings to file 'kmr_dev.xml'
+                                      Loading campaign images.rxx for KSN
+19:36:11.444     1,024s      22ms  18988    Custom - 1
+19:36:11.450     1,029s       5ms   4440    Saving dev settings to file 'kmr_dev.xml'
+19:36:11.462     1,042s      12ms   4440    Game Load Done in 1065
+                                      Loading campaign images.rxx for KSO
+19:36:11.517     1,097s      55ms  18988    Custom - 1
+19:36:11.531     1,110s      13ms   4316    Load Sprites Done
+                                      Loading campaign images.rxx for KSU
+19:36:11.576     1,155s      44ms  18988    Custom - 1
+                                      Loading campaign images.rxx for OFL
+19:36:11.629     1,209s      54ms  18988    Custom - 1
+19:36:11.636     1,215s       6ms   4316    [AsyncGameResLoader Thread] DONE Load RXX 'Trees.rxa'
+19:36:11.643     1,222s       7ms   4440    [AsyncGameResLoader MainTh] [UpdateStateIdle] GenTextures RT = rxTrees Stage = lsGenMain
+19:36:11.654     1,234s      12ms   4440    [AsyncGameResLoader MainTh] [UpdateStateIdle] DONE
+19:36:11.661     1,240s       6ms   4316    [AsyncGameResLoader Thread] RT = rxTrees Stage = lsOverload
+19:36:11.667     1,246s       5ms   4316    [AsyncGameResLoader Thread] OverloadFromFolder RT = rxTrees
+19:36:11.674     1,253s       7ms   4316    [AsyncGameResLoader Thread] DONE OverloadFromFolder RT = rxTrees
+                                      Loading campaign images.rxx for OER
+19:36:11.692     1,271s      18ms  18988    Custom - 1
+19:36:11.698     1,277s       6ms   4440    [AsyncGameResLoader MainTh] [UpdateStateIdle] GenTextures RT = rxTrees Stage = lsGenOverload
+19:36:11.704     1,283s       6ms   4440    [AsyncGameResLoader MainTh] [UpdateStateIdle] DONE
+19:36:11.711     1,290s       7ms   4316    [AsyncGameResLoader Thread] RT = rxHouses Stage = lsLoad
+19:36:11.716     1,296s       6ms   4316    [AsyncGameResLoader Thread] Start Load RXX 'Houses.rxx'
+19:36:11.722     1,301s       5ms   4316    Load Sprites started
+19:36:11.729     1,309s       8ms   4316    Houses - 2709
+                                      Loading campaign images.rxx for TBK
+19:36:11.742     1,321s      12ms  18988    Custom - 1
+                                      Loading campaign images.rxx for TPR
+19:36:11.802     1,381s      60ms  18988    Custom - 1
+                                      Loading campaign images.rxx for TSK
+19:36:11.851     1,430s      49ms  18988    Custom - 1
+                                      Loading campaign images.rxx for TUA
+19:36:11.892     1,471s      41ms  18988    Custom - 1
+19:36:11.899     1,478s       7ms   4316    Load Sprites Done
+19:36:12.032     1,612s     134ms   4316    [AsyncGameResLoader Thread] DONE Load RXX 'Houses.rxa'
+19:36:12.041     1,620s       8ms   4440    [AsyncGameResLoader MainTh] [UpdateStateIdle] GenTextures RT = rxHouses Stage = lsGenMain
+                                      Loading campaign images.rxx for TMR
+19:36:12.057     1,636s      16ms  18988    Custom - 1
+19:36:12.063     1,642s       6ms   4440    [AsyncGameResLoader MainTh] [UpdateStateIdle] DONE
+19:36:12.069     1,649s       7ms   4316    [AsyncGameResLoader Thread] RT = rxHouses Stage = lsOverload
+19:36:12.076     1,655s       6ms   4316    [AsyncGameResLoader Thread] OverloadFromFolder RT = rxHouses
+19:36:12.174     1,753s      98ms   4316    [AsyncGameResLoader Thread] DONE OverloadFromFolder RT = rxHouses
+19:36:12.193     1,772s      19ms   4440    [AsyncGameResLoader MainTh] [UpdateStateIdle] GenTextures RT = rxHouses Stage = lsGenOverload
+19:36:12.199     1,779s       7ms   4440    [AsyncGameResLoader MainTh] [UpdateStateIdle] DONE
+19:36:12.206     1,785s       6ms   4316    [AsyncGameResLoader Thread] RT = rxUnits Stage = lsLoad
+19:36:12.213     1,792s       7ms   4316    [AsyncGameResLoader Thread] Start Load RXX 'Units.rxx'
+19:36:12.219     1,798s       6ms   4316    Load Sprites started
+19:36:12.225     1,805s       7ms   4316    Units - 14845
+19:36:12.469     2,048s     243ms  18868    Error while loading game info from save of unsupported version r15833
+19:36:12.479     2,058s      10ms  18868    Error while loading game info from save of unsupported version r15833
+19:36:12.485     2,064s       6ms  18868    Error while loading game info from save of unsupported version r15833
+19:36:12.492     2,071s       6ms  18868    Error while loading game info from save of unsupported version r15833
+19:36:12.500     2,079s       8ms  18868    Error while loading game info from save of unsupported version r15833
+19:36:12.506     2,085s       6ms  18868    Error while loading game info from save of unsupported version r15833
+19:36:12.514     2,093s       7ms  18868    Error while loading game info from save of unsupported version r15833
+19:36:12.521     2,100s       7ms  18868    Error while loading game info from save of unsupported version r15833
+19:36:12.528     2,108s       8ms  18868    Error while loading game info from save of unsupported version r15833
+19:36:12.534     2,115s       7ms  18868    Error loading save 'Bridge Disaster'
+19:36:12.542     2,121s       6ms  18868    Error loading save 'Bridge Disaster 2024-07-21 #1'
+19:36:12.549     2,128s       7ms  18868    Error loading save 'Bridge Disaster 2024-07-22 #1'
+19:36:12.555     2,134s       6ms  18868    Error loading save 'Bridge Disaster 2024-07-24 #1'
+19:36:12.563     2,142s       7ms  18868    Error while loading game info from save of unsupported version r15833
+19:36:12.570     2,149s       7ms  18868    Error loading save 'Nowa Misja 2024-08-11 #1'
+19:36:12.577     2,156s       6ms  18868    Error loading save 'Nowa Misja 2024-08-11 #2'
+19:36:12.584     2,164s       7ms  18868    Error loading save 'Nowa Misja 2024-08-11 #3'
+19:36:12.592     2,171s       7ms  18868    Error loading save 'TMR09 2024-08-05 #1'
+19:36:12.604     2,184s      12ms  18868    Error loading save 'TSK 1 2024-10-30 #2'
+19:36:12.612     2,192s       8ms  18868    Error loading save 'TSK 18 2024-10-30 #6'
+19:36:12.619     2,198s       6ms  18868    Error loading save 'TSK 2 2024-10-30 #5'
+19:36:12.626     2,206s       8ms  18868    Error loading save 'TSK 20 2024-10-30 #1'
+19:36:12.633     2,213s       6ms  18868    Error loading save 'TSK 3 2024-10-30 #3'
+19:36:12.642     2,221s       8ms  18868    Error loading save 'TSK 6 2024-10-30 #4'
+19:36:12.649     2,229s       8ms  18868    Error loading save 'TUA22'
+19:36:12.712     2,291s      62ms   4316    Load Sprites Done
+19:36:13.755     3,334s    1043ms   4440    LoadGameResources ... AlphaShadows: True. Forced: False
+19:36:13.764     3,343s       9ms   4440    TKMResSprites.LoadGameResources
+19:36:13.799     3,378s      35ms   4316    [AsyncGameResLoader Thread] DONE Load RXX 'Units.rxa'
+19:36:13.806     3,386s       8ms   4440    [AsyncGameResLoader MainTh] [LoadGameResources] GenTextures RT = rxUnits Stage = lsGenMain
+19:36:13.865     3,445s      59ms   4440    [AsyncGameResLoader MainTh] [LoadGameResources] DONE
+19:36:13.872     3,452s       7ms   4316    [AsyncGameResLoader Thread] RT = rxUnits Stage = lsOverload
+19:36:13.879     3,458s       6ms   4316    [AsyncGameResLoader Thread] OverloadFromFolder RT = rxUnits
+19:36:13.885     3,465s       7ms   4316    [AsyncGameResLoader Thread] DONE OverloadFromFolder RT = rxUnits
+19:36:13.892     3,471s       6ms   4440    [AsyncGameResLoader MainTh] [LoadGameResources] GenTextures RT = rxUnits Stage = lsGenOverload
+19:36:13.898     3,477s       6ms   4440    [AsyncGameResLoader Thread] Stopped
+19:36:13.905     3,484s       7ms   4440    [AsyncGameResLoader MainTh] [LoadGameResources] DONE
+19:36:13.911     3,490s       6ms   4440    Resource loading state - Game
+19:36:13.918     3,498s       8ms   4440    Saving dev settings to file 'kmr_dev.xml'
+19:36:13.964     3,543s      45ms   4440    <== Game creation is done ==>
+19:36:13.972     3,551s       8ms   4440    Loading game from: E:\programowanie\projekty delphi\kam_expansion\Saves\autosave01\autosave01.sav
+19:36:13.996     3,575s      24ms   4440    Terrain loaded
+19:36:14.082     3,661s      86ms   4440    Interface loaded
+19:36:14.089     3,669s       8ms   4440    Set game seed: 993037069
+19:36:14.138     3,717s      48ms   4440    Loading game ... done
+19:36:14.144     3,723s       6ms   4440    After game loading
+19:36:14.207     3,787s      64ms   4440    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+19:36:14.214     3,794s       7ms   4440    After game loading ... done
+19:36:27.339    16,918s   13124ms   4440    Exception on tick 96750: Range check error
+00b4ddd9 KaM_Expansion.exe KM_HandStats       1086 TKMHandStats.UpdateState
+00f4b84a KaM_Expansion.exe KM_Hand            3099 TKMHand.UpdateState
+00f18dc5 KaM_Expansion.exe KM_HandsCollection 1374 TKMHandsCollection.UpdateState
+0108c216 KaM_Expansion.exe KM_Game            3217 TKMGame.PlayGameTick
+0108c81a KaM_Expansion.exe KM_Game            3364 TKMGame.PlayNextTick
+0108b869 KaM_Expansion.exe KM_Game            3001 DoUpdateGame
+0108b96e KaM_Expansion.exe KM_Game            3025 TKMGame.UpdateGame
+00e97ab0 KaM_Expansion.exe KM_GameApp         1578 TKMGameApp.DoGameTick
+00e9f001 KaM_Expansion.exe KM_Main             552 TKMMain.DoIdle
+0096f6b5 KaM_Expansion.exe Vcl.Forms               TApplication.Idle
+0096e737 KaM_Expansion.exe Vcl.Forms               TApplication.HandleMessage
+0096ea69 KaM_Expansion.exe Vcl.Forms               TApplication.Run
+0111bb3b KaM_Expansion.exe KaM_Expansion       480 initialization
+0111bb5a KaM_Expansion.exe KaM_Expansion       482 initialization
+774c7ba7 KERNEL32.DLL                              BaseThreadInitThunk
+19:36:27.382    16,961s      43ms   4440    Exception occurred [ERangeError]: Range check error.
+                                      ================================================================================
+                                                                      START BUG REPORT                                
+                                      ================================================================================
+                                      date/time          : 2024-12-29, 19:36:27, 341ms
+computer name      : LAPTOP-5CTTUAIM
+user name          : szyby
+registered owner   : szybyc@wp.pl / HP Inc.
+operating system   : Windows 11 x64 build 22631
+system language    : Polish
+system up time     : 38 minutes 21 seconds
+program up time    : 17 seconds
+processors         : 12x 11th Gen Intel(R) Core(TM) i5-11400F @ 2.60GHz
+physical memory    : 23545/32650 MB (free/total)
+free disk space    : (C:) 165,83 GB (E:) 653,02 GB
+display mode       : 1920x1080, 32 bit
+process id         : $cb8
+allocated memory   : 497,13 MB
+largest free block : 1,65 GB
+executable         : KaM_Expansion.exe
+exec. date/time    : 2024-12-29 19:36
+version            : 1.0.0.0
+compiled with      : Delphi 11
+madExcept version  : 5.1.4
+callstack crc      : $bf5598bb, $ae8e1688, $66d08535
+exception number   : 1
+exception class    : ERangeError
+exception message  : Range check error.
+
+main thread ($1158):
+00b4ddd9 +18d KaM_Expansion.exe KM_HandStats       1086 +23 TKMHandStats.UpdateState
+00f4b84a +5fe KaM_Expansion.exe KM_Hand            3099 +97 TKMHand.UpdateState
+00f18dc5 +091 KaM_Expansion.exe KM_HandsCollection 1374  +7 TKMHandsCollection.UpdateState
+0108c216 +1ca KaM_Expansion.exe KM_Game            3217 +43 TKMGame.PlayGameTick
+0108c81a +09e KaM_Expansion.exe KM_Game            3364 +15 TKMGame.PlayNextTick
+0108b869 +009 KaM_Expansion.exe KM_Game            3001  +1 DoUpdateGame
+0108b96e +0ba KaM_Expansion.exe KM_Game            3025 +15 TKMGame.UpdateGame
+00e97ab0 +018 KaM_Expansion.exe KM_GameApp         1578  +2 TKMGameApp.DoGameTick
+00e9f001 +08d KaM_Expansion.exe KM_Main             552 +21 TKMMain.DoIdle
+0096f6b5 +099 KaM_Expansion.exe Vcl.Forms                   TApplication.Idle
+0096e737 +017 KaM_Expansion.exe Vcl.Forms                   TApplication.HandleMessage
+0096ea69 +0d1 KaM_Expansion.exe Vcl.Forms                   TApplication.Run
+0111bb3b +077 KaM_Expansion.exe KaM_Expansion       480  +7 initialization
+0111bb5a +096 KaM_Expansion.exe KaM_Expansion       482  +9 initialization
+774c7ba7 +017 KERNEL32.DLL                                  BaseThreadInitThunk
+
+thread $30a8:
+774c7ba7 +17 KERNEL32.DLL  BaseThreadInitThunk
+
+thread $13bc:
+774c7ba7 +17 KERNEL32.DLL  BaseThreadInitThunk
+
+thread $4904:
+774c7ba7 +17 KERNEL32.DLL  BaseThreadInitThunk
+
+thread $2b28:
+75f04152 +82 KERNELBASE.dll              WaitForSingleObjectEx
+75f040bd +0d KERNELBASE.dll              WaitForSingleObject
+00794add +0d KaM_Expansion.exe madExcept CallThreadProcSafe
+00794b42 +32 KaM_Expansion.exe madExcept ThreadExceptFrame
+00794bb8 +a8 KaM_Expansion.exe madExcept ThreadExceptFrame
+774c7ba7 +17 KERNEL32.DLL                BaseThreadInitThunk
+>> created by main thread ($1158) at:
+78f10276 +00 nvoglv32.dll
+
+thread $43b4:
+75f04f79 +189 KERNELBASE.dll              WaitForMultipleObjectsEx
+00794add +00d KaM_Expansion.exe madExcept CallThreadProcSafe
+00794b42 +032 KaM_Expansion.exe madExcept ThreadExceptFrame
+00794bb8 +0a8 KaM_Expansion.exe madExcept ThreadExceptFrame
+774c7ba7 +017 KERNEL32.DLL                BaseThreadInitThunk
+>> created by main thread ($1158) at:
+767a02ff +000 CRYPT32.dll
+
+thread $17d4:
+75f04f79 +189 KERNELBASE.dll              WaitForMultipleObjectsEx
+75f04dd3 +013 KERNELBASE.dll              WaitForMultipleObjects
+00794add +00d KaM_Expansion.exe madExcept CallThreadProcSafe
+00794b42 +032 KaM_Expansion.exe madExcept ThreadExceptFrame
+00794bb8 +0a8 KaM_Expansion.exe madExcept ThreadExceptFrame
+774c7ba7 +017 KERNEL32.DLL                BaseThreadInitThunk
+>> created by main thread ($1158) at:
+78f3ea4e +000 nvoglv32.dll
+
+thread $318:
+76072dbc +4c USER32.dll                  MsgWaitForMultipleObjectsEx
+7608245a +1a USER32.dll                  MsgWaitForMultipleObjects
+00794add +0d KaM_Expansion.exe madExcept CallThreadProcSafe
+00794b42 +32 KaM_Expansion.exe madExcept ThreadExceptFrame
+00794bb8 +a8 KaM_Expansion.exe madExcept ThreadExceptFrame
+774c7ba7 +17 KERNEL32.DLL                BaseThreadInitThunk
+>> created by thread $2b28 at:
+78f0a0f7 +00 nvoglv32.dll
+
+thread $3c14:
+774c7ba7 +17 KERNEL32.DLL  BaseThreadInitThunk
+
+thread $4f30:
+774c7ba7 +17 KERNEL32.DLL  BaseThreadInitThunk
+
+thread $4af0: <priority:15>
+75f04f79 +189 KERNELBASE.dll              WaitForMultipleObjectsEx
+75f04dd3 +013 KERNELBASE.dll              WaitForMultipleObjects
+00794add +00d KaM_Expansion.exe madExcept CallThreadProcSafe
+00794b42 +032 KaM_Expansion.exe madExcept ThreadExceptFrame
+00794bb8 +0a8 KaM_Expansion.exe madExcept ThreadExceptFrame
+774c7ba7 +017 KERNEL32.DLL                BaseThreadInitThunk
+>> created by main thread ($1158) at:
+7190f555 +000 dsound.DLL
+
+thread $4f6c: <priority:15>
+75f04f79 +189 KERNELBASE.dll              WaitForMultipleObjectsEx
+75f04dd3 +013 KERNELBASE.dll              WaitForMultipleObjects
+00794add +00d KaM_Expansion.exe madExcept CallThreadProcSafe
+00794b42 +032 KaM_Expansion.exe madExcept ThreadExceptFrame
+00794bb8 +0a8 KaM_Expansion.exe madExcept ThreadExceptFrame
+774c7ba7 +017 KERNEL32.DLL                BaseThreadInitThunk
+>> created by main thread ($1158) at:
+7190f555 +000 dsound.DLL
+
+thread $3f60: <priority:15>
+75f04152 +82 KERNELBASE.dll              WaitForSingleObjectEx
+75f040bd +0d KERNELBASE.dll              WaitForSingleObject
+779f857c +8c msvcrt.dll                  _endthreadex
+00794add +0d KaM_Expansion.exe madExcept CallThreadProcSafe
+00794b42 +32 KaM_Expansion.exe madExcept ThreadExceptFrame
+00794bb8 +a8 KaM_Expansion.exe madExcept ThreadExceptFrame
+774c7ba7 +17 KERNEL32.DLL                BaseThreadInitThunk
+>> created by main thread ($1158) at:
+779f845f +7f msvcrt.dll                  _beginthreadex
+
+thread $3510: <priority:2>
+75f04f79 +189 KERNELBASE.dll              WaitForMultipleObjectsEx
+75f04dd3 +013 KERNELBASE.dll              WaitForMultipleObjects
+779f857c +08c msvcrt.dll                  _endthreadex
+00794add +00d KaM_Expansion.exe madExcept CallThreadProcSafe
+00794b42 +032 KaM_Expansion.exe madExcept ThreadExceptFrame
+00794bb8 +0a8 KaM_Expansion.exe madExcept ThreadExceptFrame
+774c7ba7 +017 KERNEL32.DLL                BaseThreadInitThunk
+>> created by main thread ($1158) at:
+779f845f +07f msvcrt.dll                  _beginthreadex
+
+thread $1004: <priority:15>
+75f04152 +82 KERNELBASE.dll              WaitForSingleObjectEx
+779f83cc +9c msvcrt.dll                  _endthread
+00794add +0d KaM_Expansion.exe madExcept CallThreadProcSafe
+00794b42 +32 KaM_Expansion.exe madExcept ThreadExceptFrame
+00794bb8 +a8 KaM_Expansion.exe madExcept ThreadExceptFrame
+774c7ba7 +17 KERNEL32.DLL                BaseThreadInitThunk
+>> created by main thread ($1158) at:
+779f8291 +71 msvcrt.dll                  _beginthread
+
+thread $4d10: <priority:14>
+75f04f79 +189 KERNELBASE.dll              WaitForMultipleObjectsEx
+75f04dd3 +013 KERNELBASE.dll              WaitForMultipleObjects
+00794add +00d KaM_Expansion.exe madExcept CallThreadProcSafe
+00794b42 +032 KaM_Expansion.exe madExcept ThreadExceptFrame
+00794bb8 +0a8 KaM_Expansion.exe madExcept ThreadExceptFrame
+774c7ba7 +017 KERNEL32.DLL                BaseThreadInitThunk
+>> created by thread $17a8 at:
+7192970d +000 dsound.DLL
+
+thread $40d4: <priority:15>
+00794add +0d KaM_Expansion.exe madExcept CallThreadProcSafe
+00794b42 +32 KaM_Expansion.exe madExcept ThreadExceptFrame
+00794bb8 +a8 KaM_Expansion.exe madExcept ThreadExceptFrame
+774c7ba7 +17 KERNEL32.DLL                BaseThreadInitThunk
+>> created by thread $17a8 at:
+748f6555 +00 winmm.dll
+
+thread $1e70 (TKMWorkerThread):
+75f04152 +082 KERNELBASE.dll                            WaitForSingleObjectEx
+75f040bd +00d KERNELBASE.dll                            WaitForSingleObject
+0074062e +002 KaM_Expansion.exe System.SysUtils         WaitForSyncWaitObj
+0074081f +01f KaM_Expansion.exe System.SysUtils         WaitOrSignalObj
+006eb6b1 +065 KaM_Expansion.exe System           23  +0 TMonitor.Wait
+006eb6ee +0a2 KaM_Expansion.exe System           23  +0 TMonitor.Wait
+006eb726 +022 KaM_Expansion.exe System           23  +0 TMonitor.Wait
+009ac481 +0dd KaM_Expansion.exe KM_WorkerThread 153 +27 TKMWorkerThread.Execute
+009ac4d9 +135 KaM_Expansion.exe KM_WorkerThread 159 +33 TKMWorkerThread.Execute
+009ac553 +1af KaM_Expansion.exe KM_WorkerThread 175 +49 TKMWorkerThread.Execute
+00794bf7 +02b KaM_Expansion.exe madExcept               HookedTThreadExecute
+00794c62 +096 KaM_Expansion.exe madExcept               HookedTThreadExecute
+0081cf71 +049 KaM_Expansion.exe System.Classes          ThreadProc
+0081cfd4 +0ac KaM_Expansion.exe System.Classes          ThreadProc
+006ec4b4 +028 KaM_Expansion.exe System           23  +0 ThreadWrapper
+00794add +00d KaM_Expansion.exe madExcept               CallThreadProcSafe
+00794b42 +032 KaM_Expansion.exe madExcept               ThreadExceptFrame
+00794bb8 +0a8 KaM_Expansion.exe madExcept               ThreadExceptFrame
+774c7ba7 +017 KERNEL32.DLL                              BaseThreadInitThunk
+>> created by main thread ($1158) at:
+0081d038 +018 KaM_Expansion.exe System.Classes          TThread.Create
+
+thread $5d4 (TKMWorkerThread):
+75f04152 +082 KERNELBASE.dll                            WaitForSingleObjectEx
+75f040bd +00d KERNELBASE.dll                            WaitForSingleObject
+0074062e +002 KaM_Expansion.exe System.SysUtils         WaitForSyncWaitObj
+0074081f +01f KaM_Expansion.exe System.SysUtils         WaitOrSignalObj
+006eb6b1 +065 KaM_Expansion.exe System           23  +0 TMonitor.Wait
+006eb6ee +0a2 KaM_Expansion.exe System           23  +0 TMonitor.Wait
+006eb726 +022 KaM_Expansion.exe System           23  +0 TMonitor.Wait
+009ac481 +0dd KaM_Expansion.exe KM_WorkerThread 153 +27 TKMWorkerThread.Execute
+009ac4d9 +135 KaM_Expansion.exe KM_WorkerThread 159 +33 TKMWorkerThread.Execute
+009ac553 +1af KaM_Expansion.exe KM_WorkerThread 175 +49 TKMWorkerThread.Execute
+00794bf7 +02b KaM_Expansion.exe madExcept               HookedTThreadExecute
+00794c62 +096 KaM_Expansion.exe madExcept               HookedTThreadExecute
+0081cf71 +049 KaM_Expansion.exe System.Classes          ThreadProc
+0081cfd4 +0ac KaM_Expansion.exe System.Classes          ThreadProc
+006ec4b4 +028 KaM_Expansion.exe System           23  +0 ThreadWrapper
+00794add +00d KaM_Expansion.exe madExcept               CallThreadProcSafe
+00794b42 +032 KaM_Expansion.exe madExcept               ThreadExceptFrame
+00794bb8 +0a8 KaM_Expansion.exe madExcept               ThreadExceptFrame
+774c7ba7 +017 KERNEL32.DLL                              BaseThreadInitThunk
+>> created by main thread ($1158) at:
+0081d038 +018 KaM_Expansion.exe System.Classes          TThread.Create
+
+thread $be4 (TKMWorkerThread):
+75f04152 +082 KERNELBASE.dll                            WaitForSingleObjectEx
+75f040bd +00d KERNELBASE.dll                            WaitForSingleObject
+0074062e +002 KaM_Expansion.exe System.SysUtils         WaitForSyncWaitObj
+0074081f +01f KaM_Expansion.exe System.SysUtils         WaitOrSignalObj
+006eb6b1 +065 KaM_Expansion.exe System           23  +0 TMonitor.Wait
+006eb6ee +0a2 KaM_Expansion.exe System           23  +0 TMonitor.Wait
+006eb726 +022 KaM_Expansion.exe System           23  +0 TMonitor.Wait
+009ac481 +0dd KaM_Expansion.exe KM_WorkerThread 153 +27 TKMWorkerThread.Execute
+009ac4d9 +135 KaM_Expansion.exe KM_WorkerThread 159 +33 TKMWorkerThread.Execute
+009ac553 +1af KaM_Expansion.exe KM_WorkerThread 175 +49 TKMWorkerThread.Execute
+00794bf7 +02b KaM_Expansion.exe madExcept               HookedTThreadExecute
+00794c62 +096 KaM_Expansion.exe madExcept               HookedTThreadExecute
+0081cf71 +049 KaM_Expansion.exe System.Classes          ThreadProc
+0081cfd4 +0ac KaM_Expansion.exe System.Classes          ThreadProc
+006ec4b4 +028 KaM_Expansion.exe System           23  +0 ThreadWrapper
+00794add +00d KaM_Expansion.exe madExcept               CallThreadProcSafe
+00794b42 +032 KaM_Expansion.exe madExcept               ThreadExceptFrame
+00794bb8 +0a8 KaM_Expansion.exe madExcept               ThreadExceptFrame
+774c7ba7 +017 KERNEL32.DLL                              BaseThreadInitThunk
+>> created by main thread ($1158) at:
+0081d038 +018 KaM_Expansion.exe System.Classes          TThread.Create
+
+thread $311c (TKMWorkerThread):
+75f04152 +082 KERNELBASE.dll                            WaitForSingleObjectEx
+75f040bd +00d KERNELBASE.dll                            WaitForSingleObject
+0074062e +002 KaM_Expansion.exe System.SysUtils         WaitForSyncWaitObj
+0074081f +01f KaM_Expansion.exe System.SysUtils         WaitOrSignalObj
+006eb6b1 +065 KaM_Expansion.exe System           23  +0 TMonitor.Wait
+006eb6ee +0a2 KaM_Expansion.exe System           23  +0 TMonitor.Wait
+006eb726 +022 KaM_Expansion.exe System           23  +0 TMonitor.Wait
+009ac481 +0dd KaM_Expansion.exe KM_WorkerThread 153 +27 TKMWorkerThread.Execute
+009ac4d9 +135 KaM_Expansion.exe KM_WorkerThread 159 +33 TKMWorkerThread.Execute
+009ac553 +1af KaM_Expansion.exe KM_WorkerThread 175 +49 TKMWorkerThread.Execute
+00794bf7 +02b KaM_Expansion.exe madExcept               HookedTThreadExecute
+00794c62 +096 KaM_Expansion.exe madExcept               HookedTThreadExecute
+0081cf71 +049 KaM_Expansion.exe System.Classes          ThreadProc
+0081cfd4 +0ac KaM_Expansion.exe System.Classes          ThreadProc
+006ec4b4 +028 KaM_Expansion.exe System           23  +0 ThreadWrapper
+00794add +00d KaM_Expansion.exe madExcept               CallThreadProcSafe
+00794b42 +032 KaM_Expansion.exe madExcept               ThreadExceptFrame
+00794bb8 +0a8 KaM_Expansion.exe madExcept               ThreadExceptFrame
+774c7ba7 +017 KERNEL32.DLL                              BaseThreadInitThunk
+>> created by main thread ($1158) at:
+0081d038 +018 KaM_Expansion.exe System.Classes          TThread.Create
+
+thread $35cc:
+75f04f79 +189 KERNELBASE.dll              WaitForMultipleObjectsEx
+00794add +00d KaM_Expansion.exe madExcept CallThreadProcSafe
+00794b42 +032 KaM_Expansion.exe madExcept ThreadExceptFrame
+00794bb8 +0a8 KaM_Expansion.exe madExcept ThreadExceptFrame
+774c7ba7 +017 KERNEL32.DLL                BaseThreadInitThunk
+>> created by main thread ($1158) at:
+7588587e +000 combase.dll
+
+thread $2f18:
+76072dbc +4c USER32.dll                  MsgWaitForMultipleObjectsEx
+00794add +0d KaM_Expansion.exe madExcept CallThreadProcSafe
+00794b42 +32 KaM_Expansion.exe madExcept ThreadExceptFrame
+00794bb8 +a8 KaM_Expansion.exe madExcept ThreadExceptFrame
+774c7ba7 +17 KERNEL32.DLL                BaseThreadInitThunk
+>> created by main thread ($1158) at:
+75ab628b +00 shcore.dll
+
+thread $2df0:
+774c7ba7 +17 KERNEL32.DLL  BaseThreadInitThunk
+
+modules:
+006e0000 KaM_Expansion.exe               1.0.0.0             E:\programowanie\projekty delphi\kam_expansion
+020c0000 ogg.dll                                             E:\programowanie\projekty delphi\kam_expansion
+020d0000 vorbis.dll                                          E:\programowanie\projekty delphi\kam_expansion
+10000000 vorbisfile.dll                                      E:\programowanie\projekty delphi\kam_expansion
+11000000 bass.dll                        2.4.8.1             E:\programowanie\projekty delphi\kam_expansion
+13a00000 OpenAL32.dll                    6.14.357.24         C:\WINDOWS\SYSTEM32
+166f0000 wrap_oal.dll                    2.2.0.5             C:\WINDOWS\SYSTEM32
+50240000 libvlccore.dll                  3.0.8.0             E:\programowanie\projekty delphi\kam_expansion\lib\vlc
+50b40000 windows.staterepositorycore.dll 6.2.22621.4036      C:\WINDOWS\SYSTEM32
+50b60000 Windows.System.Launcher.dll     6.2.22621.4541      C:\Windows\System32
+50d00000 FaultRep.dll                    6.2.22621.4541      C:\WINDOWS\SYSTEM32
+53ea0000 AppXDeploymentClient.dll        6.2.22621.4541      C:\Windows\System32
+55320000 Windows.StateRepositoryPS.dll   6.2.22621.4036      C:\Windows\System32
+57c00000 nvgpucomp32.dll                 32.0.15.6081        C:\WINDOWS\System32\DriverStore\FileRepository\nvmdi.inf_amd64_2e01d57d451be19f
+60230000 CoreUIComponents.dll            6.2.22621.4541      C:\WINDOWS\SYSTEM32
+6bf40000 msvcp110_win.dll                6.2.22621.1         C:\Windows\System32
+6f350000 opengl32.dll                    6.2.22621.4541      C:\WINDOWS\SYSTEM32
+70880000 CoreMessaging.dll               6.2.22621.4541      C:\WINDOWS\SYSTEM32
+71280000 mssprxy.dll                     7.0.22621.4249      C:\WINDOWS\system32
+71290000 Windows.FileExplorer.Common.dll 6.2.22621.4541      C:\Windows\System32
+71320000 resourcepolicyclient.dll        6.2.22621.3527      C:\WINDOWS\SYSTEM32
+71330000 libvlc.dll                      3.0.8.0             E:\programowanie\projekty delphi\kam_expansion\lib\vlc
+71380000 midimap.dll                     6.2.22621.2506      C:\WINDOWS\SYSTEM32
+71390000 MSACM32.dll                     6.2.22621.1         C:\WINDOWS\SYSTEM32
+713b0000 msacm32.drv                     6.2.22621.2506      C:\WINDOWS\SYSTEM32
+713c0000 AUDIOSES.DLL                    6.2.22621.4541      C:\WINDOWS\SYSTEM32
+71630000 AVRT.dll                        6.2.22621.2506      C:\WINDOWS\SYSTEM32
+71640000 ksuser.dll                      6.2.22621.1         C:\WINDOWS\SYSTEM32
+71650000 wdmaud.drv                      6.2.22621.3527      C:\WINDOWS\SYSTEM32
+716b0000 MMDevApi.dll                    6.2.22621.4111      C:\WINDOWS\System32
+71800000 msdmo.dll                       6.2.22621.1         C:\WINDOWS\SYSTEM32
+71810000 ResampleDmo.DLL                 6.2.22621.2506      C:\WINDOWS\SYSTEM32
+718b0000 winmmbase.dll                   6.2.22621.1         C:\WINDOWS\SYSTEM32
+718d0000 dsound.DLL                      6.2.22621.3527      C:\WINDOWS\SYSTEM32
+719c0000 powrprof.dll                    6.2.22621.3958      C:\WINDOWS\SYSTEM32
+71a10000 winhttp.dll                     6.2.22621.4541      C:\WINDOWS\SYSTEM32
+72570000 drvstore.dll                    6.2.22621.4541      C:\WINDOWS\SYSTEM32
+72d40000 winspool.drv                    6.2.22621.3810      C:\WINDOWS\SYSTEM32
+72de0000 dxcore.dll                      6.2.22621.4541      C:\WINDOWS\SYSTEM32
+72fc0000 cryptnet.dll                    6.2.22621.1         C:\WINDOWS\SYSTEM32
+73020000 rsaenh.dll                      6.2.22621.4249      C:\WINDOWS\system32
+73050000 CRYPTSP.dll                     6.2.22621.3672      C:\WINDOWS\SYSTEM32
+73070000 devobj.dll                      6.2.22621.2506      C:\WINDOWS\SYSTEM32
+730a0000 TextShaping.dll                 6.2.22621.4541      C:\WINDOWS\SYSTEM32
+73140000 textinputframework.dll          6.2.22621.4541      C:\WINDOWS\SYSTEM32
+737b0000 WINSTA.dll                      6.2.22621.4541      C:\WINDOWS\SYSTEM32
+73850000 nvspcap.dll                     11.0.1.163          C:\WINDOWS\system32
+73c60000 wldp.dll                        6.2.22621.4541      C:\WINDOWS\SYSTEM32
+73cd0000 SHFolder.dll                    6.2.22621.1         C:\WINDOWS\SYSTEM32
+73d30000 cfgmgr32.dll                    6.2.22621.2506      C:\WINDOWS\SYSTEM32
+73e20000 iertutil.dll                    11.0.22621.4541     C:\Windows\System32
+74060000 srvcli.dll                      6.2.22621.4249      C:\Windows\System32
+740b0000 urlmon.dll                      11.0.22621.4169     C:\Windows\System32
+74280000 propsys.dll                     7.0.22621.4249      C:\WINDOWS\system32
+74350000 SspiCli.dll                     6.2.22621.3810      C:\WINDOWS\SYSTEM32
+74380000 msasn1.dll                      6.2.22621.2506      C:\WINDOWS\SYSTEM32
+743d0000 uxtheme.dll                     6.2.22621.4541      C:\WINDOWS\system32
+74460000 COMCTL32.dll                    6.10.22621.4541     C:\WINDOWS\WinSxS\x86_microsoft.windows.common-controls_6595b64144ccf1df_6.0.22621.4541_none_6ebe089c8800e98b
+74690000 UMPDC.dll                       6.2.22621.1         C:\WINDOWS\SYSTEM32
+746b0000 GLU32.dll                       6.2.22621.2506      C:\WINDOWS\SYSTEM32
+748a0000 ntmarta.dll                     6.2.22621.1         C:\WINDOWS\SYSTEM32
+748f0000 winmm.dll                       6.2.22621.4541      C:\WINDOWS\SYSTEM32
+74940000 dwmapi.dll                      6.2.22621.4541      C:\WINDOWS\SYSTEM32
+74970000 wsock32.dll                     6.2.22621.1         C:\WINDOWS\SYSTEM32
+74b70000 kernel.appcore.dll              6.2.22621.3958      C:\WINDOWS\SYSTEM32
+74b90000 netutils.dll                    6.2.22621.2506      C:\Windows\System32
+74cc0000 version.dll                     6.2.22621.1         C:\WINDOWS\SYSTEM32
+74e50000 profapi.dll                     6.2.22621.4541      C:\WINDOWS\SYSTEM32
+74e80000 wintypes.dll                    6.2.22621.3810      C:\WINDOWS\SYSTEM32
+74f50000 windows.storage.dll             6.2.22621.4601      C:\WINDOWS\SYSTEM32
+756f0000 CRYPTBASE.DLL                   6.2.22621.1         C:\WINDOWS\SYSTEM32
+75700000 wtsapi32.dll                    6.2.22621.1         C:\WINDOWS\SYSTEM32
+75710000 USERENV.dll                     6.2.22621.3527      C:\WINDOWS\SYSTEM32
+757f0000 combase.dll                     6.2.22621.4601      C:\WINDOWS\System32
+75a80000 shcore.dll                      6.2.22621.4541      C:\WINDOWS\System32
+75b50000 RPCRT4.dll                      6.2.22621.4249      C:\WINDOWS\System32
+75c70000 clbcatq.dll                     2001.12.10941.16384 C:\WINDOWS\System32
+75d00000 comdlg32.dll                    6.2.22621.4541      C:\WINDOWS\System32
+75dc0000 KERNELBASE.dll                  6.2.22621.4601      C:\WINDOWS\System32
+76050000 USER32.dll                      6.2.22621.4601      C:\WINDOWS\System32
+76200000 SETUPAPI.dll                    6.2.22621.2506      C:\WINDOWS\System32
+76640000 MSCTF.dll                       6.2.22621.4601      C:\WINDOWS\System32
+76750000 GDI32.dll                       6.2.22621.4036      C:\WINDOWS\System32
+76780000 CRYPT32.dll                     6.2.22621.4541      C:\WINDOWS\System32
+76a80000 SHELL32.dll                     6.2.22621.4541      C:\WINDOWS\System32
+77130000 ole32.dll                       6.2.22621.3958      C:\WINDOWS\System32
+77290000 WINTRUST.dll                    6.2.22621.4541      C:\WINDOWS\System32
+772f0000 ucrtbase.dll                    6.2.22621.3593      C:\WINDOWS\System32
+77410000 oleaut32.dll                    6.2.22621.3672      C:\WINDOWS\System32
+774b0000 KERNEL32.DLL                    6.2.22621.4391      C:\WINDOWS\System32
+775a0000 coml2.dll                       6.2.22621.3672      C:\WINDOWS\System32
+77610000 PSAPI.dll                       6.2.22621.1         C:\WINDOWS\System32
+77620000 bcrypt.dll                      6.2.22621.2506      C:\WINDOWS\System32
+77640000 sechost.dll                     6.2.22621.4541      C:\WINDOWS\System32
+776d0000 shlwapi.dll                     6.2.22621.4541      C:\WINDOWS\System32
+77720000 msvcp_win.dll                   6.2.22621.3374      C:\WINDOWS\System32
+777a0000 IMM32.DLL                       6.2.22621.3374      C:\WINDOWS\System32
+777d0000 bcryptPrimitives.dll            6.2.22621.4317      C:\WINDOWS\System32
+77840000 gdi32full.dll                   6.2.22621.4601      C:\WINDOWS\System32
+77930000 WS2_32.dll                      6.2.22621.1         C:\WINDOWS\System32
+77990000 msvcrt.dll                      7.0.22621.2506      C:\WINDOWS\System32
+77a60000 imagehlp.dll                    6.2.22621.1         C:\WINDOWS\System32
+77a80000 advapi32.dll                    6.2.22621.4391      C:\WINDOWS\System32
+77b00000 win32u.dll                      6.2.22621.4460      C:\WINDOWS\System32
+77b30000 ntdll.dll                       6.2.22621.4541      C:\WINDOWS\SYSTEM32
+77ef0000 Windows.UI.dll                  6.2.22621.4541      C:\Windows\System32
+78700000 nvoglv32.dll                    32.0.15.6081        C:\WINDOWS\System32\DriverStore\FileRepository\nvmdi.inf_amd64_2e01d57d451be19f
+
+hardware:
++ {1ed2bbf9-11f0-4084-b21f-ad83a8e6dcdc}
+  - Fax
+  - G³ówna kolejka wydruku
+  - HP Smart Printing
+  - Microsoft Print to PDF
+  - Microsoft XPS Document Writer
++ {36fc9e60-c465-11cf-8056-444553540000}
+  - G³ówny koncentrator USB (USB 3.0)
+  - Intel(R) USB 3.20 eXtensible Host Controller - 1.20 (Microsoft)
+  - Rodzajowy koncentrator USB
+  - Rodzajowy koncentrator USB
+  - Rodzajowy koncentrator USB SuperSpeed
+  - Urz¹dzenie kompozytowe USB
+  - Urz¹dzenie kompozytowe USB
++ {4d36e966-e325-11ce-bfc1-08002be10318}
+  - Komputer oparty na architekturze x64 obs³uguj¹cy interfejs ACPI
+  - Micro-Star International Co., Ltd. MS-7D15
++ {4d36e967-e325-11ce-bfc1-08002be10318}
+  - KXG60ZNV512G KIOXIA
+  - Samsung SSD 980 1TB
++ {4d36e968-e325-11ce-bfc1-08002be10318}
+  - NVIDIA GeForce RTX 3060 Ti (driver 32.0.15.6081)
++ {4d36e96a-e325-11ce-bfc1-08002be10318}
+  - Standardowy kontroler SATA AHCI
++ {4d36e96b-e325-11ce-bfc1-08002be10318}
+  - Urz¹dzenie klawiatury HID
+  - Urz¹dzenie klawiatury HID
++ {4d36e96c-e325-11ce-bfc1-08002be10318}
+  - NVIDIA High Definition Audio (driver 1.4.0.1)
+  - NVIDIA Virtual Audio Device (Wave Extensible) (WDM) (driver 4.65.0.3)
+  - Urz¹dzenie zgodne ze standardem High Definition Audio
++ {4d36e96e-e325-11ce-bfc1-08002be10318}
+  - Generic Monitor (Smart TV)
++ {4d36e96f-e325-11ce-bfc1-08002be10318}
+  - Mysz zgodna z HID
++ {4d36e972-e325-11ce-bfc1-08002be10318}
+  - Microsoft Kernel Debug Network Adapter
+  - Realtek Gaming 2.5GbE Family Controller (driver 10.71.312.2024)
+  - WAN Miniport (IKEv2)
+  - WAN Miniport (IP)
+  - WAN Miniport (IPv6)
+  - WAN Miniport (L2TP)
+  - WAN Miniport (Network Monitor)
+  - WAN Miniport (PPPOE)
+  - WAN Miniport (PPTP)
+  - WAN Miniport (SSTP)
++ {4d36e97b-e325-11ce-bfc1-08002be10318}
+  - Kontroler miejsc do magazynowania firmy Microsoft
+  - Standardowy kontroler NVM Express
+  - Standardowy kontroler NVM Express
+  - Xvdd SCSI Miniport (driver 10.0.22020.1)
++ {4d36e97d-e325-11ce-bfc1-08002be10318}
+  - Agregator procesora systemu ACPI
+  - Alarm wznawiania ACPI
+  - AMD Crash Defender (driver 22.20.0.2)
+  - Aplikacja zbieraj¹ca informacje o oprogramowaniu urz¹dzeñ Plug and Play
+  - Ch³odzenie ACPI
+  - Ch³odzenie ACPI
+  - Ch³odzenie ACPI
+  - Ch³odzenie ACPI
+  - Ch³odzenie ACPI
+  - Czasomierz systemowy
+  - Czasomierz zdarzeniowy wysokiej precyzji
+  - Intel(R) GNA - 4C11 (driver 10.1.41.5)
+  - Intel(R) Host Bridge/DRAM Registers - 4C53 (driver 10.1.41.5)
+  - Intel(R) LPC Controller (B560) - 4387 (driver 10.1.34.10)
+  - Intel(R) Management Engine Interface #1 (driver 2131.1.4.0)
+  - Intel(R) PCI Express Root Port #21 - 43C4 (driver 10.1.34.10)
+  - Intel(R) PCI Express Root Port #6 - 43BD (driver 10.1.34.10)
+  - Intel(R) PCI Express Root Port #9 - 43B0 (driver 10.1.34.10)
+  - Intel(R) PEG10 - 4C01 (driver 10.1.41.5)
+  - Intel(R) Serial IO GPIO Host Controller - INT34C6 (driver 30.100.2051.37)
+  - Intel(R) Shared SRAM - 43EF (driver 10.1.34.10)
+  - Intel(R) SPI (flash) Controller - 43A4 (driver 10.1.34.10)
+  - Intel(R) Watchdog Timer Driver (Intel(R) WDT) (driver 11.7.0.1000)
+  - Interfejs zarz¹dzania Microsoft Windows dla ACPI
+  - Interfejs zarz¹dzania Microsoft Windows dla ACPI
+  - Interfejs zarz¹dzania Microsoft Windows dla ACPI
+  - Interfejs zarz¹dzania Microsoft Windows dla ACPI
+  - Interfejs zarz¹dzania Microsoft Windows dla ACPI
+  - Kontroler zgodny ze standardem High Definition Audio
+  - Kontroler zgodny ze standardem High Definition Audio
+  - Magistrala readresatora urz¹dzeñ us³ug pulpitu zdalnego
+  - Mened¿er woluminów
+  - Modu³ wyliczaj¹cy dysku wirtualnego firmy Microsoft
+  - Modu³ wyliczaj¹cy magistrali g³ównej UMBus
+  - Modu³ wyliczaj¹cy magistrali kompozytowej
+  - Modu³ wyliczaj¹cy wirtualnej karty sieciowej NDIS
+  - Podstawowy sterownik ekranu firmy Microsoft
+  - Podstawowy sterownik renderowania firmy Microsoft
+  - Procesor numeryczny
+  - Programowalny kontroler przerwañ
+  - Przycisk ACPI Fixed Feature
+  - Przycisk uœpienia ACPI
+  - Przycisk zasilania ACPI
+  - Serwer PCI funkcji Microsoft Hyper-V
+  - Sterownik BIOS zarz¹dzania systemem firmy Microsoft
+  - Sterownik infrastruktury wirtualizacji funkcji Microsoft Hyper-V
+  - Sterownik wybierania Ÿród³a ³adowania
+  - Strefa termiczna ACPI
+  - Synaptics SMBus Driver (driver 19.5.19.95)
+  - System zgodny ze standardem Microsoft ACPI
+  - System zgodny ze standardem Microsoft UEFI
+  - Us³uga hosta funkcji hypervisor firmy Microsoft
+  - Wtyczka aparatu zasilania firmy Intel(R)
+  - Zasoby p³yty g³ównej
+  - Zasoby p³yty g³ównej
+  - Zasoby p³yty g³ównej
+  - Zasoby p³yty g³ównej
+  - Zasoby p³yty g³ównej
+  - Zasoby p³yty g³ównej
+  - Zasoby p³yty g³ównej
+  - Zasoby p³yty g³ównej
+  - Zespó³ g³ówny PCI Express
++ {50127dc3-0f36-415e-a6cc-4cb3be910b65}
+  - 11th Gen Intel(R) Core(TM) i5-11400F @ 2.60GHz
+  - 11th Gen Intel(R) Core(TM) i5-11400F @ 2.60GHz
+  - 11th Gen Intel(R) Core(TM) i5-11400F @ 2.60GHz
+  - 11th Gen Intel(R) Core(TM) i5-11400F @ 2.60GHz
+  - 11th Gen Intel(R) Core(TM) i5-11400F @ 2.60GHz
+  - 11th Gen Intel(R) Core(TM) i5-11400F @ 2.60GHz
+  - 11th Gen Intel(R) Core(TM) i5-11400F @ 2.60GHz
+  - 11th Gen Intel(R) Core(TM) i5-11400F @ 2.60GHz
+  - 11th Gen Intel(R) Core(TM) i5-11400F @ 2.60GHz
+  - 11th Gen Intel(R) Core(TM) i5-11400F @ 2.60GHz
+  - 11th Gen Intel(R) Core(TM) i5-11400F @ 2.60GHz
+  - 11th Gen Intel(R) Core(TM) i5-11400F @ 2.60GHz
++ {533c5b84-ec70-11d2-9505-00c04f79deaf}
+  - Rodzajowa kopia w tle woluminów
+  - Rodzajowa kopia w tle woluminów
+  - Rodzajowa kopia w tle woluminów
+  - Rodzajowa kopia w tle woluminów
+  - Rodzajowa kopia w tle woluminów
++ {5c4c3332-344d-483c-8739-259e934c9cc8}
+  - Intel(R) Dynamic Application Loader Host Interface (driver 1.44.2023.710)
+  - Intel(R) iCLS Client (driver 1.71.99.0)
+  - Intel(R) Management Engine WMI Provider (driver 2408.5.4.0)
++ {62f9c741-b25a-46ce-b54c-9bccce08b6f2}
+  - LAPTOP-5CTTUAIM: szybyc@wp.pl:
+  - Microsoft Device Association Root Enumerator
+  - Microsoft Radio Device Enumeration Bus
+  - Microsoft RRAS Root Enumerator
+  - POLSATBOX4KLITE-
+  - Syntezator SW Microsoft GS Wavetable
++ {745a17a0-74d3-11d0-b6fe-00a0c90f57da}
+  - Kontroler systemu zgodny z HID
+  - Kontroler systemu zgodny z HID
+  - Urz¹dzenie steruj¹ce u¿ytkownika zgodne z HID
+  - Urz¹dzenie steruj¹ce u¿ytkownika zgodne z HID
+  - Urz¹dzenie wejœciowe USB
+  - Urz¹dzenie wejœciowe USB
+  - Urz¹dzenie wejœciowe USB
+  - Urz¹dzenie wejœciowe USB
+  - Urz¹dzenie wejœciowe USB
+  - Urz¹dzenie zdefiniowane przez dostawcê zgodne z HID
+  - Urz¹dzenie zdefiniowane przez dostawcê zgodne z HID
+  - Urz¹dzenie zgodne z HID
++ {c166523c-fe0c-4a94-a586-f1a80cfbbf3e}
+  - Cyfrowe urz¹dzenie audio (S/PDIF) (High Definition Audio Device)
+  - Mikrofon (High Definition Audio Device)
+  - Smart TV (NVIDIA High Definition Audio)
+  - S³uchawki (High Definition Audio Device)
++ {f2e7dd72-6468-4e36-b6f1-6488f42c1b52}
+  - Oprogramowanie uk³adowe urz¹dzenia
+
+cpu registers:
+eax = 1a1196f0
+ebx = 00b4ddd9
+ecx = 00000000
+edx = 021eb2a0
+esi = 00b4ddd9
+edi = 0111bac4
+eip = 00b4ddd9
+esp = 01dff560
+ebp = 01dff5a8
+
+stack dump:
+01dff560  d9 dd b4 00 de fa ed 0e - 01 00 00 00 07 00 00 00  ................
+01dff570  74 f5 df 01 d9 dd b4 00 - f0 96 11 1a d9 dd b4 00  t...............
+01dff580  d9 dd b4 00 c4 ba 11 01 - a8 f5 df 01 90 f5 df 01  ................
+01dff590  04 00 00 00 f0 71 6e 00 - c4 ba 11 01 f0 79 f8 07  .....qn......y..
+01dff5a0  33 72 6e 00 fd ff ff 04 - c8 f5 df 01 d9 dd b4 00  3rn.............
+01dff5b0  72 bd f4 04 07 00 00 00 - 04 00 00 00 90 d2 78 01  r.............x.
+01dff5c0  ee 79 39 35 50 5e 78 21 - 18 f6 df 01 4f b8 f4 00  .y95P^x!....O...
+01dff5d0  20 f6 df 01 9c bb 6e 00 - 18 f6 df 01 00 00 00 00   .....n.........
+01dff5e0  00 00 00 00 00 00 00 00 - 00 00 00 00 00 00 00 00  ................
+01dff5f0  00 00 00 00 00 00 fe 0f - 40 a0 0d 34 00 00 00 00  ........@..4....
+01dff600  70 4f 0a 21 02 00 00 33 - 05 00 00 00 38 00 00 00  pO.!...3....8...
+01dff610  ee 79 01 00 e0 80 41 05 - 3c f6 df 01 c8 8d f1 00  .y....A.<.......
+01dff620  44 f6 df 01 9c bb 6e 00 - 3c f6 df 01 05 00 00 00  D.....n.<.......
+01dff630  05 00 00 00 ee 79 01 00 - f8 6b 11 1a 90 f6 df 01  .....y...k......
+01dff640  1b c2 08 01 50 f6 df 01 - 9c bb 6e 00 90 f6 df 01  ....P.....n.....
+01dff650  5c f6 df 01 9c bb 6e 00 - 90 f6 df 01 98 f6 df 01  \.....n.........
+01dff660  9c bb 6e 00 90 f6 df 01 - 00 00 00 00 00 00 00 00  ..n.............
+01dff670  00 00 00 00 c4 ba 11 01 - c4 ba 11 01 e0 4e 42 05  .............NB.
+01dff680  20 f7 df 01 a4 f6 df 01 - e9 08 f0 00 f0 79 f8 07   ............y..
+01dff690  f4 f6 df 01 1f c8 08 01 - a4 f6 df 01 7b bd 6e 00  ............{.n.
+
+disassembling:
+[...]
+00b4dd9c 1085   mov     dl, $f
+00b4dd9e        mov     eax, [ebp-4]
+00b4dda1        call    -$2896 ($b4b510)       ; KM_HandStats.TKMHandStats.GetUnitQty
+00b4dda6        mov     [ebp-$14], eax
+00b4dda9 1086   mov     eax, [ebp-4]
+00b4ddac        mov     eax, [eax+4]
+00b4ddaf        mov     edx, [ebp-4]
+00b4ddb2        mov     edx, [edx+$10]
+00b4ddb5        test    edx, edx
+00b4ddb7        jz      loc_b4ddbe
+00b4ddb9        cmp     eax, [edx-4]
+00b4ddbc        jb      loc_b4ddc3
+00b4ddbe        call    -$463a5b ($6ea368)     ; System.@BoundErr
+00b4ddc3        mov     ecx, [ebp-$10]
+00b4ddc6        sub     ecx, [ebp-$14]
+00b4ddc9        jno     loc_b4ddd0
+00b4ddcb        call    -$463a60 ($6ea370)     ; System.@IntOver
+00b4ddd0        test    ecx, ecx
+00b4ddd2        jns     loc_b4ddd9
+00b4ddd4        call    -$463a71 ($6ea368)     ; System.@BoundErr
+00b4ddd9      > mov     [edx+eax*4], ecx
+00b4dddc 1088   mov     byte ptr [ebp-5], 1
+00b4dde0 1089   xor     eax, eax
+00b4dde2        mov     al, [ebp-5]
+00b4dde5        dec     eax
+00b4dde6        cmp     eax, $33
+00b4dde9        jbe     loc_b4ddf0
+00b4ddeb        call    -$463a88 ($6ea368)     ; System.@BoundErr
+00b4ddf0        inc     eax
+00b4ddf1        imul    eax, eax, 2
+00b4ddf4        jno     loc_b4ddfb
+00b4ddf6        call    -$463a8b ($6ea370)     ; System.@IntOver
+00b4ddfb        mov     edx, [ebp-4]
+00b4ddfe        mov     eax, [edx+eax*8+$11ac]
+00b4de05        xor     edx, edx
+00b4de07        mov     dl, [ebp-5]
+00b4de0a        dec     edx
+00b4de0b        cmp     edx, $33
+00b4de0e        jbe     loc_b4de15
+00b4de10        call    -$463aad ($6ea368)     ; System.@BoundErr
+00b4de15        inc     edx
+[...]
+                                      ================================================================================
+                                                                       END BUG REPORT                                 
+                                      ================================================================================
+19:36:27.685    17,264s     303ms   4440    Creating crash report...
+19:36:27.691    17,270s       6ms   4440    Saving game at tick 96750 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\crashreport\crashreport.sav'
+19:36:28.609    18,188s     918ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Saves\crashreport\crashreport.sav
+19:36:28.616    18,195s       7ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Saves\crashreport\crashreport.bas
+19:36:28.622    18,201s       6ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Saves\crashreport\crashreport.rpl
+19:36:28.627    18,207s       6ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Saves\crashreport\crashreport.rng
+19:36:28.634    18,213s       6ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Campaigns\The Shattered Kingdom\TSK20\TSK20.dat
+19:36:28.639    18,219s       6ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Campaigns\The Shattered Kingdom\TSK20\TSK20.map
+19:36:28.645    18,225s       6ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Campaigns\The Shattered Kingdom\TSK20\TSK20.txt
+19:36:28.651    18,230s       5ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Campaigns\The Shattered Kingdom\TSK20\difficulty.script
+19:36:28.656    18,235s       5ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Campaigns\The Shattered Kingdom\TSK20\TSK20.script
+19:36:28.662    18,242s       6ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Campaigns\The Shattered Kingdom\TSK20\TSK20.bel.libx
+19:36:28.668    18,248s       6ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Campaigns\The Shattered Kingdom\TSK20\TSK20.bul.libx
+19:36:28.675    18,255s       7ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Campaigns\The Shattered Kingdom\TSK20\TSK20.chn.libx
+19:36:28.681    18,260s       5ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Campaigns\The Shattered Kingdom\TSK20\TSK20.cze.libx
+19:36:28.686    18,266s       6ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Campaigns\The Shattered Kingdom\TSK20\TSK20.dut.libx
+19:36:28.692    18,272s       6ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Campaigns\The Shattered Kingdom\TSK20\TSK20.eng.libx
+19:36:28.698    18,278s       6ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Campaigns\The Shattered Kingdom\TSK20\TSK20.est.libx
+19:36:28.703    18,283s       5ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Campaigns\The Shattered Kingdom\TSK20\TSK20.fre.libx
+19:36:28.710    18,289s       6ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Campaigns\The Shattered Kingdom\TSK20\TSK20.ger.libx
+19:36:28.716    18,295s       6ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Campaigns\The Shattered Kingdom\TSK20\TSK20.hun.libx
+19:36:28.721    18,300s       5ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Campaigns\The Shattered Kingdom\TSK20\TSK20.ita.libx
+19:36:28.726    18,305s       5ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Campaigns\The Shattered Kingdom\TSK20\TSK20.kor.libx
+19:36:28.732    18,311s       6ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Campaigns\The Shattered Kingdom\TSK20\TSK20.lit.libx
+19:36:28.737    18,317s       6ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Campaigns\The Shattered Kingdom\TSK20\TSK20.nor.libx
+19:36:28.742    18,322s       5ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Campaigns\The Shattered Kingdom\TSK20\TSK20.pol.libx
+19:36:28.748    18,327s       5ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Campaigns\The Shattered Kingdom\TSK20\TSK20.ptb.libx
+19:36:28.753    18,332s       5ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Campaigns\The Shattered Kingdom\TSK20\TSK20.rom.libx
+19:36:28.758    18,338s       5ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Campaigns\The Shattered Kingdom\TSK20\TSK20.rus.libx
+19:36:28.764    18,344s       6ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Campaigns\The Shattered Kingdom\TSK20\TSK20.spa.libx
+19:36:28.770    18,349s       5ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Campaigns\The Shattered Kingdom\TSK20\TSK20.srb.libx
+19:36:28.774    18,353s       4ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Campaigns\The Shattered Kingdom\TSK20\TSK20.svk.libx
+19:36:28.780    18,360s       5ms   4440    Attaching game loaded file: E:\programowanie\projekty delphi\kam_expansion\Saves\autosave01\autosave01.sav
+19:36:28.786    18,365s       5ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Saves\autosave01\autosave01.sav
+19:36:28.791    18,370s       5ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Saves\autosave01\autosave01.bas
+19:36:28.797    18,376s       6ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Saves\autosave01\autosave01.rpl
+19:36:28.803    18,382s       6ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Saves\autosave01\autosave01.rng
+19:36:28.807    18,387s       5ms   4440    Crash report created
+19:36:28.813    18,393s       6ms   4440    UI at crash time: MainPanel sizes: (1920;1009), cursor pos: (1224;191), 
+CtrlDown = nil
+CtrlOver = nil
+CtrlUp = nil
+CtrlFocus = nil
+19:36:28.819    18,398s       5ms   4440    Attached file: E:\programowanie\projekty delphi\kam_expansion\Logs\KaM_2024-12-29_19-36-10-421.log
+19:36:28.824    18,403s       5ms   4440    Attached file: C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml

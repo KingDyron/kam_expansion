@@ -1,0 +1,264 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{904EB328-6DBB-497D-8B9F-1E802DDA708F}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="KaM_Expansion.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Utils\Batcher\Batcher.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Utils\Campaign builder\CampaignBuilder.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Utils\FontX Collator\FontXCollator.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Utils\FontX Editor\FontXEditor.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Utils\FontX Generator\FontXGenerator.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Utils\DedicatedServer\KaM_DedicatedServer.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Utils\DedicatedServerGUI\KaM_DedicatedServerGUI.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Utils\Runner\Runner.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Utils\RXXEditor\RXXEditor.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Utils\ScriptValidator\ScriptValidator.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Utils\Server Poller\ServerPoller.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Utils\TileEditor\TileEditor.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Utils\TileResampler\TilesetResampler.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Utils\TranslationManager\TranslationManager.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Utils\RunnerParallelExtension\ParallelRunner.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Utils\UnitTests\UnitTests.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Utils\AnimInterp\AnimInterp.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Utils\MapUtil\MapUtil.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Utils\RXXPacker\RXXPacker.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="KaM_Expansion">
+        <MSBuild Projects="KaM_Expansion.dproj"/>
+    </Target>
+    <Target Name="KaM_Expansion:Clean">
+        <MSBuild Projects="KaM_Expansion.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="KaM_Expansion:Make">
+        <MSBuild Projects="KaM_Expansion.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Batcher">
+        <MSBuild Projects="Utils\Batcher\Batcher.dproj"/>
+    </Target>
+    <Target Name="Batcher:Clean">
+        <MSBuild Projects="Utils\Batcher\Batcher.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Batcher:Make">
+        <MSBuild Projects="Utils\Batcher\Batcher.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="CampaignBuilder">
+        <MSBuild Projects="Utils\Campaign builder\CampaignBuilder.dproj"/>
+    </Target>
+    <Target Name="CampaignBuilder:Clean">
+        <MSBuild Projects="Utils\Campaign builder\CampaignBuilder.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="CampaignBuilder:Make">
+        <MSBuild Projects="Utils\Campaign builder\CampaignBuilder.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="FontXCollator">
+        <MSBuild Projects="Utils\FontX Collator\FontXCollator.dproj"/>
+    </Target>
+    <Target Name="FontXCollator:Clean">
+        <MSBuild Projects="Utils\FontX Collator\FontXCollator.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="FontXCollator:Make">
+        <MSBuild Projects="Utils\FontX Collator\FontXCollator.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="FontXEditor">
+        <MSBuild Projects="Utils\FontX Editor\FontXEditor.dproj"/>
+    </Target>
+    <Target Name="FontXEditor:Clean">
+        <MSBuild Projects="Utils\FontX Editor\FontXEditor.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="FontXEditor:Make">
+        <MSBuild Projects="Utils\FontX Editor\FontXEditor.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="FontXGenerator">
+        <MSBuild Projects="Utils\FontX Generator\FontXGenerator.dproj"/>
+    </Target>
+    <Target Name="FontXGenerator:Clean">
+        <MSBuild Projects="Utils\FontX Generator\FontXGenerator.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="FontXGenerator:Make">
+        <MSBuild Projects="Utils\FontX Generator\FontXGenerator.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="KaM_DedicatedServer">
+        <MSBuild Projects="Utils\DedicatedServer\KaM_DedicatedServer.dproj"/>
+    </Target>
+    <Target Name="KaM_DedicatedServer:Clean">
+        <MSBuild Projects="Utils\DedicatedServer\KaM_DedicatedServer.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="KaM_DedicatedServer:Make">
+        <MSBuild Projects="Utils\DedicatedServer\KaM_DedicatedServer.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="KaM_DedicatedServerGUI">
+        <MSBuild Projects="Utils\DedicatedServerGUI\KaM_DedicatedServerGUI.dproj"/>
+    </Target>
+    <Target Name="KaM_DedicatedServerGUI:Clean">
+        <MSBuild Projects="Utils\DedicatedServerGUI\KaM_DedicatedServerGUI.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="KaM_DedicatedServerGUI:Make">
+        <MSBuild Projects="Utils\DedicatedServerGUI\KaM_DedicatedServerGUI.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Runner">
+        <MSBuild Projects="Utils\Runner\Runner.dproj"/>
+    </Target>
+    <Target Name="Runner:Clean">
+        <MSBuild Projects="Utils\Runner\Runner.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Runner:Make">
+        <MSBuild Projects="Utils\Runner\Runner.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="RXXEditor">
+        <MSBuild Projects="Utils\RXXEditor\RXXEditor.dproj"/>
+    </Target>
+    <Target Name="RXXEditor:Clean">
+        <MSBuild Projects="Utils\RXXEditor\RXXEditor.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="RXXEditor:Make">
+        <MSBuild Projects="Utils\RXXEditor\RXXEditor.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ScriptValidator">
+        <MSBuild Projects="Utils\ScriptValidator\ScriptValidator.dproj"/>
+    </Target>
+    <Target Name="ScriptValidator:Clean">
+        <MSBuild Projects="Utils\ScriptValidator\ScriptValidator.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ScriptValidator:Make">
+        <MSBuild Projects="Utils\ScriptValidator\ScriptValidator.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ServerPoller">
+        <MSBuild Projects="Utils\Server Poller\ServerPoller.dproj"/>
+    </Target>
+    <Target Name="ServerPoller:Clean">
+        <MSBuild Projects="Utils\Server Poller\ServerPoller.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ServerPoller:Make">
+        <MSBuild Projects="Utils\Server Poller\ServerPoller.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="TileEditor">
+        <MSBuild Projects="Utils\TileEditor\TileEditor.dproj"/>
+    </Target>
+    <Target Name="TileEditor:Clean">
+        <MSBuild Projects="Utils\TileEditor\TileEditor.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="TileEditor:Make">
+        <MSBuild Projects="Utils\TileEditor\TileEditor.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="TilesetResampler">
+        <MSBuild Projects="Utils\TileResampler\TilesetResampler.dproj"/>
+    </Target>
+    <Target Name="TilesetResampler:Clean">
+        <MSBuild Projects="Utils\TileResampler\TilesetResampler.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="TilesetResampler:Make">
+        <MSBuild Projects="Utils\TileResampler\TilesetResampler.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="TranslationManager">
+        <MSBuild Projects="Utils\TranslationManager\TranslationManager.dproj"/>
+    </Target>
+    <Target Name="TranslationManager:Clean">
+        <MSBuild Projects="Utils\TranslationManager\TranslationManager.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="TranslationManager:Make">
+        <MSBuild Projects="Utils\TranslationManager\TranslationManager.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ParallelRunner">
+        <MSBuild Projects="Utils\RunnerParallelExtension\ParallelRunner.dproj"/>
+    </Target>
+    <Target Name="ParallelRunner:Clean">
+        <MSBuild Projects="Utils\RunnerParallelExtension\ParallelRunner.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ParallelRunner:Make">
+        <MSBuild Projects="Utils\RunnerParallelExtension\ParallelRunner.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="UnitTests">
+        <MSBuild Projects="Utils\UnitTests\UnitTests.dproj"/>
+    </Target>
+    <Target Name="UnitTests:Clean">
+        <MSBuild Projects="Utils\UnitTests\UnitTests.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="UnitTests:Make">
+        <MSBuild Projects="Utils\UnitTests\UnitTests.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="AnimInterp">
+        <MSBuild Projects="Utils\AnimInterp\AnimInterp.dproj"/>
+    </Target>
+    <Target Name="AnimInterp:Clean">
+        <MSBuild Projects="Utils\AnimInterp\AnimInterp.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="AnimInterp:Make">
+        <MSBuild Projects="Utils\AnimInterp\AnimInterp.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="MapUtil">
+        <MSBuild Projects="Utils\MapUtil\MapUtil.dproj"/>
+    </Target>
+    <Target Name="MapUtil:Clean">
+        <MSBuild Projects="Utils\MapUtil\MapUtil.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="MapUtil:Make">
+        <MSBuild Projects="Utils\MapUtil\MapUtil.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="RXXPacker">
+        <MSBuild Projects="Utils\RXXPacker\RXXPacker.dproj"/>
+    </Target>
+    <Target Name="RXXPacker:Clean">
+        <MSBuild Projects="Utils\RXXPacker\RXXPacker.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="RXXPacker:Make">
+        <MSBuild Projects="Utils\RXXPacker\RXXPacker.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="KaM_Expansion;Batcher;CampaignBuilder;FontXCollator;FontXEditor;FontXGenerator;KaM_DedicatedServer;KaM_DedicatedServerGUI;Runner;RXXEditor;ScriptValidator;ServerPoller;TileEditor;TilesetResampler;TranslationManager;ParallelRunner;UnitTests;AnimInterp;MapUtil;RXXPacker"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="KaM_Expansion:Clean;Batcher:Clean;CampaignBuilder:Clean;FontXCollator:Clean;FontXEditor:Clean;FontXGenerator:Clean;KaM_DedicatedServer:Clean;KaM_DedicatedServerGUI:Clean;Runner:Clean;RXXEditor:Clean;ScriptValidator:Clean;ServerPoller:Clean;TileEditor:Clean;TilesetResampler:Clean;TranslationManager:Clean;ParallelRunner:Clean;UnitTests:Clean;AnimInterp:Clean;MapUtil:Clean;RXXPacker:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="KaM_Expansion:Make;Batcher:Make;CampaignBuilder:Make;FontXCollator:Make;FontXEditor:Make;FontXGenerator:Make;KaM_DedicatedServer:Make;KaM_DedicatedServerGUI:Make;Runner:Make;RXXEditor:Make;ScriptValidator:Make;ServerPoller:Make;TileEditor:Make;TilesetResampler:Make;TranslationManager:Make;ParallelRunner:Make;UnitTests:Make;AnimInterp:Make;MapUtil:Make;RXXPacker:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

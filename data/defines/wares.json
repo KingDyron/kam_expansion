@@ -1,0 +1,578 @@
+{
+  "VirtualWares": [ 
+	{
+		"Name":"vtDishes",
+		"TextID" : 1815, 
+		"IconID" : 771, 
+		"ProductionCountMin" : 2, 
+		"ProductionCountMax" : 2, 
+		"Cycles" : 1,
+		"ProduceInHouses" : ["htPottery"], 
+		"ShowInHouses" : ["htInn"],
+		"CoinPrice" : 4,
+		"MaxCountInStall" : 17,
+		"SpriteInStall" : 2495
+	},  
+	{
+		"Name":"vtAppleJuice",
+		"TextID" : 1860, 
+		"IconID" : 772, 
+		"ProductionCountMin" : 1, 
+		"ProductionCountMax" : 1, 
+		"Cycles" : 4,
+		"ProduceInHouses" : ["htAppleTree"],
+		"ShowInHouses" : ["htInn"],
+		"CoinPrice" : 2,
+		"MaxCountInStall" : 12,
+		"SpriteInStall" : 2496
+	},  
+	{
+		"Name":"vtCopper",
+		"TextID" : 1665, 
+		"IconID" : 721, 
+		"ProductionCountMin" : 1, 
+		"ProductionCountMax" : 5, 
+		"ProduceInHouses" : ["htIronMine", "htBitinMine", "htGoldMine"],
+		"ShowInHouses" : ["htMetallurgists"], 
+		"ProduceAfterWares" : [
+			{"Ware" : "wtIronOre", "Min" : 1, "Max" : 1, "Chance" : 3, "Cycles" : 33},
+			{"Ware" : "wtBitinOre", "Min" : 1, "Max" : 1, "Chance" : 3, "Cycles" : 33},
+			{"Ware" : "wtGoldOre", "Min" : 1, "Max" : 1, "Chance" : 3, "Cycles" : 33}
+		],
+		"CoinPrice" : 30,
+		"MaxCountInStall" : 3,
+		"SpriteInStall" : 2504
+		
+	},  
+	{
+		"Name":"vtSilver",
+		"TextID" : 1666, 
+		"IconID" : 722, 
+		"ProductionCountMin" : 1, 
+		"ProductionCountMax" : 4, 
+		"ProduceInHouses" : ["htIronMine", "htBitinMine", "htGoldMine"],
+		"ShowInHouses" : ["htMetallurgists"], 
+		"ProduceAfterWares" : [
+			{"Ware" : "wtIronOre", "Min" : 1, "Max" : 1, "Chance" : 2, "Cycles" : 50},
+			{"Ware" : "wtBitinOre", "Min" : 1, "Max" : 1, "Chance" : 2, "Cycles" : 50},
+			{"Ware" : "wtGoldOre", "Min" : 1, "Max" : 1, "Chance" : 2, "Cycles" : 50}
+		],
+		"CoinPrice" : 40,
+		"MaxCountInStall" : 3,
+		"SpriteInStall" : 2505
+	},  
+	{
+		"Name":"vtAmber",
+		"TextID" : 1667, 
+		"IconID" : 723, 
+		"ProductionCountMin" : 1, 
+		"ProductionCountMax" : 3, 
+		"ProduceInHouses" : ["htFishermans"],
+		"ShowInHouses" : ["htMetallurgists"], 
+		"ProduceAfterWares" : [
+			{"Ware" : "wtFish", "Min" : 1, "Max" : 2, "Chance" : 3, "Cycles" : 33}
+		],
+		"CoinPrice" : 46,
+		"MaxCountInStall" : 2,
+		"SpriteInStall" : 2506
+	},  
+	{
+		"Name":"vtDiamond",
+		"TextID" : 1668, 
+		"IconID" : 724, 
+		"ProductionCountMin" : 1, 
+		"ProductionCountMax" : 2, 
+		"ProduceInHouses" : ["htCoalMine", "htWoodBurner"],
+		"ShowInHouses" : ["htMetallurgists"], 
+		"ProduceAfterWares" : [
+			{"Ware" : "wtCoal", "Min" : 1, "Max" : 1, "Chance" : 1, "Cycles" : 100}
+		],
+		"CoinPrice" : 75,
+		"MaxCountInStall" : 1,
+		"SpriteInStall" : 2507
+	},  
+	{
+		"Name":"vtBitinFrag",
+		"TextID" : 1861, 
+		"IconID" : 773, 
+		"ProductionCountMin" : 1, 
+		"ProductionCountMax" : 2, 
+		"ProduceInHouses" : ["htIronSmithy", "htIronFoundry"],
+		"ShowInHouses" : ["htPalace"],
+		"ProduceAfterWares" : [
+			{"Ware" : "wtBitin", "Min" : 1, "Max" : 1, "Chance" : 100, "Cycles" : 1},
+			{"Ware" : "wtBitinE", "Min" : 10, "Max" : 2, "Chance" : 80, "Cycles" : 10}
+		],
+		"CoinPrice" : 10,
+		"MaxCountInStall" : 6,
+		"SpriteInStall" : 2497
+	},  
+	{
+		"Name":"vtPearl",
+		"TextID" : 1862, 
+		"IconID" : 774, 
+		"ProductionCountMin" : 0, 
+		"ProductionCountMax" : 1, 
+		"ProduceInHouses" : ["htFishermans"],
+		"ShowInHouses" : ["htPalace"],
+		"ProduceAfterWares" : [
+			{"Ware" : "wtFish", "Min" : 1, "Max" : 1, "Chance" : 10, "Cycles" : 10}
+		],
+		"CoinPrice" : 27,
+		"MaxCountInStall" : 2,
+		"SpriteInStall" : 2498
+	},  
+	{
+		"Name":"vtLeatherSheet",
+		"TextID" : 1863, 
+		"IconID" : 775, 
+		"ProductionCountMin" : 1, 
+		"ProductionCountMax" : 1, 
+		"ProduceInHouses" : ["htTannery", "htTailorsShop", "htArmorWorkshop"],
+		"ShowInHouses" : ["htPalace"],
+		"ProduceAfterWares" : [
+			{"Ware" : "wtLeatherArmor", "Min" : 7, "Max" : 3, "Chance" : 30, "Cycles" : 10},
+			{"Ware" : "wtLeather", "Min" : 6, "Max" : 1, "Chance" : 60, "Cycles" : 10},
+			{"Ware" : "wtBoots", "Min" : 8, "Max" : 1, "Chance" : 79, "Cycles" : 10}
+		],
+		"CoinPrice" : 6,
+		"MaxCountInStall" : 13,
+		"SpriteInStall" : 2499
+	},  
+	{
+		"Name":"vtCoin",
+		"TextID" : 1864, 
+		"IconID" : 776, 
+		"ProductionCountMin" : 1, 
+		"ProductionCountMax" : 1, 
+		"ProduceInHouses" : ["htBakery", "htMetallurgists"],
+		"ShowInHouses" : ["htPalace"],
+		"CoinPrice" : 0,
+		"MaxCountInStall" : 0,
+		"SpriteInStall" : 2500
+	},  
+	{
+		"Name":"vtIronFerrule",
+		"TextID" : 1865, 
+		"IconID" : 778, 
+		"ProductionCountMin" : 1, 
+		"ProductionCountMax" : 1, 
+		"ProduceInHouses" : ["htIronFoundry", "htIronSmithy", "htArmorSmithy", "htWeaponSmithy"],
+		"ShowInHouses" : ["htPalace"],
+		"ProduceAfterWares" : [
+			{"Ware" : "wtSteelE", "Min" : 8, "Max" : 3, "Chance" : 80, "Cycles" : 5},
+			{"Ware" : "wtIron", "Min" : 1, "Max" : 1, "Chance" : 20, "Cycles" : 5},
+			{"Ware" : "wtSword", "Min" : 4, "Max" : 1, "Chance" : 75, "Cycles" : 5},
+			{"Ware" : "wtCrossBow", "Min" : 4, "Max" : 1, "Chance" : 75, "Cycles" : 5},
+			{"Ware" : "wtPike", "Min" : 4, "Max" : 1, "Chance" : 75, "Cycles" : 5},
+			{"Ware" : "wtIronShield", "Min" : 4, "Max" : 1, "Chance" : 75, "Cycles" : 5},
+			{"Ware" : "wtIronArmor", "Min" : 9, "Max" : 1, "Chance" : 90, "Cycles" : 10}
+		],
+		"CoinPrice" : 12,
+		"MaxCountInStall" : 23,
+		"SpriteInStall" : 2501
+	},  
+	{
+		"Name":"vtResin",
+		"TextID" : 1866, 
+		"IconID" : 779, 
+		"ProductionCountMin" : 1, 
+		"ProductionCountMax" : 1, 
+		"ProduceInHouses" : ["htWoodCutters", "htSawmill", "htStoneWorkshop"],
+		"ShowInHouses" : ["htPalace"],
+		"ProduceAfterWares" : [
+			{"Ware" : "wtTrunk", "Min" : 2, "Max" : 3, "Chance" : 50, "Cycles" : 2},
+			{"Ware" : "wtTimber", "Min" : 3, "Max" : 6, "Chance" : 20, "Cycles" : 5},
+			{"Ware" : "wtLog", "Min" : 2, "Max" : 1, "Chance" : 35, "Cycles" : 5}
+		],
+		"CoinPrice" : 0.3,
+		"MaxCountInStall" : 153,
+		"SpriteInStall" : 2502
+	},  
+	{
+		"Name":"vtGemStone",
+		"TextID" : 1867, 
+		"IconID" : 780, 
+		"ProductionCountMin" : 1, 
+		"ProductionCountMax" : 1, 
+		"ProduceInHouses" : ["htQuarry", "htStoneWorkshop"],
+		"ShowInHouses" : ["htPalace"],
+		"ProduceAfterWares" : [
+			{"Ware" : "wtStone", "Min" : 2, "Max" : 1, "Chance" : 40, "Cycles" : 5},
+			{"Ware" : "wtStoneBolt", "Min" : 6, "Max" : 10, "Chance" : 20, "Cycles" : 5}
+		],
+		"CoinPrice" : 4,
+		"MaxCountInStall" : 51,
+		"SpriteInStall" : 2503
+	},  
+	{
+		"Name":"vtHoney",
+		"TextID" : 1877, 
+		"IconID" : 785, 
+		"ProductionCountMin" : 1, 
+		"ProductionCountMax" : 1, 
+		"ProduceInHouses" : ["htWoodcutters", "htFarm", "htAppleTree", "htVineyard"],
+		"ShowInHouses" : ["htPalace"],
+		"ProduceAfterWares" : [
+			{"Ware" : "wtTrunk", "Min" : 2, "Max" : 2, "Chance" : 10, "Cycles" : 10},
+			{"Ware" : "wtSeed", "Min" : 1, "Max" : 2, "Chance" : 5, "Cycles" : 20},
+			{"Ware" : "wtCorn", "Min" : 1, "Max" : 2, "Chance" : 5, "Cycles" : 20},
+			{"Ware" : "wtWine", "Min" : 2, "Max" : 2, "Chance" : 10, "Cycles" : 10},
+			{"Ware" : "wtApple", "Min" : 2, "Max" : 2, "Chance" : 10, "Cycles" : 10}
+		],
+		"CoinPrice" : 7,
+		"MaxCountInStall" : 12,
+		"SpriteInStall" : 2491
+	},  
+	{
+		"Name":"vtCertificate",
+		"TextID" : 1878, 
+		"IconID" : 786, 
+		"ProductionCountMin" : 1, 
+		"ProductionCountMax" : 1, 
+		"ProduceInHouses" : ["htBarracks", "htTownhall"],
+		"ShowInHouses" : ["htPalace"],
+		"ProduceAfterWares" : [
+			{"Ware" : "wtWarfare", "Min" : 1, "Max" : 1, "Chance" : 100}
+		],
+		"CoinPrice" : 0,
+		"MaxCountInStall" : 0,
+		"SpriteInStall" : 2492
+	},  
+	{
+		"Name":"vtNeedle",
+		"TextID" : 1879, 
+		"IconID" : 787, 
+		"ProductionCountMin" : 1, 
+		"ProductionCountMax" : 1, 
+		"ProduceInHouses" : ["htIronFoundry", "htIronSmithy", "htArmorSmithy", "htWeaponSmithy"],
+		"ShowInHouses" : ["htPalace"],
+		"ProduceAfterWares" : [
+			{"Ware" : "wtSteelE", "Min" : 3, "Max" : 6, "Chance" : 30, "Cycles" : 5},
+			{"Ware" : "wtIron", "Min" : 2, "Max" : 2, "Chance" : 30, "Cycles" : 5},
+			{"Ware" : "wtSword", "Min" : 2, "Max" : 4, "Chance" : 45, "Cycles" : 2},
+			{"Ware" : "wtCrossBow", "Min" : 2, "Max" : 3, "Chance" : 45, "Cycles" : 2},
+			{"Ware" : "wtPike", "Min" : 2, "Max" : 2, "Chance" : 45, "Cycles" : 2},
+			{"Ware" : "wtIronShield", "Min" : 2, "Max" : 2, "Chance" :50, "Cycles" :2},
+			{"Ware" : "wtIronArmor", "Min" : 3, "Max" : 4, "Chance" : 50, "Cycles" : 2}
+		],
+		"CoinPrice" : 4,
+		"MaxCountInStall" : 14,
+		"SpriteInStall" : 2493
+	},  
+	{
+		"Name":"vtWoodenPlate",
+		"TextID" : 1880, 
+		"IconID" : 788, 
+		"ProductionCountMin" : 1, 
+		"ProductionCountMax" : 1, 
+		"ProduceInHouses" : ["htArmorWorkshop", "htWeaponWorkshop", "htSawmill", "htStoneWorkshop"],
+		"ShowInHouses" : ["htPalace"],
+		"ProduceAfterWares" : [
+			{"Ware" : "wtTimber", "Min" : 1, "Max" : 2, "Chance" : 50, "Cycles" : 2},
+			{"Ware" : "wtLance", "Min" : 2, "Max" : 4, "Chance" : 20, "Cycles" : 5},
+			{"Ware" : "wtAxe", "Min" : 5, "Max" : 3, "Chance" : 40, "Cycles" : 5},
+			{"Ware" : "wtBow", "Min" : 5, "Max" : 3, "Chance" : 40, "Cycles" : 5},
+			{"Ware" : "wtWheel", "Min" : 5, "Max" : 3, "Chance" : 40, "Cycles" : 5},
+			{"Ware" : "wtLog", "Min" : 1, "Max" : 2, "Chance" : 10, "Cycles" : 10},
+			{"Ware" : "wtWoodenShield", "Min" : 3, "Max" : 3, "Chance" : 15, "Cycles" : 10}
+		],
+		"CoinPrice" : 3,
+		"MaxCountInStall" : 31,
+		"SpriteInStall" : 2494
+	},  
+	{
+		"Name":"vtHerbs",
+		"TextID" : 1893, 
+		"IconID" : 795, 
+		"ProductionCountMin" : 1, 
+		"ProductionCountMax" : 1, 
+		"ProduceInHouses" : ["htSwine", "htVineyard", "htFarm", "htHovel", "htStables"],
+		"ShowInHouses" : ["htPalace"],
+		"ProduceAfterWares" : [
+			{"Ware" : "wtWine", "Min" : 2, "Max" : 1, "Chance" : 40, "Cycles" : 5},
+			{"Ware" : "wtSeed", "Min" : 3, "Max" : 2, "Chance" : 20, "Cycles" : 10},
+			{"Ware" : "wtCorn", "Min" : 3, "Max" : 2, "Chance" : 20, "Cycles" : 10},
+			{"Ware" : "wtApple", "Min" : 2, "Max" : 2, "Chance" : 40, "Cycles" : 5},
+			{"Ware" : "wtSausage", "Min" : 2, "Max" : 2, "Chance" : 10, "Cycles" : 15},
+			{"Ware" : "wtVegetables", "Min" : 3, "Max" : 2, "Chance" : 20, "Cycles" : 8},
+			{"Ware" : "wtHorse", "Min" : 3, "Max" : 2, "Chance" : 20, "Cycles" : 8},
+			{"Ware" : "wtSkin", "Min" : 3, "Max" : 2, "Chance" : 20, "Cycles" : 8},
+			{"Ware" : "wtPig", "Min" : 3, "Max" : 2, "Chance" : 20, "Cycles" : 8}
+		],
+		"CoinPrice" : 0.3,
+		"MaxCountInStall" : 112
+	},  
+	{
+		"Name":"vtManure",
+		"TextID" : 2010, 
+		"IconID" : 945, 
+		"ProductionCountMin" : 1, 
+		"ProductionCountMax" : 1, 
+		"ProduceInHouses" : ["htSwine", "htVineyard", "htFarm", "htHovel", "htStables"],
+		"ShowInHouses" : ["htPalace"],
+		"ProduceAfterWares" : [
+			{"Ware" : "wtFeathers", "Min" : 1, "Max" : 2, "Cycles" : 20},
+			{"Ware" : "wtHorse", "Min" : 1, "Max" : 2, "Cycles" : 6},
+			{"Ware" : "wtSkin", "Min" : 1, "Max" : 2, "Cycles" : 13},
+			{"Ware" : "wtPig", "Min" : 1, "Max" : 2, "Cycles" : 13}
+		],
+		"CoinPrice" : 0.3,
+		"MaxCountInStall" : 112
+	}
+  ],
+  "VirtualWaresPalaceOrder" : [
+								"vtHoney", "vtGemStone", "vtResin", "vtCoin", "vtNeedle", "vtHerbs",
+								"vtLeatherSheet","vtWoodenPlate", "vtPearl", "vtIronFerrule", "vtBitinFrag", "vtCertificate"
+							],
+  
+  "Wares DATA": [    
+	{
+		"Name" : "wtApple",
+		"GuiIcon" : 716,
+		"MinCount" : 2,
+		"MaxCount" : 2,
+		"InHouses" : 	[
+							{
+								"HouseType" : "htAppleTree",
+								"MinCount" : 2,
+								"MaxCount" : 5
+							}
+						],	
+		"TerrainPics" : [841, 842, 843, 844, 845]
+	}, 
+	{
+		"Name" : "wtSawDust",
+		"MinCount" : 1,
+		"MaxCount" : 1,
+		"OrderCost" : ["wtTrunk"],
+		"InHouses" : 	[
+							{
+								"HouseType" : "htStoneWorkshop",
+								"MinCount" : 2,
+								"MaxCount" : 3
+							},
+							{
+								"HouseType" : "htProductionThatch",
+								"MinCount" : 2,
+								"MaxCount" : 2
+							}
+						]
+		
+		
+	}, 
+	{
+		"Name" : "wtWheel",
+		"MinCount" : 2,
+		"MaxCount" : 2,
+		"OrderCost" : ["wtTrunk"],
+		"InHouses" : 	[
+							{
+								"HouseType" : "htProductionThatch",
+								"MinCount" : 2,
+								"MaxCount" : 2
+							}
+						]
+		
+		
+	}, 
+	{
+		"Name" : "wtLog",
+		"MinCount" : 1,
+		"MaxCount" : 1,
+		"OrderCost" : ["wtTrunk"]		
+	},   
+	{
+		"Name" : "wtGold",
+		"MinCount" : 2,
+		"MaxCount" : 2,
+		"OrderCost" : ["wtGoldOre", "wtCoal"]		
+	}, 
+	{
+		"Name" : "wtIron",
+		"MinCount" : 1,
+		"MaxCount" : 1,
+		"OrderCost" : ["wtIronOre", "wtCoal"]		
+	},   
+	{
+		"Name" : "wtBitin",
+		"MinCount" : 1,
+		"MaxCount" : 1,
+		"OrderCost" : ["wtBitinOre", "wtCoal"]		
+	},   
+	{
+		"Name" : "wtSteelE",
+		"MinCount" : 2,
+		"MaxCount" : 2,
+		"OrderCost" : ["wtIron", "wtCoal"]		
+	},   
+	{
+		"Name" : "wtBitinE",
+		"MinCount" : 1,
+		"MaxCount" : 1,
+		"OrderCost" : ["wtBitin", "wtCoal"]		
+	},   
+	{
+		"Name" : "wtPlateArmor",
+		"MinCount" : 1,
+		"MaxCount" : 1,
+		"OrderCost" : ["wtTimber", "wtTimber"]
+	}, 
+	{
+		"Name" : "wtTimber",
+		"MinCount" : 2,
+		"MaxCount" : 2,
+		"OrderCost" : ["wtTrunk"],
+		"InHouses" : 	[
+							{
+								"HouseType" : "htProductionThatch",
+								"MinCount" : 2,
+								"MaxCount" : 2
+							}
+						],
+		"TerrainPics" : [830, 831, 832, 833, 834, 835]	
+	},   
+	{
+		"Name" : "wtBread",
+		"MinCount" : 2,
+		"MaxCount" : 2,
+		"OrderCost" : ["wtFlour", "wtWater"],
+		"InHouses" : 	[
+							{
+								"HouseType" : "htProductionThatch",
+								"MinCount" : 2,
+								"MaxCount" : 2
+							}
+						]
+	},   
+	{
+		"Name" : "wtFlour",
+		"MinCount" : 1,
+		"MaxCount" : 1,
+		"OrderCost" : ["wtSeed"]
+	},   
+	{
+		"Name" : "wtStone",
+		"MinCount" : 3,
+		"MaxCount" : 3,
+		"OrderCost" : ["wtAll"],
+		"InHouses" : 	[
+							{
+								"HouseType" : "htCollectors",
+								"MinCount" : 1,
+								"MaxCount" : 1
+							}
+						],
+		"TerrainPics" : [819, 820, 821, 822, 823, 824]		
+		
+		
+	}, 
+	{
+		"Name" : "wtWater",
+		"TerrainPics" : [846, 847, 848, 849, 850]	
+	},   
+	{
+		"Name" : "wtTrunk",
+		"TerrainPics" : [825, 826, 827, 828, 829]		
+	},  
+	{
+		"Name" : "wtStoneBolt",
+		"TerrainPics" : [851, 852, 853, 854, 855]		
+	},
+	{
+		"Name" : "wtWheel",
+		"TerrainPics" : [856, 857, 858, 859, 860]		
+	},  
+	{
+		"Name" : "wtBitin",
+		"TerrainPics" : [873, 874, 875, 876, 877]		
+	},  
+	{
+		"Name" : "wtSawDust",
+		"TerrainPics" : [890, 891, 892, 893, 894]		
+	}, 
+	{
+		"Name" : "wtIron",
+		"TerrainPics" : [895, 896, 897, 898, 899]		
+	}, 
+	{
+		"Name" : "wtCoal",
+		"TerrainPics" : [878, 879, 880, 881, 882, 883, 884]		
+	},  
+	{
+		"Name" : "wtBitinOre",
+		"TerrainPics" : [867, 868, 869, 870, 871, 872]		
+	},   
+	{
+		"Name" : "wtTile",
+		"MinCount" : 2,
+		"MaxCount" : 2,
+		"OrderCost" : ["wtAll"],	
+		"TerrainPics" : [836, 837, 838, 839, 840]	
+	},
+	{
+		"Name" : "wtCorn",
+		"MinCount" : 1,
+		"MaxCount" : 1,
+		"OrderCost" : ["wtAll"]	
+	},
+	{
+		"Name" : "wtSeed",
+		"MinCount" : 1,
+		"MaxCount" : 1,
+		"OrderCost" : ["wtAll"],
+		"TerrainPics" : [885, 886, 887, 888, 889]			
+	},
+	{
+		"Name" : "wtHay",
+		"MinCount" : 1,
+		"MaxCount" : 1,
+		"OrderCost" : ["wtAll"]	
+	} ,
+	{
+		"Name" : "wtWine",
+		"MinCount" : 1,
+		"MaxCount" : 1,
+		"OrderCost" : ["wtAll"],
+		"TerrainPics" : [900, 901, 902, 903, 904, 905, 906, 907, 908, 909]			
+	},
+	{
+		"Name" : "wtLeatherArmor",
+		"MinCount" : 1,
+		"MaxCount" : 1,
+		"OrderCost" : ["wtLeather"]	
+	},
+	{
+		"Name" : "wtBoots",
+		"MinCount" : 2,
+		"MaxCount" : 2,
+		"OrderCost" : ["wtLeather", "wtFeathers"]	
+	},
+	{
+		"Name" : "wtQuiver",
+		"MinCount" : 2,
+		"MaxCount" : 2,
+		"OrderCost" : ["wtLeather", "wtFeathers"]	
+	},
+	{
+		"Name" : "wtFlail",
+		"MinCount" : 1,
+		"MaxCount" : 1,
+		"OrderCost" : ["wtCoal", "wtIron"]	
+	},
+	{
+		"Name" : "wtMace",
+		"MinCount" : 1,
+		"MaxCount" : 1,
+		"OrderCost" : ["wtTimber", "wtTimber", "wtTimber"]	
+	},
+	{
+		"Name" : "wtBitinArmor",
+		"MinCount" : 1,
+		"MaxCount" : 1,
+		"OrderCost" : ["wtCoal", "wtCoal", "wtBitinE"]	
+	} 
+  ]
+}
+
+

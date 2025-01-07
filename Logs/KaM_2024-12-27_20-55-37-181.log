@@ -1,0 +1,1094 @@
+   Timestamp    Elapsed     Delta  Thread    Description
+========================
+    Date: 2024.12.27
+========================
+20:55:37.182     0,001s       1ms  22332    Log is up and running. Game version: KaM Expansion: Co-op & World Update
+20:55:37.189     0,008s       7ms  22332    Game Load started
+20:55:37.201     0,020s      12ms  22332    Start loading 'GameApp settings' from 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'
+20:55:37.209     0,028s       8ms  22332    'GameApp settings' was successfully loaded from 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'
+20:55:37.231     0,050s      10ms  22332    Start saving 'GameApp settings' to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'
+0118367c KaM_Expansion.exe KM_Settings        106 TKMSettings.SaveToDefaultFile
+0118374f KaM_Expansion.exe KM_Settings        113 TKMSettings.SaveToDefaultFile
+0118334d KaM_Expansion.exe KM_Settings         59 TKMSettings.Create
+01183a8a KaM_Expansion.exe KM_SettingsXML      38 TKMSettingsXML.Create
+01183dcb KaM_Expansion.exe KM_GameAppSettings  51 TKMGameAppSettings.Create
+0139c220 KaM_Expansion.exe KM_Main            258 TKMMain.Start
+0139c4a4 KaM_Expansion.exe KM_Main            305 TKMMain.Start
+01619b2b KaM_Expansion.exe KaM_Expansion      479 initialization
+01619b5a KaM_Expansion.exe KaM_Expansion      482 initialization
+75e37ba7 KERNEL32.DLL                             BaseThreadInitThunk
+
+20:55:37.282     0,101s      51ms  22332    'GameApp settings' was successfully saved to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'
+20:55:37.309     0,128s      27ms  22332    Start loading 'Server settings' from 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+20:55:37.316     0,135s       7ms  22332    'Server settings' was successfully loaded from 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+20:55:37.323     0,142s       7ms  22332    Start saving 'Server settings' to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+0118367c KaM_Expansion.exe KM_Settings       106 TKMSettings.SaveToDefaultFile
+0118374f KaM_Expansion.exe KM_Settings       113 TKMSettings.SaveToDefaultFile
+0118334d KaM_Expansion.exe KM_Settings        59 TKMSettings.Create
+012c5498 KaM_Expansion.exe KM_ServerSettings 109 TKMServerSettings.Create
+013915a0 KaM_Expansion.exe KM_GameApp        213 TKMGameApp.Create
+013919f2 KaM_Expansion.exe KM_GameApp        295 TKMGameApp.Create
+0139d4ca KaM_Expansion.exe KM_Main           635 TKMMain.ReinitRender
+0139d6d6 KaM_Expansion.exe KM_Main           689 TKMMain.ReinitRender
+0139c336 KaM_Expansion.exe KM_Main           281 TKMMain.Start
+0139c4a4 KaM_Expansion.exe KM_Main           305 TKMMain.Start
+01619b2b KaM_Expansion.exe KaM_Expansion     479 initialization
+01619b5a KaM_Expansion.exe KaM_Expansion     482 initialization
+75e37ba7 KERNEL32.DLL                            BaseThreadInitThunk
+
+20:55:37.338     0,157s      15ms  22332    'Server settings' was successfully saved to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+20:55:37.346     0,165s       8ms  22332    Init Render started
+20:55:37.513     0,332s     166ms  22332    GL_MAX_TEXTURE_SIZE = 32768
+20:55:37.521     0,340s       8ms  22332    GL_MAX_VIEWPORT_DIM = 32768
+                                      OpenGL Vendor: NVIDIA Corporation
+                                      OpenGL Renderer: NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2
+                                      OpenGL Version: 4.6.0 NVIDIA 560.81
+20:55:37.553     0,372s      32ms  22332    Init Render Done
+20:55:37.559     0,378s       6ms  22332    Resource loading state - None
+20:55:37.567     0,386s       8ms  22332    Reading palettes ... done
+20:55:37.577     0,396s      10ms  22332    Reading GUI.rx
+20:55:37.586     0,405s       9ms  22332    Load Sprites started
+20:55:37.596     0,414s       8ms  22332    GUI - 966
+20:55:37.617     0,436s      21ms  22332    Load Sprites Done
+20:55:37.658     0,477s      41ms  22332    Reading GUIMain.rx
+20:55:37.669     0,488s      11ms  22332    Load Sprites started
+20:55:37.678     0,497s       9ms  22332    GUIMain - 105
+20:55:37.733     0,551s      54ms  22332    Load Sprites Done
+20:55:37.787     0,605s      54ms  22332    Reading Tileset.rx
+20:55:37.797     0,616s      11ms  22332    Load Sprites started
+20:55:37.803     0,622s       6ms  22332    Tileset - 5449
+20:55:37.821     0,640s      18ms  22332    Load Sprites Done
+20:55:37.829     0,648s       8ms  22332    GenerateTerrainTransitions started. Legacy = False
+20:55:37.837     0,656s       8ms  22332    TexId = 5451 GenTilesCnt = 2100
+20:55:37.844     0,663s       7ms  22332    TexId = 6051; TexId - fGenTexIdStartI = 600; uniqueTex = 600; totalTex = 1350
+20:55:37.852     0,671s       8ms  22332    GeneratedMasks cnt = 20
+20:55:37.859     0,678s       7ms  22332    GenerateTerrainTransitions Done
+20:55:37.866     0,685s       7ms  22332    GenerateTerrainTransitions started. Legacy = True
+20:55:37.873     0,692s       7ms  22332    Legacy: TexId = 4999 GenTilesCntTemp = 2030
+20:55:37.880     0,699s       7ms  22332    TexId = 5463; TexId - fGenTexIdStartILegacy = 464; uniqueTex = 464; totalTex = 1044
+20:55:37.886     0,705s       6ms  22332    GeneratedMasks cnt = 16
+20:55:37.894     0,713s       7ms  22332    GenerateTerrainTransitions Done
+20:55:38.009     0,828s     115ms  22332    Load font started
+20:55:38.049     0,868s      40ms  22332    Font load took 40ms
+20:55:38.056     0,875s       7ms  22332    Read fonts is done
+20:55:38.074     0,893s      18ms  22332    ReadGFX is done
+20:55:38.082     0,901s       8ms  22332    Resource loading state - Menu
+20:55:38.090     0,909s       8ms   3684    OpenAL init started
+20:55:38.755     1,573s     664ms  22332    Music init done, 24 tracks found
+                                      Loading campaign images.rxx for HKS
+20:55:38.784     1,602s      29ms  19316    Custom - 1
+20:55:38.801     1,619s      17ms   3684    Pre-LoadSFX init ... done
+20:55:38.808     1,626s       7ms   3684    ALC_MONO_SOURCES 255
+20:55:38.816     1,634s       8ms   3684    ALC_STEREO_SOURCES 1
+20:55:38.824     1,642s       8ms  22332    Main menu init done
+20:55:38.831     1,649s       7ms   3684    OpenAL init done
+20:55:38.853     1,671s      22ms  22332    Check game folder 'E:\programowanie\projekty delphi\kam_expansion\' generic permissions: READ: granted; WRITE: granted; EXECUTE: granted; folder is writable: 
+20:55:38.860     1,678s       7ms  22332    LoadGameResources ... AlphaShadows: True. Forced: True
+20:55:38.867     1,685s       7ms  22332    TKMResSprites.LoadGameResources
+20:55:38.874     1,692s       7ms  22332    [AsyncGameResLoader Thread] Started
+20:55:38.881     1,699s       7ms  22332    Resource loading state - Game
+20:55:38.887     1,705s       6ms  22332    ToggleFullscreen
+20:55:38.893     1,711s       6ms  22332    Form Width/Height: 1040:853
+20:55:38.900     1,718s       7ms  22332    Panel Width/Height: 764:771
+20:55:38.907     1,725s       7ms  19348    [AsyncGameResLoader Thread] RT = rxTrees Stage = lsLoad
+20:55:38.915     1,733s       8ms  19348    [AsyncGameResLoader Thread] Start Load RXX 'Trees.rxx'
+20:55:38.923     1,742s       9ms  19348    Load Sprites started
+20:55:38.933     1,751s       9ms  19348    Trees - 1216
+20:55:39.143     1,961s     210ms  19348    Load Sprites Done
+                                      Loading campaign images.rxx for KSN
+20:55:39.206     2,024s      63ms  19316    Custom - 1
+20:55:39.254     2,072s      48ms  22332    Saving dev settings to file 'kmr_dev.xml'
+20:55:39.261     2,079s       7ms  19348    [AsyncGameResLoader Thread] DONE Load RXX 'Trees.rxa'
+                                      Loading campaign images.rxx for KSO
+20:55:39.301     2,120s      40ms  19316    Custom - 1
+20:55:39.320     2,139s      19ms  22332    Saving dev settings to file 'kmr_dev.xml'
+20:55:39.326     2,145s       6ms  22332    Game Load Done in 2174
+20:55:39.344     2,163s      18ms  22332    [AsyncGameResLoader MainTh] [UpdateStateIdle] GenTextures RT = rxTrees Stage = lsGenMain
+20:55:39.357     2,175s      12ms  22332    [AsyncGameResLoader MainTh] [UpdateStateIdle] DONE
+20:55:39.364     2,182s       7ms  19348    [AsyncGameResLoader Thread] RT = rxTrees Stage = lsOverload
+20:55:39.371     2,189s       7ms  19348    [AsyncGameResLoader Thread] OverloadFromFolder RT = rxTrees
+                                      Loading campaign images.rxx for KSU
+20:55:39.385     2,203s      14ms  19316    Custom - 1
+20:55:39.428     2,246s      43ms  19348    [AsyncGameResLoader Thread] DONE OverloadFromFolder RT = rxTrees
+20:55:39.435     2,253s       7ms  22332    [AsyncGameResLoader MainTh] [UpdateStateIdle] GenTextures RT = rxTrees Stage = lsGenOverload
+20:55:39.442     2,261s       7ms  22332    [AsyncGameResLoader MainTh] [UpdateStateIdle] DONE
+                                      Loading campaign images.rxx for OFL
+20:55:39.456     2,274s      13ms  19348    [AsyncGameResLoader Thread] RT = rxHouses Stage = lsLoad
+20:55:39.463     2,282s       8ms  19316    Custom - 1
+20:55:39.470     2,288s       6ms  19348    [AsyncGameResLoader Thread] Start Load RXX 'Houses.rxx'
+20:55:39.476     2,294s       6ms  19348    Load Sprites started
+20:55:39.483     2,302s       7ms  19348    Houses - 2709
+                                      Loading campaign images.rxx for OER
+20:55:39.506     2,324s      21ms  19316    Custom - 1
+                                      Loading campaign images.rxx for TBK
+20:55:39.552     2,370s      46ms  19316    Custom - 1
+                                      Loading campaign images.rxx for TPR
+20:55:39.618     2,437s      67ms  19316    Custom - 1
+                                      Loading campaign images.rxx for TSK
+20:55:39.676     2,494s      57ms  19316    Custom - 1
+                                      Loading campaign images.rxx for TUA
+20:55:39.720     2,539s      44ms  19316    Custom - 1
+20:55:39.728     2,546s       7ms  19348    Load Sprites Done
+20:55:39.865     2,683s     137ms  19348    [AsyncGameResLoader Thread] DONE Load RXX 'Houses.rxa'
+20:55:39.872     2,690s       7ms  22332    [AsyncGameResLoader MainTh] [UpdateStateIdle] GenTextures RT = rxHouses Stage = lsGenMain
+                                      Loading campaign images.rxx for TMR
+20:55:39.889     2,707s      17ms  19316    Custom - 1
+20:55:39.896     2,714s       7ms  22332    [AsyncGameResLoader MainTh] [UpdateStateIdle] DONE
+20:55:39.902     2,721s       7ms  19348    [AsyncGameResLoader Thread] RT = rxHouses Stage = lsOverload
+20:55:39.909     2,727s       6ms  19348    [AsyncGameResLoader Thread] OverloadFromFolder RT = rxHouses
+20:55:40.069     2,887s     160ms  19348    [AsyncGameResLoader Thread] DONE OverloadFromFolder RT = rxHouses
+20:55:40.076     2,894s       7ms  22332    [AsyncGameResLoader MainTh] [UpdateStateIdle] GenTextures RT = rxHouses Stage = lsGenOverload
+20:55:40.082     2,901s       7ms  22332    [AsyncGameResLoader MainTh] [UpdateStateIdle] DONE
+20:55:40.090     2,908s       7ms  19348    [AsyncGameResLoader Thread] RT = rxUnits Stage = lsLoad
+20:55:40.097     2,915s       7ms  19348    [AsyncGameResLoader Thread] Start Load RXX 'Units.rxx'
+20:55:40.103     2,922s       7ms  19348    Load Sprites started
+20:55:40.110     2,928s       6ms  19348    Units - 14845
+20:55:41.313     4,131s    1203ms  11332    Error while loading game info from save of unsupported version r15833
+20:55:41.319     4,138s       7ms  11332    Error while loading game info from save of unsupported version r15833
+20:55:41.327     4,145s       6ms  11332    Error while loading game info from save of unsupported version r15833
+20:55:41.334     4,153s       8ms  11332    Error while loading game info from save of unsupported version r15833
+20:55:41.341     4,159s       6ms  11332    Error while loading game info from save of unsupported version r15833
+20:55:41.349     4,168s       9ms  11332    Error while loading game info from save of unsupported version r15833
+20:55:41.355     4,174s       6ms  11332    Error while loading game info from save of unsupported version r15833
+20:55:41.362     4,180s       6ms  11332    Error while loading game info from save of unsupported version r15833
+20:55:41.368     4,186s       6ms  11332    Error while loading game info from save of unsupported version r15833
+20:55:41.374     4,193s       6ms  11332    Error loading save 'Bridge Disaster'
+20:55:41.381     4,199s       6ms  11332    Error loading save 'Bridge Disaster 2024-07-21 #1'
+20:55:41.387     4,205s       6ms  11332    Error loading save 'Bridge Disaster 2024-07-22 #1'
+20:55:41.394     4,213s       8ms  11332    Error loading save 'Bridge Disaster 2024-07-24 #1'
+20:55:41.402     4,220s       7ms  11332    Error while loading game info from save of unsupported version r15833
+20:55:41.408     4,226s       6ms  11332    Error loading save 'Nowa Misja 2024-08-11 #1'
+20:55:41.416     4,234s       7ms  11332    Error loading save 'Nowa Misja 2024-08-11 #2'
+20:55:41.423     4,241s       7ms  11332    Error loading save 'Nowa Misja 2024-08-11 #3'
+20:55:41.429     4,247s       6ms  11332    Error loading save 'TMR09 2024-08-05 #1'
+20:55:41.436     4,254s       7ms  11332    Error loading save 'TSK 1 2024-10-30 #2'
+20:55:41.443     4,261s       7ms  11332    Error loading save 'TSK 18 2024-10-30 #6'
+20:55:41.449     4,267s       6ms  11332    Error loading save 'TSK 2 2024-10-30 #5'
+20:55:41.456     4,274s       7ms  11332    Error loading save 'TSK 20 2024-10-30 #1'
+20:55:41.463     4,281s       7ms  11332    Error loading save 'TSK 3 2024-10-30 #3'
+20:55:41.470     4,288s       7ms  11332    Error loading save 'TSK 6 2024-10-30 #4'
+20:55:41.477     4,296s       7ms  11332    Error loading save 'TUA22'
+20:55:41.607     4,425s     129ms  19348    Load Sprites Done
+20:55:42.545     5,363s     938ms  22332    LoadGameResources ... AlphaShadows: True. Forced: False
+20:55:42.551     5,370s       7ms  22332    TKMResSprites.LoadGameResources
+20:55:42.698     5,517s     147ms  19348    [AsyncGameResLoader Thread] DONE Load RXX 'Units.rxa'
+20:55:42.705     5,523s       6ms  22332    [AsyncGameResLoader MainTh] [LoadGameResources] GenTextures RT = rxUnits Stage = lsGenMain
+20:55:42.765     5,584s      61ms  22332    [AsyncGameResLoader MainTh] [LoadGameResources] DONE
+20:55:42.773     5,591s       7ms  19348    [AsyncGameResLoader Thread] RT = rxUnits Stage = lsOverload
+20:55:42.779     5,598s       7ms  19348    [AsyncGameResLoader Thread] OverloadFromFolder RT = rxUnits
+20:55:43.805     6,624s    1026ms  19348    [AsyncGameResLoader Thread] DONE OverloadFromFolder RT = rxUnits
+20:55:43.812     6,630s       6ms  22332    [AsyncGameResLoader MainTh] [LoadGameResources] GenTextures RT = rxUnits Stage = lsGenOverload
+20:55:43.818     6,637s       7ms  22332    [AsyncGameResLoader Thread] Stopped
+20:55:43.825     6,643s       6ms  22332    [AsyncGameResLoader MainTh] [LoadGameResources] DONE
+20:55:43.831     6,650s       7ms  22332    Resource loading state - Game
+20:55:43.838     6,656s       6ms  22332    Saving dev settings to file 'kmr_dev.xml'
+20:55:43.885     6,703s      47ms  22332    <== Game creation is done ==>
+20:55:43.892     6,711s       8ms  22332    Loading game from: E:\programowanie\projekty delphi\kam_expansion\Saves\autosave01\autosave01.sav
+20:55:43.930     6,749s      38ms  22332    Terrain loaded
+20:55:44.066     6,884s     135ms  22332    Interface loaded
+20:55:44.072     6,890s       6ms  22332    Set game seed: 2033974395
+20:55:44.119     6,938s      48ms  22332    Loading game ... done
+20:55:44.126     6,944s       6ms  22332    After game loading
+20:55:44.212     7,031s      87ms  22332    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+20:55:44.219     7,037s       6ms  22332    After game loading ... done
+                                      Unable to make a route for Piroman:9792755 from (148;39) to (38;8) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:5818337 from (133;49) to (38;8) with "Can walk" TargetWC_Set = []
+20:55:48.714    11,532s    4495ms  22332    Issue gicGameAutoSave command at tick 80400
+20:55:48.721    11,539s       7ms  22332    Saving game at tick 80400 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+20:55:49.717    12,535s     996ms  22332    Make savepoint at tick 80999
+20:55:49.726    12,544s       9ms  22332    Issue gicGameAutoSave command at tick 81000
+20:55:49.733    12,551s       7ms  22332    Saving game at tick 81000 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+20:55:55.932    18,750s    6199ms  22332    Issue gicGameAutoSave command at tick 81600
+20:55:55.938    18,756s       6ms  22332    Saving game at tick 81600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+                                      Unable to make a route for Niszczyciel:11928370 from (134;49) to (38;8) with "Can walk" TargetWC_Set = []
+20:56:01.931    24,749s    5992ms  22332    Issue gicGameAutoSave command at tick 82200
+20:56:01.937    24,755s       6ms  22332    Saving game at tick 82200 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+20:56:08.188    31,006s    6251ms  22332    Issue gicGameAutoSave command at tick 82800
+20:56:08.195    31,013s       7ms  22332    Saving game at tick 82800 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+                                      Unable to make a route for Niszczyciel:15023863 from (140;50) to (38;8) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:7012074 from (135;38) to (38;8) with "Can walk" TargetWC_Set = []
+20:56:14.386    37,204s    6191ms  22332    Issue gicGameAutoSave command at tick 83400
+20:56:14.391    37,209s       5ms  22332    Saving game at tick 83400 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+20:56:22.339    45,158s    7949ms  22332    Issue gicGameAutoSave command at tick 84000
+20:56:22.347    45,166s       7ms  22332    Saving game at tick 84000 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+                                      Unable to make a route for Niszczyciel:4832122 from (135;38) to (38;8) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:12843911 from (135;50) to (38;8) with "Can walk" TargetWC_Set = []
+20:56:31.293    54,112s    8946ms  22332    Gameplay ended - grCancel /
+                                      Loading campaign images.rxx for HKS
+20:56:32.580    55,398s    1286ms    348    Custom - 1
+                                      Loading campaign images.rxx for KSN
+20:56:32.647    55,466s      68ms    348    Custom - 1
+                                      Loading campaign images.rxx for KSO
+20:56:32.704    55,522s      56ms    348    Custom - 1
+                                      Loading campaign images.rxx for KSU
+20:56:32.760    55,578s      55ms    348    Custom - 1
+20:56:32.773    55,591s      13ms  22332    Saving dev settings to file 'kmr_dev.xml'
+                                      Loading campaign images.rxx for OFL
+20:56:32.823    55,641s      50ms    348    Custom - 1
+                                      Loading campaign images.rxx for OER
+20:56:32.864    55,682s      41ms    348    Custom - 1
+                                      Loading campaign images.rxx for TBK
+20:56:32.908    55,727s      45ms    348    Custom - 1
+                                      Loading campaign images.rxx for TPR
+20:56:32.967    55,785s      58ms    348    Custom - 1
+                                      Loading campaign images.rxx for TSK
+20:56:33.021    55,839s      54ms    348    Custom - 1
+                                      Loading campaign images.rxx for TUA
+20:56:33.061    55,879s      40ms    348    Custom - 1
+                                      Loading campaign images.rxx for TMR
+20:56:33.208    56,027s     148ms    348    Custom - 1
+20:56:33.811    56,630s     603ms  22332    LoadGameResources ... AlphaShadows: True. Forced: False
+20:56:33.820    56,638s       8ms  22332    Resource loading state - Game
+20:56:33.846    56,665s      27ms  22332    Saving dev settings to file 'kmr_dev.xml'
+20:56:33.887    56,705s      40ms  22332    <== Game creation is done ==>
+20:56:33.893    56,712s       7ms  22332    GameStart
+20:56:33.899    56,717s       5ms  22332    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\MapsMP\TMR14\TMR14.dat
+20:56:33.905    56,723s       6ms  22332    Loading map file: E:\programowanie\projekty delphi\kam_expansion\MapsMP\TMR14\TMR14.map
+20:56:33.942    56,760s      37ms  22332    Map file loaded
+20:56:34.281    57,099s     339ms  22332    Gameplay recording initialized ... done
+20:56:34.287    57,105s       6ms  22332    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+20:56:34.293    57,112s       7ms  22332    Gameplay initialized ... done
+20:56:34.299    57,117s       5ms  22332    After game start
+20:56:34.341    57,159s      42ms  22332    Set game seed: 483059167
+20:56:34.349    57,168s       9ms  22332    After game start ... done
+20:56:57.323    80,141s   22973ms  22332    Saving from map editor: E:\programowanie\projekty delphi\kam_expansion\MapsMP\TMR14\TMR14.dat
+20:56:57.471    80,289s     148ms  22332    LoadGameResources ... AlphaShadows: True. Forced: False
+20:56:57.479    80,297s       8ms  22332    Resource loading state - Game
+20:56:57.494    80,313s      16ms  22332    Saving dev settings to file 'kmr_dev.xml'
+20:56:57.551    80,369s      56ms  22332    <== Game creation is done ==>
+20:56:57.558    80,376s       7ms  22332    GameStart
+20:56:57.564    80,382s       6ms  22332    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\MapsMP\TMR14\TMR14.dat
+20:56:57.570    80,388s       6ms  22332    Loading map file: E:\programowanie\projekty delphi\kam_expansion\MapsMP\TMR14\TMR14.map
+20:56:57.604    80,422s      34ms  22332    Map file loaded
+20:56:57.850    80,669s     247ms  22332    Gameplay recording initialized ... done
+20:56:57.857    80,676s       7ms  22332    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+20:56:57.863    80,681s       5ms  22332    Gameplay initialized ... done
+20:56:57.869    80,687s       6ms  22332    After game start
+20:56:58.007    80,825s     138ms  22332    Set game seed: 1433762138
+20:56:58.013    80,831s       6ms  22332    Saving game at tick 0 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\basesave\basesave.bas'
+20:56:58.027    80,846s      14ms  22332    After game start ... done
+20:56:58.680    81,499s     653ms  22332    Saving dev settings to file 'kmr_dev.xml'
+20:56:59.795    82,613s    1114ms  22332    Saving dev settings to file 'kmr_dev.xml'
+20:57:14.074    96,892s   14279ms  22332    Saving dev settings to file 'kmr_dev.xml'
+20:57:15.517    98,335s    1442ms  22332    Saving dev settings to file 'kmr_dev.xml'
+20:57:22.086   104,904s    6569ms  22332    Issue gicGameAutoSave command at tick 600
+20:57:22.092   104,911s       7ms  22332    Saving game at tick 600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+20:57:23.092   105,910s     999ms  22332    Issue gicGameAutoSave command at tick 1200
+20:57:23.099   105,917s       7ms  22332    Saving game at tick 1200 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+20:57:25.444   108,263s    2346ms  22332    LoadGameResources ... AlphaShadows: True. Forced: False
+20:57:25.454   108,272s       9ms  22332    Resource loading state - Game
+20:57:25.478   108,297s      25ms  22332    Saving dev settings to file 'kmr_dev.xml'
+20:57:25.520   108,338s      40ms  22332    <== Game creation is done ==>
+20:57:25.527   108,345s       7ms  22332    GameStart
+20:57:25.533   108,352s       7ms  22332    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\MapsMP\TMR14\TMR14.dat
+20:57:25.539   108,357s       5ms  22332    Loading map file: E:\programowanie\projekty delphi\kam_expansion\MapsMP\TMR14\TMR14.map
+20:57:25.577   108,395s      38ms  22332    Map file loaded
+20:57:25.911   108,730s     335ms  22332    Gameplay recording initialized ... done
+20:57:25.918   108,737s       7ms  22332    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+20:57:25.923   108,742s       5ms  22332    Gameplay initialized ... done
+20:57:25.930   108,748s       6ms  22332    After game start
+20:57:25.971   108,789s      41ms  22332    Set game seed: 537781307
+20:57:25.981   108,799s      10ms  22332    After game start ... done
+21:01:05.015   327,833s  219033ms  22332    Saving from map editor: E:\programowanie\projekty delphi\kam_expansion\MapsMP\TMR14\TMR14.dat
+21:01:05.160   327,979s     146ms  22332    LoadGameResources ... AlphaShadows: True. Forced: False
+21:01:05.167   327,986s       7ms  22332    Resource loading state - Game
+21:01:05.186   328,004s      18ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:01:05.236   328,054s      50ms  22332    <== Game creation is done ==>
+21:01:05.243   328,061s       7ms  22332    GameStart
+21:01:05.248   328,066s       5ms  22332    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\MapsMP\TMR14\TMR14.dat
+21:01:05.254   328,073s       7ms  22332    Loading map file: E:\programowanie\projekty delphi\kam_expansion\MapsMP\TMR14\TMR14.map
+21:01:05.289   328,107s      34ms  22332    Map file loaded
+21:01:05.537   328,355s     248ms  22332    Gameplay recording initialized ... done
+21:01:05.543   328,361s       6ms  22332    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+21:01:05.549   328,367s       6ms  22332    Gameplay initialized ... done
+21:01:05.554   328,373s       6ms  22332    After game start
+21:01:05.705   328,523s     150ms  22332    Set game seed: 1204822825
+21:01:05.711   328,530s       7ms  22332    Saving game at tick 0 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\basesave\basesave.bas'
+21:01:05.722   328,541s      11ms  22332    Script: Invalid parameter(s) passed to Actions.HouseUnlock: 0, 26
+21:01:05.730   328,548s       6ms  22332    Script: Invalid parameter(s) passed to Actions.HouseUnlock: 1, 26
+21:01:05.736   328,554s       6ms  22332    Script: Invalid parameter(s) passed to Actions.HouseUnlock: 3, 26
+21:01:05.742   328,561s       7ms  22332    After game start ... done
+21:01:07.840   330,659s    2098ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:01:13.862   336,680s    6021ms  22332    LoadGameResources ... AlphaShadows: True. Forced: False
+21:01:13.869   336,687s       7ms  22332    Resource loading state - Game
+21:01:13.897   336,716s      29ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:01:13.937   336,755s      39ms  22332    <== Game creation is done ==>
+21:01:13.944   336,762s       7ms  22332    GameStart
+21:01:13.950   336,768s       6ms  22332    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\MapsMP\TMR14\TMR14.dat
+21:01:13.956   336,775s       7ms  22332    Loading map file: E:\programowanie\projekty delphi\kam_expansion\MapsMP\TMR14\TMR14.map
+21:01:13.994   336,812s      37ms  22332    Map file loaded
+21:01:14.326   337,144s     332ms  22332    Gameplay recording initialized ... done
+21:01:14.332   337,150s       6ms  22332    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+21:01:14.338   337,156s       6ms  22332    Gameplay initialized ... done
+21:01:14.344   337,162s       6ms  22332    After game start
+21:01:14.386   337,204s      42ms  22332    Set game seed: 1311722977
+21:01:14.394   337,214s      10ms  22332    After game start ... done
+21:01:18.387   341,205s    3991ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:02:48.500   431,318s   90113ms  22332    Saving from map editor: E:\programowanie\projekty delphi\kam_expansion\MapsMP\TMR14\TMR14.dat
+21:02:51.619   434,438s    3120ms  22332    Saving from map editor: E:\programowanie\projekty delphi\kam_expansion\MapsMP\TMR14\TMR14.dat
+21:02:55.871   438,689s    4251ms  22332    Saving from map editor: E:\programowanie\projekty delphi\kam_expansion\MapsMP\TMR14\TMR14.dat
+21:02:56.018   438,836s     146ms  22332    LoadGameResources ... AlphaShadows: True. Forced: False
+21:02:56.025   438,844s       8ms  22332    Resource loading state - Game
+21:02:56.047   438,865s      21ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:02:56.102   438,920s      55ms  22332    <== Game creation is done ==>
+21:02:56.109   438,928s       8ms  22332    GameStart
+21:02:56.115   438,934s       6ms  22332    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\MapsMP\TMR14\TMR14.dat
+21:02:56.121   438,939s       5ms  22332    Loading map file: E:\programowanie\projekty delphi\kam_expansion\MapsMP\TMR14\TMR14.map
+21:02:56.156   438,974s      35ms  22332    Map file loaded
+21:02:56.405   439,223s     249ms  22332    Gameplay recording initialized ... done
+21:02:56.411   439,229s       6ms  22332    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+21:02:56.417   439,235s       6ms  22332    Gameplay initialized ... done
+21:02:56.423   439,241s       6ms  22332    After game start
+21:02:56.560   439,378s     137ms  22332    Set game seed: 1848201067
+21:02:56.566   439,385s       6ms  22332    Saving game at tick 0 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\basesave\basesave.bas'
+21:02:56.578   439,396s      11ms  22332    Script: Invalid parameter(s) passed to Actions.HouseUnlock: 0, 26
+21:02:56.584   439,403s       7ms  22332    Script: Invalid parameter(s) passed to Actions.HouseUnlock: 1, 26
+21:02:56.591   439,410s       7ms  22332    Script: Invalid parameter(s) passed to Actions.HouseUnlock: 2, 26
+21:02:56.597   439,416s       6ms  22332    Script: Invalid parameter(s) passed to Actions.HouseUnlock: 3, 26
+21:02:56.604   439,422s       6ms  22332    After game start ... done
+21:02:56.693   439,511s      89ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:02:58.985   441,803s    2292ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:03:18.875   461,693s   19890ms  22332    Issue gicGameAutoSave command at tick 600
+21:03:18.882   461,700s       6ms  22332    Saving game at tick 600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:03:24.874   467,693s    5993ms  22332    Issue gicGameAutoSave command at tick 1200
+21:03:24.884   467,702s       9ms  22332    Saving game at tick 1200 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:03:34.686   477,504s    9802ms  22332    Issue gicGameAutoSave command at tick 1800
+21:03:34.693   477,511s       7ms  22332    Saving game at tick 1800 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:03:43.193   486,011s    8500ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:03:45.135   487,953s    1941ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:03:46.658   489,476s    1523ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:03:47.437   490,255s     779ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:03:47.706   490,525s     270ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:03:49.296   492,114s    1589ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:03:55.688   498,507s    6392ms  22332    Issue gicGameAutoSave command at tick 2400
+21:03:55.695   498,513s       6ms  22332    Saving game at tick 2400 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:03:56.546   499,364s     851ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:03:57.433   500,251s     887ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:03:59.455   502,274s    2023ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:04:09.837   512,655s   10381ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:04:12.288   515,106s    2451ms  22332    Issue gicGameAutoSave command at tick 3000
+21:04:12.295   515,113s       7ms  22332    Saving game at tick 3000 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:04:25.753   528,571s   13458ms  22332    Issue gicGameAutoSave command at tick 3600
+21:04:25.760   528,578s       7ms  22332    Saving game at tick 3600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+                                      Unable to make a route for Piroman:16180984 from (148;39) to (39;13) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Piroman:12493762 from (146;107) to (103;217) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Piroman:3531095 from (135;52) to (39;13) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Piroman:5989243 from (123;88) to (39;13) with "Can walk" TargetWC_Set = []
+21:04:40.596   543,414s   14836ms  22332    Issue gicGameAutoSave command at tick 4200
+21:04:40.602   543,421s       7ms  22332    Saving game at tick 4200 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:04:41.895   544,713s    1292ms  22332    Issue gicGameAutoSave command at tick 4800
+21:04:41.906   544,724s      10ms  22332    Saving game at tick 4800 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+                                      Unable to make a route for Niszczyciel:11148398 from (134;49) to (46;15) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Piroman:12099276 from (131;116) to (103;217) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:1826582 from (143;100) to (103;217) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:13884742 from (142;86) to (46;15) with "Can walk" TargetWC_Set = []
+21:04:42.909   545,727s    1003ms  22332    Issue gicGameAutoSave command at tick 5400
+21:04:42.914   545,733s       6ms  22332    Saving game at tick 5400 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:04:43.897   546,715s     982ms  22332    Issue gicGameAutoSave command at tick 6000
+21:04:43.904   546,722s       7ms  22332    Saving game at tick 6000 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+                                      Unable to make a route for Niszczyciel:8017568 from (134;49) to (46;15) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:7263933 from (140;44) to (46;15) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:9722081 from (124;100) to (46;15) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:16226600 from (144;119) to (107;216) with "Can walk" TargetWC_Set = []
+21:04:44.908   547,726s    1004ms  22332    Issue gicGameAutoSave command at tick 6600
+21:04:44.913   547,731s       5ms  22332    Saving game at tick 6600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:04:45.895   548,713s     982ms  22332    Issue gicGameAutoSave command at tick 7200
+21:04:45.902   548,721s       7ms  22332    Saving game at tick 7200 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+                                      Unable to make a route for Niszczyciel:5640373 from (134;49) to (46;15) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:14324844 from (125;100) to (108;212) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:4133103 from (137;45) to (46;15) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:4805785 from (147;117) to (108;212) with "Can walk" TargetWC_Set = []
+21:04:47.736   550,554s    1833ms  22332    Issue gicGameAutoSave command at tick 7800
+21:04:47.742   550,560s       5ms  22332    Saving game at tick 7800 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:05:14.155   576,973s   26413ms  22332    Issue gicGameAutoSave command at tick 8400
+21:05:14.161   576,980s       7ms  22332    Saving game at tick 8400 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+                                      Unable to make a route for Niszczyciel:9014062 from (134;49) to (52;16) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:1199516 from (126;101) to (48;25) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:7506792 from (138;45) to (52;16) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:15715824 from (145;120) to (108;212) with "Can walk" TargetWC_Set = []
+21:05:15.762   578,581s    1601ms  22332    Make savepoint at tick 8999
+21:05:15.770   578,588s       7ms  22332    Issue gicGameAutoSave command at tick 9000
+21:05:15.776   578,594s       6ms  22332    Saving game at tick 9000 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:05:16.765   579,583s     988ms  22332    Issue gicGameAutoSave command at tick 9600
+21:05:16.771   579,590s       7ms  22332    Saving game at tick 9600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:05:17.754   580,572s     982ms  22332    Issue gicGameAutoSave command at tick 10200
+21:05:17.760   580,579s       7ms  22332    Saving game at tick 10200 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+                                      Unable to make a route for Niszczyciel:3622327 from (134;49) to (52;16) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:2115057 from (138;44) to (52;16) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:15599534 from (124;102) to (48;25) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:14567703 from (147;120) to (108;212) with "Can walk" TargetWC_Set = []
+21:05:18.764   581,583s    1004ms  22332    Issue gicGameAutoSave command at tick 10800
+21:05:18.770   581,588s       5ms  22332    Saving game at tick 10800 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:05:19.755   582,573s     985ms  22332    Issue gicGameAutoSave command at tick 11400
+21:05:19.762   582,580s       7ms  22332    Saving game at tick 11400 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+                                      Unable to make a route for Niszczyciel:16515075 from (134;49) to (52;16) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:410544 from (142;122) to (108;212) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:16236879 from (135;46) to (52;16) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:9929603 from (125;104) to (48;25) with "Can walk" TargetWC_Set = []
+21:05:27.409   590,227s    7647ms  22332    Issue gicGameAutoSave command at tick 12000
+21:05:27.416   590,235s       8ms  22332    Saving game at tick 12000 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+                                      Unable to make a route for Niszczyciel:8306043 from (139;50) to (52;16) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:1199516 from (135;101) to (105;205) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:9929603 from (125;113) to (105;205) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:15599534 from (124;111) to (105;205) with "Can walk" TargetWC_Set = []
+21:05:40.930   603,749s   13514ms  22332    Issue gicGameAutoSave command at tick 12600
+21:05:40.937   603,756s       7ms  22332    Saving game at tick 12600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:05:46.924   609,743s    5987ms  22332    Issue gicGameAutoSave command at tick 13200
+21:05:46.932   609,750s       7ms  22332    Saving game at tick 13200 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+                                      Unable to make a route for Niszczyciel:4897017 from (139;50) to (52;16) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:11320583 from (146;143) to (105;205) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:15366954 from (144;102) to (105;205) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:14613319 from (124;99) to (48;25) with "Can walk" TargetWC_Set = []
+21:05:52.930   615,748s    5998ms  22332    Issue gicGameAutoSave command at tick 13800
+21:05:52.936   615,754s       6ms  22332    Saving game at tick 13800 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:05:58.924   621,743s    5988ms  22332    Issue gicGameAutoSave command at tick 14400
+21:05:58.931   621,750s       7ms  22332    Saving game at tick 14400 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+                                      Unable to make a route for Niszczyciel:10531611 from (140;50) to (52;16) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:1766187 from (135;49) to (52;16) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:14416076 from (108;148) to (105;205) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:9975219 from (144;101) to (105;205) with "Can walk" TargetWC_Set = []
+21:06:04.930   627,748s    5998ms  22332    Issue gicGameAutoSave command at tick 15000
+21:06:04.936   627,754s       6ms  22332    Saving game at tick 15000 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:06:10.924   633,742s    5987ms  22332    Issue gicGameAutoSave command at tick 15600
+21:06:10.930   633,748s       6ms  22332    Saving game at tick 15600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+                                      Unable to make a route for Niszczyciel:16641644 from (139;50) to (52;16) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:15888009 from (135;49) to (52;16) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:5615315 from (136;45) to (52;16) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:4780727 from (108;148) to (105;205) with "Can walk" TargetWC_Set = []
+21:06:13.699   636,517s    2769ms  22332    Issue gicGameAutoSave command at tick 16200
+21:06:13.705   636,523s       6ms  22332    Saving game at tick 16200 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:06:14.691   637,509s     986ms  22332    Issue gicGameAutoSave command at tick 16800
+21:06:14.698   637,516s       7ms  22332    Saving game at tick 16800 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+                                      Unable to make a route for Niszczyciel:13035375 from (138;50) to (52;16) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:12281740 from (133;49) to (52;16) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:8154416 from (110;147) to (96;203) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:10020835 from (138;45) to (52;16) with "Can walk" TargetWC_Set = []
+21:06:17.348   640,166s    2650ms  22332    Issue gicGameAutoSave command at tick 17400
+21:06:17.355   640,173s       7ms  22332    Saving game at tick 17400 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:06:21.511   644,329s    4156ms  22332    Make savepoint at tick 17999
+21:06:21.529   644,347s      18ms  22332    Issue gicGameAutoSave command at tick 18000
+21:06:21.535   644,353s       6ms  22332    Saving game at tick 18000 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:06:24.529   647,347s    2994ms  22332    Issue gicGameAutoSave command at tick 18600
+21:06:24.536   647,354s       7ms  22332    Saving game at tick 18600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+                                      Unable to make a route for Niszczyciel:7921836 from (134;49) to (52;16) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:15933625 from (139;50) to (52;16) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:16049915 from (106;145) to (96;203) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:6414566 from (138;45) to (52;16) with "Can walk" TargetWC_Set = []
+21:06:29.378   652,196s    4842ms  22332    Issue gicGameAutoSave command at tick 19200
+21:06:29.385   652,203s       7ms  22332    Saving game at tick 19200 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:06:35.007   657,825s    5622ms  22332    Issue gicGameAutoSave command at tick 19800
+21:06:35.014   657,832s       7ms  22332    Saving game at tick 19800 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:06:37.537   660,356s    2524ms  22332    Issue gicGameAutoSave command at tick 20400
+21:06:37.545   660,363s       7ms  22332    Saving game at tick 20400 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+                                      Unable to make a route for Niszczyciel:12327356 from (135;38) to (52;16) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Piroman:2808297 from (139;50) to (52;16) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Piroman:10066451 from (145;44) to (52;16) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:7249154 from (146;103) to (97;199) with "Can walk" TargetWC_Set = []
+21:06:38.984   661,802s    1439ms  22332    Issue gicGameAutoSave command at tick 21000
+21:06:38.989   661,807s       5ms  22332    Saving game at tick 21000 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:06:39.983   662,801s     994ms  22332    Issue gicGameAutoSave command at tick 21600
+21:06:39.990   662,808s       7ms  22332    Saving game at tick 21600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+                                      Unable to make a route for Piroman:10066451 from (145;45) to (52;22) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:7921836 from (134;51) to (52;22) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:15933625 from (138;52) to (52;22) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:6414566 from (135;44) to (52;22) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:13035375 from (138;53) to (52;22) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:12281740 from (134;50) to (52;22) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:10020835 from (140;51) to (52;22) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:16641644 from (140;50) to (52;22) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:15888009 from (137;51) to (52;22) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:5615315 from (134;43) to (52;22) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:10531611 from (141;50) to (52;22) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:1766187 from (132;49) to (52;22) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:4897017 from (141;48) to (52;22) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:8306043 from (139;52) to (52;22) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:16515075 from (137;52) to (52;22) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:16236879 from (137;44) to (52;22) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:3622327 from (135;51) to (52;22) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:2115057 from (140;43) to (52;22) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:9014062 from (132;51) to (52;22) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Niszczyciel:7506792 from (133;51) to (52;22) with "Can walk" TargetWC_Set = []
+21:07:10.102   692,921s   30112ms  22332    Issue gicGameAutoSave command at tick 22200
+21:07:10.108   692,927s       6ms  22332    Saving game at tick 22200 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:07:11.102   693,921s     994ms  22332    Issue gicGameAutoSave command at tick 22800
+21:07:11.109   693,928s       7ms  22332    Saving game at tick 22800 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:07:14.609   697,427s    3499ms  22332    Issue gicGameAutoSave command at tick 23400
+21:07:14.615   697,434s       7ms  22332    Saving game at tick 23400 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:07:21.740   704,559s    7125ms  22332    Issue gicGameAutoSave command at tick 24000
+21:07:21.747   704,566s       7ms  22332    Saving game at tick 24000 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:07:29.055   711,873s    7307ms  22332    Issue gicGameAutoSave command at tick 24600
+21:07:29.061   711,880s       7ms  22332    Saving game at tick 24600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:07:35.288   718,107s    6227ms  22332    Issue gicGameAutoSave command at tick 25200
+21:07:35.295   718,113s       6ms  22332    Saving game at tick 25200 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:07:41.274   724,092s    5979ms  22332    Issue gicGameAutoSave command at tick 25800
+21:07:41.281   724,099s       7ms  22332    Saving game at tick 25800 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:07:47.288   730,107s    6008ms  22332    Issue gicGameAutoSave command at tick 26400
+21:07:47.295   730,113s       6ms  22332    Saving game at tick 26400 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:07:53.257   736,076s    5963ms  22332    Make savepoint at tick 26999
+21:07:53.274   736,093s      17ms  22332    Issue gicGameAutoSave command at tick 27000
+21:07:53.282   736,100s       7ms  22332    Saving game at tick 27000 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:07:59.273   742,092s    5992ms  22332    Issue gicGameAutoSave command at tick 27600
+21:07:59.279   742,098s       6ms  22332    Saving game at tick 27600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:08:05.274   748,092s    5994ms  22332    Issue gicGameAutoSave command at tick 28200
+21:08:05.281   748,099s       7ms  22332    Saving game at tick 28200 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+                                      Unable to make a route for Osi³ek:1589502 from (127;219) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:3572211 from (132;223) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:6308555 from (132;224) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:9798534 from (131;224) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:11781243 from (133;221) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:5752163 from (133;223) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:5473967 from (132;221) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:16222100 from (133;222) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:673961 from (131;223) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:2656670 from (133;220) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:4639379 from (132;220) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:117569 from (133;224) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:10112067 from (131;222) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:14355681 from (132;222) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:6819331 from (131;220) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:36616 from (130;223) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:13045654 from (131;221) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:5509304 from (130;221) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:233859 from (130;224) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:2216568 from (128;224) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:5706547 from (129;223) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:3921081 from (130;222) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:14669214 from (133;219) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:5625594 from (131;219) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:16373727 from (130;220) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:1579223 from (130;219) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:13834626 from (128;223) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:1776466 from (132;219) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:12524599 from (128;222) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:15260943 from (129;224) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:2727344 from (137;221) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:14229112 from (129;222) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:8953667 from (136;221) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:10936376 from (138;221) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:13672720 from (127;224) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:860925 from (127;223) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:15377233 from (126;224) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:12838132 from (135;221) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:1811803 from (126;223) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:1255411 from (136;220) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:7006295 from (138;220) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:1452654 from (135;220) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:16722597 from (127;222) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:5418072 from (125;224) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:9661686 from (125;222) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:7122585 from (137;220) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:13070712 from (135;219) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:4027092 from (136;219) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:16282495 from (125;223) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:13743394 from (138;219) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:10450658 from (137;219) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:8943388 from (126;222) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:14401297 from (138;231) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:3374968 from (128;218) to (93;167) with "Can walk" TargetWC_Set = []
+21:08:11.279   754,098s    5998ms  22332    Issue gicGameAutoSave command at tick 28800
+21:08:11.286   754,104s       6ms  22332    Saving game at tick 28800 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+                                      Unable to make a route for Osi³ek:14401297 from (138;231) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:3374968 from (128;218) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:1589502 from (127;219) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:916820 from (139;232) to (93;167) with "Can walk" TargetWC_Set = []
+21:08:17.281   760,099s    5995ms  22332    Issue gicGameAutoSave command at tick 29400
+21:08:17.288   760,106s       7ms  22332    Saving game at tick 29400 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:08:20.040   762,858s    2752ms  22332    Issue gicGameAutoSave command at tick 30000
+21:08:20.047   762,865s       7ms  22332    Saving game at tick 30000 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+                                      Unable to make a route for Osi³ek:916820 from (139;232) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:14401297 from (138;231) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:3374968 from (128;218) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:1589502 from (127;219) to (93;167) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:12221345 from (141;232) to (93;167) with "Can walk" TargetWC_Set = []
+21:08:21.048   763,866s    1001ms  22332    Issue gicGameAutoSave command at tick 30600
+21:08:21.054   763,873s       7ms  22332    Saving game at tick 30600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:08:22.041   764,859s     986ms  22332    Issue gicGameAutoSave command at tick 31200
+21:08:22.049   764,867s       8ms  22332    Saving game at tick 31200 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:08:29.128   771,947s    7080ms  22332    Issue gicGameAutoSave command at tick 31800
+21:08:29.135   771,953s       6ms  22332    Saving game at tick 31800 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:08:37.439   780,257s    8304ms  22332    Issue gicGameAutoSave command at tick 32400
+21:08:37.445   780,264s       7ms  22332    Saving game at tick 32400 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:08:43.454   786,273s    6009ms  22332    Issue gicGameAutoSave command at tick 33000
+21:08:43.461   786,280s       7ms  22332    Saving game at tick 33000 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+                                      Unable to make a route for Osi³ek:12221345 from (126;219) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:916820 from (126;220) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:14401297 from (125;220) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:3374968 from (125;219) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:1589502 from (127;219) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:3572211 from (131;224) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:6308555 from (131;222) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:9798534 from (132;224) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:11781243 from (133;221) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:5752163 from (133;223) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:5473967 from (131;221) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:16222100 from (133;222) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:673961 from (131;223) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:2656670 from (133;220) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:4639379 from (132;220) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:117569 from (133;224) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:10112067 from (132;223) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:14355681 from (132;222) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:6819331 from (130;219) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:36616 from (130;224) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:13045654 from (132;221) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:5509304 from (130;221) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:233859 from (129;224) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:2216568 from (130;223) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:5706547 from (128;224) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:3921081 from (129;223) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:14669214 from (133;219) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:5625594 from (131;220) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:16373727 from (130;220) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:1579223 from (131;219) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:13834626 from (128;223) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:1776466 from (132;219) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:12524599 from (128;222) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:15260943 from (130;222) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:2727344 from (137;221) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:14229112 from (129;222) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:8953667 from (136;221) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:10936376 from (138;221) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:13672720 from (127;223) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:860925 from (126;224) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:15377233 from (127;224) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:12838132 from (136;220) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:1811803 from (125;224) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:1255411 from (135;220) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:7006295 from (138;220) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:1452654 from (135;221) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:16722597 from (127;222) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:5418072 from (125;223) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:9661686 from (126;223) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:7122585 from (137;220) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:13070712 from (135;219) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:4027092 from (136;219) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:16282495 from (125;222) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:13743394 from (138;219) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:10450658 from (137;219) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:8943388 from (126;222) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:13334129 from (134;221) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:1078726 from (138;230) to (95;164) with "Can walk" TargetWC_Set = []
+21:08:49.647   792,465s    6185ms  22332    Issue gicGameAutoSave command at tick 33600
+21:08:49.654   792,472s       7ms  22332    Saving game at tick 33600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:08:54.171   796,990s    4518ms  22332    Issue gicGameAutoSave command at tick 34200
+21:08:54.179   796,997s       6ms  22332    Saving game at tick 34200 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+                                      Unable to make a route for Osi³ek:1078726 from (138;230) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:13334129 from (134;218) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:12221345 from (126;219) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:916820 from (126;220) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:14401297 from (125;220) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:3374968 from (125;219) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:1589502 from (127;219) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:15397791 from (141;232) to (95;164) with "Can walk" TargetWC_Set = []
+21:09:00.432   803,251s    6254ms  22332    Issue gicGameAutoSave command at tick 34800
+21:09:00.439   803,258s       7ms  22332    Saving game at tick 34800 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+                                      Unable to make a route for Osi³ek:15397791 from (143;231) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:1078726 from (138;230) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:13334129 from (134;218) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:12221345 from (126;219) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:916820 from (126;220) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:14401297 from (125;220) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:3374968 from (125;219) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:1589502 from (127;219) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:15675987 from (140;232) to (95;164) with "Can walk" TargetWC_Set = []
+21:09:06.895   809,713s    6455ms  22332    Issue gicGameAutoSave command at tick 35400
+21:09:06.901   809,720s       7ms  22332    Saving game at tick 35400 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+                                      Unable to make a route for Osi³ek:15675987 from (143;234) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:15397791 from (143;231) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:1078726 from (138;230) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:13334129 from (134;218) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:12221345 from (126;219) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:916820 from (126;220) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:14401297 from (125;220) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:3374968 from (125;219) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:1589502 from (127;219) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:10678738 from (139;232) to (95;164) with "Can walk" TargetWC_Set = []
+21:09:16.551   819,369s    9649ms  22332    Make savepoint at tick 35999
+21:09:16.559   819,377s       8ms  22332    Issue gicGameAutoSave command at tick 36000
+21:09:16.567   819,385s       8ms  22332    Saving game at tick 36000 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+                                      Unable to make a route for Wandal:10203299 from (58;16) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:5681489 from (57;21) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Piechur z mieczem:13693278 from (57;19) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:4649658 from (58;14) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:12661447 from (57;14) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:3896023 from (57;20) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Katapulta:15119595 from (66;18) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Katapulta:7583245 from (66;20) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Balista:14087764 from (66;19) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Piechur z mieczem:8812319 from (54;12) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:15316838 from (59;22) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:6551414 from (58;15) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:7780488 from (54;10) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:15792277 from (54;11) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wojownik:15038642 from (55;12) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Kusznik:11386757 from (53;19) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wojownik:15630371 from (55;11) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:14123101 from (55;10) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Piechur z mieczem:5357677 from (56;12) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Pacho³ek:11862196 from (53;21) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wojownik:2818576 from (56;10) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Piechur z mieczem:8569460 from (54;9) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Pacho³ek:15549418 from (53;20) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:6783994 from (59;21) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:16500296 from (60;22) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:7734872 from (59;20) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:15746661 from (55;9) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Pacho³ek:10193020 from (54;19) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Pacho³ek:1427596 from (54;21) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:6424845 from (56;11) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:14436634 from (56;9) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:1068447 from (55;8) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:8326601 from (60;20) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Pacho³ek:16338390 from (54;20) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:2494764 from (60;21) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Piechur z mieczem:8245648 from (55;7) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Piechur z mieczem:16732876 from (56;8) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:12964701 from (56;7) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Pacho³ek:9196526 from (55;15) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Pacho³ek:431102 from (56;15) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:8442891 from (61;19) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:2889250 from (55;6) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Kusznik:7132864 from (55;13) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wojownik:12130113 from (57;8) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for £ucznik:11376478 from (55;14) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:15620092 from (55;5) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:16095531 from (56;6) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for £ucznik:6576472 from (56;13) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:8559181 from (57;6) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:2530101 from (56;5) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Pacho³ek:16292774 from (56;14) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:7527350 from (61;18) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:4988249 from (57;5) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:12640889 from (61;17) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:3875465 from (62;19) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wojownik:1058168 from (57;7) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:5220829 from (62;18) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:13232618 from (62;17) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:9727860 from (46;17) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:16232379 from (50;20) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:962436 from (48;17) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:8220590 from (48;22) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:10678738 from (138;234) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:15675987 from (143;234) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:15397791 from (141;232) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:1078726 from (138;230) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:13334129 from (134;218) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:12221345 from (126;219) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:916820 from (126;220) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:14401297 from (125;220) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:3374968 from (125;219) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:1589502 from (127;219) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:3223341 from (140;232) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:9727860 from (46;17) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:962436 from (51;18) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:5681489 from (57;21) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Piechur z mieczem:13693278 from (57;19) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:3896023 from (57;20) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wojownik:8498786 from (44;21) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wojownik:8498786 from (44;21) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:9727860 from (48;17) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:962436 from (51;18) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:5681489 from (57;21) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Piechur z mieczem:13693278 from (57;19) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:3896023 from (57;20) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:10759691 from (44;16) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:3223341 from (139;234) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:10678738 from (138;234) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:15675987 from (143;234) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:1078726 from (138;230) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:13334129 from (134;218) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:12221345 from (126;219) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:916820 from (126;220) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:14401297 from (125;220) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:3374968 from (125;219) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:1589502 from (127;219) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:3501537 from (140;232) to (95;164) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Osi³ek:15397791 from (141;232) to (95;164) with "Can walk" TargetWC_Set = []
+21:09:24.987   827,805s    8420ms  22332    Issue gicGameAutoSave command at tick 36600
+21:09:24.992   827,810s       5ms  22332    Saving game at tick 36600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+                                      Unable to make a route for Wojownik:8498786 from (45;23) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:9727860 from (48;16) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:962436 from (51;18) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:5681489 from (57;21) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Piechur z mieczem:13693278 from (57;19) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:3896023 from (57;20) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Piechur z mieczem:13020596 from (44;16) to (119;20) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:10759691 from (41;17) to (119;20) with "Can walk" TargetWC_Set = []
+21:09:30.982   833,800s    5990ms  22332    Issue gicGameAutoSave command at tick 37200
+21:09:30.989   833,807s       7ms  22332    Saving game at tick 37200 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+                                      Unable to make a route for Piechur z mieczem:13020596 from (56;20) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:10759691 from (55;18) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wojownik:8498786 from (56;21) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Balista:7745151 from (63;20) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:9727860 from (56;19) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:962436 from (57;18) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:8220590 from (48;22) to (119;22) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:16232379 from (51;20) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:10203299 from (58;16) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:5681489 from (57;21) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Piechur z mieczem:13693278 from (57;19) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:4649658 from (58;14) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:12661447 from (57;14) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:3896023 from (57;20) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Katapulta:15119595 from (66;18) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Katapulta:7583245 from (66;20) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Balista:14087764 from (66;19) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Piechur z mieczem:8812319 from (54;12) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:15316838 from (59;22) to (119;22) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:6551414 from (58;15) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:7780488 from (54;10) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:15792277 from (54;11) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wojownik:15038642 from (55;12) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Kusznik:11386757 from (53;19) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wojownik:15630371 from (55;11) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:14123101 from (55;10) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Piechur z mieczem:5357677 from (56;12) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Pacho³ek:11862196 from (53;21) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wojownik:2818576 from (56;10) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Piechur z mieczem:8569460 from (54;9) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Pacho³ek:15549418 from (53;20) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:6783994 from (59;21) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:16500296 from (60;22) to (119;22) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:7734872 from (59;20) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:15746661 from (55;9) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Pacho³ek:10193020 from (55;19) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Pacho³ek:1427596 from (54;21) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:6424845 from (56;11) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:14436634 from (56;9) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:1068447 from (55;8) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:8326601 from (60;20) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Pacho³ek:16338390 from (54;20) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:2494764 from (60;21) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Piechur z mieczem:8245648 from (55;7) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Piechur z mieczem:16732876 from (56;8) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:12964701 from (56;7) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Pacho³ek:9196526 from (53;15) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Pacho³ek:431102 from (56;15) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:8442891 from (61;19) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:2889250 from (55;6) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Kusznik:7132864 from (55;13) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wojownik:12130113 from (57;8) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for £ucznik:11376478 from (55;14) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:15620092 from (55;5) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:16095531 from (56;6) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for £ucznik:6576472 from (56;13) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:8559181 from (57;6) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:2530101 from (56;5) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Pacho³ek:16292774 from (56;14) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:7527350 from (61;18) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:4988249 from (57;5) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:12640889 from (61;17) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:3875465 from (62;19) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wojownik:1058168 from (57;7) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:5220829 from (62;18) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wandal:13232618 from (62;17) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Piechur z mieczem:13020596 from (56;20) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:10759691 from (54;19) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wojownik:8498786 from (56;21) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:9727860 from (56;19) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:962436 from (57;18) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:5681489 from (57;21) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Piechur z mieczem:13693278 from (57;19) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:3896023 from (57;20) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wojownik:14052427 from (43;21) to (119;21) with "Can walk" TargetWC_Set = []
+21:09:37.926   840,744s    6937ms  22332    Issue gicGameAutoSave command at tick 37800
+21:09:37.931   840,750s       6ms  22332    Saving game at tick 37800 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+                                      Unable to make a route for Balista:7745151 from (63;20) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wojownik:14052427 from (40;15) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Piechur z mieczem:13020596 from (56;20) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:10759691 from (54;19) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wojownik:8498786 from (56;21) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:9727860 from (56;19) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:962436 from (57;18) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:5681489 from (57;21) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Piechur z mieczem:13693278 from (57;19) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:3896023 from (57;20) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:13576988 from (45;16) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:13576988 from (44;16) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Piechur z mieczem:13020596 from (56;20) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:10759691 from (54;19) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wojownik:8498786 from (56;21) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:9727860 from (56;19) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:962436 from (57;18) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:5681489 from (57;21) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Piechur z mieczem:13693278 from (57;19) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:3896023 from (57;20) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wojownik:6318834 from (43;21) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wojownik:14052427 from (41;16) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Katapulta:289754 from (49;24) to (119;23) with "Can walk" TargetWC_Set = []
+21:09:43.912   846,730s    5980ms  22332    Issue gicGameAutoSave command at tick 38400
+21:09:43.919   846,737s       7ms  22332    Saving game at tick 38400 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+                                      Unable to make a route for Wojownik:6318834 from (41;20) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:13576988 from (47;17) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wojownik:14052427 from (40;21) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Piechur z mieczem:13020596 from (56;20) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:10759691 from (54;19) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wojownik:8498786 from (56;21) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:9727860 from (56;19) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:962436 from (57;18) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Topornik:5681489 from (57;21) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Piechur z mieczem:13693278 from (57;19) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for ¯o³dak:3896023 from (57;20) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Wojownik:9611570 from (44;21) to (119;21) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Katapulta:289754 from (49;24) to (119;23) with "Can walk" TargetWC_Set = []
+                                      Unable to make a route for Balista:7745151 from (63;20) to (119;21) with "Can walk" TargetWC_Set = []
+21:09:49.926   852,744s    6007ms  22332    Issue gicGameAutoSave command at tick 39000
+21:09:49.932   852,751s       7ms  22332    Saving game at tick 39000 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+                                      Unable to make a route for Katapulta:13379745 from (49;14) to (119;21) with "Can walk" TargetWC_Set = []
+21:09:55.926   858,745s    5994ms  22332    Issue gicGameAutoSave command at tick 39600
+21:09:55.932   858,750s       5ms  22332    Saving game at tick 39600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:10:01.911   864,730s    5980ms  22332    Issue gicGameAutoSave command at tick 40200
+21:10:01.918   864,737s       7ms  22332    Saving game at tick 40200 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:10:07.905   870,723s    5986ms  22332    Issue gicGameAutoSave command at tick 40800
+21:10:07.912   870,730s       7ms  22332    Saving game at tick 40800 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:10:13.905   876,724s    5994ms  22332    Issue gicGameAutoSave command at tick 41400
+21:10:13.912   876,730s       6ms  22332    Saving game at tick 41400 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:10:19.764   882,583s    5853ms  22332    Issue gicGameAutoSave command at tick 42000
+21:10:19.774   882,592s       9ms  22332    Saving game at tick 42000 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:10:20.764   883,582s     990ms  22332    Issue gicGameAutoSave command at tick 42600
+21:10:20.771   883,589s       7ms  22332    Saving game at tick 42600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:10:23.417   886,235s    2646ms  22332    Issue gicGameAutoSave command at tick 43200
+21:10:23.425   886,243s       8ms  22332    Saving game at tick 43200 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:10:24.410   887,228s     985ms  22332    Issue gicGameAutoSave command at tick 43800
+21:10:24.416   887,235s       7ms  22332    Saving game at tick 43800 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:10:25.410   888,228s     993ms  22332    Issue gicGameAutoSave command at tick 44400
+21:10:25.419   888,237s       9ms  22332    Saving game at tick 44400 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:10:28.528   891,346s    3109ms  22332    Make savepoint at tick 44999
+21:10:28.537   891,355s       9ms  22332    Issue gicGameAutoSave command at tick 45000
+21:10:28.544   891,362s       7ms  22332    Saving game at tick 45000 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:10:30.153   892,971s    1609ms  22332    Issue gicGameAutoSave command at tick 45600
+21:10:30.160   892,978s       7ms  22332    Saving game at tick 45600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:10:34.673   897,492s    4514ms  22332    Issue gicGameAutoSave command at tick 46200
+21:10:34.679   897,498s       6ms  22332    Saving game at tick 46200 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:10:38.169   900,987s    3489ms  22332    Issue gicGameAutoSave command at tick 46800
+21:10:38.176   900,994s       7ms  22332    Saving game at tick 46800 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:10:44.222   907,041s    6047ms  22332    Issue gicGameAutoSave command at tick 47400
+21:10:44.229   907,048s       6ms  22332    Saving game at tick 47400 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:10:45.216   908,035s     987ms  22332    Issue gicGameAutoSave command at tick 48000
+21:10:45.223   908,041s       6ms  22332    Saving game at tick 48000 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:10:47.856   910,675s    2634ms  22332    Issue gicGameAutoSave command at tick 48600
+21:10:47.863   910,682s       6ms  22332    Saving game at tick 48600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:10:53.857   916,676s    5994ms  22332    Issue gicGameAutoSave command at tick 49200
+21:10:53.865   916,683s       7ms  22332    Saving game at tick 49200 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:10:59.869   922,687s    6004ms  22332    Issue gicGameAutoSave command at tick 49800
+21:10:59.875   922,693s       6ms  22332    Saving game at tick 49800 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:11:04.877   927,695s    5002ms  22332    Issue gicGameAutoSave command at tick 50400
+21:11:04.884   927,703s       8ms  22332    Saving game at tick 50400 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:11:12.462   935,281s    7578ms  22332    Issue gicGameAutoSave command at tick 51000
+21:11:12.469   935,288s       7ms  22332    Saving game at tick 51000 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:11:17.712   940,530s    5242ms  22332    Issue gicGameAutoSave command at tick 51600
+21:11:17.719   940,537s       7ms  22332    Saving game at tick 51600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:11:28.493   951,312s   10775ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:11:30.623   953,442s    2130ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:11:30.887   953,706s     264ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:11:31.958   954,776s    1070ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:11:32.382   955,200s     424ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:11:32.847   955,666s     466ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:11:33.148   955,966s     299ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:11:34.124   956,942s     976ms  22332    Issue gicGameAutoSave command at tick 52200
+21:11:34.130   956,948s       6ms  22332    Saving game at tick 52200 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:11:38.698   961,516s    4568ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:11:39.182   962,001s     485ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:11:45.605   968,423s    6422ms  22332    Issue gicGameAutoSave command at tick 52800
+21:11:45.611   968,429s       6ms  22332    Saving game at tick 52800 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:11:46.606   969,425s     996ms  22332    Issue gicGameAutoSave command at tick 53400
+21:11:46.614   969,433s       7ms  22332    Saving game at tick 53400 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:11:48.456   971,274s    1841ms  22332    Make savepoint at tick 53999
+21:11:48.466   971,284s      10ms  22332    Issue gicGameAutoSave command at tick 54000
+21:11:48.472   971,291s       7ms  22332    Saving game at tick 54000 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:11:49.704   972,522s    1231ms  22332    Issue gicGameAutoSave command at tick 54600
+21:11:49.710   972,528s       6ms  22332    Saving game at tick 54600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:11:50.700   973,518s     990ms  22332    Issue gicGameAutoSave command at tick 55200
+21:11:50.706   973,524s       6ms  22332    Saving game at tick 55200 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:11:51.990   974,808s    1284ms  22332    Issue gicGameAutoSave command at tick 55800
+21:11:51.997   974,815s       7ms  22332    Saving game at tick 55800 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:11:52.983   975,801s     986ms  22332    Issue gicGameAutoSave command at tick 56400
+21:11:52.990   975,808s       7ms  22332    Saving game at tick 56400 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:11:56.471   979,289s    3481ms  22332    Issue gicGameAutoSave command at tick 57000
+21:11:56.478   979,297s       8ms  22332    Saving game at tick 57000 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:12:16.407   999,225s   19928ms  22332    Issue gicGameAutoSave command at tick 57600
+21:12:16.413   999,232s       7ms  22332    Saving game at tick 57600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:12:22.405  1005,224s    5992ms  22332    Issue gicGameAutoSave command at tick 58200
+21:12:22.411  1005,230s       6ms  22332    Saving game at tick 58200 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:12:28.409  1011,227s    5997ms  22332    Issue gicGameAutoSave command at tick 58800
+21:12:28.417  1011,235s       8ms  22332    Saving game at tick 58800 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:12:35.925  1018,743s    7508ms  22332    Issue gicGameAutoSave command at tick 59400
+21:12:35.932  1018,750s       7ms  22332    Saving game at tick 59400 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:12:39.880  1022,698s    3948ms  22332    Issue gicGameAutoSave command at tick 60000
+21:12:39.887  1022,706s       8ms  22332    Saving game at tick 60000 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:12:41.111  1023,930s    1224ms  22332    Issue gicGameAutoSave command at tick 60600
+21:12:41.117  1023,936s       6ms  22332    Saving game at tick 60600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:12:44.838  1027,656s    3720ms  22332    Issue gicGameAutoSave command at tick 61200
+21:12:44.846  1027,664s       7ms  22332    Saving game at tick 61200 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:12:51.152  1033,970s    6306ms  22332    Issue gicGameAutoSave command at tick 61800
+21:12:51.159  1033,977s       7ms  22332    Saving game at tick 61800 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:12:57.153  1039,971s    5994ms  22332    Issue gicGameAutoSave command at tick 62400
+21:12:57.159  1039,977s       6ms  22332    Saving game at tick 62400 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:12:58.856  1041,675s    1698ms  22332    Make savepoint at tick 62999
+21:12:58.866  1041,684s       9ms  22332    Issue gicGameAutoSave command at tick 63000
+21:12:58.872  1041,690s       6ms  22332    Saving game at tick 63000 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:13:00.349  1043,167s    1477ms  22332    Issue gicGameAutoSave command at tick 63600
+21:13:00.356  1043,174s       7ms  22332    Saving game at tick 63600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:13:01.624  1044,443s    1269ms  22332    Issue gicGameAutoSave command at tick 64200
+21:13:01.631  1044,450s       7ms  22332    Saving game at tick 64200 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:13:02.627  1045,445s     995ms  22332    Issue gicGameAutoSave command at tick 64800
+21:13:02.634  1045,452s       7ms  22332    Saving game at tick 64800 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:13:07.705  1050,524s    5071ms  22332    Issue gicGameAutoSave command at tick 65400
+21:13:07.713  1050,531s       7ms  22332    Saving game at tick 65400 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:13:13.694  1056,512s    5981ms  22332    Issue gicGameAutoSave command at tick 66000
+21:13:13.701  1056,519s       6ms  22332    Saving game at tick 66000 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+21:13:18.970  1061,789s    5270ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:13:22.728  1065,546s    3757ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:13:24.435  1067,253s    1707ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:13:26.855  1069,673s    2420ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:13:27.305  1070,123s     450ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:13:28.518  1071,337s    1214ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:13:31.585  1074,404s    3067ms  22332    Saving dev settings to file 'kmr_dev.xml'
+21:13:32.585  1075,403s     999ms  22332    Stopping game application...
+21:13:32.602  1075,421s      18ms  22332    Gameplay ended - grSilent /
+21:13:32.610  1075,429s       8ms  22332    Start saving 'Server settings' to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+0118367c KaM_Expansion.exe KM_Settings        106 TKMSettings.SaveToDefaultFile
+0118374f KaM_Expansion.exe KM_Settings        113 TKMSettings.SaveToDefaultFile
+01183388 KaM_Expansion.exe KM_Settings         65 TKMSettings.Destroy
+012c54de KaM_Expansion.exe KM_ServerSettings  117 TKMServerSettings.Destroy
+00bea764 KaM_Expansion.exe System              20 TObject.Free
+00eb97fc KaM_Expansion.exe KromUtils          281 FreeThenNil
+01391c4f KaM_Expansion.exe KM_GameApp         330 TKMGameApp.Destroy
+00bea764 KaM_Expansion.exe System              20 TObject.Free
+00eb97fc KaM_Expansion.exe KromUtils          281 FreeThenNil
+0139c8e5 KaM_Expansion.exe KM_Main            376 TKMMain.Stop
+0139c9c4 KaM_Expansion.exe KM_Main            405 TKMMain.Stop
+0160458d KaM_Expansion.exe KM_FormMain       2212 TFormMain.FormClose
+00e636a7 KaM_Expansion.exe Vcl.Forms              TCustomForm.DoClose
+00e69095 KaM_Expansion.exe Vcl.Forms              TCustomForm.Close
+00e67cd4 KaM_Expansion.exe Vcl.Forms              TCustomForm.WMClose
+00db2cfa KaM_Expansion.exe Vcl.Controls           TControl.WndProc
+00db7ec1 KaM_Expansion.exe Vcl.Controls           TWinControl.WndProc
+00e642e8 KaM_Expansion.exe Vcl.Forms              TCustomForm.WndProc
+00e64303 KaM_Expansion.exe Vcl.Forms              TCustomForm.WndProc
+01604079 KaM_Expansion.exe KM_FormMain       2051 TFormMain.WndProc
+
+21:13:32.633  1075,451s      22ms  22332    'Server settings' was successfully saved to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+21:13:32.859  1075,677s     226ms  22332    Start saving 'GameApp settings' to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'
+0118367c KaM_Expansion.exe KM_Settings         106 TKMSettings.SaveToDefaultFile
+0118374f KaM_Expansion.exe KM_Settings         113 TKMSettings.SaveToDefaultFile
+01183388 KaM_Expansion.exe KM_Settings          65 TKMSettings.Destroy
+01183ae2 KaM_Expansion.exe KM_SettingsXML       44 TKMSettingsXML.Destroy
+01183e0e KaM_Expansion.exe KM_GameAppSettings   57 TKMGameAppSettings.Destroy
+00bea764 KaM_Expansion.exe System               20 TObject.Free
+00eb97fc KaM_Expansion.exe KromUtils           281 FreeThenNil
+0139c8ef KaM_Expansion.exe KM_Main             378 TKMMain.Stop
+0139c9c4 KaM_Expansion.exe KM_Main             405 TKMMain.Stop
+0160458d KaM_Expansion.exe KM_FormMain        2212 TFormMain.FormClose
+00e636a7 KaM_Expansion.exe Vcl.Forms               TCustomForm.DoClose
+00e69095 KaM_Expansion.exe Vcl.Forms               TCustomForm.Close
+00e67cd4 KaM_Expansion.exe Vcl.Forms               TCustomForm.WMClose
+00db2cfa KaM_Expansion.exe Vcl.Controls            TControl.WndProc
+00db7ec1 KaM_Expansion.exe Vcl.Controls            TWinControl.WndProc
+00e642e8 KaM_Expansion.exe Vcl.Forms               TCustomForm.WndProc
+00e64303 KaM_Expansion.exe Vcl.Forms               TCustomForm.WndProc
+01604079 KaM_Expansion.exe KM_FormMain        2051 TFormMain.WndProc
+00db73cc KaM_Expansion.exe Vcl.Controls            TWinControl.MainWndProc
+00db73e7 KaM_Expansion.exe Vcl.Controls            TWinControl.MainWndProc
+
+21:13:32.875  1075,693s      16ms  22332    'GameApp settings' was successfully saved to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'

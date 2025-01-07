@@ -1,0 +1,220 @@
+   Timestamp    Elapsed     Delta  Thread    Description
+========================
+    Date: 2025.01.06
+========================
+13:34:22.628     0,001s       1ms   4004    Log is up and running. Game version: KaM Expansion: Co-op & World Update
+13:34:22.634     0,007s       6ms   4004    Game Load started
+13:34:22.659     0,032s      25ms   4004    Start loading 'GameApp settings' from 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'
+13:34:22.664     0,037s       5ms   4004    'GameApp settings' was successfully loaded from 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'
+13:34:22.680     0,054s       5ms   4004    Start saving 'GameApp settings' to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'
+00fc8b84 KaM_Expansion.exe KM_Settings        106 TKMSettings.SaveToDefaultFile
+00fc8c57 KaM_Expansion.exe KM_Settings        113 TKMSettings.SaveToDefaultFile
+00fc8855 KaM_Expansion.exe KM_Settings         59 TKMSettings.Create
+00fc8f92 KaM_Expansion.exe KM_SettingsXML      38 TKMSettingsXML.Create
+00fc92d3 KaM_Expansion.exe KM_GameAppSettings  51 TKMGameAppSettings.Create
+011dfda8 KaM_Expansion.exe KM_Main            258 TKMMain.Start
+011e0017 KaM_Expansion.exe KM_Main            305 TKMMain.Start
+0146ab2b KaM_Expansion.exe KaM_Expansion      480 initialization
+0146ab5a KaM_Expansion.exe KaM_Expansion      483 initialization
+76c97ba7 KERNEL32.DLL                             BaseThreadInitThunk
+
+13:34:22.720     0,093s      38ms   4004    'GameApp settings' was successfully saved to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'
+13:34:22.762     0,135s      42ms   4004    Start loading 'Server settings' from 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+13:34:22.770     0,143s       8ms   4004    'Server settings' was successfully loaded from 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+13:34:22.777     0,150s       7ms   4004    Start saving 'Server settings' to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+00fc8b84 KaM_Expansion.exe KM_Settings       106 TKMSettings.SaveToDefaultFile
+00fc8c57 KaM_Expansion.exe KM_Settings       113 TKMSettings.SaveToDefaultFile
+00fc8855 KaM_Expansion.exe KM_Settings        59 TKMSettings.Create
+011091b0 KaM_Expansion.exe KM_ServerSettings 109 TKMServerSettings.Create
+011d52b3 KaM_Expansion.exe KM_GameApp        213 TKMGameApp.Create
+011d55de KaM_Expansion.exe KM_GameApp        298 TKMGameApp.Create
+011e101e KaM_Expansion.exe KM_Main           635 TKMMain.ReinitRender
+011e122a KaM_Expansion.exe KM_Main           689 TKMMain.ReinitRender
+011dfebe KaM_Expansion.exe KM_Main           281 TKMMain.Start
+011e0017 KaM_Expansion.exe KM_Main           305 TKMMain.Start
+0146ab2b KaM_Expansion.exe KaM_Expansion     480 initialization
+0146ab5a KaM_Expansion.exe KaM_Expansion     483 initialization
+76c97ba7 KERNEL32.DLL                            BaseThreadInitThunk
+
+13:34:22.790     0,163s      13ms   4004    'Server settings' was successfully saved to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+13:34:22.797     0,170s       6ms   4004    Init Render started
+13:34:23.288     0,661s     491ms   4004    GL_MAX_TEXTURE_SIZE = 32768
+13:34:23.296     0,669s       8ms   4004    GL_MAX_VIEWPORT_DIM = 32768
+                                      OpenGL Vendor: NVIDIA Corporation
+                                      OpenGL Renderer: NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2
+                                      OpenGL Version: 4.6.0 NVIDIA 560.94
+13:34:23.321     0,694s      25ms   4004    Init Render Done
+13:34:23.328     0,701s       7ms   4004    Resource loading state - None
+13:34:23.336     0,709s       8ms   4004    Reading palettes ... done
+13:34:23.345     0,718s       9ms   4004    Reading GUI.rx
+13:34:23.352     0,725s       7ms   4004    Load Sprites started
+13:34:23.359     0,732s       7ms   4004    GUI - 971
+13:34:23.376     0,749s      17ms   4004    Load Sprites Done
+13:34:23.418     0,791s      42ms   4004    Reading GUIMain.rx
+13:34:23.425     0,798s       7ms   4004    Load Sprites started
+13:34:23.431     0,804s       6ms   4004    GUIMain - 105
+13:34:23.482     0,855s      51ms   4004    Load Sprites Done
+13:34:23.536     0,909s      54ms   4004    Reading Tileset.rx
+13:34:23.543     0,916s       7ms   4004    Load Sprites started
+13:34:23.550     0,923s       7ms   4004    Tileset - 5449
+13:34:23.564     0,937s      14ms   4004    Load Sprites Done
+13:34:23.570     0,944s       7ms   4004    GenerateTerrainTransitions started. Legacy = False
+13:34:23.577     0,951s       7ms   4004    TexId = 5451 GenTilesCnt = 2100
+13:34:23.583     0,956s       5ms   4004    TexId = 6051; TexId - fGenTexIdStartI = 600; uniqueTex = 600; totalTex = 1350
+13:34:23.589     0,962s       6ms   4004    GeneratedMasks cnt = 20
+13:34:23.595     0,968s       6ms   4004    GenerateTerrainTransitions Done
+13:34:23.602     0,975s       7ms   4004    GenerateTerrainTransitions started. Legacy = True
+13:34:23.608     0,981s       6ms   4004    Legacy: TexId = 4999 GenTilesCntTemp = 2030
+13:34:23.613     0,986s       5ms   4004    TexId = 5463; TexId - fGenTexIdStartILegacy = 464; uniqueTex = 464; totalTex = 1044
+13:34:23.620     0,993s       7ms   4004    GeneratedMasks cnt = 16
+13:34:23.626     0,999s       6ms   4004    GenerateTerrainTransitions Done
+13:34:23.742     1,115s     116ms   4004    Load font started
+13:34:23.781     1,154s      39ms   4004    Font load took 39ms
+13:34:23.789     1,162s       8ms   4004    Read fonts is done
+13:34:23.807     1,180s      18ms   4004    ReadGFX is done
+13:34:23.813     1,187s       7ms   4004    Resource loading state - Menu
+13:34:23.826     1,199s      12ms  18328    OpenAL init started
+13:34:23.990     1,363s     164ms   4004    Music init done, 24 tracks found
+13:34:24.118     1,492s     128ms   4004    Main menu init done
+                                      Loading campaign images.rxx for HKS
+13:34:24.149     1,522s      30ms  18328    Pre-LoadSFX init ... done
+13:34:24.156     1,530s       8ms  18328    ALC_MONO_SOURCES 255
+13:34:24.163     1,536s       6ms  18328    ALC_STEREO_SOURCES 1
+13:34:24.170     1,543s       7ms  18828    Custom - 1
+13:34:24.177     1,550s       7ms  18328    OpenAL init done
+13:34:24.191     1,564s      14ms   4004    Check game folder 'E:\programowanie\projekty delphi\kam_expansion\' generic permissions: READ: granted; WRITE: granted; EXECUTE: granted; folder is writable: 
+13:34:24.201     1,574s      10ms   4004    LoadGameResources ... AlphaShadows: True. Forced: True
+13:34:24.208     1,581s       7ms   4004    TKMResSprites.LoadGameResources
+13:34:24.214     1,587s       6ms   4004    [AsyncGameResLoader Thread] Started
+13:34:24.228     1,601s      13ms   4004    Resource loading state - Game
+13:34:24.235     1,608s       7ms   4004    ToggleFullscreen
+13:34:24.241     1,614s       5ms   4004    Form Width/Height: 1040:759
+13:34:24.248     1,621s       7ms   4004    Panel Width/Height: 1024:720
+13:34:24.255     1,628s       7ms  21236    [AsyncGameResLoader Thread] RT = rxTrees Stage = lsLoad
+13:34:24.262     1,635s       7ms  21236    [AsyncGameResLoader Thread] Start Load RXX 'Trees.rxx'
+13:34:24.268     1,641s       6ms  21236    Load Sprites started
+13:34:24.277     1,650s       9ms  21236    Trees - 1227
+13:34:24.291     1,664s      14ms   4004    Saving dev settings to file 'kmr_dev.xml'
+                                      Loading campaign images.rxx for KSN
+13:34:24.335     1,708s      44ms  18828    Custom - 1
+13:34:24.342     1,716s       8ms   4004    Saving dev settings to file 'kmr_dev.xml'
+13:34:24.360     1,733s      17ms   4004    Game Load Done in 1767
+                                      Loading campaign images.rxx for KSO
+13:34:24.417     1,790s      57ms  18828    Custom - 1
+13:34:24.435     1,808s      18ms  21236    Load Sprites Done
+                                      Loading campaign images.rxx for KSU
+13:34:24.481     1,854s      46ms  18828    Custom - 1
+                                      Loading campaign images.rxx for OFL
+13:34:24.545     1,918s      64ms  18828    Custom - 1
+13:34:24.551     1,925s       7ms  21236    [AsyncGameResLoader Thread] DONE Load RXX 'Trees.rxa'
+13:34:24.566     1,939s      14ms   4004    [AsyncGameResLoader MainTh] [UpdateStateIdle] GenTextures RT = rxTrees Stage = lsGenMain
+13:34:24.577     1,951s      12ms   4004    [AsyncGameResLoader MainTh] [UpdateStateIdle] DONE
+13:34:24.584     1,957s       6ms  21236    [AsyncGameResLoader Thread] RT = rxTrees Stage = lsOverload
+13:34:24.591     1,964s       7ms  21236    [AsyncGameResLoader Thread] OverloadFromFolder RT = rxTrees
+                                      Loading campaign images.rxx for OER
+13:34:24.603     1,976s      12ms  21236    [AsyncGameResLoader Thread] DONE OverloadFromFolder RT = rxTrees
+13:34:24.609     1,982s       6ms  18828    Custom - 1
+13:34:24.618     1,991s       9ms   4004    [AsyncGameResLoader MainTh] [UpdateStateIdle] GenTextures RT = rxTrees Stage = lsGenOverload
+13:34:24.624     1,997s       6ms   4004    [AsyncGameResLoader MainTh] [UpdateStateIdle] DONE
+13:34:24.632     2,005s       8ms  21236    [AsyncGameResLoader Thread] RT = rxHouses Stage = lsLoad
+13:34:24.638     2,011s       6ms  21236    [AsyncGameResLoader Thread] Start Load RXX 'Houses.rxx'
+13:34:24.645     2,018s       7ms  21236    Load Sprites started
+                                      Loading campaign images.rxx for TBK
+13:34:24.657     2,031s      13ms  21236    Houses - 2710
+13:34:24.664     2,037s       6ms  18828    Custom - 1
+                                      Loading campaign images.rxx for TPR
+13:34:24.718     2,091s      54ms  18828    Custom - 1
+13:34:24.737     2,110s      19ms  21236    Load Sprites Done
+                                      Loading campaign images.rxx for TSK
+13:34:24.772     2,145s      34ms  18828    Custom - 1
+                                      Loading campaign images.rxx for TUA
+13:34:24.807     2,180s      35ms  18828    Custom - 1
+13:34:24.884     2,257s      77ms  21236    [AsyncGameResLoader Thread] DONE Load RXX 'Houses.rxa'
+13:34:24.897     2,270s      13ms   4004    [AsyncGameResLoader MainTh] [UpdateStateIdle] GenTextures RT = rxHouses Stage = lsGenMain
+13:34:24.919     2,292s      22ms   4004    [AsyncGameResLoader MainTh] [UpdateStateIdle] DONE
+13:34:24.926     2,299s       7ms  21236    [AsyncGameResLoader Thread] RT = rxHouses Stage = lsOverload
+13:34:24.932     2,306s       7ms  21236    [AsyncGameResLoader Thread] OverloadFromFolder RT = rxHouses
+13:34:24.938     2,312s       6ms  21236    [AsyncGameResLoader Thread] DONE OverloadFromFolder RT = rxHouses
+13:34:24.956     2,329s      17ms   4004    [AsyncGameResLoader MainTh] [UpdateStateIdle] GenTextures RT = rxHouses Stage = lsGenOverload
+13:34:24.962     2,336s       7ms   4004    [AsyncGameResLoader MainTh] [UpdateStateIdle] DONE
+13:34:24.970     2,343s       7ms  21236    [AsyncGameResLoader Thread] RT = rxUnits Stage = lsLoad
+                                      Loading campaign images.rxx for TMR
+13:34:24.983     2,356s      13ms  21236    [AsyncGameResLoader Thread] Start Load RXX 'Units.rxx'
+13:34:24.990     2,363s       7ms  21236    Load Sprites started
+13:34:24.996     2,369s       6ms  18828    Custom - 1
+13:34:25.003     2,376s       7ms  21236    Units - 15213
+13:34:25.500     2,874s     497ms  21236    Load Sprites Done
+13:34:26.538     3,911s    1037ms   4004    LoadGameResources ... AlphaShadows: True. Forced: False
+13:34:26.546     3,919s       8ms   4004    TKMResSprites.LoadGameResources
+13:34:26.661     4,035s     116ms  21236    [AsyncGameResLoader Thread] DONE Load RXX 'Units.rxa'
+13:34:26.667     4,041s       6ms   4004    [AsyncGameResLoader MainTh] [LoadGameResources] GenTextures RT = rxUnits Stage = lsGenMain
+13:34:26.731     4,104s      63ms   4004    [AsyncGameResLoader MainTh] [LoadGameResources] DONE
+13:34:26.738     4,111s       7ms  21236    [AsyncGameResLoader Thread] RT = rxUnits Stage = lsOverload
+13:34:26.745     4,118s       7ms  21236    [AsyncGameResLoader Thread] OverloadFromFolder RT = rxUnits
+13:34:26.751     4,124s       6ms  21236    [AsyncGameResLoader Thread] DONE OverloadFromFolder RT = rxUnits
+13:34:26.758     4,131s       7ms   4004    [AsyncGameResLoader MainTh] [LoadGameResources] GenTextures RT = rxUnits Stage = lsGenOverload
+13:34:26.772     4,146s      15ms   4004    [AsyncGameResLoader Thread] Stopped
+13:34:26.780     4,153s       6ms   4004    [AsyncGameResLoader MainTh] [LoadGameResources] DONE
+13:34:26.786     4,159s       6ms   4004    Resource loading state - Game
+13:34:26.792     4,166s       7ms   4004    Saving dev settings to file 'kmr_dev.xml'
+13:34:26.838     4,212s      46ms   4004    <== Game creation is done ==>
+13:34:26.846     4,219s       7ms   4004    GameStart
+13:34:26.852     4,225s       6ms   4004    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\Maps\Nowa Misja 2\Nowa Misja 2.dat
+13:34:26.858     4,231s       6ms   4004    Loading map file: E:\programowanie\projekty delphi\kam_expansion\Maps\Nowa Misja 2\Nowa Misja 2.map
+13:34:26.865     4,238s       7ms   4004    Map file loaded
+13:34:26.881     4,254s      16ms   4004    Gameplay recording initialized ... done
+13:34:26.887     4,260s       6ms   4004    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+13:34:26.893     4,266s       6ms   4004    Gameplay initialized ... done
+13:34:26.899     4,272s       6ms   4004    After game start
+13:34:26.906     4,279s       7ms   4004    Set game seed: 88924560
+13:34:26.921     4,294s      15ms   4004    Saving game at tick 0 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\basesave\basesave.bas'
+13:34:26.929     4,302s       8ms   4004    After game start ... done
+13:34:59.319    36,692s   32390ms   4004    Saving dev settings to file 'kmr_dev.xml'
+13:35:00.326    37,699s    1007ms   4004    Stopping game application...
+13:35:00.334    37,707s       8ms   4004    Gameplay ended - grSilent /
+13:35:00.352    37,725s      18ms   4004    Start saving 'Server settings' to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+00fc8b84 KaM_Expansion.exe KM_Settings        106 TKMSettings.SaveToDefaultFile
+00fc8c57 KaM_Expansion.exe KM_Settings        113 TKMSettings.SaveToDefaultFile
+00fc8890 KaM_Expansion.exe KM_Settings         65 TKMSettings.Destroy
+011091f6 KaM_Expansion.exe KM_ServerSettings  117 TKMServerSettings.Destroy
+00a2a764 KaM_Expansion.exe System              23 TObject.Free
+00cf8fe4 KaM_Expansion.exe KromUtils          281 FreeThenNil
+011d580b KaM_Expansion.exe KM_GameApp         333 TKMGameApp.Destroy
+00a2a764 KaM_Expansion.exe System              23 TObject.Free
+00cf8fe4 KaM_Expansion.exe KromUtils          281 FreeThenNil
+011e0439 KaM_Expansion.exe KM_Main            376 TKMMain.Stop
+011e0518 KaM_Expansion.exe KM_Main            405 TKMMain.Stop
+01454f61 KaM_Expansion.exe KM_FormMain       2212 TFormMain.FormClose
+00ca2df7 KaM_Expansion.exe Vcl.Forms              TCustomForm.DoClose
+00ca87e5 KaM_Expansion.exe Vcl.Forms              TCustomForm.Close
+00ca7424 KaM_Expansion.exe Vcl.Forms              TCustomForm.WMClose
+00bf2cfa KaM_Expansion.exe Vcl.Controls           TControl.WndProc
+00bf7ec1 KaM_Expansion.exe Vcl.Controls           TWinControl.WndProc
+00ca3a38 KaM_Expansion.exe Vcl.Forms              TCustomForm.WndProc
+00ca3a53 KaM_Expansion.exe Vcl.Forms              TCustomForm.WndProc
+01454a4d KaM_Expansion.exe KM_FormMain       2051 TFormMain.WndProc
+
+13:35:00.374    37,747s      22ms   4004    'Server settings' was successfully saved to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+13:35:00.661    38,034s     287ms   4004    Start saving 'GameApp settings' to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'
+00fc8b84 KaM_Expansion.exe KM_Settings         106 TKMSettings.SaveToDefaultFile
+00fc8c57 KaM_Expansion.exe KM_Settings         113 TKMSettings.SaveToDefaultFile
+00fc8890 KaM_Expansion.exe KM_Settings          65 TKMSettings.Destroy
+00fc8fea KaM_Expansion.exe KM_SettingsXML       44 TKMSettingsXML.Destroy
+00fc9316 KaM_Expansion.exe KM_GameAppSettings   57 TKMGameAppSettings.Destroy
+00a2a764 KaM_Expansion.exe System               23 TObject.Free
+00cf8fe4 KaM_Expansion.exe KromUtils           281 FreeThenNil
+011e0443 KaM_Expansion.exe KM_Main             378 TKMMain.Stop
+011e0518 KaM_Expansion.exe KM_Main             405 TKMMain.Stop
+01454f61 KaM_Expansion.exe KM_FormMain        2212 TFormMain.FormClose
+00ca2df7 KaM_Expansion.exe Vcl.Forms               TCustomForm.DoClose
+00ca87e5 KaM_Expansion.exe Vcl.Forms               TCustomForm.Close
+00ca7424 KaM_Expansion.exe Vcl.Forms               TCustomForm.WMClose
+00bf2cfa KaM_Expansion.exe Vcl.Controls            TControl.WndProc
+00bf7ec1 KaM_Expansion.exe Vcl.Controls            TWinControl.WndProc
+00ca3a38 KaM_Expansion.exe Vcl.Forms               TCustomForm.WndProc
+00ca3a53 KaM_Expansion.exe Vcl.Forms               TCustomForm.WndProc
+01454a4d KaM_Expansion.exe KM_FormMain        2051 TFormMain.WndProc
+00bf73cc KaM_Expansion.exe Vcl.Controls            TWinControl.MainWndProc
+00bf73e7 KaM_Expansion.exe Vcl.Controls            TWinControl.MainWndProc
+
+13:35:00.676    38,049s      15ms   4004    'GameApp settings' was successfully saved to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'

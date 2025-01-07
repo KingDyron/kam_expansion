@@ -1,0 +1,727 @@
+﻿0:Saekaater
+1:Sepikoda
+2:Relva sepikoda
+3:Söekaevandus
+4:Rauakaevandus
+5:Kullakaevandus
+6:Kaluri onn
+7:Pagariäri
+8:Talu
+9:Puuraiduri onn
+10:Raudturvise sepikoda
+11:Laohoone
+12:Tallid
+13:Koolimaja
+14:Kivikaevandus
+15:Kulla sepikoda
+16:Sealaut
+17:Vahitorn
+18:Linnakoda
+19:Relvakoda
+20:Turvisekoda
+21:Kasarmu
+22:Veski
+23:Vallutusseadmetekoda
+24:Lihunikuäri
+25:Nahaparkimiskoda
+26:Treening saal
+27:Kõrts
+28:Viinamarjaistandus
+29:Turuplats
+30:Puu palk
+31:Kivid
+32:Laudpuit
+33:Raua maak
+34:Kulla maak
+35:Süsi
+36:Raud
+37:Kuld
+38:Veini tünnid
+39:Rukkis
+40:Leivad
+41:Jahu
+42:Parknahk
+43:Vorstid
+44:Sead
+45:Nahad
+46:Puukilp
+47:Raudkilp
+48:Nahkturvis
+49:Raudturvis
+50:Käsikirves
+51:Mõõk
+52:Oda
+53:Piik
+54:Vibu
+55:Amb
+56:Hobused
+57:Kala
+58:Pärisori
+59:Puuraidur
+60:Kaevur
+61:Tõuaretaja
+62:Talupoeg
+63:Puusepp
+64:Pagar
+65:Lihunik
+66:Kalamees
+67:Ehitaja
+68:Kiviraidur
+69:Sepp
+70:Kullassepp
+71:Nekrut
+72:Rahvaväelane
+73:Kirve kandja
+74:Mõõga kandja
+75:Vibukütt
+76:Ambur
+77:Oda kandja
+78:Piigi kandja
+79:Skaut
+80:Rüütel
+81:Barbar
+82:Mässaja
+83:Kelm
+84:Sõdalane
+85:Hulkur sõdalane
+86:Katapult
+87:Ballista
+88:Pärisori veab laiali kaubad ja resursse.||Majad peavad olema ühendatud teedega.
+89:Palkide tootmiseks saekaatrile, on Teil vaja puuraidurit.||Puuraidur taasistutab metsa ise.
+90:Kaevandaja kaevab süsi, raua ja kulla maake kaevandustes.
+91:Tõuaretaja kasutab rukkist, et kasvatada sigu sealaudas ja hobuseid tallides.
+92:Talupoeg istutab ja korjab rukkist põllul.||Lisaks toodab ta veel veini veiniistanduses.
+93:Puusepp tötab seakaatris, relvakojas ja Turvisekoda.||Lisaks ta ehitab katapulte ja balistasid vallutusseadmetekojas.
+94:Pagar jahvatab rukkise jahuks.||Lisaks küpsetab leiba pagariäris.
+95:Lihunik teeb vorste lihunikuäris ja parknahka nahaparkimiskojas.
+96:Kalamees püüab kalu lähedal asuvatest vetest.
+97:Ehitaja ehitab maju ja teesid. Lihtsalt märgi ehitus objekti asukoht ja ehitaja tegutseb automaatselt.||Ta parandab ka kahjustatud majasid.
+98:Ehitajate varustamiseks on vajalik kiviraidur, kes lõikab kivid õigesse suurusesse.
+99:Sepp sepistab raudrelvasid ja raudrüüsid relva ja raudturvise sepikodades.
+100:Kullassepp kasutab sütt kulla ja raua maagi töötlemiseks.
+101:Nekrutit saab varustada kasarmus.||Lisaks töötab ta vahitornis.
+102:Majade valikusse
+103:Kaupade jaguneminemisse
+104:Statistikasse
+105:Sättetesse
+106:Tagasi minek
+107:Maja|Valik
+108:Kaupade|jagunemine
+109:Statistika
+110:Sätted
+111:Lae Mäng
+112:Salvesta Mäng
+113:Oled kindel,|et tahad lahkuda |sellest missioonist?
+114:Lõpeta Missioon
+115:Mine tagasi
+116:Sätted
+117:Välju Kaardihaldurist
+118:Ümbruskonna heli
+119:Muuda helitugevust
+120:Muuda helitugevust
+121:Muusika
+122:Muusika lahti/kinni
+123:Automaatsalvestis
+124:Muusika Mängija
+125:Eelmine lugu
+126:Uus lugu
+127:Lammuta
+128:Eemalda ehitised/väljatoodud
+129:Ehita tee
+130:Ehita teed
+131:Künna põldu
+132:Künna põldusid
+133:Määra viinamarjapõld
+134:Määra viinamarjapõllud
+135:Tühista
+136:Tühista hetkeline treening
+137:Vaja minev:
+140:Valmistab:
+141:Maja|ehitamisel
+142:Hävita
+143:Kas oled kindel et soovid |lammutada seda maja?
+144:Hävita valitud maja
+145:Vähenda tellimuse arv
+146:Suurenda tellimuse arv
+147:Eelmine sõduri tüüp
+148:Järgmine sõduri tüüp
+149:Varusta hetke sõduri tüüp
+150:Järgmine amet
+151:Eelmine amet
+152:Lisa järjekorda
+153:Luba/keela kauba vedu
+154:Hind:
+155:Luba/keela maja parandus
+156:Maja ei ole saadaval hetkel
+157:Olek
+158:Keera sõdur vasakule
+159:Keera sõdur paremale
+160:Ründa
+161:Saada sõdur
+162:Varusta toiduga
+163:Välkrünnak
+164:Lisa rida
+165:Vähenda rida
+166:Valige|grupp
+167:Tühista
+168:Kustuta
+169:Kustuta hetke sõnumi
+170:Mine
+171:Liigub hetkese sõnumi kohani
+172:Sulge
+173:Sulgeb akna
+174:Sinu kiviraidur ei pääse kivini.
+175:Sinu söekaevanduses on süsi lõppenud.
+176:Sinu rauakaevanduses on raud lõppenud.
+177:Sinu kullakaevanduses on kuld lõppenud.
+178:Puuraidur ei leia rohkem puid langetada
+179:See maja on asustamatta.
+180:Sinu sõdurid on väga näljased, anna neile midagi süüa!
+181:PAUS
+182:Toob
+183:Ehitab teed
+184:Kaevab põldu
+185:Ehitab viinamarajapõldu
+186:Ühtlustab majaalust maad
+187:Ehitab maja
+188:Parandab maja
+189:Läheb koju
+190:Läheb kõrtsu
+191:Ründab maja
+192:Tulistab
+193:Võitleb
+194:Tormirünnak
+195:Ründab
+196:Liigub
+197:Paigal
+198:Kaevab kivi
+199:Jahvatab vilja
+200:Lõikab vilja
+201:Korjab viinamarjasid
+202:Kalastab
+203:Langetab puitu
+204:Istutab puitu
+205:Vaim
+206:Hõivatud
+207:Keskaegne pasun
+208:Kevad
+209:Lauto
+210:Palgasõdur
+211:Printsess
+212:Kuninganna
+213:Turul
+214:Lahinguväljal
+215:Õukonna tants
+216:Armee
+217:Lossis
+218:Laadad
+219:Õukonnas
+220:Sisseastumine
+221:Sügav sinine
+222:Rabelema
+223:Kuninglik koda
+224:Aristokraatia
+225:Sadamas
+226:Rännak
+227:Kampaaniad
+228:Kampaaniad
+229:Alusta Kampaania!
+230:Mängi üksikkaarti
+231:Alusta kaarti
+232:Tagasi menüüsse
+233:Lae salvestatud mäng
+234:Võrgumäng
+235:Sätted
+236:Lõputiitrid
+237:Lahku mängust
+238:Jätka
+239:Taaskäivita missioon
+240:Resolutsioon:
+241:Pole toetatud
+242:Pole toetatud
+243:VÕIT!
+244:KAOTUS!
+245:Kaotatud üksused:
+246:Hävitatud üksused:
+247:Kaotatud ehitised:
+248:Hävitatud ehitised:
+249:Ehitatud ehitised:
+250:Treenitud üksused:
+251:Relvi toodetud:
+252:Sõdureid treenitud:
+253:Missioon lõpetatud:
+254:Statistika
+255:Majandus
+256:Elanikke|treenitud
+257:Elanikke|kaotatud
+258:Sõdureid|relvastatud
+259:Sõdureid|kaotatud
+260:Sõdureid|Hävitatud
+261:Ehitisi|ehitatud
+262:Ehitised|kaotatud
+263:Ehitisi|hävitatud
+264:Kaupu|toodetud
+265:Relvi|toodetud
+266:Armee
+267:Elanikke
+268:Majad
+269:Varud
+270:Varusid toodetud
+271:Pole infot
+272:Sina
+273:Mängija %d
+274:Tagasi Võrgumängu
+275:Tagasi Kordusmängijasse
+276:Kõik
+277:Sõjavarustus
+278:Toit
+279:JOYMANIA ENTERTAINMENT||PROGRAMEERIMINE:|Peter Ohlmann||MÄNGU GRAAFIKA:|Adam Sprys||TASEME KUJUNDUS:|Adam Sprys|Andre Quaß||HELI TÖÖTLUS JA MIKSIMINE:|Tonstudio Mannheim||MUUSIKA:|Gerd Hofmann|Joachim Schäfer|Jürgen Rebhann|Klaus Staendike|Steffen Schüngel||KAUNISTUSED:|Boleslaw Kasza|Christoph Werner||ZUXXEZ ENTERTAINMENT AG||PRODUTSEERIA:|Uwe Schäfer||JUHEND:|Peter Ohlmann|Uwe Schäfer||BETA TESTIJAD:|Peter Ohlmann|Adam Sprys|Alexandra Constandache|Dirk P. Hassinger|Achim Heidelauf|Uwe Schäfer|Ingrid Schäfer|Dirk U. Jantz|Ion Constandache|Yaman Egeli|Roman Eich|Iris Mocsnek|Anke Jantz|Paul Hassinger|Liza Hassinger||MÄNGU JUHENDAJA:|Achim Heidelauf||VÄLJASTAJA:|TopWare Interactive||VAHETSEENID:||JUHATAMINE:|Slawomir Jedrzejewski||Kajetan Czarnecki|Wojciech Drazek|Daniel Duplaga|Rafal Januszkiewicz|Andrzej Rams|Piotr Rulka|Krzysztof Rybczynski|Grzegorz Wisniwski||HÄÄLED:|Claus Boyen (Jutustaja)||Tim Timmermann|Peter Houska|Dirk Mühlbach|Ralf Ditze|Gerhard Piske|Gernot Wassmann||KUNSTITÖÖD:|Boleslaw Kasza|Adam Sprys||AVA-ANIMATSIOON:|Uwe Schäfer|Christian Bigalk|Additional 3D-Modelling:|Niels Horstmann||ERI TÄNUD:|Tadeusz Zuber|Dieter Ohlmann|Alexandra Constandache|Ingrid Schäfer|Andrea Rumpelt
+280:Missioon katkestatud
+281:Tagasimäng lõppes
+282:Linna ehitamise tutvustus
+283:Võitluse tutvustus
+284:Üksikmäng
+285:Kaardi ehitamine
+286:Alusta missiooni
+287:Pealkiri
+288:Suurus
+289:Võitmise tingimused:
+290:Kaotamise tingimused:
+291:Liitlased:
+292:Vaenlased:
+293:Aeg
+294:Uus kaardi suurus
+295:Laius
+296:Pikkus
+297:Loo uus kaart
+298:Olemas olevad kaardid
+299:Lae olemas olev kaart
+300:Asukoht
+301:Juhtimisseaded:
+302:Mängu seaded
+303:Heli:
+304:Vaigista muusika
+305:Graafika:
+306:Heledus
+307:Vertikaalne sünkroon
+308:Täisekraan
+309:Kinnita
+310:Keel:
+311:Varju kvaliteet:
+312:Madal
+313:Kõrge
+314:Toimub laadimine... Palun oodake
+315:Viga on esinenud!
+316:Uue lokaadi laadimine
+317:Salvestatud mängude list
+318:Faili nimi
+319:Iseloomustus
+320:Lae
+321:Kustuta
+322:Oled kindel, et soovid seda salvestust kustutada?
+323:Kustuta
+324:Loobu
+325:Pealkiri
+326:Kaardid
+327:Avatud
+328:Sa Võitsid!
+329:Jätka mängu
+330:Võit!
+331:Sa kaotasid!
+332:Jätka vaatamist
+333:Kaotus
+334:Kordus on lõppenud
+335:Jätka vaatamist
+336:Lahku menüüni
+337:Pole saadaval
+338:Vajuta %s, et jätkata mängu
+339:Mängijate info
+340:Vestlus
+341:Salvesta üle juba olemasolev
+342:Kirjuta üle
+343:Salvesta
+344:Lae
+345:Vana OpelGL versioon avastatud, mäng võib töötada aeglaselt ja/või graafika vigadega
+346:Palun uuendage oma videokaardi drivereid, et saada parem jõudlus.
+347:Võrgu viga:
+348:Viga: Mängija nimi ei saa olla tühi
+349:Viga: Mängija nimi ei tohi olla pikem kui %d tähemärki
+350:Viga: Mängija nimi sisaldab keelatud tähemärke
+351:Ühenduse viga: %s
+352:Ühendus on kaotatud
+353:Missioon %d
+354:Sõnumi logi
+355:Su kalastus onn on veest liiga kaugel.
+356:Sinu kalamees ei saa rohkem püüda kala lähedal olevatest vetest.
+357:Taasalusta tagasimäng
+358:Peata tagasimäng
+359:Liigu 1 võrra edasi
+360:Jätka peatatud tagasimäng
+361:Välju tagasimängust
+362:Näita iga mängijat eraldi
+364:Kasuta vasakut hiireklahvi, et valida toode, mida vahetada
+365:Kasuta paremat hiireklahvi, et valida toodet, mida vahetada
+366:Millest: x%d
+367:Milleks: x%d
+368:Pinnastiku kujundamine
+369:Pintslid
+370:Kõrgused
+371:Ruudustik
+372:Objektid
+373:Kõrgused
+374:Pintslite kuju
+375:Suurus
+376:Liiguta et muuta pintsli suurust
+377:Kallak
+378:Liiguta et muuta kallaku teravust: 1= madal ... 15 = järsk
+379:Kiirus
+380:Liiguta et muuta kallaku kiirust: 1 = aeglane ... 15 = kiire
+382:Ruuduline pintsel
+383:Tõsta/Madalda
+384:Ebaühtlusta/ Tasasta
+385:Tõsta (vasak klikk) / Madalda (parem klikk)
+386:Ebaühtlusta (vasak klikk)/ Tasanda (parem klikk)
+387:Pintsel
+388:Suva elemendid
+389:Suva suund
+390:Pane linnuke kui soovid suva suunalisi maastikuruudustikku või parema klikkiga keerad neid ise
+392:Keela kõndimine
+393:Eemalda objekt
+394:Küla planeerimine
+395:Visuaalsed skriptid
+396:Globaalsed skriptid
+397:Menüü
+398:Objektid
+399:Näita maake
+400:Näita üksuseid
+401:Näita majasid
+402:Näita objekte
+403:Vaata möödvust
+404:Kõik salvestamata|muutused kaovad
+405:Katkesta
+406:Lae
+407:Lae Kaart
+408:Katkesta
+409:Salvesta
+410:Kirjuta üle
+411:Kaart juba eksisteerib
+412:Mängijad:
+413:Tavaliselt
+414:Mängijate tüübid
+415:Sümmeetriline
+416:Liidud
+417:Taktika
+418:Normaalne
+419:Missiooni laad
+420:Liigu sihtkohta
+421:Ekraan keskele missiooni alguses
+422:Keskele ekraan
+423:Paljasta kõik
+424:Avalda osa kaardist
+425:Eemalda sõjaudu
+426:Blokeeri kauplemine
+427:Blokeeri/Vabasta majad
+428:Värvid
+429:Eesmärk
+432:Mängija
+433:Majanduslikud majad
+434:Pärisorjad ja koolid
+435:Militaar vara
+436:Teadmata
+437:Sõdurid
+438:Majad
+439:Aeg
+440:Ehitamise õpetus
+441:Mitte miski
+442:Tingimus
+443:Jää ellu
+444:Võit
+445:Mitte miski
+446:Tüüp
+447:Eesmärgid
+448:OK
+449:Katkesta
+450:Veerud
+451:Arv
+452:Sõjaväelaste formatsioon
+453:Muuda formatsiooni
+454:Sea liimit, kui palju sõjaväelaseid võib AI'l olla
+455:Sea kui palju sõdureid võib AI korraga teha
+456:Pane maksimum sõdureid
+457:Pane kui palju värvatuid võib AI'l kasarmus olla
+458:Värvatuid kasarmus
+460:Eri positsioon
+463:Lähim üksus
+465:Grupi arv
+466:Ründamis info
+468:Kordamine
+469:Kohe
+470:Saduldatud
+471:Kaugmaa
+472:Hobuse vastane
+473:Jalgsirünnak
+474:Asu
+475:Sihtmärk
+476:Mehed
+477:Viivitus
+478:Tüüp
+479:Automaatnerünnak
+480:AI ründab
+481:Varusta vastavas koguses nahaga
+482:Varusta vastavas koguses rauaga
+483:Automaatkaitse
+484:Ai rajab ja varustab kaitse positsioone automaatselt
+485:Pane paika kaitsepositsioonid AI'le
+486:AI kaitse positsioonid
+487:Töölised
+488:Pärisorjasid 10 maja kohta
+489:Automaat parandamine
+490:Automaatne ehitamine
+491:AI seaded
+492:Majad
+493:Tee tööd
+494:Vertikaalselt keeramise valik
+495:Horisontaalselt keeramise valik
+496:Aseta maastik
+497:Kopeeri maastik
+498:Kopeeri/aseta
+499:Uus Missioon
+500:Mängija nimi
+501:Staatus:
+502:Loo Server
+503:LOO SERVER
+504:Nimi
+505:Port
+506:Loo Kohalik Server
+507:Loo Interneti Server
+508:Tühista
+509:Leia Server IP Järgi
+510:LEIA SERVER
+511:Aadress
+512:Port
+513:Tuba
+514:Ühenda
+515:Tühista
+516:Salasõnaga kaitstud mäng
+517:Salasõna
+518:Serveri nimi
+519:Olek
+520:Mängijad
+521:Ping
+522:Värskenda Serverite nimekirja
+523:SERVERI DETAILID
+524:Mängijad:
+525:Liitu
+526:Toimub ühendamine, palun oodake ...
+527:Toimub teadete laadimine...
+528:Uuendamine...
+529:Mängijad
+530:Algne asukoht
+531:Meeskond
+532:Värv
+533:Valmis
+534:Ping
+535:Ping/FPS
+536:Avatud
+537:Mängib arvuti
+538:Vali...
+539:Suvaline
+540:Ühtegi
+541:Salvestatud Mäng
+542:Vali kaart...
+543:Vali salvestus...
+544:Lahku eesruumi
+545:Valmis
+546:Pole valmis
+547:Alusta!
+548:Mängu kiirus (rahu aeg)
+549:Mängu kiirus
+550:OK
+551:Katkesta
+552:Kirjeldus
+553:Salasõna
+554:Mängu seaded:
+556:Eemalda mängust
+557:Löö välja
+558:Suvasta kohad mängijatel
+559:Kirjeldus
+560:Seaded
+561:Asukoht %d
+562:Viga: Palun vali mängija salvestisest, et teda kontrollida
+563:Viga: Kaardi laadimine ebaõnnestus või ühtegi kaarti ei ole valitud
+564:Ei saa alustada: %s
+565:Kõik ei ole valmis alustama
+566:Ei ole võimalik suva kohtasid määrata
+567:Server on juhtimis õiused meile määranud
+568:Mänguga on alustatud
+569:Ehitamise Kaart
+570:Võitlemise Kaart
+571:Koostöö kaart
+572:Eri kaart
+573:Mängu seaded:
+574:Rahuaeg (minutid)
+575:Suletud
+576:Mängujuht seadistab
+577:Mängijate ootamine:
+578:Kõik
+579:Meeskond
+580:KaM Remake Lõputiitrid
+581:Originaalsed Knights & Merchants Lõputiitrid
+582:PROGRAMMEERIMINE:
+583:LISA PROGRAMMEERIMINE:
+584:LISA GRAAFIKA:
+585:LISA HELID:
+586:LISA MUUSIKA:
+587:LISA TÕLKED:
+588:SUURED TÄNUD:
+589:Võrgumängu kaardid
+590:Üksikmängu kaardid
+591:Rulliku kiirus
+592:Servereid ei leitud
+593:Suva lood
+594:Mängu informatsioon:
+595:-
+596:Eesruum
+597:Toimub Laadmine
+598:Mäng
+599:Ehitamine ja Võitlemine
+600:Võitlemine
+601:Valmis
+602:Vale protokolli versioon: %s. Server kasutab: %s
+603:Tõsta kauba hulka
+604:Vähenda kauba hulka
+605:Mängu salvestamine...
+606:%s kaotas!
+607:Elimineeri mängijaid
+608:Mängu juht võib elimineerida mängijaid pärast %d sekundit
+609:Mängu juht võib nüüd elimineerida neid mängijaid
+610:Mängujuht (%s) on lahkunud
+611:Ühendus sevreriga on kaotatud. Taasühendamine...
+612:Oled kindel, et soovid lahkuda?
+613:Oled kindel, et soovid lõplikult elimineerida neid mängijaid?
+614:Tühista
+615:Selle ressurssi vahetamine pole võimalik selles missioonis
+616:Istuta ja langeta
+617:Ainult langeta
+618:Sa ei saa seda teha rahuajal
+619:Rahuaega jäänud: %s
+620:Rahuaeg on lõppenud. Relvadele!
+621:Mängu aeg:|%s
+622:Peata sõdur
+623:Lisa sõdur
+624:Jaga sõdurid
+625:Korduse vaatamine
+626:Vaata kordust
+627:Toeta formaat %s
+628:Toetamata versioon %s
+629:Toetamata modifikatsioonid
+630:Liigendamise viga on esinenud failis %s
+631:alustamine
+632:skript
+633:üksused
+634:majad
+635:puud
+636:definitsioonid
+637:ruudustik
+638:Kaarti ei leitud: %s
+639:Salvestist ei leitud: %s
+640:Kaardi failid ei ühildu mängujuhi kaardi failidega: %s
+641:Salvestise failid ei ühildu mängujuhi salvestise failidega: %s
+642:Kordusvaade on läbi kukkunud järjepidevus kontrollist. See probleem võib mõjutada teie kordusvaadet. Kas soovite edasi vaadata?
+643:Sul võib üks juhtum mängu jooksul olla mitmikmängu tüübi korral korraga
+644:Modifikatsioonid pole mitmikmängu puhul lubatud.|Palun taasta orginaal failid.
+645:Viga on tekkinud programmis. Palun vajutage Saatke Vea Teade nuppu, et me saaksime uurida probleemi. Täname abi eest!
+646:Saatke Vea Teade
+647:Näita Tooreid Andmeid
+648:Jätkake Programmi
+649:Peatage Programm
+650:Järgmine
+651:Kontakti Detailid
+652:Teie nimi:(Valikuline)
+653:Teie email:(valikuline)
+654:Mäleta mind
+655:Vea Detailid
+656:Millises olukorras viga esines? Kas te saate lisa infot sellele lisada?
+657:Ekraanipilt
+658:Lisa ekraanipilt vea teatele
+659:(kliki pildi muutmiseks)
+660:Saatke Teade
+661:Katkesta
+662:Saadan vea teadet...
+663:Ühendan serveriga...
+664:Saadan andmeid...
+665:Vea teate saatmine ebaõnnestus! Meie server võib olla hõivatud, palun proovige uuesti.
+666:Informatsioon
+667:Palun oodake moment...
+668:Salvesta Kaart
+669:Viivitus minutites enne kui AI hakkab sõdureid tootma
+670:Värvamise viivitus (minutites)
+671:Pane paika vee suund
+672:Maagiline vesi
+673:Kopeeri
+674:Aseta
+675:Aseta kinnita
+676:Aseta katkesta
+677:Keera vertikaalselt
+678:Keera horisontaalselt
+679:Vea valitud alale kaardil
+680:AI kaitse seaded
+681:Kinni
+683:Kustuta praegune sõjaudu eemaldaja
+684:Tagasi sõjaudu eemaldaja lehele
+685:Kinni
+686:Grupi käsk
+687:mitte ükski
+688:Ründa positsiooni
+689:Kõnni sinna
+690:Suund
+693:Kaitse raadius
+694:Kustuta praegune kaitsepositsioon
+695:Liigu tagasi kaitse leheküljele
+696:Kaitse positsioon
+697:Üksused
+698:Hunt
+699:Kala
+700:Vesimadu
+701:Meritäht
+702:Krabi
+703:Vesilill
+704:Vesileht
+705:Part
+706:Sõduri tüüp pole saadaval
+707:Karakter pole saadaval
+708:Blokeeri üksuseid
+736:Allalaadimine
+737:laeb alla....
+738:Kirjutan üle failid
+739:%s kaotas ühenduse
+740:%s lahkus
+741:%s ühendus uuesti
+742:Ei saa liituda kui mäng on aktiivne
+743:Mänguruum on täis. Rohkem mängijaid ei saa liituda
+744:Mängija sama nimega on liitunud
+746:Viga. %s on erinevad data failid kui võõrustajal ja ei saa liituda
+747:Sinu data failid ei ühildu võõrustajaga
+748:Võõrustaja õigused antud %s
+749:%s on erinev versioon kui %s
+750:%s ei oma %s
+751:Küsitav ajast väljas
+752:Võõrustaja jättis mängust välja %s
+753:Võõrustaja lõi jalaga p***e mängijale %s
+754:Üritan uuesti mängu ühenduda.....
+755:%s liitus
+756:Uuesti ühendumine ebaõnnestus: %s
+757:Võõrustaja otsustas ilma sinuta edasi mängida :(
+758:Ebaõnnestunud ühendamine serveriga: Aegunud ühendus
+759:Sind löödi võõrustaja poolt välja.
+760:Server ei vasta
+761:Puudulik mänguruumi number
+765:Sosista %s
+766:Võõrustaja blokeeris mängija %s
+767:Sind on blokeeritud võõrustaja poolt
+768:Tühista kõik blokeeringud
+769:Võõrustaja eemaldas kõik blokeeringud sellele eelruumile
+770:Kuupäev
+1118:Võrgumängu kaardid
+1119:Vaigista muusika
+1120:Suva lood

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Root>
+  <Main>
+    <GFX FullScreen="False" VSync="True" ResolutionWidth="1360" ResolutionHeight="768" RefreshRate="60" FPSCap="60"/>
+    <Window Left="472" Top="-14" Width="1024" Height="883" State="2"/>
+    <Misc NoRenderMaxTime="1000"/>
+  </Main>
+  <Game>
+    <GFX Brightness="0" AlphaShadows="True" LoadFullFonts="False"/>
+    <SFX Volume="0.3500"/>
+    <Music Enabled="True" Volume="0.2000" Shuffle="False"/>
+    <Video Enabled="False" Stretch="True" Startup="True" Volume="0.5000"/>
+    <Weather Enabled="True" MaxCount="10" MaxSpawnCount="4" MinInterval="200" MaxInterval="3000" MaxLifeTime="1200" MaxCloudSpeed="0.1000" DecParticles="9" NightSpeed="10" NightTime="15" DynamicLight="True"/>
+    <GameCommon Locale="pol">
+      <UI DefaultZoom="1.0000" ZoomBehaviour="1"/>
+      <Speed Medium="3.0000" Fast="6.0000" VeryFast="10.0000" Pace="100" ScrollSpeed="20.0000"/>
+      <Autosave Enabled="True" OnGameEnd="False" Frequency="600" Count="5"/>
+      <SavePoints Enabled="True" Frequency="9000" Limit="30"/>
+      <PlayersColor Mode="1" Self="0707FF" Ally="07FFFF" Enemy="FFFF00"/>
+      <WareDistribution Value="" SavedBetweenGames="True"/>
+      <Misc SpecShowBeacons="False" ShowGameTime="False" ShowGameSpeed="False" DayGamesCount="10" LastDayGamePlayed="2024.12.1 0:0:0"/>
+      <Tweaks AllowSnowHouses="True" AllowSnowObjects="True" InterpolatedRender="True" InterpolatedAnimations="False"/>
+    </GameCommon>
+    <Campaign CampaignLastDifficulty="4"/>
+    <Replay Autopause="False" ShowBeacons="False" Savepoint="True" SavepointFrequency="3000"/>
+    <MapEd HistoryDepth="250" MaxTerrainHeight="150"/>
+    <Multiplayer Name="NoName" LastIP="127.0.0.1" LastPort="56789" LastRoom="0" LastPassword="" FlashOnMessage="True"/>
+    <Misc AsyncGameResLoader="True" BeastPanelExpanded="False" WaresPanelExpanded="False False False False False False False False False False False " HousesPanelExpanded="False False False False False False False False False False False "/>
+    <Menu FavouriteMaps="" CampaignName="HKS" LobbyMapType="3" CampaignID="0" CampaignMapID="48">
+      <Singleplayer Type="0" ScenarioMapCRC="1097251786" MissionMapCRC="3221235012" TacticMapCRC="3221235012" SpecialMapCRC="3221235012" SaveFileName="autosave"/>
+      <Replay Type="0" SPSaveName="" MPSaveName=""/>
+      <MapEd MapType="1" NewMapX="32" NewMapY="32" SPMapCRC="1097251786" MPMapCRC="352931217" MPMapName="TMR04" DLMapCRC="0"/>
+    </Menu>
+    <Debug SaveRandomChecks="True" SaveGameAsText="False"/>
+  </Game>
+  <Hotkeys>
+    <kfScrollLeft Key="37" KeyDesc="Strzałka w lewo" FuncDesc="Przewiń w lewo"/>
+    <kfScrollRight Key="39" KeyDesc="Strzałka w prawo" FuncDesc="Przewiń w prawo"/>
+    <kfScrollUp Key="38" KeyDesc="Strzałka w górę" FuncDesc="Przewiń do góry"/>
+    <kfScrollDown Key="40" KeyDesc="Strzałka w dół" FuncDesc="Przewiń w dół"/>
+    <kfMapDragScroll Key="4" KeyDesc="Środkowy przycisk myszy" FuncDesc="Przesuń mapę"/>
+    <kfZoomIn Key="34" KeyDesc="Page Down" FuncDesc="Przybliż"/>
+    <kfZoomOut Key="33" KeyDesc="Page Up" FuncDesc="Oddal"/>
+    <kfZoomReset Key="8" KeyDesc="Backspace" FuncDesc="Przywróć przybliżenie"/>
+    <kfCloseMenu Key="27" KeyDesc="Escape" FuncDesc="Zamknij menu"/>
+    <kfMusicPrevTrack Key="177" KeyDesc="Poprzedni utwór" FuncDesc="Muzyka - poprzedni utwór"/>
+    <kfMusicNextTrack Key="176" KeyDesc="Następny utwór" FuncDesc="Muzyka - następny utwór"/>
+    <kfMusicDisable Key="178" KeyDesc="Zatrzymaj utwór" FuncDesc="Wyłącz muzykę"/>
+    <kfMusicShuffle Key="179" KeyDesc="Odtwarzanie/Wstrzymanie utw." FuncDesc="Odtwarzaj losowo muzykę"/>
+    <kfMusicVolumeUp Key="175" KeyDesc="Zgłośnij" FuncDesc="Zwiększ głośność muzyki"/>
+    <kfMusicVolumeDown Key="174" KeyDesc="Ścisz" FuncDesc="Zmniejsz głośność muzyki"/>
+    <kfMusicMute Key="0" KeyDesc="" FuncDesc="Wycisz muzykę"/>
+    <kfSoundVolumeUp Key="107" KeyDesc="+ (numeryczna)" FuncDesc="Zwiększenie głośności"/>
+    <kfSoundVolumeDown Key="109" KeyDesc="- (numeryczna)" FuncDesc="Zmniejsz głośność"/>
+    <kfSoundMute Key="0" KeyDesc="" FuncDesc="Wycisz dźwięki"/>
+    <kfMuteAll Key="173" KeyDesc="Wycisz muzykę" FuncDesc="Wycisz wszystko (muzykę i dźwięki)"/>
+    <kfDebugWindow Key="122" KeyDesc="F11" FuncDesc="Okno debugowania"/>
+    <kfDebugRevealmap Key="77" KeyDesc="M" FuncDesc="Pokaż mapę (cheat)"/>
+    <kfDebugVictory Key="86" KeyDesc="V" FuncDesc="Wygraj (cheat)"/>
+    <kfDebugDefeat Key="69" KeyDesc="E" FuncDesc="Porażka (cheat)"/>
+    <kfDebugAddscout Key="67" KeyDesc="C" FuncDesc="Dodaj l. jazdę (cheat)"/>
+    <kfMenuBuild Key="112" KeyDesc="F1" FuncDesc="Menu budowania"/>
+    <kfMenuRatio Key="113" KeyDesc="F2" FuncDesc="Menu podziału towarów"/>
+    <kfMenuStats Key="114" KeyDesc="F3" FuncDesc="Menu statystyk"/>
+    <kfMenuMenu Key="115" KeyDesc="F4" FuncDesc="Menu opcji"/>
+    <kfSpeedup1 Key="116" KeyDesc="F5" FuncDesc="Normalna prędkość gry (x1)"/>
+    <kfSpeedup2 Key="117" KeyDesc="F6" FuncDesc="Prędkość x%s"/>
+    <kfSpeedup3 Key="118" KeyDesc="F7" FuncDesc="Prędkość x%s"/>
+    <kfSpeedup4 Key="119" KeyDesc="F8" FuncDesc="Prędkość x%s"/>
+    <kfBeacon Key="66" KeyDesc="B" FuncDesc="Sygnał"/>
+    <kfPause Key="80" KeyDesc="P" FuncDesc="Pauza"/>
+    <kfShowTeams Key="84" KeyDesc="T" FuncDesc="Pokaż drużyny (MP)"/>
+    <kfCenterAlert Key="32" KeyDesc="Spacja" FuncDesc="Wyśrodkuj na powiadomieniu"/>
+    <kfDeleteMsg Key="46" KeyDesc="Delete" FuncDesc="Usuń wiadomość"/>
+    <kfChat Key="13" KeyDesc="Return" FuncDesc="Pokaż czat (MP)"/>
+    <kfNextEntitySameType Key="9" KeyDesc="TAB" FuncDesc="Kolejny budynek/jednostka tego typu"/>
+    <kfPlayerColorMode Key="0" KeyDesc="" FuncDesc="Przełącz tryb kolorów graczy"/>
+    <kfPlanRoad Key="81" KeyDesc="Q" FuncDesc="Konstruuj drogę"/>
+    <kfPlanField Key="87" KeyDesc="W" FuncDesc="Wykop pole"/>
+    <kfPlanWine Key="69" KeyDesc="E" FuncDesc="Załóż winnicę"/>
+    <kfErasePlan Key="82" KeyDesc="R" FuncDesc="Usuń plan"/>
+    <kfSelect1 Key="49" KeyDesc="1" FuncDesc="Zaznacz grupę 1"/>
+    <kfSelect2 Key="50" KeyDesc="2" FuncDesc="Zaznacz grupę 2"/>
+    <kfSelect3 Key="51" KeyDesc="3" FuncDesc="Zaznacz grupę 3"/>
+    <kfSelect4 Key="52" KeyDesc="4" FuncDesc="Zaznacz grupę 4"/>
+    <kfSelect5 Key="53" KeyDesc="5" FuncDesc="Zaznacz grupę 5"/>
+    <kfSelect6 Key="54" KeyDesc="6" FuncDesc="Zaznacz grupę 6"/>
+    <kfSelect7 Key="55" KeyDesc="7" FuncDesc="Zaznacz grupę 7"/>
+    <kfSelect8 Key="56" KeyDesc="8" FuncDesc="Zaznacz grupę 8"/>
+    <kfSelect9 Key="57" KeyDesc="9" FuncDesc="Zaznacz grupę 9"/>
+    <kfSelect10 Key="48" KeyDesc="0" FuncDesc="Zaznacz grupę 10"/>
+    <kfSelect11 Key="0" KeyDesc="" FuncDesc="Zaznacz grupę 11"/>
+    <kfSelect12 Key="0" KeyDesc="" FuncDesc="Zaznacz grupę 12"/>
+    <kfSelect13 Key="0" KeyDesc="" FuncDesc="Zaznacz grupę 13"/>
+    <kfSelect14 Key="0" KeyDesc="" FuncDesc="Zaznacz grupę 14"/>
+    <kfSelect15 Key="0" KeyDesc="" FuncDesc="Zaznacz grupę 15"/>
+    <kfSelect16 Key="0" KeyDesc="" FuncDesc="Zaznacz grupę 16"/>
+    <kfSelect17 Key="0" KeyDesc="" FuncDesc="Zaznacz grupę 17"/>
+    <kfSelect18 Key="0" KeyDesc="" FuncDesc="Zaznacz grupę 18"/>
+    <kfSelect19 Key="0" KeyDesc="" FuncDesc="Zaznacz grupę 19"/>
+    <kfSelect20 Key="0" KeyDesc="" FuncDesc="Zaznacz grupę 20"/>
+    <kfArmyHalt Key="72" KeyDesc="H" FuncDesc="Komenda stop"/>
+    <kfArmySplit Key="83" KeyDesc="S" FuncDesc="Komenda podziel"/>
+    <kfArmyLink Key="76" KeyDesc="L" FuncDesc="Komenda połącz"/>
+    <kfArmyFood Key="70" KeyDesc="F" FuncDesc="Komenda nakarm"/>
+    <kfArmyStorm Key="88" KeyDesc="X" FuncDesc="Komenda szturmuj"/>
+    <kfArmyAddLine Key="187" KeyDesc="=" FuncDesc="Powiększ formację"/>
+    <kfArmyDelLine Key="189" KeyDesc="-" FuncDesc="Pomniejsz formację"/>
+    <kfArmyRotateCw Key="190" KeyDesc="." FuncDesc="Obróć zgodnie z ruchem zegara"/>
+    <kfArmyRotateCcw Key="188" KeyDesc="," FuncDesc="Obróc przeciwnie do ruchu zegara"/>
+    <kfTrainGotoPrev Key="65" KeyDesc="A" FuncDesc="Poprzednia jednostka"/>
+    <kfTrainEquipUnit Key="83" KeyDesc="S" FuncDesc="Wyszkól lub wyposaż jednostkę"/>
+    <kfTrainGotoNext Key="68" KeyDesc="D" FuncDesc="Następna jednostka"/>
+    <kfSpecpanelSelectDropbox Key="0" KeyDesc="" FuncDesc="Otwórz/zamknij panel statystyk widza"/>
+    <kfReplayPlayNextTick Key="78" KeyDesc="N" FuncDesc="Zagraj kolejną klatkę w powtórce"/>
+    <kfSpectatePlayer1 Key="49" KeyDesc="1" FuncDesc="Oglądaj gracza 1"/>
+    <kfSpectatePlayer2 Key="50" KeyDesc="2" FuncDesc="Oglądaj gracza 2"/>
+    <kfSpectatePlayer3 Key="51" KeyDesc="3" FuncDesc="Oglądaj gracza 3"/>
+    <kfSpectatePlayer4 Key="52" KeyDesc="4" FuncDesc="Oglądaj gracza 4"/>
+    <kfSpectatePlayer5 Key="53" KeyDesc="5" FuncDesc="Oglądaj gracza 5"/>
+    <kfSpectatePlayer6 Key="54" KeyDesc="6" FuncDesc="Oglądaj gracza 6"/>
+    <kfSpectatePlayer7 Key="55" KeyDesc="7" FuncDesc="Oglądaj gracza 7"/>
+    <kfSpectatePlayer8 Key="56" KeyDesc="8" FuncDesc="Oglądaj gracza 8"/>
+    <kfSpectatePlayer9 Key="57" KeyDesc="9" FuncDesc="Oglądaj gracza 9"/>
+    <kfSpectatePlayer10 Key="48" KeyDesc="0" FuncDesc="Oglądaj gracza 10"/>
+    <kfSpectatePlayer11 Key="189" KeyDesc="-" FuncDesc="Oglądaj gracza 11"/>
+    <kfSpectatePlayer12 Key="61" KeyDesc="=" FuncDesc="Oglądaj gracza 12"/>
+    <kfMapedExtra Key="13" KeyDesc="Return" FuncDesc="Extra Menu"/>
+    <kfMapedSaveMap Key="83" KeyDesc="S" FuncDesc="Zapisz mapę"/>
+    <kfMapedTerrain Key="112" KeyDesc="F1" FuncDesc="Edytor terenu"/>
+    <kfMapedVillage Key="113" KeyDesc="F2" FuncDesc="Planowanie wsi"/>
+    <kfMapedVisual Key="114" KeyDesc="F3" FuncDesc="Skrypty wizualne"/>
+    <kfMapedGlobal Key="115" KeyDesc="F4" FuncDesc="Globalne skrypty"/>
+    <kfMapedMainMenu Key="116" KeyDesc="F5" FuncDesc="Menu główne"/>
+    <kfMapedSubMenu1 Key="49" KeyDesc="1" FuncDesc="Podmenu 1"/>
+    <kfMapedSubMenu2 Key="50" KeyDesc="2" FuncDesc="Podmenu 2"/>
+    <kfMapedSubMenu3 Key="51" KeyDesc="3" FuncDesc="Podmenu 3"/>
+    <kfMapedSubMenu4 Key="52" KeyDesc="4" FuncDesc="Podmenu 4"/>
+    <kfMapedSubMenu5 Key="53" KeyDesc="5" FuncDesc="Podmenu 5"/>
+    <kfMapedSubMenu6 Key="54" KeyDesc="6" FuncDesc="Podmenu 6"/>
+    <kfMapedSubMenu7 Key="55" KeyDesc="7" FuncDesc="Podmenu 7"/>
+    <kfMapedSubMenuAction1 Key="81" KeyDesc="Q" FuncDesc="Podmenu akcja 1"/>
+    <kfMapedSubMenuAction2 Key="87" KeyDesc="W" FuncDesc="Podmenu akcja 2"/>
+    <kfMapedSubMenuAction3 Key="69" KeyDesc="E" FuncDesc="Podmenu akcja 3"/>
+    <kfMapedSubMenuAction4 Key="82" KeyDesc="R" FuncDesc="Podmenu akcja 4"/>
+    <kfMapedSubMenuAction5 Key="84" KeyDesc="T" FuncDesc="Podmenu akcja 5"/>
+    <kfMapedSubMenuAction6 Key="89" KeyDesc="Y" FuncDesc="Podmenu akcja 6"/>
+    <kfMapedSubMenuAction7 Key="85" KeyDesc="U" FuncDesc="Podmenu akcja 7"/>
+    <kfMapedObjPalette Key="32" KeyDesc="Spacja" FuncDesc="Paleta obiektów"/>
+    <kfMapedTilesPalette Key="119" KeyDesc="F8" FuncDesc="Paleta płytek"/>
+    <kfMapedUnivErasor Key="46" KeyDesc="Delete" FuncDesc="Uniwersalna gumka"/>
+    <kfMapedPaintBucket Key="45" KeyDesc="Insert" FuncDesc="Wiaderko (zmiana właściciela obiektu)"/>
+    <kfMapedHistory Key="72" KeyDesc="H" FuncDesc="Historia"/>
+    <kfMapedFlatTerrain Key="0" KeyDesc="" FuncDesc="Płaski teren"/>
+    <kfMapedTilesGrid Key="0" KeyDesc="" FuncDesc="Siatka terenu"/>
+  </Hotkeys>
+</Root>

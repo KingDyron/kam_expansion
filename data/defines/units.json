@@ -1,0 +1,871 @@
+{
+  "Units": [ 
+  
+		{
+			"UnitType":"utCarpenter",
+			"SchoolTime" : 60,
+			"ProducesWares" : ["wtSawDust", "wtTimber", "wtLog", "wtLeatherArmor", 
+								"wtWheel", "wtWoodenShield", "wtLance", "wtAxe", "wtBow", 
+								"wtMace", "wtBoots", "wtQuiver", "wtPlateArmor"]
+		},
+		{
+			"UnitType":"utMetallurgist",
+			"ProducesWares" : ["wtBitinE", "wtBolt", "wtSteelE", "wtIron", "wtBitin", 
+								"wtCoal", "wtGold", "wtJewerly"]
+		},
+		{
+			"UnitType":"utBaker",
+			"ProducesWares" : ["wtFlour", "wtBread"]
+		},
+		{
+			"UnitType":"utStoneMason",
+			"ProducesWares" : ["wtStone", "wtStoneBolt"]
+		},
+		{
+			"UnitType":"utFarmer",
+			"ProducesWares" : ["wtHay", "wtWine", "wtCorn", "wtSeed", "wtVegetables"]
+		},
+		{
+			"UnitType":"utBuilder",
+			"SchoolTime" : 40
+		},
+		{
+			"UnitType":"utStoneMason",
+			"SchoolTime" : 45
+		},
+		{
+			"UnitType":"utFarmer",
+			"SchoolTime" : 40
+		},
+		{
+			"UnitType":"utBaker",
+			"SchoolTime" : 35
+		},
+		{
+			"UnitType":"utAnimalBreeder",
+			"SchoolTime" : 40
+		},
+		{
+			"UnitType":"utButcher",
+			"SchoolTime" : 35
+		},
+		{
+			"UnitType":"utMiner",
+			"SchoolTime" : 45
+		},
+		{
+			"UnitType":"utMetallurgist",
+			"SchoolTime" : 45
+		},
+		{
+			"UnitType":"utSmith",
+			"SchoolTime" : 35
+		},
+		{
+			"UnitType":"utRecruit",
+			"SchoolTime" : 50
+		},
+		{
+			"UnitType":"utOperator",
+			"SchoolTime" : 50,
+			"Defence" : 1,
+			"Speed" : 24,
+			"FullUnitAnimations": [
+				{"ActionType" : "uaWalk", "StartStep" : 11868, "StepsCount" : 8}
+			]
+		},
+		{
+			"UnitType":"utClayPicker",
+			"SchoolTime" : 20,
+			"Defence" : 1,
+			"Speed" : 24,
+			"ProducesWares" : ["wtTile"],
+			"FullUnitAnimations": [
+				{"ActionType" : "uaWalk", "StartStep" : 12612, "StepsCount" : 8},
+				{"ActionType" : "uaSpec", "StartStep" : 12780, "StepsCount" : 8}
+			],
+			"Animations" : [
+				{"ActionType" : "uaWork", "Dir" : "DirN", "StepStart" : 12676, "Count" : 13, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWork", "Dir" : "DirNE", "StepStart" : 12689, "Count" : 13, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWork", "Dir" : "DirE", "StepStart" : 12702, "Count" : 13, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWork", "Dir" : "DirSE", "StepStart" : 12715, "Count" : 14, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWork", "Dir" : "DirS", "StepStart" : 12729, "Count" : 12, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWork", "Dir" : "DirSW", "StepStart" : 12741, "Count" : 13, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWork", "Dir" : "DirW", "StepStart" : 12754, "Count" : 13, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWork", "Dir" : "DirNW", "StepStart" : 12767, "Count" : 13, "Offset" : 0, "BackWard" : false},
+				
+				{"ActionType" : "uaWork1", "Dir" : "DirN", "StepStart" : 13141, "Count" : 10},
+				{"ActionType" : "uaWork1", "Dir" : "DirNE", "StepStart" : 13141, "Count" : 10},
+				{"ActionType" : "uaWork1", "Dir" : "DirE", "StepStart" : 13151, "Count" : 10},
+				{"ActionType" : "uaWork1", "Dir" : "DirSE", "StepStart" : 13151, "Count" : 10},
+				{"ActionType" : "uaWork1", "Dir" : "DirS", "StepStart" : 13161, "Count" : 10},
+				{"ActionType" : "uaWork1", "Dir" : "DirSW", "StepStart" : 13161, "Count" : 10},
+				{"ActionType" : "uaWork1", "Dir" : "DirW", "StepStart" : 13171, "Count" : 10},
+				{"ActionType" : "uaWork1", "Dir" : "DirNW", "StepStart" : 13171, "Count" : 10}
+			]
+		},
+		{
+			"UnitType":"utSpikedTrap",
+			"DescriptionID" : 2167,
+			"Attack" : 200,
+			"UnitDamage" : 15,
+			"HitPoints" : 10,
+			"Defence" : 1,
+			"Speed" : 18,
+			"CanAttackHouses" : False,
+			"CanAttackUnits" : False,
+			"FullUnitAnimations": [
+				{"ActionType" : "uaWalk", "StartStep" : 12955, "StepsCount" : 20}
+			],
+			"Animations" : [
+				{"ActionType" : "uaWork", "Dir" : "DirN", "StepStart" : 13115, "Count" : 13},
+				{"ActionType" : "uaWork", "Dir" : "DirNE", "StepStart" : 13128, "Count" : 13}
+			],
+			"PalaceCost" : {
+				"PhaseCount" : 6,
+				"PhaseDuration" : 300,
+				"VirtualWares" : [ 
+							{"VirtualWareName" : "vtCopper", "Count" : 5},
+							{"VirtualWareName" : "vtSilver", "Count" : 0},
+							{"VirtualWareName" : "vtAmber", "Count" : 0},
+							{"VirtualWareName" : "vtPearl", "Count" : 0},
+							{"VirtualWareName" : "vtDiamond", "Count" : 0},							
+							
+							{"VirtualWareName" : "vtBitinFrag", "Count" : 0},
+							{"VirtualWareName" : "vtLeatherSheet", "Count" : 5},	
+							{"VirtualWareName" : "vtCoin", "Count" : 0}, 
+							{"VirtualWareName" : "vtIronFerrule", "Count" : 30},
+							{"VirtualWareName" : "vtResin", "Count" : 200},
+							{"VirtualWareName" : "vtGemStone", "Count" : 0}, 
+							{"VirtualWareName" : "vtHoney", "Count" : 20}, 
+							{"VirtualWareName" : "vtCertificate", "Count" : 0},
+							{"VirtualWareName" : "vtNeedle", "Count" : 5}, 
+							{"VirtualWareName" : "vtWoodenPlate", "Count" : 100}, 
+							{"VirtualWareName" : "vtHerbs", "Count" : 0}	
+						],
+				"Wares" : [ 
+							{"WareType" : "wtPig", "Count" : 1},
+							{"WareType" : "wtGold", "Count" : 0},
+							{"WareType" : "wtApple", "Count" : 2},
+							{"WareType" : "wtBoots", "Count" : 2}
+						]
+			}
+		},
+		{
+			"UnitType":"utTorchMan",
+			"DescriptionID": 2168,
+			"SchoolTime" : 20,
+			"Attack" : 200,
+			"UnitDamage" : 15,
+			"HouseDamage" : 550,
+			"HitPoints" : 10,
+			"Defence" : 1,
+			"Speed" : 24,
+			"CanAttackHouses" : true,
+			"CanAttackUnits" : False,
+			"FullUnitAnimations": [
+				{"ActionType" : "uaWalk", "StartStep" : 13181, "StepsCount" : 8},
+				{"ActionType" : "uaWork", "StartStep" : 13246, "StepsCount" : 5},
+				{"ActionType" : "uaStay", "StartStep" : 13289, "StepsCount" : 8}
+			],
+			"PalaceCost" : {
+				"PhaseCount" : 1,
+				"PhaseDuration" : 1200,
+				"VirtualWares" : [ 
+							{"VirtualWareName" : "vtCopper", "Count" : 0},
+							{"VirtualWareName" : "vtSilver", "Count" : 0},
+							{"VirtualWareName" : "vtAmber", "Count" : 0},
+							{"VirtualWareName" : "vtPearl", "Count" : 1},
+							{"VirtualWareName" : "vtDiamond", "Count" : 0},		
+							
+							{"VirtualWareName" : "vtBitinFrag", "Count" : 1},
+							{"VirtualWareName" : "vtLeatherSheet", "Count" : 20},	
+							{"VirtualWareName" : "vtCoin", "Count" : 200}, 
+							{"VirtualWareName" : "vtIronFerrule", "Count" : 20},
+							{"VirtualWareName" : "vtResin", "Count" : 100},
+							{"VirtualWareName" : "vtGemStone", "Count" : 0}, 
+							{"VirtualWareName" : "vtHoney", "Count" : 5}, 
+							{"VirtualWareName" : "vtCertificate", "Count" : 10},
+							{"VirtualWareName" : "vtNeedle", "Count" : 10}, 
+							{"VirtualWareName" : "vtWoodenPlate", "Count" : 0}, 
+							{"VirtualWareName" : "vtHerbs", "Count" : 0}	
+						],
+				"Wares" : [ 
+							{"WareType" : "wtPig", "Count" : 1},
+							{"WareType" : "wtGold", "Count" : 5},
+							{"WareType" : "wtApple", "Count" : 5},
+							{"WareType" : "wtBoots", "Count" : 1}
+						]
+			}
+		},
+		{
+			"UnitType":"utPyro",
+			"DescriptionID" : 2161,
+			"SchoolTime" : 20,
+			"Attack" : 1,
+			"UnitDamage" : 1,
+			"HouseDamage" : 1,
+			"HitPoints" : 5,
+			"Defence" : 1,
+			"Speed" : 28,
+			"CanAttackHouses" : true,
+			"CanAttackUnits" : False,
+			"FullUnitAnimations": [
+				{"ActionType" : "uaWalk", "StartStep" : 13726, "StepsCount" : 8},
+				{"ActionType" : "uaWork", "StartStep" : 13790, "StepsCount" : 11},
+				{"ActionType" : "uaStay", "StartStep" : 13878, "StepsCount" : 8}
+			],
+			"PalaceCost" : {
+				"PhaseCount" : 3,
+				"PhaseDuration" : 600,
+				"VirtualWares" : [ 
+							{"VirtualWareName" : "vtCopper", "Count" : 0},
+							{"VirtualWareName" : "vtSilver", "Count" : 0},
+							{"VirtualWareName" : "vtAmber", "Count" : 2},
+							{"VirtualWareName" : "vtPearl", "Count" : 0},
+							{"VirtualWareName" : "vtDiamond", "Count" : 0},		
+							
+							{"VirtualWareName" : "vtBitinFrag", "Count" : 0},
+							{"VirtualWareName" : "vtLeatherSheet", "Count" : 20},	
+							{"VirtualWareName" : "vtCoin", "Count" : 200}, 
+							{"VirtualWareName" : "vtIronFerrule", "Count" : 0},
+							{"VirtualWareName" : "vtResin", "Count" : 100},
+							{"VirtualWareName" : "vtGemStone", "Count" : 0}, 
+							{"VirtualWareName" : "vtHoney", "Count" : 5}, 
+							{"VirtualWareName" : "vtCertificate", "Count" : 10},
+							{"VirtualWareName" : "vtNeedle", "Count" : 0}, 
+							{"VirtualWareName" : "vtWoodenPlate", "Count" : 0}, 
+							{"VirtualWareName" : "vtHerbs", "Count" : 100}	
+						],
+				"Wares" : [ 
+							{"WareType" : "wtPig", "Count" : 1},
+							{"WareType" : "wtGold", "Count" : 3},
+							{"WareType" : "wtApple", "Count" : 3},
+							{"WareType" : "wtBoots", "Count" : 2}
+						]
+			}
+		},
+		{
+			"UnitType":"utLekter",
+			"DescriptionID" : 2162,
+			"SchoolTime" : 20,
+			"Attack" : 1,
+			"UnitDamage" : 1,
+			"HouseDamage" : 1,
+			"HitPoints" : 5,
+			"Defence" : 1,
+			"Speed" : 20,
+			"CanAttackHouses" : true,
+			"CanAttackUnits" : False,
+			"FullUnitAnimations": [
+				{"ActionType" : "uaWalk", "StartStep" : 13942, "StepsCount" : 8},
+				{"ActionType" : "uaStay", "StartStep" : 14021, "StepsCount" : 8}
+			],
+			"Animations" : [
+				{"ActionType" : "uaWork", "Dir" : "DirN", "StepStart" : 14006, "Count" : 15, "Offset" : 0, "BackWard" : false}
+			],
+			"PalaceCost" : {
+				"PhaseCount" : 2,
+				"PhaseDuration" : 3000,
+				"VirtualWares" : [ 
+							{"VirtualWareName" : "vtCopper", "Count" : 0},
+							{"VirtualWareName" : "vtSilver", "Count" : 0},
+							{"VirtualWareName" : "vtAmber", "Count" : 0},
+							{"VirtualWareName" : "vtPearl", "Count" : 1},
+							{"VirtualWareName" : "vtDiamond", "Count" : 0},		
+							
+							{"VirtualWareName" : "vtBitinFrag", "Count" : 1},
+							{"VirtualWareName" : "vtLeatherSheet", "Count" : 20},	
+							{"VirtualWareName" : "vtCoin", "Count" : 200}, 
+							{"VirtualWareName" : "vtIronFerrule", "Count" : 20},
+							{"VirtualWareName" : "vtResin", "Count" : 100},
+							{"VirtualWareName" : "vtGemStone", "Count" : 0}, 
+							{"VirtualWareName" : "vtHoney", "Count" : 5}, 
+							{"VirtualWareName" : "vtCertificate", "Count" : 10},
+							{"VirtualWareName" : "vtNeedle", "Count" : 10}, 
+							{"VirtualWareName" : "vtWoodenPlate", "Count" : 0}, 
+							{"VirtualWareName" : "vtHerbs", "Count" : 0}	
+						],
+				"Wares" : [ 
+							{"WareType" : "wtPig", "Count" : 1},
+							{"WareType" : "wtGold", "Count" : 5},
+							{"WareType" : "wtApple", "Count" : 5},
+							{"WareType" : "wtBoots", "Count" : 1}
+						]
+			}
+		},
+		{
+			"UnitType":"utShieldBearer",
+			"SchoolTime" : 200,
+			"Attack" : 5,
+			"AttackHorse" : 1,
+			"Defence" : 5,
+			"HitPoints" : 4,
+			"ProjectileDefence" : 5,
+			"Speed" : 20,
+			"TownhallCost" : 10,
+			"CanAttackHouses" : false,
+			"StrikeSteps" : [7],
+			"FullUnitAnimations": [
+				{"ActionType" : "uaWalk", "StartStep" : 12085, "StepsCount" : 8},
+				{"ActionType" : "uaWork", "StartStep" : 12149, "StepsCount" : 10}
+			]
+		},
+		{
+			"UnitType":"utWoodenWall",
+			"Attack" : 5,
+			"AttackHorse" : 1,
+			"Defence" : 10,
+			"HitPoints" : 10,
+			"ProjectileDefence" : 10,
+			"Speed" : 12,
+			"CanAttackHouses" : false,
+			"CanAttackUnits" : false,
+			"StrikeSteps" : [7],
+			"FullUnitAnimations": [
+				{"ActionType" : "uaWalk", "StartStep" : 12292, "StepsCount" : 20},
+				{"ActionType" : "uaWork", "StartStep" : 12451, "StepsCount" : 20}
+			],
+			"SiegeWorkshopPhasesCount" : 5,
+			"SiegeWorkshopCost" : [{"WareType" : "wtLog", "Count" : 2}, {"WareType" : "wtSteelE", "Count" : 4}, {"WareType" : "wtWheel", "Count" : 1}]
+		},
+		{
+			"UnitType":"utFighter",
+			"SchoolTime" : 100,
+			"Attack" : 15,
+			"HitPoints" : 3,
+			"Defence" : 1,
+			"Speed" : 24,
+			"CanAttackHouses" : false,
+			"TownhallCost" : 1,
+			"StrikeSteps" : [4, 9],
+			"BarracksCost" : [
+			],
+			"FullUnitAnimations": [
+				{"ActionType" : "uaWalk", "StartStep" : 11932, "StepsCount" : 8}
+			],
+			"PalaceCost" : {
+				"PhaseCount" : 1,
+				"PhaseDuration" : 80,
+				"VirtualWares" : [ 
+							{"VirtualWareName" : "vtCertificate", "Count" : 1}
+						],
+				"Wares" : [ 
+							{"WareType" : "wtJewerly", "Count" : 0},
+							{"WareType" : "wtGold", "Count" : 0},
+							{"WareType" : "wtApple", "Count" : 0},
+							{"WareType" : "wtBoots", "Count" : 0}
+						]
+			},
+				
+			"Animations" : [
+				{"ActionType" : "uaWork", "Dir" : "DirN", "X" : 0, "Y" : 0, "StepStart" : 11996, "Count" : 11, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWork", "Dir" : "DirNE", "X" : 0, "Y" : 0, "StepStart" : 12007, "Count" : 11, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWork", "Dir" : "DirE", "X" : 0, "Y" : 0, "StepStart" : 12018, "Count" : 11, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWork", "Dir" : "DirSE", "X" : 0, "Y" : 0, "StepStart" : 12029, "Count" : 11, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWork", "Dir" : "DirS", "X" : 0, "Y" : 0, "StepStart" : 12040, "Count" : 12, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWork", "Dir" : "DirSW", "X" : 0, "Y" : 0, "StepStart" : 12052, "Count" : 11, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWork", "Dir" : "DirW", "X" : 0, "Y" : 0, "StepStart" : 12063, "Count" : 11, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWork", "Dir" : "DirNW", "X" : 0, "Y" : 0, "StepStart" : 12074, "Count" : 11, "Offset" : 0, "BackWard" : false}
+			]
+		},
+		{
+			"UnitType":"utClubMan",
+			"DescriptionID" : 2158,
+			"TownhallCost" : 4,
+			"Attack" : 5,
+			"Defence" : 1,
+			"HouseDamage" : 3,
+			"HitPoints" : 3,
+			"Speed" : 24,
+			"StrikeSteps" : [5],
+			"FullUnitAnimations": [
+				{"ActionType" : "uaWalk", "StartStep" : 11740, "StepsCount" : 8},
+				{"ActionType" : "uaWork", "StartStep" : 11804, "StepsCount" : 8}
+			]
+		},
+		{
+			"UnitType":"utMedic",
+			"DescriptionID" : 2163,
+			"TownhallCost" : 4,
+			"Attack" : 1,
+			"Defence" : 1,
+			"HitPoints" : 3,
+			"HouseDamage" : 3,
+			"Speed" : 20,
+			"StrikeSteps" : [],
+			"CanAttackHouses" : false,
+			"CanAttackUnits" : false,
+			"FullUnitAnimations": [
+				{"ActionType" : "uaWalk", "StartStep" : 12228, "StepsCount" : 8},
+				{"ActionType" : "uaSpec", "StartStep" : 13358, "StepsCount" : 16}
+			],
+			"PalaceCost" : {
+				"PhaseCount" : 4,
+				"PhaseDuration" : 300,
+				"VirtualWares" : [ 
+							{"VirtualWareName" : "vtCopper", "Count" : 0},
+							{"VirtualWareName" : "vtSilver", "Count" : 0},
+							{"VirtualWareName" : "vtAmber", "Count" : 0},
+							{"VirtualWareName" : "vtPearl", "Count" : 0},
+							{"VirtualWareName" : "vtDiamond", "Count" : 1},	
+							
+							{"VirtualWareName" : "vtBitinFrag", "Count" : 0},
+							{"VirtualWareName" : "vtLeatherSheet", "Count" : 30},	
+							{"VirtualWareName" : "vtCoin", "Count" : 145}, 
+							{"VirtualWareName" : "vtIronFerrule", "Count" : 1},
+							{"VirtualWareName" : "vtResin", "Count" : 50},
+							{"VirtualWareName" : "vtGemStone", "Count" : 0}, 
+							{"VirtualWareName" : "vtHoney", "Count" : 25}, 
+							{"VirtualWareName" : "vtCertificate", "Count" : 10},
+							{"VirtualWareName" : "vtNeedle", "Count" : 30}, 
+							{"VirtualWareName" : "vtWoodenPlate", "Count" : 0}, 
+							{"VirtualWareName" : "vtHerbs", "Count" : 165}	
+						],
+				"Wares" : [ 
+							{"WareType" : "wtPig", "Count" : 1},
+							{"WareType" : "wtGold", "Count" : 0},
+							{"WareType" : "wtApple", "Count" : 2},
+							{"WareType" : "wtBoots", "Count" : 2}
+						]
+			}
+		},
+		{
+			"UnitType":"utMaceFighter",
+			"DescriptionID" : 2159,
+			"StrikeSteps" : [5],
+			"Attack" : 10,
+			"Defence" : 2,
+			"HouseDamage" : 4,
+			"Speed" : 22,
+			"BarracksCost" : [
+				{"WareType" : "wtMace", "Count" : 1},
+				{"WareType" : "wtPlateArmor", "Count" : 1}
+			],
+			"FullUnitAnimations": [
+				{"ActionType" : "uaWalk", "StartStep" : 11412, "StepsCount" : 8},
+				{"ActionType" : "uaWork", "StartStep" : 11476, "StepsCount" : 8}
+			]
+		},
+		{
+			"UnitType":"utFlailFighter",
+			"DescriptionID" : 2160,
+			"StrikeSteps" : [9],
+			"Attack" : 20,
+			"Defence" : 3,
+			"HouseDamage" : 10,
+			"Speed" : 20,
+			"BarracksCost" : [
+				{"WareType" : "wtFlail", "Count" : 1},
+				{"WareType" : "wtIronArmor", "Count" : 1}
+			],
+			"FullUnitAnimations": [
+				{"ActionType" : "uaWalk", "StartStep" : 11540, "StepsCount" : 10},
+				{"ActionType" : "uaWork", "StartStep" : 11620, "StepsCount" : 15}
+			]
+		},
+		{
+			"UnitType":"utSerf",
+			"SchoolTime" : 20
+		},
+		{
+			"UnitType":"utGolem",
+			"HitPoints" : 20,
+			"StrikeSteps" : [5],
+			"MaxRange" : 10.99,
+			"AmmoType" : "uatArrow",
+			"MinRange" : 5
+			
+ 		},
+		{
+			"UnitType":"utAmmoCart",	
+			"DescriptionID" : 1920,		
+			"AmmoType" : "uatNone",
+			"CanOrderAmmo" : true,
+			"CanStorm" : false,
+			"CanAttackUnits" : false,
+			"CanAttackHouses" : false,
+			"ProjectileDefence" : 10,
+			"Animations" : [
+				{
+					"ActionType" : "uaWalk", "Dir" : "DirN", "X" : 0, "Y" : 0, "StepStart" : 10594, "Count" : 15, "Offset" : 0, "BackWard" : false
+				}
+			],
+			"PalaceCost" : {
+				"PhaseCount" : 6,
+				"PhaseDuration" : 420,
+				"VirtualWares" : [ 
+							{"VirtualWareName" : "vtCopper", "Count" : 5},
+							{"VirtualWareName" : "vtSilver", "Count" : 0},
+							{"VirtualWareName" : "vtAmber", "Count" : 0},
+							{"VirtualWareName" : "vtPearl", "Count" : 0},
+							{"VirtualWareName" : "vtDiamond", "Count" : 0},	
+							
+							{"VirtualWareName" : "vtBitinFrag", "Count" : 0},
+							{"VirtualWareName" : "vtLeatherSheet", "Count" : 30},	
+							{"VirtualWareName" : "vtCoin", "Count" : 150}, 
+							{"VirtualWareName" : "vtIronFerrule", "Count" : 40},
+							{"VirtualWareName" : "vtResin", "Count" : 255},
+							{"VirtualWareName" : "vtGemStone", "Count" : 0}, 
+							{"VirtualWareName" : "vtHoney", "Count" : 0}, 
+							{"VirtualWareName" : "vtCertificate", "Count" : 0},
+							{"VirtualWareName" : "vtNeedle", "Count" : 50}, 
+							{"VirtualWareName" : "vtWoodenPlate", "Count" : 100}, 
+							{"VirtualWareName" : "vtHerbs", "Count" : 0}	
+						],
+				"Wares" : [ 
+							{"WareType" : "wtPig", "Count" : 1},
+							{"WareType" : "wtGold", "Count" : 2},
+							{"WareType" : "wtApple", "Count" : 5},
+							{"WareType" : "wtBoots", "Count" : 1}
+						]
+			}
+		},
+		{
+			"UnitType":"utTrainedWolf",
+			"DescriptionID" : 1921,
+			"HitPoints" : 2,
+			"Attack" : 89,
+			"AttackHorse" : 30,
+			"Speed" : 44,
+			"Defence" : 2,
+			"HouseDamage" : 3,
+			"UnitDamage" : 1,
+			"CanAttackHouses" : false,
+			"ProjectileDefence" : 5,
+			"StrikeSteps" : [2, 5, 8],
+			"PalaceCost" : {
+				"PhaseCount" : 1,
+				"CanAttackHouses" : false,
+				"PhaseDuration" : 1200,
+				"VirtualWares" : [ 
+							{"VirtualWareName" : "vtCopper", "Count" : 0},
+							{"VirtualWareName" : "vtSilver", "Count" : 0},
+							{"VirtualWareName" : "vtAmber", "Count" : 1},
+							{"VirtualWareName" : "vtPearl", "Count" : 0},
+							{"VirtualWareName" : "vtDiamond", "Count" : 0},	
+							
+							{"VirtualWareName" : "vtBitinFrag", "Count" : 0},
+							{"VirtualWareName" : "vtLeatherSheet", "Count" : 20},	
+							{"VirtualWareName" : "vtCoin", "Count" : 10}, 
+							{"VirtualWareName" : "vtIronFerrule", "Count" : 0},
+							{"VirtualWareName" : "vtResin", "Count" : 0},
+							{"VirtualWareName" : "vtGemStone", "Count" : 0}, 
+							{"VirtualWareName" : "vtHoney", "Count" : 0}, 
+							{"VirtualWareName" : "vtCertificate", "Count" : 0},
+							{"VirtualWareName" : "vtNeedle", "Count" : 0}, 
+							{"VirtualWareName" : "vtWoodenPlate", "Count" : 0}, 
+							{"VirtualWareName" : "vtHerbs", "Count" : 150}		
+						],
+				"Wares" : [ 
+							{"WareType" : "wtPig", "Count" : 1},
+							{"WareType" : "wtGold", "Count" : 1},
+							{"WareType" : "wtBoots", "Count" : 3}
+						]
+			}
+		},
+		{
+			"UnitType":"utPaladin",
+			"HitPoints" : 9,
+			"Attack" : 115,
+			"AttackHorse" : 10,
+			"Defence" : 15,
+			"Speed" : 20,
+			"Sight" : 3,
+			"HouseDamage" : 3,
+			"UnitDamage" : 3,
+			"StrikeSteps" : [5],
+			"ProjectileDefence" : 10,
+			"PalaceCost" : {
+				"PhaseCount" : 6,
+				"PhaseDuration" : 1000,
+				"VirtualWares" : [ 
+							{"VirtualWareName" : "vtCopper", "Count" : 0},
+							{"VirtualWareName" : "vtSilver", "Count" : 0},
+							{"VirtualWareName" : "vtAmber", "Count" : 0},
+							{"VirtualWareName" : "vtPearl", "Count" : 0},
+							{"VirtualWareName" : "vtDiamond", "Count" : 2},	
+							
+							{"VirtualWareName" : "vtBitinFrag", "Count" : 20},
+							{"VirtualWareName" : "vtLeatherSheet", "Count" : 10},	
+							{"VirtualWareName" : "vtCoin", "Count" : 250}, 
+							{"VirtualWareName" : "vtIronFerrule", "Count" : 20},
+							{"VirtualWareName" : "vtResin", "Count" : 0},
+							{"VirtualWareName" : "vtGemStone", "Count" : 150}, 
+							{"VirtualWareName" : "vtHoney", "Count" : 80}, 
+							{"VirtualWareName" : "vtCertificate", "Count" : 30},
+							{"VirtualWareName" : "vtNeedle", "Count" : 10}, 
+							{"VirtualWareName" : "vtWoodenPlate", "Count" : 0}, 
+							{"VirtualWareName" : "vtHerbs", "Count" : 100}			
+						],
+				"Wares" : [ 
+							{"WareType" : "wtPig", "Count" : 1},
+							{"WareType" : "wtGold", "Count" : 5},
+							{"WareType" : "wtApple", "Count" : 4},
+							{"WareType" : "wtBoots", "Count" : 1}
+						]
+			}
+		},
+		{
+			"UnitType":"utArcher",
+			"HitPoints" : 1,
+			"MaxRange" : 7.99,
+			"PalaceCost" : {
+				"PhaseCount" : 9,
+				"PhaseDuration" : 650,
+				"VirtualWares" : [ 
+							{"VirtualWareName" : "vtCopper", "Count" : 0},
+							{"VirtualWareName" : "vtSilver", "Count" : 3},
+							{"VirtualWareName" : "vtAmber", "Count" : 0},
+							{"VirtualWareName" : "vtPearl", "Count" : 0},
+							{"VirtualWareName" : "vtDiamond", "Count" : 0},	
+							
+							{"VirtualWareName" : "vtBitinFrag", "Count" : 0},
+							{"VirtualWareName" : "vtLeatherSheet", "Count" : 15},	
+							{"VirtualWareName" : "vtCoin", "Count" : 125}, 
+							{"VirtualWareName" : "vtIronFerrule", "Count" : 10},
+							{"VirtualWareName" : "vtResin", "Count" : 0},
+							{"VirtualWareName" : "vtGemStone", "Count" : 40}, 
+							{"VirtualWareName" : "vtHoney", "Count" : 30}, 
+							{"VirtualWareName" : "vtCertificate", "Count" : 30},
+							{"VirtualWareName" : "vtNeedle", "Count" : 10}, 
+							{"VirtualWareName" : "vtWoodenPlate", "Count" : 15}, 
+							{"VirtualWareName" : "vtHerbs", "Count" : 199}		
+						],
+				"Wares" : [ 
+							{"WareType" : "wtPig", "Count" : 1},
+							{"WareType" : "wtGold", "Count" : 5},
+							{"WareType" : "wtApple", "Count" : 4},
+							{"WareType" : "wtBoots", "Count" : 4}
+						]
+			}
+		},
+		{
+			"UnitType":"utSpy",
+			"PalaceCost" : {
+				"PhaseCount" : 12,
+				"PhaseDuration" : 500,
+				"VirtualWares" : [ 
+							{"VirtualWareName" : "vtCopper", "Count" : 0},
+							{"VirtualWareName" : "vtSilver", "Count" : 0},
+							{"VirtualWareName" : "vtAmber", "Count" : 0},
+							{"VirtualWareName" : "vtPearl", "Count" : 10},
+							{"VirtualWareName" : "vtDiamond", "Count" : 0},	
+							
+							{"VirtualWareName" : "vtBitinFrag", "Count" : 0},
+							{"VirtualWareName" : "vtLeatherSheet", "Count" : 50},	
+							{"VirtualWareName" : "vtCoin", "Count" : 200}, 
+							{"VirtualWareName" : "vtIronFerrule", "Count" : 0},
+							{"VirtualWareName" : "vtResin", "Count" : 0},
+							{"VirtualWareName" : "vtGemStone", "Count" : 150}, 
+							{"VirtualWareName" : "vtHoney", "Count" : 100}, 
+							{"VirtualWareName" : "vtCertificate", "Count" : 50},
+							{"VirtualWareName" : "vtNeedle", "Count" : 30}, 
+							{"VirtualWareName" : "vtWoodenPlate", "Count" : 0}, 
+							{"VirtualWareName" : "vtHerbs", "Count" : 200}
+						],
+				"Wares" : [ 
+							{"WareType" : "wtPig", "Count" : 1},
+							{"WareType" : "wtGold", "Count" : 2},
+							{"WareType" : "wtApple", "Count" : 1},
+							{"WareType" : "wtBoots", "Count" : 1}
+						]
+			}
+		},
+		{
+			"UnitType":"utRam",
+			"Animations" : [
+				{"ActionType" : "uaWalk", "Dir" : "DirN", "X" : 0, "Y" : 0, "StepStart" : 10842, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWalk", "Dir" : "DirNE", "X" : 0, "Y" : 0, "StepStart" : 10827, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWalk", "Dir" : "DirE", "X" : 0, "Y" : 0, "StepStart" : 10812, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWalk", "Dir" : "DirSE", "X" : 0, "Y" : 0, "StepStart" : 10917, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWalk", "Dir" : "DirS", "X" : 0, "Y" : 0, "StepStart" : 10902, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWalk", "Dir" : "DirSW", "X" : 0, "Y" : 0, "StepStart" : 10887, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWalk", "Dir" : "DirW", "X" : 0, "Y" : 0, "StepStart" : 10872, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWalk", "Dir" : "DirNW", "X" : 0, "Y" : 0, "StepStart" : 10857, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				
+				{"ActionType" : "uaWork", "Dir" : "DirN", "X" : 0, "Y" : 0, "StepStart" : 10962, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWork", "Dir" : "DirNE", "X" : 0, "Y" : 0, "StepStart" : 10947, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWork", "Dir" : "DirE", "X" : 0, "Y" : 0, "StepStart" : 10932, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWork", "Dir" : "DirSE", "X" : 0, "Y" : 0, "StepStart" : 11037, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWork", "Dir" : "DirS", "X" : 0, "Y" : 0, "StepStart" : 11022, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWork", "Dir" : "DirSW", "X" : 0, "Y" : 0, "StepStart" : 11007, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWork", "Dir" : "DirW", "X" : 0, "Y" : 0, "StepStart" : 10992, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWork", "Dir" : "DirNW", "X" : 0, "Y" : 0, "StepStart" : 10977, "Count" : 15, "Offset" : 0, "BackWard" : false}
+			]
+		},
+		{
+			"UnitType":"utPikeMachine",
+			"CanAttackHouses" : false,
+			"DescriptionID" : 1919,
+			"PalaceCost" : {
+				"PhaseCount" : 12,
+				"PhaseDuration" : 130,
+				"VirtualWares" : [ 
+							{"VirtualWareName" : "vtCopper", "Count" : 0},
+							{"VirtualWareName" : "vtSilver", "Count" : 3},
+							{"VirtualWareName" : "vtAmber", "Count" : 0},
+							{"VirtualWareName" : "vtPearl", "Count" : 0},
+							{"VirtualWareName" : "vtDiamond", "Count" : 0},	
+							
+							{"VirtualWareName" : "vtHoney", "Count" : 30}, 
+							{"VirtualWareName" : "vtGemStone", "Count" : 10}, 
+							{"VirtualWareName" : "vtResin", "Count" : 250},
+							{"VirtualWareName" : "vtCoin", "Count" : 150}, 
+							{"VirtualWareName" : "vtNeedle", "Count" : 10}, 
+							{"VirtualWareName" : "vtCertificate", "Count" : 40}, 
+							{"VirtualWareName" : "vtWoodenPlate", "Count" : 100},
+							{"VirtualWareName" : "vtIronFerrule", "Count" : 15},
+							{"VirtualWareName" : "vtLeatherSheet", "Count" : 15},
+							{"VirtualWareName" : "vtHerbs", "Count" : 0},
+							{"VirtualWareName" : "vtBitinFrag", "Count" : 0}		
+						],
+				"Wares" : [ 
+							{"WareType" : "wtPig", "Count" : 1},
+							{"WareType" : "wtGold", "Count" : 1},
+							{"WareType" : "wtApple", "Count" : 2},
+							{"WareType" : "wtBoots", "Count" : 2}
+						]
+			},
+			"StrikeSteps" : [ 7, 14],
+			"Animations" : [
+				{"ActionType" : "uaWalk", "Dir" : "DirN", "X" : 0, "Y" : 0, "StepStart" : 11142, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWalk", "Dir" : "DirNE", "X" : 0, "Y" : 0, "StepStart" : 11127, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWalk", "Dir" : "DirE", "X" : 0, "Y" : 0, "StepStart" : 11112, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWalk", "Dir" : "DirSE", "X" : 0, "Y" : 0, "StepStart" : 11097, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWalk", "Dir" : "DirS", "X" : 0, "Y" : 0, "StepStart" : 11082, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWalk", "Dir" : "DirSW", "X" : 0, "Y" : 0, "StepStart" : 11067, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWalk", "Dir" : "DirW", "X" : 0, "Y" : 0, "StepStart" : 11052, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWalk", "Dir" : "DirNW", "X" : 0, "Y" : 0, "StepStart" : 11157, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				
+				{"ActionType" : "uaWork", "Dir" : "DirN", "X" : 0, "Y" : 0, "StepStart" : 11262, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWork", "Dir" : "DirNE", "X" : 0, "Y" : 0, "StepStart" : 11247, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWork", "Dir" : "DirE", "X" : 0, "Y" : 0, "StepStart" : 11232, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWork", "Dir" : "DirSE", "X" : 0, "Y" : 0, "StepStart" : 11217, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWork", "Dir" : "DirS", "X" : 0, "Y" : 0, "StepStart" : 11202, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWork", "Dir" : "DirSW", "X" : 0, "Y" : 0, "StepStart" : 11187, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWork", "Dir" : "DirW", "X" : 0, "Y" : 0, "StepStart" : 11172, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWork", "Dir" : "DirNW", "X" : 0, "Y" : 0, "StepStart" : 11277, "Count" : 15, "Offset" : 0, "BackWard" : false}
+			]
+		},
+		{
+			"UnitType":"utShip",
+			"CanAttackHouses" : false,
+			"CanAttackUnits" : false,
+			"CanOrderAmmo" : false,
+			"DescriptionID" : 2165,
+			"Sight" : 9,
+			"Animations" : [
+				{"ActionType" : "uaWalk", "Dir" : "DirN", "X" : 0, "Y" : 0, "StepStart" : 11292, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWalk", "Dir" : "DirNE", "X" : 0, "Y" : 0, "StepStart" : 11307, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWalk", "Dir" : "DirE", "X" : 0, "Y" : 0, "StepStart" : 11322, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWalk", "Dir" : "DirSE", "X" : 0, "Y" : 0, "StepStart" : 11337, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWalk", "Dir" : "DirS", "X" : 0, "Y" : 0, "StepStart" : 11352, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWalk", "Dir" : "DirSW", "X" : 0, "Y" : 0, "StepStart" : 11367, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWalk", "Dir" : "DirW", "X" : 0, "Y" : 0, "StepStart" : 11382, "Count" : 15, "Offset" : 0, "BackWard" : false},
+				{"ActionType" : "uaWalk", "Dir" : "DirNW", "X" : 0, "Y" : 0, "StepStart" : 11397, "Count" : 15, "Offset" : 0, "BackWard" : false}
+			]
+		},
+		{
+			"UnitType":"utBoat",
+			"DescriptionID" : 2164,
+			"CanAttackHouses" : false,
+			"CanAttackUnits" : false,
+			"FullUnitAnimations": [
+				{"ActionType" : "uaWalk", "StartStep" : 13486, "StepsCount" : 15}
+			]
+		},
+		{
+			"UnitType":"utBattleShip",
+			"CanAttackHouses" : true,
+			"CanAttackUnits" : true,
+			"CanOrderAmmo" : true,
+			"DescriptionID" : 2166,
+			"Attack" : 200,
+			"UnitDamage" : 3,
+			"AttackHorse" : 0,
+			"HouseDamage" : 10,
+			"Sight" : 12,
+			"FullUnitAnimations": [
+				{"ActionType" : "uaWalk", "StartStep" : 13606, "StepsCount" : 15},
+				{"ActionType" : "uaWork", "StartStep" : 13606, "StepsCount" : 15}
+			]
+		},
+		{
+			"UnitType":"utDeerMale",
+			"Speed": 40,
+			"FullUnitAnimations": [
+				{"ActionType" : "uaWalk", "StartStep" : 14085, "StepsCount" : 8}
+			]
+		},
+		{
+			"UnitType":"utDeerFemale",
+			"Speed": 32,
+			"FullUnitAnimations": [
+				{"ActionType" : "uaWalk", "StartStep" : 14150, "StepsCount" : 8}
+			]
+		},
+		{
+			"UnitType":"utFox",
+			"Speed": 32,
+			"FullUnitAnimations": [
+				{"ActionType" : "uaWalk", "StartStep" : 14215, "StepsCount" : 8}
+			]
+		},
+		{
+			"UnitType":"utBoar",
+			"Speed": 12,
+			"FullUnitAnimations": [
+				{"ActionType" : "uaWalk", "StartStep" : 14409, "StepsCount" : 16}
+			]
+		},
+		{
+			"UnitType":"utBear",
+			"Speed": 12,
+			"FullUnitAnimations": [
+				{"ActionType" : "uaWalk", "StartStep" : 14280, "StepsCount" : 16}
+			]
+		},
+		{
+			"UnitType":"utLandDuck",
+			"Speed": 12,
+			"FullUnitAnimations": [
+				{"ActionType" : "uaWalk", "StartStep" : 14538, "StepsCount" : 8}
+			]
+		},
+		{
+			"UnitType":"utRabbit",
+			"Speed": 32,
+			"FullUnitAnimations": [
+				{"ActionType" : "uaWalk", "StartStep" : 14602, "StepsCount" : 8}
+			]
+		},
+		{
+			"UnitType":"utSandSnake",
+			"Speed": 6,
+			"FullUnitAnimations": [
+				{"ActionType" : "uaWalk", "StartStep" : 15085, "StepsCount" : 16}
+			]
+		},
+		{
+			"UnitType":"utWhiteBear",
+			"Speed": 16,
+			"FullUnitAnimations": [
+				{"ActionType" : "uaWalk", "StartStep" : 14893, "StepsCount" : 16}
+			]
+		},
+		{
+			"UnitType":"utSpider",
+			"Speed": 8,
+			"FullUnitAnimations": [
+				{"ActionType" : "uaWalk", "StartStep" : 15021, "StepsCount" : 8}
+			]
+		}
+	],
+	"School Order" : ["utSerf","utBuilder","utStoneMason","utWoodcutter","utCarpenter", "utClayPicker","utFisher","utFarmer","utBaker","utAnimalBreeder","utButcher","utMiner","utMetallurgist","utSmith","utOperator", "utRecruit"],
+	"SiegeWorkshop Order" : ["utBallista", "utCatapult", "utRam", "utWoodenWall"],
+	"Townhall Order" : ["utFighter", "utRebel", "utRogue", "utClubMan", "utVagabond", "utShieldBearer", "utBarbarian", "utWarrior"],
+	"Palace Order" : ["utFighter", "utTorchMan", "utPyro", "utLekter", "utMedic", "utArcher","utPaladin", "utSpy", "utTrainedWolf", "utAmmoCart", "utPikeMachine", "utSpikedTrap"],
+	"Barracks Order" : ["utFighter", "utMilitia", "utAxefighter", "utSwordfighter", "utBowMan", "utCrossbowMan", "utLanceCarrier", "utPikeman", "utMaceFighter", "utFlailFighter", "utScout", "utKnight"],
+	"Shipyard Order" : ["utBoat","utShip", "utBattleShip"]
+}

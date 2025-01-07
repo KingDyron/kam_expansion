@@ -1,0 +1,869 @@
+   Timestamp    Elapsed     Delta  Thread    Description
+========================
+    Date: 2025.01.01
+========================
+15:20:44.789     0,001s       1ms  17484    Log is up and running. Game version: KaM Expansion: Co-op & World Update
+15:20:44.794     0,006s       5ms  17484    Game Load started
+15:20:44.949     0,161s     155ms  17484    Start loading 'GameApp settings' from 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'
+15:20:44.955     0,167s       6ms  17484    'GameApp settings' was successfully loaded from 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'
+15:20:44.972     0,184s       6ms  17484    Start saving 'GameApp settings' to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'
+01262b8c KaM_Expansion.exe KM_Settings        106 TKMSettings.SaveToDefaultFile
+01262c5f KaM_Expansion.exe KM_Settings        113 TKMSettings.SaveToDefaultFile
+0126285d KaM_Expansion.exe KM_Settings         59 TKMSettings.Create
+01262f9a KaM_Expansion.exe KM_SettingsXML      38 TKMSettingsXML.Create
+012632db KaM_Expansion.exe KM_GameAppSettings  51 TKMGameAppSettings.Create
+0147dc14 KaM_Expansion.exe KM_Main            258 TKMMain.Start
+0147de98 KaM_Expansion.exe KM_Main            305 TKMMain.Start
+016fcb2b KaM_Expansion.exe KaM_Expansion      479 initialization
+016fcb5a KaM_Expansion.exe KaM_Expansion      482 initialization
+75987ba7 KERNEL32.DLL                             BaseThreadInitThunk
+
+15:20:45.009     0,221s      37ms  17484    'GameApp settings' was successfully saved to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'
+15:20:45.068     0,280s      59ms  17484    Start loading 'Server settings' from 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+15:20:45.075     0,287s       7ms  17484    'Server settings' was successfully loaded from 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+15:20:45.082     0,295s       8ms  17484    Start saving 'Server settings' to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+01262b8c KaM_Expansion.exe KM_Settings       106 TKMSettings.SaveToDefaultFile
+01262c5f KaM_Expansion.exe KM_Settings       113 TKMSettings.SaveToDefaultFile
+0126285d KaM_Expansion.exe KM_Settings        59 TKMSettings.Create
+013a6e8c KaM_Expansion.exe KM_ServerSettings 109 TKMServerSettings.Create
+01472f94 KaM_Expansion.exe KM_GameApp        213 TKMGameApp.Create
+014733e6 KaM_Expansion.exe KM_GameApp        295 TKMGameApp.Create
+0147eebe KaM_Expansion.exe KM_Main           635 TKMMain.ReinitRender
+0147f0ca KaM_Expansion.exe KM_Main           689 TKMMain.ReinitRender
+0147dd2a KaM_Expansion.exe KM_Main           281 TKMMain.Start
+0147de98 KaM_Expansion.exe KM_Main           305 TKMMain.Start
+016fcb2b KaM_Expansion.exe KaM_Expansion     479 initialization
+016fcb5a KaM_Expansion.exe KaM_Expansion     482 initialization
+75987ba7 KERNEL32.DLL                            BaseThreadInitThunk
+
+15:20:45.097     0,309s      14ms  17484    'Server settings' was successfully saved to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+15:20:45.104     0,316s       7ms  17484    Init Render started
+15:20:45.266     0,478s     162ms  17484    GL_MAX_TEXTURE_SIZE = 32768
+15:20:45.273     0,485s       7ms  17484    GL_MAX_VIEWPORT_DIM = 32768
+                                      OpenGL Vendor: NVIDIA Corporation
+                                      OpenGL Renderer: NVIDIA GeForce RTX 3060 Ti/PCIe/SSE2
+                                      OpenGL Version: 4.6.0 NVIDIA 560.81
+15:20:45.302     0,514s      29ms  17484    Init Render Done
+15:20:45.309     0,521s       7ms  17484    Resource loading state - None
+15:20:45.317     0,529s       8ms  17484    Reading palettes ... done
+15:20:45.327     0,539s       9ms  17484    Reading GUI.rx
+15:20:45.336     0,548s       9ms  17484    Load Sprites started
+15:20:45.342     0,554s       6ms  17484    GUI - 966
+15:20:45.362     0,574s      19ms  17484    Load Sprites Done
+15:20:45.402     0,614s      40ms  17484    Reading GUIMain.rx
+15:20:45.410     0,622s       7ms  17484    Load Sprites started
+15:20:45.417     0,629s       7ms  17484    GUIMain - 105
+15:20:45.470     0,682s      53ms  17484    Load Sprites Done
+15:20:45.527     0,739s      57ms  17484    Reading Tileset.rx
+15:20:45.534     0,746s       7ms  17484    Load Sprites started
+15:20:45.541     0,753s       7ms  17484    Tileset - 5449
+15:20:45.581     0,793s      40ms  17484    Load Sprites Done
+15:20:45.588     0,800s       7ms  17484    GenerateTerrainTransitions started. Legacy = False
+15:20:45.596     0,808s       8ms  17484    TexId = 5451 GenTilesCnt = 2100
+15:20:45.603     0,815s       7ms  17484    TexId = 6051; TexId - fGenTexIdStartI = 600; uniqueTex = 600; totalTex = 1350
+15:20:45.609     0,821s       6ms  17484    GeneratedMasks cnt = 20
+15:20:45.617     0,829s       8ms  17484    GenerateTerrainTransitions Done
+15:20:45.623     0,835s       6ms  17484    GenerateTerrainTransitions started. Legacy = True
+15:20:45.631     0,843s       8ms  17484    Legacy: TexId = 4999 GenTilesCntTemp = 2030
+15:20:45.637     0,849s       6ms  17484    TexId = 5463; TexId - fGenTexIdStartILegacy = 464; uniqueTex = 464; totalTex = 1044
+15:20:45.643     0,855s       6ms  17484    GeneratedMasks cnt = 16
+15:20:45.651     0,863s       8ms  17484    GenerateTerrainTransitions Done
+15:20:45.773     0,985s     122ms  17484    Load font started
+15:20:45.811     1,023s      38ms  17484    Font load took 38ms
+15:20:45.818     1,030s       7ms  17484    Read fonts is done
+15:20:45.836     1,048s      18ms  17484    ReadGFX is done
+15:20:45.843     1,055s       7ms  17484    Resource loading state - Menu
+15:20:45.850     1,062s       7ms  16272    OpenAL init started
+15:20:45.874     1,086s      24ms  17484    Music init done, 24 tracks found
+                                      Loading campaign images.rxx for HKS
+15:20:45.911     1,123s      37ms  17656    Custom - 1
+15:20:45.919     1,131s       8ms  16272    Pre-LoadSFX init ... done
+15:20:45.925     1,137s       6ms  17484    Main menu init done
+15:20:45.932     1,144s       7ms  16272    ALC_MONO_SOURCES 255
+15:20:45.938     1,150s       6ms  16272    ALC_STEREO_SOURCES 1
+15:20:45.945     1,157s       7ms  16272    OpenAL init done
+                                      Loading campaign images.rxx for KSN
+15:20:46.001     1,213s      56ms  17656    Custom - 1
+15:20:46.020     1,232s      19ms  17484    Check game folder 'E:\programowanie\projekty delphi\kam_expansion\' generic permissions: READ: granted; WRITE: granted; EXECUTE: granted; folder is writable: 
+15:20:46.027     1,239s       7ms  17484    LoadGameResources ... AlphaShadows: True. Forced: True
+15:20:46.035     1,247s       8ms  17484    TKMResSprites.LoadGameResources
+15:20:46.042     1,254s       7ms  17484    [AsyncGameResLoader Thread] Started
+15:20:46.049     1,261s       7ms  17484    Resource loading state - Game
+15:20:46.056     1,268s       7ms  17484    ToggleFullscreen
+15:20:46.063     1,275s       7ms  17484    Form Width/Height: 1936:1048
+15:20:46.069     1,281s       6ms  17484    Panel Width/Height: 1936:1048
+15:20:46.076     1,288s       6ms  17824    [AsyncGameResLoader Thread] RT = rxTrees Stage = lsLoad
+15:20:46.083     1,295s       7ms  17824    [AsyncGameResLoader Thread] Start Load RXX 'Trees.rxx'
+15:20:46.089     1,301s       6ms  17824    Load Sprites started
+15:20:46.098     1,310s       9ms  17824    Trees - 1216
+15:20:46.109     1,321s      11ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:20:46.124     1,336s      15ms  17484    Saving dev settings to file 'kmr_dev.xml'
+                                      Loading campaign images.rxx for KSO
+15:20:46.138     1,350s      14ms  17656    Custom - 1
+15:20:46.145     1,357s       6ms  17484    Game Load Done in 1389
+                                      Loading campaign images.rxx for KSU
+15:20:46.211     1,423s      66ms  17656    Custom - 1
+15:20:46.236     1,448s      25ms  17824    Load Sprites Done
+                                      Loading campaign images.rxx for OFL
+15:20:46.273     1,484s      36ms  17656    Custom - 1
+                                      Loading campaign images.rxx for OER
+15:20:46.320     1,532s      48ms  17656    Custom - 1
+15:20:46.347     1,559s      27ms  17824    [AsyncGameResLoader Thread] DONE Load RXX 'Trees.rxa'
+15:20:46.355     1,567s       8ms  17484    [AsyncGameResLoader MainTh] [UpdateStateIdle] GenTextures RT = rxTrees Stage = lsGenMain
+                                      Loading campaign images.rxx for TBK
+15:20:46.374     1,586s      19ms  17656    Custom - 1
+15:20:46.382     1,594s       8ms  17484    [AsyncGameResLoader MainTh] [UpdateStateIdle] DONE
+15:20:46.390     1,602s       8ms  17824    [AsyncGameResLoader Thread] RT = rxTrees Stage = lsOverload
+15:20:46.399     1,611s       9ms  17824    [AsyncGameResLoader Thread] OverloadFromFolder RT = rxTrees
+15:20:46.411     1,622s      11ms  17824    [AsyncGameResLoader Thread] DONE OverloadFromFolder RT = rxTrees
+15:20:46.420     1,632s       9ms  17484    [AsyncGameResLoader MainTh] [UpdateStateIdle] GenTextures RT = rxTrees Stage = lsGenOverload
+15:20:46.430     1,642s       9ms  17484    [AsyncGameResLoader MainTh] [UpdateStateIdle] DONE
+15:20:46.437     1,649s       7ms  17824    [AsyncGameResLoader Thread] RT = rxHouses Stage = lsLoad
+                                      Loading campaign images.rxx for TPR
+15:20:46.452     1,664s      15ms  17824    [AsyncGameResLoader Thread] Start Load RXX 'Houses.rxx'
+15:20:46.459     1,671s       7ms  17824    Load Sprites started
+15:20:46.466     1,678s       7ms  17656    Custom - 1
+15:20:46.474     1,686s       8ms  17824    Houses - 2709
+                                      Loading campaign images.rxx for TSK
+15:20:46.521     1,733s      47ms  17656    Custom - 1
+                                      Loading campaign images.rxx for TUA
+15:20:46.579     1,791s      58ms  17656    Custom - 1
+15:20:46.666     1,878s      87ms  17824    Load Sprites Done
+                                      Loading campaign images.rxx for TMR
+15:20:46.740     1,952s      74ms  17656    Custom - 1
+15:20:46.812     2,024s      72ms  17824    [AsyncGameResLoader Thread] DONE Load RXX 'Houses.rxa'
+15:20:46.837     2,049s      25ms  17484    [AsyncGameResLoader MainTh] [UpdateStateIdle] GenTextures RT = rxHouses Stage = lsGenMain
+15:20:46.852     2,064s      15ms  17484    [AsyncGameResLoader MainTh] [UpdateStateIdle] DONE
+15:20:46.859     2,071s       7ms  17824    [AsyncGameResLoader Thread] RT = rxHouses Stage = lsOverload
+15:20:46.867     2,079s       8ms  17824    [AsyncGameResLoader Thread] OverloadFromFolder RT = rxHouses
+15:20:46.980     2,192s     113ms  17824    [AsyncGameResLoader Thread] DONE OverloadFromFolder RT = rxHouses
+15:20:46.988     2,200s       8ms  17484    [AsyncGameResLoader MainTh] [UpdateStateIdle] GenTextures RT = rxHouses Stage = lsGenOverload
+15:20:46.994     2,206s       6ms  17484    [AsyncGameResLoader MainTh] [UpdateStateIdle] DONE
+15:20:47.001     2,213s       7ms  17824    [AsyncGameResLoader Thread] RT = rxUnits Stage = lsLoad
+15:20:47.006     2,218s       5ms  17824    [AsyncGameResLoader Thread] Start Load RXX 'Units.rxx'
+15:20:47.013     2,225s       7ms  17824    Load Sprites started
+15:20:47.019     2,231s       6ms  17824    Units - 14845
+15:20:47.543     2,755s     524ms  17824    Load Sprites Done
+15:20:48.651     3,863s    1108ms  17824    [AsyncGameResLoader Thread] DONE Load RXX 'Units.rxa'
+15:20:48.665     3,876s      13ms  17484    [AsyncGameResLoader MainTh] [UpdateStateIdle] GenTextures RT = rxUnits Stage = lsGenMain
+15:20:48.740     3,952s      76ms  17484    [AsyncGameResLoader MainTh] [UpdateStateIdle] DONE
+15:20:48.746     3,958s       6ms  17824    [AsyncGameResLoader Thread] RT = rxUnits Stage = lsOverload
+15:20:48.754     3,966s       8ms  17824    [AsyncGameResLoader Thread] OverloadFromFolder RT = rxUnits
+15:20:48.760     3,972s       6ms  17824    [AsyncGameResLoader Thread] DONE OverloadFromFolder RT = rxUnits
+15:20:48.766     3,978s       6ms  17484    [AsyncGameResLoader MainTh] [UpdateStateIdle] GenTextures RT = rxUnits Stage = lsGenOverload
+15:20:48.773     3,985s       7ms  17484    [AsyncGameResLoader Thread] Stopped
+15:20:48.779     3,991s       6ms  17484    [AsyncGameResLoader MainTh] [UpdateStateIdle] DONE
+                                      Loading campaign images.rxx for HKS
+15:21:59.607    74,819s   70828ms  12596    Custom - 1
+                                      Loading campaign images.rxx for KSN
+15:21:59.689    74,901s      71ms  12596    Custom - 1
+                                      Loading campaign images.rxx for KSO
+15:21:59.748    74,960s      59ms  12596    Custom - 1
+                                      Loading campaign images.rxx for KSU
+15:21:59.815    75,027s      67ms  12596    Custom - 1
+                                      Loading campaign images.rxx for OFL
+15:21:59.863    75,075s      48ms  12596    Custom - 1
+                                      Loading campaign images.rxx for OER
+15:21:59.907    75,120s      45ms  12596    Custom - 1
+                                      Loading campaign images.rxx for TBK
+15:21:59.951    75,164s      44ms  12596    Custom - 1
+                                      Loading campaign images.rxx for TPR
+15:22:00.013    75,225s      61ms  12596    Custom - 1
+                                      Loading campaign images.rxx for TSK
+15:22:00.139    75,351s     126ms  12596    Custom - 1
+                                      Loading campaign images.rxx for TUA
+15:22:00.171    75,383s      32ms  12596    Custom - 1
+                                      Loading campaign images.rxx for TMR
+15:22:00.326    75,538s     155ms  12596    Custom - 1
+15:22:00.613    75,825s     287ms  17484    LoadGameResources ... AlphaShadows: True. Forced: False
+15:22:00.619    75,831s       6ms  17484    Resource loading state - Game
+15:22:00.646    75,858s      27ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:22:00.677    75,889s      31ms  17484    <== Game creation is done ==>
+15:22:00.684    75,896s       7ms  17484    GameStart
+15:22:00.690    75,902s       6ms  17484    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:22:00.697    75,909s       7ms  17484    Loading map file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.map
+15:22:00.708    75,920s      11ms  17484    Map file loaded
+15:22:00.897    76,109s     189ms  17484    Gameplay recording initialized ... done
+15:22:00.904    76,116s       7ms  17484    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+15:22:00.911    76,123s       7ms  17484    Gameplay initialized ... done
+15:22:00.917    76,129s       6ms  17484    After game start
+15:22:00.927    76,139s      10ms  17484    Set game seed: 1003243062
+15:22:00.933    76,145s       6ms  17484    After game start ... done
+15:23:38.897   174,108s   97963ms  17484    Saving from map editor: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:25:10.689   265,901s   91793ms  17484    Saving from map editor: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:25:10.897   266,109s     208ms  17484    LoadGameResources ... AlphaShadows: True. Forced: False
+15:25:10.904   266,116s       7ms  17484    Resource loading state - Game
+15:25:10.931   266,143s      27ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:25:10.977   266,189s      46ms  17484    <== Game creation is done ==>
+15:25:10.985   266,197s       7ms  17484    GameStart
+15:25:10.992   266,204s       7ms  17484    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:25:10.998   266,210s       6ms  17484    Loading map file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.map
+15:25:11.005   266,217s       7ms  17484    Map file loaded
+15:25:11.095   266,307s      90ms  17484    Script: Script compile hints: 
+[Hint] Variable 'LASTMAPID' never used in 'E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.script' at [45:2]
+15:25:11.102   266,314s       7ms  17484    Gameplay recording initialized ... done
+15:25:11.109   266,321s       7ms  17484    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+15:25:11.115   266,327s       6ms  17484    Gameplay initialized ... done
+15:25:11.121   266,333s       6ms  17484    After game start
+15:25:11.139   266,351s      17ms  17484    Set game seed: 1692760335
+15:25:11.145   266,357s       6ms  17484    Saving game at tick 0 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\basesave\basesave.bas'
+15:25:11.152   266,364s       7ms  17484    After game start ... done
+15:25:19.471   274,683s    8319ms  17484    Issue gicGameAutoSave command at tick 600
+15:25:19.479   274,691s       8ms  17484    Saving game at tick 600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+15:25:22.432   277,644s    2953ms  17484    LoadGameResources ... AlphaShadows: True. Forced: False
+15:25:22.438   277,650s       6ms  17484    Resource loading state - Game
+15:25:22.466   277,678s      28ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:25:22.495   277,707s      28ms  17484    <== Game creation is done ==>
+15:25:22.503   277,715s       8ms  17484    GameStart
+15:25:22.510   277,722s       7ms  17484    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:25:22.517   277,729s       7ms  17484    Loading map file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.map
+15:25:22.528   277,740s      11ms  17484    Map file loaded
+15:25:22.715   277,927s     187ms  17484    Gameplay recording initialized ... done
+15:25:22.722   277,934s       7ms  17484    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+15:25:22.728   277,940s       6ms  17484    Gameplay initialized ... done
+15:25:22.734   277,946s       6ms  17484    After game start
+15:25:22.743   277,955s       9ms  17484    Set game seed: 1858690863
+15:25:22.750   277,962s       7ms  17484    After game start ... done
+15:25:24.790   280,002s    2040ms  17484    Saving from map editor: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:25:24.997   280,209s     207ms  17484    LoadGameResources ... AlphaShadows: True. Forced: False
+15:25:25.004   280,216s       7ms  17484    Resource loading state - Game
+15:25:25.033   280,245s      29ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:25:25.083   280,295s      50ms  17484    <== Game creation is done ==>
+15:25:25.090   280,302s       7ms  17484    GameStart
+15:25:25.097   280,309s       7ms  17484    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:25:25.103   280,315s       6ms  17484    Loading map file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.map
+15:25:25.110   280,322s       7ms  17484    Map file loaded
+15:25:25.179   280,391s      69ms  17484    Script: Script compile hints: 
+[Hint] Variable 'LASTMAPID' never used in 'E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.script' at [45:2]
+15:25:25.186   280,398s       7ms  17484    Gameplay recording initialized ... done
+15:25:25.192   280,404s       6ms  17484    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+15:25:25.199   280,411s       7ms  17484    Gameplay initialized ... done
+15:25:25.205   280,417s       6ms  17484    After game start
+15:25:25.222   280,434s      17ms  17484    Set game seed: 76571128
+15:25:25.228   280,440s       6ms  17484    Saving game at tick 0 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\basesave\basesave.bas'
+15:25:25.236   280,448s       8ms  17484    After game start ... done
+15:25:27.388   282,600s    2152ms  17484    Issue gicGameAutoSave command at tick 600
+15:25:27.395   282,607s       7ms  17484    Saving game at tick 600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+15:25:42.587   297,799s   15192ms  17484    Issue gicGameAutoSave command at tick 1200
+15:25:42.594   297,806s       7ms  17484    Saving game at tick 1200 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+15:25:49.640   304,852s    7046ms  17484    Gameplay ended - grCancel /
+                                      Loading campaign images.rxx for HKS
+15:25:50.726   305,938s    1086ms   5532    Custom - 1
+                                      Loading campaign images.rxx for KSN
+15:25:50.807   306,019s      81ms   5532    Custom - 1
+                                      Loading campaign images.rxx for KSO
+15:25:50.877   306,089s      70ms   5532    Custom - 1
+                                      Loading campaign images.rxx for KSU
+15:25:50.938   306,149s      59ms   5532    Custom - 1
+                                      Loading campaign images.rxx for OFL
+15:25:50.992   306,204s      55ms   5532    Custom - 1
+                                      Loading campaign images.rxx for OER
+15:25:51.043   306,255s      51ms   5532    Custom - 1
+                                      Loading campaign images.rxx for TBK
+15:25:51.087   306,299s      44ms   5532    Custom - 1
+                                      Loading campaign images.rxx for TPR
+15:25:51.147   306,359s      60ms   5532    Custom - 1
+                                      Loading campaign images.rxx for TSK
+15:25:51.200   306,412s      53ms   5532    Custom - 1
+                                      Loading campaign images.rxx for TUA
+15:25:51.240   306,451s      39ms   5532    Custom - 1
+15:25:51.282   306,494s      43ms  17484    LoadGameResources ... AlphaShadows: True. Forced: False
+15:25:51.289   306,501s       7ms  17484    Resource loading state - Game
+15:25:51.315   306,527s      26ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:25:51.348   306,560s      33ms  17484    <== Game creation is done ==>
+15:25:51.356   306,568s       7ms  17484    GameStart
+15:25:51.362   306,574s       6ms  17484    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:25:51.368   306,580s       6ms  17484    Loading map file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.map
+15:25:51.379   306,591s      11ms  17484    Map file loaded
+15:25:51.565   306,777s     186ms  17484    Gameplay recording initialized ... done
+15:25:51.572   306,784s       7ms  17484    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+15:25:51.579   306,791s       7ms  17484    Gameplay initialized ... done
+15:25:51.585   306,797s       6ms  17484    After game start
+15:25:51.594   306,806s       9ms  17484    Set game seed: 319655449
+15:25:51.601   306,813s       7ms  17484    After game start ... done
+                                      Loading campaign images.rxx for TMR
+15:25:51.647   306,859s      46ms   5532    Custom - 1
+15:26:03.023   318,235s   11375ms  17484    Saving from map editor: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:31:17.702   632,914s  314679ms  17484    Saving from map editor: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:31:17.883   633,095s     181ms  17484    LoadGameResources ... AlphaShadows: True. Forced: False
+15:31:17.889   633,101s       6ms  17484    Resource loading state - Game
+15:31:17.917   633,129s      28ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:31:17.961   633,173s      44ms  17484    <== Game creation is done ==>
+15:31:17.968   633,180s       7ms  17484    GameStart
+15:31:17.974   633,186s       6ms  17484    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:31:17.980   633,192s       5ms  17484    Loading map file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.map
+15:31:17.996   633,208s      16ms  17484    Map file loaded
+15:31:18.064   633,276s      68ms  17484    Script: Script compile errors: 
+[Error] Invalid number of parameters in 'E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.script' at [66:66]
+15:31:18.071   633,283s       7ms  17484    Script: Script compile hints: 
+[Hint] Variable 'LASTMAPID' never used in 'E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.script' at [45:2]
+15:31:18.077   633,289s       6ms  17484    Gameplay recording initialized ... done
+15:31:18.084   633,296s       7ms  17484    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+15:31:18.091   633,303s       7ms  17484    Gameplay initialized ... done
+15:31:18.097   633,309s       6ms  17484    After game start
+15:31:18.116   633,328s      19ms  17484    Set game seed: 290220155
+15:31:18.123   633,335s       7ms  17484    Saving game at tick 0 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\basesave\basesave.bas'
+15:31:18.130   633,342s       7ms  17484    After game start ... done
+15:32:17.758   692,970s   59628ms  17484    Gameplay ended - grSilent /
+15:32:17.783   692,995s      25ms  17484    LoadGameResources ... AlphaShadows: True. Forced: False
+15:32:17.789   693,001s       6ms  17484    Resource loading state - Game
+15:32:17.816   693,028s      26ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:32:17.861   693,073s      44ms  17484    <== Game creation is done ==>
+15:32:17.868   693,080s       7ms  17484    GameStart
+15:32:17.874   693,086s       6ms  17484    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:32:17.880   693,092s       6ms  17484    Loading map file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.map
+15:32:17.887   693,099s       7ms  17484    Map file loaded
+15:32:17.956   693,168s      69ms  17484    Script: Script compile errors: 
+[Error] Closing parenthesis expected in 'E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.script' at [66:19]
+15:32:17.964   693,175s       7ms  17484    Script: Script compile hints: 
+[Hint] Variable 'LASTMAPID' never used in 'E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.script' at [45:2]
+15:32:17.970   693,181s       6ms  17484    Gameplay recording initialized ... done
+15:32:17.976   693,188s       7ms  17484    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+15:32:17.983   693,195s       7ms  17484    Gameplay initialized ... done
+15:32:17.989   693,201s       6ms  17484    After game start
+15:32:18.006   693,218s      17ms  17484    Set game seed: 1159913210
+15:32:18.014   693,226s       7ms  17484    Saving game at tick 0 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\basesave\basesave.bas'
+15:32:18.021   693,233s       7ms  17484    After game start ... done
+15:32:30.358   705,570s   12337ms  17484    Gameplay ended - grSilent /
+15:32:30.382   705,594s      24ms  17484    LoadGameResources ... AlphaShadows: True. Forced: False
+15:32:30.389   705,601s       7ms  17484    Resource loading state - Game
+15:32:30.416   705,628s      27ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:32:30.461   705,673s      45ms  17484    <== Game creation is done ==>
+15:32:30.468   705,679s       6ms  17484    GameStart
+15:32:30.474   705,685s       6ms  17484    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:32:30.480   705,692s       7ms  17484    Loading map file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.map
+15:32:30.487   705,699s       7ms  17484    Map file loaded
+15:32:30.556   705,768s      69ms  17484    Script: Script compile hints: 
+[Hint] Variable 'LASTMAPID' never used in 'E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.script' at [45:2]
+15:32:30.563   705,775s       7ms  17484    Gameplay recording initialized ... done
+15:32:30.569   705,781s       6ms  17484    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+15:32:30.579   705,791s      10ms  17484    Gameplay initialized ... done
+15:32:30.586   705,798s       6ms  17484    After game start
+15:32:30.603   705,815s      17ms  17484    Set game seed: 679741674
+15:32:30.610   705,822s       7ms  17484    Saving game at tick 0 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\basesave\basesave.bas'
+15:32:30.617   705,829s       7ms  17484    After game start ... done
+15:32:42.438   717,650s   11820ms  17484    Issue gicGameAutoSave command at tick 600
+15:32:42.445   717,657s       7ms  17484    Saving game at tick 600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+15:32:43.439   718,651s     994ms  17484    Issue gicGameAutoSave command at tick 1200
+15:32:43.446   718,658s       7ms  17484    Saving game at tick 1200 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+15:32:44.424   719,636s     977ms  17484    Issue gicGameAutoSave command at tick 1800
+15:32:44.431   719,642s       6ms  17484    Saving game at tick 1800 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+15:32:45.423   720,635s     993ms  17484    Issue gicGameAutoSave command at tick 2400
+15:32:45.430   720,642s       7ms  17484    Saving game at tick 2400 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+15:33:00.038   735,250s   14608ms  17484    Issue gicGameAutoSave command at tick 3000
+15:33:00.046   735,258s       8ms  17484    Saving game at tick 3000 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+15:33:08.627   743,839s    8581ms  17484    Gameplay ended - grSilent /
+15:33:08.651   743,863s      24ms  17484    LoadGameResources ... AlphaShadows: True. Forced: False
+15:33:08.658   743,870s       7ms  17484    Resource loading state - Game
+15:33:08.685   743,897s      27ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:33:08.730   743,942s      45ms  17484    <== Game creation is done ==>
+15:33:08.736   743,948s       6ms  17484    GameStart
+15:33:08.743   743,955s       7ms  17484    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:33:08.750   743,962s       7ms  17484    Loading map file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.map
+15:33:08.756   743,968s       6ms  17484    Map file loaded
+15:33:08.824   744,036s      68ms  17484    Script: Script compile hints: 
+[Hint] Variable 'LASTMAPID' never used in 'E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.script' at [45:2]
+15:33:08.831   744,043s       7ms  17484    Gameplay recording initialized ... done
+15:33:08.837   744,049s       6ms  17484    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+15:33:08.843   744,055s       6ms  17484    Gameplay initialized ... done
+15:33:08.849   744,061s       6ms  17484    After game start
+15:33:08.867   744,078s      17ms  17484    Set game seed: 2086351210
+15:33:08.874   744,085s       7ms  17484    Saving game at tick 0 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\basesave\basesave.bas'
+15:33:08.881   744,093s       8ms  17484    After game start ... done
+15:33:11.372   746,584s    2491ms  17484    Issue gicGameAutoSave command at tick 600
+15:33:11.379   746,591s       7ms  17484    Saving game at tick 600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+15:33:14.005   749,217s    2626ms  17484    Issue gicGameAutoSave command at tick 1200
+15:33:14.012   749,224s       7ms  17484    Saving game at tick 1200 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+15:33:15.339   750,551s    1326ms  17484    Issue gicGameAutoSave command at tick 1800
+15:33:15.346   750,558s       7ms  17484    Saving game at tick 1800 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+15:33:16.358   751,570s    1012ms  17484    Issue gicGameAutoSave command at tick 2400
+15:33:16.365   751,577s       7ms  17484    Saving game at tick 2400 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+15:33:18.922   754,134s    2557ms  17484    Issue gicGameAutoSave command at tick 3000
+15:33:18.929   754,141s       7ms  17484    Saving game at tick 3000 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+15:33:36.405   771,617s   17476ms  17484    Issue gicGameAutoSave command at tick 3600
+15:33:36.415   771,627s      10ms  17484    Saving game at tick 3600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+15:33:45.856   781,068s    9441ms  17484    Issue gicGameAutoSave command at tick 4200
+15:33:45.863   781,075s       7ms  17484    Saving game at tick 4200 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+15:33:47.093   782,305s    1230ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:33:51.052   786,264s    3959ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:34:13.459   808,671s   22407ms  17484    Gameplay ended - grSilent /
+15:34:13.484   808,696s      25ms  17484    LoadGameResources ... AlphaShadows: True. Forced: False
+15:34:13.490   808,702s       6ms  17484    Resource loading state - Game
+15:34:13.517   808,729s      27ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:34:13.561   808,773s      44ms  17484    <== Game creation is done ==>
+15:34:13.569   808,781s       8ms  17484    GameStart
+15:34:13.575   808,787s       6ms  17484    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:34:13.581   808,793s       6ms  17484    Loading map file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.map
+15:34:13.587   808,799s       6ms  17484    Map file loaded
+15:34:13.656   808,868s      69ms  17484    Script: Script compile hints: 
+[Hint] Variable 'LASTMAPID' never used in 'E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.script' at [45:2]
+15:34:13.663   808,875s       7ms  17484    Gameplay recording initialized ... done
+15:34:13.669   808,881s       6ms  17484    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+15:34:13.675   808,887s       6ms  17484    Gameplay initialized ... done
+15:34:13.681   808,893s       6ms  17484    After game start
+15:34:13.699   808,911s      18ms  17484    Set game seed: 1035340553
+15:34:13.707   808,919s       7ms  17484    Saving game at tick 0 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\basesave\basesave.bas'
+15:34:13.715   808,927s       8ms  17484    After game start ... done
+15:34:15.730   810,942s    2015ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:34:18.752   813,964s    3022ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:34:22.942   818,154s    4190ms  17484    Gameplay ended - grCancel /
+15:34:24.452   819,664s    1510ms  17484    LoadGameResources ... AlphaShadows: True. Forced: False
+15:34:24.458   819,670s       6ms  17484    Resource loading state - Game
+15:34:24.486   819,698s      28ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:34:24.531   819,743s      45ms  17484    <== Game creation is done ==>
+15:34:24.538   819,750s       7ms  17484    GameStart
+15:34:24.544   819,756s       6ms  17484    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:34:24.550   819,762s       6ms  17484    Loading map file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.map
+15:34:24.557   819,769s       7ms  17484    Map file loaded
+15:34:24.625   819,837s      68ms  17484    Script: Script compile hints: 
+[Hint] Variable 'LASTMAPID' never used in 'E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.script' at [45:2]
+15:34:24.633   819,845s       7ms  17484    Gameplay recording initialized ... done
+15:34:24.639   819,851s       6ms  17484    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+15:34:24.645   819,857s       6ms  17484    Gameplay initialized ... done
+15:34:24.651   819,863s       6ms  17484    After game start
+15:34:24.669   819,881s      18ms  17484    Set game seed: 982474546
+15:34:24.676   819,888s       7ms  17484    Saving game at tick 0 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\basesave\basesave.bas'
+15:34:24.683   819,895s       7ms  17484    After game start ... done
+15:34:25.148   820,360s     465ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:34:27.030   822,242s    1882ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:34:27.622   822,834s     592ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:34:30.152   825,364s    2530ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:34:38.759   833,971s    8607ms  17484    Gameplay ended - grSilent /
+15:34:38.784   833,996s      25ms  17484    LoadGameResources ... AlphaShadows: True. Forced: False
+15:34:38.792   834,004s       8ms  17484    Resource loading state - Game
+15:34:38.817   834,029s      25ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:34:38.861   834,073s      44ms  17484    <== Game creation is done ==>
+15:34:38.868   834,080s       7ms  17484    GameStart
+15:34:38.875   834,087s       7ms  17484    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:34:38.881   834,093s       6ms  17484    Loading map file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.map
+15:34:38.887   834,099s       6ms  17484    Map file loaded
+15:34:38.957   834,169s      70ms  17484    Script: Script compile hints: 
+[Hint] Variable 'LASTMAPID' never used in 'E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.script' at [45:2]
+15:34:38.963   834,175s       6ms  17484    Gameplay recording initialized ... done
+15:34:38.969   834,181s       6ms  17484    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+15:34:38.975   834,187s       6ms  17484    Gameplay initialized ... done
+15:34:38.981   834,192s       5ms  17484    After game start
+15:34:38.998   834,209s      17ms  17484    Set game seed: 527885821
+15:34:39.004   834,216s       6ms  17484    Saving game at tick 0 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\basesave\basesave.bas'
+15:34:39.012   834,224s       7ms  17484    After game start ... done
+15:34:39.345   834,557s     333ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:34:42.285   837,497s    2940ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:34:46.906   842,118s    4621ms  17484    Issue gicGameAutoSave command at tick 600
+15:34:46.912   842,124s       6ms  17484    Saving game at tick 600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+15:34:51.439   846,651s    4527ms  21204    Error while loading game info from save of unsupported version r15833
+15:34:51.447   846,659s       8ms  21204    Error while loading game info from save of unsupported version r15833
+15:34:51.453   846,665s       6ms  21204    Error while loading game info from save of unsupported version r15833
+15:34:51.460   846,672s       7ms  21204    Error while loading game info from save of unsupported version r15833
+15:34:51.467   846,679s       7ms  21204    Error while loading game info from save of unsupported version r15833
+15:34:51.473   846,685s       6ms  21204    Error while loading game info from save of unsupported version r15833
+15:34:51.479   846,691s       6ms  21204    Error while loading game info from save of unsupported version r15833
+15:34:51.488   846,700s       9ms  21204    Error while loading game info from save of unsupported version r15833
+15:34:51.495   846,707s       7ms  21204    Error while loading game info from save of unsupported version r15833
+15:34:51.501   846,713s       6ms  21204    Error loading save 'Bridge Disaster'
+15:34:51.509   846,721s       8ms  21204    Error loading save 'Bridge Disaster 2024-07-21 #1'
+15:34:51.515   846,727s       6ms  21204    Error loading save 'Bridge Disaster 2024-07-22 #1'
+15:34:51.521   846,733s       6ms  21204    Error loading save 'Bridge Disaster 2024-07-24 #1'
+15:34:51.529   846,741s       8ms  21204    Error while loading game info from save of unsupported version r15833
+15:34:51.535   846,747s       6ms  21204    Error loading save 'Nowa Misja 2024-08-11 #1'
+15:34:51.542   846,754s       7ms  21204    Error loading save 'Nowa Misja 2024-08-11 #2'
+15:34:51.550   846,762s       8ms  21204    Error loading save 'Nowa Misja 2024-08-11 #3'
+15:34:51.558   846,770s       8ms  21204    Error loading save 'TMR09 2024-08-05 #1'
+15:34:51.564   846,776s       6ms  21204    Error loading save 'TSK 1 2024-10-30 #2'
+15:34:51.570   846,782s       6ms  21204    Error loading save 'TSK 18 2024-10-30 #6'
+15:34:51.577   846,789s       7ms  21204    Error loading save 'TSK 2 2024-10-30 #5'
+15:34:51.584   846,796s       7ms  21204    Error loading save 'TSK 20 2024-10-30 #1'
+15:34:51.591   846,803s       7ms  21204    Error loading save 'TSK 3 2024-10-30 #3'
+15:34:51.597   846,809s       6ms  21204    Error loading save 'TSK 6 2024-10-30 #4'
+15:34:51.605   846,817s       8ms  21204    Error loading save 'TUA22'
+15:35:11.076   866,288s   19471ms  17484    Gameplay ended - grSilent /
+15:35:11.101   866,312s      24ms  17484    LoadGameResources ... AlphaShadows: True. Forced: False
+15:35:11.108   866,320s       8ms  17484    Resource loading state - Game
+15:35:11.135   866,347s      27ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:35:11.179   866,391s      44ms  17484    <== Game creation is done ==>
+15:35:11.187   866,399s       8ms  17484    GameStart
+15:35:11.193   866,405s       6ms  17484    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:35:11.199   866,411s       6ms  17484    Loading map file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.map
+15:35:11.206   866,418s       7ms  17484    Map file loaded
+15:35:11.274   866,486s      68ms  17484    Script: Script compile hints: 
+[Hint] Variable 'LASTMAPID' never used in 'E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.script' at [45:2]
+15:35:11.281   866,493s       7ms  17484    Gameplay recording initialized ... done
+15:35:11.287   866,499s       6ms  17484    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+15:35:11.292   866,504s       5ms  17484    Gameplay initialized ... done
+15:35:11.300   866,512s       8ms  17484    After game start
+15:35:11.317   866,529s      17ms  17484    Set game seed: 1543491139
+15:35:11.323   866,535s       6ms  17484    Saving game at tick 0 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\basesave\basesave.bas'
+15:35:11.330   866,542s       7ms  17484    After game start ... done
+15:35:22.189   877,401s   10858ms  17484    Issue gicGameAutoSave command at tick 600
+15:35:22.196   877,408s       7ms  17484    Saving game at tick 600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+15:35:31.609   886,821s    9413ms  17484    Gameplay ended - grSilent /
+15:35:31.634   886,846s      25ms  17484    LoadGameResources ... AlphaShadows: True. Forced: False
+15:35:31.641   886,853s       7ms  17484    Resource loading state - Game
+15:35:31.669   886,881s      28ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:35:31.714   886,926s      45ms  17484    <== Game creation is done ==>
+15:35:31.721   886,933s       7ms  17484    GameStart
+15:35:31.728   886,940s       7ms  17484    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:35:31.734   886,946s       6ms  17484    Loading map file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.map
+15:35:31.741   886,953s       7ms  17484    Map file loaded
+15:35:31.812   887,024s      71ms  17484    Script: Script compile hints: 
+[Hint] Variable 'LASTMAPID' never used in 'E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.script' at [45:2]
+15:35:31.819   887,031s       7ms  17484    Gameplay recording initialized ... done
+15:35:31.826   887,038s       7ms  17484    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+15:35:31.832   887,044s       6ms  17484    Gameplay initialized ... done
+15:35:31.838   887,050s       6ms  17484    After game start
+15:35:31.856   887,068s      18ms  17484    Set game seed: 1040295061
+15:35:31.862   887,074s       6ms  17484    Saving game at tick 0 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\basesave\basesave.bas'
+15:35:31.870   887,082s       7ms  17484    After game start ... done
+15:35:33.506   888,718s    1636ms  17484    Issue gicGameAutoSave command at tick 600
+15:35:33.513   888,725s       7ms  17484    Saving game at tick 600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+15:35:34.506   889,718s     992ms  17484    Issue gicGameAutoSave command at tick 1200
+15:35:34.512   889,724s       6ms  17484    Saving game at tick 1200 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+15:35:35.506   890,718s     993ms  17484    Issue gicGameAutoSave command at tick 1800
+15:35:35.513   890,725s       7ms  17484    Saving game at tick 1800 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+15:35:40.289   895,500s    4775ms  17484    Issue gicGameAutoSave command at tick 2400
+15:35:40.299   895,511s      11ms  17484    Saving game at tick 2400 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+15:35:49.444   904,656s    9145ms  17484    Gameplay ended - grCancel /
+                                      Loading campaign images.rxx for HKS
+15:35:50.410   905,622s     966ms  14884    Custom - 1
+                                      Loading campaign images.rxx for KSN
+15:35:50.479   905,691s      69ms  14884    Custom - 1
+                                      Loading campaign images.rxx for KSO
+15:35:50.549   905,761s      70ms  14884    Custom - 1
+                                      Loading campaign images.rxx for KSU
+15:35:50.607   905,819s      58ms  14884    Custom - 1
+                                      Loading campaign images.rxx for OFL
+15:35:50.656   905,868s      48ms  14884    Custom - 1
+                                      Loading campaign images.rxx for OER
+15:35:50.699   905,911s      43ms  14884    Custom - 1
+                                      Loading campaign images.rxx for TBK
+15:35:50.733   905,945s      34ms  14884    Custom - 1
+                                      Loading campaign images.rxx for TPR
+15:35:50.788   906,000s      55ms  14884    Custom - 1
+                                      Loading campaign images.rxx for TSK
+15:35:50.842   906,053s      53ms  14884    Custom - 1
+                                      Loading campaign images.rxx for TUA
+15:35:50.887   906,099s      46ms  14884    Custom - 1
+15:35:50.952   906,164s      65ms  17484    LoadGameResources ... AlphaShadows: True. Forced: False
+15:35:50.959   906,171s       7ms  17484    Resource loading state - Game
+15:35:50.986   906,198s      26ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:35:51.016   906,228s      30ms  17484    <== Game creation is done ==>
+15:35:51.023   906,235s       7ms  17484    GameStart
+15:35:51.029   906,241s       6ms  17484    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:35:51.037   906,249s       8ms  17484    Loading map file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.map
+15:35:51.047   906,259s      10ms  17484    Map file loaded
+15:35:51.235   906,447s     188ms  17484    Gameplay recording initialized ... done
+15:35:51.242   906,454s       7ms  17484    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+15:35:51.248   906,460s       5ms  17484    Gameplay initialized ... done
+15:35:51.254   906,466s       6ms  17484    After game start
+15:35:51.263   906,475s       9ms  17484    Set game seed: 689361091
+15:35:51.270   906,482s       7ms  17484    After game start ... done
+                                      Loading campaign images.rxx for TMR
+15:35:51.319   906,530s      48ms  14884    Custom - 1
+15:36:10.109   925,321s   18791ms  17484    Saving from map editor: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:36:10.283   925,495s     174ms  17484    LoadGameResources ... AlphaShadows: True. Forced: False
+15:36:10.290   925,502s       7ms  17484    Resource loading state - Game
+15:36:10.318   925,530s      28ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:36:10.363   925,575s      45ms  17484    <== Game creation is done ==>
+15:36:10.369   925,581s       6ms  17484    GameStart
+15:36:10.376   925,588s       7ms  17484    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:36:10.383   925,595s       7ms  17484    Loading map file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.map
+15:36:10.390   925,601s       6ms  17484    Map file loaded
+15:36:10.460   925,672s      71ms  17484    Script: Script compile hints: 
+[Hint] Variable 'LASTMAPID' never used in 'E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.script' at [45:2]
+15:36:10.468   925,679s       7ms  17484    Gameplay recording initialized ... done
+15:36:10.474   925,685s       6ms  17484    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+15:36:10.481   925,693s       8ms  17484    Gameplay initialized ... done
+15:36:10.487   925,699s       6ms  17484    After game start
+15:36:10.504   925,716s      17ms  17484    Set game seed: 858972625
+15:36:10.511   925,723s       7ms  17484    Saving game at tick 0 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\basesave\basesave.bas'
+15:36:10.518   925,730s       7ms  17484    After game start ... done
+15:36:15.139   930,351s    4621ms  17484    Issue gicGameAutoSave command at tick 600
+15:36:15.147   930,359s       8ms  17484    Saving game at tick 600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+15:36:15.167   930,379s      20ms  17484    Script: Invalid parameter(s) passed to Actions.GroupOrderAttackHouse: -1, 4208277
+15:36:15.267   930,479s     100ms  17484    Script: Invalid parameter(s) passed to Actions.GroupOrderAttackHouse: -1, 4208277
+15:36:18.418   933,630s    3151ms  17484    LoadGameResources ... AlphaShadows: True. Forced: False
+15:36:18.425   933,637s       7ms  17484    Resource loading state - Game
+15:36:18.453   933,665s      28ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:36:18.483   933,695s      30ms  17484    <== Game creation is done ==>
+15:36:18.490   933,702s       7ms  17484    GameStart
+15:36:18.496   933,708s       6ms  17484    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:36:18.503   933,715s       7ms  17484    Loading map file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.map
+15:36:18.514   933,726s      11ms  17484    Map file loaded
+15:36:18.701   933,913s     187ms  17484    Gameplay recording initialized ... done
+15:36:18.709   933,921s       8ms  17484    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+15:36:18.715   933,927s       6ms  17484    Gameplay initialized ... done
+15:36:18.721   933,933s       6ms  17484    After game start
+15:36:18.730   933,942s       9ms  17484    Set game seed: 354328215
+15:36:18.737   933,949s       7ms  17484    After game start ... done
+15:36:46.900   962,112s   28163ms  17484    Saving from map editor: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:36:47.083   962,295s     183ms  17484    LoadGameResources ... AlphaShadows: True. Forced: False
+15:36:47.091   962,303s       8ms  17484    Resource loading state - Game
+15:36:47.118   962,330s      27ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:36:47.162   962,374s      44ms  17484    <== Game creation is done ==>
+15:36:47.170   962,382s       8ms  17484    GameStart
+15:36:47.176   962,388s       6ms  17484    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:36:47.182   962,394s       6ms  17484    Loading map file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.map
+15:36:47.190   962,402s       8ms  17484    Map file loaded
+15:36:47.264   962,476s      74ms  17484    Script: Script compile hints: 
+[Hint] Variable 'LASTMAPID' never used in 'E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.script' at [45:2]
+15:36:47.271   962,483s       7ms  17484    Gameplay recording initialized ... done
+15:36:47.277   962,489s       6ms  17484    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+15:36:47.283   962,495s       6ms  17484    Gameplay initialized ... done
+15:36:47.289   962,501s       6ms  17484    After game start
+15:36:47.307   962,519s      18ms  17484    Set game seed: 1612117234
+15:36:47.314   962,526s       7ms  17484    Saving game at tick 0 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\basesave\basesave.bas'
+15:36:47.321   962,533s       7ms  17484    After game start ... done
+15:36:49.141   964,353s    1820ms  17484    Issue gicGameAutoSave command at tick 600
+15:36:49.147   964,359s       6ms  17484    Saving game at tick 600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+15:36:50.138   965,350s     991ms  17484    Issue gicGameAutoSave command at tick 1200
+15:36:50.145   965,357s       7ms  17484    Saving game at tick 1200 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+15:36:52.156   967,368s    2011ms  17484    Issue gicGameAutoSave command at tick 1800
+15:36:52.164   967,376s       8ms  17484    Saving game at tick 1800 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+15:36:52.518   967,730s     354ms  17484    Script: Invalid parameter(s) passed to Actions.GroupOrderAttackHouse: -1, 11466431
+15:36:52.558   967,770s      40ms  17484    Script: Invalid parameter(s) passed to Actions.GroupOrderAttackHouse: -1, 11466431
+15:36:58.893   974,105s    6335ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:37:06.686   981,898s    7793ms  17484    LoadGameResources ... AlphaShadows: True. Forced: False
+15:37:06.694   981,906s       8ms  17484    Resource loading state - Game
+15:37:06.722   981,934s      28ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:37:06.760   981,972s      38ms  17484    <== Game creation is done ==>
+15:37:06.767   981,978s       6ms  17484    GameStart
+15:37:06.774   981,986s       8ms  17484    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:37:06.780   981,992s       6ms  17484    Loading map file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.map
+15:37:06.791   982,003s      11ms  17484    Map file loaded
+15:37:06.985   982,197s     194ms  17484    Gameplay recording initialized ... done
+15:37:06.992   982,204s       7ms  17484    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+15:37:06.998   982,210s       6ms  17484    Gameplay initialized ... done
+15:37:07.004   982,216s       6ms  17484    After game start
+15:37:07.014   982,226s      10ms  17484    Set game seed: 520628537
+15:37:07.021   982,233s       7ms  17484    After game start ... done
+15:37:13.625   988,837s    6604ms  17484    Saving from map editor: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:37:13.793   989,005s     168ms  17484    LoadGameResources ... AlphaShadows: True. Forced: False
+15:37:13.799   989,011s       6ms  17484    Resource loading state - Game
+15:37:13.819   989,031s      19ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:37:13.875   989,087s      56ms  17484    <== Game creation is done ==>
+15:37:13.882   989,094s       7ms  17484    GameStart
+15:37:13.888   989,100s       6ms  17484    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:37:13.895   989,107s       7ms  17484    Loading map file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.map
+15:37:13.901   989,113s       6ms  17484    Map file loaded
+15:37:14.003   989,215s     102ms  17484    Script: Script compile hints: 
+[Hint] Variable 'LASTMAPID' never used in 'E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.script' at [45:2]
+15:37:14.010   989,222s       6ms  17484    Gameplay recording initialized ... done
+15:37:14.018   989,230s       8ms  17484    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+15:37:14.023   989,235s       5ms  17484    Gameplay initialized ... done
+15:37:14.030   989,242s       6ms  17484    After game start
+15:37:14.048   989,260s      18ms  17484    Set game seed: 1714844702
+15:37:14.055   989,267s       7ms  17484    Saving game at tick 0 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\basesave\basesave.bas'
+15:37:14.062   989,274s       7ms  17484    After game start ... done
+15:37:17.959   993,171s    3897ms  17484    Issue gicGameAutoSave command at tick 600
+15:37:17.967   993,179s       8ms  17484    Saving game at tick 600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+15:37:18.034   993,246s      67ms  17484    Script: Invalid parameter(s) passed to Actions.GroupOrderAttackHouse: -1, 11466431
+15:37:18.058   993,270s      24ms  17484    Script: Invalid parameter(s) passed to Actions.GroupOrderAttackHouse: -1, 11466431
+15:37:19.320   994,531s    1261ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:37:21.679   996,891s    2360ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:37:41.385  1016,597s   19706ms  17484    LoadGameResources ... AlphaShadows: True. Forced: False
+15:37:41.393  1016,605s       7ms  17484    Resource loading state - Game
+15:37:41.421  1016,633s      28ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:37:41.461  1016,673s      40ms  17484    <== Game creation is done ==>
+15:37:41.468  1016,680s       7ms  17484    GameStart
+15:37:41.475  1016,687s       7ms  17484    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:37:41.481  1016,693s       6ms  17484    Loading map file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.map
+15:37:41.492  1016,704s      11ms  17484    Map file loaded
+15:37:41.680  1016,892s     188ms  17484    Gameplay recording initialized ... done
+15:37:41.686  1016,898s       6ms  17484    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+15:37:41.694  1016,906s       8ms  17484    Gameplay initialized ... done
+15:37:41.700  1016,912s       6ms  17484    After game start
+15:37:41.709  1016,921s       9ms  17484    Set game seed: 1192661936
+15:37:41.716  1016,928s       7ms  17484    After game start ... done
+15:38:13.144  1048,356s   31428ms  17484    Saving from map editor: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:38:13.311  1048,523s     167ms  17484    LoadGameResources ... AlphaShadows: True. Forced: False
+15:38:13.318  1048,530s       7ms  17484    Resource loading state - Game
+15:38:13.337  1048,549s      19ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:38:13.391  1048,603s      54ms  17484    <== Game creation is done ==>
+15:38:13.399  1048,611s       8ms  17484    GameStart
+15:38:13.405  1048,617s       6ms  17484    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:38:13.412  1048,624s       7ms  17484    Loading map file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.map
+15:38:13.418  1048,630s       6ms  17484    Map file loaded
+15:38:13.493  1048,705s      75ms  17484    Script: Script compile hints: 
+[Hint] Variable 'LASTMAPID' never used in 'E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.script' at [45:2]
+15:38:13.500  1048,712s       7ms  17484    Gameplay recording initialized ... done
+15:38:13.507  1048,719s       7ms  17484    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+15:38:13.513  1048,725s       6ms  17484    Gameplay initialized ... done
+15:38:13.519  1048,731s       6ms  17484    After game start
+15:38:13.536  1048,748s      17ms  17484    Set game seed: 757081717
+15:38:13.543  1048,755s       7ms  17484    Saving game at tick 0 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\basesave\basesave.bas'
+15:38:13.550  1048,762s       7ms  17484    After game start ... done
+15:38:24.496  1059,708s   10946ms  17484    Issue gicGameAutoSave command at tick 600
+15:38:24.503  1059,715s       7ms  17484    Saving game at tick 600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+15:38:28.726  1063,937s    4222ms   5824    Error while loading game info from save of unsupported version r15833
+15:38:28.733  1063,945s       8ms   5824    Error while loading game info from save of unsupported version r15833
+15:38:28.740  1063,952s       7ms   5824    Error while loading game info from save of unsupported version r15833
+15:38:28.748  1063,960s       8ms   5824    Error while loading game info from save of unsupported version r15833
+15:38:28.754  1063,966s       6ms   5824    Error while loading game info from save of unsupported version r15833
+15:38:28.762  1063,974s       8ms   5824    Error while loading game info from save of unsupported version r15833
+15:38:28.769  1063,981s       7ms   5824    Error while loading game info from save of unsupported version r15833
+15:38:28.776  1063,988s       7ms   5824    Error while loading game info from save of unsupported version r15833
+15:38:28.782  1063,994s       6ms   5824    Error while loading game info from save of unsupported version r15833
+15:38:28.789  1064,001s       7ms   5824    Error loading save 'Bridge Disaster'
+15:38:28.797  1064,009s       8ms   5824    Error loading save 'Bridge Disaster 2024-07-21 #1'
+15:38:28.803  1064,015s       6ms   5824    Error loading save 'Bridge Disaster 2024-07-22 #1'
+15:38:28.811  1064,023s       8ms   5824    Error loading save 'Bridge Disaster 2024-07-24 #1'
+15:38:28.817  1064,029s       6ms   5824    Error while loading game info from save of unsupported version r15833
+15:38:28.824  1064,036s       7ms   5824    Error loading save 'Nowa Misja 2024-08-11 #1'
+15:38:28.831  1064,043s       7ms   5824    Error loading save 'Nowa Misja 2024-08-11 #2'
+15:38:28.837  1064,049s       6ms   5824    Error loading save 'Nowa Misja 2024-08-11 #3'
+15:38:28.845  1064,057s       8ms   5824    Error loading save 'TMR09 2024-08-05 #1'
+15:38:28.851  1064,063s       6ms   5824    Error loading save 'TSK 1 2024-10-30 #2'
+15:38:28.858  1064,070s       7ms   5824    Error loading save 'TSK 18 2024-10-30 #6'
+15:38:28.865  1064,077s       7ms   5824    Error loading save 'TSK 2 2024-10-30 #5'
+15:38:28.871  1064,083s       6ms   5824    Error loading save 'TSK 20 2024-10-30 #1'
+15:38:28.878  1064,090s       7ms   5824    Error loading save 'TSK 3 2024-10-30 #3'
+15:38:28.885  1064,097s       7ms   5824    Error loading save 'TSK 6 2024-10-30 #4'
+15:38:28.892  1064,104s       7ms   5824    Error loading save 'TUA22'
+15:38:30.277  1065,488s    1384ms  17484    Gameplay ended - grSilent /
+15:38:30.286  1065,498s      10ms  17484    LoadGameResources ... AlphaShadows: True. Forced: False
+15:38:30.293  1065,505s       7ms  17484    Resource loading state - Game
+15:38:30.322  1065,534s      29ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:38:30.378  1065,590s      56ms  17484    <== Game creation is done ==>
+15:38:30.386  1065,598s       8ms  17484    Loading game from: E:\programowanie\projekty delphi\kam_expansion\Saves\autosave01\autosave01.sav
+15:38:30.393  1065,605s       7ms  17484    Terrain loaded
+15:38:30.436  1065,648s      43ms  17484    Interface loaded
+15:38:30.443  1065,655s       7ms  17484    Set game seed: 536684637
+15:38:30.450  1065,662s       6ms  17484    Loading game ... done
+15:38:30.456  1065,668s       6ms  17484    After game loading
+15:38:30.473  1065,685s      17ms  17484    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+15:38:30.480  1065,692s       7ms  17484    After game loading ... done
+15:59:33.001  2328,213s 1262521ms  17484    Gameplay ended - grCancel /
+15:59:33.272  2328,484s     271ms  17484    Saving dev settings to file 'kmr_dev.xml'
+                                      Loading campaign images.rxx for HKS
+15:59:34.256  2329,468s     984ms   9596    Custom - 1
+                                      Loading campaign images.rxx for KSN
+15:59:34.324  2329,536s      68ms   9596    Custom - 1
+                                      Loading campaign images.rxx for KSO
+15:59:34.385  2329,597s      60ms   9596    Custom - 1
+                                      Loading campaign images.rxx for KSU
+15:59:34.446  2329,658s      61ms   9596    Custom - 1
+                                      Loading campaign images.rxx for OFL
+15:59:34.502  2329,714s      56ms   9596    Custom - 1
+                                      Loading campaign images.rxx for OER
+15:59:34.551  2329,763s      49ms   9596    Custom - 1
+                                      Loading campaign images.rxx for TBK
+15:59:34.595  2329,807s      44ms   9596    Custom - 1
+                                      Loading campaign images.rxx for TPR
+15:59:34.656  2329,868s      61ms   9596    Custom - 1
+                                      Loading campaign images.rxx for TSK
+15:59:34.709  2329,921s      53ms   9596    Custom - 1
+                                      Loading campaign images.rxx for TUA
+15:59:34.747  2329,959s      38ms   9596    Custom - 1
+15:59:34.756  2329,968s       9ms  17484    LoadGameResources ... AlphaShadows: True. Forced: False
+15:59:34.764  2329,976s       7ms  17484    Resource loading state - Game
+15:59:34.791  2330,003s      27ms  17484    Saving dev settings to file 'kmr_dev.xml'
+15:59:34.821  2330,033s      30ms  17484    <== Game creation is done ==>
+15:59:34.828  2330,040s       7ms  17484    GameStart
+15:59:34.834  2330,046s       6ms  17484    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+15:59:34.842  2330,054s       8ms  17484    Loading map file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.map
+15:59:34.853  2330,065s      11ms  17484    Map file loaded
+15:59:35.052  2330,264s     199ms  17484    Gameplay recording initialized ... done
+15:59:35.059  2330,271s       7ms  17484    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+15:59:35.065  2330,277s       6ms  17484    Gameplay initialized ... done
+15:59:35.071  2330,283s       6ms  17484    After game start
+15:59:35.081  2330,293s       9ms  17484    Set game seed: 1684614226
+15:59:35.088  2330,300s       7ms  17484    After game start ... done
+                                      Loading campaign images.rxx for TMR
+15:59:35.137  2330,349s      49ms   9596    Custom - 1
+16:02:27.951  2503,163s  172814ms  17484    Saving from map editor: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+16:02:28.142  2503,354s     191ms  17484    LoadGameResources ... AlphaShadows: True. Forced: False
+16:02:28.148  2503,360s       6ms  17484    Resource loading state - Game
+16:02:28.176  2503,388s      28ms  17484    Saving dev settings to file 'kmr_dev.xml'
+16:02:28.221  2503,433s      45ms  17484    <== Game creation is done ==>
+16:02:28.229  2503,441s       8ms  17484    GameStart
+16:02:28.235  2503,447s       6ms  17484    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+16:02:28.242  2503,454s       7ms  17484    Loading map file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.map
+16:02:28.249  2503,461s       7ms  17484    Map file loaded
+16:02:28.330  2503,542s      81ms  17484    Script: Script compile hints: 
+[Hint] Variable 'LASTMAPID' never used in 'E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.script' at [45:2]
+16:02:28.338  2503,550s       8ms  17484    Gameplay recording initialized ... done
+16:02:28.346  2503,558s       8ms  17484    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+16:02:28.354  2503,566s       8ms  17484    Gameplay initialized ... done
+16:02:28.361  2503,574s       8ms  17484    After game start
+16:02:28.379  2503,591s      17ms  17484    Set game seed: 864628132
+16:02:28.385  2503,597s       6ms  17484    Saving game at tick 0 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\basesave\basesave.bas'
+16:02:28.393  2503,605s       8ms  17484    After game start ... done
+16:02:36.851  2512,063s    8458ms  17484    Gameplay ended - grSilent /
+16:02:36.875  2512,087s      24ms  17484    LoadGameResources ... AlphaShadows: True. Forced: False
+16:02:36.881  2512,093s       6ms  17484    Resource loading state - Game
+16:02:36.909  2512,121s      26ms  17484    Saving dev settings to file 'kmr_dev.xml'
+16:02:36.954  2512,166s      45ms  17484    <== Game creation is done ==>
+16:02:36.961  2512,173s       7ms  17484    GameStart
+16:02:36.966  2512,178s       5ms  17484    Loading DAT file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.dat
+16:02:36.973  2512,185s       7ms  17484    Loading map file: E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.map
+16:02:36.980  2512,192s       7ms  17484    Map file loaded
+16:02:37.065  2512,277s      85ms  17484    Script: Script compile hints: 
+[Hint] Variable 'LASTMAPID' never used in 'E:\programowanie\projekty delphi\kam_expansion\Maps\New World\New World.script' at [45:2]
+16:02:37.071  2512,283s       6ms  17484    Gameplay recording initialized ... done
+16:02:37.078  2512,290s       7ms  17484    Game options: PT = 0; SpeedPT = 1; SpeedAfterPT = 1; Seed = 0; Difficulty = mdNone
+16:02:37.085  2512,297s       7ms  17484    Gameplay initialized ... done
+16:02:37.091  2512,303s       6ms  17484    After game start
+16:02:37.109  2512,321s      18ms  17484    Set game seed: 1314567734
+16:02:37.115  2512,327s       6ms  17484    Saving game at tick 0 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\basesave\basesave.bas'
+16:02:37.123  2512,335s       8ms  17484    After game start ... done
+16:02:40.732  2515,944s    3609ms  17484    Issue gicGameAutoSave command at tick 600
+16:02:40.740  2515,951s       7ms  17484    Saving game at tick 600 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+16:02:43.266  2518,478s    2527ms  17484    Issue gicGameAutoSave command at tick 1200
+16:02:43.273  2518,485s       7ms  17484    Saving game at tick 1200 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+16:02:44.265  2519,477s     992ms  17484    Issue gicGameAutoSave command at tick 1800
+16:02:44.273  2519,485s       8ms  17484    Saving game at tick 1800 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+16:02:45.266  2520,478s     993ms  17484    Issue gicGameAutoSave command at tick 2400
+16:02:45.273  2520,485s       7ms  17484    Saving game at tick 2400 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+16:02:50.302  2525,514s    5029ms  17484    Saving dev settings to file 'kmr_dev.xml'
+16:02:52.404  2527,616s    2102ms  17484    Saving dev settings to file 'kmr_dev.xml'
+16:02:52.909  2528,121s     505ms  17484    Saving dev settings to file 'kmr_dev.xml'
+16:02:54.009  2529,221s    1100ms  17484    Saving dev settings to file 'kmr_dev.xml'
+16:03:08.031  2543,243s   14022ms  17484    Issue gicGameAutoSave command at tick 3000
+16:03:08.037  2543,249s       6ms  17484    Saving game at tick 3000 to 'E:\programowanie\projekty delphi\kam_expansion\Saves\autosave\autosave.sav'
+16:03:08.922  2544,134s     885ms  17484    Gameplay ended - grCancel /
+16:03:10.132  2545,344s    1210ms  17484    Stopping game application...
+16:03:10.141  2545,353s       9ms  17484    Start saving 'Server settings' to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+01262b8c KaM_Expansion.exe KM_Settings           106 TKMSettings.SaveToDefaultFile
+01262c5f KaM_Expansion.exe KM_Settings           113 TKMSettings.SaveToDefaultFile
+01262898 KaM_Expansion.exe KM_Settings            65 TKMSettings.Destroy
+013a6ed2 KaM_Expansion.exe KM_ServerSettings     117 TKMServerSettings.Destroy
+00cca764 KaM_Expansion.exe System                 23 TObject.Free
+00f99814 KaM_Expansion.exe KromUtils             281 FreeThenNil
+01473643 KaM_Expansion.exe KM_GameApp            330 TKMGameApp.Destroy
+00cca764 KaM_Expansion.exe System                 23 TObject.Free
+00f99814 KaM_Expansion.exe KromUtils             281 FreeThenNil
+0147e2d9 KaM_Expansion.exe KM_Main               376 TKMMain.Stop
+0147e3b8 KaM_Expansion.exe KM_Main               405 TKMMain.Stop
+013b8e26 KaM_Expansion.exe KM_GUIMenuMain        123 TKMMenuMain.ButtonClick
+013b8e46 KaM_Expansion.exe KM_GUIMenuMain        124 TKMMenuMain.ButtonClick
+01680c91 KaM_Expansion.exe KM_Controls          1242 TKMControl.DoClick
+0167f294 KaM_Expansion.exe KM_Controls           690 TKMControl.MouseUp
+016772be KaM_Expansion.exe KM_ControlsBase       805 TKMButton.MouseUp
+01683385 KaM_Expansion.exe KM_Controls          2274 TKMMasterControl.MouseUp
+01457b01 KaM_Expansion.exe KM_InterfaceMainMenu  479 TKMMainMenuInterface.MouseUp
+01474212 KaM_Expansion.exe KM_GameApp            559 TKMGameApp.MouseUp
+016e080c KaM_Expansion.exe KM_FormMain           697 TFormMain.RenderAreaMouseUp
+
+16:03:10.158  2545,370s      17ms  17484    'Server settings' was successfully saved to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Server Settings.ini'
+16:03:10.389  2545,601s     230ms  17484    Start saving 'GameApp settings' to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'
+01262b8c KaM_Expansion.exe KM_Settings           106 TKMSettings.SaveToDefaultFile
+01262c5f KaM_Expansion.exe KM_Settings           113 TKMSettings.SaveToDefaultFile
+01262898 KaM_Expansion.exe KM_Settings            65 TKMSettings.Destroy
+01262ff2 KaM_Expansion.exe KM_SettingsXML         44 TKMSettingsXML.Destroy
+0126331e KaM_Expansion.exe KM_GameAppSettings     57 TKMGameAppSettings.Destroy
+00cca764 KaM_Expansion.exe System                 23 TObject.Free
+00f99814 KaM_Expansion.exe KromUtils             281 FreeThenNil
+0147e2e3 KaM_Expansion.exe KM_Main               378 TKMMain.Stop
+0147e3b8 KaM_Expansion.exe KM_Main               405 TKMMain.Stop
+013b8e26 KaM_Expansion.exe KM_GUIMenuMain        123 TKMMenuMain.ButtonClick
+013b8e46 KaM_Expansion.exe KM_GUIMenuMain        124 TKMMenuMain.ButtonClick
+01680c91 KaM_Expansion.exe KM_Controls          1242 TKMControl.DoClick
+0167f294 KaM_Expansion.exe KM_Controls           690 TKMControl.MouseUp
+016772be KaM_Expansion.exe KM_ControlsBase       805 TKMButton.MouseUp
+01683385 KaM_Expansion.exe KM_Controls          2274 TKMMasterControl.MouseUp
+01457b01 KaM_Expansion.exe KM_InterfaceMainMenu  479 TKMMainMenuInterface.MouseUp
+01474212 KaM_Expansion.exe KM_GameApp            559 TKMGameApp.MouseUp
+016e080c KaM_Expansion.exe KM_FormMain           697 TFormMain.RenderAreaMouseUp
+00e93644 KaM_Expansion.exe Vcl.Controls              TControl.MouseUp
+00e93684 KaM_Expansion.exe Vcl.Controls              TControl.DoMouseUp
+
+16:03:10.404  2545,616s      15ms  17484    'GameApp settings' was successfully saved to 'C:\Users\szyby\OneDrive\Dokumenty\My Games\Knights and Merchants Remake\KaM Remake Settings KingDyronMod.xml'

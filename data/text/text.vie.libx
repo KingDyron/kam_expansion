@@ -1,0 +1,338 @@
+﻿0:Xưởng cưa\n
+1:Lò rèn sắt
+2:Lò rèn vũ khí
+3:Mỏ than
+4:Mỏ sắt
+5:Mỏ vàng
+6:Nhà câu cá
+7:Nhà bánh
+8:Ruộng
+9:Nhà cưa gỗ
+10:Lò rèn giáp
+11:Nhà chứa
+12:chuồng ngựa
+13:Nhà gọi dân
+14:Nhà đá
+15:Người luyện kim
+16:Nhà chăn lợn
+17:Chòi
+18:tòa thị chính
+19:Nhà vũ khí gỗ
+20:Nhà giáp
+21:Doanh trại
+22:Cối xay gió
+23:xưởng cơ khí
+24:Nhà xúc xích
+25:Nhà da thuộc
+26:Trại huấn luyện
+27:Nhà ăn
+28:Nhà trồng nho
+29:Chợ
+30:Gỗ cây
+31:Đá
+32:Gỗ ván
+33:Quặng sắt
+34:Quặng vàng
+35:Than
+36:Sắt
+37:Vàng
+38:Thùng rượu
+39:Lúa
+40:Bánh mì
+41:Bột
+42:Da thuộc
+43:Xúc xích
+44:Lợn
+45:Da thú
+46:khiên gỗ
+47:Khiên sắt
+48:Giáp da
+49:Giáp sắt
+50:Rìu gỗ
+51:Kiếm sắt
+52:Thương gỗ
+53:Thương sắt
+54:Cung gỗ
+55:Cung sắt
+56:Ngựa
+57:Cá
+58:Khuân vác
+59:Tiều phu
+60:Thợ mỏ
+61:Người chăn nuôi
+62:Nông dân
+63:Thợ mộc
+64:Thợ làm bánh
+65:Người bán thịt, làm da
+66:Người câu cá
+67:Thợ xây
+68:Thợ đào đá
+69:Thợ rèn
+70:Nhà luyện kim
+71:Lính
+72:Lính rìu gỗ
+73:Lính rìu giáp gỗ
+74:Lính kiếm giáp sắt
+75:Lính cung gỗ
+76:Lính cung sắt
+77:Lính thương gỗ
+78:Lính thương sắt
+79:Lính ngưa gỗ
+80:Hiệp sĩ
+81:Lính rìu
+88:Những người khuân vác sẽ mang vật liệu là gỗ và đá đến các công trình. Lưu ý là phải có con đường nối công trình đó với dường chính đến nhà kho.
+89:Để có được gỗ cây cho xưởng cưa, bạn sẽ cần tiều phu.Những người tiều phu thực hiện việc trồng rừng một cách độc lập.
+90:Những người thợ mỏ sẽ đào quặng từ các mỏ than, sắt và vàng.
+91:Những người chăn nuôi sẽ dùng lúa để sinh ra lợn ở nhà chăn lợn và ngựa ở nhà chăn ngựa.
+92:Nông dân sẽ trồng và thu hoạch lúa ở trên cánh đồng. Họ cũng sản suất rượu ở cánh đồng nho.
+93:Thợ mộc sẽ làm việc ở nhà xưởng cưa, nhà vũ khí gỗ và nhà giáp gỗ, da.Họ cũng chế tạo máy bắn đá và ballista trong xưởng cơ khí.
+94:Thợ làm bánh sẽ xay lúa thành bột mì ở trong nhà cối xay gió. Họ cũng sẽ làm bánh trong nhà bánh.
+95:Người bán thịt, làm da sẽ làm xúc xích ở nhà xúc xích và da thuộc ở nhà da thuộc.
+96:Người bắt cá sẽ câu cá ở ven hồ.
+97:Thợ xây sẽ xây dựng các công trình, đường đi. Đơn giản chỉ cần đánh dấu vị trí bạn cần xây công trình hay đường và họ sẽ nhận lệnh từ bạn ngay lập tức. Họ cũng sẽ sửa lại công trình của bạn.
+98:Để cung cấp vật liệu xây dựng cho việc xây đường và công trình, thợ đào đá sẽ đục và cắt đá thành khối, mỗi lần đi đục đá thợ đào sẽ cắt được 3 đá.
+99:Thợ rèn sẽ rèn vũ khí và áo giáp trong lò rèn vũ khí và áo giáp.
+100:Nhà luyện kim sẽ dùng than để luyện vàng và sắt.
+101:Lính có thể được dùng như quân lính ở trong các doanh trại. Họ cũng sẽ đứng ở các chòi bảo vệ.
+102:Để lựa chọn các công trình
+103:Để phân phối vật phẩm
+104:Để thống kê
+105:Để tùy chọn
+106:Quay lại
+107:Xậy dựng| sự lựa chọn
+108:Phân phối| vật phẩm
+109:Bảng thống kê
+110:Tùy chọn
+111:Load game.
+112:Lưu game
+113:Bạn có chác|muốn thoát|nhiệm vụ này?
+114:Thoát nhiệm vụ
+115:Quay lại
+117:Thoát việc chỉnh sửa
+118:SFX
+119:Thay đổi âm lượng
+120:Thay đổi âm lượng
+121:Âm nhạc
+123:Tự động lưu
+124:Máy chạy nhạc
+125:Bản trước
+126:Bản tiếp theo
+127:Phá hủy công trình
+128:Xóa bỏ công trình|điểm xây dựng
+129:Xây dựng đường
+130:Xây dựng nhiều đường
+131:Ruộng cày
+132:Nhiều ruộng cày
+133:Ruộng nho
+134:Nhiều ruộng nho
+135:Hủy
+136:Hủy việc huấn luyện
+137:Cần thiết
+140:Người vận chuyển
+141:Nhà chưa được|xây dựng
+142:Phá hủy
+143:Bạn muốn|phá hủy công trình này?
+144:Phá hủy công trình đã chọn.
+145:Giảm số lượng đặt hàng
+146:Tăng số lượng đặt hàng
+147:Loại quân lính trước
+148:Loại quân lính tiếp theo
+149:Trang bị quân lính loại này
+150:Nghề nghiệp tiếp theo
+151:Nghề nghiệp trước
+152:Thêm vào hàng chờ
+153:Bật/tắt việc chuyển vật phẩm
+154:Giá:
+155:Bật/Tắt chế độ sửa công trình
+156:Xây dựng không có sẵn tại thời điểm này
+157:Điều kiện
+158:Quay quân lính sang trái
+159:Quay quân lính sang phải
+160:Tấn công ('a)
+161:Cử quân lính đi ('d')
+162:Cho quân lính ăn
+163:Bắt đầu tấn công bão táp
+164:Thêm hàng
+165:Rút ngắn hàng
+166:Lựa chọn|nhóm
+167:Hủy
+168:Xóa bỏ
+169:Xóa thư hiện tại
+170:Đi tới
+171:ĐI tới vị trí tin nhắn hiện tại
+172:Đóng
+173:Đóng cửa sổ
+174:Thợ đào đá của bạn không thể tìm thấy mỏ đá nào nữa.
+175:Mỏ than của bạn đã cạn kiệt
+176:Mỏ sắt của bạn đã cạn kiệt
+177:Mỏ vàng của bạn đã cạn kiệt
+178:Tiều phu của bạn không thể tìm thấy cây nào xung quanh nữa
+179:Nhà này chưa có thợ
+180:Quân lính này đang đói, họ cần được cho ăn sớm!
+181:DỪNG
+182:Đang chuyển đồ
+183:Đang xây đường
+184:Đang đào ruộng cày
+185:Đang đào ruộng nho
+186:Đang đào móng công trình
+187:Đang xây công trình
+188:Đang sửa công trình
+189:Đang về công trình
+190:Đang đi tới nhà ăn
+191:Đang tấn công công trình
+192:Đang khai hỏa
+193:Đang đánh
+194:Tấn công bão táp
+195:Đang tấn công
+196:Đang di chuyển
+197:Nhàn rỗi
+198:Đang đào đá
+199:Đang gieo mạ
+200:Đang gặt lúa
+201:Đang thu hoạch nho
+202:Đang câu cá
+203:Đang chặt cây
+204:Đang trồng cây
+205:Spirit
+206:Busy
+207:Middle Ages Horn
+208:Spring
+209:Lute
+210:Mercenary
+211:The Princess
+212:The Queen
+213:In the Marketplace
+214:On the Battlefield
+215:Court Dance
+216:The Army
+217:In the Castle
+218:Fanfares
+219:At Court
+220:Entree
+221:Deep Blue
+222:Struggle
+223:Royal Quarters
+224:Aristocracy
+225:At the Harbor
+226:Journey
+227:Chiến dịch
+228:Chiến dịch
+229:Bắt đầu chiến dịch!
+230:Chơi đơn
+231:Bắt đầu ván
+232:Trờ lại Menu
+233:Load game đã lưu
+234:Chơi nhiều người
+235:Tùy chọn
+236:Credits
+237:Thoát game
+238:Tiếp tục
+239:Chơi lại nhiệm vụ
+240:Độ phân giải:
+241:Không hỗ trợ
+242:Không hỗ trợ
+243:CHIẾN THẮNG~!
+244:THUA RỒI~!
+245:Đơn vị đã mất:
+246:Đơn vị đã tiêu diệt:
+247:Công trình đã mất:
+248:Công trình đã phá hủy:
+249:Công trình đã xây:
+250:Đơn vị đã huấn luyện:
+251:Vũ khí đã sản xuất:
+252:Quân lính đã sử dụng:
+253:Nhiệm vụ hoàn thành trong:
+254:Bảng thống kê
+255:Kinh tế
+256:Công dân|đã huấn luyện
+257:Công dân|đã mất
+258:Quân lính|đã sử dụng
+259:Quân lính|đã mất
+260:Quân lính|đã tiêu diệt
+261:Công trình|đã xây
+262:Công trình|đã mất
+263:Công trình|đã phá hủy
+264:Vật phẩm|đã sản xuất
+265:Vũ khí|đã sản xuất
+266:Đội quân
+267:Công dân
+268:Các công trình
+269:Các tài nguyên
+270:Các tài nguyên đã sản xuất
+271:Không dữ liệu
+272:Bạn
+273:Người chơi %d
+274:Trở lại chế độ nhiều người chơi
+275:Quay lại mục phát lại
+276:Tất cả
+277:Chiến tranh
+278:Đồ ăn
+279:JOYMANIA ENTERTAINMENT||Lập trình viên:|Peter Ohlmann||Đồ họa game :|Adam Sprys||Các mức độ chơi:|Adam Sprys|André Quaß||Âm thanh và phối âm:|Tonstudio Mannheim||Âm nhạc:|Gerd Hofmann|Joachim Schäfer|Jürgen Rebhann|Klaus Staendike|Steffen Schüngel||Iminh họa:|Boleslaw Kasza|Christoph Werner||Dịch giả:|Ronnie Shankland|Patricia Bellantuono|Andrea Rumpelt|||ZUXXEZ ENTERTAINMENT AG||Nhà sản xuất:|Uwe Schäfer||Hướng dẫn:|Peter Ohlmann|Uwe Schäfer||BETA TESTING:|Peter Ohlmann|Adam Sprys|Alexandra Constandache|Dirk P. Hassinger|Achim Heidelauf|Uwe Schäfer|Ingrid Schäfer|Dirk U. Jantz|Ion Constandache|Yaman Egeli|Roman Eich|Iris Mocsnek|Anke Jantz|Paul Hassinger|Liza Hassinger||GAMES DIRECTOR:|Achim Heidelauf||PUBLISHED BY:|TopWare Interactive||CUTSCENES:||DIRECTION:|Slawomir Jedrzejewski||Kajetan Czarnecki|Wojciech Drazek|Daniel Duplaga|Rafal Januszkiewicz|Andrzej Rams|Piotr Rulka|Krzysztof Rybczynski|Grzegorz Wisniewski||VOICES:|Claus Boyen (Storyteller)||Tim Timmermann|Peter Houska|Dirk Mühlbach|Ralf Ditze|Gerhard Piske|Gernot Wassmann||ARTWORK:|Boleslaw Kasza|Adam Sprys||Hiệu ứng hoạt ảnh đầu:|Uwe Schäfer|Christian Bigalk|Mô hình 3D bổ sung:|Niels Horstmann||SPECIAL THANKS TO:|Tadeusz Zuber|Dieter Ohlmann|Alexandra Constandache|Ingrid Schäfer
+280:Nhiệm vũ đã hủy
+281:Kết thúc phát lại
+282:Hướng dẫn xây dựng
+283:Hướng dẫn đánh trận
+284:Chơi đơn
+285:Xây dựng màn
+286:Bắt đầu nhiệm vụ
+287:Tiêu đề
+288:Kích cỡ
+289:Điều kiện thắng
+290:Điều kiện thua
+291:Đồng minh
+292:Quân địch
+293:Thời gian
+294:Kích thước bản đồ mới
+295:Độ rộng
+296:Độ cao
+297:Tạo bản đồ mới
+298:Bản đồ có sẵn
+299:Tải bản đồ có sẵn
+300:Vị trí
+301:Điều khiển:
+302:Lối chơi:
+303:Âm thanh:
+304:Tắt nhạc
+305:Đồ họa:
+306:Độ sáng
+307:Vertical Sync
+308:Toàn màn hình
+309:Áp dụng
+310:Ngôn ngữ.
+311:Chất lượng bóng:
+312:Thấp
+313:Cao
+314:Đang tải... 
+315:Một lỗi đã xảy ra!
+316:Tải ngôn ngữ mới
+317:Danh sách lưu game
+318:Tên tệp
+319:Dòng miêu tả
+320:Tải
+321:Xóa
+322:Bạn có chắc muốn xóa bản lưu này không?
+323:Xóa
+324:Hủy
+325:Tiêu đề
+326:Bản đồ
+327:Đã mở 
+698:Sói
+699:Cá
+700:Rắn nước
+701:Sao biển
+702:cua
+703:Rong biển
+704:Là rong biển
+705:Vịt
+706:Quân lính loại này không có sẵn
+707:Đơn vị loại này không có sẵn
+770:Ngày
+795:Để chơi lại những chiến dịch trước, chọn cờ của chiến dịch đó trên bản đồ tổng.
+801:Xóa một bản phát lại cũng đồng thời xóa phần lưu đã liên kết. Bạn có chắc muốn xóa phần lưu này?
+804:Xóa bản phát lại
+805:Xóa bản đồ
+806:Bạn có chắc muốn xóa bản đồ này?
+824:Di chuyển
+829:Đơn hàng đã được hoàn thành
+830:Tải phông chữ châu Á
+831:Xóa khỏi phần tải

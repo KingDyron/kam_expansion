@@ -1,0 +1,2113 @@
+﻿0:Tartak
+1:Dymarka
+2:Kuźnia Płatnerska
+3:Kopalnia Węgla
+4:Kopalnia Żelaza
+5:Kopalnia Złota
+6:Chatka Rybacka
+7:Piekarnia
+8:Gospodarstwo
+9:Leśniczówka
+10:Kuźnia Zbroi
+11:Spichlerz
+12:Stajnia
+13:Szkoła
+14:Kamieniołom
+15:Mennica
+16:Chlew
+17:Wieża Obronna
+18:Ratusz
+19:Warsztat Broni
+20:Warsztat Płatnerski
+21:Warownia
+22:Młyn
+23:Warsztat Wojenny
+24:Rzeźnia
+25:Garbarnia
+26:Sala treningowa
+27:Gospoda
+28:Winnica
+29:Targ
+30:Pnie drzew
+31:Kamienie
+32:Deski
+33:Ruda żelaza
+34:Ruda złota
+35:Węgiel
+36:Żelazo
+37:Złoto
+38:Wino
+39:Słoma
+40:Chleb
+41:Mąka
+42:Rulony skóry
+43:Kiełbasa
+44:Mięso
+45:Płaty skóry
+46:Drewniana tarcza
+47:Żelazna tarcza
+48:Pancerz
+49:Zbroja
+50:Topór
+51:Miecz
+52:Lanca
+53:Halabarda
+54:Łuk
+55:Kusza
+56:Konie
+57:Ryby
+58:Pomocnik
+59:Drwal
+60:Górnik
+61:Hodowca
+62:Chłop
+63:Cieśla
+64:Młynarz/Piekarz
+65:Rzeźnik/Garbarz
+66:Rybak
+67:Budowniczy
+68:Kamieniarz
+69:Kowal
+70:Hutnik
+71:Rekrut
+72:Żołdak
+73:Topornik
+74:Piechur z mieczem
+75:Łucznik
+76:Kusznik
+77:Pikinier
+78:Halabardier
+79:Lekka jazda
+80:Ciężka jazda
+81:Barbarzyńca
+82:Rebeliant
+83:Pachołek
+84:Wojownik
+85:Włóczęga
+86:Katapulta
+87:Balista
+88:Pomocnik zaopatruje Twoje budynki w niezbędne surowce.||Pamiętaj, że budynki muszą być połączone ze sobą ulicami.
+89:Aby zdobyć pnie drzew dla Tartaku, potrzebujesz Drwala.||Drwal sam ponownie zalesia wykarczowane połacie lasu.
+90:Górnik wydobywa rudy w Kopalni Węgla, Żelaza i Złota.
+91:W Chlewie i w Stajni Hodowca hoduje świnie i konie, karmiąc je ziarnem.
+92:Chłop sieje i zbiera zboże w Gospodarstwie.||Oprócz tego wytłacza wino w Winnicy.
+93:Cieśla pracuje w Tartaku Warsztacie Płatnerskim i w Warsztacie Pancerzy.||Oprócz tego Cieśla buduje katapulty i balisty w Warsztacie Wojennym.
+94:Piekarz piecze chleb w Piekarni.||Dodatkowo przerabia w Młynie ziarno na mąkę.
+95:Rzeźnik wyrabia kiełbasy w Rzeźni i wyprawia skórę w Garbarni.
+96:Rybak łowi ryby w pobliskich zbiornikach wodnych.
+97:Budowniczy buduje budynki i ulice. Zaznacz wybrane miejsca, a on automatycznie zrealizuje twoje polecenia.||Poza tym naprawia uszkodzone budynki.
+98:Aby Twoi Budowniczy mieli wystarczającą ilość budulca do budowy ulic i domów, Kamieniarz eksploatuje kamień.
+99:Kowal wytwarza cieżkię pancerze i broń w Kuźni Płatnerskiej i w Kuźni Zbroi.
+100:Hutnik produkuje z rudy złota i żelaza sztaby złota i stal.
+101:Rekrut otrzymuje w Warowni żołnierskie wyposażenie.||Oprócz tego pełni wartę na Wieży Strażniczej.
+102:Wybór budynków
+103:Podział towarów
+104:Statystyka
+105:Opcje
+106:Powrót
+107:Wybór|budynków
+108:Podział|towarów
+109:Statystyka
+110:Opcje
+111:Załaduj grę
+112:Zapisz grę
+113:Czy jesteś pewien,|że chcesz|zakończyć grę?
+114:Zakończ grę
+115:Powrót
+116:Ustawienia
+117:Zamknij Edytor
+118:Odgłosy
+119:Zmiana głośności
+120:Zmiana głośności
+121:Muzyka
+122:Włączyć/wyłączyć muzykę
+123:Autozapis
+124:Odtwarzacz muzyki
+125:Poprzedni utwór
+126:Następny utwór
+127:Burzenie
+128:Burzenie budynków i znaczników
+129:Buduj ulice
+130:Kamienna droga
+131:Pole zbożowe
+132:Pole zbożowe
+133:Pole owocowe
+134:Pole owocowe
+135:Anuluj
+136:Anuluj aktualne przyuczanie
+137:W zapasie:
+140:Dostarcza
+141:Budynek w budowie
+142:Zniszcz
+143:Czy jesteś pewien,|że chcesz|zburzyć budynek?
+144:Niszczy wybrany budynek
+145:Zmniejsz zamówienie
+146:Zwiększ zamówienie
+147:Poprzedni typ jednostki
+148:Następny typ jednostki
+149:Uzbrój aktualny typ jednostki
+150:Następny zawód
+151:Poprzedni zawód
+152:Dodaj do kolejki
+153:Przełączaj między trybami dostaw towarów: żądanie / zamknięty / oferowanie. Użyj LPM/PPM, aby przełączyć do przodu / do tyłu
+154:Koszty:
+155:Naprawa budynku włącz/wyłącz
+156:Budynek obecnie niedostępny
+157:Wytrzymałość
+158:Obróć oddział w lewo
+159:Obróć oddział w prawo
+160:Atakuj
+161:Wyślij oddział
+162:Zaopatrz oddział w żywność
+163:Rozpoczęcie szturmu
+164:Dodaj szereg
+165:Usuń szereg
+166:Wybierz|grupę docelową
+167:Anuluj
+168:Usuń
+169:Usuwa aktualną wiadomość
+170:Idź do
+171:Skacze do pozycji aktualnej wiadomości
+172:Zamknij
+173:Zamknij okno
+174:Twój Kamieniarz nie znalazł dalszych pokładów kamienia.
+175:Zasoby Twojej Kopalni Węgla są wyczerpane.
+176:Zasoby Twojej Kopalni Żelaza są wyczerpane.
+177:Zasoby Twojej Kopalni Złota są wyczerpane.
+178:Twój drwal nie może znaleźć żadnych drzew do ścięcia
+179:Ten budynek nie ma gospodarza.
+180:Ten oddział jest bardzo głodny! Dostarcz im szybko żywność!
+181:PAUZA
+182:Dostarcza towary
+183:Buduje drogę
+184:Orze pole
+185:Konstruuje winnice
+186:Wyrównuje teren pod budynek
+187:Buduje budynek
+188:Naprawia budynek
+189:Idzie do domu
+190:Idzie do gospody
+191:Atakuje budynek
+192:Strzela
+193:Walczy
+194:Szturmuje
+195:Atakuje
+196:Idzie
+197:Odpoczywa
+198:Wydobywa kamień
+199:Sieje zboże
+200:Zbiera zboże
+201:Zbiera winogrona
+202:Łowi ryby
+203:Ścina drzewa
+204:Sadzi drzewa
+205:Spirit
+206:Busy
+207:Middle Ages Horn
+208:Spring
+209:Lute
+210:Mercenary
+211:The Princess
+212:The Queen
+213:In the Marketplace
+214:On the Battlefield
+215:Court Dance
+216:The Army
+217:In the Castle
+218:Fanfares
+219:At Court
+220:Entree
+221:Deep Blue
+222:Struggle
+223:Royal Quarters
+224:Aristocracy
+225:At the Harbor
+226:Journey
+227:Kampanie
+228:Kampanie
+229:Zacznij Kampanię
+230:Rozegraj jedną misję
+231:Zacznij misję
+232:Główne menu
+233:Załaduj grę
+234:Gra w sieci
+235:Opcje
+236:Autorzy
+237:Zakończ grę
+238:Dalej
+239:Powtórz misję
+240:Rozdzielczość:
+241:Nie obsługiwane
+242:Nie obsługiwane
+243:MISJA WYPEŁNIONA!
+244:MISJA NIEWYPEŁNIONA!
+245:Utracone jednostki:
+246:Zabite jednostki:
+247:Utracone budynki:
+248:Zniszczone budynki:
+249:Zbudowane budynki:
+250:Wyszkolone jednostki:
+251:Wyprodukowana broń:
+252:Wyposażeni wojownicy:
+253:Czas trwania gry:
+254:Statystyki
+255:Ekonomia
+256:Poddani|wyszkoleni
+257:Poddani|straceni
+258:Żołnierze|wyszkoleni
+259:Żołnierze|straceni
+260:Żołnierze|zabici
+261:Budynki|wybudowane
+262:Budynki|utracone
+263:Budynki|zniszczone
+264:Towary|wyprodukowane
+265:Broń|wyprodukowana
+266:Armia
+267:Mieszkańcy
+268:Budynki
+269:Surowce
+270:Wyprodukowane surowce
+271:Brak danych
+272:Ty
+273:Gracz %d
+274:Wróć do Gry wieloosobowej
+275:Wróć do Powtórek
+276:Wszystko
+277:Wojenne
+278:Jedzenie
+279:JOYMANIA ENTERTAINMENT||PROGRAMOWANIE:|Peter Ohlmann||GRAFIKA:|Adam Sprys||MISJE:|Adam Sprys|André Quaß||DŹWIĘKI:|Tonstudio Mannheim||MUZYKA:|Gerd Hofmann|Joachim Schäfer|Jürgen Rebhann|Klaus Staendike|Steffen Schüngel||ILUSTRACJE:|Bolesław Kasza|Christoph Werner||ZUXXEZ ENTERTAINMENT AG||PRODUCENT:|Uwe Schäfer||INSTRUKCJA:|Peter Ohlmann|Uwe Schäfer||BETA-TESTERZY:|Peter Ohlmann|Adam Sprys|Alexandra Constandache|Dirk P. Hassinger|Achim Heidelauf|Uwe Schäfer|Ingrid Schäfer|Dirk U. Jantz|Ion Constandache|Yaman Egeli|Roman Eich|Iris Mocsnek|Anke Jantz|Paul Hassinger|Liza Hassinger||NADZÓR PRODUKCJI:|Achim Heidelauf||WYDAWCA:|TopWare Poland||FILMY:||NADZÓR PRODUKCJI:|Sławomir Jędrzejewski||Kajetan Czarnecki|Wojciech Drazek|Daniel Duplaga|Rafał Januszkiewicz|Andrzej Rams|Piotr Rulka|Krzysztof Rybczyński|Grzegorz Wiśniewski||GŁOSÓW UŻYCZYLI:|Zbigniew Abrachamowicz|Władysław Aniszewski|Jerzy Batycki|Kazimierz Czapla|Bartosz Dziedzic|Ireneusz Ogrodziński|Grzegorz Sikora|Janusz Siwy|Tomasz Sylwestrzak|Piotr Tomaszewski|Robert Wdaniec||PROJEKT INSTRUKCJI:|Uwe Schäfer|Alexandra Constandache||TREŚĆ INSTRUKCJI:|Peter Ohlmann|Uwe Schäfer||ILUSTRACJE:|Bolesław Kasza|Adam Sprys||INTRO:|Uwe Schäfer|Christian Bigalk|Dodatkowe Modelowanie 3D:|Niels Horstmann||SPECJALNE|PODZIĘKOWANIA DLA:|Tadeusz Zuber|Dieter Ohlmann|Alexandra Constandache|Ingrid Schäfer|Andrea Rumpelt
+280:Misja anulowana
+281:Powtórka zakończona
+282:Samouczek zarządzania miastem
+283:Samouczek dowodzenia podczas bitwy
+284:Jeden Gracz
+285:Edytor Map
+286:Rozpocznij Misję
+287:Tytuł
+288:Wlk.
+289:Warunki wygranej:
+290:Warunki przegranej:
+291:Sojusznicy:
+292:Wrogowie:
+293:Czas
+294:Rozmiar nowej mapy
+295:Szerokość
+296:Wysokość
+297:Stwórz Nową Mapę
+298:Dostępne mapy
+299:Załaduj Istniejącą Mapę
+300:Położenie
+301:Kontrola:
+302:Rozgrywka:
+303:Dźwięk:
+304:Wyłącz muzykę
+305:Grafika:
+306:Jasność
+307:Synchronizacja pionowa
+308:Pełny ekran
+309:Zastosuj
+310:Język
+311:Jakość cieni:
+314:Ładowanie... Proszę czekać
+315:Wystąpił Błąd!
+316:Ładowanie nowej lokalizacji
+317:Lista zapisanych gier
+318:Nazwa pliku
+319:Opis
+320:Załaduj
+321:Usuń
+322:Jesteś pewny że chcesz usunąć ten zapis?
+323:Usuń
+324:Anuluj
+325:Tytuł
+326:Mapy
+327:Odblokowane
+328:Wygrana!
+329:Kontynuuj grę
+330:Zwycięstwo!
+331:Przegrana!
+332:Kontynuuj oglądanie
+333:Porażka
+334:Powtórka się zakończyła
+335:Kontynuuj oglądanie
+336:Wyjdź do menu
+337:Niedostępne
+338:Naciśnij %s aby wznowić grę
+339:Informacje o graczach
+340:Czat
+341:Zapis już istnieje
+342:Zastąp
+343:Zapisz
+344:Załaduj
+345:Wykryto starą wersję OpenGL, gra może działać wolno i/lub z błędami grafiki.
+346:Proszę zaktualizuj sterowniki karty graficznej aby uzyskać większą wydajność.
+347:Błąd sieci:
+348:Błąd: Nie wpisałeś imienia
+349:Błąd: Nazwa gracza nie może być dłuższa niż %d znaków
+350:Błąd: Nazwa gracza zawiera niedozwolone znaki
+351:Połączenie nie powiodło się: %s
+352:Zostałeś rozłączony
+353:Misja %d
+354:Dziennik wiadomości
+355:Twoja Chata rybaka jest zbyt daleko od wody.
+356:Twój rybak nie może złowić więcej ryb w pobliskich zbiornikach wodnych.
+357:Uruchom ponownie powtórkę
+358:Wstrzymaj powtórkę
+359:Jeden krok do przodu
+360:Wznów wstrzymaną powtórkę
+361:Zamknij powtórkę
+362:Przełącz na perspektywę gracza
+364:Użyj lewego przycisku myszy, aby wybrać towar do handlu
+365:Użyj prawego przycisku myszy, aby wybrać towar do handlu
+366:Z x%d
+367:Na x%d
+368:Edycja terenu
+369:Pędzle
+370:Zmieniaj wysokość terenu
+371:Płytki
+372:Obiekty
+373:Wysokość terenu
+374:Kształt
+375:Rozmiar
+376:Przesuń, aby zmienić rozmiar pędzla
+377:Zbocze
+378:Przesuń, aby zmienić wysokość zbocza: 1 = płaski ... 15 = szczyt
+379:Szybkość
+380:Przesuń, aby zmienić prędkość podnoszenia: 1 = wolno ... 15 = bardzo szybko
+381:Koło
+382:Kwadrat
+383:Podniesienie / Obniżenie
+384:Fałd / Wyrównanie
+385:Podnieś (lewy przycisk) /Obniż (prawy przycisk)
+386:Pofałduj (lewy przycisk)/Wyrównaj (prawy przycisk)
+387:Malowanie pędzlem
+388:Losowe elementy
+389:Losowy kierunek
+390:Zaznacz dla losowego kierunku płytki lub kliknij prawym przyciskiem myszy, aby obrócić wybraną płytkę
+392:Zablokuj przejście
+393:Usuń obiekt
+394:Planowanie osady
+395:Skrypty wizualne
+396:Skryptowanie globalne
+397:Menu
+398:Obiekty
+399:Pokaż magazyny
+400:Pokaż jednostki
+401:Pokaż budynki
+402:Pokaż obiekty
+403:Pokaż przejścia
+404:Wszystkie|niezapisane zmiany|zostaną utracone!
+405:Anuluj
+406:Wczytaj
+407:Wczytaj mapę
+408:Anuluj
+409:Zapisz
+410:Nadpisz
+411:Mapa już istnieje
+412:Gracze:
+413:Domyślnie
+414:Rodzaj gracza
+415:Symetrycznie
+416:Sojusze
+417:Taktyczna
+418:Normalny
+419:Tryb misji
+420:Przejdź do lokalizacji
+421:Środek ekranu na początku misji
+422:Środek ekranu
+423:Pokaż całość
+424:Odsłoń część mapy
+425:Odsłoń mgłę
+426:Zablokuj handel
+427:(Od)blokuj budynki
+428:Kolory
+429:Cel
+432:Gracz
+433:Budynki ekonomiczne
+434:Pomocnicy i szkoły
+435:Cele wojskowe
+436:Nieznany
+437:Wojsko
+438:Budynki
+439:Czas
+440:Samouczek Budowania
+441:Żaden
+442:Warunek
+443:Przetrwanie
+444:Zwycięstwo
+445:Żaden
+446:Typ
+447:Cele
+448:OK
+449:Anuluj
+450:Kolumny
+451:Liczba
+452:Formacje Wojsk
+453:Edytuj formacje
+454:Ustaw limit liczby posiadanych żołnierzy dla SI
+455:Ilu żołnierzy jednocześnie może mieć SI
+456:Maks. żołnierzy
+457:Ile rekrutów klasyczny gracz komputerowy powinien mieć w Warowni
+458:Rekruci na Zamek
+460:Niestandardowa pozycja
+463:Najbliższa jednostka
+465:Liczba oddziałów
+466:Informacje o ataku
+468:Powtarzany
+469:Pojedynczy
+470:Jazda
+471:Strzelcy
+472:Anty-jazda
+473:Piechota
+474:X,Y
+475:Cel
+476:Ilu
+477:Opóźnienie
+478:typ
+479:Autom. atak
+480:Ataki AI
+481:Uzbrój skórzanych
+482:Uzbrój żelaznych
+483:Autom. obrona
+484:SI tworzy i zarządza pozycjami obrony automatycznie
+485:Umieść pozycje obrony dla SI.|Do zmiany parametrów pozycji użyj:|RMB - kierunek, Ctrl + RMB - typ oddziału, Alt + RMB - obronna / atakująca
+486:Pozycje obrony SI
+487:Robotnicy
+488:Pomocnicy/10 budynków
+489:Autom. naprawa
+490:Usprawnione AI
+491:Ustawienia AI
+492:Budynki
+493:Prace drogowe
+494:Odwróć zaznaczenie w pionie
+495:Odwróć zaznaczenie w poziomie
+496:Wklej teren
+497:Skopiuj teren
+498:Kopiuj/wklej
+499:Nowa Misja
+500:Imię gracza
+501:Status:
+502:Utwórz Serwer
+503:STWÓRZ SERWER
+504:Nazwa
+505:Port
+506:Stwórz serwer lokalny
+507:Stwórz serwer internetowy
+508:Anuluj
+509:Znajdź Serwer przez IP
+510:ZNAJDŹ SERWER
+511:Adres
+512:Port
+513:Pokój
+514:Połącz
+515:Anuluj
+516:Pokój chroniony hasłem
+517:Hasło
+518:Nazwa Serwera
+519:Stan
+520:Gracze
+521:Ping
+522:Odśwież Listę Serwerów
+523:SZCZEGÓŁY SERWERA
+524:Lista graczy:
+525:Dołącz
+526:Łączenie, proszę czekać...
+527:Ładowanie ogłoszeń...
+528:Odświeżanie...
+529:Lista graczy
+530:Lokacja
+531:Drużyna
+532:Kolor
+533:Gotowy
+534:Ping
+535:Ping / FPS
+536:Wolne
+537:Gracz SI
+538:Wybierz...
+539:Przypadkowa
+540:Żadna
+541:Zapisane Gry
+542:Wybierz mapę...
+543:Wybierz zapis...
+544:Wyjdź
+545:Gotowy
+546:Nie gotowy
+547:Start!
+548:Prędkość gry (czas pokoju)
+549:Prędkość gry
+550:OK
+551:Anuluj
+552:Opis
+553:Hasło
+554:Ustawienia pokoju
+556:Zbanuj w tym pokoju
+557:Wyrzuć
+558:Przydziel losowo lokalizacje w drużynach
+559:Opis
+560:Opcje
+561:Lokacja %d
+562:Błąd: Wybierz gracza z zapisu do kontrolowania
+563:Błąd: Nie udało się załadować mapy lub nie wybrano mapy
+564:Nie można rozpocząć: %s
+565:Nie wszyscy są gotowi do rozpoczęcia
+566:Nie można przydzielić losowej lokalizacji
+567:Serwer przypisał prawa hosta do nas
+568:Gra rozpoczęta
+569:Mapa Ekonomiczna
+570:Mapa Taktyczna
+571:Mapa Kooperacyjna
+572:Mapa specjalna
+573:Opcje gry:
+574:Czas pokoju (minuty)
+575:Zamknięte
+576:Host konfiguruje gracza
+577:Oczekiwanie na graczy:
+578:Wszyscy
+579:Drużyna
+580:Autorzy KaM Remake
+581:Autorzy Oryginalnego Knights & Merchants
+582:PROGRAMOWANIE:
+583:DODATKOWE PROGRAMOWANIE:
+584:DODATKOWE GRAFIKI;
+585:DODATKOWE DŹWIĘKI:
+586:DODATKOWA MUZYKA:
+587:DODATKOWE TŁUMACZENIA:
+588:SPECJALNE PODZIĘKOWANIA DLA:
+589:Mapy dla wielu graczy
+590:Mapy dla jednego gracza
+591:Tempo przewijania
+592:Nie znaleziono serwerów
+593:Wymieszaj utwory
+594:Informacje o grze:
+595:-
+596:Lobby
+597:Ładowanie
+598:Gra
+599:Budowa i Walka
+600:Walka
+601:Gotowy
+602:Zła wersja protokołu: %s. Serwer używa: %s
+603:Zwiększ ilość towarów
+604:Zmniejsz ilość towarów
+605:Zapisywanie gry...
+606:%s został pokonany!
+607:Wyrzuć graczy
+608:Host będzie mógł wyrzucić tych graczy za %d sekund
+609:Host może już wyrzucić tych graczy
+610:Host (%s) wyszedł
+611:Połączenie z serwerem zostało utracone. Próba ponownego połączenia ...
+612:Czy na pewno chcesz wyjść?
+613:Czy na pewno chcesz bezpowrotnie wyrzucić tych graczy?
+614:Anuluj
+615:Handlowanie tym surowcem jest niemożliwe w tej misji
+616:Sadź i ścinaj
+617:Tylko ścinaj
+618:Nie masz prawa tego robić w czasie pokoju
+619:Pozostały czas pokoju: %s
+620:Czas pokoju minął. Do broni!
+621:Czas gry:|%s
+622:Zatrzymaj oddział i formuj szyk
+623:Połącz oddziały
+624:Rozdziel oddział
+625:Podgląd Powtórek
+626:Zobacz powtórkę
+627:Niewspierany format %s
+628:Niewspierana wersja %s
+629:Niewspierana modyfikacja
+630:Wystąpił błąd podczas przetwarzania pliku %s
+631:inicjowanie
+632:skrypt
+633:jednostki
+634:budynki
+635:drzewa
+636:definicje
+637:grafiki terenu
+638:Mapy nie odnaleziono: %s
+639:Zapisu nie odnaleziono: %s
+640:Pliki mapy nie zgadzają się z mapą hosta: %s
+641:Plik zapisu nie zgadza się z zapisem hosta: %s
+642:Powtórka wykazała niespójność podczas sprawdzania. Jest to znany błąd, który wpływa na odtwarzanie niektórych powtórek. Czy chcesz kontynuować oglądanie?
+643:Możesz mieć tylko jedną otwartą grę w trybie wieloosobowym naraz.
+644:Modyfikacje gry nie są dozwolone w trybie wieloosobowym.|Zainstaluj ponownie, aby przywrócić oryginalne pliki.
+645:Wystąpił błąd w aplikacji. Proszę kliknąć Wyślij Raport o Błędach, abyśmy mogli zbadać ten problem. Dziękujemy za pomoc!
+646:Wyślij Raport o Błędach
+647:Pokaż Dane Pierwotne
+648:Wznów Aplikację
+649:Zakończ Aplikację
+650:Następny
+651:Dane Kontaktowe
+652:Twoje imię: (opcjonalnie)
+653:Twój email: (opcjonalnie)
+654:Zapamiętaj mnie
+655:Szczegóły Błędu
+656:W jakiej sytuacji występuje błąd? Możesz podać dodatkowe informacje? (preferowany agielski)
+657:Zrzut Ekranu
+658:Dołącz zrzut ekranu do raportu o błędzie
+659:(kliknij, aby edytować obraz)
+660:Wyślij Raport
+661:Anuluj
+662:Wysyłanie raportu o błędzie...
+663:Łączenie z serwerem...
+664:Wysyłanie danych...
+665:Wysyłanie raportu o awarii nie powiodło się! Nasz serwer może być zajęty, proszę spróbować wysłać go ponownie.
+666:Informacja
+667:Proszę czekać...
+668:Zapisz mapę
+669:Opóźnienie w minutach zanim klasyczny gracz SI zacznie szkolenie żołnierzy
+670:Opóźnienie (min)
+671:Ustawia kierunek dla wszystkich płytek w zbiorniku wodnym
+672:Magiczna woda
+673:Kopiuj
+674:Wklej
+675:Akceptuj wklejenie
+676:Anuluj wklejenie
+677:Obróć w pionie
+678:Obróć w poziomie
+679:Przeciągnij, aby zaznaczyć obszar na mapie
+680:Opcje obrony AI
+681:Wył.
+682:Promień
+683:Usuń bieżący odsłaniacz
+684:Powrót do widoku odkrytej mgły
+685:Zamknij
+686:Kolejność oddziałów
+687:Żaden
+688:Pozycja ataku
+689:Idź do
+690:Kierunek
+693:Promień obrony
+694:Usuń aktualną pozycję obrony
+695:Powrót do widoku obrony
+696:Pozycja obrony
+697:Jednostki
+698:Wilk
+699:Ryba
+700:Wąż wodny
+701:Rozgwiazda
+702:Krab
+703:Lilia wodna
+704:Liść wodny
+705:Kaczka
+706:Ten typ żołnierza nie jest dostępny
+707:Ten typ jednostki nie jest dostępny
+708:Zablokuj jednostki
+736:Pobierz
+737:pobieranie...
+738:Nadpisz istniejące pliki
+739:%s stracił połączenie
+740:%s wyszedł
+741:%s odzyskał połączenie
+742:Nie można dołączyć, gdy gra jest w toku
+743:Pokój jest pełen. Nie można dołączyć do gry
+744:Gracz o tym samym nicku przyłączył się już do lobby
+746:Błąd: %s ma pliki gry niezgodne z plikami hosta i przez to nie może dołączyć do tej gry
+747:Twoje pliki gry są niezgodne z plikami hosta
+748:Prawa hosta przeniesione do %s
+749:%s ma inną wersję %s
+750:%s nie posiada %s
+751:Przekroczono limit czasu połączenia
+752:Host usunął %s z gry
+753:%s został wyrzucony przez hosta
+754:Próbuję podłączyć się do gry...
+755:%s dołączył
+756:Ponowne połączenie nie powiodło się: %s
+757:Host postanowił kontynuować grę bez Ciebie :(
+758:Odłączono od serwera: Wykryto przekroczenie czasu oczekiwania
+759:Zostałeś wyrzucony przez hosta
+760:Serwer przestał odpowiadać
+761:Nieprawidłowy numer pokoju
+765:Szeptaj do %s
+766:%s został zbanowany w tym pokoju przez hosta
+767:Zostałeś zbanowany przez hosta
+768:Zresetuj bany
+769:Host zresetował wszystkie bany w tym lobby
+770:Data
+771:Pokaż Mgłę
+772:Oglądaj
+773:Widz
+774:Zasięg auto-ataku
+775:Grupy sztucznej inteligencji automatycznie zaatakują, jeśli jesteś bliżej niż tyle pól
+776:Chroń sojuszników
+777:Jeśli włączone, to sztuczna inteligencja będzie bronić jednostek i budynków sojuszników, jak gdyby były jego własnymi
+778:Zezwalaj na oglądanie
+779:Przypisz prawa hosta
+780:Widzowie
+781:Nie można wyłączyć widzów: Lista widzów musi być pusta
+782:Powtórz
+783:Cofnij
+784:Ustawia pozycję początkową gracza SI, która jest wykorzystywana do kierowania atakami przez sztuczną inteligencję
+785:Pozycja startowa SI
+786:Kolejność
+788:Początkowe opóźnienie ataku (s)
+790:Budynek najbliżej armii
+791:Najbliższy budynek od pozycji startowej
+792:Atakujący
+793:Obrońcy
+794:Widzowie
+795:Aby ponownie zagrać w odblokowaną misję kampanii, wybierz odpowiednią flagę misji na mapie kampanii
+796:%s głosuje za powrotem do lobby (ilość potrzebnych głosów: %s)
+797:Głosuj, aby powrócić do lobby. Gra może zostać wznowiona lub zmieniona
+798:Powrót do lobby?
+799:%s zagłosował za powrotem do lobby (głosowanie udane)
+800:Głosowanie za powrotem do lobby nie powiodło się
+801:Usunięcie powtórki usuwa również powiązany zapis. Czy na pewno chcesz usunąć ten zapis?
+802:Losowo
+803:Minimalna ilość atakujących jednostek
+804:Usuń powtórkę
+805:Usuń mapę
+806:Czy na pewno chcesz usunąć tę mapę?
+807:Ukryj nakładkę skryptu
+808:Pokaż nakładkę skryptu
+809:Nie możesz zmienić hosta, kiedy serwer jest uruchomiony na twoim kliencie
+810:SI automatycznie tworzy i zarządza atakami. Ignoruje ataki utworzone ręcznie
+811:Szybko wyposaż
+812:Klasyczna SI: Żołnierze są wyposażani tak szybko, jak to możliwe. Na tempo wyposażania nadal wpływa rozplanowanie wioski|Lepsza SI: Bez limitu wyposażania
+813:Zastosuj dla SI
+814:Buduje agresywnie
+815:Wprowadza agresywne ustawienia ekonomii dla wszystkich graczy SI (dla wieloosobowych map ekonomicznych)
+816:Ostrzeżenie: To zastąpi istniejące ustawienia SI dla wszystkich graczy. Kontynuować?
+817:Typ armii
+818:Żelazo --> skóra
+819:Żelazna
+820:Skórzana
+821:Mieszana
+822:Pobrane mapy
+823:Uwaga: pierwszy "powtarzany" atak wyśle wszystkie jednostki, które gracz SI trzyma na ofensywnych posterunkach. Inaczej będzie w przypadku każdego następnego ataku "powtarzanego" (jak również ataku "pojedynczego"), gdzie wysłane będzie tyle grup wojska, aby przekroczyć "Minimalną ilość atakujących jednostek"
+824:Przenieś
+825:Zobacz plik PDF
+826:Nie można uruchomić przeglądarki PDF
+827:Ustaw liczbę pomocników na każde 10 budynków dla wybranego gracza SI. Ilość budynków wybranego SI: %d
+828:Błąd: Plik pauzy hosta nie odpowiada lokalnemu plikowi pauzy. Wystąpił błąd lub host próbuje oszukiwać.
+829:Zamówienie zostało zrealizowane
+830:Azjatyckie czcionki
+831:Przenieś z pobranych
+832:Zmień nazwę tej powtórki
+833:Zmień nazwę powtórki
+834:Usuń tę powtórkę
+835:Nazwa:
+836:Zatwierdź
+837:Edytuj powiązania klawiszy
+838:Powiązania klawiszy
+839:OK
+840:Funkcja
+841:Klawisz
+842:Specjalne nieedytowalne powiązania klawiszy
+843:Specjalne powiązania klawiszy
+844:Przywróć domyślne
+845:Przewiń w lewo
+846:Przewiń w prawo
+847:Przewiń do góry
+848:Przewiń w dół
+849:Menu budowania
+850:Menu podziału towarów
+851:Menu statystyk
+852:Menu opcji
+853:Komenda stop
+854:Komenda podziel
+855:Komenda połącz
+856:Komenda nakarm
+857:Komenda szturmuj
+858:Powiększ formację
+859:Pomniejsz formację
+860:Obróć zgodnie z ruchem zegara
+861:Obróc przeciwnie do ruchu zegara
+862:Normalna prędkość gry (x1)
+863:Prędkość x%s
+864:Prędkość x%s
+865:Prędkość x%s
+866:Sygnał
+867:Pauza
+868:Pokaż drużyny (MP)
+869:Przybliż
+870:Oddal
+871:Przywróć przybliżenie
+872:Zaznacz grupę 1
+873:Zaznacz grupę 2
+874:Zaznacz grupę 3
+875:Zaznacz grupę 4
+876:Zaznacz grupę 5
+877:Zaznacz grupę 6
+878:Zaznacz grupę 7
+879:Zaznacz grupę 8
+880:Zaznacz grupę 9
+881:Zaznacz grupę 10
+882:Wyśrodkuj na powiadomieniu
+883:Usuń wiadomość
+884:Pokaż czat (MP)
+885:Zamknij menu
+886:Pokaż mapę (cheat)
+887:Wygraj (cheat)
+888:Porażka (cheat)
+889:Dodaj l. jazdę (cheat)
+890:Extra Menu
+891:Edytor terenu
+892:Planowanie wsi
+893:Skrypty wizualne
+894:Globalne skrypty
+895:Menu główne
+896:Podmenu 1
+897:Podmenu 2
+898:Podmenu 3
+899:Podmenu 4
+900:Podmenu 5
+901:Podmenu 6
+902:Ctrl i Shift nie mogą być przypisane
+903:~~~ Nieznana wartość
+904:Lewy przycisk myszy
+905:Środkowy przycisk myszy
+906:Prawy przycisk myszy
+908:Backspace
+909:TAB
+910:Wyczyść
+918:Spacja
+923:Strzałka w lewo
+924:Strzałka w górę
+925:Strzałka w prawo
+926:Strzałka w dół
+927:Zaznacz
+929:Wykonaj
+933:Pomoc
+934:0 (numeryczna)
+935:1 (numeryczna)
+936:2 (numeryczna)
+937:3 (numeryczna)
+938:4 (numeryczna)
+939:5 (numeryczna)
+940:6 (numeryczna)
+941:7 (numeryczna)
+942:8 (numeryczna)
+943:9 (numeryczna)
+944:* (numeryczna)
+945:Odstęp
+946:- (numeryczna)
+947:. (numeryczna)
+948:/ (numeryczna)
+951:Lewy Shift
+952:Prawy Shift
+953:Lewy Control
+954:Prawy Control
+955:Lewy Alt
+956:Prawy Alt
+960:+ (numeryczna)
+961:Ogólne
+962:Skróty w grze
+963:Edytor map
+964:Oczekiwanie na dane rozłączonych graczy:
+965:Zakrapiacz - wybiera rodzaj płytki pod kursorem myszy
+966:Ta kuźnia zbroi nie ma gospodarza
+967:Ten warsztat pancerzy nie ma gospodarza
+968:Ta piekarnia nie ma gospodarza
+969:Ta rzeźnia nie ma gospodarza
+970:Ta kopalnia węgla nie ma gospodarza
+971:To gospodarstwo nie ma gospodarza
+972:Ta chatka rybacka nie ma gospodarza
+973:Ta kopalnia złota nie ma gospodarza
+974:Ta kopalnia żelaza nie ma gospodarza
+975:Ta dymarka nie ma gospodarza
+976:Ta mennica nie ma gospodarza
+977:Ten młyn nie ma gospodarza
+978:Ten kamieniołom nie ma gospodarza
+979:Ten tartak nie ma gospodarza
+980:Ten warsztat wojenny nie ma gospodarza
+981:Ta stajnia nie ma gospodarza
+982:Ten chlew nie ma gospodarza
+983:Ta garbarnia nie ma gospodarza
+984:Ta wieża obronna nie ma gospodarza
+985:Ta kuźnia płatnerska nie ma gospodarza
+986:Ten warsztat płatnerski nie ma gospodarza
+987:Ta winnica nie ma gospodarza
+988:Ta leśniczówka nie ma gospodarza
+989:%s wyszedł i został pokonany
+990:Host (%s) wyszedł z gry i został pokonany
+991:Anuluj
+992:Wyczyść klawisz
+993:Zaznacz grupę 11
+994:Zaznacz grupę 12
+995:Zaznacz grupę 13
+996:Zaznacz grupę 14
+997:Zaznacz grupę 15
+998:Zaznacz grupę 16
+999:Zaznacz grupę 17
+1000:Zaznacz grupę 18
+1001:Zaznacz grupę 19
+1002:Zaznacz grupę 20
+1003:Konstruuj drogę
+1004:Wykop pole
+1005:Załóż winnicę
+1006:Usuń plan
+1007:Kolejny budynek/jednostka tego typu
+1008:Okno debugowania
+1009:Oglądaj gracza 1
+1010:Oglądaj gracza 2
+1011:Oglądaj gracza 3
+1012:Oglądaj gracza 4
+1013:Oglądaj gracza 5
+1014:Oglądaj gracza 6
+1015:Oglądaj gracza 7
+1016:Oglądaj gracza 8
+1017:Przesuń mapę
+1018:W trakcie oglądania gry lub powtórki
+1019:%s cię wyciszył. Nie możesz więcej wysyłać mu wiadomości ani sygnałów
+1020:Paleta obiektów
+1021:Uniwersalna gumka
+1022:Twój drwal nie może znaleźć miejsca do zasadzenia drzewa.
+1023:PT-
+1024:%s zwyciężył!
+1025:%s nie jest już połączony z grą
+1026:Maksymalna ilość złota
+1027:Maksymalna ilość złota dostarczana do Ratusza
+1028:Tylko sadź
+1029:Otwórz / zamknij bydynek dla %s
+1030:Otwórz
+1031:Zamknij
+1032:Zapełnij
+1033:Zmień nazwę mapy
+1034:Pauzuj po czasie pokoju
+1035:Czas gry
+1036:Nazwa
+1037:Siła wojska
+1038:Całe wojsko
+1039:Typ wykresu
+1040:Ilość
+1041:PKB
+1042:w danej chwili
+1043:od początku
+1044:zabici
+1045:straceni
+1046:Powrót do wyników
+1047:indywidualnie
+1048:drużynowo
+1049:Więcej|statystyk
+1050:Wróć do edytora
+1051:Powrót do edytora map
+1052:Czy na pewno chcesz|wyjść z tej powtórki?
+1053:Błąd mapy
+1054:Zaznaczona mapa zawiera błędy. Wybierz inną mapę
+1055:Ściągnięte pliki mapy się zmieniły
+1056:Zaznaczono pobraną mapę, której pliki zostały zmienione. Proszę najpierw przenieść ją poza kategorię pobranych
+1057:Pliki mapy się zmieniły. Wybierz tę mapę ponownie
+1058:Przycisk myszy do przodu
+1059:Przycisk myszy do tyłu
+1060:Wszystkie
+1061:Uniwersalna gumka
+1062:Pokaż właścicieli płytek
+1063:Pokaż siatkę płytek
+1064:Punkt wycinki
+1065:Ustaw punkt wycinki dla leśniczówki. Możesz zrobić to też wciskając Shift + prawy przycisk myszy
+1066:Punkt zbiórki
+1067:Ustaw punkt zbiórki dla budynku: %s. Możesz zrobić to też wciskając Shift + prawy przycisk myszy
+1068:Zmiana rozmiaru
+1069:Przesuń granice:
+1070:Zmień i zapisz
+1071:Zmienia rozmiar mapy i zapisuje ją
+1072:Zmiana rozmiaru
+1073:Czy na pewno chcesz zmienić rozmiar mapy?||Zastąpi ona aktualną mapę!
+1074:Nie można zmienić rozmiaru|Musisz najpierw zapisać mapę
+1075:Zmień właściciela obiektu
+1076:Test mapy
+1077:Włącz edytowaną mapę w trybie jednego gracza
+1078:Wybierz gracza:
+1079:Wybierz gracza którym chcesz kierować
+1080:Start bez zapisu
+1081:Włącz grę dla wybranego gracza bez zapisywania zmian wprowadzonych na mapie
+1082:Start z zapisem
+1083:Zapisuje mapę i włącza grę dla wybranego gracza
+1084:w Warowni:
+1085:w Ratuszu:
+1086:Obróć płytkę na mapie
+1087:Paleta obiektów
+1088:Zamknij paletę
+1089:Usuń jednostki/grupy
+1090:Powtórz autopauza
+1091:Automatycznie wstrzymuj odtwarzanie po zakończeniu czasu pokoju
+1092:Pokaż sygnały
+1093:Pokaż sygnały graczy
+1094:Wycisz gracza
+1095:Wyłącz wyciszenie gracza
+1096:Zapamiętaj to hasło
+1097:Użyj ostatniego znanego hasła
+1098:Przejdź do poprzedniego menu
+1099:Tak
+1100:Nie
+1101:Anuluj
+1102:Mapa
+1103:Powtórka
+1104:Gracze
+1105:Drużyny
+1106:Oglądaj gracza 9
+1107:Oglądaj gracza 10
+1108:Oglądaj gracza 11
+1109:Oglądaj gracza 12
+1110:Obecny rozmiar mapy:|[ %d : %d ]
+1111:Nowy rozmiar:|[ %d : %d ]
+1112:Zmiana rozmiaru
+1113:Właściciel: %s
+1114:Usuń gracza %d
+1115:Usuwanie gracza %d
+1116:Czy na pewno chcesz usunąć gracza?|Wszystkie jego dane zostaną usunięte!
+1117:Zamknij
+1118:Mapy dla wielu graczy
+1119:Wyłącz muzykę
+1120:Mieszaj utwory
+1121:Losuj utwory wł./wył.
+1122:Typ mapy
+1123:Mapa scenariusza
+1124:Również dla jednego gracza
+1125:Ścinalne drzewo
+1126:blokuje przejście po skosie
+1127:blokuje przejście i budowanie
+1128:Pokaż drogi/pola/winnice
+1129:Podmenu akcja 1
+1130:Podmenu akcja 2
+1131:Podmenu akcja 3
+1132:Podmenu akcja 4
+1133:Podmenu akcja 5
+1134:Podmenu akcja 6
+1135:Podmenu akcja 7
+1136:Wiaderko (zmiana właściciela obiektu)
+1137:Dodaj atak SI
+1138:Usuń atak SI
+1139:Zwolniony
+1140:Zwolnij
+1141:Czy naprawdę chcesz zwolnić jednostkę?|Poddany uda się do szkoły i opuści twoje miasto na zawsze
+1142:Zwolnij jednostkę
+1143:Anuluj zwolnienie jednostki
+1144:Nie da się zwolnić jednostki, ponieważ nie posiadasz w mieście szkoły
+1145:Parametry|misji
+1146:Zmień parametry misji
+1147:Parametry misji
+1148:Autor
+1149:Krótki opis
+1150:Długi opis
+1151:ID w pliku libx
+1152:Ta mapa dla wielu graczy będzie zawsze widoczna na liście map dla jednego gracza
+1153:Zablokuj wybór drużyn
+1154:Blokuje wybór drużyny w lobby
+1155:Blokuj czas pokoju
+1156:Blokuje zmianę czasu pokoju w lobby
+1157:Zablokuj pełny podgląd mapy
+1158:Blokuje pełny podgląd mapy w lobby
+1159:Tekst
+1160:Pokaż zasięg wydobycia
+1161:Pokaż zasięg ataku wieży
+1162:Pokaż zasięg ataku jednostki
+1163:Kod koloru:
+1164:Niebieski/zielony/czerwony
+1165:Czerwony/zielony/niebieski
+1166:Kolor tekstu:
+1167:Mniej nasycony kolor, który może być używany do tekstów (np. w napisach nakładki dynamicznego skryptu) [ustawia się automatycznie]
+1168:Filtruj mapy
+1169:Zresetuj filtr
+1170:Liczba graczy
+1171:Powrót do gry
+1172:Pokaż szczegółowe statystyki gry
+1173:Poziom trudności
+1174:Łatwy
+1175:Normalny
+1176:Trudny
+1177:Poziomy trudności
+1178:Wyznacz różne poziomy trudności, których można użyć w skrypcie do zmodyfikowania logiki/trudności misji
+1179:Lepsza SI
+1180:Lepsza SI
+1181:Klasyczna SI
+1182:Zwycięzca
+1183:Pokonany
+1184:Host
+1185:Idź do zaznaczonego budynku
+1186:Idź do zaznaczonej jednostki
+1187:Tryb koloru sojusznika / wroga
+1188:Kolory własny / sojusznika / wroga dla graczy zamiast kolorów początkowych
+1189:[$404040]Host jest gotowy do startu. proszę nacisnąć '[][$0707FF]%s[][$404040]'[]
+1190:Wezwij do wciśnięcia Gotowy
+1191:Wezwanie do wciśnięcia Gotowy wysłane do %s graczy
+1192:Przełącz tryb kolorów graczy
+1193:Zwolnienie nie jest dostępne podczas wykonywania akcji przez jednostkę
+1194:Ctrl + Kółko myszy
+1195:Alt + Kółko myszy
+1196:Shift + Kółko myszy
+1197:Zastąp płytki|dodane ręcznie
+1198:Wymusza malowanie pędzlem po płytkach, które były wcześniej wstawione ręcznie (o ile to możliwe)
+1199:Magiczny pędzel - poprawia przejścia przy użyciu wybranej uniwersalnej maski, gdy użyto płytek które nie mają zwykłej grafiki przejściowej dla danych rodzajów terenu
+1200:Bez maski - używaj domyślnych przejść między płytkami
+1201:Najmiększa maska - użyj automatycznie utworzonych przejść
+1202:Miękka maska - użyj automatycznie utworzonych przejść
+1203:Twarda maska - użyj automatycznie utworzonych przejść
+1204:Koszt niestandardowych jednostek Ratusza
+1205:Koszt niestandardowych cen Targu
+1209:Napraw pędzle
+1210:Spróbuj naprawić zawarte w mapie informacje na temat terenu, aby umożliwić malowanie terenu pędzlem
+1211:Napraw pędzle
+1212:Czy na pewno chcesz naprawić wszystkie informacje na|temat terenu? Umożliwi to używanie pędzli w|miejscach, w których płytki zostały wstawione ręcznie
+1213:D.
+1214:Gracz
+1215:Klasyczna SI %d
+1216:Klasyczna SI
+1217:Klasyczna SI %d
+1218:Lepsza SI %d
+1219:Klasyczna SI
+1220:Typ sztucznej inteligencji
+1221:Autozapis na koniec gry
+1222:Nic
+1223:Surowce
+1224:Budynki
+1225:W budowie
+1226:Poddani
+1227:Wojsko
+1228:Zwolnienie nie jest dostępne dla głodnych jednostek
+1229:Klasyczna SI|Parametry
+1230:Zmień parametry używane jedynie przez Klasyczną SI
+1231:Parametry Klasycznej SI
+1232:Użyj wszystkich rodzajów jednostek
+1233:Trudność
+1234:%s nie jest przy komputerze od %s [$00B0FF]minut[]
+1235:Eksport danych moża zająć do kilku minut.\nWyeksportowane dane zostaną zapisane w katalogu '%s'.\nCzy chcesz kontynuować?
+1236:Procedura [ %s ] zadeklarowana dla konsolowej komendy /%s nie została znaleziona w skrypcie
+1237:Zły typ parametru dla komendy /%s: [%s]
+1238:Zły pierwszy typ parametru dla komendy /%s. Oczekiwano: [%s] a jest: [%s]
+1239:Zbyt wiele parametrów dla komendy /%s: [%s]. Maksymalna liczba parametrów to [%s] (wliczając obowiązkowy parametr HandID)
+1240:Złe parametry dla komendy /%s. Oczekiwane typy parametrów to: [%s]
+1241:Zbyt wiele parametrów przekazanych do komendy /%s: Oczekiwana liczba parametrów [ %s ], a jest: [ %s ]
+1242:Komenda wykonana: /%s(%s)
+1243:Błąd w trakcie wykonania komendy /%s(%s)|
+1244:Komenda /%s nie została odnaleziona
+1245:Włącz/wyłącz kopiuj-wklej w oknie czatu
+1246:Zapisz obecny stan powtórki, aby móc powrócić do tego momentu w trakcie jej oglądania
+1247:Załaduj powtórkę
+1248:Kolory graczy:
+1249:normalne
+1250:sojusznik / wróg
+1251:drużynowo
+1252:Pokoloruj graczy zgodnie z ich wyborem koloru w lobby
+1253:Pokaż 3 różne kolory (dla własnych, sojuszniczych i wrogich) jednostek i budynków
+1254:Pokoloruj jednostki i budynki zgodnie z podziałem na drużyny
+1255:Błąd: Nazwa gracza '%s' jest zarezerwowana
+1256:Poddani (P/B/R)
+1257:Poddani (inni)
+1258:Otwórz/zamknij panel statystyk widza
+1259:Dostarczanie %s jest zablokowane
+1260:Wynoszenie %s jest zablokowane w trybie dostawy „oferowany”
+1261:Rekrut nie może wejść do Warowni
+1262:Szukaj płytki przez ID
+1263:Generator map losowych - ustawienia
+1264:Ustawienia generatora map losowych
+1265:Ustawienia GML
+1266:Wymiary:
+1267:Lokalizacje
+1268:Włącz lokalizacje z zasobami
+1269:Liczba lokalizacji
+1270:Ustaw liczbę lokalizacji
+1271:Promień ochronny
+1272:Określ rozmiar chronionego obszaru. Zabezpiecza obszar do zbudowania wokół każdej lokalizacji.
+1273:Połącz lokalizacje
+1274:Twórz ścieżki spacerowe między lokalizacjami
+1275:Układ
+1276:Układ lokalizacji
+1277:Prostokątny
+1278:Pionowy
+1279:Poziomy
+1280:Losowy
+1281:Środkowy ekran
+1282:Zasoby
+1283:Włącz zasoby w każdej lokalizacji (ilość węgla jest obliczana automatycznie)
+1284:Korekta kopalni
+1285:Upewnij się, że zasoby można wydobywać (kopalnie złota i żelaza)
+1286:Ilość surowców: kamienie
+1287:Ilość zasobów: złoto
+1288:Ilość surowców: żelazo
+1289:Przeszkody
+1290:Włącz przeszkody (góry, rzeki, bagna itp.)
+1291:Rozmiar
+1292:Średnia wielkość generowanych przeszkód
+1293:Gęstość
+1294:Gęstość generowanych przeszkód
+1295:Zmienność
+1296:Zróżnicowanie wielkości generowanych przeszkód
+1297:Proporcje
+1298:Rodzaj i proporcje generowanych przeszkód
+1299:Pusta góra złota
+1300:Proporcja pustych gór złota
+1301:Pusta góra żelaza
+1302:Proporcja pustych gór żelaza
+1303:Bagno
+1304:Proporcja bagien
+1305:Tereny podmokłe
+1306:Proporcja terenów podmokłych
+1307:Woda
+1308:Proporcja wody
+1309:Krajobraz
+1310:Włącz krajobraz
+1311:Rodzaj krajobrazu
+1312:Wybierz wymagane krajobrazy
+1313:Trawa
+1314:Trawa jest domyślnym krajobrazem i nie można jej usunąć
+1315:Ziemia
+1316:Włącz ziemię
+1317:Śnieg
+1318:Włącz śnieg
+1319:Piasek
+1320:Włącz piasek
+1321:Pierwsza warstwa
+1322:Pierwsza warstwa krajobrazu (właściwości głównej tekstury)
+1323:Druga warstwa
+1324:Druga warstwa krajobrazu (właściwości pomocniczych tekstur)
+1325:Krok
+1326:Krok głównej tekstury (wyższa wartość = większy krajobraz).  np: równina pozbawiona drzew, rzek i jezior
+1327:Krok tekstur pomocniczych (wyższa wartość = większy krajobraz).   np: równina pozbawiona drzew, rzek i jezior
+1328:Limit
+1329:Ograniczenie granic krajobrazów (wyższa wartość = większy krajobraz)
+1330:Wysokość
+1331:Włącz wysokość
+1332:Ukryj złe przejścia
+1333:Dostosuj wysokość terenu, aby ukryć nierówne przejścia tekstur
+1334:Niedostępne miejsca
+1335:Korygowanie niedostępnych miejsc
+1336:Blokuj chodzenie
+1337:Zablokuj chodzenie (poprawia znajdowanie ścieżek dla jednostek i generowanie siatki nawigacyjnej)
+1338:Zmień teksturę
+1339:Zastąp teren specjalnymi krajobrazami
+1340:Obiekty
+1341:Włącz obiekty
+1342:Zwierzęta
+1343:Włącz zwierzęta
+1344:Gęstość obiektów
+1345:Gęstość lasów
+1346:Gęstość lasów
+1347:Drzewa
+1348:Liczba drzew w lesie
+1349:Ziarno losowości
+1350:Liczba używana jako identyfikator do generowania mapy o określonej konfiguracji
+1351:Losowe generowanie
+1352:Zmień ziarno losowości i wygeneruj mapę
+1353:Wygeneruj mapę
+1354:Wygeneruj mapę bez zmiany ziarna losowości
+1355:Zamknij generator map losowych
+1356:Rozmiar mapy:
+1357:Zagraj kolejną klatkę w powtórce
+1358:Łatwiejszy
+1359:Bardzo łatwy
+1360:Trudniejszy
+1361:Bardzo trudny
+1362:Wersja gry hosta jest inna niż twoja wersja gry
+1363:Wszystko
+1364:Zezwól '%s' dla wszystkich lokacji
+1365:Zabroń '%s' dla wszystkich lokacji
+1366:Krok algorytmu wysokości (1 = mały, 10 = duży)
+1367:Nachylenie wysokości (0 = płaski, 15 = szczyt)
+1368:Maksymalna wysokość płytek, po których można chodzić
+1369:Mapa losowa
+1370:Mapa została wygenerowana automatycznie przez generator map losowych
+1371:Początkowe zasoby
+1372:Ilość początkowych surowców w magazynie
+1373:mało
+1374:normalne
+1375:dużo
+1376:Wybierz rozmiar mapy
+1377:Spróbuj zacząć
+1378:Spróbuj załadować zapis
+1379:Spróbuj obejrzeć powtórkę
+1380:Błąd podczas ładowania nieobsługiwanej wersji %s zapisu z %s
+1381:Błąd podczas ładowania powtórki nieobsługiwanej wersji %s z %s
+1382:Nazwa mapy
+1383:Czas
+1384:Wersja
+1385:Wczytanie nieobsługiwanej wersji może spowodować, że gra nie zostanie poprawnie załadowana lub nawet spowoduje zawieszenie gry
+1386:Nieobsługiwana wersja
+1387:Czy na pewno chcesz odblokować wszystkie kampanie?\nNie można tego odwrócić.\n\nJeśli chcesz zapisać stan swoich kampanii, upewnij się, że zrobiłeś kopię pliku 'Campaigns.dat' zlokalizowanego w\n'%s'\n\nCzy chcesz potwierdzić tę operację?
+1388:Twarda maska - użyj automatycznie utworzonych przejść
+1389:Opóźnienie w cyklach zanim AI wyposaży jednostki skórzane
+1390:Opóźnienie w cyklach zanim AI wyposaży jednostki zbrojone
+1391:Ustaw ilość budowniczych dla AI
+1392:Poziom nakładania
+1393:Poziom nakładania dla automatycznych masek
+1394:Blokuje budowanie
+1395:Blokuje chodzenie i budowanie
+1396:Płytki dekoracyjne
+1397:Dodaj płytki dekoracyjne.|Użyj LPM dla trybu bezpiecznego i LPM+Shift by zastąpić drogi
+1398:Filmy:
+1399:Włącz
+1400:Rozciągnij
+1401:Pokaż przy uruchomieniu
+1402:Głosność
+1403:Klip testowy
+1404:Modyfikacje
+1405:Zaśnieżone budynki
+1406:Zablokuj kolory graczy
+1407:Blokuje kolory graczy
+1408:Historia
+1409:Historia zmian na mapie
+1410:Historia
+1411:Przeskocz tutaj
+1412:Przejdź do zaznaczonego punktu historii
+1413:Początek
+1414:Dodaj %s %s
+1415:Usuń %s %s
+1416:Aktualizuj %s %s
+1417:Przenieś %s %s
+1418:Zmień właściciela: %s %s
+1419:droga
+1420:pole pszenicy
+1421:pole winogron
+1422:płytka dekoracyjna
+1423:obiekt
+1424:Nie posiadasz wystarczających uprawnień do katalogu instalacji KaM Remake:\n'%s'\n\nSpróbuj uruchomić grę z uprawnieniami administratora, przeinstaluj grę do innego katalogu, lub dodaj wyjątek dla KaM_Remake.exe w programie antywirusowym.
+1425:Paleta płytek
+1426:Paleta płytek
+1427:Wersja
+1428:Napraw pędzle terenu
+1429:Zapisuj stany powtórek
+1430:Poprzednia jednostka
+1431:Wyszkól lub wyposaż jednostkę
+1432:Następna jednostka
+1433:Rozkazy jednostek
+1434:Skróty budynków
+1435:Pokaż pozycje obronne
+1436:Pokaż płaski teren
+1437:Prędkość gry może zostać zmieniona przez hosta tylko wtedy, gdy na mapie nie ma aktywnego gracza
+1438:Eksport pliku zakończony: [ %s ]
+1439:Wstecz
+1440:Dalej
+1441:Odśwież
+1442:Zatrzymaj
+1443:Szukaj
+1444:Ulubione
+1445:Strona domowa
+1446:Wycisz muzykę
+1447:Ścisz
+1448:Zgłośnij
+1449:Następny utwór
+1450:Poprzedni utwór
+1451:Zatrzymaj utwór
+1452:Odtwarzanie/Wstrzymanie utw.
+1453:Otwórz e-mail
+1454:Włącz zaznaczony utwór
+1455:Otwórz aplikację 1
+1456:Otwórz aplikację 2
+1457:Muzyka - poprzedni utwór
+1458:Muzyka - następny utwór
+1459:Wyłącz muzykę
+1460:Odtwarzaj losowo muzykę
+1461:Zwiększ głośność muzyki
+1462:Zmniejsz głośność muzyki
+1463:Wycisz muzykę
+1464:Zwiększenie głośności
+1465:Zmniejsz głośność
+1466:Wycisz dźwięki
+1467:Wycisz wszystko (muzykę i dźwięki)
+1468:Pędzel obiektów
+1469:Drzewa
+1470:Wszystkie obiekty oprócz drzew
+1471:Kamienie
+1472:Kwiaty
+1473:Grzyby
+1474:Pniaki
+1475:Martwe drzewa
+1476:Kaktusy
+1477:Pustynne krzaki
+1478:Ruiny
+1479:Obiekty na teren
+1480:Postaw obiekty (pasujące do danego terenu) w trakcie malowania
+1481:Gęstość
+1482:Gęstość obiektów/drzew
+1483:Wiek drzew
+1484:Gumka wymazująca wszystkie obiekty
+1485:Każde
+1486:Młode
+1487:Średnie
+1488:Wycinka
+1489:Wszystkie drzewa
+1490:Młode drzewa
+1491:Średnie drzewa
+1492:Drzewa gotowe do ścinki
+1493:Zatwierdź wklejenie terenu ze skopiowanego miejsca
+1494:Zatwierdź wklejenie wysokości ze skopiowanego miejsca
+1495:Zatwierdź wklejenie obiektów ze skopiowanego miejsca
+1496:Zatwierdź wklejenie płytek dekoracyjnych ze skopiowanego miejsca
+1497:Stała wysokość
+1498:Pędzel zmieniający wysokość na stałą
+1499:Poziom wysokości
+1500:Poziom wysokości jest używany przez 'stałą wysokość'.
+1501:Wznieś podobne
+1502:Podnieś (LPM) lub obniż (PPM) wszystkie płytki na mapie, o tym samym rodzaju terenu jaki znajduje się pod wskaźnikiem myszy
+1503:Zastąp obiekty
+1504:Obiekty zostaną zastąpione przez inne obiekty, bądź usunięte
+1505:Gradient - użyj automatycznie utworzonych przejść
+1506:Duże
+1507:Duże drzewa
+1508:Pnie
+1509:Pnie drzew
+1510:Każde-
+1511:Wszystkie drzewa bez pni
+1512:Czas misji:
+1513:Aktualna prędkość gry
+1514:Aktualna prędkość powtórki
+1515:Nagrana prędkość gry
+1516:Wygładzone renderowanie
+1517:Wygładzone renderowanie
+1518:Będzie wygładzać róch jednostek
+1519:Dla gracza %0:s do %1:s player's %2:s %3:s musi być %4:s
+1520:wygranej
+1521:przetrwania
+1522:zniszczone
+1523:oszczędzone
+1524:główne budynki ( %s )
+1525:Tylko symetryczne sojusze są dozwolone
+1526:Wygładzone animacje
+1527:Wygładzone animacje
+1528:Będzie wygładzać animacje wygładzone renderowanie powinno być włączone
+1536:Użyj wszystkich rodzajów |jednostek
+1537:Słaba
+1538:Żołnierze bez zbroi, żołnierze uzbrojeni w skórę lub żołnierze uzbrojeni w żelazo.
+1539:Dodaj oddział
+1540:Dodaj oddział po postawieniu pozycji obronnej. Oddział zależy od formacji wojsk AI
+1541:Jednostki
+1542:Liczba żołnierzy w oddziale. Ustawione na '0', to użyte zostaną formacje wojsk AI
+1543:Kolumny
+1544:Liczba kolumn w oddziale. Jeśli ilość jednostek jest równa 0, będą użyte formacje wojsk AI
+1545:Wygładź Węgiel
+1546:Złoża węgla w zaznaczeniu zostaną automatycznie ustawione od najmniejszej ilości węgla na brzegach, po największe w środku
+1547:Inny gracz miał błąd desynchronizacji. Prosimy o wysłanie raportu błędu, dzięki czemu będziemy w stanie naprawić ten problem.%sTreść błędu drugiego gracza:%s
+1548:Cofnij
+1549:Ponów
+1550:Trawa
+1551:Ściółka
+1552:Jasna trawa
+1553:Trawa na ziemi
+1554:Ziemia
+1555:Plażowy piasek
+1556:Pustynna trawa 1
+1557:Pustynna trawa 2
+1558:Pustynna trawa 3
+1559:Pustynia
+1560:Bagna
+1561:Obrośnięta woda
+1562:Woda
+1563:Szybka woda
+1564:Własne
+1565:Śnieg na trawie
+1566:Śnieg na ziemi
+1567:Śnieg
+1568:Wysoki śnieg
+1569:Lód
+1570:Kamień
+1571:Szara góra
+1572:Brązowa góra
+1573:Bruk
+1574:Żwir
+1575:Węgiel
+1576:Złoże złota
+1577:Złoże żelaza
+1578:Lawa
+1579:Pustka
+1580:Wszystkie niezapisane zmiane będą stracone. Chcesz wyjść?
+1581:UWAGA!
+1582:Brak nakładki
+1583:Stopień kopania 1
+1584:Stopień kopania 2
+1585:Stopień kopania 3
+1586:Stopień kopania 4
+1587:Nakładka drogi
+1588:Domyślny
+1589:Włącz budowanie zaawansowane AI dla gracza %d
+1590:Ustawienia gry wieloosobowej dla gracza AI %d
+1591:Ostrzeżenie: Zastąpi aktualne ustawienia AI dla gracza %d. Kontynuować?
+1592:Zapisuje aktualne hasło dla przyszłego, ponownego użycia
+1593:Ilość ryb
+1594:Zapisz mapę
+1595:Mapa zapisana
+1596:Zapisywanie mapy...
+1597:Płaski teren
+1598:Siatka terenu
+1599:Plik zapisu nie istnieje
+1600:Atak: 
+1601:Obrona: 
+1602:Amunicja: 
+1603:Życie: 
+1604:Niszczyciel
+1605:Spichlerz zapełniony:
+1606:Stal Bitynowa
+1607:Ruda bitynu
+1608:Warzywa
+1609:Pocisk
+1610:Bełty
+1611:Koło
+1612:Belka
+1613:Kołczan
+1614:Żelazna część
+1615:Bitynowa płyta
+1616:Woda
+1617:Mur (Poziomy)
+1618:Brama (Pozioma)
+1619:Mur (Pionowy)
+1620:Brama (Pionowa)
+1621:Zakończenie muru
+1622:Kurnik
+1623:Kamienna Tabliczka
+1624:Kopalnia Bitynu
+1625:Wieża Strzelnicza
+1626:Studnia
+1627:Warsztat Ciesielski
+1628:Odlewnia
+1629:Uzbrój z Ratusza
+1630:Dachówka
+1631:Ziarno
+1632:Garncarnia
+1633:Zasieki
+
+1634:Podstawowe surowce
+1635:Rudy
+1636:Drewniane bronie
+1637:Żelazne bronie
+1638:Obronne
+1639:Przepalarnia
+1640:Drzewo owocowe
+1641:Wióry
+1642:Owoce
+1643:Machiny zasięgowe
+1644:Dom Emisariusza
+1645:Metale Wartościowe
+1646:Amunicja Oblężnicza
+1647:Gospodarcze V1
+1648:Gospodarcze V2
+
+1649:Podstawowe
+1650:Produkcyjne
+1651:Wojskowe
+1652:Kopalnie
+1653:Warsztaty
+1654:Obronne
+1655:Dodatkowe
+
+1657:Podstawowe
+1658:Żywność
+1659:Produkty
+1660:Rudy 
+1661:Wartościowe
+1662:Wyposażenie
+1663:Oblężnicze
+
+1664:[LMB] Wyłącz dostarczanie [RMB] Zezwól na wynoszenie
+1665:Miedź
+1666:Srebro
+1667:Bursztyn
+1668:Diamenty
+1669:Biżuteria
+1670:Buty
+
+1671:Na tabliczce jest napisane
+1672:GOLEM
+1673:GIGANT
+1674:Taran
+1675:Chata Zbieracza
+1676:Zakład Kaletniczy
+1677:Silos
+1678:Chata Mieszkalna
+1679:Dom Mieszkalny
+1680:Paladyn
+1681:Pałac
+1682:Bezrobotni
+
+1683:Ta garncarnia nie ma gospodarza
+1684:Ten kurnik nie ma gospodarza
+1685:Ten sad nie ma gospodarza
+1686:Ta kopalnia bitynu nie ma gospodarza
+1687:Ta odlewnia nie ma gospodarza
+1688:Ten warsztat ciesielski nie ma gospodarza
+1689:Ta wypalarka nie ma gospodarza
+1690:Ta wieża strzelnicza nie ma gospodarza
+1691:Ten dom emisariusza nie ma gospodarza
+1692:Ta chata zbieracza nie ma gospodarza
+1693:Ten zakład kaletniczy nie ma gospodarza
+1694:Węgiel lv.1
+1695:Węgiel lv.2
+1696:Węgiel lv.3
+1697:Węgiel lv.4
+1698:Węgiel lv.5
+1699:Ziema lv.1
+1700:Ziema lv.2
+1701:Ziema lv.3
+1702:Ziema lv.4
+1703:Ziema lv.5
+1704:Ozdoba 1
+1705:Ozdoba 2
+1706:Ozdoba 3
+1707:Ozdoba 4
+1708:Ozdoba 5
+1709:Ozdoba 6
+1710:Nieskończony surowiec
+1711:Nieskończona glina
+1712:Nieskończony węgiel
+1713:Data
+1714:Godzina
+1715:Czas gry
+1716:Przenieś surowce
+1717:Anuluj przenoszenie
+1718:Wybierz gracza, do którego mają być wysłane surowce: 
+1719:Rozbuduj budynek
+1720:Anuluj rozbudowę budynku
+1721:Budynek maksymalnie rozbudowany
+1722:Strzelec konny
+
+1723:Murami możesz zabezpieczyć swoje miasto.||Można je rozbudować do drugiego poziomu.
+1724:W kurniku chodowane są kury. Pozyskasz w nim prióra, które są potrzebne do produkcji kołczanów i butów. Karmiąc kury warzywami, utuczysz je i otrzymasz z nich szybciej mięso.
+1725:Kamienna tabliczka służy do przekazywania informacji graczom.
+1726:Dzięki temu budynkowi możesz wykopać rzadki minerał, którym jest ruda bitynu.
+1727:Wieża strzelnicza odkrywa duży obszar terenu. Celność rekrutów jest bardzo dobra i mogą zabić przeciwnika jednym strzałem.
+1728:W studni znajdziesz dużo wody. Świnie, konie oraz kury będą potrzebowały jej w rozwoju. Piekarnia oraz Jabłoń również jej wymagają.||Pracownik pójdzie sam po wodę jeśli studnia jest wybudowana blisko niego.
+1729:Tutaj możesz wyprodukować: kamienne pociski potrzebne w wieżach obronnych, belki i koła do machin oblężniczych, a także trociny wykorzystywane w wypalarce.
+1730:Odlewnia przetwarza żelazo na części potzebne do produkcji machin oblężniczych. Produkuje również płyty bitynowe używane do wzmocnienia machin oraz jednostek w warowni.
+1731:Dzięki emisariuszowi możesz przekazywać wybrane towary swoim sojusznikom.|Może wysyłać towary na odległe części mapy jeśli tylko wybudowana jest stocznia.
+1732:W garncarni wytwarzane są dachówki wymagane do rozbudowy miasta.
+1733:Jest to jedyny budynek, który może wyprodukować węgiel z surowca odnawialnego jakim jest drewno. Potrzebuje rozpałki w postaci słomy oraz paliwa, czyli trocin lub węgla.
+1734:Na drzewie rośnie mnóstwo owoców. Ludzie w domostwach potrzebują ich jako pokarmu. Jest to budynek modułowy, dzięki czemu można stworzyć ogromny sady.
+1735:W tym budynku kolekcjoner wydobywa z kamieni cenne materiały. Z nich można zrobić pierścień, który jest drogocenny podczas wymiany w targowisku. Również jest wymagany w szkoleniu elitarnych jednostek w pałacu.
+1736:Krawiec, dzięki swoim zdolnościom wyszywa buty. Każdy obywatel, który pracuje w ciągłym ruchu może je ubrać w szkole. Jest w stanie produkować również pancerze i kołczany.
+1737:Silos może przechować różne surowce. Nie będą one tykane dopuki sam nie wydasz takiego rozkazu. Budynek można rozbudować do trzeciego poziomu.
+1738:Mały budynek mieszkalny, w którym mieszkają poddani gotowi do szkolenia.
+1739:Dom mieszkalny pomieści znacznie więcej domowników niż chata mieszkalna.
+1740:Są tu szkolone elitarne jednostki, które wesprą twoje oddziały w walce i zapewnią im dodatkowe bonusy.
+1741:W szkole można nauczać poddanych do wyznaczonych profesji.
+1742:Spichlerz jest najważniejszym budynkiem, ponieważ przechowa wszystkie wyprodukowane surowce, o ile jest w nim miejsce.
+1743:Głodni poddani przyjdą tutaj, aby się nasycić. Zaopatrzona w naczynia lub sok jabłkowy przyczynia się do wydajności pokarmu.
+1744:W koszarach szkoleni są żołnierze. Strategicznie wykorzystuj ich posiadanie.
+1745:W ratuszu sprowadzani są różnego rodzaju wojownicy. Każdy ma cenę za swoje usługi.
+1746:Rybak wymaga pobliskiego zbiornika wody do połowu ryb.
+1747:Miejsce, w którym możesz wymienić towary na te bardziej potrzebne.
+1748:W tym miejscu kowal wyprodukuje żelazne uzbrojenie dla nowych rekrutów.
+1749:Dzięki wytworzonym drewnianym tarczom oraz zbrojom płytkowym twoje jednostki będą wytrzymalsze w walce.
+1750:Dzięki mące i wodzie piekarz wypiecze dla twoich poddanych świeży chleb.
+1751:Rzeźnik przygotuje sycące kiełbasy.
+1752:Węgiel jest wymagany do przepalania metali.
+1753:Górnik wydobywa rudę złota.
+1754:Górnik wydobywa rudę żelaza.
+1755:Rudy żelaza i bitynu są przetapiane na żelazo oraz bityn.
+1756:Dzięki warsztatowi wojennemu wybudujesz potężne machiny oblężnicze. Każda machina posiada własny schemat konstrukcji. 
+1757:Skrzynie złota trafiają do szkoły, aby zapłacić za wyszkolenie nowych poddanych.
+1758:Młyn przetwarza zebrane wcześniej przez chłopów ziarno na czystą mąkę. 
+1759:Tartak to jeden z najważniejszych budynków. Wytwarza deski do budowy oraz produkcji broni. Jako produkt uboczny tworzą się trociny, wykorzystasz je w wypalarce drewna.
+1760:Konie hodowane w stajni są wymagane do rekrutacji jeźdców. Można przyspieszyć ich hodowlę używając zróżnicowanej diety. Konie na pewno zadowolą się sianem.
+1761:Wyhodowane świnie są przeznaczone produkcji kiełbas i skóry. Można je utuczyć używając zróżnicowanej diety. Świnie na pewno zadowolą się warzywami.
+1762:Garbarz przetworzy płaty skór na rulony potrzebne do produkcji pancerzy oraz butów.
+1763:Wino jest najłatwiejszym do zdobycia pokarmem. W dużej ilości mogą zastąpić chleb albo ryby. Chłop pracujący w winnicy potrzebuje co najmniej 9 pól winogron. 
+1764:Drwal ścina pobliskie drzewa i przechowuje pniaki w swojej chacie. Pniaki są stosowane do produkcji wielu materiałów.
+1765:Wieża obronna. Z pewnością najlepsza do obrony miasta. Jeden kamienny pocisk wystrzelony z niej zapewnia śmierć przeciwnikowi i zranienie kilku pobliskich. Proce balistyczne na szczycie wieży mają daleki zasięg. Licz się z czasem przeładowania. Również nie trafi w pobliskie cele. 
+1766:W tym domu obrabiany jest kamień przyniesiony przez kamieniarza z pobliskich gór. Kamień jest ważnym materiałem budowlanym. Może być przerobiony na kamienne pociski.
+1767:Gospodarstwo jest bardzo ważne do zapewnienia pokarmu zwierzętom.
+1768:Dobrze uzbrojona armia potrzebuje dobrej broni.
+1769:W tym miejscu zlecisz produkcję podstawowych broni.
+
+1770:Rekrut z toporem nie jest drogą jednostką. W dużej ilości mogą pokazać swoją wartość.||Jednostka ta posiada umiejętność "szturm", która daje tymczasowe, niekontrolowane przyśpieszenie.
+1771:Rekrut uzbrojony w skórzany pancerz, drewnianą tarczę oraz topór dobrze sprawdza się w walce wręcz. Jego tarcza chroni go również przed strzałami przeciwnika.||Jednostka ta posiada umiejętność "szturm", która daje tymczasowe, niekontrolowane przyśpieszenie.
+1772:Żelazne uzbrojenie i długi miecz, to receptura żołnierza, który poradzi sobie z pikinierami. Tarczą będzie się bronić przed wszelakimi strzałami z powietrza.||Jednostka ta posiada umiejętność "szturm", która daje tymczasowe, niekontrolowane przyśpieszenie.
+1773:Jego strzały nie są zbyt potężne, jednak jako wsparcie pierwszej linii będą idealne.||Wymagają dostarczenia kołczanów
+1774:Kusza to śmiercionośna broń. Długo trwa przeładowanie bełtów, aczkolwiek nadrabia to siłą uderzenia.||Wymagają dostarczenia kołczanów
+1775:Jeźdźcy od zawsze stanowili duże zagrożenie. Lance będą stawiały im opór znacznie lepiej niż miecze czy topory.
+1776:Halabardier z żelazną zbroją wytrzyma znacznie dłużej niż pikinier.
+1777:Lekka jazda pomoże ci odkryć znacznie większy teren niż inni żołnierze. Znakomicie radzi sobie z piechotą. 
+1778:Przez swe uzbrojenie koń jest wolniejszy, ale znacznie wytrzymalszy. Jest w stanie przetrwać salwę strzał.
+1779:Barbarzyńca jest wykupywany w Ratuszu. Siłą przewyższa wszystkie jednostki z warowni.
+1780:Chłopi z widłami to najtańsza jednostka, którą można wykupić. Ich ilość pomaga zatrzymać przeciwnika, podczas gdy prawdziwi rycerze zaczynają szkolenie.
+1781:Pachołkowie strzelają kamieniami w stronę przeciwników.||Wymagają dostarczenia kamiennych pocisków.
+1782:Wojownik jest najpotężniejszą jednostką podstawową. Dzięki zbroi jest w stanie przetrwać solidne uderzenia, a sam jest skuteczny przeciwko budowlom.
+1783:Brak uzbrojenia jeźdźca i wierzchowca sprawia, że pokonuje on duże odległości w krótszym czasie.
+1784:Machina oblężnicza przystosowana do niszczenia budynków z dalekiej odległości. Nie jest celna na ruszające się cele. Wymaga długiego czasu przeładowania pocisku.||Wymaga dostarczenia kamiennych pocisków.
+1785:Bełty wystrzelone z tej machiny przebiją się przez każdą zbroję niosąc śmierć. Nie jest skuteczna do burzenia budynków.||Wymagają dostarczenia bełtów.
+1786:Wytrzymałość i nieustępliwość tej machiny są w stanie przejść przez salwę strzał oraz stojące na jej drodze jednostki, aby tylko zniszczyć potężne mury oraz budynki.
+1787:GOLEM został stworzony na potrzeby kampanii KamStar. Nie można go szkolić.
+1788:GIGANT został stworzony na potrzeby kampanii KamStar. Nie można go szkolić.
+1789:Paladyn jest uzbrojony w zbroję ze stali bitynowej. Zwykłe pociski nie robią na nim wrażenia. Jego potężny miecz z łatwością pokona każdy rodzaj jednostki. Ciężka zbroja spowalnia jego chód, jednakże ochroni go przed niemalże każdym ciosem.||Będąc w oddziale piechoty wesprze pozostałych bonusem do obrony.|Posiada umiejętność "Szał"
+1790:Strzelec na koniu może uciec z każdej ryzykownej sytuacji.||Wymaga dostarczania kołczanów.||Będąc w oddziale strzelców zwiększy ich zasięg oddania strzału, jak i zmniejszy minimalny zasięg.
+1791:Dodatkowe ustawienia
+1792:Podmenu 7
+1793:Szablony
+1794:Ustaw prędkość gry
+1795:Zwój: Domyślny
+1796:Zwój: Domek
+1797:Zwój: Żołnierz
+1798:Zwój: Pióro
+1799:Zwój: Zwinięty
+1800:Zwój: Zwinięty z pieczęcią
+1801:Zwój z pieczęcią 1
+1802:Zwój z pieczęcią 2
+1803:Zwój z tarczą 1
+1804:Zwój z tarczą 2
+1805:Zwój z monetą
+1806:Duży zwój z pieczęciami
+1807:Duży zwój z piórem
+1808:Piechota specjalna
+1809:Strzelcy specjalni
+1810:Nasycenie
+1811:Wciśnij CTRL a następnie na tabliczkę aby edytować wiadomości.
+1812:Ustaw wygląd dla stawianych budynków
+1813:Zmień surowce budynku
+1814:Zmień wygląd zaznaczonego budynku
+1815:Naczynia
+1816:Wymuś pracę. Pracownik będzie pracował mimo zapełnionego miejsca
+1817:Przerwij wymuszanie pracy
+1818:Włącz/Wyłącz wymuszoną pracę. Pracownik będzie pracował mimo zapełnionego miejsca
+1819:Dodaj buty
+1820:Szpieg
+1821:Szpieg może przemknąć między liniami obronnymi wroga. Odkryje dla ciebie teren i zbierze ważne informacje o położeniu wroga. Jest cichy i sprytny, jednak nie jest wytrzymały. 
+1822:Pędzel terenu
+1823:Maska terenu
+1824:Dodaj szablon obiektów
+1825:Dodaj szablon wzniesienia
+1826:Szablony
+1827:Użyj szablonu
+1828:Dodaj pracowników
+1829:Zapisz szablony
+1830:Odśwież
+1831:Zmień nazwę
+1832:Usuń
+1833:Zastąp objekty
+1834:Szablony
+1835:Usuń szablon
+1836:Jesteś pewny usunięcia tego szablonu : 
+1837:Użyj maski terenu
+1838:Połącz oddział
+1839:Rozmiar gumki
+1839:Ciwile
+1840:Usuń wszystkie pozycje
+1841:W warsztacie wojennym
+1842:Dodaj domowników
+1843:Edutuj wiadomości
+1844:Wiadomości
+1845:ID wiadomości
+1846:Czas
+1847:ID (plik .libx)
+1848:Czas: (w cyklach)
+1849:Dodaj wiadomość
+1850:Usuń wiadomość
+1851:Zawartość wiadomości
+1852:Zwój wiadomości
+1853:Zapisz warstwy
+1854:Wczytaj warstwy
+1855:Pełny teren
+1856:Nie będziesz mógł przywrócić usuniętej wartswy.| Jesteś pewien?
+1857:Warstwy
+1858:Wyłącz gracza
+1859:Ustaw maksymalny poziom budynku, który możesz wybudować. [--] lub [max] oznacza maksymalny poziom
+1860:Sok jakbłkowy
+1861:Fragment bitynu
+1862:Perła
+1863:Płachta
+1864:Moneta
+1865:Żelazne skuwki
+1866:Żywica
+1867:Kamień ozdobny
+1868:Budynek nie będzie potrzebował surowców aby wytrwarzać produkty
+1869:Automatycznie uzupełnij nowo postawiony budynek. [LMB + SHIFT] zmień na tryb losowy.
+1870:Nieszkończoność
+1871:Włącza oddziałowi nieskończoność amunicji
+1872:Wózek z amunicją
+1873:Amunicja
+1874:Strzały
+1875:Kamienie
+1876:Bełty balisty
+1877:Miód
+1878:Glejt
+1879:Igła
+1880:Drewniana płyta
+1881:Kamyki
+1882:W pałacu
+1883:Machiny z bliska
+1884:Kolor Flagi:
+1885:Budynki z zakładki:
+1886:Wszystkie budynki
+1887:Wszystkie jednostki
+1888:Dotrzyj do miejsca
+1889:Znajdź miejsce
+1890:Pozycja X
+1891:Pozycja Y
+1892:Pozycja (X,Y):
+1893:Zioła
+
+1894:Czas
+1895:Budynki
+1896:Oddziały
+1897:Militarne
+1898:Pomocnicy i szkoły
+1899:Budynki ekonomiczne
+1900:Budynki z zakładki
+1901:Wszystkie budynki
+1902:Wszystkie jednostki/cywile
+1903:Dotrzyj do miejsca
+1904:Odkryj miejsce
+1905:Wykonano cel wygranej: 
+1906:Nie wykonano celu przetrwania: 
+1907:Koszt
+1908:Wymaga
+1909:Dostarcza
+1910:Odblokowany po:
+1911:Wytwarza produkty uboczne:
+1912:Koszt jednostki: 
+1913:Atak do jazdy: 
+1914:Prędkość: 
+1915:Odkrywanie: 
+1916:Atak do budowli: 
+1917:Kliknij aby znaleźdź budynek, który produkuje ten towar
+1918:Machina pikowa
+1919:Wytrzymała machina, która dzięki swoim włóczniom szybko rozprawi się z kawalerią.||Będąc w oddziale anty-jazdy wzmacnia atak pozostałych jednostek.||Atakuje trzy jednostki na raz.
+1920:Wózek z amunicją można naładować bełtami oraz kamiennymi pociskami.||Będąc w oddziale machin zasięgowych, wszystkie balisty i katapulty nie będą potrzebowały przyniesienia pocisków jeśli wózek będzie je posiadał. 
+1921:Wilk jest bardzo groźny i drapieżny. Wytresowany będzie ci służył w walce z przeciwnikiem. Jest zwinny dzięki czemu z łatwością unika strzał. Szybko atakuje jednak łatwo go zranić.||Jednostka ta posiada umiejętność "szturm", która daje tymczasowe, niekontrolowane przyśpieszenie.||Będąc w oddziale jeźdców zwiększa ich prędkość ruchu.
+1922:Zaopatrz oddział w pociski.
+1923:Bitynowy
+1924:Oddział otrzyma wzmocnienie bitynowe.
+1925:Pokaż wiadomość
+1926:Pokaże wiadomość o powodzeniu lub przegranej danego celu
+1927:Zablokuj przynoszenie danego towaru
+1928:Zniszcz:
+1929:Zabij:
+1930:Ukończ wszystkie punkty wygranej przed wyznaczonym czasem: 
+1931:Przetrwaj do czasu: 
+1932:Chroń budynki:
+1933:Chroń jednostki:
+1934:Gracza:
+1935:Tresowany wilk
+1936:Promień obrony
+1937:Wszyscy cywile
+1938:Konkretny budynek
+1939:Porządkuj pozycje
+1940:Włącz/Wyłącz przemieszczanie się oddziałów pomiędzy wolnymi pozycjami z ostatnich do pierwszych.
+1941:Mgła wojny
+1942:Zaznacz teren dla szablonów
+1943:Usuń zaznaczenie terenu
+1944:Rysuj granice mgły wojny
+1945:Usuń granice mgły wojny
+1946:Produkty uboczne
+1947:Podstawowy poradnik
+1948:Cele zwycięstwa
+1949:Zasoby Twojej Kopalni Bitynu są wyczerpane.
+1950:Zbieracz nie może znaleźć więcej zasobów.
+1951:Zasoby Twojej Garncarni są wyczerpane.
+1952:Ukończone
+1953:Wybierz Kolor
+1954:Wiek zwierząt
+1955:Wieprz
+1956:Koń
+1957:Kurczak
+1958:Sprzedaj towary
+1959:Kup produkty
+1960:Pracowników
+1961:Wyładuj jednostki/towary
+1962:Nie znaleziono surowców
+1963:Burzyciele
+
+1964:Wandal
+1965:Osiłek
+1966:Burzyciel
+1967:Operator
+1968:Statek Transportowy
+1969:Tarczownik
+1970:Bojownik
+1971:Kolczasta pułapka
+1972:Ruchoma ściana
+1973:Siano
+1974:Stragan
+1975:Strzecha produkcyjna
+1976:Zbieracz
+1977:Maczuga
+1978:Kiścień
+1979:Pióra
+1980:Pancerz płytkowy
+1981:Bitinowa kolczuga
+1982:Samouczki Budowania
+1983:Stocznia
+1984:Rozpocznij samouczek
+1985:Nazwa mapy
+1986:Sprzedaj po jednym surowcu za: %d. Prawym przyciskiem myszy sprzedaj wszystko za: %d
+1987:Sprzedaj: [ %s x %d ] na : [ %s x %d ]
+1988:Wymień: [ %s x %d ] na : [ %s x %d ]
+1989:Samouczki Bitewne
+1990:Łąka
+1991:Warzywniak
+1992:Kamienna droga
+1993:Drewniana ścieżka
+1994:Kocie łby
+1995:Ekskluzywna drogę
+1996:Niszczyciel
+1997:Medyk
+1998:Ukryj towary, których nie ma w spichlerzu
+1999:Ukryj
+2000:Pszenica
+2001:Żyto
+2002:Owies
+2003:Ryż
+2004:Kukurydza
+2005:Słonecznik
+2006:Dynia
+2007:Trawa
+2008:Koniczyna
+2009:Lucerna
+2010:Nawóz
+2011:Przywołaj niepracujących poddanych do tego budynku
+2012:Marchew
+2013:Kapusta
+2014:Pomidory
+2015:Ziemniaki
+2016:Ziemniaki
+2017:Jabłoń
+2018:Czereśnia
+2019:Czarna jabłoń
+2020:Postaw plan budynku
+2021:Progres budowania
+2022:Statki
+2023:Statek Bitewny
+2024:Łódka
+2025:Bananowiec
+2026:Kokosowiec
+2027:Spawner zwierząt
+2028:Wojsko
+2029:Maksymalna ilość bitynowych kolczug
+2030:Odznacz zaznaczenie
+2031:Strażnicy
+2032:Potrzebne towary:
+2033:Rozpocznij budowę statków
+2034:Zatrzymaj budowę statków
+2035:Struktury
+2036:Dekoracje
+2037:Wymagane surowce:
+2038:Dostarczono:
+2039:Struktura
+2040:Rozpocznij połów ryb
+2041:Rozpocznij Wyszukiwanie surowców
+2042:Przerwij połów ryb
+2043:Przerwij Wyszukiwanie surowców
+2044:Drewniany most
+2045:Drewniany most pozwoli na przejście przez wodę i dotarcie na drugi brzeg
+2046:Kamienny most
+2047:Kamienny most umożliwi połączenie ze sobą dwóch brzegów. Można na nim postawić drogę.
+2048:Kamienny plac
+2049:Kamienny taras
+2050:Kamienny taras jest miejscem przeznaczonym do budowania na wodzie
+2051:Słomokrzak
+2052:Ośnieżone obiekty
+2053:Pogoda
+2054:Włącz/wyłącz pogodę
+2055:Maksymalna ilość chmur na mapie 50x50
+2056:Ilość spawnowanych chmur na mapie 50x50
+2057:Minimalny czas spawnu w sekundach
+2058:Maksymalny czas spawnu w sekundach
+2059:Żywotność chmur
+2060:Prędkość chmur
+2061:Zmniejsz cząsteczki 
+2062:Czas spawnu (min / maks)
+2063:Ilość chmur (maks / spawn) 
+2064:Żywotność chmur w sekundach
+2065:Włączona
+2066:Nadpisz
+2067:Nadpisz ustawienia pogody
+2068:Zmniejsz cząsteczki: 1 (wszystkie) -> 10 (wyłącz cząsteczki)
+2069:Środowisko
+2070:Długość dnia:
+2071:Pora dnia:
+2072:Długość dnia [ 0 : zatrzymuje czas, 1: 60 minut, 10: 30 minut, 20: 5 minut ] 
+2073:Pora dnia na rozpoczęciu rozgrywki [ 0-8: dzień, 9-14 : noc, 15-24: dzień ]
+2074:Towar
+2075:Jednostki
+2076:Towary
+2077:Jednostka
+
+2078:Ważne
+2079:Budowlane
+2080:Ekonomiczne
+2081:Kopalnie
+2082:Warsztaty
+2083:Obronne
+2084:Dodatkowe
+
+2085:Ognisko z kamyczkami
+2086:Ognisko
+2087:Lampa
+2088:Latarnia
+2089:Towary na ziemi
+2090:Sortuj
+2091:Wszystko
+2092:Drzewa
+2093:Drzewa owocowe
+2094:Zboża i owoce
+2095:Surowce
+2096:Inne
+2097:Sortuj według rodzaju obiektu
+2098:Narzędzia
+2099:Dynamiczne światło
+2100:Włącz/Wyłącz dynamiczne światło z budynków i obiektów
+2101:Jajka
+2102:Piroman
+2103:Lekter
+2104:Niezniszczalny
+2105:Nieśmiertelny
+2106:Realizm
+2107:Wbudowany poziom trudności
+2108:Osiągnięcia
+2109:Trzeba czymś płacić|Wyprodukuj 100 skrzyń ze złotem||Skrzynie pełne złota|Wyprodukuj 1000 skrzyń ze złotem||Złoto, złoto wszędzie|Wyprodukuj 10 000 skrzyń ze złotem||Pamiętaj o jedzeniu|Wyprodukuj 1000 jedzenia||Jedzenie to zdrowie|Wyprodukuj 10 000 jedzenia||Dawać ŻARCIE!|Wyprodukuj 100 000 jedzenia||Cywile dla Wioski|Wyszkól 500 jednostek||Cywile dla miasta|Wyszkól 1000 jednostek||Cywile dla królestwa|Wyszkól 5000 jednostek||Pierwsze zwycięstwo|Wygraj jakąkolwiek rozgrywkę||Rozpoczyna się pole bitwy|Wygraj 10 rozgrywek||Do Boju!|Wygraj 100 rozgrywek||Grać po wszystkie czasy, zawsze.|Wygraj 1000 rozgrywek||Pomoc specjalistów 1|Wyrekrutuj tresowanego wilka z Pałacu||Pomoc specjalistów 2|Wyrekrutuj paladyna w Pałacu||Pomoc specjalistów 3|Wyrekrutuj szpiega w Pałacu||Prawdziwe życie|Wygraj rozgrywkę w trybie Realizm||Rośliny mi gniją!|Wygraj rozgrywkę w trybie Realizm 15 razy||Jedzenie się psuje, a zwierzęta zdychają?|Wygraj rozgrywkę w trybie Realizm 34 razy||Piekło na ziemi i ludzie w grobowcach|Wygraj rozgrywkę w trybie Realizm 666 razy
+2110:Wyłącza rośnięcie roślin na danej płytce
+2111:Zmienia ilość towarów w budynku pod kursorem
+2112:Losowa ilość towarów
+2113:Minimalna ilość towarów
+2114:Maksymalna ilość towarów
+2115:Min / max ilość
+2116:Spis wiadomości
+2117:Tekst/ściąga z innego języka
+2118:Ustaw obszar chroniony
+2119:Obszar chroniony
+2120:Zmagazynowano
+2121:Złoże rudy złota ukryte pod ziemią
+2122:Złoże rudy żelaza ukryte pod ziemią
+2123:Złoże rudy bitinu ukryte pod ziemią
+2124:Szyb pod kopalnię złota
+2125:Szyb pod kopalnię żelaza
+2126:W stoczni
+2127:Siej i ścinaj
+2128:Tylko ścinaj
+2129:Tylko siej
+2130:Duplikuj
+2131:Dodaj 
+2132:Węgiel ukryty pod ziemią
+2133:Łączna ilość jednostek wszystkich pozycji obronnych
+2134:Łączna ilość jednostek z pozycji atakujących
+2135:Pozycje atakujące
+2136:Ilość pozycji atakujących typu: 
+2137:Ilość jednostek na podstawie pozycji obronnych
+2138:Zastąp nakładki
+2139:Praca wstrzymana z danym typem roślin
+2140:Losowy typ roślin
+2141:Zbieracz: znajduje surowce na mapie
+2142:Myśliwy: stawia sidła na zwierzęta i zabiera ich mięso oraz skórę
+2143:Pustkowia
+2144:Jeleń
+2145:Sarna
+2146:Lis
+2147:Dzik
+2148:Niedźwiedź
+2149:Kaczka lądowa
+2150:Królik
+2151:Niedźwiedź Polarny
+2152:Wąż
+2153:Pająk
+2154:Promień spawnera
+2155:Maks. ilość zwierząt
+2156:Czas spawnowania
+2157:Progress budowy
+2158:Dzięki swej maczudze Wandal rozprawi się szybko z budynkami wroga, a także powstrzyma każde uzbrojenie przeciwnika.
+2159:Osiłek uzbrojony w maczugę oraz zbroję płytkową jest idealny do rozprawienia się z budynkami wroga, kiedy to inni walczą z żołnierzami przeciwnika.
+2160:Po jednym ataku swego kiścienia potrafi zniszczyć każde fundamenty. Żelazne uzbrojenie nie jest dla niego przeszkodą w pokonaniu wroga.
+2161:Gdy tylko Piroman zbliży swoją pochodnię do budynku, ten będzie się palił do puki nie pozostaną z niego tylko zgliszcza.
+2162:Lekter przejmie każdy wrogi budynek, który potem będzie należał do ciebie.
+2163:Dzięki medykowi zyskasz możliwość leczenia jednostek podczas walki. Im więcej ich posiadasz w oddziale tym efekt ich jest bardziej widoczny.
+2164:Dzięki łódce będziesz mógł przemieżyć wody aby wyłowić z niej pyszne ryby. Również jeśli znajdzie się w pobliżu lądu, zbierze dla ciebie surowce.
+2165:Statek przetransportuje twoje jednostki na drugą stronę morza. Pomieści nawet machiny, ale licz się z tym, że jego miejsce jest ograniczone.
+2166:Statek uzbrojony po brzeki wielkimi kuszami oraz posiadający wytrzymałą strukturę kadłuba, idealnie sprawdzi się podczas walk. 
+2167:Po rozłożeniu kolczasta pułapka jest niemalże niewidzialna. Niech tylko wróg zbliży się do niej, a poznasz jej możliwości.
+2168:Jako jedyny jest jednostką jednorazową. Gdy uderzy w budynek, uszkodzi jego strukturę, a nawet zniszczy w całości.
+2169:Ten budynek może być postawiony tylko raz, jednakże może się w nim zmieścić do pięciu pracowników, którzy będą pracowali w pocie czoła aby zebrać jak najszybciej wymagane surowce/.
+2170:W stoczni wybudujesz łodzie, które będą mogły przemieżyć wody aby zebrać surowce, transportować jednostki lub atakować wroga.
+2171:Dzięki sklepikarzowi będziesz mógł wykupić produkty uboczne za monety.
+2172:Ilość flag
+2173:Ilość kropek
+2174:Pozycja tekstu
+2175:Po lewej
+2176:Po prawej
+2177:Odblokuj po:
+2178:Kolor flagi
+2179:Edutyj mapę
+2180:Kampanie

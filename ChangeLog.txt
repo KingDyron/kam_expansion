@@ -1,0 +1,124 @@
+﻿
+Interface:
+	+added scroll bar to almost every panel. In small resolutions not everything was visible
+	+added Libx Name for missions. Mission name can be different depending on Language
+	+added mobile hints
+	-bevel effect is improved. It makes panels look more 3D
+	-improved checking alliances in Map Editor
+	-can't zoom map whit mouse whell while cursor is at left panel
+	-Transporting ship when is idle and is near land will automatically unload units
+	
+AI:
+	+added Defend Positions, soldiers will protect this area when attacked even when it's far away
+	+added "Record Building"
+	
+Wares:
+	+added wares: Hay, Vegetables, Feathers, Mace, Flail, Plate Armor, Bitin Armor
+	+Hay, Vegetables and Straw as food for animals have different affection
+	+added by-product "Manure". Farmer uses it to speed up growing crops 
+	+boots speeds up work outside for citizens
+	+added wares placable on the map (not objects)
+	+added progress bar for Vineyard
+	-the prices of wares are based on their production
+	-changed ware name from Sawdust to Shavings
+	-changed ware name from Pigs to Meat
+	
+Building:
+	+added Stall in which we can buy by-products
+	+added Production Thatch. Big house for many workers
+	+added Shipyard
+	+added 3 types of road
+	+added structures that can be built on the map
+	+added decorations that can be placed on the map
+	+added progress icons that shows age of the animals
+	+added progress wheel. Shows how many work is done in the house
+	+added indestructibility of buildings 
+	+added grass field and vegetables fields
+	+added few different types of crops
+	+building any field (except wooden road) flattens terrain 
+	+Apple tree is changed to Fruit Tree. It can plant many tree types
+	+added blocking roads, fields, house levels, structures and decorations 
+	+Changing ware slot can be forced with pressing "Shift"
+	+added "Hide wares" options to Storehouse. It shows only wares there are in store.
+	+added "Bell" button in Storehouse and Townhall. After click every idle citizen goes close to the house
+	+siege machines need 4 Operators to drive out of Siege Workshop 
+	+Fruit Tree(apple tree) house is now a modular house. It can be built close to each other
+	+Collector has now a new mode where he can be a Hunter. He sets traps for animals
+	+added structure "Mine shaft". Mines can be built on it to mine wherever ore deposits are
+	+added "Saw only" and "Cut only" in Farm
+	-emissary will send wares through shipyard if possible
+	-selected house has blue outline
+	-citizens if they need water and well is nearby, will go themselves for it
+	-Stone road is selected by default. It can be changed with right click on another road type
+	-Laborers building is imrpoved
+	-Cottage and House works different, it's improved
+	-by-products have a cyclic production now instead of random
+	-after killing enemy you get by-products
+	-fixed a bug with upgrading buildings
+	-fixed a bug with Market 
+	-fixed a smoke in cottage
+	-fixed a bug with a farmer. He didn't want to cut crops while having "Force Working" on
+	-Cottage and house placed in map editor (after starting the map) already has few workless citizens
+	-throwing rock in watch tower has been slowed down
+
+Units:
+	+citizens go to the Storehouse to put on boots when they have free time
+	+added immortality of units 
+	+added possibility to change units flag color in Map Editor
+	+Woodcutter plants tree sapling, from which will grow every tree type depending on terrain kind
+	+added new working unit: Collector
+	+added new working unit: Operator
+	+added new support unit: Medic
+	+added new support unit: Shield Bearer
+	+added new support unit: Spiked Trap
+	+added new support unit: Mobile Wall
+	+added new support unit: Lekter
+	+added new support unit: Pyro
+	+added new fighting unit: Fighter
+	+added new fighting unit: Clubman
+	+added new fighting unit: Mace Fighter
+	+added new fighting unit: Flail Fighter
+	+added new support unit: Boat
+	+added new support unit: Transporting Ship
+	+added new Fighting unit: Battle Ship
+	+added new types of Animals
+	+added blocking units for each type of training house
+	+units trained in palace have special, unique skills
+	-soldiers can be dismissed
+	-units equipped in barracks have the same condition as recruits
+	-units HP is now shown as hearts
+	-units Condition is now shown as food bar
+	-selected unit has an arrow above it
+	-unit's death animation is now seperated, so after death tile is unlocked ASAP for another unit
+	-trained unit will take Fruit juice (when possible) to fill up its condition
+	-selecting ally's units is enabled by default
+
+General:
+	+added tutorials for each aspect of town building and battle
+	+added panel where messages you get in game can be reviewed
+	+added multiplayer campaign
+	+added new trees and objects
+	+added night. It's optional. Can be disabled in "Options" menu
+	+added Weather. It's optional. Can be disabled in "Options" menu
+	+added built-in difficulty levels
+	+added few tree types
+	+added achievements
+	+KaM logo has been changed
+	+added message after finishing all campaign missions (if it has one)
+	-loading game resources is speeded up
+	-every tree needs different axe hits and give different amount of tree trunks (1-3)
+	-testing campaign map include campaign data and script files
+	-fixed not showing message about attacked houses or units
+	-fixed a bug in "Guide" panel.
+	-fixed a bug while saving campaign mission. It was saving in Maps folder instead of Campaign folder
+
+MapEd:
+	+added a brush with which you can set wares in houses
+	+added new terrain "Barren land"
+	+added filter for objects in "Objects Pallete"
+	+added "Copy and Paste" option for goals
+	+added new decoration tile that blocks growing for trees and crops
+	+messages from LIBX files can be changed directly in map editor
+	+added Campaign map editor (flags, nodes, etc)
+	-decoration tiles order sorted out
+	-decoration tile brush has check box for not override already placed ones
