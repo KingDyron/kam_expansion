@@ -16764,3 +16764,420 @@ disassembling:
 014064be       jnz     loc_14065f1
 [...]
 
+date/time          : 2025-01-07, 21:52:29, 338ms
+computer name      : LAPTOP-5CTTUAIM
+user name          : szyby
+registered owner   : szybyc@wp.pl / HP Inc.
+operating system   : Windows 11 x64 build 22631
+system language    : Polish
+system up time     : 3 hours 15 minutes
+program up time    : 1 second
+processors         : 12x 11th Gen Intel(R) Core(TM) i5-11400F @ 2.60GHz
+physical memory    : 20621/32650 MB (free/total)
+free disk space    : (C:) 175,86 GB (E:) 651,98 GB
+display mode       : 1920x1080, 32 bit
+process id         : $24dc
+allocated memory   : 112,93 MB
+largest free block : 1,96 GB
+executable         : KaM_Expansion.exe
+exec. date/time    : 2025-01-06 16:31
+version            : 1.0.0.0
+compiled with      : Delphi 11
+madExcept version  : 5.1.4
+callstack crc      : $7d79d09b, $3f994aad, $3f994aad
+count              : 2
+exception number   : 1
+exception class    : EInOutError
+exception message  : Invalid filename.
+
+main thread ($fa4):
+00dbde7f +087 KaM_Expansion.exe KM_ResUnits   1708  +6 TKMResUnits.ExportCSV
+01419248 +298 KaM_Expansion.exe KM_Resource    218 +44 TKMResource.LoadMainResources
+011e2a21 +151 KaM_Expansion.exe KM_GameApp     224 +25 TKMGameApp.Create
+011ee6b2 +136 KaM_Expansion.exe KM_Main        635 +22 TKMMain.ReinitRender
+011ed552 +33a KaM_Expansion.exe KM_Main        281 +74 TKMMain.Start
+0146fb2b +067 KaM_Expansion.exe KaM_Expansion  480  +6 initialization
+74ea7ba7 +017 KERNEL32.DLL                             BaseThreadInitThunk
+
+thread $700:
+74ea7ba7 +17 KERNEL32.DLL  BaseThreadInitThunk
+
+thread $3b78:
+74ea7ba7 +17 KERNEL32.DLL  BaseThreadInitThunk
+
+thread $4090:
+74ea7ba7 +17 KERNEL32.DLL  BaseThreadInitThunk
+
+thread $4ffc:
+76fc4152 +82 KERNELBASE.dll              WaitForSingleObjectEx
+76fc40bd +0d KERNELBASE.dll              WaitForSingleObject
+00ae4add +0d KaM_Expansion.exe madExcept CallThreadProcSafe
+00ae4b42 +32 KaM_Expansion.exe madExcept ThreadExceptFrame
+00ae4bb8 +a8 KaM_Expansion.exe madExcept ThreadExceptFrame
+74ea7ba7 +17 KERNEL32.DLL                BaseThreadInitThunk
+>> created by main thread ($fa4) at:
+78b00276 +00 nvoglv32.dll
+
+thread $4558:
+76fc4f79 +189 KERNELBASE.dll              WaitForMultipleObjectsEx
+00ae4add +00d KaM_Expansion.exe madExcept CallThreadProcSafe
+00ae4b42 +032 KaM_Expansion.exe madExcept ThreadExceptFrame
+00ae4bb8 +0a8 KaM_Expansion.exe madExcept ThreadExceptFrame
+74ea7ba7 +017 KERNEL32.DLL                BaseThreadInitThunk
+>> created by main thread ($fa4) at:
+765802ff +000 CRYPT32.dll
+
+thread $4c38:
+76fc4f79 +189 KERNELBASE.dll              WaitForMultipleObjectsEx
+76fc4dd3 +013 KERNELBASE.dll              WaitForMultipleObjects
+00ae4add +00d KaM_Expansion.exe madExcept CallThreadProcSafe
+00ae4b42 +032 KaM_Expansion.exe madExcept ThreadExceptFrame
+00ae4bb8 +0a8 KaM_Expansion.exe madExcept ThreadExceptFrame
+74ea7ba7 +017 KERNEL32.DLL                BaseThreadInitThunk
+>> created by main thread ($fa4) at:
+78b2ea4e +000 nvoglv32.dll
+
+thread $1bbc:
+76a82dbc +4c USER32.dll                  MsgWaitForMultipleObjectsEx
+76a9245a +1a USER32.dll                  MsgWaitForMultipleObjects
+00ae4add +0d KaM_Expansion.exe madExcept CallThreadProcSafe
+00ae4b42 +32 KaM_Expansion.exe madExcept ThreadExceptFrame
+00ae4bb8 +a8 KaM_Expansion.exe madExcept ThreadExceptFrame
+74ea7ba7 +17 KERNEL32.DLL                BaseThreadInitThunk
+>> created by thread $4ffc at:
+78afa0f7 +00 nvoglv32.dll
+
+thread $2938:
+74ea7ba7 +17 KERNEL32.DLL  BaseThreadInitThunk
+
+thread $4f8c:
+74ea7ba7 +17 KERNEL32.DLL  BaseThreadInitThunk
+
+modules:
+00a30000 KaM_Expansion.exe        1.0.0.0             E:\programowanie\projekty delphi\kam_expansion
+03d80000 vorbis.dll                                   E:\programowanie\projekty delphi\kam_expansion
+03db0000 ogg.dll                                      E:\programowanie\projekty delphi\kam_expansion
+10000000 vorbisfile.dll                               E:\programowanie\projekty delphi\kam_expansion
+11000000 bass.dll                 2.4.8.1             E:\programowanie\projekty delphi\kam_expansion
+50f00000 AppXDeploymentClient.dll 6.2.22621.4541      C:\Windows\System32
+51040000 libvlc.dll               3.0.8.0             E:\programowanie\projekty delphi\kam_expansion\lib\vlc
+51070000 libvlccore.dll           3.0.8.0             E:\programowanie\projekty delphi\kam_expansion\lib\vlc
+51870000 CoreUIComponents.dll     6.2.22621.4541      C:\WINDOWS\SYSTEM32
+51f30000 FaultRep.dll             6.2.22621.4541      C:\WINDOWS\SYSTEM32
+62f90000 nvgpucomp32.dll          32.0.15.6094        C:\WINDOWS\System32\DriverStore\FileRepository\nvmd.inf_amd64_aa54f7a758543a0a
+68ff0000 nvspcap.dll              11.0.1.163          C:\WINDOWS\system32
+6c540000 MSACM32.dll              6.2.22621.1         C:\WINDOWS\SYSTEM32
+6e000000 drvstore.dll             6.2.22621.4541      C:\WINDOWS\SYSTEM32
+6eb30000 dwmapi.dll               6.2.22621.4541      C:\WINDOWS\SYSTEM32
+6ef90000 devobj.dll               6.2.22621.2506      C:\WINDOWS\SYSTEM32
+6efd0000 dxcore.dll               6.2.22621.4541      C:\WINDOWS\SYSTEM32
+6f000000 GLU32.dll                6.2.22621.2506      C:\WINDOWS\SYSTEM32
+70970000 opengl32.dll             6.2.22621.4541      C:\WINDOWS\SYSTEM32
+72500000 CoreMessaging.dll        6.2.22621.4541      C:\WINDOWS\SYSTEM32
+725d0000 TextShaping.dll          6.2.22621.4541      C:\WINDOWS\SYSTEM32
+72670000 textinputframework.dll   6.2.22621.4541      C:\WINDOWS\SYSTEM32
+72770000 cryptnet.dll             6.2.22621.1         C:\WINDOWS\SYSTEM32
+727d0000 rsaenh.dll               6.2.22621.4249      C:\WINDOWS\system32
+72d30000 CRYPTSP.dll              6.2.22621.3672      C:\WINDOWS\SYSTEM32
+72e70000 winspool.drv             6.2.22621.3810      C:\WINDOWS\SYSTEM32
+72f70000 powrprof.dll             6.2.22621.3958      C:\WINDOWS\SYSTEM32
+73040000 WINSTA.dll               6.2.22621.4541      C:\WINDOWS\SYSTEM32
+731b0000 SHFolder.dll             6.2.22621.1         C:\WINDOWS\SYSTEM32
+73250000 wldp.dll                 6.2.22621.4541      C:\WINDOWS\SYSTEM32
+733d0000 ntmarta.dll              6.2.22621.1         C:\WINDOWS\SYSTEM32
+73810000 cfgmgr32.dll             6.2.22621.2506      C:\WINDOWS\SYSTEM32
+73870000 SspiCli.dll              6.2.22621.3810      C:\WINDOWS\SYSTEM32
+738a0000 winmm.dll                6.2.22621.4541      C:\WINDOWS\SYSTEM32
+738e0000 uxtheme.dll              6.2.22621.4541      C:\WINDOWS\system32
+73970000 winhttp.dll              6.2.22621.4541      C:\WINDOWS\SYSTEM32
+73a50000 COMCTL32.dll             6.10.22621.4541     C:\WINDOWS\WinSxS\x86_microsoft.windows.common-controls_6595b64144ccf1df_6.0.22621.4541_none_6ebe089c8800e98b
+73cb0000 UMPDC.dll                6.2.22621.1         C:\WINDOWS\SYSTEM32
+73e80000 propsys.dll              7.0.22621.4249      C:\WINDOWS\system32
+73f50000 msasn1.dll               6.2.22621.2506      C:\WINDOWS\SYSTEM32
+73f60000 wsock32.dll              6.2.22621.1         C:\WINDOWS\SYSTEM32
+74160000 kernel.appcore.dll       6.2.22621.3958      C:\WINDOWS\SYSTEM32
+741b0000 version.dll              6.2.22621.1         C:\WINDOWS\SYSTEM32
+74440000 profapi.dll              6.2.22621.4541      C:\WINDOWS\SYSTEM32
+74470000 wintypes.dll             6.2.22621.3810      C:\WINDOWS\SYSTEM32
+74540000 windows.storage.dll      6.2.22621.4601      C:\WINDOWS\SYSTEM32
+74c90000 CRYPTBASE.DLL            6.2.22621.1         C:\WINDOWS\SYSTEM32
+74d10000 wtsapi32.dll             6.2.22621.1         C:\WINDOWS\SYSTEM32
+74d40000 msvcp_win.dll            6.2.22621.3374      C:\WINDOWS\System32
+74e30000 WS2_32.dll               6.2.22621.1         C:\WINDOWS\System32
+74e90000 KERNEL32.DLL             6.2.22621.4391      C:\WINDOWS\System32
+74f80000 comdlg32.dll             6.2.22621.4541      C:\WINDOWS\System32
+75040000 advapi32.dll             6.2.22621.4391      C:\WINDOWS\System32
+75240000 SHELL32.dll              6.2.22621.4541      C:\WINDOWS\System32
+758f0000 combase.dll              6.2.22621.4601      C:\WINDOWS\System32
+75b80000 gdi32full.dll            6.2.22621.4601      C:\WINDOWS\System32
+75c70000 shlwapi.dll              6.2.22621.4541      C:\WINDOWS\System32
+75cc0000 RPCRT4.dll               6.2.22621.4249      C:\WINDOWS\System32
+75d80000 WINTRUST.dll             6.2.22621.4541      C:\WINDOWS\System32
+75de0000 sechost.dll              6.2.22621.4541      C:\WINDOWS\System32
+75e80000 msvcrt.dll               7.0.22621.2506      C:\WINDOWS\System32
+75f50000 SETUPAPI.dll             6.2.22621.2506      C:\WINDOWS\System32
+76390000 win32u.dll               6.2.22621.4460      C:\WINDOWS\System32
+763b0000 clbcatq.dll              2001.12.10941.16384 C:\WINDOWS\System32
+764a0000 oleaut32.dll             6.2.22621.3672      C:\WINDOWS\System32
+76540000 bcrypt.dll               6.2.22621.2506      C:\WINDOWS\System32
+76560000 CRYPT32.dll              6.2.22621.4541      C:\WINDOWS\System32
+76670000 ole32.dll                6.2.22621.3958      C:\WINDOWS\System32
+767d0000 IMM32.DLL                6.2.22621.3374      C:\WINDOWS\System32
+76800000 imagehlp.dll             6.2.22621.1         C:\WINDOWS\System32
+768c0000 MSCTF.dll                6.2.22621.4601      C:\WINDOWS\System32
+769d0000 GDI32.dll                6.2.22621.4036      C:\WINDOWS\System32
+76a60000 USER32.dll               6.2.22621.4601      C:\WINDOWS\System32
+76c10000 ucrtbase.dll             6.2.22621.3593      C:\WINDOWS\System32
+76d40000 bcryptPrimitives.dll     6.2.22621.4317      C:\WINDOWS\System32
+76db0000 shcore.dll               6.2.22621.4541      C:\WINDOWS\System32
+76e80000 KERNELBASE.dll           6.2.22621.4601      C:\WINDOWS\System32
+77120000 ntdll.dll                6.2.22621.4541      C:\WINDOWS\SYSTEM32
+782f0000 nvoglv32.dll             32.0.15.6094        C:\WINDOWS\System32\DriverStore\FileRepository\nvmd.inf_amd64_aa54f7a758543a0a
+
+hardware:
++ {1ed2bbf9-11f0-4084-b21f-ad83a8e6dcdc}
+  - Fax
+  - Główna kolejka wydruku
+  - HP Smart Printing
+  - Microsoft Print to PDF
+  - Microsoft XPS Document Writer
++ {36fc9e60-c465-11cf-8056-444553540000}
+  - Główny koncentrator USB (USB 3.0)
+  - Intel(R) USB 3.20 eXtensible Host Controller - 1.20 (Microsoft)
+  - Rodzajowy koncentrator USB
+  - Rodzajowy koncentrator USB
+  - Rodzajowy koncentrator USB SuperSpeed
+  - Urządzenie kompozytowe USB
+  - Urządzenie kompozytowe USB
++ {4d36e966-e325-11ce-bfc1-08002be10318}
+  - Komputer oparty na architekturze x64 obsługujący interfejs ACPI
+  - Micro-Star International Co., Ltd. MS-7D15
++ {4d36e967-e325-11ce-bfc1-08002be10318}
+  - KXG60ZNV512G KIOXIA
+  - Samsung SSD 980 1TB
++ {4d36e968-e325-11ce-bfc1-08002be10318}
+  - NVIDIA GeForce RTX 3060 Ti (driver 32.0.15.6094)
++ {4d36e96a-e325-11ce-bfc1-08002be10318}
+  - Standardowy kontroler SATA AHCI
++ {4d36e96b-e325-11ce-bfc1-08002be10318}
+  - Urządzenie klawiatury HID
+  - Urządzenie klawiatury HID
++ {4d36e96c-e325-11ce-bfc1-08002be10318}
+  - NVIDIA High Definition Audio (driver 1.4.0.1)
+  - NVIDIA Virtual Audio Device (Wave Extensible) (WDM) (driver 4.65.0.3)
+  - Urządzenie zgodne ze standardem High Definition Audio
++ {4d36e96e-e325-11ce-bfc1-08002be10318}
+  - Generic Monitor (Smart TV)
++ {4d36e96f-e325-11ce-bfc1-08002be10318}
+  - Mysz zgodna z HID
++ {4d36e972-e325-11ce-bfc1-08002be10318}
+  - Microsoft Kernel Debug Network Adapter
+  - Realtek Gaming 2.5GbE Family Controller (driver 10.71.312.2024)
+  - Realtek PCIe GbE Family Controller (driver 10.71.312.2024)
+  - WAN Miniport (IKEv2)
+  - WAN Miniport (IP)
+  - WAN Miniport (IPv6)
+  - WAN Miniport (L2TP)
+  - WAN Miniport (Network Monitor)
+  - WAN Miniport (PPPOE)
+  - WAN Miniport (PPTP)
+  - WAN Miniport (SSTP)
++ {4d36e97b-e325-11ce-bfc1-08002be10318}
+  - Kontroler miejsc do magazynowania firmy Microsoft
+  - Standardowy kontroler NVM Express
+  - Standardowy kontroler NVM Express
+  - Xvdd SCSI Miniport (driver 10.0.22020.1)
++ {4d36e97d-e325-11ce-bfc1-08002be10318}
+  - Agregator procesora systemu ACPI
+  - Alarm wznawiania ACPI
+  - AMD Crash Defender (driver 22.20.0.2)
+  - Aplikacja zbierająca informacje o oprogramowaniu urządzeń Plug and Play
+  - Chłodzenie ACPI
+  - Chłodzenie ACPI
+  - Chłodzenie ACPI
+  - Chłodzenie ACPI
+  - Chłodzenie ACPI
+  - Czasomierz systemowy
+  - Czasomierz zdarzeniowy wysokiej precyzji
+  - Intel(R) GNA - 4C11 (driver 10.1.41.5)
+  - Intel(R) Host Bridge/DRAM Registers - 4C53 (driver 10.1.41.5)
+  - Intel(R) LPC Controller (B560) - 4387 (driver 10.1.34.10)
+  - Intel(R) Management Engine Interface #1 (driver 2131.1.4.0)
+  - Intel(R) PCI Express Root Port #21 - 43C4 (driver 10.1.34.10)
+  - Intel(R) PCI Express Root Port #6 - 43BD (driver 10.1.34.10)
+  - Intel(R) PCI Express Root Port #7 - 43BE (driver 10.1.34.10)
+  - Intel(R) PCI Express Root Port #9 - 43B0 (driver 10.1.34.10)
+  - Intel(R) PEG10 - 4C01 (driver 10.1.41.5)
+  - Intel(R) Serial IO GPIO Host Controller - INT34C6 (driver 30.100.2051.37)
+  - Intel(R) Shared SRAM - 43EF (driver 10.1.34.10)
+  - Intel(R) SPI (flash) Controller - 43A4 (driver 10.1.34.10)
+  - Intel(R) Watchdog Timer Driver (Intel(R) WDT) (driver 11.7.0.1000)
+  - Interfejs zarządzania Microsoft Windows dla ACPI
+  - Interfejs zarządzania Microsoft Windows dla ACPI
+  - Interfejs zarządzania Microsoft Windows dla ACPI
+  - Interfejs zarządzania Microsoft Windows dla ACPI
+  - Interfejs zarządzania Microsoft Windows dla ACPI
+  - Kontroler zgodny ze standardem High Definition Audio
+  - Kontroler zgodny ze standardem High Definition Audio
+  - Magistrala readresatora urządzeń usług pulpitu zdalnego
+  - Menedżer woluminów
+  - Moduł wyliczający dysku wirtualnego firmy Microsoft
+  - Moduł wyliczający magistrali głównej UMBus
+  - Moduł wyliczający magistrali kompozytowej
+  - Moduł wyliczający wirtualnej karty sieciowej NDIS
+  - Podstawowy sterownik ekranu firmy Microsoft
+  - Podstawowy sterownik renderowania firmy Microsoft
+  - Procesor numeryczny
+  - Programowalny kontroler przerwań
+  - Przycisk ACPI Fixed Feature
+  - Przycisk uśpienia ACPI
+  - Przycisk zasilania ACPI
+  - Serwer PCI funkcji Microsoft Hyper-V
+  - Sterownik BIOS zarządzania systemem firmy Microsoft
+  - Sterownik infrastruktury wirtualizacji funkcji Microsoft Hyper-V
+  - Sterownik wybierania źródła ładowania
+  - Strefa termiczna ACPI
+  - Synaptics SMBus Driver (driver 19.5.19.95)
+  - System zgodny ze standardem Microsoft ACPI
+  - System zgodny ze standardem Microsoft UEFI
+  - Usługa hosta funkcji hypervisor firmy Microsoft
+  - Wtyczka aparatu zasilania firmy Intel(R)
+  - Zasoby płyty głównej
+  - Zasoby płyty głównej
+  - Zasoby płyty głównej
+  - Zasoby płyty głównej
+  - Zasoby płyty głównej
+  - Zasoby płyty głównej
+  - Zasoby płyty głównej
+  - Zasoby płyty głównej
+  - Zespół główny PCI Express
++ {50127dc3-0f36-415e-a6cc-4cb3be910b65}
+  - 11th Gen Intel(R) Core(TM) i5-11400F @ 2.60GHz
+  - 11th Gen Intel(R) Core(TM) i5-11400F @ 2.60GHz
+  - 11th Gen Intel(R) Core(TM) i5-11400F @ 2.60GHz
+  - 11th Gen Intel(R) Core(TM) i5-11400F @ 2.60GHz
+  - 11th Gen Intel(R) Core(TM) i5-11400F @ 2.60GHz
+  - 11th Gen Intel(R) Core(TM) i5-11400F @ 2.60GHz
+  - 11th Gen Intel(R) Core(TM) i5-11400F @ 2.60GHz
+  - 11th Gen Intel(R) Core(TM) i5-11400F @ 2.60GHz
+  - 11th Gen Intel(R) Core(TM) i5-11400F @ 2.60GHz
+  - 11th Gen Intel(R) Core(TM) i5-11400F @ 2.60GHz
+  - 11th Gen Intel(R) Core(TM) i5-11400F @ 2.60GHz
+  - 11th Gen Intel(R) Core(TM) i5-11400F @ 2.60GHz
++ {533c5b84-ec70-11d2-9505-00c04f79deaf}
+  - Rodzajowa kopia w tle woluminów
+  - Rodzajowa kopia w tle woluminów
+  - Rodzajowa kopia w tle woluminów
+  - Rodzajowa kopia w tle woluminów
+  - Rodzajowa kopia w tle woluminów
+  - Rodzajowa kopia w tle woluminów
++ {5c4c3332-344d-483c-8739-259e934c9cc8}
+  - Intel(R) Dynamic Application Loader Host Interface (driver 1.44.2023.710)
+  - Intel(R) iCLS Client (driver 1.71.99.0)
+  - Intel(R) Management Engine WMI Provider (driver 2408.5.4.0)
++ {62f9c741-b25a-46ce-b54c-9bccce08b6f2}
+  - LAPTOP-5CTTUAIM: szybyc@wp.pl:
+  - Microsoft Device Association Root Enumerator
+  - Microsoft Radio Device Enumeration Bus
+  - Microsoft RRAS Root Enumerator
+  - POLSATBOX4KLITE-
+  - Syntezator SW Microsoft GS Wavetable
++ {745a17a0-74d3-11d0-b6fe-00a0c90f57da}
+  - Kontroler systemu zgodny z HID
+  - Kontroler systemu zgodny z HID
+  - Urządzenie sterujące użytkownika zgodne z HID
+  - Urządzenie sterujące użytkownika zgodne z HID
+  - Urządzenie wejściowe USB
+  - Urządzenie wejściowe USB
+  - Urządzenie wejściowe USB
+  - Urządzenie wejściowe USB
+  - Urządzenie wejściowe USB
+  - Urządzenie zdefiniowane przez dostawcę zgodne z HID
+  - Urządzenie zdefiniowane przez dostawcę zgodne z HID
+  - Urządzenie zgodne z HID
++ {c166523c-fe0c-4a94-a586-f1a80cfbbf3e}
+  - Cyfrowe urządzenie audio (S/PDIF) (High Definition Audio Device)
+  - Mikrofon (High Definition Audio Device)
+  - Smart TV (NVIDIA High Definition Audio)
+  - Słuchawki (High Definition Audio Device)
++ {f2e7dd72-6468-4e36-b6f1-6488f42c1b52}
+  - Oprogramowanie układowe urządzenia
+
+cpu registers:
+eax = 0fef9f90
+ebx = 00dbde7f
+ecx = 00000000
+edx = 02230548
+esi = 00dbde7f
+edi = 0146fac4
+eip = 00dbde7f
+esp = 021ff77c
+ebp = 021ff7c4
+
+stack dump:
+021ff77c  7f de db 00 de fa ed 0e - 01 00 00 00 07 00 00 00  ................
+021ff78c  90 f7 1f 02 7f de db 00 - 90 9f ef 0f 7f de db 00  ................
+021ff79c  7f de db 00 c4 fa 46 01 - c4 f7 1f 02 ac f7 1f 02  ......F.........
+021ff7ac  00 00 00 00 f0 71 a3 00 - c4 fa 46 01 00 00 00 00  .....q....F.....
+021ff7bc  33 72 a3 00 00 00 00 00 - f8 fa 1f 02 7f de db 00  3r..............
+021ff7cc  00 fb 1f 02 9c bb a3 00 - f8 fa 1f 02 00 00 00 00  ................
+021ff7dc  00 00 00 00 00 00 00 00 - 00 00 00 00 00 00 00 00  ................
+021ff7ec  00 00 00 00 00 00 00 00 - 00 00 00 00 00 00 00 00  ................
+021ff7fc  b0 d7 01 00 80 00 00 00 - 00 00 00 00 00 00 00 00  ................
+021ff80c  48 fa 1f 02 c0 81 a3 00 - 38 81 a3 00 34 81 a3 00  H.......8...4...
+021ff81c  88 81 a3 00 00 00 00 00 - 00 00 00 00 00 00 00 00  ................
+021ff82c  00 00 00 00 00 00 00 00 - 00 00 00 00 00 00 00 00  ................
+021ff83c  00 00 00 00 45 00 3a 00 - 5c 00 70 00 72 00 6f 00  ....E.:.\.p.r.o.
+021ff84c  67 00 72 00 61 00 6d 00 - 6f 00 77 00 61 00 6e 00  g.r.a.m.o.w.a.n.
+021ff85c  69 00 65 00 5c 00 70 00 - 72 00 6f 00 6a 00 65 00  i.e.\.p.r.o.j.e.
+021ff86c  6b 00 74 00 79 00 20 00 - 64 00 65 00 6c 00 70 00  k.t.y. .d.e.l.p.
+021ff87c  68 00 69 00 5c 00 6b 00 - 61 00 6d 00 5f 00 65 00  h.i.\.k.a.m._.e.
+021ff88c  78 00 70 00 61 00 6e 00 - 73 00 69 00 6f 00 6e 00  x.p.a.n.s.i.o.n.
+021ff89c  5c 00 45 00 78 00 70 00 - 6f 00 72 00 74 00 5c 00  \.E.x.p.o.r.t.\.
+021ff8ac  55 00 6e 00 69 00 74 00 - 73 00 2e 00 63 00 73 00  U.n.i.t.s...c.s.
+
+disassembling:
+[...]
+00dbde33        mov     [ebp-$24], ecx
+00dbde36        mov     [ebp-8], edx
+00dbde39        mov     [ebp-4], eax
+00dbde3c        xor     eax, eax
+00dbde3e        push    ebp
+00dbde3f        push    $dbe14f                ; System.@HandleFinally
+00dbde44        push    dword ptr fs:[eax]
+00dbde47        mov     fs:[eax], esp
+00dbde4a 1703   mov     eax, [ebp-8]
+00dbde4d        call    +$67ed8e ($143cbe0)    ; KM_CommonUtils.IsFileInUse
+00dbde52        test    al, al
+00dbde54        jnz     loc_dbe127
+00dbde5a 1705   xor     ecx, ecx
+00dbde5c        mov     edx, [ebp-8]
+00dbde5f        lea     eax, [ebp-$300]
+00dbde65        call    -$385a3e ($a3842c)     ; System.@AssignText
+00dbde6a        call    -$386c37 ($a37238)     ; System.@_IOTest
+00dbde6f 1706   lea     eax, [ebp-$300]
+00dbde75        call    -$385d9a ($a380e0)     ; System.@RewritText
+00dbde7a        call    -$386c47 ($a37238)     ; System.@_IOTest
+00dbde7f 1708 > mov     edx, $dbe168
+00dbde84        lea     eax, [ebp-$300]
+00dbde8a        call    -$3846b7 ($a397d8)     ; System.@Write0UString
+00dbde8f        call    -$3845b8 ($a398dc)     ; System.@WriteLn
+00dbde94        call    -$386c61 ($a37238)     ; System.@_IOTest
+00dbde99 1709   xor     eax, eax
+00dbde9b        mov     [ebp-$10], eax
+00dbde9e 1711   mov     eax, [ebp-$10]
+00dbdea1        cmp     eax, $4b
+00dbdea4        jbe     loc_dbdeab
+00dbdea6        call    -$383b43 ($a3a368)     ; System.@BoundErr
+00dbdeab        mov     al, [eax+$147e0c8]
+00dbdeb1        mov     [ebp-9], al
+00dbdeb4 1712   xor     eax, eax
+00dbdeb6        mov     al, [ebp-9]
+00dbdeb9        mov     edx, [ebp-4]
+00dbdebc        mov     eax, [edx+eax*4+8]
+00dbdec0        call    -$5f59 ($db7f6c)       ; KM_ResUnits.TKMUnitSpec.IsValid
+00dbdec5        test    al, al
+00dbdec7        jz      loc_dbe10a
+00dbdecd 1714   mov     dl, [ebp-9]
+[...]
+
