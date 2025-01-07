@@ -79,3 +79,20 @@ __recovery/
 
 # Boss dependency manager vendor folder https://github.com/HashLoad/boss
 modules/
+/.Maps
+/Battle Tutorials
+/Campaigns
+/CampaignsMP
+/data/cursors
+/data/gfx
+/data/sfx
+/data/Sprites
+/Maps
+/MapsDL
+/MapsMP
+/Music
+/Saves
+/SavesMP
+/Sounds
+/studio
+/Tutorials
