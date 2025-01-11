@@ -130,6 +130,9 @@ procedure TKMSpecialAnims.UpdateState(aTick : Integer);
 var I : integer;
   aRemoveArr: TKMWordArray;
 begin
+  if self = nil then
+    Exit;
+
   //if aTick mod 2 <> 0 then Exit;
   aRemoveArr := [];
 

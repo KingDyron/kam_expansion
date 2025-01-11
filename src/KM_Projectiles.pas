@@ -334,7 +334,7 @@ begin
                                 if (FRIENDLY_FIRE or (gHands.CheckAlliance(fOwner.Owner, U.Owner)= atEnemy)) then
                                   U.HitPointsDecrease(U.HitPointsMax, fOwner)
                               end else
-                              if fOwner.Attack >= 200 then
+                              if (fOwner.Attack >= 200) and (fOwner is TKMUnitWarrior) then
                               begin
                                 UDamage := Max(TKMUnitWarrior(fOwner).DamageUnits, 1);
 

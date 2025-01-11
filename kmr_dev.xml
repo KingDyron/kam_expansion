@@ -23,7 +23,7 @@
       <tbAngleZ Position="0"/>
       <tbBuildingStep Position="0"/>
       <chkSnowHouses Checked="True"/>
-      <chkInterpolatedRender Checked="False"/>
+      <chkInterpolatedRender Checked="True"/>
       <tbWaterLight Position="130"/>
       <chkInterpolatedAnims Checked="False"/>
     </Graphic_tweaks>
