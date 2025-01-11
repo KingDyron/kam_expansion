@@ -112,7 +112,7 @@ begin
     fList[I].Json.Free;
 
   SetLength(fList, 0);
-  for path in TDirectory.GetFiles(DEFAULT_JSON_PATH) do
+  for path in TDirectory.GetFiles(ExeDir + DEFAULT_JSON_PATH) do
     if TPath.GetExtension(path) = '.json' then
     begin
       SetLength(fList, length(fList) + 1);
@@ -127,9 +127,9 @@ end;
 function TKMJsonData.GetDefaultPath(aType: TKMDirType) : string;
 begin
   if aType = dtModding then
-    Result :=  FILE_NAMES[aType]
+    Result := ExeDir + FILE_NAMES[aType]
   else
-    Result := DEFAULT_JSON_PATH + FILE_NAMES[aType];
+    Result := ExeDir + DEFAULT_JSON_PATH + FILE_NAMES[aType];
 end;
 
 procedure TKMJsonData.LoadTutorials;

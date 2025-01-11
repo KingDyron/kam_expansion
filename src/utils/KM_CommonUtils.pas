@@ -228,6 +228,9 @@ const
   procedure Inc(var X: Cardinal; A : Cardinal = 1); overload;
   procedure Inc(var X: Word; A : Word = 1); overload;
   procedure Inc(var X: Single; A : Single = 1); overload;
+  {procedure Inc(var X: Char; A : Single = 1); overload;
+  procedure Inc(var X: PChar; A : Single = 1); overload;
+  procedure Inc(var X: PAnsiChar; A : Single = 1); overload;}
 
   procedure Dec(var X: SmallInt; A : SmallInt = 1); overload;
   procedure Dec(var X: ShortInt; A : ShortInt = 1); overload;
@@ -237,6 +240,9 @@ const
   procedure Dec(var X: Byte; A : Byte = 1); overload;
   procedure Dec(var X: Word; A : Word = 1); overload;
   procedure Dec(var X: Single; A : Single = 1); overload;
+  {procedure Dec(var X: Char; A : Single = 1); overload;
+  procedure Dec(var X: PChar; A : Single = 1); overload;
+  procedure Dec(var X: PAnsiChar; A : Single = 1); overload;}
   function IsFileInUse(aPath : String) : Boolean;
 
   function ToCell(A : Integer) : Single;//pixels / 40;
@@ -2317,6 +2323,9 @@ procedure Inc(var X: Cardinal; A : Cardinal = 1); begin  X := X + A; end;
 procedure Inc(var X: Byte; A : Byte = 1); begin  X := X + A; end;
 procedure Inc(var X: Word; A : Word = 1); begin X := X + A; end;
 procedure Inc(var X: Single; A : Single = 1); begin X := X + A; end;
+{procedure Inc(var X: Char; A : Single = 1); begin X := Char(byte(X) + A); end;
+procedure Inc(var X: PChar; A : Single = 1); begin X := PChar(byte(X) + A); end;
+procedure Inc(var X: PAnsiChar; A : Single = 1); begin X := PAnsiChar(byte(X) + A); end;}
 
 procedure Dec(var X: SmallInt; A : SmallInt = 1); begin  X := X - A; end;
 procedure Dec(var X: ShortInt; A : ShortInt = 1); begin  X := X - A; end;
@@ -2326,6 +2335,9 @@ procedure Dec(var X: Cardinal; A : Cardinal = 1); begin  X := X - A; end;
 procedure Dec(var X: Byte; A : Byte = 1); begin  X := X - A; end;
 procedure Dec(var X: Word; A : Word = 1); begin X := X - A; end;
 procedure Dec(var X: Single; A : Single = 1); begin X := X - A; end;
+{procedure Dec(var X: Char; A : Single = 1); begin X := Char(byte(X) - A); end;
+procedure Dec(var X: PChar; A : Single = 1); begin X := PChar(byte(X) - A); end;
+procedure Dec(var X: PAnsiChar; A : Single = 1); begin X := PAnsiChar(byte(X) - A); end;}
 
 function IsFileInUse(aPath: string) : Boolean;
 var

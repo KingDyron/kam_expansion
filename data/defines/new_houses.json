@@ -536,6 +536,7 @@
 			"TileCost": 6,
 			"WoodPic": 2237,
 			"StonePic": 2215,
+			"CanForceWork": true,
 			"Sight": 5,
 			"WorkerType":13,
 			"WorkerTypes": [{"UnitType" : "utRecruit", "MaxCount" : 1}],

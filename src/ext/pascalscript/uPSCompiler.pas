@@ -340,7 +340,7 @@ type
   end;
 
 
-  TKMPSEnumSize = (esByte, esWord, esCardinal);
+  TKMPSEnumSize = (es8Bit, es16bit, es32bit);
 
   TPSEnumType = class(TPSType)
   private
@@ -1055,7 +1055,7 @@ type
     procedure Debug_WriteLine(BlockInfo: TPSBlockInfo);
     procedure Debug_WriteLine2(BlockInfo: TPSBlockInfo; IsProcExit: Boolean);
 
-    function IsCompatibleType(p1, p2: TPSType; Cast: Boolean): Boolean;
+    function IsCompatibleType(p1, p2: TPSType; Cast: Boolean; aEnumAsInt: Boolean = False): Boolean;
 
     function IsDuplicate(const s: tbtString; const check: TPSDuplicCheck): Boolean;
     {$IFDEF PS_USESSUPPORT}
@@ -1935,19 +1935,20 @@ begin
       BlockWriteLong(BlockInfo, Length(tbtString(p^.tstring)));
       BlockWriteData(BlockInfo, tbtString(p^.tstring)[1], Length(tbtString(p^.tstring)));
     end;
-     btenum:
-     begin
-       if TPSEnumType(p^.FType).HighValue <=256 then
-      begin
-        du8 := tbtu8(p^.tu32);
-        BlockWriteData(BlockInfo, du8, 1)
-      end
-       else if TPSEnumType(p^.FType).HighValue <=65536 then
-      begin
-        du16 := tbtu16(p^.tu32);
-        BlockWriteData(BlockInfo, du16, 2)
+  btenum:
+    begin
+      case TPSEnumType(p^.FType).EnumSize of
+        es8Bit:   begin
+                    du8 := tbtu8(p^.tu32);
+                    BlockWriteData(BlockInfo, du8, 1);
+                  end;
+        es16Bit:  begin
+                    du16 := tbtu16(p^.tu32);
+                    BlockWriteData(BlockInfo, du16, 2)
+                  end;
       end;
-	end;
+      // No BlockWriteData code for du32 ?
+	  end;
 
   bts8,btu8: BlockWriteData(BlockInfo, p^.tu8, 1);
   bts16,btu16: BlockWriteData(BlockInfo, p^.tu16, 2);
@@ -2773,6 +2774,29 @@ begin
   end;
 end;
 
+function IsCharType(b: TPSBaseType): Boolean;
+begin
+  case b of
+    btChar{$IFNDEF PS_NOWIDESTRING}, btWideChar{$ENDIF}: Result := True;
+  else
+    Result := False;
+  end;
+end;
+
+function IsStringType(b: TPSBaseType): Boolean;
+begin
+  case b of
+    btString{$IFNDEF PS_NOWIDESTRING}, btWideString, btUnicodeString{$ENDIF}: Result := True;
+  else
+    Result := False;
+  end;
+end;
+
+function IsStringOrCharType(b: TPSBaseType): Boolean;
+begin
+  Result := IsStringType(b) or IsCharType(b);
+end;
+
 function IsRealType(b: TPSBaseType): Boolean;
 begin
   case b of
@@ -2854,7 +2878,7 @@ begin
     {$IFNDEF PS_NOWIDESTRING}
     btWideChar: Result := ord(tbtwidechar(src^.twidechar));
     {$ENDIF}
-    btEnum: Result := src^.tu32;
+    btEnum: Result := src^.ts32;
   else
     begin
       s := False;
@@ -2879,7 +2903,7 @@ begin
     {$IFNDEF PS_NOWIDESTRING}
     btWideChar: Result := ord(tbtwidechar(src^.twidechar));
     {$ENDIF}
-    btEnum: Result := src^.tu32;
+    btEnum: Result := src^.ts32;
   else
     begin
       s := False;
@@ -2902,7 +2926,7 @@ begin
     {$IFNDEF PS_NOWIDESTRING}
     btWideChar: Result := ord(tbtwidechar(src^.twidechar));
     {$ENDIF}
-    btEnum: Result := src^.tu32;
+    btEnum: Result := src^.ts32;
   else
     begin
       s := False;
@@ -3143,7 +3167,8 @@ begin
 end;
 
 
-function TPSPascalCompiler.IsCompatibleType(p1, p2: TPSType; Cast: Boolean): Boolean;
+// aEnumAsInt - flag if we consider enum as an Integer type
+function TPSPascalCompiler.IsCompatibleType(p1, p2: TPSType; Cast: Boolean; aEnumAsInt: Boolean = False): Boolean;
 begin
   if
     ((p1.BaseType = btProcPtr) and (p2 = p1)) or
@@ -3177,8 +3202,8 @@ begin
     {$ENDIF}
     ((p1.BaseType = btRecord) and (p2.BaseType = btrecord) and (not IsVarInCompatible(p1, p2))) or
     ((p1.BaseType = btEnum) and (p2.BaseType = btEnum) and (p1.Name = p2.Name)) or // Only enums with the same could be compatible
-    ({Cast and }IsIntType(P1.BaseType) and (p2.baseType = btEnum)) or // No Cast needed - treat enums as integers, thus they should be compatible with them
-    ({Cast and }(p1.baseType = btEnum) and IsIntType(P2.BaseType))
+    ((Cast or aEnumAsInt) and IsIntType(P1.BaseType) and (p2.baseType = btEnum)) or // no enum strict flag
+    ((Cast or aEnumAsInt) and (p1.baseType = btEnum) and IsIntType(P2.BaseType))
     then
     Result := True
   // nx change start - allow casting class -> integer and vice versa
@@ -3218,8 +3243,8 @@ begin
             btS8: var1^.ts8 := var1^.ts8 + GetInt(Var2, Result);
             btU16: var1^.tu16 := var1^.tu16 + GetUint(Var2, Result);
             btS16: var1^.ts16 := var1^.ts16 + Getint(Var2, Result);
-            btEnum, btU32: var1^.tu32 := var1^.tu32 + GetUint(Var2, Result);
-            btS32: var1^.ts32 := var1^.ts32 + Getint(Var2, Result);
+            btU32: var1^.tu32 := var1^.tu32 + GetUint(Var2, Result);
+            btEnum, btS32: var1^.ts32 := var1^.ts32 + Getint(Var2, Result);
             {$IFNDEF PS_NOINT64}btS64: var1^.ts64 := var1^.ts64 + GetInt64(Var2, Result); {$ENDIF}
             btSingle: var1^.tsingle := var1^.tsingle + GetReal( Var2, Result);
             btDouble: var1^.tdouble := var1^.tdouble + GetReal( Var2, Result);
@@ -3255,8 +3280,8 @@ begin
             btS8: var1^.ts8 := var1^.ts8 - Getint(Var2, Result);
             btU16: var1^.tu16 := var1^.tu16 - GetUint(Var2, Result);
             btS16: var1^.ts16 := var1^.ts16 - Getint(Var2, Result);
-            btEnum, btU32: var1^.tu32 := var1^.tu32 - GetUint(Var2, Result);
-            btS32: var1^.ts32 := var1^.ts32 - Getint(Var2, Result);
+            btU32: var1^.tu32 := var1^.tu32 - GetUint(Var2, Result);
+            btEnum, btS32: var1^.ts32 := var1^.ts32 - Getint(Var2, Result);
             {$IFNDEF PS_NOINT64}btS64: var1^.ts64 := var1^.ts64 - GetInt64(Var2, Result); {$ENDIF}
             btSingle: var1^.tsingle := var1^.tsingle - GetReal( Var2, Result);
             btDouble: var1^.tdouble := var1^.tdouble - GetReal(Var2, Result);
@@ -3432,6 +3457,7 @@ begin
             btU32: b := var1^.tu32 >= GetUint(Var2, Result);
             btS32: b := var1^.ts32 >= Getint(Var2, Result);
             {$IFNDEF PS_NOINT64}btS64: b := var1^.ts64 >= GetInt64(Var2, Result); {$ENDIF}
+            btEnum: b := var1^.ts32 >= Getint(Var2, Result);
             btSingle: b := var1^.tsingle >= GetReal( Var2, Result);
             btDouble: b := var1^.tdouble >= GetReal( Var2, Result);
             btExtended: b := var1^.textended >= GetReal( Var2, Result);
@@ -3458,6 +3484,7 @@ begin
             btU32: b := var1^.tu32 <= GetUint(Var2, Result);
             btS32: b := var1^.ts32 <= Getint(Var2, Result);
             {$IFNDEF PS_NOINT64}btS64: b := var1^.ts64 <= GetInt64(Var2, Result); {$ENDIF}
+            btEnum: b := var1^.ts32 <= Getint(Var2, Result);
             btSingle: b := var1^.tsingle <= GetReal( Var2, Result);
             btDouble: b := var1^.tdouble <= GetReal( Var2, Result);
             btExtended: b := var1^.textended <= GetReal( Var2, Result);
@@ -3484,6 +3511,7 @@ begin
             btU32: b := var1^.tu32 > GetUint(Var2, Result);
             btS32: b := var1^.ts32 > Getint(Var2, Result);
             {$IFNDEF PS_NOINT64}btS64: b := var1^.ts64 > GetInt64(Var2, Result); {$ENDIF}
+            btEnum: b := var1^.ts32 > Getint(Var2, Result);
             btSingle: b := var1^.tsingle > GetReal( Var2, Result);
             btDouble: b := var1^.tdouble > GetReal( Var2, Result);
             btExtended: b := var1^.textended > GetReal( Var2, Result);
@@ -3503,6 +3531,7 @@ begin
             btU32: b := var1^.tu32 < GetUint(Var2, Result);
             btS32: b := var1^.ts32 < Getint(Var2, Result);
             {$IFNDEF PS_NOINT64}btS64: b := var1^.ts64 < GetInt64(Var2, Result); {$ENDIF}
+            btEnum: b := var1^.ts32 < Getint(Var2, Result);
             btSingle: b := var1^.tsingle < GetReal( Var2, Result);
             btDouble: b := var1^.tdouble < GetReal( Var2, Result);
             btExtended: b := var1^.textended < GetReal( Var2, Result);
@@ -4036,9 +4065,9 @@ begin
           btS32: FArrayStart := tempf.ts32;
           // Parse `array[wtTrunk ...`
           btEnum: case TPSEnumType(tempf.FType).EnumSize of
-                    esByte:     FArrayStart := tempf.tu8;
-                    esWord:     FArrayStart := tempf.tu16;
-                    esCardinal: FArrayStart := tempf.tu32;
+                    es8Bit:   FArrayStart := tempf.ts8;
+                    es16bit:  FArrayStart := tempf.ts16;
+                    es32bit:  FArrayStart := tempf.ts32;
                     else
                       raise Exception.Create('Unexpected EnumSize');
                   end;
@@ -4076,9 +4105,9 @@ begin
           btS32: FArrayLength := tempf.ts32;
           // Parse `array[wtTrunk..wtStone] ...`
           btEnum: case TPSEnumType(tempf.FType).EnumSize of
-                    esByte:     FArrayLength := tempf.tu8;
-                    esWord:     FArrayLength := tempf.tu16;
-                    esCardinal: FArrayLength := tempf.tu32;
+                    es8Bit:  FArrayLength := tempf.ts8;
+                    es16bit: FArrayLength := tempf.ts16;
+                    es32bit: FArrayLength := tempf.ts32;
                     else
                       raise Exception.Create('Unexpected EnumSize');
                   end;
@@ -5326,9 +5355,8 @@ begin
         begin
           Params[c].ExpectedType := GetTypeNo(BlockInfo, Params[c].Val);
           if PType <> nil then
-          if (Params[c].ExpectedType = nil) or not (Params[c].ExpectedType.BaseType in [btString,
-            {$IFNDEF PS_NOWIDESTRING}btWideString, btUnicodeString, btWideChar,{$ENDIF}
-            btChar]) then begin
+          if (Params[c].ExpectedType = nil) or not IsStringOrCharType(Params[c].ExpectedType.BaseType) then
+          begin
             MakeError('', ecTypeMismatch, '');
             Result := False;
             exit;
@@ -5660,7 +5688,7 @@ function TPSPascalCompiler.ProcessSub(BlockInfo: TPSBlockInfo): Boolean;
   function WriteOutRec(x: TPSValue; AllowData: Boolean): Boolean; forward;
   procedure AfterWriteOutRec(var x: TPSValue); forward;
 
-  function CheckCompatType(V1, v2: TPSValue): Boolean;
+  function CheckCompatType(V1, v2: TPSValue; aEnumAsInt: Boolean = False): Boolean;
   var
     p1, P2: TPSType;
   begin
@@ -5701,7 +5729,7 @@ function TPSPascalCompiler.ProcessSub(BlockInfo: TPSBlockInfo): Boolean;
     begin
       Result := True;
     end else
-      Result := IsCompatibleType(p1, p2, False);
+      Result := IsCompatibleType(p1, p2, False, aEnumAsInt);
   end;
 
   function _ProcessFunction(ProcCall: TPSValueProc; ResultRegister: TPSValue): Boolean; forward;
@@ -6183,7 +6211,9 @@ function TPSPascalCompiler.ProcessSub(BlockInfo: TPSBlockInfo): Boolean;
       for i := 0 to arr.count -1 do
       begin
         mType := GetTypeNo(BlockInfo, arr.Item[i]);
-        if (mType <> SetType.SetType) and not (IsIntType(mType.FBaseType) and IsIntType(SetType.SetType.BaseType)) then
+        if (mType <> SetType.SetType) and
+           not (IsIntType(mType.FBaseType) and IsIntType(SetType.SetType.BaseType)) and
+           not (IsCharType(mType.FBaseType) and IsCharType(SetType.SetType.BaseType)) then
         begin
           with MakeError('', ecTypeMismatch, '') do
           begin
@@ -6811,7 +6841,8 @@ function TPSPascalCompiler.ProcessSub(BlockInfo: TPSBlockInfo): Boolean;
               x := nil;
               exit;
             end;
-            if not IsIntType(GetTypeNo(BlockInfo, tmp).BaseType) then
+            var bType := GetTypeNo(BlockInfo, tmp).BaseType;
+            if not IsIntType(bType) and not (bType = btEnum) then
             begin
               MakeError('', ecTypeMismatch, '');
               tmp.Free;
@@ -8579,6 +8610,8 @@ function TPSPascalCompiler.ProcessSub(BlockInfo: TPSBlockInfo): Boolean;
             else if IsIntRealType(t1.BaseType) and
               IsIntRealType(t2.BaseType) then
               Result := FDefaultBoolType
+            else if (t1.BaseType = btEnum) and (t2.BaseType = btEnum) and (t1 = t2) then
+              Result := FDefaultBoolType
             else if
             ((t1.BaseType = btString) or (t1.BaseType = btChar) {$IFNDEF PS_NOWIDESTRING} or (t1.BaseType = btWideString) or (t1.BaseType = btWideChar) or (t1.BaseType = btUnicodestring){$ENDIF}) and
             ((t2.BaseType = btString) or (t2.BaseType = btChar) {$IFNDEF PS_NOWIDESTRING} or (t2.BaseType = btWideString) or (t2.BaseType = btWideChar) or (t2.BaseType = btUnicodestring){$ENDIF}) then
@@ -9447,7 +9480,8 @@ begin
       end;
     end;
   begin
-    if not CheckCompatType(Outreg, InData) then
+    // Check enum as Int for `arr[WT]`
+    if not CheckCompatType(Outreg, InData, True) then
     begin
       MakeError('', ecTypeMismatch, '');
       Result := False;
@@ -9652,8 +9686,17 @@ begin
       end
       else
       begin
-        if (Tmp.ExpectedType = nil) or (Tmp.ExpectedType = FAnyString) then
+        if Tmp.ExpectedType = nil then
+          Tmp.ExpectedType := GetTypeNo(BlockInfo, tmp.Val)
+        else if Tmp.ExpectedType = FAnyString then begin
           Tmp.ExpectedType := GetTypeNo(BlockInfo, tmp.Val);
+          if not IsStringOrCharType(Tmp.ExpectedType.BaseType) then
+          begin
+            MakeError('', ecTypeMismatch, '');
+            Cleanup;
+            exit;
+          end;
+        end;
         if Tmp.ExpectedType.BaseType = btPChar then
         begin
           Tmp.TempVar := AllocStackReg(at2ut(FindBaseType(btstring)))
@@ -11475,13 +11518,10 @@ var
           WriteData(tbtString(p^.tstring)[1], Length(tbtString(p^.tstring)));
         end;
       btenum:
-        begin
-          if TPSEnumType(p^.FType).HighValue <=256 then
-            WriteData( p^.tu32, 1)
-          else if TPSEnumType(p^.FType).HighValue <=65536 then
-            WriteData(p^.tu32, 2)
-          else
-            WriteData(p^.tu32, 4);
+        case TPSEnumType(p^.FType).EnumSize of
+          es8bit:   WriteData(p^.tu32, 1);
+          es16bit:  WriteData(p^.tu32, 2);
+          es32bit:  WriteData(p^.tu32, 4);
         end;
       bts8,btu8: WriteData(p^.tu8, 1);
       bts16,btu16: WriteData(p^.tu16, 2);
@@ -11555,12 +11595,11 @@ var
             bt := btU32;
           end else
           if (x.BaseType = btEnum) then begin
-            if TPSEnumType(x).HighValue <= 256 then
-              bt := btU8
-            else if TPSEnumType(x).HighValue <= 65536 then
-              bt := btU16
-            else
-              bt := btU32;
+            case TPSEnumType(x).EnumSize of
+              es8bit:   bt := bts8;
+              es16bit:  bt := bts16;
+              es32bit:  bt := bts32;
+            end;
           end;
           if FExportName <> '' then
           begin
@@ -14060,12 +14099,12 @@ procedure TPSEnumType.SetHighValue(const aHighValue: Cardinal);
 begin
   FHighValue := aHighValue;
 
-  if FHighValue <= 256 then
-    FEnumSize := esByte
-  else if FHighValue <= 65536 then
-    FEnumSize := esWord
+  if FHighValue < 128 then
+    FEnumSize := es8bit
+  else if FHighValue < 32768 then
+    FEnumSize := es16bit
   else
-    FEnumSize := esCardinal;
+    FEnumSize := es32bit;
 end;
 
 
@@ -14142,7 +14181,7 @@ begin
   if (FValue <> nil) then
   begin
     case FValue.FType.BaseType of
-      btEnum: FValue.tu32 := Val;
+      btEnum: FValue.ts32 := Val;
       btU32, btS32: FValue.ts32 := Val;
       btU16, btS16: FValue.ts16 := Val;
       btU8, btS8: FValue.ts8 := Val;
@@ -14230,7 +14269,7 @@ begin
   if (FValue <> nil) then
   begin
     case FValue.FType.BaseType of
-      btEnum: FValue.tu32 := Val;
+      btEnum: FValue.ts32 := Val;
       btU32, btS32: FValue.tu32 := Val;
       btU16, btS16: FValue.tu16 := Val;
       btU8, btS8: FValue.tu8 := Val;
@@ -15232,7 +15271,7 @@ end;
 function TPSSetType.GetBitSize: Longint;
 begin
   case SetType.BaseType of
-    btEnum: begin Result := TPSEnumType(setType).HighValue+1; end;
+    btEnum: begin Result := TPSEnumType(setType).HighValue + 1; end;
     btChar, btU8: Result := 256;
   else
     Result := 0;

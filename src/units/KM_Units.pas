@@ -1009,23 +1009,9 @@ begin
   if not (InHouse = Home) then
     Exit;
   fTask := nil;
-  //because he is also in the merchant house, he has to have another task, just like normal citizen
+  //because he is also in the merchant house, he has another task
   if (fHome is TKMHouseMerchant) then
-  begin
     TaskSendWares;
-    {fTask := TKMTaskMining.Create(Self, fHome.WareOutput[1]);
-    tm := TKMTaskMining(fTask);
-
-    // Verify the task can be done
-    if not ( //todo: Invert negation here
-    tm.WorkPlan.IsIssued
-    and tm.WorkPlan.CanWork(Self)
-    )
-     then
-      // If task can't be done - discard it
-      FreeAndNil(fTask);}
-
-  end;
 
   if not (fHome is TKMHouseTower)  then
     Exit;

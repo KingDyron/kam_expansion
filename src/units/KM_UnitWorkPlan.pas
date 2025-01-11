@@ -921,6 +921,7 @@ begin
                         end else
                         begin
                           DefaultPlan(aUnit);
+                          ActSetByMultiplier(aUnit, 0.3);
                           WalkStyle(KMPointDir(tmp.Loc,dirN), uaWalkTool2,uaWork2, 5,0,uaWalkBooty2,gsFarmerWine);
                         end;
                       end;
