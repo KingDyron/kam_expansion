@@ -100,7 +100,7 @@ begin
       S := gRes.JsonData.GetBattleTutorialPath(I);
       name := Copy(TPath.GetFileName(S), 1, length(TPath.GetFileName(S)) - 4 );
 
-      mapInfo := TKMMapInfo.Create(ExeDir + TPath.GetDirectoryName(S) + PathDelim,
+      mapInfo := TKMMapInfo.Create(TPath.GetDirectoryName(S) + PathDelim,
                                    name, true);
 
       if K > high(Button_Tutorial) then //add new button if needed
@@ -121,7 +121,7 @@ begin
   begin
     S := gRes.JsonData.GetTutorialPath(I);
     name := Copy(TPath.GetFileName(S), 1, length(TPath.GetFileName(S)) - 4 );
-    mapInfo := TKMMapInfo.Create(ExeDir + TPath.GetDirectoryName(S) + PathDelim,
+    mapInfo := TKMMapInfo.Create(TPath.GetDirectoryName(S) + PathDelim,
                                  name, true);
 
     if K > high(Button_Tutorial) then //add new button if needed
@@ -198,13 +198,13 @@ begin
     S := gRes.JsonData.GetBattleTutorialPath(I);
 
     if Assigned(OnNewSingleMap) then
-      OnNewSingleMap(ExeDir + S, gRes.JsonData.BattleTutorial[I]);
+      OnNewSingleMap(S, gRes.JsonData.BattleTutorial[I]);
   end else
   begin
     S := gRes.JsonData.GetTutorialPath(I);
 
     if Assigned(OnNewSingleMap) then
-      OnNewSingleMap(ExeDir + S, gRes.JsonData.Tutorial[I]);
+      OnNewSingleMap(S, gRes.JsonData.Tutorial[I]);
 
   end;
 

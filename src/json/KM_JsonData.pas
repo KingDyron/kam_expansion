@@ -144,7 +144,7 @@ begin
   for I := 0 to fileList.Count - 1 do
   begin
     S :=  TPath.GetFileName(fileList[I]);
-    S := fileList[I] + PathDelim + S + '.dat';
+    S := ExeDir + fileList[I] + PathDelim + S + '.dat';
     if FileExists(S) then
     begin
       SetLength(fTutorials, length(fTutorials) + 1);
@@ -157,7 +157,7 @@ begin
   for I := 0 to fileList.Count - 1 do
   begin
     S :=  TPath.GetFileName(fileList[I]);
-    S := fileList[I] + PathDelim + S + '.dat';
+    S := ExeDir + fileList[I] + PathDelim + S + '.dat';
     if FileExists(S) then
     begin
       SetLength(fBattleTutorials, length(fBattleTutorials) + 1);
