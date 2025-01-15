@@ -90,6 +90,7 @@ type
     procedure MoveObjectToCursorCell(aObjectToMove: TObject);
     procedure UpdateSelection(aCheckUnderCursor: Boolean = true; aAnimals : Boolean = true);
     procedure SelectNextGameObjWSameType;
+    procedure SelectNextGameObjWSimilarType;
     procedure HandleNextHouseKey(Key: Word; var aHandled: Boolean);
 
     procedure DragHouseModeStart(const aHouseNewPos, aHouseOldPos: TKMPoint);
@@ -195,7 +196,7 @@ uses
   KM_ResTexts, KM_Game, KM_GameParams, KM_Cursor,
   KM_Resource, KM_ResHouses, KM_TerrainDeposits, KM_ResKeys, KM_GameApp,
   KM_AIDefensePos, KM_RenderUI, KM_ResFonts, KM_CommonClasses, KM_UnitWarrior,
-  KM_Maps,
+  KM_Maps, KM_Campaigns,
   KM_Utils, KM_CommonUtils,
   KM_UnitGroupTypes,
   KM_ResTypes;
@@ -1168,7 +1169,13 @@ begin
   if keyHandled then Exit;
 
   if (Key = gResKeys[kfMapedSaveMap]) and (ssCtrl in Shift) then
-    gGame.SaveMapEditor(TKMapsCollection.FullPath(Trim(gGameParams.Name), '.dat', fMapIsMultiplayer));
+    if gCursor.CampaignData.Path <> '' then
+      gGame.SaveMapEditor(TKMCampaignsCollection.GetFullPath(gCursor.CampaignData.Path,
+                          gCursor.CampaignData.ShortName,
+                          gCursor.CampaignData.MissionID,
+                          '.dat'))
+    else
+      gGame.SaveMapEditor(TKMapsCollection.FullPath(Trim(gGameParams.Name), '.dat', fMapIsMultiplayer));
 
   //F1-F5 menu shortcuts
   if Key = gResKeys[kfMapedTerrain]   then
@@ -1671,6 +1678,68 @@ begin
 end;
 
 
+// Select next building/unit/unit group with the similar type for same owner
+procedure TKMMapEdInterface.SelectNextGameObjWSimilarType;
+var
+  nextHouse: TKMHouse;
+  nextUnit: TKMUnit;
+  nextUnitGroup: TKMUnitGroup;
+  ID : Integer;
+begin
+  if gMySpectator.Hand.InCinematic then
+    Exit;
+
+  if gMySpectator.Selected is TKMUnit then
+  begin
+    nextUnit := gHands.GetNextUnitWSameType(TKMUnit(gMySpectator.Selected));
+    if nextUnit <> nil then
+    begin
+      gMySpectator.Selected := nextUnit;
+      fViewport.Position := nextUnit.PositionF; //center viewport on that unit
+    end;
+
+  end else
+  if gMySpectator.Selected is TKMHouse then
+  begin
+    nextHouse := gHands.GetNextHouseWSameType(TKMHouse(gMySpectator.Selected));
+    if nextHouse <> nil then
+    begin
+      gMySpectator.Selected := nextHouse;
+      fViewport.Position := KMPointF(nextHouse.Entrance); //center viewport on that house
+    end;
+
+  end else
+  if gMySpectator.Selected is TKMUnitGroup then
+  begin
+    nextUnitGroup := gHands.GetNextGroupWSameType(TKMUnitGroup(gMySpectator.Selected));
+    if nextUnitGroup <> nil then
+    begin
+      gMySpectator.Selected := nextUnitGroup;
+      fViewport.Position := nextUnitGroup.FlagBearer.PositionF; //center viewport on that unit
+    end;
+
+  end else
+  begin
+    ID := gGame.MapEditor.ActiveMarker.Index;
+    case gGame.MapEditor.ActiveMarker.MarkerType of
+      mmtDefence : ID := gMySpectator.Hand.GetNextMarkerDefenceIndex(ID);
+      mmtRevealFOW : ID := gMySpectator.Hand.GetNextMarkerFogIndex(ID);
+      mmtDefendPos : ID := gMySpectator.Hand.GetNextMarkerDefendIndex(ID);
+      mmtSpawner : ID := gHands.PlayerAnimals.GetNextMarkerSpawnerIndex(ID);
+    end;
+    case gGame.MapEditor.ActiveMarker.MarkerType of
+      mmtDefence : fViewport.Position := gMySpectator.Hand.AI.General.DefencePositions[ID].Position.Loc.ToFloat;
+      mmtRevealFOW : fViewport.Position := gGame.MapEditor.Revealers[gGame.MapEditor.ActiveMarker.Owner][ID].ToFloat;
+      mmtDefendPos : fViewport.Position := gMySpectator.Hand.AI.General.DefendPositions[ID].Position.ToFloat;
+      mmtSpawner : fViewport.Position := gHands.PlayerAnimals.Spawners[ID].Loc.ToFloat;
+    end;
+    gGame.MapEditor.ActiveMarker.Index := ID;
+    ShowMarkerInfo(gGame.MapEditor.ActiveMarker);
+    gMySpectator.Selected := nil;
+  end;
+
+  UpdateSelection(false, true);
+end;
 procedure TKMMapEdInterface.HandleNextHouseKey(Key: Word; var aHandled: Boolean);
 begin
   // Switch between same type buildings/units/groups

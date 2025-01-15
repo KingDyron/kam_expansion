@@ -339,7 +339,13 @@ begin
     htAny:     for HT := HOUSE_MIN to HOUSE_MAX do
                 if not (HT in WALL_HOUSES) then
                   Inc(Result, Houses[HT].Initial + Houses[HT].Built - Houses[HT].SelfDestruct - Houses[HT].Lost);
-    else        Result := Houses[aType].Initial + Houses[aType].Built - Houses[aType].SelfDestruct - Houses[aType].Lost;
+    else        begin
+                  {Inc(Result, Houses[aType].Initial);
+                  Inc(Result, Houses[aType].Built);
+                  Dec(Result, Houses[aType].SelfDestruct);
+                  Dec(Result, Houses[aType].Lost);}
+                  Result := Result + (Houses[aType].Initial + Houses[aType].Built) - Houses[aType].SelfDestruct - Houses[aType].Lost;
+                  end;
   end;
 end;
 
@@ -354,7 +360,7 @@ begin
     htNone:    ;
     htAny:     for HT := HOUSE_MIN to HOUSE_MAX do
                   Inc(Result, Houses[HT].Initial + Houses[HT].Built - Houses[HT].SelfDestruct - Houses[HT].Lost - Houses[HT].Closed);
-    else        Result := Houses[aType].Initial + Houses[aType].Built - Houses[aType].SelfDestruct - Houses[aType].Lost - Houses[aType].Closed;
+    else        Result := Result + Houses[aType].Initial + Houses[aType].Built - Houses[aType].SelfDestruct - Houses[aType].Lost - Houses[aType].Closed;
   end;
 end;
 

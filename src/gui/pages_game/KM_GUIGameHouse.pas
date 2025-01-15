@@ -1431,8 +1431,8 @@ begin
   HandleHouseClosedForWorker(aHouse);
   Button_House_Worker.FlagColor := gHands[aHouse.Owner].FlagColor;
 
-  HealthBar_House.Caption   := IntToStr(round(aHouse.GetHealth)) + '/' + IntToStr(aHouse.MaxHealth);
-  HealthBar_House.Position  := aHouse.GetHealth / aHouse.MaxHealth;
+  //HealthBar_House.Caption   := IntToStr(aHouse.GetHealth) + '/' + IntToStr(aHouse.MaxHealth);
+  HealthBar_House.SetFromDivByMax(aHouse.GetHealth, aHouse.MaxHealth);
   Button_UpgradeHouse.Hide;
   Button_ForceWork.Hide;
   Image_WorkProgress.Hide;

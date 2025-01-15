@@ -2532,7 +2532,8 @@ end;
 
 procedure TKMUnitGroup.Paint(aTickLag: Single);
 begin
-
+  If self = nil then
+    Exit;
   PaintHighlighted(aTickLag, IfThen(FlagBearer.FlagColor > 0, FlagBearer.FlagColor, gHands[FlagBearer.Owner].GameFlagColor), FlagColor);
 end;
 

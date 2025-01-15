@@ -5937,7 +5937,6 @@ var
     end;
     UpdatePassability(KMPoint(X,Y));
     AddToVisited(X,Y);
-
     // 4. Update surrounding tiles
     // Floodfill through around tiles
     UpdateTransition(X,  Y-1, aStep + 1); //  x x x

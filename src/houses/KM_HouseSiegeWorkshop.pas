@@ -509,7 +509,7 @@ begin
   if fUnitType = utNone then
     Result := 0
   else
-    Result := ((WorkingTime) + (fPhase * fPhaseDuration)) / (fPhaseDuration * GetPhasesCount);
+    Result := ((WorkingTime) + (fPhase * fPhaseDuration)) / Max(fPhaseDuration * GetPhasesCount, 1);
 
 end;
 

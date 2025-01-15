@@ -85,6 +85,8 @@ type
     fMessageStack: TKMMessageStack;
     fSelection: array [0..DYNAMIC_HOTKEYS_NUM - 1] of Integer;
     fIsErasingRoad : Boolean;
+    fInfoHideTime: Cardinal;
+
 
     procedure Create_Controls;
     procedure Create_Replay;
@@ -207,6 +209,7 @@ type
     procedure TrackBar_GameSpeedChange(Sender : TObject);
     procedure PinPanels_OnShow(Sender : TObject);
     function Button_GetGameSpeed(aTag : Integer) : Integer;
+    procedure Update_Label_Info;
   protected
     Sidebar_Top: TKMImage;
     Sidebar_Middle: TKMImage;
@@ -214,7 +217,7 @@ type
     Label_GameTimeName,
     Label_HourName,
     Label_GameTimeBar,
-    Label_HourBar: TKMLabel;
+    Label_HourBar, Label_Info: TKMLabel;
     Button_GameSpeed:array[0..5] of TKMButton;
     TrackBar_GameSpeed : TKMTrackBar;
 
@@ -882,6 +885,7 @@ begin
   fAlerts := TKMAlerts.Create(fViewport);
 
   // Instruct to use global Terrain
+  fInfoHideTime := 0;
   fLastSaveName := '';
   fLastKbdSelectionTime := 0;
   fPlacingBeacon := False;
@@ -932,7 +936,6 @@ begin
   Image_DirectionCursor.Hide;
 
   InitDebugControls;
-
 { I plan to store all possible layouts on different pages which gets displayed one at a time }
 { ========================================================================================== }
 
@@ -997,6 +1000,8 @@ begin
   // Panel_Main.Height := aScreenY;
   // UpdatePositions; //Reposition messages stack etc.
 
+  Label_Info := TKMLabel.Create(Panel_Main, 232, 50, gResTexts[TX_MAPED_MAP_SAVED], fntOutline, taLeft);
+  Label_Info.Hide;
   AfterCreateComplete;
 end;
 
@@ -3641,9 +3646,11 @@ begin
 
   if gGame.IsPlayerWaiting and IsKeyBlockedOnPause(Key) then Exit;
 
+
   keyHandled := False;
   inherited KeyDown(Key, Shift, aIsFirst, keyHandled);
   if keyHandled then Exit;
+
 
   if (Key = gResKeys[kfReplayPlayNextTick]) and Button_ReplayStep.IsClickable then
     ReplayClick(Button_ReplayStep);
@@ -3668,6 +3675,37 @@ begin
 
   fGuiGameUnit.KeyDown(Key, Shift, keyHandled);
   fGuiGameHouse.KeyDown(Key, Shift, keyHandled);
+
+  If not gGameParams.IsMultiPlayerOrSpec then
+    if (Key = gResKeys[kfMapedSaveMap]) and (ssCtrl in Shift) and (ssShift in Shift) and (fInfoHideTime = 0) then
+    begin
+      keyHandled := true;;
+      gGame.Save(gGameParams.Name + '_QS', UTCNow);
+      fInfoHideTime := TimeGet + 3000;
+      Update_Label_Info;
+    end;
+end;
+
+procedure TKMGamePlayInterface.Update_Label_Info;
+const
+  FADE_TIME_MAX = 1000;
+var
+  time: Cardinal;
+  A: Byte;
+begin
+  time := TimeGet;
+  if time > fInfoHideTime then
+  begin
+    Label_Info.Visible := False;
+    fInfoHideTime := 0;
+  end
+  else
+  begin
+    // a bit of 'animation'
+    A := Round(Min(fInfoHideTime - time, FADE_TIME_MAX) / FADE_TIME_MAX * 255);
+    Label_Info.FontColor := ((A shl 24) or $FFFFFF);
+    Label_Info.Visible := true;
+  end;
 end;
 
 
@@ -5022,6 +5060,7 @@ begin
                             not fDragScrolling
                             and not ((gGame.IsPaused or gGame.IsWaitingForNetwork) and IsKeyFuncBlockedOnPause(kfScrollUp)),
                             gMySpectator.Hand.InCinematic);
+  Update_Label_Info;
 end;
 
 

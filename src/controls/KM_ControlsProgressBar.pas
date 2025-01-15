@@ -54,6 +54,8 @@ type
     property AddColor: Cardinal read fAddColor write fAddColor;
     property LinesCount : Byte read fLinesCount write fLinesCount;
     property Orientation : TKMProgressBarOrientation read fOrientation write fOrientation;
+
+    procedure SetFromDivByMax(aValue, aMax : Integer);
   end;
 
   TKMImageBar = class(TKMPercentBar)
@@ -198,6 +200,18 @@ begin
   fSeam := EnsureRange(aValue, 0, 1);
 end;
 
+procedure TKMPercentBar.SetFromDivByMax(aValue: Integer; aMax: Integer);
+begin
+  If aMax <= 0 then
+  begin
+    Position := 0;
+    Caption := '---';
+    Exit;
+  end;
+  Position := aValue/aMax;
+  Caption := Format('%d/%d', [aValue, aMax]);
+end;
+
 
 procedure TKMPercentBar.PaintBar;
 begin
@@ -218,7 +232,6 @@ begin
   TKMRenderUI.WritePicture(AbsLeft - 1, AbsTop - 1, Width, Height, [], rxGui, TexID, Enabled, $FFFF00FF, 0, fPosition);
 
   G := Width div (fLinesCount + 1);
-
   for I := 1 to fLinesCount do
   begin
     TKMRenderUI.WritePicture(AbsLeft - 7 + G * I, AbsTop + Height - 7, 13, 6, [], rxGui, 929, Enabled, $FFFF00FF, 0, fPosition);
