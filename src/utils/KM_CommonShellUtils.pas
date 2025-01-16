@@ -12,7 +12,7 @@ interface
 implementation
 uses
   {$IFDEF MSWindows}Windows, {$ENDIF}
-  Forms, Net.HttpClient
+  Vcl.Forms, Net.HttpClient
   {$IFDEF WDC}, ShellApi, PsAPI {$ENDIF}
   {$IFDEF FPC}, JwaPsApi {$ENDIF}
   ;

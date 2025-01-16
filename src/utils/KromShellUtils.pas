@@ -7,7 +7,7 @@ uses
   {$IFDEF Unix}LCLType, {$ENDIF}
   {$IFDEF FPC}LCLIntf, UTF8Process, LazHelpHTML, {$ENDIF}
   {$IFDEF WDC}ShellApi, {$ENDIF}
-	Forms, Dialogs, Controls;
+	Vcl.Forms, Vcl.Dialogs, Vcl.Controls;
 
 	function RunOpenDialog(Sender: TOpenDialog; const aName, aPath, aFilter: string): Boolean;
   function RunSaveDialog(Sender: TSaveDialog; aFileName, aFilePath, aFilter: string; const aFileExt: string = ''): Boolean;

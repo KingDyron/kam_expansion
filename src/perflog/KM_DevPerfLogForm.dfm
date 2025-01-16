@@ -10,30 +10,28 @@ object FormPerfLogs: TFormPerfLogs
   Color = clBtnFace
   ParentFont = True
   FormStyle = fsStayOnTop
-  OldCreateOrder = True
   Position = poScreenCenter
-  PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object Label1: TLabel
     Left = 104
     Top = 144
-    Width = 125
-    Height = 13
+    Width = 145
+    Height = 15
     Caption = 'Filled in dynamically on init'
     Visible = False
   end
   object Label2: TLabel
     Left = 182
     Top = 6
-    Width = 49
-    Height = 13
+    Width = 54
+    Height = 15
     Caption = 'Scale (ms)'
   end
   object lblPerflogSaveThreshold: TLabel
     Left = 8
     Top = 83
-    Width = 102
-    Height = 13
+    Width = 109
+    Height = 15
     Caption = 'Save Threshold (ms):'
   end
   object cbStackedGFX: TCheckBox

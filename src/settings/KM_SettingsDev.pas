@@ -3,8 +3,8 @@ unit KM_SettingsDev;
 interface
 uses
   SysUtils, StrUtils, Classes, Math,
-  ComCtrls, Controls, ExtCtrls, StdCtrls,
-  {$IFDEF MSWindows} Forms, Spin; {$ENDIF}
+  Vcl.ComCtrls, Vcl.Controls, Vcl.ExtCtrls, Vcl.StdCtrls,
+  {$IFDEF MSWindows} Vcl.Forms, Vcl.Samples.Spin; {$ENDIF}
   {$IFDEF Unix} LCLIntf, LCLType; {$ENDIF}
 
 

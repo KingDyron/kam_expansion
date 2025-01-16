@@ -10,11 +10,9 @@ object FormLogistics: TFormLogistics
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   OnClose = FormClose
   OnCreate = FormCreate
   OnShow = FormShow
-  PixelsPerInch = 96
   TextHeight = 13
   object vstPageCtrl: TPageControl
     Left = 0
@@ -27,26 +25,14 @@ object FormLogistics: TFormLogistics
     OnChange = vstPageCtrlChange
     object tabSheetDeliveries: TTabSheet
       Caption = 'Deliveries'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
     object tabSheetOffers: TTabSheet
       Caption = 'Offers'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
     object tabSheetDemands: TTabSheet
       Caption = 'Demands'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
   end
   object panel1: TPanel
@@ -76,10 +62,9 @@ object FormLogistics: TFormLogistics
         Top = 35
         Width = 191
         Height = 62
-        OnClickCheck = FilterUpdated
         Columns = 6
         CheckBoxPadding = 2
-        ItemHeight = 15
+        ItemHeight = 17
         Items.Strings = (
           '0'
           '1'
@@ -100,6 +85,7 @@ object FormLogistics: TFormLogistics
           '16'
           '17')
         TabOrder = 0
+        OnClickCheck = FilterUpdated
       end
       object gbToFromID: TGroupBox
         Left = 216

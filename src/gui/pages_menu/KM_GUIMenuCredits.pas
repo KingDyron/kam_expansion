@@ -6,7 +6,7 @@ uses
   {$IFDEF WDC} ShellAPI, Windows, {$ENDIF} // Required for OpenURL in Delphi
   {$IFDEF FPC} LCLIntf, {$ENDIF} // Required for OpenURL in Lazarus
   Classes,
-  Forms,
+  Vcl.Forms,
   KM_Controls, KM_ControlsBase,
   KM_Defaults,
   KM_InterfaceDefaults, KM_InterfaceTypes;

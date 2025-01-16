@@ -3,7 +3,7 @@ unit KM_GUIMapEdUnit;
 interface
 uses
    Classes, KromUtils, Math, StrUtils, SysUtils,
-   Controls,
+   Vcl.Controls,
    KM_Controls, KM_ControlsBase, KM_ControlsDrop, KM_ControlsEdit, KM_ControlsProgressBar, KM_ControlsList,
    KM_ControlsPopUp, KM_ControlsScroll,
    KM_Defaults, KM_Pics, KM_Units, KM_UnitGroup, KM_ControlsSwitch,

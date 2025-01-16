@@ -6,7 +6,7 @@ uses
   Classes,
   {$IFDEF MSWindows} Windows, {$ENDIF}
   {$IFDEF Unix} LCLIntf, LCLType, {$ENDIF}
-  Controls, Menus, ExtCtrls, Forms;
+  Vcl.Controls, Vcl.Menus, Vcl.ExtCtrls, Vcl.Forms;
 
 type
   // This type allow to show hints over menu items

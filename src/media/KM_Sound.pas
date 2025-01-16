@@ -121,7 +121,7 @@ var
 implementation
 uses
   SysUtils, Classes, TypInfo, Math,
-  Dialogs,
+  Vcl.Dialogs,
   {$IFDEF WDC} UITypes, {$ENDIF}
   {$IFNDEF NO_OGG_SOUND}
   Codec, VorbisFile,

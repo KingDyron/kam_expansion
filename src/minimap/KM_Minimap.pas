@@ -51,7 +51,7 @@ type
 
 implementation
 uses
-  SysUtils, Math, Graphics,
+  SysUtils, Math, Vcl.Graphics,
   KromUtils;
 
 

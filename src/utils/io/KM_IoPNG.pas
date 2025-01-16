@@ -3,7 +3,7 @@ unit KM_IoPNG;
 interface
 uses
   KM_CommonTypes,
-  {$IFDEF WDC} PNGImage; {$ENDIF}
+  {$IFDEF WDC} Vcl.Imaging.PNGImage; {$ENDIF}
   {$IFDEF FPC} BGRABitmap, BGRABitmapTypes; {$ENDIF}
 
 
@@ -18,7 +18,7 @@ uses
 
 procedure SaveToPng(aWidth, aHeight: Word; const aPixelData: TKMCardinalArray; const aFile: UnicodeString);
 var
-  {$IFDEF WDC} Png: PNGImage.TPngImage; {$ENDIF}
+  {$IFDEF WDC} Png: Vcl.Imaging.PNGImage.TPngImage; {$ENDIF}
   {$IFDEF FPC} Png: TBGRABitmap; {$ENDIF}
   I, K: Integer;
   T: Cardinal;

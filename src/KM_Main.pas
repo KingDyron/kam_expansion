@@ -93,7 +93,7 @@ var
 implementation
 uses
   Classes, SysUtils, SysConst, StrUtils, Math,
-  Forms,
+  Vcl.Forms,
   {$IFDEF MSWindows} MMSystem, {$ENDIF}
   {$IFDEF USE_MAD_EXCEPT} KM_Exceptions, {$ENDIF}
   KromUtils, KM_FileIO,

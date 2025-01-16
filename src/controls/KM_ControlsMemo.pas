@@ -2,7 +2,7 @@
 {$I KaM_Remake.inc}
 interface
 uses
-  Classes, Controls,
+  Classes, Vcl.Controls,
   KM_Controls, KM_ControlsScroll,
   KM_RenderUI, KM_ResFonts,
   KM_CommonTypes, KM_Points;
@@ -101,7 +101,7 @@ uses
   {$IFDEF MSWindows} Windows, {$ENDIF}
   {$IFDEF Unix} LCLIntf, LCLType, {$ENDIF}
   SysUtils, StrUtils, Math,
-  Clipbrd,
+  Vcl.Clipbrd,
   KromUtils,
   KM_ControlsUtils,
   KM_Resource, KM_Render, KM_RenderTypes,

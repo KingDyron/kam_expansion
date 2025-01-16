@@ -19,8 +19,8 @@ type
     Weather : TKMSettingsWeather;
     constructor Create;
     procedure Reset;
-    procedure Save(SaveStream: TKMemoryStream);
-    procedure Load(LoadStream: TKMemoryStream);
+    procedure Save(SaveStream: TKMemoryStream; aWeather : Boolean = true);
+    procedure Load(LoadStream: TKMemoryStream; aWeather : Boolean = true);
     function ToString: string; reintroduce;
   end;
 
@@ -53,27 +53,33 @@ begin
 end;
 
 
-procedure TKMGameOptions.Load(LoadStream: TKMemoryStream);
+procedure TKMGameOptions.Load(LoadStream: TKMemoryStream; aWeather : Boolean = true);
 begin
   LoadStream.Read(Peacetime);
   LoadStream.Read(SpeedPT);
   LoadStream.Read(SpeedAfterPT);
   LoadStream.Read(RandomSeed);
   LoadStream.Read(MissionDifficulty, SizeOf(MissionDifficulty));
-  LoadStream.Read(MissionBuiltInDifficulty, SizeOf(MissionBuiltInDifficulty));
-  LoadStream.Read(Weather, SizeOf(Weather));
+  If aWeather then
+  begin
+    LoadStream.Read(MissionBuiltInDifficulty, SizeOf(MissionBuiltInDifficulty));
+    LoadStream.Read(Weather, SizeOf(Weather));
+  end;
 end;
 
 
-procedure TKMGameOptions.Save(SaveStream: TKMemoryStream);
+procedure TKMGameOptions.Save(SaveStream: TKMemoryStream; aWeather : Boolean = true);
 begin
   SaveStream.Write(Peacetime);
   SaveStream.Write(SpeedPT);
   SaveStream.Write(SpeedAfterPT);
   SaveStream.Write(RandomSeed);
   SaveStream.Write(MissionDifficulty, SizeOf(MissionDifficulty));
-  SaveStream.Write(MissionBuiltInDifficulty, SizeOf(MissionBuiltInDifficulty));
-  SaveStream.Write(Weather, SizeOf(Weather));
+  if aWeather then
+  begin
+    SaveStream.Write(MissionBuiltInDifficulty, SizeOf(MissionBuiltInDifficulty));
+    SaveStream.Write(Weather, SizeOf(Weather));
+  end;
 end;
 
 

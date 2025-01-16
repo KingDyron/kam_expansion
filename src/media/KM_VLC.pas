@@ -150,7 +150,7 @@ implementation
 uses
   {$IFDEF MSWindows} Windows, {$ENDIF}
   {$IFDEF Unix} LCLIntf, LCLType, {$ENDIF}
-  Classes, Dialogs;
+  Classes, Vcl.Dialogs;
 
 {$IFDEF VIDEOS}
 

@@ -3,7 +3,7 @@ unit KM_DevPerfLog;
 interface
 uses
   Classes, Math, StrUtils, SysUtils,
-  Forms, Controls,
+  Vcl.Forms, Vcl.Controls,
   KM_CommonTypes,
   KM_DevPerfLogSingle, KM_DevPerfLogStack, KM_DevPerfLogTypes;
 

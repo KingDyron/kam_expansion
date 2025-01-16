@@ -3,7 +3,7 @@ unit KM_TerrainSelection;
 interface
 uses
   Classes, Math,
-  Clipbrd,
+  Vcl.Clipbrd,
   KromUtils,
   {$IFDEF MSWindows} Windows, {$ENDIF}
   KM_CommonClasses, KM_Points, KM_Terrain, KM_TerrainTypes, KM_TerrainPainter, KM_RenderPool, KM_ResTilesetTypes,

@@ -759,7 +759,7 @@ begin
 
     for MBD := Low(TKMMissionBuiltInDifficulty) to High(TKMMissionBuiltInDifficulty) do
     begin
-      DropBox_BuilInDifficulty.Add(gResTexts[BDIFFICULTY_TEXTS[MBD]]);
+      DropBox_BuilInDifficulty.Add(gResTexts[BDIFFICULTY_TEXTS[MBD]], byte(MBD));
       if MBD = mdbNormal then
         DropBox_BuilInDifficulty.ItemIndex := byte(MBD);
     end;
@@ -1396,6 +1396,7 @@ end;
 procedure TKMMenuLobby.Lobby_OnGameOptions;
 var
   MD: TKMMissionDifficulty;
+  MBD: TKMMissionBuiltInDifficulty;
 begin
   TrackBar_LobbyPeacetime.Position := gNetworking.NetGameOptions.Peacetime;
 
@@ -1406,9 +1407,11 @@ begin
   fWeather := gNetworking.NetGameOptions.Weather;
   UpdateWeather;
   MD := gNetworking.NetGameOptions.MissionDifficulty;
-
   if MD <> mdNone then
     DropBox_Difficulty.SelectByTag(Byte(MD));
+
+  MBD := gNetworking.NetGameOptions.MissionBuiltInDifficulty;
+    DropBox_BuilInDifficulty.SelectByTag(Byte(MBD));
 
   UpdateGameOptionsUI;
 end;

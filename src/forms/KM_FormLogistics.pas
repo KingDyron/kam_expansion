@@ -7,8 +7,8 @@ uses
   {$IFDEF Unix} LCLIntf, LCLType, {$ENDIF}
   {$IFDEF USE_VIRTUAL_TREEVIEW}VirtualTrees, {$ENDIF}
   SysUtils, Variants, Classes,
-  Graphics, Controls, Forms, Dialogs, ComCtrls,
-  StdCtrls, ExtCtrls, CheckLst, Spin, Clipbrd;
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls,
+  Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.CheckLst, Vcl.Samples.Spin, Vcl.Clipbrd;
 
 type
   {$IFDEF USE_VIRTUAL_TREEVIEW}

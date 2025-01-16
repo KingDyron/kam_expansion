@@ -3,7 +3,7 @@
 interface
 uses
   Classes,
-  Controls,
+  Vcl.Controls,
   KromOGLUtils,
   KM_ControlsTypes,
   KM_Controls, KM_ControlsBase, KM_ControlsList, KM_ControlsTrackBar, KM_ControlsEdit,

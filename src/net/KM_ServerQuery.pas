@@ -163,7 +163,7 @@ begin
   fRooms[fCount].RoomID := aRoomID;
   fRooms[fCount].OnlyRoom := aOnlyRoom;
   fRooms[fCount].GameInfo := TKMPGameInfo.Create;
-  fRooms[fCount].GameInfo.LoadFromStream(aGameInfoStream);
+  fRooms[fCount].GameInfo.LoadFromStream(aGameInfoStream, false);
   Inc(fCount);
 end;
 

@@ -2,7 +2,7 @@
 {$I KaM_Remake.inc}
 interface
 uses
-  Classes, Controls,
+  Classes, Vcl.Controls,
   KromOGLUtils,
   KM_RenderUI, KM_Minimap, KM_Viewport,
   KM_ResFonts, KM_CommonTypes, KM_Points, KM_Defaults,

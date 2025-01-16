@@ -4,7 +4,7 @@ interface
 uses
   Classes,
   {$IFDEF FPC} LResources, {$ENDIF}
-  Forms, Controls, ComCtrls, ExtCtrls, StdCtrls, Graphics,
+  Vcl.Forms, Vcl.Controls, Vcl.ComCtrls, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Graphics,
   Vcl.Imaging.pngimage, SysUtils;
 
 type

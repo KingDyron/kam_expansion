@@ -324,7 +324,7 @@ uses
   {$IFDEF FPC} Types, {$ENDIF}
   {$IFDEF WDC} System.Types, {$ENDIF}
   Classes, SysUtils, Math, TypInfo,
-  Dialogs,
+  Vcl.Dialogs,
   {$IFDEF WDC} UITypes, {$ENDIF}
   KromUtils,
   KM_Sound, KM_ScriptSound,
@@ -748,16 +748,16 @@ begin
       gmMulti, gmMultiSpectate: begin
                                   //settings can be default or the ones used by map
                                   if MapTxtInfo.Weather.Overwrite then
-                                    fWeather.Settings := MapTxtInfo.Weather
+                                    fWeather.Settings := MapTxtInfo.Weather.Copy
                                   else
-                                    fWeather.Settings := gNetworking.NetGameOptions.Weather;
+                                    fWeather.Settings := gNetworking.NetGameOptions.Weather.Copy;
                                 end;
       gmSingle, gmCampaign: begin
                               //settings can be default or the ones used by map
                               if MapTxtInfo.Weather.Overwrite then
-                                fWeather.Settings := MapTxtInfo.Weather
+                                fWeather.Settings := MapTxtInfo.Weather.Copy
                               else
-                                fWeather.Settings := gGameSettings.Weather;
+                                fWeather.Settings := gGameSettings.Weather.Copy;
                             end;
     end;
     if fParams.MBD = mdbRealism then

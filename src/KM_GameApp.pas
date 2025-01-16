@@ -5,7 +5,7 @@ uses
   {$IFDEF WDC} UITypes, {$ENDIF}
   {$IFDEF FPC} Controls, {$ENDIF}
   Classes,
-  Dialogs,
+  Vcl.Dialogs,
   KM_CommonTypes, KM_Defaults, KM_RenderControl, KM_Video,
   KM_Campaigns, KM_Game, KM_InterfaceDefaults, KM_InterfaceMainMenu, KM_InterfaceTypes, KM_Resource,
   KM_Music, KM_Maps, KM_MapTypes, KM_CampaignTypes, KM_Networking,

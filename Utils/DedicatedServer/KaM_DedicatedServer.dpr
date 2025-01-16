@@ -12,15 +12,22 @@ program KaM_DedicatedServer;
 //  {$ENDIF}
 //{$ENDIF}
 
+
+
 uses
   {$IFDEF UNIX}
-    {$DEFINE UseCThreads}
-    cthreads, //We use a thread for deleting old log files
-    BaseUnix,
-  {$ENDIF}
-  Classes, SysUtils,
-  {$IFDEF MSWindows} Windows, MMSystem, {$ENDIF}
-  {$IFDEF FPC} Interfaces, {$ENDIF}
+  {$DEFINE}
+  cthreads,
+  {$ENDIF }
+  Classes,
+  SysUtils,
+  {$IFDEF MSWindows}
+  Windows,
+  MMSystem,
+  {$ENDIF }
+  {$IFDEF FPC}
+  Interfaces,
+  {$ENDIF }
   KM_CommonUtils in '..\..\src\utils\KM_CommonUtils.pas',
   KM_Defaults in '..\..\src\common\KM_Defaults.pas',
   KM_Points in '..\..\src\common\KM_Points.pas',
@@ -31,8 +38,17 @@ uses
   KM_DedicatedServer in '..\..\src\net\other\KM_DedicatedServer.pas',
   {$IFDEF WDC}
   KM_ConsoleTimer in '..\..\src\utils\KM_ConsoleTimer.pas',
-  {$ENDIF}
-  KM_ServerEventHandler in 'KM_ServerEventHandler.pas';
+  {$ENDIF }
+  KM_ServerEventHandler in 'KM_ServerEventHandler.pas',
+  KM_JsonData in '..\..\src\json\KM_JsonData.pas',
+  KM_JsonHelpers in '..\..\src\json\KM_JsonHelpers.pas',
+  KM_JSONUtils in '..\..\src\json\KM_JSONUtils.pas',
+  KM_Structure in '..\..\src\structures\KM_Structure.pas',
+  KM_StructuresCollection in '..\..\src\structures\KM_StructuresCollection.pas',
+  KM_Particles in '..\..\src\weather\KM_Particles.pas',
+  KM_Weather in '..\..\src\weather\KM_Weather.pas',
+  KM_WeatherCollection in '..\..\src\weather\KM_WeatherCollection.pas',
+  KM_WeatherTypes in '..\..\src\weather\KM_WeatherTypes.pas';
 
 var
   fEventHandler: TKMServerEventHandler;
@@ -194,6 +210,8 @@ begin
   Writeln('');
   Writeln('Log file: ' + gLog.LogPath);
   Writeln('Settings file: ' + fSettings.Path);
+  Writeln('Settings file: ' + fSettings.Path);
+
   Writeln('');
 
   fEventHandler.ServerStatusMessage('Using protocol for clients running ' + NET_PROTOCOL_REVISON);

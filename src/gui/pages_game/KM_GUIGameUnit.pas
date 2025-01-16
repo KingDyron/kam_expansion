@@ -4,7 +4,7 @@ interface
 uses
   {$IFDEF MSWindows} Windows, {$ENDIF}
   {$IFDEF Unix} LCLIntf, LCLType, {$ENDIF}
-  Classes, Controls, SysUtils,
+  Classes, Vcl.Controls, SysUtils,
   KM_Defaults,
   KM_Controls, KM_ControlsBase, KM_ControlsProgressBar, KM_ControlsScroll,
   KM_ControlsWaresRow,

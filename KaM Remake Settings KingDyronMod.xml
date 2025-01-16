@@ -2,13 +2,13 @@
 <Root>
   <Main>
     <GFX FullScreen="False" VSync="True" ResolutionWidth="1360" ResolutionHeight="768" RefreshRate="60" FPSCap="60"/>
-    <Window Left="472" Top="-14" Width="1024" Height="883" State="2"/>
+    <Window Left="-146" Top="82" Width="1024" Height="883" State="2"/>
     <Misc NoRenderMaxTime="1000"/>
   </Main>
   <Game>
     <GFX Brightness="0" AlphaShadows="True" LoadFullFonts="False"/>
-    <SFX Volume="0.3500"/>
-    <Music Enabled="True" Volume="0.2000" Shuffle="False"/>
+    <SFX Volume="0.4500"/>
+    <Music Enabled="True" Volume="0.0000" Shuffle="False"/>
     <Video Enabled="False" Stretch="True" Startup="True" Volume="0.5000"/>
     <Weather Enabled="True" MaxCount="10" MaxSpawnCount="4" MinInterval="200" MaxInterval="3000" MaxLifeTime="1200" MaxCloudSpeed="0.1000" DecParticles="9" NightSpeed="10" NightTime="15" DynamicLight="True"/>
     <GameCommon Locale="pol">
@@ -24,9 +24,9 @@
     <Campaign CampaignLastDifficulty="4"/>
     <Replay Autopause="False" ShowBeacons="False" Savepoint="True" SavepointFrequency="3000"/>
     <MapEd HistoryDepth="250" MaxTerrainHeight="150"/>
-    <Multiplayer Name="NoName" LastIP="127.0.0.1" LastPort="56789" LastRoom="0" LastPassword="" FlashOnMessage="True"/>
+    <Multiplayer Name="NoName2" LastIP="194.87.226.195" LastPort="56789" LastRoom="1" LastPassword="" FlashOnMessage="True"/>
     <Misc AsyncGameResLoader="True" BeastPanelExpanded="False" WaresPanelExpanded="False False False False False False False False False False False " HousesPanelExpanded="False False False False False False False False False False False "/>
-    <Menu FavouriteMaps="" CampaignName="HKS" LobbyMapType="3" CampaignID="0" CampaignMapID="48">
+    <Menu FavouriteMaps="" CampaignName="HKS" LobbyMapType="0" CampaignID="0" CampaignMapID="48">
       <Singleplayer Type="0" ScenarioMapCRC="1097251786" MissionMapCRC="3221235012" TacticMapCRC="3221235012" SpecialMapCRC="3221235012" SaveFileName="autosave"/>
       <Replay Type="0" SPSaveName="" MPSaveName=""/>
       <MapEd MapType="1" NewMapX="32" NewMapY="32" SPMapCRC="1097251786" MPMapCRC="352931217" MPMapName="TMR04" DLMapCRC="0"/>

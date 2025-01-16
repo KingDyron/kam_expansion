@@ -297,6 +297,7 @@ begin
   gLog.AddOnLogEventSub(PostLogMessageToChat);
   fVoteReturnToLobbySucceeded := False;
 
+
   gNetworking := Self;
 end;
 
@@ -747,6 +748,8 @@ begin
   NetGameOptions.Peacetime := fSaveInfo.GameOptions.Peacetime;
   NetGameOptions.SpeedPT := fSaveInfo.GameOptions.SpeedPT;
   NetGameOptions.SpeedAfterPT := fSaveInfo.GameOptions.SpeedAfterPT;
+  NetGameOptions.Weather := fSaveInfo.GameOptions.Weather.Copy;
+  NetGameOptions.MissionBuiltInDifficulty := fSaveInfo.GameOptions.MissionBuiltInDifficulty;
   SendGameOptions;
   if Assigned(OnGameOptions) then OnGameOptions;
 
@@ -1172,7 +1175,7 @@ begin
   fNetGameOptions.SpeedAfterPT := aSpeedAfterPT;
   fNetGameOptions.MissionDifficulty := aDifficulty;
   fNetGameOptions.MissionBuiltInDifficulty := aMBD;
-  fNetGameOptions.Weather := aWeather;
+  fNetGameOptions.Weather := aWeather.Copy;
 
   fNetPlayers.ResetReady;
   MyNetPlayer.ReadyToStart := True;
@@ -2764,7 +2767,7 @@ begin
     MPGameInfo.GameOptions.RandomSeed := fNetGameOptions.RandomSeed; //not needed, but we send it anyway
     MPGameInfo.GameOptions.MissionDifficulty := fNetGameOptions.MissionDifficulty;
     MPGameInfo.GameOptions.MissionBuiltInDifficulty := fNetGameOptions.MissionBuiltInDifficulty;
-    MPGameInfo.GameOptions.Weather := fNetGameOptions.Weather;
+    MPGameInfo.GameOptions.Weather := fNetGameOptions.Weather.Copy;
 
     for I := 1 to NetPlayers.Count do
     begin

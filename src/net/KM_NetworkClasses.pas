@@ -31,8 +31,8 @@ type
     constructor Create;
     destructor Destroy; override;
     function GetFormattedTime: UnicodeString;
-    procedure LoadFromStream(aStream: TKMemoryStream);
-    procedure SaveToStream(aStream: TKMemoryStream);
+    procedure LoadFromStream(aStream: TKMemoryStream; aWeather : Boolean = true);
+    procedure SaveToStream(aStream: TKMemoryStream; aWeather : Boolean = true);
     function HTMLPlayersList: string;
     function ConnectedPlayerCount: Byte;
   end;
@@ -44,7 +44,7 @@ uses
 
 
 { TKMPGameInfo }
-procedure TKMPGameInfo.LoadFromStream(aStream: TKMemoryStream);
+procedure TKMPGameInfo.LoadFromStream(aStream: TKMemoryStream; aWeather : Boolean = true);
 var
   I: Integer;
 begin
@@ -53,7 +53,7 @@ begin
   aStream.Read(PlayerCount);
   if GameOptions = nil then
     GameOptions := TKMGameOptions.Create;
-  GameOptions.Load(aStream);
+  GameOptions.Load(aStream, false);
   for I := 1 to PlayerCount do
   begin
     aStream.ReadA(Players[I].Name);
@@ -69,6 +69,11 @@ begin
   aStream.ReadW(Description);
   aStream.ReadW(Map);
   aStream.Read(GameTime, SizeOf(GameTime));
+  If aWeather then
+  begin
+    aStream.Read(GameOptions.MissionBuiltInDifficulty, SizeOf(GameOptions.MissionBuiltInDifficulty));
+    aStream.Read(GameOptions.Weather, SizeOf(GameOptions.Weather));
+  end;
 end;
 
 
@@ -97,14 +102,14 @@ begin
 end;
 
 
-procedure TKMPGameInfo.SaveToStream(aStream: TKMemoryStream);
+procedure TKMPGameInfo.SaveToStream(aStream: TKMemoryStream; aWeather : Boolean = true);
 var
   I: Integer;
 begin
   aStream.Write(GameState, SizeOf(GameState));
   aStream.Write(PasswordLocked);
   aStream.Write(PlayerCount);
-  GameOptions.Save(aStream);
+  GameOptions.Save(aStream, false);
   for I := 1 to PlayerCount do
   begin
     aStream.WriteA(Players[I].Name);
@@ -120,6 +125,11 @@ begin
   aStream.WriteW(Description);
   aStream.WriteW(Map);
   aStream.Write(GameTime, SizeOf(GameTime));
+  If aWeather then
+  begin
+    aStream.Write(GameOptions.MissionBuiltInDifficulty, SizeOf(GameOptions.MissionBuiltInDifficulty));
+    aStream.Write(GameOptions.Weather, SizeOf(GameOptions.Weather));
+  end;
 end;
 
 

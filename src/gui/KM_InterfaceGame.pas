@@ -5,7 +5,7 @@ uses
   {$IFDEF MSWindows} Windows, {$ENDIF}
   {$IFDEF Unix} LCLType, {$ENDIF}
   SysUtils, Classes, Math,
-  Controls,
+  Vcl.Controls,
   KM_Defaults,
   KM_Controls, KM_ControlsBase,
   KM_Points,

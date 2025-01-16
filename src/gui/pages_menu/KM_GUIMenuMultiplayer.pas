@@ -536,6 +536,7 @@ begin
   end
   else
   begin
+
     Label_Servers_Status.Hide;
     for I := 0 to gNetworking.ServerQuery.Rooms.Count - 1 do
     begin

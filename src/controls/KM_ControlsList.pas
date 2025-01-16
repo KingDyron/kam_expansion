@@ -3,7 +3,7 @@ unit KM_ControlsList;
 interface
 uses
   Classes,
-  Controls,
+  Vcl.Controls,
   KromOGLUtils,
   KM_Controls, KM_ControlsScroll,
   KM_RenderUI,

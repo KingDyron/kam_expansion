@@ -2,7 +2,7 @@
 {$I KaM_Remake.inc}
 interface
 uses
-  Classes, Controls,
+  Classes, Vcl.Controls,
   KM_Controls;
 
 

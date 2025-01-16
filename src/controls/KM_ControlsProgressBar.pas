@@ -4,7 +4,7 @@ interface
 uses
   Generics.Collections,
   KromOGLUtils,
-  Classes, Controls,
+  Classes, Vcl.Controls,
   KM_Controls,
   KM_RenderUI,
   KM_ResFonts, KM_ResTypes,

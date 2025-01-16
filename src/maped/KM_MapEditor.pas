@@ -3,7 +3,7 @@ unit KM_MapEditor;
 interface
 uses
   Classes,
-  Controls,
+  Vcl.Controls,
   KM_RenderPool, KM_TerrainPainter, KM_TerrainDeposits, KM_TerrainSelection,
   KM_CommonTypes, KM_CommonClasses, KM_Defaults, KM_Points, KM_MapEditorHistory,
   KM_MapEdClipBoard,

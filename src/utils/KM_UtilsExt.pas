@@ -4,7 +4,7 @@ interface
 uses
   Classes,
   KM_Controls,
-  Controls
+  Vcl.Controls
   {$IFDEF MSWindows}
   , Windows
   {$ENDIF}

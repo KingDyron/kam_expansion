@@ -4,7 +4,7 @@ interface
 uses
   KM_CommonTypes
   {$IFDEF MSWindows}, Windows {$ENDIF}
-  {$IFDEF WDC}, Graphics, JPEG, PNGImage {$ENDIF} //Lazarus doesn't have JPEG library yet -> FPReadJPEG?
+  {$IFDEF WDC}, Vcl.Graphics, Vcl.Imaging.JPEG, Vcl.Imaging.PNGImage {$ENDIF} //Lazarus doesn't have JPEG library yet -> FPReadJPEG?
   ;
 
   procedure SavePixelDataToFile(const aFilePath: string; aImageType: TKMImageType; aWidth, aHeight: Integer; var aPixelData: TKMCardinalArray);
@@ -12,7 +12,7 @@ uses
 implementation
 uses
   SysUtils, KM_FileIO
-{$IFDEF WDC}, Dialogs, KM_Log{$ENDIF}
+{$IFDEF WDC}, Vcl.Dialogs, KM_Log{$ENDIF}
   ;
 
 

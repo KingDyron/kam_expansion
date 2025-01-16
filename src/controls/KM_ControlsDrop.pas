@@ -2,7 +2,7 @@ unit KM_ControlsDrop;
 interface
 uses
   Classes,
-  Controls,
+  Vcl.Controls,
   KromOGLUtils,
   KM_Controls, KM_ControlsBase, KM_ControlsList,
   KM_ResTypes, KM_ResFonts,

@@ -3,7 +3,7 @@ unit KM_FormMain;
 interface
 uses
   SysUtils, StrUtils, Classes, Math,
-  ComCtrls, Controls, Buttons, Dialogs, ExtCtrls, Forms, Graphics, Menus, StdCtrls,
+  Vcl.ComCtrls, Vcl.Controls, Vcl.Buttons, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Forms, Vcl.Graphics, Vcl.Menus, Vcl.StdCtrls,
   KM_RenderControl, KM_CommonTypes,
   KM_WindowParams, KM_SettingsDev,
   KM_Defaults, KM_ResExporter,

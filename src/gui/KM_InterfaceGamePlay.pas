@@ -5,7 +5,7 @@ uses
   {$IFDEF MSWindows} Windows, {$ENDIF}
   {$IFDEF Unix} LCLIntf, LCLType, {$ENDIF}
   StrUtils, SysUtils, Math, Classes, TypInfo, Generics.Collections,
-  Controls,
+  Vcl.Controls,
   KromUtils,
   KM_Controls, KM_ControlsBase, KM_ControlsDrop, KM_ControlsEdit, KM_ControlsList,  KM_ControlsMinimapView,
   KM_ControlsProgressBar, KM_ControlsSwitch, KM_ControlsTrackBar,

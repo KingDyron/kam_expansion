@@ -183,7 +183,7 @@ type
   end;
   //settings for weather
   //it's used in few files, not just in KM_GameSettings
-  TKMSettingsWeather = record
+  TKMSettingsWeather = packed record
     Overwrite,
     Enabled : Boolean;
     MaxCount, MaxSpawnCount : Integer;
@@ -194,6 +194,7 @@ type
     DynamicLight : Boolean;
     procedure SetDefault;
     procedure SetRealism;
+    function Copy : TKMSettingsWeather;
   end;
 
 
@@ -674,6 +675,22 @@ begin
   NightSpeed := 10;
   NightTime := 7;
   DynamicLight := true;
+end;
+
+function TKMSettingsWeather.Copy: TKMSettingsWeather;
+begin
+  Result.Overwrite := Overwrite;
+  Result.Enabled := Enabled;
+  Result.MaxCount := MaxCount;
+  Result.MaxSpawnCount := MaxSpawnCount;
+  Result.MinInterval := MinInterval;
+  Result.MaxInterval := MaxInterval;
+  Result.MaxLifeTime := MaxLifeTime;
+  Result.MaxCloudSpeed := MaxCloudSpeed;
+  Result.DecParticles := DecParticles;
+  Result.NightSpeed := NightSpeed;
+  Result.NightTime := NightTime;
+  Result.DynamicLight := DynamicLight;
 end;
 
 end.

@@ -2,9 +2,10 @@ unit KM_DevPerfLogForm;
 {$I KaM_Remake.inc}
 interface
 uses
-  SysUtils, Classes, Graphics, Forms, StdCtrls, Controls, ExtCtrls, Types,
+  SysUtils, Classes, Vcl.Graphics, Vcl.Forms, Vcl.StdCtrls, Vcl.Controls, Vcl.ExtCtrls, Types,
   KM_CommonTypes,
-  KM_DevPerfLog, KM_DevPerfLogTypes, Spin, KM_VclHelpers;
+  KM_DevPerfLog, KM_DevPerfLogTypes{, System.Spin}, KM_VclHelpers,
+  Vcl.Samples.Spin;
 
 type
   TFormPerfLogs = class(TForm)
