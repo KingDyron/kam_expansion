@@ -421,11 +421,14 @@ function TKMTaskBuildRoad.Execute: TKMTaskResult;
   procedure TryToTakeWares(aWare : TKMWareType; aCount : Integer);
   var H : TKMHouse;
   begin
-    H := TKMHouse(gTerrain.House(KMPointAbove(fLoc)));
-
-    if H = nil then //house not found byt tile, try to find by hit test
-      if gTerrain.Land[KMPointAbove(fLoc).Y, KMPointAbove(fLoc).X].TileLock in [tlHouse, tlDigged] then
-        H := gHands[fUnit.Owner].HousesHitTest(KMPointAbove(fLoc).X, KMPointAbove(fLoc).Y);
+    If fLoc.Y > 1 then
+    begin
+      H := TKMHouse(gTerrain.House(KMPointAbove(fLoc)));
+      if H = nil then //house not found byt tile, try to find by hit test
+        if gTerrain.Land[KMPointAbove(fLoc).Y, KMPointAbove(fLoc).X].TileLock in [tlHouse, tlDigged] then
+          H := gHands[fUnit.Owner].HousesHitTest(KMPointAbove(fLoc).X, KMPointAbove(fLoc).Y);
+    end else
+      H := nil;
 
 
     
