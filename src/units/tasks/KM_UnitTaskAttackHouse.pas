@@ -160,7 +160,7 @@ begin
             else
               SetActionStay(0, uaWalk)
           else
-            SetActionWalkToHouse(fHouse, 1);
+            SetActionWalkToHouse(fHouse, 1.42);
       1:  begin
             if IsRanged then
             begin

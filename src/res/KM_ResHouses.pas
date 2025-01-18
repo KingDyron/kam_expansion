@@ -224,7 +224,7 @@ type
     Silo_Tablets: TKMAnimLoop;
 
     ProdThatch_Anims : array[TKMProdThatchAnimType] of TKMAnimation;
-
+    SimilarTypes : TKMHouseTypeArray2;
 
     constructor Create;
     destructor Destroy; override;
@@ -1926,6 +1926,8 @@ begin
   fItems[htSchool].Anim[haIdle].Create([]);
   Shool_Clock.Create(-17, 5, [813, 814, 815, 816, 817, 861, 862, 863, 864, 865, 866, 867, 868, 869, 870, 871, 872, 873, 874, 875, 876, 877, 878]);
   //SaveToNewStream;
+
+
 end;
 
 constructor TKMResHouses.Create;
@@ -1936,7 +1938,6 @@ begin
   fCRC := fCRC xor LoadFromJSON(gRes.JsonData[dtOldHouses]);
   fCRC := fCRC xor LoadFromJSON(gRes.JsonData[dtNewHouses]);
 end;
-
 Procedure TKMResHouses.ReloadJSONData(UpdateCRC: Boolean);
 var oldCRC : Cardinal;
 begin

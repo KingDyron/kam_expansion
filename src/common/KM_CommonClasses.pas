@@ -2170,7 +2170,7 @@ function TKMArray<T>.GetItem(aIndex : Integer) : T;
 begin
 
   if not InRange(aIndex, 0, fCount - 1) then
-    Exit();
+    Exit;
   Result := fList[aIndex];
 end;
 

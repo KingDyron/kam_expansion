@@ -801,7 +801,7 @@ function TKMControl.HitTest(X, Y: Integer; aIncludeDisabled: Boolean = False; aI
 begin
   Result := False;
   if    (Hitable or aIncludeNotHitable)
-    and (fEnabled or aIncludeDisabled) then
+    and (Enabled or aIncludeDisabled) then
   begin
     //DrawRect could is restricted by parent panel size and also could be restricted with parent ScrollPanel
     //While outside of ScrollPanel its better to use Abs coordinates

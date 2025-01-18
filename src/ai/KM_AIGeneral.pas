@@ -1157,6 +1157,7 @@ begin
   for I := fDefencePositions.Count - 1 downto 0 do
     if fDefencePositions[I].DefenceType = dtBackLine then
       if fDefencePositions[I].CurrentGroup <> nil then
+        if fDefencePositions[I].CurrentGroup.IsDead then
         //if fDefencePositions[I].CurrentGroup.FlagBearer.IsIdle then
           fDefencePositions[I].CurrentGroup.OrderHalt(true, true);
 end;

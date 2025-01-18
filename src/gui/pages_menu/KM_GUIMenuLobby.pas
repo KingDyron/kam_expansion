@@ -3319,7 +3319,7 @@ begin
   begin
     if Panel_Weather.Childs[I] <> CheckBox_Enabled then
       Panel_Weather.Childs[I].Enabled := CheckBox_Enabled.Checked;
-    Panel_Weather.Childs[I].Enabled := Panel_Weather.Childs[I].Enabled and Panel_Weather.Enabled;
+    //Panel_Weather.Childs[I].Enabled := Panel_Weather.Childs[I].Enabled and Panel_Weather.Enabled;
   end;
 
   TrackBar_NightSpeed.Enable;
