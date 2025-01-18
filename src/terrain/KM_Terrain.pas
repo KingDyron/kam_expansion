@@ -3266,26 +3266,33 @@ begin
 end;
 
 procedure TKMTerrain.SetPalisade(const aLoc: TKMPoint; aOwner: TKMHandID);
+  function HasWall(A, B : Integer) :Boolean;
+  begin
+    Result := false;
+      If not TileInMapCoords(aLoc.X + A, aLoc.Y + B) then
+        Exit;
+    Result := TileHasWall(aLoc.X + A, aLoc.Y + B);
+  end;
 begin
   SetField_Init(aLoc, aOwner);
 
-   if TileHasWall(aLoc.X, aLoc.Y + 1) and TileHasWall(aLoc.X + 1, aLoc.Y) then
+   if HasWall(0, 1) and HasWall(1, 0) then
     SetObject(aLoc, 263)
-   else if TileHasWall(aLoc.X, aLoc.Y + 1) and TileHasWall(aLoc.X - 1, aLoc.Y) then
+   else if HasWall(0, aLoc.Y + 1) and HasWall(-1, 0) then
     SetObject(aLoc, 262)
-   else if TileHasWall(aLoc.X, aLoc.Y - 1) and TileHasWall(aLoc.X + 1, aLoc.Y) then
+   else if HasWall(0, -1) and HasWall(1, 0) then
     SetObject(aLoc, 260)
-   else if TileHasWall(aLoc.X, aLoc.Y - 1) and TileHasWall(aLoc.X - 1, aLoc.Y) then
+   else if HasWall(0, -1) and HasWall(-1, 0) then
     SetObject(aLoc, 261)
    else
 
-   if TileHasWall(aLoc.X, aLoc.Y + 1) then
+   if HasWall(0, 1) then
     SetObject(aLoc, 256)
-   else if TileHasWall(aLoc.X + 1, aLoc.Y) then
+   else if HasWall(1, 0) then
     SetObject(aLoc, 257)
-   else if TileHasWall(aLoc.X - 1, aLoc.Y) then
+   else if HasWall(-1, 0) then
     SetObject(aLoc, 258)
-   else if TileHasWall(aLoc.X, aLoc.Y - 1) then
+   else if HasWall(0, -1) then
     SetObject(aLoc, 259);
 
 
