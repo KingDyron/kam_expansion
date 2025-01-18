@@ -48,7 +48,6 @@ uses
 { TKMMapEdPlayerBlockUnit }
 constructor TKMMapEdPlayerBlockUnit.Create(aParent: TKMPanel);
 var
-  I: Integer;
   top : Integer;
 begin
   inherited Create;
@@ -66,7 +65,6 @@ begin
   CreateButtons(top, gResTexts[1841], Button_BlockSiegeMachines, SIEGE_GAME_ORDER);
   CreateButtons(top, gResTexts[1882], Button_BlockPalaceUnits, PALACE_UNITS_ORDER);
   CreateButtons(top, gResTexts[2126], Button_BlockShips, SHIPYARD_ORDER);
-
 end;
 
 procedure TKMMapEdPlayerBlockUnit.CreateButtons(var aTop: Integer; aCaption : String; var aButtons: TKMButtonFlatBlockArray; aUnitArr: TKMUnitTypeArray);

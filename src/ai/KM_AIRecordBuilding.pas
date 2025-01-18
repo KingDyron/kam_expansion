@@ -417,7 +417,7 @@ end;
 
 procedure TKMAIRecorder.UpdateState(aTick: Cardinal);
 var I : Integer;
-  tmp : TKMAICommand;
+  //tmp : TKMAICommand;
 begin
   if fRecording then
     Exit;

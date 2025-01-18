@@ -367,7 +367,7 @@ begin
         S.SaveToFile(TKMCampaignsCollection.GetFullPath(gCursor.CampaignData.Path,
                                                         gCursor.CampaignData.ShortName,
                                                         gCursor.CampaignData.MissionID,
-                                                        '.'+ gResLocales.UserLocale + '.libx'
+                                                        '.'+ String(gResLocales.UserLocale) + '.libx'
                                                         )
                                                         );
 

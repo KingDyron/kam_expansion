@@ -1664,9 +1664,12 @@ procedure TKMMapEdHouse.Panel_FarmChange(Sender: TObject; Shift: TShiftState);
 var I, J : Integer;
 begin
   J := 1 - (2 * byte(ssRight in Shift));
+  I := -1;
   if Sender = Button_Grain then I := 0 else
   if Sender = Button_Grass then I := 1 else
   if Sender = Button_Vege then I := 2;
+
+  Assert(I <> -1, 'TKMMapEdHouse.Panel_FarmChange');
 
   if fHouse is TFarm then TFarm(fHouse).SetNextGrainType(J, I) else
   if fHouse is TThatch then TThatch(fHouse).SetNextGrainType(J, I);

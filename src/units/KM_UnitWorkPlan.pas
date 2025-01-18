@@ -73,7 +73,7 @@ uses
   KM_Houses, KM_HouseWoodcutters, KM_HouseSiegeWorkshop, KM_HouseWoodBurner, KM_HouseQueue,
   KM_HouseSwineStable,
   KM_MapEditor, KM_MapEdTypes,
-  KM_Terrain, KM_ResWares, KM_Log, KM_ResMapElements, KM_ResTileset,
+  KM_Terrain, KM_ResWares, KM_Log, KM_ResMapElements, KM_ResTileset, KM_ResTilesetTypes,
   KM_Resource, KM_CommonUtils, KM_HandsCollection, Math;
 
 

@@ -564,7 +564,7 @@ end;
 function TKMUnitActionWalkTo.CheckForObstacle(aDir: TKMDirection): TKMObstacleCheck;
 var
   nextPos: TKMPoint;
-  distNext: Single;
+  //distNext: Single;
   allTilesAroundLocked: Boolean;
   U: TKMUnit;
   animStep: Integer;

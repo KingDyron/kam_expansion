@@ -1496,7 +1496,7 @@ var
   id: Integer;
   rxData: TRXData;
   cornerX, cornerY: Single;
-  gX, gY : Single;
+  gY : Single;
 begin
 
   // We don't care about off-map arrows, but still we get TKMPoint error if X/Y gets negative

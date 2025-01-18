@@ -64,7 +64,7 @@ const
   KID_AGE_MULTIPLIER : array[TKMWorklessAge] of Single = (0.8, 1.2, 1);
 
 procedure TKMHouseCottage.Activate(aWasBuilt: Boolean);
-var I, C, K : Integer;
+var I, C : Integer;
 begin
   inherited;
 

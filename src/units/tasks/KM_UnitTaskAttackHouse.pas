@@ -81,7 +81,7 @@ uses
   KM_Entity,
   KM_HandsCollection,
   KM_Resource, KM_ResSound, KM_ResHouses, KM_ResUnits,
-  KM_HandTypes, KM_Hand,
+  KM_HandTypes, KM_Hand, KM_HandEntity,
   KM_ScriptingEvents,
   KM_Sound, KM_Projectiles, KM_GameParams,
   KM_SpecialAnim, KM_ResTypes;

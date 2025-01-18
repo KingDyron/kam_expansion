@@ -42,11 +42,13 @@ type
   end;
 
 implementation
+uses KM_HandTypes, KM_HandEntity;
 
 function TKMHouseHelpers.Hand: TKMHand;
 begin
   Result := gHands[Owner];
 end;
+
 function TKMHouseHelpers.Shipyard : TKMHouseShipYard;
 begin
   If self is TKMHouseShipYard then Result := TKMHouseShipYard(self) else Exit(nil);

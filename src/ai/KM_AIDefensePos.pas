@@ -130,6 +130,7 @@ type
 implementation
 uses
   SysUtils, TypInfo,KM_Terrain,
+  KM_HandTypes,
   KM_Game, KM_GameUIDTracker, KM_GameParams, KM_HandsCollection, KM_RenderAux, KM_RenderPool, KM_Hand,
   KM_UnitGroupTypes, KM_InterfaceGame;
 

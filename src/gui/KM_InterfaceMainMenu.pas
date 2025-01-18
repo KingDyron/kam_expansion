@@ -283,7 +283,7 @@ begin
 
   case Dest of
     gpMainMenu:     begin
-                      Label_Version.Caption := GAME_VERSION;
+                      Label_Version.Caption := String(GAME_VERSION);
                       fMenuMain.Show;
                       fMenuPage := fMenuMain;
                     end;

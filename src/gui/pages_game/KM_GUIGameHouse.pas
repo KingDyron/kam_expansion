@@ -1842,10 +1842,6 @@ begin
                         base := 2 + demandTop;
 
                         ShowCommonDemand(aHouse, base, line, rowRes);
-                        //Panel_House_Common.Show;
-                        //Label_Common_Demand.Hide;
-
-                        base := base + demandTop + line * 25 + 25;
                         rowRes := 1;
                         line := 0;
 

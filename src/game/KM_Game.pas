@@ -3058,7 +3058,7 @@ end;
 function TKMGame.Achievements: TKMAchievements;
 begin
   if Self = nil then
-    Exit;
+    Exit(nil);
 
   Result := gAchievements;
 end;

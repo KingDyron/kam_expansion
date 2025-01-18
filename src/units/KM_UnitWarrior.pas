@@ -2191,8 +2191,7 @@ begin
 end;
 
 function TKMUnitWarriorSpy.UpdateState: Boolean;
-var I, K : Integer;
-  DP : TAIDefencePosition;
+var I : Integer;
 begin
   Result := Inherited;
 
@@ -2214,20 +2213,6 @@ begin
     if I = HAND_NONE then
       Exit;
     fFlagColor := gHands[I].GameFlagColor;
-    {for I := gHands.Count - 1 downto 0 do
-      if I <> Owner then
-        if gHands[I].Enabled and gHands[I].IsComputer and (gHands[I].Alliances[Owner] = atEnemy)then
-          for K := 0 to gHands[I].AI.General.DefencePositions.Count - 1 do
-          begin
-            DP := gHands[I].AI.General.DefencePositions[K];
-            if KMLengthDiag(self.Position, DP.Position.Loc) <= DP.Radius then
-            begin
-              fFlagColor := gHands[I].GameFlagColor;
-              Exit;
-            end;
-
-          end;}
-
   end;
 
 end;

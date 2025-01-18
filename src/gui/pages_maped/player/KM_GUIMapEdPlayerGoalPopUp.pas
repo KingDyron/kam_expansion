@@ -233,8 +233,6 @@ begin
 end;
 
 procedure TKMMapEdPlayerGoal.Goal_Close(Sender: TObject);
-var
-  G: TKMGoal;
 begin
   if Sender = Button_GoalOk then
     Goal_Save;

@@ -147,7 +147,6 @@ type
     procedure Selection_Select(aId: Word);
     procedure SelectUnit(aUnit: TKMUnit);
     procedure SelectUnitGroup(aGroup: TKMUnitGroup);
-    procedure SelectStructure(aStructure: TKMStructure);
     procedure SelectNextGameObjWSameType;
     procedure SwitchPage(Sender: TObject);
     procedure OpenMenuPage(aPage: TKMTabButtons);
@@ -3279,12 +3278,6 @@ begin
     gSoundPlayer.PlayWarrior(aGroup.SelectedUnit.UnitType, spSelect); // play unit group selection sound
 end;
 
-procedure TKMGamePlayInterface.SelectStructure(aStructure: TKMStructure);
-begin
-  gMySpectator.Selected := aStructure;
-end;
-
-
 // Select next building/unit/unit group with the same type for same owner
 procedure TKMGamePlayInterface.SelectNextGameObjWSameType;
 var
@@ -3675,6 +3668,8 @@ begin
 
   fGuiGameUnit.KeyDown(Key, Shift, keyHandled);
   fGuiGameHouse.KeyDown(Key, Shift, keyHandled);
+
+  if keyHandled then Exit;
 
   If not gGameParams.IsMultiPlayerOrSpec then
     if (Key = gResKeys[kfMapedSaveMap]) and (ssCtrl in Shift) and (ssShift in Shift) and (fInfoHideTime = 0) then

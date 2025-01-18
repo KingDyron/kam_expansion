@@ -237,6 +237,7 @@ end;
 
 function TKMHandLocks.HouseToType(aHouseType: TKMHouseType): TKMUnitHouseBlock;
 begin
+  Result := uhtSchool;
   case aHouseType of
     htSchool :        Result := uhtSchool;
     htBarracks :      Result := uhtBarracks;

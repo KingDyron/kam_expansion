@@ -264,7 +264,7 @@ const
 
 var
   S: TMemoryStream;
-  I, K: Integer;
+  I: Integer;
   //stage : TKMChopableAge;
 begin
   if not FileExists(aFileName) then Exit;

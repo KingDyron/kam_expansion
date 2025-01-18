@@ -166,7 +166,7 @@ const
   CHK_W = 300;
   RADIO_W = 250;
 var
-  difW, Top: Integer;
+  Top: Integer;
   MD: TKMMissionDifficulty;
 begin
   Panel_MissionParams := TKMPanel.Create(aParent.ItemsPanel, 5, 5, aParent.ItemsPanel.Width - 10, aParent.ItemsPanel.Height - 10);

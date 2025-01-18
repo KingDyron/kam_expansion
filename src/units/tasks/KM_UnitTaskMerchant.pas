@@ -33,7 +33,7 @@ implementation
 uses
   KM_Terrain,
   KM_CommonUtils,
-  KM_HandsCollection, KM_Entity,
+  KM_Hand, KM_HandTypes, KM_HandsCollection, KM_Entity,  KM_HandEntity,
   KM_UnitWarrior,
   KM_Points;
 

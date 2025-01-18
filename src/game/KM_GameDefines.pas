@@ -104,8 +104,6 @@ procedure TKMGameResources.ApplyAfterStart;
   end;
 
 var I, K : Integer;
-  HT : TKMHouseType;
-  UT : TKMUnitType;
 begin
   if SkipWater then  
     for I := 0 to gHands.Count - 1 do

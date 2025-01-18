@@ -1004,7 +1004,6 @@ end;
 procedure TKMUnitRecruit.TaskGetWork;
 var
   enemy: TKMUnit;
-  tm: TKMTaskMining;
 begin
   if not (InHouse = Home) then
     Exit;

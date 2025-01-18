@@ -1840,8 +1840,6 @@ end;
 
 function TKMTerrain.TileHasOnlyTerrainKinds(aLoc : TKMPoint; const aTerKind: TKMTerrainKindSet): Boolean;
 var
-  I: Integer;
-  cornersTerKinds: TKMTerrainKindCorners;
   TK : TKMTerrainKind;
 begin
   Result := false;
@@ -3484,7 +3482,6 @@ var
   validTiles, nearTiles, farTiles: TKMPointList;
   P: TKMPoint;
   stage : Byte;
-  GT : TKMGrainType;
   hasGrass, hasVege, hasGrain : Boolean;
 
   procedure CheckGrassField(Loc : TKMPoint);
@@ -3549,9 +3546,6 @@ var
           if not (TObject(aProdThatch) is TKMHouseProdThatch) or (not TKMHouseProdThatch(aProdThatch).IsPointTaken(Loc)) then
           if RouteCanBeMade(aLoc, Loc, tpWalk) then
           begin
-            {if (Land^[Loc.Y,Loc.X].FieldAge = CORN_AGE_MAX) and (TKMHouse(aProdThatch).CheckWareOut(wtCorn) < TKMHouse(aProdThatch).GetMaxOutWare) and (TKMHouse(aProdThatch).CheckWareOut(wtSeed) < TKMHouse(aProdThatch).GetMaxOutWare) then
-              nearTiles.Add(P)
-            else}
             if KMLength(Loc, aLoc) <= 3 then
               nearTiles.Add(P)
             else
@@ -3907,7 +3901,6 @@ begin
           and TileHasCollectorsGoods(K, I)
           and (aIgnoreWorkingUnits or not TileIsLocked(KMPoint(K, I))) then
           begin
-            weight := 100;
             if ObjectIsWare(Land^[I, K].Obj) then
               weight := 100
             else
@@ -5490,7 +5483,7 @@ end;
 
 
 procedure TKMTerrain.SowCorn(const aLoc: TKMPoint; aGrainType : TKMGrainFarmSet;  aAddManure : Boolean);
-var GFT, GFT2 : TKMGrainType;
+var GFT2 : TKMGrainType;
 begin
   GFT2 := gftNone;
   if TileIsCornField(aLoc) then
@@ -9027,7 +9020,6 @@ var
   I, K, A: Integer;
 //  J: TKMChopableAge;
   T: Integer;
-  aStage : Byte;
 begin
 
   if not DYNAMIC_TERRAIN then Exit;
@@ -9076,77 +9068,7 @@ begin
       Land^[I,K].IncJamMeter(-3);
 
       if InRange(Land^[I,K].FieldAge, 1, CORN_AGE_DEAD-1) then
-      begin
         IncFieldAge(KMPoint(K, I));
-      end;
-
-
-      {if InRange(Land^[I,K].FieldAge, 1, CORN_AGE_MAX-1) then
-      begin
-        aStage := gFieldGrains[Land[I, K].GrainType].GetStage(Land^[I,K].FieldAge);
-
-        if (aStage <> 254) and (aStage <> 255) and TileIsGrassField(KMPoint(K,I)) then
-          if not gFieldGrains[Land[I, K].GrainType].Stage[aStage].CanBeCut then
-            Inc(Land^[I,K].FieldAge)
-          else
-        else    
-          Inc(Land^[I,K].FieldAge);
-
-        aStage := gFieldGrains[Land[I, K].GrainType].GetStage(Land^[I,K].FieldAge);
-
-        if TileIsCornField(KMPoint(K,I)) then
-        begin
-          if (aStage <> 254) and (aStage <> 255) and (aStage > 0) then
-          begin
-            SetLand(GetTileCornTile(KMPoint(K, I), aStage),K,I,GetTileCornObject(KMPoint(K, I), aStage));
-
-            //last stage is just empty field, previous stage has to be cut
-            if aStage + 1 = gFieldGrains[Land[I, K].GrainType].StagesCount - 1 then
-              Land^[I,K].FieldAge := CORN_AGE_MAX;
-            
-          end;
-        end
-        else
-        if TileIsWineField(KMPoint(K,I)) then
-        begin
-          if (aStage <> 254) and (aStage <> 255) and (aStage > 0) then
-          begin
-            SetLand(gFieldGrains[Land[I, K].GrainType].Stage[aStage].Terr,K,I,GetTileWineObject(KMPoint(K, I), aStage));
-
-            //last stage is just empty field, previous stage has to be cut
-            if aStage = gFieldGrains[Land[I, K].GrainType].StagesCount - 1 then
-              Land^[I,K].FieldAge := CORN_AGE_MAX;
-
-          end;
-        end
-        else
-        if TileIsGrassField(KMPoint(K,I)) then
-        begin
-          if (aStage <> 254) and (aStage <> 255) and (aStage > 0) then
-          begin
-            SetLand(GetTileGrassTile(KMPoint(K, I), aStage),K,I,GetTileGrassObject(KMPoint(K, I), aStage));
-
-            //last stage is just empty field, previous stage has to be cut
-            if aStage + 1 = gFieldGrains[Land[I, K].GrainType].StagesCount - 1 then
-              Land^[I,K].FieldAge := CORN_AGE_MAX;
-
-          end;
-        end else
-        if TileIsVegeField(KMPoint(K,I)) then
-        begin
-          if (aStage <> 254) and (aStage <> 255) and (aStage > 0) then
-          begin
-            SetLand(GetTileGrassTile(KMPoint(K, I), aStage),K,I,GetTileGrassObject(KMPoint(K, I), aStage));
-
-            //last stage is just empty field, previous stage has to be cut
-            if aStage + 1 = gFieldGrains[Land[I, K].GrainType].StagesCount - 1 then
-              Land^[I,K].FieldAge := CORN_AGE_MAX;
-
-          end;
-        end;
-
-      end;}
-
 
       if InRange(Land^[I,K].TreeAge, 1, CORN_AGE_MAX - 1) then
       begin
@@ -9166,23 +9088,6 @@ begin
 
         end;
       end;
-
-
-      {if InRange(Land^[I,K].TreeAge, 1, TREE_AGE_FULL) then
-      begin
-        Inc(Land^[I,K].TreeAge);
-        if (Land^[I,K].TreeAge = TREE_AGE_1)
-        or (Land^[I,K].TreeAge = TREE_AGE_2)
-        or (Land^[I,K].TreeAge = TREE_AGE_FULL) then //Speedup
-          for H := Low(CHOPABLE_TREES) to High(CHOPABLE_TREES) do
-            for J := caAge1 to caAge3 do
-              if Land^[I,K].Obj = CHOPABLE_TREES[H,J] then
-                case Land^[I,K].TreeAge of
-                  TREE_AGE_1:    Land^[I,K].Obj := CHOPABLE_TREES[H, caAge2];
-                  TREE_AGE_2:    Land^[I,K].Obj := CHOPABLE_TREES[H, caAge3];
-                  TREE_AGE_FULL: Land^[I,K].Obj := CHOPABLE_TREES[H, caAgeFull];
-                end;
-      end;}
 
       Inc(A, TERRAIN_PACE);
     end;

@@ -86,7 +86,7 @@ type
     procedure DoLighting(aFOW: TKMFogOfWarCommon);
     procedure DoAnimations(aAnimStep: Integer; aFOW: TKMFogOfWarCommon);
     procedure DoShadows(aFOW: TKMFogOfWarCommon);
-    function VBOSupported: Boolean;
+    //function VBOSupported: Boolean;
     procedure RenderMarkup(pX, pY: Word; aFieldType: TKMFieldType; aRoadType : TKMRoadType);
     procedure DoRenderTile(aTerrainId: Word; pX,pY,Rot: Integer; aDoBindTexture: Boolean; aUseTileLookup: Boolean;
                            DoHighlight: Boolean = False; HighlightColor: Cardinal = 0; aBlendingLvl: Byte = 0); overload;
@@ -213,7 +213,7 @@ begin
   inherited;
 end;
 
-
+{
 function TKMRenderTerrain.VBOSupported: Boolean;
 begin
   //Some GPUs don't comply with OpenGL 1.5 spec on VBOs, so check Assigned instead of GL_VERSION_1_5
@@ -222,7 +222,7 @@ begin
             Assigned(glTexCoordPointer)   and Assigned(glDrawElements)  and Assigned(glDisableClientState) and
             Assigned(glDeleteBuffers);
 end;
-
+}
 
 function TKMRenderTerrain.DoUseVBO: Boolean;
 begin

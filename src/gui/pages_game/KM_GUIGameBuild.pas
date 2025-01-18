@@ -646,7 +646,7 @@ begin
       begin
         Button_Build[lastVisible].Hint := gResTexts[TX_HOUSE_NOT_AVAILABLE];
         Button_Build[lastVisible].TexID := 41;
-        Button_Build[lastVisible].Tag := ord(H);
+        Button_Build[lastVisible].Tag := -1;
         Button_Build[lastVisible].OnClickShift := nil;
         Button_Build[lastVisible].Down := false;
       end;

@@ -28,7 +28,7 @@ type
     fID: TKMHandID; //Index of this hand in gHands
     fUnits: TKMUnitsCollection;
   public
-    constructor Create(aHandIndex: TKMHandID); virtual;
+    constructor Create(aHandIndex: TKMHandID);
     destructor Destroy; override;
     property ID: TKMHandID read fID;
     property Units: TKMUnitsCollection read fUnits;
@@ -387,7 +387,7 @@ type
     procedure RemoveFromSpawner(aAnimalID : TKMUnit; aIndex : Integer);
 
 
-    constructor Create(aHandIndex: TKMHandID); override;
+    constructor Create(aHandIndex: TKMHandID);
 
     procedure UpdateState(aTick: Cardinal); override;
     procedure Paint(const aRect: TKMRect; aTickLag: Single); override;
@@ -921,7 +921,7 @@ end;
 function TKMHand.IsAffectedbyMBD: Boolean;
 begin
   if self = nil then
-    Exit;
+    Exit(false);
   Result := IsHuman or IsAlliedWithHuman;
 end;
 
@@ -2505,7 +2505,6 @@ var aWaresIn, aWaresOut : array[WARE_MIN..WARE_MAX] of Word;
   aWariant : Integer;
   WT : TKMWareType;
   H : TKMHouse;
-  P : array[0..3] of Integer;//additional data like TreeID or WoodcuttersMode
 begin
   if aHouse.AppleTree.NotNil then
     if aHouse.AppleTree.ParentTree.NotNil then
