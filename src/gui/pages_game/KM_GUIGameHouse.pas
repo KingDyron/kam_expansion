@@ -2294,6 +2294,7 @@ begin
         if gRes.Wares[aHouse.WareOutput[I]].IsValid then
         begin
           W := aHouse.WareOutput[I];
+          WaresRow_Common[RowRes].Left := 0;
           WaresRow_Common[RowRes].Width := TB_WIDTH - 20;
           WaresRow_Common[RowRes].TexID     := gRes.Wares[W].GUIIcon;
           WaresRow_Common[RowRes].WareCount := aHouse.CheckWareOut(W);
