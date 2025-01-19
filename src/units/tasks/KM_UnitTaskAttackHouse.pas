@@ -160,7 +160,7 @@ begin
             else
               SetActionStay(0, uaWalk)
           else
-            SetActionWalkToHouse(fHouse, 1.42);
+            SetActionWalkToHouse(fHouse, 1.42 + byte(fUnit.UnitType = utFlailFighter) * 0.58 );
       1:  begin
             if IsRanged then
             begin
@@ -212,7 +212,7 @@ begin
             else
             begin
               //Check if the walk failed
-              if fHouse.GetDistance(Position) > GetFightMaxRange then
+              if fHouse.GetDistance(Position) > GetFightMaxRange + byte(fUnit.UnitType = utFlailFighter) then
               begin
                 SetActionStay(0, uaWalk);
                 Result := trTaskDone;

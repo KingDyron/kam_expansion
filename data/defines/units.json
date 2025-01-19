@@ -453,7 +453,7 @@
 			"StrikeSteps" : [9],
 			"Attack" : 20,
 			"Defence" : 3,
-			"HouseDamage" : 10,
+			"HouseDamage" : 5,
 			"Speed" : 20,
 			"BarracksCost" : [
 				{"WareType" : "wtFlail", "Count" : 1},
