@@ -774,7 +774,8 @@ function TKMHandsCollection.GetNextUnitWSameType(aUnit: TKMUnit): TKMUnit;
 begin
   Result := nil;
   if (aUnit = nil) or aUnit.IsDeadOrDying then Exit;
-
+  If gMySpectator.Hand.IsAnimal then
+    Exit;
   Result := fHandsList[aUnit.Owner].GetNextUnitWSameType(aUnit.UnitType, aUnit.UID);
 end;
 

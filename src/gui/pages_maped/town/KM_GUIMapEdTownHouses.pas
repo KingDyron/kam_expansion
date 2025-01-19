@@ -435,6 +435,12 @@ begin
                         gCursor.MapEdSize := BrushSize.Position;
                       end;
         end;
+        case FT of
+          lftRoadStone,
+          lftRoadWooden,
+          lftRoadClay,
+          lftRoadExclusive: gCursor.MapEdSize := BrushSize.Position;
+        end;
         Exit;
       end;
 
