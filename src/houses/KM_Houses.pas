@@ -5188,9 +5188,9 @@ procedure TKMHouseAppleTree.AddDemandBuildingMaterials;
 begin
   if ParentTree.IsValid then
   begin
-    gHands[Owner].Deliveries.Queue.AddDemand(ParentTree, nil, wtTimber, gRes.Houses[self.HouseType].WoodCost, dtOnce, diHigh4);
-    gHands[Owner].Deliveries.Queue.AddDemand(ParentTree, nil, wtStone, gRes.Houses[self.HouseType].StoneCost, dtOnce, diHigh4);
-    gHands[Owner].Deliveries.Queue.AddDemand(ParentTree, nil, wtTile, gRes.Houses[self.HouseType].TileCost, dtOnce, diHigh4);
+    gHands[ParentTree.Owner].Deliveries.Queue.AddDemand(ParentTree, nil, wtTimber, gRes.Houses[self.HouseType].WoodCost, dtOnce, diHigh4);
+    gHands[ParentTree.Owner].Deliveries.Queue.AddDemand(ParentTree, nil, wtStone, gRes.Houses[self.HouseType].StoneCost, dtOnce, diHigh4);
+    gHands[ParentTree.Owner].Deliveries.Queue.AddDemand(ParentTree, nil, wtTile, gRes.Houses[self.HouseType].TileCost, dtOnce, diHigh4);
   end else
     Inherited;
 end;
@@ -5249,12 +5249,9 @@ begin
 end;
 
 function TKMHouseAppleTree.PaintHouseWork: Boolean;
-var I : Integer;
 begin
-  if IsNil(self) or IsDestroyed then
-    Exit(false);
-
-  Result := true;
+  Exit(false);
+  {
   if fStartAnim > 0 then
     if fTick < fStartAnim + IfThen(fWorkAnim = haWork1, 50, (6 * 20)) then
       Result := false;
@@ -5263,7 +5260,7 @@ begin
   for I := 0 to high(fChildTrees) do
     if ChildTree(I).IsValid then
       If ChildTree(I).fTick < ChildTree(I).fStartAnim + IfThen(ChildTree(I).fWorkAnim = haWork1, 50, (6 * 20)) then
-        Result := false;
+        Result := false;}
 
 end;
 
@@ -5924,21 +5921,28 @@ begin
 
   if not IsComplete then
     Exit;
-  gRenderPool.RenderMapElement(gFruitTrees[fFruitTreeID].Stage[fGrowPhase], gTerrain.AnimStep, Entrance.X, Entrance.Y, false, false ,false);
 
   gRenderPool.AddHouseSupply(HouseType, fPosition, [0, CheckWareIn(wtWater), 0, 0], [CheckWareOut(wtApple), 0, 0, 0], []);
 
-  {if CurrentAction <> nil then
+  if CurrentAction <> nil then
+  begin
     gRenderPool.AddHouseWork(HouseType, fPosition,
-                            CurrentAction.SubAction * [haWork1, haWork2, haWork3, haWork4, haWork5],
-                            WorkAnimStep, WorkAnimStepPrev, gHands[Owner].GameFlagColor);}
+                            CurrentAction.SubAction * [haFire1..haFire8],
+                            WorkAnimStep, WorkAnimStepPrev, gHands[Owner].GameFlagColor);
+    If ParentTree = nil then
+    gRenderPool.AddHouseWork(HouseType, fPosition,
+                            CurrentAction.SubAction - [haWork1, haWork2],
+                            WorkAnimStep, WorkAnimStepPrev, gHands[Owner].GameFlagColor);
+  end;
 
   if fStartAnim > 0 then
     if fTick < fStartAnim + IfThen(fWorkAnim = haWork1, 50, (6 * 20)) then
       gRenderPool.AddHouseWork(HouseType, fPosition,
                               [fWorkAnim],
                               Abs(fTick - fStartAnim), WorkAnimStepPrev, GetFlagColor);
+  gRenderPool.RenderMapElement(gFruitTrees[fFruitTreeID].Stage[fGrowPhase], gTerrain.AnimStep, Entrance.X, Entrance.Y, false, false ,false);
 end;
+
 constructor TKMHousePottery.Load(LoadStream: TKMemoryStream);
 var I : Integer;
 begin
