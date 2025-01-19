@@ -999,7 +999,7 @@ begin
   // Panel_Main.Height := aScreenY;
   // UpdatePositions; //Reposition messages stack etc.
 
-  Label_Info := TKMLabel.Create(Panel_Main, 232, 50, gResTexts[TX_MAPED_MAP_SAVED], fntOutline, taLeft);
+  Label_Info := TKMLabel.Create(Panel_Main, 232, 50, gResTexts[2181], fntOutline, taLeft);
   Label_Info.Hide;
   AfterCreateComplete;
 end;

@@ -198,7 +198,6 @@ begin
   TextOffset := 0;
   TxtOffset := 0;
   ShowName := true;
-
 end;
 
 
@@ -238,7 +237,6 @@ begin
   Inherited;
   SetCaption(Caption);
 end;
-
 function TKMWaresRow.GetMobilHint: Boolean;
 begin
   if Caption <> fFinCap then
@@ -275,7 +273,8 @@ begin
     TKMRenderUI.WritePicture(AbsLeft + Width - 18 + TxtOffset, AbsTop + 3, 14, 14, [], RX, TexID);
   end else
     for I := Min(WareCount - 1, MaxWares) downto 0 do
-      TKMRenderUI.WritePicture(AbsLeft + Width - 18 - I * Spacing + TxtOffset, AbsTop + 3, 14, 14, [], RX, TexID);
+      TKMRenderUI.WritePicture(AbsLeft + Width - 18 - I * Spacing + TxtOffset, AbsTop + 3, 14, 14,
+                                [], RX, TexID, Enabled, $FFFF00FF, 0.25 * (I mod 2));
 end;
 
 

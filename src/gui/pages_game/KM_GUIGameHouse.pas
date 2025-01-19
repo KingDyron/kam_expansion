@@ -4,7 +4,7 @@ interface
 uses
   StrUtils, SysUtils, Math, Classes,
   KM_Controls, KM_ControlsBase, KM_ControlsProgressBar, KM_ControlsSwitch, KM_ControlsWaresRow,
-  KM_CommonClasses, KM_CommonTypes, KM_Defaults, KM_Pics, KM_ControlsPopUp, KM_COntrolsEdit, KM_ControlsScroll,
+  KM_CommonClasses, KM_CommonTypes, KM_Defaults, KM_Pics, KM_ControlsPopUp, KM_ControlsEdit, KM_ControlsScroll,
   KM_InterfaceGame, KM_Houses, KM_HouseMarket, KM_HouseQueue, KM_ResWares, KM_ResTypes;
 
 const LINE_HEIGHT = 25; //Each new Line is placed ## pixels after previous
@@ -125,6 +125,7 @@ type
       Button_House_DemolishYes,Button_House_DemolishNo: TKMButton;
       WaresProdCt_Common: array [1..WARES_IN_OUT_COUNT * 2] of TKMLabel;
       WaresRow_Common: array [1..WARES_IN_OUT_COUNT * 2] of TKMWaresRow;
+      WaresRow_Max: array [1..WARES_IN_OUT_COUNT] of TKMNumericEdit;
       Image_WareIn_Accept: array [1..WARES_IN_OUT_COUNT * 2] of TKMWaresBlockRow;
       Button_TransferWare: array[1..WARES_IN_OUT_COUNT * 2] of TKMButton;
 
@@ -451,9 +452,19 @@ begin
         WaresRow_Common[I].HideHighlight := false;
         WaresRow_Common[I].Clickable := true;
         WaresRow_Common[I].MobilHint := true;
+        If I <= WARES_IN_OUT_COUNT then
+        begin
+          WaresRow_Max[I] := TKMNumericEdit.Create(Panel_House_Common, 0, 0, 0, 120, fntGrey, false);
+          WaresRow_Max[I].Hide;
+          WaresRow_Max[I].AutoFocusable := false;
+          WaresRow_Max[I].Focusable := false;
+          WaresRow_Max[I].TextAlign := taCenter;
+          WaresRow_Max[I].ButtonInc.OnClickShift := ToggleHouseAcceptWare;
+          WaresRow_Max[I].ButtonDec.OnClickShift := ToggleHouseAcceptWare;
+        end;
         WaresProdCt_Common[I] := TKMLabel.Create(Panel_House_Common, WaresRow_Common[I].Right + 3, 0, TB_WIDTH - 20, 0, '',fntGrey,taLeft);
 
-        Image_WareIn_Accept[I] := TKMWaresBlockRow.Create(Panel_House_Common, WaresRow_Common[I].Right - 3 - WaresRow_Common[I].Spacing * 6, 0, 200, 12);
+        Image_WareIn_Accept[I] := TKMWaresBlockRow.Create(Panel_House_Common, 0, 0, 100, 12);
         Image_WareIn_Accept[I].Count := 5;
         Image_WareIn_Accept[I].Hitable := False;
         Image_WareIn_Accept[I].Spacing :=  WaresRow_Common[I].Spacing;
@@ -2150,7 +2161,7 @@ begin
                       end;
           htTownhall: begin
                         ShowTownHall(aHouse);
-                        Panel_HouseTownHall.Top := 76 + base + line * 25 + 20;
+                        Panel_HouseTownHall.Top := 50 + base + line * 25 + 20;
                       end;
       end;
 
@@ -2174,9 +2185,11 @@ begin
 end;
 
 procedure TKMGUIGameHouse.ShowCommonDemandSingle(aHouse: TKMHouse; aID : TByteSet; Base: Integer; var Line, RowRes: Integer);
+const MAX_WARE_EDIT_WIDTH = 75;
 var
   I: Integer;
   hSpec: TKMHouseSpec;
+  WT : TKMWareType;
 begin
   if not aHouse.AcceptsWares then
     Exit;
@@ -2194,42 +2207,60 @@ begin
       if I in aID then
         if gRes.Wares[aHouse.WareInput[I]].IsValid then
         begin
-          WaresRow_Common[RowRes].Width := TB_WIDTH;
+          WT := aHouse.WareInput[I];
 
           WaresRow_Common[RowRes].Spacing := 14;
           WaresRow_Common[RowRes].Tag := I;
-          Image_WareIn_Accept[RowRes].Spacing := WaresRow_Common[RowRes].Spacing;
-          Image_WareIn_Accept[RowRes].CntAsNumber := aHouse.GetMaxInWare >= 10;
-          Image_WareIn_Accept[RowRes].MaxCount := aHouse.GetMaxInWare;
           WaresRow_Common[RowRes].WareCntAsNumber := aHouse.GetMaxInWare >= 10;
-          WaresRow_Common[RowRes].ShowName := true;
+          WaresRow_Common[RowRes].ShowName := not WaresRow_Common[RowRes].WareCntAsNumber;
 
-          if Image_WareIn_Accept[RowRes].CntAsNumber then
-            Image_WareIn_Accept[RowRes].Left := WaresRow_Common[RowRes].AbsRight - 25
-          else
-            Image_WareIn_Accept[RowRes].Left := WaresRow_Common[RowRes].AbsRight - (5 + 2) * Image_WareIn_Accept[I].Spacing;
+          WaresRow_Common[RowRes].TexID := gRes.Wares[WT].GUIIcon;
 
-          WaresRow_Common[RowRes].TexID := gRes.Wares[aHouse.WareInput[I]].GUIIcon;
 
-          if WaresRow_Common[RowRes].WareCntAsNumber then
-            WaresRow_Common[RowRes].Caption := gRes.Wares[aHouse.WareInput[I]].Title + ' (' + IntToStr(aHouse.GetMaxInWare - aHouse.GetAcceptWareIn(aHouse.WareInput[I])) + ')'
-          else
-            WaresRow_Common[RowRes].Caption := gRes.Wares[aHouse.WareInput[I]].Title;
-
-          WaresRow_Common[RowRes].Hint := gRes.Wares[aHouse.WareInput[I]].Title;
+          WaresRow_Common[RowRes].Hint := gRes.Wares[WT].Title;
           WaresRow_Common[RowRes].WareCount := aHouse.CheckWareIn(aHouse.WareInput[I]);
           WaresRow_Common[RowRes].Top := Base + Line * LINE_HEIGHT;
-          WaresRow_Common[RowRes].Show;
-          Image_WareIn_Accept[RowRes].Show;
-
           WaresRow_Common[RowRes].Hitable := true;
           WaresRow_Common[RowRes].HideHighlight := false;
           WaresRow_Common[RowRes].Clickable := true;
           WaresRow_Common[RowRes].MaxWares := aHouse.GetMaxInWare;
+
+          if WaresRow_Common[RowRes].WareCntAsNumber then
+          begin
+            //WaresRow_Common[RowRes].Caption := IntToStr(aHouse.GetMaxInWare - aHouse.GetAcceptWareIn(WT)) +  '/'  + IntToStr(aHouse.GetMaxInWare);
+            WaresRow_Common[RowRes].Left := MAX_WARE_EDIT_WIDTH;
+            WaresRow_Common[RowRes].Width := TB_WIDTH - (MAX_WARE_EDIT_WIDTH);
+            WaresRow_Max[RowRes].Top := WaresRow_Common[RowRes].Top;
+            WaresRow_Max[RowRes].Width := MAX_WARE_EDIT_WIDTH;
+            WaresRow_Max[RowRes].Value := aHouse.GetMaxInWare - aHouse.GetAcceptWareIn(WT);
+            WaresRow_Max[RowRes].SetRange(0, aHouse.GetMaxInWare);
+            WaresRow_Max[RowRes].Hint := Format(gResTexts[2182], [WaresRow_Max[RowRes].Value, aHouse.GetMaxInWare]);
+            WaresRow_Max[RowRes].Tag := I;
+            WaresRow_Max[RowRes].Show;
+          end else
+          begin
+            WaresRow_Common[RowRes].Caption := gRes.Wares[WT].Title;
+            WaresRow_Common[RowRes].Left := 0;
+            WaresRow_Common[RowRes].Width := TB_WIDTH;
+            WaresRow_Max[RowRes].Hide;
+          end;
+
+          WaresRow_Common[RowRes].Show;
+
+          WaresProdCt_Common[RowRes].Top := Base + 3 + Line * LINE_HEIGHT;
+
+
+          Image_WareIn_Accept[RowRes].Spacing := WaresRow_Common[RowRes].Spacing;
+          Image_WareIn_Accept[RowRes].CntAsNumber := aHouse.GetMaxInWare >= 10;
+          Image_WareIn_Accept[RowRes].MaxCount := aHouse.GetMaxInWare;
           Image_WareIn_Accept[RowRes].Top := WaresRow_Common[RowRes].Top;
           Image_WareIn_Accept[RowRes].Count := aHouse.GetAcceptWareIn(aHouse.WareInput[I]);
 
-          WaresProdCt_Common[RowRes].Top := Base + 3 + Line * LINE_HEIGHT;
+          if Image_WareIn_Accept[RowRes].CntAsNumber then
+            Image_WareIn_Accept[RowRes].Left := WaresRow_Common[RowRes].Right - 18
+          else
+            Image_WareIn_Accept[RowRes].Left := WaresRow_Common[RowRes].Right - 5 * Image_WareIn_Accept[I].Spacing - 18;
+          Image_WareIn_Accept[RowRes].Show;
 
           Inc(Line);
           Inc(RowRes);
@@ -3520,6 +3551,29 @@ begin
           aCount := -aCount;
         //HS.ToggleAcceptWaresIn(HS.WareInput[I], aCount)
         gGame.GameInputProcess.CmdHouse(gicHouseDeliveryToggle, HS, HS.WareInput[J], aCount);
+      end else
+      if (Sender = WaresRow_Max[I].ButtonInc) or (Sender = WaresRow_Max[I].ButtonDec) then
+      begin
+        J := WaresRow_Max[I].Tag;
+        If Sender = WaresRow_Max[I].ButtonInc then
+          aCount := -1
+        else
+          aCount := 1;
+
+        if ssShift in Shift then
+          aCount := aCount * 10;
+
+        if ssCtrl in Shift then
+          aCount := aCount * 10;
+
+        if ssAlt in Shift then
+          aCount := aCount * 10;
+
+        if ssRight in Shift then
+          aCount := aCount * 10;
+        //HS.ToggleAcceptWaresIn(HS.WareInput[I], aCount)
+        gGame.GameInputProcess.CmdHouse(gicHouseDeliveryToggle, HS, HS.WareInput[J], aCount);
+
       end;
 
     //Image_WareIn_Accept[I].Visible := (HS.GetAcceptWareIn(HS.WareInput[I]) > 0) and (HS.WareInput[I] in WARES_VALID);

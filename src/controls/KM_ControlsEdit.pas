@@ -142,6 +142,7 @@ type
     property Value: Integer read fValue write SetValue;
     property TextAlign : TKMTextAlign read fTextAlign write fTextAlign;
     property Text : String read fText write fText;
+    procedure SetRange(aMin, aMax : Integer);
     function KeyDown(Key: Word; Shift: TShiftState): Boolean; override;
     procedure MouseWheel(Sender: TObject; WheelSteps: Integer; var aHandled: Boolean); override;
     property ButtonInc : TKMButton read fButtonInc;
@@ -788,6 +789,12 @@ begin
     OnChange(Self);
 end;
 
+procedure TKMNumericEdit.SetRange(aMin: Integer; aMax: Integer);
+begin
+  ValueMin := aMin;
+  ValueMax := aMax;
+  Value := EnsureRange(Value, ValueMin, ValueMax);
+end;
 
 function TKMNumericEdit.KeyDown(Key: Word; Shift: TShiftState): Boolean;
 begin

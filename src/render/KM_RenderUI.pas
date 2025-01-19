@@ -645,8 +645,8 @@ begin
           if aLightness > 0 then
             glBlendFunc(GL_SRC_ALPHA, GL_ONE)
           else begin
-            glBlendFunc(GL_SRC_ALPHA, GL_ZERO);
-            aLightness := 1-Abs(aLightness);
+            //glBlendFunc(GL_SRC_ALPHA, GL_ZERO);
+            aLightness := aLightness + 1;
           end;
           glColor3f(aLightness, aLightness, aLightness);
           glBegin(GL_QUADS);
