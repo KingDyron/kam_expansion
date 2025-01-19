@@ -1200,8 +1200,8 @@ begin
       gicHouseBarracksRally:     TKMHouseBarracks(srcHouse).FlagPoint := KMPoint(IntParams[1], IntParams[2]);
       gicHouseTownHallEquip:     TKMHouseTownHall(srcHouse).Equip(TKMUnitType(IntParams[1]), IntParams[2]);
       gicHouseTownHallRally:     TKMHouseTownHall(srcHouse).FlagPoint := KMPoint(IntParams[1], IntParams[2]);
-      gicHouseTownHallMaxGold:   TKMHouseTownHall(srcHouse).GoldMaxCnt := EnsureRange(IntParams[1], 0, High(Word));
-      gicHouseTownHallMaxBitin:   TKMHouseTownHall(srcHouse).BitinArmorMaxCnt := EnsureRange(IntParams[1], 0, High(Word));
+      //gicHouseTownHallMaxGold:   TKMHouseTownHall(srcHouse).GoldMaxCnt := EnsureRange(IntParams[1], 0, High(Word));
+      //gicHouseTownHallMaxBitin:   TKMHouseTownHall(srcHouse).BitinArmorMaxCnt := EnsureRange(IntParams[1], 0, High(Word));
       gicHouseSiegeWorkshopRally:TKMHouseSiegeWorkshop(srcHouse).FlagPoint := KMPoint(IntParams[1], IntParams[2]);
       gicHouseCollectorsRally:   TKMHouseCollectors(srcHouse).FlagPoint := KMPoint(IntParams[1], IntParams[2]);
       gicHousePalaceRally:       TKMHousePalace(srcHouse).FlagPoint := KMPoint(IntParams[1], IntParams[2]);

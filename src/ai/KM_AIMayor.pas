@@ -925,10 +925,10 @@ begin
     and not Houses[I].IsDestroyed then
     case Houses[I].HouseType of
 
-      htTownhall: if TKMHouseTownHall(Houses[I]).GoldMaxCnt > 0 then
+      {htTownhall: if TKMHouseTownHall(Houses[I]).GoldMaxCnt > 0 then
                     TKMHouseTownHall(Houses[I]).GoldMaxCnt := IfThen(gHands[fOwner].Stats.Wares[wtGold].ActualCnt < 15, 0, 15)
                   else
-                    TKMHouseTownHall(Houses[I]).GoldMaxCnt := IfThen(gHands[fOwner].Stats.Wares[wtGold].ActualCnt < 30, 0, 15);
+                    TKMHouseTownHall(Houses[I]).GoldMaxCnt := IfThen(gHands[fOwner].Stats.Wares[wtGold].ActualCnt < 30, 0, 15);}
 
       htFarm : Houses[I].ForceWorking := true;
       htBarracks: begin

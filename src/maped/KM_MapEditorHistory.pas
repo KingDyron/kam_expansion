@@ -496,7 +496,7 @@ constructor TKMCheckpointHouses.Create(const aCaption: string);
 
     case aHouse.HouseType of
       htTownHall:   begin
-                      fHouses[aCount].WaresIn[0] := TKMHouseTownhall(aHouse).GoldCnt;
+                      fHouses[aCount].WaresIn[0] := aHouse.CheckWareIn(wtGold);
                     end;
       htStore:      begin
                       for WT := WARE_MIN to WARE_MAX do
@@ -580,9 +580,9 @@ begin
       TKMHouseWFlagPoint(H).FlagPoint := fHouses[I].FlagPoint;
 
     case H.HouseType of
-      htTownHall:   begin
+     {htTownHall:   begin
                       TKMHouseTownhall(H).GoldCnt := fHouses[I].WaresIn[0];
-                    end;
+                    end;}
       htStore:      begin
                       for WT := WARE_MIN to WARE_MAX do
                         TKMHouseStore(H).WareAddToIn(WT, fHouses[I].WaresIn[Ord(WT) - Ord(WARE_MIN)]);

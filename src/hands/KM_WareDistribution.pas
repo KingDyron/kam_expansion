@@ -74,7 +74,7 @@ begin
   //Some houses has different count of wares, so use Max word instead of max 5 wares
   if aWare in [wtAll, wtWarfare, wtFood] then
     Exit(1);
-  if aHouse in [htStore, htBarracks, htMarket, htTownhall] then
+  if aHouse in [htStore, htBarracks, htMarket] then
     Exit(1);
   
   Result := gRes.Houses[aHouse].MaxWareCount;

@@ -327,6 +327,7 @@ type
     function HasSlotWithWare(aWare : TKMWareType) : Boolean;
     function CanChangeWareInput(IsAI : Boolean = false) : Boolean;
     function GetAcceptWareIn(aWareType : TKMWareType) : Word;
+    procedure SetAcceptWareIn(aWareType : TKMWareType; aMax : Word);
     function ShouldAbandonDeliveryTo(aWareType: TKMWareType): Boolean; virtual;
     function ShouldAbandonDeliveryFrom(aWareType: TKMWareType; aImmidiateCheck: Boolean = False): Boolean; virtual;
     function ShouldAbandonDeliveryFromTo(aToHouse: TKMHouse; aWareType: TKMWareType; aImmidiateCheck: Boolean): Boolean; virtual;
@@ -1760,6 +1761,15 @@ begin
     if aWareType = fWareInput[I] then
       Result := fWareBlocked[I];
 end;
+
+procedure TKMHouse.SetAcceptWareIn(aWareType: TKMWareType; aMax: Word);
+var I : Integer;
+begin
+  for I := 1 to WARES_IN_OUT_COUNT do
+    if aWareType = fWareInput[I] then
+      fWareBlocked[I] := aMax;
+end;
+
 
 //Check if we should abandon delivery to this house
 function TKMHouse.ShouldAbandonDeliveryTo(aWareType: TKMWareType): Boolean;
@@ -3580,7 +3590,7 @@ begin
   //Don't allow output to be overfilled from script. This is not checked
   //in WareAddToOut because e.g. stonemason is allowed to overfill it slightly)
   if WareCanAddToOut(aWare) then
-    if not (fType in [htStore, htTownhall, htMarket, htBarracks, htInn, htPalace]) then
+    if not (fType in [htStore, htMarket, htBarracks, htInn, htPalace]) then
     begin
       count := Min(aCount, GetMaxOutWare - CheckWareOut(aWare));
       WareAddToOut(aWare, aCount);
@@ -4182,6 +4192,13 @@ end;
 //      Maybe it's possible to cancel the current requests if no serf has taken them yet?
 procedure TKMHouse.UpdateDemands;
 Const MAX_ORDERS = 10;
+  function MaxOrders : Word;
+  begin
+    Result := MAX_ORDERS;
+    case HouseType of
+      htTownhall : Result := 20;
+    end;
+  end;
 var
   I: Integer;
   demandsRemoved, plannedToRemove, demandsToChange: Integer;
@@ -4190,7 +4207,7 @@ var
 begin
   for I := 1 to WARES_IN_OUT_COUNT do
   begin
-    if (fType = htTownHall) or (fWareInput[I] in [wtAll, wtWarfare, wtNone]) then Continue;
+    if (fWareInput[I] in [wtAll, wtWarfare, wtNone]) then Continue;
 
     resDelivering := WareDeliveryCnt[I] - WareDemandsClosing[I];
 
@@ -4202,7 +4219,7 @@ begin
 
     //demandsToChange := Min( 5 - (demandsToChange - fWareIn[I]), GetMaxInWare -  demandsToChange);
 
-    demandsToChange := Min( MAX_ORDERS - (resDelivering - fWareIn[I]), maxDistribution -  resDelivering);
+    demandsToChange := Min( MaxOrders - (resDelivering - fWareIn[I]), maxDistribution -  resDelivering);
 
     //Not enough resources ordered, add new demand
     if demandsToChange > 0 then

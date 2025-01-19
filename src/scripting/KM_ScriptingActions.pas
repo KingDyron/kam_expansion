@@ -3112,7 +3112,7 @@ begin
     begin
       H := fIDCache.GetHouse(aHouseID);
       if (H <> nil) and (H is TKMHouseTownHall) and not H.IsDestroyed and H.IsComplete then
-        TKMHouseTownHall(H).GoldMaxCnt := aMaxGold;
+        H.SetAcceptWareIn(wtGold, aMaxGold);
     end
     else
       LogIntParamWarn('Actions.HouseTownHallMaxGold', [aHouseID, aMaxGold]);

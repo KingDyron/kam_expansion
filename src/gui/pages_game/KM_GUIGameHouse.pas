@@ -55,7 +55,6 @@ type
     procedure House_BarracksItemClickShift(Sender: TObject; Shift: TShiftState);
     procedure House_BarracksUnitChange(Sender: TObject; Shift: TShiftState);
 
-    procedure House_TownHall_Change(Sender: TObject; aChangeValue: Integer);
     procedure House_TH_UnitChange(Sender: TObject; Shift: TShiftState);
 
     procedure House_MarketFill(aMarket: TKMHouseMarket);
@@ -204,11 +203,7 @@ type
       Image_KidsProgress: array[0..2] of array[1..8] of TKMImage;
 
     Panel_HouseTownHall: TKMPanel;
-      Label_TH_Demand,Label_TH_Costs: TKMLabel;
-      ResRow_TH_Gold: TKMWaresRow;
-      ResRow_TH_MaxGold: TKMWareOrderRow;
-      ResRow_TH_Bitin: TKMWaresRow;
-      ResRow_TH_MaxBitin: TKMWareOrderRow;
+      Label_TH_Costs: TKMLabel;
       Label_TH_Unit: TKMLabel;
       Image_TH_Right,Image_TH_Train,Image_TH_Left: TKMImage;
       Button_TH_Right,Button_TH_Train,Button_TH_Left: TKMButton;
@@ -938,43 +933,6 @@ begin
   Panel_HouseTownhall := TKMPanel.Create(Panel_House, 0, 76, TB_WIDTH, 350);
 
     dy := 8;
-//    Label_TH_Demand := TKMLabel.Create(Panel_HouseTownhall,0,dy,TB_WIDTH,0,gResTexts[TX_HOUSE_NEEDS],fntGrey,taCenter);
-//    Inc(dy, 19);
-    ResRow_TH_Gold := TKMWaresRow.Create(Panel_HouseTownhall, 0, dy, TB_WIDTH);
-    ResRow_TH_Gold.RX := rxGui;
-    ResRow_TH_Gold.TexID := gRes.Wares[wtGold].GUIIcon;
-    ResRow_TH_Gold.Caption := gRes.Wares[wtGold].Title;
-    ResRow_TH_Gold.Hint := gRes.Wares[wtGold].Title;
-    ResRow_TH_Gold.WareCntAsNumber := True;
-    Inc(dy, 25);
-
-    ResRow_TH_Bitin := TKMWaresRow.Create(Panel_HouseTownhall, 0, dy, TB_WIDTH);
-    ResRow_TH_Bitin.RX := rxGui;
-    ResRow_TH_Bitin.TexID := gRes.Wares[wtBitinArmor].GUIIcon;
-    ResRow_TH_Bitin.Caption := gRes.Wares[wtBitinArmor].Title;
-    ResRow_TH_Bitin.Hint := gRes.Wares[wtBitinArmor].Title;
-    ResRow_TH_Bitin.WareCntAsNumber := True;
-    Inc(dy, 25);
-
-    ResRow_TH_MaxGold := TKMWareOrderRow.Create(Panel_HouseTownhall, 0, dy, TB_WIDTH, gRes.Houses[htTownhall].MaxWareCount);
-    ResRow_TH_MaxGold.MouseWheelStep := HOUSE_ORDER_ROW_MOUSEWHEEL_STEP;
-    ResRow_TH_MaxGold.WareRow.RX := rxGui;
-    ResRow_TH_MaxGold.WareRow.TexID := gRes.Wares[wtGold].GUIIcon;
-    ResRow_TH_MaxGold.WareRow.Caption := gResTexts[TX_HOUSES_TOWNHALL_MAX_GOLD];
-    ResRow_TH_MaxGold.WareRow.WareCount := 1;
-    ResRow_TH_MaxGold.Hint := gResTexts[TX_HOUSES_TOWNHALL_MAX_GOLD_HINT];
-    ResRow_TH_MaxGold.OnChange := House_TownHall_Change;
-    Inc(dy, 29);
-
-    ResRow_TH_MaxBitin := TKMWareOrderRow.Create(Panel_HouseTownhall, 0, dy, TB_WIDTH, gRes.Houses[htTownhall].MaxWareCount);
-    ResRow_TH_MaxBitin.MouseWheelStep := HOUSE_ORDER_ROW_MOUSEWHEEL_STEP;
-    ResRow_TH_MaxBitin.WareRow.RX := rxGui;
-    ResRow_TH_MaxBitin.WareRow.TexID := gRes.Wares[wtBitinArmor].GUIIcon;
-    ResRow_TH_MaxBitin.WareRow.Caption := gResTexts[2029];
-    ResRow_TH_MaxBitin.WareRow.WareCount := 1;
-    ResRow_TH_MaxBitin.Hint := gResTexts[TX_HOUSES_TOWNHALL_MAX_GOLD_HINT];
-    ResRow_TH_MaxBitin.OnChange := House_TownHall_Change;
-    Inc(dy, 29);
 
     Label_TH_Unit := TKMLabel.Create(Panel_HouseTownhall, 0, dy, TB_WIDTH, 0, '', fntOutline, taCenter);
     Inc(dy, 20);
@@ -1758,7 +1716,18 @@ begin
                         if aHouse.ResourceDepleted then
                           Label_DepletedMsg.Caption := gResTexts[aHouse.GetResourceDepletedMessageId];
                       end;
-    htTownHall:       ShowTownHall(aHouse);
+    {htTownHall:       begin
+                        //Now show only what we need
+                        rowRes := 1;
+                        line := 0;
+                        base := 2;
+
+                        //Show Demand
+                        ShowCommonDemand(aHouse, base, line, rowRes);
+                        Panel_House_Common.Show;
+                        ShowTownHall(aHouse);
+                        Panel_HouseTownHall.Top := 100 + demandTop;
+                      end;}
     htSiegeWorkShop : begin
                         //First thing - hide everything
                         for I := 0 to Panel_House_Common.ChildCount - 1 do
@@ -2088,6 +2057,7 @@ begin
 
       Panel_HouseQueue.Show;
       Panel_House_Common.Show;
+
     end else
     begin
 
@@ -2177,6 +2147,10 @@ begin
                           Ship_DoWork.TexID := IfThen(TKMHouseShipYard(aHouse).DoWork, 33, 32);
                           Ship_DoWork.Hint := IfThen(TKMHouseShipYard(aHouse).DoWork, gResTexts[2034], gResTexts[2033]);
                         end;
+                      end;
+          htTownhall: begin
+                        ShowTownHall(aHouse);
+                        Panel_HouseTownHall.Top := 76 + base + line * 25 + 20;
                       end;
       end;
 
@@ -2436,13 +2410,7 @@ begin
   Assert(aHouse is TKMHouseTownHall);
 
   TH := TKMHouseTownHall(aHouse);
-
   House_TH_UnitChange(nil, []);
-  ResRow_TH_Gold.WareCount := TH.GoldCnt;
-  ResRow_TH_MaxGold.OrderCount := TH.GoldMaxCnt;
-
-  ResRow_TH_Bitin.WareCount := TH.BitinArmorCnt;
-  ResRow_TH_MaxBitin.OrderCount := TH.BitinArmorMaxCnt;
 
   //Panel_HouseTownHall.Show;
 end;
@@ -2979,24 +2947,6 @@ begin
     Image_Barracks_Right.Hide;
   end;
 end;
-
-
-procedure TKMGUIGameHouse.House_TownHall_Change(Sender: TObject; aChangeValue: Integer);
-var
-  TH: TKMHouseTownHall;
-  newValue: Integer;
-begin
-  TH := TKMHouseTownHall(gMySpectator.Selected);
-  if Sender = ResRow_TH_MaxBitin then
-  begin
-    newValue := EnsureRange(TH.BitinArmorMaxCnt + aChangeValue, 0, High(Word));
-    gGame.GameInputProcess.CmdHouse(gicHouseTownHallMaxBitin, TH, newValue);
-    Exit;
-  end;
-  newValue := EnsureRange(TH.GoldMaxCnt + aChangeValue, 0, High(Word));
-  gGame.GameInputProcess.CmdHouse(gicHouseTownHallMaxGold, TH, newValue);
-end;
-
 
 procedure TKMGUIGameHouse.House_TH_UnitChange(Sender: TObject; Shift: TShiftState);
 var

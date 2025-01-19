@@ -228,7 +228,7 @@ begin
       for I := 0 to Count - 1 do
       begin
         if Houses[I].HouseType = htTownHall then
-          Inc(value, TKMHouseTownHall(Houses[I]).GoldCnt);
+          Inc(value, Houses[I].CheckWareIn(wtGold));
       end;
   end else
     value := gHands[aHandIndex].Stats.GetWareBalance(TKMWareType(ATag));

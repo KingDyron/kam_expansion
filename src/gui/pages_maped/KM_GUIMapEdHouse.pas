@@ -913,7 +913,7 @@ begin
   HealthBar_House.Caption := IntToStr(Round(fHouse.GetHealth)) + '/' + IntToStr(fHouse.MaxHealth);
   HealthBar_House.Position := fHouse.GetHealth / fHouse.MaxHealth;
 
-  if not (fHouse.HouseType in [htTownHall, htSign]) then //Do not show common resources input/output for TownHall
+  if not (fHouse.HouseType in [htSign]) then
     ShowCommonResources
   else
     HideAllCommonResources;
@@ -950,7 +950,7 @@ begin
 
   Button_HouseForceWork.Hide;
   Button_HouseNoRes.Hide;
-  if houseSpec.AcceptsWares and not (aHouse.HouseType in [htTownHall, htStore, htPalace, htInn]) then
+  if houseSpec.AcceptsWares and not (aHouse.HouseType in [htStore, htPalace, htInn]) then
   begin
     Button_HouseNoRes.Show;
     Button_HouseNoRes.TexID :=  IfThen(fHouse.DontNeedRes, 718, 717);
@@ -1041,10 +1041,6 @@ begin
                         BarracksSelectWare(Button_Barracks_Recruit)
                       else
                         BarracksSelectWare(Button_Barracks[fBarracksItem]);
-                    end;
-    htTownHall:    begin
-                      Panel_HouseTownHall.Show;
-                      TownHallRefresh;
                     end;
     htWoodcutters: begin
                       Panel_HouseWoodcutters.Show;
@@ -1256,6 +1252,7 @@ var
   TH: TKMHouseTownHall;
   newCountAdd: Integer;
 begin
+  {
   TH := TKMHouseTownHall(fHouse);
   if aValue > 0 then
   begin
@@ -1272,7 +1269,7 @@ begin
     fHouse.WareTakeFromIn(wtGold, newCountAdd);
   end;
   WaresRow_TH_Gold_Input.OrderCount := fHouse.CheckWareIn(wtGold);
-  WaresRow_TH_Gold_Input.WareRow.WareCount := Min(MAX_WARES_IN_HOUSE, WaresRow_TH_Gold_Input.OrderCount);
+  WaresRow_TH_Gold_Input.WareRow.WareCount := Min(MAX_WARES_IN_HOUSE, WaresRow_TH_Gold_Input.OrderCount);}
 end;
 
 

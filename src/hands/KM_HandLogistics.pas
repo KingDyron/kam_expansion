@@ -1803,7 +1803,7 @@ begin
       and (fDemand[dWT,iD].Loc_House.HouseType = htTownHall) then
     begin
       //Delivering gold to TH - if there are already more then 500 gold, then make this delivery very low priority
-      if (fDemand[dWT,iD].Loc_House.CheckWareIn(oWT) > 500) then
+      if (fDemand[dWT,iD].Loc_House.CheckWareIn(oWT) > 120) then
         aBidCost.IncAddition(5000)
       else
         aBidCost.IncAddition(2); //Add small value, so it will not have so big advantage above other houses

@@ -3334,7 +3334,7 @@ begin
     begin
       H := fIDCache.GetHouse(aHouseID);
       if H is TKMHouseTownHall then
-        Result := TKMHouseTownHall(H).GoldMaxCnt;
+        Result := H.GetAcceptWareIn(wtGold);
     end
     else
       LogIntParamWarn('States.HouseTownHallMaxGold', [aHouseID]);

@@ -504,10 +504,10 @@ begin
     if (HTH = nil) or HTH.IsDestroyed or (not HTH.IsComplete) then
       Continue;
 
-    if HTH.GoldCnt < 10 then
+    if HTH.CheckWareIn(wtGold) < 10 then
       Continue;
     J := 0;
-    while (HTH.GoldCnt > 2) and (J < 5) do
+    while (HTH.CheckWareIn(wtGold) > 2) and (J < 5) do
     begin
       Inc(J);
       K := 0;//Chose a random group type that we are going to attempt to train (so we don't always train certain group types first)

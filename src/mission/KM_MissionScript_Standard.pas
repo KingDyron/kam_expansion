@@ -633,13 +633,13 @@ begin
                           begin
                             if not fLastHouse.IsDestroyed then //Could be destroyed already by damage
                             begin
-                              if fLastHouse.HouseType in [htStore, htTownHall, htMarket] then
+                              if fLastHouse.HouseType in [htStore, htMarket] then
                                 fLastHouse.WareAddToIn(WARE_ID_TO_TYPE[P[0]], qty, true)
                               else
                                 fLastHouse.WareAddToEitherFromScript(WARE_ID_TO_TYPE[P[0]], qty);
                               gHands[fLastHand].Stats.WareInitial(WARE_ID_TO_TYPE[P[0]], qty);
 
-                              if not (fLastHouse.HouseType in [htStore, htTownHall, htMarket]) then
+                              if not (fLastHouse.HouseType in [htStore, htMarket]) then
                                 fLastHouse.ToggleAcceptWaresIn(WARE_ID_TO_TYPE[P[0]], -qty)
                             end;
                           end

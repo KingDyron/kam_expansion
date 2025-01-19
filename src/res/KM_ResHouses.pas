@@ -649,7 +649,7 @@ const
     NeedsPlayerOrder: False;
     BuildIcon:        319;
     TabletSpriteId:   269;
-    Input:            (wtGold,       wtNone,       wtNone,       wtNone);
+    Input:            (wtGold,       wtBitinArmor,wtNone,       wtNone);
     Output:           (wtNone,       wtNone,       wtNone,       wtNone);
     UnlockedByHouse:  htMetallurgists;
     SnowSpriteId:     2077;
