@@ -64,6 +64,7 @@ type
 
     procedure House_SchoolUnitChange(Sender: TObject; Shift: TShiftState);
     procedure House_SchoolUnitQueueClick(Sender: TObject; Shift: TShiftState);
+    //procedure House_SchoolIconClicked(aValue : Integer; Shift : TShiftState);
 
     procedure House_StoreItemClickShift(Sender: TObject;X, Y : Integer; Shift: TShiftState);
     procedure House_StoreItemMouseOver(Sender: TObject; Shift: TShiftState);
@@ -163,6 +164,7 @@ type
       Label_School_Unit: TKMLabel;
       Image_School_Right,Image_School_Train,Image_School_Left: TKMImage;
       Button_School_Right,Button_School_Train,Button_School_Left: TKMButton;
+      //Icons_AllWorkers: TKMIconsRow;
 
     Panel_House_Siege: TKMPanel;
       Button_Siege_UnitWIP: TKMButton;
@@ -288,7 +290,7 @@ uses
   KM_GameSettings,
   KM_Hand,
   KM_InterfaceTypes,
-  KM_CommonUtils,
+  KM_CommonUtils, KM_CommonHelpers,
   KM_HouseBarracks, KM_HouseSchool, KM_HouseTownHall, KM_HouseWoodcutters, KM_HouseStore,
   KM_HouseArmorWorkshop, KM_HouseSiegeWorkshop, KM_HouseWoodBurner, KM_HouseCottage,
   KM_HouseSwineStable,
@@ -721,7 +723,7 @@ procedure TKMGUIGameHouse.Create_HouseSchool;
 var
   I: Integer;
 begin
-  Panel_House_School := TKMPanel.Create(Panel_House, 0, 76, TB_WIDTH, Panel_House.Height - 76);
+  Panel_House_School := TKMPanel.Create(Panel_House, 0, 76, TB_WIDTH, Panel_House.Height);
 
     //TKMLabel.Create(Panel_House_School,0,2,TB_WIDTH,30,gResTexts[TX_HOUSE_NEEDS],fntGrey,taCenter);
 
@@ -765,7 +767,11 @@ begin
     Button_School_Train.OnClickShift := House_SchoolUnitChange;
     Button_School_Right.OnClickShift := House_SchoolUnitChange;
 
-
+    {Icons_AllWorkers := TKMIconsRow.Create(Panel_House_School, 5, Button_School_Right.Bottom + 5, 30, 30);
+    Icons_AllWorkers.OnIconClickedShift := House_SchoolIconClicked;
+    Icons_AllWorkers.AddBevel := true;
+    Icons_AllWorkers.BackBevel := 0.4;
+    Icons_AllWorkers.MaxCountInRow := 6;}
 end;
 
 procedure TKMGUIGameHouse.Create_HouseSiege;
@@ -1715,6 +1721,11 @@ begin
                         Image_School_Right.FlagColor := gHands[aHouse.Owner].FlagColor;
                         Image_School_Train.FlagColor := gHands[aHouse.Owner].FlagColor;
                         House_SchoolUnitChange(nil, []);
+                        {Icons_AllWorkers.Clear;
+                        for I := 0 to High(SCHOOL_GAME_ORDER) do
+                          If gHands[fHouse.Owner].Locks.UnitUnlocked(SCHOOL_GAME_ORDER[I], htSchool) then
+                            Icons_AllWorkers.AddIcon(gRes.Units[SCHOOL_GAME_ORDER[I]].GUIIcon, ord(SCHOOL_GAME_ORDER[I]));}
+
                         //Panel_House_School.Show;
                       end;
     htBarracks:       begin
@@ -3294,7 +3305,20 @@ begin
 
   end;
 end;
+{
+procedure TKMGUIGameHouse.House_SchoolIconClicked(aValue: Integer; Shift : TShiftState);
+var I : Integer;
+  UT : TKMUnitType;
+begin
+  I := Icons_AllWorkers.GetTag(aValue);
+  UT := TKMUnitType(I);
+  if IsRMBInShiftState(Shift) then
+    gGame.GameInputProcess.CmdHouse(gicHouseSchoolTrain, fHouse, UT, 10)
+  else
+    gGame.GameInputProcess.CmdHouse(gicHouseSchoolTrain, fHouse, UT, 1)
 
+end;
+}
 // That small red triangle blocking delivery of wares to Barracks
 // Ware determined by Button.Tag property
 procedure TKMGUIGameHouse.House_BarracksItemClickShift(Sender: TObject; Shift: TShiftState);

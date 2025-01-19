@@ -1082,6 +1082,16 @@ begin
     if gGame.Params.MBD.IsHardOrRealism then
       ActSetByMultiplier(aUnit, 1.25);
 
+  if aUnit.Home.HouseType = htProductionThatch then
+  begin
+    case aProduct of
+      wtLog, wtWheel, wtSawDust : ActSetByMultiplier(aUnit, 0.65);
+      wtTimber : ActSetByMultiplier(aUnit, 0.45);
+      wtGold, wtIron, wtBitin, wtSteelE, wtBitinE : ActSetByMultiplier(aUnit, 0.80);
+      wtBread, wtFlour : ActSetByMultiplier(aUnit, 0.70);
+    end;
+
+  end;
 end;
 
 

@@ -2034,9 +2034,7 @@ end;
 // Return distance from aPos to the closest house tile
 function TKMHouse.GetDistance(const aPos: TKMPoint): Single;
 var
-  I, K: Integer;
-  loc: TKMPoint;
-  HA: TKMHouseArea;
+  I: Integer;
   list : TKMPointList;
 begin
   Result := MaxSingle;

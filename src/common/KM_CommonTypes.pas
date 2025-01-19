@@ -2,7 +2,7 @@ unit KM_CommonTypes;
 {$I KaM_Remake.inc}
 interface
 uses
-  KM_Points;
+  KM_Points, Classes;
 
 type
   TKMByteSet = set of Byte;
@@ -45,6 +45,7 @@ type
   TBooleanEvent = procedure (aValue: Boolean) of object;
   TBooleanObjEvent = procedure (Sender: TObject; aValue: Boolean) of object;
   TIntegerEvent = procedure (aValue: Integer) of object;
+  TIntegerShiftEvent = procedure (aValue: Integer; Shift : TShiftState) of object;
   TIntBoolEvent = procedure (aIntValue: Integer; aBoolValue: Boolean) of object;
   TObjectIntegerEvent = procedure (Sender: TObject; X: Integer) of object;
   TSingleEvent = procedure (aValue: Single) of object;

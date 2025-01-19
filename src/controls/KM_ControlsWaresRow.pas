@@ -127,10 +127,13 @@ type
 
   TKMIconsRow = class(TKMControl)
     private
+
+      fTags: TIntegerArray;
       fIcons: TKMWordArray;
       fIconOver: Byte;
       fIconClicked: Byte;
       fOnIconClicked : TIntegerEvent;
+      fOnIconClickedShift :TIntegerShiftEvent;
     protected
       procedure SetVisible(aValue: Boolean); override;
     public
@@ -140,9 +143,15 @@ type
       HSpacing : SmallInt;
       StillSize : Boolean;
       Caption : String;
+      AddBevel : Boolean;
+      BackBevel : Single;
       procedure SetIcons(aIcons : TKMWordArray);
+      procedure Clear;
+      procedure AddIcon(aIcon : Word; aTag : Integer);
+      function GetTag(aIndex : Integer) : Integer;
 
       property OnIconClicked : TIntegerEvent read fOnIconClicked write fOnIconClicked;
+      property OnIconClickedShift : TIntegerShiftEvent read fOnIconClickedShift write fOnIconClickedShift;
 
 
       procedure MouseMove(X,Y: Integer; Shift: TShiftState); override;
@@ -596,7 +605,8 @@ begin
   HSpacing := aHSpacing;
   fIconClicked := 255;
   fIconOver := 255;//no icon over
-
+  AddBevel := false;
+  BackBevel := 0.8;
 end;
 
 procedure TKMIconsRow.SetIcons(aIcons: TKMWordArray);
@@ -606,6 +616,32 @@ begin
     Exit;
   Width := Min(length(fIcons), MaxCountInRow)  * HSpacing;
   Height := (length(fIcons) div (MaxCountInRow + 1) + 1) * VSpacing;
+  SetLength(fTags, length(fIcons));
+  FillChar(fTags, SizeOf(fTags), #0);
+end;
+
+procedure TKMIconsRow.AddIcon(aIcon: Word; aTag: Integer);
+var I : Integer;
+begin
+  I := length(fIcons);
+  Setlength(fIcons, I + 1);
+  Setlength(fTags, I + 1);
+  fIcons[I] := aIcon;
+  fTags[I] := aTag;
+
+  Width := Min(length(fIcons), MaxCountInRow)  * HSpacing;
+  Height := (length(fIcons) div (MaxCountInRow) + 1)   * VSpacing;
+end;
+
+function TKMIconsRow.GetTag(aIndex: Integer): Integer;
+begin
+  Result := fTags[aIndex];
+end;
+
+procedure TKMIconsRow.Clear;
+begin
+  SetLength(fIcons, 0);
+  SetLength(fTags, 0);
 end;
 
 procedure TKMIconsRow.SetVisible(aValue: Boolean);
@@ -651,8 +687,12 @@ begin
   Inherited;
 
   if fIconClicked <> 255 then
+  begin
     if Assigned(fOnIconClicked) then
       fOnIconClicked(fIconClicked);
+    If Assigned(fOnIconClickedShift) then
+      fOnIconClickedShift(fIconClicked, Shift);
+  end;
 
   fIconClicked := 255;
 end;
@@ -670,13 +710,19 @@ begin
   else
     lWidth := Width;
 
-  TKMRenderUI.WriteBevel(AbsLeft, AbsTop, lWidth, IfThen(Caption <> '', Height + 20, Height), 1, 0.8);
+  TKMRenderUI.WriteBevel(AbsLeft, AbsTop, lWidth, IfThen(Caption <> '', Height + 20, Height), 1, BackBevel);
 
   top := IfThen(Caption <> '', 20, 0);
   TKMRenderUI.WriteText(AbsLeft, AbsTop, lWidth, Caption, fntMetal, taCenter);
   for I := 0 to C - 1 do
+  begin
+    If AddBevel then
+      TKMRenderUI.WriteBevel(AbsLeft + HSpacing * (I mod MaxCountInRow) + 2,
+                              AbsTop + top + VSpacing * (I div MaxCountInRow) + 2,
+                              HSpacing - 4, VSpacing -4, 1, BackBevel);
     TKMRenderUI.WritePicture(AbsLeft + HSpacing * (I mod MaxCountInRow), AbsTop + top + VSpacing * (I div MaxCountInRow), HSpacing, VSpacing,
                               [], RX, fIcons[I], not (fIconClicked = I), $FFFF00FF, 0.4 * ord(fIconOver = I));
+  end;
 end;
 
 constructor TKMIconProgressBar.Create(aParent: TKMPanel; aLeft, aTop, aWidth, aHeight: Integer; aRound : Boolean = false; aTexID : TKMWord2Array = []);
