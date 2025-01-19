@@ -287,8 +287,8 @@ type
     function GetClosestCell(const aPos: TKMPoint): TKMPoint;
     function GetDistance(const aPos: TKMPoint): Single;
     function InReach(const aPos: TKMPoint; aDistance: Single): Boolean;
-    procedure GetListOfCellsAround(aCells: TKMPointDirList; aPassability: TKMTerrainPassability);
-    procedure GetListOfCellsWithin(aCells: TKMPointList);
+    procedure GetListOfCellsAround(aCells: TKMPointDirList; aPassability: TKMTerrainPassability); virtual;
+    procedure GetListOfCellsWithin(aCells: TKMPointList); virtual;
     procedure GetListOfGroundVisibleCells(aCells: TKMPointTagList);
     function GetRandomCellWithin: TKMPoint;
     function HitTest(X, Y: Integer): Boolean;
@@ -597,6 +597,8 @@ type
       procedure SetNextFruitType(aStep : Integer);
 
       procedure SetAnimation(aChildID : Integer = -1);
+      procedure GetListOfCellsAround(aCells: TKMPointDirList; aPassability: TKMTerrainPassability); override;
+      procedure GetListOfCellsWithin(aCells: TKMPointList); override;
 
       constructor Create(aUID: Integer; aHouseType: TKMHouseType; PosX, PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
       constructor Load(LoadStream: TKMemoryStream); override;
@@ -2035,15 +2037,26 @@ var
   I, K: Integer;
   loc: TKMPoint;
   HA: TKMHouseArea;
+  list : TKMPointList;
 begin
   Result := MaxSingle;
-  loc := fPosition;
-  HA := gRes.Houses[fType].BuildArea;
+  list := TKMPointList.Create;
+  try
+    GetListOfCellsWithin(list);
+    for I := 0 to list.Count - 1 do
+      Result := Min(Result, KMLength(aPos, list[I]));
 
-  for I := max(loc.Y - 3, 1) to loc.Y do
+  finally
+    list.Free;
+  end;
+
+
+  //HA := gRes.Houses[fType].BuildArea;
+
+  {for I := max(loc.Y - 3, 1) to loc.Y do
   for K := max(loc.X - 2, 1) to min(loc.X + 1, gTerrain.MapX) do
   if HA[I - loc.Y + 4, K - loc.X + 3] <> 0 then
-    Result := Min(Result, KMLength(aPos, KMPoint(K, I)));
+    Result := Min(Result, KMLength(aPos, KMPoint(K, I)));}
 end;
 
 
@@ -5551,6 +5564,94 @@ begin
   TKMHouseAppleTree(aHouse).AddChildTree(self);//add child
 end;
 
+procedure TKMHouseAppleTree.GetListOfCellsAround(aCells: TKMPointDirList; aPassability: TKMTerrainPassability);
+  procedure AddLoc(X,Y: Word; Dir: TKMDirection);
+  begin
+    //Check that the passabilty is correct, as the house may be placed against blocked terrain
+    if (aPassability = tpNone) or gTerrain.CheckPassability(KMPoint(X,Y), aPassability) then
+      aCells.Add(KMPointDir(X, Y, Dir));
+  end;
+  procedure GetCellsFromTree(aID : Integer);
+  var
+    I, K: Integer;
+    loc: TKMPoint;
+    HA: TKMHouseArea;
+    H : TKMHouseAppleTree;
+  begin
+    If aID = -1 then
+      H := self
+    else
+      H := ChildTree(aID);
+    If not H.IsValid then
+      Exit;
+    loc := H.Position;
+    HA := gRes.Houses[H.HouseType].BuildArea;
+
+    for I := 1 to 4 do for K := 1 to 4 do
+    if HA[I,K] <> 0 then
+    begin
+      if (I = 1) or (HA[I-1,K] = 0) then
+        AddLoc(loc.X + K - 3, loc.Y + I - 4 - 1, dirS); //Above
+      if (I = 4) or (HA[I+1,K] = 0) then
+        AddLoc(loc.X + K - 3, loc.Y + I - 4 + 1, dirN); //Below
+      if (K = 4) or (HA[I,K+1] = 0) then
+        AddLoc(loc.X + K - 3 + 1, loc.Y + I - 4, dirW); //FromRight
+      if (K = 1) or (HA[I,K-1] = 0) then
+        AddLoc(loc.X + K - 3 - 1, loc.Y + I - 4, dirE); //FromLeft
+    end;
+  end;
+var I : integer;
+begin
+  If ParentTree <> nil then
+    ParentTree.GetListOfCellsAround(aCells, aPassability)
+  else
+  begin
+    aCells.Clear;
+    GetCellsFromTree(-1);//main tree
+    for I := 0 to ChildCount - 1 do
+      GetCellsFromTree(I);//child trees
+  end;
+
+end;
+
+procedure TKMHouseAppleTree.GetListOfCellsWithin(aCells: TKMPointList);
+  procedure GetCellsFromTree(aID : Integer);
+  var
+    I, K: Integer;
+    loc: TKMPoint;
+    houseArea: TKMHouseArea;
+    H : TKMHouseAppleTree;
+  begin
+    If aID = -1 then
+      H := self
+    else
+      H := ChildTree(aID);
+    If not H.IsValid then
+      Exit;
+    loc := H.Position;
+    houseArea := gRes.Houses[H.HouseType].BuildArea;
+
+    for I := Max(loc.Y - 3, 1) to loc.Y do
+      for K := Max(loc.X - 2, 1) to Min(loc.X + 1, gTerrain.MapX) do
+        if houseArea[I - loc.Y + 4, K - loc.X + 3] in [1, 2] then
+          aCells.Add(KMPoint(K, I));
+  end;
+
+var I : integer;
+
+begin
+  If ParentTree <> nil then
+    ParentTree.GetListOfCellsWithin(aCells)
+  else
+  begin
+    aCells.Clear;
+    GetCellsFromTree(-1);//main tree
+    for I := 0 to ChildCount - 1 do
+      GetCellsFromTree(I);//child trees
+  end;
+
+end;
+
 procedure TKMHouseAppleTree.SetAnimation(aChildID : Integer = -1);
 begin
   if aChildID > 0 then
@@ -5572,7 +5673,6 @@ begin
     end;
     SetProgress(true);
   end;
-
 
 end;
 

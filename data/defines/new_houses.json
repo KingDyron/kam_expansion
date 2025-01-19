@@ -662,7 +662,7 @@
 	},
     {
 		"Name": "htAppleTree",
-			"MaxHealth" : 20,
+			"MaxHealth" : 80,
 			"WoodPic" : 2238,
 			"StonePic" : 2207,
 			"Sight" : 3,
