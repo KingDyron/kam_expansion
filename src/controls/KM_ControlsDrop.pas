@@ -645,7 +645,9 @@ end;
 
 function TKMDropList.GetSelectedTag: Integer;
 begin
-  Result := GetTag(fList.ItemIndex);
+  Result := -1;
+  If ItemIndex >= 0 then
+    Result := GetTag(fList.ItemIndex);
 end;
 
 function TKMDropList.GetItem(aIndex: Integer): UnicodeString;

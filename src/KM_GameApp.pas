@@ -103,7 +103,7 @@ type
     procedure ReloadGameResources;
 
     //These are all different game kinds we can start
-    procedure NewCampaignMap(aCampaignId: TKMCampaignId; aMap: Byte; aDifficulty: TKMMissionDifficulty = mdNone;
+    procedure NewCampaignMap(aCampaignId: TKMCampaignId; aMap: Byte; aLocation : Integer; aDifficulty: TKMMissionDifficulty = mdNone;
                                  aBDifficulty: TKMMissionBuiltInDifficulty = mdbNormal);
     procedure NewSingleMap(const aMissionFullPath, aGameName: UnicodeString; aDesiredLoc: ShortInt = -1;
                            aDesiredColor: Cardinal = NO_OVERWRITE_COLOR; aDifficulty: TKMMissionDifficulty = mdNone;
@@ -931,14 +931,14 @@ begin
 end;
 
 
-procedure TKMGameApp.NewCampaignMap(aCampaignId: TKMCampaignId; aMap: Byte; aDifficulty: TKMMissionDifficulty = mdNone;
+procedure TKMGameApp.NewCampaignMap(aCampaignId: TKMCampaignId; aMap: Byte; aLocation : Integer; aDifficulty: TKMMissionDifficulty = mdNone;
                                     aBDifficulty: TKMMissionBuiltInDifficulty = mdbNormal);
 var
   camp: TKMCampaign;
 begin
   camp := fCampaigns.CampaignById(aCampaignId);
   LoadGameFromScript(camp.GetMissionFile(aMap), camp.GetMissionTitle(aMap), 0, 0, camp, aMap, gmCampaign,
-                      -1, NO_OVERWRITE_COLOR, aDifficulty, aitNone, aBDifficulty);
+                      aLocation, NO_OVERWRITE_COLOR, aDifficulty, aitNone, aBDifficulty);
 
   fCampaigns.SetActive(camp, aMap);
 

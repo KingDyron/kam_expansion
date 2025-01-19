@@ -47,6 +47,7 @@ type
       Label_Difficulty: TKMLabel;
       DropBox_Difficulty: TKMDropList;
       DropBox_BDifficulty: TKMDropList;
+      DropBox_Loc: TKMDropList;
       Button_CampaignStart, Button_CampaignBack: TKMButton;
   public
     OnNewCampaignMap: TKMNewCampaignMapEvent;
@@ -69,6 +70,7 @@ implementation
 uses
   KM_Audio, KM_Music, KM_Sound, KM_Video,
   KM_GameSettings,
+  KM_Maps,
   KM_ResTexts, KM_ResFonts, KM_ResSound, KM_ResTypes,
   KM_RenderUI,
   KM_Defaults;
@@ -135,21 +137,26 @@ begin
     Label_CampaignText := TKMLabel.Create(Panel_CampScroll, 20, 70, 383, 290, NO_TEXT, fntAntiqua, taLeft);
     Label_CampaignText.WordWrap := True;
 
-    Label_Difficulty := TKMLabel.Create(Panel_CampScroll, Panel_CampScroll.Width-280-30, Panel_CampScroll.Height-98, gResTexts[TX_MISSION_DIFFICULTY_CAMPAIGN], fntOutline, taRight);
+    Label_Difficulty := TKMLabel.Create(Panel_CampScroll, Panel_CampScroll.Width-280-30, Panel_CampScroll.Height-120, gResTexts[TX_MISSION_DIFFICULTY_CAMPAIGN], fntOutline, taRight);
     Label_Difficulty.Anchors := [anLeft, anBottom];
     //Label_Difficulty.Hide;
-    DropBox_Difficulty := TKMDropList.Create(Panel_CampScroll, Panel_CampScroll.Width-280-20, Panel_CampScroll.Height-78, 280, 20, fntMetal, gResTexts[TX_MISSION_DIFFICULTY], bsMenu);
+    DropBox_Difficulty := TKMDropList.Create(Panel_CampScroll, Panel_CampScroll.Width-280-20, Panel_CampScroll.Height-100, 280, 20, fntMetal, gResTexts[TX_MISSION_DIFFICULTY], bsMenu);
     DropBox_Difficulty.Anchors := [anLeft, anBottom];
     DropBox_Difficulty.OnChange := Difficulty_Change;
     DropBox_Difficulty.Hide;
 
-    DropBox_BDifficulty := TKMDropList.Create(Panel_CampScroll, Panel_CampScroll.Width-280-20, Panel_CampScroll.Height-100, 280, 20, fntMetal, gResTexts[TX_MISSION_DIFFICULTY], bsMenu);
+    DropBox_BDifficulty := TKMDropList.Create(Panel_CampScroll, Panel_CampScroll.Width-280-20, Panel_CampScroll.Height-122, 280, 20, fntMetal, gResTexts[TX_MISSION_DIFFICULTY], bsMenu);
     DropBox_BDifficulty.Anchors := [anLeft, anBottom];
     DropBox_BDifficulty.OnChange := Difficulty_Change;
     DropBox_BDifficulty.Hint := gResTexts[2107];
     DropBox_BDifficulty.DefaultCaption := gResTexts[2107];
     DropBox_BDifficulty.ItemIndex := -1;
 
+    DropBox_Loc := TKMDropList.Create(Panel_CampScroll, Panel_CampScroll.Width-280-20, Panel_CampScroll.Height-78, 280, 20, fntMetal, gResTexts[TX_MENU_MAP_LOCATION], bsMenu);
+    DropBox_Loc.Anchors := [anLeft, anBottom];
+    DropBox_Loc.OnChange := Difficulty_Change;
+    DropBox_Loc.Hint := gResTexts[TX_MENU_MAP_LOCATION];
+    DropBox_Loc.Hide;
 
   Image_ScrollRestore := TKMImage.Create(Panel_Campaign, aParent.Width-20-30- 50, Panel_Campaign.Height-53, 30, 48, 491);
   Image_ScrollRestore.Anchors := [anBottom, anRight];
@@ -288,13 +295,39 @@ end;
 
 procedure TKMMenuCampaign.SelectMap(aMapIndex: Byte);
 var
-  I, panHeight: Integer;
+  I, K, panHeight: Integer;
   color: Cardinal;
+  map : TKMMapInfo;
 begin
   fMapIndex := aMapIndex;
+  map := TKMMapInfo.Create(fCampaign.GetMissionPath(fMapIndex), fCampaign.GetMissionName(fMapIndex), false);
+
+  DropBox_Loc.ItemIndex := -1;
+  DropBox_Loc.Clear;
+  K := 0;
+  for I := 0 to map.LocCount - 1 do
+    if map.CanBeHuman[I] then
+    begin
+      DropBox_Loc.Add(map.LocationName(K), I);
+      Inc(K)
+    end;
+  If K > 1 then
+  begin
+    DropBox_BDifficulty.Top := Panel_CampScroll.Height-122;
+    DropBox_Difficulty.Top := Panel_CampScroll.Height-100;
+    Label_Difficulty.Top := Panel_CampScroll.Height-120;
+    DropBox_Loc.Show;
+  end else
+  begin
+    DropBox_BDifficulty.Top := Panel_CampScroll.Height-100;
+    DropBox_Difficulty.Top := Panel_CampScroll.Height-78;
+    Label_Difficulty.Top := Panel_CampScroll.Height-98;
+    DropBox_Loc.Hide;
+  end;
+  map.Free;
+
 
   UpdateDifficultyLevel;
-
   // Place highlight
   for I := 0 to High(Image_CampaignFlags) do
   begin
@@ -321,7 +354,7 @@ begin
 
   Panel_CampScroll.Left := IfThen(fCampaign.Maps[fMapIndex].TextPos = bcBottomRight, Panel_Campaign.Width - Panel_CampScroll.Width, 0);
   //Add offset from top and space on bottom to fit buttons
-  panHeight := Label_CampaignText.Top + Label_CampaignText.TextSize.Y + 70 + 25 + 25;
+  panHeight := Label_CampaignText.Top + Label_CampaignText.TextSize.Y + 70 + 25 + 25 + 20 * byte(DropBox_Loc.Visible);
 
   // Stretch image in case its too small for a briefing text
   // Stretched scroll does not look good, but its okay for now (only happens for a custom campaigns)
@@ -367,11 +400,12 @@ begin
 end;
 
 procedure TKMMenuCampaign.StartClick(Sender: TObject);
+var I : Integer;
 begin
   gMusic.StopPlayingOtherFile;
-
+  I := DropBox_Loc.GetSelectedTag;
   if Assigned(OnNewCampaignMap) then
-    OnNewCampaignMap(fCampaignId, fMapIndex, fDifficulty, fBDifficulty);
+    OnNewCampaignMap(fCampaignId, fMapIndex, I, fDifficulty, fBDifficulty);
 
   if fCampaign.MapsInfo[fMapIndex].TxtInfo.HasDifficultyLevels then
     gGameSettings.CampaignLastDifficulty := TKMMissionDifficulty(DropBox_Difficulty.GetSelectedTag);

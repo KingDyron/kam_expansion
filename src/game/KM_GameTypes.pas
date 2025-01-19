@@ -52,7 +52,7 @@ type
                                     aDesiredColor: Cardinal = $00000000; aDifficulty: TKMMissionDifficulty = mdNone;
                                     aAIType: TKMAIType = aitNone; aBDifficulty: TKMMissionBuiltInDifficulty = mdbNormal) of object;
 
-  TKMNewCampaignMapEvent = procedure (aCampaign: TKMCampaignId; aMap: Byte; aDifficulty: TKMMissionDifficulty = mdNone;
+  TKMNewCampaignMapEvent = procedure (aCampaign: TKMCampaignId; aMap: Byte; aLocation : Integer; aDifficulty: TKMMissionDifficulty = mdNone;
                                  aBDifficulty: TKMMissionBuiltInDifficulty = mdbNormal) of object;
 
   TKMNewMapEditorEvent = procedure (const aFileName: UnicodeString; aSizeX: Integer = 0; aSizeY: Integer = 0; aMapFullCRC: Cardinal = 0;
