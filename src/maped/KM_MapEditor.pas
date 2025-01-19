@@ -35,6 +35,7 @@ type
 
     function GetRevealer(aIndex: Byte): TKMPointTagList;
     procedure ProceedRoadCursorMode;
+    procedure ChangeRoadType(const X, Y : Integer);
     procedure ProceedPalisadeCursorMode;
     procedure ProceedRemUnit(const X, Y: Integer);
     procedure ProceedUnitsCursorMode;
@@ -831,11 +832,22 @@ begin
 end;
 
 
+procedure TKMMapEditor.ChangeRoadType(const X, Y : Integer);
+begin
+  If gTerrain.TileHasRoad(X, Y) {and (gTerrain.Land^[Y, X].TileOwner = gMySpectator.HandID)} then
+    gMySpectator.Hand.AddRoad(KMPoint(X, Y), gCursor.RoadType);
+end;
+
 procedure TKMMapEditor.ProceedRoadCursorMode;
 var
   P: TKMPoint;
 begin
+
   P := gCursor.Cell;
+  If gCursor.MapEdSize > 1 then
+  begin
+    IterateOverArea(P, gCursor.MapEdSize, false, ChangeRoadType);
+  end else
   if gMySpectator.Hand.CanAddFieldPlan(P, ftRoad) {or (gTerrain.TileHasRoad(P) and (gTerrain.GetRoadType(P) <> gCursor.RoadType))} then
   begin
     //If there's a field remove it first so we don't get road on top of the field tile (undesired in MapEd)

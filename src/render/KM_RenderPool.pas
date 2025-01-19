@@ -2494,7 +2494,18 @@ begin
                   else
                     RenderSpriteOnTile(P, TC_BLOCK);       // Red X
 
-    cmRoad:       if (gMySpectator.Hand.CanAddFakeFieldPlan(P, ftRoad)) and (gCursor.Tag1 <> Ord(cfmErase)) then
+    cmRoad:       If gGame.Params.IsMapEditor then
+                  begin
+                    If gCursor.MapEdSize > 1 then
+                    begin
+                      RenderForegroundUI_ObjectsBrush;
+                    end else
+                    if (gMySpectator.Hand.CanAddFakeFieldPlan(P, ftRoad)) and (gCursor.Tag1 <> Ord(cfmErase)) then
+                      RenderWireTile(P, icCyan) // Cyan quad
+                    else
+                      RenderSpriteOnTile(P, TC_BLOCK);
+                  end else
+                  if (gMySpectator.Hand.CanAddFakeFieldPlan(P, ftRoad)) and (gCursor.Tag1 <> Ord(cfmErase)) then
                     RenderWireTile(P, icCyan) // Cyan quad
                   else
                     RenderSpriteOnTile(P, TC_BLOCK);       // Red X

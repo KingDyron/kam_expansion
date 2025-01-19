@@ -510,11 +510,18 @@ procedure TKMMapEdTownHouses.Town_BuildChange(Sender: TObject);
   end;
 var
   I: Integer;
+  oldMode : TKMCursorMode;
 begin
   //Reset cursor and see if it needs to be changed
+  oldMode := gCursor.Mode;
   gCursor.Mode := cmNone;
-  if Sender = BrushSize then
-    gCursor.Mode := cmErase
+  if (Sender = BrushSize) then
+  begin
+    If not (oldMode in [cmErase, cmRoad]) then
+      gCursor.Mode := cmErase
+    else
+      gCursor.Mode := oldMode;
+  end
   else
 
   {if (Sender = Button_BuildPalisade) then
@@ -580,7 +587,7 @@ begin
   Button_BuildField[lftWineField].Down := (gCursor.Mode = cmWine);
   Button_BuildField[lftField].Down := (gCursor.Mode = cmField);
   Button_BuildField[lftRemove].Down := (gCursor.Mode = cmErase);
-  BrushSize.Enabled := (gCursor.Mode = cmErase);
+  BrushSize.Enabled := (gCursor.Mode in [cmErase, cmRoad]);
 
   for I := 0 to high(Button_Build) do
       Button_Build[I].Down := (gCursor.Mode = cmHouses) and (gCursor.Tag1 = Button_Build[I].Tag);
