@@ -5057,7 +5057,7 @@ end;
 
 function TKMHouseMerchant.CanWork : Boolean;
 begin
-  Result := ((CheckWareIn(wtAll) >= 10) or ForceWorking)
+  Result := ((CheckWareIn(wtAll) >= 10) or ForceWorking or Worker.ToUnit.BootsAdded)
              and (fCurrentHand <> Owner)
              and ((fStore <> nil)
                   or ((gHands[fCurrentHand].Stats.GetHouseQty(htShipYard) > 0)

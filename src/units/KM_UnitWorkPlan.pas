@@ -1074,6 +1074,8 @@ begin
         Res[I].W := wtNone;
         Res[I].C := 0;
       end;
+  If aUnit.BootsAdded then
+    ActSetByMultiplier(aUnit, 0.75);
 
   if gHands[aUnit.Owner].IsAffectedbyMBD then
     if gGame.Params.MBD.IsEasy then

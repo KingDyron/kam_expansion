@@ -281,7 +281,7 @@ end;
 
 function TKMTaskBuild.WaitedTooLong: Boolean;
 begin
-  Result := (fUnit.IsHungry and (gHands[fUnit.Owner].Stats.GetHouseQty(htInn) > 0));
+  Result := (fPhase < 5) and fUnit.IsHungry and (gHands[fUnit.Owner].Stats.GetHouseQty(htInn) > 0);
   Result := Result or (fTicker > 6000);//builder waited 10 minutes for wares to be delivered
 end;
 

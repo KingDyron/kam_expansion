@@ -24,9 +24,9 @@ type
 
 implementation
 uses
+  Math,
   KM_Entity,
   KM_HandsCollection, KM_Hand, KM_HandTypes, KM_HandEntity, KM_Houses,
-
   KM_Projectiles, KM_Points, KM_CommonUtils,
   KM_CommonGameTypes, KM_ResTypes;
 
@@ -91,7 +91,7 @@ begin
               Home.SetState(hstWork); //Set house to Work state
               Home.CurrentAction.SubActionWork(haWork2); //show Recruits back
             end;
-            SetActionStay(20, uaWalk);
+            SetActionStay(IfThen(BootsAdded, 5, 20), uaWalk);
           end;
       1:  begin
             if fUnit.Home.HouseType = htWatchTower then
@@ -110,11 +110,11 @@ begin
             gHands.CleanUpUnitPointer(fTarget); //We don't need it anymore
             SetActionLockedStay(1, uaWalk);
           end;
-      2:  SetActionLockedStay(fFlightTime, uaWalk); //Pretend to look how it goes
+      2:  SetActionLockedStay(IfThen(BootsAdded, 1, fFlightTime), uaWalk); //Pretend to look how it goes
       3:  begin
             //pretend to reload
             if fUnit.Home.HouseType = htWatchTower then
-              SetActionLockedStay(TKMHouseTower(Home).ThrowingCycles + KamRandom(20, 'TKMTaskThrowRock.Execute1'), uaWalk)
+              SetActionLockedStay(TKMHouseTower(Home).ThrowingCycles + KamRandom(IfThen(BootsAdded, 2, 20), 'TKMTaskThrowRock.Execute1'), uaWalk)
             else
               SetActionLockedStay(2, uaWalk);
 
@@ -124,7 +124,7 @@ begin
             if fUnit.Home.HouseType = htWallTower then
               SetActionStay(2 + KamRandom(2, 'TKMTaskThrowRock.Execute2'), uaWalk) //Idle before throwing another rock
             else
-              SetActionStay(10 + KamRandom(10, 'TKMTaskThrowRock.Execute3'), uaWalk); //Idle before throwing another rock
+              SetActionStay(10 + KamRandom(IfThen(BootsAdded, 3, 10), 'TKMTaskThrowRock.Execute3'), uaWalk); //Idle before throwing another rock
 
           end;
       else Result := trTaskDone;

@@ -2,7 +2,8 @@ unit KM_CommonHelpers;
 {$I KaM_Remake.inc}
 interface
 uses KM_MapTypes,
-      KM_Hand;
+      KM_Hand,
+      KM_Houses, KM_Units, KM_UnitWarrior;
 type
   TKMWordHelper = record helper for Word
     function ToResText : String;
@@ -20,6 +21,11 @@ type
 
   TKMPointerHelper = record helper for Pointer
     function ToHand : TKMHand;
+    function ToHouse : TKMHouse;
+    function ToUnit : TKMUnit;
+    function ToWarrior : TKMUnitWarrior;
+    function ToRecruit : TKMUnitRecruit;
+    function ToCitizen : TKMUnitCitizen;
   end;
 
 implementation
@@ -77,9 +83,11 @@ begin
   Result := (self = mdbHard) or (self = mdbRealism);
 end;
 
-function TKMPointerHelper.ToHand: TKMHand;
-begin
-  Result := TKMHand(Self);
-end;
+function TKMPointerHelper.ToHand: TKMHand;                begin Result := TKMHand(Self); end;
+function TKMPointerHelper.ToHouse: TKMHouse;              begin Result := TKMHouse(Self); end;
+function TKMPointerHelper.ToUnit: TKMUnit;                begin Result := TKMUnit(Self); end;
+function TKMPointerHelper.ToWarrior: TKMUnitWarrior;      begin Result := TKMUnitWarrior(Self); end;
+function TKMPointerHelper.ToRecruit: TKMUnitRecruit;      begin Result := TKMUnitRecruit(Self); end;
+function TKMPointerHelper.ToCitizen: TKMUnitCitizen;      begin Result := TKMUnitCitizen(Self); end;
 
 end.
