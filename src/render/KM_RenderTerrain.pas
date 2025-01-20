@@ -873,35 +873,6 @@ const
                     Result := RoadsConnectivityExclusive[aRoad, 1];
                   end;
     end;
-
-    {case aRoadType of
-      //rtNone, rtStone : ;
-      rtWooden:case aRoad of
-                    248 : Result := 643;
-                    250 : Result := 644;
-                    252 : Result := 645;
-                    254 : Result := 646;
-                    618 : Result := 647;
-                    else Result := aRoad;
-                  end;
-      rtClay :case aRoad of
-                    248 : Result := 638;
-                    250 : Result := 639;
-                    252 : Result := 640;
-                    254 : Result := 641;
-                    618 : Result := 642;
-                    else Result := aRoad;
-                  end;
-      rtExclusive:case aRoad of
-                    248 : Result := 633;
-                    250 : Result := 634;
-                    252 : Result := 635;
-                    254 : Result := 636;
-                    618 : Result := 637;
-                    else Result := aRoad;
-                  end;
-      else Result := aRoad;
-    end; }
   end;
 var
   road, ID, rot: Word;
@@ -916,6 +887,7 @@ begin
       2:  RenderTile(gGame.MapEditor.LandMapEd^[pY, pX].CornOrWineTerrain, pX, pY, 0, DoHighlight, HighlightColor); //Wine
     end;
 
+  //coal is rendered under the road
   if gTerrain.Land^[pY, pX].TileOverlay2 in (COAL_LIKE_OVERLAYS - [toInfinityCoal, toInfinityClay]) then
     RenderTile(TILE_OVERLAY_IDS[gTerrain.Land^[pY, pX].TileOverlay2], pX, pY, (gTerrain.Land^[pY,pX].BaseLayer.Rotation + 1) mod 4, DoHighlight, HighlightColor);
 
@@ -956,6 +928,7 @@ begin
 
   case gTerrain.Land^[pY, pX].TileOverlay2 of
     toNone : ;
+    toCoal1..toCoal5: ;
     toInfinityCoal: ;
     toInfinityClay: ;
     toFence1..toFence6 : RenderTile(TILE_OVERLAY_IDS[gTerrain.Land^[pY, pX].TileOverlay2], pX, pY, 0, DoHighlight, HighlightColor);
