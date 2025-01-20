@@ -41,6 +41,8 @@ constructor TKMHouseTownHall.Create(aUID: Integer; aHouseType: TKMHouseType; Pos
 begin
   inherited;
   EquipTime := 0;
+  SetAcceptWareIn(wtGold, 100);
+  SetAcceptWareIn(wtBitinArmor, 115);
 end;
 
 
@@ -139,7 +141,11 @@ procedure TKMHouseTownHall.PostLoadMission;
 begin
   // House could be destroyed on the game start if placed with 0 health in the MapEd
   if not IsDestroyed then
+  begin
+    SetAcceptWareIn(wtGold, 100);
+    SetAcceptWareIn(wtBitinArmor, 115);
     UpdateDemands;
+  end;
 end;
 
 end.
