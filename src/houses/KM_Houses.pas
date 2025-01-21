@@ -2775,9 +2775,9 @@ end;
 
 procedure TKMHouse.AddDemandBuildingMaterials;
 begin
-  gHands[Owner].Deliveries.Queue.AddDemand(self, nil, wtTimber, gRes.Houses[self.HouseType].WoodCost, dtOnce, diHigh4);
-  gHands[Owner].Deliveries.Queue.AddDemand(self, nil, wtStone, gRes.Houses[self.HouseType].StoneCost, dtOnce, diHigh4);
-  gHands[Owner].Deliveries.Queue.AddDemand(self, nil, wtTile, gRes.Houses[self.HouseType].TileCost, dtOnce, diHigh4);
+  gHands[Owner].Deliveries.Queue.AddDemand(self, nil, wtTimber, gRes.Houses[self.HouseType].WoodCost, dtOnce, diHigh5);
+  gHands[Owner].Deliveries.Queue.AddDemand(self, nil, wtStone, gRes.Houses[self.HouseType].StoneCost, dtOnce, diHigh5);
+  gHands[Owner].Deliveries.Queue.AddDemand(self, nil, wtTile, gRes.Houses[self.HouseType].TileCost, dtOnce, diHigh5);
 end;
 
 procedure TKMHouse.SetBuildingProgress(aProgress: Word; aWood: Word; aStone: Word; aTile: Word);
@@ -5057,7 +5057,14 @@ end;
 
 function TKMHouseMerchant.CanWork : Boolean;
 begin
-  Result := ((CheckWareIn(wtAll) >= 10) or ForceWorking or Worker.ToUnit.BootsAdded)
+
+  Result := (CheckWareIn(wtAll) >= 10)
+              or ForceWorking
+              or ((fWorkers[0] <> nil) and fWorkers[0].ToUnit.BootsAdded);
+
+
+
+  Result := Result
              and (fCurrentHand <> Owner)
              and ((fStore <> nil)
                   or ((gHands[fCurrentHand].Stats.GetHouseQty(htShipYard) > 0)
@@ -5203,9 +5210,9 @@ procedure TKMHouseAppleTree.AddDemandBuildingMaterials;
 begin
   if ParentTree.IsValid then
   begin
-    gHands[ParentTree.Owner].Deliveries.Queue.AddDemand(ParentTree, nil, wtTimber, gRes.Houses[self.HouseType].WoodCost, dtOnce, diHigh4);
-    gHands[ParentTree.Owner].Deliveries.Queue.AddDemand(ParentTree, nil, wtStone, gRes.Houses[self.HouseType].StoneCost, dtOnce, diHigh4);
-    gHands[ParentTree.Owner].Deliveries.Queue.AddDemand(ParentTree, nil, wtTile, gRes.Houses[self.HouseType].TileCost, dtOnce, diHigh4);
+    gHands[ParentTree.Owner].Deliveries.Queue.AddDemand(ParentTree, nil, wtTimber, gRes.Houses[self.HouseType].WoodCost, dtOnce, diHigh5);
+    gHands[ParentTree.Owner].Deliveries.Queue.AddDemand(ParentTree, nil, wtStone, gRes.Houses[self.HouseType].StoneCost, dtOnce, diHigh5);
+    gHands[ParentTree.Owner].Deliveries.Queue.AddDemand(ParentTree, nil, wtTile, gRes.Houses[self.HouseType].TileCost, dtOnce, diHigh5);
   end else
     Inherited;
 end;

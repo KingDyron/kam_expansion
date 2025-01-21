@@ -2829,6 +2829,8 @@ var
   M: TKMMapInfo;
   S: TKMSaveInfo;
   txt: UnicodeString;
+  I : integer;
+  panelEnabled : Boolean;
 begin
   //Common settings
   MinimapView.Visible := (gNetworking.SelectGameKind in [ngkMap, ngkCampaign]) and gNetworking.MapInfo.IsValid;
@@ -2846,7 +2848,11 @@ begin
   //DropBox_Difficulty.Enabled := gNetworking.IsHost and (gNetworking.SelectGameKind = ngkMap) and gNetworking.MapInfo.IsValid;
 
   Button_ShowOptions.Enabled := (gNetworking.SelectGameKind in [ngkMap, ngkCampaign]) and gNetworking.MapInfo.IsValid;
-  Panel_SetupOptions.Enabled := gNetworking.IsHost and (gNetworking.SelectGameKind in [ngkMap, ngkCampaign]) and gNetworking.MapInfo.IsValid;
+
+  panelEnabled := gNetworking.IsHost and (gNetworking.SelectGameKind in [ngkMap, ngkCampaign]) and gNetworking.MapInfo.IsValid;
+
+  for I := 3 to Panel_SetupOptions.ChildCount - 1 do
+    Panel_SetupOptions.Childs[I].Enabled := panelEnabled;
   //In case it was hidden during file transfer
   Panel_SetupTransfer.Hide;
   Panel_SetupMinimap.Show;
@@ -2916,6 +2922,8 @@ end;
 
 
 procedure TKMMenuLobby.Lobby_OnMapMissing(const aData: UnicodeString; aStartTransfer: Boolean);
+var I : integer;
+  panelEnabled : Boolean;
 begin
   //Common settings
   MinimapView.Visible := (gNetworking.SelectGameKind = ngkMap) and gNetworking.MapInfo.IsValid;
@@ -2929,7 +2937,11 @@ begin
   DropBox_Difficulty.Enabled := gNetworking.IsHost and (gNetworking.SelectGameKind = ngkMap) and gNetworking.MapInfo.IsValid;
 
   Button_ShowOptions.Enabled := (gNetworking.SelectGameKind = ngkMap) and gNetworking.MapInfo.IsValid;
-  Panel_SetupOptions.Enabled := gNetworking.IsHost and (gNetworking.SelectGameKind = ngkMap) and gNetworking.MapInfo.IsValid;
+
+  panelEnabled := gNetworking.IsHost and (gNetworking.SelectGameKind = ngkMap) and gNetworking.MapInfo.IsValid;
+
+  for I := 3 to Panel_SetupOptions.ChildCount - 1 do
+    Panel_SetupOptions.Childs[I].Enabled := panelEnabled;
 
   RefreshWeatherControls;
 

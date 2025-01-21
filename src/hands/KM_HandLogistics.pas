@@ -29,6 +29,7 @@ type
   // Sorted from lowest to highest importance
   TKMDemandImportance = (
     diNorm,  //Everything (lowest importance)
+    diHigh5, //Materials to workers
     diHigh4, //Materials to workers
     diHigh3, //Food to Inn
     diHigh2, //Food to soldiers

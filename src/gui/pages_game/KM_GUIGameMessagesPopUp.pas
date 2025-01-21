@@ -35,6 +35,7 @@ type
 implementation
 uses  KM_HandsCollection,
       KM_Pics,
+      KM_Game,
       KM_AIGoals, KM_MapTypes,
       KM_Defaults, KM_GameParams,
       KM_ResFonts, KM_ResTexts,
@@ -109,6 +110,7 @@ end;
 
 procedure TKMGUIGameMessagesPopUp.RefreshList;
 var I, ItemIndex, TopIndex : Integer;
+  S : String;
 begin
   ItemIndex := Columnbox_Messages.ItemIndex;
   TopIndex := Columnbox_Messages.TopIndex;
@@ -118,7 +120,11 @@ begin
   for I := 0 to High(gMySpectator.Hand.MessageStack) do
   begin
     with gMySpectator.Hand.MessageStack[I] do
-      Columnbox_Messages.AddItem( MakeListRow([ Copy(Text, 1, 15) + '...'], I ) );
+    begin
+      S := Text;
+      S := gGame.TextMission.ParseTextMarkup(Text);
+      Columnbox_Messages.AddItem( MakeListRow([ Copy(S, 1, 30) + '...'], I ) );
+    end;
   end;
 
   if ItemIndex >= Columnbox_Messages.RowCount then
@@ -140,7 +146,7 @@ begin
     Exit;
   if aIndex > high(gMySpectator.Hand.MessageStack) then Exit;
   
-  Label_Message.Caption := gMySpectator.Hand.MessageStack[aIndex].Text;
+  Label_Message.Caption := gGame.TextMission.ParseTextMarkup(gMySpectator.Hand.MessageStack[aIndex].Text);
   Image_MessageKind.TexID := MSG_ICON[gMySpectator.Hand.MessageStack[aIndex].Kind];
 end;
 

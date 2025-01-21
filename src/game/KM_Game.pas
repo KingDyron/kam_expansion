@@ -2281,6 +2281,7 @@ begin
     aBodyStream.Write(gameRes, SizeOf(GameResult));
   end;
 
+
   gTerrain.Save(aBodyStream); //Saves the map
   fTerrainPainter.Save(aBodyStream);
   gHands.Save(aBodyStream, isMulti); //Saves all players properties individually
@@ -2293,7 +2294,7 @@ begin
   fPathfinding.Save(aBodyStream);
   gProjectiles.Save(aBodyStream);
   gSpecAnim.Save(aBodyStream);
-  gParticles.Save(aBodyStream);
+  //gParticles.Save(aBodyStream);
   fWeather.Save(aBodyStream);
   fGameRes.Save(aBodyStream);
   fScripting.Save(aBodyStream);
@@ -2711,7 +2712,7 @@ begin
     fPathfinding.Load(bodyStream);
     gProjectiles.Load(bodyStream);
     gSpecAnim.Load(bodyStream);
-    gParticles.Load(bodyStream);
+    //gParticles.Load(bodyStream);
     fWeather.Load(bodyStream);
     fGameRes.Load(bodyStream);
     fScripting.Load(bodyStream);

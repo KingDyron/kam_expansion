@@ -2431,7 +2431,7 @@ procedure TKMScriptActions.ShowMsg(aHand: Shortint; const aText: AnsiString);
 begin
   try
     if (aHand = gMySpectator.HandID) or (aHand = HAND_NONE) then
-      gMySpectator.Hand.ShowMSG(mkText, gGame.TextMission.ParseTextMarkup(UnicodeString(aText)), KMPOINT_ZERO);
+      gMySpectator.Hand.ShowMSG(mkText, UnicodeString(aText), KMPOINT_ZERO);
       //gGame.ShowMessageLocal(mkText, gGame.TextMission.ParseTextMarkup(UnicodeString(aText)), KMPOINT_ZERO);
   except
     gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
@@ -2473,7 +2473,7 @@ begin
     if gTerrain.TileInMapCoords(aX, aY) then
     begin
       if (aHand = gMySpectator.HandID) or (aHand = HAND_NONE) then
-        gMySpectator.Hand.ShowMSG(mkText, gGame.TextMission.ParseTextMarkup(UnicodeString(aText)), KMPoint(aX,aY));
+        gMySpectator.Hand.ShowMSG(mkText, UnicodeString(aText), KMPoint(aX,aY));
         //gGame.ShowMessageLocal(mkText, gGame.TextMission.ParseTextMarkup(UnicodeString(aText)), KMPoint(aX,aY));
     end
     else

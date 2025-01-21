@@ -2865,6 +2865,7 @@ begin
     SaveStream.Write(MessageStack[I].Kind, SizeOf(MessageStack[I].Kind));
     SaveStream.Write(MessageStack[I].Loc);
   end;
+
   // Overlay
   SaveStream.WriteA(fOverlayMarkup);
   SaveStream.Write(fOverlayTextSettings, SizeOf(fOverlayTextSettings));
@@ -2964,6 +2965,7 @@ begin
     LoadStream.Read(MessageStack[I].Kind, SizeOf(MessageStack[I].Kind));
     LoadStream.Read(MessageStack[I].Loc);
   end;
+
 
   // Overlay
   LoadStream.ReadA(fOverlayMarkup);
@@ -3290,13 +3292,13 @@ procedure TKMHand.ShowMSG(aKind : TKMMessageKind; aMessage: string; aLoc : TKMPo
 var J : Integer;
 begin
   if ID = gMySpectator.HandID then
-  gGame.ShowMessageLocal(aKind,
-                          gGame.TextMission.ParseTextMarkup(aMessage),
-                        aLoc);
+    gGame.ShowMessageLocal(aKind,
+                            gGame.TextMission.ParseTextMarkup(aMessage),
+                          aLoc);
 
   J := length(MessageStack);
   SetLength(MessageStack, J + 1);
-  MessageStack[J].Text := gGame.TextMission.ParseTextMarkup(aMessage);
+  MessageStack[J].Text := aMessage {gGame.TextMission.ParseTextMarkup(aMessage)};
   MessageStack[J].Loc := aLoc;
   MessageStack[J].Kind := aKind;
 end;
