@@ -215,6 +215,7 @@ var
     I : Integer;
     H : TKMHouseBarracks;
   begin
+    Result := 0;
     if P.Stats.GetHouseQty(htBarracks) = 0 then
       Result := 0
     else
@@ -246,7 +247,6 @@ var
 
         //Result := fSetup.RecruitCount * P.Stats.GetHouseQty(htBarracks);
       end;
-    Inc(Result, P.Stats.GetHouseQty(htWallTower) * 2);
   end;
 
 var
@@ -925,10 +925,10 @@ begin
     and not Houses[I].IsDestroyed then
     case Houses[I].HouseType of
 
-      {htTownhall: if TKMHouseTownHall(Houses[I]).GoldMaxCnt > 0 then
-                    TKMHouseTownHall(Houses[I]).GoldMaxCnt := IfThen(gHands[fOwner].Stats.Wares[wtGold].ActualCnt < 15, 0, 15)
+      htTownhall: if Houses[I].GetAcceptWareIn(wtGold) < 120 then
+                    Houses[I].SetAcceptWareIn(wtGold, IfThen(gHands[fOwner].Stats.Wares[wtGold].ActualCnt < 15, 120, 120 - 15) )
                   else
-                    TKMHouseTownHall(Houses[I]).GoldMaxCnt := IfThen(gHands[fOwner].Stats.Wares[wtGold].ActualCnt < 30, 0, 15);}
+                    Houses[I].SetAcceptWareIn(wtGold, IfThen(gHands[fOwner].Stats.Wares[wtGold].ActualCnt < 30, 120, 120 - 15) );
 
       htFarm : Houses[I].ForceWorking := true;
       htBarracks: begin

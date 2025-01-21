@@ -3820,7 +3820,7 @@ var
   isWareBoth : Boolean;
 begin
   Assert(aWare <> wtNone);
-  Assert(not(fType in [htStore,htBarracks,htTownHall]));
+  Assert(not(fType in [htStore,htBarracks]));
 
   isWareBoth := WareIsInAndOut(aWare) and (fDeliveryMode = dmTakeOut);
 
