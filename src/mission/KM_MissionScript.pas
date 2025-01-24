@@ -116,7 +116,8 @@ type
     ctSetHouseFlagColor,
     ctSetHouseIndestructible,
     ctSetUnitImmortal,
-    ctSetFarmGrainType
+    ctSetFarmGrainType,
+    ctSetHouseWariant
     );
 
 const
@@ -223,7 +224,8 @@ const
     'SET_HOUSE_FLAG_COLOR',
     'SET_HOUSE_INDESTRUCTIBLE',
     'SET_UNIT_IMMORTAL',
-    'SET_FARM_GRAIN_TYPE'
+    'SET_FARM_GRAIN_TYPE',
+    'SET_HOUSE_WARIANT'
     );
 type
   TKMMissionParserCommon = class

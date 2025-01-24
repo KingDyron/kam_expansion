@@ -614,13 +614,15 @@ type
 
   TKMHousePottery = class(TKMHouse)
     private
-      fLastTile : byte;
-      fTiles : array[1..4] of Byte;
+      fTiles : array[1..4] of Cardinal;//Time when clay was brought to the pottery
     public
       constructor Load(LoadStream: TKMemoryStream); override;
       procedure Save(SaveStream: TKMemoryStream); override;
       function ObjToString(const aSeparator: String = '|'): String; override;
+      procedure BringTile;
       function TakeTile : Byte;
+      function CanTakeTile : Boolean;
+      function HasSpaceForNextTile : Boolean;
       procedure Paint; Override;
   end;
 
@@ -728,8 +730,7 @@ type
     private
       fAnims : array[TKMProdThatchAnimType] of TKMPTAnim;
       fWorkPointsTaken : TKMArray<TKMPoint>;
-      fLastTile : Byte;
-      fTiles : array[1..10] of Byte;
+      fTiles : array[1..15] of Cardinal;
 
       fGrainType, fGrassType, fVegeType: TKMGrainType;
       fFillWine,
@@ -750,7 +751,10 @@ type
       procedure TakePoint(P : TKMPoint);
       procedure RemovePoint(P : TKMPoint);
       procedure ClearPoints;
+      procedure BringTile;
       function TakeTile : Byte;
+      function CanTakeTile : Boolean;
+      function HasSpaceForNextTile : Boolean;
 
       property GrainType : TKMGrainType read fGrainType;
       property GrassType : TKMGrainType read fGrassType;
@@ -1967,7 +1971,7 @@ begin
       if fWareInput[K] = fOldWares[I].W then
       begin
         fWareIn[K] := fWareIn[K] + fOldWares[I].C;
-        fWareDeliveryCount[I] := fWareIn[K];
+        fWareDeliveryCount[K] := fWareIn[K];
       end
       else
       if fWareOutput[K] = fOldWares[I].W then
@@ -5971,10 +5975,8 @@ begin
   Inherited;
   LoadStream.CheckMarker('HousePottery');
 
-  for I := 1 to high(fTiles) do
-    LoadStream.Read(fTiles[I]);
+  LoadStream.Read(fTiles, SizeOf(fTiles));
 
-  LoadStream.Read(fLastTile);
 end;
 
 procedure TKMHousePottery.Save(SaveStream: TKMemoryStream);
@@ -5982,27 +5984,51 @@ var I : Integer;
 begin
   Inherited;
   SaveStream.PlaceMarker('HousePottery');
-  for I := 1 to high(fTiles) do
-    SaveStream.Write(fTiles[I]);
-
-  SaveStream.Write(fLastTile);
+  SaveStream.Write(fTiles, SizeOf(fTiles));
 end;
 
 function TKMHousePottery.TakeTile : Byte;
-var J : Integer;
+var I : Integer;
 begin
   Result := 0;
-  J := (fLastTile) mod 4 + 1 ;
 
-  fLastTile := J;
+  for I := low(fTiles) to High(fTiles) do
+    If (fTiles[I] > 0) and (gGame.Params.Tick > fTiles[I]) then
+    begin
+      fTiles[I] := 0;
+      Exit(I);
+    end;
+end;
 
-  Inc(fTiles[J]);
+procedure TKMHousePottery.BringTile;
+var I : Integer;
+begin
+  for I := low(fTiles) to High(fTiles) do
+    If fTiles[I] = 0 then
+    begin
+      fTiles[I] := gGame.Params.Tick + 1500;
+      Break;
+    end;
 
-  if fTiles[J] = 2 then
-  begin
-    Result := J;
-    fTiles[J] := 0;
-  end;
+end;
+
+function TKMHousePottery.CanTakeTile: Boolean;
+var I : Integer;
+begin
+  Result := false;
+  for I := low(fTiles) to High(fTiles) do
+    If (fTiles[I] > 0) and (gGame.Params.Tick > fTiles[I]) then
+      Exit(true);
+
+end;
+
+function TKMHousePottery.HasSpaceForNextTile: Boolean;
+var I : Integer;
+begin
+  Result := false;
+  for I := low(fTiles) to High(fTiles) do
+    If fTiles[I] = 0 then
+      Exit(true);
 end;
 
 procedure TKMHousePottery.Paint;
@@ -6011,14 +6037,13 @@ begin
   Inherited;
 
   for I := 1 to high(fTiles) do
-    if fTiles[I] = 1 then
+    if fTiles[I] > 0 then
       gRenderPool.AddHousePotteryTiles(fPosition, I);
 end;
 
 function TKMHousePottery.ObjToString(const aSeparator: string = '|'): string;
 begin
-  Result := inherited ObjToString(aSeparator) +
-            Format('%sLastTile = %d', [aSeparator, fLastTile]);
+  Result := inherited;
 end;
 
 function TKMHouseCollectors.GetMaxDistanceToPoint: Integer;
@@ -6531,7 +6556,34 @@ begin
 
 end;
 
+
 procedure TKMHousePalace.Paint;
+  procedure PaintDeposits;
+  var list : TKMPointTagList;
+    I : Integer;
+    C, factor : Cardinal;
+  begin
+    list := TKMPointTagList.Create;
+    gTerrain.FindDeposits(Entrance, 25, list, true);
+
+    for I := 0 to list.Count - 1 do
+    begin
+      case list.Tag[I] of
+        1: C := $FF00FF00;
+        2: C := $FFFF0000;
+        3: C := $FF0000FF;
+        4: C := $FF000000;
+        else
+          C := $FFFFFFFF;
+      end;
+      factor := list.Tag2[I] * 15 + 40;
+      factor := factor shl 24;
+      factor := factor or $00FFFFFF;
+      C := C and factor;
+      gRenderAux.Quad(list[I].X, list[I].Y, C);
+    end;
+    list.Free;
+  end;
 var I : Integer;
 begin
   Inherited;
@@ -6540,6 +6592,8 @@ begin
     for I := 1 to 4 do
         gRenderPool.AddHousePalaceFlags(HouseType, fPosition, I, FlagAnimStep + I * 10, gHands[Owner].FlagColor);
 
+  if gMySpectator.Selected = self then
+    PaintDeposits;
 end;
 
 function TKMHousePalace.ObjToString(const aSeparator: string = '|'): string;
@@ -6845,7 +6899,6 @@ begin
   inherited;
   fWorkPointsTaken.Clear;
   LoadStream.Read(fAnims, SizeOf(fAnims));
-  LoadStream.Read(fLastTile);
   LoadStream.Read(fTiles, SizeOf(fTiles));
   fWorkPointsTaken.LoadFromStream(LoadStream);
   LoadStream.Read(fGrainType, SizeOf(fGrainType));
@@ -6862,7 +6915,6 @@ procedure TKMHouseProdThatch.Save(SaveStream: TKMemoryStream);
 begin
   Inherited;
   SaveStream.Write(fAnims, SizeOf(fAnims));
-  SaveStream.Write(fLastTile);
   SaveStream.Write(fTiles, SizeOf(fTiles));
   fWorkPointsTaken.SaveToStream(SaveStream);
   SaveStream.Write(fGrainType, SizeOf(fGrainType));
@@ -6903,19 +6955,48 @@ begin
 end;
 
 function TKMHouseProdThatch.TakeTile: Byte;
-var J : Byte;
+var I : Integer;
 begin
   Result := 0;
-  J := (fLastTile mod high(fTiles)) + 1;
-  fLastTile := J;
-  Inc(fTiles[J]);
-  if fTiles[J] = 2 then
-  begin
-    Result := J;
-    fTiles[J] := 0;
-  end;
+
+  for I := low(fTiles) to High(fTiles) do
+    If (fTiles[I] > 0) and (gGame.Params.Tick > fTiles[I]) then
+    begin
+      fTiles[I] := 0;
+      Exit(I);
+    end;
 end;
 
+procedure TKMHouseProdThatch.BringTile;
+var I : Integer;
+begin
+  for I := low(fTiles) to High(fTiles) do
+    If fTiles[I] = 0 then
+    begin
+      fTiles[I] := gGame.Params.Tick + 1500;
+      Exit;
+    end;
+
+end;
+
+function TKMHouseProdThatch.CanTakeTile: Boolean;
+var I : Integer;
+begin
+  Result := false;
+  for I := low(fTiles) to High(fTiles) do
+    If (fTiles[I] > 0) and (gGame.Params.Tick > fTiles[I]) then
+      Exit(true);
+
+end;
+
+function TKMHouseProdThatch.HasSpaceForNextTile: Boolean;
+var I : Integer;
+begin
+  Result := false;
+  for I := low(fTiles) to High(fTiles) do
+    If fTiles[I] = 0 then
+      Exit(true);
+end;
 
 procedure TKMHouseProdThatch.ProduceStarts(aWare: TKMWareType);
   procedure StartAnim(aType : TKMProdThatchAnimType);

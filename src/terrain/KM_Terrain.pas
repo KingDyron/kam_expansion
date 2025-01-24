@@ -295,7 +295,8 @@ type
     function TileIsVegeField(const aLoc : TKMPoint): Boolean; overload; inline;
     function TileIsVegeField(const X, Y: Word): Boolean; overload; inline;
     function TileIsMineShaft(aLoc : TKMPoint) : Boolean;
-    procedure FindDeposits(const aLoc: TKMPoint; aRadius : Byte; aDeposits : TKMPointTagList; OverlapRadius : Byte = 0);
+    procedure FindDeposits(const aLoc: TKMPoint; aRadius : Byte; aDeposits : TKMPointTagList; OverlapRadius : Byte = 0);overload;
+    procedure FindDeposits(const aLoc: TKMPoint; aRadius : Byte; aDeposits : TKMPointTagList; aIncludeNormalOre : Boolean);overload;
     procedure PalaceExploreDeposits(const aLoc : TKMPoint);
 
     procedure IncFieldAge(aLoc : TKMPoint);
@@ -2217,6 +2218,32 @@ begin
       aDeposits.Add(KMPoint(tmpArr[I].X, tmpArr[I].Y), tmpArr[I].Tag);
   end;
 end;
+
+procedure TKMTerrain.FindDeposits(const aLoc: TKMPoint; aRadius : Byte; aDeposits : TKMPointTagList; aIncludeNormalOre : Boolean);
+var
+  rec : TKMRect;
+  I, K : Integer;
+
+  tmpPoints : TKMPointArray;
+  tmpTags : Integer;
+
+  function HasDeposit(X, Y : Integer; aType : TKMTileOverlay = toNone) : Boolean;
+  begin
+    if aType = toNone then
+      Result := (Land[Y, X].TileOverlay2 in [toGold, toIron, toBitin, toCoal]) and (Land[Y, X].Ware.C2 > 0)
+    else
+      Result := (Land[Y, X].TileOverlay2 = aType) and (Land[Y, X].Ware.C2 > 0);
+  end;
+
+begin
+  rec := KMRectGrow(KMRect(aLoc), aRadius);
+  rec.FitInMap(fMapX - 1, fMapY - 1);
+  for I := rec.Left to rec.Right do
+  for K := rec.Top to rec.Bottom do
+    if HasDeposit(I, K) then
+      aDeposits.Add(KMPoint(I, K), byte(Land[K, I].TileOverlay2) - byte(toGold) + 1, Land[K, I].Ware.C2);
+end;
+
 
 function TKMTerrain.GetTileCornObject(const aLoc: TKMPoint; aStage: Byte): Word;
 begin
@@ -5570,7 +5597,8 @@ begin
   Result := Result or (TileIsGrassField(aLoc) and (aStage in [4, 5]));}
   Result := (aStage >= CORN_AGE_MAX);
   if not Result then Exit; //We have no corn here actually, nothing to cut
-
+  If Land^[aLoc.Y,aLoc.X].TileOverlay2 = toInfinity then
+    Exit;
   Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := GetTileCornTile(aLoc, 6);
   Land^[aLoc.Y,aLoc.X].Obj := GetTileCornObject(aLoc, 6);
   Land^[aLoc.Y,aLoc.X].FieldAge := 0;

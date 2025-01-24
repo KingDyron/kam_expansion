@@ -20,7 +20,14 @@ type
     cwtMilitia,      cwtAxeFighter,   cwtSwordsman,     cwtBowman,
     cwtArbaletman,   cwtPikeman,      cwtHallebardman,  cwtHorseScout,
     cwtCavalry,      cwtBarbarian,
-    cwtPeasant,      cwtSlingshot,    cwtMetalBarbarian, cwtHorseman);
+    cwtPeasant,      cwtSlingshot,    cwtMetalBarbarian, cwtHorseman,
+
+    cwtCatapult,     cwtBallista,     cwtRam,           cwtGolem,
+    cwtGiant,        cwtPaladin,      cwtArcher,        cwtSpy,
+    cwtTrainedWolf,  cwtAmmoCart,     cwtPikeMachine,   cwtShip,
+    cwtClubMan,      cwtMaceFighter,  cwtFlailFighter,  cwtShieldBearer,
+    cwtFighter,      cwtSpikedTrap,   cwtWoodenWall,    cwtTorchMan,
+    cwtMedic,        cwtBattleShip,   cwtBoat,          cwtPyro);
 
   // Chart army type class
   TKMChartWarrior = class
@@ -230,7 +237,7 @@ begin
   fType := aType;
   case aType of
     cwtAll:                   fUnitType := utAny;
-    cwtMilitia..cwtHorseman:  fUnitType := TKMUnitType(Ord(utMilitia) + Ord(aType) - Ord(cwtMilitia));
+    cwtMilitia..high(TKMChartWarriorType):  fUnitType := TKMUnitType(Ord(utMilitia) + Ord(aType) - Ord(cwtMilitia));
   end;
 end;
 
@@ -1059,6 +1066,7 @@ var
   ST: TKMStatType;
   chart: TKMChart;
   selectedItemTag: Integer;
+  itemIndex, topIndex : Integer;
 begin
   //Hide everything if there is no data
   if fNoArmyChartData then
@@ -1072,6 +1080,14 @@ begin
           Charts_Army[ST,cKind,wType].Chart.Hide;
     Exit;
   end;
+  itemIndex := 0;
+  topIndex := 0;
+  if Sender = Columnbox_Army then
+  begin
+    itemIndex := Columnbox_Army.ItemIndex;
+    topIndex := Columnbox_Army.TopIndex;
+  end;
+
 
   selectedItemTag := -1;
   if Columnbox_Army.IsSelected then
@@ -1090,6 +1106,12 @@ begin
                                         Byte(wType)));
     if selectedItemTag = Byte(wType) then
       Columnbox_Army.ItemIndex := Columnbox_Army.RowCount - 1;
+  end;
+
+  if Sender = Columnbox_Army then
+  begin
+    Columnbox_Army.ItemIndex := itemIndex;
+    Columnbox_Army.TopIndex := topIndex;
   end;
 
   if not Columnbox_Army.IsSelected then

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Root>
-  <DebugForm State="0">
+  <DebugForm State="2">
     <Misc Collapsed="True">
       <chkBevel Checked="True"/>
       <rgDebugFont ItemIndex="7"/>
@@ -202,7 +202,7 @@
       <edDebugText Text=""/>
       <chkFindObjByUID Checked="False"/>
     </Debug_Input>
-    <Game_additional Collapsed="True">
+    <Game_additional Collapsed="False">
       <chkLoadUnsupSaves Checked="True"/>
       <RGPlayer ItemIndex="0"/>
       <seMaxImageSize Value="2000"/>

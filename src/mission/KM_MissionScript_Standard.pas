@@ -1200,6 +1200,14 @@ begin
                           end else
                             AddError('ct_SetHouseFlagColor without prior declaration of House');
                          end;
+    ctSetHouseWariant:   if fLastHand <> HAND_NONE then
+                         begin
+                          if (fLastHouse <> nil) then
+                          begin
+                            fLastHouse.PicWariant := P[0];
+                          end else
+                            AddError('ct_SetHouseFlagColor without prior declaration of House');
+                         end;
 
    end;
 end;
@@ -1636,6 +1644,8 @@ begin
         else
         if H.HouseType = htProductionThatch then
           AddCommand(ctSetFarmGrainType, [ord(TThatch(H).GrainType), ord(TThatch(H).GrassType), ord(TThatch(H).VegeType)]);
+        If H.PicWariant >= 0 then
+          AddCommand(ctSetHouseWariant, [H.PicWariant]);
 
       end;
     end;

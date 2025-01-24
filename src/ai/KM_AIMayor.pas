@@ -246,6 +246,9 @@ var
         end;
 
         //Result := fSetup.RecruitCount * P.Stats.GetHouseQty(htBarracks);
+        Inc(Result, P.Stats.GetHouseQty(htWallTower) * 2);
+        Inc(Result, P.Stats.GetHouseQty(htMerchant));
+        Inc(Result, P.Stats.GetHouseQty(htStall));
       end;
   end;
 

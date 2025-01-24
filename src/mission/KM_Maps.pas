@@ -1488,7 +1488,7 @@ begin
             or (Author <> '') or (Version <> '')
             or (fSmallDesc <> '') or IsSmallDescLibxSet
             or (fBigDesc <> '') or IsBigDescLibxSet
-            or (fNameLibx <> 0)
+            or (fNameLibx <> -1)
             or HasDifficultyLevels
             or Weather.Overwrite);
 end;

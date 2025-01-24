@@ -127,13 +127,15 @@ begin
 end;
 
 procedure TKMChart.UpdateVisibility;
+var maxVisible : Word;
 begin
   Inherited;
 
-  fScrollBarV.Visible := Self.Visible and (fItemHeight * fCount * fSeparatorHeight > self.Height - fSeparatorHeight);
-
+  maxVisible := Round((Height - 48) / fItemHeight);
+  //fScrollBarV.Visible := Self.Visible and (fItemHeight * fCount * fSeparatorHeight > Height - fSeparatorHeight);
   fScrollBarV.MinValue := 1;
-  fScrollBarV.MaxValue := Max(fCount - 5, 1);
+  fScrollBarV.MaxValue := Max(fCount - maxVisible, 1);
+  fScrollBarV.Visible := Self.Visible and (fScrollBarV.MaxValue > fScrollBarV.MinValue);
 end;
 
 procedure TKMChart.AddLine(const aTitle: UnicodeString; aColor: TColor4; const aValues: TKMCardinalArray; aTag: Integer = -1);
@@ -173,9 +175,10 @@ begin
   UpdateMaxValue;
 
   fScrollBarV.MinValue := 1;
-  fScrollBarV.MaxValue := Max(fCount - 5, 1);
+  fScrollBarV.MaxValue := Max(fCount - Round((Height - 48) / fItemHeight), 1);
 
-  fScrollBarV.Visible := Self.Visible and (fItemHeight * fCount * fSeparatorHeight > self.Height - fSeparatorHeight);
+  //fScrollBarV.Visible := Self.Visible and (fItemHeight * fCount * fSeparatorHeight > self.Height - fSeparatorHeight);
+  fScrollBarV.Visible := Self.Visible and (fScrollBarV.MaxValue > fScrollBarV.MinValue);
 
 
 end;

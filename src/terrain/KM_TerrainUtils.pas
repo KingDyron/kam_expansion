@@ -13,6 +13,7 @@ uses
 implementation
 uses
   Classes, Math,
+  KM_CommonUtils,
   KM_Resource, KM_ResSprites,
   KM_HandTypes, KM_ResTypes, KM_ResTilesetTypes;
 
@@ -138,6 +139,12 @@ procedure ReadTileFromStream(aStream: TKMemoryStream; var aTileBasic: TKMTerrain
     Result.Mask.MType   := TKMTileMaskType(aPackedInfo and 15);
   end;
 
+  function CheckModRev : Boolean;
+  begin
+    //Result := not ArrayContains(aGameRev, [15122, 15379, 14787]);
+    Result := ArrayContains(aGameRev, [15834, 14787, 15453, 15833]);
+  end;
+
 var
   I: Integer;
   terrainB, objectB, rot, corners: Byte;
@@ -187,27 +194,27 @@ begin
     else
       aTileBasic.TileOverlay := toNone;
 
-    if aGameRev > 14786 then
+    if (aGameRev > 14786) and CheckModRev then
       aStream.Read(aTileBasic.TileOverlay2, SizeOf(aTileBasic.TileOverlay2)) //10
     else
       aTileBasic.TileOverlay2 := toNone;
 
-    if aGameRev > 15000 then
+    if (aGameRev > 15000) and CheckModRev then
       aStream.Read(aTileBasic.IsHidden) //11
     else
       aTileBasic.IsHidden := false;
 
-    if aGameRev > 15452 then
+    if (aGameRev > 15452) and CheckModRev then
       aStream.Read(aTileBasic.RoadType, SizeOf(aTileBasic.RoadType)) //12
     else
       aTileBasic.RoadType := rtNone;
 
-    if aGameRev > 15832 then
+    if (aGameRev > 15832) and CheckModRev then
       aStream.Read(aTileBasic.GrainType, SizeOf(aTileBasic.GrainType)) //13
     else
       aTileBasic.GrainType := gftNone;
 
-    if aGameRev > 15833 then
+    if (aGameRev > 15833) and CheckModRev then
     begin
       aStream.Read(aTileBasic.Ware.W); //14
       aStream.Read(aTileBasic.Ware.C); //15

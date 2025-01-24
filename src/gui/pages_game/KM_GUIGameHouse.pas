@@ -194,7 +194,6 @@ type
       Button_Queue_Right,Button_Queue_Left : TKMButton;
 
     Panel_HouseCottage: TKMPanel;
-      ResRow_Cottage_Apples: TKMWaresRow;
       Button_CottageWorkless : TKMButtonFlat;
       //Bar_FamilyProgress: TKMPercentBar;
       //Bar_KidsProgress: array[0..5] of TKMPercentBar;
@@ -1128,10 +1127,7 @@ end;
 Procedure TKMGUIGameHouse.Create_HouseCottage;
 var I : Integer;
 begin
-  Panel_HouseCottage :=  TKMPanel.Create(Panel_House, 0, 80, TB_WIDTH, LINE_HEIGHT*7);
-
-  ResRow_Cottage_Apples:= TKMWaresRow.Create(Panel_HouseCottage, 0, 0, TB_WIDTH, 20, gRes.Wares[wtApple].GUIIcon);
-  ResRow_Cottage_Apples.WareCntAsNumber := true;
+  Panel_HouseCottage :=  TKMPanel.Create(Panel_House, 0, 135, TB_WIDTH, LINE_HEIGHT*7);
 
   //Bar_CottageProgress := TKMPercentBar.Create(Panel_HouseCottage, 0, 37, TB_WIDTH - 28, LINE_HEIGHT);
 
@@ -1142,14 +1138,14 @@ begin
   end;}
 
   //Bar_KidsProgress: array[0..5] of TKMPercentBar;
-  TKMBevel.Create(Panel_HouseCottage, 9, 30, TB_WIDTH - 9, 38);
-  TKMBevel.Create(Panel_HouseCottage, 9, 70, TB_WIDTH - 9, 38);
-  TKMBevel.Create(Panel_HouseCottage, 9, 110, TB_WIDTH - 9, 38);
-  TKMBevel.Create(Panel_HouseCottage, 9, 150, TB_WIDTH - 9, 38);
-  Button_FamilyQty := TKMButtonFlat.Create(Panel_HouseCottage, 9, 30, 28, 38, 803);
-  Button_KidsQty[0] := TKMButtonFlat.Create(Panel_HouseCottage, 9, 70, 28, 38, 804);
-  Button_KidsQty[1] := TKMButtonFlat.Create(Panel_HouseCottage, 9, 110, 28, 38, 806);
-  Button_KidsQty[2] := TKMButtonFlat.Create(Panel_HouseCottage, 9, 150, 28, 38, 807);
+  TKMBevel.Create(Panel_HouseCottage, 9, 0, TB_WIDTH - 9, 38);
+  TKMBevel.Create(Panel_HouseCottage, 9, 40, TB_WIDTH - 9, 38);
+  TKMBevel.Create(Panel_HouseCottage, 9, 80, TB_WIDTH - 9, 38);
+  TKMBevel.Create(Panel_HouseCottage, 9, 120, TB_WIDTH - 9, 38);
+  Button_FamilyQty := TKMButtonFlat.Create(Panel_HouseCottage, 9, 0, 28, 38, 803);
+  Button_KidsQty[0] := TKMButtonFlat.Create(Panel_HouseCottage, 9, 40, 28, 38, 804);
+  Button_KidsQty[1] := TKMButtonFlat.Create(Panel_HouseCottage, 9, 80, 28, 38, 806);
+  Button_KidsQty[2] := TKMButtonFlat.Create(Panel_HouseCottage, 9, 120, 28, 38, 807);
 
   Button_FamilyQty.Hint := 'Family';
   Button_KidsQty[0].Hint := 'Niemowle';
@@ -1158,15 +1154,15 @@ begin
 
   for I := Low(Image_FamilyProgress) to High(Image_FamilyProgress) do
   begin
-    Image_FamilyProgress[I] := TKMImage.Create(Panel_HouseCottage, 18 + I * 20, 37, 20, 20, 799);
+    Image_FamilyProgress[I] := TKMImage.Create(Panel_HouseCottage, 18 + I * 20, 7, 20, 20, 799);
     Image_FamilyProgress[I].AlphaStep := 0;
   end;
 
   for I := 1 to 8 do
   begin
-    Image_KidsProgress[0, I] := TKMImage.Create(Panel_HouseCottage, 18 + I * 20, 80, 20, 20, 801);
-    Image_KidsProgress[1, I] := TKMImage.Create(Panel_HouseCottage, 18 + I * 20, 115, 20, 20, 802);
-    Image_KidsProgress[2, I] := TKMImage.Create(Panel_HouseCottage, 18 + I * 20, 160, 20, 20, 800);
+    Image_KidsProgress[0, I] := TKMImage.Create(Panel_HouseCottage, 18 + I * 20, 50, 20, 20, 801);
+    Image_KidsProgress[1, I] := TKMImage.Create(Panel_HouseCottage, 18 + I * 20, 85, 20, 20, 802);
+    Image_KidsProgress[2, I] := TKMImage.Create(Panel_HouseCottage, 18 + I * 20, 130, 20, 20, 800);
     Image_KidsProgress[0, I].AlphaStep := 0;
     Image_KidsProgress[1, I].AlphaStep := 0;
     Image_KidsProgress[2, I].AlphaStep := 0;
@@ -1893,7 +1889,13 @@ begin
                         for I := 0 to Panel_House_Common.ChildCount - 1 do
                           Panel_House_Common.Childs[I].Hide;
                         Panel_HouseCottage.Show;
-                        ResRow_Cottage_Apples.WareCount := aHouse.CheckWareIn(wtApple);
+
+                        rowRes := 1;
+                        line := 0;
+                        base := 0 + demandTop;
+
+                        ShowCommonDemand(aHouse, base, line, rowRes);
+                        //ResRow_Cottage_Apples.WareCount := aHouse.CheckWareIn(wtApple);
                         //Button_CottageWorkless.Caption := IntToStr(TKMHouseCottage(aHouse).Workless);
 
                         Button_FamilyQty.Caption := IntToStr(TKMHouseCottage(aHouse).FamilyQty);

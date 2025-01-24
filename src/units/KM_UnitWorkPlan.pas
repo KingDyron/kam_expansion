@@ -607,7 +607,7 @@ begin
     gsGoldMiner : fIssued := gTerrain.FindOre(aLoc, wtGoldOre, tmp.Loc, aUnit.Home.IsMineShaft);
     gsIronMiner : fIssued := gTerrain.FindOre(aLoc, wtIronOre, tmp.Loc, aUnit.Home.IsMineShaft);
     gsBitinMiner : fIssued := gTerrain.FindOre(aLoc, wtBitinOre, tmp.Loc, aUnit.Home.IsMineShaft);
-    gsClayMiner : fIssued := gTerrain.FindClay(aLoc, KMPOINT_ZERO, False, tmpHouse, tmp.Loc);
+    //gsClayMiner : fIssued := gTerrain.FindClay(aLoc, KMPOINT_ZERO, False, tmpHouse, tmp.Loc);
     //gsCollector : fIssued := gTerrain.FindJewerly(aLoc, KMPOINT_ZERO, False, tmp.Loc);
     gsStoneCutter : fIssued := gTerrain.FindStone(aLoc, gRes.Units[aUnit.UnitType].MiningRange, KMPOINT_ZERO, False, tmpHouse, tmp);
     gsFisherCatch : fIssued := gTerrain.FindFishWater(aLoc, gRes.Units[aUnit.UnitType].MiningRange, KMPOINT_ZERO, False, tmp);
@@ -629,7 +629,7 @@ begin
         DefaultPlan(aUnit);
 
       case GatheringScript of
-        gsClayMiner : WalkStyle(tmp, uaWalk,uaWork,13,0,uaSpec,gsClayMiner);
+        //gsClayMiner : WalkStyle(tmp, uaWalk,uaWork,13,0,uaSpec,gsClayMiner);
         //gsCollector : WalkStyle(tmp, uaWalk,uaWork,8,0,uaWalkTool,gsCollector);
         gsStoneCutter : WalkStyle(tmp, uaWalk,uaWork,8,0,uaWalkTool,gsStoneCutter);
         gsFisherCatch : WalkStyle(tmp, uaWalk,uaWork2,8,0,uaWalkTool,gsFisherCatch);
@@ -1038,6 +1038,53 @@ begin
                         Res.CopyFrom(TShipYard(aUnit.Home).GetWarePlan);
                         Res.SetCount(WARES_IN_OUT_COUNT);
                         fIssued := TKMHouseShipYard(aUnit.Home).CanWork;
+                      end;
+    gsClayMiner:      begin
+                        hardWritten := true;
+                        fIssued := false;
+                        If (aUnit.Home.HouseType = htPottery) then
+                        begin
+                          If TKMHousePottery(aUnit.Home).CanTakeTile then
+                          begin
+                            SubActAdd(haWork2,3);
+                            SubActAdd(haWork5,1);
+                            Prod.AddWare(wtTile, 1);
+                            fIssued := true;
+                          end else
+                          If TKMHousePottery(aUnit.Home).HasSpaceForNextTile then
+                          begin
+                            fIssued := gTerrain.FindClay(aLoc, KMPOINT_ZERO, False, tmpHouse, tmp.Loc);
+                            if fIssued then
+                            begin
+                              WalkStyle(tmp, uaWalk,uaWork,13,0,uaSpec,gsClayMiner);
+                              SubActAdd(haWork2,3);
+                            end
+                            else
+                              ResourceDepleted := not gTerrain.FindClay(aLoc, KMPOINT_ZERO, False, tmpHouse, tmp.Loc);
+                          end;
+                        end else
+                        If (aUnit.Home.HouseType = htProductionThatch) then
+                        begin
+                          If TKMHouseProdThatch(aUnit.Home).CanTakeTile then
+                          begin
+                            SubActAdd(haWork2,3);
+                            Prod.AddWare(wtTile, 1);
+                            fIssued := true;
+                          end else
+                          If TKMHouseProdThatch(aUnit.Home).HasSpaceForNextTile then
+                          begin
+                            fIssued := gTerrain.FindClay(aLoc, KMPOINT_ZERO, False, tmpHouse, tmp.Loc);
+                            if fIssued then
+                            begin
+                              WalkStyle(tmp, uaWalk,uaWork,13,0,uaSpec,gsClayMiner);
+                              SubActAdd(haWork2,3);
+                            end
+                            else
+                              ResourceDepleted := not gTerrain.FindClay(aLoc, KMPOINT_ZERO, False, tmpHouse, tmp.Loc);
+                          end;
+                        end;
+
+
                       end;
   else
     hardWritten := false;

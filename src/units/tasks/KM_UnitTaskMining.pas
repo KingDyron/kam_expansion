@@ -536,6 +536,14 @@ begin
             fPhase2 := 0;
             Home.SetState(hstWork);
 
+            if (WorkPlan.GatheringScript = gsClayMiner) and (WorkPlan.Prod.HasWare(wtTile) = 0) then
+              If Home.HouseType = htPottery then
+                TKMHousePottery(Home).BringTile
+              else
+              If Home.HouseType = htProductionThatch then
+                TKMHouseProdThatch(Home).BringTile;
+
+
             if WorkPlan.GatheringScript = gsShipyard then
               if TShipYard(fUnit.Home).CanWork then
                 TShipYard(fUnit.Home).StartWorking
@@ -551,35 +559,6 @@ begin
             if Home.HouseType = htMetallurgists then
               if WorkPlan.Prod[0].W = wtJewerly then
                 gHands[Owner].TakeJewerly;
-
-            if not (WorkPlan.GatheringScript in [gsMerchant]) then
-            begin
-              hasRes := true;
-              for I := 0 to high(WorkPlan.Res) do
-                if WorkPlan.Res[I].W <> wtNone then
-                  if Home.CheckWareIn(WorkPlan.Res[I].W) < WorkPlan.Res[I].C then
-                    hasRes := false;
-
-              if not hasRes then
-                Result := trTaskDone
-              else
-              begin
-                for I := 0 to high(WorkPlan.Res) do
-                begin
-                  if WorkPlan.Res[I].W <> wtNone then
-                    Home.WareTakeFromIn(WorkPlan.Res[I].W, WorkPlan.Res[I].C);
-
-                  gHands[fUnit.Owner].Stats.WareConsumed(WorkPlan.Res[I].W, WorkPlan.Res[I].C);
-                end;
-                CalculateWorkingTime(Home);
-                if Home is TKMHouseProdThatch then
-                begin
-                  for I := 0 to high(WorkPlan.Prod)  do
-                    TKMHouseProdThatch(Home).ProduceStarts(WorkPlan.Prod[I].W);
-                end;
-
-              end;
-            end;
 
             Home.CurrentAction.SubActionAdd([haSmoke]);
             if WorkPlan.GatheringScript = gsSwineBreeder then
@@ -703,7 +682,8 @@ begin
               gsIronMiner:    ResAcquired := gTerrain.DecOreDeposit(WorkPlan.Loc, wtIronOre);
               gsBitinMiner:   ResAcquired := gTerrain.DecOreDeposit(WorkPlan.Loc, wtBitinOre);
               gsClayMiner: begin
-                              ResAcquired := fDistantResAcquired;
+                              //ResAcquired := fDistantResAcquired;
+                              ResAcquired := (fWorkPlan.Prod.HasWare(wtTile) > 0);
                               if ResAcquired then
                                 if fUnit.Home is TKMHousePottery then
                                   ResAcquired := TKMHousePottery(Home).TakeTile > 0

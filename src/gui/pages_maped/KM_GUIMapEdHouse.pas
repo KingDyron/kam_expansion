@@ -63,6 +63,7 @@ type
     procedure HouseSetForceWorking(Sender : TObject);
     procedure HouseToggleAcceptWare(Sender : TObject);
     procedure MerchantChange(Sender : TObject);
+    procedure SetWariant(Sender : TObject; Shift: TShiftState);
 
     procedure Panel_HouseContructionChange(Sender : TObject; Shift: TShiftState);
     procedure Panel_HouseBuildWaresChange(Sender : TObject; aCount : Integer);
@@ -72,7 +73,7 @@ type
     Panel_HouseAdditional: TKMPanel;
       Button_HouseForceWork : TKMButton;
       Button_HouseNoRes,
-      Button_HouseStyles: TKMButton;
+      Button_HouseStyles, Button_HouseWariant: TKMButton;
       Button_WareInputSlot : array[0..9] of TKMButton;
       Button_Level : TKMButton;
       Button_Grain, Button_Grass, Button_Vege : TKMButton;
@@ -237,6 +238,11 @@ begin
     Button_HouseStyles.OnClick := ChangeStyle;
     Button_HouseStyles.Tag := 1;
     Button_HouseStyles.Hint := gResTexts[1814];
+
+    Button_HouseWariant := TKMButton.Create(Panel_HouseAdditional, 60, 80, 30, 30, 0, rxGui, bsGame);
+    Button_HouseWariant.OnClickShift := SetWariant;
+    Button_HouseWariant.Tag := 1;
+    Button_HouseWariant.Hint := gResTexts[2183];
 
     Button_HouseForceWork := TKMButton.Create(Panel_HouseAdditional, 0, 72, 30, 30, 0, rxGui, bsGame);
     Button_HouseForceWork.Hint := gResTexts[1818];
@@ -961,7 +967,7 @@ begin
     Button_HouseForceWork.TexID :=  IfThen(fHouse.ForceWorking, 770, 769);
   end;
 
-  SortVisibleControls(0, 72, Panel_HouseAdditional.Width, 0, [Button_HouseStyles, Button_Level, Button_HouseForceWork, Button_HouseNoRes]);
+  SortVisibleControls(0, 72, Panel_HouseAdditional.Width, 0, [Button_HouseStyles, Button_HouseWariant, Button_Level, Button_HouseForceWork, Button_HouseNoRes]);
 
   for I := 0 to High(Button_PlayerSelect) do
     Button_PlayerSelect[I].Hide;
@@ -1147,7 +1153,8 @@ begin
     Button_HouseStyles.Show;
     Button_HouseStyles.TexID := 399;
   end;
-
+  Button_HouseWariant.Visible := fHouse.HSpec.HasStoneWariants > 0;
+  Button_HouseWariant.Caption := IntToStr(fHouse.PicWariant + 1);
 
   for I := 0 to High(Button_WareInputSlot) do
     Button_WareInputSlot[I].Hide;
@@ -1741,6 +1748,19 @@ begin
     //Edit_HouseFlagColor.SetTextSilently( Format('%.6x', [C and $FFFFFF]) );
     //Shape_FlagColor.FillColor := C;
   end;
+end;
+
+procedure TKMMapEdHouse.SetWariant(Sender: TObject; Shift: TShiftState);
+var maxW, C : Integer;
+begin
+  maxW := fHouse.HSpec.HasStoneWariants - 1;
+  C := fHouse.PicWariant;
+  If ssRight in Shift then
+    IncLoop(C, -1, maxW, -1)
+  else
+    IncLoop(C, -1, maxW);
+  fHouse.PicWariant := C;
+  Button_HouseWariant.Caption := IntToStr(fHouse.PicWariant + 1);
 end;
 
 end.
