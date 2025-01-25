@@ -535,6 +535,34 @@ begin
             Thought := thNone;
             fPhase2 := 0;
             Home.SetState(hstWork);
+            if not (WorkPlan.GatheringScript in [gsMerchant]) then
+            begin
+              hasRes := true;
+              for I := 0 to high(WorkPlan.Res) do
+                if WorkPlan.Res[I].W <> wtNone then
+                  if Home.CheckWareIn(WorkPlan.Res[I].W) < WorkPlan.Res[I].C then
+                    hasRes := false;
+
+              if not hasRes then
+                Result := trTaskDone
+              else
+              begin
+                for I := 0 to high(WorkPlan.Res) do
+                begin
+                  if WorkPlan.Res[I].W <> wtNone then
+                    Home.WareTakeFromIn(WorkPlan.Res[I].W, WorkPlan.Res[I].C);
+
+                  gHands[fUnit.Owner].Stats.WareConsumed(WorkPlan.Res[I].W, WorkPlan.Res[I].C);
+                end;
+                CalculateWorkingTime(Home);
+                if Home is TKMHouseProdThatch then
+                begin
+                  for I := 0 to high(WorkPlan.Prod)  do
+                    TKMHouseProdThatch(Home).ProduceStarts(WorkPlan.Prod[I].W);
+                end;
+
+              end;
+            end;
 
             if (WorkPlan.GatheringScript = gsClayMiner) and (WorkPlan.Prod.HasWare(wtTile) = 0) then
               If Home.HouseType = htPottery then

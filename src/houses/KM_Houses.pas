@@ -1771,7 +1771,11 @@ var I : Integer;
 begin
   for I := 1 to WARES_IN_OUT_COUNT do
     if aWareType = fWareInput[I] then
+    begin
       fWareBlocked[I] := aMax;
+      UpdateDemands;
+    end;
+
 end;
 
 
@@ -6589,11 +6593,14 @@ begin
   Inherited;
 
   if fBuildState = hbsDone then
+  begin
     for I := 1 to 4 do
         gRenderPool.AddHousePalaceFlags(HouseType, fPosition, I, FlagAnimStep + I * 10, gHands[Owner].FlagColor);
 
-  if gMySpectator.Selected = self then
-    PaintDeposits;
+    if gMySpectator.Selected = self then
+      PaintDeposits;
+  end;
+
 end;
 
 function TKMHousePalace.ObjToString(const aSeparator: string = '|'): string;

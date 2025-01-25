@@ -5611,7 +5611,9 @@ begin
   aStage := GetWineStage(aLoc);
   Result := TileIsWineField(aLoc) and gFieldGrains[GetGrainType(aLoc)].Stage[aStage].CanBeCut;
   if not Result then Exit; //We have no wine here actually, nothing to cut
-  
+
+  If Land^[aLoc.Y,aLoc.X].TileOverlay2 = toInfinity then
+    Exit;
   Land^[aLoc.Y,aLoc.X].FieldAge := 1;
   Land^[aLoc.Y,aLoc.X].Obj := gFieldGrains[GetGrainType(aLoc)].Stage[0].Obj; //Reset the grapes
 end;

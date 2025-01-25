@@ -452,12 +452,12 @@ begin
       for K := 1 to WARES_IN_OUT_COUNT do
         WareOrder := WareOrder + H.WareOrder[K];
 
-    if not H.IsDestroyed and ((WareOrder = 0) or (H.HouseType in [htTailorsShop, htIronFoundry])) then
+    if not H.IsDestroyed and ((WareOrder = 0) or (H.HouseType in [htProductionThatch, htTailorsShop, htIronFoundry])) then
     case H.HouseType of
       htProductionThatch: for K := 1 to WARES_IN_OUT_COUNT do
                           begin
-                            if H.WareOrder[K] = MAX_WARES_ORDER then
-                              Continue;
+                            {if H.WareOrder[K] = MAX_WARES_ORDER then
+                              Continue;}
 
                             H.WareOrder[K] := 0;
                             case H.WareOutPut[K] of
@@ -466,18 +466,29 @@ begin
                                       or (WarfareRatios[wtHorse] > 0)
                                       or (WarfareRatios[wtQuiver] > 0)
                                       or HasHouses([htSwine, htStables]) then
-                                        H.WareOrder[K] := MAX_WARES_ORDER;
+                                        H.WareOrder[K] := MAX_WARES_ORDER
+                                      else
+                                        H.WareOrder[K] := 0;
+
 
                               wtSeed :If (WarfareRatios[wtQuiver] > 0)
                                       or HasHouses([htMill, htHovel]) then
-                                        H.WareOrder[K] := MAX_WARES_ORDER;
+                                        H.WareOrder[K] := MAX_WARES_ORDER
+                                      else
+                                        H.WareOrder[K] := 0;
 
                               wtVegetables :If HasHouses([htInn]) then
-                                              H.WareOrder[K] := MAX_WARES_ORDER;
+                                              H.WareOrder[K] := MAX_WARES_ORDER
+                                      else
+                                        H.WareOrder[K] := 0;
                               wtWine :If HasHouses([htInn]) then
-                                              H.WareOrder[K] := MAX_WARES_ORDER;
+                                              H.WareOrder[K] := MAX_WARES_ORDER
+                                      else
+                                        H.WareOrder[K] := 0;
                               wtStoneBolt :If NeedsWare(wtStoneBolt) and (HasHouses([htWatchTower]) or HasUnits([utRogue])) then
-                                        H.WareOrder[K] := MAX_WARES_ORDER;
+                                        H.WareOrder[K] := MAX_WARES_ORDER
+                                      else
+                                        H.WareOrder[K] := 0;
 
                               wtTile,
                               wtStone,
@@ -492,7 +503,9 @@ begin
                               wtLog,
                               wtWheel,
                               wtTimber :If NeedsWare(H.WareOutPut[K]) then
-                                        H.WareOrder[K] := MAX_WARES_ORDER;
+                                        H.WareOrder[K] := MAX_WARES_ORDER
+                                      else
+                                        H.WareOrder[K] := 0;
 
                             end;
                           end;
@@ -1301,7 +1314,7 @@ begin
         Houses[I].BuildingRepair := fSetup.IsRepairAlways;
         if fSetup.AutoBuild then
           if Houses[I].CanMakeUpgrade then
-            if HouseConnectedToStore(Houses[I]) then
+            if HouseConnectedToStore(Houses[I]) or (Houses[I].HouseType in WALL_HOUSES) then
               Houses[I].MakeUpgrade;
 
       end;
@@ -1393,6 +1406,11 @@ function TKMayor.NeedsWare(aWare : TKMWareType) : Boolean;
               +gHands[fOwner].Stats.Wares[wtFish].ActualCnt) >= aCount;
   end;
 
+  function HasWare(aWare : TKMWareType; aCount : integer) : Boolean;
+  begin
+    Result :=  gHands[fOwner].Stats.Wares[aWare].ActualCnt >= aCount;
+  end;
+
 begin
   Result := false;
   case aWare of
@@ -1453,7 +1471,7 @@ begin
                         and gHands[fOwner].Locks.UnitsUnlocked([utScout, utKnight])
                         and HasHouses([htBarracks]);
     wtBitin: Result := HasHouses([htIronFoundry]);
-    wtVegetables: Result := HasHouses([htBakery]);
+    wtVegetables: Result := HasHouses([htSwine, htStables, htHovel]);
     //wtBitinOre: Result := gHands[fOwner].Stats.GetHouseQty([htIronSmithy]) > 0;  //don't trade bitin ore
     wtStoneBolt: Result := HasUnits([utRogue, utCatapult]) or HasHouses([htWatchTower]);
 
@@ -1464,15 +1482,19 @@ begin
     wtSteelE,
     wtLog: Result := ((ArmyDemand[gtMachines] > 0) or (ArmyDemand[gtMachinesMelee] > 0) or (ArmyDemand[gtShips] > 0))
                         and gHands[fOwner].Locks.UnitsUnlocked([utBallista, utCatapult, utRam, utBattleShip])
+                        and not HasWare(aWare, 20)//no need to make a lot of it
                         and HasHouses([htSiegeWorkshop, htShipyard]);
 
     wtWheel: Result := ((ArmyDemand[gtMachines] > 0) or (ArmyDemand[gtMachinesMelee] > 0))
                         and gHands[fOwner].Locks.UnitsUnlocked([utBallista, utCatapult, utRam])
+                        and not HasWare(aWare, 20)//no need to make a lot of it
                         and HasHouses([htSiegeWorkshop]);
-    wtBolt: Result :=  HasUnits([utBallista, utBattleShip]);
+    wtBolt: Result :=  HasUnits([utBallista, utBattleShip])
+                        and not HasWare(aWare, 20);//no need to make a lot of it
 
-    wtQuiver: Result := HasUnits([utBowman, utCrossBowMan])
-                        or HasHouses([htWallTower]);
+    wtQuiver: Result := (HasUnits([utBowman, utCrossBowMan])
+                        or HasHouses([htWallTower]))
+                        and not HasWare(aWare, 20);//no need to make a lot of it
 
     wtWater: Result := HasHouses([htHovel, htBakery, htStables, htSwine, htAppletree]) and not HasHouses([htWell]);
     wtTile: Result := fSetup.AutoBuild;
