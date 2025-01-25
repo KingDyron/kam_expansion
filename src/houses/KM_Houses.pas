@@ -623,6 +623,7 @@ type
       function TakeTile : Byte;
       function CanTakeTile : Boolean;
       function HasSpaceForNextTile : Boolean;
+      function HasAnyTile : Boolean;
       procedure Paint; Override;
   end;
 
@@ -755,6 +756,7 @@ type
       function TakeTile : Byte;
       function CanTakeTile : Boolean;
       function HasSpaceForNextTile : Boolean;
+      function HasAnyTile : Boolean;
 
       property GrainType : TKMGrainType read fGrainType;
       property GrassType : TKMGrainType read fGrassType;
@@ -4213,6 +4215,8 @@ var
   maxDistribution: Byte;
   resDelivering : Integer;
 begin
+  If not IsComplete then
+    Exit;
   for I := 1 to WARES_IN_OUT_COUNT do
   begin
     if (fWareInput[I] in [wtAll, wtWarfare, wtNone]) then Continue;
@@ -6035,6 +6039,15 @@ begin
       Exit(true);
 end;
 
+function TKMHousePottery.HasAnyTile : Boolean;
+var I : Integer;
+begin
+  Result := false;
+  for I := low(fTiles) to High(fTiles) do
+    If fTiles[I] > 0 then
+      Exit(true);
+end;
+
 procedure TKMHousePottery.Paint;
 var I : Integer;
 begin
@@ -7002,6 +7015,15 @@ begin
   Result := false;
   for I := low(fTiles) to High(fTiles) do
     If fTiles[I] = 0 then
+      Exit(true);
+end;
+
+function TKMHouseProdThatch.HasAnyTile : Boolean;
+var I : Integer;
+begin
+  Result := false;
+  for I := low(fTiles) to High(fTiles) do
+    If fTiles[I] > 0 then
       Exit(true);
 end;
 

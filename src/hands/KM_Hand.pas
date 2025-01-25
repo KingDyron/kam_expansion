@@ -3791,6 +3791,19 @@ procedure TKMHandAnimals.UpdateState(aTick: Cardinal);
 
   end;
 
+  procedure DeleteDeadAnimals(aId : Integer);
+  var I : Integer;
+    tmp : TKMAnimalSpawner;
+  begin
+    tmp := fSpawners[aID];
+    for I := tmp.Animals.Count - 1 to 0 do
+    begin
+      If tmp.Animals[I].IsDeadOrDying then
+        tmp.Animals.Remove(I);
+    end;
+    fSpawners[aID] := tmp;
+  end;
+
 var I : Integer;
   P : TKMPoint;
   U : TKMUnitAnimal;
@@ -3800,9 +3813,11 @@ begin
   //use spawners
   for I := 0 to High(fSpawners) do
     with fSpawners[I] do
-      if Animals.Count < MaxCount then
         if aTick mod fSpawners[I].Pace = 0 then
         begin
+          DeleteDeadAnimals(I);
+          if Animals.Count >= MaxCount then
+            Continue;
           UT := GetType;
           if UT = utNone then
             Continue;

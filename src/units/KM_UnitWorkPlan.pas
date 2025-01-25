@@ -1060,7 +1060,7 @@ begin
                               SubActAdd(haWork2,3);
                             end
                             else
-                              ResourceDepleted := not gTerrain.FindClay(aLoc, KMPOINT_ZERO, False, tmpHouse, tmp.Loc);
+                              ResourceDepleted := not gTerrain.FindClay(aLoc, KMPOINT_ZERO, False, tmpHouse, tmp.Loc) and not TKMHousePottery(aUnit.Home).HasAnyTile;
                           end;
                         end else
                         If (aUnit.Home.HouseType = htProductionThatch) then
@@ -1080,7 +1080,7 @@ begin
                               SubActAdd(haWork2,3);
                             end
                             else
-                              ResourceDepleted := not gTerrain.FindClay(aLoc, KMPOINT_ZERO, False, tmpHouse, tmp.Loc);
+                              ResourceDepleted := not gTerrain.FindClay(aLoc, KMPOINT_ZERO, False, tmpHouse, tmp.Loc) and not TKMHouseProdThatch(aUnit.Home).HasAnyTile;
                           end;
                         end;
 
