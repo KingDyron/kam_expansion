@@ -1500,7 +1500,7 @@ var
 begin
 
   // We don't care about off-map arrows, but still we get TKMPoint error if X/Y gets negative
-  if not gTerrain.TileInMapCoords(Round(aLoc.X), Round(aLoc.Y)) then Exit;
+  if not gTerrain.TileInMapCoords(Trunc(aLoc.X), Trunc(aLoc.Y)) then Exit;
 
   if gGameParams.DynamicFOW then
   begin
@@ -1513,7 +1513,7 @@ begin
 
   cornerX := aLoc.X +  (rxData.Pivot[id].X + aAnim.X) / CELL_SIZE_PX - 1;
   cornerY := aLoc.Y + (rxData.Pivot[id].Y + aAnim.Y + rxData.Size[id].Y) / CELL_SIZE_PX - 1
-              - gTerrain.LandExt^[Round(aLoc.Y) + 1, Round(aLoc.X)].RenderHeight / CELL_HEIGHT_DIV ;
+              - gTerrain.LandExt^[Trunc(aLoc.Y) + 1, Trunc(aLoc.X)].RenderHeight / CELL_HEIGHT_DIV ;
 
   gY := aGround.Y + (rxData.Pivot[id].Y + aAnim.Y + rxData.Size[id].Y) / CELL_SIZE_PX;
 
