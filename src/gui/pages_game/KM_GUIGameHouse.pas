@@ -1705,18 +1705,23 @@ begin
                         for I := 0 to Panel_House_Common.ChildCount - 1 do
                           Panel_House_Common.Childs[I].Hide;
 
-                        Label_Common_Offer.Show;
+                        {Label_Common_Offer.Show;
                         Label_Common_Offer.Caption := gResTexts[TX_HOUSE_DELIVERS]+':';
                         //Label_Common_Offer.Caption := gResTexts[TX_HOUSE_DELIVERS]+'(x'+inttostr(gRes.Houses[aHouse.HouseType].ResProductionX)+'):';
-                        Label_Common_Offer.Top := 8 + demandTop;;
+                        Label_Common_Offer.Top := 8 + demandTop;}
 
-                        WaresRow_Common[1].TexID := gRes.Wares[aHouse.WareOutput[1]].GUIIcon;
+                        rowRes := 1;
+                        line := 0;
+                        base := demandTop;
+                        ShowCommonOutput(aHouse, base, line, rowRes);
+
+                        {WaresRow_Common[1].TexID := gRes.Wares[aHouse.WareOutput[1]].GUIIcon;
                         WaresRow_Common[1].WareCount := aHouse.CheckWareOut(aHouse.WareOutput[1]);
                         WaresRow_Common[1].Caption := gRes.Wares[aHouse.WareOutput[1]].Title;
                         WaresRow_Common[1].Hint := gRes.Wares[aHouse.WareOutput[1]].Title;
                         WaresRow_Common[1].Show;
                         WaresRow_Common[1].Top := 2 + LINE_HEIGHT + demandTop;;
-                        WaresRow_Common[1].WareCntAsNumber := false;
+                        WaresRow_Common[1].WareCntAsNumber := false;}
 
                         Label_DepletedMsg.Top := Panel_HouseWoodcutter.Top + Radio_Woodcutter.Bottom + 5;
                         Label_DepletedMsg.Visible := aHouse.ResourceDepleted;
