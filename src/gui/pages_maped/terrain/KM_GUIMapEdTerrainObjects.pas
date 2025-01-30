@@ -9,7 +9,8 @@ uses
   KM_Controls, KM_ControlsList, KM_ControlsBase, KM_ControlsPopUp, KM_ControlsScroll, KM_ControlsSwitch, KM_ControlsTrackBar,
   KM_ControlsEdit, KM_ControlsDrop,
   KM_TerrainTypes, KM_ResMapElements,
-  KM_Defaults, KM_Pics, KM_Cursor, KM_Points, KM_CommonTypes;
+  KM_Defaults, KM_Pics, KM_Cursor, KM_Points, KM_CommonTypes,
+  Vcl.Controls;
 
 type
   TKMTerrainObjectAttribute = (toaBlockDiagonal, toaBlockAllExceptBuild, toaBlockBuild, toaChoppableTree);
@@ -119,9 +120,16 @@ type
 
   TKMMapEdTerrainPatterns = class(TKMMapEdSubMenuPage)
   private
+    procedure ObjectsSelectCollection(Sender: TObject);
     procedure ObjectsPatternClick(Sender: TObject);
     procedure ObjectsPatternClickDouble(Sender: TObject);
     procedure DeletePatternClick(Sender: TObject);
+    procedure RefreshPatternsList;
+    procedure RefreshCollectionList;
+    procedure ShowRename;
+    procedure ConfirmRename(Sender: TObject);
+    procedure MovePattern(Sender: TObject);
+    procedure MovePatternHold(Sender: TObject; AButton: TMouseButton; var aHandled: Boolean);
   protected
     Panel_PatternSelection : TKMPanel;
       BrushSelectSize : TKMTrackBar;
@@ -136,9 +144,11 @@ type
       Button_OpenPatternSettings : TKMButton;
 
     PopUp_Patterns: TKMPopUpMenu;
+      ColumnBox_CollectionList,
       ColumnBox_PatternsList: TKMColumnBox;
       Button_SavePatterns: TKMButton;
       Button_RefreshPatterns, Button_ReName, Button_Delete: TKMButton;
+      Button_MoveUp, Button_MoveDown: TKMButton;
       Check_Override,
       Check_DeSelect: TKMCheckBox;
       Scroll_AdditionalHeight : TKMTrackBar;
@@ -1295,7 +1305,16 @@ begin
   TKMBevel.Create(PopUp_Patterns, -2000, -2000, 5000, 5000).OnClick := ObjectsPatternClick;
   TKMImage.Create(PopUp_Patterns, 0, 0, PopUp_Patterns.Width, PopUp_Patterns.Height, 15, rxGuiMain).ImageStretch;
 
-    ColumnBox_PatternsList:= TKMColumnBox.Create(PopUp_Patterns, PopUp_Patterns.Width div 2, 80, PopUp_Patterns.Width div 2, PopUp_Patterns.Height - 80 - 50, fntMetal, bsGame);
+    ColumnBox_CollectionList:= TKMColumnBox.Create(PopUp_Patterns, PopUp_Patterns.Width div 2 - 5, 80, PopUp_Patterns.Width div 4, PopUp_Patterns.Height - 80 - 50, fntMetal, bsGame);
+    ColumnBox_CollectionList.SetColumns(fntOutline, [gResTexts[1834]], [0]);
+    ColumnBox_CollectionList.Anchors := [anLeft,anTop,anBottom];
+    ColumnBox_CollectionList.ShowLines := True;
+    ColumnBox_CollectionList.ShowHintWhenShort := True;
+    ColumnBox_CollectionList.HintBackColor := TKMColor4f.New(57, 48, 50); // Dark grey
+    ColumnBox_CollectionList.PassAllKeys := True;
+    ColumnBox_CollectionList.OnChange := ObjectsSelectCollection;
+
+    ColumnBox_PatternsList:= TKMColumnBox.Create(PopUp_Patterns, PopUp_Patterns.Width div 2 + PopUp_Patterns.Width div 4, 80, PopUp_Patterns.Width div 4, PopUp_Patterns.Height - 80 - 50, fntMetal, bsGame);
     ColumnBox_PatternsList.SetColumns(fntOutline, [gResTexts[1834]], [0]);
     ColumnBox_PatternsList.Anchors := [anLeft,anTop,anBottom];
     ColumnBox_PatternsList.ShowLines := True;
@@ -1304,6 +1323,8 @@ begin
     ColumnBox_PatternsList.PassAllKeys := True;
     ColumnBox_PatternsList.OnChange := ObjectsPatternClick;
     ColumnBox_PatternsList.OnDoubleClick := ObjectsPatternClickDouble;
+
+
     Button_SavePatterns := TKMButton.Create(PopUp_Patterns, 9, PopUp_Patterns.Height - 50, 150, 25, gResTexts[1829], bsGame);
     Button_SavePatterns.OnClick := ObjectsPatternClick;
     //Button_SavePatterns.Hide;
@@ -1311,11 +1332,19 @@ begin
     Button_RefreshPatterns:= TKMButton.Create(PopUp_Patterns, ColumnBox_PatternsList.Right - 150, ColumnBox_PatternsList.Bottom + 5, 125, 25, gResTexts[1830], bsGame);
     Button_RefreshPatterns.OnClick := ObjectsPatternClick;
 
-    Button_ReName:= TKMButton.Create(PopUp_Patterns, ColumnBox_PatternsList.Left, ColumnBox_PatternsList.Bottom + 5, 125, 25, gResTexts[1831], bsGame);
+    Button_ReName:= TKMButton.Create(PopUp_Patterns, ColumnBox_CollectionList.Left, ColumnBox_PatternsList.Bottom + 5, 125, 25, gResTexts[1831], bsGame);
     Button_ReName.OnClick := ObjectsPatternClick;
 
-    Button_Delete:= TKMButton.Create(PopUp_Patterns, ColumnBox_PatternsList.Center.X - 75, ColumnBox_PatternsList.Bottom + 5, 125, 25, gResTexts[1832], bsGame);
+    Button_Delete := TKMButton.Create(PopUp_Patterns, Button_ReName.Right + 1, ColumnBox_PatternsList.Bottom + 5, 125, 25, gResTexts[1832], bsGame);
     Button_Delete.OnClick := ObjectsPatternClick;
+
+    Button_MoveUp := TKMButton.Create(PopUp_Patterns, Button_Delete.Right + 1, Button_Delete.Top, 30, 25, 4, rxGui, bsGame);
+    Button_MoveUp.OnClick := MovePattern;
+    Button_MoveUp.OnClickHold := MovePatternHold;
+
+    Button_MoveDown := TKMButton.Create(PopUp_Patterns, Button_MoveUp.Right + 1, Button_Delete.Top, 30, 25, 5, rxGui, bsGame);
+    Button_MoveDown.OnClick := MovePattern;
+    Button_MoveDown.OnClickHold := MovePatternHold;
 
     Check_Override := TKMCheckBox.Create(PopUp_Patterns, 9, 80, PopUp_Patterns.Width div 2, 25, gResTexts[1833], fntMetal);
     Check_Deselect := TKMCheckBox.Create(PopUp_Patterns, 9, 105, PopUp_Patterns.Width div 2, 25, gResTexts[2030], fntMetal);
@@ -1380,7 +1409,7 @@ begin
   PopUp_Rename.Height := 200;
   // Keep the pop-up centered
   PopUp_Rename.AnchorsCenter;
-  PopUp_Rename.Left := ColumnBox_PatternsList.Center.X - 200;
+  PopUp_Rename.Left := ColumnBox_PatternsList.Left - 200;
   PopUp_Rename.Top := ColumnBox_PatternsList.Bottom - 300;
   PopUp_Rename.Hide;
 
@@ -1400,7 +1429,7 @@ begin
 
     Button_MapRenameConfirm := TKMButton.Create(PopUp_Rename, 20, 155, 170, 30, gResTexts[TX_MENU_REPLAY_RENAME_CONFIRM], bsMenu);
     Button_MapRenameConfirm.Anchors := [anLeft,anBottom];
-    Button_MapRenameConfirm.OnClick := ObjectsPatternClick;
+    Button_MapRenameConfirm.OnClick := ConfirmRename;
 
     Button_MapRenameCancel := TKMButton.Create(PopUp_Rename, 210, 155, 170, 30, gResTexts[TX_MENU_LOAD_DELETE_CANCEL], bsMenu);
     Button_MapRenameCancel.Anchors := [anLeft,anBottom];
@@ -1419,41 +1448,24 @@ procedure TKMMapEdTerrainPatterns.ObjectsPatternClick(Sender: TObject);
 var I, J : Integer;
 begin
   if Sender = Button_Delete then
-  begin
-    PopUp_Delete.LabelCenter.Caption := gResTexts[1836] + gRes.Patterns[ColumnBox_PatternsList.ItemIndex].Name;
-    PopUp_Delete.Show;
-  end else
-  if Sender = Button_MapRenameConfirm then
-  begin
-    gRes.Patterns[ColumnBox_PatternsList.ItemIndex].Name := FilenameEdit_Rename.Text;
-    ColumnBox_PatternsList.Item[ColumnBox_PatternsList.ItemIndex].Cells[0].Caption := FilenameEdit_Rename.Text;
-    PopUp_Rename.Hide;
-  end else
+    PopUp_Delete.Show
+  else
   if Sender = Button_MapRenameCancel then
   begin
     PopUp_Rename.Hide;
   end else
   if Sender = Button_ReName then
   begin
-    FilenameEdit_Rename.Text := gRes.Patterns[ColumnBox_PatternsList.ItemIndex].Name;
-    PopUp_Rename.Show;
+    ShowRename;
   end else
   if Sender = Button_SavePatterns then
   begin
-    gRes.SavePatterns;
+    gRes.Patterns.Save;
     Exit;
   end else
   if Sender = Button_RefreshPatterns then
   begin
-    J := ColumnBox_PatternsList.ItemIndex;
-    ColumnBox_PatternsList.Clear;
-    for I := 0 to High(gRes.Patterns) do
-      //if gRes.Patterns[I].aType = ptObjects then
-        ColumnBox_PatternsList.AddItem(MakeListRow(gRes.Patterns[I].Name) );
-
-    if J < 0 then
-      J := 0;
-    ColumnBox_PatternsList.ItemIndex := J;
+    RefreshCollectionList;
     Exit;
   end;
   if Sender = Button_OpenPatternSettings then
@@ -1465,7 +1477,10 @@ begin
     //Exit;
   end else
   if Sender = Button_SetFromPattern then
-    gGame.MapEditor.Selection.SetFromPattern(ColumnBox_PatternsList.ItemIndex, Check_Override.Checked, Check_Deselect.Checked)
+    gGame.MapEditor.Selection.SetFromPattern(ColumnBox_CollectionList.ItemIndex,
+                                             ColumnBox_PatternsList.ItemIndex,
+                                             Check_Override.Checked,
+                                             Check_Deselect.Checked)
   else
   if Sender = BrushSelectCircle then
   begin
@@ -1523,7 +1538,10 @@ begin
   if not ColumnBox_PatternsList.IsSelected then
     Exit;
 
-  gGame.MapEditor.Selection.SetFromPattern(ColumnBox_PatternsList.ItemIndex, Check_Override.Checked, Check_Deselect.Checked)
+  gGame.MapEditor.Selection.SetFromPattern(ColumnBox_CollectionList.ItemIndex,
+                                            ColumnBox_PatternsList.ItemIndex,
+                                            Check_Override.Checked,
+                                            Check_Deselect.Checked)
 end;
 
 // Check if new name is allowed
@@ -1531,8 +1549,11 @@ procedure TKMMapEdTerrainPatterns.DeletePatternClick(Sender: TObject);
 begin
   if Sender = PopUp_Delete.Button_Confirm then
   begin
-    gRes.DeletePattern(ColumnBox_PatternsList.ItemIndex);
-    ObjectsPatternClick(Button_RefreshPatterns);
+    If ColumnBox_CollectionList.ItemIndex = 0 then
+    begin
+      gRes.Patterns.DeletePattern(ColumnBox_PatternsList.ItemIndex);
+      ObjectsPatternClick(Button_RefreshPatterns);
+    end;
     PopUp_Delete.Hide;
 
   end else
@@ -1542,6 +1563,108 @@ begin
   end;
 
 end;
+
+procedure TKMMapEdTerrainPatterns.RefreshCollectionList;
+var I, topID, itemID : Integer;
+begin
+  topID := ColumnBox_CollectionList.TopIndex;
+  itemID := ColumnBox_CollectionList.ItemIndex;
+
+  ColumnBox_CollectionList.Clear;
+
+  ColumnBox_CollectionList.AddItem(MakeListRow([gRes.Patterns.Local.GetName], [$FFFFFF00]));
+  for I := 0 to gRes.Patterns.Count - 1 do
+    ColumnBox_CollectionList.AddItem(MakeListRow([gRes.Patterns[I].GetName]));
+
+  ColumnBox_CollectionList.ItemIndex := itemID;
+  ColumnBox_CollectionList.TopIndex := topID;
+  RefreshPatternsList;
+end;
+
+procedure TKMMapEdTerrainPatterns.RefreshPatternsList;
+var I, id, topID, itemID : Integer;
+begin
+  topID := ColumnBox_PatternsList.TopIndex;
+  itemID := ColumnBox_PatternsList.ItemIndex;
+  ColumnBox_PatternsList.Clear;
+  If not ColumnBox_CollectionList.IsSelected then
+    Exit;
+  id := ColumnBox_CollectionList.ItemIndex;
+
+  If id = 0 then
+  begin
+    for I := 0 to gRes.Patterns.Local.Count - 1 do
+      ColumnBox_PatternsList.AddItem(MakeListRow([gRes.Patterns.Local[I].GetName]));
+  end else
+    for I := 0 to gRes.Patterns[id - 1].Count - 1 do
+      ColumnBox_PatternsList.AddItem(MakeListRow([gRes.Patterns[id - 1].Pattern[I].GetName]));
+
+  ColumnBox_PatternsList.ItemIndex := itemID;
+  ColumnBox_PatternsList.TopIndex := topID;
+end;
+
+procedure TKMMapEdTerrainPatterns.ObjectsSelectCollection(Sender: TObject);
+begin
+  RefreshPatternsList;
+end;
+
+procedure TKMMapEdTerrainPatterns.ShowRename;
+var K : integer;
+begin
+  If ColumnBox_CollectionList.ItemIndex <> 0 then
+    Exit;
+  If not ColumnBox_PatternsList.IsSelected then
+    Exit;
+
+  K := ColumnBox_PatternsList.ItemIndex;
+  FilenameEdit_Rename.SetTextSilently(gRes.Patterns.Local.Pattern[K].GetName);
+  PopUp_Rename.Show;
+
+end;
+
+procedure TKMMapEdTerrainPatterns.ConfirmRename(Sender: TObject);
+var K : integer;
+begin
+  If ColumnBox_CollectionList.ItemIndex <> 0 then
+    Exit;
+  If not ColumnBox_PatternsList.IsSelected then
+    Exit;
+
+  K := ColumnBox_PatternsList.ItemIndex;
+  gRes.Patterns.Local.Pattern[K].SetName(FilenameEdit_Rename.Text);
+
+  RefreshPatternsList;
+  PopUp_Rename.Hide;
+
+end;
+
+procedure TKMMapEdTerrainPatterns.MovePattern(Sender: TObject);
+var I, newID: Integer;
+begin
+  If ColumnBox_CollectionList.ItemIndex <> 0 then
+    Exit;
+  If not ColumnBox_PatternsList.IsSelected then
+    Exit;
+  I := ColumnBox_PatternsList.ItemIndex;
+
+  If Sender = Button_MoveUp then
+    newID := gRes.Patterns.PatternMoveUp(I)
+  else
+  If Sender = Button_MoveDown then
+    newID := gRes.Patterns.PatternMoveDown(I);
+
+  RefreshPatternsList;
+  ColumnBox_PatternsList.ItemIndex := newID;
+  ColumnBox_PatternsList.TopIndex := EnsureRange(newID - 8, 0, ColumnBox_PatternsList.RowCount);
+end;
+
+procedure TKMMapEdTerrainPatterns.MovePatternHold(Sender: TObject; AButton: TMouseButton; var aHandled: Boolean);
+begin
+  aHandled := true;
+  If AButton = mbLeft then
+    MovePattern(Sender);
+end;
+
 
 procedure TKMMapEdTerrainPatterns.Show;
 begin
@@ -1561,6 +1684,10 @@ end;
 
 procedure TKMMapEdTerrainPatterns.UpdateState;
 begin
+  Button_Delete.Enabled := (ColumnBox_CollectionList.ItemIndex = 0) and ColumnBox_PatternsList.IsSelected;
+  Button_ReName.Enabled := Button_Delete.Enabled;
+  Button_MoveUp.Enabled := Button_Delete.Enabled;
+  Button_MoveDown.Enabled := Button_Delete.Enabled;
 
 end;
 

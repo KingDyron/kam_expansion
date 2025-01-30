@@ -191,14 +191,6 @@ type
     otTrees, otAllButTrees, otFlowers, otMushrooms, otStumps,
     otDeadTrees, otStones, otBushes, otCactus, otRuins);
 
-  TKMPatternType = (ptObjects, ptHeights);
-
-  TKMPattern = record
-    Value : array[1..30, 1..30] of Word;
-    Name : String;
-    aType : TKMPatternType;
-    function GetFromPattern(X, Y : Integer) : Word;
-  end;
   function TileOverlayVisibleInGame(aOverlay : TKMTileOverlay) : Boolean;
 const
   OBJ_BLOCK = 61;
@@ -385,10 +377,6 @@ begin
   Result := Light / 127.5 - 1;
 end;
 
-function TKMPattern.GetFromPattern(X: Integer; Y: Integer): Word;
-begin
-  Result := Value[X mod 30 + 1, Y mod 30 + 1];
-end;
 
 function TileOverlayVisibleInGame(aOverlay : TKMTileOverlay) : Boolean;
 begin

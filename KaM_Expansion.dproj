@@ -645,6 +645,7 @@
         <DCCReference Include="src\maped\KM_MapEdClipBoard.pas"/>
         <DCCReference Include="src\units\tasks\KM_UnitTaskMerchant.pas"/>
         <DCCReference Include="src\houses\KM_HouseHelpers.pas"/>
+        <DCCReference Include="src\res\KM_ResPatterns.pas"/>
         <None Include="KM_TextIDs.inc"/>
         <None Include="KaM_Remake.dpr"/>
         <None Include="KaM_Remake.inc"/>

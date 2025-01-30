@@ -84,8 +84,8 @@ type
 
     procedure SetNiceCoal; //Do the actual paste from buffer to terrain
 
-    procedure AddPattern(aType : TKMPatternType);
-    procedure SetFromPattern(aPatternID : Integer; ReplaceObjects, aDeselect : Boolean);
+    procedure AddPattern;
+    procedure SetFromPattern(aColID, aPatternID : Integer; ReplaceObjects, aDeselect : Boolean);
     property Rect : TKMRect read fSelectionRect write fSelectionRect;
 
     function TileWithinPastePreview(aX, aY: Word): Boolean;
@@ -1060,113 +1060,39 @@ begin
   end;
 end;
 
-procedure TKMSelection.AddPattern(aType : TKMPatternType);
+procedure TKMSelection.AddPattern;
 var X, Y, J, aStartX, aStartY : Integer;
 begin
   aStartX := Min(fSelectionRect.Left + 1, gTerrain.MapX - 31);
   aStartY := Min(fSelectionRect.Top + 1, gTerrain.MapY - 31);
-  J := length(gRes.Patterns);
-  SetLength(gRes.Patterns, J + 1);
-
-  gRes.Patterns[J].Name := 'Custom : ' + IntTOStr(J);
-  gRes.Patterns[J].aType := aType;
-  if aType = ptHeights then
-  begin
-  for X := 1 to 30 do
-    for Y := 1 to 30 do
-      gRes.Patterns[J].Value[X,Y] := gTerrain.Land^[aStartY + Y - 1, aStartX + X - 1].Height;
-
-  end else
-  for X := 1 to 30 do
-    for Y := 1 to 30 do
-      gRes.Patterns[J].Value[X,Y] := gTerrain.Land^[aStartY + Y - 1, aStartX + X - 1].Obj;
+  gRes.Patterns.AddNewPattern(aStartX, aStartY);
 end;
 
-procedure TKMSelection.SetFromPattern(aPatternID : Integer;ReplaceObjects, aDeselect : Boolean);
+procedure TKMSelection.SetFromPattern(aColID, aPatternID : Integer; ReplaceObjects, aDeselect : Boolean);
 var X, Y: Integer;
   RanX, RanY : Integer;
-  temp : array[0..MAX_MAP_SIZE, 0..MAX_MAP_SIZE] of Byte;
-  L : TKMPointList;
 begin
-  if length(gRes.Patterns) = 0 then Exit;
-  if aPatternID < 0 then Exit;
-  
-  L := TKMPointList.Create;
-
-  if not (gRes.Patterns[aPatternID].aType = ptObjects) then
-    for X := 1 to gTerrain.MapX - 1 do
-      for Y := 1 to gTerrain.MapY - 1 do
-        temp[X,Y] := 0;
+  if (aPatternID < 0) or (aColID < 0) then Exit;
 
   gGame.MapEditor.History.MakeCheckpoint(caTerrain, 'Patterns');
-  Assert(aPatternID < length(gRes.Patterns) );
+
 
   RanX := Random(100);
   RanY := Random(100);
 
-  if gRes.Patterns[aPatternID].aType = ptObjects then
-    for X := 1 to gTerrain.MapX - 1 do
-      for Y := 1 to gTerrain.MapY - 1 do
-        if gTerrain.Land^[Y,X].TileSelected then
-        begin
-          if ReplaceObjects or (not ReplaceObjects and (gTerrain.Land^[Y, X].Obj = 255)) then
-            gTerrain.Land^[Y, X].Obj := gRes.Patterns[aPatternID].GetFromPattern(X + RanX,Y + RanY);
-        end;
-
-  if gRes.Patterns[aPatternID].aType = ptHeights then
-  begin
-    for X := 1 to gTerrain.MapX - 1 do
-      for Y := 1 to gTerrain.MapY - 1 do
-        if gTerrain.Land^[Y,X].TileSelected then
-        begin
-          if (X > 1) and (Y > 1)
-          and gTerrain.Land^[Y - 1,X].TileSelected
-          and gTerrain.Land^[Y,X - 1].TileSelected
-          and gTerrain.Land^[Y,X + 1].TileSelected
-          and gTerrain.Land^[Y + 1,X].TileSelected then
-              gTerrain.Land^[Y, X].Height := EnsureRange(gRes.Patterns[aPatternID].GetFromPattern(X + RanX,Y + RanY) + gCursor.MapEdPatterns.AddHeight - 50, 0, 150)
+  for X := 1 to gTerrain.MapX - 1 do
+    for Y := 1 to gTerrain.MapY - 1 do
+      if gTerrain.Land^[Y,X].TileSelected then
+      begin
+        if ReplaceObjects or (not ReplaceObjects and (gTerrain.Land^[Y, X].Obj = 255)) then
+          If aColID = 0 then
+            gTerrain.Land^[Y, X].Obj := gRes.Patterns.Local[aPatternID].GetObject(X + RanX,Y + RanY)
           else
-          begin
-            L.AddUnique(KMPoint(X,Y));
-            L.AddUnique(KMPoint(X + 1,Y));
-            L.AddUnique(KMPoint(X,Y + 1));
-            L.AddUnique(KMPoint(X - 1,Y));
-            L.AddUnique(KMPoint(X,Y - 1));
-            gTerrain.Land^[Y, X].Height := EnsureRange(gRes.Patterns[aPatternID].GetFromPattern(X + RanX,Y + RanY) + gCursor.MapEdPatterns.AddHeight - 50, 0, 150);
-          end;
+            gTerrain.Land^[Y, X].Obj := gRes.Patterns.Pattern[aColID - 1, aPatternID].GetObject(X + RanX,Y + RanY);
 
-        end;
-
-
-  if L.Count > 0 then
-    for X := 0 to L.Count - 1 do
-    begin
-
-      if gTerrain.TileInMapCoords(L[X], 1) then
-      temp[L[X].X, L[X].Y] := (gTerrain.Land^[L[X].Y, L[X].X - 1].Height + gTerrain.Land^[L[X].Y, L[X].X].Height + gTerrain.Land^[L[X].Y, L[X].X + 1].Height
-                                                + gTerrain.Land^[L[X].Y - 1, L[X].X].Height + gTerrain.Land^[L[X].Y + 1, L[X].X].Height
-                                                ) div 5
-      else
-      if gTerrain.TileInMapCoords(L[X]) then
-        temp[L[X].X, L[X].Y] := gTerrain.Land^[L[X].Y, L[X].X].Height;
-    end;
-
-  for X := 0 to L.Count - 1 do
-    if gTerrain.TileInMapCoords(L[X]) then
-      gTerrain.Land^[L[X].Y, L[X].X].Height := temp[L[X].X, L[X].Y];
-  end;
-  if aDeselect then
-    for X := 1 to gTerrain.MapX - 1 do
-      for Y := 1 to gTerrain.MapY - 1 do
-        gTerrain.Land^[Y,X].TileSelected := false;
-
-
-  if gRes.Patterns[aPatternID].aType = ptHeights then
-  begin
-    gTerrain.UpdateRenderHeight;
-    gTerrain.UpdateLighting;
-  end;
-
+        If aDeselect then
+          gTerrain.Land^[Y,X].TileSelected := false;
+      end;
 end;
 
 procedure TKMSelection.SyncTempLand;

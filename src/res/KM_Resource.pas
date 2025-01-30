@@ -19,7 +19,8 @@ uses
   KM_ResWares,
   KM_ResStructures,
   KM_JsonData,
-  KM_TerrainTypes;
+  KM_TerrainTypes,
+  KM_ResPatterns;
 
 
 type
@@ -40,10 +41,9 @@ type
     fTileset: TKMResTileset;
     fMapElements: TKMResMapElements;
     fStructures : TKMResStructures;
-    procedure LoadPatterns;
+    fPatterns : TKMResPatterns;
 
   public
-    Patterns : array of TKMPattern;
     OnLoadingStep: TEvent;
     OnLoadingText: TUnicodeStringEvent;
 
@@ -73,8 +73,7 @@ type
     property Units: TKMResUnits read fUnits;
     property Wares: TKMResWares read fWares;
     property Structures: TKMResStructures read fStructures;
-    procedure SavePatterns;
-    procedure DeletePattern(aIndex : Integer);
+    property Patterns: TKMResPatterns read fPatterns;
     procedure ReloadJSONData(UpdateCRC : Boolean; aEvent : TAnsiStringEvent);
 
 
@@ -131,6 +130,7 @@ begin
   FreeAndNil(fUnits);
   FreeAndNil(gResKeyFuncs);
   FreeAndNil(fStructures);
+  FreeAndNil(fPatterns);
 
   inherited;
 end;
@@ -209,7 +209,7 @@ begin
   fHouses := TKMResHouses.Create;
   fStructures := TKMResStructures.Create;
   fUnits.SetUnitHousesList;
-  LoadPatterns;
+  fPatterns := TKMResPatterns.Create;
   StepRefresh;
   gLog.AddTime('ReadGFX is done');
   fDataState := rlsMenu;
@@ -288,73 +288,6 @@ end;
 function TKMResource.IsMsgHouseUnnocupied(aMsgId: Word): Boolean;
 begin
   Result := (aMsgId >= TX_MSG_HOUSE_UNOCCUPIED__22) and (aMsgId <= TX_MSG_HOUSE_UNOCCUPIED__22 + 22);
-end;
-
-procedure TKMResource.LoadPatterns;
-var I, X, Y, newCount : Integer;
-  S : TKMemoryStream;
-begin
-  if not FileExists(ExeDir + 'data' + PathDelim +  'defines' + PathDelim + 'Patterns.dat') then
-    Exit;
-
-  S := TKMemoryStreamBinary.Create;
-
-  S.LoadFromFile(ExeDir + 'data' + PathDelim +  'defines' + PathDelim + 'Patterns.dat');
-
-  S.CheckMarker('Patterns');
-  S.Read(newCount);
-  SetLength(Patterns, newCount);
-
-  for I := 0 to newCount - 1 do
-  with Patterns[I] do
-  begin
-    S.ReadAnsi(Name);
-    S.Read(aType, SizeOf(aType));
-    for X := 1 to high(Value) do
-      for Y := 1 to high(Value[X]) do
-        S.Read(Value[X,Y]);
-  end;
-end;
-
-procedure TKMResource.SavePatterns;
-var I, X,Y, newCount : Integer;
-  S : TKMemoryStream;
-  str : String;
-begin
-
-  newCount := length(Patterns);
-  if newCount = 0  then Exit;
-  S := TKMemoryStreamBinary.Create;
-  try
-    S.PlaceMarker('Patterns');
-    S.Write(newCount);
-    for I := 0 to newCount - 1 do
-    with Patterns[I] do
-    begin
-      str := Name;
-      S.WriteANSI(str);
-      S.Write(aType, SizeOf(aType));
-      for X := 1 to high(Value) do
-        for Y := 1 to high(Value[X]) do
-          S.Write(Value[X,Y]);
-    end;
-    S.SaveToFile(ExeDir + 'data' + PathDelim +  'defines' + PathDelim + 'Patterns.dat');
-  finally
-    S.Free;
-  end;
-
-
-end;
-
-procedure TKMResource.DeletePattern(aIndex: Integer);
-var I, J : Integer;
-begin
-
-  J := high(Patterns);
-  for I := aIndex to J - 1 do
-    Patterns[I] := Patterns[I + 1];
-  SetLength(Patterns, J);
-
 end;
 
 procedure TKMResource.ReloadJSONData(UpdateCRC: Boolean; aEvent : TAnsiStringEvent);

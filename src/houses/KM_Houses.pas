@@ -5978,7 +5978,6 @@ begin
 end;
 
 constructor TKMHousePottery.Load(LoadStream: TKMemoryStream);
-var I : Integer;
 begin
   Inherited;
   LoadStream.CheckMarker('HousePottery');
@@ -5988,7 +5987,6 @@ begin
 end;
 
 procedure TKMHousePottery.Save(SaveStream: TKMemoryStream);
-var I : Integer;
 begin
   Inherited;
   SaveStream.PlaceMarker('HousePottery');

@@ -1167,7 +1167,7 @@ begin
 
   if keyHandled then Exit;
 
-  if (Key = gResKeys[kfMapedSaveMap]) and (ssCtrl in Shift) then
+  if (Key = gResKeys[kfMapedSaveMap]) and not (ssAlt in Shift) and not (ssShift in Shift) then
     if gCursor.CampaignData.Path <> '' then
       gGame.SaveMapEditor(TKMCampaignsCollection.GetFullPath(gCursor.CampaignData.Path,
                           gCursor.CampaignData.ShortName,

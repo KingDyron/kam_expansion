@@ -292,6 +292,7 @@ begin
   fGuiObjects.UpdateState;
   fGuiSelection.UpdateState;
   fGuiOverlays.UpdateState;
+  fGuiPatterns.UpdateState;
 end;
 
 

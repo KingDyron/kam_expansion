@@ -1323,7 +1323,6 @@ begin
   begin
     if (aAttacker <> nil) and (aUnit <> nil) then
     if not aAttacker.IsDeadOrDying and not aUnit.IsDeadOrDying then
-    
     begin
       fIDCache.CacheUnit(aUnit, aUnit.UID); //Improves cache efficiency since aUnit will probably be accessed soon
       fIDCache.CacheUnit(aAttacker, aAttacker.UID); //Improves cache efficiency since aAttacker will probably be accessed soon

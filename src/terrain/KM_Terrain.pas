@@ -2224,8 +2224,6 @@ var
   rec : TKMRect;
   I, K : Integer;
 
-  tmpPoints : TKMPointArray;
-  tmpTags : Integer;
 
   function HasDeposit(X, Y : Integer; aType : TKMTileOverlay = toNone) : Boolean;
   begin

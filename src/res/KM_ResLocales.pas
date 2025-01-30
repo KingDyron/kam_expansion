@@ -36,6 +36,7 @@ type
     property Locales[aIndex: Integer]: TKMLocaleSpec read GetLocaleByIndex; default;
     function IndexByCode(const aLocaleCode: AnsiString): Integer;
     function LocaleByCode(const aCode: AnsiString): TKMLocaleSpec;
+    function UserLocaleIndex: Integer;
     function TranslatorCredits: string;
     function CodePagesList: TKMWordArray;
   end;
@@ -161,6 +162,7 @@ begin
 end;
 
 
+
 function TKMResLocales.IndexByCode(const aLocaleCode: AnsiString): Integer;
 var
   I: Integer;
@@ -169,6 +171,11 @@ begin
   for I := 0 to Count - 1 do
     if fLocaleList[I].Code = aLocaleCode then
       Exit(I);
+end;
+
+function TKMResLocales.UserLocaleIndex: Integer;
+begin
+  Result := IndexByCode(UserLocale);
 end;
 
 

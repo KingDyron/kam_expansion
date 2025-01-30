@@ -292,7 +292,7 @@ const
   H_TICKS = 6; //The number of ticks before hitting that an arrow will make the hit noise
 var
   I: Integer;
-  U: TKMUnit;
+  U, U2: TKMUnit;
   H: TKMHouse;
   Damage, HDamage, UDamage: Smallint;
 begin
@@ -310,7 +310,12 @@ begin
 
         if fPosition >= fLength then
         begin
-          gScriptEvents.ProcUnitHit(fOpponent, fOwner);
+          If fOpponent <> nil then
+          begin
+            If gHands.GetUnitByUID(fOpponent.UID) = fOpponent then
+              gScriptEvents.ProcUnitHit(fOpponent, fOwner);
+          end;
+
           U := gTerrain.UnitsHitTestF(fTarget);
 
           if fType = ptCatapultRock then

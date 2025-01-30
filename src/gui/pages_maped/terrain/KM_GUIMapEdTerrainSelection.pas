@@ -23,7 +23,7 @@ type
       Button_SelectPasteApply: TKMButton;
       Button_SelectPasteCancel: TKMButton;
       Button_SelectFlipH, Button_SelectFlipV: TKMButton;
-      Button_AddPatternObj, Button_AddPatternHeight: TKMButton;
+      Button_AddPatternObj: TKMButton;
       Map_PasteType: array [TKMTerrainSelectionPasteType] of  TKMButtonFlat;
       Button_RMGRND: TKMButton;
       Button_SelectSetCoal: TKMButton;
@@ -116,11 +116,6 @@ begin
   Button_AddPatternObj.Anchors := [anLeft, anTop, anRight];
   Button_AddPatternObj.OnClick := SelectionClick;
 
-  Button_AddPatternHeight := TKMButton.Create(Panel_Selection, 9, 420, Panel_Selection.Width - 9, 20, gResTexts[1825], bsGame);
-  Button_AddPatternHeight.Anchors := [anLeft, anTop, anRight];
-  Button_AddPatternHeight.OnClick := SelectionClick;
-
-
   fSubMenuActionsEvents[0] := SelectionClick;
   fSubMenuActionsEvents[1] := SelectionClick;
   fSubMenuActionsEvents[2] := SelectionClick;
@@ -170,7 +165,7 @@ begin
       Break;
     end;
 
-  if (Sender = Button_AddPatternObj) or (Sender = Button_AddPatternHeight) then
+  if (Sender = Button_AddPatternObj) then
   begin
 
     if (gGame.MapEditor.Selection.Rect.Left >= 1)
@@ -179,9 +174,7 @@ begin
     and (gGame.MapEditor.Selection.Rect.Bottom - gGame.MapEditor.Selection.Rect.Top = 30) then
     begin
       if Sender = Button_AddPatternObj then
-        gGame.MapEditor.Selection.AddPattern(ptObjects)
-      else
-        gGame.MapEditor.Selection.AddPattern(ptHeights);
+        gGame.MapEditor.Selection.AddPattern;
     end else
     begin
       gGame.MapEditor.Selection.Rect.SetLeft(Min(Max(gGame.MapEditor.Selection.Rect.Left, 1), gGame.MapSize.X - 32));
