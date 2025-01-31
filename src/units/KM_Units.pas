@@ -932,9 +932,10 @@ begin
   // Don't bother creating a task if there's no room for resulting ware
   // Saves us time on Fishers/Stonecutters/Woodcutters when they calculate routes to nearby deposits
   // Other houses where workers walk out can choose between cut/plant
-  if (fHome.HouseType in [htFishermans, htQuarry, htVineyard, htPottery]) then
+  if (fHome.HouseType in [htFishermans, htQuarry, htVineyard{, htPottery}]) then
   begin
-    If (fHome.CheckWareOut(fHome.WareOutput[res]) >= fHome.GetMaxOutWare) and not fHome.ForceWorking then
+    //If (fHome.CheckWareOut(fHome.WareOutput[res]) >= fHome.GetMaxOutWare) and not fHome.ForceWorking then
+    If not fHome.CanTaskProduceWare(fHome.WareOutput[res]) then
       Exit;
   end;
 

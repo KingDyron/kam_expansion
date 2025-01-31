@@ -564,7 +564,8 @@ begin
               end;
             end;
 
-            if (WorkPlan.GatheringScript = gsClayMiner) and (WorkPlan.Prod.HasWare(wtTile) = 0) then
+            //clay miner brought back clay
+            if (WorkPlan.GatheringScript = gsClayMiner) and (WorkPlan.TMPInt = 2) then
               If Home.HouseType = htPottery then
                 TKMHousePottery(Home).BringTile
               else
@@ -710,14 +711,24 @@ begin
               gsIronMiner:    ResAcquired := gTerrain.DecOreDeposit(WorkPlan.Loc, wtIronOre);
               gsBitinMiner:   ResAcquired := gTerrain.DecOreDeposit(WorkPlan.Loc, wtBitinOre);
               gsClayMiner: begin
+
                               //ResAcquired := fDistantResAcquired;
-                              ResAcquired := (fWorkPlan.Prod.HasWare(wtTile) > 0);
+                              ResAcquired := fWorkPlan.TMPInt = 0;//produces clay
                               if ResAcquired then
                                 if fUnit.Home is TKMHousePottery then
                                   ResAcquired := TKMHousePottery(Home).TakeTile > 0
                                 else
                                 if fUnit.Home is TKMHouseProdThatch then
-                                  ResAcquired := TKMHouseProdThatch(Home).TakeTile > 0
+                                  ResAcquired := TKMHouseProdThatch(Home).TakeTile > 0;
+
+                                //takes stored clay and puts it in the form
+                              If fWorkPlan.TMPInt = 1 then
+                                if fUnit.Home is TKMHousePottery then
+                                  TKMHousePottery(Home).UseStoredClay
+                                else
+                                if fUnit.Home is TKMHouseProdThatch then
+                                  TKMHouseProdThatch(Home).UseStoredClay
+
                            end;
 
               gsSwineBreeder: ResAcquired := fBeastID <> 0;

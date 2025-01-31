@@ -259,6 +259,10 @@ begin
           aStream.Read(terIdentInfo); //Read packed info
           genInfo := UnpackTerrainGenInfo(terIdentInfo);
         end;
+        if aGameRev <= 15834 then
+          If (genInfo.TerKind > tkDirt) and (genInfo.TerKind <= tkLava) then
+            genInfo.TerKind := TKMTerrainKind(byte(genInfo.TerKind) + 1);
+
         //Get current generated terrain id by identification info
         //We could add more masks and terKinds in future, so we can't stick with generated terrainId,
         //but need to save/load its generation parameters (terKind/mask types etc)

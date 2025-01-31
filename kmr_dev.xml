@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Root>
-  <DebugForm State="0">
+  <DebugForm State="2">
     <Misc Collapsed="True">
       <chkBevel Checked="True"/>
       <rgDebugFont ItemIndex="7"/>
@@ -194,7 +194,7 @@
     <Scripting Collapsed="True">
       <chkDebugScripting Checked="False"/>
     </Scripting>
-    <Debug_Input Collapsed="True">
+    <Debug_Input Collapsed="False">
       <seFindObjByUID Value="0"/>
       <seEntityUID Value="0"/>
       <seWarriorUID Value="0"/>
@@ -241,7 +241,7 @@
       <chkDebugLayer2 Checked="True"/>
       <chkDebugLayer3 Checked="True"/>
     </Debug_Terrain>
-    <Debug_Render Collapsed="False">
+    <Debug_Render Collapsed="True">
       <chkSelectionBuffer Checked="False"/>
       <chkShowRoutes Checked="False"/>
       <chkShowWires Checked="False"/>

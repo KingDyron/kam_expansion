@@ -431,6 +431,7 @@ type
     property ForceWorking : Boolean read fForceWorking write fForceWorking;
     property DontNeedRes : Boolean read fDontNeedRes write fDontNeedRes;
     function IsMineShaft : Boolean;
+    function CanTaskProduceWare(aWare : TKMWareType) : Boolean;virtual;
 
     procedure IncProductionCycle(aIndex : Integer);overload;
     procedure IncProductionCycle(aWare : TKMWareType);overload;
@@ -615,7 +616,10 @@ type
   TKMHousePottery = class(TKMHouse)
     private
       fTiles : array[1..4] of Cardinal;//Time when clay was brought to the pottery
+      fStoredClay : Byte;
     public
+      const MAX_CLAY_TO_STORE = 30;
+      constructor Create(aUID: Integer; aHouseType: TKMHouseType; PosX, PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
       constructor Load(LoadStream: TKMemoryStream); override;
       procedure Save(SaveStream: TKMemoryStream); override;
       function ObjToString(const aSeparator: String = '|'): String; override;
@@ -624,6 +628,14 @@ type
       function CanTakeTile : Boolean;
       function HasSpaceForNextTile : Boolean;
       function HasAnyTile : Boolean;
+      function HasClayStored : Boolean;
+      function HasTileOrClay : Boolean;
+      function CanUseStoredClay : Boolean;
+      function CanStoreClay : Boolean;
+      procedure UseStoredClay;
+      function FilledClay : Single;
+      property StoredClay : Byte read fStoredClay;
+
       procedure Paint; Override;
   end;
 
@@ -732,6 +744,7 @@ type
       fAnims : array[TKMProdThatchAnimType] of TKMPTAnim;
       fWorkPointsTaken : TKMArray<TKMPoint>;
       fTiles : array[1..15] of Cardinal;
+      fStoredClay : Byte;
 
       fGrainType, fGrassType, fVegeType: TKMGrainType;
       fFillWine,
@@ -745,6 +758,7 @@ type
       procedure SetNextVegeType(aValue : Integer);
       function GetGrainTypes : TKMGrainFarmSet;
       function GetCutGrainTypes : TKMGrainFarmSet;
+      const MAX_CLAY_TO_STORE = 50;
     protected
       procedure MakeSound; Override; //Swine/stables make extra sounds
     public
@@ -752,11 +766,17 @@ type
       procedure TakePoint(P : TKMPoint);
       procedure RemovePoint(P : TKMPoint);
       procedure ClearPoints;
+      //clay picker functions
       procedure BringTile;
       function TakeTile : Byte;
       function CanTakeTile : Boolean;
       function HasSpaceForNextTile : Boolean;
       function HasAnyTile : Boolean;
+      function HasClayStored : Boolean;
+      function HasTileOrClay : Boolean;
+      function CanUseStoredClay : Boolean;
+      function CanStoreClay : Boolean;
+      procedure UseStoredClay;
 
       property GrainType : TKMGrainType read fGrainType;
       property GrassType : TKMGrainType read fGrassType;
@@ -781,6 +801,7 @@ type
       procedure ProduceStarts(aWare: TKMWareType);
       procedure UpdateState(aTick: Cardinal); override;
       procedure Paint; Override;
+      function ObjToString(const aSeparator: string = '|'): string; override;
   end;
 
   TKMHouseFarm = class(TKMHouse)
@@ -3408,6 +3429,11 @@ begin
   Result := gTerrain.TileIsMineShaft(Entrance);}
 end;
 
+function TKMHouse.CanTaskProduceWare(aWare: TKMWareType): Boolean;
+begin
+  Result := (CheckWareOut(aWare) < GetMaxOutWare) or ForceWorking;
+end;
+
 procedure TKMHouse.ProduceWare(aWare: TKMWareType; aCount: Integer = 1);
 begin
   if aCount > 0 then
@@ -5977,12 +6003,18 @@ begin
   gRenderPool.RenderMapElement(gFruitTrees[fFruitTreeID].Stage[fGrowPhase], gTerrain.AnimStep, Entrance.X, Entrance.Y, false, false ,false);
 end;
 
+constructor TKMHousePottery.Create(aUID: Integer; aHouseType: TKMHouseType; PosX: Integer; PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
+begin
+  Inherited;
+  fStoredClay := 0;
+end;
 constructor TKMHousePottery.Load(LoadStream: TKMemoryStream);
 begin
   Inherited;
   LoadStream.CheckMarker('HousePottery');
 
   LoadStream.Read(fTiles, SizeOf(fTiles));
+  LoadStream.Read(fStoredClay);
 
 end;
 
@@ -5991,6 +6023,7 @@ begin
   Inherited;
   SaveStream.PlaceMarker('HousePottery');
   SaveStream.Write(fTiles, SizeOf(fTiles));
+  SaveStream.Write(fStoredClay);
 end;
 
 function TKMHousePottery.TakeTile : Byte;
@@ -6012,9 +6045,10 @@ begin
   for I := low(fTiles) to High(fTiles) do
     If fTiles[I] = 0 then
     begin
-      fTiles[I] := gGame.Params.Tick + 1500;
-      Break;
+      fTiles[I] := gGame.Params.Tick + 1800;
+      Exit;
     end;
+  Inc(fStoredClay);
 
 end;
 
@@ -6032,6 +6066,7 @@ function TKMHousePottery.HasSpaceForNextTile: Boolean;
 var I : Integer;
 begin
   Result := false;
+  //Result := fStoredClay < MAX_CLAY_TO_STORE;
   for I := low(fTiles) to High(fTiles) do
     If fTiles[I] = 0 then
       Exit(true);
@@ -6046,6 +6081,40 @@ begin
       Exit(true);
 end;
 
+function TKMHousePottery.HasClayStored: Boolean;
+begin
+  Result := fStoredClay > 0;
+end;
+
+function TKMHousePottery.HasTileOrClay: Boolean;
+begin
+  Result := HasAnyTile or HasClayStored;
+end;
+
+function TKMHousePottery.CanUseStoredClay: Boolean;
+begin
+  Result := (fStoredClay > 0) and HasSpaceForNextTile;
+end;
+
+function TKMHousePottery.CanStoreClay: Boolean;
+begin
+  Result := (fStoredClay < MAX_CLAY_TO_STORE) or HasSpaceForNextTile;
+end;
+
+procedure TKMHousePottery.UseStoredClay;
+begin
+  If fStoredClay > 0 then
+  begin
+    Dec(fStoredClay);
+    BringTile;
+  end;
+end;
+
+function TKMHousePottery.FilledClay: Single;
+begin
+  Result := fStoredClay / MAX_CLAY_TO_STORE;
+end;
+
 procedure TKMHousePottery.Paint;
 var I : Integer;
 begin
@@ -6058,7 +6127,13 @@ end;
 
 function TKMHousePottery.ObjToString(const aSeparator: string = '|'): string;
 begin
-  Result := inherited;
+  Result := inherited+ Format('%sfTiles : %d, %d, %d, %d %s'
+                              + 'fStoredClay : %d',
+                              [aSeparator,
+                              fTiles[1], fTiles[2], fTiles[3], fTiles[4], aSeparator,
+                              fStoredClay
+                              ]
+                              );
 end;
 
 function TKMHouseCollectors.GetMaxDistanceToPoint: Integer;
@@ -6910,6 +6985,7 @@ begin
   fFillHay := 0;
   fFillWine := 0;
   fFillVege := 0;
+  fStoredClay := 0;
 end;
 
 constructor TKMHouseProdThatch.Load(LoadStream: TKMemoryStream);
@@ -6927,6 +7003,7 @@ begin
   LoadStream.Read(fFillSeeds);
   LoadStream.Read(fFillCorn);
   LoadStream.Read(fFillVege);
+  LoadStream.Read(fStoredClay);
 end;
 
 procedure TKMHouseProdThatch.Save(SaveStream: TKMemoryStream);
@@ -6943,6 +7020,7 @@ begin
   SaveStream.Write(fFillSeeds);
   SaveStream.Write(fFillCorn);
   SaveStream.Write(fFillVege);
+  SaveStream.Write(fStoredClay);
 end;
 
 function TKMHouseProdThatch.IsPointTaken(P: TKMPoint): Boolean;
@@ -6991,9 +7069,10 @@ begin
   for I := low(fTiles) to High(fTiles) do
     If fTiles[I] = 0 then
     begin
-      fTiles[I] := gGame.Params.Tick + 1500;
+      fTiles[I] := gGame.Params.Tick + 1800;
       Exit;
     end;
+  Inc(fStoredClay);
 
 end;
 
@@ -7024,6 +7103,36 @@ begin
     If fTiles[I] > 0 then
       Exit(true);
 end;
+
+function TKMHouseProdThatch.HasClayStored: Boolean;
+begin
+  Result := fStoredClay > 0;
+end;
+
+function TKMHouseProdThatch.HasTileOrClay: Boolean;
+begin
+  Result := HasAnyTile or HasClayStored;
+end;
+
+function TKMHouseProdThatch.CanUseStoredClay: Boolean;
+begin
+  Result := (fStoredClay > 0) and HasSpaceForNextTile;
+end;
+
+function TKMHouseProdThatch.CanStoreClay: Boolean;
+begin
+  Result := (fStoredClay < MAX_CLAY_TO_STORE) or HasSpaceForNextTile;
+end;
+
+procedure TKMHouseProdThatch.UseStoredClay;
+begin
+  If fStoredClay > 0 then
+  begin
+    Dec(fStoredClay);
+    BringTile;
+  end;
+end;
+
 
 procedure TKMHouseProdThatch.ProduceStarts(aWare: TKMWareType);
   procedure StartAnim(aType : TKMProdThatchAnimType);
@@ -7329,6 +7438,17 @@ begin
     if gGameParams.Tick >= fAnims[PT].StartTick then
       gRenderPool.AddAnimation(Position, gRes.Houses.ProdThatch_Anims[PT], gGameParams.Tick - fAnims[PT].StartTick, gHands[Owner].FlagColor, rxHouses);
 
+end;
+
+function TKMHouseProdThatch.ObjToString(const aSeparator: string = '|'): string;
+begin
+  Result := inherited+ Format('%sfTiles : %d, %d, %d, %d %s'
+                              + 'fStoredClay : %d',
+                              [aSeparator,
+                              fTiles[1], fTiles[2], fTiles[3], fTiles[4], aSeparator,
+                              fStoredClay
+                              ]
+                              );
 end;
 
 function TKMHouseFarm.GetGrainTypes: TKMGrainFarmSet;

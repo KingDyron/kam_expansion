@@ -257,6 +257,9 @@ type
     Ship_ShipType, Ship_DoWork : TKMButton;
     WaresOut_ShipYard : TKMWaresButtonsMulti;
 
+    Pottery_ClayCount : TKMLabel;
+    Pottery_ClayTitle : TKMLabel;
+
   public
     AskDemolish: Boolean;
     OnHouseDemolish: TNotifyEventShift;
@@ -524,6 +527,11 @@ begin
   WaresOut_ShipYard.WarePlan.Reset;
   WaresOut_ShipYard.MobilHint := true;
   WaresOut_ShipYard.Caption := gResTexts[2120] + ':';
+
+
+  Pottery_ClayTitle := TKMLabel.Create(Panel_House_Common, 0, 0, Panel_House_Common.Width, 15, gResTexts[2184], fntMetal, taLeft);
+  Pottery_ClayCount := TKMLabel.Create(Panel_House_Common, 0, 0, Panel_House_Common.Width, 20, gResTexts[2184], fntGrey, taRight);
+
   Create_HouseMarket;
   Create_HouseStore;
   Create_HouseSchool;
@@ -2145,6 +2153,8 @@ begin
                         Progress_BigWare.Animation.Create(0, 0, 892, 9);
                         Progress_BigWare.AnimStep := EnsureRange(Round(Progress_BigWare.Animation.Count * (TKMHouseVineyard(aHouse).WineToProduce / 5)) - 1, 0, 8);
 
+                        ProgressBar_BigWare.LinesCount := 4;
+                        ProgressBar_BigWare.TexID := 928;
                         ProgressBar_BigWare.Top := Progress_BigWare.Top;
                         ProgressBar_BigWare.Position := TKMHouseVineyard(aHouse).WineProgress / 5;
                         ProgressBar_BigWare.Show;
@@ -2169,6 +2179,19 @@ begin
           htTownhall: begin
                         ShowTownHall(aHouse);
                         Panel_HouseTownHall.Top := 50 + base + line * 25 + 20;
+                      end;
+          htPottery : begin
+                        ProgressBar_BigWare.LinesCount := 2;
+                        ProgressBar_BigWare.TexID := 978;
+                        ProgressBar_BigWare.Top := Progress_Beasts.Top + 60;
+                        ProgressBar_BigWare.Position := TKMHousePottery(aHouse).FilledClay;
+                        ProgressBar_BigWare.Show;
+                        Pottery_ClayTitle.Top := ProgressBar_BigWare.Top - 17;
+                        Pottery_ClayCount.Top := ProgressBar_BigWare.Bottom - 17;
+                        Pottery_ClayCount.Width := ProgressBar_BigWare.Width - 3;
+                        Pottery_ClayCount.Caption := IntToStr(TKMHousePottery(aHouse).StoredClay) + '/' + IntToStr(TKMHousePottery(aHouse).MAX_CLAY_TO_STORE);
+                        Pottery_ClayTitle.Show;
+                        Pottery_ClayCount.Show;
                       end;
       end;
 

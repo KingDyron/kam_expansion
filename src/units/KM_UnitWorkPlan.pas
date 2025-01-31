@@ -499,8 +499,16 @@ begin
         if (H.CheckWareOut(W) >= H.GetMaxOutWare) then
           hasSpace := false;
 
+  If GatheringScript = gsClayMiner then
+    If aUnit.Home.HouseType = htPottery then
+      hasSpace := hasSpace or TKMHousePottery(aUnit.Home).CanStoreClay
+    else
+    If aUnit.Home.HouseType = htProductionThatch then
+      hasSpace := hasSpace or TKMHouseProdThatch(aUnit.Home).CanStoreClay;
+
   Result := (hasSpace or H.ForceWorking) and (hasRes or H.DontNeedRes) and not ResourceDepleted and fIssued;
   Result := Result and ((H.GetHealth / H.MaxHealth) >= 0.5);
+
 end;
 
 procedure TKMUnitWorkPlan.FindPlan(aUnit: TKMUnit; aHome: TKMHouseType; aProduct: TKMWareType; aLoc: TKMPoint; aPlantAct: TKMPlantAct);
@@ -1044,43 +1052,63 @@ begin
                         fIssued := false;
                         If (aUnit.Home.HouseType = htPottery) then
                         begin
-                          If TKMHousePottery(aUnit.Home).CanTakeTile then
+                          If TKMHousePottery(aUnit.Home).CanTakeTile and aUnit.Home.CanTaskProduceWare(wtTile) then //TMPInt = 0, produces tile
                           begin
                             SubActAdd(haWork2,3);
                             SubActAdd(haWork5,1);
                             Prod.AddWare(wtTile, 1);
                             fIssued := true;
+                            TMPInt := 0;
                           end else
-                          If TKMHousePottery(aUnit.Home).HasSpaceForNextTile then
+                          If TKMHousePottery(aUnit.Home).CanUseStoredClay then //TMPInt = 1, takes stored clay and puts it in the form
+                          begin
+                            SubActAdd(haWork2,3);
+                            SubActAdd(haWork5,1);
+                            Prod.AddWare(wtTile, 1);
+                            fIssued := true;
+                            TMPInt := 1;
+                          end else
+                          If TKMHousePottery(aUnit.Home).CanStoreClay then //TMPInt = 2, goes to dig clay from deposits
                           begin
                             fIssued := gTerrain.FindClay(aLoc, KMPOINT_ZERO, False, tmpHouse, tmp.Loc);
+                            TMPInt := 2;
                             if fIssued then
                             begin
                               WalkStyle(tmp, uaWalk,uaWork,13,0,uaSpec,gsClayMiner);
                               SubActAdd(haWork2,3);
                             end
                             else
-                              ResourceDepleted := not gTerrain.FindClay(aLoc, KMPOINT_ZERO, False, tmpHouse, tmp.Loc) and not TKMHousePottery(aUnit.Home).HasAnyTile;
+                              ResourceDepleted := not gTerrain.FindClay(aLoc, KMPOINT_ZERO, False, tmpHouse, tmp.Loc) and not TKMHousePottery(aUnit.Home).HasTileOrClay;
                           end;
                         end else
                         If (aUnit.Home.HouseType = htProductionThatch) then
                         begin
-                          If TKMHouseProdThatch(aUnit.Home).CanTakeTile then
+                          If TKMHouseProdThatch(aUnit.Home).CanTakeTile and aUnit.Home.CanTaskProduceWare(wtTile)  then
                           begin
                             SubActAdd(haWork2,3);
                             Prod.AddWare(wtTile, 1);
                             fIssued := true;
+                            TMPInt := 0;
                           end else
-                          If TKMHouseProdThatch(aUnit.Home).HasSpaceForNextTile then
+                          If TKMHouseProdThatch(aUnit.Home).CanUseStoredClay then //TMPInt = 1, takes stored clay and puts it in the form
+                          begin
+                            SubActAdd(haWork2,3);
+                            SubActAdd(haWork5,1);
+                            Prod.AddWare(wtTile, 1);
+                            fIssued := true;
+                            TMPInt := 1;
+                          end else
+                          If TKMHouseProdThatch(aUnit.Home).CanStoreClay then
                           begin
                             fIssued := gTerrain.FindClay(aLoc, KMPOINT_ZERO, False, tmpHouse, tmp.Loc);
+                            TMPInt := 2;
                             if fIssued then
                             begin
                               WalkStyle(tmp, uaWalk,uaWork,13,0,uaSpec,gsClayMiner);
                               SubActAdd(haWork2,3);
                             end
                             else
-                              ResourceDepleted := not gTerrain.FindClay(aLoc, KMPOINT_ZERO, False, tmpHouse, tmp.Loc) and not TKMHouseProdThatch(aUnit.Home).HasAnyTile;
+                              ResourceDepleted := not gTerrain.FindClay(aLoc, KMPOINT_ZERO, False, tmpHouse, tmp.Loc) and not TKMHouseProdThatch(aUnit.Home).HasTileOrClay;
                           end;
                         end;
 
