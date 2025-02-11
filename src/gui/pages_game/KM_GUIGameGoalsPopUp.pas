@@ -159,7 +159,7 @@ begin
     begin
       Columnbox_Goals.AddItem(
                                 MakeListRow([gResTexts[GOAL_CONDITION_LIBX[G.GoalCondition, G.GoalType]], ''],
-                                             [icWhite, 0], [MakePic(rxGuiMain, 0), MakePic(rxGuiMain, IfThen(G.Disabled, 33, 32))],
+                                             [icWhite, icWhite], [MakePic(rxGuiMain, 0), MakePic(rxGuiMain, IfThen(G.Disabled, 33, 32))],
                                              I
                                             )
                               );
@@ -168,7 +168,7 @@ begin
     begin
       Columnbox_Goals.AddItem(
                                 MakeListRow([gResTexts[GOAL_CONDITION_LIBX[G.GoalCondition, G.GoalType]], ''],
-                                             [icWhite, 0], [MakePic(rxGuiMain, 0), MakePic(rxGuiMain, IfThen(G.Disabled, 32, 33))],
+                                             [icWhite, icWhite], [MakePic(rxGuiMain, 0), MakePic(rxGuiMain, IfThen(G.Disabled, 32, 33))],
                                              I
                                             )
                               );

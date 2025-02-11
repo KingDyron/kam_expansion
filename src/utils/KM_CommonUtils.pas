@@ -217,16 +217,16 @@ const
   function MixColor(Color1, Color2 : Cardinal; aFactor : Single) : Cardinal;
 
   procedure IncLoop(var A : Integer; const aLow, aMax : Integer; const aStep : Integer = 1); overload;
-  procedure IncLoop(var A : Word; const aLow, aMax : Word; const aStep : Word = 1); overload;
-  procedure IncLoop(var A : Byte; const aLow, aMax : Byte; const aStep : Byte = 1); overload;
+  procedure IncLoop(var A : Word; const aLow, aMax : Word; const aStep : Integer = 1); overload;
+  procedure IncLoop(var A : Byte; const aLow, aMax : Byte; const aStep : Integer = 1); overload;
 
-  procedure Inc(var X: Byte; A : Byte = 1); overload;
-  procedure Inc(var X: SmallInt; A : SmallInt = 1); overload;
-  procedure Inc(var X: ShortInt; A : ShortInt = 1); overload;
-  procedure Inc(var X: Int64; A : Int64 = 1); overload;
+  procedure Inc(var X: Byte; A : Integer = 1); overload;
+  procedure Inc(var X: SmallInt; A : Integer = 1); overload;
+  procedure Inc(var X: ShortInt; A : Integer = 1); overload;
+  procedure Inc(var X: Int64; A : Integer = 1); overload;
   procedure Inc(var X: Integer; A : Integer = 1); overload;
-  procedure Inc(var X: Cardinal; A : Cardinal = 1); overload;
-  procedure Inc(var X: Word; A : Word = 1); overload;
+  procedure Inc(var X: Cardinal; A : Integer = 1); overload;
+  procedure Inc(var X: Word; A : Integer = 1); overload;
   procedure Inc(var X: Single; A : Single = 1); overload;
   {procedure Inc(var X: Char; A : Single = 1); overload;
   procedure Inc(var X: PChar; A : Single = 1); overload;
@@ -2273,7 +2273,7 @@ begin
   end;
 end;
 
-procedure IncLoop(var A : Word; const aLow, aMax : Word; const aStep : Word = 1);
+procedure IncLoop(var A : Word; const aLow, aMax : Word; const aStep : Integer = 1);
 begin
   if aStep > 0 then
   begin
@@ -2292,7 +2292,7 @@ begin
 
 end;
 
-procedure IncLoop(var A : Byte; const aLow, aMax : Byte; const aStep : Byte = 1);
+procedure IncLoop(var A : Byte; const aLow, aMax : Byte; const aStep : Integer = 1);
 begin
   if aStep > 0 then
   begin
@@ -2315,13 +2315,13 @@ begin
   Result := aObject = nil;
 end;
 
-procedure Inc(var X: SmallInt; A : SmallInt = 1); begin  X := X + A; end;
-procedure Inc(var X: ShortInt; A : ShortInt = 1); begin  X := X + A; end;
-procedure Inc(var X: Int64; A : Int64 = 1); begin  X := X + A; end;
+procedure Inc(var X: SmallInt; A : Integer = 1); begin  X := X + A; end;
+procedure Inc(var X: ShortInt; A : Integer = 1); begin  X := X + A; end;
+procedure Inc(var X: Int64; A : Integer = 1); begin  X := X + A; end;
 procedure Inc(var X: Integer; A : Integer = 1); begin  X := X + A; end;
-procedure Inc(var X: Cardinal; A : Cardinal = 1); begin  X := X + A; end;
-procedure Inc(var X: Byte; A : Byte = 1); begin  X := X + A; end;
-procedure Inc(var X: Word; A : Word = 1); begin X := X + A; end;
+procedure Inc(var X: Cardinal; A : Integer = 1); begin  X := X + A; end;
+procedure Inc(var X: Byte; A : Integer = 1); begin  X := X + A; end;
+procedure Inc(var X: Word; A : Integer = 1); begin X := X + A; end;
 procedure Inc(var X: Single; A : Single = 1); begin X := X + A; end;
 {procedure Inc(var X: Char; A : Single = 1); begin X := Char(byte(X) + A); end;
 procedure Inc(var X: PChar; A : Single = 1); begin X := PChar(byte(X) + A); end;

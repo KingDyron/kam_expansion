@@ -351,7 +351,7 @@ function TKMUnitActionFight.ExecuteProcessMelee(Step: Byte): Boolean;
       If (UNIT_TO_GROUP_TYPE[fUnit.UnitType] <> gtWreckers) and (aUnit.UnitType <> utPikeMachine) then
         damage := damage div Math.max(aUnit.Defence, 1); //Not needed, but animals have 0 defence
 
-      isHit := (damage >= KaMRandom(101, 'TKMUnitActionFight.ExecuteProcessMelee')); //Damage is a % chance to hit
+      isHit := (aUnit.Defence <= 0) or (damage >= KaMRandom(101, 'TKMUnitActionFight.ExecuteProcessMelee')); //Damage is a % chance to hit
       if isHit then
         if TKMUnitWarrior(fUnit).DamageUnits > 0 then
           aUnit.HitPointsDecrease(TKMUnitWarrior(fUnit).DamageUnits, fUnit);

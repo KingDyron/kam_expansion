@@ -1602,7 +1602,13 @@ begin
     else    
     if gGameParams.MBD.IsHardOrRealism then
       Result := Max(Round(Result * 0.8), 1);
-  end;  
+  end;
+
+  if fGroup <> nil then
+    if not (UnitType in SPECIAL_UNITS) then
+      if UNIT_TO_GROUP_TYPE[UnitType] = gtWreckers then
+        if TKMUnitGroup(fGroup).HasUnitType(utPyro) then //
+          Result := Result + 1;
 end;
 
 function TKMUnitWarrior.GetDamageHouse: Word;
@@ -1615,7 +1621,13 @@ begin
     else    
     if gGameParams.MBD.IsHardOrRealism then
       Result := Max(Round(Result * 0.8), 1);
-  end;  
+  end;
+
+  if fGroup <> nil then
+    if not (UnitType in SPECIAL_UNITS) then
+      if UNIT_TO_GROUP_TYPE[UnitType] = gtWreckers then
+        if TKMUnitGroup(fGroup).HasUnitType(utPyro) then //
+          Result := Result + 2;
 end;
 
 function TKMUnitWarrior.IsSelected: Boolean;

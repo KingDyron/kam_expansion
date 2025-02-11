@@ -613,7 +613,7 @@ begin
 
         //Base layer
         TKMRender.BindTexture(Tex.TexID);
-        if aEnabled then glColor3f(1,1,1) else glColor3f(0.33,0.33,0.33);
+        if aEnabled then glColor4f(1,1,1, (aColor SHR 24 AND $FF) / 255) else glColor3f(0.33,0.33,0.33);
         glBegin(GL_QUADS);
           glTexCoord2f(Tex.u1,Tex.v1); glVertex2f(0            , 0             );
           glTexCoord2f(Tex.u2,Tex.v1); glVertex2f(0 + drawWidth, 0             );
@@ -648,7 +648,7 @@ begin
             //glBlendFunc(GL_SRC_ALPHA, GL_ZERO);
             aLightness := aLightness + 1;
           end;
-          glColor3f(aLightness, aLightness, aLightness);
+          glColor4f(aLightness, aLightness, aLightness, (aColor SHR 24 AND $FF) / 255);
           glBegin(GL_QUADS);
             glTexCoord2f(Tex.u1,Tex.v1); glVertex2f(0            , 0             );
             glTexCoord2f(Tex.u2,Tex.v1); glVertex2f(0 + drawWidth, 0             );

@@ -3,6 +3,7 @@
 interface
 uses
   Classes, Vcl.Controls,
+  KM_CommonTypes,
   KromOGLUtils,
   KM_Controls,
   KM_ResTypes,
@@ -110,13 +111,43 @@ type
     procedure Paint; override;
   end;
 
+  TKMSwitch = class(TKMControl)
+    private
+      fID : TKMWordArray;
+      fPosition,
+      fSelected : Byte;
+      fNextSelected : Byte;
+      fToLeft : Boolean;
+      function GetCount : Byte;
+      procedure SetSelected(aValue : Byte);
+      function NextIcon(aFrom : Integer = -1) : Word;
+      function PrevIcon(aFrom : Integer = -1) : Word;
+    public
+      RX : TRXType;
+
+      Offset : Byte;
+      constructor Create(aParent: TKMPanel; aLeft, aTop, aWidth, aHeight: Integer);
+
+      property TexID : TKMWordArray read fID write fID;
+      property Count : Byte read GetCount;
+      procedure SelectNext;
+      procedure SelectPrevius;
+      property Selected : Byte read fNextSelected write SetSelected;
+
+      procedure MouseUp(X,Y: Integer; Shift: TShiftState; Button: TMouseButton); override;
+      procedure UpdateState(aTickCount: Cardinal); override;
+      procedure Paint; override;
+  end;
+
 
 implementation
 uses
   SysUtils, Math,
   KM_RenderUI,
   KM_Resource,
-  KM_Defaults;
+  KM_Defaults,
+  KM_Game, KM_GameApp,
+  KM_CommonUtils;
 
 
 { TKMCheckBoxCommon }
@@ -295,9 +326,9 @@ begin
   TKMRenderUI.WriteBevel(AbsLeft, AbsTop, checkSize - 4, checkSize-4, 1, Byte(not IsSemiChecked and Enabled)*0.35);
 
   case fState of
-    cbsChecked:     TKMRenderUI.WritePicture(AbsLeft, AbsTop, checkSize, checkSize, [], rxGuiMain, TexIDChecked, Enabled or fEnabledVisually, 0);
-    cbsSemiChecked: TKMRenderUI.WritePicture(AbsLeft, AbsTop, checkSize, checkSize, [], rxGuiMain, TexIDChecked, Enabled or fEnabledVisually, 0);
-    cbsUnchecked:   TKMRenderUI.WritePicture(AbsLeft, AbsTop, checkSize, checkSize, [], rxGuiMain, TexIDUnchecked, Enabled or fEnabledVisually, 0); //Do not draw anything
+    cbsChecked:     TKMRenderUI.WritePicture(AbsLeft, AbsTop, checkSize, checkSize, [], rxGuiMain, TexIDChecked, Enabled or fEnabledVisually);
+    cbsSemiChecked: TKMRenderUI.WritePicture(AbsLeft, AbsTop, checkSize, checkSize, [], rxGuiMain, TexIDChecked, Enabled or fEnabledVisually);
+    cbsUnchecked:   TKMRenderUI.WritePicture(AbsLeft, AbsTop, checkSize, checkSize, [], rxGuiMain, TexIDUnchecked, Enabled or fEnabledVisually); //Do not draw anything
   end;
   TKMRenderUI.WriteText(AbsLeft + checkSize, AbsTop, Width - checkSize, fCaption, fFont, taLeft, col);
 end;
@@ -531,6 +562,150 @@ begin
     TKMRenderUI.WriteText(AbsLeft + CheckSize, AbsTop + Round(VisibleI * LineHeight), Width - Round(LineHeight),
                           fItems[I].Text, fFont, taLeft, FONT_COL[Enabled and fItems[I].Enabled]);
     Inc(VisibleI);
+  end;
+end;
+
+
+constructor TKMSwitch.Create(aParent: TKMPanel; aLeft: Integer; aTop: Integer; aWidth: Integer; aHeight: Integer);
+begin
+  Inherited;
+  fID := [];
+  RX := rxGui;
+  fSelected := 0;
+  fPosition := 0;
+  Offset := 20;
+end;
+
+function TKMSwitch.GetCount: Byte;
+begin
+  Result := length(fID);
+end;
+
+procedure TKMSwitch.SetSelected(aValue : Byte);
+begin
+  fSelected := EnsureRange(aValue, 0, Count - 1);
+  fNextSelected := fSelected;
+end;
+
+function TKMSwitch.NextIcon(aFrom : Integer = -1): Word;
+begin
+  If aFrom = -1 then
+    Result := fSelected
+  else
+    Result := aFrom;
+
+  IncLoop(Result, 0, Count - 1, 1);
+  Result := fID[Result];
+end;
+function TKMSwitch.PrevIcon(aFrom : Integer = -1): Word;
+begin
+  If aFrom = -1 then
+    Result := fSelected
+  else
+    Result := aFrom;
+
+  IncLoop(Result, 0, Count - 1, -1);
+  Result := fID[Result];
+end;
+
+procedure TKMSwitch.SelectNext;
+begin
+  If Count = 0 then
+    Exit;
+  fSelected := fNextSelected;
+  IncLoop(fNextSelected, 0, Count - 1, 1);
+  If fNextSelected <> fSelected then
+    fPosition := 0;
+  fToLeft := true;
+end;
+
+procedure TKMSwitch.SelectPrevius;
+begin
+  If Count = 0 then
+    Exit;
+  fSelected := fNextSelected;
+  IncLoop(fNextSelected, 0, Count - 1, -1);
+  If fNextSelected <> fSelected then
+    fPosition := 0;
+  fToLeft := false;
+end;
+
+
+procedure TKMSwitch.MouseUp(X: Integer; Y: Integer; Shift: TShiftState; Button: TMouseButton);
+begin
+  If ssRight in Shift then
+    SelectPrevius
+  else
+    SelectNext;
+
+  Inherited;
+end;
+
+procedure TKMSwitch.UpdateState(aTickCount: Cardinal);
+var delta : Byte;
+begin
+  If fPosition < Offset then
+  begin
+    delta := Max((Offset - fPosition) div 2, 1);
+    Inc(fPosition, delta);
+    If fPosition = Offset then
+      fSelected := fNextSelected;
+  end;
+  Inherited;
+end;
+
+procedure TKMSwitch.Paint;
+var color : Cardinal;
+  progress : single;
+  finColor1, finColor2 : Cardinal;
+  lt, tp : Integer;
+  bevCenterLeft : Integer;
+begin
+  Inherited;
+  If Count = 0 then
+    Exit;
+  lt := AbsLeft + Width div 2;
+  tp := AbsTop + Height div 2;
+  bevCenterLeft := Width div 3;
+  bevCenterLeft := lt - bevCenterLeft div 2;
+
+  TKMRenderUI.WriteBevel(ABSLeft, ABSTop, Width, Height, 1, 0.3);
+  TKMRenderUI.WriteBevel(bevCenterLeft, ABSTop, Width div 3, Height, 1, 0.3);
+  If fSelected <> fNextSelected then
+  begin
+    color := $FFFF00FF;
+    progress := fPosition / Offset;
+    finColor1 := (Round(progress * 255) shl 24) or $00FFFFFF;
+    finColor2 := (Round(255 - progress * 255) shl 24) or $00FFFFFF;
+    finColor1 := color and finColor1;
+    finColor2 := color and finColor2;
+
+    If fToLeft then
+    begin
+      TKMRenderUI.WritePicture(lt - Offset, tp, 0, 0, [], RX, PrevIcon(fSelected), Enabled, finColor2, -0.25 - 0.75 * progress);//left fade
+
+      TKMRenderUI.WritePicture(lt - fPosition, tp, 0, 0, [], RX, fID[fSelected], Enabled, color, -0.25 * progress);
+      TKMRenderUI.WritePicture(lt + Offset - fPosition, tp, 0, 0, [], RX, fID[fNextSelected], Enabled, color, -0.25 + 0.25 * progress);
+
+      TKMRenderUI.WritePicture(lt + Offset, tp, 0, 0, [], RX, NextIcon(fNextSelected), Enabled, finColor1, -1 + 0.75 * progress);//right FADE
+    end else
+    begin
+      TKMRenderUI.WritePicture(lt - Offset, tp, 0, 0, [], RX, PrevIcon(fNextSelected), Enabled, finColor1, -1 + 0.75 * progress);//left fade
+
+      TKMRenderUI.WritePicture(lt + fPosition, tp, 0, 0, [], RX, fID[fSelected], Enabled, color, -0.25 * progress);
+      TKMRenderUI.WritePicture(lt - Offset + fPosition, tp, 0, 0, [], RX, fID[fNextSelected], Enabled, color, -0.25 + 0.25 * progress);
+
+      TKMRenderUI.WritePicture(lt + Offset, tp, 0, 0, [], RX, NextIcon(fSelected), Enabled, finColor2, -0.25 - 0.75 * progress);//right FADE
+    end;
+
+  end else
+  begin
+    color := $FFFF00FF;
+
+    TKMRenderUI.WritePicture(lt - Offset, tp, 0, 0, [], RX, PrevIcon, Enabled, color, -0.25);
+    TKMRenderUI.WritePicture(lt, tp, 0, 0, [], RX, fID[fSelected], Enabled);
+    TKMRenderUI.WritePicture(lt + Offset, tp, 0, 0, [], RX, NextIcon, Enabled, color, -0.25);
+
   end;
 end;
 

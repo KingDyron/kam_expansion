@@ -453,7 +453,7 @@ begin
                   Inc(Result, GetUnitQty(UT));
                   //Inc(Result, Units[UT].Initial + Units[UT].Trained - Units[UT].Lost);
     else        begin
-                  Result := Units[aType].Initial + Units[aType].Trained - Units[aType].Lost;
+                  Result := Result + Units[aType].Initial + Units[aType].Trained - Units[aType].Lost;
                   if aType = utRecruit then
                     for UT in BARRACKS_GAME_ORDER do
                       Dec(Result, Units[UT].Trained); //Trained soldiers use a recruit

@@ -192,7 +192,9 @@ const
 implementation
 uses
   Math, KM_ResTexts, KM_Resource, KM_Defaults,
-  KM_CommonClassesExt, KM_CommonUtils, KM_JSONUtils;
+  KM_CommonClassesExt, KM_CommonUtils, KM_JSONUtils,
+  KM_Points,
+  KM_JsonHelpers;
 
 procedure TKMVirtualWare.AddProdWare(aType : TKMWareType; aMin, aMax, aChance : Byte; aReplaceWare : Boolean; aCycles : Word);
 begin
@@ -983,7 +985,9 @@ var
   WT: TKMWareType;
   S: string;
   SL: TStringList;
-  I: Integer;
+  I, K: Integer;
+var
+  root : TKMJsonSaver;
 
   procedure AddField(const aField: string); overload;
   begin S := S + aField + ';'; end;
@@ -1025,6 +1029,66 @@ begin
     SL.SaveToFile(aPath);
   finally
     SL.Free;
+  end;
+  Exit;
+
+  root := TKMJsonSaver.Create;
+
+  try
+    root.BeginFile;
+      root.WriteArray('Wares DATA', true);
+        for I := 0 to high(WARE_ID_TO_TYPE) do
+        begin
+          WT := WARE_ID_TO_TYPE[I];
+          If not TKMEnumUtils.GetName<TKMWareType>(WT, S) then
+            raise Exception.Create('Error 1');
+
+          root.WriteEmptyObject(I = 0);
+            //base
+            root.Write('Name', S, true);
+            root.Write('GuiIcon', fList[WT].GUIIcon);
+            ///production data
+            root.Write('MinCount', fList[WT].fProduction.MinCount);
+            root.Write('MaxCount', fList[WT].fProduction.MaxCount);
+            If length(fList[WT].fProduction.Houses) > 0 then
+            begin
+              root.WriteArray('InHouses');
+                for K := 0 to high(fList[WT].fProduction.Houses) do
+                begin
+                  root.WriteEmptyObject(K = 0);
+                    root.Write('MinCount', fList[WT].fProduction.Houses[K].MinCount, true);
+                    root.Write('MaxCount', fList[WT].fProduction.Houses[K].MaxCount);
+
+                    If not TKMEnumUtils.GetName<TKMHouseType>(fList[WT].fProduction.Houses[K].House, S) then
+                      raise Exception.Create('Error 2');
+
+                    root.Write('HouseType', S);
+                  root.EndObject;
+                end;
+              root.EndArray;
+            end;
+            //order cost
+            If length(fList[WT].OrderCost) > 0 then
+            begin
+              root.WriteLineArray('OrderCost');
+              for K := 0 to High(fList[WT].OrderCost) do
+              begin
+                If not TKMEnumUtils.GetName<TKMWareType>(fList[WT].OrderCost[K], S) then
+                  raise Exception.Create('Error 3');
+                root.AddToArray(S, K = 0);
+              end;
+              root.EndLineArray;
+            end;
+            //additional
+            root.Write('CoinPrice', fList[WT].CoinPrice);
+            root.Write('TerrainPics', fList[WT].AtTerrainPic);
+          root.EndObject;
+        end;
+      root.EndArray;
+    root.EndFile;
+    root.SaveToFile(ChangeFileExt(aPath, '.json'));
+  finally
+    root.Free;
   end;
 
 

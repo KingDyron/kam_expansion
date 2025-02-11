@@ -276,15 +276,15 @@ var path : String;
   PC : TKMPatternsCollection;
 begin
   Inherited;
-
-  for path in TDirectory.GetDirectories(ExeDir + 'data' + PathDelim + 'Patterns' + PathDelim) do
-  If not (TPath.GetFileName(path) = 'Local') then
-  begin
-    I := length(fList);
-    SetLength(fList, I + 1);
-    PC := TKMPatternsCollection.Create(path);
-    fList[I] := PC;
-  end;
+  If DirectoryExists(path) then
+    for path in TDirectory.GetDirectories(ExeDir + 'data' + PathDelim + 'Patterns' + PathDelim) do
+    If not (TPath.GetFileName(path) = 'Local') then
+    begin
+      I := length(fList);
+      SetLength(fList, I + 1);
+      PC := TKMPatternsCollection.Create(path);
+      fList[I] := PC;
+    end;
 
   fLocal := TKMPatternsCollection.Create(ExeDir + 'data' + PathDelim + 'Patterns' + PathDelim + 'Local');
   fLocal.fDirName := 'Local';

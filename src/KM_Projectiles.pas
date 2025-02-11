@@ -370,7 +370,7 @@ begin
 
 
                                 if (FRIENDLY_FIRE or (gHands.CheckAlliance(fOwner.Owner, U.Owner)= atEnemy))
-                                and (Damage >= KaMRandom(101, 'TKMProjectiles.UpdateState:Damage')) then
+                                and ( (Damage >= KaMRandom(101, 'TKMProjectiles.UpdateState:Damage')) or (U.Defence = 0)) then
                                   U.HitPointsDecrease(UDamage, fOwner);
                               end;
                             end

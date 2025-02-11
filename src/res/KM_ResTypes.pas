@@ -2,7 +2,7 @@ unit KM_ResTypes;
 {$I KaM_Remake.inc}
 interface
 uses
-  KM_ResTilesetTypes, KM_TerrainTypes, KM_CommonClasses, KM_Defaults;
+  KM_ResTilesetTypes, KM_TerrainTypes, KM_CommonClasses, KM_Defaults, KM_CommonTypes;
 
 type
   TKMChopableAge = (caAge1, caAge2, caAge3, caAgeFull, caAgeFall, caAgeStump);
@@ -83,11 +83,37 @@ type
       Qty : Byte;
     end;
   end;
-
+  //shared house types
   TKMHouseArea = array [1..4, 1..4] of Byte;
   TKMWareType4 = array [1..4] of TKMWareType;
   TKMWareType8 = array [1..WARES_IN_OUT_COUNT] of TKMWareType;//now lets make it more wares
+  TKMHouseAreaNew = array [1..MAX_HOUSE_SIZE, 1..MAX_HOUSE_SIZE] of Byte;
   THouseSupply8 = array [1..WARES_IN_OUT_COUNT, 1..5] of SmallInt;
+
+  TKMHouseSound = record
+    ID : Integer;
+    Steps : TByteSet;
+  end;
+  TKMHouseWorkAnim = record
+    Action : TKMHouseActionType;
+    Cycles : Single;
+  end;
+  TKMHouseWareSlot = record
+    WareInput : TKMWareType8;
+    WareOutput : TKMWareType8;
+    Icon : Word;
+  end;
+  TKMHouseWorker = record
+    UnitType : TKMUnitType;
+    MaxCount : Byte;
+  end;
+
+  TKMHouseStyle = record
+    StonePic : Word;
+    SnowPic : Word;
+    Icon : Word;
+    HideSupplies: Boolean;
+  end;
 
 
   THouseBuildSupplyOld = array [1..2,1..6] of packed record MoveX, MoveY: Integer; end;

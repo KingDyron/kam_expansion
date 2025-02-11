@@ -62,7 +62,9 @@ type
   protected
     procedure PaintBar; override;
   public
-    TexID : Word;
+    TexID, BaseID : Word;
+    AddBevel : Boolean;
+    procedure SetTextures(aBase, aBarTex : Word);
     constructor Create(aParent: TKMPanel; aLeft, aTop, aWidth, aHeight, aTexID: Integer);
   end;
 
@@ -223,19 +225,33 @@ constructor TKMImageBar.Create(aParent: TKMPanel; aLeft: Integer; aTop: Integer;
 begin
   Inherited Create(aParent, aLeft, aTop, aWidth, aHeight);
   TexID := aTexID;
+  BaseID := 0;
+  AddBevel := true;
+end;
+
+procedure TKMImageBar.SetTextures(aBase: Word; aBarTex: Word);
+begin
+  TexID := aBarTex;
+  BaseID := aBase;
 end;
 
 procedure TKMImageBar.PaintBar;
 var I, G : integer;
 begin
-  TKMRenderUI.WriteBevel(AbsLeft, AbsTop, Width, Height);
+  If AddBevel then
+    TKMRenderUI.WriteBevel(AbsLeft, AbsTop, Width, Height);
+  IF BaseID > 0 then
+    TKMRenderUI.WritePicture(AbsLeft - 1, AbsTop - 1, Width, Height, [], rxGui, BaseID, Enabled, $FFFF00FF, 0, fPosition);
   TKMRenderUI.WritePicture(AbsLeft - 1, AbsTop - 1, Width, Height, [], rxGui, TexID, Enabled, $FFFF00FF, 0, fPosition);
 
-  G := Width div (fLinesCount + 1);
-  for I := 1 to fLinesCount do
+  If AddBevel then
   begin
-    TKMRenderUI.WritePicture(AbsLeft - 7 + G * I, AbsTop + Height - 7, 13, 6, [], rxGui, 929, Enabled, $FFFF00FF, 0, fPosition);
-    TKMRenderUI.WritePicture(AbsLeft - 7 + G * I, AbsTop - 1, 13, 6, [], rxGui, 930, Enabled, $FFFF00FF, 0, fPosition);
+    G := Width div (fLinesCount + 1);
+    for I := 1 to fLinesCount do
+    begin
+      TKMRenderUI.WritePicture(AbsLeft - 7 + G * I, AbsTop + Height - 7, 13, 6, [], rxGui, 929, Enabled, $FFFF00FF, 0, fPosition);
+      TKMRenderUI.WritePicture(AbsLeft - 7 + G * I, AbsTop - 1, 13, 6, [], rxGui, 930, Enabled, $FFFF00FF, 0, fPosition);
+    end;
   end;
 
 

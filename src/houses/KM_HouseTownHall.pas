@@ -113,7 +113,7 @@ begin
     if Index <> high(Word) then
     begin
       count := gRes.Wares.VirtualWares.Ware[Index].GetProdCount(HouseType, wtWarfare);
-      Inc(gHands[Owner].VWaresCount[Index], count)
+      gHands[Owner].VirtualWareTake(Index, -count);
     end;
 
     if gHands[Owner].IsComputer then

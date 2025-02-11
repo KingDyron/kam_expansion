@@ -2154,8 +2154,9 @@ begin
                         Progress_BigWare.AnimStep := EnsureRange(Round(Progress_BigWare.Animation.Count * (TKMHouseVineyard(aHouse).WineToProduce / 5)) - 1, 0, 8);
 
                         ProgressBar_BigWare.LinesCount := 4;
-                        ProgressBar_BigWare.TexID := 928;
+                        ProgressBar_BigWare.SetTextures(0, 928);
                         ProgressBar_BigWare.Top := Progress_BigWare.Top;
+                        ProgressBar_BigWare.AddBevel := true;
                         ProgressBar_BigWare.Position := TKMHouseVineyard(aHouse).WineProgress / 5;
                         ProgressBar_BigWare.Show;
 
@@ -2182,12 +2183,14 @@ begin
                       end;
           htPottery : begin
                         ProgressBar_BigWare.LinesCount := 2;
-                        ProgressBar_BigWare.TexID := 978;
+                        ProgressBar_BigWare.SetTextures(979, 980);
                         ProgressBar_BigWare.Top := Progress_Beasts.Top + 60;
                         ProgressBar_BigWare.Position := TKMHousePottery(aHouse).FilledClay;
+                        ProgressBar_BigWare.AddBevel := false;
                         ProgressBar_BigWare.Show;
+
                         Pottery_ClayTitle.Top := ProgressBar_BigWare.Top - 17;
-                        Pottery_ClayCount.Top := ProgressBar_BigWare.Bottom - 17;
+                        Pottery_ClayCount.Top := ProgressBar_BigWare.Bottom;
                         Pottery_ClayCount.Width := ProgressBar_BigWare.Width - 3;
                         Pottery_ClayCount.Caption := IntToStr(TKMHousePottery(aHouse).StoredClay) + '/' + IntToStr(TKMHousePottery(aHouse).MAX_CLAY_TO_STORE);
                         Pottery_ClayTitle.Show;

@@ -116,7 +116,7 @@ type
     procedure SaveAttachements(const aMissionFile: UnicodeString);
     function HitTest(X,Y: Integer): TKMMapEdMarker;
     function HumanCount: Integer;
-    procedure AddWorkersToHouses;
+    procedure AddWorkersToHouses(aAddBoots : Boolean);
     procedure MouseDown(Button: TMouseButton);
     procedure MouseMove;
     procedure MouseUp(Button: TMouseButton; aOverMap: Boolean);
@@ -1127,7 +1127,7 @@ begin
   end;
 end;
 
-procedure TKMMapEditor.AddWorkersToHouses;
+procedure TKMMapEditor.AddWorkersToHouses(aAddBoots : Boolean);
 var I, J, K, Count, unitsCounter : Integer;
   H : TKMHouse;
   UT : TKMUnitType;
@@ -1142,7 +1142,7 @@ var I, J, K, Count, unitsCounter : Integer;
       U := gMySpectator.Hand.AddUnit(utSerf, P, true);
 
       if U <> nil then
-        if gCursor.MapEd_UnitAddBoots then
+        if aAddBoots then
           U.BootsAdded := true;
     end;
   end;
@@ -1204,7 +1204,7 @@ begin
           U := gMySpectator.Hand.AddUnit(UT, P, true);
 
           if U <> nil then
-            if gCursor.MapEd_UnitAddBoots then
+            if aAddBoots then
               U.BootsAdded := true;
 
           if U <> nil then

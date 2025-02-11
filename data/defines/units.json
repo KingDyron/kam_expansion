@@ -332,9 +332,9 @@
 		{
 			"UnitType":"utFighter",
 			"SchoolTime" : 100,
-			"Attack" : 15,
+			"Attack" : 5,
 			"HitPoints" : 3,
-			"Defence" : 1,
+			"Defence" : 0,
 			"Speed" : 24,
 			"CanAttackHouses" : false,
 			"TownhallCost" : 1,

@@ -351,7 +351,7 @@ begin
 
   if sender = Button_AddUnitsToHouse then
   begin
-    gGame.MapEditor.AddWorkersToHouses;
+    gGame.MapEditor.AddWorkersToHouses(CheckBox_AddBoots.Checked);
     Exit;
   end else
   if Sender = CheckBox_AddBoots then

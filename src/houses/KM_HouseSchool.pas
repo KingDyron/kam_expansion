@@ -393,8 +393,8 @@ begin
   if (WorkingTime = 0) or (TotalWorkingTime = 0)  then
     step := 0
   else
-    step := round(gRes.Houses.Shool_Clock.Count * (self.WorkingTime / self.TotalWorkingTime));
-  gRenderPool.AddAnimation(Position, gRes.Houses.Shool_Clock, step, gHands[Owner].FlagColor, rxHouses);
+    step := round(gRes.Houses.School_Clock.Count * (self.WorkingTime / self.TotalWorkingTime));
+  gRenderPool.AddAnimation(Position, gRes.Houses.School_Clock, step, gHands[Owner].FlagColor, rxHouses);
 end;
 
 

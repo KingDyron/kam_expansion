@@ -69,6 +69,86 @@ type
 
   end;
 
+  TKMJsonSaver = class
+    private
+      fStringList : TStringList;
+      fDistance : Word;
+      fInOneLine, fOldInOneLine: Boolean;
+      procedure AddToLast(aText: String);
+      procedure AddLine(aLine : String; aNewLine : Boolean = true);
+      function ConvertDistance : String;
+      procedure AddObject(aName : String);
+      procedure AddArray(aName : String; aNewLine : Boolean = true);
+      procedure AddCommaToLast;
+      procedure AddValue(aName, aValue : String; aNewLine : Boolean = true);
+      procedure SetOldOneLine;
+      procedure GetOldOneLine;
+
+    public
+      constructor Create;
+      destructor Destroy; override;
+
+      procedure BeginFile;
+      procedure EndFile;
+      procedure BeginObject(aNewLine : Boolean = true);
+      procedure EndObject(aNewLine : Boolean = true);
+      procedure BeginArray(aNewLine : Boolean = true);
+      procedure EndArray(aNewLine : Boolean = true);
+
+
+      procedure WriteEmptyObject(aIsFirst : Boolean = false);
+      procedure WriteObject(aName : String; aIsFirst : Boolean = false);
+      procedure WriteArray(aName : String; aIsFirst : Boolean = false);
+      procedure WriteToArray(aValue : String; aIsFirst : Boolean = false);
+      procedure WriteValue(aName, aValue : String; aIsFirst : Boolean = false);
+
+      procedure WriteLineObject(aName : String; aIsFirst : Boolean = false);
+      procedure EndLineObject;
+      procedure WriteLineArray(aName : String; aIsFirst : Boolean = false);
+      procedure EndLineArray;
+
+      Procedure Write(aName : String; aValue : Boolean; aIsFirst : Boolean = false);overload;
+      Procedure Write(aName : String; aValue : Integer; aIsFirst : Boolean = false);overload;
+      Procedure Write(aName : String; aValue : Word; aIsFirst : Boolean = false);overload;
+      Procedure Write(aName : String; aValue : Byte; aIsFirst : Boolean = false);overload;
+      Procedure Write(aName : String; aValue : ShortInt; aIsFirst : Boolean = false);overload;
+      Procedure Write(aName : String; aValue : SmallInt; aIsFirst : Boolean = false);overload;
+      Procedure Write(aName : String; aValue : Cardinal; aIsFirst : Boolean = false);overload;
+      Procedure Write(aName : String; aValue : Single; aIsFirst : Boolean = false);overload;
+      Procedure Write(aName : String; aValue : String; aIsFirst : Boolean = false);overload;
+      Procedure Write(aName : String; aValue : TKMPoint; aIsFirst : Boolean = false);overload;
+      Procedure Write(aName : String; aValue : TKMPointF; aIsFirst : Boolean = false);overload;
+      Procedure Write(aName : String; aValue : TKMUnitType; aIsFirst : Boolean = false);overload;
+      Procedure Write(aName : String; aValue : TKMHouseType; aIsFirst : Boolean = false);overload;
+      Procedure Write(aName : String; aValue : TKMWareType; aIsFirst : Boolean = false);overload;
+
+      Procedure Write(aName : String; aValue : TIntegerArray; aIsFirst : Boolean = false);overload;
+      Procedure Write(aName : String; aValue : TInteger2Array; aIsFirst : Boolean = false);overload;
+      Procedure Write(aName : String; aValue : TKMWordArray; aIsFirst : Boolean = false);overload;
+      Procedure Write(aName : String; aValue : TKMStringArray; aIsFirst : Boolean = false);overload;
+      Procedure Write(aName : String; aValue : TKMWareTypeArray; aIsFirst : Boolean = false);overload;
+      Procedure Write(aName : String; aValue : TKMUnitTypeArray; aIsFirst : Boolean = false);overload;
+      Procedure Write(aName : String; aValue : TKMHouseTypeArray; aIsFirst : Boolean = false);overload;
+      Procedure Write(aName : String; aValue : TKMHouseTypeArray2; aIsFirst : Boolean = false);overload;
+      Procedure Write(aName : String; aValue : TKMHouseArea; aIsFirst : Boolean = false);overload;
+      Procedure Write(aName : String; aValue : TKMHouseAreaNew; aIsFirst : Boolean = false);overload;
+      Procedure Write(aName : String; aValue : TKMWareType4; aIsFirst : Boolean = false);overload;
+      Procedure Write(aName : String; aValue : TKMWareType8; aIsFirst : Boolean = false);overload;
+      Procedure Write(aName : String; aValue : THouseSupply; aIsFirst : Boolean = false);overload;
+      Procedure Write(aName : String; aValue : THouseSupply8; aIsFirst : Boolean = false);overload;
+
+      Procedure Write(aName : String; aValue : TKMAnimLoop; aIsFirst : Boolean = false);overload;
+
+      procedure AddToArray(aValue : Integer; aIsFirst : Boolean = false);overload;
+      procedure AddToArray(aValue : Word; aIsFirst : Boolean = false);overload;
+      procedure AddToArray(aValue : Byte; aIsFirst : Boolean = false);overload;
+      procedure AddToArray(aValue : Single; aIsFirst : Boolean = false);overload;
+      procedure AddToArray(aValue : String; aIsFirst : Boolean = false);overload;
+
+
+      procedure SaveToFile(aPath : String);
+  end;
+
 implementation
 uses KromUtils, IOUtils, KM_CommonClassesExt,
     SysUtils, Math;
@@ -532,5 +612,682 @@ begin
 
   end;
 end;
+
+
+constructor TKMJsonSaver.Create;
+begin
+  Inherited;
+  fStringList := TStringList.Create;
+  fDistance := 0;
+  fInOneLine := false;
+end;
+
+destructor TKMJsonSaver.Destroy;
+begin
+  fStringList.Free;
+  Inherited;
+end;
+
+function TKMJsonSaver.ConvertDistance: string;
+var I : Integer;
+begin
+  Result := '';
+  for I := 1 to fDistance do
+    Result := Result + #9;
+end;
+procedure TKMJsonSaver.AddToLast(aText: string);
+var S : String;
+begin
+  S := fStringList.Strings[fStringList.Count - 1] + aText;
+  fStringList.Strings[fStringList.Count - 1] := S;
+end;
+
+procedure TKMJsonSaver.AddLine(aLine: string; aNewLine : Boolean = true);
+begin
+  If aNewLine and not fInOneLine then
+    fStringList.Add(ConvertDistance + aLine)
+  else
+    AddToLast(aLine);
+end;
+
+
+procedure TKMJsonSaver.AddObject(aName : String);
+begin
+  If aName <> '' then
+    AddLine(Format('"%s" : ', [aName]) );
+  BeginObject(not fInOneLine);
+end;
+
+procedure TKMJsonSaver.AddArray(aName : String; aNewLine : Boolean = true);
+begin
+  If aName <> '' then
+    AddLine(Format('"%s" : ', [aName]));
+  BeginArray(aNewLine);
+end;
+
+procedure TKMJsonSaver.AddCommaToLast;
+var S : String;
+begin
+  S := fStringList.Strings[fStringList.Count - 1] + ',';
+  fStringList.Strings[fStringList.Count - 1] := S;
+end;
+
+procedure TKMJsonSaver.AddValue(aName, aValue : String; aNewLine : Boolean = true);
+begin
+  AddLine(Format('"%s" : %s', [aName, aValue]), aNewLine);
+end;
+
+procedure TKMJsonSaver.BeginFile;
+begin
+  fDistance := 0;
+  AddLine('{');
+  Inc(fDistance);
+end;
+
+procedure TKMJsonSaver.EndFile;
+begin
+  fDistance := 0;
+  AddLine('}');
+end;
+
+procedure TKMJsonSaver.BeginObject(aNewLine : Boolean = true);
+begin
+  AddLine('{', aNewLine);
+  Inc(fDistance);
+end;
+
+procedure TKMJsonSaver.EndObject(aNewLine : Boolean = true);
+begin
+  Dec(fDistance);
+  AddLine('}', aNewLine);
+end;
+
+procedure TKMJsonSaver.BeginArray(aNewLine : Boolean = true);
+begin
+  AddLine('[', aNewLine);
+  Inc(fDistance);
+end;
+
+procedure TKMJsonSaver.EndArray(aNewLine : Boolean = true);
+begin
+  Dec(fDistance);
+  AddLine(']', aNewLine);
+end;
+
+
+procedure TKMJsonSaver.SetOldOneLine;
+begin
+  fOldInOneLine := fInOneLine;
+end;
+
+procedure TKMJsonSaver.GetOldOneLine;
+begin
+  fInOneLine := fOldInOneLine;
+end;
+
+procedure TKMJsonSaver.WriteEmptyObject(aIsFirst: Boolean = False);
+begin
+  If not aIsFirst then
+    AddCommaToLast;
+  BeginObject(not fInOneLine);
+end;
+procedure TKMJsonSaver.WriteObject(aName : String; aIsFirst : Boolean = false);
+begin
+  If not aIsFirst then
+    AddCommaToLast;
+  AddObject(aName);
+end;
+
+procedure TKMJsonSaver.WriteArray(aName : String; aIsFirst : Boolean = false);
+begin
+  If not aIsFirst then
+    AddCommaToLast;
+  AddArray(aName);
+end;
+
+procedure TKMJsonSaver.WriteToArray(aValue : String; aIsFirst : Boolean = false);
+begin
+  If not aIsFirst then
+    AddCommaToLast;
+  AddLine(aValue);
+end;
+
+procedure TKMJsonSaver.WriteValue(aName, aValue : String; aIsFirst : Boolean = false);
+begin
+  If not aIsFirst then
+    AddCommaToLast;
+  AddValue(aName, aValue);
+end;
+
+procedure TKMJsonSaver.WriteLineObject(aName : String; aIsFirst : Boolean = false);
+begin
+  If not aIsFirst then
+    AddCommaToLast;
+
+  If aName <> '' then
+    AddLine(Format('"%s" : ', [aName]) )
+  else
+    AddLine('');
+  fInOneLine := true;
+  BeginObject(false);
+end;
+
+procedure TKMJsonSaver.EndLineObject;
+begin
+  fInOneLine := true;
+  EndObject;
+  fInOneLine := false;
+end;
+
+procedure TKMJsonSaver.WriteLineArray(aName : String; aIsFirst : Boolean = false);
+begin
+  If not aIsFirst then
+    AddCommaToLast;
+  If aName <> '' then
+    AddLine(Format('"%s" : ', [aName]));
+  fInOneLine := true;
+  BeginArray(false);
+end;
+
+procedure TKMJsonSaver.EndLineArray;
+begin
+  fInOneLine := true;
+  EndArray;
+  fInOneLine := false;
+end;
+
+procedure TKMJsonSaver.SaveToFile(aPath : String);
+begin
+  fStringList.SaveToFile(apath, TEncoding.UTF8);
+end;
+
+
+Procedure TKMJsonSaver.Write(aName : String; aValue : Boolean; aIsFirst : Boolean = false);
+begin
+  WriteValue(aName, BoolToStr(aValue, true), aIsFirst);
+end;
+
+Procedure TKMJsonSaver.Write(aName : String; aValue : Integer; aIsFirst : Boolean = false);
+begin
+  WriteValue(aName, aValue.ToString, aIsFirst);
+end;
+
+Procedure TKMJsonSaver.Write(aName : String; aValue : Word; aIsFirst : Boolean = false);
+begin
+  WriteValue(aName, aValue.ToString, aIsFirst);
+end;
+
+Procedure TKMJsonSaver.Write(aName : String; aValue : Byte; aIsFirst : Boolean = false);
+begin
+  WriteValue(aName, aValue.ToString, aIsFirst);
+end;
+
+Procedure TKMJsonSaver.Write(aName : String; aValue : ShortInt; aIsFirst : Boolean = false);
+begin
+  WriteValue(aName, aValue.ToString, aIsFirst);
+end;
+
+Procedure TKMJsonSaver.Write(aName : String; aValue : SmallInt; aIsFirst : Boolean = false);
+begin
+  WriteValue(aName, aValue.ToString, aIsFirst);
+end;
+
+Procedure TKMJsonSaver.Write(aName : String; aValue : Cardinal; aIsFirst : Boolean = false);
+begin
+  WriteValue(aName, aValue.ToString, aIsFirst);
+end;
+
+Procedure TKMJsonSaver.Write(aName : String; aValue : Single; aIsFirst : Boolean = false);
+begin
+  WriteValue(aName, aValue.ToString, aIsFirst);
+end;
+
+Procedure TKMJsonSaver.Write(aName : String; aValue : String; aIsFirst : Boolean = false);
+begin
+  WriteValue(aName, '"' + aValue + '"', aIsFirst);
+end;
+
+Procedure TKMJsonSaver.Write(aName: string; aValue: TKMPoint; aIsFirst: Boolean = False);
+begin
+  WriteLineObject(aName, aIsFirst);
+  Write('X', aValue.X, true);
+  Write('Y', aValue.Y);
+  EndLineObject;
+end;
+
+Procedure TKMJsonSaver.Write(aName: string; aValue: TKMPointF; aIsFirst: Boolean = False);
+begin
+  WriteLineObject(aName, aIsFirst);
+  Write('X', aValue.X, true);
+  Write('Y', aValue.Y);
+  EndLineObject;
+end;
+
+Procedure TKMJsonSaver.Write(aName : String; aValue : TKMUnitType; aIsFirst : Boolean = false);
+var S : String;
+begin
+  If not TKMEnumUtils.GetName<TKMUnitType>(aValue, S) then
+    raise Exception.Create('Wrong TKMUnitType in TKMJsonSaver');
+  Write(aName, S, aIsFirst);
+end;
+
+Procedure TKMJsonSaver.Write(aName : String; aValue : TKMHouseType; aIsFirst : Boolean = false);
+var S : String;
+begin
+  If not TKMEnumUtils.GetName<TKMHouseType>(aValue, S) then
+    raise Exception.Create('Wrong TKMHouseType in TKMJsonSaver');
+  Write(aName, S, aIsFirst);
+end;
+
+Procedure TKMJsonSaver.Write(aName : String; aValue : TKMWareType; aIsFirst : Boolean = false);
+var S : String;
+begin
+  If not TKMEnumUtils.GetName<TKMWareType>(aValue, S) then
+    raise Exception.Create('Wrong TKMWareType in TKMJsonSaver');
+  Write(aName, S, aIsFirst);
+end;
+
+
+Procedure TKMJsonSaver.Write(aName : String; aValue : TIntegerArray; aIsFirst : Boolean = false);
+var I, J : integer;
+  S : String;
+begin
+  If length(aValue) = 0 then
+    Exit;
+
+  If not aIsFirst then
+    AddCommaToLast;
+
+  AddArray(aName, false);
+
+  S := '';
+  J := High(aValue);
+  for I := 0 to J do
+  begin
+    S := S + aValue[I].ToString;
+    If I < J then
+      S := S + ', ';
+  end;
+  AddLine(S, false);
+
+  EndArray(false);
+end;
+
+Procedure TKMJsonSaver.Write(aName : String; aValue : TInteger2Array; aIsFirst : Boolean = false);
+var I, K, J, L : integer;
+  S : String;
+begin
+  If length(aValue) = 0 then
+    Exit;
+
+  If not aIsFirst then
+    AddCommaToLast;
+
+  AddArray(aName);
+
+  L := high(aValue);
+  for K := 0 to L do
+  begin
+    S := '';
+    If K > 0 then
+      AddCommaToLast;
+    J := High(aValue[K]);
+    BeginArray;
+    for I := 0 to J do
+    begin
+      S := S + aValue[K, I].ToString;
+      If I < J then
+        S := S + ', ';
+    end;
+    AddLine(S, false);
+    EndArray(false);
+  end;
+
+  EndArray(true);
+end;
+
+Procedure TKMJsonSaver.Write(aName : String; aValue : TKMWordArray; aIsFirst : Boolean = false);
+var I, J : integer;
+  S : String;
+begin
+  If length(aValue) = 0 then
+    Exit;
+
+  If not aIsFirst then
+    AddCommaToLast;
+
+  AddArray(aName, false);
+
+  S := '';
+  J := High(aValue);
+  for I := 0 to J do
+  begin
+    S := S + aValue[I].ToString;
+    If I < J then
+      S := S + ', ';
+  end;
+  AddLine(S, false);
+
+  EndArray(false);
+end;
+
+Procedure TKMJsonSaver.Write(aName : String; aValue : TKMStringArray; aIsFirst : Boolean = false);
+var I, J : integer;
+  S : String;
+begin
+  If length(aValue) = 0 then
+    Exit;
+
+  If not aIsFirst then
+    AddCommaToLast;
+
+  AddArray(aName, false);
+
+  S := '';
+  J := High(aValue);
+  for I := 0 to J do
+  begin
+    S := S + '"' + aValue[I] + '"';
+    If I < J then
+      S := S + ', ';
+  end;
+  AddLine(S, false);
+
+  EndArray(false);
+end;
+
+Procedure TKMJsonSaver.Write(aName : String; aValue : TKMWareTypeArray; aIsFirst : Boolean = false);
+var S : String;
+  I : Integer;
+begin
+  If length(aValue) = 0 then
+    Exit;
+  SetOldOneLine;
+  WriteLineArray(aName, aIsFirst);
+  for I := 0 to High(aValue) do
+  begin
+    If not TKMEnumUtils.GetName<TKMWareType>(aValue[I], S) then
+      raise Exception.Create('Wrong TKMWareType in TKMJsonSaver');
+
+    AddToArray(S, I = 0);
+  end;
+
+  EndLineArray;
+  GetOldOneLine;
+end;
+
+Procedure TKMJsonSaver.Write(aName : String; aValue : TKMUnitTypeArray; aIsFirst : Boolean = false);
+var S : String;
+  I : Integer;
+begin
+  If length(aValue) = 0 then
+    Exit;
+  SetOldOneLine;
+  WriteLineArray(aName, aIsFirst);
+  for I := 0 to High(aValue) do
+  begin
+    If not TKMEnumUtils.GetName<TKMUnitType>(aValue[I], S) then
+      raise Exception.Create('Wrong TKMUnitType in TKMJsonSaver');
+
+    AddToArray(S, I = 0);
+  end;
+
+  EndLineArray;
+  GetOldOneLine;
+end;
+
+Procedure TKMJsonSaver.Write(aName : String; aValue : TKMHouseTypeArray; aIsFirst : Boolean = false);
+var S : String;
+  I : Integer;
+begin
+  If length(aValue) = 0 then
+    Exit;
+  SetOldOneLine;
+  WriteLineArray(aName, aIsFirst);
+  for I := 0 to High(aValue) do
+  begin
+    If not TKMEnumUtils.GetName<TKMHouseType>(aValue[I], S) then
+      raise Exception.Create('Wrong TKMHouseType in TKMJsonSaver');
+
+    AddToArray(S, I = 0);
+  end;
+
+  EndLineArray;
+  GetOldOneLine;
+end;
+
+Procedure TKMJsonSaver.Write(aName : String; aValue : TKMHouseTypeArray2; aIsFirst : Boolean = false);
+var S : String;
+  I, K : Integer;
+begin
+  If length(aValue) = 0 then
+    Exit;
+  SetOldOneLine;
+  WriteArray(aName, aIsFirst);
+
+  for I := 0 to High(aValue) do
+  begin
+    AddToArray('htNone', I = 0);
+    fInOneLine := true;
+    for K := 0 to High(aValue[I]) do
+    begin
+      If not TKMEnumUtils.GetName<TKMHouseType>(aValue[I, K], S) then
+        raise Exception.Create('Wrong TKMHouseType in TKMJsonSaver');
+      AddToArray(S);
+    end;
+
+    fInOneLine := false;
+  end;
+  EndArray;
+  GetOldOneLine;
+end;
+
+Procedure TKMJsonSaver.Write(aName : String; aValue : TKMHouseArea; aIsFirst : Boolean = false);
+var I, K : integer;
+begin
+  If not aIsFirst then
+    AddCommaToLast;
+
+  SetOldOneLine;
+  AddArray(aName);
+
+  for K := 1 to 4 do
+  begin
+    If K > 1 then
+      AddCommaToLast;
+    BeginArray(true);
+    fInOneLine := true;
+    for I := 1 to 4 do
+    begin
+      AddToArray(aValue[K, I], I = 1);
+    end;
+    EndArray(false);
+    fInOneLine := false;
+  end;
+
+  EndArray(true);
+  GetOldOneLine;
+end;
+
+Procedure TKMJsonSaver.Write(aName : String; aValue : TKMHouseAreaNew; aIsFirst : Boolean = false);
+var I, K : integer;
+begin
+  If not aIsFirst then
+    AddCommaToLast;
+
+  SetOldOneLine;
+  AddArray(aName);
+
+  for K := 1 to MAX_HOUSE_SIZE do
+  begin
+    If K > 1 then
+      AddCommaToLast;
+    BeginArray(true);
+    fInOneLine := true;
+    for I := 1 to MAX_HOUSE_SIZE do
+    begin
+      AddToArray(aValue[K, I], I = 1);
+    end;
+    EndArray(false);
+    fInOneLine := false;
+  end;
+
+  EndArray(true);
+  GetOldOneLine;
+end;
+
+Procedure TKMJsonSaver.Write(aName : String; aValue : TKMWareType4; aIsFirst : Boolean = false);
+var S : String;
+  I : Integer;
+begin
+  If length(aValue) = 0 then
+    Exit;
+  SetOldOneLine;
+  WriteArray(aName, aIsFirst);
+  for I := low(aValue) to High(aValue) do
+  begin
+    If not TKMEnumUtils.GetName<TKMWareType>(aValue[I], S) then
+      raise Exception.Create('Wrong TKMWareType in TKMJsonSaver');
+
+    AddToArray(S, I = low(aValue));
+  end;
+
+  EndArray;
+  GetOldOneLine;
+end;
+
+Procedure TKMJsonSaver.Write(aName : String; aValue : TKMWareType8; aIsFirst : Boolean = false);
+var S : String;
+  I : Integer;
+begin
+  If length(aValue) = 0 then
+    Exit;
+  SetOldOneLine;
+  WriteLineArray(aName, aIsFirst);
+  for I := low(aValue) to High(aValue) do
+  begin
+    If not TKMEnumUtils.GetName<TKMWareType>(aValue[I], S) then
+      raise Exception.Create('Wrong TKMWareType in TKMJsonSaver');
+
+    AddToArray(S, I = low(aValue));
+  end;
+
+  EndLineArray;
+  GetOldOneLine;
+end;
+
+Procedure TKMJsonSaver.Write(aName : String; aValue : THouseSupply; aIsFirst : Boolean = false);
+var I, K : integer;
+begin
+  If not aIsFirst then
+    AddCommaToLast;
+  SetOldOneLine;
+
+  AddArray(aName);
+
+  for K := low(aValue) to high(aValue) do
+  begin
+    If K > 1 then
+      AddCommaToLast;
+    BeginArray(true);
+    fInOneLine := true;
+    for I := low(aValue[K]) to high(aValue[K]) do
+    begin
+      AddToArray(aValue[K, I], I = 1);
+    end;
+    EndArray(false);
+    fInOneLine := false;
+  end;
+
+  EndArray(true);
+  GetOldOneLine;
+end;
+
+Procedure TKMJsonSaver.Write(aName : String; aValue : THouseSupply8; aIsFirst : Boolean = false);
+var I, K : integer;
+begin
+  If not aIsFirst then
+    AddCommaToLast;
+  SetOldOneLine;
+
+  AddArray(aName);
+
+  for K := low(aValue) to high(aValue) do
+  begin
+    If K > 1 then
+      AddCommaToLast;
+    BeginArray(true);
+    fInOneLine := true;
+    for I := low(aValue[K]) to high(aValue[K]) do
+    begin
+      AddToArray(aValue[K, I], I = 1);
+    end;
+    EndArray(false);
+    fInOneLine := false;
+  end;
+
+  EndArray(true);
+  GetOldOneLine;
+end;
+
+procedure TKMJsonSaver.Write(aName: string; aValue: TKMAnimLoop; aIsFirst: Boolean = False);
+var I : Integer;
+begin
+  If aValue.Count = 0 then
+    Exit;
+
+  SetOldOneLine;
+
+
+  WriteLineObject(aName, aIsFirst);
+    Write('X', aValue.MoveX, true);
+    Write('Y', aValue.MoveY);
+
+    WriteArray('Steps');
+      for I := 1 to aValue.Count - 1 do
+        AddToArray(aValue.Step[I], I = 1);
+    EndArray;
+  EndLineObject;
+
+  GetOldOneLine;
+end;
+
+
+
+procedure TKMJsonSaver.AddToArray(aValue : Integer; aIsFirst : Boolean = false);
+begin
+  If not aIsFirst then
+    AddCommaToLast;
+  AddLine(aValue.ToString);
+end;
+
+procedure TKMJsonSaver.AddToArray(aValue : Word; aIsFirst : Boolean = false);
+begin
+  If not aIsFirst then
+    AddCommaToLast;
+  AddLine(aValue.ToString);
+end;
+
+procedure TKMJsonSaver.AddToArray(aValue : Byte; aIsFirst : Boolean = false);
+begin
+  If not aIsFirst then
+    AddCommaToLast;
+  AddLine(aValue.ToString);
+end;
+
+procedure TKMJsonSaver.AddToArray(aValue : Single; aIsFirst : Boolean = false);
+begin
+  If not aIsFirst then
+    AddCommaToLast;
+  AddLine(aValue.ToString);
+end;
+
+procedure TKMJsonSaver.AddToArray(aValue : String; aIsFirst : Boolean = false);
+begin
+  If not aIsFirst then
+    AddCommaToLast;
+  AddLine('"' + aValue + '"');
+end;
+
 
 end.

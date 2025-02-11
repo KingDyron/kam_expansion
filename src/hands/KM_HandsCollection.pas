@@ -915,7 +915,7 @@ begin
       Continue;
     U.SetHitTime;
     gScriptEvents.ProcUnitHit(U, aOwner);
-    if (Damage >= 200)
+    if (Damage >= 200) or (U.Defence = 0)
       or (Damage div Max(U.Defence, 1) >= KamRandom(101, 'TKMProjectiles.HitAllInRadius')) then
     begin
       U.HitPointsDecrease(UDamage, aOwner);

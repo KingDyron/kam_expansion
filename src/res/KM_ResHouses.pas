@@ -95,25 +95,13 @@ type
     function GetMaxWareCount : Word;
     function GetMaxWareOutCount : Word;
     function GetHouseDescription : UnicodeString;
-    procedure SaveToNewStream(aSaveStream : TKMemoryStream);
-    procedure LoadFromNewStream(aLoadStream : TKMemoryStream);
     procedure AddWorker(aType : TKMUnitType; aCount : Byte);
   public
-    Sound : array[haWork1..haWork5] of record
-      ID : Integer;
-      Steps : TByteSet;
-    end;
+    Sound : array[haWork1..haWork5] of TKMHouseSound;
 
-    WorkAnim : array of record
-      Action : TKMHouseActionType;
-      Cycles : Single;
-    end;
+    WorkAnim : array of TKMHouseWorkAnim;
 
-    WareInputSlots : array of record
-      WareInput : TKMWareType8;
-      WareOutput : TKMWareType8;
-      Icon : Word;
-    end;
+    WareInputSlots : array of TKMHouseWareSlot;
 
     Styles : array of record
       StonePic : Word;
@@ -123,10 +111,7 @@ type
     end;
 
     Levels : array of TKMHouseLevelRec;
-    Workers: array of record
-      UnitType : TKMUnitType;
-      MaxCount : Byte;
-    end;
+    Workers: array of TKMHouseWorker;
 
     MaxWorkersCount: Byte;
     //WorkerTypes: TKMUnitTypeSet;
@@ -217,14 +202,13 @@ type
     function GetBeastAnim(aType: TKMHouseType; aBeast, aAge:integer): TKMAnimLoop;
   public
     Palace_Flags : array[1..4] of TKMAnimLoop;
-    Shool_Clock,
+    School_Clock,
     WallTower_RecruitLeft,
     WallTower_RecruitRight,
     Merchant_Tablets,
     Silo_Tablets: TKMAnimLoop;
 
     ProdThatch_Anims : array[TKMProdThatchAnimType] of TKMAnimation;
-    SimilarTypes : TKMHouseTypeArray2;
 
     constructor Create;
     destructor Destroy; override;
@@ -235,13 +219,13 @@ type
     property BeastAnim[aType: TKMHouseType; aBeast, aAge: Integer]: TKMAnimLoop read GetBeastAnim;
     property CRC: Cardinal read fCRC; //Return hash of all values
 
-    procedure SaveToNewStream;
-    procedure LoadFromNewStream;
-
     procedure ExportCSV(const aPath: string);
 
     function LoadFromJSON(aFileName : String) : Cardinal;
     procedure ReloadJSONData(UpdateCRC : Boolean);
+
+    procedure SaveToJson(const aPath: String);
+
   end;
 
 
@@ -1363,157 +1347,6 @@ begin
   Result := Result / CELL_SIZE_PX;
 end;
 
-procedure TKMHouseSpec.SaveToNewStream(aSaveStream : TKMemoryStream);
-var I, K : Integer;
-  HA : TKMHouseActionType;
-  newCount, nC2 : Integer;
-begin
-  aSaveStream.PlaceMarker('HouseSpec');
-  aSaveStream.Write(fHouseDat, SizeOf(fHouseDat));
-  for HA := haWork1 to haWork5 do
-  begin
-    aSaveStream.Write(Sound[HA].ID);
-    aSaveStream.Write(Sound[HA].Steps, SizeOf(Sound[HA].Steps));
-  end;
-
-  newCount := length(WorkAnim);
-  aSaveStream.Write(newCount);
-  for I := 0 to newCount - 1 do
-  begin
-    aSaveStream.Write(WorkAnim[I].Action, SizeOf(WorkAnim[I].Action));
-    aSaveStream.Write(WorkAnim[I].Cycles);
-  end;
-
-  newCount := length(WareInputSlots);
-  aSaveStream.Write(newCount);
-  for I := 0 to newCount - 1do
-    aSaveStream.Write(WareInputSlots[I], SizeOf(WareInputSlots[I]));
-
-
-  newCount := length(Styles);
-  aSaveStream.Write(newCount);
-  for I := 0 to newCount - 1 do
-    aSaveStream.Write(Styles[I], SizeOf(Styles[I]));
-
-  newCount := length(Levels);
-  aSaveStream.Write(newCount);
-  for I := 0 to newCount - 1 do
-  begin
-    aSaveStream.Write(Levels[I].StonePic);
-    aSaveStream.Write(Levels[I].SnowPic);
-    aSaveStream.Write(Levels[I].Progress);
-    aSaveStream.Write(Levels[I].StoneCost);
-    aSaveStream.Write(Levels[I].TileCost);
-    aSaveStream.Write(Levels[I].WoodCost);
-    aSaveStream.Write(Levels[I].MaxInWares);
-    aSaveStream.Write(Levels[I].AnimMultiplier);
-    aSaveStream.Write(Levels[I].HideSupplies);
-
-    nC2 := length(Levels[I].Anim);
-    aSaveStream.Write(nC2);
-    for K := 0 to nC2 - 1 do
-      aSaveStream.Write(Levels[I].Anim[K], SizeOf(Levels[I].Anim[K]));
-
-      
-  end;
-
-  aSaveStream.Write(fHouseType, SizeOf(fHouseType));
-  aSaveStream.Write(fDescriptionID);
-  aSaveStream.Write(fNameTextID);
-  aSaveStream.Write(fTileCost);
-  aSaveStream.Write(fDescriptionID);
-  aSaveStream.Write(fMaxInWares);
-  aSaveStream.Write(fWareInput, SizeOf(fWareInput));
-  aSaveStream.Write(fWareOutput, SizeOf(fWareOutput));
-  aSaveStream.Write(fBuildSupply, SizeOf(fBuildSupply));
-  aSaveStream.Write(fGatheringScript, SizeOf(fGatheringScript));
-  aSaveStream.Write(fUnlockAfter, SizeOf(fUnlockAfter));
-  aSaveStream.Write(fCanForceWork);
-
-
-
-  {newCount := length(fWariants);
-  aSaveStream.Write(newCount);
-  for I := 0 to newCount - 1 do
-    aSaveStream.Write(fWariants[I]);}
-
-  SaveArrToStream(aSaveStream, fWariants);
-
-end;
-
-procedure TKMHouseSpec.LoadFromNewStream(aLoadStream : TKMemoryStream);
-var I, K : Integer;
-  HA : TKMHouseActionType;
-  newCount, nC2 : Integer;
-begin
-  aLoadStream.CheckMarker('HouseSpec');
-  aLoadStream.Read(fHouseDat, SizeOf(fHouseDat));
-  for HA := haWork1 to haWork5 do
-  begin
-    aLoadStream.Read(Sound[HA].ID);
-    aLoadStream.Read(Sound[HA].Steps, SizeOf(Sound[HA].Steps));
-  end;
-
-  aLoadStream.Read(newCount);
-  SetLength(WorkAnim, newCount);
-  for I := 0 to newCount - 1 do
-  begin
-    aLoadStream.Read(WorkAnim[I].Action, SizeOf(WorkAnim[I].Action));
-    aLoadStream.Read(WorkAnim[I].Cycles);
-  end;
-
-  aLoadStream.Read(newCount);
-  SetLength(WareInputSlots, newCount);
-  for I := 0 to newCount - 1do
-    aLoadStream.Read(WareInputSlots[I], SizeOf(WareInputSlots[I]));
-
-
-  aLoadStream.Read(newCount);
-  SetLength(Styles, newCount);
-  for I := 0 to newCount - 1 do
-    aLoadStream.Read(Styles[I], SizeOf(Styles[I]));
-
-  aLoadStream.Read(newCount);
-  SetLength(Levels, newCount);
-  for I := 0 to newCount - 1 do
-  begin
-    aLoadStream.Read(Levels[I].StonePic);
-    aLoadStream.Read(Levels[I].SnowPic);
-    aLoadStream.Read(Levels[I].Progress);
-    aLoadStream.Read(Levels[I].StoneCost);
-    aLoadStream.Read(Levels[I].TileCost);
-    aLoadStream.Read(Levels[I].WoodCost);
-    aLoadStream.Read(Levels[I].MaxInWares);
-    aLoadStream.Read(Levels[I].AnimMultiplier);
-    aLoadStream.Read(Levels[I].HideSupplies);
-
-    aLoadStream.Read(nC2);
-    SetLength(Levels[I].Anim, nC2);
-    for K := 0 to nC2 - 1 do
-      aLoadStream.Read(Levels[I].Anim[K], SizeOf(Levels[I].Anim[K]));
-  end;
-
-  aLoadStream.Read(fHouseType, SizeOf(fHouseType));
-  aLoadStream.Read(fDescriptionID);
-  aLoadStream.Read(fNameTextID);
-  aLoadStream.Read(fTileCost);
-  aLoadStream.Read(fDescriptionID);
-  aLoadStream.Read(fMaxInWares);
-  aLoadStream.Read(fWareInput, SizeOf(fWareInput));
-  aLoadStream.Read(fWareOutput, SizeOf(fWareOutput));
-  aLoadStream.Read(fBuildSupply, SizeOf(fBuildSupply));
-  aLoadStream.Read(fGatheringScript, SizeOf(fGatheringScript));
-  aLoadStream.Read(fUnlockAfter, SizeOf(fUnlockAfter));
-  aLoadStream.Read(fCanForceWork);
-
-  LoadArrFromStream(aLoadStream, fWariants);
-
-  {aLoadStream.Read(newCount);
-  SetLength(fWariants, newCount);
-  for I := 0 to newCount - 1 do
-    aLoadStream.Read(fWariants[I]);}
-
-end;
 { TKMResHouses }
 procedure TKMResHouses.CreateHouses;
 
@@ -1599,7 +1432,7 @@ var
   I, K: Integer;
 var PT : TKMProdThatchAnimType;
 begin
-  for H := HOUSE_MIN to HOUSE_MAX do
+  {for H := HOUSE_MIN to HOUSE_MAX do
   begin
     fItems[H] := TKMHouseSpec.Create(H);
 
@@ -1678,20 +1511,6 @@ begin
   AddAnimation(htMarket, haFire6, 39, -47, [1629,1630,1631,1626,1627,1628]);
   AddAnimation(htMarket, haFire7, 25, 13, [1635,1636,1637,1632,1633,1634]);
   AddAnimation(htMarket, haFire8, -82, -40, [1621,1622,1623,1624,1625,1620]);
-  //Now add horse animations for the market
-  AddMarketBeastAnim(1,[278, 277, 276, 275, 274, 273, 272, 271, 271, 271, 271, 271, 272,
-                        273, 274, 275, 276, 277, 277, 278, 279, 280, 281, 282, 282, 282,
-                        282, 281, 280, 279]);
-  fMarketBeastAnim[1].Count := 30;
-  fMarketBeastAnim[1].MoveX := MARKET_WARES_OFF_X;
-  fMarketBeastAnim[1].MoveY := MARKET_WARES_OFF_Y;
-  AddMarketBeastAnim(2,[266, 265, 264, 263, 262, 261, 260, 259, 258, 257, 258, 259, 260,
-                        261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 270, 270, 270,
-                        270, 269, 268, 267]);
-  fMarketBeastAnim[2].Count := 30;
-  fMarketBeastAnim[2].MoveX := MARKET_WARES_OFF_X;
-  fMarketBeastAnim[2].MoveY := MARKET_WARES_OFF_Y;
-
 
 
 
@@ -1880,6 +1699,21 @@ begin
           BuildArea[I, K] := HOUSE_DAT_X[H].PlanYX[I, K];
 
   end;
+  }
+
+  //Now add horse animations for the market
+  AddMarketBeastAnim(1,[278, 277, 276, 275, 274, 273, 272, 271, 271, 271, 271, 271, 272,
+                        273, 274, 275, 276, 277, 277, 278, 279, 280, 281, 282, 282, 282,
+                        282, 281, 280, 279]);
+  fMarketBeastAnim[1].Count := 30;
+  fMarketBeastAnim[1].MoveX := MARKET_WARES_OFF_X;
+  fMarketBeastAnim[1].MoveY := MARKET_WARES_OFF_Y;
+  AddMarketBeastAnim(2,[266, 265, 264, 263, 262, 261, 260, 259, 258, 257, 258, 259, 260,
+                        261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 270, 270, 270,
+                        270, 269, 268, 267]);
+  fMarketBeastAnim[2].Count := 30;
+  fMarketBeastAnim[2].MoveX := MARKET_WARES_OFF_X;
+  fMarketBeastAnim[2].MoveY := MARKET_WARES_OFF_Y;
 
 
  //set some default values if none of them were asigned
@@ -1924,19 +1758,38 @@ begin
 
 
   fItems[htSchool].Anim[haIdle].Create([]);
-  Shool_Clock.Create(-17, 5, [813, 814, 815, 816, 817, 861, 862, 863, 864, 865, 866, 867, 868, 869, 870, 871, 872, 873, 874, 875, 876, 877, 878]);
+  School_Clock.Create(-17, 5, [813, 814, 815, 816, 817, 861, 862, 863, 864, 865, 866, 867, 868, 869, 870, 871, 872, 873, 874, 875, 876, 877, 878]);
   //SaveToNewStream;
 
 
 end;
 
 constructor TKMResHouses.Create;
+var H : TKMHouseType;
+  procedure ResetSound(aHouse : TKMHouseType);
+  var HA : TKMHouseActionType;
+
+  begin
+    with  fItems[aHouse] do
+      for HA := haWork1 to haWork5 do
+        Sound[HA].ID := -1;
+  end;
+
 begin
   inherited;
-  CreateHouses;
+  for H := HOUSE_MIN to HOUSE_MAX do
+  begin
+    fItems[H] := TKMHouseSpec.Create(H);
 
-  fCRC := fCRC xor LoadFromJSON(gRes.JsonData[dtOldHouses]);
+    ResetSound(H);
+  end;
+  //temporarry
+  fCRC := LoadHouseDat(ExeDir+'data' + PathDelim + 'defines' + PathDelim + 'houses.dat');
+
+
+  //fCRC := fCRC xor LoadFromJSON(gRes.JsonData[dtOldHouses]);
   fCRC := fCRC xor LoadFromJSON(gRes.JsonData[dtNewHouses]);
+  CreateHouses;
 end;
 Procedure TKMResHouses.ReloadJSONData(UpdateCRC: Boolean);
 var oldCRC : Cardinal;
@@ -1944,7 +1797,7 @@ begin
 
   oldCRC := fCRC;
 
-  //fCRC := LoadHouseDat(ExeDir+'data' + PathDelim + 'defines' + PathDelim + 'houses.dat');
+  fCRC := LoadHouseDat(ExeDir+'data' + PathDelim + 'defines' + PathDelim + 'houses.dat');
   CreateHouses;
   fCRC := fCRC xor LoadFromJSON(gRes.JsonData[dtOldHouses]);
   fCRC := fCRC xor LoadFromJSON(gRes.JsonData[dtNewHouses]);
@@ -2011,7 +1864,8 @@ begin
     //Read the records one by one because we need to reorder them and skip one in the middle
     for i:=0 to 28 do //KaM has only 28 houses
     if HOUSE_ID_TO_TYPE[i] <> htNone then
-      fItems[HOUSE_ID_TO_TYPE[i]].LoadFromStream(S)
+      //fItems[HOUSE_ID_TO_TYPE[i]].LoadFromStream(S)
+      S.Seek(SizeOf(TKMHouseDat), soFromCurrent)
     else
       S.Seek(SizeOf(TKMHouseDat), soFromCurrent);
 
@@ -2158,13 +2012,9 @@ begin
         SetValue(fNameTextID, nHouse.I['TextID'], nHouse.Contains('TextID'));
         SetValue(fDescriptionID, nHouse.I['DescriptionID'], nHouse.Contains('DescriptionID'));
         SetValue(fTileCost, nHouse.I['TileCost'], nHouse.Contains('TileCost'));
-        //fNameTextID := IfThen(nHouse.Contains('TextID'), nHouse.I['TextID'], fNameTextID);
-        //fDescriptionID := nHouse.I['DescriptionID'];
-        //fTileCost := IfThen(nHouse.Contains('TileCost'), nHouse.I['TileCost'], fTileCost);
         with fHouseDat do
         begin
           //only replace when the values are not 0
-
           SetValue(MaxHealth, nHouse.I['MaxHealth'], nHouse.Contains('MaxHealth'));
           SetValue(WoodCost, nHouse.I['WoodCost'], nHouse.Contains('WoodCost'));
           SetValue(StoneCost, nHouse.I['StoneCost'], nHouse.Contains('StoneCost'));
@@ -2179,22 +2029,8 @@ begin
           SetValue(Sight, nHouse.I['Sight'], nHouse.Contains('Sight'));
           SetValue(fMaxInWares, nHouse.I['MaxInWares'], nHouse.Contains('MaxInWares'));
           SetValue(fMaxOutWares, nHouse.I['MaxOutWares'], nHouse.Contains('MaxOutWares'));
-          {MaxHealth := IfThen(nHouse.Contains('MaxHealth'), nHouse.I['MaxHealth'], MaxHealth);
-          WoodCost := IfThen(nHouse.Contains('WoodCost'), nHouse.I['WoodCost'], WoodCost);
-          StoneCost := IfThen(nHouse.Contains('StoneCost'), nHouse.I['StoneCost'], StoneCost);
-          WoodPic := IfThen(nHouse.Contains('WoodPic'), nHouse.I['WoodPic'], WoodPic);
-          StonePic := IfThen(nHouse.Contains('StonePic'), nHouse.I['StonePic'], StonePic);
-          EntranceOffsetX := IfThen(nHouse.Contains('EntranceOffsetX'), nHouse.I['EntranceOffsetX'], EntranceOffsetX);
-          EntranceOffsetXpx := IfThen(nHouse.Contains('EntranceOffsetXpx'), nHouse.I['EntranceOffsetXpx'], EntranceOffsetXpx);
-          EntranceOffsetYpx := IfThen(nHouse.Contains('EntranceOffsetYpx'), nHouse.I['EntranceOffsetYpx'], EntranceOffsetYpx);
-          WorkerType := IfThen(nHouse.Contains('WorkerType'), nHouse.I['WorkerType'], WorkerType);
-          WorkerRest := IfThen(nHouse.Contains('WorkerRest'), nHouse.I['WorkerRest'], WorkerRest);
-          Sight := IfThen(nHouse.Contains('Sight'), nHouse.I['Sight'], Sight);
-          fMaxInWares := IfThen(nHouse.Contains('MaxInWares'), nHouse.I['MaxInWares'], fMaxInWares);}
 
           SetValue(fCanForceWork, nHouse.B['CanForceWork'], nHouse.Contains('CanForceWork'));
-
-          //JSONArrToValidSet(nHouse.A['WorkerTypes'], WorkerTypes);
 
           nAR := nHouse.A['WorkerTypes'];
 
@@ -2485,7 +2321,7 @@ begin
 
           end;
 
-          If nHouse.Contains('Build_Area') then
+          {If nHouse.Contains('Build_Area') then
           begin
             nAnim :=  nHouse.O['Build_Area'];
 
@@ -2499,8 +2335,23 @@ begin
                   BuildArea[J, K] := nAR[K-1];
                   
               end;
-          end;
+          end;}
 
+          If nHouse.Contains('Build_Area') then
+          begin
+            nAR2 :=  nHouse.A['Build_Area'];
+
+            for J := 0 to nAR2.Count - 1 do
+            begin
+              nAR := nAR2.A[J];
+              If nAR.Count = 0 then
+                Continue;
+
+              for K := 0 to nAR.Count - 1 do
+                BuildArea[J + 1, K + 1] := nAR[K];
+
+            end;
+          end;
           JSONArrToValidArr(nHouse.A['Wariants'], fWariants);
 
 
@@ -2517,83 +2368,6 @@ begin
 
 end;
 
-procedure TKMResHouses.SaveToNewStream;
-var I, J, K, L: Integer;
-  H : TKMHouseType;
-  S : TKMemoryStream;
-begin
-  S := TKMemoryStreamBinary.Create;
-  S.PlaceMarker('ResHouses');
-
-  S.Write(Palace_Flags, SizeOf(Palace_Flags));
-  S.Write(Merchant_Tablets, SizeOf(Merchant_Tablets));
-  S.Write(Silo_Tablets, SizeOf(Silo_Tablets));
-
-  S.Write(fMarketBeastAnim, SizeOf(fMarketBeastAnim));
-  S.Write(fBeastAnim, SizeOf(fBeastAnim));
-  S.Write(fHovelBeastAnim, SizeOf(fHovelBeastAnim));
-
-  J := length(HOUSE_GUI_TAB_ORDER);
-  S.Write(J);
-  for I := 0 to J - 1 do
-  begin
-    S.Write(HOUSE_GUI_TAB_ORDER[I].TextID);
-
-    L := Length(HOUSE_GUI_TAB_ORDER[I].H);
-    S.Write(L);
-    for K := 0 to L - 1 do
-      S.Write(HOUSE_GUI_TAB_ORDER[I].H[K], SizeOf(HOUSE_GUI_TAB_ORDER[I].H[K]));
-      
-  end;
-  H := HOUSE_MAX;
-  S.Write(H, SizeOf(H));
-  for H := HOUSE_MIN to HOUSE_MAX do
-    fItems[H].SaveToNewStream(S);
-  S.SaveToFile(ExeDir+ 'data' + PathDelim + 'defines' + PathDelim + 'NewHouses.dat');
-  S.Free;
-end;
-
-procedure TKMResHouses.LoadFromNewStream;
-var I, J, K, L : Integer;
-  H, H2 : TKMHouseType;
-  S : TKMemoryStream;
-begin
-  if not FileExists(ExeDir+ 'data' + PathDelim + 'defines' + PathDelim + 'NewHouses.dat') then
-    Exception.Create('Error loading ResHouses : NewHouses.dat not found');
-
-  S := TKMemoryStreamBinary.Create;
-  S.LoadFromFile(ExeDir+ 'data' + PathDelim + 'defines' + PathDelim + 'NewHouses.dat');
-
-  S.CheckMarker('ResHouses');
-  S.Read(Palace_Flags, SizeOf(Palace_Flags));
-  S.Read(Merchant_Tablets, SizeOf(Merchant_Tablets));
-  S.Read(Silo_Tablets, SizeOf(Silo_Tablets));
-
-  S.Read(fMarketBeastAnim, SizeOf(fMarketBeastAnim));
-  S.Read(fBeastAnim, SizeOf(fBeastAnim));
-  S.Read(fHovelBeastAnim, SizeOf(fHovelBeastAnim));
-
-  S.Read(J);
-  SetLength(HOUSE_GUI_TAB_ORDER, J);
-
-  for I := 0 to J - 1 do
-  begin
-    S.Read(HOUSE_GUI_TAB_ORDER[I].TextID);
-
-    S.Read(L);
-    SetLength(HOUSE_GUI_TAB_ORDER[I].H, L);
-    for K := 0 to L - 1 do
-      S.Read(HOUSE_GUI_TAB_ORDER[I].H[K], SizeOf(HOUSE_GUI_TAB_ORDER[I].H[K]));
-
-  end;
-  S.Read(H2, sizeOf(H2));
-  for H := HOUSE_MIN to H2 do
-    fItems[H].LoadFromNewStream(S);
-
-  fCRC := Adler32CRC(S);
-  S.Free;
-
-end;
 
 procedure TKMResHouses.ExportCSV(const aPath: string);
 var
@@ -2662,6 +2436,301 @@ begin
 
   SL.SaveToFile(aPath);
   SL.Free;
+  SaveToJson(aPath);
+end;
+
+procedure TKMResHouses.SaveToJson(const aPath: string);
+var
+  root : TKMJsonSaver;
+  I, K, J, L : Integer;
+  HT, HT2 : TKMHouseType;
+  HA : TKMHouseActionType;
+  S : String;
+  B : Byte;
+begin
+  root := TKMJsonSaver.Create;
+
+  try
+    root.BeginFile;
+      root.WriteArray('HousesOrder', true);
+        for I := 0 to High(HOUSE_GUI_TAB_ORDER) do
+        begin
+          root.WriteObject('', I = 0);
+            root.Write('TitleID', HOUSE_GUI_TAB_ORDER[I].TextID, true);
+            root.Write('GuiIcon', HOUSE_GUI_TAB_ORDER[I].GuiIcon);
+            root.Write('Houses', HOUSE_GUI_TAB_ORDER[I].H);
+          root.EndObject;
+        end;
+
+      root.EndArray;
+      root.WriteArray('HousesVictoryOrder');
+        for I := 0 to High(HOUSE_VICTORY_ORDER) do
+        begin
+          root.WriteObject('', I = 0);
+            root.Write('TitleID', HOUSE_VICTORY_ORDER[I].TextID, true);
+            root.Write('GuiIcon', HOUSE_VICTORY_ORDER[I].GuiIcon);
+            root.Write('Houses', HOUSE_VICTORY_ORDER[I].H);
+          root.EndObject;
+        end;
+
+      root.EndArray;
+
+      root.WriteArray('Houses');
+      for I := 0 to high(HOUSE_ID_TO_TYPE) do
+      begin
+        HT := HOUSE_ID_TO_TYPE[I];
+        If not (HT in HOUSES_VALID) then
+          Continue;
+        root.WriteEmptyObject(I = 0);
+
+        with fItems[HT] do
+        begin
+          //base data
+          root.Write('Name', HT, true);
+          root.Write('TextID', fNameTextID);
+          root.Write('DescriptionID', fDescriptionID);
+          root.Write('TileCost', fTileCost);
+
+          with fHouseDat do
+          begin
+            root.Write('MaxHealth', MaxHealth);
+            root.Write('WoodCost', WoodCost);
+            root.Write('StoneCost', StoneCost);
+            root.Write('WoodPic', WoodPic);
+            root.Write('StonePic', StonePic);
+            root.Write('EntranceOffsetX', EntranceOffsetX);
+            root.Write('EntranceOffsetY', EntranceOffsetY);
+            root.Write('EntranceOffsetXpx', EntranceOffsetXpx);
+            root.Write('EntranceOffsetYpx', EntranceOffsetYpx);
+            root.Write('WorkerType', WorkerType);
+            root.Write('WorkerRest', WorkerRest);
+            root.Write('Sight', Sight);
+            root.Write('MaxInWares', fMaxInWares);
+            root.Write('MaxOutWares', fMaxOutWares);
+            root.Write('CanForceWork', fCanForceWork);
+          end;
+          //workers
+          If length(Workers) > 0 then
+          begin
+            root.WriteArray('WorkerTypes');
+              for K := 0 to High(Workers) do
+              begin
+                root.WriteLineObject('', K = 0);
+                  root.Write('UnitType', Workers[K].UnitType, true);
+                  root.Write('MaxCount', Workers[K].MaxCount);
+                root.EndLineObject;
+              end;
+            root.EndArray;
+          end;
+          root.Write('MaxWorkersCount', MaxWorkersCount);
+          root.Write('CanOverfill', CanOverfill);
+
+          If not TKMEnumUtils.GetName<TKMGatheringScript>(fGatheringScript, S) then
+            raise Exception.Create('Wrong TKMGatheringScript, TKMResHouses');
+          root.Write('GatheringScript', S);
+          //house wares types
+          root.Write('WareInput', fWareInput);
+          root.Write('WareOutput', fWareOutput);
+          //house release after
+          root.WriteLineArray('UnlockAfter');
+            L := 0;
+            for HT2 in fUnlockAfter do
+            begin
+              If not TKMEnumUtils.GetName<TKMHouseType>(HT2, S) then
+                raise Exception.Create('Wrong TKMHouseType, TKMResHouses');
+              root.AddToArray(S, L = 0);
+              Inc(L);
+            end;
+          root.EndLineArray;
+          //wares supplies textures
+          for J := 1 to WARES_IN_OUT_COUNT do
+          begin
+            If fSupplyIn[J, 1] = -1 then
+              Continue;
+            root.WriteLineArray('SupplyIn' + IntToStr(J));
+            for K := 1 to 5 do
+              root.AddToArray(fSupplyIn[J, K], K = 1);
+            root.EndLineArray;
+          end;
+
+          for J := 1 to WARES_IN_OUT_COUNT do
+          begin
+            If fSupplyOut[J, 1] = -1 then
+              Continue;
+
+            root.WriteLineArray('SupplyOut' + IntToStr(J));
+            for K := 1 to 5 do
+              root.AddToArray(fSupplyOut[J, K], K = 1);
+            root.EndLineArray;
+          end;
+          //house animations
+          for HA := haWork1 to haFire8 do
+          begin
+            If fHouseDat.Anim[HA].Count = 0 then
+              Continue;
+            root.WriteLineObject(HOUSE_ACTION_STR[HA], L = 0);
+              root.Write('X', fHouseDat.Anim[HA].MoveX, true);
+              root.Write('Y', fHouseDat.Anim[HA].MoveY);
+              root.WriteLineArray('Steps');
+                for K := 1 to fHouseDat.Anim[HA].Count do
+                  root.AddToArray(fHouseDat.Anim[HA].Step[K], K = 1);
+              root.EndLineArray;
+            root.EndLineObject;
+            Inc(L);
+          end;
+          //work animation sounds
+          for HA := haWork1 to haWork5 do
+          begin
+            L := 0;
+            If Sound[HA].Steps = [] then
+              Continue;
+            root.WriteLineObject('MakeSound_' + HOUSE_ACTION_STR[HA]);
+              root.Write('SoundID', Sound[HA].ID, true);
+              root.WriteLineArray('Steps');
+                for B in Sound[HA].Steps do
+                begin
+                  root.AddToArray(B, L = 0);
+                  Inc(L);
+                end;
+              root.EndLineArray;
+            root.EndLineObject;
+            Inc(L);
+          end;
+          //Work animation cycles
+          If length(WorkAnim) > 0 then
+          begin
+            root.WriteArray('WorkAnim');
+              for K := 0 to High(WorkAnim) do
+              begin
+                HA := WorkAnim[K].Action;
+                root.WriteLineObject('', K = 0);
+                  If not TKMEnumUtils.GetName<TKMHouseActionType>(HA, S) then
+                    raise Exception.Create('Wrong TKMHouseActionType, TKMResHouses');
+                  root.Write('WorkType', S, true);
+                  root.Write('Cycles', WorkAnim[K].Cycles);
+                root.EndLineObject;
+              end;
+            root.EndArray;
+          end;
+          //wares Slots
+          If length(WareInputSlots) > 0 then
+          begin
+            root.WriteArray('WareSlots');
+              for K := 0 to High(WareInputSlots) do
+              begin
+                root.WriteLineObject('', K = 0);
+                  root.Write('GuiIcon', WareInputSlots[K].Icon, true);
+                  root.Write('WareInput', WareInputSlots[K].WareInput);
+                  root.Write('WareOutput', WareInputSlots[K].WareOutput);
+                root.EndLineObject;
+              end;
+            root.EndArray;
+          end;
+          //house styles
+          If length(Styles) > 0 then
+          begin
+            root.WriteArray('Styles');
+              for K := 0 to High(Styles) do
+              begin
+                root.WriteLineObject('', K = 0);
+                  root.Write('GuiIcon', Styles[K].Icon, true);
+                  root.Write('StonePic', Styles[K].StonePic);
+                  root.Write('SnowPic', Styles[K].SnowPic);
+                  root.Write('HideSupplies', Styles[K].HideSupplies);
+                root.EndLineObject;
+              end;
+            root.EndArray;
+          end;
+          //house levels
+          If length(Levels) > 0 then
+          begin
+            root.WriteArray('Levels');
+              for K := 0 to High(Levels) do
+              begin
+                root.WriteObject('', K = 0);
+                  root.Write('StonePic', Levels[K].StonePic, true);
+                  root.Write('SnowPic', Levels[K].SnowPic);
+                  root.Write('WoodCost', Levels[K].WoodCost);
+                  root.Write('StoneCost', Levels[K].StoneCost);
+                  root.Write('TileCost', Levels[K].TileCost);
+                  root.Write('MaxInWares', Levels[K].MaxInWares);
+                  root.Write('WorkCyclesMultiplier', Levels[K].AnimMultiplier);
+                  root.Write('ReplaceAnim', Levels[K].ReplaceAnim);
+                  root.Write('HideSupplies', Levels[K].HideSupplies);
+                  If length(Levels[K].Anim) > 0 then
+                  begin
+                    root.WriteLineArray('Anim', Levels[K].HideSupplies);
+                    for J := 0 to High(Levels[K].Anim) do
+                    begin
+                      root.WriteLineObject('', J = 0);
+                        root.Write('X', Levels[K].Anim[J].MoveX, true);
+                        root.Write('Y', Levels[K].Anim[J].MoveY);
+                        root.WriteLineArray('Steps');
+                          for L := 1 to Levels[K].Anim[J].Count do
+                            root.AddToArray(Levels[K].Anim[J].Step[L], L = 1);
+                        root.EndLineArray;
+                      root.EndLineObject;
+                    end;
+                    root.EndLineArray;
+                  end;
+                root.EndObject;
+              end;
+            root.EndArray;
+          end;
+          //house build supply
+          root.WriteLineObject('WoodPileOffset');
+            root.Write('X', fBuildSupply[1, 1].MoveX, true);
+            root.Write('Y', fBuildSupply[1, 1].MoveY);
+          root.EndLineObject;
+          root.WriteLineObject('StonePileOffset');
+            root.Write('X', fBuildSupply[2, 1].MoveX, true);
+            root.Write('Y', fBuildSupply[2, 1].MoveY);
+          root.EndLineObject;
+          root.WriteLineObject('TilePileOffset');
+            root.Write('X', fBuildSupply[3, 1].MoveX, true);
+            root.Write('Y', fBuildSupply[3, 1].MoveY);
+          root.EndLineObject;
+          root.Write('Build_Area', BuildArea);
+          root.Write('Wariants', fWariants);
+        end;
+        root.EndObject;
+      end;
+
+      root.EndArray;
+      //beast anim
+      root.WriteArray('BeastAnim');
+        for I := low(fBeastAnim) to High(fBeastAnim) do
+        begin
+          root.WriteArray('', I = low(fBeastAnim));
+          for J := low(fBeastAnim[I]) to High(fBeastAnim[I]) do
+          begin
+            root.WriteArray('', J = low(fBeastAnim[I]));
+            for K := low(fBeastAnim[I, J]) to High(fBeastAnim[I, J]) do
+              root.Write('', fBeastAnim[I, J, K], K = low(fBeastAnim[I, J]));
+
+            root.EndArray;
+          end;
+          root.EndArray;
+        end;
+
+      root.EndArray;
+
+      //market beast anim
+      root.WriteArray('MarketBeastAnim');
+        for I := low(fMarketBeastAnim) to High(fMarketBeastAnim) do
+          root.Write('', fMarketBeastAnim[I], I = low(fMarketBeastAnim));
+      root.EndArray;
+      //Hovel beast anim
+      root.WriteArray('HovelBeastAnim');
+        for I := low(fHovelBeastAnim) to High(fHovelBeastAnim) do
+          root.Write('', fHovelBeastAnim[I], I = low(fHovelBeastAnim));
+      root.EndArray;
+    root.EndFile;
+
+    root.SaveToFile(ChangeFileExt(aPath, '.json'));
+  finally
+    root.Free;
+  end;
 end;
 
 

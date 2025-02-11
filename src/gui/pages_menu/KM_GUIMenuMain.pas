@@ -3,7 +3,7 @@ unit KM_GUIMenuMain;
 interface
 uses
   Math, SysUtils,
-  KM_Controls, KM_ControlsBase, KM_ControlsEdit,
+  KM_Controls, KM_ControlsBase, KM_ControlsEdit,{  KM_ControlsSwitch,}
   KM_Pics, KM_InterfaceDefaults, KM_InterfaceTypes;
 
 
@@ -24,6 +24,7 @@ type
     Image_MM_HasAch : TKMImage;
     Button_MM_Credits: TKMButton;
     Button_MM_Quit: TKMButton;
+    //Switch_Test : TKMSwitch;
   public
     constructor Create(aParent: TKMPanel; aOnPageChange: TKMMenuChangeEventText);
     procedure Show;
@@ -78,6 +79,10 @@ begin
       Image_MM_HasAch := TKMImage.Create(Panel_MMButtons, Button_MM_Achievements.Right - 15, Button_MM_Achievements.Top - 10, 35, 33, 105, rxGuiMain);
       Image_MM_HasAch.Hitable := false;
       Image_MM_HasAch.Hide;
+
+      {Switch_Test := TKMSwitch.Create(Panel_MMButtons, 0, 340, 110, 30);
+      Switch_Test.Offset := 35;
+      Switch_Test.TexID := [383, 384, 385];}
 end;
 
 

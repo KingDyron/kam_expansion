@@ -218,7 +218,8 @@ begin
   Randomize;
 
   //fFormLoading.Label5.Caption := UnicodeString(GAME_VERSION + ': King Dyron mod');
-  fFormLoading.Show; //This is our splash screen
+  //fFormLoading.Show; //This is our splash screen
+  fFormLoading.Hide; //This is our splash screen
   fFormLoading.Refresh;
 
   {$IFDEF MSWindows}
@@ -882,7 +883,7 @@ begin
   fFormLoading.Position := poScreenCenter;
   fFormLoading.Bar1.Position := 0;
   fFormLoading.Label1.Caption := '';
-  fFormLoading.Show;
+  //fFormLoading.Show;
 end;
 
 

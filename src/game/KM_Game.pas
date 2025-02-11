@@ -102,6 +102,7 @@ type
     fMapEdMapSaveEnded: TEvent;
     fWeather : TKMWeatherCollection;
     fGameRes : TKMGameResources;
+    fTickLag : Single;
 
     procedure IssueAutosaveCommand(aAfterPT: Boolean);
     function FindHandToSpec: Integer;
@@ -153,6 +154,7 @@ type
     function PlayNextTick: Boolean;
     function GetMapSize: TKMPoint;
     function GetMapSizeInfo: UnicodeString;
+    function GetTickLag : Single;
   public
     GameResult: TKMGameResultMsg;
 
@@ -305,6 +307,7 @@ type
     procedure ReplayInconsistency(aCommand: TKMStoredGIPCommand; aMyRand: Cardinal);
     procedure SaveCampaignScriptData(SaveStream: TKMemoryStream);
 
+    property TickLag : Single read GetTickLag;
     procedure Render(aRender: TKMRender);
     procedure UpdateGame;
     procedure UpdateState(aGlobalTickCount: Cardinal);
@@ -1632,10 +1635,14 @@ begin
     fMapEdMapSaveEnded;
 end;
 
+function TKMGame.GetTickLag: Single;
+begin
+  If self = nil then
+    Exit(0);
+  Result := fTickLag;
+end;
 
 procedure TKMGame.Render(aRender: TKMRender);
-var
-  tickLag: Single;
 begin
   {$IFDEF PERFLOG}
   gPerfLogs.SectionEnter(psFrameFullC);
@@ -1644,17 +1651,17 @@ begin
     // How far in the past should we render? (0.0=Current tick, 1.0=Previous tick)
     if gGameSettings.GFX.InterpolatedRender then
     begin
-      tickLag := TimeSince(fLastUpdateState) / gMain.GameTickInterval;
-      tickLag := 1.0 - tickLag;
-      tickLag := EnsureRange(tickLag, 0.0, 1.0);
+      fTickLag := TimeSince(fLastUpdateState) / gMain.GameTickInterval;
+      fTickLag := 1.0 - fTickLag;
+      fTickLag := EnsureRange(fTickLag, 0.0, 1.0);
     end
     else
-      tickLag := 0.0;
+      fTickLag := 0.0;
 
-    fSetGameTickFracEvent(1.0 - tickLag);
+    fSetGameTickFracEvent(1.0 - fTickLag);
 
     if DoRenderGame then
-      gRenderPool.Render(tickLag);
+      gRenderPool.Render(fTickLag);
 
     aRender.SetRenderMode(rm2D);
 
