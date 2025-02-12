@@ -187,7 +187,7 @@ procedure TKMAIRecorder.AfterMissionStart;
   end;
 
 var I, J, K, L, M : Integer;
-  HA : TKMHouseArea;
+  HA : TKMHouseAreaNew;
   P1, P2 : TKMPoint;
   HT : TKMHouseType;
 begin
@@ -198,8 +198,8 @@ begin
       gicBuildHousePlan:  begin
                             HT := TKMHouseType(fCommandsStored[I].Params[0]);
                             HA := gRes.Houses[HT].BuildArea;
-                            for J := 1 to 4 do
-                              for K := 1 to 4 do
+                            for J := 1 to MAX_HOUSE_SIZE do
+                              for K := 1 to MAX_HOUSE_SIZE do
                               if HA[J, K] > 0 then
                               begin
                                 P2.X := P1.X + K - 3 - gRes.Houses[HT].EntranceOffsetX;
@@ -217,13 +217,13 @@ end;
 
 procedure TKMAIRecorder.RemoveObjForHouse(aLoc : TKMPoint; aHouse : TKMHouseType);
 var I, K : Integer;
-  HA : TKMHouseArea;
+  HA : TKMHouseAreaNew;
   P : TKMPoint;
 begin
   HA := gRes.Houses[aHouse].BuildArea;
 
-  for I := 1 to 4 do
-    for K := 1 to 4 do
+  for I := 1 to MAX_HOUSE_SIZE do
+    for K := 1 to MAX_HOUSE_SIZE do
     if HA[I, K] > 0 then
     begin
       P.X := aLoc.X + K - 3 - gRes.Houses[aHouse].EntranceOffsetX;

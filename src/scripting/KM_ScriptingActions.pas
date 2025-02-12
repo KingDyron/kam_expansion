@@ -1270,7 +1270,7 @@ function TKMScriptActions.GiveHouseSite(aHand, aHouseType, X, Y: Integer; aAddMa
 var
   H: TKMHouse;
   I, K: Integer;
-  HA: TKMHouseArea;
+  HA: TKMHouseAreaNew;
   nonEntranceX, nonEntranceY: Integer;
 begin
   try
@@ -1290,8 +1290,8 @@ begin
 
         Result := H.UID;
         HA := gRes.Houses[H.HouseType].BuildArea;
-        for I := 1 to 4 do
-        for K := 1 to 4 do
+        for I := 1 to MAX_HOUSE_SIZE do
+        for K := 1 to MAX_HOUSE_SIZE do
           if HA[I, K] <> 0 then
           begin
             gTerrain.RemoveObject(KMPoint(nonEntranceX + K - 3, nonEntranceY + I - 4));
@@ -1331,7 +1331,7 @@ function TKMScriptActions.GiveHouseSiteEx(aHand: Integer; aHouseType: TKMHouseTy
 var
   H: TKMHouse;
   I, K: Integer;
-  HA: TKMHouseArea;
+  HA: TKMHouseAreaNew;
   nonEntranceX: Integer;
 begin
   try
@@ -1350,8 +1350,8 @@ begin
 
         Result := H.UID;
         HA := gRes.Houses[aHouseType].BuildArea;
-        for I := 1 to 4 do
-        for K := 1 to 4 do
+        for I := 1 to MAX_HOUSE_SIZE do
+        for K := 1 to MAX_HOUSE_SIZE do
           if HA[I, K] <> 0 then
           begin
             gTerrain.RemoveObject(KMPoint(nonEntranceX + K - 3, Y + I - 4));

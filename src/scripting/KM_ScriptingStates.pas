@@ -128,7 +128,7 @@ type
     function HouseWoodcutterChopOnly(aHouseID: Integer): Boolean;
     function HouseWoodcutterMode(aHouseID: Integer): TKMWoodcutterMode;
     function HouseWorker(aHouseID: Integer): Integer;
-    function HouseArea(aHouseType: Integer): TKMHouseArea;
+    function HouseArea(aHouseType: Integer): TKMHouseAreaNew;
     function HouseEntranceOffset(aHouseType: Integer): TKMPoint;
     function HouseTypeToID(aHouseType: TKMHouseType): Integer;
     function HouseIDtoType(aHouseType: Integer): TKMHouseType;
@@ -3742,13 +3742,11 @@ begin
   end;
 end;
 
-function TKMScriptStates.HouseArea(aHouseType: Integer): TKMHouseArea;
+function TKMScriptStates.HouseArea(aHouseType: Integer): TKMHouseAreaNew;
 var I, K : Integer;
 begin
   try
-    for I := 1 to 4 do
-      for K := 1 to 4 do
-        Result[I,K] := 0;
+    FillChar(Result, SizeOf(Result), #0);
 
     if InRange(aHouseType, low(HOUSE_ID_TO_TYPE), high(HOUSE_ID_TO_TYPE)) then
     begin

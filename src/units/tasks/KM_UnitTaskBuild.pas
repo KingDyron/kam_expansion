@@ -1261,7 +1261,7 @@ end;
 constructor TKMTaskBuildHouseArea.Create(aWorker: TKMUnitWorker; aHouseType: TKMHouseType; const aLoc: TKMPoint; aID: Integer);
 var
   I,K: Integer;
-  HA: TKMHouseArea;
+  HA: TKMHouseAreaNew;
 begin
   inherited Create(aWorker);
   fType  := uttBuildHouseArea;
@@ -1276,7 +1276,7 @@ begin
 
   //Fill Cells left->right, top->bottom. Worker will start flattening from the end (reversed)
   fLastToDig := -1;
-  for I := 1 to 4 do for K := 1 to 4 do
+  for I := 1 to MAX_HOUSE_SIZE do for K := 1 to MAX_HOUSE_SIZE do
   if HA[I,K] <> 0 then
   begin
     Inc(fLastToDig);

@@ -683,7 +683,7 @@ var
 
 var
   I, X, Y, aX, aY, ActualIdx, Cnt: Integer;
-  HA: TKMHouseArea;
+  HA: TKMHouseAreaNew;
 begin
   for House := HOUSE_MIN to HOUSE_MAX do
   begin
@@ -697,8 +697,8 @@ begin
     // Find house plan and save its shape into POMArr
     HA := gRes.Houses[House].BuildArea;
     Cnt := 0;
-    for Y := 1 to 4 do
-    for X := 1 to 4 do
+    for Y := 1 to MAX_HOUSE_SIZE do
+    for X := 1 to MAX_HOUSE_SIZE do
       if (HA[Y,X] <> 0) then
       begin
         POMArr[Y,X] := 0;
@@ -708,8 +708,8 @@ begin
     // Save vectors from entrance to each tile which is in house plan
     SetLength(fHousesMapping[House].Tiles, Cnt);
     Cnt := 0;
-    for Y := 1 to 4 do
-    for X := 1 to 4 do
+    for Y := 1 to MAX_HOUSE_SIZE do
+    for X := 1 to MAX_HOUSE_SIZE do
       if (POMArr[Y,X] = 0) then
       begin
         fHousesMapping[House].Tiles[Cnt] := KMPoint(X - 3 - EnterOff, Y - 4);
@@ -736,9 +736,13 @@ begin
     Index[dirE] := 3 + Byte(POMArr[4,4] = 0);
 
     // Get entrance with respect to array HA
-    for X := 1 to 4 do
-      if (HA[4,X] = 2) then
-        break;
+    for X := 1 to MAX_HOUSE_SIZE do
+      for Y := 1 to MAX_HOUSE_SIZE do
+        if (HA[Y,X] = 2) then
+        begin
+          break;
+          Break;
+        end;
     fHousesMapping[House].MoveToEntrance[dirN] := KMPoint(0, 0);
     fHousesMapping[House].MoveToEntrance[dirS] := KMPoint(0, 4 - Index[dirN]);
     fHousesMapping[House].MoveToEntrance[dirW] := KMPoint(X - Index[dirE], 0);

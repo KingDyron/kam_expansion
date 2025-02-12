@@ -1408,15 +1408,15 @@ end;
 function TKMHand.CanAddHousePlan(const aLoc: TKMPoint; aHouseType: TKMHouseType): Boolean;
 var
   I, K, J, S, T, Tx, Ty: Integer;
-  HA: TKMHouseArea;
+  HA: TKMHouseAreaNew;
 begin
   Result := gTerrain.CanPlaceHouse(aLoc, aHouseType);
   Result := Result and CanBuildHouse(aHouseType);
   if not Result then Exit;
 
   HA := gRes.Houses[aHouseType].BuildArea;
-  for I := 1 to 4 do
-  for K := 1 to 4 do
+  for I := 1 to MAX_HOUSE_SIZE do
+  for K := 1 to MAX_HOUSE_SIZE do
   if HA[I,K] <> 0 then
   begin
     Tx := aLoc.X + K - 3- gRes.Houses[aHouseType].EntranceOffsetX;
@@ -1493,7 +1493,7 @@ end;
 function TKMHand.CanAddHousePlanAI(aX, aY: Word; aHouseType: TKMHouseType; aCheckInfluence: Boolean): Boolean;
 var
   I, K, J, S, T, Tx, Ty: Integer;
-  HA: TKMHouseArea;
+  HA: TKMHouseAreaNew;
   enterOff: ShortInt;
   terOwner: TKMHandID;
 begin
@@ -1507,8 +1507,8 @@ begin
   //Perform additional cheks for AI
   HA := gRes.Houses[aHouseType].BuildArea;
   enterOff := gRes.Houses[aHouseType].EntranceOffsetX;
-  for I := 1 to 4 do
-  for K := 1 to 4 do
+  for I := 1 to MAX_HOUSE_SIZE do
+  for K := 1 to MAX_HOUSE_SIZE do
   if HA[I,K] <> 0 then
   begin
     Tx := aX + K - 3 - enterOff;
@@ -2391,7 +2391,7 @@ var
   I, K, J, S, T: Integer;
   P2: TKMPoint;
   allowBuild: Boolean;
-  HA: TKMHouseArea;
+  HA: TKMHouseAreaNew;
 begin
   //Get basic Marks
   gTerrain.GetHouseMarks(aLoc, aHouseType, aList, aIgnoreObjects);
@@ -2399,8 +2399,8 @@ begin
   //Override marks if there are House/FieldPlans (only we know about our plans) and or FogOfWar
   HA := gRes.Houses[aHouseType].BuildArea;
 
-  for I := 1 to 4 do
-    for K := 1 to 4 do
+  for I := 1 to MAX_HOUSE_SIZE do
+    for K := 1 to MAX_HOUSE_SIZE do
       if (HA[I,K] <> 0)
         and gTerrain.TileInMapCoords(aLoc.X + K - 3 - gRes.Houses[aHouseType].EntranceOffsetX, aLoc.Y + I - 4 - gRes.Houses[aHouseType].EntranceOffsetY, 1) then
       begin

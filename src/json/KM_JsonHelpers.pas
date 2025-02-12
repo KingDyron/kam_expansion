@@ -65,6 +65,8 @@ type
     function GetPoint(aName : String) : TKMPoint;
     function GetPointF(aName : String) : TKMPointF;
 
+    function GetHouseArea(aName : String; out aValue : TKMHouseAreaNew) : Boolean;
+
     function CRC : Cardinal;
 
   end;
@@ -138,6 +140,7 @@ type
       Procedure Write(aName : String; aValue : THouseSupply8; aIsFirst : Boolean = false);overload;
 
       Procedure Write(aName : String; aValue : TKMAnimLoop; aIsFirst : Boolean = false);overload;
+      Procedure Write(aName : String; aValue : TKMAnimation; aIsFirst : Boolean = false);overload;
 
       procedure AddToArray(aValue : Integer; aIsFirst : Boolean = false);overload;
       procedure AddToArray(aValue : Word; aIsFirst : Boolean = false);overload;
@@ -598,6 +601,24 @@ end;
 function TKMJsonHelper.GetPointF(aName : String) : TKMPointF;
 begin
   Result := KMPointF(O[aName].D['X'], O[aName].D['Y']);
+end;
+
+function TKMJsonHelper.GetHouseArea(aName : String; out aValue : TKMHouseAreaNew) : Boolean;
+var I, K : Integer;
+  arr1, arr2 : TKMJsonArray;
+begin
+  arr1 := self.A[aName];
+  If arr1.Count = 0 then
+    Exit(false);
+  Result := true;
+  FillChar(aValue, Sizeof(aValue), #0);
+  for I := 0 to Min(arr1.Count -1, MAX_HOUSE_SIZE - 1) do
+  begin
+    arr2 := arr1.A[I];
+    for K := 0 to Min(arr2.Count -1, MAX_HOUSE_SIZE - 1) do
+      aValue[I + 1, K + 1] := arr2.I[K];
+  end;
+
 end;
 
 function TKMJsonHelper.CRC: Cardinal;
@@ -1244,7 +1265,7 @@ begin
     Write('Y', aValue.MoveY);
 
     WriteArray('Steps');
-      for I := 1 to aValue.Count - 1 do
+      for I := 1 to aValue.Count do
         AddToArray(aValue.Step[I], I = 1);
     EndArray;
   EndLineObject;
@@ -1252,6 +1273,27 @@ begin
   GetOldOneLine;
 end;
 
+procedure TKMJsonSaver.Write(aName: string; aValue: TKMAnimation; aIsFirst: Boolean = False);
+var I : Integer;
+begin
+  If aValue.Count = 0 then
+    Exit;
+
+  SetOldOneLine;
+
+
+  WriteLineObject(aName, aIsFirst);
+    Write('X', aValue.X, true);
+    Write('Y', aValue.Y);
+
+    WriteArray('Steps');
+      for I := 0 to aValue.Count - 1 do
+        AddToArray(aValue.Step[I], I = 1);
+    EndArray;
+  EndLineObject;
+
+  GetOldOneLine;
+end;
 
 
 procedure TKMJsonSaver.AddToArray(aValue : Integer; aIsFirst : Boolean = false);

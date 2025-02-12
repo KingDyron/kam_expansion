@@ -214,7 +214,7 @@ var
   iPlayerAI: TKMHandAI;
   chooseLoc: TKMChooseLoc;
   groupOrder: TKMMissionScriptGroupOrder;
-  HA: TKMHouseArea;
+  HA: TKMHouseAreaNew;
 begin
   case CommandType of
     ctSetMap:           begin
@@ -376,8 +376,8 @@ begin
                                 fLastHouse.AddDemandBuildingMaterials;
 
                                 HA := gRes.Houses[fLastHouse.HouseType].BuildArea;
-                                for I := 1 to 4 do
-                                for K := 1 to 4 do
+                                for I := 1 to MAX_HOUSE_SIZE do
+                                for K := 1 to MAX_HOUSE_SIZE do
                                   if HA[I, K] <> 0 then
                                   begin
                                     //gTerrain.RemoveObject(KMPoint(nonEntranceX + K - 3, P[2]+1 + I - 4));

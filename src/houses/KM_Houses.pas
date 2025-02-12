@@ -2116,7 +2116,7 @@ procedure TKMHouse.GetListOfCellsAround(aCells: TKMPointDirList; aPassability: T
 var
   I, K: Integer;
   loc: TKMPoint;
-  HA: TKMHouseArea;
+  HA: TKMHouseAreaNew;
 
   procedure AddLoc(X,Y: Word; Dir: TKMDirection);
   begin
@@ -2130,14 +2130,14 @@ begin
   loc := fPosition;
   HA := gRes.Houses[fType].BuildArea;
 
-  for I := 1 to 4 do for K := 1 to 4 do
+  for I := 1 to MAX_HOUSE_SIZE do for K := 1 to MAX_HOUSE_SIZE do
   if HA[I,K] <> 0 then
   begin
     if (I = 1) or (HA[I-1,K] = 0) then
       AddLoc(loc.X + K - 3, loc.Y + I - 4 - 1, dirS); //Above
-    if (I = 4) or (HA[I+1,K] = 0) then
+    if (I = MAX_HOUSE_SIZE) or (HA[I+1,K] = 0) then
       AddLoc(loc.X + K - 3, loc.Y + I - 4 + 1, dirN); //Below
-    if (K = 4) or (HA[I,K+1] = 0) then
+    if (K = MAX_HOUSE_SIZE) or (HA[I,K+1] = 0) then
       AddLoc(loc.X + K - 3 + 1, loc.Y + I - 4, dirW); //FromRight
     if (K = 1) or (HA[I,K-1] = 0) then
       AddLoc(loc.X + K - 3 - 1, loc.Y + I - 4, dirE); //FromLeft
@@ -2149,7 +2149,7 @@ procedure TKMHouse.GetListOfCellsWithin(aCells: TKMPointList);
 var
   I, K: Integer;
   loc: TKMPoint;
-  houseArea: TKMHouseArea;
+  houseArea: TKMHouseAreaNew;
 begin
   aCells.Clear;
   loc := fPosition;
@@ -2166,7 +2166,7 @@ procedure TKMHouse.GetListOfGroundVisibleCells(aCells: TKMPointTagList);
 var
   I, K, ground: Integer;
   loc: TKMPoint;
-  groundVisibleArea: TKMHouseArea;
+  groundVisibleArea: TKMHouseAreaNew;
 begin
   aCells.Clear;
   loc := fPosition;
@@ -2197,8 +2197,8 @@ end;
 
 function TKMHouse.HitTest(X, Y: Integer): Boolean;
 begin
-  Result := (X-fPosition.X+3 in [1..4]) and
-            (Y-fPosition.Y+4 in [1..4]) and
+  Result := (X-fPosition.X+3 in [1..MAX_HOUSE_SIZE]) and
+            (Y-fPosition.Y+4 in [1..MAX_HOUSE_SIZE]) and
             (gRes.Houses[fType].BuildArea[Y-fPosition.Y+4, X-fPosition.X+3] <> 0) and
             (gRes.Houses[fType].BuildArea[Y-fPosition.Y+4, X-fPosition.X+3] <> 3)
             ;
@@ -4155,7 +4155,7 @@ const
 var
   I, K: Integer;
   wasOnSnow: Boolean;
-  HA: TKMHouseArea;
+  HA: TKMHouseAreaNew;
 begin
   Inc(FlagAnimStep);
   WorkAnimStepPrev := WorkAnimStep;
@@ -4177,8 +4177,8 @@ begin
   begin
     HA := gRes.Houses[fType].BuildArea;
     //Reveal house from all points it covers
-    for I := 1 to 4 do
-      for K := 1 to 4 do
+    for I := 1 to MAX_HOUSE_SIZE do
+      for K := 1 to MAX_HOUSE_SIZE do
         if HA[I,K] <> 0 then
           gHands.RevealForTeam(Owner, KMPoint(fPosition.X + K - 4, fPosition.Y + I - 4), gRes.Houses[fType].Sight, FOG_OF_WAR_INC, frtHouse);
   end;
@@ -4373,7 +4373,7 @@ const
 var
   I, K: Integer;
   houseUnoccupiedMsgId: Integer;
-  HA: TKMHouseArea;
+  HA: TKMHouseAreaNew;
 begin
   if not IsComplete then
   begin
@@ -4381,8 +4381,8 @@ begin
     begin
       HA := gRes.Houses[fType].BuildArea;
       //Reveal house from all points it covers
-      for I := 1 to 4 do
-        for K := 1 to 4 do
+      for I := 1 to MAX_HOUSE_SIZE do
+        for K := 1 to MAX_HOUSE_SIZE do
           if HA[I,K] <> 0 then
             gHands.RevealForTeam(Owner, KMPoint(fPosition.X + K - 4, fPosition.Y + I - 4), HOUSE_PLAN_SIGHT, FOG_OF_WAR_INC, frtHouse);
     end;
@@ -5632,7 +5632,7 @@ procedure TKMHouseAppleTree.GetListOfCellsAround(aCells: TKMPointDirList; aPassa
   var
     I, K: Integer;
     loc: TKMPoint;
-    HA: TKMHouseArea;
+    HA: TKMHouseAreaNew;
     H : TKMHouseAppleTree;
   begin
     If aID = -1 then
@@ -5644,14 +5644,14 @@ procedure TKMHouseAppleTree.GetListOfCellsAround(aCells: TKMPointDirList; aPassa
     loc := H.Position;
     HA := gRes.Houses[H.HouseType].BuildArea;
 
-    for I := 1 to 4 do for K := 1 to 4 do
+    for I := 1 to MAX_HOUSE_SIZE do for K := 1 to MAX_HOUSE_SIZE do
     if HA[I,K] <> 0 then
     begin
       if (I = 1) or (HA[I-1,K] = 0) then
         AddLoc(loc.X + K - 3, loc.Y + I - 4 - 1, dirS); //Above
-      if (I = 4) or (HA[I+1,K] = 0) then
+      if (I = MAX_HOUSE_SIZE) or (HA[I+1,K] = 0) then
         AddLoc(loc.X + K - 3, loc.Y + I - 4 + 1, dirN); //Below
-      if (K = 4) or (HA[I,K+1] = 0) then
+      if (K = MAX_HOUSE_SIZE) or (HA[I,K+1] = 0) then
         AddLoc(loc.X + K - 3 + 1, loc.Y + I - 4, dirW); //FromRight
       if (K = 1) or (HA[I,K-1] = 0) then
         AddLoc(loc.X + K - 3 - 1, loc.Y + I - 4, dirE); //FromLeft
@@ -5676,7 +5676,7 @@ procedure TKMHouseAppleTree.GetListOfCellsWithin(aCells: TKMPointList);
   var
     I, K: Integer;
     loc: TKMPoint;
-    houseArea: TKMHouseArea;
+    houseArea: TKMHouseAreaNew;
     H : TKMHouseAppleTree;
   begin
     If aID = -1 then

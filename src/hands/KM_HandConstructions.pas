@@ -1245,7 +1245,7 @@ procedure TKMHousePlanList.GetOutlines(aList: TKMPointDirList; const aRect: TKMR
 var
   I, J, K: Integer;
   rect: TKMRect;
-  HA: TKMHouseArea;
+  HA: TKMHouseAreaNew;
 begin
   //Expand the Rect by 2 to include plans near Rect borders
   rect := KMRectGrow(aRect, 2);
@@ -1258,7 +1258,7 @@ begin
     begin
       HA := gRes.Houses[fPlans[I].HouseType].BuildArea;
 
-      for J := 1 to 4 do for K := 1 to 4 do
+      for J := 1 to MAX_HOUSE_SIZE do for K := 1 to MAX_HOUSE_SIZE do
       if HA[J,K] <> 0 then
       begin
         if (J = 1) or (HA[J-1, K] = 0) then
@@ -1267,10 +1267,10 @@ begin
         if (K = 1) or (HA[J, K-1] = 0) then
           aList.Add(KMPointDir(fPlans[I].Loc.X + K - 3, fPlans[I].Loc.Y + J - 4, dirE));
 
-        if (J = 4) or (HA[J+1, K] = 0) then
+        if (J = MAX_HOUSE_SIZE) or (HA[J+1, K] = 0) then
           aList.Add(KMPointDir(fPlans[I].Loc.X + K - 3, fPlans[I].Loc.Y + J - 4, dirS));
 
-        if (K = 4) or (HA[J, K+1] = 0) then
+        if (K = MAX_HOUSE_SIZE) or (HA[J, K+1] = 0) then
           aList.Add(KMPointDir(fPlans[I].Loc.X + K - 3, fPlans[I].Loc.Y + J - 4, dirW));
       end;
     end;

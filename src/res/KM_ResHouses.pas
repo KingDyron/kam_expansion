@@ -78,6 +78,7 @@ type
     fMaxOutWares : Word;
     fUnlockAfter : TKMHouseTypeSet;
     fCanForceWork : Boolean;
+    fBuildArea, fGroundArea : TKMHouseAreaNew;
     function GetArea: TKMHouseArea;
     function GetDoesOrders: Boolean;
     function GetGUIIcon: Word;
@@ -90,7 +91,6 @@ type
     function GetTabletIcon: Word;
     function GetSnowPic: SmallInt;
     function GetUnoccupiedMsgId: SmallInt;
-    function GetGroundVisibleArea: TKMHouseArea;
     function GetBuildSupply : THouseBuildSupply;
     function GetMaxWareCount : Word;
     function GetMaxWareOutCount : Word;
@@ -140,7 +140,7 @@ type
     property EntranceOffsetYpx: ShortInt read fHouseDat.EntranceOffsetYpx;
     property WoodCost: Byte read fHouseDat.WoodCost;
     property StoneCost: Byte read fHouseDat.StoneCost;
-    property BuildSupply: THouseBuildSupply read GetBuildSupply;{fHouseDat.BuildSupply}
+    property BuildSupply: THouseBuildSupply read GetBuildSupply;
     property WorkerRest: Smallint read fHouseDat.WorkerRest;
     property ResProductionX: ShortInt read fHouseDat.ResProductionX;
     property Sight: Smallint read fHouseDat.Sight;
@@ -151,8 +151,8 @@ type
     function HasStoneWariants : Byte;
     function GetStoneWariant(aID : Integer) : Integer;
     // Additional properties added by Remake
-    property BuildArea: TKMHouseArea read GetArea;
-    property GroundVisibleArea: TKMHouseArea read GetGroundVisibleArea;
+    property BuildArea: TKMHouseAreaNew read fBuildArea;
+    property GroundVisibleArea: TKMHouseAreaNew read fGroundArea;
     property DoesOrders: Boolean read GetDoesOrders;
     property GUIIcon: Word read GetGUIIcon;
     property HouseDescription: UnicodeString read GetHouseDescription;
@@ -1075,11 +1075,6 @@ begin
 end;
 
 
-function TKMHouseSpec.GetGroundVisibleArea: TKMHouseArea;
-begin
-  Result := HOUSE_DAT_X[fHouseType].GroundArea;
-end;
-
 function TKMHouseSpec.GetGUIIcon: Word;
 begin
   Result := HOUSE_DAT_X[fHouseType].BuildIcon;
@@ -1132,10 +1127,10 @@ var
   outlines: TKMShapesArray;
 begin
   aList.Clear;
-  SetLength(tmp, 6, 6);
+  SetLength(tmp, MAX_HOUSE_SIZE + 1, MAX_HOUSE_SIZE + 1);
 
-  for I := 0 to 3 do
-  for K := 0 to 3 do
+  for I := 0 to MAX_HOUSE_SIZE - 1 do
+  for K := 0 to MAX_HOUSE_SIZE - 1 do
     tmp[I+1,K+1] := byte(BuildArea[I+1,K+1] > 0);
     //tmp[I+1,K+1] := Byte(HOUSE_DAT_X[fHouseType].PlanYX[I+1,K+1] > 0);
 
@@ -2125,7 +2120,6 @@ begin
 
             nAnim := nHouse.O[HOUSE_ACTION_STR[HA]];
             TKMJson(nAnim).GetAnim(fItems[H].fHouseDat.Anim[HA]);
-            //JSONToAnim(nAnim, fItems[H].fHouseDat.Anim[HA]);
           end;
 
           for HA := haWork1 to haWork5 do
@@ -2336,9 +2330,12 @@ begin
                   
               end;
           end;}
+          nHouse.GetHouseArea('Build_Area', fBuildArea);
+          nHouse.GetHouseArea('Ground_Area', fGroundArea);
 
-          If nHouse.Contains('Build_Area') then
+          {If nHouse.Contains('Build_Area') then
           begin
+
             nAR2 :=  nHouse.A['Build_Area'];
 
             for J := 0 to nAR2.Count - 1 do
@@ -2351,7 +2348,8 @@ begin
                 BuildArea[J + 1, K + 1] := nAR[K];
 
             end;
-          end;
+          end;}
+
           JSONArrToValidArr(nHouse.A['Wariants'], fWariants);
 
 
@@ -2545,7 +2543,7 @@ begin
           //wares supplies textures
           for J := 1 to WARES_IN_OUT_COUNT do
           begin
-            If fSupplyIn[J, 1] = -1 then
+            If fSupplyIn[J, 1] < 10 then
               Continue;
             root.WriteLineArray('SupplyIn' + IntToStr(J));
             for K := 1 to 5 do
@@ -2555,7 +2553,7 @@ begin
 
           for J := 1 to WARES_IN_OUT_COUNT do
           begin
-            If fSupplyOut[J, 1] = -1 then
+            If fSupplyOut[J, 1] < 10 then
               Continue;
 
             root.WriteLineArray('SupplyOut' + IntToStr(J));
@@ -2568,15 +2566,7 @@ begin
           begin
             If fHouseDat.Anim[HA].Count = 0 then
               Continue;
-            root.WriteLineObject(HOUSE_ACTION_STR[HA], L = 0);
-              root.Write('X', fHouseDat.Anim[HA].MoveX, true);
-              root.Write('Y', fHouseDat.Anim[HA].MoveY);
-              root.WriteLineArray('Steps');
-                for K := 1 to fHouseDat.Anim[HA].Count do
-                  root.AddToArray(fHouseDat.Anim[HA].Step[K], K = 1);
-              root.EndLineArray;
-            root.EndLineObject;
-            Inc(L);
+            root.Write(HOUSE_ACTION_STR[HA], fHouseDat.Anim[HA]);
           end;
           //work animation sounds
           for HA := haWork1 to haWork5 do
@@ -2690,7 +2680,9 @@ begin
             root.Write('X', fBuildSupply[3, 1].MoveX, true);
             root.Write('Y', fBuildSupply[3, 1].MoveY);
           root.EndLineObject;
-          root.Write('Build_Area', BuildArea);
+          //root.Write('Build_Area', BuildArea);
+          root.Write('Build_Area', fBuildArea);
+          root.Write('Ground_Area', GroundVisibleArea);
           root.Write('Wariants', fWariants);
         end;
         root.EndObject;

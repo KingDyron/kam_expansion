@@ -4840,7 +4840,7 @@ var
   I,K,S,T: Integer;
   P2: TKMPoint;
   allowBuild: Boolean;
-  HA: TKMHouseArea;
+  HA: TKMHouseAreaNew;
   CanDoWall : Boolean;
 begin
   Assert(aList.Count = 0);
@@ -4856,8 +4856,8 @@ begin
   if aHouseType = htShipYard then
     CanDoWall := CanPlaceShipYard(aLoc.X, aLoc.Y);
 
-  for I := 1 to 4 do
-    for K := 1 to 4 do
+  for I := 1 to MAX_HOUSE_SIZE do
+    for K := 1 to MAX_HOUSE_SIZE do
       if HA[I,K] <> 0 then
       begin
 
@@ -7139,7 +7139,7 @@ procedure TKMTerrain.SetHouse(const aLoc: TKMPoint; aHouseType: TKMHouseType; aH
 var
   I, K, X, Y: Word;
   toFlatten: TKMPointList;
-  HA: TKMHouseArea;
+  HA: TKMHouseAreaNew;
   objectsEffected: Boolean; //UpdateWalkConnect cares about this for optimisation purposes
 begin
   objectsEffected := False;
@@ -7155,8 +7155,8 @@ begin
 
   HA := gRes.Houses[aHouseType].BuildArea;
 
-  for I := 1 to 4 do
-  for K := 1 to 4 do
+  for I := 1 to MAX_HOUSE_SIZE do
+  for K := 1 to MAX_HOUSE_SIZE do
     if HA[I,K] <> 0 then
     begin
       X := aLoc.X + K - 3;
@@ -7203,8 +7203,8 @@ begin
 
   if aHouseType in WALL_HOUSES then
     if aHouseStage = hsNone then
-      for I := 1 to 4 do
-        for K := 1 to 4 do
+      for I := 1 to MAX_HOUSE_SIZE do
+        for K := 1 to MAX_HOUSE_SIZE do
           if HA[I,K] <> 0 then
           begin
             X := aLoc.X + K - 3;
@@ -7221,20 +7221,20 @@ begin
 
   //Recalculate Passability for tiles around the house so that they can't be built on too
   UpdatePassability(KMRect(aLoc.X - 2 - HOUSE_BLOCK_RADIUS, aLoc.Y - 3 - HOUSE_BLOCK_RADIUS,
-                            aLoc.X + 1 + HOUSE_BLOCK_RADIUS, aLoc.Y + HOUSE_BLOCK_RADIUS));
-  UpdateWalkConnect([wcWalk, wcRoad, wcWork], KMRect(aLoc.X - 3, aLoc.Y - 4, aLoc.X + 2, aLoc.Y + 1), objectsEffected);
+                            aLoc.X + 3 + HOUSE_BLOCK_RADIUS, aLoc.Y + 2 + HOUSE_BLOCK_RADIUS));
+  UpdateWalkConnect([wcWalk, wcRoad, wcWork], KMRect(aLoc.X - 3, aLoc.Y - 4, aLoc.X + 4, aLoc.Y + 3), objectsEffected);
 end;
 
 procedure TKMTerrain.SetHouse(aHouse: Pointer; aOwner: ShortInt; aHouseStage : TKMHouseStage; const aFlattenTerrain: Boolean = False);
 var
   I, K, X, Y: Word;
-  HA: TKMHouseArea;
+  HA: TKMHouseAreaNew;
 begin
   HA := gRes.Houses[TKMHouse(aHouse).HouseType].BuildArea;
 
 
-  for I := 1 to 4 do
-  for K := 1 to 4 do
+  for I := 1 to MAX_HOUSE_SIZE do
+  for K := 1 to MAX_HOUSE_SIZE do
     if HA[I,K] <> 0 then
     begin
       X := TKMHouse(aHouse).Position.X + K - 3;
@@ -7267,14 +7267,14 @@ end;
 procedure TKMTerrain.SetHouseAreaOwner(const aLoc: TKMPoint; aHouseType: TKMHouseType; aOwner: TKMHandID);
 var
   I, K: Integer;
-  HA: TKMHouseArea;
+  HA: TKMHouseAreaNew;
 begin
   HA := gRes.Houses[aHouseType].BuildArea;
   case aHouseType of
     htNone:    Land^[aLoc.Y,aLoc.X].TileOwner := aOwner;
     htAny:     ; //Do nothing
-    else        for I := 1 to 4 do
-                  for K := 1 to 4 do //If this is a house make change for whole place
+    else        for I := 1 to MAX_HOUSE_SIZE do
+                  for K := 1 to MAX_HOUSE_SIZE do //If this is a house make change for whole place
                     if HA[I,K] <> 0 then
                       if TileInMapCoords(aLoc.X + K - 3, aLoc.Y + I - 4) then
                         Land^[aLoc.Y + I - 4, aLoc.X + K - 3].TileOwner := aOwner;
@@ -7320,7 +7320,7 @@ function TKMTerrain.CanPlaceHouse(aLoc: TKMPoint; aHouseType: TKMHouseType): Boo
 var
   I,K,X,Y: Integer;
   L, M: Integer;
-  HA: TKMHouseArea;
+  HA: TKMHouseAreaNew;
 begin
   Result := True;
 
@@ -7336,8 +7336,8 @@ begin
   HA := gRes.Houses[aHouseType].BuildArea;
   aLoc.X := aLoc.X - gRes.Houses[aHouseType].EntranceOffsetX; //update offset
   aLoc.Y := aLoc.Y - gRes.Houses[aHouseType].EntranceOffsetY; //update offset
-  for I := 1 to 4 do
-  for K := 1 to 4 do
+  for I := 1 to MAX_HOUSE_SIZE do
+  for K := 1 to MAX_HOUSE_SIZE do
     if Result and (HA[I,K] <> 0) then
     begin
       X := aLoc.X + k - 3;
@@ -7410,7 +7410,7 @@ end;
 function TKMTerrain.CheckHouseBounds(aHouseType: TKMHouseType; const aLoc: TKMPoint; aInsetRect: TKMRect): Boolean;
 var
   I, K: Integer;
-  HA: TKMHouseArea;
+  HA: TKMHouseAreaNew;
   TX, TY: Integer;
   mapHouseInsetRect: TKMRect;
 begin
@@ -7419,8 +7419,8 @@ begin
 
   mapHouseInsetRect := KMRect(aInsetRect.Left + 1, aInsetRect.Top + 1, aInsetRect.Right - 1, aInsetRect.Bottom - 1);
 
-  for I := 1 to 4 do
-  for K := 1 to 4 do
+  for I := 1 to MAX_HOUSE_SIZE do
+  for K := 1 to MAX_HOUSE_SIZE do
   if (HA[I,K] <> 0) then
   begin
     TX := aLoc.X + K - 3;
@@ -7434,14 +7434,14 @@ end;
 function TKMTerrain.CanPlaceHouseFromScript(aHouseType: TKMHouseType; const aLoc: TKMPoint): Boolean;
 var
   I, K, L, M: Integer;
-  HA: TKMHouseArea;
+  HA: TKMHouseAreaNew;
   TX, TY: Integer;
 begin
   Result := True;
   HA := gRes.Houses[aHouseType].BuildArea;
 
-  for I := 1 to 4 do
-  for K := 1 to 4 do
+  for I := 1 to MAX_HOUSE_SIZE do
+  for K := 1 to MAX_HOUSE_SIZE do
   if (HA[I,K] <> 0) then
   begin
     TX := aLoc.X + K - 3;
@@ -7775,7 +7775,7 @@ end;
 procedure TKMTerrain.AddHouseRemainder(const aLoc: TKMPoint; aHouseType: TKMHouseType; aBuildState: TKMHouseBuildState; Resources : array of TKMWareType);
 var
   I, K: Integer;
-  HA: TKMHouseArea;
+  HA: TKMHouseAreaNew;
   W : TKMWareType;
 begin
   HA := gRes.Houses[aHouseType].BuildArea;
@@ -7783,8 +7783,8 @@ begin
   if aBuildState in [hbsStone, hbsDone] then //only leave rubble if the construction was well underway (stone and above)
   begin
     //Leave rubble
-    for I := 2 to 4 do
-      for K := 2 to 4 do
+    for I := 2 to MAX_HOUSE_SIZE do
+      for K := 2 to MAX_HOUSE_SIZE do
         if (HA[I - 1, K] <> 0) and (HA[I, K - 1] <> 0)
         and (HA[I - 1, K - 1] <> 0) and (HA[I, K] <> 0) then
         begin
