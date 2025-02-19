@@ -276,8 +276,9 @@ var path : String;
   PC : TKMPatternsCollection;
 begin
   Inherited;
-  If DirectoryExists(path) then
-    for path in TDirectory.GetDirectories(ExeDir + 'data' + PathDelim + 'Patterns' + PathDelim) do
+  If not DirectoryExists(ExeDir + 'data' + PathDelim + 'Patterns') then
+    Exit;
+  for path in TDirectory.GetDirectories(ExeDir + 'data' + PathDelim + 'Patterns' + PathDelim) do
     If not (TPath.GetFileName(path) = 'Local') then
     begin
       I := length(fList);

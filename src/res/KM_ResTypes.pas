@@ -117,7 +117,7 @@ type
 
 
   THouseBuildSupplyOld = array [1..2,1..6] of packed record MoveX, MoveY: Integer; end;
-  THouseBuildSupply = array [1..3,1..9] of packed record MoveX, MoveY: Integer; end;
+  THouseBuildSupply = array [1..3] of packed record MoveX, MoveY: Integer; end;
   THouseSupply = array [1..4, 1..5] of SmallInt;
   //* Woodcutting mode
   TKMWoodcutterMode = (wmChopAndPlant, wmChop, wmPlant);

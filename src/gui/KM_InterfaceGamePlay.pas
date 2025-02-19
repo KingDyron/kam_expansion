@@ -4918,7 +4918,8 @@ var
 begin
   inherited;
   date := Now;
-  Label_HourBar.Caption := TimeToStr(date);
+
+  Label_HourBar.Caption := TimeToStr(date, TFormatSettings.Create(SysLocale.PriLangID));
   Label_GameTimeBar.Caption := TimeToString(gGame.MissionTime);
   // Update replay counters
   if fUIMode = umReplay then

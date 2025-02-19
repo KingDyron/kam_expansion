@@ -1031,7 +1031,6 @@ begin
     SL.Free;
   end;
   Exit;
-
   root := TKMJsonSaver.Create;
 
   try

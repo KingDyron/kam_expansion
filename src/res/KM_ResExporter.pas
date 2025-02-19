@@ -174,6 +174,7 @@ begin
       UT: TKMUnitType;
       ACT: TKMUnitActionType;
       anim: TKMAnimLoop;
+      animation : TKMAnimation;
       DIR: TKMDirection;
       WT: TKMWareType;
       STEP, origSpriteID, spriteID: Integer;
@@ -241,10 +242,10 @@ begin
             folderCreated := False;
             for DIR := dirN to dirNW do
             begin
-              anim := units.SerfCarry[WT, DIR];
-              for STEP := 0 to anim.Count - 1 do
+              animation := units.SerfCarry[WT, DIR];
+              for STEP := 0 to animation.Count - 1 do
               begin
-                origSpriteID := anim.Step[STEP+1]+1;
+                origSpriteID := animation.Step[STEP]+1;
                 if origSpriteID = 0 then Continue;
 
                 if utSerf in [aUnitFrom..aUnitTo] then
@@ -313,6 +314,7 @@ begin
       UT: TKMUnitType;
       ACT: TKMUnitActionType;
       anim: TKMAnimLoop;
+      animation : TKMAnimation;
       DIR: TKMDirection;
       WT: TKMWareType;
       T: TKMUnitThought;
@@ -386,10 +388,10 @@ begin
             folderCreated := False;
             for DIR := dirN to dirNW do
             begin
-              anim := units.SerfCarry[WT, DIR];
-              for STEP := 1 to anim.Count do
+              animation := units.SerfCarry[WT, DIR];
+              for STEP := 0 to anim.Count - 1 do
               begin
-                spriteID := anim.Step[STEP]+1;
+                spriteID := animation.Step[STEP]+1;
                 if spriteID <> 0 then
                 begin
                   used[spriteID] := True;

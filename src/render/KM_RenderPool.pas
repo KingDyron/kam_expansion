@@ -866,8 +866,8 @@ begin
   if rWood <> 0 then
   begin
     id := 260 + rWood - 1;
-    cornerX := Loc.X + (supply[1, rWood].MoveX - 4) / CELL_SIZE_PX - 1;
-    cornerY := Loc.Y + (supply[1, rWood].MoveY + rx.Size[id].Y - 5) / CELL_SIZE_PX - 1
+    cornerX := Loc.X + (supply[1].MoveX + rx.Pivot[id].X - 4) / CELL_SIZE_PX - 1;
+    cornerY := Loc.Y + (supply[1].MoveY+ rx.Pivot[id].Y + rx.Size[id].Y - 5) / CELL_SIZE_PX - 1
                      - gTerrain.LandExt^[Loc.Y + 1, Loc.X].RenderHeight / CELL_HEIGHT_DIV;
 
     fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, Loc.X, Loc.Y);
@@ -882,8 +882,8 @@ begin
     if rWood <> 0 then
     begin
       id := 260 + rWood - 1;
-      cornerX := Loc.X + (supply[1, rWood].MoveX + 9)/ CELL_SIZE_PX - 1;
-      cornerY := Loc.Y + (supply[1, rWood].MoveY + rx.Size[id].Y + 8) / CELL_SIZE_PX - 1
+      cornerX := Loc.X + (supply[1].MoveX + rx.Pivot[id].X + 9)/ CELL_SIZE_PX - 1;
+      cornerY := Loc.Y + (supply[1].MoveY + rx.Pivot[id].Y + rx.Size[id].Y + 8) / CELL_SIZE_PX - 1
                        - gTerrain.LandExt^[Loc.Y + 1, Loc.X].RenderHeight / CELL_HEIGHT_DIV;
 
       fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, Loc.X, Loc.Y);
@@ -899,8 +899,8 @@ begin
   begin
     id := 267 + rStone - 1;
 
-    cornerX := Loc.X + supply[2, rStone].MoveX / CELL_SIZE_PX - 1;
-    cornerY := Loc.Y + (supply[2, rStone].MoveY + rx.Size[id].Y - 6) / CELL_SIZE_PX - 1
+    cornerX := Loc.X + (supply[2].MoveX + rx.Pivot[id].X) / CELL_SIZE_PX - 1;
+    cornerY := Loc.Y + (supply[2].MoveY + rx.Pivot[id].Y + rx.Size[id].Y - 6) / CELL_SIZE_PX - 1
                      - gTerrain.LandExt^[Loc.Y + 1, Loc.X].RenderHeight / CELL_HEIGHT_DIV;
     fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, Loc.X, Loc.Y);
   end;
@@ -914,8 +914,8 @@ begin
     if rStone <> 0 then
     begin
       id := 267 + rStone - 1;
-      cornerX := Loc.X + (supply[2, rStone].MoveX + 9)/ CELL_SIZE_PX - 1;
-      cornerY := Loc.Y + (supply[2, rStone].MoveY + rx.Size[id].Y + 8) / CELL_SIZE_PX - 1
+      cornerX := Loc.X + (supply[2].MoveX + rx.Pivot[id].X + 9)/ CELL_SIZE_PX - 1;
+      cornerY := Loc.Y + (supply[2].MoveY + rx.Pivot[id].Y + rx.Size[id].Y + 8) / CELL_SIZE_PX - 1
                        - gTerrain.LandExt^[Loc.Y + 1, Loc.X].RenderHeight / CELL_HEIGHT_DIV;
 
       fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, Loc.X, Loc.Y);
@@ -928,8 +928,8 @@ begin
   if rTile <> 0 then
   begin
     id := 2288 + rTile - 1;
-    cornerX := Loc.X + (supply[3, rTile].MoveX) / CELL_SIZE_PX - 1;
-    cornerY := Loc.Y + (supply[3, rTile].MoveY + rx.Size[id].Y - 6) / CELL_SIZE_PX - 1
+    cornerX := Loc.X + (supply[3].MoveX + rx.Pivot[id].X) / CELL_SIZE_PX - 1;
+    cornerY := Loc.Y + (supply[3].MoveY + rx.Pivot[id].Y + rx.Size[id].Y - 6) / CELL_SIZE_PX - 1
                      - gTerrain.LandExt^[Loc.Y + 1, Loc.X].RenderHeight / CELL_HEIGHT_DIV;
     fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, Loc.X, Loc.Y);
   end;
@@ -943,8 +943,8 @@ begin
     if rTile <> 0 then
     begin
       id := 2288 + rTile - 1;
-      cornerX := Loc.X + (supply[3, rTile].MoveX + 9)/ CELL_SIZE_PX - 1;
-      cornerY := Loc.Y + (supply[3, rTile].MoveY + rx.Size[id].Y + 8) / CELL_SIZE_PX - 1
+      cornerX := Loc.X + (supply[3].MoveX + rx.Pivot[id].X + 9)/ CELL_SIZE_PX - 1;
+      cornerY := Loc.Y + (supply[3].MoveY + rx.Pivot[id].Y + rx.Size[id].Y + 8) / CELL_SIZE_PX - 1
                        - gTerrain.LandExt^[Loc.Y + 1, Loc.X].RenderHeight / CELL_HEIGHT_DIV;
 
       fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, Loc.X, Loc.Y);
@@ -1241,7 +1241,7 @@ procedure TKMRenderPool.AddHouseWork(aHouse: TKMHouseType; const aLoc: TKMPoint;
 var
   id: Cardinal;
   AT: TKMHouseActionType;
-  A: TKMAnimLoop;
+  A: TKMAnimation;
   rxData: TRXData;
   cornerX, cornerY: Single;
 const
@@ -1265,10 +1265,10 @@ begin
     if A.Count > 0 then
     begin
 
-      id := A.Step[aAnimStep mod Byte(A.Count) + 1] + 1;
+      id := A.Animation[aAnimStep] + 1;
 
-      cornerX := aLoc.X + (rxData.Pivot[id].X + A.MoveX) / CELL_SIZE_PX - 1;
-      cornerY := aLoc.Y + (rxData.Pivot[id].Y + A.MoveY + rxData.Size[id].Y) / CELL_SIZE_PX - 1
+      cornerX := aLoc.X + (rxData.Pivot[id].X + A.X) / CELL_SIZE_PX - 1;
+      cornerY := aLoc.Y + (rxData.Pivot[id].Y + A.Y + rxData.Size[id].Y) / CELL_SIZE_PX - 1
                        - gTerrain.LandExt^[aLoc.Y + 1, aLoc.X].RenderHeight / CELL_HEIGHT_DIV;
 
       if aDoImmediateRender then
@@ -1651,21 +1651,20 @@ procedure TKMRenderPool.AddUnitCarry(aCarry: TKMWareType; aUID: Integer; aDir: T
 var
   cornerX, cornerY: Single;
   id, step: Integer;
-  A: TKMAnimLoop;
+  A: TKMAnimation;
   R: TRXData;
 begin
   //if aCarry >= wtSteel then
    // aCarry := wtIron;
 
   A := gRes.Units.SerfCarry[aCarry, aDir];
-  step := StepID mod A.Count + 1;
-  id := A.Step[step] + 1;
+  id := A.Animation[StepID] + 1;
 
   if id <= 0 then Exit;
   R := fRXData[rxUnits];
 
-  cornerX := pX + (R.Pivot[id].X + A.MoveX) / CELL_SIZE_PX;
-  cornerY := gTerrain.RenderFlatToHeight(pX, pY) + (R.Pivot[id].Y + R.Size[id].Y + A.MoveY) / CELL_SIZE_PX;
+  cornerX := pX + (R.Pivot[id].X + A.X) / CELL_SIZE_PX;
+  cornerY := gTerrain.RenderFlatToHeight(pX, pY) + (R.Pivot[id].Y + R.Size[id].Y + A.Y) / CELL_SIZE_PX;
   fRenderList.AddSprite(rxUnits, id, cornerX, cornerY, Round(pX), Round(pY), FlagColor);
 end;
 

@@ -90,6 +90,7 @@ type
     procedure Create(Steps : TIntegerArray; aDuplicates : Byte = 1);overload;
     procedure Create(X, Y, StepStart, aCount : Integer; aOffset : Byte = 0; doBackWard : Boolean = false);overload;
     procedure Clear;
+    function IsLinear : Boolean;
   end;
 
   TKMAnimation = packed record
@@ -114,6 +115,8 @@ type
     procedure Extend(aCount : Byte);
     procedure SaveToStream(SaveStream : TObject);
     procedure LoadFromStream(LoadStream : TObject);
+
+    function IsLinear : Boolean;
   end;
 
   function Anim(aX, aY : Integer; aAnimation : TKMWordArray; aOffset : Byte = 0) : TKMAnimation;overload;
@@ -486,6 +489,18 @@ begin
   MoveY := 0;
 end;
 
+function TKMAnimLoop.IsLinear : Boolean;
+var I, J : Integer;
+begin
+  If Count = 0 then
+    Exit(false);
+  Result := true;
+  J := Step[1];
+  for I := 2 to Count do
+    If Step[I] <> J + I then
+      Exit(false);
+end;
+
 procedure TKMAnimation.Clear;
 begin
   SetLength(fSteps, 0);
@@ -509,7 +524,7 @@ end;
 
 function TKMAnimation.GetStep(aIndex: Integer): Word;
 begin
-  Assert(InRange(aIndex, 0, high(fSteps)), 'TKMAnimation.NoAnimationFound');
+  Assert(InRange(aIndex, 0, high(fSteps)), 'TKMAnimation.NoAnimationFound: ' + IntToStr(aIndex));
   Result := fSteps[aIndex];
 end;
 
@@ -618,6 +633,18 @@ begin
   SetLength(fSteps, newCount);
   for I := 0 to newCount - 1 do
     TKMemoryStream(LoadStream).Read(fSteps[I]);
+end;
+
+function TKMAnimation.IsLinear : Boolean;
+var I, J : Integer;
+begin
+  If Count = 0 then
+    Exit(false);
+  Result := true;
+  J := fSteps[0];
+  for I := 1 to Count - 1 do
+    If fSteps[I] <> J + I then
+      Exit(false);
 end;
 
 

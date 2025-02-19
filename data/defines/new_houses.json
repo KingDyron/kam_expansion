@@ -79,22 +79,26 @@
 			"Name" : "htSawmill",
 			"TextID" : 0,
 			"DescriptionID" : 1759,
-			"TileCost" : 0,
 			"MaxHealth" : 350,
-			"WoodCost" : 4,
-			"StoneCost" : 3,
 			"WoodPic" : 1,
 			"StonePic" : 0,
+			"SnowPic" : 2050,
+			"WoodCost" : 4,
+			"StoneCost" : 3,
+			"TileCost" : 0,
 			"EntranceOffsetX" : -1,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 21,
 			"EntranceOffsetYpx" : 12,
-			"WorkerType" : 5,
 			"WorkerRest" : 5,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 301,
+			"TabletID" : 251,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 979,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utCarpenter","MaxCount" : 1}
@@ -132,43 +136,45 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[1,1,1,1,0,0],
-				[1,2,1,1,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[1,1,1,1,0],
+				[1,2,1,1,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[3,1,0,2,0],
+				[4,1,1,3,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htIronSmithy",
 			"TextID" : 1,
 			"DescriptionID" : 1755,
-			"TileCost" : 4,
 			"MaxHealth" : 350,
-			"WoodCost" : 4,
-			"StoneCost" : 2,
 			"WoodPic" : 25,
 			"StonePic" : 20,
+			"SnowPic" : 2051,
+			"WoodCost" : 4,
+			"StoneCost" : 2,
+			"TileCost" : 4,
 			"EntranceOffsetX" : 0,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 17,
 			"EntranceOffsetYpx" : 13,
-			"WorkerType" : 12,
 			"WorkerRest" : 5,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 302,
+			"TabletID" : 252,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 975,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utMetallurgist","MaxCount" : 1}
@@ -203,43 +209,45 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[1,1,1,1,0,0],
-				[1,1,2,1,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[1,1,1,1,0],
+				[1,1,2,1,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[3,0,0,2,0],
+				[3,2,1,3,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htWeaponSmithy",
 			"TextID" : 2,
 			"DescriptionID" : 1768,
-			"TileCost" : 3,
 			"MaxHealth" : 350,
-			"WoodCost" : 4,
-			"StoneCost" : 3,
 			"WoodPic" : 41,
 			"StonePic" : 40,
+			"SnowPic" : 2069,
+			"WoodCost" : 4,
+			"StoneCost" : 3,
+			"TileCost" : 3,
 			"EntranceOffsetX" : -1,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 21,
 			"EntranceOffsetYpx" : 10,
-			"WorkerType" : 11,
 			"WorkerRest" : 5,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 303,
+			"TabletID" : 253,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 985,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utSmith","MaxCount" : 1}
@@ -294,43 +302,45 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[1,1,1,1,0,0],
-				[1,2,1,1,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[1,1,1,1,0],
+				[1,2,1,1,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[3,0,0,3,0],
+				[4,1,2,3,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htCoalMine",
 			"TextID" : 3,
 			"DescriptionID" : 1752,
-			"TileCost" : 0,
 			"MaxHealth" : 250,
-			"WoodCost" : 3,
-			"StoneCost" : 2,
 			"WoodPic" : 134,
 			"StonePic" : 133,
+			"SnowPic" : 2070,
+			"WoodCost" : 3,
+			"StoneCost" : 2,
+			"TileCost" : 0,
 			"EntranceOffsetX" : -1,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 15,
 			"EntranceOffsetYpx" : 14,
-			"WorkerType" : 2,
 			"WorkerRest" : 5,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 304,
+			"TabletID" : 254,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 970,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utMiner","MaxCount" : 1}
@@ -366,43 +376,45 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[1,1,1,0,0,0],
-				[1,2,1,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[1,1,1,0,0],
+				[1,2,1,0,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[2,1,1,0,0],
+				[3,1,3,0,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htIronMine",
 			"TextID" : 4,
 			"DescriptionID" : 1754,
-			"TileCost" : 2,
 			"MaxHealth" : 250,
-			"WoodCost" : 2,
-			"StoneCost" : 2,
 			"WoodPic" : 114,
 			"StonePic" : 60,
+			"SnowPic" : 2052,
+			"WoodCost" : 2,
+			"StoneCost" : 2,
+			"TileCost" : 2,
 			"EntranceOffsetX" : 0,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 17,
 			"EntranceOffsetYpx" : 15,
-			"WorkerType" : 2,
 			"WorkerRest" : 5,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 305,
+			"TabletID" : 255,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 974,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utMiner","MaxCount" : 1}
@@ -437,43 +449,45 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,1,2,1,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,1,2,1,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,3,1,3,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htGoldMine",
 			"TextID" : 5,
 			"DescriptionID" : 1753,
-			"TileCost" : 2,
 			"MaxHealth" : 250,
-			"WoodCost" : 2,
-			"StoneCost" : 2,
 			"WoodPic" : 239,
 			"StonePic" : 238,
+			"SnowPic" : 2073,
+			"WoodCost" : 2,
+			"StoneCost" : 2,
+			"TileCost" : 2,
 			"EntranceOffsetX" : 0,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 9,
 			"EntranceOffsetYpx" : 15,
-			"WorkerType" : 2,
 			"WorkerRest" : 5,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 306,
+			"TabletID" : 256,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 973,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utMiner","MaxCount" : 1}
@@ -510,43 +524,45 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,1,2,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,1,2,0,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,2,1,0,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htFishermans",
 			"TextID" : 6,
 			"DescriptionID" : 1746,
-			"TileCost" : 1,
 			"MaxHealth" : 350,
-			"WoodCost" : 4,
-			"StoneCost" : 3,
 			"WoodPic" : 116,
 			"StonePic" : 80,
+			"SnowPic" : 2053,
+			"WoodCost" : 4,
+			"StoneCost" : 3,
+			"TileCost" : 1,
 			"EntranceOffsetX" : -1,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 24,
 			"EntranceOffsetYpx" : 15,
-			"WorkerType" : 8,
 			"WorkerRest" : 5,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 307,
+			"TabletID" : 257,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 972,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utFisher","MaxCount" : 1}
@@ -574,43 +590,45 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,1,1,0,0,0],
-				[0,2,1,1,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,1,1,0,0],
+				[0,2,1,1,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,2,0,1,0],
+				[0,1,1,3,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htBakery",
 			"TextID" : 7,
 			"DescriptionID" : 1750,
-			"TileCost" : 0,
 			"MaxHealth" : 350,
-			"WoodCost" : 4,
-			"StoneCost" : 4,
 			"WoodPic" : 121,
 			"StonePic" : 100,
+			"SnowPic" : 2054,
+			"WoodCost" : 4,
+			"StoneCost" : 4,
+			"TileCost" : 0,
 			"EntranceOffsetX" : 1,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 17,
 			"EntranceOffsetYpx" : 12,
-			"WorkerType" : 6,
 			"WorkerRest" : 5,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 308,
+			"TabletID" : 258,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 968,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utBaker","MaxCount" : 1}
@@ -660,43 +678,45 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,1,1,1,0,0],
-				[0,1,1,1,0,0],
-				[0,1,1,2,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,1,1,1,0],
+				[0,1,1,1,0],
+				[0,1,1,2,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,3,1,2,0],
+				[0,1,0,1,0],
+				[0,3,2,1,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htFarm",
 			"TextID" : 8,
 			"DescriptionID" : 1767,
-			"TileCost" : 1,
 			"MaxHealth" : 350,
-			"WoodCost" : 4,
-			"StoneCost" : 3,
 			"WoodPic" : 124,
 			"StonePic" : 123,
+			"SnowPic" : 2055,
+			"WoodCost" : 4,
+			"StoneCost" : 3,
+			"TileCost" : 1,
 			"EntranceOffsetX" : -1,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 9,
 			"EntranceOffsetYpx" : 4,
-			"WorkerType" : 4,
 			"WorkerRest" : 5,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 309,
+			"TabletID" : 259,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 971,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utFarmer","MaxCount" : 1}
@@ -726,43 +746,45 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[1,1,1,1,0,0],
-				[1,1,1,1,0,0],
-				[1,2,1,1,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[1,1,1,1,0],
+				[1,1,1,1,0],
+				[1,2,1,1,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[3,2,2,3,0],
+				[2,0,0,2,0],
+				[3,1,3,3,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htWoodcutters",
 			"TextID" : 9,
 			"DescriptionID" : 1764,
-			"TileCost" : 0,
 			"MaxHealth" : 250,
-			"WoodCost" : 5,
-			"StoneCost" : 0,
 			"WoodPic" : 142,
 			"StonePic" : 141,
+			"SnowPic" : 2057,
+			"WoodCost" : 5,
+			"StoneCost" : 0,
+			"TileCost" : 0,
 			"EntranceOffsetX" : 0,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 13,
 			"EntranceOffsetYpx" : 5,
-			"WorkerType" : 1,
 			"WorkerRest" : 5,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 310,
+			"TabletID" : 260,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 988,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utWoodcutter","MaxCount" : 1}
@@ -790,43 +812,45 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[1,1,1,0,0,0],
-				[1,1,2,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[1,1,1,0,0],
+				[1,1,2,0,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[3,0,1,0,0],
+				[4,2,1,0,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htArmorSmithy",
 			"TextID" : 10,
 			"DescriptionID" : 1748,
-			"TileCost" : 4,
 			"MaxHealth" : 350,
-			"WoodCost" : 4,
-			"StoneCost" : 2,
 			"WoodPic" : 244,
 			"StonePic" : 243,
+			"SnowPic" : 2074,
+			"WoodCost" : 4,
+			"StoneCost" : 2,
+			"TileCost" : 4,
 			"EntranceOffsetX" : -1,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 20,
 			"EntranceOffsetYpx" : 12,
-			"WorkerType" : 11,
 			"WorkerRest" : 5,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 311,
+			"TabletID" : 261,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 966,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utSmith","MaxCount" : 1}
@@ -881,43 +905,45 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,1,1,0,0,0],
-				[1,1,1,1,0,0],
-				[1,2,1,1,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,1,1,0,0],
+				[1,1,1,1,0],
+				[1,2,1,1,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[1,2,2,1,0],
+				[3,1,0,2,0],
+				[3,1,2,3,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htStore",
 			"TextID" : 11,
 			"DescriptionID" : 1742,
-			"TileCost" : 5,
 			"MaxHealth" : 550,
-			"WoodCost" : 4,
-			"StoneCost" : 5,
 			"WoodPic" : 138,
 			"StonePic" : 137,
+			"SnowPic" : 2056,
+			"WoodCost" : 4,
+			"StoneCost" : 5,
+			"TileCost" : 5,
 			"EntranceOffsetX" : -1,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 19,
 			"EntranceOffsetYpx" : 7,
-			"WorkerType" : -1,
 			"WorkerRest" : 0,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 312,
+			"TabletID" : 262,
 			"MaxInWares" : 65535,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : -1,
 			"MaxWorkersCount" : 1,
 			"CanOverfill" : False,
 			"GatheringScript" : "gsNone",
@@ -943,43 +969,45 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[1,1,1,0,0,0],
-				[1,1,1,0,0,0],
-				[1,2,1,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[1,1,1,0,0],
+				[1,1,1,0,0],
+				[1,2,1,0,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[3,0,2,0,0],
+				[2,0,2,0,0],
+				[3,1,3,0,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htStables",
 			"TextID" : 12,
 			"DescriptionID" : 1760,
-			"TileCost" : 6,
 			"MaxHealth" : 550,
-			"WoodCost" : 4,
-			"StoneCost" : 4,
 			"WoodPic" : 146,
 			"StonePic" : 145,
+			"SnowPic" : 2071,
+			"WoodCost" : 4,
+			"StoneCost" : 4,
+			"TileCost" : 6,
 			"EntranceOffsetX" : 0,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 0,
 			"EntranceOffsetYpx" : 5,
-			"WorkerType" : 3,
 			"WorkerRest" : 10,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 313,
+			"TabletID" : 263,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 981,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utAnimalBreeder","MaxCount" : 1}
@@ -1023,43 +1051,45 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[1,1,1,1,0,0],
-				[1,1,1,1,0,0],
-				[1,1,2,1,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[1,1,1,1,0],
+				[1,1,1,1,0],
+				[1,1,2,1,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[2,1,0,2,0],
+				[1,0,0,1,0],
+				[3,2,1,4,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htSchool",
 			"TextID" : 13,
 			"DescriptionID" : 1741,
-			"TileCost" : 5,
 			"MaxHealth" : 550,
-			"WoodCost" : 4,
-			"StoneCost" : 4,
 			"WoodPic" : 250,
 			"StonePic" : 249,
+			"SnowPic" : 2059,
+			"WoodCost" : 4,
+			"StoneCost" : 4,
+			"TileCost" : 5,
 			"EntranceOffsetX" : -1,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 17,
 			"EntranceOffsetYpx" : 10,
-			"WorkerType" : -1,
 			"WorkerRest" : 1,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 314,
+			"TabletID" : 264,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : -1,
 			"MaxWorkersCount" : 1,
 			"CanOverfill" : False,
 			"GatheringScript" : "gsNone",
@@ -1086,43 +1116,45 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[1,1,1,0,0,0],
-				[1,1,1,0,0,0],
-				[1,2,1,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[1,1,1,0,0],
+				[1,1,1,0,0],
+				[1,2,1,0,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[1,0,1,0,0],
+				[1,0,0,0,0],
+				[3,1,3,0,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htQuarry",
 			"TextID" : 14,
 			"DescriptionID" : 1766,
-			"TileCost" : 0,
 			"MaxHealth" : 250,
-			"WoodCost" : 4,
-			"StoneCost" : 0,
 			"WoodPic" : 211,
 			"StonePic" : 210,
+			"SnowPic" : 2058,
+			"WoodCost" : 4,
+			"StoneCost" : 0,
+			"TileCost" : 0,
 			"EntranceOffsetX" : 0,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 26,
 			"EntranceOffsetYpx" : 10,
-			"WorkerType" : 10,
 			"WorkerRest" : 5,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 315,
+			"TabletID" : 265,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 978,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utStonemason","MaxCount" : 1}
@@ -1158,43 +1190,45 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,1,1,1,0,0],
-				[0,1,2,1,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,1,1,1,0],
+				[0,1,2,1,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,2,0,1,0],
+				[0,3,1,3,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htMetallurgists",
 			"TextID" : 15,
 			"DescriptionID" : 1757,
-			"TileCost" : 2,
 			"MaxHealth" : 350,
-			"WoodCost" : 4,
-			"StoneCost" : 3,
 			"WoodPic" : 235,
 			"StonePic" : 234,
+			"SnowPic" : 2068,
+			"WoodCost" : 4,
+			"StoneCost" : 3,
+			"TileCost" : 2,
 			"EntranceOffsetX" : -1,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 25,
 			"EntranceOffsetYpx" : 0,
-			"WorkerType" : 12,
 			"WorkerRest" : 5,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 316,
+			"TabletID" : 266,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 976,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utMetallurgist","MaxCount" : 1}
@@ -1245,43 +1279,45 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[1,1,1,0,0,0],
-				[1,1,1,0,0,0],
-				[1,2,1,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[1,1,1,0,0],
+				[1,1,1,0,0],
+				[1,2,1,0,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[3,0,2,0,0],
+				[3,1,2,0,0],
+				[3,1,3,0,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htSwine",
 			"TextID" : 16,
 			"DescriptionID" : 1761,
-			"TileCost" : 2,
 			"MaxHealth" : 350,
-			"WoodCost" : 4,
-			"StoneCost" : 2,
 			"WoodPic" : 368,
 			"StonePic" : 367,
+			"SnowPic" : 2064,
+			"WoodCost" : 4,
+			"StoneCost" : 2,
+			"TileCost" : 2,
 			"EntranceOffsetX" : 1,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 19,
 			"EntranceOffsetYpx" : 9,
-			"WorkerType" : 3,
 			"WorkerRest" : 5,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 317,
+			"TabletID" : 267,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 982,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utAnimalBreeder","MaxCount" : 1}
@@ -1332,43 +1368,45 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,1,1,1,0,0],
-				[1,1,1,1,0,0],
-				[1,1,1,2,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,1,1,1,0],
+				[1,1,1,1,0],
+				[1,1,1,2,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[2,2,0,2,0],
+				[2,1,0,2,0],
+				[4,4,3,1,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htWatchTower",
 			"TextID" : 17,
 			"DescriptionID" : 1765,
-			"TileCost" : 2,
 			"MaxHealth" : 250,
-			"WoodCost" : 3,
-			"StoneCost" : 2,
 			"WoodPic" : 255,
 			"StonePic" : 254,
+			"SnowPic" : 2060,
+			"WoodCost" : 3,
+			"StoneCost" : 2,
+			"TileCost" : 2,
 			"EntranceOffsetX" : 0,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 17,
 			"EntranceOffsetYpx" : 9,
-			"WorkerType" : 13,
 			"WorkerRest" : 0,
 			"Sight" : 8,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 318,
+			"TabletID" : 268,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 984,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utOperator","MaxCount" : 1}
@@ -1396,21 +1434,19 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,1,1,0,0,0],
-				[0,1,2,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,1,1,0,0],
+				[0,1,2,0,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,1,2,0,0],
+				[0,3,1,0,0],
+				[0,0,0,0,0]
 			],
 			"Wariants" : [2135, 2136]
 		},
@@ -1418,22 +1454,26 @@
 			"Name" : "htTownHall",
 			"TextID" : 18,
 			"DescriptionID" : 1745,
-			"TileCost" : 6,
 			"MaxHealth" : 550,
-			"WoodCost" : 6,
-			"StoneCost" : 5,
 			"WoodPic" : 1658,
 			"StonePic" : 1656,
+			"SnowPic" : 2077,
+			"WoodCost" : 6,
+			"StoneCost" : 5,
+			"TileCost" : 6,
 			"EntranceOffsetX" : -1,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 26,
 			"EntranceOffsetYpx" : 10,
-			"WorkerType" : -1,
 			"WorkerRest" : 1,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 319,
+			"TabletID" : 269,
 			"MaxInWares" : 120,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : -1,
 			"MaxWorkersCount" : 1,
 			"CanOverfill" : False,
 			"GatheringScript" : "gsNone",
@@ -1455,43 +1495,45 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[1,1,1,1,0,0],
-				[1,1,1,1,0,0],
-				[1,2,1,1,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[1,1,1,1,0],
+				[1,1,1,1,0],
+				[1,2,1,1,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[1,0,0,2,0],
+				[2,0,0,2,0],
+				[3,1,1,2,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htWeaponWorkshop",
 			"TextID" : 19,
 			"DescriptionID" : 1769,
-			"TileCost" : 0,
 			"MaxHealth" : 350,
-			"WoodCost" : 4,
-			"StoneCost" : 3,
 			"WoodPic" : 273,
 			"StonePic" : 272,
+			"SnowPic" : 2061,
+			"WoodCost" : 4,
+			"StoneCost" : 3,
+			"TileCost" : 0,
 			"EntranceOffsetX" : -1,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 24,
 			"EntranceOffsetYpx" : 9,
-			"WorkerType" : 5,
 			"WorkerRest" : 5,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 320,
+			"TabletID" : 270,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 986,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utCarpenter","MaxCount" : 1}
@@ -1544,43 +1586,45 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[1,1,1,1,0,0],
-				[1,2,1,1,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[1,1,1,1,0],
+				[1,2,1,1,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[3,0,0,3,0],
+				[3,1,2,3,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htArmorWorkshop",
 			"TextID" : 20,
 			"DescriptionID" : 1749,
-			"TileCost" : 0,
 			"MaxHealth" : 350,
-			"WoodCost" : 4,
-			"StoneCost" : 3,
 			"WoodPic" : 663,
 			"StonePic" : 662,
+			"SnowPic" : 2067,
+			"WoodCost" : 4,
+			"StoneCost" : 3,
+			"TileCost" : 0,
 			"EntranceOffsetX" : -1,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 23,
 			"EntranceOffsetYpx" : 4,
-			"WorkerType" : 5,
 			"WorkerRest" : 5,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 321,
+			"TabletID" : 271,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 967,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utCarpenter","MaxCount" : 1}
@@ -1631,43 +1675,45 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,1,1,0,0,0],
-				[0,1,1,1,0,0],
-				[0,2,1,1,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,1,1,0,0],
+				[0,1,1,1,0],
+				[0,2,1,1,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,3,1,0,0],
+				[0,0,0,1,0],
+				[0,1,2,3,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htBarracks",
 			"TextID" : 21,
 			"DescriptionID" : 1744,
-			"TileCost" : 4,
 			"MaxHealth" : 800,
-			"WoodCost" : 6,
-			"StoneCost" : 9,
 			"WoodPic" : 334,
 			"StonePic" : 333,
+			"SnowPic" : 2075,
+			"WoodCost" : 6,
+			"StoneCost" : 9,
+			"TileCost" : 4,
 			"EntranceOffsetX" : -1,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 19,
 			"EntranceOffsetYpx" : 10,
-			"WorkerType" : 13,
 			"WorkerRest" : 5,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 322,
+			"TabletID" : 272,
 			"MaxInWares" : 65535,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : -1,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utRecruit","MaxCount" : 1}
@@ -1695,43 +1741,45 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
-				[1,1,1,1,0,0],
-				[1,1,1,1,0,0],
-				[1,1,1,1,0,0],
-				[1,2,1,1,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[1,1,1,1,0],
+				[1,1,1,1,0],
+				[1,1,1,1,0],
+				[1,2,1,1,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[2,0,0,1,0],
+				[0,0,0,0,0],
+				[1,0,0,1,0],
+				[4,1,2,2,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htMill",
 			"TextID" : 22,
 			"DescriptionID" : 1758,
-			"TileCost" : 2,
 			"MaxHealth" : 350,
-			"WoodCost" : 4,
-			"StoneCost" : 2,
 			"WoodPic" : 358,
 			"StonePic" : 357,
+			"SnowPic" : 2062,
+			"WoodCost" : 4,
+			"StoneCost" : 2,
+			"TileCost" : 2,
 			"EntranceOffsetX" : 0,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 16,
 			"EntranceOffsetYpx" : 15,
-			"WorkerType" : 6,
 			"WorkerRest" : 5,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 323,
+			"TabletID" : 273,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 977,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utBaker","MaxCount" : 1}
@@ -1765,43 +1813,45 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,1,1,1,0,0],
-				[0,1,2,1,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,1,1,1,0],
+				[0,1,2,1,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,2,1,3,0],
+				[0,3,1,4,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htSiegeWorkshop",
 			"TextID" : 23,
 			"DescriptionID" : 1756,
-			"TileCost" : 0,
 			"MaxHealth" : 300,
-			"WoodCost" : 6,
-			"StoneCost" : 0,
 			"WoodPic" : 1682,
 			"StonePic" : 1680,
+			"SnowPic" : 2078,
+			"WoodCost" : 6,
+			"StoneCost" : 0,
+			"TileCost" : 0,
 			"EntranceOffsetX" : -1,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 31,
 			"EntranceOffsetYpx" : 15,
-			"WorkerType" : 5,
 			"WorkerRest" : 10,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 324,
+			"TabletID" : 274,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 980,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utCarpenter","MaxCount" : 1},
@@ -1836,43 +1886,45 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,1,1,1,0,0],
-				[0,2,1,1,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,1,1,1,0],
+				[0,2,1,1,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,1,0,2,0],
+				[0,1,2,3,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htButchers",
 			"TextID" : 24,
 			"DescriptionID" : 1751,
-			"TileCost" : 2,
 			"MaxHealth" : 350,
-			"WoodCost" : 4,
-			"StoneCost" : 3,
 			"WoodPic" : 397,
 			"StonePic" : 396,
+			"SnowPic" : 2066,
+			"WoodCost" : 4,
+			"StoneCost" : 3,
+			"TileCost" : 2,
 			"EntranceOffsetX" : 1,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 16,
 			"EntranceOffsetYpx" : 0,
-			"WorkerType" : 7,
 			"WorkerRest" : 5,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 325,
+			"TabletID" : 275,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 969,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utButcher","MaxCount" : 1}
@@ -1923,43 +1975,45 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,1,1,0,0,0],
-				[0,1,1,1,0,0],
-				[0,1,1,2,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,1,1,0,0],
+				[0,1,1,1,0],
+				[0,1,1,2,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,2,2,3,0],
+				[0,0,0,1,0],
+				[0,2,2,1,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htTannery",
 			"TextID" : 25,
 			"DescriptionID" : 1762,
-			"TileCost" : 0,
 			"MaxHealth" : 350,
-			"WoodCost" : 4,
-			"StoneCost" : 3,
 			"WoodPic" : 668,
 			"StonePic" : 667,
+			"SnowPic" : 2076,
+			"WoodCost" : 4,
+			"StoneCost" : 3,
+			"TileCost" : 0,
 			"EntranceOffsetX" : 0,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 28,
 			"EntranceOffsetYpx" : 15,
-			"WorkerType" : 7,
 			"WorkerRest" : 5,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 326,
+			"TabletID" : 276,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 983,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utButcher","MaxCount" : 1}
@@ -1995,43 +2049,45 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,1,1,1,0,0],
-				[0,1,2,1,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,1,1,1,0],
+				[0,1,2,1,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,0,0,2,0],
+				[0,3,1,3,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htInn",
 			"TextID" : 27,
 			"DescriptionID" : 1743,
-			"TileCost" : 6,
 			"MaxHealth" : 550,
-			"WoodCost" : 4,
-			"StoneCost" : 4,
 			"WoodPic" : 363,
 			"StonePic" : 362,
+			"SnowPic" : 2063,
+			"WoodCost" : 4,
+			"StoneCost" : 4,
+			"TileCost" : 6,
 			"EntranceOffsetX" : -1,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 20,
 			"EntranceOffsetYpx" : 9,
-			"WorkerType" : -1,
 			"WorkerRest" : 5,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 328,
+			"TabletID" : 278,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : -1,
 			"MaxWorkersCount" : 1,
 			"CanOverfill" : False,
 			"GatheringScript" : "gsNone",
@@ -2060,43 +2116,45 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,1,1,1,0,0],
-				[1,1,1,1,0,0],
-				[1,2,1,1,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,1,1,1,0],
+				[1,1,1,1,0],
+				[1,2,1,1,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[1,0,0,2,0],
+				[2,0,0,2,0],
+				[4,1,2,3,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htVineyard",
 			"TextID" : 28,
 			"DescriptionID" : 1763,
-			"TileCost" : 2,
 			"MaxHealth" : 350,
-			"WoodCost" : 2,
-			"StoneCost" : 3,
 			"WoodPic" : 378,
 			"StonePic" : 377,
+			"SnowPic" : 2065,
+			"WoodCost" : 2,
+			"StoneCost" : 3,
+			"TileCost" : 2,
 			"EntranceOffsetX" : 1,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 19,
 			"EntranceOffsetYpx" : 7,
-			"WorkerType" : 4,
 			"WorkerRest" : 5,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 329,
+			"TabletID" : 279,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 987,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utFarmer","MaxCount" : 1}
@@ -2133,43 +2191,45 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,1,1,1,0,0],
-				[0,1,1,2,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,1,1,1,0],
+				[0,1,1,2,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,2,0,0,0],
+				[0,2,3,1,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htMarket",
 			"TextID" : 29,
 			"DescriptionID" : 1747,
-			"TileCost" : 4,
 			"MaxHealth" : 550,
-			"WoodCost" : 5,
-			"StoneCost" : 4,
 			"WoodPic" : 151,
 			"StonePic" : 150,
+			"SnowPic" : 2072,
+			"WoodCost" : 5,
+			"StoneCost" : 4,
+			"TileCost" : 4,
 			"EntranceOffsetX" : 1,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 4,
 			"EntranceOffsetYpx" : 10,
-			"WorkerType" : -1,
 			"WorkerRest" : 0,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 327,
+			"TabletID" : 277,
 			"MaxInWares" : 65535,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : -1,
 			"MaxWorkersCount" : 1,
 			"CanOverfill" : False,
 			"GatheringScript" : "gsNone",
@@ -2193,43 +2253,45 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,1,1,1,0,0],
-				[1,1,1,1,0,0],
-				[1,1,1,2,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,1,1,1,0],
+				[1,1,1,1,0],
+				[1,1,1,2,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[2,2,1,1,0],
+				[0,0,0,0,0],
+				[2,2,2,1,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htWall",
 			"TextID" : 1617,
 			"DescriptionID" : 1723,
-			"TileCost" : 0,
 			"MaxHealth" : 100,
-			"WoodCost" : 4,
-			"StoneCost" : 0,
 			"WoodPic" : 2114,
 			"StonePic" : 2428,
+			"SnowPic" : 2480,
+			"WoodCost" : 4,
+			"StoneCost" : 0,
+			"TileCost" : 0,
 			"EntranceOffsetX" : 0,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 20,
 			"EntranceOffsetYpx" : 0,
-			"WorkerType" : -1,
 			"WorkerRest" : 5,
 			"Sight" : 3,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 338,
+			"TabletID" : 268,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : -1,
 			"MaxWorkersCount" : 1,
 			"CanOverfill" : False,
 			"GatheringScript" : "gsNone",
@@ -2263,43 +2325,45 @@
 			"TilePileOffset" : {"X" : 20,"Y" : 15},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,1,2,1,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,1,2,1,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,2,3,2,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htWall2",
 			"TextID" : 1618,
 			"DescriptionID" : 1723,
-			"TileCost" : 0,
 			"MaxHealth" : 150,
-			"WoodCost" : 5,
-			"StoneCost" : 0,
 			"WoodPic" : 2115,
 			"StonePic" : 2429,
+			"SnowPic" : 2481,
+			"WoodCost" : 5,
+			"StoneCost" : 0,
+			"TileCost" : 0,
 			"EntranceOffsetX" : 1,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 20,
 			"EntranceOffsetYpx" : 0,
-			"WorkerType" : -1,
 			"WorkerRest" : 5,
 			"Sight" : 3,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 347,
+			"TabletID" : 268,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : -1,
 			"MaxWorkersCount" : 1,
 			"CanOverfill" : False,
 			"GatheringScript" : "gsNone",
@@ -2333,43 +2397,45 @@
 			"TilePileOffset" : {"X" : 20,"Y" : 15},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[1,3,3,2,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[1,3,3,2,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[3,1,1,3,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htWall3",
 			"TextID" : 1619,
 			"DescriptionID" : 1723,
-			"TileCost" : 0,
 			"MaxHealth" : 100,
-			"WoodCost" : 4,
-			"StoneCost" : 0,
 			"WoodPic" : 2116,
 			"StonePic" : 2430,
+			"SnowPic" : 2482,
+			"WoodCost" : 4,
+			"StoneCost" : 0,
+			"TileCost" : 0,
 			"EntranceOffsetX" : 0,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 20,
 			"EntranceOffsetYpx" : 0,
-			"WorkerType" : -1,
 			"WorkerRest" : 5,
 			"Sight" : 3,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 333,
+			"TabletID" : 268,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : -1,
 			"MaxWorkersCount" : 1,
 			"CanOverfill" : False,
 			"GatheringScript" : "gsNone",
@@ -2403,43 +2469,45 @@
 			"TilePileOffset" : {"X" : 40,"Y" : 15},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,1,0,0,0],
-				[0,0,1,0,0,0],
-				[0,0,2,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,1,0,0],
+				[0,0,1,0,0],
+				[0,0,2,0,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,2,0,0],
+				[0,0,2,0,0],
+				[0,0,2,0,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htWall4",
 			"TextID" : 1620,
 			"DescriptionID" : 1723,
-			"TileCost" : 0,
 			"MaxHealth" : 150,
-			"WoodCost" : 5,
-			"StoneCost" : 0,
 			"WoodPic" : 2117,
 			"StonePic" : 2431,
+			"SnowPic" : 2483,
+			"WoodCost" : 5,
+			"StoneCost" : 0,
+			"TileCost" : 0,
 			"EntranceOffsetX" : 0,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 20,
 			"EntranceOffsetYpx" : 0,
-			"WorkerType" : -1,
 			"WorkerRest" : 5,
 			"Sight" : 3,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 334,
+			"TabletID" : 268,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : -1,
 			"MaxWorkersCount" : 1,
 			"CanOverfill" : False,
 			"GatheringScript" : "gsNone",
@@ -2473,43 +2541,45 @@
 			"TilePileOffset" : {"X" : 40,"Y" : 15},
 			"Build_Area" : 
 			[
-				[0,0,1,0,0,0],
-				[0,0,3,0,0,0],
-				[0,0,3,0,0,0],
-				[0,0,2,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,1,0,0],
+				[0,0,3,0,0],
+				[0,0,3,0,0],
+				[0,0,2,0,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,3,0,0],
+				[0,0,1,0,0],
+				[0,0,1,0,0],
+				[0,0,3,0,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htWall5",
 			"TextID" : 1621,
 			"DescriptionID" : 1723,
-			"TileCost" : 0,
 			"MaxHealth" : 100,
-			"WoodCost" : 2,
-			"StoneCost" : 0,
 			"WoodPic" : 2118,
 			"StonePic" : 2432,
+			"SnowPic" : 2484,
+			"WoodCost" : 2,
+			"StoneCost" : 0,
+			"TileCost" : 0,
 			"EntranceOffsetX" : 0,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 20,
 			"EntranceOffsetYpx" : 0,
-			"WorkerType" : -1,
 			"WorkerRest" : 5,
 			"Sight" : 3,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 332,
+			"TabletID" : 268,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : -1,
 			"MaxWorkersCount" : 1,
 			"CanOverfill" : False,
 			"GatheringScript" : "gsNone",
@@ -2548,43 +2618,45 @@
 			"TilePileOffset" : {"X" : 40,"Y" : 15},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,2,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,0,2,0,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,0,3,0,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htHovel",
 			"TextID" : 1622,
 			"DescriptionID" : 1724,
-			"TileCost" : 1,
 			"MaxHealth" : 200,
-			"WoodCost" : 4,
-			"StoneCost" : 1,
 			"WoodPic" : 2086,
 			"StonePic" : 2085,
+			"SnowPic" : 2466,
+			"WoodCost" : 4,
+			"StoneCost" : 1,
+			"TileCost" : 1,
 			"EntranceOffsetX" : 1,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 20,
 			"EntranceOffsetYpx" : 0,
-			"WorkerType" : 3,
 			"WorkerRest" : 5,
 			"Sight" : 5,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 680,
+			"TabletID" : 679,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 1684,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utAnimalBreeder","MaxCount" : 1}
@@ -2624,43 +2696,45 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 15},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,1,1,1,0,0],
-				[0,1,1,2,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,1,1,1,0],
+				[0,1,1,2,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,1,2,3,0],
+				[0,1,2,3,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htSign",
 			"TextID" : 1623,
 			"DescriptionID" : 1725,
-			"TileCost" : 2,
 			"MaxHealth" : 100,
-			"WoodCost" : 2,
-			"StoneCost" : 2,
 			"WoodPic" : 2111,
 			"StonePic" : 2111,
+			"SnowPic" : 2608,
+			"WoodCost" : 2,
+			"StoneCost" : 2,
+			"TileCost" : 2,
 			"EntranceOffsetX" : 0,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 0,
 			"EntranceOffsetYpx" : 0,
-			"WorkerType" : -1,
 			"WorkerRest" : 5,
 			"Sight" : 0,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 685,
+			"TabletID" : 679,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : -1,
 			"MaxWorkersCount" : 1,
 			"CanOverfill" : False,
 			"GatheringScript" : "gsNone",
@@ -2676,43 +2750,45 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,2,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,0,2,0,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,0,3,0,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htBitinMine",
 			"TextID" : 1624,
 			"DescriptionID" : 1726,
-			"TileCost" : 1,
 			"MaxHealth" : 250,
-			"WoodCost" : 2,
-			"StoneCost" : 4,
 			"WoodPic" : 2113,
 			"StonePic" : 2112,
+			"SnowPic" : 2465,
+			"WoodCost" : 2,
+			"StoneCost" : 4,
+			"TileCost" : 1,
 			"EntranceOffsetX" : 1,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 20,
 			"EntranceOffsetYpx" : 0,
-			"WorkerType" : 2,
 			"WorkerRest" : 5,
 			"Sight" : 4,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 686,
+			"TabletID" : 687,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 1686,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utMiner","MaxCount" : 1}
@@ -2748,43 +2824,45 @@
 			"TilePileOffset" : {"X" : 0,"Y" : 15},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,1,1,2,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,1,1,2,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,1,2,3,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htWallTower",
 			"TextID" : 1625,
 			"DescriptionID" : 1727,
-			"TileCost" : 2,
 			"MaxHealth" : 120,
-			"WoodCost" : 6,
-			"StoneCost" : 0,
 			"WoodPic" : 2120,
 			"StonePic" : 2119,
+			"SnowPic" : 2121,
+			"WoodCost" : 6,
+			"StoneCost" : 0,
+			"TileCost" : 2,
 			"EntranceOffsetX" : 0,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 20,
 			"EntranceOffsetYpx" : 0,
-			"WorkerType" : 13,
 			"WorkerRest" : 5,
 			"Sight" : 18,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 689,
+			"TabletID" : 690,
 			"MaxInWares" : 1,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 1690,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utRecruit","MaxCount" : 2}
@@ -2811,21 +2889,19 @@
 			"TilePileOffset" : {"X" : -5,"Y" : 15},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,1,0,0,0,0],
-				[0,1,2,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,1,0,0,0],
+				[0,1,2,0,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,3,0,0,0],
+				[0,4,2,0,0],
+				[0,0,0,0,0]
 			],
 			"Wariants" : [2132, 2133, 2134]
 		},
@@ -2833,22 +2909,26 @@
 			"Name" : "htWell",
 			"TextID" : 1626,
 			"DescriptionID" : 1728,
-			"TileCost" : 1,
 			"MaxHealth" : 50,
-			"WoodCost" : 1,
-			"StoneCost" : 1,
 			"WoodPic" : 2164,
 			"StonePic" : 2162,
+			"SnowPic" : 5,
+			"WoodCost" : 1,
+			"StoneCost" : 1,
+			"TileCost" : 1,
 			"EntranceOffsetX" : 0,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 20,
 			"EntranceOffsetYpx" : 10,
-			"WorkerType" : -1,
 			"WorkerRest" : 5,
 			"Sight" : 1,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 703,
+			"TabletID" : 704,
 			"MaxInWares" : 1,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : -1,
 			"MaxWorkersCount" : 1,
 			"CanOverfill" : False,
 			"GatheringScript" : "gsNone",
@@ -2861,43 +2941,45 @@
 			"TilePileOffset" : {"X" : 10,"Y" : 15},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,2,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,0,2,0,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,0,3,0,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htStoneWorkshop",
 			"TextID" : 1627,
 			"DescriptionID" : 1729,
-			"TileCost" : 0,
 			"MaxHealth" : 350,
-			"WoodCost" : 4,
-			"StoneCost" : 3,
 			"WoodPic" : 2166,
 			"StonePic" : 2165,
+			"SnowPic" : 2472,
+			"WoodCost" : 4,
+			"StoneCost" : 3,
+			"TileCost" : 0,
 			"EntranceOffsetX" : 1,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 20,
 			"EntranceOffsetYpx" : 10,
-			"WorkerType" : 5,
 			"WorkerRest" : 5,
 			"Sight" : 3,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 691,
+			"TabletID" : 692,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 1688,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utStonemason","MaxCount" : 1},
@@ -2938,43 +3020,45 @@
 			"TilePileOffset" : {"X" : 10,"Y" : 15},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[1,1,1,0,0,0],
-				[1,1,1,1,0,0],
-				[0,1,1,2,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[1,1,1,0,0],
+				[1,1,1,1,0],
+				[0,1,1,2,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[1,1,3,0,0],
+				[1,1,3,1,0],
+				[0,3,3,2,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htIronFoundry",
 			"TextID" : 1628,
 			"DescriptionID" : 1730,
-			"TileCost" : 4,
 			"MaxHealth" : 400,
-			"WoodCost" : 4,
-			"StoneCost" : 4,
 			"WoodPic" : 2168,
 			"StonePic" : 2167,
+			"SnowPic" : 2467,
+			"WoodCost" : 4,
+			"StoneCost" : 4,
+			"TileCost" : 4,
 			"EntranceOffsetX" : 0,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 20,
 			"EntranceOffsetYpx" : 0,
-			"WorkerType" : 12,
 			"WorkerRest" : 5,
 			"Sight" : 5,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 693,
+			"TabletID" : 694,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 1687,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utMetallurgist","MaxCount" : 1}
@@ -3013,43 +3097,45 @@
 			"TilePileOffset" : {"X" : -15,"Y" : 15},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,1,1,0,0,0],
-				[1,1,1,0,0,0],
-				[1,1,2,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,1,1,0,0],
+				[1,1,1,0,0],
+				[1,1,2,0,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,1,1,0,0],
+				[2,2,2,0,0],
+				[3,3,3,0,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htMerchant",
 			"TextID" : 1644,
 			"DescriptionID" : 1731,
-			"TileCost" : 6,
 			"MaxHealth" : 650,
-			"WoodCost" : 5,
-			"StoneCost" : 6,
 			"WoodPic" : 2237,
 			"StonePic" : 2215,
+			"SnowPic" : 2468,
+			"WoodCost" : 5,
+			"StoneCost" : 6,
+			"TileCost" : 6,
 			"EntranceOffsetX" : -1,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 25,
 			"EntranceOffsetYpx" : -20,
-			"WorkerType" : 13,
 			"WorkerRest" : 10,
 			"Sight" : 5,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 719,
+			"TabletID" : 720,
 			"MaxInWares" : 10,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 1691,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utRecruit","MaxCount" : 1}
@@ -3090,43 +3176,45 @@
 			"TilePileOffset" : {"X" : 40,"Y" : 15},
 			"Build_Area" : 
 			[
-				[0,1,1,1,0,0],
-				[0,1,1,1,0,0],
-				[0,1,1,1,0,0],
-				[0,2,1,1,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,1,1,1,0],
+				[0,1,1,1,0],
+				[0,1,1,1,0],
+				[0,2,1,1,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,3,3,3,0],
+				[0,3,3,3,0],
+				[0,2,2,2,0],
+				[0,1,1,1,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htPottery",
 			"TextID" : 1632,
 			"DescriptionID" : 1732,
-			"TileCost" : 3,
 			"MaxHealth" : 400,
-			"WoodCost" : 4,
-			"StoneCost" : 1,
 			"WoodPic" : 2216,
 			"StonePic" : 2182,
+			"SnowPic" : 2464,
+			"WoodCost" : 4,
+			"StoneCost" : 1,
+			"TileCost" : 3,
 			"EntranceOffsetX" : 0,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 10,
 			"EntranceOffsetYpx" : 0,
-			"WorkerType" : 10,
 			"WorkerRest" : 5,
 			"Sight" : 5,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 708,
+			"TabletID" : 715,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 1683,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utClayPicker","MaxCount" : 1}
@@ -3160,21 +3248,19 @@
 			"TilePileOffset" : {"X" : 35,"Y" : 15},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,1,1,0,0],
-				[0,1,1,1,0,0],
-				[0,1,2,1,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,1,1,0],
+				[0,1,1,1,0],
+				[0,1,2,1,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,1,1,0],
+				[0,2,2,2,0],
+				[0,3,3,1,0],
+				[0,0,0,0,0]
 			],
 			"Wariants" : [2284, 2285, 2286]
 		},
@@ -3182,22 +3268,26 @@
 			"Name" : "htWoodBurner",
 			"TextID" : 1639,
 			"DescriptionID" : 1733,
-			"TileCost" : 3,
 			"MaxHealth" : 300,
-			"WoodCost" : 3,
-			"StoneCost" : 4,
 			"WoodPic" : 2184,
 			"StonePic" : 2183,
+			"SnowPic" : 2185,
+			"WoodCost" : 3,
+			"StoneCost" : 4,
+			"TileCost" : 3,
 			"EntranceOffsetX" : 0,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 20,
 			"EntranceOffsetYpx" : 0,
-			"WorkerType" : 12,
 			"WorkerRest" : 5,
 			"Sight" : 5,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 711,
+			"TabletID" : 713,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 1689,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utMetallurgist","MaxCount" : 1}
@@ -3231,43 +3321,45 @@
 			"TilePileOffset" : {"X" : -15,"Y" : 15},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[1,1,1,0,0,0],
-				[1,1,2,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[1,1,1,0,0],
+				[1,1,2,0,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[1,2,1,0,0],
+				[1,3,1,0,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htAppleTree",
 			"TextID" : 1640,
 			"DescriptionID" : 1734,
-			"TileCost" : 0,
 			"MaxHealth" : 50,
-			"WoodCost" : 2,
-			"StoneCost" : 0,
 			"WoodPic" : 2207,
 			"StonePic" : 2207,
+			"SnowPic" : 5,
+			"WoodCost" : 2,
+			"StoneCost" : 0,
+			"TileCost" : 0,
 			"EntranceOffsetX" : 0,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 20,
 			"EntranceOffsetYpx" : 0,
-			"WorkerType" : 0,
 			"WorkerRest" : 5,
 			"Sight" : 3,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 712,
+			"TabletID" : 714,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 10,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 1685,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utFarmer","MaxCount" : 1}
@@ -3292,44 +3384,45 @@
 			"TilePileOffset" : {"X" : -20,"Y" : 15},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,1,1,0,0,0],
-				[0,1,2,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,1,1,0,0],
+				[0,1,2,0,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
-			],
-			"Wariants" : [2207, 2208, 2209, 2210, 2211, 2212, 2213, 2214]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,2,2,0,0],
+				[0,2,2,0,0],
+				[0,0,0,0,0]
+			]
 		},
 		{
 			"Name" : "htSmallStore",
 			"TextID" : 1677,
 			"DescriptionID" : 1737,
-			"TileCost" : 0,
 			"MaxHealth" : 250,
-			"WoodCost" : 4,
-			"StoneCost" : 0,
 			"WoodPic" : 2436,
 			"StonePic" : 2436,
+			"SnowPic" : 2469,
+			"WoodCost" : 4,
+			"StoneCost" : 0,
+			"TileCost" : 0,
 			"EntranceOffsetX" : 0,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 20,
 			"EntranceOffsetYpx" : 0,
-			"WorkerType" : -1,
 			"WorkerRest" : 5,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 753,
+			"TabletID" : 752,
 			"MaxInWares" : 50,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : -1,
 			"MaxWorkersCount" : 1,
 			"CanOverfill" : False,
 			"GatheringScript" : "gsNone",
@@ -3369,7 +3462,10 @@
 					"WorkCyclesMultiplier" : 0,
 					"ReplaceAnim" : False,
 					"HideSupplies" : False,
-					"Anim" : [{"X" : 62,"Y" : -87,"Steps" : [1165,1166,1167,1163,1164]}]
+					"Anim" : 
+					[
+						{"X" : 62,"Y" : -87,"Steps" : [1165,1166,1167,1163,1164]}
+					]
 				},
 				{
 					"StonePic" : 2460,
@@ -3381,7 +3477,10 @@
 					"WorkCyclesMultiplier" : 0,
 					"ReplaceAnim" : False,
 					"HideSupplies" : False,
-					"Anim" : [{"X" : 62,"Y" : -87,"Steps" : [1165,1166,1167,1163,1164]}]
+					"Anim" : 
+					[
+						{"X" : 62,"Y" : -87,"Steps" : [1165,1166,1167,1163,1164]}
+					]
 				}
 			],
 			"WoodPileOffset" : {"X" : 83,"Y" : 15},
@@ -3389,43 +3488,45 @@
 			"TilePileOffset" : {"X" : 40,"Y" : 15},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,1,1,0,0],
-				[0,0,2,1,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,0,1,1,0],
+				[0,0,2,1,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,2,2,0,0],
+				[0,2,2,0,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htCollectors",
 			"TextID" : 1675,
 			"DescriptionID" : 1735,
-			"TileCost" : 0,
 			"MaxHealth" : 450,
-			"WoodCost" : 6,
-			"StoneCost" : 0,
 			"WoodPic" : 2399,
 			"StonePic" : 2400,
+			"SnowPic" : 2473,
+			"WoodCost" : 6,
+			"StoneCost" : 0,
+			"TileCost" : 0,
 			"EntranceOffsetX" : -1,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 20,
 			"EntranceOffsetYpx" : 0,
-			"WorkerType" : 10,
 			"WorkerRest" : 1,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 731,
+			"TabletID" : 730,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 10,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 1692,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utClayPicker","MaxCount" : 2}
@@ -3459,43 +3560,45 @@
 			"TilePileOffset" : {"X" : -20,"Y" : 15},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[1,1,1,1,0,0],
-				[1,1,1,1,0,0],
-				[1,2,1,1,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[1,1,1,1,0],
+				[1,1,1,1,0],
+				[1,2,1,1,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[2,2,2,2,0],
+				[2,4,4,3,0],
+				[1,1,3,1,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htTailorsShop",
 			"TextID" : 1676,
 			"DescriptionID" : 1736,
-			"TileCost" : 2,
 			"MaxHealth" : 250,
-			"WoodCost" : 3,
-			"StoneCost" : 2,
 			"WoodPic" : 2409,
 			"StonePic" : 2401,
+			"SnowPic" : 2474,
+			"WoodCost" : 3,
+			"StoneCost" : 2,
+			"TileCost" : 2,
 			"EntranceOffsetX" : 1,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 5,
 			"EntranceOffsetYpx" : 0,
-			"WorkerType" : 5,
 			"WorkerRest" : 5,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 732,
+			"TabletID" : 729,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 15,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : 1693,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utCarpenter","MaxCount" : 1}
@@ -3534,43 +3637,45 @@
 			"TilePileOffset" : {"X" : -20,"Y" : 15},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,1,1,0,0],
-				[0,1,1,2,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,0,1,1,0],
+				[0,1,1,2,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[2,2,2,2,0],
+				[2,2,2,2,0],
+				[2,2,2,2,0],
+				[2,2,2,2,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htCottage",
 			"TextID" : 1678,
 			"DescriptionID" : 1738,
-			"TileCost" : 0,
 			"MaxHealth" : 300,
-			"WoodCost" : 4,
-			"StoneCost" : 3,
 			"WoodPic" : 2407,
 			"StonePic" : 2406,
+			"SnowPic" : 2462,
+			"WoodCost" : 4,
+			"StoneCost" : 3,
+			"TileCost" : 0,
 			"EntranceOffsetX" : 1,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 5,
 			"EntranceOffsetYpx" : 0,
-			"WorkerType" : -1,
 			"WorkerRest" : 5,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 741,
+			"TabletID" : 739,
 			"MaxInWares" : 10,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : -1,
 			"MaxWorkersCount" : 1,
 			"CanOverfill" : False,
 			"GatheringScript" : "gsNone",
@@ -3592,43 +3697,45 @@
 			"TilePileOffset" : {"X" : -20,"Y" : 15},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,1,1,1,0,0],
-				[0,1,1,2,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,1,1,1,0],
+				[0,1,1,2,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[2,2,2,2,0],
+				[2,2,2,2,0],
+				[2,2,2,2,0],
+				[2,2,2,2,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htHouse",
 			"TextID" : 1679,
 			"DescriptionID" : 1739,
-			"TileCost" : 5,
 			"MaxHealth" : 650,
-			"WoodCost" : 5,
-			"StoneCost" : 4,
 			"WoodPic" : 2408,
 			"StonePic" : 2402,
+			"SnowPic" : 2461,
+			"WoodCost" : 5,
+			"StoneCost" : 4,
+			"TileCost" : 5,
 			"EntranceOffsetX" : 1,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 5,
 			"EntranceOffsetYpx" : 0,
-			"WorkerType" : -1,
 			"WorkerRest" : 5,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 742,
+			"TabletID" : 740,
 			"MaxInWares" : 25,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : -1,
 			"MaxWorkersCount" : 1,
 			"CanOverfill" : False,
 			"GatheringScript" : "gsNone",
@@ -3650,21 +3757,19 @@
 			"TilePileOffset" : {"X" : -20,"Y" : 15},
 			"Build_Area" : 
 			[
-				[0,1,1,1,0,0],
-				[1,1,1,1,0,0],
-				[1,1,1,1,0,0],
-				[1,1,1,2,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,1,1,1,0],
+				[1,1,1,1,0],
+				[1,1,1,1,0],
+				[1,1,1,2,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[2,2,2,2,0],
+				[2,2,2,2,0],
+				[2,2,2,2,0],
+				[2,2,2,2,0],
+				[0,0,0,0,0]
 			],
 			"Wariants" : [2403, 2404, 2405]
 		},
@@ -3672,22 +3777,26 @@
 			"Name" : "htPalace",
 			"TextID" : 1681,
 			"DescriptionID" : 1740,
-			"TileCost" : 8,
 			"MaxHealth" : 800,
-			"WoodCost" : 5,
-			"StoneCost" : 6,
 			"WoodPic" : 2427,
 			"StonePic" : 2410,
+			"SnowPic" : 2463,
+			"WoodCost" : 5,
+			"StoneCost" : 6,
+			"TileCost" : 8,
 			"EntranceOffsetX" : 1,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 5,
 			"EntranceOffsetYpx" : 0,
-			"WorkerType" : -1,
 			"WorkerRest" : 5,
 			"Sight" : 30,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 743,
+			"TabletID" : 744,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : -1,
 			"MaxWorkersCount" : 1,
 			"CanOverfill" : False,
 			"GatheringScript" : "gsNone",
@@ -3710,43 +3819,45 @@
 			"TilePileOffset" : {"X" : -20,"Y" : 15},
 			"Build_Area" : 
 			[
-				[1,1,1,1,0,0],
-				[1,1,1,1,0,0],
-				[1,1,1,1,0,0],
-				[1,1,1,2,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[1,1,1,1,0],
+				[1,1,1,1,0],
+				[1,1,1,1,0],
+				[1,1,1,2,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[2,2,2,2,0],
+				[2,2,2,2,0],
+				[2,2,2,2,0],
+				[2,2,2,2,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htStall",
 			"TextID" : 1974,
 			"DescriptionID" : 2171,
-			"TileCost" : 0,
 			"MaxHealth" : 50,
-			"WoodCost" : 3,
-			"StoneCost" : 1,
 			"WoodPic" : 2489,
 			"StonePic" : 2489,
+			"SnowPic" : 2609,
+			"WoodCost" : 3,
+			"StoneCost" : 1,
+			"TileCost" : 0,
 			"EntranceOffsetX" : 0,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 20,
 			"EntranceOffsetYpx" : 10,
-			"WorkerType" : -1,
 			"WorkerRest" : 5,
 			"Sight" : 3,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 867,
+			"TabletID" : 868,
 			"MaxInWares" : 15,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : -1,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utRecruit","MaxCount" : 1}
@@ -3766,21 +3877,19 @@
 			"TilePileOffset" : {"X" : 10,"Y" : 15},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,2,1,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,0,0,0,0],
+				[0,0,2,1,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[2,2,2,2,0],
+				[2,2,2,2,0],
+				[2,2,2,2,0],
+				[2,2,2,2,0],
+				[0,0,0,0,0]
 			],
 			"Wariants" : [2489, 2508, 2509, 2510, 2511, 2512, 2513, 2514, 2515, 2516, 2517]
 		},
@@ -3788,22 +3897,26 @@
 			"Name" : "htProductionThatch",
 			"TextID" : 1975,
 			"DescriptionID" : 2169,
-			"TileCost" : 8,
 			"MaxHealth" : 600,
-			"WoodCost" : 5,
-			"StoneCost" : 5,
 			"WoodPic" : 2530,
 			"StonePic" : 2518,
+			"SnowPic" : 2610,
+			"WoodCost" : 5,
+			"StoneCost" : 5,
+			"TileCost" : 8,
 			"EntranceOffsetX" : 0,
 			"EntranceOffsetY" : 0,
 			"EntranceOffsetXpx" : 20,
 			"EntranceOffsetYpx" : 10,
-			"WorkerType" : -1,
 			"WorkerRest" : 10,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 869,
+			"TabletID" : 870,
 			"MaxInWares" : 15,
 			"MaxOutWares" : 30,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : -1,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utCarpenter","MaxCount" : 5},
@@ -3850,43 +3963,45 @@
 			"TilePileOffset" : {"X" : 10,"Y" : 15},
 			"Build_Area" : 
 			[
-				[1,1,1,1,0,0],
-				[1,1,1,1,0,0],
-				[1,1,1,1,0,0],
-				[1,1,2,1,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[1,1,1,1,0],
+				[1,1,1,1,0],
+				[1,1,1,1,0],
+				[1,1,2,1,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[2,2,2,2,0],
+				[2,2,2,2,0],
+				[2,2,2,2,0],
+				[2,2,2,2,0],
+				[0,0,0,0,0]
 			]
 		},
 		{
 			"Name" : "htShipYard",
 			"TextID" : 1983,
 			"DescriptionID" : 2170,
-			"TileCost" : 4,
 			"MaxHealth" : 600,
-			"WoodCost" : 6,
-			"StoneCost" : 0,
 			"WoodPic" : 2532,
 			"StonePic" : 2531,
+			"SnowPic" : 0,
+			"WoodCost" : 6,
+			"StoneCost" : 0,
+			"TileCost" : 4,
 			"EntranceOffsetX" : -1,
 			"EntranceOffsetY" : -2,
 			"EntranceOffsetXpx" : 20,
 			"EntranceOffsetYpx" : 10,
-			"WorkerType" : 5,
 			"WorkerRest" : 10,
 			"Sight" : 6,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 872,
+			"TabletID" : 873,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
+			"UnoccupiedMsgId" : -1,
 			"WorkerTypes" : 
 			[
 				{"UnitType" : "utCarpenter","MaxCount" : 1}
@@ -3918,21 +4033,19 @@
 			"TilePileOffset" : {"X" : 10,"Y" : 15},
 			"Build_Area" : 
 			[
-				[0,1,1,0,0,0],
-				[0,2,1,0,0,0],
-				[0,0,0,0,0,0],
-				[1,1,1,1,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[0,1,1,0,0],
+				[0,2,1,0,0],
+				[0,0,0,0,0],
+				[1,1,1,1,0],
+				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
 			[
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0],
-				[0,0,0,0,0,0]
+				[2,2,2,2,0],
+				[2,2,2,2,0],
+				[2,2,2,2,0],
+				[2,2,2,2,0],
+				[0,0,0,0,0]
 			]
 		}
 	],
@@ -4003,5 +4116,23 @@
 		{"X" : -20,"Y" : -5,"Steps" : [2093,2094,2095,2096,2097,2098,2098,2098,2098,2098,2097,2093,2094,2095,2096,2093,2094,2095,2096,2093,2094,2095,2096]},
 		{"X" : 0,"Y" : 3,"Steps" : [2372,2373,2374,2375,2376,2377,2377,2377,2377,2377,2376,2372,2373,2374,2375,2372,2373,2374,2375,2372,2373,2374,2375]},
 		{"X" : 40,"Y" : 0,"Steps" : [2093,2094,2095,2096,2097,2098,2098,2098,2098,2098,2097,2093,2094,2095,2096,2093,2094,2095,2096,2093,2094,2095,2096]}
-	]
+	],
+	"Palace_Flags" : 
+	[
+		{"X" : -78,"Y" : -22,"Steps" : [1165,1166,1167,1163,1164]},
+		{"X" : -78,"Y" : 30,"Steps" : [1165,1166,1167,1163,1164]},
+		{"X" : 28,"Y" : 30,"Steps" : [1165,1166,1167,1163,1164]},
+		{"X" : 70,"Y" : 30,"Steps" : [1165,1166,1167,1163,1164]}
+	],
+	"ProductionThatch_Anims" : 
+	{
+		"ptaSawDust" : {"X" : 0,"Y" : 0,"Steps" : [6,6,6,6,6,6,6,6,6,6,6,6,6,6,2520,2521,2522,2523,2524,2525,2522,2523,2524,2525,2522,2523,2524,2525,2526]},
+		"ptaStoneDust" : {"X" : 0,"Y" : 0,"Steps" : [6,6,6,6,6,6,6,6,2694,2695,2696,2697,2698,2699,2697,2698,2699,2697,2698,2699,2697,2698,2699,2697,2698,2699,2697,2698,2699,2700,2701,2702]},
+		"ptaSmokeBakery" : {"X" : -81,"Y" : 38,"Steps" : [889,890,891,892]},
+		"ptaSmokeIron" : {"X" : 17,"Y" : -14,"Steps" : [889,890,891,892]},
+		"ptaSmokeGold" : {"X" : -57,"Y" : -30,"Steps" : [891,892,889,890]},
+		"ptaWindows" : {"X" : 0,"Y" : 0,"Steps" : [2527,2528,2528,2529,2529,2530,2530,2687,2687,2687,2687,2687,2687,2687,2687,2687,2530,2530,2529,2529,2528,2528,2527,2527,2527,2527,2527,2527]},
+		"ptaWine" : {"X" : 0,"Y" : 0,"Steps" : [6,6,6,6,6,6,6,6,2703,2704,2705,2706,2707,2705,2706,2707,2705,2706,2707,2705,2706,2707,2705,2706,2707,2708,2709]},
+		"ptaCorn" : {"X" : 0,"Y" : 0,"Steps" : [6,6,6,6,6,6,6,6,2688,2689,2690,2691,2692,2690,2691,2692,2690,2691,2692,2690,2691,2692,2690,2691,2692,2690,2691,2692,2693]}
+	}
 }

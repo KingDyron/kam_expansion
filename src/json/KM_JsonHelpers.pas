@@ -127,6 +127,7 @@ type
       Procedure Write(aName : String; aValue : TIntegerArray; aIsFirst : Boolean = false);overload;
       Procedure Write(aName : String; aValue : TInteger2Array; aIsFirst : Boolean = false);overload;
       Procedure Write(aName : String; aValue : TKMWordArray; aIsFirst : Boolean = false);overload;
+      Procedure Write(aName : String; aValue : TKMByteArray; aIsFirst : Boolean = false);overload;
       Procedure Write(aName : String; aValue : TKMStringArray; aIsFirst : Boolean = false);overload;
       Procedure Write(aName : String; aValue : TKMWareTypeArray; aIsFirst : Boolean = false);overload;
       Procedure Write(aName : String; aValue : TKMUnitTypeArray; aIsFirst : Boolean = false);overload;
@@ -379,7 +380,7 @@ begin
   end else
   begin
     arr := [];
-    GetArray('Steps', arr);
+    json.GetArray('Steps', arr);
     if length(arr) = 0 then
       Exit;
     Result := true;
@@ -618,6 +619,7 @@ begin
     for K := 0 to Min(arr2.Count -1, MAX_HOUSE_SIZE - 1) do
       aValue[I + 1, K + 1] := arr2.I[K];
   end;
+
 
 end;
 
@@ -859,8 +861,14 @@ begin
 end;
 
 Procedure TKMJsonSaver.Write(aName : String; aValue : Single; aIsFirst : Boolean = false);
+var S : String;
+  I : Integer;
 begin
-  WriteValue(aName, aValue.ToString, aIsFirst);
+  S := aValue.ToString(ffNumber, 1, 5);
+  for I := 1 to Length(S) do
+    If S[I] = ',' then
+      S[I] := '.';
+  WriteValue(aName, S, aIsFirst);
 end;
 
 Procedure TKMJsonSaver.Write(aName : String; aValue : String; aIsFirst : Boolean = false);
@@ -968,6 +976,31 @@ begin
 end;
 
 Procedure TKMJsonSaver.Write(aName : String; aValue : TKMWordArray; aIsFirst : Boolean = false);
+var I, J : integer;
+  S : String;
+begin
+  If length(aValue) = 0 then
+    Exit;
+
+  If not aIsFirst then
+    AddCommaToLast;
+
+  AddArray(aName, false);
+
+  S := '';
+  J := High(aValue);
+  for I := 0 to J do
+  begin
+    S := S + aValue[I].ToString;
+    If I < J then
+      S := S + ', ';
+  end;
+  AddLine(S, false);
+
+  EndArray(false);
+end;
+
+Procedure TKMJsonSaver.Write(aName : String; aValue : TKMByteArray; aIsFirst : Boolean = false);
 var I, J : integer;
   S : String;
 begin
@@ -1288,7 +1321,7 @@ begin
 
     WriteArray('Steps');
       for I := 0 to aValue.Count - 1 do
-        AddToArray(aValue.Step[I], I = 1);
+        AddToArray(aValue.Step[I], I = 0);
     EndArray;
   EndLineObject;
 

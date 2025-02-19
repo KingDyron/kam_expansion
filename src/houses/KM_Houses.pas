@@ -4151,7 +4151,7 @@ end;
 procedure TKMHouse.IncAnimStep;
 const
   //How much ticks it takes for a house to become completely covered in snow
-  SNOW_TIME = 300;
+  SNOW_TIME = 600;
 var
   I, K: Integer;
   wasOnSnow: Boolean;
@@ -5831,7 +5831,6 @@ var obj : Word;
 begin
   fProgress := 0;
   fGrowPhase := 0;
-  fWariant := 0;
   fFillFruits := 0;
   FruitType := 0;
 

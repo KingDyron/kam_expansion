@@ -45,8 +45,8 @@ type
     fUnitType: TKMUnitType;
     fUnitDat: TKMUnitDat;
     fUnitSpecInfo: TKMUnitSpecInfo;
-    fUnitSprite: TKMUnitSprite;
-    fUnitSprite2: TKMUnitSprite2;
+    //fUnitSprite: TKMUnitSprite;
+    //fUnitSprite2: TKMUnitSprite2;
     fUnitSpriteNew : TKMUnitSpriteNew;
 
     fHouses : TKMHouseTypeArray;
@@ -90,7 +90,7 @@ type
     FightType : TKMFightType;
     MinRange, MaxRange : Single;
     DescriptionID : Word;
-    StrikeSteps : array of Byte;
+    StrikeSteps : TKMByteArray;
     ProducesWares : TKMWareTypeSet;
     ShipWeight : Single;
     SchoolTime : Byte;
@@ -146,12 +146,10 @@ type
   private
     fCRC: Cardinal;
     fItems: array [TKMUnitType] of TKMUnitSpec;
-    fSerfCarry: array [WARE_MIN..wtFish, dirN..dirNW] of TKMAnimLoop;
-    fSerfCarryNew: array [wtBitin..WARE_MAX, dirN..dirNW] of TKMAnimLoop;
+    fSerfCarryNew: array [WARE_MIN..WARE_MAX, dirN..dirNW] of TKMAnimation;
 
-    function LoadUnitsDat(const aPath: UnicodeString): Cardinal;
     function GetItem(aType: TKMUnitType): TKMUnitSpec; inline;
-    function GetSerfCarry(aType: TKMWareType; aDir: TKMDirection): TKMAnimLoop;
+    function GetSerfCarry(aType: TKMWareType; aDir: TKMDirection): TKMAnimation;
     procedure CalculateTroopTrainOrder;
   public
     BootsAnim : TKMAnimLoop;
@@ -165,10 +163,11 @@ type
 
 
     property Items[aType: TKMUnitType]: TKMUnitSpec read GetItem; default;
-    property SerfCarry[aType: TKMWareType; aDir: TKMDirection]: TKMAnimLoop read GetSerfCarry;
+    property SerfCarry[aType: TKMWareType; aDir: TKMDirection]: TKMAnimation read GetSerfCarry;
     property CRC: Cardinal read fCRC; //Return hash of all values
 
     procedure ExportCSV(const aPath: UnicodeString);
+    procedure SaveToJson(const aPath: UnicodeString);
     procedure SetUnitHousesList;
     procedure SaveCustomData(aSaveStream: TKMemoryStream);
     procedure LoadCustomData(aLoadStream: TKMemoryStream);
@@ -481,13 +480,13 @@ var act : TKMUnitActionType;
 begin
   if fUnitType in UNITS_NEW then Exit;
 
-  Stream.Read(fUnitDat, SizeOf(TKMUnitDat));
+  {Stream.Read(fUnitDat, SizeOf(TKMUnitDat));
   for act := uaWalk to uaUnknown do
     if act <> uaStay then
-      Stream.Read(fUnitSprite.Act[act], SizeOf(fUnitSprite.Act[act]));
+      Stream.Read(fUnitSprite.Act[act], SizeOf(fUnitSprite.Act[act]));}
 
   //Stream.Read(fUnitSprite, SizeOf(TKMUnitSpriteOld));
-  Stream.Read(fUnitSprite2, SizeOf(TKMUnitSprite2));
+  //Stream.Read(fUnitSprite2, SizeOf(TKMUnitSprite2));
 end;
 
 
@@ -1177,25 +1176,6 @@ end;
 { TKMUnitsDatCollection }
 constructor TKMResUnits.Create;
 
-  procedure AddAnimation(aUnit: TKMUnitType; aAnim: TKMUnitActionType; aDir : TKMDirection; aMoveX, aMoveY: Integer; const aSteps: array of SmallInt);  overload;
-  var
-    I: Integer;
-  begin
-    with fItems[aUnit].fUnitSprite.Act[aAnim].Dir[aDir] do
-    begin
-      MoveX := aMoveX;
-      MoveY := aMoveY;
-      Count := length(aSteps);
-      for I := 1 to Count do
-        Step[I] := aSteps[I-1] - 1;
-    end;
-  end;
-
-  procedure AddAnimation(aUnit: TKMUnitType; aAnim: TKMUnitActionType; aDir : TKMDirection; aMoveX, aMoveY: Integer; const aStart, aCount: SmallInt; aOffset : Byte = 0; BackWard : Boolean = false); overload;
-  begin
-    with fItems[aUnit].fUnitSprite.Act[aAnim].Dir[aDir] do
-      Create(aMoveX, aMoveY, aStart, aCount, aOffset, BackWard)
-  end;
 const
   DEF_SCOUT_SIGHT = 9;
   DEF_HORSEMAN_ATTACK = 40;
@@ -1234,412 +1214,10 @@ begin
   for UT := utNone to UNIT_MAX do
       fItems[UT] := TKMUnitSpec.Create(UT);
 
-  fCRC := LoadUnitsDat(ExeDir + 'data' + PathDelim + 'defines' + PathDelim + 'unit.dat');
-
-  for UT := utNone to utRecruit do
-    fItems[UT].fUnitDat.Sight := 4;
-
-  for UT := utMilitia to UNIT_MAX do
-    fItems[UT].fUnitDat.Sight := 6;
-
-  // Overwrite units stats only if they are set for default values from original game
-  // We don't want to update them, in case player manually edited unit.dat file
-  fItems[utScout].fUnitDat.Sight := 9;
-  fItems[utVagabond].fUnitDat.Sight := 7;
-
-  fItems[utVagabond].fUnitDat.Attack := 35;
-
-  fItems[utRebel].fUnitDat.AttackHorse := 50;
-  fItems[utLanceCarrier].fUnitDat.AttackHorse := 65;
-  fItems[utPikeman].fUnitDat.AttackHorse := 90;
-
-  fItems[utScout].fUnitDat.Speed := 40;
-  fItems[utKnight].fUnitDat.Speed := 36;
-  fItems[utVagabond].fUnitDat.Speed := 44;
-
-  fItems[utWarrior].fUnitDat.Defence := fItems[utWarrior].fUnitDat.Defence + 1;
-
-  fItems[utRam].fUnitType := utRam;
-  fItems[utRam].fUnitDat := fItems[utCatapult].fUnitDat;
-
-  fItems[utRam].fUnitDat.Attack := 3;
-  fItems[utRam].fUnitDat.AttackHorse := 0;
-  fItems[utRam].fUnitDat.HitPoints := 10;
-  fItems[utRam].fUnitDat.Defence := 10;
-  fItems[utRam].fUnitDat.Sight := 5;
-
-
-  fItems[utRam].fUnitSprite := fItems[utCatapult].fUnitSprite;
-  fItems[utRam].fUnitSprite2 := fItems[utCatapult].fUnitSprite2;
-  fItems[utRam].fUnitDat.Speed := 12;
-
-  fItems[utBallista].fUnitDat.HitPoints := 4;
-  fItems[utBallista].fUnitDat.Attack := 250;
-  fItems[utBallista].fUnitDat.AttackHorse := 0;
-
-  fItems[utGolem].fUnitDat := fItems[utBarbarian].fUnitDat;
-  fItems[utGolem].fUnitSprite := fItems[utBarbarian].fUnitSprite;
-  fItems[utGolem].fUnitSprite2 := fItems[utBarbarian].fUnitSprite2;
-  fItems[utGolem].fUnitDat.Speed := 24;
-
-  fItems[utGiant].fUnitDat := fItems[utBarbarian].fUnitDat;
-  fItems[utGiant].fUnitSprite := fItems[utBarbarian].fUnitSprite;
-  fItems[utGiant].fUnitSprite2 := fItems[utBarbarian].fUnitSprite2;
-  fItems[utGiant].fUnitDat.Speed := 20;
-
-  fItems[utGolem].fUnitDat.HitPoints := 4;
-  fItems[utGolem].fUnitDat.Attack := 199;
-  fItems[utGolem].fUnitDat.Defence := 3;
-  fItems[utGolem].fUnitDat.Sight := 8;
-
-  fItems[utGiant].fUnitDat.HitPoints := 7;
-  fItems[utGiant].fUnitDat.Defence := 5;
-  fItems[utGiant].fUnitDat.Attack := 250;
-  fItems[utGiant].fUnitDat.Sight := 15;
-
-  //fItems[utSerf].fUnitDat.Speed := 24;
-
-
-  //fItems[utRam].fUnitSpecInfo.StepsPerTile          := Round(1    / fItems[utRam].Speed);
-
-  fItems[utPaladin].fUnitDat := fItems[utSwordFighter].fUnitDat;
-  fItems[utPaladin].fUnitSprite := fItems[utSwordFighter].fUnitSprite;
-  fItems[utPaladin].fUnitSprite2 := fItems[utSwordFighter].fUnitSprite2;
-  fItems[utPaladin].fUnitDat.HitPoints := 7;
-  fItems[utPaladin].fUnitDat.Defence := 8;
-  fItems[utPaladin].fUnitDat.Attack := 115;
-  fItems[utPaladin].fUnitDat.AttackHorse := 20;
-  fItems[utPaladin].fUnitDat.Sight := 5;
-  fItems[utPaladin].fUnitDat.Speed := 20;
-  //archer test speed
-
-  fItems[utArcher].fUnitDat := fItems[utBowMan].fUnitDat;
-  fItems[utArcher].fUnitSprite := fItems[utBowMan].fUnitSprite;
-  fItems[utArcher].fUnitSprite2 := fItems[utBowMan].fUnitSprite2;
-  fItems[utArcher].fUnitDat.HitPoints := 2;
-  fItems[utArcher].fUnitDat.Speed := 40;
-  fItems[utArcher].fUnitDat.Sight := 9;
-
-  fItems[utSpy].fUnitDat := fItems[utMilitia].fUnitDat;
-  fItems[utSpy].fUnitSprite := fItems[utSerf].fUnitSprite;
-  fItems[utSpy].fUnitSprite2 := fItems[utSerf].fUnitSprite2;
-  fItems[utSpy].fUnitSprite.Act[uaWork] := fItems[utSerf].fUnitSprite.Act[uaWalk];
-  fItems[utSpy].fUnitDat.HitPoints := 1;
-  fItems[utSpy].fUnitDat.Speed := 20;
-  fItems[utSpy].fUnitDat.Sight := 7;
-
-  fItems[utTrainedWolf].fUnitDat := fItems[utMilitia].fUnitDat;
-  fItems[utTrainedWolf].fUnitSprite := fItems[utWolf].fUnitSprite;
-  fItems[utTrainedWolf].fUnitSprite2 := fItems[utWolf].fUnitSprite2;
-  fItems[utTrainedWolf].fUnitDat.HitPoints := 2;
-  fItems[utTrainedWolf].fUnitDat.Defence := 1;
-  fItems[utTrainedWolf].fUnitDat.Attack := 55;
-  fItems[utTrainedWolf].fUnitDat.Speed := 40;
-  fItems[utTrainedWolf].fUnitDat.Sight := 6;
-  fItems[utTrainedWolf].fUnitSprite.Act[uaWork] := fItems[utTrainedWolf].fUnitSprite.Act[uaWalk];
-
-  fItems[utAmmoCart].fUnitDat := fItems[utMilitia].fUnitDat;
-  fItems[utAmmoCart].fUnitSprite := fItems[utCatapult].fUnitSprite;
-  fItems[utAmmoCart].fUnitDat.HitPoints := 10;
-  fItems[utAmmoCart].fUnitDat.Defence := 3;
-  fItems[utAmmoCart].fUnitDat.Attack := 55;
-  fItems[utAmmoCart].fUnitDat.Speed := 12;
-  fItems[utAmmoCart].fUnitDat.Sight := 4;
-
-  fItems[utPikeMachine].fUnitDat := fItems[utMilitia].fUnitDat;
-  fItems[utPikeMachine].fUnitSprite := fItems[utCatapult].fUnitSprite;
-  fItems[utPikeMachine].fUnitDat.HitPoints := 20;
-  fItems[utPikeMachine].fUnitDat.Defence := 3;
-  fItems[utPikeMachine].fUnitDat.Attack := 55;
-  fItems[utPikeMachine].fUnitDat.AttackHorse := 100;
-  fItems[utPikeMachine].fUnitDat.Speed := 12;
-  fItems[utPikeMachine].fUnitDat.Sight := 4;
-
-  fItems[utShip].fUnitDat := fItems[utMilitia].fUnitDat;
-  fItems[utShip].fUnitSprite := fItems[utCatapult].fUnitSprite;
-  for dir := DirN to dirNW do
-    fItems[utShip].fUnitSprite.Act[uaWalkArm].Dir[dir].Count := 0;
-  //fItems[utShip].fUnitSprite.Act[uaWalkArm].Clear;
-  fItems[utShip].fUnitDat.HitPoints := 4;
-  fItems[utShip].fUnitDat.Defence := 3;
-  fItems[utShip].fUnitDat.Attack := 0;
-  fItems[utShip].fUnitDat.AttackHorse := 0;
-  fItems[utShip].fUnitDat.Speed := 24;
-  fItems[utShip].fUnitDat.Sight := 7;
-
-  fItems[utBattleShip].fUnitDat := fItems[utMilitia].fUnitDat;
-  fItems[utBattleShip].fUnitSprite := fItems[utCatapult].fUnitSprite;
-  for dir := DirN to dirNW do
-    fItems[utBattleShip].fUnitSprite.Act[uaWalkArm].Dir[dir].Count := 0;
-
-  fItems[utBattleShip].fUnitDat.HitPoints := 6;
-  fItems[utBattleShip].fUnitDat.Defence := 5;
-  fItems[utBattleShip].fUnitDat.Attack := 500;
-  fItems[utBattleShip].fUnitDat.AttackHorse := 0;
-  fItems[utBattleShip].HouseDamage := 25;
-  fItems[utBattleShip].fUnitDat.Speed := 20;
-  fItems[utBattleShip].fUnitDat.Sight := 7;
-
-
-  fItems[utBoat].fUnitDat := fItems[utMilitia].fUnitDat;
-  fItems[utBoat].fUnitSprite := fItems[utCatapult].fUnitSprite;
-  for dir := DirN to dirNW do
-    fItems[utBoat].fUnitSprite.Act[uaWalkArm].Dir[dir].Count := 0;
-  fItems[utBoat].fUnitDat.HitPoints := 5;
-  fItems[utBoat].fUnitDat.Defence := 1;
-  fItems[utBoat].fUnitDat.Attack := 0;
-  fItems[utBoat].fUnitDat.AttackHorse := 0;
-  fItems[utBoat].fUnitDat.Speed := 29;
-  fItems[utBoat].fUnitDat.Sight := 7;
-
-
-  fItems[utOperator].fUnitDat := fItems[utRecruit].fUnitDat;
-  fItems[utOperator].fUnitSprite := fItems[utRecruit].fUnitSprite;
-
-  fItems[utClayPicker].fUnitDat := fItems[utStoneMason].fUnitDat;
-  fItems[utClayPicker].fUnitSprite := fItems[utStoneMason].fUnitSprite;
-
-  fItems[utClubMan].fUnitDat := fItems[utMilitia].fUnitDat;
-  fItems[utClubMan].fUnitSprite := fItems[utMilitia].fUnitSprite;
-
-  fItems[utMaceFighter].fUnitDat := fItems[utAxeFighter].fUnitDat;
-  fItems[utMaceFighter].fUnitSprite := fItems[utAxeFighter].fUnitSprite;
-
-  fItems[utFlailFighter].fUnitDat := fItems[utSwordFighter].fUnitDat;
-  fItems[utFlailFighter].fUnitSprite := fItems[utSwordFighter].fUnitSprite;
-
-  fItems[utShieldBearer].fUnitDat := fItems[utSwordFighter].fUnitDat;
-  fItems[utShieldBearer].fUnitSprite := fItems[utSwordFighter].fUnitSprite;
-
-  fItems[utFighter].fUnitDat := fItems[utSwordFighter].fUnitDat;
-  fItems[utFighter].fUnitSprite := fItems[utSwordFighter].fUnitSprite;
-
-  fItems[utSpikedTrap].fUnitDat := fItems[utBallista].fUnitDat;
-  fItems[utSpikedTrap].fUnitSprite := fItems[utBallista].fUnitSprite;
-
-  fItems[utWoodenWall].fUnitDat := fItems[utCatapult].fUnitDat;
-  fItems[utWoodenWall].fUnitSprite := fItems[utCatapult].fUnitSprite;
-
-  fItems[utTorchMan].fUnitDat := fItems[utRecruit].fUnitDat;
-  fItems[utTorchMan].fUnitSprite := fItems[utMilitia].fUnitSprite;
-
-  fItems[utPyro].fUnitDat := fItems[utRecruit].fUnitDat;
-  fItems[utPyro].fUnitSprite := fItems[utMilitia].fUnitSprite;
-
-  fItems[utMedic].fUnitDat := fItems[utSwordFighter].fUnitDat;
-  fItems[utMedic].fUnitSprite := fItems[utSwordFighter].fUnitSprite;
-
-  fItems[utCatapult].fUnitDat.HitPoints := 4;
-  fItems[utBallista].fUnitDat.HitPoints := 4;
-  fItems[utBallista].fUnitDat.Attack := 500;
-
-
-  fItems[utStoneMason].fUnitSprite.Act[uaWork1].Dir[dirN] :=  fItems[utBuilder].fUnitSprite.Act[uaWork1].Dir[dirN];
-
-  AddAnimation(utStoneMason, uaWork1, dirN, 0, 0, [9505, 9506, 9507, 9508, 9509, 9510, 9511, 9512, 9513, 9514, 9515, 9516]);
-
-  AddAnimation(utRam, uaWalk, dirN, 0, 0, 9516, 9, 0, true);
-  AddAnimation(utRam, uaWalk, dirNE, 0, 0, 9525, 10);
-  AddAnimation(utRam, uaWalk, dirE, 0, 0, 9535, 10);
-  AddAnimation(utRam, uaWalk, dirSE, 0, 0, 9545, 10, 0, true);
-  AddAnimation(utRam, uaWalk, dirS, 0, 0, 9555, 10);
-  AddAnimation(utRam, uaWalk, dirSW, 0, 0, 9565, 10, 0, true);
-  AddAnimation(utRam, uaWalk, dirW, 0, 0, 9575, 10, 0, true);
-  AddAnimation(utRam, uaWalk, dirNW, 0, 0, 9585, 10);
-
-  AddAnimation(utRam, uaWork, dirN, 0, 0, [9610, 9611, 9612, 9613, 9614, 9615, 9610, 9610, 9610, 9610, 9610, 9610]);
-  AddAnimation(utRam, uaWork, dirNE, 0, 0, [9616, 9617, 9618, 9619, 9620, 9621, 9622, 9621, 9616, 9616, 9616, 9616, 9616, 9616]);
-  AddAnimation(utRam, uaWork, dirE, 0, 0, [9623, 9624, 9625, 9626, 9627, 9628, 9629, 9628, 9623, 9623, 9623, 9623, 9623, 9623]);
-  AddAnimation(utRam, uaWork, dirSE, 0, 0, [9630, 9631, 9632, 9633, 9634, 9635, 9636, 9635, 9630, 9630, 9630, 9630, 9630, 9630]);
-  AddAnimation(utRam, uaWork, dirS, 0, 0, [9637, 9638, 9639, 9640, 9641, 9642, 9641,  9637, 9637, 9637, 9637, 9637, 9637]);
-  AddAnimation(utRam, uaWork, dirSW, 0, 0, [9643, 9644, 9645, 9646, 9647, 9648, 9649, 9647, 9643, 9643, 9643, 9643, 9643, 9643]);
-  AddAnimation(utRam, uaWork, dirW, 0, 0, [9650, 9651, 9652, 9653, 9654, 9655, 9656, 9655, 9650, 9650, 9650, 9650, 9650, 9650]);
-  AddAnimation(utRam, uaWork, dirNW, 0, 0, [9657, 9658, 9659, 9660, 9661, 9662, 9663, 9661, 9657, 9657, 9657, 9657, 9657, 9657]);
-
-  AddAnimation(utGolem, uaWalk, dirN, 0, 0, 9721, 8);
-  AddAnimation(utGolem, uaWalk, dirNE, 0, 0, 9713, 8);
-  AddAnimation(utGolem, uaWalk, dirE, 0, 0, 9705, 8);
-  AddAnimation(utGolem, uaWalk, dirSE, 0, 0, 9697, 8);
-  AddAnimation(utGolem, uaWalk, dirS, 0, 0, 9689, 8);
-  AddAnimation(utGolem, uaWalk, dirSW, 0, 0, 9681, 8);
-  AddAnimation(utGolem, uaWalk, dirW, 0, 0, 9673, 8);
-  AddAnimation(utGolem, uaWalk, dirNW, 0, 0, 9665, 8);
-
-  AddAnimation(utGolem, uaWork, dirN, 0, 0, 9793, 7);
-  AddAnimation(utGolem, uaWork, dirNE, 0, 0, 9783, 10);
-  AddAnimation(utGolem, uaWork, dirE, 0, 0, 9773, 10);
-  AddAnimation(utGolem, uaWork, dirSE, 0, 0, 9763, 9);
-  AddAnimation(utGolem, uaWork, dirS, 0, 0, 9756, 7);
-  AddAnimation(utGolem, uaWork, dirSW, 0, 0, 9749, 7);
-  AddAnimation(utGolem, uaWork, dirW, 0, 0, 9739, 10);
-  AddAnimation(utGolem, uaWork, dirNW, 0, 0, 9729, 10);
-
-  AddAnimation(utGiant, uaWalk, dirN, 0, 0, 9800, 8);
-  AddAnimation(utGiant, uaWalk, dirNE, 0, 0, 9808, 8);
-  AddAnimation(utGiant, uaWalk, dirE, 0, 0, 9816, 8);
-  AddAnimation(utGiant, uaWalk, dirSE, 0, 0, 9824, 8);
-  AddAnimation(utGiant, uaWalk, dirS, 0, 0, 9832, 8);
-  AddAnimation(utGiant, uaWalk, dirSW, 0, 0, 9840, 8);
-  AddAnimation(utGiant, uaWalk, dirW, 0, 0, 9848, 8);
-  AddAnimation(utGiant, uaWalk, dirNW, 0, 0, 9856, 8);
-
-  AddAnimation(utGiant, uaWork, dirN, 0, 0, 9864, 7);
-  AddAnimation(utGiant, uaWork, dirNE, 0, 0, 9771, 10);
-  AddAnimation(utGiant, uaWork, dirE, 0, 0, 9781, 9);
-  AddAnimation(utGiant, uaWork, dirSE, 0, 0, 9790, 10);
-  AddAnimation(utGiant, uaWork, dirS, 0, 0, 9900, 7);
-  AddAnimation(utGiant, uaWork, dirSW, 0, 0, 9907, 7);
-  AddAnimation(utGiant, uaWork, dirW, 0, 0, 9914, 10);
-  AddAnimation(utGiant, uaWork, dirNW, 0, 0, 9924, 10);
-
-  AddAnimation(utPaladin, uaWalk, dirN, 0, 0, 10096, 15);
-  AddAnimation(utPaladin, uaWalk, dirNE, 0, 0, 10080, 15);
-  AddAnimation(utPaladin, uaWalk, dirE, 0, 0, 10063, 15);
-  AddAnimation(utPaladin, uaWalk, dirSE, 0, 0, 10176, 15);
-  AddAnimation(utPaladin, uaWalk, dirS, 0, 0, 10160, 15);
-  AddAnimation(utPaladin, uaWalk, dirSW, 0, 0, 10144, 15);
-  AddAnimation(utPaladin, uaWalk, dirW, 0, 0, 10128, 15);
-  AddAnimation(utPaladin, uaWalk, dirNW, 0, 0, 10112, 15);
-
-  AddAnimation(utPaladin, uaWork, dirN, 0, 0, 9951, 14);
-  AddAnimation(utPaladin, uaWork, dirNE, 0, 0, 9934, 15);
-  AddAnimation(utPaladin, uaWork, dirE, 0, 0, 10046, 15);
-  AddAnimation(utPaladin, uaWork, dirSE, 0, 0, 10030, 15);
-  AddAnimation(utPaladin, uaWork, dirS, 0, 0, 10014, 15);
-  AddAnimation(utPaladin, uaWork, dirSW, 0, 0, 9998, 15);
-  AddAnimation(utPaladin, uaWork, dirW, 0, 0, 9982, 15);
-  AddAnimation(utPaladin, uaWork, dirNW, 0, 0, 9966, 15);
-
-  AddAnimation(utArcher, uaWalk, dirN, 0, 0, 10215, 6);
-  AddAnimation(utArcher, uaWalk, dirNE, 0, 0, 10209, 6);
-  AddAnimation(utArcher, uaWalk, dirE, 0, 0, 10203, 6);
-  AddAnimation(utArcher, uaWalk, dirSE, 0, 0, 10197, 6);
-  AddAnimation(utArcher, uaWalk, dirS, 0, 0, 10191, 6);
-  AddAnimation(utArcher, uaWalk, dirSW, 0, 0, 10233, 6);
-  AddAnimation(utArcher, uaWalk, dirW, 0, 0, 10227, 6);
-  AddAnimation(utArcher, uaWalk, dirNW, 0, 0, 10221, 6);
-
-  AddAnimation(utArcher, uaWork, dirN, 0, 0, 10239, 15);
-  AddAnimation(utArcher, uaWork, dirNE, 0, 0, 10254, 16);
-  AddAnimation(utArcher, uaWork, dirE, 0, 0, 10270, 16);
-  AddAnimation(utArcher, uaWork, dirSE, 0, 0, 10286, 16);
-  AddAnimation(utArcher, uaWork, dirS, 0, 0, 10302, 16);
-  AddAnimation(utArcher, uaWork, dirSW, 0, 0, 10318, 16);
-  AddAnimation(utArcher, uaWork, dirW, 0, 0, 10334, 16);
-  AddAnimation(utArcher, uaWork, dirNW, 0, 0, 10350, 15);
-
-  AddAnimation(utAmmoCart, uaWalk, dirE, 0, 0, 10564, 15);
-  AddAnimation(utAmmoCart, uaWalk, dirNE, 0, 0, 10579, 15);
-  AddAnimation(utAmmoCart, uaWalk, dirN, 0, 0, 10594, 15);
-  AddAnimation(utAmmoCart, uaWalk, dirNW, 0, 0, 10609, 15);
-  AddAnimation(utAmmoCart, uaWalk, dirW, 0, 0, 10624, 15);
-  AddAnimation(utAmmoCart, uaWalk, dirSW, 0, 0, 10639, 15);
-  AddAnimation(utAmmoCart, uaWalk, dirS, 0, 0, 10654, 15);
-  AddAnimation(utAmmoCart, uaWalk, dirSE, 0, 0, 10669, 15);
-
-  AddAnimation(utTrainedWolf, uaWalk, dirN, 0, 0, [10685,10686,10687,10688,10689,10690, 10691,10748]);
-  AddAnimation(utTrainedWolf, uaWalk, dirNE, 0, 0, 10691, 8);
-  AddAnimation(utTrainedWolf, uaWalk, dirNW, 0, 0, 10699, 8, 3);
-  AddAnimation(utTrainedWolf, uaWalk, dirE, 0, 0, 10707, 8);
-  AddAnimation(utTrainedWolf, uaWalk, dirSE, 0, 0, 10715, 8);
-  AddAnimation(utTrainedWolf, uaWalk, dirW, 0, 0, 10723, 8);
-  AddAnimation(utTrainedWolf, uaWalk, dirSW, 0, 0, 10731, 8, 7);
-  AddAnimation(utTrainedWolf, uaWalk, dirS, 0, 0, 10739, 8);
-
-  AddAnimation(utTrainedWolf, uaWork, dirN, 0, 0, [10749,10750,10751,10752,10753,10754, 10755,10812]);
-  AddAnimation(utTrainedWolf, uaWork, dirNE, 0, 0, 10755, 8);
-  AddAnimation(utTrainedWolf, uaWork, dirNW, 0, 0, 10763, 8, 3);
-  AddAnimation(utTrainedWolf, uaWork, dirE, 0, 0, 10771, 8);
-  AddAnimation(utTrainedWolf, uaWork, dirSE, 0, 0, 10779, 8);
-  AddAnimation(utTrainedWolf, uaWork, dirW, 0, 0, 10787, 8);
-  AddAnimation(utTrainedWolf, uaWork, dirSW, 0, 0, 10795, 8, 7);
-  AddAnimation(utTrainedWolf, uaWork, dirS, 0, 0, 10803, 8);
-
-  fItems[utTrainedWolf].fUnitSprite.Act[uaSpec] := fItems[utTrainedWolf].fUnitSprite.Act[uaWalk];
-
-
-
-  BootsAnim.Create(10, 0, 9596, 6);
-
-  //we can override it in JSON file
-  fItems[utTrainedWolf].TownhallCost := 4;
-  fItems[utRebel].TownhallCost := 2;
-  fItems[utRogue].TownhallCost := 3;
-  fItems[utVagabond].TownhallCost := 5;
-  fItems[utBarbarian].TownhallCost := 8;
-  fItems[utWarrior].TownhallCost := 10;
-
-  fItems[utRam].CanAttackUnits := false;
-  fItems[utAmmoCart].CanAttackUnits := false;
-  fItems[utAmmoCart].CanAttackHouses := false;
-  fItems[utSpy].CanAttackUnits := false;
-  fItems[utWoodenWall].CanAttackUnits := false;
-
-  fItems[utMilitia].CanStorm := true;
-  fItems[utAxeFighter].CanStorm := true;
-  fItems[utSwordFighter].CanStorm := true;
-  fItems[utBarbarian].CanStorm := true;
-  fItems[utWarrior].CanStorm := false;
-  fItems[utTrainedWolf].CanStorm := true;
-
-  //fItems[utVagabond].CanAttackHouses := aType in UNITS_WARRIORS;
-
-  for UT := WARRIOR_MIN to WARRIOR_MAX do
-    if UT <> utSpy then
-      for dir := dirN to dirNW do
-      begin
-        if UNIT_TO_GROUP_TYPE[UT] = gtAny then
-        begin
-          fItems[UT].fUnitSprite.Act[uaWalkArm].Dir[dir].MoveY := -70 + FlagYOffset[gtMelee, dir];
-          fItems[UT].fUnitSprite.Act[uaWalkArm].Dir[dir].MoveX := 0 + FlagXOffset[gtMelee, dir];
-        end else
-        begin
-          fItems[UT].fUnitSprite.Act[uaWalkArm].Dir[dir].MoveY := -70 + FlagYOffset[UNIT_TO_GROUP_TYPE[UT], dir];
-          fItems[UT].fUnitSprite.Act[uaWalkArm].Dir[dir].MoveX := 0 + FlagXOffset[UNIT_TO_GROUP_TYPE[UT], dir];
-        end;
-      end;
-
-  //for dir := dirN to dirNW do
-  //  Inc(fItems[utBallista].fUnitSprite.Act[uaWalkArm].Dir[dir].MoveX, 10);
-
-  //for dir := dirN to dirNW do
-  //  Inc(fItems[utFighter].fUnitSprite.Act[uaWalkArm].Dir[dir].MoveY, 22);
-  ShipSketch[dirN].Create(0, 0, 12844, 13);
-  ShipSketch[dirNE].Create(0, 0, 12857, 14);
-  ShipSketch[dirE].Create(0, 0, 12871, 14);
-  ShipSketch[dirSE].Create(0, 0, 12885, 14);
-  ShipSketch[dirS].Create(0, 0, 12899, 14);
-  ShipSketch[dirSW].Create(0, 0, 12913, 14);
-  ShipSketch[dirW].Create(0, 0, 12927, 14);
-  ShipSketch[dirNW].Create(0, 0, 12941, 14);
-
-  for dir := dirN to dirNW do
-  begin
-    FishermansShipSketch[dir].Create(0, 0, 14666 + (byte(dir) - 1) * 6, 6);
-    BattleShipSketch[dir].Create(0, 0, 14714 + (byte(dir) - 1) * 16, 16);
-  end;
-
-  TH_GAME_ORDER := [utRebel, utRogue, utVagabond, utBarbarian, utWarrior];
-  BARRACKS_GAME_ORDER := [utMilitia, utAxefighter, utSwordfighter, utBowMan, utCrossbowMan, utLanceCarrier, utPikeman, utScout, utKnight];
-  PALACE_UNITS_ORDER := [utPaladin, utArcher, utSpy, utTrainedWolf, utAmmoCart];
-  SCHOOL_GAME_ORDER := [utSerf, utBuilder, utStonemason, utWoodcutter, utCarpenter,
-                        utFisher, utFarmer, utBaker, utAnimalBreeder, utButcher,
-                        utMiner, utMetallurgist, utSmith, utRecruit];
-  SIEGE_GAME_ORDER := [utCatapult, utBallista, utRam];
-  SHIPYARD_ORDER := [utBoat, utShip, utBattleShip];
-
-
   Explosion.Create(10, 0, [13354, 13355, 13356, 13357, 13358]);
   Explosion.Extend(0);
   RageAnim.Create(10, 0, [14843, 14844, 14845, 14844]);
 
-  //convert AnimLoop to Animation
-  for UT := UNIT_MIN to UNIT_MAX do
-    for act := low(TKMUnitActionType) to High(TKMUnitActionType) do
-      for dir := DirN to DirNW do
-      begin
-        fItems[UT].fUnitSpriteNew[act, dir].Create(fItems[UT].fUnitSprite.Act[act].Dir[dir]);
-      end;
   fCRC := fCRC xor LoadFromJson(gRes.JsonData[dtUnits]);
 
   for UT := UNIT_MIN to UNIT_MAX do
@@ -1720,160 +1298,225 @@ begin
     write(ft,floattostr(Items[ii].Speed)+';');
     write(ft,inttostr(Items[ii].Sight)+';');
     writeln(ft);
-
   end;
 
-  {for ii := Low(TKMUnitType) to High(TKMUnitType) do
-  if Items[ii].IsValid then
-  begin
-    write(ft,Items[ii].GUIName+';');
-    write(ft,inttostr(Items[ii].HitPoints)+';');
-    write(ft,inttostr(Items[ii].Attack)+';');
-    write(ft,inttostr(Items[ii].AttackHorse)+';');
-    write(ft,inttostr(Items[ii].Defence)+';');
-    write(ft,floattostr(Items[ii].Speed)+';');
-    write(ft,inttostr(Items[ii].Sight)+';');
-    writeln(ft);
-  end;}
   closefile(ft);
+  //SaveToJson(aPath);
+end;
 
-  {AssignFile(ft,ExeDir+'Units.txt'); rewrite(ft);
-  for ii:=Low(TKMUnitType) to High(TKMUnitType) do
-  if UnitsDat[ii].IsValid then
-  begin
-    writeln(ft);
-    writeln(ft);
-    writeln(ft,'NewUnit'+inttostr(ii));
-    for kk:=1 to 14 do
-    for hh:=1 to 8 do
-    //  if UnitSprite[ii].Act[kk].Dir[hh].Step[1]>0 then
+procedure TKMResUnits.SaveToJson(const aPath: UnicodeString);
+var I, J: Integer;
+  S : String;
+  root : TKMJsonSaver;
+  UT : TKMUnitType;
+  WT : TKMWareType;
+  HT : TKMHouseType;
+  B : Byte;
+  act : TKMUnitActionType;
+  dir : TKMDirection;
+  dit: TKMUnitSpec;
+begin
+  root :=  TKMJsonSaver.Create;
+  try
+    root.BeginFile;
+
+    root.WriteArray('Units', true);
+      for I := 0 to High(UNIT_ID_TO_TYPE) do
+      begin
+        UT := UNIT_ID_TO_TYPE[I];
+        If not (UT in UNITS_VALID) then
+          Continue;
+        root.WriteObject('', I = 0);
+        with fItems[UT] do
         begin
-          write(ft,inttostr(kk)+'.'+inttostr(hh)+#9);
-          for jj:=1 to 30 do
-          if UnitSprite[ii].Act[kk].Dir[hh].Step[jj]>0 then //write(ft,'#');
-          write(ft,inttostr(UnitSprite[ii].Act[kk].Dir[hh].Step[jj])+'. ');
-          write(ft,inttostr(UnitSprite[ii].Act[kk].Dir[hh].Count)+' ');
-          write(ft,inttostr(UnitSprite[ii].Act[kk].Dir[hh].MoveX)+' ');
-          write(ft,inttostr(UnitSprite[ii].Act[kk].Dir[hh].MoveY)+' ');
-          writeln(ft);
+          //base
+          root.Write('UnitType', UT, true);
+          root.Write('GameID', I);
+          root.Write('DescriptionID', DescriptionID);
+          root.Write('SchoolTime', SchoolTime);
+
+          with fUnitDat do
+          begin
+            root.Write('HitPoints', HitPoints);
+            root.Write('Attack', Attack);
+            root.Write('AttackHorse', AttackHorse);
+            root.Write('Defence', Defence);
+            root.Write('Speed', Speed);
+            root.Write('Sight', Sight);
+          end;
+          root.Write('HouseDamage', HouseDamage);
+          root.Write('UnitDamage', UnitDamage);
+          root.Write('ProjectileDefence', ProjectileDefence);
+
+          root.Write('CanOrderAmmo', CanOrderAmmo);
+          root.Write('CanStorm', CanStorm);
+          root.Write('CanAttackUnits', CanAttackUnits);
+          root.Write('CanAttackHouses', CanAttackHouses);
+          If not TKMEnumUtils.GetName<TKMFightType>(FightType, S) then
+            raise Exception.Create('Wrong TKMFightType; TKMResUnits');
+          root.Write('FightType', S);
+
+          If not TKMEnumUtils.GetName<TKMUnitAmmoType>(AmmoType, S) then
+            raise Exception.Create('Wrong TKMUnitAmmoType; TKMResUnits');
+          root.Write('AmmoType', S);
+          root.Write('MinRange', MinRange);
+          root.Write('MaxRange', MaxRange);
+          root.Write('StrikeSteps', StrikeSteps);
+          root.WriteLineArray('ProducesWares');
+          J := 0;
+          for WT in ProducesWares do
+          begin
+            If not TKMEnumUtils.GetName<TKMWareType>(WT, S) then
+              raise Exception.Create('Wrong TKMWareType; TKMResUnits');
+            root.AddToArray(S, J = 0);
+            Inc(J);
+          end;
+          root.EndLineArray;
+          ///palace cost
+          If (PalaceCost.PhaseCount > 0) and (PalaceCost.PhaseDuration > 0) and (length(PalaceCost.Wares) > 0) then
+          begin
+            root.WriteObject('PalaceCost');
+              with PalaceCost do
+              begin
+                root.Write('PhaseCount', PhaseCount, true);
+                root.Write('PhaseDuration', PhaseDuration);
+
+                root.WriteArray('VirtualWares');
+                for J := 0 to High(Wares) do
+                begin
+                  root.WriteLineObject('', J = 0);
+                    root.Write('VirtualWareName', Wares[J].W, true);
+                    root.Write('Count', Wares[J].C);
+                  root.EndLineObject;
+                end;
+                root.EndArray;
+
+                root.WriteArray('Wares');
+                for J := 0 to High(Plan) do
+                begin
+                  root.WriteLineObject('', J = 0);
+                    If not TKMEnumUtils.GetName<TKMWareType>(Plan[J].W, S) then
+                      raise Exception.Create('Wrong TKMWareType; TKMResUnits');
+
+                    root.Write('WareType', S, true);
+                    root.Write('Count', Plan[J].C);
+                  root.EndLineObject;
+                end;
+                root.EndArray;
+              end;
+            root.EndObject;
+          end;
+          ///Barracks cost
+          If length(BarracksCost) > 0 then
+          begin
+            root.WriteArray('BarracksCost');
+            for J := 0 to High(BarracksCost) do
+            begin
+              root.WriteLineObject('', J = 0);
+                If not TKMEnumUtils.GetName<TKMWareType>(BarracksCost[J].W, S) then
+                  raise Exception.Create('Wrong TKMWareType; TKMResUnits');
+
+                root.Write('WareType', S, true);
+                root.Write('Count', BarracksCost[J].C);
+              root.EndLineObject;
+            end;
+            root.EndArray;
+          end;
+          //siege cost
+          If SiegePhasesCount > 0 then
+          begin
+            root.Write('SiegeWorkshopPhasesCount', SiegePhasesCount);
+
+            root.WriteArray('SiegeWorkshopCost');
+            for J := 0 to High(SiegeCost) do
+            begin
+              root.WriteLineObject('', J = 0);
+                If not TKMEnumUtils.GetName<TKMWareType>(SiegeCost[J].W, S) then
+                  raise Exception.Create('Wrong TKMWareType; TKMResUnits');
+
+                root.Write('WareType', S, true);
+                root.Write('Count', SiegeCost[J].C);
+              root.EndLineObject;
+            end;
+            root.EndArray;
+          end;
+
+          If TownhallCost > 0 then
+            root.Write('TownhallCost', TownhallCost);
+          //Animations
+          J := 0;
+          root.WriteArray('Animations');
+            for act := Low(TKMUnitActionType) to High(TKMUnitActionType) do
+              for dir := dirN to dirNW do
+                If fUnitSpriteNew[act, dir].Count > 0 then
+                begin
+                  root.WriteLineObject('', J = 0);
+                    root.Write('ActionType', UNIT_ACT_STR[act], true);
+                    If not TKMEnumUtils.GetName<TKMDirection>(dir, S) then
+                      raise Exception.Create('Wrong TKMDirection; TKMResUnits');
+                    root.Write('Dir', S);
+                    root.Write('X', fUnitSpriteNew[act, dir].X);
+                    root.Write('Y', fUnitSpriteNew[act, dir].Y);
+                    If fUnitSpriteNew[act, dir].IsLinear then
+                    begin
+                      root.Write('StepStart', fUnitSpriteNew[act, dir].Step[0]);
+                      root.Write('Count', fUnitSpriteNew[act, dir].Count);
+                    end else
+                    begin
+                      root.Write('Steps', fUnitSpriteNew[act, dir].StepArray);
+                    end;
+
+                  root.EndLineObject;
+                  Inc(J);
+                end;
+          root.EndArray;
+
         end;
+        root.EndObject;
+      end;
+      root.EndArray;
+    root.WriteArray('SerfCarryAnimations');
+      J := 0;
+      for WT := WARE_MIN to WARE_MAX do
+      begin
+        root.WriteObject('', WT = WARE_MIN);
+          root.Write('WareType', WT, true);
+          for dir := dirN to dirNW do
+          begin
+            If not TKMEnumUtils.GetName<TKMDirection>(dir, S) then
+              raise Exception.Create('Wrong TKMDirection; TKMResUnits');
+            root.Write(S, fSerfCarryNew[WT, dir]);
+          end;
+
+        root.EndObject;
+        Inc(J);
+      end;
+
+    root.EndArray;
+    root.Write('School Order', SCHOOL_GAME_ORDER);
+    root.Write('Barracks Order', BARRACKS_GAME_ORDER);
+    root.Write('Townhall Order', TH_GAME_ORDER);
+    root.Write('SiegeWorkshop Order', SIEGE_GAME_ORDER);
+    root.Write('Palace Order', PALACE_UNITS_ORDER);
+    root.Write('Shipyard Order', SHIPYARD_ORDER);
+    root.EndFile;
+    root.SaveToFile(ChangeFileExt(aPath, '.json'));
+  finally
+    root.Free;
   end;
-  closefile(ft);}
 end;
 
 
-function TKMResUnits.GetSerfCarry(aType: TKMWareType; aDir: TKMDirection): TKMAnimLoop;
+function TKMResUnits.GetSerfCarry(aType: TKMWareType; aDir: TKMDirection): TKMAnimation;
 begin
   Assert(aType in WARES_VALID);
-
-  if aType >= wtBitin then
-   Result := fSerfCarryNew[aType, aDir]
-  else
-   Result := fSerfCarry[aType, aDir];
-
-
+  Result := fSerfCarryNew[aType, aDir];
 end;
 
 
 function TKMResUnits.GetItem(aType: TKMUnitType): TKMUnitSpec;
 begin
   Result := fItems[aType];
-end;
-
-
-function TKMResUnits.LoadUnitsDat(const aPath: UnicodeString): Cardinal;
-const
-  UNIT_DAT_COUNT = 41;
-  MISSING_CARRY_ANIMATIONS : array[wtBitin .. WARE_MAX] of TKMWareType =
-  (
-  wtIron, wtIronOre, wtIronOre, wtStone, wtTrunk,//wtBitin .. wtLog
-  wtIron, wtIron, wtTimber, wtBow, wtBow, wtFish, //wtSteelE .. wtWater
-  wtStone, wtCoal, wtWine, wtWine, wtStone, wtLeather, //wtTile..wtSawDust
-  wtCorn, wtLance, wtPike, wtCoal, wtLeatherArmor,//wtHay..wtPlateArmor
-  wtIron, wtIronOre
-  );
-
-var
-  S: TKMemoryStream;
-  I: Integer;
-  WT : TKMWareType;
-  DIR : TKMDirection;
-begin
-  Assert(FileExists(aPath), 'unit.dat not found at: ' + aPath);
-
-  S := TKMemoryStreamBinary.Create;
-  try
-    S.LoadFromFile(aPath);
-
-    S.Read(fSerfCarry, SizeOf(fSerfCarry){28*8*70});
-
-    for I := 0 to UNIT_DAT_COUNT - 1 do
-    if not (UNIT_ID_TO_TYPE[I] in UNITS_NEW + [utNone])  then
-      fItems[UNIT_ID_TO_TYPE[I]].LoadFromStream(S)
-    else //Skip
-    if not (UNIT_ID_TO_TYPE[I] in UNITS_NEW) then
-      S.Seek(SizeOf(TKMUnitDat) + SizeOf(TKMUnitSprite) + SizeOf(TKMUnitSprite2), soFromCurrent);
-    Result := Adler32CRC(S);
-    for WT := wtBitin to WARE_MAX do
-      for DIR := dirN to dirNW do
-        fSerfCarryNew[WT, DIR] := fSerfCarry[MISSING_CARRY_ANIMATIONS[WT], DIR];
-        {if WT in SERF_CARRY_DO_WARES then
-        begin
-
-          for I := 0 to 7 do
-            fSerfCarryNew[WT, DIR].Step[I + 1] := SERF_CARRY_ADD[WT, Dir, I] - 1;
-
-        end;}
-
-      fSerfCarryNew[wtVegetables, dirN].Create(0, 0, 9464, 8);
-      fSerfCarryNew[wtVegetables, dirNE].Create(0, 0, 9480, 8);
-      fSerfCarryNew[wtVegetables, dirE].Create(0, 0, 9488, 8);
-      fSerfCarryNew[wtEgg, dirSE].Create(0, 0, 9464, 8);
-      fSerfCarryNew[wtEgg, dirS].Create(0, 0, 9464, 8);
-      fSerfCarryNew[wtEgg, dirSW].Create(0, 0, 9464, 8);
-      fSerfCarryNew[wtVegetables, dirW].Create(0, 0, 9496, 8);
-      fSerfCarryNew[wtVegetables, dirNW].Create(0, 0, 9472, 8);
-
-      fSerfCarryNew[wtBitin, dirN].Create(0, 0, 9400, 8);
-      fSerfCarryNew[wtBitin, dirNE].Create(0, 0, 9408, 8);
-      fSerfCarryNew[wtBitin, dirE].Create(0, 0, 9424, 8);
-      fSerfCarryNew[wtBitin, dirSE].Create(0, 0, 9440, 8);
-      fSerfCarryNew[wtBitin, dirS].Create(0, 0, 9448, 8);
-      fSerfCarryNew[wtBitin, dirSW].Create(0, 0, 9456, 8);
-      fSerfCarryNew[wtBitin, dirW].Create(0, 0, 9432, 8);
-      fSerfCarryNew[wtBitin, dirNW].Create(0, 0, 9416, 8);
-
-      fSerfCarryNew[wtBitinOre, dirN].Create(0, 0, 10429, 8);
-      fSerfCarryNew[wtBitinOre, dirNE].Create(0, 0, 10445, 8);
-      fSerfCarryNew[wtBitinOre, dirE].Create(0, 0, 10453, 8);
-      fSerfCarryNew[wtBitinOre, dirSE].Create(0, 0, 10469, 8);
-      fSerfCarryNew[wtBitinOre, dirS].Create(0, 0, 10477, 8);
-      fSerfCarryNew[wtBitinOre, dirSW].Create(0, 0, 10485, 8);
-      fSerfCarryNew[wtBitinOre, dirW].Create(0, 0, 10461, 8);
-      fSerfCarryNew[wtBitinOre, dirNW].Create(0, 0, 10437, 8);
-
-      fSerfCarryNew[wtLog, dirN].Create(0, 0, [10493, 10494, 10495, 10496, 10497, 10498, 10555, 10556]);
-      fSerfCarryNew[wtLog, dirNE].Create(0, 0, 10499, 8);
-      fSerfCarryNew[wtLog, dirE].Create(0, 0, 10515, 8);
-      fSerfCarryNew[wtLog, dirSE].Create(0, 0, 10539, 8);
-      fSerfCarryNew[wtLog, dirS].Create(0, 0, 10547, 8);
-      fSerfCarryNew[wtLog, dirSW].Create(0, 0, 10531, 8);
-      fSerfCarryNew[wtLog, dirW].Create(0, 0, 10523, 8);
-      fSerfCarryNew[wtLog, dirNW].Create(0, 0, 10507, 8);
-
-      fSerfCarryNew[wtApple, dirN].Create(0, 0, 10365, 8);
-      fSerfCarryNew[wtApple, dirNE].Create(0, 0, 10389, 8);
-      fSerfCarryNew[wtApple, dirE].Create(0, 0, 10397, 8);
-      fSerfCarryNew[wtApple, dirSE].Create(0, 0, 10405, 8);
-      fSerfCarryNew[wtApple, dirS].Create(0, 0, 10413, 8);
-      fSerfCarryNew[wtApple, dirSW].Create(0, 0, 10421, 8);
-      fSerfCarryNew[wtApple, dirW].Create(0, 0, 10373, 8);
-      fSerfCarryNew[wtApple, dirNW].Create(0, 0, 10381, 8);
-
-  finally
-    S.Free;
-  end;
-
 end;
 
 function TKMResUnits.LoadFromJson(aPath: string) : Cardinal;
@@ -1898,8 +1541,11 @@ function TKMResUnits.LoadFromJson(aPath: string) : Cardinal;
 
 var I : Integer;
   nArr: TJsonArray;
-  nRoot : TKMJson;
+  nRoot, nAnim : TKMJson;
   UT : TKMUnitType;
+  WT : TKMWareType;
+  dir : TKMDirection;
+  S : String;
   //tmp : TKMUnitTypeArray;
 begin
   if not FileExists(aPath) then
@@ -1918,6 +1564,23 @@ begin
 
     fItems[UT].LoadFromJson(nArr.O[I]);
   end;
+  nArr := nRoot.A['SerfCarryAnimations'];
+  for I := 0 to nArr.Count - 1 do
+  begin
+    nAnim := nArr.O[I];
+    if not TKMEnumUtils.TryGetAs<TKMWareType>(nArr.O[I].S['WareType'],  WT) then
+      raise Exception.Create('Wrong WareType');
+
+    for dir := dirN to dirNW do
+    begin
+      if not TKMEnumUtils.GetName<TKMDirection>(dir,  S) then
+        raise Exception.Create('Wrong TKMDirection');
+      nAnim.GetAnim(S, fSerfCarryNew[WT, dir]);
+    end;
+
+
+  end;
+
   //townhall
   nRoot.GetArray('Townhall Order', TH_GAME_ORDER);
   nRoot.GetArray('Barracks Order', BARRACKS_GAME_ORDER);
@@ -1925,61 +1588,12 @@ begin
   nRoot.GetArray('SiegeWorkshop Order', SIEGE_GAME_ORDER);
   nRoot.GetArray('Palace Order', PALACE_UNITS_ORDER);
   nRoot.GetArray('Shipyard Order', SHIPYARD_ORDER);
-  {
-  if UnitTypeArray(nArr, tmp) then
-  begin
-    SetLength(TH_GAME_ORDER, length(tmp));
-    for I := 0 to High(tmp) do
-      TH_GAME_ORDER[I] := tmp[I];
-  end;
-  //barracks
-  nArr := nRoot.A['Barracks Order'];
-  if UnitTypeArray(nArr, tmp) then
-  begin
-    SetLength(BARRACKS_GAME_ORDER, length(tmp));
-    for I := 0 to High(tmp) do
-      BARRACKS_GAME_ORDER[I] := tmp[I];
-  end;
-  //school
-  nArr := nRoot.A['School Order'];
-  if UnitTypeArray(nArr, tmp) then
-  begin
-    SetLength(SCHOOL_GAME_ORDER, length(tmp));
-    for I := 0 to High(tmp) do
-      SCHOOL_GAME_ORDER[I] := tmp[I];
-  end;
-  //siege
-  nArr := nRoot.A['SiegeWorkshop Order'];
-  if UnitTypeArray(nArr, tmp) then
-  begin
-    SetLength(SIEGE_GAME_ORDER, length(tmp));
-    for I := 0 to High(tmp) do
-      SIEGE_GAME_ORDER[I] := tmp[I];
-  end;
-  //Palace
-  nArr := nRoot.A['Palace Order'];
-  if UnitTypeArray(nArr, tmp) then
-  begin
-    SetLength(PALACE_UNITS_ORDER, length(tmp));
-    for I := 0 to High(tmp) do
-      PALACE_UNITS_ORDER[I] := tmp[I];
-  end;
-
-  //shipsyard
-  nArr := nRoot.A['Shipyard Order'];
-  if UnitTypeArray(nArr, tmp) then
-  begin
-    SetLength(SHIPYARD_ORDER, length(tmp));
-    for I := 0 to High(tmp) do
-      SHIPYARD_ORDER[I] := tmp[I];
-  end;}
 end;
 
 Procedure TKMResUnits.ReloadJSONData(UpdateCRC: Boolean);
 var oldCRC : Cardinal;
 begin
   oldCRC := fCRC;
-  fCRC := LoadUnitsDat(ExeDir + 'data' + PathDelim + 'defines' + PathDelim + 'unit.dat');
   fCRC := fCRC xor LoadFromJSON(gRes.JsonData[dtUnits]);
   if not UpdateCRC then
     fCRC := oldCRC;

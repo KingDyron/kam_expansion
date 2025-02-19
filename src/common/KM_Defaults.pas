@@ -448,7 +448,7 @@ const
 
   EXT_FILE_SCRIPT_DOT = '.' + EXT_FILE_SCRIPT;
 
-  MAX_HOUSE_SIZE = 6;
+  MAX_HOUSE_SIZE = 5;
   WARES_IN_OUT_COUNT = 6;
 
 type

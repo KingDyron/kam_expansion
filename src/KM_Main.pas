@@ -3,6 +3,7 @@ unit KM_Main;
 interface
 uses
   {$IFDEF MSWindows} Windows, {$ENDIF}
+  System.Classes,
   KM_FormMain, KM_FormLoading, KM_Maps,
   KM_MainSettings, KM_Resolutions, KM_Video,
   KM_WindowParams,
@@ -84,7 +85,6 @@ type
 
     property Resolutions: TKMResolutions read fResolutions;
   end;
-
 
 var
   gMain: TKMMain;
@@ -218,8 +218,8 @@ begin
   Randomize;
 
   //fFormLoading.Label5.Caption := UnicodeString(GAME_VERSION + ': King Dyron mod');
-  //fFormLoading.Show; //This is our splash screen
-  fFormLoading.Hide; //This is our splash screen
+  fFormLoading.Show; //This is our splash screen
+  //fFormLoading.Hide; //This is our splash screen
   fFormLoading.Refresh;
 
   {$IFDEF MSWindows}
@@ -883,7 +883,7 @@ begin
   fFormLoading.Position := poScreenCenter;
   fFormLoading.Bar1.Position := 0;
   fFormLoading.Label1.Caption := '';
-  //fFormLoading.Show;
+  fFormLoading.Show;
 end;
 
 
@@ -905,6 +905,5 @@ begin
     ClipCursor(nil); //Otherwise have no restriction
   {$ENDIF}
 end;
-
 
 end.
