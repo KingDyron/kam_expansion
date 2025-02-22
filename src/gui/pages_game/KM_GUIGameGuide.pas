@@ -34,7 +34,7 @@ type
 
       Image_Selected: TKMButtonFlat;
       Panel_House : TKMPanel;
-        Button_Worker: TKMButtonFlat;
+        Icons_Workers: TKMUnitsButtonsMulti;
         WaresOut,
         WaresIn : array[1..4] of TKMWaresRow;
 
@@ -110,8 +110,8 @@ begin
   Image_Selected := TKMButtonFlat.Create(Panel_Guide, 250, 100, 200, 200, 0);
   Image_Selected.Hitable := false;
 
-  Button_Worker := TKMButtonFlat.Create(Panel_Guide, 250, 100, 30, 36, 0);
-  Button_Worker.Hide;
+  Icons_Workers := TKMUnitsButtonsMulti.Create(Panel_Guide, 260, 120, 200, 200);
+
   Panel_House := TKMPanel.Create(Panel_Guide, 0, 450, 500, Panel_Guide.Height - 450 - 40);
   Panel_House.Hitable := false;
 
@@ -391,7 +391,6 @@ begin
     Panel_Unit.Hide;
     Image_Selected.TexID := 0;
     Image_Selected.Caption := '';
-    Button_Worker.Hide;
     Exit;
   end;
 
@@ -406,7 +405,7 @@ begin
     Image_Selected.Height := 250;
     Image_Selected.CapOffsetY := 100;
     Image_Selected.Caption := gRes.Units[UT].GUIName;
-    Button_Worker.Hide;
+    Icons_Workers.Hide;
     with gRes.Units[UT] do
     begin
       Label_Attack.Caption := gResTexts[1600] + IntToStr(Attack);
@@ -481,10 +480,13 @@ begin
     Image_Selected.Height := 325;
     Image_Selected.CapOffsetY := 138;
     Image_Selected.Caption := gRes.Houses[HT].HouseName;
-    Button_Worker.Show;
+    Icons_Workers.Show;
 
-    Button_Worker.TexId := gRes.Units[gRes.Houses[HT].WorkerType].GUIIcon;
-
+    Icons_Workers.UnitPlan := gRes.Houses[HT].Workers;
+    If gRes.Houses[HT].WorkerType <> utNone then
+      Icons_Workers.Caption := 'Max : ' + gRes.Houses[HT].MaxWorkersCount.ToString
+    else
+      Icons_Workers.Caption := '';
     WareRow_WoodCost.WareCount := gRes.Houses[HT].WoodCost;
     WareRow_StoneCost.WareCount := gRes.Houses[HT].StoneCost;
     WareRow_TileCost.WareCount := gRes.Houses[HT].TileCost;

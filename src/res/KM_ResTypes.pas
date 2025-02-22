@@ -103,10 +103,6 @@ type
     WareOutput : TKMWareType8;
     Icon : Word;
   end;
-  TKMHouseWorker = record
-    UnitType : TKMUnitType;
-    MaxCount : Byte;
-  end;
 
   TKMHouseStyle = record
     StonePic : Word;

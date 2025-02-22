@@ -47,7 +47,7 @@ type
     procedure HouseSignClose(Sender: TObject);
     procedure House_OrderChange(Sender: TObject; aValue: Integer);
     procedure House_DeliveryModeToggle(Sender: TObject; Shift: TShiftState);
-    procedure House_ClosedForWorkerToggle(Sender: TObject);
+    procedure House_ClosedForWorkerToggle(Sender: TObject; Shift: TShiftState);
     procedure HandleHouseClosedForWorker(aHouse: TKMHouse);
 
     procedure HouseLogo_Click(Sender: TObject);
@@ -341,7 +341,7 @@ begin
     Image_House_Worker.ImageCenter;
 
     Button_House_Worker := TKMButton.Create(Panel_House,60,42,30,30,141, rxGui, bsGame);
-    Button_House_Worker.OnClick := House_ClosedForWorkerToggle; //Clicking the button cycles it
+    Button_House_Worker.OnClickShift := House_ClosedForWorkerToggle; //Clicking the button cycles it
 
     Button_Bell := TKMButton.Create(Panel_House,60,42,30,30,883, rxGui, bsGame);
     Button_Bell.OnClick := Store_BellClick;
@@ -1319,6 +1319,7 @@ begin
       Exit;
     end;
 
+  fHouse := aHouse;
   Show(aHouse, AskDemolish);
 end;
 
@@ -2634,13 +2635,38 @@ begin
 end;
 
 
-procedure TKMGUIGameHouse.House_ClosedForWorkerToggle(Sender: TObject);
+procedure TKMGUIGameHouse.House_ClosedForWorkerToggle(Sender: TObject; Shift: TShiftState);
 var
   house: TKMHouse;
+  UT : TKMUnitType;
+  I : Integer;
 begin
   if (gMySpectator.Selected = nil) or not (gMySpectator.Selected is TKMHouse)
     or (gMySpectator.Selected is TKMHouseBarracks) then Exit;
+  If ssShift in Shift then
+  begin
+    UT := gRes.Houses[fHouse.HouseType].WorkerType;
+    if (UT in UNITS_VALID) and gMySpectator.Hand.Locks.UnitUnlocked(UT, htSchool) then
+      If gHands[fHouse.Owner].Stats.GetHouseQty(htSchool) > 0 then
+      begin
+        house := gHands[fHouse.Owner].FindHouse(htSchool, 1);
+        if not house.IsValid(htSchool, false, true) then
+          Exit;
+        for I := 0 to High(SCHOOL_GAME_ORDER) do
+          If SCHOOL_GAME_ORDER[I] = UT then
+          begin
+            fLastSchoolUnit := I;
+            fIsOrderRefreshed := true;
+          end;
 
+        gMySpectator.Selected := house;
+        gMySpectator.UpdateNewSelected;
+        If Assigned(fSetViewportEvent) then
+          fSetViewportEvent(KMPointF(house.Entrance));
+      end;
+
+    Exit;
+  end;
   house := TKMHouse(gMySpectator.Selected);
   
   gGame.GameInputProcess.CmdHouse(gicHouseClosedForWorkerTgl, house);

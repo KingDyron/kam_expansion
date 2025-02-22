@@ -2274,7 +2274,7 @@ begin
   Result := 0;
   for I := 0 to High(HSpec.Workers) do
     if HSpec.Workers[I].UnitType = aType then
-      Exit(HSpec.Workers[I].MaxCount);
+      Exit(HSpec.Workers[I].Count);
 
 end;
 

@@ -1195,7 +1195,7 @@ begin
 
           if not gRes.Units[UT].IsValid then
             Continue;
-          if unitsAdded[UT] >= H.HSpec.Workers[K].MaxCount then
+          if unitsAdded[UT] >= H.HSpec.Workers[K].Count then
             Continue;
 
           //U := nil;

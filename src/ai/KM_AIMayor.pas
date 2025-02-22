@@ -293,7 +293,7 @@ begin
           begin
             UT := house.HSpec.Workers[K].UnitType;
             if house.CanHasWorker(UT) then
-              if tmpUnitCnt[UT] < house.HSpec.Workers[K].MaxCount then
+              if tmpUnitCnt[UT] < house.HSpec.Workers[K].Count then
               begin
                 Inc(UnitReq[UT], 1);
                 Inc(tmpUnitCnt[UT]);

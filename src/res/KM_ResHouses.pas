@@ -97,7 +97,7 @@ type
     end;
 
     Levels : array of TKMHouseLevelRec;
-    Workers: array of TKMHouseWorker;
+    Workers: TKMUnitPlan;
 
     MaxWorkersCount: Byte;
     //WorkerTypes: TKMUnitTypeSet;
@@ -458,7 +458,7 @@ begin
   SetLength(Workers, length(Workers) + 1);
 
   Workers[high(Workers)].UnitType := aType;
-  Workers[high(Workers)].MaxCount := aCount;
+  Workers[high(Workers)].Count := aCount;
 end;
 
 function TKMHouseSpec.GetGUIWorkerType: TKMUnitType;
@@ -478,7 +478,7 @@ begin
   for I := 0 to High(Workers) do
   begin
     Result := Workers[I].UnitType;
-    inc(C, Workers[I].MaxCount);
+    inc(C, Workers[I].Count);
     if C > 1 then
       Exit(utAny);
   end;
@@ -534,7 +534,7 @@ begin
   Result := false;
   for I := 0 to High(Workers) do
     if not (Workers[I].UnitType in [utAny, utNone, utSerf, utBuilder]) then
-      if Workers[I].MaxCount > 0 then
+      if Workers[I].Count > 0 then
       Exit(true);
   //Result := (WorkerType <> utNone);
 end;
@@ -545,7 +545,7 @@ begin
   Result := false;
   for I := 0 to High(Workers) do
     if (Workers[I].UnitType = aUnitType) then
-      if Workers[I].MaxCount > 0 then
+      if Workers[I].Count > 0 then
       Exit(true);
 end;
 
@@ -1312,7 +1312,7 @@ begin
               begin
                 root.WriteLineObject('', K = 0);
                   root.Write('UnitType', Workers[K].UnitType, true);
-                  root.Write('MaxCount', Workers[K].MaxCount);
+                  root.Write('MaxCount', Workers[K].Count);
                 root.EndLineObject;
               end;
             root.EndArray;
