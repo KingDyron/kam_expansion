@@ -24,7 +24,7 @@ type
     procedure Unit_ActivateControls(aUnit: TKMUnit);
     procedure Army_Issue_Order(Sender: TObject; Shift: TShiftState);
     procedure ShowDismissBtn;
-    procedure Unit_Scroll_Click(Sender: TObject);
+    procedure Unit_Scroll_Click(Sender: TObject; Shift: TShiftState);
     procedure Show_Common(aUnit: TKMUnit);
     procedure SendUnitDismissCommand;
     procedure OnPanelExpanded(sender : TObject);
@@ -135,7 +135,7 @@ begin
 
     Image_UnitPic         := TKMImage.Create(Panel_Unit,0,38,54,100,521);
     Image_UnitPic.Hint    := gResTexts[TX_UNIT_SCROLL_HINT];
-    Image_UnitPic.OnClick := Unit_Scroll_Click;
+    Image_UnitPic.OnClickShift := Unit_Scroll_Click;
     Image_UnitPic.HighlightOnMouseOver := True;
     Image_UnitPic.HighlightCoef := 0.1; //highlight just a little bit
 
@@ -621,7 +621,7 @@ begin
 end;
 
 
-procedure TKMGUIGameUnit.Unit_Scroll_Click(Sender: TObject);
+procedure TKMGUIGameUnit.Unit_Scroll_Click(Sender: TObject; Shift: TShiftState);
 var
   U: TKMUnit;
   G: TKMUnitGroup;
@@ -640,7 +640,12 @@ begin
   end else
   if gMySpectator.Selected is TKMUnit then
     U := TKMUnit(gMySpectator.Selected);
-
+  If U <> nil then
+    If ssShift in Shift then
+    begin
+      gGame.GamePlayInterface.ShowGuide(U.UnitType);
+      Exit;
+    end;
   if Assigned(fSetViewportEvent) then
     fSetViewportEvent(U.PositionF);
 end;

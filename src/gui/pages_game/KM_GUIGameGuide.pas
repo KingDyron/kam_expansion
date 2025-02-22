@@ -2,11 +2,12 @@
 {$I KaM_Remake.inc}
 interface
 uses
+  KM_Defaults,
   KM_Controls, KM_ControlsBase, KM_CommonClasses,
   KM_ControlsWaresRow,
   KM_Pics, KM_ResTypes,
   KM_InterfaceGame, KM_ScriptingTypes,
-  System.Classes;
+  Classes;
 
 
 type
@@ -62,7 +63,9 @@ type
   public
     constructor Create(aParent: TKMPanel; aOnShow : TNotifyEvent);
 
-    procedure Show;
+    procedure Show; overload;
+    procedure Show(aUnitType : TKMUnitType); overload;
+    procedure Show(aHouseType : TKMHouseType); overload;
     procedure Hide;
     function Visible: Boolean;
   end;
@@ -70,7 +73,6 @@ type
 
 implementation
 uses  KM_RenderUI, KM_Resource, KM_HandsCollection,
-      KM_Defaults,
       KM_UtilsExt,
       KM_HouseSiegeWorkshop,
       KM_ResUnits, KM_ResHouses, KM_ResTexts, KM_ResFonts,
@@ -264,6 +266,34 @@ begin
   RefreshPanel;
 end;
 
+procedure TKMGuiGameGuide.Show(aUnitType : TKMUnitType);
+var I : Integer;
+begin
+  for I := 0 to High(MapEd_Order) do
+    If aUnitType = MapEd_Order[I] then
+    begin
+      fselected := I;
+      fType := gtUnits;
+      Show;
+      Exit;
+    end;
+
+end;
+
+procedure TKMGuiGameGuide.Show(aHouseType : TKMHouseType);
+var I : Integer;
+begin
+  for I := 0 to High(GUIHouseOrderFull) - 1 do
+    If aHouseType = GUIHouseOrderFull[I + 1] then
+    begin
+      fselected := I;
+      fType := gtHouses;
+      Show;
+      Exit;
+    end;
+
+end;
+
 
 procedure TKMGUIGameGuide.Hide;
 begin
@@ -396,7 +426,7 @@ begin
 
   if fType = gtUnits then
   begin
-    UT := Soldiers_Order[fSelected];
+    UT := MapEd_Order[fSelected];
     Panel_House.Hide;
     Panel_Unit.Show;
     Image_Selected.RX := rxGui;

@@ -374,6 +374,8 @@ type
     procedure AddReplayMark(aTick: Cardinal);
     procedure UpdateReplayMarks;
     procedure MessageLog_Update(aFullRefresh: Boolean);
+    procedure ShowGuide(aUnitType : TKMUnitType); overload;
+    procedure ShowGuide(aHouseType : TKMHouseType); overload;
 
     property UIMode: TUIMode read fUIMode;
     property CustomPanel : TKMGuiGameCustomPanel read fGuiGameCustomPanel;
@@ -2435,6 +2437,15 @@ begin
   MessageLog_ShowMessage(messageId, ssLeft in Shift);
 end;
 
+procedure TKMGamePlayInterface.ShowGuide(aUnitType : TKMUnitType);
+begin
+  fGuiGameGuide.Show(aUnitType);
+end;
+
+procedure TKMGamePlayInterface.ShowGuide(aHouseType : TKMHouseType);
+begin
+  fGuiGameGuide.Show(aHouseType);
+end;
 
 // Sync displayed messages with queue
 // We show only last 8 messages by design

@@ -50,7 +50,7 @@ type
     procedure House_ClosedForWorkerToggle(Sender: TObject; Shift: TShiftState);
     procedure HandleHouseClosedForWorker(aHouse: TKMHouse);
 
-    procedure HouseLogo_Click(Sender: TObject);
+    procedure HouseLogo_Click(Sender: TObject; Shift: TShiftState);
 
     procedure House_BarracksItemClickShift(Sender: TObject; Shift: TShiftState);
     procedure House_BarracksUnitChange(Sender: TObject; Shift: TShiftState);
@@ -361,7 +361,7 @@ begin
     Image_House_Logo := TKMImage.Create(Panel_House,93,41,32,32,338);
     Image_House_Logo.ImageCenter;
     Image_House_Logo.HighlightOnMouseOver := True;
-    Image_House_Logo.OnClick := HouseLogo_Click;
+    Image_House_Logo.OnClickShift := HouseLogo_Click;
     Image_House_Logo.Hint := gResTexts[TX_HOUSE_LOGO_HINT];
     HealthBar_House := TKMPercentBar.Create(Panel_House,126,50,55,15);
     Label_House_UnderConstruction := TKMLabel.Create(Panel_House,0,110,TB_WIDTH,0,gResTexts[TX_HOUSE_UNDER_CONSTRUCTION],fntGrey,taCenter);
@@ -2688,7 +2688,7 @@ begin
 end;
 
 
-procedure TKMGUIGameHouse.HouseLogo_Click(Sender: TObject);
+procedure TKMGUIGameHouse.HouseLogo_Click(Sender: TObject; Shift: TShiftState);
 var
   H: TKMHouse;
 begin
@@ -2697,6 +2697,11 @@ begin
   H := TKMHouse(gMySpectator.Selected);
   if not H.IsDestroyed then
   begin
+    If ssShift in Shift then
+    begin
+      gGame.GamePlayInterface.ShowGuide(H.HouseType);
+      Exit;
+    end;
     if Assigned(fSetViewportEvent) then
     begin
       gMySpectator.Highlight := H;
