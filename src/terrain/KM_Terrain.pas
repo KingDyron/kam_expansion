@@ -455,6 +455,7 @@ type
     function GetNightAtTile(aLoc : TKMPoint) : Single;overload;
     property NightFactor : Single read GetNightFactor write SetNightFactor;
     function LocalNightSpeed : Integer;
+    function IsNight : Boolean;
 
     procedure IncAnimStep; //Lite-weight UpdateState for MapEd
     property AnimStep: Cardinal read fAnimStep;
@@ -8967,6 +8968,10 @@ begin
   Result := NIGHT_SPEED * (MAX_NIGHT_SPEED - gGame.Weather.Settings.NightSpeed);
 end;
 
+function TKMTerrain.IsNight: Boolean;
+begin
+  Result := MIN_NIGHT_DARKNESS + (Sin(GetNightFactor) + 1) * 0.6 * (1 - MIN_NIGHT_DARKNESS) < MIN_NIGHT_DARKNESS + 0.3;
+end;
 
 procedure TKMTerrain.IncFieldAge(aLoc: TKMPoint);
 var aStage : Integer;

@@ -92,7 +92,7 @@ var
 
 implementation
 uses
-  Classes, SysUtils, SysConst, StrUtils, Math,
+  SysUtils, SysConst, StrUtils, Math,
   Vcl.Forms,
   {$IFDEF MSWindows} MMSystem, {$ENDIF}
   {$IFDEF USE_MAD_EXCEPT} KM_Exceptions, {$ENDIF}
@@ -761,7 +761,7 @@ var
 begin
   Result := False;
   try
-    aBounds := Classes.Rect(-1,-1,-1,-1);
+    aBounds := Rect(-1,-1,-1,-1);
     fFormMain.Monitor; //This forces Delphi to reload Screen.Monitors (only if necessary) and so fixes crashes when using multiple monitors
     //Maximized is a special case, it can only be on one monitor. This is required because when maximized form.left = -9 (on Windows 7 anyway)
     if fFormMain.WindowState = wsMaximized then

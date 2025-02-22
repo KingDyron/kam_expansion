@@ -1666,11 +1666,14 @@ end;
 function TKMUnitWarrior.GetRangeMax: Single;
 begin
   Result := gRes.Units[fType].MaxRange;
+  If gGameParams.MissionBuiltInDifficulty.IsRealism then
+    If gTerrain.IsNight then
+      Result := Result - 2;
 
   if fGroup <> nil then
     if not (UnitType in SPECIAL_UNITS) then
       if UNIT_TO_GROUP_TYPE[UnitType] = gtRanged then
-        if TKMUnitGroup(fGroup).HasUnitType(utArcher) then //add one defense
+        if TKMUnitGroup(fGroup).HasUnitType(utArcher) then //add bonus
           Result := Result + 2;
 end;
 
