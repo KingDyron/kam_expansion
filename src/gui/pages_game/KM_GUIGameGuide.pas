@@ -337,19 +337,31 @@ begin
     for I := 0 to High(Button_Select) do
     begin
       Button_Select[I].FlagColor := gMySpectator.Hand.FlagColor;
-      if I > high(Soldiers_Order) then
+      if I > high(MapEd_Order) then
         Button_Select[I].Hide
       else
       begin
+        UT := MapEd_Order[I];
         Button_Select[I].Top := 100 + (I div 6) * 40;
         Button_Select[I].Left := 30 + (I mod 6) * 34;
         Button_Select[I].Height := 38;
 
-        Button_Select[I].TexID := gRes.Units[Soldiers_Order[I]].GUIIcon;
-        Button_Select[I].Hint := gRes.Units[Soldiers_Order[I]].GUIName;
+        Button_Select[I].TexID := gRes.Units[UT].GUIIcon;
+        Button_Select[I].Hint := gRes.Units[UT].GUIName;
 
         Button_Select[I].Show;
         Button_Select[I].Down := fSelected = I;
+
+        case gRes.Units[UT].GetTrainingHouse of
+          htSchool : Button_Select[I].BackBevelColor := $2276403E;
+          htBarracks : Button_Select[I].BackBevelColor := $22FF0000;
+          htTownhall : Button_Select[I].BackBevelColor := $2200BDFF;
+          htPalace : Button_Select[I].BackBevelColor := $220000FF;
+          htSiegeWorkshop : Button_Select[I].BackBevelColor := $22FF00C6;
+          htShipyard : Button_Select[I].BackBevelColor := $22FFB400;
+          else
+            Button_Select[I].BackBevelColor := $22FFFFFF;
+        end;
 
       end;
       
@@ -359,6 +371,7 @@ begin
   begin
     for I := 0 to High(Button_Select) do
     begin
+      Button_Select[I].BackBevelColor := 0;
       Button_Select[I].FlagColor := high(Cardinal);
       Button_Select[I].Top := 100 + (I div 6) * 34;
       Button_Select[I].Left := 30 + (I mod 6) * 34;

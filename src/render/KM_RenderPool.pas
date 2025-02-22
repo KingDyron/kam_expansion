@@ -1401,16 +1401,16 @@ var
   cornerX, cornerY: Single;
   id: Integer;
   rxData: TRXData;
-  A: TKMAnimLoop;
+  A: TKMAnimation;
 begin
   rxData := fRXData[rxHouses];
 
   A := gRes.Houses.Palace_Flags[aFlagID];
 
-  id := A.Step[aAnimStep mod A.Count + 1] + 1;
+  id := A.Animation[aAnimStep] + 1;
 
-  cornerX := aLoc.X + (A.MoveX + rxData.Pivot[id].X) / CELL_SIZE_PX - 1;
-  cornerY := aLoc.Y + (A.MoveY + rxData.Pivot[id].Y + rxData.Size[id].Y) / CELL_SIZE_PX - 1
+  cornerX := aLoc.X + (A.X + rxData.Pivot[id].X) / CELL_SIZE_PX - 1;
+  cornerY := aLoc.Y + (A.Y + rxData.Pivot[id].Y + rxData.Size[id].Y) / CELL_SIZE_PX - 1
                    - gTerrain.LandExt^[aLoc.Y + 1, aLoc.X].RenderHeight / CELL_HEIGHT_DIV;
 
   fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, aLoc.X, aLoc.Y, FlagColor);

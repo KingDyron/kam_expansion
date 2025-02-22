@@ -408,7 +408,7 @@ begin
   end else
   begin
     arr := [];
-    GetArray('Steps', arr);
+    json.GetArray('Steps', arr);
     if length(arr) = 0 then
       Exit;
     Result := true;

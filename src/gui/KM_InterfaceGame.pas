@@ -222,13 +222,14 @@ const
   TownHall_Order: array [0..6] of TKMUnitType = (
     utRebel, utRogue, utClubMan, utVagabond, utShieldBearer, utBarbarian, utWarrior);
 
-  Soldiers_Order: array[0..33] of TKMUnitType = (
-    utMilitia, utAxeFighter, utSwordFighter, utBowman, utCrossbowman,
-    utLanceCarrier, utPikeman, utScout, utKnight,
+  Soldiers_Order: array[0..36] of TKMUnitType = (
+    utFighter, utMilitia, utAxeFighter, utSwordFighter, utBarbarian, utWarrior, utPaladin,
+    utRogue, utBowman, utCrossbowMan, utArcher,
+    utRebel, utLanceCarrier, utPikeman, utPikeMachine,
     utClubMan, utMaceFighter, utFlailFighter,
-    utRebel, utRogue, utVagabond, utBarbarian, utWarrior, utCatapult, utBallista, utRam, utAmmoCart, utPikeMachine,
-    utPaladin, utPyro, utTorchMan, utLekter, utMedic, utArcher, utSpy, utTrainedWolf, utSpikedTrap, utBoat, utShip, utBattleShip{,
-    utGolem, utGiant});
+    utVagabond, utScout, utKnight, utTrainedWolf,
+    utCatapult, utBallista, utAmmoCart, utShieldBearer, utWoodenWall, utRam,
+    utPyro, utTorchMan, utLekter, utMedic, utSpy, utSpikedTrap, utBoat, utShip, utBattleShip);
 
   // Stats get stacked by UI logic (so that on taller screens they all were
   // in nice pairs, and would stack up only on short screens)

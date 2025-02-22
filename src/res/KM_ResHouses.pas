@@ -181,12 +181,12 @@ type
     function GetHouse(aType: TKMHouseType): TKMHouseSpec; inline;
     function GetBeastAnim(aType: TKMHouseType; aBeast, aAge:integer): TKMAnimLoop;
   public
-    Palace_Flags : array[1..4] of TKMAnimLoop;
+    Palace_Flags : array[1..4] of TKMAnimation;
     School_Clock,
     WallTower_RecruitLeft,
     WallTower_RecruitRight,
     Merchant_Tablets,
-    Silo_Tablets: TKMAnimLoop;
+    Silo_Tablets: TKMAnimation;
 
     ProdThatch_Anims : array[TKMProdThatchAnimType] of TKMAnimation;
 
