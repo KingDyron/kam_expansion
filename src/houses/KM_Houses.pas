@@ -6218,7 +6218,7 @@ begin
   end;
 
 
-  fillSkin := fFill;
+  fillSkin := fFill * 2;
   ProduceWareFromFill(wtPig, fFill);
   if Ut = utLandDuck then
     ProduceWareFromFill(wtFeathers, fillSkin)

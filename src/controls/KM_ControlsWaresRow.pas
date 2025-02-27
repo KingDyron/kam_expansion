@@ -262,7 +262,7 @@ begin
 
   if ShowName then
   begin
-    TKMRenderUI.WriteText(AbsLeft + 4 + TextOffset, AbsTop + 3, Width-8, fFinCap, fntGame, taLeft, $FFE0E0E0);
+    TKMRenderUI.WriteText(AbsLeft + 4 + TextOffset, AbsTop + 3, Width-8, fFinCap, fntGame, taLeft, CapColor);
   end;
 
 

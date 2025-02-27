@@ -4981,7 +4981,7 @@ begin
     fGuiGameBuild.UpdateState;
   if fGuiGameGoals.Visible then
     fGuiGameGoals.UpdateState;
-  //if fGuiGameWares.Visible then
+  if fGuiGameWares.Visible then
     fGuiGameWares.UpdateState;
 
   if fGuiGameRatios.Visible and (fUIMode in [umReplay, umSpectate]) then

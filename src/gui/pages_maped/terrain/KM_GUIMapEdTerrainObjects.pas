@@ -1306,7 +1306,7 @@ begin
   TKMImage.Create(PopUp_Patterns, 0, 0, PopUp_Patterns.Width, PopUp_Patterns.Height, 15, rxGuiMain).ImageStretch;
 
     ColumnBox_CollectionList:= TKMColumnBox.Create(PopUp_Patterns, PopUp_Patterns.Width div 2 - 5, 80, PopUp_Patterns.Width div 4, PopUp_Patterns.Height - 80 - 50, fntMetal, bsGame);
-    ColumnBox_CollectionList.SetColumns(fntOutline, [gResTexts[1834]], [0]);
+    ColumnBox_CollectionList.SetColumns(fntOutline, ['Collections'], [0]);
     ColumnBox_CollectionList.Anchors := [anLeft,anTop,anBottom];
     ColumnBox_CollectionList.ShowLines := True;
     ColumnBox_CollectionList.ShowHintWhenShort := True;
@@ -1445,7 +1445,6 @@ begin
 end;
 
 procedure TKMMapEdTerrainPatterns.ObjectsPatternClick(Sender: TObject);
-var I, J : Integer;
 begin
   if Sender = Button_Delete then
     PopUp_Delete.Show

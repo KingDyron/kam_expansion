@@ -292,7 +292,7 @@ const
   H_TICKS = 6; //The number of ticks before hitting that an arrow will make the hit noise
 var
   I: Integer;
-  U, U2: TKMUnit;
+  U: TKMUnit;
   H: TKMHouse;
   Damage, HDamage, UDamage: Smallint;
 begin

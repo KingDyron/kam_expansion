@@ -246,11 +246,11 @@ const
   TAB_HINT : array [TKMTownTab] of Word = (
     TX_MAPED_VILLAGE,
     TX_MAPED_UNITS,
+    2028,
+    2027,
     TX_MAPED_AI_TITLE,
     TX_MAPED_AI_DEFENSE_OPTIONS,
-    TX_MAPED_AI_ATTACK,
-    2027,
-    2028);
+    TX_MAPED_AI_ATTACK);
 var
   TT: TKMTownTab;
 begin

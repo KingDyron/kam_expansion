@@ -35,6 +35,7 @@ type
   TKMPlantAct = (taCut, taPlant, taAny);
 
   TKMTerrainClimat = (tcNone, tcDry1, tcDry2, tcWarm1, tcWarm2, tcWet1, tcWet2, tcNeutral, tcCold1, tcCold2);
+  TKMTerrainClimatArray = array of TKMTerrainClimat;
 type
   TKMTileChangeType = (tctTerrain, tctRotation, tctHeight, tctObject);
 

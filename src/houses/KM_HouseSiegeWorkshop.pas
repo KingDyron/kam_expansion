@@ -223,14 +223,13 @@ begin
 
   if gRes.Units[aUnitType].SiegePhasesCount > 0 then
   begin
-    result := gRes.Units[aUnitType].SiegeCost;
+    gRes.Units[aUnitType].SiegeCost.CopyTo(Result);
     for I := 1 to gRes.Units[aUnitType].SiegePhasesCount do
     begin
        Inc(Result[0].C, gRes.Units[aUnitType].SiegeCost[0].C);
        Inc(Result[1].C, gRes.Units[aUnitType].SiegeCost[1].C);
        Inc(Result[2].C, gRes.Units[aUnitType].SiegeCost[2].C);
        Inc(Result[3].C, gRes.Units[aUnitType].SiegeCost[3].C);
-
     end;
   end;
 
