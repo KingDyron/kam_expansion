@@ -2,8 +2,8 @@
 {$I KaM_Remake.inc}
 interface
 uses
-  KM_Controls, KM_ControlsBase, KM_ControlsEdit,
-  KM_CommonClasses,
+  KM_Controls, KM_ControlsBase, KM_ControlsEdit, KM_ControlsWaresRow,
+  KM_CommonClasses, KM_CommonTypes,
   KM_ResTypes, KM_ControlsList,
   System.Classes;
 
@@ -30,6 +30,7 @@ type
       Shape_PlayerColor : TKMFlatButtonShape;
       Edit_PlayerName,
       Edit_BuildingType : TKMEdit;
+      Icon_Houses : TKMIconsRow;
 
   public
     constructor Create(aParent: TKMPanel; aOnShow : TNotifyEvent);
@@ -46,6 +47,7 @@ uses  KM_HandsCollection,
       KM_Pics,
       KM_AIGoals, KM_MapTypes,
       KM_Defaults, KM_GameParams,
+      KM_Resource,
       KM_ResFonts, KM_ResTexts,
       KM_RenderUI, KM_ResHouses,
       KM_CommonUtils, SysUtils, Math;
@@ -58,7 +60,7 @@ begin
   Pin_Open := TKMButtonFlatPin.Create(aParent, 198, 70, 25, 32, 794);
   Pin_Open.OnClick := ClosePanel;
   Pin_Open.Hint := gResTexts[1948];
-  Panel_Goals := TKMPanel.Create(aParent, 240, 0, 400, 500);
+  Panel_Goals := TKMPanel.Create(aParent, 240, 0, 400, 650);
 
   Image_Background := TKMImage.Create(Panel_Goals, 0, 0, Panel_Goals.Width, Panel_Goals.Height, 18, rxGuiMain);
   Image_Background.ImageStretch;
@@ -104,6 +106,12 @@ begin
   Edit_BuildingType.Hitable := false;
   Edit_BuildingType.AutoFocusable := false;
   Edit_BuildingType.ReadOnly := true;
+  Icon_Houses := TKMIconsRow.Create(Panel_Goals, Edit_BuildingType.Left, Edit_BuildingType.Bottom + 5, 37, 37);
+  Icon_Houses.MaxCountInRow := 4;
+  //Icon_Houses.StillSize := true;
+  Icon_Houses.BackBevel := 0.5;
+  //Icon_Houses.Width := 37 * 4;
+  //Icon_Houses.Height := 37 * 5;
 
   Hide;
 end;
@@ -198,6 +206,14 @@ begin
 end;
 
 procedure TKMGUIGameGoalsPopUp.SelectListItem(Sender: TObject);
+  function HousesToIcons(aArray : TKMHouseTypeArray) : TKMWordArray;
+  var I : Integer;
+  begin
+    SetLength(Result, Length(aArray));
+    for I := 0 to High(aArray) do
+      Result[I] := gRes.Houses[aArray[I]].GuiIcon;
+
+  end;
 var aIndex : Integer;
   G : TKMGoal;
   aTime : Single;
@@ -208,6 +224,7 @@ begin
   Shape_PlayerColor.Hide;
   Edit_PlayerName.Hide;
   Edit_BuildingType.Hide;
+  Icon_Houses.Hide;
   Label_GoalLine3.Hide;
   Edit_PlayerName.Unfocus;
   Edit_BuildingType.Unfocus;
@@ -253,7 +270,7 @@ begin
 
     Label_GoalLine2.Caption := gResTexts[GOAL_CONDITION_LIBX[G.GoalCondition, G.GoalType]];
     Edit_BuildingType.Visible := G.GoalCondition = gcBuildingsType;
-
+    Icon_Houses.Visible := G.GoalCondition in [gcBuildingsType, gcBuildings, gcMilitaryAssets];
     if ((G.HandIndex >= 0) and (G.HandIndex <> gMySpectator.HandID)) or (G.GoalType = gltSurvive) then
     begin
       Label_GoalLine3.Show;
@@ -264,6 +281,18 @@ begin
       Edit_PlayerName.SetTextSilently(gHands[G.HandIndex].OwnerName);
       if Edit_BuildingType.Visible then
         Edit_BuildingType.Text := gResTexts[HOUSE_VICTORY_ORDER[G.BuldingsType].TextID];
+
+      If Icon_Houses.Visible then
+      begin
+        case G.GoalCondition of
+          gcBuildingsType : Icon_Houses.SetIcons(HousesToIcons(HOUSE_VICTORY_ORDER[G.BuldingsType].H));
+          gcBuildings : Icon_Houses.SetIcons(HousesToIcons([htStore, htSchool, htBarracks, htTownHall, htPalace]) );
+          gcMilitaryAssets : Icon_Houses.SetIcons(HousesToIcons([htBarracks, htCoalMine, htWeaponWorkshop, htArmorWorkshop, htStables,
+                                                                 htIronMine, htIronSmithy ,htWeaponSmithy, htArmorSmithy, htTownHall,
+                                                                 htSiegeWorkshop, htPalace, htWallTower]));
+        end;
+
+      end;
 
     end;
   end;

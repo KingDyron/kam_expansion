@@ -1840,6 +1840,8 @@
 1883:Machines Melee
 1884:FlagColor:
 1885:Buildings from tab:
+1886:All buildings
+1887:All units
 1888:Reach a place
 1889:Reveal a place
 1890:Location X
@@ -2033,9 +2035,9 @@
 2076:Wares
 2077:Unit type
 
-2078:Important Houses
-2079:Basic Houses
-2080:Economy Houses
+2078:Important
+2079:Basic
+2080:Economy
 2081:Mines
 2082:Workshops
 2083:Defensive

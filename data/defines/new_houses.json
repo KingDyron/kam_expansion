@@ -70,7 +70,7 @@
 		{
 			"TitleID" : 2084,
 			"GuiIcon" : 0,
-			"Houses" : ["htMarket","htMerchant","htCollectors","htTailorsShop","htSign"]
+			"Houses" : ["htMarket","htMerchant","htCollectors","htTailorsShop"]
 		}
 	],
 	"Houses" : 

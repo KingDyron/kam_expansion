@@ -614,7 +614,7 @@ begin
   if StillSize then
     Exit;
   Width := Min(length(fIcons), MaxCountInRow)  * HSpacing;
-  Height := (length(fIcons) div (MaxCountInRow + 1) + 1) * VSpacing;
+  Height := ((length(fIcons) + MaxCountInRow) div MaxCountInRow) * VSpacing;
   SetLength(fTags, length(fIcons));
   FillChar(fTags, SizeOf(fTags), #0);
 end;
@@ -627,9 +627,11 @@ begin
   Setlength(fTags, I + 1);
   fIcons[I] := aIcon;
   fTags[I] := aTag;
+  if StillSize then
+    Exit;
 
   Width := Min(length(fIcons), MaxCountInRow)  * HSpacing;
-  Height := (length(fIcons) div (MaxCountInRow) + 1)   * VSpacing;
+  Height := ((length(fIcons) + MaxCountInRow) div MaxCountInRow) * VSpacing;
 end;
 
 function TKMIconsRow.GetTag(aIndex: Integer): Integer;
