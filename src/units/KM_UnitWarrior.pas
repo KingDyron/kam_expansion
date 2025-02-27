@@ -1666,6 +1666,9 @@ end;
 function TKMUnitWarrior.GetRangeMax: Single;
 begin
   Result := gRes.Units[fType].MaxRange;
+  IF fBitinAdded then
+    Result := Result + IfThen(UnitType in [utCatapult], 2, 1);
+
   If gGameParams.MissionBuiltInDifficulty.IsRealism then
     If gTerrain.IsNight then
       Result := Result - 2;
