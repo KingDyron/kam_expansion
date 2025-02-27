@@ -3432,7 +3432,7 @@
 		{
 			"UnitType" : "utOperator",
 			"GameID" : 51,
-			"DescriptionID" : 0,
+			"DescriptionID" : 2190,
 			"SchoolTime" : 50,
 			"HitPoints" : 2,
 			"Attack" : 161,
@@ -3812,7 +3812,7 @@
 		{
 			"UnitType" : "utClayPicker",
 			"GameID" : 56,
-			"DescriptionID" : 0,
+			"DescriptionID" : 2191,
 			"SchoolTime" : 20,
 			"HitPoints" : 2,
 			"Attack" : 0,
