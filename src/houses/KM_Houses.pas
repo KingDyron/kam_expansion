@@ -205,6 +205,7 @@ type
     function GetProductionCycle(aIndex : Byte) : Word;
     function PaintHouseWork : Boolean; virtual;
     function GetFlagColor : Cardinal;
+    procedure SetWariant(aValue : Integer);
   protected
     fWorkers: TPointerArray;
     fProductionCycles: array [1..WARES_IN_OUT_COUNT] of Word; //If HousePlaceOrders=True then here are production orders
@@ -296,7 +297,7 @@ type
     property PlacedOverRoad: Boolean read fPlacedOverRoad write fPlacedOverRoad;
 
     property PositionF: TKMPointF read GetPositionF;
-    property PicWariant : Integer read fWariant write fWariant;
+    property PicWariant : Integer read fWariant write SetWariant;
     property DeliveryMode: TKMDeliveryMode read fDeliveryMode;
     property StoreFilled: Boolean read fStoreFilled write fStoreFilled;
     property Text : String read fText write fText;
@@ -1318,6 +1319,7 @@ begin
   LoadStream.Read(DoorwayUse);
   LoadStream.Read(fPlacedOverRoad);
   LoadStream.Read(fWariant);
+  PicWariant := fWariant;
   LoadStream.Read(fStyle);
   LoadStream.Read(fSlotID);
   LoadStream.Read(fIsBurning);
@@ -2578,6 +2580,11 @@ end;
 function TKMHouse.GetWoodPic : Integer;
 begin
   Result := gRes.Houses[fType].WoodPic;
+end;
+
+procedure TKMHouse.SetWariant(aValue: Integer);
+begin
+  fWariant := EnsureRange(aValue, -1, gRes.Houses[fType].HasWariants - 1);
 end;
 
 function TKMHouse.GetStonePic : Integer;
