@@ -64,7 +64,8 @@ type
     function GetClosestUnit(const aLoc: TKMPoint; aIndex: TKMHandID; aAlliance: TKMAllianceType): TKMUnit;
     function GetClosestHouse(const aLoc: TKMPoint; aIndex: TKMHandID; aAlliance: TKMAllianceType; aTypes: TKMHouseTypeSet = HOUSES_VALID; aOnlyCompleted: Boolean = True): TKMHouse;overload;
     function GetClosestHouse(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aWareSet : TKMWareTypeSet = [wtAll]; aMaxDistance : Single = 999): TKMHouse;overload;
-    function GetHousesInRadius(const aLoc: TKMPoint; aSqrRadius: Single; aIndex: TKMHandID; aAlliance: TKMAllianceType; aTypes: TKMHouseTypeSet = HOUSES_VALID; aOnlyCompleted: Boolean = True): TKMHouseArray;
+    function GetHousesInRadius(const aLoc: TKMPoint; aSqrRadius: Single; aIndex: TKMHandID; aAlliance: TKMAllianceType; aTypes: TKMHouseTypeSet = HOUSES_VALID; aOnlyCompleted: Boolean = True): TKMHouseArray; overload;
+    function GetHousesInRadius(const aLoc: TKMPoint; aSqrRadius: Single; aTypes: TKMHouseTypeSet = HOUSES_VALID; aOnlyCompleted: Boolean = True): TKMHouseArray; overload;
     function DistanceToEnemyTowers(const aLoc: TKMPoint; aIndex: TKMHandID): Single;
 
     procedure GetUnitsInRect(const aRect: TKMRect; List: TList<TKMUnit>);
@@ -639,6 +640,29 @@ begin
   SetLength(Result, idx);
 end;
 
+function TKMHandsCollection.GetHousesInRadius(const aLoc: TKMPoint; aSqrRadius: Single;
+                                              aTypes: TKMHouseTypeSet = HOUSES_VALID; aOnlyCompleted: Boolean = True): TKMHouseArray;
+var
+  I, K, idx: Integer;
+  HA: TKMHouseArray;
+begin
+  SetLength(Result, 12);
+
+  idx := 0;
+  for I := 0 to fCount - 1 do
+  if fHandsList[I].Enabled then
+  begin
+    HA := fHandsList[I].Houses.FindHousesInRadius(aLoc, aSqrRadius, aTypes, aOnlyCompleted);
+    if (idx + Length(HA) > Length(Result)) then
+      SetLength(Result, idx + Length(HA) + 12);
+    for K := Low(HA) to High(HA) do
+    begin
+      Result[idx] := HA[K];
+      idx := idx + 1;
+    end;
+  end;
+  SetLength(Result, idx);
+end;
 
 //Return distance from the tile to the closest enemy tower
 function TKMHandsCollection.DistanceToEnemyTowers(const aLoc: TKMPoint; aIndex: TKMHandID): Single;

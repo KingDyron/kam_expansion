@@ -68,7 +68,7 @@ type
     htStoneWorkshop,   htIronFoundry,     htMerchant,      htPottery,       htWoodBurner,
     htAppleTree,       htSmallStore,      htCollectors,    htTailorsShop,   htCottage,
     htHouse,           htPalace,          htStall,         htProductionThatch,
-    htShipYard
+    htShipYard,        htCartographers
   );
 
   //* House type set

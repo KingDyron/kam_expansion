@@ -61,8 +61,6 @@ type
       procedure Paint; override;
   end;
 
-
-
   TKMGUIGameGuide = class
   private
     fOnShow : TNotifyEvent;
@@ -678,6 +676,7 @@ begin
   Image_Selected.Height := 325;
   Image_Selected.CapOffsetY := 138;
   Image_Selected.Caption := gRes.Houses[HT].HouseName;
+
   Icons_Workers.Show;
 
   Icons_Workers.UnitPlan := gRes.Houses[HT].Workers;
@@ -988,8 +987,6 @@ begin
   end else
   If fType = gtHouses then
   begin
-    Image_Selected.Height := 325;
-
     for I := 0 to High(Button_Select) do
     begin
       Button_Select[I].BackBevelColor := 0;
@@ -1354,7 +1351,6 @@ begin
 
   TKMRenderUI.WritePictureWithPivot(cX, cY, rxUnits, A.Animation[AnimStep] + 1);
 end;
-
 
 end.
 

@@ -391,6 +391,7 @@ type
 
     procedure UpdateState(aTick: Cardinal); override;
     procedure Paint(const aRect: TKMRect; aTickLag: Single); override;
+    procedure PaintSpawners(const aRect: TKMRect);
 
     procedure Save(SaveStream: TKMemoryStream); override;
     procedure Load(LoadStream: TKMemoryStream); override;
@@ -3836,17 +3837,28 @@ begin
 end;
 
 procedure TKMHandAnimals.Paint(const aRect: TKMRect; aTickLag: Single);
-var I : Integer;
 begin
   Inherited;
 
   if (gGameParams.IsMapEditor and (melSpawners in gGame.MapEditor.VisibleLayers))
       or (gGameParams.IsGame and (mlSpawners in gGameParams.VisibleLayers)) then
+        PaintSpawners(aRect);
+
+
+
+end;
+
+procedure TKMHandAnimals.PaintSpawners(const aRect: TKMRect);
+var I, K, J, offX : Integer;
+  UT : TKMUnitType;
+begin
+
     for I := 0 to High(fSpawners) do
       with fSpawners[I] do
         if KMInRect(Loc, KMRectGrow(aRect, Radius div 2)) then
         begin
-
+          K := length(AnimalTypes);
+          offX := Round(Sqrt(K));
           gRenderPool.RenderSpriteOnTile(Loc, 914);
           gRenderAux.CircleOnTerrain(Loc.X-0.5, Loc.Y-0.5,
                                       1,
@@ -3856,10 +3868,16 @@ begin
                                       Radius,
                                       icGreen AND $10FFFFFF,
                                       icGreen);
+          for J := 0 to K - 1 do
+          begin
+            UT := AnimalTypes[J];
+            gRenderPool.RenderSpriteOnTile(KMPoint(Loc.X - (offX div 2) + (J mod offX), Loc.Y - (offX div 2) + (J div offX)), gRes.Units[UT].GUIIcon);
+
+          end;
+
+
+
         end;
-
-
-
 end;
 
 procedure TKMHandAnimals.Save(SaveStream: TKMemoryStream);

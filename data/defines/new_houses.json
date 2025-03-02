@@ -31,7 +31,7 @@
 			[
 				"htNone","htBarracks","htTownHall","htPalace","htSiegeWorkshop","htShipYard",
 				"htNone","htWall","htWall2","htWall3","htWall4","htWall5",
-				"htNone","htWallTower","htWatchTower"
+				"htNone","htWallTower","htWatchTower", "htCartographers"
 			]
 		}
 	],
@@ -70,7 +70,7 @@
 		{
 			"TitleID" : 2084,
 			"GuiIcon" : 0,
-			"Houses" : ["htMarket","htMerchant","htCollectors","htTailorsShop"]
+			"Houses" : ["htMarket","htMerchant","htCollectors","htTailorsShop", "htCartographers"]
 		}
 	],
 	"Houses" : 
@@ -3789,7 +3789,7 @@
 			"EntranceOffsetXpx" : 5,
 			"EntranceOffsetYpx" : 0,
 			"WorkerRest" : 5,
-			"Sight" : 30,
+			"Sight" : 18,
 			"NeedsPlayerOrder" : False,
 			"BuildIcon" : 743,
 			"TabletID" : 744,
@@ -4039,6 +4039,76 @@
 				[0,2,1,0,0],
 				[0,0,0,0,0],
 				[1,1,1,1,0],
+				[0,0,0,0,0]
+			],
+			"Ground_Area" : 
+			[
+				[2,2,2,2,0],
+				[2,2,2,2,0],
+				[2,2,2,2,0],
+				[2,2,2,2,0],
+				[0,0,0,0,0]
+			]
+		},
+		{
+			"Name" : "htCartographers",
+			"TextID" : 1983,
+			"DescriptionID" : 2170,
+			"MaxHealth" : 300,
+			"WoodPic" : 2532,
+			"StonePic" : 2531,
+			"SnowPic" : 0,
+			"WoodCost" : 1,
+			"StoneCost" : 6,
+			"TileCost" : 1,
+			"EntranceOffsetX" : 0,
+			"EntranceOffsetY" : 0,
+			"EntranceOffsetXpx" : 20,
+			"EntranceOffsetYpx" : 10,
+			"WorkerRest" : 5,
+			"Sight" : 30,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 872,
+			"TabletID" : 873,
+			"MaxInWares" : 5,
+			"MaxOutWares" : 5,
+			"CanForceWork" : False,
+			"UnoccupiedMsgId" : -1,
+			"WorkerTypes" : 
+			[
+				{"UnitType" : "utRecruit","MaxCount" : 1}
+			],
+			"MaxWorkersCount" : 1,
+			"CanOverfill" : False,
+			"GatheringScript" : "gsNone",
+			"WareInput" : ["wtFeathers","wtWine"],
+			"WareOutput" : ["wtNone","wtNone","wtNone","wtNone","wtNone","wtNone"],
+			"UnlockAfter" : ["htSawmill"],
+			"ha_Work2" : {"X" : 0,"Y" : 0,"Steps" : [5,5,5,5,5,5,5,5,5,5]},
+			"ha_Work3" : {"X" : 0,"Y" : 0,"Steps" : [5,5,5,5,5,5,5,5,5,5]},
+			"ha_Flag1" : {"X" : -15,"Y" : -170,"Steps" : [1183,1184,1185,1186,1187,1188,1189,1190,1191,1192]},
+			"ha_Fire1" : {"X" : -68,"Y" : -177,"Steps" : [1623,1624,1625,1620,1621,1622]},
+			"ha_Fire2" : {"X" : 0,"Y" : 0,"Steps" : [1637,1632,1633,1634,1635,1636]},
+			"ha_Fire3" : {"X" : -15,"Y" : -185,"Steps" : [1620,1621,1622,1623,1624,1625]},
+			"ha_Fire4" : {"X" : 63,"Y" : 32,"Steps" : [1617,1618,1619,1614,1615,1616]},
+			"ha_Fire5" : {"X" : 20,"Y" : -109,"Steps" : [1632,1633,1634,1635,1636,1637]},
+			"ha_Fire6" : {"X" : 25,"Y" : -54,"Steps" : [1629,1630,1631,1626,1627,1628]},
+			"ha_Fire7" : {"X" : 37,"Y" : -100,"Steps" : [1635,1636,1637,1632,1633,1634]},
+			"ha_Fire8" : {"X" : 0,"Y" : -123,"Steps" : [1621,1622,1623,1624,1625,1620]},
+			"WorkAnim" : 
+			[
+				{"WorkType" : "haWork2","Cycles" : 5},
+				{"WorkType" : "haWork3","Cycles" : 5}
+			],
+			"WoodPileOffset" : {"X" : -10,"Y" : 15},
+			"StonePileOffset" : {"X" : 0,"Y" : 15},
+			"TilePileOffset" : {"X" : 10,"Y" : 15},
+			"Build_Area" : 
+			[
+				[0,1,1,0,0],
+				[0,2,1,0,0],
+				[0,0,0,0,0],
+				[0,0,0,0,0],
 				[0,0,0,0,0]
 			],
 			"Ground_Area" : 

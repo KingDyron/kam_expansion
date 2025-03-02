@@ -68,7 +68,7 @@ uses
   KM_HandTypes, KM_HandEntity,
   KM_HouseInn, KM_HouseMarket, KM_HouseBarracks, KM_HouseSchool, KM_HouseStore, KM_HouseSwineStable,
   KM_HouseTownHall, KM_HouseWoodcutters, KM_HouseSiegeWorkshop, KM_HouseWoodBurner, KM_HouseQueue,
-  KM_HouseCottage,
+  KM_HouseCottage, KM_HouseCartographers,
   KM_Resource,
   KM_GameTypes,
   KM_TerrainTypes,
@@ -172,6 +172,7 @@ begin
     htProductionThatch:         Result := TKMHouseProdThatch.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
     htVineyard:         Result := TKMHouseVineyard.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
     htShipyard:         Result := TKMHouseShipyard.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
+    htCartographers:    Result := TKMHouseCartographers.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
     else             Result := TKMHouse.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
   end;
 
@@ -509,10 +510,11 @@ begin
       htPalace:         H := TKMHousePalace.Load(LoadStream);
       htStall:          H := TKMHouseStall.Load(LoadStream);
       htProductionThatch: H := TKMHouseProdThatch.Load(LoadStream);
-      htVineyard: H := TKMHouseVineyard.Load(LoadStream);
-      htShipyard: H := TKMHouseShipyard.Load(LoadStream);
+      htVineyard:         H := TKMHouseVineyard.Load(LoadStream);
+      htShipyard:         H := TKMHouseShipyard.Load(LoadStream);
+      htCartographers:    H := TKMHouseCartographers.Load(LoadStream);
 
-      else             H := TKMHouse.Load(LoadStream);
+      else                H := TKMHouse.Load(LoadStream);
     end;
 
     if H <> nil then
@@ -584,7 +586,7 @@ begin
   growRect := KMRectGrow(aRect, Margin);
 
   for I := 0 to Count - 1 do
-  if not Houses[I].IsDestroyed and KMInRect(Houses[I].Position, growRect) then
+  if not Houses[I].IsDestroyed and (KMInRect(Houses[I].Position, growRect) or (Houses[I].HouseType = htCartographers) )then
     Houses[I].Paint;
 end;
 

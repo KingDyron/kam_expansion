@@ -25,8 +25,9 @@ type
 
     property ClipRect: TKMRect read fClipRect write fClipRect;
 
-    procedure PaintMiningRadius;
+    procedure PaintMiningRadius;overload;
     procedure PaintDefences;
+    procedure PaintMiningRadius(aHouse : Pointer); overload;
 
     procedure RenderTiledArea(const aLoc: TKMPoint; aMinRadius, aMaxRadius: Single; aDistanceFunc: TCoordDistanceFn;
                                     aFillColor, aLineColor: Cardinal);
@@ -327,7 +328,7 @@ const
     gRenderAux.SetColor(Color);
     for I := 0 to aPoints.Count - 1 do
     begin
-      gRenderAux.Quad(aPoints[I].X + inset, aPoints[I].Y + inset);
+      gRenderAux.Quad(aPoints[I].X, aPoints[I].Y);
       if aVertexes then
         gRenderAux.CircleOnTerrain(aPoints[I].X - 1, aPoints[I].Y - 1, 0.15, Color);
 
@@ -523,6 +524,180 @@ begin
   selectedPts.Free;
 end;
 
+
+procedure TKMRenderDebug.PaintMiningRadius(aHouse: Pointer);
+
+const
+  GOLD_ORE_COLOR = icYellow;
+  IRON_ORE_COLOR = icSteelBlue;
+  BITIN_ORE_COLOR = icLightRed;
+  CLAY_ORE_COLOR = icAmberBrown;
+  COAL_ORE_COLOR = icGray;
+
+  WOODCUTTER_COLOR = icDeepGreen;
+  QUARRY_COLOR = icBlack;
+  FISHERHUT_COLOR = icBlue;
+  FARM_COLOR = icYellow;
+  WINEYARD_COLOR = icLightCyan;
+  SELECTED_ORE_COLOR = icLight2Red;
+
+  procedure PaintOrePoints(aOreP: TKMPointListArray; Color: Cardinal);
+  var
+    I, K, L: Integer;
+    lineColor, fillColor: Cardinal;
+    coef: Single;
+  begin
+    coef := 0.15;
+
+    ResetAreaData;
+    lineColor := Color;
+    for I := 1 to Length(aOreP) - 1 do
+    begin
+      Color := Color and $40FFFFFF; //Add some transparency
+      Color := MultiplyBrightnessByFactor(Color, coef);
+      for K := Length(aOreP) - 1 downto 0 do
+        for L := 0 to aOreP[K].Count - 1 do
+        begin
+          fillColor := Color;
+          if K = 1 then
+            fillColor := MultiplyBrightnessByFactor(Color, 4);
+          if K = 2 then
+            fillColor := MultiplyBrightnessByFactor(Color, 7);
+          gRenderAux.Quad(aOreP[K][L].X, aOreP[K][L].Y, fillColor);
+
+          fAreaTilesLand[aOreP[K][L].Y - 1, aOreP[K][L].X - 1] := True;
+        end;
+    end;
+
+    if not fMarchingSquares.IdentifyPerimeters(fBorderPoints) then
+      Exit;
+
+    for I := 0 to fBorderPoints.Count - 1 do
+      gRenderAux.LineOnTerrain(fBorderPoints[I], lineColor);
+  end;
+
+
+  procedure PaintMiningPoints(aPoints: TKMPointList; Color: Cardinal; aDeepCl: Boolean = False;
+                              aVertexes: Boolean = False);
+  var
+    I: Integer;
+    coef: Single;
+    lineColor: Cardinal;
+  begin
+    coef := 0.15;
+
+
+    lineColor := Color;
+
+    if aDeepCl then
+      Color := Color and $80FFFFFF //Add some transparency
+    else
+      Color := Color and $40FFFFFF; //Add more transparency
+    Color := MultiplyBrightnessByFactor(Color, coef);
+
+    ResetAreaData;
+
+    gRenderAux.SetColor(Color);
+    for I := 0 to aPoints.Count - 1 do
+    begin
+      gRenderAux.Quad(aPoints[I].X, aPoints[I].Y);
+      if aVertexes then
+        gRenderAux.CircleOnTerrain(aPoints[I].X - 1, aPoints[I].Y - 1, 0.15, Color);
+
+      fAreaTilesLand[aPoints[I].Y - 1, aPoints[I].X - 1] := True;
+    end;
+
+    if not fMarchingSquares.IdentifyPerimeters(fBorderPoints) then
+      Exit;
+
+    for I := 0 to fBorderPoints.Count - 1 do
+      gRenderAux.LineOnTerrain(fBorderPoints[I], lineColor, 0);
+  end;
+
+var H : TKMHouse;
+  I : Integer;
+  Ores: TKMPointListArray;
+  Points: TKMPointList;
+  DirPoints: TKMPointDirList;
+begin
+  SetLength(Ores, 3);
+  for I := 0 to High(Ores) do
+    Ores[I] := TKMPointList.Create;
+
+  Points := TKMPointList.Create;
+  DirPoints := TKMPointDirList.Create;
+
+  H := TKMHouse(aHouse);
+  case H.HouseType of
+    htIronMine:   if IsAreaInClip(H.PointBelowEntrance, 11) then
+                  begin
+                    gTerrain.FindOrePointsByDistance(H.PointBelowEntrance, wtIronOre, Ores);
+                    PaintOrePoints(Ores, IRON_ORE_COLOR);
+                  end;
+    htBitinMine:  if IsAreaInClip(H.PointBelowEntrance, 11) then
+                  begin
+                    gTerrain.FindOrePointsByDistance(H.PointBelowEntrance, wtBitinOre, Ores);
+                    PaintOrePoints(Ores, IRON_ORE_COLOR);
+                  end;
+    htPottery:    if IsAreaInClip(H.PointBelowEntrance, 11) then
+                  begin
+                    gTerrain.FindOrePointsByDistance(H.PointBelowEntrance, wtTile, Ores);
+                    PaintOrePoints(Ores, CLAY_ORE_COLOR);
+                  end;
+    htGoldMine:   if IsAreaInClip(H.PointBelowEntrance, 11) then
+                  begin
+                    gTerrain.FindOrePointsByDistance(H.PointBelowEntrance, wtGoldOre, Ores);
+                    PaintOrePoints(Ores, GOLD_ORE_COLOR);
+                  end;
+    htCoalMine:   if IsAreaInClip(H.PointBelowEntrance, 5) then
+                  begin
+                    gTerrain.FindOrePointsByDistance(H.PointBelowEntrance, wtCoal, Ores);
+                    PaintOrePoints(Ores, COAL_ORE_COLOR);
+                  end;
+    htWoodcutters:if IsAreaInClip(H.PointBelowEntrance, gRes.Units[utWoodcutter].MiningRange) then
+                  begin
+                    gTerrain.FindPossibleTreePoints(TKMHouseWoodcutters(H).FlagPoint,
+                                                    gRes.Units[utWoodcutter].MiningRange,
+                                                    Points);
+                    PaintMiningPoints(Points, WOODCUTTER_COLOR, False, True);
+                  end;
+    htQuarry:     if IsAreaInClip(H.PointBelowEntrance, gRes.Units[utStonemason].MiningRange) then
+                  begin
+                    gTerrain.FindStoneLocs(H.PointBelowEntrance,
+                                           gRes.Units[utStonemason].MiningRange,
+                                           KMPOINT_ZERO, True, nil, Points);
+                    PaintMiningPoints(Points, QUARRY_COLOR);
+                  end;
+    htFishermans: if IsAreaInClip(H.PointBelowEntrance, gRes.Units[utFisher].MiningRange) then
+                  begin
+                    gTerrain.FindFishWaterLocs(H.PointBelowEntrance,
+                                               gRes.Units[utFisher].MiningRange,
+                                               KMPOINT_ZERO, True, DirPoints);
+                    DirPoints.ToPointList(Points, true);
+                    PaintMiningPoints(Points, FISHERHUT_COLOR);
+                  end;
+    htFarm:       if IsAreaInClip(H.PointBelowEntrance, gRes.Units[utFarmer].MiningRange) then
+                  begin
+                    gTerrain.FindCornFieldLocs(H.PointBelowEntrance,
+                                               gRes.Units[utFarmer].MiningRange,
+                                               Points);
+                    PaintMiningPoints(Points, FARM_COLOR);
+                  end;
+    htVineyard:   if IsAreaInClip(H.PointBelowEntrance, gRes.Units[utFarmer].MiningRange) then
+                  begin
+                    gTerrain.FindWineFieldLocs(H.PointBelowEntrance,
+                                               gRes.Units[utFarmer].MiningRange,
+                                               Points);
+                    PaintMiningPoints(Points, WINEYARD_COLOR);
+                  end;
+  end;
+
+  for I := 0 to High(Ores) do
+    Ores[I].Free;
+
+  Points.Free;
+  DirPoints.Free;
+end;
 
 { TKMAreaData }
 function TKMAreaData.GetData(X, Y: Integer): Boolean;

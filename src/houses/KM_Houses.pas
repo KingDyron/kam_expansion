@@ -6654,44 +6654,13 @@ end;
 
 
 procedure TKMHousePalace.Paint;
-  procedure PaintDeposits;
-  var list : TKMPointTagList;
-    I : Integer;
-    C, factor : Cardinal;
-  begin
-    list := TKMPointTagList.Create;
-    gTerrain.FindDeposits(Entrance, 25, list, true);
-
-    for I := 0 to list.Count - 1 do
-    begin
-      case list.Tag[I] of
-        1: C := $FF00FF00;
-        2: C := $FFFF0000;
-        3: C := $FF0000FF;
-        4: C := $FF000000;
-        else
-          C := $FFFFFFFF;
-      end;
-      factor := list.Tag2[I] * 15 + 40;
-      factor := factor shl 24;
-      factor := factor or $00FFFFFF;
-      C := C and factor;
-      gRenderAux.Quad(list[I].X, list[I].Y, C);
-    end;
-    list.Free;
-  end;
 var I : Integer;
 begin
   Inherited;
 
   if fBuildState = hbsDone then
-  begin
     for I := 1 to 4 do
-        gRenderPool.AddHousePalaceFlags(HouseType, fPosition, I, FlagAnimStep + I * 10, gHands[Owner].FlagColor);
-
-    if gMySpectator.Selected = self then
-      PaintDeposits;
-  end;
+      gRenderPool.AddHousePalaceFlags(HouseType, fPosition, I, FlagAnimStep + I * 10, gHands[Owner].FlagColor);
 
 end;
 

@@ -56,7 +56,7 @@ type
     class procedure WriteReplayBar (aLeft, aTop, aWidth, aHeight: SmallInt; aPos, aPeacetime, aMaxValue: Integer; aMarks: TList<Integer>; aPattern: Word; aHighlightedMark: Integer = -1);
     class procedure WritePicture   (aLeft, aTop, aWidth, aHeight: SmallInt; aAnchors: TKMAnchorsSet; aRX: TRXType; aID: Word;
       aEnabled: Boolean = True; aColor: TColor4 = $FFFF00FF; aLightness: Single = 0; aAlphaStep : Single = -1);
-    class procedure WritePictureWithPivot   (aLeft, aTop: SmallInt; aRX: TRXType; aID: Word);
+    class procedure WritePictureWithPivot   (aLeft, aTop: SmallInt; aRX: TRXType; aID: Word; aColor : Cardinal = $FF000000);
 
     class procedure WritePlot      (aLeft, aTop, aWidth, aHeight: SmallInt; aValues: TKMCardinalArray; aMaxValue: Cardinal;
       aColor: TColor4; aLineWidth: Byte);
@@ -752,10 +752,10 @@ begin
   glPopMatrix;
 end;
 
-class procedure TKMRenderUI.WritePictureWithPivot(aLeft: SmallInt; aTop: SmallInt; aRX: TRXType; aID: Word);
+class procedure TKMRenderUI.WritePictureWithPivot(aLeft: SmallInt; aTop: SmallInt; aRX: TRXType; aID: Word; aColor : Cardinal = $FF000000);
 begin
   WritePicture(aLeft + gRes.Sprites[aRX].RXData.Pivot[aID].X, aTop + gRes.Sprites[aRX].RXData.Pivot[aID].Y,
-              0, 0, [anLeft, anTop], aRX, aID);
+              0, 0, [anLeft, anTop], aRX, aID, true, aColor, 0, -1);
 
 end;
 

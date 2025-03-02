@@ -443,7 +443,8 @@ uses
   KM_MapEdClipBoard in 'src\maped\KM_MapEdClipBoard.pas',
   KM_UnitTaskMerchant in 'src\units\tasks\KM_UnitTaskMerchant.pas',
   KM_HouseHelpers in 'src\houses\KM_HouseHelpers.pas',
-  KM_ResPatterns in 'src\res\KM_ResPatterns.pas';
+  KM_ResPatterns in 'src\res\KM_ResPatterns.pas',
+  KM_HouseCartographers in 'src\houses\KM_HouseCartographers.pas';
 
 //KM_PerfLog in 'src\unused\KM_PerfLog.pas', //unused
 

@@ -295,7 +295,8 @@ const
     htHovel, htSign, htBitinMine, htWallTower, htWell,
     htStoneWorkshop, htIronFoundry, htMerchant, htPottery, htWoodBurner,
     htAppleTree, htSmallStore, htCollectors, htTailorsShop, htCottage,
-    htHouse, htPalace, htStall, htProductionThatch, htShipyard);
+    htHouse, htPalace, htStall, htProductionThatch, htShipyard,
+    htCartographers);
 
   //TKMHouseType corresponds to this index in KaM scripts and libs
   //KaM scripts are 0 based, so we must use HouseTypeToIndex[H]-1 in script usage. Other cases are 1 based.
@@ -311,7 +312,8 @@ const
     36, 37, 38, 39, 40,
     41, 42, 43, 44, 45,
     46, 47, 48, 49, 50,
-    51, 52, 53, 54, 55
+    51, 52, 53, 54, 55,
+    56
     );
 
   WALL_HOUSES : TKMHouseTypeSet = [ htWall, htWall2, htWall3, htWall4, htWall5];
