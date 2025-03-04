@@ -590,7 +590,7 @@ begin
   if fCampaigns <> nil then
   begin
     fCampaigns.UnlockAllCampaignsMissions;
-    fCampaigns.SaveProgress;
+    fCampaigns.SaveProgress(true);
 
     fMainMenuInterface.RefreshCampaigns;
   end;

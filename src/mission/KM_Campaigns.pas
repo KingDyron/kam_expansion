@@ -162,7 +162,7 @@ type
     destructor Destroy; override;
 
     //Initialization
-    procedure SaveProgress;
+    procedure SaveProgress(aForceSave: Boolean = false);
 
     procedure Lock;
     procedure Unlock;
@@ -328,7 +328,7 @@ begin
 end;
 
 
-procedure TKMCampaignsCollection.SaveProgress;
+procedure TKMCampaignsCollection.SaveProgress(aForceSave: Boolean = false);
 var
   I, J: Integer;
   M: TKMemoryStream;
@@ -345,7 +345,7 @@ begin
     for I := 0 to Count - 1 do
     begin
       M.Write(Campaigns[I].Viewed);
-      if Campaigns[I].Viewed then
+      if Campaigns[I].Viewed or aForceSave then
       begin
         M.Write(Campaigns[I].CampaignId, SizeOf(TKMCampaignId));
         M.Write(Campaigns[I].UnlockedMap);
