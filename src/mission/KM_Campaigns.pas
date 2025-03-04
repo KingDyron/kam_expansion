@@ -344,8 +344,9 @@ begin
     M.Write(Count);
     for I := 0 to Count - 1 do
     begin
+      Campaigns[I].Viewed := Campaigns[I].Viewed or aForceSave;
       M.Write(Campaigns[I].Viewed);
-      if Campaigns[I].Viewed or aForceSave then
+      if Campaigns[I].Viewed then
       begin
         M.Write(Campaigns[I].CampaignId, SizeOf(TKMCampaignId));
         M.Write(Campaigns[I].UnlockedMap);

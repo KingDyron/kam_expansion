@@ -4111,7 +4111,7 @@
 			"DescriptionID" : 2170,
 			"MaxHealth" : 300,
 			"WoodPic" : 2532,
-			"StonePic" : 2531,
+			"StonePic" : 2710,
 			"SnowPic" : 0,
 			"WoodCost" : 1,
 			"StoneCost" : 6,
@@ -4160,10 +4160,10 @@
 			"TilePileOffset" : {"X" : 10,"Y" : 15},
 			"Build_Area" : 
 			[
-				[0,1,1,0,0],
-				[0,2,1,0,0],
 				[0,0,0,0,0],
 				[0,0,0,0,0],
+				[0,0,1,1,0],
+				[0,0,2,1,0],
 				[0,0,0,0,0]
 			],
 			"Ground_Area" : 

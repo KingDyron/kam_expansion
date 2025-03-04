@@ -887,279 +887,277 @@ begin
           SetValue(NeedsPlayerOrder, nHouse.B['NeedsPlayerOrder'], nHouse.Contains('NeedsPlayerOrder'));
           SetValue(BuildIcon, nHouse.I['BuildIcon'], nHouse.Contains('BuildIcon'));
           SetValue(TabletID, nHouse.I['TabletID'], nHouse.Contains('TabletID'));
+        end;
 
-          SetValue(fCanForceWork, nHouse.B['CanForceWork'], nHouse.Contains('CanForceWork'));
-          SetValue(fUnoccupiedMsgID, nHouse.I['UnoccupiedMsgId'], nHouse.Contains('UnoccupiedMsgId'));
+        SetValue(fCanForceWork, nHouse.B['CanForceWork'], nHouse.Contains('CanForceWork'));
+        SetValue(fUnoccupiedMsgID, nHouse.I['UnoccupiedMsgId'], nHouse.Contains('UnoccupiedMsgId'));
 
-          nAR := nHouse.A['WorkerTypes'];
+        nAR := nHouse.A['WorkerTypes'];
 
-          if nAr.Count > 0 then
+        if nAr.Count > 0 then
+        begin
+          SetLength(Workers, 0);
+          MaxWorkersCount := 0;
+        end;
+
+        for K := 0 to nAr.Count - 1 do
+        begin
+          nAnim := nAr.O[K];
+          if nAnim.I['MaxCount'] > 0 then
           begin
-            SetLength(Workers, 0);
-            MaxWorkersCount := 0;
+            if not TKMEnumUtils.TryGetAs<TKMUnitType>(nAnim.S['UnitType'],  UT) then
+              raise Exception.Create('Error loading' + aFileName + ': wrong UnitType name: ' + nAnim.S['UnitType']);
+
+            AddWorker(UT, nAnim.I['MaxCount']);
+            Inc(MaxWorkersCount, nAnim.I['MaxCount']);
+          end;
+        end;
+
+
+        SetValue(MaxWorkersCount, nHouse.I['MaxWorkersCount'], nHouse.Contains('MaxWorkersCount'));
+        SetValue(CanOverfill, nHouse.B['CanOverfill'], nHouse.Contains('CanOverfill'));
+
+        if nHouse.Contains('GatheringScript') then
+            if not TKMEnumUtils.TryGetAs<TKMGatheringScript>(nHouse.S['GatheringScript'],  fGatheringScript) then
+              raise Exception.Create('Error loading' + aFileName + ': wrong GatheringScript name: ' + nHouse.S['GatheringScript']);
+
+
+        nAR := nHouse.A['WareInput'];
+        if nAR.Count > 0 then
+          for K := 1 to WARES_IN_OUT_COUNT do
+          begin
+            if (K > nAR.Count) then
+              fWareInput[K] := wtNone
+            else
+            if TKMEnumUtils.TryGetAs<TKMWareType>(nAR.S[K - 1],  W) then
+              fWareInput[K] := W
+            else
+              raise Exception.Create('Error loading ' + jsonPath + ': wrong WareType name: ' + nAR.S[K - 1]);
           end;
 
-          for K := 0 to nAr.Count - 1 do
+        nAR := nHouse.A['UnlockAfter'];
+        if nAR.Count > 0 then
+        begin
+          fUnlockAfter := [];
+          for K := 0 to nAR.Count - 1 do
           begin
-            nAnim := nAr.O[K];
-            if nAnim.I['MaxCount'] > 0 then
-            begin
-              if not TKMEnumUtils.TryGetAs<TKMUnitType>(nAnim.S['UnitType'],  UT) then
-                raise Exception.Create('Error loading' + aFileName + ': wrong UnitType name: ' + nAnim.S['UnitType']);
-
-              AddWorker(UT, nAnim.I['MaxCount']);
-              Inc(MaxWorkersCount, nAnim.I['MaxCount']);
-            end;
+            if TKMEnumUtils.TryGetAs<TKMHouseType>(nAR[K],  HT) then
+              fUnlockAfter := fUnlockAfter + [HT]
+            else
+              raise Exception.Create('Error loading' + aFileName + ': wrong TKMHouseType name: ' + nAR[K]);
           end;
+        end;
 
-
-          SetValue(MaxWorkersCount, nHouse.I['MaxWorkersCount'], nHouse.Contains('MaxWorkersCount'));
-          SetValue(CanOverfill, nHouse.B['CanOverfill'], nHouse.Contains('CanOverfill'));
-
-          if nHouse.Contains('GatheringScript') then
-              if not TKMEnumUtils.TryGetAs<TKMGatheringScript>(nHouse.S['GatheringScript'],  fGatheringScript) then
-                raise Exception.Create('Error loading' + aFileName + ': wrong GatheringScript name: ' + nHouse.S['GatheringScript']);
-
-
-          nAR := nHouse.A['WareInput'];
-          if nAR.Count > 0 then
-            for K := 1 to WARES_IN_OUT_COUNT do
-            begin
-              if (K > nAR.Count) then
-                fWareInput[K] := wtNone
-              else
-              if TKMEnumUtils.TryGetAs<TKMWareType>(nAR.S[K - 1],  W) then
-                fWareInput[K] := W
-              else
-                raise Exception.Create('Error loading ' + jsonPath + ': wrong WareType name: ' + nAR.S[K - 1]);
-            end;
-
-          nAR := nHouse.A['UnlockAfter'];
-          if nAR.Count > 0 then
+        nAR := nHouse.A['WareOutput'];
+        if nAR.Count > 0 then
+          for K := 1 to WARES_IN_OUT_COUNT do
           begin
-            fUnlockAfter := [];
-            for K := 0 to nAR.Count - 1 do
-            begin
-              if TKMEnumUtils.TryGetAs<TKMHouseType>(nAR[K],  HT) then
-                fUnlockAfter := fUnlockAfter + [HT]
-              else
-                raise Exception.Create('Error loading' + aFileName + ': wrong TKMHouseType name: ' + nAR[K]);
-            end;
-          end;
-
-          nAR := nHouse.A['WareOutput'];
-          if nAR.Count > 0 then
-            for K := 1 to WARES_IN_OUT_COUNT do
-            begin
-              if (K > nAR.Count) then
-                fWareOutput[K] := wtNone
-              else
-              if TKMEnumUtils.TryGetAs<TKMWareType>(nAR.S[K - 1],  W) then
-                fWareOutput[K] := W
-              else
-                raise Exception.Create('Error loading ' + jsonPath + ': wrong WareType name: ' + nAR.S[K - 1]);
-            end;
-
-
-
-          for J := 1 to WARES_IN_OUT_COUNT do
-          begin
-            nAR := nHouse.A['SupplyIn' + IntToStr(J)];
-            for K := 1 to Min(nAR.Count, WARES_IN_OUT_COUNT) do
-              SetValue(fSupplyIn[J, K], nAR[K - 1]);
-
-
-            nAR := nHouse.A['SupplyOut' + IntToStr(J)];
-            for K := 1 to Min(nAR.Count, WARES_IN_OUT_COUNT) do
-              SetValue(fSupplyOut[J, K], nAR[K - 1]);
-
-
-          end;
-
-          for HA := haWork1 to haFire8 do
-          begin
-
-            if not nHouse.Contains(HOUSE_ACTION_STR[HA]) then
-              Continue;
-
-            nAnim := nHouse.O[HOUSE_ACTION_STR[HA]];
-            TKMJson(nAnim).GetAnim(fItems[H].fHouseDat.Anim[HA]);
-          end;
-
-          for HA := haWork1 to haWork5 do
-          begin
-
-            if not nHouse.Contains('MakeSound_' + HOUSE_ACTION_STR[HA]) then
-              Continue;
-
-            nAnim := nHouse.O['MakeSound_' + HOUSE_ACTION_STR[HA]];
-
-            Sound[HA].ID := nAnim.I['SoundID'];
-            nAR := nAnim.A['Steps'];
-
-            for K := 0 to nAR.Count - 1 do
-              Sound[HA].Steps :=  Sound[HA].Steps + [byte(nAR[K])];
-
-          end;
-
-          if nHouse.Contains('WorkAnim') then
-          begin
-            nAR := nHouse.A['WorkAnim'];
-            SetLength(WorkAnim, 0);
-            for K := 0 to nAR.Count - 1 do
-            begin
-              nAnim := nAR.O[K];
-
-              if TKMEnumUtils.TryGetAs<TKMHouseActionType>(nAnim.S['WorkType'],  HA) and (HA in [haWork1..haWork5]) then
-              begin
-                SetLength(WorkAnim, length(WorkAnim) + 1);
-                WorkAnim[high(WorkAnim)].Action := HA;
-                WorkAnim[high(WorkAnim)].Cycles := Max(nAnim.I['Cycles'], 1);
-              end else
-              raise Exception.Create('Error loading ' + jsonPath + ': wrong ActionType name: ' + nAnim.S['WorkType']);
-
-            end;
-
-          end;
-
-          if nHouse.Contains('WareSlots') then
-          begin
-            nAR := nHouse.A['WareSlots'];
-            SetLength(WareInputSlots, 0);
-            for K := 0 to nAR.Count - 1 do
-            begin
-              nAnim := nAR.O[K];
-              SetLength(WareInputSlots, length(WareInputSlots) + 1);
-              with WareInputSlots[high(WareInputSlots)] do
-              begin
-                Icon := nAnim.I['GuiIcon'];
-
-                nAR2 := nAnim.A['WareInput'];
-
-                for L := low(WareInput) to high(WareInput) do
-                  WareInput[L] := wtNone;
-
-
-                if nAR2.Count > 0 then
-                  for L := 1 to nAR2.Count do
-                    if TKMEnumUtils.TryGetAs<TKMWareType>(nAR2.S[L - 1],  W) then
-                    begin
-                      WareInput[L] := W;
-                    end else
-                    raise Exception.Create('Error loading ' + jsonPath + ': wrong WareType name: ' + nAR2.S[L-1] );
-
-                nAR2 := nAnim.A['WareOutput'];
-
-                for L := low(WareOutput) to high(WareOutput) do
-                  WareOutput[L] := wtNone;
-
-                if nAR2.Count > 0 then
-                  for L := 1 to nAR2.Count do
-                    if TKMEnumUtils.TryGetAs<TKMWareType>(nAR2.S[L - 1],  W) then
-                    begin
-                      WareOutput[L] := W;
-                    end else
-                    raise Exception.Create('Error loading ' + jsonPath + ': wrong WareType name: ' + nAR2.S[L-1] );
-
-              end;
-
-
-            end;
-
-          end;
-
-          if nHouse.Contains('Styles') then
-          begin
-            nAR := nHouse.A['Styles'];
-            SetLength(Styles, 0);
-            for K := 0 to nAR.Count - 1 do
-            begin
-              nAnim := nAR.O[K];
-              SetLength(Styles, length(Styles) + 1);
-
-              with Styles[high(Styles)] do
-              begin
-                Icon := nAnim.I['GuiIcon'];
-                StonePic := nAnim.I['StonePic'];
-                SnowPic := nAnim.I['SnowPic'];
-                HideSupplies := nAnim.B['HideSupplies'];
-              end;
-            end;
-          end;
-          if nHouse.Contains('Levels') then
-          begin
-            nAR := nHouse.A['Levels'];
-            SetLength(Levels, 0);
-            for K := 0 to nAR.Count - 1 do
-            begin
-              nAnim := nAR.O[K];
-              SetLength(Levels, length(Levels) + 1);
-
-              with Levels[high(Levels)] do
-              begin
-                StonePic := nAnim.I['StonePic'];
-                SnowPic := nAnim.I['SnowPic'];
-                WoodCost := nAnim.I['WoodCost'];
-                StoneCost := nAnim.I['StoneCost'];
-                TileCost := nAnim.I['TileCost'];
-                MaxInWares := nAnim.I['MaxInWares'];
-                HideSupplies := nAnim.B['HideSupplies'];
-
-                ChangeIfDifferent(AnimMultiplier,nAnim.D['WorkCyclesMultiplier'], 0);
-
-                Progress := IfThen( nAnim.Contains('AddHealth'), nAnim.I['AddHealth'], 250);
-                ReplaceAnim := nAnim.Contains('ReplaceAnim') and nAnim.B['ReplaceAnim'];
-              end;
-
-              if nAnim.Contains('Anim') then
-              begin
-                nAR2 := nAnim.A['Anim'];
-
-                for J := 0 to nAR2.Count - 1 do
-                begin
-                  nAnim2 := nAR2.O[J];
-                  if nAnim2.A['Steps'].Count = 0 then
-                    Continue;
-                  SetLength(Levels[high(Levels)].Anim, length(Levels[high(Levels)].Anim) + 1);
-
-                  nAnim2.GetAnim(Levels[high(Levels)].Anim[high(Levels[high(Levels)].Anim)]);
-                end;
-
-
-              end;
-
-
-            end;
+            if (K > nAR.Count) then
+              fWareOutput[K] := wtNone
+            else
+            if TKMEnumUtils.TryGetAs<TKMWareType>(nAR.S[K - 1],  W) then
+              fWareOutput[K] := W
+            else
+              raise Exception.Create('Error loading ' + jsonPath + ': wrong WareType name: ' + nAR.S[K - 1]);
           end;
 
 
 
+        for J := 1 to WARES_IN_OUT_COUNT do
+        begin
+          nAR := nHouse.A['SupplyIn' + IntToStr(J)];
+          for K := 1 to Min(nAR.Count, WARES_IN_OUT_COUNT) do
+            SetValue(fSupplyIn[J, K], nAR[K - 1]);
 
-          if nHouse.Contains('WoodPileOffset') then
-          begin
-            nAnim := nHouse.O['WoodPileOffset'];
-            fBuildSupply[1].MoveX := nAnim.I['X'];
-            fBuildSupply[1].MoveY := nAnim.I['Y'];
-          end;
-          if nHouse.Contains('StonePileOffset') then
-          begin
-            nAnim := nHouse.O['StonePileOffset'];
-            fBuildSupply[2].MoveX := nAnim.I['X'];
-            fBuildSupply[2].MoveY := nAnim.I['Y'];
-          end;
-          if nHouse.Contains('TilePileOffset') then
-          begin
-            nAnim := nHouse.O['TilePileOffset'];
-            fBuildSupply[3].MoveX := nAnim.I['X'];
-            fBuildSupply[3].MoveY := nAnim.I['Y'];
-          end;
 
-          nHouse.GetHouseArea('Build_Area', fBuildArea);
-          nHouse.GetHouseArea('Ground_Area', fGroundArea);
-          JSONArrToValidArr(nHouse.A['Wariants'], fWariants);
+          nAR := nHouse.A['SupplyOut' + IntToStr(J)];
+          for K := 1 to Min(nAR.Count, WARES_IN_OUT_COUNT) do
+            SetValue(fSupplyOut[J, K], nAR[K - 1]);
 
 
         end;
+
+        for HA := haWork1 to haFire8 do
+        begin
+
+          if not nHouse.Contains(HOUSE_ACTION_STR[HA]) then
+            Continue;
+
+          nAnim := nHouse.O[HOUSE_ACTION_STR[HA]];
+          TKMJson(nAnim).GetAnim(fItems[H].fHouseDat.Anim[HA]);
+        end;
+
+        for HA := haWork1 to haWork5 do
+        begin
+
+          if not nHouse.Contains('MakeSound_' + HOUSE_ACTION_STR[HA]) then
+            Continue;
+
+          nAnim := nHouse.O['MakeSound_' + HOUSE_ACTION_STR[HA]];
+
+          Sound[HA].ID := nAnim.I['SoundID'];
+          nAR := nAnim.A['Steps'];
+
+          for K := 0 to nAR.Count - 1 do
+            Sound[HA].Steps :=  Sound[HA].Steps + [byte(nAR[K])];
+
+        end;
+
+        if nHouse.Contains('WorkAnim') then
+        begin
+          nAR := nHouse.A['WorkAnim'];
+          SetLength(WorkAnim, 0);
+          for K := 0 to nAR.Count - 1 do
+          begin
+            nAnim := nAR.O[K];
+
+            if TKMEnumUtils.TryGetAs<TKMHouseActionType>(nAnim.S['WorkType'],  HA) and (HA in [haWork1..haWork5]) then
+            begin
+              SetLength(WorkAnim, length(WorkAnim) + 1);
+              WorkAnim[high(WorkAnim)].Action := HA;
+              WorkAnim[high(WorkAnim)].Cycles := Max(nAnim.I['Cycles'], 1);
+            end else
+            raise Exception.Create('Error loading ' + jsonPath + ': wrong ActionType name: ' + nAnim.S['WorkType']);
+
+          end;
+
+        end;
+
+        if nHouse.Contains('WareSlots') then
+        begin
+          nAR := nHouse.A['WareSlots'];
+          SetLength(WareInputSlots, 0);
+          for K := 0 to nAR.Count - 1 do
+          begin
+            nAnim := nAR.O[K];
+            SetLength(WareInputSlots, length(WareInputSlots) + 1);
+            with WareInputSlots[high(WareInputSlots)] do
+            begin
+              Icon := nAnim.I['GuiIcon'];
+
+              nAR2 := nAnim.A['WareInput'];
+
+              for L := low(WareInput) to high(WareInput) do
+                WareInput[L] := wtNone;
+
+
+              if nAR2.Count > 0 then
+                for L := 1 to nAR2.Count do
+                  if TKMEnumUtils.TryGetAs<TKMWareType>(nAR2.S[L - 1],  W) then
+                  begin
+                    WareInput[L] := W;
+                  end else
+                  raise Exception.Create('Error loading ' + jsonPath + ': wrong WareType name: ' + nAR2.S[L-1] );
+
+              nAR2 := nAnim.A['WareOutput'];
+
+              for L := low(WareOutput) to high(WareOutput) do
+                WareOutput[L] := wtNone;
+
+              if nAR2.Count > 0 then
+                for L := 1 to nAR2.Count do
+                  if TKMEnumUtils.TryGetAs<TKMWareType>(nAR2.S[L - 1],  W) then
+                  begin
+                    WareOutput[L] := W;
+                  end else
+                  raise Exception.Create('Error loading ' + jsonPath + ': wrong WareType name: ' + nAR2.S[L-1] );
+
+            end;
+
+
+          end;
+
+        end;
+
+        if nHouse.Contains('Styles') then
+        begin
+          nAR := nHouse.A['Styles'];
+          SetLength(Styles, 0);
+          for K := 0 to nAR.Count - 1 do
+          begin
+            nAnim := nAR.O[K];
+            SetLength(Styles, length(Styles) + 1);
+
+            with Styles[high(Styles)] do
+            begin
+              Icon := nAnim.I['GuiIcon'];
+              StonePic := nAnim.I['StonePic'];
+              SnowPic := nAnim.I['SnowPic'];
+              HideSupplies := nAnim.B['HideSupplies'];
+            end;
+          end;
+        end;
+        if nHouse.Contains('Levels') then
+        begin
+          nAR := nHouse.A['Levels'];
+          SetLength(Levels, 0);
+          for K := 0 to nAR.Count - 1 do
+          begin
+            nAnim := nAR.O[K];
+            SetLength(Levels, length(Levels) + 1);
+
+            with Levels[high(Levels)] do
+            begin
+              StonePic := nAnim.I['StonePic'];
+              SnowPic := nAnim.I['SnowPic'];
+              WoodCost := nAnim.I['WoodCost'];
+              StoneCost := nAnim.I['StoneCost'];
+              TileCost := nAnim.I['TileCost'];
+              MaxInWares := nAnim.I['MaxInWares'];
+              HideSupplies := nAnim.B['HideSupplies'];
+
+              ChangeIfDifferent(AnimMultiplier,nAnim.D['WorkCyclesMultiplier'], 0);
+
+              Progress := IfThen( nAnim.Contains('AddHealth'), nAnim.I['AddHealth'], 250);
+              ReplaceAnim := nAnim.Contains('ReplaceAnim') and nAnim.B['ReplaceAnim'];
+            end;
+
+            if nAnim.Contains('Anim') then
+            begin
+              nAR2 := nAnim.A['Anim'];
+
+              for J := 0 to nAR2.Count - 1 do
+              begin
+                nAnim2 := nAR2.O[J];
+                if nAnim2.A['Steps'].Count = 0 then
+                  Continue;
+                SetLength(Levels[high(Levels)].Anim, length(Levels[high(Levels)].Anim) + 1);
+
+                nAnim2.GetAnim(Levels[high(Levels)].Anim[high(Levels[high(Levels)].Anim)]);
+              end;
+
+
+            end;
+
+
+          end;
+        end;
+
+
+
+
+        if nHouse.Contains('WoodPileOffset') then
+        begin
+          nAnim := nHouse.O['WoodPileOffset'];
+          fBuildSupply[1].MoveX := nAnim.I['X'];
+          fBuildSupply[1].MoveY := nAnim.I['Y'];
+        end;
+        if nHouse.Contains('StonePileOffset') then
+        begin
+          nAnim := nHouse.O['StonePileOffset'];
+          fBuildSupply[2].MoveX := nAnim.I['X'];
+          fBuildSupply[2].MoveY := nAnim.I['Y'];
+        end;
+        if nHouse.Contains('TilePileOffset') then
+        begin
+          nAnim := nHouse.O['TilePileOffset'];
+          fBuildSupply[3].MoveX := nAnim.I['X'];
+          fBuildSupply[3].MoveY := nAnim.I['Y'];
+        end;
+
+        nHouse.GetHouseArea('Build_Area', fBuildArea);
+        nHouse.GetHouseArea('Ground_Area', fGroundArea);
+        JSONArrToValidArr(nHouse.A['Wariants'], fWariants);
       end;
     end;
     /////////////////////////////////////////////////Beast Anim

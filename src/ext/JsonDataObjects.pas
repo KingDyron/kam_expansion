@@ -2785,7 +2785,7 @@ begin
     jdtNone:
       Result := False;
     jdtString:
-      Result := string(FValue.S) = 'true';
+      Result := System.SysUtils.LowerCase(string(FValue.S)) = 'true';
     jdtInt:
       Result := FValue.I <> 0;
     jdtLong:
