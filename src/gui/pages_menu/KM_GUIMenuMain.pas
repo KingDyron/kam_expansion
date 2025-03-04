@@ -24,6 +24,7 @@ type
     Image_MM_HasAch : TKMImage;
     Button_MM_Credits: TKMButton;
     Button_MM_Quit: TKMButton;
+    Button_MM_Debug: TKMButton;
     //Switch_Test : TKMSwitch;
   public
     constructor Create(aParent: TKMPanel; aOnPageChange: TKMMenuChangeEventText);
@@ -67,6 +68,7 @@ begin
       Button_MM_Achievements := TKMButton.Create(Panel_MMButtons,0,200,350,30,gResTexts[2108],bsMenu);
       Button_MM_Credits      := TKMButton.Create(Panel_MMButtons,0,240,350,30,gResTexts[TX_MENU_CREDITS],bsMenu);
       Button_MM_Quit         := TKMButton.Create(Panel_MMButtons,0,300,350,30,gResTexts[TX_MENU_QUIT],bsMenu);
+      Button_MM_Debug        := TKMButton.Create(Panel_MMButtons,0,350,350,30,'Debug Houses',bsMenu);
       Button_MM_SinglePlayer.OnClick := ButtonClick;
       Button_MM_MultiPlayer.OnClick  := ButtonClick;
       Button_MM_MapEd.OnClick        := ButtonClick;
@@ -75,6 +77,7 @@ begin
       Button_MM_Achievements.OnClick := ButtonClick;
       Button_MM_Credits.OnClick      := ButtonClick;
       Button_MM_Quit.OnClick         := ButtonClick;
+      Button_MM_Debug.OnClick         := ButtonClick;
 
       Image_MM_HasAch := TKMImage.Create(Panel_MMButtons, Button_MM_Achievements.Right - 15, Button_MM_Achievements.Top - 10, 35, 33, 105, rxGuiMain);
       Image_MM_HasAch.Hitable := false;
@@ -121,6 +124,9 @@ begin
 
   if Sender = Button_MM_Credits then
     fOnPageChange(gpCredits);
+
+  if Sender = Button_MM_Debug then
+    fOnPageChange(gpDebug);
 
 
 

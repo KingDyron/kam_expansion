@@ -27,7 +27,8 @@ uses
   KM_GUIMenuSinglePlayer,
   KM_GUIMapEdCampaignMap,
   KM_GUIMenuTutorials,
-  KM_GUIMenuAchievements;
+  KM_GUIMenuAchievements,
+  KM_GUIMenuDebug;
 
 
 type
@@ -50,6 +51,7 @@ type
     fMenuMapEdCampaign: TKMCampaignMapEditor;
     fMenuTutorials: TKMMenuTutorial;
     fMenuAchievements: TKMMenuAchievements;
+    fMenuDebug: TKMMenuDebug;
 
     fMenuPage: TKMMenuPageCommon;
   protected
@@ -147,6 +149,7 @@ begin
   fMenuMapEdCampaign := TKMCampaignMapEditor.Create(Panel_Menu, PageChange);
   fMenuTutorials     := TKMMenuTutorial.Create(Panel_Menu, PageChange);
   fMenuAchievements  := TKMMenuAchievements.Create(Panel_Menu, PageChange);
+  fMenuDebug  := TKMMenuDebug.Create(Panel_Menu, PageChange);
 
   fMenuSingleMap.OnNewSingleMap     := aOnNewSingleMap;
   fMenuSinglePlayer.OnNewSingleMap  := aOnNewSingleMap;
@@ -209,6 +212,7 @@ begin
   fMenuMapEdCampaign.Free;
   fMenuTutorials.Free;
   fMenuAchievements.Free;
+  fMenuDebug.Free;
   inherited;
 end;
 
@@ -363,6 +367,10 @@ begin
     gpAchievements: begin
                       fMenuAchievements.Show;
                       fMenuPage := fMenuAchievements;
+                    end;
+    gpDebug:        begin
+                      fMenuDebug.Show;
+                      fMenuPage := fMenuDebug;
                     end;
   end;
 end;

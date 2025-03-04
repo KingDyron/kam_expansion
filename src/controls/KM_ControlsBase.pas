@@ -20,7 +20,8 @@ type
     BackAlpha: Single;
     EdgeAlpha: Single;
     Color: TKMColor3f;
-    constructor Create(aParent: TKMPanel; aLeft, aTop, aWidth, aHeight: Integer);
+    constructor Create(aParent: TKMPanel; aLeft, aTop, aWidth, aHeight: Integer); overload;
+    constructor Create(aParent: TKMPanel; aSizeOf : TKMControl); overload;
 
     procedure SetDefBackAlpha;
     procedure SetDefEdgeAlpha;
@@ -297,6 +298,13 @@ constructor TKMBevel.Create(aParent: TKMPanel; aLeft, aTop, aWidth, aHeight: Int
 begin
   inherited Create(aParent, aLeft, aTop, aWidth, aHeight);
 
+  SetDefBackAlpha;
+  SetDefEdgeAlpha;
+end;
+
+constructor TKMBevel.Create(aParent: TKMPanel; aSizeOf: TKMControl);
+begin
+  Inherited Create(aParent, aSizeOf.Left, aSizeOf.Top, aSizeOf.Width, aSizeOf.Height);
   SetDefBackAlpha;
   SetDefEdgeAlpha;
 end;

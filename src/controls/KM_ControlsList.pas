@@ -136,6 +136,7 @@ type
     property SeparatorHeight: Byte read fSeparatorHeight write fSeparatorHeight;
 
     function Selected: Boolean;
+    function SelectedItem: String;
     procedure MouseDown(X,Y: Integer; Shift: TShiftState; Button: TMouseButton); override;
     procedure MouseMove(X,Y: Integer; Shift: TShiftState); override;
     procedure MouseWheel(Sender: TObject; WheelSteps: Integer; var aHandled: Boolean); override;
@@ -848,6 +849,13 @@ end;
 function TKMListBox.Selected: Boolean;
 begin
   Result := fItemIndex <> -1;
+end;
+
+function TKMListBox.SelectedItem: string;
+begin
+  Result := '';
+  If Selected then
+    Result := fItems[fItemIndex];
 end;
 
 

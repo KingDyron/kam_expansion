@@ -22,6 +22,7 @@ type
                         gpMapEditor,
                         gpOptions,
                         gpCredits,
+                        gpDebug,
                       gpLoading,
                       gpError,
                       gpMapEdCampaign,

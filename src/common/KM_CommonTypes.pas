@@ -112,6 +112,7 @@ type
     procedure Create(aAnimation : TKMAnimLoop); overload;
     procedure Create(aName : String); overload;
 
+    procedure Delete(aIndex : Integer);
     procedure Extend(aCount : Byte);
     procedure SaveToStream(SaveStream : TObject);
     procedure LoadFromStream(LoadStream : TObject);
@@ -584,6 +585,16 @@ end;
 procedure TKMAnimation.Create(aName: string);
 begin
   self := gRes.JsonData.Animation(aName);
+end;
+
+procedure TKMAnimation.Delete(aIndex : Integer);
+var I : Integer;
+begin
+  If not InRange(aIndex, 0, Count - 1) then
+    Exit;
+  for I := aIndex to Count - 2 do
+    fSteps[I] := fSteps[I + 1];
+  SetLength(fSteps, high(fSteps));
 end;
 
 procedure TKMAnimation.Extend(aCount: Byte);

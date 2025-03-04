@@ -166,6 +166,10 @@ type
     function GetDoorwayOffset(aCheck: TKMCheckAxis): Single;
     function GetWareProdCt(aWare : TKMWareType) : byte;
     function GetRandomStonePic : Word;
+
+
+    procedure DebugChangeAnimation(HA : TKMHouseActionType; aAnim : TKMAnimation);
+    procedure DebugChangePileOffset(aID : Integer; aX, aY : Integer);
   end;
 
 
@@ -594,6 +598,17 @@ begin
 
   end else
     Result := StonePic;
+end;
+
+procedure TKMHouseSpec.DebugChangeAnimation(HA: TKMHouseActionType; aAnim: TKMAnimation);
+begin
+  fHouseDat.Anim[HA] := aAnim;
+end;
+
+procedure TKMHouseSpec.DebugChangePileOffset(aID: Integer; aX: Integer; aY: Integer);
+begin
+  fBuildSupply[aID].MoveX := aX;
+  fBuildSupply[aID].MoveY := aY;
 end;
 
 
@@ -1279,7 +1294,7 @@ begin
         begin
           //base data
           root.Write('Name', HT, true);
-          root.Write('GameID', HOUSE_TYPE_TO_ID[HT] - 1, true);
+          root.Write('GameID', HOUSE_TYPE_TO_ID[HT] - 1);
           root.Write('TextID', fNameTextID);
           root.Write('DescriptionID', fDescriptionID);
 

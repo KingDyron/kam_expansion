@@ -419,6 +419,7 @@ type
     function DoPanelHandleMouseWheelByDefault: Boolean; virtual;
 
     procedure Enlarge(aChild: TKMControl);
+    function IndexOf(aChild: TKMControl) : Integer;
   public
     PanelHandleMouseWheelByDefault: Boolean; //Do whole panel handle MW by default? Usually it is
     FocusedControlIndex: Integer; //Index of currently focused control on this Panel
@@ -433,6 +434,10 @@ type
     procedure SetHeightToChilds(aMargin : Integer = 5);virtual;
     procedure SetWidthToChilds(aMargin : Integer = 5);virtual;
     procedure SetRectToChilds(aMargin : Integer = 5);virtual;
+    procedure ChildSendToBack(aID1 : Integer; aMax : Boolean = false);overload;
+    procedure ChildSendToFront(aID1 : Integer; aMax : Boolean = false);overload;
+    procedure ChildSendToBack(aControl : TKMControl; aMax : Boolean = false);overload;
+    procedure ChildSendToFront(aControl : TKMControl; aMax : Boolean = false);overload;
 
     function FindFocusableControl(aFindNext: Boolean): TKMControl;
     procedure FocusNext;
@@ -1698,6 +1703,53 @@ procedure TKMPanel.SetRectToChilds(aMargin: Integer = 5);
 begin
   SetHeightToChilds(aMargin);
   SetWidthToChilds(aMargin);
+end;
+
+function TKMPanel.IndexOf(aChild: TKMControl): Integer;
+var I : integer;
+begin
+  Result := -1;
+  for I := 0 to ChildCount - 1 do
+    If Childs[I] = aChild then
+      Exit(I);
+end;
+
+procedure TKMPanel.ChildSendToBack(aID1 : Integer; aMax : Boolean = false);
+var tmp : TKMControl;
+    id2 : Integer;
+begin
+  If (aID1 <= 0)then
+    Exit;
+  id2 := Ifthen(aMax, 0, aID1 - 1);
+  If id2 = aID1 then
+    Exit;
+  tmp := Childs[id2];
+  Childs[id2] := Childs[aID1];
+  Childs[aID1] := tmp;
+end;
+
+procedure TKMPanel.ChildSendToFront(aID1 : Integer; aMax : Boolean = false);
+var tmp : TKMControl;
+    id2 : Integer;
+begin
+  If (aID1 >= ChildCount - 1) then
+    Exit;
+  id2 := Ifthen(aMax, ChildCount - 1, aID1 + 1);
+  If id2 = aID1 then
+    Exit;
+  tmp := Childs[id2];
+  Childs[id2] := Childs[aID1];
+  Childs[aID1] := tmp;
+end;
+
+procedure TKMPanel.ChildSendToBack(aControl : TKMControl; aMax : Boolean = false);
+begin
+  ChildSendToBack(IndexOf(aControl), aMax);
+end;
+
+procedure TKMPanel.ChildSendToFront(aControl : TKMControl; aMax : Boolean = false);
+begin
+  ChildSendToFront(IndexOf(aControl), aMax);
 end;
 
 procedure TKMPanel.SetHeight(aValue: Integer);

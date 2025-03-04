@@ -118,6 +118,7 @@ type
       fSelected : Byte;
       fNextSelected : Byte;
       fToLeft : Boolean;
+      fOnChange : TNotifyEvent;
       function GetCount : Byte;
       procedure SetSelected(aValue : Byte);
       function NextIcon(aFrom : Integer = -1) : Word;
@@ -133,6 +134,7 @@ type
       procedure SelectNext;
       procedure SelectPrevius;
       property Selected : Byte read fNextSelected write SetSelected;
+      property OnChange : TNotifyEvent read fOnChange write fOnChange;
 
       procedure MouseUp(X,Y: Integer; Shift: TShiftState; Button: TMouseButton); override;
       procedure UpdateState(aTickCount: Cardinal); override;
@@ -324,6 +326,9 @@ begin
   checkSize := 20;
 
   TKMRenderUI.WriteBevel(AbsLeft, AbsTop, checkSize - 4, checkSize-4, 1, Byte(not IsSemiChecked and Enabled)*0.35);
+
+  if DrawOutline then
+    TKMRenderUI.WriteOutline(AbsLeft, AbsTop, Width, checkSize - 4, LineWidth, LineColor);
 
   case fState of
     cbsChecked:     TKMRenderUI.WritePicture(AbsLeft, AbsTop, checkSize, checkSize, [], rxGuiMain, TexIDChecked, Enabled or fEnabledVisually);
@@ -617,6 +622,8 @@ begin
   If fNextSelected <> fSelected then
     fPosition := 0;
   fToLeft := true;
+  If Assigned(fOnChange) then
+    fOnChange(Self);
 end;
 
 procedure TKMSwitch.SelectPrevius;
@@ -628,6 +635,8 @@ begin
   If fNextSelected <> fSelected then
     fPosition := 0;
   fToLeft := false;
+  If Assigned(fOnChange) then
+    fOnChange(Self);
 end;
 
 
@@ -649,7 +658,9 @@ begin
     delta := Max((Offset - fPosition) div 2, 1);
     Inc(fPosition, delta);
     If fPosition = Offset then
+    begin
       fSelected := fNextSelected;
+    end;
   end;
   Inherited;
 end;

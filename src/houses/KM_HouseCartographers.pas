@@ -3,7 +3,7 @@ unit KM_HouseCartographers;
 interface
 uses
   Math,
-  KM_CommonClasses, KM_Defaults,  KM_CommonTypes,
+  KM_CommonClasses, KM_Defaults,  KM_CommonTypes, KM_Points,
   KM_Houses,
   KM_ResTypes;
 
@@ -11,7 +11,7 @@ type
   TKMCartographesMode = (cmChartman, cmSpy);
   TKMCartographersPaintLayer = (cplUnderground, cplMiningRadius, cplTowerRange, cplSpawners, cplObjects);
 
-  TKMHouseCartographers = class(TKMHouse)
+  TKMHouseCartographers = class(TKMHouseWFlagPoint)
   private
     //fMinimap : //not used right now
     fMode : TKMCartographesMode;
@@ -19,6 +19,8 @@ type
     fHouseList : TKMHouseArray;//this value is not saved !!!
     procedure RefreshHousesList;
   protected
+    procedure SetFlagPoint(aFlagPoint: TKMPoint); override;
+    function GetMaxDistanceToPoint: Integer; override;
     procedure Activate(aWasBuilt: Boolean); virtual;
   public
     constructor Create(aUID: Integer; aHouseType: TKMHouseType; PosX, PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
@@ -38,7 +40,6 @@ type
 implementation
 uses
   KM_Game,
-  KM_Points,
   KM_CommonUtils, KromUtils,
   KM_HandsCollection,
   KM_HouseHelpers,
@@ -71,6 +72,16 @@ end;
 procedure TKMHouseCartographers.Activate(aWasBuilt: Boolean);
 begin
   Inherited;
+end;
+
+procedure TKMHouseCartographers.SetFlagPoint(aFlagPoint: TKMPoint);
+begin
+  Inherited;
+end;
+
+function TKMHouseCartographers.GetMaxDistanceToPoint: Integer;
+begin
+  Result := 80;
 end;
 
 procedure TKMHouseCartographers.SyncLoad;

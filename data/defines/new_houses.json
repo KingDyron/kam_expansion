@@ -1,4 +1,4 @@
-{
+﻿{
 	"HousesOrder" : 
 	[
 		{
@@ -31,7 +31,7 @@
 			[
 				"htNone","htBarracks","htTownHall","htPalace","htSiegeWorkshop","htShipYard",
 				"htNone","htWall","htWall2","htWall3","htWall4","htWall5",
-				"htNone","htWallTower","htWatchTower", "htCartographers"
+				"htNone","htWallTower","htWatchTower","htCartographers"
 			]
 		}
 	],
@@ -70,13 +70,14 @@
 		{
 			"TitleID" : 2084,
 			"GuiIcon" : 0,
-			"Houses" : ["htMarket","htMerchant","htCollectors","htTailorsShop", "htCartographers"]
+			"Houses" : ["htMarket","htMerchant","htCollectors","htTailorsShop","htCartographers"]
 		}
 	],
 	"Houses" : 
 	[
 		{
 			"Name" : "htSawmill",
+			"GameID" : 0,
 			"TextID" : 0,
 			"DescriptionID" : 1759,
 			"MaxHealth" : 350,
@@ -97,7 +98,7 @@
 			"TabletID" : 251,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
-			"CanForceWork" : true,
+			"CanForceWork" : True,
 			"UnoccupiedMsgId" : 979,
 			"WorkerTypes" : 
 			[
@@ -127,12 +128,12 @@
 			"ha_Fire8" : {"X" : -14,"Y" : -28,"Steps" : [1617,1618,1619,1614,1615,1616]},
 			"WorkAnim" : 
 			[
-				{"WorkType" : "haWork1","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 25},
-				{"WorkType" : "haWork5","Cycles" : 1}
+				{"WorkType" : "haWork1","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 25.00000},
+				{"WorkType" : "haWork5","Cycles" : 1.00000}
 			],
-			"WoodPileOffset" : {"X" : 0,"Y" : 0},
-			"StonePileOffset" : {"X" : 0,"Y" : 0},
+			"WoodPileOffset" : {"X" : -40,"Y" : 20},
+			"StonePileOffset" : {"X" : 0,"Y" : 30},
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
@@ -153,6 +154,7 @@
 		},
 		{
 			"Name" : "htIronSmithy",
+			"GameID" : 1,
 			"TextID" : 1,
 			"DescriptionID" : 1755,
 			"MaxHealth" : 350,
@@ -173,7 +175,7 @@
 			"TabletID" : 252,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
-			"CanForceWork" : true,
+			"CanForceWork" : True,
 			"UnoccupiedMsgId" : 975,
 			"WorkerTypes" : 
 			[
@@ -204,9 +206,9 @@
 			"ha_Fire6" : {"X" : 13,"Y" : -47,"Steps" : [1634,1635,1636,1637,1632,1633]},
 			"ha_Fire7" : {"X" : 22,"Y" : -32,"Steps" : [1624,1625,1620,1621,1622,1623]},
 			"ha_Fire8" : {"X" : 60,"Y" : -7,"Steps" : [1619,1614,1615,1616,1617,1618]},
-			"WoodPileOffset" : {"X" : 0,"Y" : 0},
-			"StonePileOffset" : {"X" : 0,"Y" : 0},
-			"TilePileOffset" : {"X" : 0,"Y" : 0},
+			"WoodPileOffset" : {"X" : -40,"Y" : 24},
+			"StonePileOffset" : {"X" : -17,"Y" : 30},
+			"TilePileOffset" : {"X" : 10,"Y" : 26},
 			"Build_Area" : 
 			[
 				[0,0,0,0,0],
@@ -226,6 +228,7 @@
 		},
 		{
 			"Name" : "htWeaponSmithy",
+			"GameID" : 2,
 			"TextID" : 2,
 			"DescriptionID" : 1768,
 			"MaxHealth" : 350,
@@ -241,7 +244,7 @@
 			"EntranceOffsetYpx" : 10,
 			"WorkerRest" : 5,
 			"Sight" : 6,
-			"NeedsPlayerOrder" : true,
+			"NeedsPlayerOrder" : True,
 			"BuildIcon" : 303,
 			"TabletID" : 253,
 			"MaxInWares" : 5,
@@ -283,23 +286,23 @@
 			"ha_Fire8" : {"X" : 12,"Y" : 44,"Steps" : [1615,1616,1617,1618,1619,1614]},
 			"WorkAnim" : 
 			[
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork4","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork4","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork4","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork4","Cycles" : 1},
-				{"WorkType" : "haWork5","Cycles" : 1}
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork4","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork4","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork4","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork4","Cycles" : 1.00000},
+				{"WorkType" : "haWork5","Cycles" : 1.00000}
 			],
-			"WoodPileOffset" : {"X" : 0,"Y" : 0},
-			"StonePileOffset" : {"X" : 0,"Y" : 0},
-			"TilePileOffset" : {"X" : 0,"Y" : 0},
+			"WoodPileOffset" : {"X" : -50,"Y" : 18},
+			"StonePileOffset" : {"X" : -20,"Y" : 23},
+			"TilePileOffset" : {"X" : 30,"Y" : 20},
 			"Build_Area" : 
 			[
 				[0,0,0,0,0],
@@ -319,6 +322,7 @@
 		},
 		{
 			"Name" : "htCoalMine",
+			"GameID" : 3,
 			"TextID" : 3,
 			"DescriptionID" : 1752,
 			"MaxHealth" : 250,
@@ -339,7 +343,7 @@
 			"TabletID" : 254,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
-			"CanForceWork" : true,
+			"CanForceWork" : True,
 			"UnoccupiedMsgId" : 970,
 			"WorkerTypes" : 
 			[
@@ -367,12 +371,12 @@
 			"ha_Fire8" : {"X" : -51,"Y" : 43,"Steps" : [1617,1618,1619,1614,1615,1616]},
 			"WorkAnim" : 
 			[
-				{"WorkType" : "haWork1","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 23},
-				{"WorkType" : "haWork5","Cycles" : 1}
+				{"WorkType" : "haWork1","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 23.00000},
+				{"WorkType" : "haWork5","Cycles" : 1.00000}
 			],
-			"WoodPileOffset" : {"X" : 0,"Y" : 0},
-			"StonePileOffset" : {"X" : 0,"Y" : 0},
+			"WoodPileOffset" : {"X" : -30,"Y" : 20},
+			"StonePileOffset" : {"X" : 0,"Y" : 20},
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
@@ -393,6 +397,7 @@
 		},
 		{
 			"Name" : "htIronMine",
+			"GameID" : 4,
 			"TextID" : 4,
 			"DescriptionID" : 1754,
 			"MaxHealth" : 250,
@@ -413,7 +418,7 @@
 			"TabletID" : 255,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
-			"CanForceWork" : true,
+			"CanForceWork" : True,
 			"UnoccupiedMsgId" : 974,
 			"WorkerTypes" : 
 			[
@@ -440,13 +445,13 @@
 			"ha_Fire8" : {"X" : 16,"Y" : 11,"Steps" : [1618,1619,1614,1615,1616,1617]},
 			"WorkAnim" : 
 			[
-				{"WorkType" : "haWork1","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 24},
-				{"WorkType" : "haWork5","Cycles" : 1}
+				{"WorkType" : "haWork1","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 24.00000},
+				{"WorkType" : "haWork5","Cycles" : 1.00000}
 			],
-			"WoodPileOffset" : {"X" : 0,"Y" : 0},
-			"StonePileOffset" : {"X" : 0,"Y" : 0},
-			"TilePileOffset" : {"X" : 0,"Y" : 0},
+			"WoodPileOffset" : {"X" : -20,"Y" : 27},
+			"StonePileOffset" : {"X" : 0,"Y" : 30},
+			"TilePileOffset" : {"X" : 30,"Y" : 25},
 			"Build_Area" : 
 			[
 				[0,0,0,0,0],
@@ -466,6 +471,7 @@
 		},
 		{
 			"Name" : "htGoldMine",
+			"GameID" : 5,
 			"TextID" : 5,
 			"DescriptionID" : 1753,
 			"MaxHealth" : 250,
@@ -486,7 +492,7 @@
 			"TabletID" : 256,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
-			"CanForceWork" : true,
+			"CanForceWork" : True,
 			"UnoccupiedMsgId" : 973,
 			"WorkerTypes" : 
 			[
@@ -515,13 +521,13 @@
 			"ha_Fire8" : {"X" : 1,"Y" : -3,"Steps" : [1614,1615,1616,1617,1618,1619]},
 			"WorkAnim" : 
 			[
-				{"WorkType" : "haWork1","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 24},
-				{"WorkType" : "haWork5","Cycles" : 1}
+				{"WorkType" : "haWork1","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 24.00000},
+				{"WorkType" : "haWork5","Cycles" : 1.00000}
 			],
-			"WoodPileOffset" : {"X" : 0,"Y" : 0},
-			"StonePileOffset" : {"X" : 0,"Y" : 0},
-			"TilePileOffset" : {"X" : 0,"Y" : 0},
+			"WoodPileOffset" : {"X" : -30,"Y" : 20},
+			"StonePileOffset" : {"X" : 20,"Y" : 20},
+			"TilePileOffset" : {"X" : -14,"Y" : 24},
 			"Build_Area" : 
 			[
 				[0,0,0,0,0],
@@ -541,6 +547,7 @@
 		},
 		{
 			"Name" : "htFishermans",
+			"GameID" : 6,
 			"TextID" : 6,
 			"DescriptionID" : 1746,
 			"MaxHealth" : 350,
@@ -561,7 +568,7 @@
 			"TabletID" : 257,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
-			"CanForceWork" : true,
+			"CanForceWork" : True,
 			"UnoccupiedMsgId" : 972,
 			"WorkerTypes" : 
 			[
@@ -585,9 +592,9 @@
 			"ha_Fire6" : {"X" : -9,"Y" : -127,"Steps" : [1629,1630,1631,1626,1627,1628]},
 			"ha_Fire7" : {"X" : 48,"Y" : -37,"Steps" : [1634,1635,1636,1637,1632,1633]},
 			"ha_Fire8" : {"X" : 23,"Y" : -25,"Steps" : [1622,1623,1624,1625,1620,1621]},
-			"WoodPileOffset" : {"X" : 0,"Y" : 0},
-			"StonePileOffset" : {"X" : 0,"Y" : 0},
-			"TilePileOffset" : {"X" : 0,"Y" : 0},
+			"WoodPileOffset" : {"X" : -40,"Y" : 30},
+			"StonePileOffset" : {"X" : 20,"Y" : 40},
+			"TilePileOffset" : {"X" : -20,"Y" : 30},
 			"Build_Area" : 
 			[
 				[0,0,0,0,0],
@@ -607,6 +614,7 @@
 		},
 		{
 			"Name" : "htBakery",
+			"GameID" : 7,
 			"TextID" : 7,
 			"DescriptionID" : 1750,
 			"MaxHealth" : 350,
@@ -627,7 +635,7 @@
 			"TabletID" : 258,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
-			"CanForceWork" : true,
+			"CanForceWork" : True,
 			"UnoccupiedMsgId" : 968,
 			"WorkerTypes" : 
 			[
@@ -658,23 +666,23 @@
 			"ha_Fire8" : {"X" : 31,"Y" : -117,"Steps" : [1624,1625,1620,1621,1622,1623]},
 			"WorkAnim" : 
 			[
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1}
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000}
 			],
-			"WoodPileOffset" : {"X" : 0,"Y" : 0},
-			"StonePileOffset" : {"X" : 0,"Y" : 0},
+			"WoodPileOffset" : {"X" : -20,"Y" : 10},
+			"StonePileOffset" : {"X" : 10,"Y" : 20},
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
@@ -695,6 +703,7 @@
 		},
 		{
 			"Name" : "htFarm",
+			"GameID" : 8,
 			"TextID" : 8,
 			"DescriptionID" : 1767,
 			"MaxHealth" : 350,
@@ -715,7 +724,7 @@
 			"TabletID" : 259,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
-			"CanForceWork" : true,
+			"CanForceWork" : True,
 			"UnoccupiedMsgId" : 971,
 			"WorkerTypes" : 
 			[
@@ -741,9 +750,9 @@
 			"ha_Fire6" : {"X" : 73,"Y" : -40,"Steps" : [1631,1626,1627,1628,1629,1630]},
 			"ha_Fire7" : {"X" : 9,"Y" : -74,"Steps" : [1622,1623,1624,1625,1620,1621]},
 			"ha_Fire8" : {"X" : 52,"Y" : -15,"Steps" : [1619,1614,1615,1616,1617,1618]},
-			"WoodPileOffset" : {"X" : 0,"Y" : 0},
-			"StonePileOffset" : {"X" : 0,"Y" : 0},
-			"TilePileOffset" : {"X" : 0,"Y" : 0},
+			"WoodPileOffset" : {"X" : -50,"Y" : 20},
+			"StonePileOffset" : {"X" : -20,"Y" : 20},
+			"TilePileOffset" : {"X" : 10,"Y" : 20},
 			"Build_Area" : 
 			[
 				[0,0,0,0,0],
@@ -763,6 +772,7 @@
 		},
 		{
 			"Name" : "htWoodcutters",
+			"GameID" : 9,
 			"TextID" : 9,
 			"DescriptionID" : 1764,
 			"MaxHealth" : 250,
@@ -783,7 +793,7 @@
 			"TabletID" : 260,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
-			"CanForceWork" : true,
+			"CanForceWork" : True,
 			"UnoccupiedMsgId" : 988,
 			"WorkerTypes" : 
 			[
@@ -807,7 +817,7 @@
 			"ha_Fire6" : {"X" : 30,"Y" : -13,"Steps" : [1615,1616,1617,1618,1619,1614]},
 			"ha_Fire7" : {"X" : -63,"Y" : -52,"Steps" : [1625,1620,1621,1622,1623,1624]},
 			"ha_Fire8" : {"X" : -35,"Y" : -33,"Steps" : [1620,1621,1622,1623,1624,1625]},
-			"WoodPileOffset" : {"X" : 0,"Y" : 0},
+			"WoodPileOffset" : {"X" : 20,"Y" : 20},
 			"StonePileOffset" : {"X" : 0,"Y" : 0},
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
@@ -829,6 +839,7 @@
 		},
 		{
 			"Name" : "htArmorSmithy",
+			"GameID" : 10,
 			"TextID" : 10,
 			"DescriptionID" : 1748,
 			"MaxHealth" : 350,
@@ -844,7 +855,7 @@
 			"EntranceOffsetYpx" : 12,
 			"WorkerRest" : 5,
 			"Sight" : 6,
-			"NeedsPlayerOrder" : true,
+			"NeedsPlayerOrder" : True,
 			"BuildIcon" : 311,
 			"TabletID" : 261,
 			"MaxInWares" : 5,
@@ -885,24 +896,24 @@
 			"ha_Fire8" : {"X" : 18,"Y" : -92,"Steps" : [1620,1621,1622,1623,1624,1625]},
 			"WorkAnim" : 
 			[
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork4","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork4","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork4","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork4","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork5","Cycles" : 1}
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork4","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork4","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork4","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork4","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork5","Cycles" : 1.00000}
 			],
-			"WoodPileOffset" : {"X" : 0,"Y" : 0},
-			"StonePileOffset" : {"X" : 0,"Y" : 0},
-			"TilePileOffset" : {"X" : 0,"Y" : 0},
+			"WoodPileOffset" : {"X" : -30,"Y" : 25},
+			"StonePileOffset" : {"X" : -6,"Y" : 30},
+			"TilePileOffset" : {"X" : 20,"Y" : 26},
 			"Build_Area" : 
 			[
 				[0,0,0,0,0],
@@ -922,6 +933,7 @@
 		},
 		{
 			"Name" : "htStore",
+			"GameID" : 11,
 			"TextID" : 11,
 			"DescriptionID" : 1742,
 			"MaxHealth" : 550,
@@ -964,9 +976,9 @@
 			[
 				{"GuiIcon" : 353,"StonePic" : 2434,"SnowPic" : 2489,"HideSupplies" : False}
 			],
-			"WoodPileOffset" : {"X" : 0,"Y" : 0},
-			"StonePileOffset" : {"X" : 0,"Y" : 0},
-			"TilePileOffset" : {"X" : 0,"Y" : 0},
+			"WoodPileOffset" : {"X" : -50,"Y" : 20},
+			"StonePileOffset" : {"X" : -20,"Y" : 20},
+			"TilePileOffset" : {"X" : 6,"Y" : 26},
 			"Build_Area" : 
 			[
 				[0,0,0,0,0],
@@ -986,6 +998,7 @@
 		},
 		{
 			"Name" : "htStables",
+			"GameID" : 12,
 			"TextID" : 12,
 			"DescriptionID" : 1760,
 			"MaxHealth" : 550,
@@ -1006,7 +1019,7 @@
 			"TabletID" : 263,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
-			"CanForceWork" : true,
+			"CanForceWork" : True,
 			"UnoccupiedMsgId" : 981,
 			"WorkerTypes" : 
 			[
@@ -1040,15 +1053,15 @@
 			"ha_Fire8" : {"X" : -55,"Y" : -64,"Steps" : [1628,1629,1630,1631,1626,1627]},
 			"WorkAnim" : 
 			[
-				{"WorkType" : "haWork1","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork4","Cycles" : 1},
-				{"WorkType" : "haWork5","Cycles" : 1}
+				{"WorkType" : "haWork1","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork4","Cycles" : 1.00000},
+				{"WorkType" : "haWork5","Cycles" : 1.00000}
 			],
-			"WoodPileOffset" : {"X" : 0,"Y" : 0},
-			"StonePileOffset" : {"X" : 0,"Y" : 0},
-			"TilePileOffset" : {"X" : 0,"Y" : 0},
+			"WoodPileOffset" : {"X" : -60,"Y" : 10},
+			"StonePileOffset" : {"X" : 50,"Y" : 0},
+			"TilePileOffset" : {"X" : -17,"Y" : 20},
 			"Build_Area" : 
 			[
 				[0,0,0,0,0],
@@ -1068,6 +1081,7 @@
 		},
 		{
 			"Name" : "htSchool",
+			"GameID" : 13,
 			"TextID" : 13,
 			"DescriptionID" : 1741,
 			"MaxHealth" : 550,
@@ -1111,9 +1125,9 @@
 			"ha_Fire6" : {"X" : 20,"Y" : 24,"Steps" : [1633,1634,1635,1636,1637,1632]},
 			"ha_Fire7" : {"X" : 26,"Y" : -47,"Steps" : [1628,1629,1630,1631,1626,1627]},
 			"ha_Fire8" : {"X" : -90,"Y" : -132,"Steps" : [1623,1624,1625,1620,1621,1622]},
-			"WoodPileOffset" : {"X" : 0,"Y" : 0},
-			"StonePileOffset" : {"X" : 0,"Y" : 0},
-			"TilePileOffset" : {"X" : 0,"Y" : 0},
+			"WoodPileOffset" : {"X" : -3,"Y" : 13},
+			"StonePileOffset" : {"X" : -67,"Y" : 16},
+			"TilePileOffset" : {"X" : 20,"Y" : 13},
 			"Build_Area" : 
 			[
 				[0,0,0,0,0],
@@ -1133,6 +1147,7 @@
 		},
 		{
 			"Name" : "htQuarry",
+			"GameID" : 14,
 			"TextID" : 14,
 			"DescriptionID" : 1766,
 			"MaxHealth" : 250,
@@ -1153,7 +1168,7 @@
 			"TabletID" : 265,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
-			"CanForceWork" : true,
+			"CanForceWork" : True,
 			"UnoccupiedMsgId" : 978,
 			"WorkerTypes" : 
 			[
@@ -1181,11 +1196,11 @@
 			"ha_Fire8" : {"X" : -19,"Y" : 48,"Steps" : [1614,1615,1616,1617,1618,1619]},
 			"WorkAnim" : 
 			[
-				{"WorkType" : "haWork1","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 9},
-				{"WorkType" : "haWork5","Cycles" : 1}
+				{"WorkType" : "haWork1","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 9.00000},
+				{"WorkType" : "haWork5","Cycles" : 1.00000}
 			],
-			"WoodPileOffset" : {"X" : 0,"Y" : 0},
+			"WoodPileOffset" : {"X" : 10,"Y" : 20},
 			"StonePileOffset" : {"X" : 0,"Y" : 0},
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
@@ -1207,6 +1222,7 @@
 		},
 		{
 			"Name" : "htMetallurgists",
+			"GameID" : 15,
 			"TextID" : 15,
 			"DescriptionID" : 1757,
 			"MaxHealth" : 350,
@@ -1222,12 +1238,12 @@
 			"EntranceOffsetYpx" : 0,
 			"WorkerRest" : 5,
 			"Sight" : 6,
-			"NeedsPlayerOrder" : true,
+			"NeedsPlayerOrder" : True,
 			"BuildIcon" : 316,
 			"TabletID" : 266,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
-			"CanForceWork" : true,
+			"CanForceWork" : True,
 			"UnoccupiedMsgId" : 976,
 			"WorkerTypes" : 
 			[
@@ -1260,23 +1276,23 @@
 			"ha_Fire8" : {"X" : -29,"Y" : -70,"Steps" : [1617,1618,1619,1614,1615,1616]},
 			"WorkAnim" : 
 			[
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork4","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork4","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork4","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork4","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1}
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork4","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork4","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork4","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork4","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000}
 			],
-			"WoodPileOffset" : {"X" : 0,"Y" : 0},
-			"StonePileOffset" : {"X" : 0,"Y" : 0},
-			"TilePileOffset" : {"X" : 0,"Y" : 0},
+			"WoodPileOffset" : {"X" : -30,"Y" : 20},
+			"StonePileOffset" : {"X" : 0,"Y" : 20},
+			"TilePileOffset" : {"X" : -80,"Y" : 10},
 			"Build_Area" : 
 			[
 				[0,0,0,0,0],
@@ -1296,6 +1312,7 @@
 		},
 		{
 			"Name" : "htSwine",
+			"GameID" : 16,
 			"TextID" : 16,
 			"DescriptionID" : 1761,
 			"MaxHealth" : 350,
@@ -1316,7 +1333,7 @@
 			"TabletID" : 267,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
-			"CanForceWork" : true,
+			"CanForceWork" : True,
 			"UnoccupiedMsgId" : 982,
 			"WorkerTypes" : 
 			[
@@ -1349,23 +1366,23 @@
 			"ha_Fire8" : {"X" : 47,"Y" : -45,"Steps" : [1621,1622,1623,1624,1625,1620]},
 			"WorkAnim" : 
 			[
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1}
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000}
 			],
 			"Styles" : 
 			[
 				{"GuiIcon" : 353,"StonePic" : 2433,"SnowPic" : 2433,"HideSupplies" : False}
 			],
-			"WoodPileOffset" : {"X" : 0,"Y" : 0},
-			"StonePileOffset" : {"X" : 0,"Y" : 0},
-			"TilePileOffset" : {"X" : 0,"Y" : 0},
+			"WoodPileOffset" : {"X" : 0,"Y" : 30},
+			"StonePileOffset" : {"X" : 30,"Y" : 30},
+			"TilePileOffset" : {"X" : 60,"Y" : 20},
 			"Build_Area" : 
 			[
 				[0,0,0,0,0],
@@ -1385,6 +1402,7 @@
 		},
 		{
 			"Name" : "htWatchTower",
+			"GameID" : 17,
 			"TextID" : 17,
 			"DescriptionID" : 1765,
 			"MaxHealth" : 250,
@@ -1429,9 +1447,9 @@
 			"ha_Fire6" : {"X" : 7,"Y" : -88,"Steps" : [1628,1629,1630,1631,1626,1627]},
 			"ha_Fire7" : {"X" : -35,"Y" : -123,"Steps" : [1621,1622,1623,1624,1625,1620]},
 			"ha_Fire8" : {"X" : 26,"Y" : -77,"Steps" : [1634,1635,1636,1637,1632,1633]},
-			"WoodPileOffset" : {"X" : 0,"Y" : 0},
-			"StonePileOffset" : {"X" : 0,"Y" : 0},
-			"TilePileOffset" : {"X" : 0,"Y" : 0},
+			"WoodPileOffset" : {"X" : -40,"Y" : 20},
+			"StonePileOffset" : {"X" : -20,"Y" : 23},
+			"TilePileOffset" : {"X" : 10,"Y" : 27},
 			"Build_Area" : 
 			[
 				[0,0,0,0,0],
@@ -1452,6 +1470,7 @@
 		},
 		{
 			"Name" : "htTownHall",
+			"GameID" : 18,
 			"TextID" : 18,
 			"DescriptionID" : 1745,
 			"MaxHealth" : 550,
@@ -1490,9 +1509,9 @@
 			"ha_Fire6" : {"X" : 40,"Y" : -68,"Steps" : [1629,1630,1631,1626,1627,1628]},
 			"ha_Fire7" : {"X" : 83,"Y" : -60,"Steps" : [1635,1636,1637,1632,1633,1634]},
 			"ha_Fire8" : {"X" : -5,"Y" : -78,"Steps" : [1637,1632,1633,1634,1635,1636]},
-			"WoodPileOffset" : {"X" : 0,"Y" : 0},
-			"StonePileOffset" : {"X" : 0,"Y" : 0},
-			"TilePileOffset" : {"X" : 0,"Y" : 0},
+			"WoodPileOffset" : {"X" : -70,"Y" : 10},
+			"StonePileOffset" : {"X" : -40,"Y" : 31},
+			"TilePileOffset" : {"X" : -10,"Y" : 30},
 			"Build_Area" : 
 			[
 				[0,0,0,0,0],
@@ -1512,6 +1531,7 @@
 		},
 		{
 			"Name" : "htWeaponWorkshop",
+			"GameID" : 19,
 			"TextID" : 19,
 			"DescriptionID" : 1769,
 			"MaxHealth" : 350,
@@ -1527,7 +1547,7 @@
 			"EntranceOffsetYpx" : 9,
 			"WorkerRest" : 5,
 			"Sight" : 6,
-			"NeedsPlayerOrder" : true,
+			"NeedsPlayerOrder" : True,
 			"BuildIcon" : 320,
 			"TabletID" : 270,
 			"MaxInWares" : 5,
@@ -1567,22 +1587,22 @@
 			"ha_Fire8" : {"X" : 69,"Y" : 23,"Steps" : [1634,1635,1636,1637,1632,1633]},
 			"WorkAnim" : 
 			[
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork4","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork4","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork4","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork4","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1}
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork4","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork4","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork4","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork4","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000}
 			],
-			"WoodPileOffset" : {"X" : 0,"Y" : 0},
-			"StonePileOffset" : {"X" : 0,"Y" : 0},
+			"WoodPileOffset" : {"X" : -10,"Y" : 30},
+			"StonePileOffset" : {"X" : 20,"Y" : 30},
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
@@ -1603,6 +1623,7 @@
 		},
 		{
 			"Name" : "htArmorWorkshop",
+			"GameID" : 20,
 			"TextID" : 20,
 			"DescriptionID" : 1749,
 			"MaxHealth" : 350,
@@ -1618,7 +1639,7 @@
 			"EntranceOffsetYpx" : 4,
 			"WorkerRest" : 5,
 			"Sight" : 6,
-			"NeedsPlayerOrder" : true,
+			"NeedsPlayerOrder" : True,
 			"BuildIcon" : 321,
 			"TabletID" : 271,
 			"MaxInWares" : 5,
@@ -1656,22 +1677,22 @@
 			"ha_Fire8" : {"X" : -29,"Y" : -11,"Steps" : [1614,1615,1616,1617,1618,1619]},
 			"WorkAnim" : 
 			[
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork4","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork4","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork4","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork4","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1}
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork4","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork4","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork4","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork4","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000}
 			],
-			"WoodPileOffset" : {"X" : 0,"Y" : 0},
-			"StonePileOffset" : {"X" : 0,"Y" : 0},
+			"WoodPileOffset" : {"X" : 20,"Y" : 20},
+			"StonePileOffset" : {"X" : -30,"Y" : 10},
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
@@ -1692,6 +1713,7 @@
 		},
 		{
 			"Name" : "htBarracks",
+			"GameID" : 21,
 			"TextID" : 21,
 			"DescriptionID" : 1744,
 			"MaxHealth" : 800,
@@ -1736,9 +1758,9 @@
 			"ha_Fire6" : {"X" : -18,"Y" : -92,"Steps" : [1633,1634,1635,1636,1637,1632]},
 			"ha_Fire7" : {"X" : 55,"Y" : -125,"Steps" : [1637,1632,1633,1634,1635,1636]},
 			"ha_Fire8" : {"X" : 100,"Y" : -104,"Steps" : [1632,1633,1634,1635,1636,1637]},
-			"WoodPileOffset" : {"X" : 0,"Y" : 0},
-			"StonePileOffset" : {"X" : 0,"Y" : 0},
-			"TilePileOffset" : {"X" : 0,"Y" : 0},
+			"WoodPileOffset" : {"X" : -70,"Y" : 1},
+			"StonePileOffset" : {"X" : -36,"Y" : 20},
+			"TilePileOffset" : {"X" : 6,"Y" : 20},
 			"Build_Area" : 
 			[
 				[1,1,1,1,0],
@@ -1758,6 +1780,7 @@
 		},
 		{
 			"Name" : "htMill",
+			"GameID" : 22,
 			"TextID" : 22,
 			"DescriptionID" : 1758,
 			"MaxHealth" : 350,
@@ -1778,7 +1801,7 @@
 			"TabletID" : 273,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
-			"CanForceWork" : true,
+			"CanForceWork" : True,
 			"UnoccupiedMsgId" : 977,
 			"WorkerTypes" : 
 			[
@@ -1806,11 +1829,11 @@
 			"ha_Fire8" : {"X" : 48,"Y" : -66,"Steps" : [1633,1634,1635,1636,1637,1632]},
 			"WorkAnim" : 
 			[
-				{"WorkType" : "haWork2","Cycles" : 47}
+				{"WorkType" : "haWork2","Cycles" : 47.00000}
 			],
-			"WoodPileOffset" : {"X" : 0,"Y" : 0},
-			"StonePileOffset" : {"X" : 0,"Y" : 0},
-			"TilePileOffset" : {"X" : 0,"Y" : 0},
+			"WoodPileOffset" : {"X" : -10,"Y" : 10},
+			"StonePileOffset" : {"X" : 10,"Y" : 20},
+			"TilePileOffset" : {"X" : 40,"Y" : 14},
 			"Build_Area" : 
 			[
 				[0,0,0,0,0],
@@ -1830,6 +1853,7 @@
 		},
 		{
 			"Name" : "htSiegeWorkshop",
+			"GameID" : 23,
 			"TextID" : 23,
 			"DescriptionID" : 1756,
 			"MaxHealth" : 300,
@@ -1881,7 +1905,7 @@
 			"ha_Fire6" : {"X" : 41,"Y" : -52,"Steps" : [1620,1621,1622,1623,1624,1625]},
 			"ha_Fire7" : {"X" : 18,"Y" : 15,"Steps" : [1617,1618,1619,1614,1615,1616]},
 			"ha_Fire8" : {"X" : -32,"Y" : 23,"Steps" : [1615,1616,1617,1618,1619,1614]},
-			"WoodPileOffset" : {"X" : 0,"Y" : 0},
+			"WoodPileOffset" : {"X" : 30,"Y" : 30},
 			"StonePileOffset" : {"X" : 0,"Y" : 0},
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
@@ -1903,6 +1927,7 @@
 		},
 		{
 			"Name" : "htButchers",
+			"GameID" : 24,
 			"TextID" : 24,
 			"DescriptionID" : 1751,
 			"MaxHealth" : 350,
@@ -1923,7 +1948,7 @@
 			"TabletID" : 275,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
-			"CanForceWork" : true,
+			"CanForceWork" : True,
 			"UnoccupiedMsgId" : 969,
 			"WorkerTypes" : 
 			[
@@ -1953,26 +1978,26 @@
 			"ha_Fire8" : {"X" : 86,"Y" : -40,"Steps" : [1634,1635,1636,1637,1632,1633]},
 			"WorkAnim" : 
 			[
-				{"WorkType" : "haWork1","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork4","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork4","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork4","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork4","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 1},
-				{"WorkType" : "haWork3","Cycles" : 1},
-				{"WorkType" : "haWork4","Cycles" : 1}
+				{"WorkType" : "haWork1","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork4","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork4","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork4","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork4","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 1.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000},
+				{"WorkType" : "haWork4","Cycles" : 1.00000}
 			],
-			"WoodPileOffset" : {"X" : 0,"Y" : 0},
-			"StonePileOffset" : {"X" : 0,"Y" : 0},
-			"TilePileOffset" : {"X" : 0,"Y" : 0},
+			"WoodPileOffset" : {"X" : -20,"Y" : 20},
+			"StonePileOffset" : {"X" : 50,"Y" : 27},
+			"TilePileOffset" : {"X" : 0,"Y" : 20},
 			"Build_Area" : 
 			[
 				[0,0,0,0,0],
@@ -1992,6 +2017,7 @@
 		},
 		{
 			"Name" : "htTannery",
+			"GameID" : 25,
 			"TextID" : 25,
 			"DescriptionID" : 1762,
 			"MaxHealth" : 350,
@@ -2012,7 +2038,7 @@
 			"TabletID" : 276,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
-			"CanForceWork" : true,
+			"CanForceWork" : True,
 			"UnoccupiedMsgId" : 983,
 			"WorkerTypes" : 
 			[
@@ -2041,11 +2067,11 @@
 			"ha_Fire8" : {"X" : 39,"Y" : -91,"Steps" : [1621,1622,1623,1624,1625,1620]},
 			"WorkAnim" : 
 			[
-				{"WorkType" : "haWork1","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 29}
+				{"WorkType" : "haWork1","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 29.00000}
 			],
-			"WoodPileOffset" : {"X" : 0,"Y" : 0},
-			"StonePileOffset" : {"X" : 0,"Y" : 0},
+			"WoodPileOffset" : {"X" : -30,"Y" : 20},
+			"StonePileOffset" : {"X" : 30,"Y" : 30},
 			"TilePileOffset" : {"X" : 0,"Y" : 0},
 			"Build_Area" : 
 			[
@@ -2066,6 +2092,7 @@
 		},
 		{
 			"Name" : "htInn",
+			"GameID" : 27,
 			"TextID" : 27,
 			"DescriptionID" : 1743,
 			"MaxHealth" : 550,
@@ -2111,9 +2138,9 @@
 			"ha_Fire6" : {"X" : 48,"Y" : -68,"Steps" : [1629,1630,1631,1626,1627,1628]},
 			"ha_Fire7" : {"X" : 67,"Y" : 18,"Steps" : [1634,1635,1636,1637,1632,1633]},
 			"ha_Fire8" : {"X" : 72,"Y" : -86,"Steps" : [1635,1636,1637,1632,1633,1634]},
-			"WoodPileOffset" : {"X" : 0,"Y" : 0},
-			"StonePileOffset" : {"X" : 0,"Y" : 0},
-			"TilePileOffset" : {"X" : 0,"Y" : 0},
+			"WoodPileOffset" : {"X" : -50,"Y" : 20},
+			"StonePileOffset" : {"X" : 50,"Y" : 30},
+			"TilePileOffset" : {"X" : -10,"Y" : 30},
 			"Build_Area" : 
 			[
 				[0,0,0,0,0],
@@ -2133,6 +2160,7 @@
 		},
 		{
 			"Name" : "htVineyard",
+			"GameID" : 28,
 			"TextID" : 28,
 			"DescriptionID" : 1763,
 			"MaxHealth" : 350,
@@ -2153,7 +2181,7 @@
 			"TabletID" : 279,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
-			"CanForceWork" : true,
+			"CanForceWork" : True,
 			"UnoccupiedMsgId" : 987,
 			"WorkerTypes" : 
 			[
@@ -2182,13 +2210,13 @@
 			"ha_Fire8" : {"X" : 47,"Y" : -111,"Steps" : [1621,1622,1623,1624,1625,1620]},
 			"WorkAnim" : 
 			[
-				{"WorkType" : "haWork1","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 11},
-				{"WorkType" : "haWork5","Cycles" : 1}
+				{"WorkType" : "haWork1","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 11.00000},
+				{"WorkType" : "haWork5","Cycles" : 1.00000}
 			],
-			"WoodPileOffset" : {"X" : 0,"Y" : 0},
-			"StonePileOffset" : {"X" : 0,"Y" : 0},
-			"TilePileOffset" : {"X" : 0,"Y" : 0},
+			"WoodPileOffset" : {"X" : 70,"Y" : 20},
+			"StonePileOffset" : {"X" : 40,"Y" : 20},
+			"TilePileOffset" : {"X" : 0,"Y" : 30},
 			"Build_Area" : 
 			[
 				[0,0,0,0,0],
@@ -2208,6 +2236,7 @@
 		},
 		{
 			"Name" : "htMarket",
+			"GameID" : 29,
 			"TextID" : 29,
 			"DescriptionID" : 1747,
 			"MaxHealth" : 550,
@@ -2248,9 +2277,9 @@
 			"ha_Fire6" : {"X" : 39,"Y" : -47,"Steps" : [1629,1630,1631,1626,1627,1628]},
 			"ha_Fire7" : {"X" : 25,"Y" : 13,"Steps" : [1635,1636,1637,1632,1633,1634]},
 			"ha_Fire8" : {"X" : -82,"Y" : -40,"Steps" : [1621,1622,1623,1624,1625,1620]},
-			"WoodPileOffset" : {"X" : 0,"Y" : 0},
-			"StonePileOffset" : {"X" : 0,"Y" : 0},
-			"TilePileOffset" : {"X" : 0,"Y" : 0},
+			"WoodPileOffset" : {"X" : -30,"Y" : 10},
+			"StonePileOffset" : {"X" : 0,"Y" : 20},
+			"TilePileOffset" : {"X" : 40,"Y" : 10},
 			"Build_Area" : 
 			[
 				[0,0,0,0,0],
@@ -2270,6 +2299,7 @@
 		},
 		{
 			"Name" : "htWall",
+			"GameID" : 30,
 			"TextID" : 1617,
 			"DescriptionID" : 1723,
 			"MaxHealth" : 100,
@@ -2315,12 +2345,12 @@
 					"StoneCost" : 6,
 					"TileCost" : 0,
 					"MaxInWares" : 0,
-					"WorkCyclesMultiplier" : 0,
+					"WorkCyclesMultiplier" : 0.00000,
 					"ReplaceAnim" : False,
 					"HideSupplies" : False
 				}
 			],
-			"WoodPileOffset" : {"X" : -45,"Y" : 15},
+			"WoodPileOffset" : {"X" : 15,"Y" : 25},
 			"StonePileOffset" : {"X" : -5,"Y" : 15},
 			"TilePileOffset" : {"X" : 20,"Y" : 15},
 			"Build_Area" : 
@@ -2342,6 +2372,7 @@
 		},
 		{
 			"Name" : "htWall2",
+			"GameID" : 31,
 			"TextID" : 1618,
 			"DescriptionID" : 1723,
 			"MaxHealth" : 150,
@@ -2387,13 +2418,13 @@
 					"StoneCost" : 8,
 					"TileCost" : 1,
 					"MaxInWares" : 0,
-					"WorkCyclesMultiplier" : 0,
+					"WorkCyclesMultiplier" : 0.00000,
 					"ReplaceAnim" : False,
 					"HideSupplies" : False
 				}
 			],
-			"WoodPileOffset" : {"X" : -45,"Y" : 15},
-			"StonePileOffset" : {"X" : -5,"Y" : 15},
+			"WoodPileOffset" : {"X" : -15,"Y" : 25},
+			"StonePileOffset" : {"X" : 25,"Y" : 25},
 			"TilePileOffset" : {"X" : 20,"Y" : 15},
 			"Build_Area" : 
 			[
@@ -2414,6 +2445,7 @@
 		},
 		{
 			"Name" : "htWall3",
+			"GameID" : 32,
 			"TextID" : 1619,
 			"DescriptionID" : 1723,
 			"MaxHealth" : 100,
@@ -2459,12 +2491,12 @@
 					"StoneCost" : 6,
 					"TileCost" : 0,
 					"MaxInWares" : 0,
-					"WorkCyclesMultiplier" : 0,
+					"WorkCyclesMultiplier" : 0.00000,
 					"ReplaceAnim" : False,
 					"HideSupplies" : False
 				}
 			],
-			"WoodPileOffset" : {"X" : 0,"Y" : 15},
+			"WoodPileOffset" : {"X" : 0,"Y" : 19},
 			"StonePileOffset" : {"X" : 20,"Y" : 15},
 			"TilePileOffset" : {"X" : 40,"Y" : 15},
 			"Build_Area" : 
@@ -2486,6 +2518,7 @@
 		},
 		{
 			"Name" : "htWall4",
+			"GameID" : 33,
 			"TextID" : 1620,
 			"DescriptionID" : 1723,
 			"MaxHealth" : 150,
@@ -2531,13 +2564,13 @@
 					"StoneCost" : 8,
 					"TileCost" : 1,
 					"MaxInWares" : 0,
-					"WorkCyclesMultiplier" : 0,
+					"WorkCyclesMultiplier" : 0.00000,
 					"ReplaceAnim" : False,
 					"HideSupplies" : False
 				}
 			],
-			"WoodPileOffset" : {"X" : 0,"Y" : 15},
-			"StonePileOffset" : {"X" : 20,"Y" : 15},
+			"WoodPileOffset" : {"X" : 0,"Y" : 35},
+			"StonePileOffset" : {"X" : 20,"Y" : 35},
 			"TilePileOffset" : {"X" : 40,"Y" : 15},
 			"Build_Area" : 
 			[
@@ -2558,6 +2591,7 @@
 		},
 		{
 			"Name" : "htWall5",
+			"GameID" : 34,
 			"TextID" : 1621,
 			"DescriptionID" : 1723,
 			"MaxHealth" : 100,
@@ -2608,13 +2642,13 @@
 					"StoneCost" : 4,
 					"TileCost" : 0,
 					"MaxInWares" : 0,
-					"WorkCyclesMultiplier" : 0,
+					"WorkCyclesMultiplier" : 0.00000,
 					"ReplaceAnim" : False,
 					"HideSupplies" : False
 				}
 			],
-			"WoodPileOffset" : {"X" : 0,"Y" : 15},
-			"StonePileOffset" : {"X" : 20,"Y" : 15},
+			"WoodPileOffset" : {"X" : 0,"Y" : 35},
+			"StonePileOffset" : {"X" : 20,"Y" : 35},
 			"TilePileOffset" : {"X" : 40,"Y" : 15},
 			"Build_Area" : 
 			[
@@ -2635,6 +2669,7 @@
 		},
 		{
 			"Name" : "htHovel",
+			"GameID" : 35,
 			"TextID" : 1622,
 			"DescriptionID" : 1724,
 			"MaxHealth" : 200,
@@ -2655,7 +2690,7 @@
 			"TabletID" : 679,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
-			"CanForceWork" : true,
+			"CanForceWork" : True,
 			"UnoccupiedMsgId" : 1684,
 			"WorkerTypes" : 
 			[
@@ -2688,12 +2723,12 @@
 			"ha_Fire8" : {"X" : 2,"Y" : -40,"Steps" : [1621,1622,1623,1624,1625,1620]},
 			"WorkAnim" : 
 			[
-				{"WorkType" : "haWork2","Cycles" : 5},
-				{"WorkType" : "haWork3","Cycles" : 20}
+				{"WorkType" : "haWork2","Cycles" : 5.00000},
+				{"WorkType" : "haWork3","Cycles" : 20.00000}
 			],
-			"WoodPileOffset" : {"X" : -35,"Y" : 15},
-			"StonePileOffset" : {"X" : -18,"Y" : 15},
-			"TilePileOffset" : {"X" : 0,"Y" : 15},
+			"WoodPileOffset" : {"X" : -44,"Y" : 25},
+			"StonePileOffset" : {"X" : -18,"Y" : 43},
+			"TilePileOffset" : {"X" : 60,"Y" : 28},
 			"Build_Area" : 
 			[
 				[0,0,0,0,0],
@@ -2713,6 +2748,7 @@
 		},
 		{
 			"Name" : "htSign",
+			"GameID" : 36,
 			"TextID" : 1623,
 			"DescriptionID" : 1725,
 			"MaxHealth" : 100,
@@ -2745,9 +2781,9 @@
 			[
 				{"GuiIcon" : 333,"StonePic" : 2709,"SnowPic" : 2709,"HideSupplies" : False}
 			],
-			"WoodPileOffset" : {"X" : 0,"Y" : 0},
-			"StonePileOffset" : {"X" : 0,"Y" : 0},
-			"TilePileOffset" : {"X" : 0,"Y" : 0},
+			"WoodPileOffset" : {"X" : 0,"Y" : 20},
+			"StonePileOffset" : {"X" : 10,"Y" : 30},
+			"TilePileOffset" : {"X" : 30,"Y" : 30},
 			"Build_Area" : 
 			[
 				[0,0,0,0,0],
@@ -2767,6 +2803,7 @@
 		},
 		{
 			"Name" : "htBitinMine",
+			"GameID" : 37,
 			"TextID" : 1624,
 			"DescriptionID" : 1726,
 			"MaxHealth" : 250,
@@ -2787,7 +2824,7 @@
 			"TabletID" : 687,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 5,
-			"CanForceWork" : true,
+			"CanForceWork" : True,
 			"UnoccupiedMsgId" : 1686,
 			"WorkerTypes" : 
 			[
@@ -2815,13 +2852,13 @@
 			"ha_Fire8" : {"X" : 2,"Y" : -40,"Steps" : [1621,1622,1623,1624,1625,1620]},
 			"WorkAnim" : 
 			[
-				{"WorkType" : "haWork1","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 40},
-				{"WorkType" : "haWork5","Cycles" : 1}
+				{"WorkType" : "haWork1","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 40.00000},
+				{"WorkType" : "haWork5","Cycles" : 1.00000}
 			],
 			"WoodPileOffset" : {"X" : -30,"Y" : 15},
-			"StonePileOffset" : {"X" : -13,"Y" : 15},
-			"TilePileOffset" : {"X" : 0,"Y" : 15},
+			"StonePileOffset" : {"X" : -3,"Y" : 15},
+			"TilePileOffset" : {"X" : 30,"Y" : 15},
 			"Build_Area" : 
 			[
 				[0,0,0,0,0],
@@ -2841,6 +2878,7 @@
 		},
 		{
 			"Name" : "htWallTower",
+			"GameID" : 38,
 			"TextID" : 1625,
 			"DescriptionID" : 1727,
 			"MaxHealth" : 120,
@@ -2884,9 +2922,9 @@
 			"ha_Fire6" : {"X" : -15,"Y" : -157,"Steps" : [1629,1630,1631,1626,1627,1628]},
 			"ha_Fire7" : {"X" : 55,"Y" : -13,"Steps" : [1635,1636,1637,1632,1633,1634]},
 			"ha_Fire8" : {"X" : 2,"Y" : -40,"Steps" : [1621,1622,1623,1624,1625,1620]},
-			"WoodPileOffset" : {"X" : -40,"Y" : 15},
-			"StonePileOffset" : {"X" : -20,"Y" : 15},
-			"TilePileOffset" : {"X" : -5,"Y" : 15},
+			"WoodPileOffset" : {"X" : -40,"Y" : 25},
+			"StonePileOffset" : {"X" : -20,"Y" : 25},
+			"TilePileOffset" : {"X" : -5,"Y" : 35},
 			"Build_Area" : 
 			[
 				[0,0,0,0,0],
@@ -2907,6 +2945,7 @@
 		},
 		{
 			"Name" : "htWell",
+			"GameID" : 39,
 			"TextID" : 1626,
 			"DescriptionID" : 1728,
 			"MaxHealth" : 50,
@@ -2936,9 +2975,9 @@
 			"WareOutput" : ["wtWater","wtNone","wtNone","wtNone","wtNone","wtNone"],
 			"UnlockAfter" : ["htPottery","htAppleTree"],
 			"SupplyOut1" : [2163,2163,2163,2163,2163],
-			"WoodPileOffset" : {"X" : -10,"Y" : 15},
-			"StonePileOffset" : {"X" : 0,"Y" : 15},
-			"TilePileOffset" : {"X" : 10,"Y" : 15},
+			"WoodPileOffset" : {"X" : -12,"Y" : 15},
+			"StonePileOffset" : {"X" : 7,"Y" : 15},
+			"TilePileOffset" : {"X" : 29,"Y" : 15},
 			"Build_Area" : 
 			[
 				[0,0,0,0,0],
@@ -2958,6 +2997,7 @@
 		},
 		{
 			"Name" : "htStoneWorkshop",
+			"GameID" : 40,
 			"TextID" : 1627,
 			"DescriptionID" : 1729,
 			"MaxHealth" : 350,
@@ -2973,7 +3013,7 @@
 			"EntranceOffsetYpx" : 10,
 			"WorkerRest" : 5,
 			"Sight" : 3,
-			"NeedsPlayerOrder" : true,
+			"NeedsPlayerOrder" : True,
 			"BuildIcon" : 691,
 			"TabletID" : 692,
 			"MaxInWares" : 5,
@@ -3011,12 +3051,12 @@
 			"ha_Fire8" : {"X" : 50,"Y" : -40,"Steps" : [1621,1622,1623,1624,1625,1620]},
 			"WorkAnim" : 
 			[
-				{"WorkType" : "haWork1","Cycles" : 1},
-				{"WorkType" : "haWork2","Cycles" : 20},
-				{"WorkType" : "haWork5","Cycles" : 1}
+				{"WorkType" : "haWork1","Cycles" : 1.00000},
+				{"WorkType" : "haWork2","Cycles" : 20.00000},
+				{"WorkType" : "haWork5","Cycles" : 1.00000}
 			],
-			"WoodPileOffset" : {"X" : -40,"Y" : 15},
-			"StonePileOffset" : {"X" : -15,"Y" : 15},
+			"WoodPileOffset" : {"X" : -41,"Y" : 15},
+			"StonePileOffset" : {"X" : -15,"Y" : 25},
 			"TilePileOffset" : {"X" : 10,"Y" : 15},
 			"Build_Area" : 
 			[
@@ -3037,6 +3077,7 @@
 		},
 		{
 			"Name" : "htIronFoundry",
+			"GameID" : 41,
 			"TextID" : 1628,
 			"DescriptionID" : 1730,
 			"MaxHealth" : 400,
@@ -3052,7 +3093,7 @@
 			"EntranceOffsetYpx" : 0,
 			"WorkerRest" : 5,
 			"Sight" : 5,
-			"NeedsPlayerOrder" : true,
+			"NeedsPlayerOrder" : True,
 			"BuildIcon" : 693,
 			"TabletID" : 694,
 			"MaxInWares" : 5,
@@ -3089,12 +3130,12 @@
 			"ha_Fire8" : {"X" : -40,"Y" : -40,"Steps" : [1621,1622,1623,1624,1625,1620]},
 			"WorkAnim" : 
 			[
-				{"WorkType" : "haWork2","Cycles" : 20},
-				{"WorkType" : "haWork5","Cycles" : 1}
+				{"WorkType" : "haWork2","Cycles" : 20.00000},
+				{"WorkType" : "haWork5","Cycles" : 1.00000}
 			],
-			"WoodPileOffset" : {"X" : -50,"Y" : 15},
-			"StonePileOffset" : {"X" : -33,"Y" : 15},
-			"TilePileOffset" : {"X" : -15,"Y" : 15},
+			"WoodPileOffset" : {"X" : -50,"Y" : 25},
+			"StonePileOffset" : {"X" : -22,"Y" : 25},
+			"TilePileOffset" : {"X" : 7,"Y" : 31},
 			"Build_Area" : 
 			[
 				[0,0,0,0,0],
@@ -3114,6 +3155,7 @@
 		},
 		{
 			"Name" : "htMerchant",
+			"GameID" : 42,
 			"TextID" : 1644,
 			"DescriptionID" : 1731,
 			"MaxHealth" : 650,
@@ -3134,7 +3176,7 @@
 			"TabletID" : 720,
 			"MaxInWares" : 10,
 			"MaxOutWares" : 5,
-			"CanForceWork" : true,
+			"CanForceWork" : True,
 			"UnoccupiedMsgId" : 1691,
 			"WorkerTypes" : 
 			[
@@ -3171,9 +3213,9 @@
 				{"GuiIcon" : 370,"WareInput" : ["wtWoodenShield","wtPlateArmor","wtLeatherArmor","wtIronShield","wtIronArmor","wtNone"],"WareOutput" : ["wtNone","wtNone","wtNone","wtNone","wtNone","wtNone"]},
 				{"GuiIcon" : 695,"WareInput" : ["wtStoneBolt","wtBolt","wtBitinE","wtBitinArmor","wtNone","wtNone"],"WareOutput" : ["wtNone","wtNone","wtNone","wtNone","wtNone","wtNone"]}
 			],
-			"WoodPileOffset" : {"X" : -40,"Y" : 15},
-			"StonePileOffset" : {"X" : 0,"Y" : 15},
-			"TilePileOffset" : {"X" : 40,"Y" : 15},
+			"WoodPileOffset" : {"X" : -40,"Y" : -15},
+			"StonePileOffset" : {"X" : -10,"Y" : 5},
+			"TilePileOffset" : {"X" : 20,"Y" : -5},
 			"Build_Area" : 
 			[
 				[0,1,1,1,0],
@@ -3193,6 +3235,7 @@
 		},
 		{
 			"Name" : "htPottery",
+			"GameID" : 43,
 			"TextID" : 1632,
 			"DescriptionID" : 1732,
 			"MaxHealth" : 400,
@@ -3240,11 +3283,11 @@
 			"MakeSound_ha_Work2" : {"SoundID" : 1,"Steps" : [1]},
 			"WorkAnim" : 
 			[
-				{"WorkType" : "haWork2","Cycles" : 10},
-				{"WorkType" : "haWork5","Cycles" : 1}
+				{"WorkType" : "haWork2","Cycles" : 10.00000},
+				{"WorkType" : "haWork5","Cycles" : 1.00000}
 			],
-			"WoodPileOffset" : {"X" : -30,"Y" : 15},
-			"StonePileOffset" : {"X" : 0,"Y" : 15},
+			"WoodPileOffset" : {"X" : -30,"Y" : 25},
+			"StonePileOffset" : {"X" : 10,"Y" : 32},
 			"TilePileOffset" : {"X" : 35,"Y" : 15},
 			"Build_Area" : 
 			[
@@ -3266,6 +3309,7 @@
 		},
 		{
 			"Name" : "htWoodBurner",
+			"GameID" : 44,
 			"TextID" : 1639,
 			"DescriptionID" : 1733,
 			"MaxHealth" : 300,
@@ -3316,9 +3360,9 @@
 			"ha_Fire6" : {"X" : -20,"Y" : -67,"Steps" : [1629,1630,1631,1626,1627,1628]},
 			"ha_Fire7" : {"X" : 45,"Y" : -33,"Steps" : [1635,1636,1637,1632,1633,1634]},
 			"ha_Fire8" : {"X" : -40,"Y" : -40,"Steps" : [1621,1622,1623,1624,1625,1620]},
-			"WoodPileOffset" : {"X" : -50,"Y" : 15},
-			"StonePileOffset" : {"X" : -33,"Y" : 15},
-			"TilePileOffset" : {"X" : -15,"Y" : 15},
+			"WoodPileOffset" : {"X" : -54,"Y" : 18},
+			"StonePileOffset" : {"X" : -33,"Y" : 24},
+			"TilePileOffset" : {"X" : -4,"Y" : 25},
 			"Build_Area" : 
 			[
 				[0,0,0,0,0],
@@ -3338,6 +3382,7 @@
 		},
 		{
 			"Name" : "htAppleTree",
+			"GameID" : 45,
 			"TextID" : 1640,
 			"DescriptionID" : 1734,
 			"MaxHealth" : 50,
@@ -3358,7 +3403,7 @@
 			"TabletID" : 714,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 10,
-			"CanForceWork" : true,
+			"CanForceWork" : True,
 			"UnoccupiedMsgId" : 1685,
 			"WorkerTypes" : 
 			[
@@ -3379,7 +3424,7 @@
 			"ha_Flag1" : {"X" : -34,"Y" : 9,"Steps" : [1165,1166,1167,1163,1164]},
 			"ha_Fire1" : {"X" : -40,"Y" : -43,"Steps" : [1623,1624,1625,1620,1621,1622]},
 			"ha_Fire4" : {"X" : 35,"Y" : -35,"Steps" : [1632,1633,1634,1635,1636,1637]},
-			"WoodPileOffset" : {"X" : -45,"Y" : 15},
+			"WoodPileOffset" : {"X" : -5,"Y" : 25},
 			"StonePileOffset" : {"X" : -20,"Y" : 15},
 			"TilePileOffset" : {"X" : -20,"Y" : 15},
 			"Build_Area" : 
@@ -3401,6 +3446,7 @@
 		},
 		{
 			"Name" : "htSmallStore",
+			"GameID" : 46,
 			"TextID" : 1677,
 			"DescriptionID" : 1737,
 			"MaxHealth" : 250,
@@ -3459,7 +3505,7 @@
 					"StoneCost" : 0,
 					"TileCost" : 1,
 					"MaxInWares" : 100,
-					"WorkCyclesMultiplier" : 0,
+					"WorkCyclesMultiplier" : 0.00000,
 					"ReplaceAnim" : False,
 					"HideSupplies" : False,
 					"Anim" : 
@@ -3474,7 +3520,7 @@
 					"StoneCost" : 5,
 					"TileCost" : 3,
 					"MaxInWares" : 200,
-					"WorkCyclesMultiplier" : 0,
+					"WorkCyclesMultiplier" : 0.00000,
 					"ReplaceAnim" : False,
 					"HideSupplies" : False,
 					"Anim" : 
@@ -3483,7 +3529,7 @@
 					]
 				}
 			],
-			"WoodPileOffset" : {"X" : 83,"Y" : 15},
+			"WoodPileOffset" : {"X" : 83,"Y" : 25},
 			"StonePileOffset" : {"X" : 60,"Y" : 15},
 			"TilePileOffset" : {"X" : 40,"Y" : 15},
 			"Build_Area" : 
@@ -3505,6 +3551,7 @@
 		},
 		{
 			"Name" : "htCollectors",
+			"GameID" : 47,
 			"TextID" : 1675,
 			"DescriptionID" : 1735,
 			"MaxHealth" : 450,
@@ -3525,7 +3572,7 @@
 			"TabletID" : 730,
 			"MaxInWares" : 5,
 			"MaxOutWares" : 10,
-			"CanForceWork" : true,
+			"CanForceWork" : True,
 			"UnoccupiedMsgId" : 1692,
 			"WorkerTypes" : 
 			[
@@ -3553,9 +3600,9 @@
 			"MakeSound_ha_Work3" : {"SoundID" : 1,"Steps" : [1]},
 			"WorkAnim" : 
 			[
-				{"WorkType" : "haWork2","Cycles" : 10}
+				{"WorkType" : "haWork2","Cycles" : 10.00000}
 			],
-			"WoodPileOffset" : {"X" : -45,"Y" : 15},
+			"WoodPileOffset" : {"X" : -15,"Y" : 25},
 			"StonePileOffset" : {"X" : -20,"Y" : 15},
 			"TilePileOffset" : {"X" : -20,"Y" : 15},
 			"Build_Area" : 
@@ -3577,6 +3624,7 @@
 		},
 		{
 			"Name" : "htTailorsShop",
+			"GameID" : 48,
 			"TextID" : 1676,
 			"DescriptionID" : 1736,
 			"MaxHealth" : 250,
@@ -3629,12 +3677,12 @@
 			"MakeSound_ha_Work3" : {"SoundID" : 1,"Steps" : [1]},
 			"WorkAnim" : 
 			[
-				{"WorkType" : "haWork2","Cycles" : 30},
-				{"WorkType" : "haWork3","Cycles" : 1}
+				{"WorkType" : "haWork2","Cycles" : 30.00000},
+				{"WorkType" : "haWork3","Cycles" : 1.00000}
 			],
-			"WoodPileOffset" : {"X" : -45,"Y" : 15},
-			"StonePileOffset" : {"X" : -20,"Y" : 15},
-			"TilePileOffset" : {"X" : -20,"Y" : 15},
+			"WoodPileOffset" : {"X" : -45,"Y" : 25},
+			"StonePileOffset" : {"X" : -10,"Y" : 26},
+			"TilePileOffset" : {"X" : 20,"Y" : 25},
 			"Build_Area" : 
 			[
 				[0,0,0,0,0],
@@ -3654,6 +3702,7 @@
 		},
 		{
 			"Name" : "htCottage",
+			"GameID" : 49,
 			"TextID" : 1678,
 			"DescriptionID" : 1738,
 			"MaxHealth" : 300,
@@ -3692,8 +3741,8 @@
 			"ha_Fire6" : {"X" : 60,"Y" : -67,"Steps" : [1629,1630,1631,1626,1627,1628]},
 			"ha_Fire7" : {"X" : 45,"Y" : -33,"Steps" : [1635,1636,1637,1632,1633,1634]},
 			"ha_Fire8" : {"X" : -40,"Y" : -40,"Steps" : [1621,1622,1623,1624,1625,1620]},
-			"WoodPileOffset" : {"X" : -45,"Y" : 15},
-			"StonePileOffset" : {"X" : -20,"Y" : 15},
+			"WoodPileOffset" : {"X" : -22,"Y" : 30},
+			"StonePileOffset" : {"X" : 10,"Y" : 32},
 			"TilePileOffset" : {"X" : -20,"Y" : 15},
 			"Build_Area" : 
 			[
@@ -3714,6 +3763,7 @@
 		},
 		{
 			"Name" : "htHouse",
+			"GameID" : 50,
 			"TextID" : 1679,
 			"DescriptionID" : 1739,
 			"MaxHealth" : 650,
@@ -3752,9 +3802,9 @@
 			"ha_Fire6" : {"X" : -20,"Y" : -137,"Steps" : [1629,1630,1631,1626,1627,1628]},
 			"ha_Fire7" : {"X" : 45,"Y" : -33,"Steps" : [1635,1636,1637,1632,1633,1634]},
 			"ha_Fire8" : {"X" : -40,"Y" : -40,"Steps" : [1621,1622,1623,1624,1625,1620]},
-			"WoodPileOffset" : {"X" : -45,"Y" : 15},
-			"StonePileOffset" : {"X" : -20,"Y" : 15},
-			"TilePileOffset" : {"X" : -20,"Y" : 15},
+			"WoodPileOffset" : {"X" : -65,"Y" : 20},
+			"StonePileOffset" : {"X" : -30,"Y" : 30},
+			"TilePileOffset" : {"X" : 20,"Y" : 26},
 			"Build_Area" : 
 			[
 				[0,1,1,1,0],
@@ -3775,6 +3825,7 @@
 		},
 		{
 			"Name" : "htPalace",
+			"GameID" : 51,
 			"TextID" : 1681,
 			"DescriptionID" : 1740,
 			"MaxHealth" : 800,
@@ -3814,9 +3865,9 @@
 			"ha_Fire6" : {"X" : 40,"Y" : -147,"Steps" : [1629,1630,1631,1626,1627,1628]},
 			"ha_Fire7" : {"X" : -20,"Y" : -80,"Steps" : [1635,1636,1637,1632,1633,1634]},
 			"ha_Fire8" : {"X" : 40,"Y" : -75,"Steps" : [1621,1622,1623,1624,1625,1620]},
-			"WoodPileOffset" : {"X" : -45,"Y" : 15},
-			"StonePileOffset" : {"X" : -20,"Y" : 15},
-			"TilePileOffset" : {"X" : -20,"Y" : 15},
+			"WoodPileOffset" : {"X" : -65,"Y" : 5},
+			"StonePileOffset" : {"X" : 40,"Y" : 5},
+			"TilePileOffset" : {"X" : -40,"Y" : 12},
 			"Build_Area" : 
 			[
 				[1,1,1,1,0],
@@ -3836,6 +3887,7 @@
 		},
 		{
 			"Name" : "htStall",
+			"GameID" : 52,
 			"TextID" : 1974,
 			"DescriptionID" : 2171,
 			"MaxHealth" : 50,
@@ -3872,8 +3924,8 @@
 			"ha_Fire1" : {"X" : 29,"Y" : -63,"Steps" : [1623,1624,1625,1620,1621,1622]},
 			"ha_Fire4" : {"X" : 16,"Y" : 10,"Steps" : [1617,1618,1619,1614,1615,1616]},
 			"ha_Fire8" : {"X" : 2,"Y" : -61,"Steps" : [1621,1622,1623,1624,1625,1620]},
-			"WoodPileOffset" : {"X" : -10,"Y" : 15},
-			"StonePileOffset" : {"X" : 0,"Y" : 15},
+			"WoodPileOffset" : {"X" : 20,"Y" : 35},
+			"StonePileOffset" : {"X" : 40,"Y" : 35},
 			"TilePileOffset" : {"X" : 10,"Y" : 15},
 			"Build_Area" : 
 			[
@@ -3895,6 +3947,7 @@
 		},
 		{
 			"Name" : "htProductionThatch",
+			"GameID" : 53,
 			"TextID" : 1975,
 			"DescriptionID" : 2169,
 			"MaxHealth" : 600,
@@ -3910,12 +3963,12 @@
 			"EntranceOffsetYpx" : 10,
 			"WorkerRest" : 10,
 			"Sight" : 6,
-			"NeedsPlayerOrder" : true,
+			"NeedsPlayerOrder" : True,
 			"BuildIcon" : 869,
 			"TabletID" : 870,
 			"MaxInWares" : 15,
 			"MaxOutWares" : 30,
-			"CanForceWork" : true,
+			"CanForceWork" : True,
 			"UnoccupiedMsgId" : -1,
 			"WorkerTypes" : 
 			[
@@ -3946,8 +3999,8 @@
 			"ha_Fire8" : {"X" : -27,"Y" : -160,"Steps" : [1621,1622,1623,1624,1625,1620]},
 			"WorkAnim" : 
 			[
-				{"WorkType" : "haWork2","Cycles" : 30},
-				{"WorkType" : "haWork3","Cycles" : 30}
+				{"WorkType" : "haWork2","Cycles" : 30.00000},
+				{"WorkType" : "haWork3","Cycles" : 30.00000}
 			],
 			"WareSlots" : 
 			[
@@ -3960,9 +4013,9 @@
 				{"GuiIcon" : 357,"WareInput" : ["wtIron","wtBitin","wtCoal","wtNone","wtNone","wtNone"],"WareOutput" : ["wtSteelE","wtBitinE","wtNone","wtNone","wtNone","wtNone"]},
 				{"GuiIcon" : 362,"WareInput" : ["wtSeed","wtFlour","wtWater","wtNone","wtNone","wtNone"],"WareOutput" : ["wtFlour","wtBread","wtNone","wtNone","wtNone","wtNone"]}
 			],
-			"WoodPileOffset" : {"X" : -10,"Y" : 15},
-			"StonePileOffset" : {"X" : 0,"Y" : 15},
-			"TilePileOffset" : {"X" : 10,"Y" : 15},
+			"WoodPileOffset" : {"X" : -34,"Y" : 24},
+			"StonePileOffset" : {"X" : 6,"Y" : 25},
+			"TilePileOffset" : {"X" : 36,"Y" : 19},
 			"Build_Area" : 
 			[
 				[1,1,1,1,0],
@@ -3982,6 +4035,7 @@
 		},
 		{
 			"Name" : "htShipYard",
+			"GameID" : 54,
 			"TextID" : 1983,
 			"DescriptionID" : 2170,
 			"MaxHealth" : 600,
@@ -4027,12 +4081,12 @@
 			"ha_Fire8" : {"X" : 0,"Y" : -123,"Steps" : [1621,1622,1623,1624,1625,1620]},
 			"WorkAnim" : 
 			[
-				{"WorkType" : "haWork2","Cycles" : 5},
-				{"WorkType" : "haWork3","Cycles" : 5}
+				{"WorkType" : "haWork2","Cycles" : 5.00000},
+				{"WorkType" : "haWork3","Cycles" : 5.00000}
 			],
-			"WoodPileOffset" : {"X" : -10,"Y" : 15},
-			"StonePileOffset" : {"X" : 0,"Y" : 15},
-			"TilePileOffset" : {"X" : 10,"Y" : 15},
+			"WoodPileOffset" : {"X" : -30,"Y" : -35},
+			"StonePileOffset" : {"X" : 0,"Y" : -25},
+			"TilePileOffset" : {"X" : 20,"Y" : -35},
 			"Build_Area" : 
 			[
 				[0,1,1,0,0],
@@ -4052,6 +4106,7 @@
 		},
 		{
 			"Name" : "htCartographers",
+			"GameID" : 55,
 			"TextID" : 1983,
 			"DescriptionID" : 2170,
 			"MaxHealth" : 300,
@@ -4081,7 +4136,7 @@
 			"MaxWorkersCount" : 1,
 			"CanOverfill" : False,
 			"GatheringScript" : "gsNone",
-			"WareInput" : ["wtFeathers","wtWine"],
+			"WareInput" : ["wtFeathers","wtWine","wtNone","wtNone","wtNone","wtNone"],
 			"WareOutput" : ["wtNone","wtNone","wtNone","wtNone","wtNone","wtNone"],
 			"UnlockAfter" : ["htSawmill"],
 			"ha_Work2" : {"X" : 0,"Y" : 0,"Steps" : [5,5,5,5,5,5,5,5,5,5]},
@@ -4097,8 +4152,8 @@
 			"ha_Fire8" : {"X" : 0,"Y" : -123,"Steps" : [1621,1622,1623,1624,1625,1620]},
 			"WorkAnim" : 
 			[
-				{"WorkType" : "haWork2","Cycles" : 5},
-				{"WorkType" : "haWork3","Cycles" : 5}
+				{"WorkType" : "haWork2","Cycles" : 5.00000},
+				{"WorkType" : "haWork3","Cycles" : 5.00000}
 			],
 			"WoodPileOffset" : {"X" : -10,"Y" : 15},
 			"StonePileOffset" : {"X" : 0,"Y" : 15},
@@ -4196,6 +4251,8 @@
 		{"X" : 28,"Y" : 30,"Steps" : [1165,1166,1167,1163,1164]},
 		{"X" : 70,"Y" : 30,"Steps" : [1165,1166,1167,1163,1164]}
 	],
+	"Silo_Tablets" : {"X" : 56,"Y" : -11,"Steps" : [2446,2447,2448,2449,2450,2451,2452,2453,2454,2455]},
+	"Merchant_Tablets" : {"X" : 0,"Y" : 0,"Steps" : [2447,2454,2460,2459,2450,2451,2458,2457,2456,2455]},
 	"ProductionThatch_Anims" : 
 	{
 		"ptaSawDust" : {"X" : 0,"Y" : 0,"Steps" : [6,6,6,6,6,6,6,6,6,6,6,6,6,6,2520,2521,2522,2523,2524,2525,2522,2523,2524,2525,2522,2523,2524,2525,2526]},
@@ -4207,9 +4264,7 @@
 		"ptaWine" : {"X" : 0,"Y" : 0,"Steps" : [6,6,6,6,6,6,6,6,2703,2704,2705,2706,2707,2705,2706,2707,2705,2706,2707,2705,2706,2707,2705,2706,2707,2708,2709]},
 		"ptaCorn" : {"X" : 0,"Y" : 0,"Steps" : [6,6,6,6,6,6,6,6,2688,2689,2690,2691,2692,2690,2691,2692,2690,2691,2692,2690,2691,2692,2690,2691,2692,2690,2691,2692,2693]}
 	},
-	"School_Clock" : {"X" :-17,"Y" : 5,"Steps" : [814, 815, 816, 817, 818, 861, 862, 863, 864, 865, 866, 867, 868, 869, 870, 871, 872, 873, 874, 875, 876, 877, 878, 879, 880]},
-	"WallTower_RecruitLeft" : {"X" :0,"Y" : 0,"Steps" : [2123,2123,2123,2123,2123,2123,2123,2124,2125,2126,2127,2127,2127,2127,2127,2127,2127,2126,2125,2124,2123]},
-	"WallTower_RecruitRight" : {"X" :0,"Y" : 0,"Steps" : [2128,2128,2128,2128,2128,2128,2128,2128,2130,2131,2132,2132,2132,2132,2132,2132,2132,2131,2130,2129,2128,2128,2128,2128,2128]},
-	"Silo_Tablets" : {"X" :56,"Y" : -11,"StepStart" : 2446, "Count" : 10},
-	"Merchant_Tablets" : {"X" :0,"Y" : 0,"Steps" : [2447, 2454, 2460, 2459, 2450, 2451, 2458, 2457, 2456, 2455]}
+	"WallTower_RecruitLeft" : {"X" : 0,"Y" : 0,"Steps" : [2123,2123,2123,2123,2123,2123,2123,2124,2125,2126,2127,2127,2127,2127,2127,2127,2127,2126,2125,2124,2123]},
+	"WallTower_RecruitRight" : {"X" : 0,"Y" : 0,"Steps" : [2128,2128,2128,2128,2128,2128,2128,2128,2130,2131,2132,2132,2132,2132,2132,2132,2132,2131,2130,2129,2128,2128,2128,2128,2128]},
+	"School_Clock" : {"X" : -17,"Y" : 5,"Steps" : [814,815,816,817,818,861,862,863,864,865,866,867,868,869,870,871,872,873,874,875,876,877,878,879,880]}
 }
