@@ -45,7 +45,6 @@ type
 
     procedure BarracksChange(Sender: TObject; Shift: TShiftState);
     procedure BarracksChange2(Sender: TObject; WheelSteps: Integer; var aHandled: Boolean);
-    procedure TownHallChange(Sender: TObject; aValue: Integer);
     procedure StoreChange(Sender: TObject; Shift: TShiftState);
 
     procedure StoreSelectWare(Sender: TObject);
@@ -717,13 +716,6 @@ begin
     Button_TownHall_RallyPoint.Caption := gResTexts[TX_HOUSES_RALLY_POINT];
     Button_TownHall_RallyPoint.Hint := Format(gResTexts[TX_MAPED_RALLY_POINT_HINT], [gRes.Houses[htTownhall].HouseName]);
     Button_TownHall_RallyPoint.OnClick := SetRallyPointClick;
-
-    WaresRow_TH_Gold_Input := TKMWareOrderRow.Create(Panel_HouseTownHall, 0, 34, Panel_House.Width, TH_MAX_GOLDMAX_VALUE);
-    WaresRow_TH_Gold_Input.WareRow.RX := rxGui;
-    WaresRow_TH_Gold_Input.Hint := gRes.Wares[wtGold].Title;
-    WaresRow_TH_Gold_Input.WareRow.TexID := gRes.Wares[wtGold].GUIIcon;
-    WaresRow_TH_Gold_Input.WareRow.Caption := gRes.Wares[wtGold].Title;
-    WaresRow_TH_Gold_Input.OnChange := TownHallChange;
 end;
 
 
@@ -1252,33 +1244,6 @@ begin
   HealthBar_House.Caption := IntToStr(Round(fHouse.GetHealth)) + '/' + IntToStr(fHouse.MaxHealth);
   HealthBar_House.Position := fHouse.GetHealth / fHouse.MaxHealth;
 end;
-
-
-procedure TKMMapEdHouse.TownHallChange(Sender: TObject; aValue: Integer);
-var
-  TH: TKMHouseTownHall;
-  newCountAdd: Integer;
-begin
-  {
-  TH := TKMHouseTownHall(fHouse);
-  if aValue > 0 then
-  begin
-    if TH.GoldMaxCnt < aValue + TH.GoldCnt then
-      TH.GoldMaxCnt := aValue + TH.GoldCnt;
-    aValue := Min(aValue, TH.GoldMaxCnt - TH.GoldCnt);
-    fHouse.WareAddToIn(wtGold, aValue);
-  end else
-  if aValue < 0 then
-  begin
-    if TH.GoldMaxCnt > aValue + TH.GoldCnt then
-      TH.GoldMaxCnt := Max(0, aValue + TH.GoldCnt);
-    newCountAdd := Math.Min(Abs(aValue), fHouse.CheckWareIn(wtGold));
-    fHouse.WareTakeFromIn(wtGold, newCountAdd);
-  end;
-  WaresRow_TH_Gold_Input.OrderCount := fHouse.CheckWareIn(wtGold);
-  WaresRow_TH_Gold_Input.WareRow.WareCount := Min(MAX_WARES_IN_HOUSE, WaresRow_TH_Gold_Input.OrderCount);}
-end;
-
 
 procedure TKMMapEdHouse.HouseChange(Sender: TObject; aValue: Integer);
 var

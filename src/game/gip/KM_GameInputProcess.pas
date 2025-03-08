@@ -96,6 +96,7 @@ type
     gicHouseSiegeWorkshopRally,
     gicHouseCollectorsRally,
     gicHousePalaceRally,
+    gicHouseFlagPointSet,
     gicHouseTownHallEquip,           //Place an order to train warrior in the TownHall
     gicHouseTownHallRally,           //Set the rally point for the TownHall
     gicHouseTownHallMaxGold,         //Set TownHall MaxGold value
@@ -246,6 +247,7 @@ const
     gicHouseSiegeWorkshopRally,
     gicHouseCollectorsRally,
     gicHousePalaceRally,
+    gicHouseFlagPointSet,
     gicHouseTownHallEquip,
     gicHouseTownHallRally,
     gicHouseTownHallMaxGold,
@@ -331,6 +333,7 @@ const
     gicpt_Int3,     // gicHouseSiegeWorkshopRally
     gicpt_Int3,     // gicHouseCollectorsRally
     gicpt_Int3,     // gicHousePalaceRally
+    gicpt_Int3,     // gicHouseFlagPointSet
     gicpt_Int3,     // gicHouseTownHallEquip
     gicpt_Int3,     // gicHouseTownHallRally
     gicpt_Int2,     // gicHouseTownHallMaxGold
@@ -1072,7 +1075,7 @@ begin
     end;
     if CommandType in [gicHouseRepairToggle, gicHouseDeliveryModeNext, gicHouseDeliveryModePrev, gicHouseWoodcuttersCutting, gicHouseTownHallMaxGold,gicHouseTownHallMaxBitin,
       gicHouseOrderProduct, gicHouseMarketFrom, gicHouseMarketTo, gicHouseBarracksRally, gicHouseTownHallRally, gicHouseSiegeWorkshopRally, gicHouseCollectorsRally,
-      gicHousePalaceRally,
+      gicHousePalaceRally,gicHouseFlagPointSet,
       gicHouseStoreNotAcceptFlag, gicHStoreNotAllowTakeOutFlag, gicHouseBarracksAcceptFlag, gicHBarracksNotAllowTakeOutFlag,
       gicHouseBarracksEquip, gicHouseTownHallEquip, gicHouseClosedForWorkerTgl,
       gicHouseSchoolTrain, gicHouseSchoolTrainChOrder, gicHouseSchoolTrainChLastUOrder, gicHouseRemoveTrain,
@@ -1205,6 +1208,7 @@ begin
       gicHouseSiegeWorkshopRally:TKMHouseSiegeWorkshop(srcHouse).FlagPoint := KMPoint(IntParams[1], IntParams[2]);
       gicHouseCollectorsRally:   TKMHouseCollectors(srcHouse).FlagPoint := KMPoint(IntParams[1], IntParams[2]);
       gicHousePalaceRally:       TKMHousePalace(srcHouse).FlagPoint := KMPoint(IntParams[1], IntParams[2]);
+      gicHouseFlagPointSet:       TKMHouseWFlagPoint(srcHouse).FlagPoint := KMPoint(IntParams[1], IntParams[2]);
 
       gicHouseSchoolTrain:       TKMHouseSchool(srcHouse).AddUnitToQueue(TKMUnitType(IntParams[1]), IntParams[2]);
       gicHouseSchoolTrainChOrder:TKMHouseSchool(srcHouse).ChangeUnitTrainOrder(IntParams[1], IntParams[2]);
@@ -1563,8 +1567,10 @@ end;
 
 procedure TKMGameInputProcess.CmdHouse(aCommandType: TKMGameInputCommandType; aHouse: TKMHouse; const aLoc: TKMPoint);
 begin
-  Assert((aCommandType in [gicHouseBarracksRally, gicHouseTownHallRally, gicHouseSiegeWorkshopRally, gicHouseWoodcuttersCutting, gicHouseCollectorsRally, gicHousePalaceRally]));
-  Assert((aHouse is TKMHouseBarracks) or (aHouse is TKMHouseTownHall) or (aHouse is TKMHouseWoodcutters) or (aHouse is TKMHouseSiegeWorkshop) or (aHouse is TKMHouseCollectors) or (aHouse is TKMHousePalace));
+  Assert((aCommandType in  [gicHouseBarracksRally, gicHouseTownHallRally, gicHouseSiegeWorkshopRally,
+                            gicHouseWoodcuttersCutting, gicHouseCollectorsRally, gicHousePalaceRally,
+                            gicHouseFlagPointSet]));
+  Assert(aHouse is TKMHouseWFlagPoint);
   TakeCommand(MakeCommand(aCommandType, aHouse.UID, aLoc.X, aLoc.Y));
 end;
 

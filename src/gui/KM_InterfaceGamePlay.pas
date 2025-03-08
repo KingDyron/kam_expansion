@@ -821,7 +821,7 @@ begin
   begin
     if gTerrain.RouteCanBeMade(TKMHouse(gMySpectator.Selected).PointBelowEntrance, loc, tpWalk, 0) then
     begin
-      if gMySpectator.Selected is TKMHouseBarracks then
+      {if gMySpectator.Selected is TKMHouseBarracks then
         gGame.GameInputProcess.CmdHouse(gicHouseBarracksRally, TKMHouse(gMySpectator.Selected), loc)
       else
       if gMySpectator.Selected is TKMHouseTownHall then
@@ -837,7 +837,10 @@ begin
         gGame.GameInputProcess.CmdHouse(gicHouseCollectorsRally, TKMHouse(gMySpectator.Selected), loc)
       else
       if gMySpectator.Selected is TKMHousePalace then
-        gGame.GameInputProcess.CmdHouse(gicHousePalaceRally, TKMHouse(gMySpectator.Selected), loc);
+        gGame.GameInputProcess.CmdHouse(gicHousePalaceRally, TKMHouse(gMySpectator.Selected), loc)
+      else}
+      if gMySpectator.Selected is TKMHouseWFlagPoint then
+        gGame.GameInputProcess.CmdHouse(gicHouseFlagPointSet, TKMHouse(gMySpectator.Selected), loc);
     end
     else
       gSoundPlayer.Play(sfxCantPlace, loc, False, 4);
@@ -4724,12 +4727,13 @@ begin
         end;
 
         if not fPlacingBeacon
-          and ((gMySpectator.Selected is TKMHouseBarracks)
+          and ({(gMySpectator.Selected is TKMHouseBarracks)
             or (gMySpectator.Selected is TKMHouseTownHall)
             or (gMySpectator.Selected is TKMHouseWoodcutters)
             or (gMySpectator.Selected is TKMHouseSiegeWorkshop)
             or (gMySpectator.Selected is TKMHousePalace)
-            or (gMySpectator.Selected is TKMHouseCollectors))
+            or (gMySpectator.Selected is TKMHouseCollectors)
+            or }(gMySpectator.Selected is TKMHouseWFlagPoint))
           and (fUIMode in [umSP, umMP])
           and not HasLostMPGame then
         begin
@@ -4738,7 +4742,7 @@ begin
             or gTerrain.RouteCanBeMade(KMPointLeft(P2), P, tpWalk, 0)
             or gTerrain.RouteCanBeMade(KMPointRight(P2), P, tpWalk, 0) then
           begin
-            if gMySpectator.Selected is TKMHouseBarracks then
+            {if gMySpectator.Selected is TKMHouseBarracks then
               gGame.GameInputProcess.CmdHouse(gicHouseBarracksRally, TKMHouse(gMySpectator.Selected), P)
             else
             if gMySpectator.Selected is TKMHouseSiegeWorkshop then
@@ -4754,7 +4758,10 @@ begin
               gGame.GameInputProcess.CmdHouse(gicHouseTownHallRally, TKMHouse(gMySpectator.Selected), P)
             else
               if gMySpectator.Selected is TKMHouseWoodcutters then
-                gGame.GameInputProcess.CmdHouse(gicHouseWoodcuttersCutting, TKMHouse(gMySpectator.Selected), P);
+                gGame.GameInputProcess.CmdHouse(gicHouseWoodcuttersCutting, TKMHouse(gMySpectator.Selected), P)
+            else }
+              if gMySpectator.Selected is TKMHouseWFlagPoint then
+                gGame.GameInputProcess.CmdHouse(gicHouseFlagPointSet, TKMHouse(gMySpectator.Selected), P);
           end
           else
             gSoundPlayer.Play(sfxCantPlace, P, False, 4);

@@ -1650,7 +1650,7 @@ end;
 procedure TKMRenderPool.AddUnitCarry(aCarry: TKMWareType; aUID: Integer; aDir: TKMDirection; StepId: Integer; StepFrac: Single; pX,pY: Single; FlagColor: TColor4);
 var
   cornerX, cornerY: Single;
-  id, step: Integer;
+  id: Integer;
   A: TKMAnimation;
   R: TRXData;
 begin

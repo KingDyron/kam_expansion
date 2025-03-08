@@ -57,6 +57,7 @@ type
     fCRC: Cardinal;
     procedure DuplicateFormPrevObj(aAnimSteps :array of TKMWordArray);
   public
+    HighestPrice : Single;
     property Count: Integer read fCount;
     property CRC: Cardinal read fCRC;
 
@@ -976,12 +977,14 @@ end;
 procedure TKMResMapElements.AfterResourceLoad;
 var I, K : Integer;
 begin
+  HighestPrice := 0;
   for I := 0 to High(gMapElements) do
     with gMapElements[I] do
     begin
       ObjectPrice := 0;
       for K := 0 to High(VWares) do
-        ObjectPrice := ObjectPrice + (gRes.Wares.VirtualWares.WareS[VWares[K].W].CoinPrice * VWares[K].Cmax);
+        ObjectPrice := ObjectPrice + (gRes.Wares.VirtualWares.WareS[VWares[K].W].CoinPrice * VWares[K].Cmax * (VWares[K].Ch / 100));
+      HighestPrice := Max(HighestPrice, ObjectPrice);
     end;
 
 end;

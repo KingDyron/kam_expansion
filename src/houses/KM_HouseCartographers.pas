@@ -16,15 +16,18 @@ type
     //fMinimap : //not used right now
     fMode : TKMCartographesMode;
     fLayer: array[TKMCartographersPaintLayer] of Boolean;
-    fHouseList : TKMHouseArray;//this value is not saved !!!
-    procedure RefreshHousesList;
+    fHouseList : TKMHouseArray;
+    fUndergoundDeposits : TKMPointTagList;
+    fObjectsWithWares : TKMPointTagList;
+    fSpawners : TKMWordArray;
   protected
     procedure SetFlagPoint(aFlagPoint: TKMPoint); override;
     function GetMaxDistanceToPoint: Integer; override;
-    procedure Activate(aWasBuilt: Boolean); virtual;
+    procedure Activate(aWasBuilt: Boolean); override;
   public
     constructor Create(aUID: Integer; aHouseType: TKMHouseType; PosX, PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
     constructor Load(LoadStream: TKMemoryStream); override;
+    destructor Destroy; override;
     procedure SyncLoad; override;
     procedure PostLoadMission; override;
     procedure Save(SaveStream: TKMemoryStream); override;
@@ -34,6 +37,7 @@ type
     function CanWork : Boolean;
     procedure ToggleLayer(aLayer : TKMCartographersPaintLayer); overload;
     procedure ToggleLayer(aLayer : Byte); overload;
+    procedure CollectData(aLoc : TKMPoint);
 
   end;
 
@@ -44,6 +48,7 @@ uses
   KM_HandsCollection,
   KM_HouseHelpers,
   KM_HouseCollection,
+  KM_ResMapElements, KM_Resource,
   KM_RenderAux, KM_RenderDebug, KM_RenderPool,
   KM_Terrain;
 
@@ -53,25 +58,66 @@ begin
   Inherited;
   fMode := cmChartman;
   for CP := Low(TKMCartographersPaintLayer) to High(TKMCartographersPaintLayer) do
-    fLayer[CP] := false;
-  fLayer[cplSpawners] := true;
-  //FillChar(fLayer, SizeOf(fLayer), #0);
+    fLayer[CP] := true;
+  fLayer[cplObjects] := true;
+  If fUndergoundDeposits = nil then
+  begin
+    fUndergoundDeposits := TKMPointTagList.Create;
+    fObjectsWithWares := TKMPointTagList.Create;
+  end;
+  SetLength(fHouseList, 0);
 end;
 
 constructor TKMHouseCartographers.Load(LoadStream: TKMemoryStream);
+var I, C: Integer;
 begin
   Inherited;
+  If fUndergoundDeposits = nil then
+  begin
+    fUndergoundDeposits := TKMPointTagList.Create;
+    fObjectsWithWares := TKMPointTagList.Create;
+  end;
+  fUndergoundDeposits.LoadFromStream(LoadStream);
+  fObjectsWithWares.LoadFromStream(LoadStream);
+  LoadStream.Read(fLayer, SizeOf(fLayer));
+  LoadStream.Read(fSpawners);
+  LoadStream.Read(C);
+  SetLength(fHouseList, C);
+  for I := 0 to C - 1 do
+    LoadStream.Read(fHouseList[I], 4);
+
 
 end;
 
+destructor TKMHouseCartographers.Destroy;
+begin
+  fUndergoundDeposits.Free;
+  fObjectsWithWares.Free;
+  Inherited;
+end;
+
 procedure TKMHouseCartographers.Save(SaveStream: TKMemoryStream);
+var I, C: Integer;
 begin
   Inherited;
+  fUndergoundDeposits.SaveToStream(SaveStream);
+  fObjectsWithWares.SaveToStream(SaveStream);
+  SaveStream.Write(fLayer, SizeOf(fLayer));
+  SaveStream.Write(fSpawners);
+  C := length(fHouseList);
+  SaveStream.Write(C);
+  for I := 0 to C - 1 do
+    SaveStream.Write(fHouseList[I].UID);
 end;
 
 procedure TKMHouseCartographers.Activate(aWasBuilt: Boolean);
 begin
   Inherited;
+  If fUndergoundDeposits = nil then
+  begin
+    fUndergoundDeposits := TKMPointTagList.Create;
+    fObjectsWithWares := TKMPointTagList.Create;
+  end;
 end;
 
 procedure TKMHouseCartographers.SetFlagPoint(aFlagPoint: TKMPoint);
@@ -81,23 +127,20 @@ end;
 
 function TKMHouseCartographers.GetMaxDistanceToPoint: Integer;
 begin
-  Result := 80;
+  Result := 50;
 end;
 
 procedure TKMHouseCartographers.SyncLoad;
+var I: Integer;
 begin
   Inherited;
-  If IsComplete then
-    If not gGame.Params.IsMapEditor then
-      RefreshHousesList;
+  for I := 0 to High(fHouseList) do
+    fHouseList[I] := gHands.GetHouseByUID(Integer(fHouseList[I]));
 end;
 
 procedure TKMHouseCartographers.PostLoadMission;
 begin
   Inherited;
-  If IsComplete then
-    If not gGame.Params.IsMapEditor then
-      RefreshHousesList;
 end;
 
 procedure TKMHouseCartographers.UpdateState(aTick: Cardinal);
@@ -105,22 +148,18 @@ begin
   Inherited;
   If not IsComplete or not HasWorkerInside then
     Exit;
-  If aTick mod 3000 = 0 then
-    RefreshHousesList;
 end;
 
 procedure TKMHouseCartographers.Paint;
   procedure PaintUndergroundDeposits;
-  var list : TKMPointTagList;
+  var
     I : Integer;
     C, factor : Cardinal;
   begin
-    list := TKMPointTagList.Create;
-    gTerrain.FindDeposits(Entrance, 30, list, true);
 
-    for I := 0 to list.Count - 1 do
+    for I := 0 to fUndergoundDeposits.Count - 1 do
     begin
-      case list.Tag[I] of
+      case fUndergoundDeposits.Tag[I] of
         1: C := icYellow;
         2: C := icSteelBlue;
         3: C := icLightRed;
@@ -128,14 +167,31 @@ procedure TKMHouseCartographers.Paint;
         else
           C := $FFFFFFFF;
       end;
-      factor := list.Tag2[I] * 15 + 40;
+      factor := fUndergoundDeposits.Tag2[I] * 15 + 40;
       factor := factor shl 24;
       factor := factor or $00FFFFFF;
       C := C and factor;
-      gRenderAux.Quad(list[I].X, list[I].Y, C);
+      gRenderAux.Quad(fUndergoundDeposits[I].X, fUndergoundDeposits[I].Y, C);
     end;
-    list.Free;
   end;
+
+  procedure PaintObjects;
+  var
+    I : Integer;
+    C : Cardinal;
+    factor : Byte;
+  begin
+
+    for I := 0 to fObjectsWithWares.Count - 1 do
+    begin
+
+      factor := Round(gMapElements[fObjectsWithWares.Tag[I]].ObjectPrice / gRes.MapElements.HighestPrice) * 255;
+      C := $AA00FF00 + factor;
+      //gRenderAux.Quad(fObjectsWithWares[I].X, fObjectsWithWares[I].Y, C);
+      gRenderAux.CircleOnTerrain(fObjectsWithWares[I].X - 0.5, fObjectsWithWares[I].Y - 0.5, 0.75, C and $75FFFFFF, C);
+    end;
+  end;
+
   procedure PaintMiningRange(H : TKMHouse);
   begin
     If H.HouseType in [htQuarry, htIronMine, htBitinMine, htGoldMine, htCoalMine,
@@ -152,7 +208,7 @@ procedure TKMHouseCartographers.Paint;
 var I : Integer;
 begin
   Inherited;
-  If not IsComplete or not HasWorkerInside then
+  If not IsComplete {or not HasWorkerInside} then
     Exit;
 
   if gMySpectator.Selected <> self then
@@ -171,21 +227,19 @@ begin
     for I := 0 to High(fHouseList) do
       If fHouseList[I].IsValid then
         PaintTowerRange(fHouseList[I]);
+
   If fLayer[cplSpawners] then
-    gHands.PlayerAnimals.PaintSpawners(KMRectGrow(KMRect(Entrance), 60));
+    for I := 0 to High(fSpawners) do
+      gHands.PlayerAnimals.PaintSpawner(fSpawners[I]);
 
-end;
+  If fLayer[cplObjects] then
+    PaintObjects;
 
-procedure TKMHouseCartographers.RefreshHousesList;
-begin
-  If fMode = cmSpy then
-    Exit;
-  fHouseList := gHands.GetHousesInRadius(Entrance, 30 * 30);
 end;
 
 function TKMHouseCartographers.CanWork: Boolean;
 begin
-  Result := true;
+  Result := FlagPoint <> PointBelowEntrance;
 end;
 
 procedure TKMHouseCartographers.ToggleLayer(aLayer : TKMCartographersPaintLayer);
@@ -196,6 +250,59 @@ end;
 procedure TKMHouseCartographers.ToggleLayer(aLayer : Byte);
 begin
   ToggleLayer(TKMCartographersPaintLayer(aLayer) );
+end;
+
+procedure TKMHouseCartographers.CollectData(aLoc: TKMPoint);
+  function ContainsSpawner(aID : Integer): Boolean;
+  var I : Integer;
+  begin
+    Result := false;
+    for I := 0 to High(fSpawners) do
+      If fSpawners[I] = aID then
+        Exit(true);
+  end;
+  function ContainsHouse(aID : TKMHouse): Boolean;
+  var I : Integer;
+  begin
+    Result := false;
+    for I := 0 to High(fHouseList) do
+      If fHouseList[I] = aID then
+        Exit(true);
+  end;
+var list : TKMPointTagList;
+  I, J : Integer;
+  houseList : TKMHouseArray;
+begin
+  list := TKMPointTagList.Create;
+  gTerrain.FindDepositsWithDistance(aLoc, 10, list, 15);
+  fUndergoundDeposits.AddListUnique(list);
+  list.Clear;
+  gTerrain.FindValuableObjects(aLoc, 15, list);
+  fObjectsWithWares.AddListUnique(list);
+  list.Free;
+
+
+  for I := 0 to gHands.PlayerAnimals.SpawnersCount - 1 do
+    If KMLengthDiag(aLoc, gHands.PlayerAnimals.Spawners[I].Loc) < 20 then
+      If not ContainsSpawner(I) then
+      begin
+        J := length(fSpawners);
+        SetLength(fSpawners, J + 1);
+        fSpawners[J] := I;
+      end;
+  If FlagPoint = aLoc then
+    FlagPoint := PointBelowEntrance;
+
+  houseList := gHands.GetHousesInRadius(aLoc, Sqr(20));
+
+  for I := 0 to high(houseList) do
+    If not ContainsHouse(houseList[I]) then
+    begin
+      J := length(fHouseList);
+      SetLength(fHouseList, J + 1);
+      fHouseList[J] := houseList[I];
+    end;
+
 end;
 
 end.

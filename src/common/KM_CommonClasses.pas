@@ -77,6 +77,7 @@ type
     procedure Write(const Value: SmallInt      ); reintroduce; overload; virtual; abstract;
     procedure Write(const Value: TDateTime     ); reintroduce; overload; virtual; abstract;
     procedure Write(const Value: TKMWordArray  ); reintroduce; overload; virtual; abstract;
+    procedure Write(const Value: TIntegerArray  ); reintroduce; overload; virtual; abstract;
 
     procedure Read(out Value: TKMDirection  ); reintroduce; overload; virtual; abstract;
     procedure Read(out Value: TKMPoint      ); reintroduce; overload; virtual; abstract;
@@ -98,6 +99,7 @@ type
     procedure Read(out Value: SmallInt      ); reintroduce; overload; virtual; abstract;
     procedure Read(out Value: TDateTime     ); reintroduce; overload; virtual; abstract;
     procedure Read(out Value: TKMWordArray     ); reintroduce; overload; virtual; abstract;
+    procedure Read(out Value: TIntegerArray     ); reintroduce; overload; virtual; abstract;
 
     procedure ReadBytes(out Value: TBytes);
     procedure WriteBytes(const Value: TBytes);
@@ -172,6 +174,8 @@ type
     procedure Write(const Value: ShortInt      ); override;
     procedure Write(const Value: SmallInt      ); override;
     procedure Write(const Value: TDateTime     ); override;
+    procedure Write(const Value: TKMWordArray     ); override;
+    procedure Write(const Value: TIntegerArray     ); override;
 
     procedure Read(out Value: TKMDirection  ); override;
     procedure Read(out Value: TKMPoint      ); override;
@@ -192,6 +196,8 @@ type
     procedure Read(out Value: ShortInt      ); override;
     procedure Read(out Value: SmallInt      ); override;
     procedure Read(out Value: TDateTime     ); override;
+    procedure Read(out Value: TKMWordArray     ); override;
+    procedure Read(out Value: TIntegerArray     ); override;
   end;
 
   // Text writer
@@ -299,9 +305,9 @@ type
     procedure Copy(aSrc: TKMPointList);
     procedure Add(const aLoc: TKMPoint); overload; virtual;
     procedure Add(X, Y: Integer); overload;
-    procedure AddList(aList: TKMPointList);
-    procedure AddUnique(const aLoc: TKMPoint);
-    procedure AddListUnique(aList: TKMPointList);
+    procedure AddList(aList: TKMPointList); virtual;
+    procedure AddUnique(const aLoc: TKMPoint); virtual;
+    procedure AddListUnique(aList: TKMPointList); virtual;
     function  Remove(const aLoc: TKMPoint): Integer; virtual;
     procedure Delete(aIndex: Integer); virtual;
     procedure Insert(ID: Integer; const aLoc: TKMPoint);
@@ -338,6 +344,11 @@ type
     Tag, Tag2: array of Cardinal; //0..Count-1
     procedure Clear; override;
     procedure Add(const aLoc: TKMPoint; aTag: Cardinal; aTag2: Cardinal = 0); reintroduce; virtual;
+
+    procedure AddList(aList: TKMPointTagList); reintroduce;
+    procedure AddUnique(const aLoc: TKMPoint; aTag: Cardinal; aTag2: Cardinal = 0); reintroduce;
+    procedure AddListUnique(aList: TKMPointTagList); reintroduce;
+
     function IndexOf(const aLoc: TKMPoint; aTag: Cardinal; aTag2: Cardinal): Integer; overload;
     procedure SortByTag;
     function Remove(const aLoc: TKMPoint): Integer; override;
@@ -1178,6 +1189,28 @@ begin
   Tag2[fCount-1] := aTag2;
 end;
 
+procedure TKMPointTagList.AddList(aList: TKMPointTagList);
+var I : Integer;
+begin
+  for I := 0 to aList.Count - 1 do
+    Add(aList[I], aList.Tag[I], aList.Tag2[I]);
+end;
+
+procedure TKMPointTagList.AddUnique(const aLoc: TKMPoint; aTag: Cardinal; aTag2: Cardinal = 0);
+begin
+  If not Contains(aLoc) then
+    Add(aLoc, aTag, aTag2);
+end;
+
+procedure TKMPointTagList.AddListUnique(aList: TKMPointTagList);
+var I : Integer;
+begin
+  for I := 0 to aList.Count - 1 do
+    If not Contains(aList[I]) then
+      Add(aList[I], aList.Tag[I], aList.Tag2[I]);
+end;
+
+
 
 function TKMPointTagList.IndexOf(const aLoc: TKMPoint; aTag, aTag2: Cardinal): Integer;
 var
@@ -1852,6 +1885,25 @@ procedure TKMemoryStreamBinary.Read(out Value: ShortInt);       begin inherited 
 procedure TKMemoryStreamBinary.Read(out Value: SmallInt);       begin inherited Read(Value, SizeOf(Value)); end;
 procedure TKMemoryStreamBinary.Read(out Value: TDateTime);      begin inherited Read(Value, SizeOf(Value)); end;
 
+procedure TKMemoryStreamBinary.Read(out Value: TKMWordArray     );
+var I, C : Integer;
+begin
+  C := Length(Value);
+  Read(C);
+  SetLength(Value, C);
+  for I := 0 to C - 1 do
+      Read(Value[I]);
+end;
+
+procedure TKMemoryStreamBinary.Read(out Value: TIntegerArray     );
+var I, C : Integer;
+begin
+  C := Length(Value);
+  Read(C);
+  SetLength(Value, C);
+  for I := 0 to C - 1 do
+      Read(Value[I]);
+end;
 
 procedure TKMemoryStreamBinary.Write(const Value: TKMDirection);   begin inherited Write(Value, SizeOf(Value)); end;
 procedure TKMemoryStreamBinary.Write(const Value: TKMPoint);       begin inherited Write(Value, SizeOf(Value)); end;
@@ -1872,6 +1924,24 @@ procedure TKMemoryStreamBinary.Write(const Value: Word);           begin inherit
 procedure TKMemoryStreamBinary.Write(const Value: ShortInt);       begin inherited Write(Value, SizeOf(Value)); end;
 procedure TKMemoryStreamBinary.Write(const Value: SmallInt);       begin inherited Write(Value, SizeOf(Value)); end;
 procedure TKMemoryStreamBinary.Write(const Value: TDateTime);      begin inherited Write(Value, SizeOf(Value)); end;
+
+procedure TKMemoryStreamBinary.Write(const Value: TKMWordArray     );
+var I, C : Integer;
+begin
+  C := Length(Value);
+  Write(C);
+  for I := 0 to C - 1 do
+      Write(Value[I]);
+end;
+
+procedure TKMemoryStreamBinary.Write(const Value: TIntegerArray     );
+var I, C : Integer;
+begin
+  C := Length(Value);
+  Write(C);
+  for I := 0 to C - 1 do
+      Write(Value[I]);
+end;
 
 
 { TKMemoryStreamText }

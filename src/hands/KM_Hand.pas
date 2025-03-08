@@ -364,7 +364,6 @@ type
     function GetType : TKMUnitType;
     procedure ClearAnimalTypes;
   end;
-
   PKMAnimalSpawner = ^TKMAnimalSpawner;
 
   TKMHandAnimals = class(TKMHandCommon)
@@ -391,6 +390,7 @@ type
 
     procedure UpdateState(aTick: Cardinal); override;
     procedure Paint(const aRect: TKMRect; aTickLag: Single); override;
+    procedure PaintSpawner(const aID: Integer);
     procedure PaintSpawners(const aRect: TKMRect);
 
     procedure Save(SaveStream: TKMemoryStream); override;
@@ -3848,36 +3848,41 @@ begin
 
 end;
 
+procedure TKMHandAnimals.PaintSpawner(const aID: Integer);
+var K, J, offX : Integer;
+  UT : TKMUnitType;
+begin
+  with fSpawners[aID] do
+  begin
+    K := length(AnimalTypes);
+    offX := Round(Sqrt(K));
+    gRenderPool.RenderSpriteOnTile(Loc, 914);
+    gRenderAux.CircleOnTerrain(Loc.X-0.5, Loc.Y-0.5,
+                                1,
+                                icDeepGreen AND $55FFFFFF,
+                                icDeepGreen);
+    gRenderAux.CircleOnTerrain(Loc.X-0.5, Loc.Y-0.5,
+                                Radius,
+                                icGreen AND $10FFFFFF,
+                                icGreen);
+    for J := 0 to K - 1 do
+    begin
+      UT := AnimalTypes[J];
+      gRenderPool.RenderSpriteOnTile(KMPoint(Loc.X - (offX div 2) + (J mod offX), Loc.Y - (offX div 2) + (J div offX)), gRes.Units[UT].GUIIcon);
+
+    end;
+  end;
+end;
+
+
 procedure TKMHandAnimals.PaintSpawners(const aRect: TKMRect);
 var I, K, J, offX : Integer;
   UT : TKMUnitType;
 begin
-
-    for I := 0 to High(fSpawners) do
-      with fSpawners[I] do
-        if KMInRect(Loc, KMRectGrow(aRect, Radius div 2)) then
-        begin
-          K := length(AnimalTypes);
-          offX := Round(Sqrt(K));
-          gRenderPool.RenderSpriteOnTile(Loc, 914);
-          gRenderAux.CircleOnTerrain(Loc.X-0.5, Loc.Y-0.5,
-                                      1,
-                                      icDeepGreen AND $55FFFFFF,
-                                      icDeepGreen);
-          gRenderAux.CircleOnTerrain(Loc.X-0.5, Loc.Y-0.5,
-                                      Radius,
-                                      icGreen AND $10FFFFFF,
-                                      icGreen);
-          for J := 0 to K - 1 do
-          begin
-            UT := AnimalTypes[J];
-            gRenderPool.RenderSpriteOnTile(KMPoint(Loc.X - (offX div 2) + (J mod offX), Loc.Y - (offX div 2) + (J div offX)), gRes.Units[UT].GUIIcon);
-
-          end;
-
-
-
-        end;
+  for I := 0 to High(fSpawners) do
+    with fSpawners[I] do
+      if KMInRect(Loc, KMRectGrow(aRect, Radius div 2)) then
+        PaintSpawner(I);
 end;
 
 procedure TKMHandAnimals.Save(SaveStream: TKMemoryStream);

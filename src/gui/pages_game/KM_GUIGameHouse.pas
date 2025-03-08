@@ -2470,15 +2470,10 @@ end;
 
 
 procedure TKMGUIGameHouse.ShowTownHall(aHouse: TKMHouse);
-var
-  TH: TKMHouseTownHall;
 begin
   Assert(aHouse is TKMHouseTownHall);
 
-  TH := TKMHouseTownHall(aHouse);
   House_TH_UnitChange(nil, []);
-
-  //Panel_HouseTownHall.Show;
 end;
 
 function TKMGUIGameHouse.HasAnyUnit(unitArr: array of TKMUnitType): Boolean;

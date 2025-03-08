@@ -5,6 +5,7 @@ uses
   Classes, Math, SysUtils, KromUtils, Types,
   KM_CommonClasses, KM_CommonTypes, KM_Defaults, KM_Points, KM_CommonUtils, KM_UnitVisual,
   KM_ResHouses, KM_Houses, KM_HouseSchool, KM_HouseBarracks, KM_HouseInn, KM_ResUnits,
+  KM_HouseCartographers,
   KM_Structure,
   KM_HandEntity,
   KM_ResTypes;
@@ -356,6 +357,7 @@ type
   TKMUnitRecruit = class(TKMSettledUnit)
   private
     procedure TaskSendWares;
+    procedure TaskCartographer;
   protected
     procedure TaskGetWork; override;
   end;
@@ -508,6 +510,7 @@ uses
   KM_UnitTaskCollectWares,
   KM_UnitTaskGoToWell,
   KM_UnitTaskMerchant,
+  KM_UnitTaskCartographer,
   KM_SpecialAnim,
   KM_GameTypes,
   KM_HandTypes,
@@ -1002,6 +1005,23 @@ begin
   fTask := TKMTaskMerchant.Create(self, H, HS, HM.CurrentHand, W);
 end;
 
+procedure TKMUnitRecruit.TaskCartographer;
+var H : TKMHouseCartographers;
+begin
+  if not (InHouse = Home) then
+    Exit;
+  fTask := nil;
+  H := TKMHouseCartographers(Home);
+  If not H.IsValid then
+    Exit;
+
+  if not gTerrain.RouteCanBeMade(H.PointBelowEntrance, H.FlagPoint, tpWalk) then //can't reach the flag point
+    Exit;
+
+  If H.CanWork then
+    fTask := TKMTaskCartographer.Create(self, H.FlagPoint);
+end;
+
 procedure TKMUnitRecruit.TaskGetWork;
 var
   enemy: TKMUnit;
@@ -1011,7 +1031,10 @@ begin
   fTask := nil;
   //because he is also in the merchant house, he has another task
   if (fHome is TKMHouseMerchant) then
-    TaskSendWares;
+    TaskSendWares
+  else
+  if fHome.HouseType = htCartographers then
+    TaskCartographer;
 
   if not (fHome is TKMHouseTower)  then
     Exit;
@@ -3060,6 +3083,7 @@ const
       -1,                      //uttGoToShip
       TX_UNIT_TASK_ROAD,        //uttBuildGrassland
       -1,                      //uttUnloadFromShip
+      -1,
       -1,
       -1,
       -1,

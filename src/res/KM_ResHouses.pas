@@ -507,7 +507,7 @@ begin
     htCollectors:  Result := 728;
     htPalace:  Result := 745;
   else
-    Result := 0; // Has no such thing
+    Result := 990; // Default Flag
   end;
 end;
 

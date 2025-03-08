@@ -297,6 +297,8 @@ type
     function TileIsMineShaft(aLoc : TKMPoint) : Boolean;
     procedure FindDeposits(const aLoc: TKMPoint; aRadius : Byte; aDeposits : TKMPointTagList; OverlapRadius : Byte = 0);overload;
     procedure FindDeposits(const aLoc: TKMPoint; aRadius : Byte; aDeposits : TKMPointTagList; aIncludeNormalOre : Boolean);overload;
+    procedure FindDepositsWithDistance(const aLoc: TKMPoint; aRadius : Byte; aDeposits : TKMPointTagList; aMaxDistance : Byte);
+    procedure FindValuableObjects(const aLoc: TKMPoint; aRadius : Byte; aObjects : TKMPointTagList);
     procedure PalaceExploreDeposits(const aLoc : TKMPoint);
 
     procedure IncFieldAge(aLoc : TKMPoint);
@@ -2159,6 +2161,7 @@ var
   tmpX, tmpY : Integer;
 begin
   SetLength(area, fMapX , fMapY);
+  FillChar(area, SizeOf(area), #0);
   SetLength(tmpArr, 0);
   rec := KMRectGrow(KMRect(aLoc), aRadius);
   rec.FitInMap(fMapX - 1, fMapY - 1);
@@ -2241,6 +2244,79 @@ begin
   for K := rec.Top to rec.Bottom do
     if HasDeposit(I, K) then
       aDeposits.Add(KMPoint(I, K), byte(Land[K, I].TileOverlay2) - byte(toGold) + 1, Land[K, I].Ware.C2);
+end;
+
+
+procedure TKMTerrain.FindDepositsWithDistance(const aLoc: TKMPoint; aRadius: Byte; aDeposits: TKMPointTagList; aMaxDistance: Byte);
+var area : TKMByte2Array;
+  rec : TKMRect;
+  I, K : Integer;
+
+  function HasDeposit(X, Y : Integer; aType : TKMTileOverlay = toNone) : Boolean;
+  begin
+    if aType = toNone then
+      Result := (Land[Y, X].TileOverlay2 in [toGold, toIron, toBitin, toCoal]) and (Land[Y, X].Ware.C2 > 0)
+    else
+      Result := (Land[Y, X].TileOverlay2 = aType) and (Land[Y, X].Ware.C2 > 0);
+  end;
+
+  procedure CheckTile(X, Y : Integer; aDistance : Integer; aType : TKMTileOverlay = toNone);
+  begin
+    if (area[X, Y] <> 0) or not HasDeposit(X, Y, aType) then
+      Exit;
+    if aDistance >= aMaxDistance then
+      Exit;
+
+    //deposits were found
+    //if (aType = toNone) or (Land[K, I].TileOverlay2 = aType) then
+    begin
+      aType := Land[K, I].TileOverlay2;
+      area[X, Y] := byte(Land[Y, X].TileOverlay2) - byte(toGold) + 1;
+      aDeposits.AddUnique(KMPoint(X, Y), area[X, Y], Land[K, I].Ware.C2);
+      if (X - 1 >= 1) then
+      begin
+        if (Y - 1 >= 1) then            CheckTile(X - 1, Y - 1, aDistance + 1, aType); //left top
+                                        CheckTile(X - 1, Y, aDistance + 1, aType);    //left
+        if (Y + 1 < fMapY) then         CheckTile(X - 1, Y + 1, aDistance + 1, aType); //left bottom
+      end;
+
+      if (Y - 1 >= 1) then
+        CheckTile(X, Y - 1, aDistance + 1, aType); // bottom
+      if (Y + 1 < fMapY) then
+        CheckTile(X, Y + 1, aDistance + 1, aType); // top
+
+      if (X + 1 < fMapX) then
+      begin
+        if (Y - 1 >= 1) then            CheckTile(X + 1, Y - 1, aDistance + 1, aType); //right top
+                                        CheckTile(X + 1, Y, aDistance + 1, aType);    //right
+        if (Y + 1 < fMapY) then         CheckTile(X + 1, Y + 1, aDistance + 1, aType); //right bottom
+      end;
+    end;
+  end;
+begin
+  SetLength(area, fMapX , fMapY);
+  //FillChar(area, SizeOf(area), #0);
+
+  rec := KMRectGrow(KMRect(aLoc), aRadius);
+  rec.FitInMap(fMapX - 1, fMapY - 1);
+  for I := rec.Left to rec.Right do
+  for K := rec.Top to rec.Bottom do
+    if (area[I, K] = 0) and HasDeposit(I, K) then
+      CheckTile(I, K, 0, toNone);
+end;
+
+procedure TKMTerrain.FindValuableObjects(const aLoc: TKMPoint; aRadius: Byte; aObjects: TKMPointTagList);
+var
+  rec : TKMRect;
+  I, K : Integer;
+begin
+  rec := KMRectGrow(KMRect(aLoc), aRadius);
+  rec.FitInMap(fMapX - 1, fMapY - 1);
+  for I := rec.Left to rec.Right do
+  for K := rec.Top to rec.Bottom do
+    If gMapElements[Land[K, I].Obj].ObjectPrice > 0 then
+      aObjects.Add(KMPoint(I, K), Land[K, I].Obj);
+
 end;
 
 

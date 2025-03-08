@@ -3743,7 +3743,6 @@ begin
 end;
 
 function TKMScriptStates.HouseArea(aHouseType: Integer): TKMHouseAreaNew;
-var I, K : Integer;
 begin
   try
     FillChar(Result, SizeOf(Result), #0);

@@ -1061,7 +1061,7 @@ begin
 end;
 
 procedure TKMSelection.AddPattern;
-var X, Y, J, aStartX, aStartY : Integer;
+var aStartX, aStartY : Integer;
 begin
   aStartX := Min(fSelectionRect.Left + 1, gTerrain.MapX - 31);
   aStartY := Min(fSelectionRect.Top + 1, gTerrain.MapY - 31);
