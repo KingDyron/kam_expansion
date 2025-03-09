@@ -5,6 +5,7 @@ uses
   StrUtils, SysUtils, Math, Classes,
   KM_Controls, KM_ControlsBase, KM_ControlsProgressBar, KM_ControlsSwitch, KM_ControlsWaresRow,
   KM_CommonClasses, KM_CommonTypes, KM_Defaults, KM_Pics, KM_ControlsPopUp, KM_ControlsEdit, KM_ControlsScroll,
+  KM_GUIGameHouseCartographer,
   KM_InterfaceGame, KM_Houses, KM_HouseMarket, KM_HouseQueue, KM_ResWares, KM_ResTypes;
 
 const LINE_HEIGHT = 25; //Each new Line is placed ## pixels after previous
@@ -259,6 +260,8 @@ type
 
     Pottery_ClayCount : TKMLabel;
     Pottery_ClayTitle : TKMLabel;
+
+    Panel_Cartographers : TKMGuiGameCartographer;
 
   public
     AskDemolish: Boolean;
@@ -532,6 +535,7 @@ begin
   Pottery_ClayTitle := TKMLabel.Create(Panel_House_Common, 0, 0, Panel_House_Common.Width, 15, gResTexts[2184], fntMetal, taLeft);
   Pottery_ClayCount := TKMLabel.Create(Panel_House_Common, 0, 0, Panel_House_Common.Width, 20, gResTexts[2184], fntGrey, taRight);
 
+  Panel_Cartographers := TKMGuiGameCartographer.Create(Panel_House);
   Create_HouseMarket;
   Create_HouseStore;
   Create_HouseSchool;
@@ -2197,6 +2201,7 @@ begin
                         Pottery_ClayTitle.Show;
                         Pottery_ClayCount.Show;
                       end;
+          htCartographers : Panel_Cartographers.Show(fHouse, base + line * 25 + 20 + 50);
       end;
 
 

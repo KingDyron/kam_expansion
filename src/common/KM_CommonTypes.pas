@@ -168,6 +168,7 @@ type
   TKMColor3b = record
     R,G,B: Byte;
     function ToCardinal: Cardinal;
+    function ToCardinal2: Cardinal;
     class function New(aR,aG,aB: Byte): TKMColor3b; static;
   end;
 
@@ -306,6 +307,10 @@ end;
 function TKMColor3b.ToCardinal: Cardinal;
 begin
   Result := (R + (G shl 8) + (B shl 16)); {or $FF000000};
+end;
+function TKMColor3b.ToCardinal2: Cardinal;
+begin
+  Result := (R + (G shl 8) + (B shl 16)) or $FF000000;
 end;
 
 

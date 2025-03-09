@@ -5,6 +5,7 @@ uses
   Math,
   KM_CommonClasses, KM_Defaults,  KM_CommonTypes, KM_Points,
   KM_Houses,
+  KM_MinimapCartographer,
   KM_ResTypes;
 
 type
@@ -20,6 +21,8 @@ type
     fUndergoundDeposits : TKMPointTagList;
     fObjectsWithWares : TKMPointTagList;
     fSpawners : TKMWordArray;
+    fMinimap : TKMMinimapCartographer;
+    function GetLayer(aType : TKMCartographersPaintLayer) : Boolean;
   protected
     procedure SetFlagPoint(aFlagPoint: TKMPoint); override;
     function GetMaxDistanceToPoint: Integer; override;
@@ -34,6 +37,9 @@ type
     procedure UpdateState(aTick: Cardinal); override;
     procedure Paint; override;
 
+    property Mode : TKMCartographesMode read fMode;
+    property Layer[aType : TKMCartographersPaintLayer] : Boolean read GetLayer;
+    property Minimap : TKMMinimapCartographer read fMinimap;
     function CanWork : Boolean;
     procedure ToggleLayer(aLayer : TKMCartographersPaintLayer); overload;
     procedure ToggleLayer(aLayer : Byte); overload;
@@ -64,6 +70,7 @@ begin
   begin
     fUndergoundDeposits := TKMPointTagList.Create;
     fObjectsWithWares := TKMPointTagList.Create;
+    fMinimap := TKMMinimapCartographer.Create(gTerrain.MapX, gTerrain.MapY);
   end;
   SetLength(fHouseList, 0);
 end;
@@ -76,9 +83,11 @@ begin
   begin
     fUndergoundDeposits := TKMPointTagList.Create;
     fObjectsWithWares := TKMPointTagList.Create;
+    fMinimap := TKMMinimapCartographer.Create(gTerrain.MapX, gTerrain.MapY);
   end;
   fUndergoundDeposits.LoadFromStream(LoadStream);
   fObjectsWithWares.LoadFromStream(LoadStream);
+  fMinimap.LoadFromStream(LoadStream);
   LoadStream.Read(fLayer, SizeOf(fLayer));
   LoadStream.Read(fSpawners);
   LoadStream.Read(C);
@@ -102,6 +111,7 @@ begin
   Inherited;
   fUndergoundDeposits.SaveToStream(SaveStream);
   fObjectsWithWares.SaveToStream(SaveStream);
+  fMinimap.SaveToStream(SaveStream);
   SaveStream.Write(fLayer, SizeOf(fLayer));
   SaveStream.Write(fSpawners);
   C := length(fHouseList);
@@ -117,6 +127,7 @@ begin
   begin
     fUndergoundDeposits := TKMPointTagList.Create;
     fObjectsWithWares := TKMPointTagList.Create;
+    fMinimap := TKMMinimapCartographer.Create(gTerrain.MapX, gTerrain.MapY);
   end;
 end;
 
@@ -127,7 +138,7 @@ end;
 
 function TKMHouseCartographers.GetMaxDistanceToPoint: Integer;
 begin
-  Result := 50;
+  Result := 100;
 end;
 
 procedure TKMHouseCartographers.SyncLoad;
@@ -242,6 +253,11 @@ begin
   Result := FlagPoint <> PointBelowEntrance;
 end;
 
+function TKMHouseCartographers.GetLayer(aType: TKMCartographersPaintLayer): Boolean;
+begin
+  Result := fLayer[aType];
+end;
+
 procedure TKMHouseCartographers.ToggleLayer(aLayer : TKMCartographersPaintLayer);
 begin
   fLayer[aLayer] := not fLayer[aLayer];
@@ -302,6 +318,8 @@ begin
       SetLength(fHouseList, J + 1);
       fHouseList[J] := houseList[I];
     end;
+
+  fMinimap.RevealCircle(aLoc, 50);
 
 end;
 

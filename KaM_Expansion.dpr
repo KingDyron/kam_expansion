@@ -446,7 +446,9 @@ uses
   KM_ResPatterns in 'src\res\KM_ResPatterns.pas',
   KM_HouseCartographers in 'src\houses\KM_HouseCartographers.pas',
   KM_GUIMenuDebug in 'src\gui\pages_menu\KM_GUIMenuDebug.pas',
-  KM_UnitTaskCartographer in 'src\units\tasks\KM_UnitTaskCartographer.pas';
+  KM_UnitTaskCartographer in 'src\units\tasks\KM_UnitTaskCartographer.pas',
+  KM_MinimapCartographer in 'src\minimap\KM_MinimapCartographer.pas',
+  KM_GUIGameHouseCartographer in 'src\gui\pages_game\house\KM_GUIGameHouseCartographer.pas';
 
 //KM_PerfLog in 'src\unused\KM_PerfLog.pas', //unused
 

@@ -4,7 +4,7 @@ interface
 uses
   Classes, Vcl.Controls,
   KromOGLUtils,
-  KM_RenderUI, KM_Minimap, KM_Viewport,
+  KM_RenderUI, KM_Minimap, KM_MinimapCartographer, KM_Viewport,
   KM_ResFonts, KM_CommonTypes, KM_Points, KM_Defaults,
   KM_Controls, KM_ControlsBase;
 
@@ -54,6 +54,31 @@ type
     procedure Paint; override;
   end;
 
+  TKMMinimapCartographerView = class(TKMControl)
+  private
+    fMinimap: TKMMinimapCartographer;
+    fPaintWidth: Integer;
+    fPaintHeight: Integer;
+    fLeftOffset: Integer;
+    fTopOffset: Integer;
+
+    fMapTex: TTexture;
+    fWidthPOT: Word;
+    fHeightPOT: Word;
+
+    procedure UpdateTexture;
+    procedure ResizeMinimap;
+  public
+    OnLocClick: TIntegerEvent;
+
+    constructor Create(aParent: TKMPanel; aLeft, aTop, aWidth, aHeight: Integer);
+
+    procedure UpdateSizes;
+    procedure UpdateMinimap;
+    procedure SetMinimap(aMinimap: TKMMinimapCartographer);
+
+    procedure Paint; override;
+  end;
 
 implementation
 uses
@@ -330,6 +355,93 @@ begin
     TKMRenderUI.WriteBevel(AbsLeft, AbsTop, Width+1, Height+1, 0, 0.5);
 end;
 
+
+
+{ TKMMinimapCartographerView }
+constructor TKMMinimapCartographerView.Create(aParent: TKMPanel; aLeft, aTop, aWidth, aHeight: Integer);
+begin
+  inherited Create(aParent, aLeft, aTop, aWidth, aHeight);
+
+  fMinimap := nil;
+  fMapTex.Tex := TKMRender.GenerateTextureCommon(ftNearest, ftNearest);
+end;
+
+
+procedure TKMMinimapCartographerView.UpdateSizes;
+begin
+  if fMinimap.MapX > fMinimap.MapY then
+  begin
+    fPaintWidth := Width;
+    fPaintHeight := Round(Height * fMinimap.MapY / Max(fMinimap.MapX, 1)); // X could = 0
+    fLeftOffset := 0;
+    fTopOffset := (Height - fPaintHeight) div 2;
+  end
+  else
+  begin
+    fPaintWidth := Round(Width * fMinimap.MapX / Max(fMinimap.MapY, 1)); // Y could = 0
+    fPaintHeight := Height;
+    fLeftOffset := (Width - fPaintWidth) div 2;
+    fTopOffset := 0;
+  end;
+end;
+
+procedure TKMMinimapCartographerView.UpdateMinimap;
+begin
+  If fMinimap <> nil then
+    UpdateTexture;
+end;
+
+procedure TKMMinimapCartographerView.SetMinimap(aMinimap: TKMMinimapCartographer);
+begin
+  If fMinimap <> aMinimap then
+  begin
+    fMinimap := aMinimap;
+    ResizeMinimap;
+    UpdateTexture;
+  end;
+end;
+
+procedure TKMMinimapCartographerView.ResizeMinimap;
+begin
+  if Self = nil then Exit;
+
+  fWidthPOT := MakePOT(fMinimap.MapX);
+  fHeightPOT := MakePOT(fMinimap.MapY);
+  fMapTex.U := fMinimap.MapX / fWidthPOT;
+  fMapTex.V := fMinimap.MapY / fHeightPOT;
+end;
+
+
+procedure TKMMinimapCartographerView.UpdateTexture;
+var
+  wData: Pointer;
+  I: Word;
+begin
+  if Self = nil then Exit;
+  GetMem(wData, fWidthPOT * fHeightPOT * 4);
+
+  if fMinimap.MapY > 0 then //if MapY = 0 then loop will overflow to MaxWord
+  for I := 0 to fMinimap.MapY - 1 do
+    Move(Pointer(NativeUint(fMinimap.Base) + I * fMinimap.MapX * 4)^,
+         Pointer(NativeUint(wData) + I * fWidthPOT * 4)^, fMinimap.MapX * 4);
+
+  TKMRender.UpdateTexture(fMapTex.Tex, fWidthPOT, fHeightPOT, tfRGBA8, wData);
+  FreeMem(wData);
+
+  UpdateSizes;
+end;
+
+procedure TKMMinimapCartographerView.Paint;
+begin
+  inherited;
+  TKMRenderUI.WriteBevel(AbsLeft - 1, AbsTop - 1, Width + 2, Height + 2);
+
+  if (fMinimap = nil) or (fMinimap.MapX * fMinimap.MapY = 0) then
+    Exit;
+
+  if (fMapTex.Tex <> 0) then
+    TKMRenderUI.WriteTexture(AbsLeft + fLeftOffset, AbsTop + fTopOffset, fPaintWidth, fPaintHeight, fMapTex, $FFFFFFFF);
+end;
 
 end.
 
