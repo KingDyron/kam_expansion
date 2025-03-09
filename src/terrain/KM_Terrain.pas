@@ -2490,7 +2490,8 @@ begin
             or (gMapElements[Land^[Y, X].Obj].Coal > 0)
             or (gMapElements[Land^[Y, X].Obj].Gold > 0)
             or ((Land^[Y, X].Ware.W > 0) and (Land^[Y, X].Ware.C > 0))
-            or (length(gMapElements[Land^[Y, X].Obj].VWares) > 0);
+            or (length(gMapElements[Land^[Y, X].Obj].VWares) > 0)
+            or HasMeat(KMPoint(X, Y));
 end;
 
 function TKMTerrain.TileIsLocked(const aLoc: TKMPoint): Boolean;
@@ -3832,6 +3833,7 @@ function TKMTerrain.FindCollectors(const aLoc: TKMPoint; const aAvoidLoc: TKMPoi
 var
   L: TKMPointDirCenteredList;
   I : Integer;
+  P : TKMPoint;
 begin
   L := TKMPointDirCenteredList.Create(aLoc);
   Result.SetCount(WARES_IN_OUT_COUNT, true);
@@ -3855,19 +3857,18 @@ begin
     Exit;
   end;
 
-  I := 255;
-  case aOrePoint.Dir of
-    dirN : I := Land^[aOrePoint.Y - 1, aOrePoint.X].Obj;
-    dirS : I := Land^[aOrePoint.Y + 1, aOrePoint.X].Obj;
-    dirE : I := Land^[aOrePoint.Y, aOrePoint.X + 1].Obj;
-    dirW : I := Land^[aOrePoint.Y, aOrePoint.X - 1].Obj;
-  end;
+  P := aOrePoint.DirFaceLoc;
+  I := Land^[P.Y, P.X].Obj;
 
   if I = 255 then
     Result[0].W := wtNone;
-
   if Result[0].W <> wtNone then
   begin
+    If HasMeat(P) then
+    begin
+      Result[0].W := wtPig;
+      Result[0].C := 0;
+    end else
     if length(gMapElements[I].VWares) > 0 then
       Result[0].W := wtJewerly
     else
@@ -4003,10 +4004,9 @@ begin
   miningRect := GetMiningRect(wtJewerly);
 
   //Try to find Clay
-  for I := Max(aLoc.Y - miningRect.Top, 2) to Min(aLoc.Y + miningRect.Bottom, fMapY - 2) do
-    for K := Max(aLoc.X - miningRect.Left, 2) to Min(aLoc.X + miningRect.Right, fMapX - 2) do
+  for I := Max(aLoc.Y - miningRect.Top, 2) to Min(aLoc.Y + miningRect.Bottom, fMapY - 1) do
+    for K := Max(aLoc.X - miningRect.Left, 2) to Min(aLoc.X + miningRect.Right, fMapX - 1) do
         if not KMSamePoint(aAvoidLoc, KMPoint(K,I))
-          //and TileHasClay(K, I)
           and TileHasCollectorsGoods(K, I)
           and (aIgnoreWorkingUnits or not TileIsLocked(KMPoint(K, I))) then
           begin
@@ -4022,18 +4022,21 @@ begin
               Weight := 250;
 
             weight := weight / (KMLengthDiag(aLoc, KMPoint(K, I)) * 100);
+            If K - 1 > 0 then
+              If RouteCanBeMade(aLoc, KMPoint(K - 1, I), tpWalk) then //left
+                aJewerlyLocs.AddW(KMPointDir(K - 1, I, dirW), weight);
 
-            If RouteCanBeMade(aLoc, KMPoint(K - 1, I), tpWalk) then //left
-              aJewerlyLocs.AddW(KMPointDir(K - 1, I, dirW), weight);
+            If K + 1 < fMapX then
+              If RouteCanBeMade(aLoc, KMPoint(K + 1, I), tpWalk) then //right
+                aJewerlyLocs.AddW(KMPointDir(K + 1, I, dirE), weight);
 
-            If RouteCanBeMade(aLoc, KMPoint(K + 1, I), tpWalk) then //right
-              aJewerlyLocs.AddW(KMPointDir(K + 1, I, dirE), weight);
+            If I - 1 > 0 then
+              If RouteCanBeMade(aLoc, KMPoint(K, I - 1), tpWalk) then //Top
+                aJewerlyLocs.AddW(KMPointDir(K, I - 1, dirS), weight);
 
-            If RouteCanBeMade(aLoc, KMPoint(K, I - 1), tpWalk) then //Top
-              aJewerlyLocs.AddW(KMPointDir(K, I - 1, dirS), weight);
-
-            If RouteCanBeMade(aLoc, KMPoint(K, I + 1), tpWalk) then //Bottom
-              aJewerlyLocs.AddW(KMPointDir(K, I + 1, dirN), weight);
+            If I + 1 < fMapY then
+              If RouteCanBeMade(aLoc, KMPoint(K, I + 1), tpWalk) then //Bottom
+                aJewerlyLocs.AddW(KMPointDir(K, I + 1, dirN), weight);
           end;
 
 end;
@@ -4059,8 +4062,12 @@ begin
   if I = 255 then
     Exit(false);
   W := ObjectGetWare(I);
-
-  if W <> wtNone then
+  If HasMeat(aLoc.Loc) then
+  begin
+    SetObject(aLoc.Loc, OBJ_NONE);
+    Result := true;
+  end else
+  if not (W in [wtNone, wtTile]) then
   begin
     if ObjectGetWare(I - 1) = W then
       SetObject(aLoc.Loc, I - 1)

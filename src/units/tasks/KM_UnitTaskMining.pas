@@ -747,6 +747,9 @@ begin
               gsCollector : begin
                               ResAcquired := true;
                               if (fObjectType <> 0) and (fObjectType <> 255) then
+                                If ArrayContains(fObjectType, [540, 541, 542, 543, 544, 545, 546, 547, 548]) then
+                                  TKMHouseCollectors(fUnit.Home).FillMeat(fObjectType)
+                                else
                                 if length(gMapElements[fObjectType].VWares) > 0 then
                                 begin
                                   gHands[fUnit.Owner].AddJewerly(fObjectType);
