@@ -172,7 +172,7 @@ type
 
     function FindHunter(const aLoc: TKMPoint; const aAvoidLoc: TKMPoint; aIgnoreWorkingUnits: Boolean; out aOrePoint: TKMPointDir) : Boolean;
     procedure FindHunterPoints(const aLoc: TKMPoint; const aAvoidLoc: TKMPoint; aIgnoreWorkingUnits: Boolean; aPoints : TKMWeightedPointList);
-    function SetHunterTraps(const aLoc: TKMPoint) : Word;
+    function SetHunterTraps(const aLoc: TKMPoint; aMode : Integer) : Word;
     function HasMeat(P : TKMPoint) : Boolean;
     function CanSetTrap(P : TKMPoint) : Boolean;
 
@@ -4148,7 +4148,9 @@ begin
   Result := ArrayContains(Land^[P.Y, P.X].Obj, [540, 541, 542, 543, 544, 545, 546, 547, 548])
 end;
 
-function TKMTerrain.SetHunterTraps(const aLoc: TKMPoint) : Word;
+//aMode = 2 : collects meat
+//aMode = 1 : sets trap
+function TKMTerrain.SetHunterTraps(const aLoc: TKMPoint; aMode : Integer) : Word;
 begin
   Result := OBJ_NONE;
   //collect meat
@@ -4158,8 +4160,8 @@ begin
     SetObject(aLoc, OBJ_NONE);
     Exit;
   end;
-  //set traps
-  //if CanSetTrap(aLoc) then
+  //set trap
+  if aMode = 1 then
     SetObject(aLoc, 539);
 end;
 

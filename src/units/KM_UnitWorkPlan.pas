@@ -750,12 +750,13 @@ begin
                         begin
                           Loc := tmp.Loc;
                           WalkStyle(tmp, uaWalk,uaWork,5,0,uaWalk,gsHunter);
+                          TMPInt := 2;//collect meat
                           if gTerrain.GetObject(tmp.Loc) = OBJ_NONE then
                           begin
                             if (aUnit.Home.CheckWareIn(wtLance) = 0) and not aUnit.Home.DontNeedRes then
                               fIssued := false
                             else
-                              TMPInt := 1;
+                              TMPInt := 1;//set trap
                           end;
                         end;{ else
                           ResourceDepleted := not gTerrain.FindHunter(aLoc, KMPOINT_ZERO, true, tmp);}

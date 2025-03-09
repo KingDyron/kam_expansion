@@ -228,7 +228,7 @@ begin
   with gTerrain do
   case WorkPlan.GatheringScript of
     gsClayMiner:       Result := TileHasClay(WorkPlan.Loc.X, WorkPlan.Loc.Y); //Check stone deposit above Loc, which is walkable tile
-    gsHunter :         Result := CanSetTrap(WorkPlan.Loc) or HasMeat(WorkPlan.Loc);
+    gsHunter :         Result := ((WorkPlan.TMPInt = 1) and CanSetTrap(WorkPlan.Loc)) or ((WorkPlan.TMPInt = 2) and HasMeat(WorkPlan.Loc));
     gsStoneCutter:     Result := TileHasStone(WorkPlan.Loc.X, WorkPlan.Loc.Y-1); //Check stone deposit above Loc, which is walkable tile
     gsFarmerSow:       Result := (TileIsCornField(WorkPlan.Loc) and (Land^[WorkPlan.Loc.Y, WorkPlan.Loc.X].FieldAge = 0))
                                  or (TileIsGrassField(WorkPlan.Loc) and InRange(Land^[WorkPlan.Loc.Y, WorkPlan.Loc.X].FieldAge, 0, CORN_AGE_1 - 1))
@@ -470,7 +470,7 @@ begin
                                end;
            gsHunter:           begin
                                 fDistantResAcquired := false;
-                                fObjectType := gTerrain.SetHunterTraps(WorkPlan.Loc);
+                                fObjectType := gTerrain.SetHunterTraps(WorkPlan.Loc, WorkPlan.TMPInt);
                                 if fObjectType <> OBJ_NONE then
                                 begin
                                   fDistantResAcquired := true;
