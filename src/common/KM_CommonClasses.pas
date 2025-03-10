@@ -78,6 +78,7 @@ type
     procedure Write(const Value: TDateTime     ); reintroduce; overload; virtual; abstract;
     procedure Write(const Value: TKMWordArray  ); reintroduce; overload; virtual; abstract;
     procedure Write(const Value: TIntegerArray  ); reintroduce; overload; virtual; abstract;
+    procedure WriteData(const Buffer); reintroduce; overload; virtual; abstract;
 
     procedure Read(out Value: TKMDirection  ); reintroduce; overload; virtual; abstract;
     procedure Read(out Value: TKMPoint      ); reintroduce; overload; virtual; abstract;
@@ -100,6 +101,7 @@ type
     procedure Read(out Value: TDateTime     ); reintroduce; overload; virtual; abstract;
     procedure Read(out Value: TKMWordArray     ); reintroduce; overload; virtual; abstract;
     procedure Read(out Value: TIntegerArray     ); reintroduce; overload; virtual; abstract;
+    procedure ReadData(out Buffer); reintroduce; overload; virtual; abstract;
 
     procedure ReadBytes(out Value: TBytes);
     procedure WriteBytes(const Value: TBytes);
@@ -176,6 +178,7 @@ type
     procedure Write(const Value: TDateTime     ); override;
     procedure Write(const Value: TKMWordArray     ); override;
     procedure Write(const Value: TIntegerArray     ); override;
+    procedure WriteData(const Buffer); override;
 
     procedure Read(out Value: TKMDirection  ); override;
     procedure Read(out Value: TKMPoint      ); override;
@@ -198,6 +201,7 @@ type
     procedure Read(out Value: TDateTime     ); override;
     procedure Read(out Value: TKMWordArray     ); override;
     procedure Read(out Value: TIntegerArray     ); override;
+    procedure ReadData(out Buffer); override;
   end;
 
   // Text writer
@@ -1884,6 +1888,7 @@ procedure TKMemoryStreamBinary.Read(out Value: Word);           begin inherited 
 procedure TKMemoryStreamBinary.Read(out Value: ShortInt);       begin inherited Read(Value, SizeOf(Value)); end;
 procedure TKMemoryStreamBinary.Read(out Value: SmallInt);       begin inherited Read(Value, SizeOf(Value)); end;
 procedure TKMemoryStreamBinary.Read(out Value: TDateTime);      begin inherited Read(Value, SizeOf(Value)); end;
+procedure TKMemoryStreamBinary.ReadData(out Buffer);            begin inherited Read(Buffer, SizeOf(Buffer)); end;
 
 procedure TKMemoryStreamBinary.Read(out Value: TKMWordArray     );
 var I, C : Integer;
@@ -1924,6 +1929,7 @@ procedure TKMemoryStreamBinary.Write(const Value: Word);           begin inherit
 procedure TKMemoryStreamBinary.Write(const Value: ShortInt);       begin inherited Write(Value, SizeOf(Value)); end;
 procedure TKMemoryStreamBinary.Write(const Value: SmallInt);       begin inherited Write(Value, SizeOf(Value)); end;
 procedure TKMemoryStreamBinary.Write(const Value: TDateTime);      begin inherited Write(Value, SizeOf(Value)); end;
+procedure TKMemoryStreamBinary.WriteData(const Buffer);            begin Inherited Write(Buffer, SizeOf(Buffer)); end;
 
 procedure TKMemoryStreamBinary.Write(const Value: TKMWordArray     );
 var I, C : Integer;

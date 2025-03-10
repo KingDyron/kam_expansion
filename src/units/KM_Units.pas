@@ -1019,7 +1019,7 @@ begin
     Exit;
 
   If H.CanWork then
-    fTask := TKMTaskCartographer.Create(self, H.FlagPoint);
+    fTask := TKMTaskCartographer.Create(self, H.FlagPoint, H.Mode);
 end;
 
 procedure TKMUnitRecruit.TaskGetWork;
@@ -1824,6 +1824,7 @@ begin
       uttGoToWell:        fTask := TKMTaskGoToWell.Load(LoadStream);
       uttTakeOverHouse:   fTask := TKMTaskTakeOverHouse.Load(LoadStream);
       uttMerchant:        fTask := TKMTaskMerchant.Load(LoadStream);
+      uttCartographer:    fTask := TKMTaskCartographer.Load(LoadStream);
     else
       raise Exception.Create('TaskName can''t be handled');
     end;

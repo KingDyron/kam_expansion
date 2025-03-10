@@ -747,6 +747,7 @@ const
   GROUP_TYPE_GUI_TEXT : array[GROUP_TYPE_MIN..GROUP_TYPE_MAX] of Word = (473, 472, 471, 470, 1643, 1883, 1963, 2022);
 type
   TKMGroupTypeArray = array [gtAny..GROUP_TYPE_MAX] of Word;
+  TKMGroupTypeValidArray = array [GROUP_TYPE_MIN..GROUP_TYPE_MAX] of Word;
   //* AI army type
   TKMArmyType = (atIronThenLeather, atLeather, atIron, atIronAndLeather);
   TAIArmyDemand = array [TKMGroupType] of Integer;

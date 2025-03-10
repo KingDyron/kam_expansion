@@ -12,10 +12,11 @@ type
   TKMTaskCartographer = class(TKMUnitTask)
   private
     fCenterPoint : TKMPoint;
+    fMode : TKMCartographersMode;
     function GetRandomPos : TKMPoint;
     function Cartographers : TKMHouseCartographers;
   public
-    constructor Create(aUnit: TKMUnit; aLoc : TKMPoint);
+    constructor Create(aUnit: TKMUnit; aLoc : TKMPoint; aMode : TKMCartographersMode);
     destructor Destroy; override;
     constructor Load(LoadStream: TKMemoryStream); override;
     function Execute: TKMTaskResult; override;
@@ -35,10 +36,11 @@ uses
 const
   MAX_PHASE2 = 5;
 { TTaskThrowRock }
-constructor TKMTaskCartographer.Create(aUnit: TKMUnit; aLoc : TKMPoint);
+constructor TKMTaskCartographer.Create(aUnit: TKMUnit; aLoc : TKMPoint; aMode : TKMCartographersMode);
 begin
   inherited Create(aUnit);
   fType := uttCartographer;
+  fMode := aMode;
   fCenterPoint := aLoc;
 end;
 
@@ -59,6 +61,7 @@ begin
   inherited;
   LoadStream.CheckMarker('TaskCartographer');
   LoadStream.Read(fCenterPoint);
+  LoadStream.ReadData(fMode{, SizeOf(fMode)});
 end;
 
 function TKMTaskCartographer.Execute: TKMTaskResult;
@@ -71,40 +74,43 @@ begin
     Result := trTaskDone;
     Exit;
   end;
-
-  with fUnit do
-    case fPhase of
-      0:  begin
-            Home.SetState(hstEmpty);
-            SetActionGoIn(uaWalk, gdGoOutside, Home);
-          end;
-      1:  begin
-            SetActionWalkToSpot(GetRandomPos);
-          end;
-      2:  begin
-            inc(fPhase2);
-            SetActionLockedStay(50, uaWalk);
-            If fPhase2 < MAX_PHASE2 then
-              fPhase := 0;
-          end;
-      3:  SetActionWalkToSpot(Home.PointBelowEntrance);
-      4:  begin
-            SetActionGoIn(uaWalk, gdGoInside, Home);
-          end;
-      5:  begin
-            Home.SetState(hstWork);
-            Home.CurrentAction.SubActionAdd([haSmoke]);
-            SetActionLockedStay(600, uaWalk);// 1 minute
-            Home.TotalWorkingTime := 600;
-            Home.WorkingTime := 0;
-          end;
-      6:  begin
-            Home.SetState(hstIdle);
-            SetActionLockedStay(Home.HSpec.WorkerRest * 10, uaWalk);
-            Cartographers.CollectData(fCenterPoint);
-          end;
-      else Result := trTaskDone;
-    end;
+  If fMode = cmSpy then
+    Result := trTaskDone
+  else
+  If fMode = cmChartman then
+    with fUnit do
+      case fPhase of
+        0:  begin
+              Home.SetState(hstEmpty);
+              SetActionGoIn(uaWalk, gdGoOutside, Home);
+            end;
+        1:  begin
+              SetActionWalkToSpot(GetRandomPos);
+            end;
+        2:  begin
+              inc(fPhase2);
+              SetActionLockedStay(100, uaWalk);
+              If fPhase2 < MAX_PHASE2 then
+                fPhase := 0;
+            end;
+        3:  SetActionWalkToSpot(Home.PointBelowEntrance);
+        4:  begin
+              SetActionGoIn(uaWalk, gdGoInside, Home);
+            end;
+        5:  begin
+              Home.SetState(hstWork);
+              Home.CurrentAction.SubActionAdd([haSmoke]);
+              SetActionLockedStay(600, uaWalk);// 1 minute
+              Home.TotalWorkingTime := 600;
+              Home.WorkingTime := 0;
+            end;
+        6:  begin
+              Home.SetState(hstIdle);
+              SetActionLockedStay(Home.HSpec.WorkerRest * 10, uaWalk);
+              Cartographers.CollectChartmanData(fCenterPoint);
+            end;
+        else Result := trTaskDone;
+      end;
 
   Inc(fPhase);
 end;
@@ -115,6 +121,7 @@ begin
   inherited;
   SaveStream.PlaceMarker('TaskCartographer');
   SaveStream.Write(fCenterPoint);
+  SaveStream.WriteData(fMode{, SizeOf(fMode)});
 end;
 
 function TKMTaskCartographer.GetRandomPos: TKMPoint;

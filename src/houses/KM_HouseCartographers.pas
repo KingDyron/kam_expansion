@@ -4,24 +4,48 @@ interface
 uses
   Math,
   KM_CommonClasses, KM_Defaults,  KM_CommonTypes, KM_Points,
+  KM_AITypes,
   KM_Houses,
   KM_MinimapCartographer,
   KM_ResTypes;
 
 type
-  TKMCartographesMode = (cmChartman, cmSpy);
+  TKMCartographersMode = (cmChartman, cmSpy);
   TKMCartographersPaintLayer = (cplUnderground, cplMiningRadius, cplTowerRange, cplSpawners, cplObjects);
+
+  TKMSpyPlayerData = record
+    ID : Integer;
+
+    Army : Word;
+    StrongestUnit : TKMUnitType;
+    Groups : TKMGroupTypeValidArray;
+    WarHouses : array[0..6] of Word;
+
+    Citizens : Word;
+    WarriorsKilled : Word;
+    Weapons : Integer;
+    //AI
+    UnlimitedEquip : Boolean;
+    AutoAttackRange : Byte;
+    ArmyType : TKMArmyType;
+    AttackTarget : array of TKMAIAttackTarget;
+  end;
+  TKMSpyPlayersData = array of TKMSpyPlayerData;
 
   TKMHouseCartographers = class(TKMHouseWFlagPoint)
   private
-    //fMinimap : //not used right now
-    fMode : TKMCartographesMode;
+    fMode : TKMCartographersMode;
+    //chartman
     fLayer: array[TKMCartographersPaintLayer] of Boolean;
     fHouseList : TKMHouseArray;
     fUndergoundDeposits : TKMPointTagList;
     fObjectsWithWares : TKMPointTagList;
     fSpawners : TKMWordArray;
     fMinimap : TKMMinimapCartographer;
+    //spy
+    fPlayerToSpy : Integer;
+    fPlayers : TKMSpyPlayersData;
+    procedure SetMode(aMode : TKMCartographersMode);
     function GetLayer(aType : TKMCartographersPaintLayer) : Boolean;
   protected
     procedure SetFlagPoint(aFlagPoint: TKMPoint); override;
@@ -37,13 +61,14 @@ type
     procedure UpdateState(aTick: Cardinal); override;
     procedure Paint; override;
 
-    property Mode : TKMCartographesMode read fMode;
+    property Mode : TKMCartographersMode read fMode write SetMode;
     property Layer[aType : TKMCartographersPaintLayer] : Boolean read GetLayer;
     property Minimap : TKMMinimapCartographer read fMinimap;
     function CanWork : Boolean;
     procedure ToggleLayer(aLayer : TKMCartographersPaintLayer); overload;
     procedure ToggleLayer(aLayer : Byte); overload;
-    procedure CollectData(aLoc : TKMPoint);
+    procedure CollectChartmanData(aLoc : TKMPoint);
+    procedure CollectSpyData(aPlayer : Integer);
 
   end;
 
@@ -51,10 +76,11 @@ implementation
 uses
   KM_Game,
   KM_CommonUtils, KromUtils,
-  KM_HandsCollection,
+  KM_HandsCollection, KM_Hand,
   KM_HouseHelpers,
   KM_HouseCollection,
   KM_ResMapElements, KM_Resource,
+  KM_InterfaceGame,
   KM_RenderAux, KM_RenderDebug, KM_RenderPool,
   KM_Terrain;
 
@@ -95,14 +121,13 @@ begin
   for I := 0 to C - 1 do
     LoadStream.Read(fHouseList[I], 4);
 
+  LoadStream.Read(fPlayerToSpy);
+  LoadStream.Read(C);
+  SetLength(fPlayers, C);
+  for I := 0 to C - 1 do
+    LoadStream.Read(fPlayers[I], SizeOf(fPlayers[I]));
 
-end;
 
-destructor TKMHouseCartographers.Destroy;
-begin
-  fUndergoundDeposits.Free;
-  fObjectsWithWares.Free;
-  Inherited;
 end;
 
 procedure TKMHouseCartographers.Save(SaveStream: TKMemoryStream);
@@ -118,6 +143,20 @@ begin
   SaveStream.Write(C);
   for I := 0 to C - 1 do
     SaveStream.Write(fHouseList[I].UID);
+
+  SaveStream.Write(fPlayerToSpy);
+  C := length(fPlayers);
+  SaveStream.Write(C);
+  for I := 0 to C - 1 do
+    SaveStream.Write(fPlayers[I], SizeOf(fPlayers[I]));
+
+end;
+
+destructor TKMHouseCartographers.Destroy;
+begin
+  fUndergoundDeposits.Free;
+  fObjectsWithWares.Free;
+  Inherited;
 end;
 
 procedure TKMHouseCartographers.Activate(aWasBuilt: Boolean);
@@ -219,14 +258,12 @@ procedure TKMHouseCartographers.Paint;
 var I : Integer;
 begin
   Inherited;
-  If not IsComplete {or not HasWorkerInside} then
+  If not IsComplete or (fMode = cmSpy ) then
     Exit;
 
   if gMySpectator.Selected <> self then
     Exit;
 
-  If fMode = cmSpy then
-    Exit;
   If fLayer[cplUnderground] then
     PaintUndergroundDeposits;
   If fLayer[cplMiningRadius] then
@@ -253,6 +290,11 @@ begin
   Result := FlagPoint <> PointBelowEntrance;
 end;
 
+procedure TKMHouseCartographers.SetMode(aMode: TKMCartographersMode);
+begin
+  fMode := aMode;
+end;
+
 function TKMHouseCartographers.GetLayer(aType: TKMCartographersPaintLayer): Boolean;
 begin
   Result := fLayer[aType];
@@ -268,7 +310,8 @@ begin
   ToggleLayer(TKMCartographersPaintLayer(aLayer) );
 end;
 
-procedure TKMHouseCartographers.CollectData(aLoc: TKMPoint);
+procedure TKMHouseCartographers.CollectChartmanData(aLoc: TKMPoint);
+
   function ContainsSpawner(aID : Integer): Boolean;
   var I : Integer;
   begin
@@ -277,6 +320,7 @@ procedure TKMHouseCartographers.CollectData(aLoc: TKMPoint);
       If fSpawners[I] = aID then
         Exit(true);
   end;
+
   function ContainsHouse(aID : TKMHouse): Boolean;
   var I : Integer;
   begin
@@ -285,15 +329,36 @@ procedure TKMHouseCartographers.CollectData(aLoc: TKMPoint);
       If fHouseList[I] = aID then
         Exit(true);
   end;
+
+  procedure DeleteHouse(aID : Integer);
+  var I : Integer;
+  begin
+    for I := aID to High(fHouseList) - 1 do
+      fHouseList[I] := fHouseList[I + 1];
+    SetLength(fHouseList, high(fHouseList));
+  end;
+
 var list : TKMPointTagList;
   I, J : Integer;
   houseList : TKMHouseArray;
+  rect : TKMRect;
 begin
   list := TKMPointTagList.Create;
-  gTerrain.FindDepositsWithDistance(aLoc, 10, list, 15);
+  rect := KMRectGrow(aLoc, 15);
+  gTerrain.FindDepositsWithDistance(aLoc, 15, list, 1);
+
+  //delete old data from this place
+  for I := fUndergoundDeposits.Count - 1 downto 0 do
+    If KMInRect(fUndergoundDeposits[I], rect) then
+      fUndergoundDeposits.Delete(I);
   fUndergoundDeposits.AddListUnique(list);
   list.Clear;
+
   gTerrain.FindValuableObjects(aLoc, 15, list);
+  //delete old data from this place
+  for I := fObjectsWithWares.Count - 1 downto 0 do
+    If KMInRect(fObjectsWithWares[I], rect) then
+      fObjectsWithWares.Delete(I);
   fObjectsWithWares.AddListUnique(list);
   list.Free;
 
@@ -306,10 +371,15 @@ begin
         SetLength(fSpawners, J + 1);
         fSpawners[J] := I;
       end;
+
   If FlagPoint = aLoc then
     FlagPoint := PointBelowEntrance;
 
   houseList := gHands.GetHousesInRadius(aLoc, Sqr(20));
+
+  for I := high(fHouseList) downto 0 do
+    If not fHouseList[I].IsValid(htAny, false, true) then
+      DeleteHouse(I);
 
   for I := 0 to high(houseList) do
     If not ContainsHouse(houseList[I]) then
@@ -320,6 +390,56 @@ begin
     end;
 
   fMinimap.RevealCircle(aLoc, 50);
+
+end;
+
+procedure TKMHouseCartographers.CollectSpyData(aPlayer: Integer);
+var hand : TKMHand;
+  I, id : Integer;
+begin
+  hand := gHands[aPlayer];
+  id := -1;
+  for I := 0 to High(fPlayers) do
+    If fPlayers[I].ID = aPlayer then
+    begin
+      id := I;
+      Break;
+    end;
+  If id = -1 then
+  begin
+    id := length(fPlayers);
+    SetLength(fPlayers, id + 1);
+  end;
+  fPlayers[id].ID := aPlayer;
+  fPlayers[id].Army := hand.Stats.GetArmyCount;
+  fPlayers[id].Groups := hand.GetGroupsCount;
+
+  //statistics
+  fPlayers[id].Citizens := hand.Stats.GetCitizensCount;
+  fPlayers[id].WarriorsKilled := hand.Stats.GetWarriorsKilled;
+  fPlayers[id].Weapons := 0;
+  for I := low(BarracksResOrder) to High(BarracksResOrder) do
+    If BarracksResOrder[I] in WARES_VALID then
+      Inc(fPlayers[id].Weapons, hand.Stats.Wares[BarracksResOrder[I]].ActualCnt);
+
+  //AI
+  fPlayers[id].UnlimitedEquip := hand.AI.Setup.UnlimitedEquip;
+  fPlayers[id].AutoAttackRange := hand.AI.Setup.AutoAttackRange;
+  fPlayers[id].ArmyType := hand.AI.Setup.ArmyType;
+  SetLength(fPlayers[id].AttackTarget, hand.AI.General.Attacks.Count);
+  for I := 0 to hand.AI.General.Attacks.Count - 1 do
+    fPlayers[id].AttackTarget[I] := hand.AI.General.Attacks[I].Target;
+
+  for I := 0 to High(fPlayers[id].WarHouses) do
+    case I of
+      0: fPlayers[id].WarHouses[I] := hand.Stats.GetHouseQty(htBarracks);
+      1: fPlayers[id].WarHouses[I] := hand.Stats.GetHouseQty(htTownhall);
+      2: fPlayers[id].WarHouses[I] := hand.Stats.GetHouseQty(htPalace);
+      3: fPlayers[id].WarHouses[I] := hand.Stats.GetHouseQty(htSiegeWorkshop);
+      4: fPlayers[id].WarHouses[I] := hand.Stats.GetHouseQty(htWallTower);
+      5: fPlayers[id].WarHouses[I] := hand.Stats.GetHouseQty(htWatchTower);
+      6: fPlayers[id].WarHouses[I] := hand.Stats.GetHouseQty([htWall, htWall2, htWall3, htWall4, htWall5]);
+    end;
 
 end;
 

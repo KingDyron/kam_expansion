@@ -313,6 +313,7 @@ type
     function GetClosestHouse(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aWareSet : TKMWareTypeSet = [wtAll];  aMaxDistance : Single = 999) : TKMHouse;
     function GetClosestStore(aLoc : TKMPoint; aWare: TKMWareType) : TKMHouse;
     function GetClosestBarracks(aLoc : TKMPoint; aWare: TKMWareType) : TKMHouse;
+    function GetGroupsCount: TKMGroupTypeValidArray;
 
 
     function GetFieldsCount: Integer;
@@ -2707,6 +2708,15 @@ begin
     end;
   end;
 
+end;
+
+function TKMHand.GetGroupsCount: TKMGroupTypeValidArray;
+var I : Integer;
+begin
+  FillChar(Result, SizeOf(Result), #0);
+  for I := 0 to fUnitGroups.Count - 1 do
+    If not fUnitGroups[I].IsDead then
+      Inc(Result[fUnitGroups[I].GroupType], 1);
 end;
 
 function TKMHand.GetWorklessCount : Integer;
