@@ -571,6 +571,7 @@ type
       function PaintHouseWork : Boolean; override;
       procedure RecheckParenting;
       procedure CheckForParentTree;
+      procedure RefreshChilds;
     protected
        procedure Activate(aWasBuilt: Boolean); override;
        function ShowUnoccupiedMSG : Boolean; override;
@@ -5367,10 +5368,44 @@ begin
   list.Free;
 end;
 
+procedure TKMHouseAppleTree.RefreshChilds;
+var tmp : TPointerArray;
+  I : Integer;
+begin
+  SetLength(tmp, 0);
+  for I := 0 to high(fChildTrees) do
+    If TKMHouseAppleTree(fChildTrees[I]).IsValid then
+    begin
+      SetLength(tmp, length(tmp) + 1);
+      tmp[high(tmp)] := fChildTrees[I];
+    end;
+  fChildTrees := tmp;
+end;
+
 procedure TKMHouseAppleTree.Demolish(aFrom: ShortInt; IsSilent: Boolean = False);
 var I : Integer;
+  newParent : TKMHouseAppleTree;
 begin
   Inherited;
+  If (aFrom = -1) or (aFrom = Owner) then
+  begin
+    If ParentTree = nil then
+    begin
+      //Make first valid apple tree a new parent
+      for I := 0 to ChildCount - 1 do
+        if ChildTree(I).IsValid() then
+        begin
+          newParent := ChildTree(I);
+          Break;
+        end;
+      newParent.SetParentTree(nil);
+      //now add childs to this parent
+      for I := 0 to ChildCount - 1 do
+        if ChildTree(I).IsValid and (newParent <> ChildTree(I)) then
+          ChildTree(I).SetParentTree(newParent);
+    end else
+      TKMHouseAppleTree(ParentTree).RefreshChilds;
+  end else
   if ParentTree <> nil then
     ParentTree.Demolish(aFrom, IsSilent)
   else
@@ -5610,18 +5645,23 @@ end;
 procedure TKMHouseAppleTree.SetParentTree(aHouse: TKMHouse);
 var I : Integer;
 begin
-  fParentTree := aHouse;
+  If fParentTree = self then
+    fParentTree := nil
+  else
+    fParentTree := aHouse;
+
   if not IsValid then
     Exit;
   if fParentTree = nil then
-
+  begin
     gTerrain.SetRoad(Entrance, Owner, rtStone);
+    self.IsClosedForWorker := false;
+  end;
 
   if not ParentTree.IsValid then //check if new parent is valid (is not nil)
     Exit;
 
   gTerrain.RemRoad(Entrance);
-
   for I := 0 to TKMHouseAppleTree(aHouse).ChildCount - 1 do
     if TKMHouseAppleTree(aHouse).fChildTrees[I] = self then //don't add the same house
       Exit;
