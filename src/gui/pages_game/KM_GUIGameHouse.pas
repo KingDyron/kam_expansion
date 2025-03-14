@@ -294,7 +294,7 @@ uses
   KM_CommonUtils, KM_CommonHelpers,
   KM_HouseBarracks, KM_HouseSchool, KM_HouseTownHall, KM_HouseWoodcutters, KM_HouseStore,
   KM_HouseArmorWorkshop, KM_HouseSiegeWorkshop, KM_HouseWoodBurner, KM_HouseCottage,
-  KM_HouseSwineStable,
+  KM_HouseSwineStable, KM_HouseCartographers,
   KM_HandsCollection, KM_HandTypes, KM_HandEntity,
   KM_RenderUI, KM_ResKeys, KM_ResMapElements,
   KM_Resource, KM_ResFonts, KM_ResHouses, KM_ResTexts, KM_ResUnits, KM_Utils, KM_UtilsExt, KM_Points,
@@ -2300,7 +2300,12 @@ begin
           else
             Image_WareIn_Accept[RowRes].Left := WaresRow_Common[RowRes].Right - 5 * Image_WareIn_Accept[I].Spacing - 18;
           Image_WareIn_Accept[RowRes].Show;
-
+          WaresProdCt_Common[RowRes].Caption := '';
+          case aHouse.HouseType of
+            htCartographers: If TKMHouseCartographers(aHouse).NeedsWare(WT) > 0 then
+                              WaresProdCt_Common[RowRes].Caption := 'x' + TKMHouseCartographers(aHouse).NeedsWare(WT).ToString;
+          end;
+          WaresProdCt_Common[RowRes].Visible := WaresProdCt_Common[RowRes].Caption <> '';
           Inc(Line);
           Inc(RowRes);
         end;

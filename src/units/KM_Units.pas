@@ -1014,12 +1014,19 @@ begin
   H := TKMHouseCartographers(Home);
   If not H.IsValid then
     Exit;
+  If H.Mode = cmChartman then
+  begin
+    if not gTerrain.RouteCanBeMade(H.PointBelowEntrance, H.FlagPoint, tpWalk) then //can't reach the flag point
+      Exit;
 
-  if not gTerrain.RouteCanBeMade(H.PointBelowEntrance, H.FlagPoint, tpWalk) then //can't reach the flag point
-    Exit;
-
-  If H.CanWork then
-    fTask := TKMTaskCartographer.Create(self, H.FlagPoint, H.Mode);
+    If H.CanWork then
+      fTask := TKMTaskCartographer.Create(self, H.FlagPoint, H.Mode);
+  end else
+  If H.Mode = cmSpy then
+  begin
+    If H.CanWork then
+      fTask := TKMTaskCartographer.Create(self, H.PlayerToSpy, H.Mode);
+  end;
 end;
 
 procedure TKMUnitRecruit.TaskGetWork;

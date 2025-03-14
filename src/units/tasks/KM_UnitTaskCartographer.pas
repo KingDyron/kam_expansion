@@ -13,10 +13,12 @@ type
   private
     fCenterPoint : TKMPoint;
     fMode : TKMCartographersMode;
+    fPlayerToSpy : Integer;
     function GetRandomPos : TKMPoint;
     function Cartographers : TKMHouseCartographers;
   public
-    constructor Create(aUnit: TKMUnit; aLoc : TKMPoint; aMode : TKMCartographersMode);
+    constructor Create(aUnit: TKMUnit; aLoc : TKMPoint; aMode : TKMCartographersMode);overload;
+    constructor Create(aUnit: TKMUnit; aPlayerToSpy : Integer; aMode : TKMCartographersMode);overload;
     destructor Destroy; override;
     constructor Load(LoadStream: TKMemoryStream); override;
     function Execute: TKMTaskResult; override;
@@ -44,6 +46,14 @@ begin
   fCenterPoint := aLoc;
 end;
 
+{ TTaskThrowRock }
+constructor TKMTaskCartographer.Create(aUnit: TKMUnit; aPlayerToSpy : Integer; aMode : TKMCartographersMode);
+begin
+  inherited Create(aUnit);
+  fType := uttCartographer;
+  fMode := aMode;
+  fPlayerToSpy := aPlayerToSpy;
+end;
 
 destructor TKMTaskCartographer.Destroy;
 begin
@@ -62,9 +72,11 @@ begin
   LoadStream.CheckMarker('TaskCartographer');
   LoadStream.Read(fCenterPoint);
   LoadStream.ReadData(fMode{, SizeOf(fMode)});
+  LoadStream.Read(fPlayerToSpy);
 end;
 
 function TKMTaskCartographer.Execute: TKMTaskResult;
+var timeToWork : Integer;
 begin
   Result := trTaskContinues;
 
@@ -75,13 +87,50 @@ begin
     Exit;
   end;
   If fMode = cmSpy then
-    Result := trTaskDone
-  else
+  begin
+    If (fPlayerToSpy = -1) or (fPlayerToSpy >= gHands.Count) or not gHands[fPlayerToSpy].Enabled then
+      Exit(trTaskDone);
+
+    with fUnit do
+      case fPhase of
+        0:  begin
+              Home.SetState(hstEmpty);
+              Home.ProduceWares(TKMHouseCartographers(Home).NeededWares(fMode), true);
+              fUnit.Condition := UNIT_MAX_CONDITION;
+              SetActionLockedStay(30, uaWalk);
+            end;
+        1:  begin
+              Home.SetState(hstWork);
+              Home.CurrentAction.SubActionAdd([haSmoke]);
+
+              timeToWork:= 0;
+
+              If gHands[fPlayerToSpy].IsComputer then //AI has additional data
+                Inc(timeToWork, 500);
+
+              Inc(timeToWork, gHands[fPlayerToSpy].Stats.GetHouseQty(htAny) * 10);
+              Inc(timeToWork, gHands[fPlayerToSpy].Stats.GetArmyCount * 10);
+              Inc(timeToWork, gHands[fPlayerToSpy].Stats.GetCitizensCount * 5);
+
+              SetActionLockedStay(timeToWork, uaWalk);
+              Home.TotalWorkingTime := timeToWork;
+              Home.WorkingTime := 0;
+            end;
+        2:  begin
+              Home.SetState(hstIdle);
+              SetActionLockedStay(Home.HSpec.WorkerRest * 10 * 3, uaWalk);
+              Cartographers.CollectSpyData(fPlayerToSpy);
+            end;
+        else Result := trTaskDone;
+      end;
+
+  end else
   If fMode = cmChartman then
     with fUnit do
       case fPhase of
         0:  begin
               Home.SetState(hstEmpty);
+              Home.ProduceWares(TKMHouseCartographers(Home).NeededWares(fMode), true);
               SetActionGoIn(uaWalk, gdGoOutside, Home);
             end;
         1:  begin
@@ -122,6 +171,7 @@ begin
   SaveStream.PlaceMarker('TaskCartographer');
   SaveStream.Write(fCenterPoint);
   SaveStream.WriteData(fMode{, SizeOf(fMode)});
+  SaveStream.Write(fPlayerToSpy);
 end;
 
 function TKMTaskCartographer.GetRandomPos: TKMPoint;

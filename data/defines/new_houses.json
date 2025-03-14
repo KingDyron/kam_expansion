@@ -4124,7 +4124,7 @@
 			"EntranceOffsetXpx" : 20,
 			"EntranceOffsetYpx" : 10,
 			"WorkerRest" : 5,
-			"Sight" : 30,
+			"Sight" : 20,
 			"NeedsPlayerOrder" : False,
 			"BuildIcon" : 872,
 			"TabletID" : 873,

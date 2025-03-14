@@ -1,6 +1,6 @@
    Timestamp    Elapsed     Delta  Thread    Description
 ========================
-    Date: 2025.03.04
+    Date: 2025.03.13
 ========================
-19:50:11.748     0,006s       6ms  17712    Log is up and running. Game version: KaM Expansion: v1.0
-19:50:23.861    12,118s   12112ms  17712    Houses - 2710
+18:03:46.109     0,000s       0ms  15104    Log is up and running. Game version: KaM Expansion: v1.0
+18:03:49.155     3,047s    3047ms  15104    GUIMain - 105

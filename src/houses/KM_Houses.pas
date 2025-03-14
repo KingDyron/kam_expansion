@@ -398,6 +398,7 @@ type
     function CheckWareIn(aWare: TKMWareType): Word; virtual;
     function CheckWareOut(aWare: TKMWareType): Word; virtual;
     function CheckWareTotal(aWare: TKMWareType): Word; virtual;
+    function HasWaresIn(aWares: TKMWarePlan): Boolean; virtual;
     function PickOrder(aUnitType : TKMUnitType): Byte;
     function CheckResToBuild: Boolean;
     function GetMaxInWare: Word;
@@ -409,6 +410,7 @@ type
     function NeedsWareToBuild(aWare: TKMWareType) : Boolean;
     procedure WareTake(aWare: TKMWareType; aCount: Word = 1; aFromScript: Boolean = False); virtual;
     procedure WareTakeFromIn(aWare: TKMWareType; aCount: Word = 1; aFromScript: Boolean = False); virtual;
+    procedure WaresTakeFromIn(aWares : TKMWarePlan; aFromScript: Boolean = False); virtual;
     procedure WareTakeFromOut(aWare: TKMWareType; aCount: Word = 1; aFromScript: Boolean = False); virtual;
     function WareCanAddToIn(aWare: TKMWareType): Boolean; virtual;
     function WareCanAddToOut(aWare: TKMWareType): Boolean;
@@ -420,6 +422,7 @@ type
     property WareInLocked[aId: Byte]: Word read GetWareInLocked;
     procedure ToggleAcceptWaresIn(aWare : TKMWareType; aCount : Integer = 1);
     Procedure ProduceWare(aWare : TKMWareType; aCount : Integer = 1); virtual;
+    Procedure ProduceWares(aWares : TKMWarePlan; aTake : Boolean = false); virtual;
     Procedure ProduceWareFromFill(aWare : TKMWareType; var aFillFactor : Single); virtual;
     function GetWareProdCt(aWare : TKMWareType) : Byte;
     procedure SetWareInCnt(aWare : TKMWareType; aValue : Integer);
@@ -3114,6 +3117,22 @@ begin
   end;
 end;
 
+function TKMHouse.HasWaresIn(aWares: TKMWarePlan): Boolean;
+var I : integer;
+begin
+  Result := true;
+  for I := 0 to High(aWares) do
+    If CheckWareIn(aWares[I].W) < aWares[I].C then
+      Exit(false);
+end;
+
+procedure TKMHouse.WaresTakeFromIn(aWares: TKMWarePlan; aFromScript: Boolean = False);
+var I : integer;
+begin
+  for I := 0 to High(aWares) do
+    WareTakeFromIn(aWares[I].W, aWares[I].C, aFromScript);
+end;
+
 // Check amount of placed order for given ID
 function TKMHouse.GetWareOrder(aID: Byte): Integer;
 begin
@@ -3456,6 +3475,19 @@ begin
     aCount := -aCount;
     WareTakeFromIn(aWare, aCount);
     gHands[Owner].Stats.WareConsumed(aWare, aCount);
+  end;
+end;
+
+procedure TKMHouse.ProduceWares(aWares: TKMWarePlan; aTake: Boolean = False);
+var I, C : Integer;
+begin
+  for I := 0 to High(aWares) do
+  begin
+    If aTake then
+      C := aWares[I].C * -1
+    else
+      C := aWares[I].C;
+    ProduceWare(aWares[I].W, C);
   end;
 end;
 

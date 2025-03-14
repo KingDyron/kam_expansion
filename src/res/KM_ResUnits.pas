@@ -131,6 +131,7 @@ type
     property UnitAnim[aAction: TKMUnitActionType; aDir: TKMDirection]: TKMAnimation read GetUnitAnim;
     property GUIName: UnicodeString read GetUnitName;
     property GUITextID: Integer read GetUnitTextID;
+    function UnitPower : Single;
 
     property WorkerOfHouses : TKMHouseTypeArray read GetWorkerHouses;
 
@@ -859,6 +860,13 @@ begin
   else
     Result := TX_UNITS_NAMES__29 + UNIT_TYPE_TO_ID[fUnitType];
   end;
+end;
+
+function TKMUnitSpec.UnitPower : Single;
+begin
+  Result := (fUnitDat.HitPoints * fUnitDat.Defence)
+            + (fUnitDat.Attack + fUnitDat.AttackHorse);
+  Result := Result * fUnitDat.Speed;
 end;
 
 

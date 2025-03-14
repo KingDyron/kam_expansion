@@ -314,6 +314,7 @@ type
     function GetClosestStore(aLoc : TKMPoint; aWare: TKMWareType) : TKMHouse;
     function GetClosestBarracks(aLoc : TKMPoint; aWare: TKMWareType) : TKMHouse;
     function GetGroupsCount: TKMGroupTypeValidArray;
+    function GetBestUnit: TKMUnitType;
 
 
     function GetFieldsCount: Integer;
@@ -2717,6 +2718,21 @@ begin
   for I := 0 to fUnitGroups.Count - 1 do
     If not fUnitGroups[I].IsDead then
       Inc(Result[fUnitGroups[I].GroupType], 1);
+end;
+
+function TKMHand.GetBestUnit: TKMUnitType;
+var UT : TKMUnitType;
+  power : Single;
+begin
+  Result := utSerf;
+  power := 0;
+
+  for UT := WARRIOR_MIN to WARRIOR_MAX do
+    If (Stats.GetUnitQty(UT) > 0) and (gRes.Units[UT].UnitPower > power) then
+    begin
+      power := gRes.Units[UT].UnitPower;
+      Result := UT;
+    end;
 end;
 
 function TKMHand.GetWorklessCount : Integer;

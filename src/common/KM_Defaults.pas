@@ -754,7 +754,6 @@ type
   TAIArmyDemandF = array [TKMGroupType] of Single;
 
 const
-
   UNIT_TO_GROUP_TYPE: array [WARRIOR_MIN..WARRIOR_MAX] of TKMGroupType = (
     gtMelee,gtMelee,gtMelee, //utMilitia, utAxeFighter, utSwordsman
     gtRanged,gtRanged,        //utBowman, utArbaletman

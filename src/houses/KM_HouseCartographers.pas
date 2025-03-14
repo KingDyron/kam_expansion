@@ -9,6 +9,7 @@ uses
   KM_MinimapCartographer,
   KM_ResTypes;
 
+const STRATEGY_HOUSES = 7;
 type
   TKMCartographersMode = (cmChartman, cmSpy);
   TKMCartographersPaintLayer = (cplUnderground, cplMiningRadius, cplTowerRange, cplSpawners, cplObjects);
@@ -19,16 +20,16 @@ type
     Army : Word;
     StrongestUnit : TKMUnitType;
     Groups : TKMGroupTypeValidArray;
-    WarHouses : array[0..6] of Word;
+    WarHouses : array[0..STRATEGY_HOUSES - 1] of Word;
 
     Citizens : Word;
     WarriorsKilled : Word;
     Weapons : Integer;
     //AI
-    UnlimitedEquip : Boolean;
+    UnlimitedEquip, AutoRepair : Boolean;
     AutoAttackRange : Byte;
     ArmyType : TKMArmyType;
-    AttackTarget : array of TKMAIAttackTarget;
+    AttackTarget : array[TKMAIAttackTarget] of Boolean;
   end;
   TKMSpyPlayersData = array of TKMSpyPlayerData;
 
@@ -45,8 +46,12 @@ type
     //spy
     fPlayerToSpy : Integer;
     fPlayers : TKMSpyPlayersData;
+    fDoSpying : Boolean;
     procedure SetMode(aMode : TKMCartographersMode);
     function GetLayer(aType : TKMCartographersPaintLayer) : Boolean;
+    procedure SetDoSpying(aValue : Boolean);
+    procedure SetPlayer(aValue : Integer);
+    function NeededWares : TKMWarePlan; overload;
   protected
     procedure SetFlagPoint(aFlagPoint: TKMPoint); override;
     function GetMaxDistanceToPoint: Integer; override;
@@ -64,14 +69,20 @@ type
     property Mode : TKMCartographersMode read fMode write SetMode;
     property Layer[aType : TKMCartographersPaintLayer] : Boolean read GetLayer;
     property Minimap : TKMMinimapCartographer read fMinimap;
+    property DoSpying : Boolean read fDoSpying write SetDoSpying;
+    property PlayerToSpy : Integer read fPlayerToSpy write SetPlayer;
+    property SpiedPlayers : TKMSpyPlayersData read fPlayers;
+    function SpiedPlayer : TKMSpyPlayerData;
+    function NeededWares(aMode : TKMCartographersMode) : TKMWarePlan; overload;
+    function NeedsWare(aWare : TKMWareType) : Byte;
+
     function CanWork : Boolean;
     procedure ToggleLayer(aLayer : TKMCartographersPaintLayer); overload;
     procedure ToggleLayer(aLayer : Byte); overload;
     procedure CollectChartmanData(aLoc : TKMPoint);
     procedure CollectSpyData(aPlayer : Integer);
-
+    class function StrategyHouse(aID : Integer) : TKMHouseType;
   end;
-
 implementation
 uses
   KM_Game,
@@ -89,6 +100,9 @@ var CP : TKMCartographersPaintLayer;
 begin
   Inherited;
   fMode := cmChartman;
+  fPlayerToSpy := -1;
+  fDoSpying := false;
+
   for CP := Low(TKMCartographersPaintLayer) to High(TKMCartographersPaintLayer) do
     fLayer[CP] := true;
   fLayer[cplObjects] := true;
@@ -116,6 +130,8 @@ begin
   fMinimap.LoadFromStream(LoadStream);
   LoadStream.Read(fLayer, SizeOf(fLayer));
   LoadStream.Read(fSpawners);
+  LoadStream.Read(fDoSpying);
+  LoadStream.ReadData(fMode);
   LoadStream.Read(C);
   SetLength(fHouseList, C);
   for I := 0 to C - 1 do
@@ -126,8 +142,6 @@ begin
   SetLength(fPlayers, C);
   for I := 0 to C - 1 do
     LoadStream.Read(fPlayers[I], SizeOf(fPlayers[I]));
-
-
 end;
 
 procedure TKMHouseCartographers.Save(SaveStream: TKMemoryStream);
@@ -139,6 +153,8 @@ begin
   fMinimap.SaveToStream(SaveStream);
   SaveStream.Write(fLayer, SizeOf(fLayer));
   SaveStream.Write(fSpawners);
+  SaveStream.Write(fDoSpying);
+  SaveStream.WriteData(fMode);
   C := length(fHouseList);
   SaveStream.Write(C);
   for I := 0 to C - 1 do
@@ -172,7 +188,10 @@ end;
 
 procedure TKMHouseCartographers.SetFlagPoint(aFlagPoint: TKMPoint);
 begin
+  If fMode = cmSpy then
+    aFlagPoint := PointBelowEntrance;
   Inherited;
+
 end;
 
 function TKMHouseCartographers.GetMaxDistanceToPoint: Integer;
@@ -234,7 +253,8 @@ procedure TKMHouseCartographers.Paint;
 
     for I := 0 to fObjectsWithWares.Count - 1 do
     begin
-
+      If gTerrain.Land[fObjectsWithWares[I].Y, fObjectsWithWares[I].X].Obj = 255 then
+        Continue;
       factor := Round(gMapElements[fObjectsWithWares.Tag[I]].ObjectPrice / gRes.MapElements.HighestPrice) * 255;
       C := $AA00FF00 + factor;
       //gRenderAux.Quad(fObjectsWithWares[I].X, fObjectsWithWares[I].Y, C);
@@ -287,12 +307,17 @@ end;
 
 function TKMHouseCartographers.CanWork: Boolean;
 begin
-  Result := FlagPoint <> PointBelowEntrance;
+  If fMode = cmChartman then
+    Result := (FlagPoint <> PointBelowEntrance) and HasWaresIn(NeededWares)
+  else
+    Result := fDoSpying and HasWaresIn(NeededWares) and (fPlayerToSpy <> -1);
 end;
 
 procedure TKMHouseCartographers.SetMode(aMode: TKMCartographersMode);
 begin
   fMode := aMode;
+  If fMode = cmSpy then
+    FlagPoint := PointBelowEntrance;
 end;
 
 function TKMHouseCartographers.GetLayer(aType: TKMCartographersPaintLayer): Boolean;
@@ -300,6 +325,31 @@ begin
   Result := fLayer[aType];
 end;
 
+procedure TKMHouseCartographers.SetDoSpying(aValue : Boolean);
+begin
+  fDoSpying := aValue;
+end;
+
+procedure TKMHouseCartographers.SetPlayer(aValue : Integer);
+begin
+  fPlayerToSpy := aValue;
+end;
+
+function TKMHouseCartographers.NeededWares: TKMWarePlan;
+begin
+  Result := NeededWares(fMode);
+end;
+function TKMHouseCartographers.NeededWares(aMode: TKMCartographersMode): TKMWarePlan;
+begin
+  Result.Clear;
+  If aMode = cmChartman then
+    Result.AddWare(wtFeathers, 3)
+  else
+  begin
+    Result.AddWare(wtFeathers, 1);
+    Result.AddWare(wtWine, 5);
+  end;
+end;
 procedure TKMHouseCartographers.ToggleLayer(aLayer : TKMCartographersPaintLayer);
 begin
   fLayer[aLayer] := not fLayer[aLayer];
@@ -308,6 +358,21 @@ end;
 procedure TKMHouseCartographers.ToggleLayer(aLayer : Byte);
 begin
   ToggleLayer(TKMCartographersPaintLayer(aLayer) );
+end;
+
+function TKMHouseCartographers.SpiedPlayer: TKMSpyPlayerData;
+var I : Integer;
+begin
+  FillChar(Result, SizeOf(Result), #0);
+  Result.ID := -1;
+  for I := 0 to High(fPlayers) do
+    If fPlayers[I].ID = fPlayerToSpy then
+      Exit(fPlayers[I]);
+end;
+
+function TKMHouseCartographers.NeedsWare(aWare: TKMWareType): Byte;
+begin
+  Result := NeededWares.HasWare(aWare);
 end;
 
 procedure TKMHouseCartographers.CollectChartmanData(aLoc: TKMPoint);
@@ -395,8 +460,15 @@ end;
 
 procedure TKMHouseCartographers.CollectSpyData(aPlayer: Integer);
 var hand : TKMHand;
-  I, id : Integer;
+  I, J, id : Integer;
+  AAT : TKMAIAttackTarget;
 begin
+  If fPlayerToSpy = aPlayer then
+  begin
+    //fPlayerToSpy := -1;
+    fDoSpying := false;
+  end;
+
   hand := gHands[aPlayer];
   id := -1;
   for I := 0 to High(fPlayers) do
@@ -424,23 +496,38 @@ begin
 
   //AI
   fPlayers[id].UnlimitedEquip := hand.AI.Setup.UnlimitedEquip;
+  fPlayers[id].AutoRepair := hand.AI.Setup.IsRepairAlways;
   fPlayers[id].AutoAttackRange := hand.AI.Setup.AutoAttackRange;
   fPlayers[id].ArmyType := hand.AI.Setup.ArmyType;
-  SetLength(fPlayers[id].AttackTarget, hand.AI.General.Attacks.Count);
+  fPlayers[id].StrongestUnit := hand.GetBestUnit;
+
+  for AAT := Low(TKMAIAttackTarget) to High(TKMAIAttackTarget) do
+    fPlayers[id].AttackTarget[AAT] := false;
+
   for I := 0 to hand.AI.General.Attacks.Count - 1 do
-    fPlayers[id].AttackTarget[I] := hand.AI.General.Attacks[I].Target;
+      fPlayers[id].AttackTarget[hand.AI.General.Attacks[I].Target] := true;
 
   for I := 0 to High(fPlayers[id].WarHouses) do
     case I of
-      0: fPlayers[id].WarHouses[I] := hand.Stats.GetHouseQty(htBarracks);
-      1: fPlayers[id].WarHouses[I] := hand.Stats.GetHouseQty(htTownhall);
-      2: fPlayers[id].WarHouses[I] := hand.Stats.GetHouseQty(htPalace);
-      3: fPlayers[id].WarHouses[I] := hand.Stats.GetHouseQty(htSiegeWorkshop);
-      4: fPlayers[id].WarHouses[I] := hand.Stats.GetHouseQty(htWallTower);
-      5: fPlayers[id].WarHouses[I] := hand.Stats.GetHouseQty(htWatchTower);
+      0..5: fPlayers[id].WarHouses[I] := hand.Stats.GetHouseQty(StrategyHouse(I));
       6: fPlayers[id].WarHouses[I] := hand.Stats.GetHouseQty([htWall, htWall2, htWall3, htWall4, htWall5]);
     end;
 
+end;
+
+class function TKMHouseCartographers.StrategyHouse(aID: Integer): TKMHouseType;
+begin
+  case aID of
+    0: Result := htBarracks;
+    1: Result := htTownhall;
+    2: Result := htPalace;
+    3: Result := htSiegeWorkshop;
+    4: Result := htWallTower;
+    5: Result := htWatchTower;
+    6: Result := htWall;
+    else
+      Result := htNone;
+  end;
 end;
 
 end.
