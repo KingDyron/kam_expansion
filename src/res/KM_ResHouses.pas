@@ -506,6 +506,7 @@ begin
     htSiegeWorkshop:  Result := 727;
     htCollectors:  Result := 728;
     htPalace:  Result := 745;
+    htCartographers:  Result := 999;
   else
     Result := 990; // Default Flag
   end;
