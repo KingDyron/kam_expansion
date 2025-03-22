@@ -190,7 +190,7 @@ type
   function KMGetDirection(const FromPos, ToPos: TKMPoint): TKMDirection; overload;
   function KMGetDirection(const FromPos, ToPos: TKMPointF): TKMDirection; overload;
   function GetDirModifier(const aDir1, aDir2: TKMDirection): Byte;
-  function GetDirDifference(const aDir1, aDir2: TKMDirection): Integer;
+  function GetDirDifference(const aDir1, aDir2: TKMDirection): byte;
   function KMGetVertexDir(X,Y: Integer): TKMDirection;
   function KMGetVertexTile(const P: TKMPoint; const Dir: TKMDirection): TKMPoint;
   function KMGetVertex(const aDir: TKMDirection): TKMPointF;
@@ -1037,10 +1037,11 @@ end;
 //  -3 0 3
 //  -2   2
 //  -1 0 1
-function GetDirDifference(const aDir1, aDir2: TKMDirection): Integer;
+function GetDirDifference(const aDir1, aDir2: TKMDirection): byte;
 var tmpDir : TKMDirection;
-  tmpLeft, tmpRight : Byte;
+  tmpLeft : Byte;
 begin
+  Result := 0; //turn right}
   tmpDir := aDir1;
   tmpLeft := 0;
   while tmpDir <> aDir2 do
@@ -1048,19 +1049,8 @@ begin
     tmpDir := DIR_TO_PREV[tmpDir];
     tmpLeft := tmpLeft + 1;
   end;
-
-  tmpDir := aDir1;
-  tmpRight := 0;
-  while tmpDir <> aDir2 do
-  begin
-    tmpDir := DIR_TO_NEXT[tmpDir];
-    tmpRight := tmpRight + 1;
-  end;
-  if tmpRight > tmpLeft then
-    Result := 1 //turn left
-  else
-    Result := -1; //turn right
-
+  if tmpLeft < 4 then
+    Result := 1 //turn left;
 end;
 
 // How big is the difference between directions (in fights hit from behind is 5 times stronger)

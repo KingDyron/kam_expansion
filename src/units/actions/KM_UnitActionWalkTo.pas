@@ -1154,7 +1154,7 @@ function TKMUnitActionWalkTo.Execute: TKMActionResult;
 var
   dx, dy: Shortint;
   walkX, walkY, distance: Single;
-  oldDir: TKMDirection;
+  oldDir, nextDir: TKMDirection;
 begin
   Result := arActContinues;
   StepDone := False;
@@ -1256,9 +1256,21 @@ begin
 
     //Save unit dir in case we will need to restore it
     oldDir := fUnit.Direction;
+    nextDir := KMGetDirection(fNodeList[fNodePos], fNodeList[fNodePos+1]);
 
     //Update unit direction according to next Node
-    fUnit.Direction := KMGetDirection(fNodeList[fNodePos], fNodeList[fNodePos+1]);
+    If (oldDir <> nextDir) and USE_UNIT_TURN_AROUND then
+    begin
+      //in original KaM units were turning, not sudenly changing their direction
+      If GetDirDifference(oldDir, nextDir) = 1 then
+        fUnit.Direction := DIR_TO_PREV[oldDir]
+      else
+        fUnit.Direction := DIR_TO_NEXT[oldDir];
+
+        {KMGetDirection(fNodeList[fNodePos], fNodeList[fNodePos+1]);}
+      Exit;
+    end else
+      fUnit.Direction := nextDir;
 
     // Check if we can walk to next tile in the route
     // Don't use CanAbandonInternal because skipping this check can cause crashes (e.g. tile become unwalkable)
