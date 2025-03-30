@@ -82,7 +82,9 @@ begin
       Image_MM_HasAch := TKMImage.Create(Panel_MMButtons, Button_MM_Achievements.Right - 15, Button_MM_Achievements.Top - 10, 35, 33, 105, rxGuiMain);
       Image_MM_HasAch.Hitable := false;
       Image_MM_HasAch.Hide;
-
+      {$IFNDEF DEBUG}
+        Button_MM_Debug.Hide;
+      {$ENDIF}
       {Switch_Test := TKMSwitch.Create(Panel_MMButtons, 0, 340, 110, 30);
       Switch_Test.Offset := 35;
       Switch_Test.TexID := [383, 384, 385];}

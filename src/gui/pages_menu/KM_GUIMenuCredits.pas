@@ -26,6 +26,7 @@ type
     Label_Credits_Remake: TKMLabelScroll;
     Button_CreditsHomepage: TKMButton;
     Button_CreditsDiscord: TKMButton;
+    Button_CreditsDiscord2: TKMButton;
     Button_CreditsFacebook: TKMButton;
     Button_CreditsBack: TKMButton;
   public
@@ -74,17 +75,21 @@ begin
     Label_Credits_KaM := TKMLabelScroll.Create(Panel_Credits, aParent.Width div 2 + OFFSET, 110, 0, aParent.Height - 130, gResTexts[TX_CREDITS_TEXT], fntGrey, taCenter);
     Label_Credits_KaM.Anchors := [anLeft,anTop,anBottom];
 
-    Label_Contact := TKMLabel.Create(Panel_Credits,350,515,324,75, '[$F8A070]Contact with mod authors:[$FFFFFF]|e-mail: nox.studio2011@gmail|Discord: KingDyron#6907', fntMetal, taCenter);
+    Label_Contact := TKMLabel.Create(Panel_Credits,350,477,324,75, '[$F8A070]Contact with mod authors:[$FFFFFF]|e-mail: nox.studio2011@gmail|Discord: KingDyron#6907', fntMetal, taCenter);
 
-    Button_CreditsHomepage := TKMButton.Create(Panel_Credits,350,574,324,30, '[$F8A070]www.kamremake.com[]', bsMenu);
+    Button_CreditsHomepage := TKMButton.Create(Panel_Credits,350,538,324,30, '[$F8A070]www.kamremake.com[]', bsMenu);
     Button_CreditsHomepage.Anchors := [anLeft,anBottom];
     Button_CreditsHomepage.OnClick := LinkClick;
 
-    Button_CreditsDiscord := TKMButton.Create(Panel_Credits,350,610,324,30, '[$F8A070]Discord[]', bsMenu);
+    Button_CreditsDiscord2 := TKMButton.Create(Panel_Credits,350,574,324,30, '[$F8A070]KaM Expansion Discord[]', bsMenu);
+    Button_CreditsDiscord2.Anchors := [anLeft,anBottom];
+    Button_CreditsDiscord2.OnClick := LinkClick;
+
+    Button_CreditsDiscord := TKMButton.Create(Panel_Credits,350,610,324,30, '[$F8A070]KaM Remake Discord[]', bsMenu);
     Button_CreditsDiscord.Anchors := [anLeft,anBottom];
     Button_CreditsDiscord.OnClick := LinkClick;
 
-    Button_CreditsFacebook := TKMButton.Create(Panel_Credits,350,646,324,30, '[$F8A070]Facebook[]', bsMenu);
+    Button_CreditsFacebook := TKMButton.Create(Panel_Credits,350,646,324,30, '[$F8A070]KaM Remake Facebook[]', bsMenu);
     Button_CreditsFacebook.Anchors := [anLeft,anBottom];
     Button_CreditsFacebook.OnClick := LinkClick;
 
@@ -114,6 +119,8 @@ begin
     GoToURL('https://www.facebook.com/KaMRemake/');
   if Sender = Button_CreditsDiscord then
     GoToURL('https://discord.gg/UkkYceR');
+  if Sender = Button_CreditsDiscord2 then
+    GoToURL('https://discord.gg/ZxdAhN9JXM');
 end;
 
 
