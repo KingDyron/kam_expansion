@@ -366,7 +366,7 @@ begin
 
     Result := Mix(0, offset, fStep);
   end;
-  Result := 0;
+  //Result := 0;
 end;
 
 

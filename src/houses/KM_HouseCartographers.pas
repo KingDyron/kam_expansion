@@ -87,7 +87,7 @@ implementation
 uses
   KM_Game,
   KM_CommonUtils, KromUtils,
-  KM_HandsCollection, KM_Hand,
+  KM_HandsCollection, KM_Hand, KM_Entity,
   KM_HouseHelpers,
   KM_HouseCollection,
   KM_ResMapElements, KM_Resource,

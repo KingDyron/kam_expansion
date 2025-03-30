@@ -4957,8 +4957,9 @@ var
 begin
   inherited;
   date := Now;
-
+  {$WARN SYMBOL_PLATFORM OFF}
   Label_HourBar.Caption := TimeToStr(date, TFormatSettings.Create(SysLocale.PriLangID));
+  {$WARN SYMBOL_PLATFORM ON}
   Label_GameTimeBar.Caption := TimeToString(gGame.MissionTime);
   // Update replay counters
   if fUIMode = umReplay then

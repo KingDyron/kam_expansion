@@ -641,7 +641,6 @@
         <DCCReference Include="src\common\KM_CommonHelpers.pas"/>
         <DCCReference Include="src\KM_Achievements.pas"/>
         <DCCReference Include="src\gui\pages_menu\KM_GUIMenuAchievements.pas"/>
-        <DCCReference Include="src\game\KM_GameDefines.pas"/>
         <DCCReference Include="src\maped\KM_MapEdClipBoard.pas"/>
         <DCCReference Include="src\units\tasks\KM_UnitTaskMerchant.pas"/>
         <DCCReference Include="src\houses\KM_HouseHelpers.pas"/>

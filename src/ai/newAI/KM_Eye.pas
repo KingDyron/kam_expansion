@@ -734,19 +734,20 @@ begin
     Index[dirS] := 4;
     Index[dirW] := 2 - Byte(POMArr[4,1] = 0);
     Index[dirE] := 3 + Byte(POMArr[4,4] = 0);
-
     // Get entrance with respect to array HA
+    aX := 1;
     for X := 1 to MAX_HOUSE_SIZE do
       for Y := 1 to MAX_HOUSE_SIZE do
         if (HA[Y,X] = 2) then
         begin
+          aX := X;
           break;
           Break;
         end;
     fHousesMapping[House].MoveToEntrance[dirN] := KMPoint(0, 0);
     fHousesMapping[House].MoveToEntrance[dirS] := KMPoint(0, 4 - Index[dirN]);
-    fHousesMapping[House].MoveToEntrance[dirW] := KMPoint(X - Index[dirE], 0);
-    fHousesMapping[House].MoveToEntrance[dirE] := KMPoint(X - Index[dirW], 0);
+    fHousesMapping[House].MoveToEntrance[dirW] := KMPoint(aX - Index[dirE], 0);
+    fHousesMapping[House].MoveToEntrance[dirE] := KMPoint(aX - Index[dirW], 0);
 
     // Fill fHousesSurroundings
     for I := 1 to MAX_SCAN_DIST_FROM_HOUSE do

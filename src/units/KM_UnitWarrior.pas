@@ -410,8 +410,6 @@ begin
   fDamageUnits := gRes.Units[aUnitType].UnitDamage;
   fDamageHouse := gRes.Units[aUnitType].HouseDamage;
 
-  if gGame.Resource.IsTSK or gGame.Resource.IsTPR then
-    fInfinityAmmo := true;
   fRageTime := 0;
 end;
 

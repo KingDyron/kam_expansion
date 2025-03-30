@@ -2256,7 +2256,7 @@ end;
 
 function TKMArray<T>.GetItem(aIndex : Integer) : T;
 begin
-
+  FillChar(Result, Sizeof(Result), #0);
   if not InRange(aIndex, 0, fCount - 1) then
     Exit;
   Result := fList[aIndex];

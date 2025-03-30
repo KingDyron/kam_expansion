@@ -1669,6 +1669,11 @@ begin
 
   Button_BarracksRecruit.Hide;
   Image_Barracks_NotAcceptRecruit.Hide;
+
+  rowRes := 1;
+  line := 0;
+  base := 2;
+
   case aHouse.HouseType of
     htMarket:         begin
                         House_MarketFill(TKMHouseMarket(aHouse));

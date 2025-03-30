@@ -173,7 +173,6 @@ begin
       fullFolderPath, folderPath: string;
       UT: TKMUnitType;
       ACT: TKMUnitActionType;
-      anim: TKMAnimLoop;
       animation : TKMAnimation;
       DIR: TKMDirection;
       WT: TKMWareType;

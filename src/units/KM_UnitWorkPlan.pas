@@ -1146,13 +1146,6 @@ begin
     ActSetByMultiplier(aUnit, 0.85);
 
   ActSetByMultiplier(aUnit);
-  if gGame.Resource.SkipWater then
-    for I := 0 to High(Res) do
-      if Res[I].W = wtWater then
-      begin
-        Res[I].W := wtNone;
-        Res[I].C := 0;
-      end;
   If aUnit.BootsAdded then
     ActSetByMultiplier(aUnit, 0.75);
 

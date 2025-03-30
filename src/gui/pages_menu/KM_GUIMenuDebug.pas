@@ -46,8 +46,6 @@ type
     procedure ListClicked(Sender: TObject);
     procedure SelectHouse(aHouseType : TKMHouseType);
 
-    procedure HouseChanged(Sender: TObject);
-    procedure HouseChangedShift(Sender: TObject; Shift : TShiftState);
 
     procedure AnimationChanged(Sender: TObject);
     procedure AnimationChangedShift(Sender: TObject; Shift : TShiftState);
@@ -324,22 +322,6 @@ begin
     Pile_X[I].Value := Spec.BuildSupply[I + 1].MoveX;
     Pile_Y[I].Value := Spec.BuildSupply[I + 1].MoveY;
   end;
-end;
-
-procedure TKMMenuDebug.HouseChanged(Sender: TObject);
-begin
-  if not (fHouse In HOUSES_VALID) then
-    Exit;
-  RefreshControls;
-end;
-
-procedure TKMMenuDebug.HouseChangedShift(Sender: TObject; Shift: TShiftState);
-var HA : TKMHouseActionType;
-begin
-  if not (fHouse In HOUSES_VALID) then
-    Exit;
-  RefreshViewer;
-  RefreshControls;
 end;
 
 procedure TKMMenuDebug.AnimationChanged(Sender: TObject);

@@ -8,7 +8,7 @@ uses
   KM_PathFinding,
   KM_GameParams, KM_GameInputProcess,
   KM_GameSavePoints,
-  KM_GameOptions, KM_GameTypes, KM_GameDefines,
+  KM_GameOptions, KM_GameTypes,
   KM_MapEditor, KM_Campaigns, KM_Maps, KM_MapTypes, KM_CampaignTypes, KM_TerrainPainter,
   KM_Render, KM_Scripting,
   KM_MediaTypes,
@@ -101,7 +101,6 @@ type
     fMapEdMapSaveStarted: TEvent;
     fMapEdMapSaveEnded: TEvent;
     fWeather : TKMWeatherCollection;
-    fGameRes : TKMGameResources;
     fTickLag : Single;
 
     procedure IssueAutosaveCommand(aAfterPT: Boolean);
@@ -295,7 +294,6 @@ type
     property TerrainPainter: TKMTerrainPainter read fTerrainPainter;
     property TextMission: TKMTextLibraryMulti read fTextMission;
     property Weather : TKMWeatherCollection read fWeather;
-    property Resource : TKMGameResources read fGameRes;
     function Achievements : TKMAchievements;
 
     procedure SetSeed(aSeed: Integer);
@@ -458,7 +456,6 @@ begin
   gSpecAnim := TKMSpecialAnims.Create;
   gParticles := TKMParticlesCollection.Create;
   fWeather := TKMWeatherCollection.Create;
-  fGameRes := TKMGameResources.Create;
   if gRandomCheckLogger <> nil then
   begin
     gRandomCheckLogger.Clear;
@@ -494,7 +491,6 @@ begin
   FreeAndNil(gSpecAnim);
   FreeAndNil(gParticles);
   FreeAndNil(fWeather);
-  FreeAndNil(fGameRes);
   FreeAndNil(fPathfinding);
   FreeAndNil(fScripting);
   FreeAndNil(gScriptSounds);
@@ -598,8 +594,6 @@ begin
   gLog.AddTime('Loading DAT file: ' + aMissionFullFilePath);
 
 
-  fGameRes.SetDefault;
-  fGameRes.LoadFromJson(aMissionFullFilePath);
   //Disable players in MP to skip their assets from loading by MissionParser
   //In SP all players are enabled by default
   case fParams.Mode of
@@ -784,7 +778,6 @@ begin
                   fTextMission := TKMTextLibraryMulti.Create;
                   // Make a full scan for Libx top ID, to allow unordered Libx ID's by not carefull mapmakers
                   fTextMission.LoadLocale(ChangeFileExt(aMissionFullFilePath, '.%s.libx'), True);
-                  fGameRes.ApplyAfterStart;
                 end;
       gmSingle, gmCampaign:
                 begin
@@ -792,7 +785,6 @@ begin
                   fTextMission := TKMTextLibraryMulti.Create;
                   // Make a full scan for Libx top ID, to allow unordered Libx ID's by not carefull mapmakers
                   fTextMission.LoadLocale(ChangeFileExt(aMissionFullFilePath, '.%s.libx'), True);
-                  fGameRes.ApplyAfterStart;
                 end;
       gmMapEd:  begin
                   fTextMission := TKMTextLibraryMulti.Create;
@@ -2303,7 +2295,6 @@ begin
   gSpecAnim.Save(aBodyStream);
   //gParticles.Save(aBodyStream);
   fWeather.Save(aBodyStream);
-  fGameRes.Save(aBodyStream);
   fScripting.Save(aBodyStream);
   gScriptSounds.Save(aBodyStream);
   aBodyStream.Write(fAIType, SizeOf(fAIType));
@@ -2721,7 +2712,6 @@ begin
     gSpecAnim.Load(bodyStream);
     //gParticles.Load(bodyStream);
     fWeather.Load(bodyStream);
-    fGameRes.Load(bodyStream);
     fScripting.Load(bodyStream);
     gScriptSounds.Load(bodyStream);
     bodyStream.Read(fAIType, SizeOf(fAIType));

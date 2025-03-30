@@ -80,7 +80,9 @@ uses
   KM_Resource,
   KM_ResSound, KM_ScriptingEvents, KM_Alerts,
   KM_AIDefensePos,
-  KM_AIFields, KM_Terrain, KM_ResMapElements, KM_DevPerfLog, KM_DevPerfLogTypes,
+  KM_AIFields,
+  KM_Terrain, KM_TerrainTypes,
+  KM_ResMapElements, KM_DevPerfLog, KM_DevPerfLogTypes,
   KM_HandTypes,
   KM_MapTypes,
   KM_ResTypes, KM_ResHouses, KM_ResTexts, KM_ResUnits;

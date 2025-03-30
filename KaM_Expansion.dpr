@@ -439,7 +439,6 @@ uses
   KM_CommonHelpers in 'src\common\KM_CommonHelpers.pas',
   KM_Achievements in 'src\KM_Achievements.pas',
   KM_GUIMenuAchievements in 'src\gui\pages_menu\KM_GUIMenuAchievements.pas',
-  KM_GameDefines in 'src\game\KM_GameDefines.pas',
   KM_MapEdClipBoard in 'src\maped\KM_MapEdClipBoard.pas',
   KM_UnitTaskMerchant in 'src\units\tasks\KM_UnitTaskMerchant.pas',
   KM_HouseHelpers in 'src\houses\KM_HouseHelpers.pas',

@@ -14583,7 +14583,7 @@ begin
     try
 {$ENDIF}
 {$IFNDEF COMPILER25_UP}
-        Result := nil;
+        //Result := nil;
 {$ENDIF}
         Obj := TCustomSslWSocket(f_SSL_get_ex_data(SSL, 0));
         if not Assigned(Obj) then
@@ -17764,7 +17764,7 @@ begin
     Result := '';
 {$IFNDEF WIN64}    { V7.81 }
   {$IFNDEF COMPILER24_UP}
-    Entry  := nil;
+    //Entry  := nil;//not used I guess
   {$ENDIF}
 {$ENDIF}
     if not Assigned(FX509) then
@@ -18884,7 +18884,7 @@ begin
     Result := '';
 {$IFNDEF WIN64}
   {$IFNDEF COMPILER24_UP}
-    Entry  := nil; { Make dcc32 happy }
+    //Entry  := nil; { Make dcc32 happy }//not used I guess
   {$ENDIF}
 {$ENDIF}
     if XName = nil then Exit;

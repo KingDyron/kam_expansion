@@ -278,7 +278,7 @@ var
 begin
     { Prevents compiler warning "Return value might be undefined"  }
   {$IFNDEF COMPILER24_UP}
-    Result := nil;
+    //Result := nil;//not used I guess
   {$ENDIF}
     EnterCriticalSection(GWSockCritSect);
     try
@@ -311,7 +311,7 @@ end;
 function GetProc2(const ProcName : AnsiString) : Pointer;
 begin
   {$IFNDEF COMPILER24_UP}
-    Result := nil;
+    //Result := nil;//not used I guess
   {$ENDIF}
     EnterCriticalSection(GWSockCritSect);
     try
@@ -341,7 +341,7 @@ end;
 function GetProc3(const ProcName : AnsiString) : Pointer;
 begin
   {$IFNDEF COMPILER24_UP}
-    Result := nil;
+    //Result := nil;//not used I guess
   {$ENDIF}
     EnterCriticalSection(GWSockCritSect);
     try

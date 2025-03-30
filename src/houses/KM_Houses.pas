@@ -1184,8 +1184,6 @@ begin
       fWareInput[I] := gRes.Houses[fType].WareInputSlots[0].WareInput[I];
       fWareOutput[I] := gRes.Houses[fType].WareInputSlots[0].WareOutput[I];
       fWareBlocked[I] := GetMaxInWare;
-      if (gGame.Resource.SkipWater) and (fWareInput[I] = wtWater) then
-        fWareInput[I] := wtNone;
     end;
 
   end else
@@ -1195,9 +1193,6 @@ begin
       fWareInput[I] := gRes.Houses[fType].WareInput[I];
       fWareOutput[I] := gRes.Houses[fType].WareOutput[I];
       TransferWare[I] := false;
-
-      if (gGame.Resource.SkipWater) and (fWareInput[I] = wtWater) then
-        fWareInput[I] := wtNone;
     end;
 
   end;
@@ -1244,18 +1239,6 @@ begin
   FlagColor := 0;
   fFoodToRot.Clear;
 
-  if gGame.Resource.IsTSKorTPR then
-  begin
-    if HouseType = htArmorWorkshop then
-    begin
-      SetOutputWares([wtWoodenShield, wtLeatherArmor]);
-      SetInputWares([wtTimber, wtLeather]);
-    end else
-    if HouseType = htWatchTower then
-    begin
-      SetInputWares([wtStone]);
-    end;
-  end;
 
   if HouseType = htMetallurgists then
   begin
@@ -4752,12 +4735,6 @@ begin
     RangeMax := RANGE_WATCHTOWER_MAX;
     RangeMin := RANGE_WATCHTOWER_MIN;
     ThrowingCycles := 50;
-
-    if gGame.Resource.IsTSKorTPR then
-    begin
-      RangeMax := 8;
-      RangeMin := 0;
-    end;
   end else
   begin
     RangeMax := RANGE_WALLTOWER_MAX;

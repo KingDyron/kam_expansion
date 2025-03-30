@@ -30,23 +30,26 @@ type
     ArmyDemand : TAIArmyDemandF;
     procedure SetArmyDemand(aDemand : TAIArmyDemand);
 
-    function TryBuildHouse(aHouse: TKMHouseType): Boolean;
-    function TryConnectToRoad(const aLoc: TKMPoint): Boolean;
     function GetMaxPlans: Byte;
     procedure CheckAutoRepair;
     procedure CheckUnitCount;
     procedure CheckWareFlow;
     //procedure CheckHouseCount;
+    {
+    function TryConnectToRoad(const aLoc: TKMPoint): Boolean;
+    function TryBuildHouse(aHouse: TKMHouseType): Boolean;
     procedure CheckHousePlans;
     procedure CheckRoadsCount;
     procedure CheckExhaustedMines;
+    procedure PlanDefenceTowers;
+    procedure TryBuildDefenceTower;
+    }
+
     procedure CheckWeaponOrderCount;
     procedure CheckArmyDemand;
     procedure CheckMarketTrades;
     procedure CheckSilos;
     procedure CheckMerchants;
-    procedure PlanDefenceTowers;
-    procedure TryBuildDefenceTower;
     function NeedsWare(aWare : TKMWareType) : Boolean;
     function WareToMaxCount(aWare : TKMWareType) : Integer;
     function WareFromMinCount(aWare : TKMWareType) : Integer;
@@ -571,6 +574,96 @@ begin
   end;
 end;
 
+function TKMayor.HasHouses(aHouses : TKMHouseTypeSet) : Boolean;
+var HT : TKMHouseType;
+begin
+  Result := false;
+  for HT in aHouses do
+    if gHands[fOwner].Stats.GetHouseQty(HT) > 0 then
+      Exit(true);
+end;
+
+function TKMayor.HasUnits(aUnits: TKMUnitTypeSet): Boolean;
+var UT : TKMUnitType;
+begin
+  Result := false;
+  for UT in aUnits do
+    if gHands[fOwner].Stats.GetUnitQty(UT) > 0 then
+      Exit(true);
+end;
+
+function TKMayor.HouseConnectedToStore(aHouse: Pointer): Boolean;
+var H, HS : TKMHouse;
+  I : Integer;
+begin
+  Result := false;
+  H := TKMHouse(aHouse);
+
+  for I := 0 to gHands[fOwner].Houses.Stores.Count - 1 do
+  begin
+    HS := gHands[fOwner].Houses.Stores[I];
+    if not HS.IsValid(htStore, false, true) then
+      Continue;
+
+    if gTerrain.RouteCanBeMade(H.PointBelowEntrance, HS.PointBelowEntrance, tpWalkRoad) then
+      Exit(true);
+  end;
+    
+
+end;
+
+function TKMayor.GetMaxPlans: Byte;
+begin
+  Result := Ceil(fSetup.WorkerCount / 4);
+end;
+
+
+
+{
+
+
+//We want to connect to nearest road piece (not necessarily built yet)
+function TKMayor.TryConnectToRoad(const aLoc: TKMPoint): Boolean;
+const
+  MAX_DISTANCE = 150;
+var
+  I: Integer;
+  P: TKMHand;
+  H: TKMHouse;
+  LocTo: TKMPoint;
+  RoadConnectID: Byte;
+  NodeList: TKMPointList;
+  RoadExists: Boolean;
+begin
+  Result := False;
+  P := gHands[fOwner];
+
+  //Find nearest wip or ready house
+  H := P.Houses.FindHouse(htAny, aLoc.X, aLoc.Y, 1, False);
+  if H = nil then Exit; //We are screwed, no houses left
+  LocTo := H.PointBelowEntrance;
+
+  //Find nearest complete house to get the road connect ID
+  H := P.Houses.FindHouse(htAny, aLoc.X, aLoc.Y, 1, True);
+  if H = nil then Exit; //We are screwed, no houses left
+  RoadConnectID := gTerrain.GetRoadConnectID(H.PointBelowEntrance);
+
+  NodeList := TKMPointList.Create;
+  try
+    RoadExists := fPathFindingRoad.Route_ReturnToWalkable(aLoc, LocTo, RoadConnectID, NodeList);
+
+    if not RoadExists OR (NodeList.Count > MAX_DISTANCE) then
+      Exit;
+
+    for I := 0 to NodeList.Count - 1 do
+      //We must check if we can add the plan ontop of plans placed earlier in this turn
+      if P.CanAddFieldPlan(NodeList[I], ftRoad) then
+         P.Constructions.FieldworksList.AddField(NodeList[I], ftRoad, rtStone);
+    Result := True;
+  finally
+    NodeList.Free;
+  end;
+end;
 
 procedure TKMayor.PlanDefenceTowers;
 const
@@ -635,44 +728,6 @@ begin
   fDefenceTowers.Inverse; //So highest weight is first
 end;
 
-function TKMayor.HasHouses(aHouses : TKMHouseTypeSet) : Boolean;
-var HT : TKMHouseType;
-begin
-  Result := false;
-  for HT in aHouses do
-    if gHands[fOwner].Stats.GetHouseQty(HT) > 0 then
-      Exit(true);
-end;
-
-function TKMayor.HasUnits(aUnits: TKMUnitTypeSet): Boolean;
-var UT : TKMUnitType;
-begin
-  Result := false;
-  for UT in aUnits do
-    if gHands[fOwner].Stats.GetUnitQty(UT) > 0 then
-      Exit(true);
-end;
-
-function TKMayor.HouseConnectedToStore(aHouse: Pointer): Boolean;
-var H, HS : TKMHouse;
-  I : Integer;
-begin
-  Result := false;
-  H := TKMHouse(aHouse);
-
-  for I := 0 to gHands[fOwner].Houses.Stores.Count - 1 do
-  begin
-    HS := gHands[fOwner].Houses.Stores[I];
-    if not HS.IsValid(htStore, false, true) then
-      Continue;
-
-    if gTerrain.RouteCanBeMade(H.PointBelowEntrance, HS.PointBelowEntrance, tpWalkRoad) then
-      Exit(true);
-  end;
-    
-
-end;
-
 procedure TKMayor.TryBuildDefenceTower;
 const
   SEARCH_RAD = 6;
@@ -734,58 +789,6 @@ begin
     NodeList.Free;
   end;
 end;
-
-
-function TKMayor.GetMaxPlans: Byte;
-begin
-  Result := Ceil(fSetup.WorkerCount / 4);
-end;
-
-
-//We want to connect to nearest road piece (not necessarily built yet)
-function TKMayor.TryConnectToRoad(const aLoc: TKMPoint): Boolean;
-const
-  MAX_DISTANCE = 150;
-var
-  I: Integer;
-  P: TKMHand;
-  H: TKMHouse;
-  LocTo: TKMPoint;
-  RoadConnectID: Byte;
-  NodeList: TKMPointList;
-  RoadExists: Boolean;
-begin
-  Result := False;
-  P := gHands[fOwner];
-
-  //Find nearest wip or ready house
-  H := P.Houses.FindHouse(htAny, aLoc.X, aLoc.Y, 1, False);
-  if H = nil then Exit; //We are screwed, no houses left
-  LocTo := H.PointBelowEntrance;
-
-  //Find nearest complete house to get the road connect ID
-  H := P.Houses.FindHouse(htAny, aLoc.X, aLoc.Y, 1, True);
-  if H = nil then Exit; //We are screwed, no houses left
-  RoadConnectID := gTerrain.GetRoadConnectID(H.PointBelowEntrance);
-
-  NodeList := TKMPointList.Create;
-  try
-    RoadExists := fPathFindingRoad.Route_ReturnToWalkable(aLoc, LocTo, RoadConnectID, NodeList);
-
-    if not RoadExists OR (NodeList.Count > MAX_DISTANCE) then
-      Exit;
-
-    for I := 0 to NodeList.Count - 1 do
-      //We must check if we can add the plan ontop of plans placed earlier in this turn
-      if P.CanAddFieldPlan(NodeList[I], ftRoad) then
-         P.Constructions.FieldworksList.AddField(NodeList[I], ftRoad, rtStone);
-    Result := True;
-  finally
-    NodeList.Free;
-  end;
-end;
-
-
 //Try to place a building plan for requested house
 //Report back if failed to do so (that will allow requester to choose different action)
 function TKMayor.TryBuildHouse(aHouse: TKMHouseType): Boolean;
@@ -902,15 +905,13 @@ begin
 
   Result := True;
 end;
-
-
 //todo: Check if planned houses are being connected with roads
 //(worker could die while digging a road piece or elevation changed to impassable)
 procedure TKMayor.CheckHousePlans;
 begin
   //
 end;
-
+}
 
 //Manage ware distribution
 procedure TKMayor.CheckWareFlow;
@@ -1004,7 +1005,7 @@ end;
 
 
 //Demolish any exhausted mines, they will be rebuilt if needed
-procedure TKMayor.CheckExhaustedMines;
+{procedure TKMayor.CheckExhaustedMines;
 var
   I: Integer;
   Houses: TKMHousesCollection;
@@ -1027,7 +1028,7 @@ begin
     Houses[I].Demolish(fOwner);
   end;
 end;
-
+}
 {
 procedure TKMayor.CheckHouseCount;
 var
@@ -1089,7 +1090,7 @@ begin
   CheckHousePlans;
 end;}
 
-
+{
 procedure TKMayor.CheckRoadsCount;
 const
   SHORTCUT_CHECKS_PER_UPDATE = 10;
@@ -1160,7 +1161,7 @@ begin
     NodeList.Free;
   end;
 end;
-
+}
 
 procedure TKMayor.OwnerUpdate(aPlayer: TKMHandID);
 begin

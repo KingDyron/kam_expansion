@@ -33,7 +33,7 @@ uses
   KM_HandsCollection, KM_Hand, KM_HandTypes, KM_HandEntity, KM_Houses,
   KM_Projectiles, KM_CommonUtils,
   KM_CommonGameTypes, KM_ResTypes,
-  KM_Terrain;
+  KM_Terrain, KM_TerrainTypes;
 
 const
   MAX_PHASE2 = 5;

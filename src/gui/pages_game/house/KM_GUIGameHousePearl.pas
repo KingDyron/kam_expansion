@@ -353,10 +353,8 @@ end;
 
 procedure TKMGuiGamePearl.SelectPearl(Sender: TObject);
 var H : TKMHousePearl;
-  PT : TKMPearlType;
 begin
   H := TKMHousePearl(gMySpectator.Selected);
-  //PT := TKMPearlType(TKMControl(Sender).Tag);
   gGame.GameInputProcess.CmdHouse(gicPearlSelectType, H, TKMControl(Sender).Tag);
 end;
 
