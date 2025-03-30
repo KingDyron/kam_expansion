@@ -74,14 +74,14 @@ type
 
 implementation
 uses
-  SysUtils, TypInfo, Math,
+  SysUtils, TypInfo, Math, Generics.Collections,
   KM_GameParams, KM_CommonHelpers,
   KM_GameApp, KM_Game, KM_Hand, KM_HandsCollection, KM_HandStats, KM_UnitGroup,
   KM_Resource,
   KM_ResSound, KM_ScriptingEvents, KM_Alerts,
   KM_AIDefensePos,
   KM_AIFields,
-  KM_Terrain, KM_TerrainTypes,
+  KM_Terrain, KM_TerrainTypes, KM_ResTileset, KM_ResTilesetTypes,
   KM_ResMapElements, KM_DevPerfLog, KM_DevPerfLogTypes,
   KM_HandTypes,
   KM_MapTypes,

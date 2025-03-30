@@ -648,6 +648,7 @@ uses
   Classes, SysUtils, StrUtils, TypInfo, Math,
   KM_Entity,
   KM_GameApp, KM_Game, KM_GameParams, KM_GameSettings, KM_CommonHelpers,
+  KM_Supervisor,
   KM_HandsCollection, KM_HandEntity,
   KM_HouseMarket, KM_HouseBarracks, KM_HouseSchool, KM_HouseTownHall, KM_HouseStore, KM_HouseArmorWorkshop,
   KM_HouseQueue, KM_HouseCartographers, KM_HousePearl,

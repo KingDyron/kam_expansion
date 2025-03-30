@@ -342,6 +342,7 @@ uses
   KM_NetPlayersList,
   KM_HandTypes, KM_ResLocales,
   KM_ServerSettings,
+  KM_Supervisor,
   KM_MapUtils, KM_Utils,
   KM_Cursor;
 

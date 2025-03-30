@@ -296,7 +296,7 @@ uses
   KM_Game, KM_GameApp, KM_GameParams, KM_Cursor,
   KM_UnitsCollection, KM_UnitWarrior, KM_UnitTaskSelfTrain,
   KM_HouseBarracks, KM_HouseSchool, KM_HouseMarket, KM_HouseStore, KM_HouseTownHall,
-  KM_Resource, KM_ResUnits,
+  KM_Resource, KM_ResUnits, KM_ResTileSet,
   KM_Hand, KM_HandEntity,
   KM_Terrain,
   KM_CommonUtils;
