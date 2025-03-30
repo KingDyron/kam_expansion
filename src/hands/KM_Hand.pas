@@ -101,6 +101,7 @@ type
 
     //fBridgesBuilt : TKMStructureBasicArray;
     fCustomPanelData : TKMCustomPanelInfo;
+    fPearlsBuilt : array[TKMPearlType] of Boolean;
 
     function IsDisabled: Boolean;
     function GetColorIndex: Byte;
@@ -118,7 +119,7 @@ type
     procedure UnitDied(aUnit: TKMUnit);
 
     procedure UnitTrained(aUnit: TKMUnit);
-    procedure WarriorWalkedOut(aWarrior: TKMUnitWarrior);
+    procedure WarriorWalkedOut(aWarrior: TKMUnitWarrior; aHouse : TKMHouse; aIsTrained : Boolean);
     function LocHasNoAllyPlans(const aLoc: TKMPoint): Boolean;
     function GetGameFlagColor: Cardinal;
     function GetOwnerNicknameU: UnicodeString;
@@ -209,6 +210,7 @@ type
     procedure TakeJewerly;
     function CanMakeJewerly : Boolean;
     procedure ProceedStoreBell(aLoc : TKMPoint);
+    procedure ProceedPearlBell(aLoc : TKMPoint);
 
     function GetWorklessCount : Integer;
     function CanTrainSerfs : Integer;
@@ -309,6 +311,8 @@ type
     procedure GetStructureMarks(const aLoc: TKMPoint; aIndex, aRot: Word; aList : TKMPointTagList; aIgnoreFOW: Boolean = false);
     procedure TakeOverHouse(aHouse : TKMHouse);
     procedure TakeOverAppleTree(aHouse : TKMHouse);
+    procedure PearlBuilt(aType : TKMPearlType);
+    function HasPearl(aType : TKMPearlType) : Boolean;
 
     function GetClosestHouse(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aWareSet : TKMWareTypeSet = [wtAll];  aMaxDistance : Single = 999) : TKMHouse;
     function GetClosestStore(aLoc : TKMPoint; aWare: TKMWareType) : TKMHouse;
@@ -409,12 +413,13 @@ uses
   KM_Entity,
   KM_Cursor, KM_Game, KM_GameParams, KM_Terrain,
   KM_HandsCollection, KM_Sound, KM_AIFields, KM_MapEdTypes,
-  KM_HouseStore, KM_HouseSchool,  KM_HouseBarracks,KM_HouseHelpers,
+  KM_HouseStore, KM_HouseSchool,  KM_HouseBarracks,KM_HouseHelpers, KM_HousePearl,
   KM_Resource, KM_ResSound, KM_ResTexts, KM_ResMapElements, KM_ScriptingEvents, KM_ResUnits,
   KM_RenderPool, KM_RenderAux,
   KM_CommonUtils, KM_GameSettings,
   KM_UnitGroupTypes,
-  KM_MapTypes, KM_HouseCottage;
+  KM_MapTypes, KM_HouseCottage,
+  KM_TerrainTypes;
 
 const
   TIME_TO_SET_FIRST_STOREHOUSE = 10*60*2; //We give 2 minutes to set first storehouse, otherwise player will be defeated
@@ -792,20 +797,22 @@ begin
 end;
 
 
-procedure TKMHand.WarriorWalkedOut(aWarrior: TKMUnitWarrior);
+procedure TKMHand.WarriorWalkedOut(aWarrior: TKMUnitWarrior; aHouse : TKMHouse; aIsTrained : Boolean);
 var
   G, G2: TKMUnitGroup;
   H: TKMHouse;
   HWFP: TKMHouseWFlagPoint;
 begin
+  //this event is only for trained warriors
+  If not aIsTrained then
+    Exit;
   // Warrior could be killed before he walked out, f.e. by script OnTick ---> Actions.UnitKill
   // Then group will be assigned to invalid warrior and never gets removed from game
   if (aWarrior = nil) or aWarrior.IsDeadOrDying then
     Exit;
-
+  {if aWarrior.UnitType = utLekter then
+    Exit;}
   G := fUnitGroups.WarriorTrained(aWarrior);
-  if aWarrior.UnitType = utLekter then
-    Exit;
   Assert(G <> nil, 'It is certain that equipped warrior creates or finds some group to join to');
   G.OnGroupDied := GroupDied;
   if IsComputer then
@@ -820,7 +827,8 @@ begin
     if G.Count = 1 then
     begin
       //If player is human and this is the first warrior in the group, send it to the rally point
-      H := HousesHitTest(aWarrior.Position.X, aWarrior.Position.Y-1);
+      //H := HousesHitTest(aWarrior.Position.X, aWarrior.Position.Y-1);
+      H := aHouse;
       if (H is TKMHouseWFlagPoint) then
       begin
         HWFP := TKMHouseWFlagPoint(H);
@@ -1403,18 +1411,22 @@ begin
     Exit(true);
 
   case aHouseType of
-    htProductionThatch : Result := Self.Stats.GetHouseTotal(aHouseType) <= 0;
+    htCartographers,
+    htPearl,
+    htProductionThatch : Result := Stats.GetHouseTotal(aHouseType) <= 0;
     else
       Result := true;
   end;
 end;
+
 function TKMHand.CanAddHousePlan(const aLoc: TKMPoint; aHouseType: TKMHouseType): Boolean;
 var
   I, K, J, S, T, Tx, Ty: Integer;
   HA: TKMHouseAreaNew;
 begin
+  Result := CanBuildHouse(aHouseType);
+  if not Result then Exit;
   Result := gTerrain.CanPlaceHouse(aLoc, aHouseType);
-  Result := Result and CanBuildHouse(aHouseType);
   if not Result then Exit;
 
   HA := gRes.Houses[aHouseType].BuildArea;
@@ -1734,10 +1746,25 @@ begin
       if fUnits[I].InHouse = nil then
       
       if fUnits[I].UnitType in UNITS_CITIZEN then
-        if KMLength(fUnits[I].Position, aLoc) < 60 then
+        if KMLength(fUnits[I].Position, aLoc) < 30 then
           fUnits[I].GoToStore(aLoc);
   gSoundPlayer.Play(sfxnStoreBell, aLoc, true, 1);
 end;
+
+procedure TKMHand.ProceedPearlBell(aLoc: TKMPoint);
+var I : Integer;
+begin
+  for I := 0 to fUnits.Count - 1 do
+    if fUnits[I] <> nil then
+      if not fUnits[I].IsDeadOrDying and fUnits[I].IsIdle then
+      if fUnits[I].InHouse = nil then
+
+      if fUnits[I].UnitType in UNITS_CITIZEN then
+        if KMLength(fUnits[I].Position, aLoc) < 80 then
+          fUnits[I].GoToPearl(aLoc);
+  gSoundPlayer.Play(sfxnStoreBell, aLoc, true, 1);
+end;
+
 
 function TKMHand.AddHouse(aHouseType: TKMHouseType; PosX, PosY: Word; RelativeEntrace: Boolean): TKMHouse;
 begin
@@ -2616,6 +2643,18 @@ begin
 
 end;
 
+procedure TKMHand.PearlBuilt(aType: TKMPearlType);
+begin
+  fPearlsBuilt[aType] := true;
+end;
+
+function TKMHand.HasPearl(aType: TKMPearlType): Boolean;
+begin
+  If Self = nil then
+    Exit(false);
+  Result := fPearlsBuilt[aType];
+end;
+
 function TKMHand.GetClosestHouse(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aWareSet : TKMWareTypeSet = [wtAll]; aMaxDistance : Single = 999) : TKMHouse;
 var I : Integer;
   lastDistance : Single;
@@ -2926,6 +2965,8 @@ begin
     end;
   end;
 
+  SaveStream.WriteData(fPearlsBuilt);
+
   //fBridgesBuilt.SaveToStream(SaveStream);
 end;
 
@@ -3026,6 +3067,8 @@ begin
         LoadStream.Read(ImageAlphaStep);
       end;
   end;
+
+  LoadStream.ReadData(fPearlsBuilt);
 
   //fBridgesBuilt.LoadFromStream(LoadStream);
 
@@ -3902,8 +3945,7 @@ end;
 
 
 procedure TKMHandAnimals.PaintSpawners(const aRect: TKMRect);
-var I, K, J, offX : Integer;
-  UT : TKMUnitType;
+var I: Integer;
 begin
   for I := 0 to High(fSpawners) do
     with fSpawners[I] do

@@ -460,7 +460,7 @@ end;
 
 procedure TKMHouseCartographers.CollectSpyData(aPlayer: Integer);
 var hand : TKMHand;
-  I, J, id : Integer;
+  I, id : Integer;
   AAT : TKMAIAttackTarget;
 begin
   If fPlayerToSpy = aPlayer then

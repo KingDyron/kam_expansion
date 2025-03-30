@@ -12,6 +12,7 @@ type
   TKMUnitWarrior = class;
   TKMUnitWarriorShip = class;
   TKMWarriorEvent = procedure(aWarrior: TKMUnitWarrior) of object;
+  TKMWarriorHouseTrainedEvent = procedure(aWarrior: TKMUnitWarrior; aHouse: TKMHouse; aIsTrained : Boolean) of object;
   TKMWarrior2Event = procedure(aWarrior: TKMUnitWarrior; aUnit: TKMUnit) of object;
 
   // What player has ordered us to do
@@ -52,6 +53,7 @@ type
     fRamTicker : Cardinal;
     fDamageUnits : Word;
     fDamageHouse : Word;
+    fRageTime : Word;
 
     procedure ClearOrderTarget(aClearAttackingUnit: Boolean = True);
     procedure ClearAttackingUnit;
@@ -77,12 +79,14 @@ type
 
     function GetDamageUnit : Word;virtual;
     function GetDamageHouse : Word;virtual;
+
+    const RAGE_TIME_DELAY = 1200;
   protected
     function GetAllowAllyToSelect: Boolean; override;
     procedure SetAllowAllyToSelect(aAllow: Boolean); override;
     function GetDefence : SmallInt;override;
     function GetAttack : SmallInt; override;
-    procedure UpdateHitPoints; override;
+    procedure UpdateHitPoints(UseEffect : Boolean = true); override;
     procedure PaintUnit(aTickLag: Single); override;
     procedure DoDismiss;override;
     function IsSelected : Boolean; override;
@@ -90,7 +94,7 @@ type
     OnWarriorDismissed: TKMWarriorEvent; //Separate event from OnUnitDied to report to Group
     OnWarriorDied: TKMWarriorEvent; //Separate event from OnUnitDied to report to Group
     OnPickedFight: TKMWarrior2Event;
-    OnWarriorWalkOut: TKMWarriorEvent;
+    OnWarriorWalkOut: TKMWarriorHouseTrainedEvent;
     // Todo: do we actually need it? Should not Group.OrderLoc.Dir be used for the same purpose ?
     FaceDir: TKMDirection; //Direction we should face after walking. Only check for enemies in this direction.
     constructor Create(aID: Cardinal; aUnitType: TKMUnitType; const aLoc: TKMPointDir; aOwner: TKMHandID; aInHouse: TKMHouse);
@@ -168,12 +172,13 @@ type
     property CurrentOrder : TKMWarriorOrder  read fOrder;
 
     function CanJoinToGroup(aGroup : Pointer) : Boolean;
+    procedure SetRageTime(aTime : Word);
 
     procedure SetAttackingUnit(aUnit: TKMUnit);
 
-    procedure WalkedOut;
+    procedure WalkedOut(aHouse : TKMHouse; aIsTrained : Boolean);
 
-    procedure SetActionGoIn(aAction: TKMUnitActionType; aGoDir: TKMGoInDirection; aHouse: TKMHouse); override;
+    procedure SetActionGoIn(aAction: TKMUnitActionType; aGoDir: TKMGoInDirection; aHouse: TKMHouse; aisTrained : Boolean = false); override;
 
     function ObjToStringShort(const aSeparator: String = '|'): String; override;
     function ObjToString(const aSeparator: String = '|'): String; override;
@@ -200,8 +205,6 @@ type
 
   TKMUnitWarriorPaladin = class(TKMUnitWarrior)
   private
-    fRageDuration : Word;
-    fToRageTime : Word;
     function GetDamageUnit : Word; override;
     function GetDamageHouse : Word;override;
   protected
@@ -276,7 +279,7 @@ type
 
   TKMUnitWarriorShipCommon = class (TKMUnitWarrior)
   public
-    procedure UpdateHitPoints; override;
+    procedure UpdateHitPoints(UseEffect : Boolean = true); override;
   end;
 
   TKMUnitWarriorShip = class(TKMUnitWarriorShipCommon)
@@ -407,12 +410,9 @@ begin
   fDamageUnits := gRes.Units[aUnitType].UnitDamage;
   fDamageHouse := gRes.Units[aUnitType].HouseDamage;
 
-  //if fType = utBattleShip then
-  //  fInfinityAmmo := true;
   if gGame.Resource.IsTSK or gGame.Resource.IsTPR then
     fInfinityAmmo := true;
-
-
+  fRageTime := 0;
 end;
 
 
@@ -1144,7 +1144,7 @@ begin
 end;
 
 
-procedure TKMUnitWarrior.SetActionGoIn(aAction: TKMUnitActionType; aGoDir: TKMGoInDirection; aHouse: TKMHouse);
+procedure TKMUnitWarrior.SetActionGoIn(aAction: TKMUnitActionType; aGoDir: TKMGoInDirection; aHouse: TKMHouse; aisTrained : Boolean = false);
 begin
   //Assert(aGoDir = gdGoOutside, 'Walking inside is not implemented yet');
   {Assert((aHouse.HouseType = htBarracks)
@@ -1508,7 +1508,7 @@ begin
     end;
 end;
 
-procedure TKMUnitWarrior.UpdateHitPoints;
+procedure TKMUnitWarrior.UpdateHitPoints(UseEffect : Boolean = true);
 var medicsCount : Byte;
 begin
   if UnitType in UNITS_SHIPS then   //do not increase health if it's ship
@@ -1533,30 +1533,39 @@ begin
       and (fHitPoints < HitPointsMax) then
       Inc(fHitPoints);
 
-  Inc(fHitPointCounter); //Increasing each tick by 1 would require 13,6 years to overflow Cardinal
+  Inc(fHitPointCounter, 1); //Increasing each tick by 1 would require 13,6 years to overflow Cardinal
+  If UseEffect and (fSpecialEffect.EffectType = uetHealing) then
+    UpdateHitPoints(false);
 end;
 
 
 function TKMUnitWarrior.GetDefence : SmallInt;
 begin
   Result := Inherited;
+  Result := Result + 2 * Result * byte(fRageTime > RAGE_TIME_DELAY);
 
   if not (UnitType in SPECIAL_UNITS) then
     if UNIT_TO_GROUP_TYPE[UnitType] = gtMelee then
       if fGroup <> nil then
         if TKMUnitGroup(fGroup).HasUnitType(utPaladin) then //add one defense
           Result := Result + 1;
+  If gHands[Owner].HasPearl(ptRalender) then
+    Result := Result + 1;
 end;
 
 function TKMUnitWarrior.GetAttack : SmallInt;
 begin
   Result := Inherited;
+  Result := Result + 2 * Result * byte(fRageTime > RAGE_TIME_DELAY);
 
   if not (UnitType in SPECIAL_UNITS) then
     if UNIT_TO_GROUP_TYPE[UnitType] = gtAntiHorse then
       if fGroup <> nil then
         if TKMUnitGroup(fGroup).HasUnitType(utPikeMachine) then  //add attack
           Result := Result + 15;
+
+  If gHands[Owner].HasPearl(ptAgros) then
+    Result := Result + 20;
 
 end;
 
@@ -1583,6 +1592,11 @@ begin
 
 end;
 
+procedure TKMUnitWarrior.SetRageTime(aTime : Word);
+begin
+  fRageTime := RAGE_TIME_DELAY + aTime;
+end;
+
 function TKMUnitWarrior.GetAimSoundDelay: Byte;
 const
   SLINGSHOT_AIMING_SOUND_DELAY = 2;
@@ -1595,6 +1609,7 @@ end;
 function TKMUnitWarrior.GetDamageUnit: Word;
 begin
   Result := fDamageUnits;
+  Result := Result + 2 * Result * byte(fRageTime > RAGE_TIME_DELAY);
   if gHands[Owner].IsAffectedbyMBD then
   begin
     if gGameParams.MBD.IsEasy then
@@ -1614,6 +1629,7 @@ end;
 function TKMUnitWarrior.GetDamageHouse: Word;
 begin
   Result := fDamageHouse;
+  Result := Result + 2 * Result * byte(fRageTime > RAGE_TIME_DELAY);
   if gHands[Owner].IsAffectedbyMBD then
   begin
     if gGameParams.MBD.IsEasy then
@@ -1678,6 +1694,9 @@ begin
       if UNIT_TO_GROUP_TYPE[UnitType] = gtRanged then
         if TKMUnitGroup(fGroup).HasUnitType(utArcher) then //add bonus
           Result := Result + 2;
+
+  If gHands[Owner].HasPearl(ptAgros) then
+    Result := Result + 2;
 end;
 
 
@@ -1930,11 +1949,17 @@ end;
 
 
 //Warrior has walked out of the Barracks
-procedure TKMUnitWarrior.WalkedOut;
+procedure TKMUnitWarrior.WalkedOut(aHouse : TKMHouse; aIsTrained : Boolean);
 begin
   //Report for duty (Groups will link us or create a new group)
   if Assigned(OnWarriorWalkOut) then
-    OnWarriorWalkOut(Self);
+    OnWarriorWalkOut(Self, aHouse, aIsTrained);
+
+  If gHands[Owner].HasPearl(ptAgros) then
+    SetSpeed(4, true);
+
+  If gHands[Owner].HasPearl(ptRalender) then
+    fHitPointsMax := fHitPointsMax + 2;
 end;
 
 
@@ -2057,7 +2082,8 @@ begin
     inherited UpdateState;
     Exit;
   end;
-
+  If fRageTime > 0 then
+    Dec(fRageTime);
   UpdateOrderTargets;
 
   if fBitinAdded then
@@ -2147,6 +2173,14 @@ begin
   unitPos.X := V.PositionF.X + UNIT_OFF_X + V.SlideX;
   unitPos.Y := V.PositionF.Y + UNIT_OFF_Y + V.SlideY;
 
+
+  if fRageTime > RAGE_TIME_DELAY then
+  begin
+
+    gRenderPool.AddAnimation(unitPos + KMPointF(0.3, -2.3), gRes.Units.RageAnim, fTicker,
+                            IfThen(FlagColor <> 0, FlagColor, gHands[Owner].GameFlagColor), rxUnits,
+                            false, false, 0, true);
+  end;
 
   gRenderPool.AddUnit(fType, UID, act, V.Dir, V.AnimStep, V.AnimFraction, unitPos.X, unitPos.Y, IfThen(FlagColor <> 0, FlagColor, gHands[Owner].GameFlagColor), True);
 
@@ -2268,38 +2302,41 @@ end;
 constructor TKMUnitWarriorPaladin.Create(aID: Cardinal; aUnitType: TKMUnitType; const aLoc: TKMPointDir; aOwner: ShortInt; aInHouse: TKMHouse);
 begin
   Inherited;
-  fRageDuration := 0;
-  fToRageTime := 0;
+  //fRageDuration := 0;
+  //fToRageTime := 0;
 end;
 
 function TKMUnitWarriorPaladin.GetDamageUnit: Word;
 begin
   Result := Inherited;
-  Result := Result + 2 * Result * byte(fRageDuration > 0);
+  //Result := Result + 2 * Result * byte(fRageDuration > 0);
 end;
 function TKMUnitWarriorPaladin.GetDamageHouse: Word;
 begin
   Result := Inherited;
-  Result := Result +  2 * Result * byte(fRageDuration > 0);
+  //Result := Result +  2 * Result * byte(fRageDuration > 0);
 end;
 
 
 function TKMUnitWarriorPaladin.GetDefence: SmallInt;
 begin
   Result := Inherited;
-  Result := Result + 2 * Result * byte(fRageDuration > 0);
+  //Result := Result + 2 * Result * byte(fRageDuration > 0);
 end;
 function TKMUnitWarriorPaladin.GetAttack: SmallInt;
 begin
   Result := Inherited;
-  Result := Result +  2 * Result * byte(fRageDuration > 0);
+  //Result := Result +  2 * Result * byte(fRageDuration > 0);
 end;
 
 function TKMUnitWarriorPaladin.UpdateState: Boolean;
 begin
   Result := Inherited;
 
-  if fRageDuration > 0 then
+  If (fRageTime = 0) and InFight then
+    SetRageTime(150);//15 secs of special damage and defense
+
+  {if fRageDuration > 0 then
   begin
     Dec(fRageDuration);
 
@@ -2312,48 +2349,49 @@ begin
     if (fToRageTime = 0) and InFight then
       fRageDuration := 150;//15 secs of special damage and defense
 
-  end;
+  end;}
 
 end;
 
 constructor TKMUnitWarriorPaladin.Load(LoadStream: TKMemoryStream);
 begin
   Inherited;
-  LoadStream.Read(fRageDuration);
-  LoadStream.Read(fToRageTime);
+  //LoadStream.Read(fRageDuration);
+  //LoadStream.Read(fToRageTime);
 end;
 
 procedure TKMUnitWarriorPaladin.Save(SaveStream: TKMemoryStream);
 begin
   Inherited;
-  SaveStream.Write(fRageDuration);
-  SaveStream.Write(fToRageTime);
+  //SaveStream.Write(fRageDuration);
+  //SaveStream.Write(fToRageTime);
 end;
 
 procedure TKMUnitWarriorPaladin.PaintUnit(aTickLag: Single);
-var
+{var
   V: TKMUnitVisualState;
   act: TKMUnitActionType;
   unitPos: TKMPointF;
-  fillColor, lineColor: Cardinal;
+  fillColor, lineColor: Cardinal; }
 begin
+  Inherited;
   {if not (fType in [utSpy, utSpikedTrap, utMedic]) then
   begin}
 
-  V := fVisual.GetLerp(aTickLag);
+  {V := fVisual.GetLerp(aTickLag);
 
   act := V.Action;
   unitPos.X := V.PositionF.X + UNIT_OFF_X + V.SlideX;
   unitPos.Y := V.PositionF.Y + UNIT_OFF_Y + V.SlideY;
-
-  if fRageDuration > 0 then
+  }
+  {if fRageDuration > 0 then
   begin
 
     gRenderPool.AddAnimation(unitPos + KMPointF(0.3, -2.3), gRes.Units.RageAnim, fTicker,
                             IfThen(FlagColor <> 0, FlagColor, gHands[Owner].GameFlagColor), rxUnits,
                             false, false, 0, true);
-  end;
-  gRenderPool.AddUnit(fType, UID, act, V.Dir, V.AnimStep, V.AnimFraction, unitPos.X, unitPos.Y, IfThen(FlagColor <> 0, FlagColor, gHands[Owner].GameFlagColor), True);
+  end;}
+  {gRenderPool.AddUnit(fType, UID, act, V.Dir, V.AnimStep, V.AnimFraction, unitPos.X, unitPos.Y, IfThen(FlagColor <> 0, FlagColor, gHands[Owner].GameFlagColor), True);
 
   if (fThought <> thNone) then
     gRenderPool.AddUnitThought(fType, act, V.Dir, fThought, unitPos.X, unitPos.Y)
@@ -2377,7 +2415,7 @@ begin
       end;
 
       gRenderPool.RenderDebug.RenderTiledArea(Position, GetFightMinRange, GetFightMaxRange, GetLength, fillColor, lineColor);
-    end;
+    end;}
 end;
 
 constructor TKMUnitWarriorAmmoCart.Create(aID: Cardinal; aUnitType: TKMUnitType; const aLoc: TKMPointDir; aOwner: ShortInt; aInHouse: TKMHouse);
@@ -2575,7 +2613,7 @@ begin
                               );
 end;
 
-procedure TKMUnitWarriorShipCommon.UpdateHitPoints;
+procedure TKMUnitWarriorShipCommon.UpdateHitPoints(UseEffect : Boolean = true);
 var H : TKMHouse;
 begin
   if HITPOINT_RESTORE_PACE = 0 then Exit; //0 pace means don't restore

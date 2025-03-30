@@ -259,7 +259,7 @@ uses
   KM_UnitActionStormAttack, KM_CommonClassesExt, KM_RenderAux,
   KM_GameTypes, KM_Log, KM_DevPerfLog, KM_DevPerfLogTypes,
   KM_HandTypes, KM_UnitVisual,
-  KM_Resource;
+  KM_Resource, KM_ResTypes;
 
 
 const
@@ -752,7 +752,7 @@ end;
 //If the player is allowed to issue orders to group
 function TKMUnitGroup.CanTakeOrders: Boolean;
 begin
-  Result := (IsRanged or not InFight) and not fBlockOrders;
+  Result := (IsRanged or not (InFight and not gHands[Owner].HasPearl(ptValtaria))) and not fBlockOrders;
 end;
 
 

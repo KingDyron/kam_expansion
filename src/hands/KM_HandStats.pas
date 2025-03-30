@@ -64,6 +64,7 @@ type
     Units: array [HUMANS_MIN..HUMANS_MAX] of TKMUnitStats;
 
     fWareDistribution: TKMWareDistribution;
+    fRecruitsKilledInPearl : Word;
     function GetChartWares(aWare: TKMWareType): TKMCardinalArray;
     function GetChartArmy(aChartKind: TKMChartArmyKind; aWarrior: TKMUnitType): TKMCardinalArray;
     function GetArmyChartValue(aChartKind: TKMChartArmyKind; aUnitType: TKMUnitType): Integer;
@@ -96,6 +97,7 @@ type
     procedure UnitDismissCanceled(aType: TKMUnitType);
     procedure UnitLost(aType: TKMUnitType);
     procedure UnitKilled(aType: TKMUnitType);
+    procedure RecruitKilledInPearl;
 
     property WareDistribution: TKMWareDistribution read fWareDistribution;
 
@@ -173,6 +175,8 @@ begin
   for CKind := cakTotal to cakLost do
     for WT := WARRIOR_MIN to WARRIOR_MAX do
       fArmyEmpty[CKind,WT] := True;
+
+  fRecruitsKilledInPearl := 0;
 end;
 
 
@@ -293,6 +297,11 @@ end;
 procedure TKMHandStats.UnitKilled(aType: TKMUnitType);
 begin
   Inc(Units[aType].Killed);
+end;
+
+procedure TKMHandStats.RecruitKilledInPearl;
+begin
+  Inc(fRecruitsKilledInPearl);
 end;
 
 
@@ -455,8 +464,11 @@ begin
     else        begin
                   Result := Result + Units[aType].Initial + Units[aType].Trained - Units[aType].Lost;
                   if aType = utRecruit then
+                  begin
+                    Dec(Result, fRecruitsKilledInPearl);
                     for UT in BARRACKS_GAME_ORDER do
                       Dec(Result, Units[UT].Trained); //Trained soldiers use a recruit
+                  end;
 
                   if aType = utOperator then
                     for UT in SIEGE_GAME_ORDER do

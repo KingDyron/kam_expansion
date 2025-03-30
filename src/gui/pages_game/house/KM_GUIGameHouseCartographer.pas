@@ -49,11 +49,11 @@ type
   end;
 implementation
 uses
-  KM_Game,
+  KM_Game, KM_GameInputProcess,
   KM_RenderUI,
   KM_AITypes,
   KM_Resource, KM_ResTypes, KM_ResTexts, KM_ResFonts,
-  KM_HandsCollection,
+  KM_HandsCollection, KM_HandTypes, KM_HandEntity,
   KM_UtilsExt,
 
   KM_GUIGameHouse;
@@ -269,14 +269,15 @@ procedure TKMGuiGameCartographer.Button_ToggleMode(Sender: TObject);
 var H : TKMHouseCartographers;
 begin
   H := TKMHouseCartographers(gMySpectator.Selected);
-  H.ToggleLayer(TKMButtonFlat(Sender).Tag)
+  //H.ToggleLayer(TKMButtonFlat(Sender).Tag)
+  gGame.GameInputProcess.CmdHouse(gicCartographersToggleView, H, TKMControl(Sender).Tag);
 end;
 
 procedure TKMGuiGameCartographer.ChangeMode(Sender : TObject);
 var H : TKMHouseCartographers;
 begin
   H := TKMHouseCartographers(gMySpectator.Selected);
-  H.Mode := TKMCartographersMode(TKMControl(Sender).Tag);
+  gGame.GameInputProcess.CmdHouse(gicCartographersMode, H, TKMControl(Sender).Tag);
 end;
 
 procedure TKMGuiGameCartographer.SelectPlayer(Sender: TObject);
@@ -284,9 +285,11 @@ var H : TKMHouseCartographers;
 begin
   H := TKMHouseCartographers(gMySpectator.Selected);
   If Sender = Button_SpyPlayer then
-    H.DoSpying := not H.DoSpying
+    gGame.GameInputProcess.CmdHouse(gicCartographersDoSpying, H)
+    //H.DoSpying := not H.DoSpying
   else
-    H.PlayerToSpy := TKMControl(Sender).Tag;
+    gGame.GameInputProcess.CmdHouse(gicCartographersSelectPlayer, H, TKMControl(Sender).Tag);
+   //H.PlayerToSpy := TKMControl(Sender).Tag;
 end;
 
 function TKMGuiGameCartographer.GetArmyCaption(aCount : Integer) : String;

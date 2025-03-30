@@ -5,7 +5,7 @@ uses
   StrUtils, SysUtils, Math, Classes,
   KM_Controls, KM_ControlsBase, KM_ControlsProgressBar, KM_ControlsSwitch, KM_ControlsWaresRow,
   KM_CommonClasses, KM_CommonTypes, KM_Defaults, KM_Pics, KM_ControlsPopUp, KM_ControlsEdit, KM_ControlsScroll,
-  KM_GUIGameHouseCartographer,
+  KM_GUIGameHouseCartographer, KM_GuiGameHousePearl,
   KM_InterfaceGame, KM_Houses, KM_HouseMarket, KM_HouseQueue, KM_ResWares, KM_ResTypes;
 
 const LINE_HEIGHT = 25; //Each new Line is placed ## pixels after previous
@@ -262,6 +262,7 @@ type
     Pottery_ClayTitle : TKMLabel;
 
     Panel_Cartographers : TKMGuiGameCartographer;
+    Panel_Pearl : TKMGuiGamePearl;
 
   public
     AskDemolish: Boolean;
@@ -536,6 +537,7 @@ begin
   Pottery_ClayCount := TKMLabel.Create(Panel_House_Common, 0, 0, Panel_House_Common.Width, 20, gResTexts[2184], fntGrey, taRight);
 
   Panel_Cartographers := TKMGuiGameCartographer.Create(Panel_House);
+  Panel_Pearl := TKMGuiGamePearl.Create(Panel_House);
   Create_HouseMarket;
   Create_HouseStore;
   Create_HouseSchool;
@@ -1956,6 +1958,7 @@ begin
                         end;
 
                       end;
+
     htStall:          begin
                         for I := 0 to Panel_House_Common.ChildCount - 1 do
                           Panel_House_Common.Childs[I].Hide;
@@ -2031,6 +2034,8 @@ begin
                         //Button_VWares:array[0..6] of TKMButtonFlat;
                         Panel_House_Stall.Show;
                       end;
+
+    htPearl : Panel_Pearl.Show(fHouse, base + line * 25 + 20 + 50);
 
   else
     //First thing - hide everything

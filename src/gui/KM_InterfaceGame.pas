@@ -114,14 +114,13 @@ const
     htWeaponSmithy, htArmorSmithy, htBarracks, htStore, htWatchTower,
     htFishermans, htMarket, htTownHall, htPottery);}
 
-  //Gui house order has now expand panels, every // means it will create new line
   GUIHouseOrderFull: array [1..54] of TKMHouseType = (
     htSchool, htInn, htCottage, htHouse,  htStore,
     htQuarry, htWoodcutters, htSawmill, htPottery, htCollectors,//
 
     htWell, htAppleTree, htFarm, htVineyard, htFishermans,
     htSmallStore, htGoldMine, htIronMine, htBitinMine, htCoalMine,//
-    htMarket, htMerchant, htStall, htSign,
+    htMarket, htMerchant, htStall, htPearl,
     htMill, htBakery, htSwine, htButchers, htTannery,
     htStables, htHovel, htWeaponWorkshop, htArmorWorkshop, htTailorsShop,
     htMetallurgists, htIronSmithy, htWeaponSmithy, htArmorSmithy, htIronFoundry,

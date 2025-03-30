@@ -301,6 +301,7 @@ const
   MAX_WARES_ORDER        = 1000;  //Number of max allowed items to be ordered in production houses (Weapon/Armor/etc) 1000 = Infinity
 
   MAX_UNITS_AROUND_HOUSE = 50;
+  USE_UNIT_TURN_AROUND = true;
 
 const
   MAX_WOODCUTTER_CUT_PNT_DISTANCE = 5; //Max distance for woodcutter new cutting point from his house
@@ -381,10 +382,10 @@ const
   //Sausages = +60%
   //Wine     = +20% (We changed this to +30% for balance)
   //Fish     = +50%
-  BREAD_RESTORE = 0.40;
-  SAUSAGE_RESTORE = 0.50;
+  BREAD_RESTORE = 0.50;
+  SAUSAGE_RESTORE = 0.30;
   WINE_RESTORE = 0.20;
-  FISH_RESTORE = 0.40;
+  FISH_RESTORE = 0.50;
   APPLE_RESTORE = 0.15;
   VEGE_RESTORE = 0.20;
 
@@ -509,7 +510,8 @@ type
     cmDecorations,
     cmCustom,
     cmWaresOnGround,
-    cmChangeResCount);  //Tile overlays
+    cmChangeResCount,
+    cmPearlRepair);  //Tile overlays
 
 type
   // How cursor field placing will act (depends on which tile LMB was pressed)
@@ -822,7 +824,7 @@ type
         uttGoEat,     uttMining,          uttDie,        uttGoOutShowHungry,  uttAttackHouse,
         uttThrowRock, uttBuildPalisade, uttBuildRemove, uttBuildHouseUpgrade, uttGoGetBoots, uttBuildStructure,
         uttGoToShip, uttBuildGrassLand, uttUnloadFromShip, uttGoToStore, uttGoToLoc, uttCollectWares, uttUnloadWares,
-        uttGoToWell, uttTakeOverHouse, uttMerchant, uttCartographer);
+        uttGoToWell, uttTakeOverHouse, uttMerchant, uttCartographer, uttBuildPearl, uttPearlRally, uttGoToPearl);
 
   TKMUnitActionName = (uanStay, uanWalkTo, uanGoInOut, uanAbandonWalk, uanFight, uanStormAttack, uanSteer);
 

@@ -5,6 +5,7 @@ uses
   SysUtils,
   KM_CommonClasses, KM_Defaults, KM_Points,
   KM_Houses, KM_Terrain, KM_Units, KM_ResHouses, KM_Structure,
+  KM_HousePearl,
   KM_ResTypes;
 
 
@@ -133,7 +134,7 @@ type
     fBuildID: Integer;
     fHouseNeedsWorker: Boolean;
     fHouseReadyToBuild: Boolean;
-    fCellsToDig: array [0..15] of TKMPoint; //max house square is 4*4
+    fCellsToDig: array [0..MAX_HOUSE_SIZE*MAX_HOUSE_SIZE - 1] of TKMPoint; //max house square is {4*4} it's 5x5 now
     fLastToDig: ShortInt;
     function GetHouseEntranceLoc: TKMPoint;
   public
@@ -180,6 +181,24 @@ type
     procedure SyncLoad; override;
     destructor Destroy; override;
     property House: TKMHouse read fHouse;
+    function WalkShouldAbandon: Boolean; override;
+    function CouldBeCancelled: Boolean; override;
+    function Execute: TKMTaskResult; override;
+    procedure Save(SaveStream: TKMemoryStream); override;
+  end;
+
+  TKMTaskBuildPearl = class(TKMUnitTask)
+  private
+    fPearl: TKMHousePearl;
+    fBuildID: Integer;
+    fBuildFrom: TKMPointDir; //Current WIP location
+    fCells: TKMPointDirList; //List of surrounding cells and directions
+  public
+    constructor Create(aWorker: TKMUnitWorker; aHouse: TKMHouse; aID: Integer);
+    constructor Load(LoadStream: TKMemoryStream); override;
+    procedure SyncLoad; override;
+    destructor Destroy; override;
+    property Pearl: TKMHousePearl read fPearl;
     function WalkShouldAbandon: Boolean; override;
     function CouldBeCancelled: Boolean; override;
     function Execute: TKMTaskResult; override;
@@ -250,6 +269,7 @@ uses
   KM_HandLogistics, KM_HandsCollection, KM_Resource, KM_ResMapElements,
   KM_Game,
   KM_Hand, KM_HandTypes, KM_HandEntity, KM_TerrainTypes,
+  KM_HouseHelpers,
   Math,
   KM_ScriptingEvents;
 
@@ -517,7 +537,7 @@ begin
          gTerrain.IncDigState(fLoc, fRoadType);
          if fRoadType <> rtWooden then
           gTerrain.FlattenTerrain(fLoc, true, false, 0.25); //Flatten the terrain slightly on and around the road
-         if BootsAdded then
+         if BootsAdded or gHands[Owner].HasPearl(ptArium) then
           SetActionLockedStay(0,uaWork1,False) //skip this step
          else
           SetActionLockedStay(11,uaWork1,False);
@@ -550,7 +570,7 @@ begin
           end;
        end;
     5: begin
-         if BootsAdded then
+         if BootsAdded or gHands[Owner].HasPearl(ptArium) then
           SetActionLockedStay(0,uaWork2,False) //skip this step
          else
           SetActionLockedStay(11,uaWork2,False);
@@ -722,7 +742,7 @@ begin
       end;
    2: begin
         gTerrain.IncDigState(fLoc);
-         if BootsAdded then
+         if BootsAdded or gHands[Owner].HasPearl(ptArium) then
           SetActionLockedStay(0,uaWork1,False) //skip this step
          else
           SetActionLockedStay(24,uaWork1,False);
@@ -734,7 +754,7 @@ begin
    4: begin
         gTerrain.ResetDigState(fLoc);
         gTerrain.SetInitWine(fLoc, Owner); //Replace the terrain, but don't seed grapes yet
-         if BootsAdded then
+         if BootsAdded or gHands[Owner].HasPearl(ptArium) then
           SetActionLockedStay(0,uaWork1,False) //skip this step
          else
           SetActionLockedStay(30, uaWork1);
@@ -749,7 +769,7 @@ begin
    //Warning! This step value is harcoded in KM_UnitTaskDelivery
    5: begin //This step is repeated until Serf brings us some wood
 
-         if BootsAdded then
+         if BootsAdded or gHands[Owner].HasPearl(ptArium) then
           SetActionLockedStay(0,uaWork1,False) //skip this step
          else
           SetActionLockedStay(30, uaWork1);
@@ -757,7 +777,7 @@ begin
       end;
    6: begin
         fDemandSet := False;
-        SetActionLockedStay(IfThen(BootsAdded, 11*6, 11*8), uaWork2, False);
+        SetActionLockedStay(IfThen(BootsAdded or gHands[Owner].HasPearl(ptArium), 11*6, 11*8), uaWork2, False);
         Thought := thNone;
       end;
    7: begin
@@ -863,7 +883,7 @@ begin
         SetActionLockedStay(0,uaWalk);
        end;
     2: begin
-         if BootsAdded and (fPhase2 mod 4 = 0) then
+         if (BootsAdded or gHands[Owner].HasPearl(ptArium)) and (fPhase2 mod 4 = 0) then
           SetActionLockedStay(0,uaWork1,False) //skip this step
          else
           SetActionLockedStay(11,uaWork1,False);
@@ -975,7 +995,7 @@ begin
         SetActionLockedStay(0,uaWalk);
        end;
     2: begin
-         if BootsAdded and (fPhase2 mod 4 = 0) then
+         if (BootsAdded or gHands[Owner].HasPearl(ptArium)) and (fPhase2 mod 4 = 0) then
           SetActionLockedStay(0,uaWork1,False) //skip this step
          else
           SetActionLockedStay(11,uaWork1,False);
@@ -1087,7 +1107,7 @@ begin
         SetActionLockedStay(0,uaWalk);
        end;
     2: begin
-         if BootsAdded and (fPhase2 mod 4 = 0) then
+         if (BootsAdded or gHands[Owner].HasPearl(ptArium)) and (fPhase2 mod 4 = 0) then
           SetActionLockedStay(0,uaWork1,False) //skip this step
          else
           SetActionLockedStay(11,uaWork1,False);
@@ -1198,7 +1218,7 @@ begin
         SetActionLockedStay(0,uaWalk);
        end;
     2: begin
-         if BootsAdded and (fPhase2 mod 4 = 0) then
+         if (BootsAdded or gHands[Owner].HasPearl(ptArium)) and (fPhase2 mod 4 = 0) then
           SetActionLockedStay(0,uaWork1,False) //skip this step
          else
           SetActionLockedStay(11,uaWork1,False);
@@ -1430,7 +1450,7 @@ begin
           SetActionLockedStay(IfThen(BootsAdded, 5, 11),uaWork1,False); //Don't flatten terrain here as we haven't started digging yet
         end;
     4:  begin
-          if BootsAdded then
+          if BootsAdded or gHands[Owner].HasPearl(ptArium) then
             SetActionLockedStay(0,uaWork1,False)
           else
             SetActionLockedStay(11,uaWork1,False);
@@ -1438,11 +1458,11 @@ begin
           gTerrain.FlattenTerrain(fCellsToDig[fLastToDig]);
         end;
     5:  begin
-          SetActionLockedStay(IfThen(BootsAdded, 5, 11),uaWork1,False);
+          SetActionLockedStay(IfThen(BootsAdded or gHands[Owner].HasPearl(ptArium), 5, 11),uaWork1,False);
           gTerrain.FlattenTerrain(fCellsToDig[fLastToDig]);
         end;
     6:  begin
-          if BootsAdded then
+          if BootsAdded or gHands[Owner].HasPearl(ptArium) then
             SetActionLockedStay(0,uaWork1,False)
           else
             SetActionLockedStay(11,uaWork1,False);
@@ -1626,7 +1646,7 @@ begin
           //Update house on hummer hit
           fHouse.IncBuildingProgress;
 
-          if fUnit.BootsAdded and (fPhase2 mod 2 = 0)then
+          if (fUnit.BootsAdded or gHands[Owner].HasPearl(ptArium)) and (fPhase2 mod 2 = 0)then
             fHouse.IncBuildingProgress;
 
           SetActionLockedStay(6, uaWork, False, 0, 5); //Do building and end animation
@@ -1787,7 +1807,7 @@ begin
     4:  begin
           //Update house on hummer hit
           fHouse.IncBuildingUpgradeProgress;
-          if BootsAdded then
+          if BootsAdded or gHands[Owner].HasPearl(ptArium) then
             fHouse.IncBuildingUpgradeProgress;
           SetActionLockedStay(6, uaWork, False, 0, 5); //Do building and end animation
           Inc(fPhase2);
@@ -1820,6 +1840,157 @@ begin
   fCells.SaveToStream(SaveStream);
 end;
 
+{TKMTaskBuildPearl}
+constructor TKMTaskBuildPearl.Create(aWorker: TKMUnitWorker; aHouse: TKMHouse; aID: Integer);
+begin
+  inherited Create(aWorker);
+  fType := uttBuildPearl;
+  fPearl  := aHouse.GetPointer.Pearl;
+  fBuildID   := aID;
+  aWorker.Thought := thBuild;
+
+  fCells := TKMPointDirList.Create;
+  fPearl.GetListOfCellsAround(fCells, aWorker.DesiredPassability);
+end;
+
+
+constructor TKMTaskBuildPearl.Load(LoadStream: TKMemoryStream);
+begin
+  inherited;
+  LoadStream.CheckMarker('TaskBuildHouse');
+  LoadStream.Read(fPearl, 4);
+  LoadStream.Read(fBuildID);
+  LoadStream.Read(fBuildFrom);
+  fCells := TKMPointDirList.Create;
+  fCells.LoadFromStream(LoadStream);
+end;
+
+
+procedure TKMTaskBuildPearl.SyncLoad;
+begin
+  inherited;
+  fPearl := gHands.GetHouseByUID(Integer(fPearl)).Pearl;
+end;
+
+
+destructor TKMTaskBuildPearl.Destroy;
+begin
+  //We are no longer connected to the House (it's either done or we died)
+  gHands[fUnit.Owner].Constructions.PearlList.RemWorker(fBuildID);
+  gHands.CleanUpHousePointer(TKMHouse(fPearl));
+  FreeAndNil(fCells);
+  inherited;
+end;
+
+
+// If we are walking to the house but the house is destroyed/canceled we should abandon immediately
+// If house has not enough resource to be built, consider building task is done and look for a new
+// task that has enough resouces. Once this house has building resources delivered it will be
+// available from build queue again
+// If house is already built by other workers
+function TKMTaskBuildPearl.WalkShouldAbandon: Boolean;
+begin
+  if fPearl = nil then
+    Exit(true);
+  Result := fPearl.IsDestroyed or not fPearl.CanBuild;
+end;
+
+
+function TKMTaskBuildPearl.CouldBeCancelled: Boolean;
+begin
+  Result := (fPhase - 1) //phase was increased at the end of execution
+                   <= 0; //Allow cancel task only at walking phases
+end;
+
+
+{Build the house}
+function TKMTaskBuildPearl.Execute: TKMTaskResult;
+  function LocOccupied(aLoc : TKMPoint) : Boolean;
+  var W : TKMUnitWorker;
+  begin
+    if (gTerrain.GetUnit(aLoc) = nil) or not (gTerrain.GetUnit(aLoc) is TKMUnitWorker) then //unit must be worker
+      Exit(false);
+    W := TKMUnitWorker(gTerrain.GetUnit(aLoc));
+    Result := not W.IsDeadOrDying and (W <> fUnit); //ignore dead workers
+  end;
+begin
+  Result := trTaskContinues;
+
+  if WalkShouldAbandon then
+  begin
+    fUnit.Thought := thNone;
+    Result := trTaskDone;
+    Exit;
+  end;
+
+  with TKMUnitWorker(fUnit) do
+  case fPhase of
+    0:  if PickNextSpot(fCells, fBuildFrom, fPearl.LastCellID) then
+        begin
+          Thought := thBuild;
+          SetActionWalkToSpot(fBuildFrom.Loc, uaWalk, 1.42);
+        end
+        else
+          Result := trTaskDone;
+    1:  if not LocOccupied(fBuildFrom.Loc) then
+        begin
+          Thought := thBuild;
+          SetActionWalkToSpot(fBuildFrom.Loc);//walk directly to this place
+        end else
+        if PickNextSpot(fCells, fBuildFrom, fPearl.LastCellID) then
+        begin
+          Thought := thBuild;
+          SetActionWalkToSpot(fBuildFrom.Loc, uaWalk, 1.42);//try to use different location
+          fPhase := 0;
+        end
+        else
+          Result := trTaskDone;
+    //WARNING!!! THIS PHASE VALUE IS USED IN TKMTaskDelivery to construction !!!
+    2:  begin
+          //Face the building
+          Direction := fBuildFrom.Dir;
+          SetActionLockedStay(0, uaWalk);
+        end;
+    3:  begin
+          //Start animation
+          SetActionLockedStay(5, uaWork, False);
+          Direction := fBuildFrom.Dir;
+        end;
+    4:  begin
+          //Update house on hummer hit
+          fPearl.IncBuildingPearlProgress;
+          if BootsAdded or gHands[Owner].HasPearl(ptArium) then
+            fPearl.IncBuildingPearlProgress;
+          SetActionLockedStay(6, uaWork, False, 0, 5); //Do building and end animation
+          Inc(fPhase2);
+        end;
+    5:  begin
+          SetActionStay(1, uaWalk);
+          Thought := thNone;
+        end;
+    else Result := trTaskDone;
+  end;
+  Inc(fPhase);
+
+  {Worker does 8 hits from any spot around the house and then goes to new spot,
+   but if the house is done worker should stop activity immediately}
+  if (fPhase = 5) then //If animation cycle is done
+    if fPhase2 mod 8 = 0 then //if worker did [8] hits from same spot
+      fPhase := 0 //Then goto new spot
+    else
+      fPhase := 3; //else do more hits
+end;
+
+
+procedure TKMTaskBuildPearl.Save(SaveStream: TKMemoryStream);
+begin
+  inherited;
+  SaveStream.PlaceMarker('TaskBuildHouse');
+  SaveStream.Write(fPearl.UID); //Store ID, then substitute it with reference on SyncLoad
+  SaveStream.Write(fBuildID);
+  SaveStream.Write(fBuildFrom);
+  fCells.SaveToStream(SaveStream);
+end;
 
 
 { TTaskBuildHouseRepair }
@@ -1930,7 +2101,7 @@ begin
           end;
       4:  begin
             fHouse.AddRepair;
-            if BootsAdded then
+            if BootsAdded or gHands[Owner].HasPearl(ptArium) then
               fHouse.AddRepair;
 
             SetActionLockedStay(6, uaWork,False, 0, 5); //Do building and end animation
@@ -2085,7 +2256,7 @@ begin
           end;
       4:  begin
             fStructure.IncBuildingProgress;
-            if BootsAdded then
+            if BootsAdded or gHands[Owner].HasPearl(ptArium) then
               fStructure.IncBuildingProgress;
 
 

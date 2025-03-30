@@ -1593,10 +1593,10 @@ begin
   If id = 0 then
   begin
     for I := 0 to gRes.Patterns.Local.Count - 1 do
-      ColumnBox_PatternsList.AddItem(MakeListRow([gRes.Patterns.Local[I].GetName]));
+      ColumnBox_PatternsList.AddItem(MakeListRow([String(gRes.Patterns.Local[I].GetName)]));
   end else
     for I := 0 to gRes.Patterns[id - 1].Count - 1 do
-      ColumnBox_PatternsList.AddItem(MakeListRow([gRes.Patterns[id - 1].Pattern[I].GetName]));
+      ColumnBox_PatternsList.AddItem(MakeListRow([String(gRes.Patterns[id - 1].Pattern[I].GetName)]));
 
   ColumnBox_PatternsList.ItemIndex := itemID;
   ColumnBox_PatternsList.TopIndex := topID;
@@ -1616,7 +1616,7 @@ begin
     Exit;
 
   K := ColumnBox_PatternsList.ItemIndex;
-  FilenameEdit_Rename.SetTextSilently(gRes.Patterns.Local.Pattern[K].GetName);
+  FilenameEdit_Rename.SetTextSilently(String(gRes.Patterns.Local.Pattern[K].GetName));
   PopUp_Rename.Show;
 
 end;
@@ -1630,7 +1630,7 @@ begin
     Exit;
 
   K := ColumnBox_PatternsList.ItemIndex;
-  gRes.Patterns.Local.Pattern[K].SetName(FilenameEdit_Rename.Text);
+  gRes.Patterns.Local.Pattern[K].SetName(AnsiString(FilenameEdit_Rename.Text));
 
   RefreshPatternsList;
   PopUp_Rename.Hide;
@@ -1645,12 +1645,13 @@ begin
   If not ColumnBox_PatternsList.IsSelected then
     Exit;
   I := ColumnBox_PatternsList.ItemIndex;
-
   If Sender = Button_MoveUp then
     newID := gRes.Patterns.PatternMoveUp(I)
   else
   If Sender = Button_MoveDown then
-    newID := gRes.Patterns.PatternMoveDown(I);
+    newID := gRes.Patterns.PatternMoveDown(I)
+  else
+    Exit;
 
   RefreshPatternsList;
   ColumnBox_PatternsList.ItemIndex := newID;

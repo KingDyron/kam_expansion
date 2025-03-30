@@ -5,6 +5,7 @@ uses
   KM_Houses,
   KM_Hand, KM_HandsCollection, KM_HouseWoodcutters, KM_HouseArmorWorkshop, KM_HouseBarracks, KM_HouseCottage, KM_HouseInn, KM_HouseTownHall,
   KM_HouseMarket, KM_HouseSchool, KM_HouseQueue, KM_HouseSiegeWorkshop, KM_HouseStore, KM_HouseSwineStable, KM_HouseWoodBurner,
+  KM_HouseCartographers, KM_HousePearl,
   KM_ResTypes;
   
 type
@@ -38,6 +39,8 @@ type
     function School : TKMHouseSchool;
     function SiegeWorkshop : TKMHouseSiegeWorkshop;
     function Store : TKMHouseStore;
+    function Cartographers : TKMHouseCartographers;
+    function Pearl : TKMHousePearl;
     function NotNil : Boolean;
   end;
 
@@ -161,6 +164,15 @@ function TKMHouseHelpers.Store : TKMHouseStore;
 begin
   If self is TKMHouseStore then Result := TKMHouseStore(self) else Exit(nil);
 end;
+function TKMHouseHelpers.Cartographers : TKMHouseCartographers;
+begin
+  If self is TKMHouseCartographers then Result := TKMHouseCartographers(self) else Exit(nil);
+end;
+function TKMHouseHelpers.Pearl : TKMHousePearl;
+begin
+  If self is TKMHousePearl then Result := TKMHousePearl(self) else Exit(nil);
+end;
+
 function TKMHouseHelpers.NotNil: Boolean;
 begin
   Result := self <> nil;

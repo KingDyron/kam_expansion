@@ -92,6 +92,7 @@ type
     procedure RenderForegroundUI_PaintBucket(aHighlightAll: Boolean);
     procedure RenderForegroundUI_UniversalEraser(aHighlightAll: Boolean);
     procedure RenderForegroundUI_ChangeResCount;
+    procedure RenderForegroundUI_SetHouseRepair;
     procedure RenderForegroundUI_Bridge;
     procedure RenderForegroundUI_Decoration;
     procedure RenderForegroundUI_WareOnGround;
@@ -148,6 +149,10 @@ type
     procedure AddHouseTablet(aHouse: TKMHouseType; const aLoc: TKMPoint);
     procedure AddHouseBuildSupply(aHouse: TKMHouseType; const Loc: TKMPoint; Wood, Stone, tile: Byte);
     procedure AddHouseWork(aHouse: TKMHouseType; const aLoc: TKMPoint; aActSet: TKMHouseActionSet; aAnimStep, aAnimStepPrev: Cardinal; aFlagColor: TColor4; aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
+
+    procedure AddHousePearl(aPearlType : TKMPearlType; const aLoc: TKMPoint; const aStage : Byte; aWoodStep, aStoneStep, aSnowStep: Single; aFlagColor : Cardinal = 0;
+                               aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
+
     procedure AddAnimation(const aLoc: TKMPoint; aAnim : TKMAnimLoop; aAnimStep: Cardinal; aFlagColor: TColor4; aRX : TRXType;
                           aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0; aFront : Boolean = false; aAlphaStep : Single = -1);Overload;
     procedure AddAnimation(const aLoc: TKMPointF; aAnim : TKMAnimLoop; aAnimStep: Cardinal; aFlagColor: TColor4; aRX : TRXType;
@@ -969,6 +974,89 @@ begin
       gRenderPool.AddHouseWork(H.HouseType, H.Position, H.CurrentAction.SubAction, H.WorkAnimStep, H.WorkAnimStepPrev, aFlagColor, aDoImmediateRender, aDoHighlight, aHighlightColor);
   end;
 end;
+
+procedure TKMRenderPool.AddHousePearl(aPearlType: TKMPearlType; const aLoc: TKMPoint; const aStage : Byte;
+                                      aWoodStep: Single; aStoneStep: Single; aSnowStep: Single; aFlagColor : Cardinal = 0;
+                                      aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
+var
+  rxData: TRXData;
+  picWood, picStone, picSnow, id: Integer;
+  groundWood, groundStone, gX, gY: Single;
+  P : TKMPearlData;
+  I : Integer;
+//const
+    //WallTowerWariants : array of Integer = [2119, 2121, 2121, 2121, 2121, 2121, 2121];
+  function CornerX(aPic: Integer): Single;
+  begin
+    Result := aLoc.X + rxData.Pivot[aPic].X / CELL_SIZE_PX - 1;
+  end;
+
+  function CornerY(aPic: Integer): Single;
+  begin
+    Result := aLoc.Y + (rxData.Pivot[aPic].Y + rxData.Size[aPic].Y) / CELL_SIZE_PX - 1
+                     - gTerrain.LandExt^[aLoc.Y + 1, aLoc.X].RenderHeight / CELL_HEIGHT_DIV;
+  end;
+
+begin
+  // We cannot skip when WoodStep = 0 because building supply is rendered as a child.
+  // Instead RenderSpriteAlphaTest will skip rendering when WoodStep = 0
+
+  rxData := fRXData[rxHouses];
+  P := gRes.Houses.Pearls[aPearlType];
+
+  picWood := P.GetStagePic(aStage - 1) + 1;
+  picStone := P.GetStagePic(aStage) + 1;
+  picSnow := P.SnowPic + 1;
+
+
+  groundWood := rxData.Pivot[picWood].Y + rxData.Size[picWood].Y;
+  groundStone := rxData.Pivot[picStone].Y + rxData.Size[picStone].Y;
+
+  gX := aLoc.X + (rxData.Pivot[picWood].X + rxData.Size[picWood].X / 2) / CELL_SIZE_PX - 1;
+  gY := aLoc.Y + Max(groundWood, groundStone) / CELL_SIZE_PX - 1.5;
+
+  // If it's fully built we can render without alpha
+  if (aWoodStep = 1) and (aStoneStep = 1) then
+  begin
+    picStone := picWood;
+    // Snow only happens on fully built houses
+    if gGameSettings.GFX.AllowSnowHouses
+      and (aSnowStep > 0)
+      and (picSnow <> 0)and (picSnow <> 6) then
+    begin
+      // If snow is 100% we only need to render snow sprite
+      if (aSnowStep = 1)then
+        fRenderList.AddSprite(rxHouses, picSnow, CornerX(picSnow), CornerY(picSnow){, gX, gY}, aLoc.X, aLoc.Y, $0)
+      else
+      begin
+        // Render stone with snow blended on top using AlphaTest
+        fRenderList.AddSprite(rxHouses, picStone, CornerX(picStone), CornerY(picStone){, gX, gY}, aLoc.X, aLoc.Y, $0);
+        fRenderList.AddSprite(rxHouses, picSnow, CornerX(picSnow), CornerY(picSnow){, gX, gY}, aLoc.X, aLoc.Y, $0, aSnowStep);
+      end;
+    end
+    else if aDoImmediateRender then
+      RenderSprite(rxHouses, picStone, CornerX(picStone), CornerY(picStone), $0, aDoHighlight, aHighlightColor)
+    else
+      fRenderList.AddSprite(rxHouses, picStone, CornerX(picStone), CornerY(picStone){, gX, gY}, aLoc.X, aLoc.Y, $0);
+
+    for I := 0 to High(P.A) do
+    begin
+      id := P.A[I].Animation[gTerrain.AnimStep] + 1;
+      fRenderList.AddSprite(rxHouses, id, CornerX(id) + P.A[I].X / CELL_SIZE_PX, CornerY(id) + P.A[I].Y / CELL_SIZE_PX
+                            {, gX, gY}, aLoc.X, aLoc.Y, aFlagColor);
+    end;
+
+  end
+  else
+  begin
+    // Wood part of the house (may be seen below Stone part before construction is complete, e.g. Sawmill)
+    fRenderList.AddSprite(rxHouses, picWood, CornerX(picWood), CornerY(picWood){, gX, gY}, aLoc.X, aLoc.Y, $0, aWoodStep);
+    if aStoneStep > 0 then
+      fRenderList.AddSprite(rxHouses, picStone, CornerX(picStone), CornerY(picStone), aLoc.X, aLoc.Y, $0, aStoneStep);
+  end;
+
+end;
+
 
 procedure TKMRenderPool.AddAnimation(const aLoc: TKMPoint; aAnim: TKMAnimLoop; aAnimStep: Cardinal;
                                       aFlagColor: Cardinal; aRX : TRXType; aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: Cardinal = 0;
@@ -2570,6 +2658,7 @@ begin
     cmPaintBucket:      RenderForegroundUI_PaintBucket(ssShift in gCursor.SState);
     cmUniversalEraser:  RenderForegroundUI_UniversalEraser(ssShift in gCursor.SState);
     cmChangeResCount:   RenderForegroundUI_ChangeResCount;
+    cmPearlRepair:      RenderForegroundUI_SetHouseRepair;
     cmAssignToShip:     RenderAssignToShip;
     cmCustom:           case gCursor.Custom.RenderType of
                           crtWireTile : RenderWireTile(P, icCyan);
@@ -2834,6 +2923,27 @@ begin
 
   if (entity is TKMHouse) then
     AddWholeHouse(TKMHouse(entity), gHands[entity.Owner].FlagColor, True, True, icCyan);
+end;
+
+procedure TKMRenderPool.RenderForegroundUI_SetHouseRepair;
+var
+  H: TKMHouse;
+  P: TKMPoint;
+begin
+  P := gCursor.Cell;
+  H := gMySpectator.Hand.HousesHitTest(P.X, P.Y);
+
+  if H <> nil then
+  begin
+    RenderWireTile(P, icCyan); // Cyan rect
+    If H.BuildingRepair then
+      RenderSpriteOnTile(P, 40)
+    else
+      RenderSpriteOnTile(P, 39);
+  end
+  else
+    RenderSpriteOnTile(P, 340); // X
+
 end;
 
 procedure TKMRenderPool.RenderForegroundUI_Bridge;

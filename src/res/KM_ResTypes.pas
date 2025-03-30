@@ -68,7 +68,7 @@ type
     htStoneWorkshop,   htIronFoundry,     htMerchant,      htPottery,       htWoodBurner,
     htAppleTree,       htSmallStore,      htCollectors,    htTailorsShop,   htCottage,
     htHouse,           htPalace,          htStall,         htProductionThatch,
-    htShipYard,        htCartographers
+    htShipYard,        htCartographers,   htPearl
   );
 
   //* House type set
@@ -118,6 +118,7 @@ type
   //* Woodcutting mode
   TKMWoodcutterMode = (wmChopAndPlant, wmChop, wmPlant);
   TKMCollectorsMode = (cmCollector, cmHunter);
+  TKMPearlType = (ptNone, ptValtaria, ptArium, ptAgros, ptRalender);
 
   TKMProdThatchAnimType = (ptaSawDust, ptaStoneDust, ptaSmokeBakery, ptaSmokeIron, ptaSmokeGold, ptaWindows, ptaWine, ptaCorn);
   TKMPTAnim = record

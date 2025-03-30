@@ -96,6 +96,28 @@ type
     const MARGIN = 5;
   end;
 
+  TKMCostsRowMultiMax = class(TKMControl)
+  private
+    fItems : array of record
+      X, Y, Wdt : Integer;
+    end;
+    fItemHeight : Byte;
+    fWarePlan : TKMWarePlan;
+    procedure RefreshItems;
+    procedure SetWareplan(aPlan : TKMWarePlan);
+    procedure SetItemHeight(aHeight : Byte);
+  public
+    Caption : UnicodeString;
+    MaxInRow : Byte;
+    constructor Create(aParent: TKMPanel; aLeft, aTop, aWidth, aHeight: Integer; aMaxCount: Byte = 4);
+    procedure MouseOver(X,Y: Integer; Shift: TShiftState); override;
+    procedure Paint; override;
+    const MARGIN = 5;
+
+    property WarePlan : TKMWarePlan read fWarePlan write SetWareplan;
+    property ItemHeight : Byte read fItemHeight write SetItemHeight;
+  end;
+
   TKMWaresButtonsMulti = class(TKMControl)
   public
     WarePlan : TKMWarePlan;
@@ -803,7 +825,6 @@ var I, J, lX: Integer;
   wareWidth : Integer;
 begin
   Inherited;
-
   J := WarePlan.Count;
 
   Hint := '';
@@ -857,6 +878,112 @@ begin
 
   end;
     
+
+end;
+
+constructor TKMCostsRowMultiMax.Create(aParent: TKMPanel; aLeft: Integer; aTop: Integer; aWidth: Integer; aHeight: Integer; aMaxCount: Byte = 4);
+begin
+  Inherited Create(aParent, aLeft, aTop, aWidth, aHeight);
+  MaxInRow := aMaxCount;
+  fWarePlan.Reset;
+  fItemHeight := 20;
+end;
+
+
+procedure TKMCostsRowMultiMax.RefreshItems;
+var I, J, K, lTop, wareWidth, inRowCnt, rowsCnt : Integer;
+begin
+  J := fWarePlan.Count;
+  SetLength(fItems, fWarePlan.Count);
+  If J = 0 then
+    Exit;
+
+  rowsCnt := 0;
+  K := 0;
+  lTop := AbsTop - fItemHeight;
+  wareWidth := Width;
+  for I := 0 to J - 1 do
+  begin
+    If K = 0 then
+    begin
+      inRowCnt := Min(MaxInRow, J - I);
+      wareWidth := ((Width) div inRowCnt) - MARGIN;
+
+      Inc(lTop, fItemHeight + MARGIN);
+      Inc(rowsCnt);
+    end;
+    fItems[I].X := AbsLeft + (wareWidth + MARGIN) * K;
+    fItems[I].Y := lTop;
+    fItems[I].Wdt := wareWidth;
+    inc(K);
+    If K >= MaxInRow then
+      K := 0;
+  end;
+  Height := rowsCnt * (fItemHeight + MARGIN);
+end;
+
+procedure TKMCostsRowMultiMax.SetWareplan(aPlan : TKMWarePlan);
+begin
+  fWarePlan := aPlan;
+  RefreshItems;
+end;
+
+procedure TKMCostsRowMultiMax.SetItemHeight(aHeight : Byte);
+begin
+  fItemheight := aHeight;
+  RefreshItems;
+end;
+
+procedure TKMCostsRowMultiMax.MouseOver(X: Integer; Y: Integer; Shift: TShiftState);
+var I, J : Integer;
+begin
+  Inherited;
+  J := WarePlan.Count;
+
+  Hint := '';
+  if J = 0 then
+  begin
+  end else
+  if J = 1 then
+    Hint := gRes.Wares[WarePlan[0].W].Title
+  else
+  begin
+
+    for I := 0 to J - 1 do
+      if InRange(X, fItems[I].X, fItems[I].X + fItems[I].Wdt) and InRange(Y, fItems[I].Y, fItems[I].Y + fItemHeight) then
+      begin
+        Hint := gRes.Wares[WarePlan[I].W].Title + ': x' + IntToStr(WarePlan[I].C);
+        Exit;
+      end;
+
+  end;
+end;
+
+procedure TKMCostsRowMultiMax.Paint;
+var I, J, id : Integer;
+begin
+
+  TKMRenderUI.WriteText(AbsLeft, AbsTop - 17, Width, Caption, fntMetal, taLeft);
+
+  J := WarePlan.Count;
+  if J = 0 then
+  begin
+    TKMRenderUI.WriteBevel(AbsLeft, AbsTop, Width, Height, 1, 0.35); //render only bevel
+    Exit;
+  end;
+
+
+  for I := 0 to J - 1 do
+  begin
+
+    TKMRenderUI.WriteBevel(fItems[I].X, fItems[I].Y, fItems[I].Wdt, fItemHeight, 1, 0.35); //render bevel for each ware
+
+    id := gRes.Wares[WarePlan[I].W].GUIIcon;
+    TKMRenderUI.WritePicture(fItems[I].X, fItems[I].Y - 1, 30, fItemHeight,
+                              [], rxGui, id, Enabled);
+
+    TKMRenderUI.WriteText(fItems[I].X, fItems[I].Y + 5, fItems[I].Wdt - 5,'x' + IntToStr(WarePlan[I].C), fntGame, taRight);
+  end;
 
 end;
 

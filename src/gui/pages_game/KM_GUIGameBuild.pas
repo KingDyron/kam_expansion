@@ -571,7 +571,7 @@ begin
             Button_Build[K].OnClickShift := nil;
             Button_Build[K].Down := false;
           end;
-          if gMySpectator.Hand.Locks.HouseLock[H] = hlBlocked then
+          if (gMySpectator.Hand.Locks.HouseLock[H] = hlBlocked) or not gMySpectator.Hand.CanBuildHouse(H) then
             Button_Build[K].Disable
           else
             Button_Build[K].Enable;

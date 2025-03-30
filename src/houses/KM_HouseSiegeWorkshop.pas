@@ -438,7 +438,7 @@ procedure TKMHouseSiegeWorkshop.TryEquipMachines;
     U.Visible := False; //Make him invisible as he is inside the barracks
     U.Condition := UNIT_MAX_CONDITION; //All soldiers start with 3/4, so groups get hungry at the same time
     //Soldier.OrderLoc := KMPointBelow(Entrance); //Position in front of the barracks facing north
-    U.SetActionGoIn(uaWalk, gdGoOutside, Self);
+    U.SetActionGoIn(uaWalk, gdGoOutside, Self, true);
     if Assigned(U.OnUnitTrained) then
       U.OnUnitTrained(U);
 

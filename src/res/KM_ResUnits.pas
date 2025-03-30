@@ -105,7 +105,7 @@ type
     function GetTrainingHouse : TKMHouseType;
     function GetDefenceVsProjectiles(aIsBolt: Boolean): Single;
 
-    procedure LoadFromStream(Stream: TMemoryStream);
+    //procedure LoadFromStream(Stream: TMemoryStream);
     //Derived from KaM
     property HitPoints: SmallInt read fUnitDat.HitPoints;
     property Attack: SmallInt read fUnitDat.Attack;
@@ -475,20 +475,21 @@ begin
     else Result := 2;//2 for nonhorse units
   end;
 end;
-
+{
 procedure TKMUnitSpec.LoadFromStream(Stream: TMemoryStream);
 var act : TKMUnitActionType;
 begin
   if fUnitType in UNITS_NEW then Exit;
 
-  {Stream.Read(fUnitDat, SizeOf(TKMUnitDat));
+  Stream.Read(fUnitDat, SizeOf(TKMUnitDat));
   for act := uaWalk to uaUnknown do
     if act <> uaStay then
-      Stream.Read(fUnitSprite.Act[act], SizeOf(fUnitSprite.Act[act]));}
+      Stream.Read(fUnitSprite.Act[act], SizeOf(fUnitSprite.Act[act]));
 
   //Stream.Read(fUnitSprite, SizeOf(TKMUnitSpriteOld));
   //Stream.Read(fUnitSprite2, SizeOf(TKMUnitSprite2));
 end;
+}
 
 
 function TKMUnitSpec.SupportsAction(aAct: TKMUnitActionType): Boolean;
@@ -1214,8 +1215,8 @@ const
     );
 var
   UT: TKMUnitType;
-  act : TKMUnitActionType;
-  dir : TKMDirection;
+  //act : TKMUnitActionType;
+  //dir : TKMDirection;
 begin
   inherited;
 
@@ -1318,11 +1319,11 @@ var I, J: Integer;
   root : TKMJsonSaver;
   UT : TKMUnitType;
   WT : TKMWareType;
-  HT : TKMHouseType;
-  B : Byte;
+  //HT : TKMHouseType;
+  //B : Byte;
   act : TKMUnitActionType;
   dir : TKMDirection;
-  dit: TKMUnitSpec;
+  //dit: TKMUnitSpec;
 begin
   root :=  TKMJsonSaver.Create;
   try

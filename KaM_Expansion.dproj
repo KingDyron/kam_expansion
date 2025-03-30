@@ -651,6 +651,8 @@
         <DCCReference Include="src\units\tasks\KM_UnitTaskCartographer.pas"/>
         <DCCReference Include="src\minimap\KM_MinimapCartographer.pas"/>
         <DCCReference Include="src\gui\pages_game\house\KM_GUIGameHouseCartographer.pas"/>
+        <DCCReference Include="src\houses\KM_HousePearl.pas"/>
+        <DCCReference Include="src\gui\pages_game\house\KM_GUIGameHousePearl.pas"/>
         <None Include="KM_TextIDs.inc"/>
         <None Include="KaM_Remake.dpr"/>
         <None Include="KaM_Remake.inc"/>

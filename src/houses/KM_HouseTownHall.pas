@@ -107,7 +107,7 @@ begin
     U := gHands[Owner].TrainUnit(aUnitType, Self);
     U.Visible := False; //Make him invisible as he is inside the barracks
     U.Condition := Round(TROOPS_TRAINED_CONDITION * UNIT_MAX_CONDITION); //All soldiers start with 3/4, so groups get hungry at the same time
-    U.SetActionGoIn(uaWalk, gdGoOutside, Self);
+    U.SetActionGoIn(uaWalk, gdGoOutside, Self, true);
 
     Index := gRes.Wares.VirtualWares.WareS['vtCertificate'].Index;
     if Index <> high(Word) then

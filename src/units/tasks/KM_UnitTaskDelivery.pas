@@ -483,7 +483,7 @@ begin
   with TKMUnitSerf(fUnit) do
   case fPhase of
     0:  begin
-          SetActionWalkToSpot(fFrom.PointBelowEntrance);
+          SetActionWalkToSpot(fFrom.GetClosestEntrance(Position).DirFaceloc{fFrom.PointBelowEntrance});
         end;
     1:  begin
           SetActionGoIn(uaWalk, gdGoInside, fFrom);
@@ -535,7 +535,9 @@ begin
   with TKMUnitSerf(fUnit) do
   case fPhase of
     0..4:;
-    5:  SetActionWalkToSpot(fToHouse.PointBelowEntrance);
+    5:  begin
+          SetActionWalkToSpot(fToHouse.GetClosestEntrance(Position).DirFaceloc{fToHouse.PointBelowEntrance});
+        end;
     6:  SetActionGoIn(uaWalk, gdGoInside, fToHouse);
     7:  SetActionLockedStay(5, uaWalk); //wait a bit inside
     8:  begin

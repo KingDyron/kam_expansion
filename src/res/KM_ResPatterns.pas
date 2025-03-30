@@ -64,6 +64,7 @@ uses
     SysUtils,
     IOUtils,
     KM_Defaults,
+    JsonDataObjects,
     KM_JsonHelpers,
     KM_ResLocales,
     KM_Terrain;

@@ -237,6 +237,7 @@ type
     procedure Write(const Value: ShortInt      ); override;
     procedure Write(const Value: SmallInt      ); override;
     procedure Write(const Value: TDateTime     ); override;
+    procedure WriteData(const Buffer); override;
 
     //Not implemented methods yet
     procedure CheckMarker(const aTitle: string); override;
@@ -264,6 +265,7 @@ type
     procedure Read(out Value: ShortInt      ); override;
     procedure Read(out Value: SmallInt      ); override;
     procedure Read(out Value: TDateTime     ); override;
+    procedure ReadData(out Buffer); override;
 
 
   end;
@@ -2093,6 +2095,11 @@ begin
   WriteText(str);
 end;
 
+procedure TKMemoryStreamText.WriteData(const Buffer);
+begin
+  Exit;
+end;
+
 
 //Not implemented methods 
 procedure TKMemoryStreamText.CheckMarker(const aTitle: string);
@@ -2208,6 +2215,11 @@ end;
 procedure TKMemoryStreamText.Read(out Value: TDateTime);
 begin
   raise Exception.Create('MemoryStreamText.Read is not implemented yet');
+end;
+
+procedure TKMemoryStreamText.ReadData(out Buffer);
+begin
+  Exit;
 end;
 
 

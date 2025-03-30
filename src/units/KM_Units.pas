@@ -22,6 +22,11 @@ type
 
   TKMActionResult = (arActContinues, arActDone, arActAborted, arActCanNotStart);
 
+  TKMUnitEffectType = (uetNone, uetHealing, uetSpeedUp, uetAttack, uetDefence);
+  TKMUnitEffect = record
+    Duration : Word;
+    EffectType : TKMUnitEffectType;
+  end;
 
   TKMUnitArray = array of TKMUnit;
   TKMDirRotate = (drNone, drLeft, drRight);
@@ -123,6 +128,8 @@ type
     fConditionPace : Cardinal;
     fVisual: TKMUnitVisual;
     fNeverHungry : Boolean;
+
+    //pecialEffect : array of Reco
     function GetDesiredPassability: TKMTerrainPassability;
     function GetHitPointsMax: Byte;
     procedure SetDirection(aValue: TKMDirection);
@@ -138,7 +145,7 @@ type
     procedure SetInHouse(aInHouse: TKMHouse);
     procedure UpdateThoughts;
     function UpdateVisibility: Boolean;
-    procedure UpdateHitPoints; virtual;
+    procedure UpdateHitPoints(UseEffect : Boolean = true); virtual;
     procedure DoKill(aShowAnimation: Boolean);
     procedure DoDismiss;virtual;
     procedure SetDefence(aValue : SmallInt);
@@ -152,6 +159,7 @@ type
     function GetTask: TKMUnitTask;
     function GetInHouse: TKMHouse;
   protected
+    fSpecialEffect : TKMUnitEffect;
     function GetInstance: TKMUnit; override;
     function GetPositionForDisplayF: TKMPointF; override;
     procedure SetPositionF(const aPositionF: TKMPointF);
@@ -204,7 +212,7 @@ type
     function HitTest(X,Y: Integer; const UT: TKMUnitType = utAny): Boolean;
 
     procedure SetActionAbandonWalk(const aLocB: TKMPoint; aActionType: TKMUnitActionType = uaWalk);
-    procedure SetActionGoIn(aAction: TKMUnitActionType; aGoDir: TKMGoInDirection; aHouse: TKMHouse); virtual;
+    procedure SetActionGoIn(aAction: TKMUnitActionType; aGoDir: TKMGoInDirection; aHouse: TKMHouse; aIsTrained : Boolean = false); virtual;
     procedure SetActionStay(aTimeToStay: Integer; aAction: TKMUnitActionType; aStayStill: Boolean = True; aStillFrame: Byte = 0; aStep: Integer = 0);
     procedure SetActionStorm(aRow: Integer);
     procedure SetActionSteer;
@@ -261,6 +269,9 @@ type
     function IsAssigningToShip : Boolean;
     function IsUnloadingFromShip : Boolean;
     procedure GoToStore(aLocTo : TKMPoint);
+    procedure GoToPearl(aLocTo : TKMPoint);
+    procedure GoMakePearlRally(aPearl : TKMHouse);
+    procedure SetEffect(aType : TKMUnitEffectType; aDuration : Word);
 
     procedure CancelTask(aFreeTaskObject: Boolean = True);
     property  Visible: Boolean read fVisible write fVisible;
@@ -397,6 +408,7 @@ type
     procedure PaintUnit(aTickLag: Single); override;
   public
     procedure BuildStructure(aStructure : TKMStructure; aIndex: Integer);
+    procedure BuildPearl(aHouse: TKMHouse; aIndex: Integer);
     procedure BuildHouseUpgrade(aHouse: TKMHouse; aIndex: Integer);
     procedure BuildHouse(aHouse: TKMHouse; aIndex: Integer);
     procedure BuildHouseRepair(aHouse: TKMHouse; aIndex: Integer);
@@ -485,7 +497,7 @@ uses
   KM_Game, KM_GameParams, KM_GameApp,
   KM_RenderPool, KM_RenderAux, KM_ResTexts,
   KM_HandsCollection, KM_UnitWarrior, KM_Resource,
-  KM_Hand, KM_MapEdTypes,
+  KM_Hand, KM_MapEdTypes, KM_HousePearl,
   KM_CommonHelpers,
   KM_UnitActionAbandonWalk,
   KM_UnitActionFight,
@@ -1283,6 +1295,11 @@ begin
   fTask := TKMTaskBuildHouseUpgrade.Create(Self, aHouse, aIndex);
 end;
 
+procedure TKMUnitWorker.BuildPearl(aHouse: TKMHouse; aIndex: Integer);
+begin
+  fTask := TKMTaskBuildPearl.Create(Self, aHouse, aIndex);
+end;
+
 procedure TKMUnitWorker.BuildStructure(aStructure : TKMStructure; aIndex: Integer);
 begin
   fTask := TKMTaskBuildStructure.Create(Self, aStructure, aIndex);
@@ -1699,6 +1716,8 @@ begin
   InstantKill := false;
   IsHero := false;
 
+  fSpecialEffect.Duration := 0;
+
   //Now units condition pace can be changed by scripts
   if aUnitType in SIEGE_MACHINES then
     fConditionPace := 20
@@ -1711,6 +1730,9 @@ begin
   if gGameParams.MBD.IsHardOrRealism then
     fConditionPace := Round(fConditionPace * 0.8);
 
+  If aUnitType in UNITS_HUMAN then
+    if gHands[Owner].HasPearl(ptValtaria) then
+      fConditionPace := Round(fConditionPace * 1.3);
 
   //Units start with a random amount of condition ranging from 0.5 to 0.7 (KaM uses 0.6 for all units)
   //By adding the random amount they won't all go eat at the same time and cause crowding, blockages, food shortages and other problems.
@@ -1832,6 +1854,9 @@ begin
       uttTakeOverHouse:   fTask := TKMTaskTakeOverHouse.Load(LoadStream);
       uttMerchant:        fTask := TKMTaskMerchant.Load(LoadStream);
       uttCartographer:    fTask := TKMTaskCartographer.Load(LoadStream);
+      uttBuildPearl:      fTask := TKMTaskBuildPearl.Load(LoadStream);
+      uttPearlRally:      fTask := TKMTaskPearlRally.Load(LoadStream);
+      uttGoToPearl:       fTask := TKMTaskGoToPearl.Load(LoadStream);
     else
       raise Exception.Create('TaskName can''t be handled');
     end;
@@ -1900,6 +1925,7 @@ begin
   LoadStream.Read(FlagColor);
   LoadStream.Read(BlockWalking);
   LoadStream.Read(Immortal);
+  LoadStream.ReadData(fSpecialEffect);
 end;
 
 
@@ -1967,6 +1993,7 @@ begin
     rtClay: addSpeed := -4;
     rtExclusive: addSpeed := -10;
   end;
+  Inc(addSpeed, -6 * byte(fSpecialEffect.EffectType = uetSpeedUp));
   Result := Result - ConvertSpeed(addSpeed, aIsDiag);
 
   //It needs 10 seconds to "hide the bow". Slow down the speed so it make Archer less OP
@@ -2341,7 +2368,8 @@ end;
 
 procedure TKMUnit.SetHitTime;
 begin
-  fHitPointCounter := 1;
+  If fSpecialEffect.EffectType <> uetHealing then
+    fHitPointCounter := 1;
 end;
 
 function TKMUnit.GetInHouse: TKMHouse;
@@ -2423,6 +2451,25 @@ begin
   CancelTask;
   if fTask = nil then
     fTask := TKMTaskGoToStore.Create(self, aLocTo);
+end;
+procedure TKMUnit.GoToPearl(aLocTo: TKMPoint);
+begin
+  CancelTask;
+  if fTask = nil then
+    fTask := TKMTaskGoToPearl.Create(self, aLocTo);
+end;
+
+procedure TKMUnit.GoMakePearlRally(aPearl : TKMHouse);
+begin
+  CancelTask;
+  if fTask = nil then
+    fTask := TKMTaskPearlRally.Create(self, TKMHousePearl(aPearl));
+end;
+
+procedure TKMUnit.SetEffect(aType: TKMUnitEffectType; aDuration: Word);
+begin
+  fSpecialEffect.EffectType := aType;
+  fSpecialEffect.Duration := (aDuration div 10) * 10;
 end;
 
 procedure TKMUnit.SetThought(aThought: TKMUnitThought);
@@ -2549,9 +2596,9 @@ begin
 end;
 
 
-procedure TKMUnit.SetActionGoIn(aAction: TKMUnitActionType; aGoDir: TKMGoInDirection; aHouse: TKMHouse);
+procedure TKMUnit.SetActionGoIn(aAction: TKMUnitActionType; aGoDir: TKMGoInDirection; aHouse: TKMHouse; aIsTrained : Boolean = false);
 begin
-  SetAction(TKMUnitActionGoInOut.Create(Self, aAction, aGoDir, aHouse), AnimStep);
+  SetAction(TKMUnitActionGoInOut.Create(Self, aAction, aGoDir, aHouse, aIsTrained), AnimStep);
 
 end;
 
@@ -3012,7 +3059,7 @@ begin
       //OnWarriorWalkOut usually happens in TUnitActionGoInOut, otherwise the warrior doesn't get assigned a group
       //Do this after setting terrain usage since OnWarriorWalkOut calls script events
       if (Self is TKMUnitWarrior) then
-        TKMUnitWarrior(Self).WalkedOut;
+        TKMUnitWarrior(Self).WalkedOut(nil, false);
 
       if Action is TKMUnitActionGoInOut then
         SetActionLockedStay(0, uaWalk); //Abandon the walk out in this case
@@ -3098,6 +3145,9 @@ const
       -1,
       -1,
       -1,
+      -1,
+      -1,
+      -1,
       -1
     );
 begin
@@ -3108,24 +3158,25 @@ begin
 end;
 
 
-procedure TKMUnit.UpdateHitPoints;
+procedure TKMUnit.UpdateHitPoints(UseEffect : Boolean = true);
 begin
   if UnitType in UNITS_SHIPS then   //do not increase health if it's ship
     Exit;
   //Use fHitPointCounter as a counter to restore hit points every X ticks (Humbelum says even when in fights)
   if HITPOINT_RESTORE_PACE = 0 then Exit; //0 pace means don't restore
 
-  if fHitPointCounter > 200 then//wait minimum 10 seconds
+  if fHitPointCounter > 200 then//wait minimum 20 seconds
     if (fHitPointCounter mod HITPOINT_RESTORE_PACE = 0) and (fHitPoints < HitPointsMax) then
       Inc(fHitPoints);
 
-  Inc(fHitPointCounter); //Increasing each tick by 1 would require 13,6 years to overflow Cardinal
+  Inc(fHitPointCounter, 1); //Increasing each tick by 1 would require 13,6 years to overflow Cardinal
 end;
 
 function TKMUnit.GetDefence : SmallInt;
 begin
   Result := fDefence;
 
+  inc(Result, byte(fSpecialEffect.EffectType = uetDefence) * 3);
   if fCondition < 150 then
     Result := Result - 3
   else
@@ -3155,6 +3206,7 @@ end;
 function TKMUnit.GetAttack : SmallInt;
 begin
   Result := fAttack;
+  inc(Result, byte(fSpecialEffect.EffectType = uetAttack) * 50);
 
   if fCondition < 150 then
     Result := Round(Result * 0.25)
@@ -3456,6 +3508,7 @@ begin
   SaveStream.Write(FlagColor);
   SaveStream.Write(BlockWalking);
   SaveStream.Write(Immortal);
+  SaveStream.WriteData(fSpecialEffect);
 end;
 
 
@@ -3568,6 +3621,13 @@ begin
   //kill by palisade
   if (fTicker mod 10 = 0) then
   begin
+    If (fSpecialEffect.Duration > 0) then
+    begin
+      Dec(fSpecialEffect.Duration, 10);
+      If fSpecialEffect.Duration = 0 then
+        fSpecialEffect.EffectType := uetNone;
+    end;
+
     if gTerrain.TileHasPalisade(fPositionRound.X, fPositionRound.Y) then
       if gHands.CheckAlliance(Owner, gTerrain.Land^[fPositionRound.Y, fPositionRound.X].TileOwner) = atEnemy then
         HitPointsDecrease(45, 1, nil);

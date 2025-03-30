@@ -219,9 +219,34 @@ type
     procedure Save(SaveStream: TKMemoryStream);
     procedure Load(LoadStream: TKMemoryStream);
     procedure SyncLoad;
-
     procedure UpdateState;
   end;
+
+  //List of Houses ready to Upgrade
+  TKMHousePearlList = class
+  private
+    fHousesCount: Integer;
+    fHouses: array of record
+      House: TKMHouse;
+      Assigned: Integer; //How many workers are on this house
+    end;
+    procedure RemoveExtraHouses;
+  public
+    destructor Destroy; override;
+
+    procedure AddHouse(aHouse: TKMHouse); //New house to build
+    procedure RemWorker(aIndex: Integer);
+    procedure GiveTask(aIndex: Integer; aWorker: TKMUnitWorker);
+    function BestBid(aWorker: TKMUnitWorker; out aBid: Single): Integer;
+    function GetAvailableJobsCount: Integer;
+    property Count : Integer read fHousesCount;
+    procedure Save(SaveStream: TKMemoryStream);
+    procedure Load(LoadStream: TKMemoryStream);
+    procedure SyncLoad;
+    procedure UpdateState;
+  end;
+
+
   // Matchmaking service of workers to building sites, fields, repairs, etc
   TKMHandConstructions = class
   private
@@ -231,6 +256,7 @@ type
     fRepairList: TKMRepairList;
     fHouseUpgradeList: TKMHouseUpgradeList;
     fStructureList : TKMStructureList;
+    fPearlList : TKMHousePearlList;
 
     fWorkersCount: Integer;
     fWorkers: array of record
@@ -247,6 +273,7 @@ type
     procedure AssignRepairs;
     procedure AssignHouseUpgrades;
     procedure AssignStructures;
+    procedure AssignPearls;
   public
     constructor Create;
     destructor Destroy; override;
@@ -259,6 +286,7 @@ type
     property RepairList: TKMRepairList read fRepairList;
     property HouseUpgradeList: TKMHouseUpgradeList read fHouseUpgradeList;
     property StructureList : TKMStructureList read fStructureList;
+    property PearlList : TKMHousePearlList read fPearlList;
 
     procedure Save(SaveStream: TKMemoryStream);
     procedure Load(LoadStream: TKMemoryStream);
@@ -272,6 +300,7 @@ uses
   Math,
   KM_Entity, SysUtils,
   KM_GameUIDTracker, KM_HandsCollection, KM_Resource,
+  KM_HouseHelpers,
   KM_Terrain;
 
 
@@ -293,7 +322,7 @@ const
     6, {hovel}          0,{sign}              3,{Bitin}         4,{wallTower}        2{well},  10{stone workshop},
     8 {iron foundry},   10{Merchant},          8{Pottery},       6{WoodBurner},       4{AppleTree}, 4, {small store}
     6 {Collectors},      6{TailorsShop},       4{Cottage},       8{House},            10,           2,{Stall}
-    10{htProductionThatch}, 6{shipyard},       6{Cartographers}
+    10{htProductionThatch}, 6{shipyard},       6{Cartographers}, 15{Pearl}
   );
 
 
@@ -724,6 +753,152 @@ end;
 
 
 procedure TKMHouseUpgradeList.SyncLoad;
+var
+  I: Integer;
+begin
+  for I := 0 to fHousesCount - 1 do
+    fHouses[i].House := gHands.GetHouseByUID(Integer(fHouses[I].House));
+end;
+
+{TKMHouseUpgradeList}
+destructor TKMHousePearlList.Destroy;
+var
+  I: Integer;
+begin
+  for I := 0 to fHousesCount - 1 do
+  if fHouses[I].House <> nil then
+    gHands.CleanUpHousePointer(fHouses[I].House);
+
+  inherited;
+end;
+
+
+//Add new job to the list
+procedure TKMHousePearlList.AddHouse(aHouse: TKMHouse);
+var
+  I: Integer;
+begin
+  If not aHouse.IsValid(htPearl) then
+    Exit;
+  I := 0;
+  while (I < fHousesCount) and (fHouses[I].House <> nil) do
+    Inc(I);
+
+  if I >= fHousesCount then
+    Inc(fHousesCount);
+
+  if I >= Length(fHouses) then
+    SetLength(fHouses, Length(fHouses) + LENGTH_INC);
+
+  fHouses[I].House := aHouse.GetPointer;
+  fHouses[I].Assigned := 0;
+end;
+
+
+function TKMHousePearlList.BestBid(aWorker: TKMUnitWorker; out aBid: Single): Integer;
+var
+  I: Integer;
+  newBid: Single;
+begin
+  //We can weight the repairs by distance, severity, etc..
+  //For now, each worker will go for the house closest to him
+
+  Result := -1;
+  aBid := MaxSingle;
+  for I := fHousesCount - 1 downto 0 do
+    if fHouses[i].House.IsValid(htPearl, false, true)
+    and (fHouses[I].Assigned < MAX_WORKERS[fHouses[i].House.HouseType])
+    and fHouses[i].House.Pearl.CanBuild
+    and aWorker.CanWalkTo(fHouses[i].House.PointBelowEntrance, 0)
+    then
+    begin
+      newBid := KMLengthDiag(aWorker.Position, fHouses[I].House.Position);
+      newBid := newBid + fHouses[I].Assigned * BID_MODIF;
+
+      if newBid < aBid then
+      begin
+        aBid := newBid;
+        Result := I;
+      end;
+    end;
+end;
+
+
+function TKMHousePearlList.GetAvailableJobsCount:Integer;
+var
+  I: Integer;
+begin
+  Result := 0;
+  for I := 0 to fHousesCount - 1 do
+    if (fHouses[i].House <> nil) and fHouses[i].House.Pearl.CanBuild then
+      inc(Result);
+end;
+
+
+procedure TKMHousePearlList.GiveTask(aIndex: Integer; aWorker: TKMUnitWorker);
+begin
+  aWorker.BuildPearl(fHouses[aIndex].House, aIndex);
+  Inc(fHouses[aIndex].Assigned);
+end;
+
+
+//Whenever worker dies we need to remove him from assigned to the house
+procedure TKMHousePearlList.RemWorker(aIndex: Integer);
+begin
+  Dec(fHouses[aIndex].Assigned);
+  //If the house is complete or destroyed it will be removed in next UpdateState
+end;
+
+
+//We can remove house only when there are no workers left to it (e.g. stuck on their way)
+procedure TKMHousePearlList.RemoveExtraHouses;
+var
+  I: Integer;
+begin
+  for I := 0 to fHousesCount - 1 do
+  if (fHouses[i].House <> nil) and (fHouses[I].House.IsDestroyed or not fHouses[I].House.Pearl.Confirmed) and (fHouses[I].Assigned = 0) then
+      gHands.CleanUpHousePointer(fHouses[I].House);
+end;
+
+
+procedure TKMHousePearlList.UpdateState;
+begin
+  RemoveExtraHouses;
+end;
+
+
+procedure TKMHousePearlList.Save(SaveStream: TKMemoryStream);
+var
+  I: Integer;
+begin
+  SaveStream.PlaceMarker('HouseUpgradeList');
+
+  SaveStream.Write(fHousesCount);
+  for I := 0 to fHousesCount - 1 do
+  begin
+    SaveStream.Write(fHouses[I].House.UID);
+    SaveStream.Write(fHouses[I].Assigned);
+  end;
+end;
+
+
+procedure TKMHousePearlList.Load(LoadStream: TKMemoryStream);
+var
+  I: Integer;
+begin
+  LoadStream.CheckMarker('HouseUpgradeList');
+
+  LoadStream.Read(fHousesCount);
+  SetLength(fHouses, fHousesCount);
+  for I := 0 to fHousesCount - 1 do
+  begin
+    LoadStream.Read(fHouses[I].House, 4);
+    LoadStream.Read(fHouses[I].Assigned);
+  end;
+end;
+
+
+procedure TKMHousePearlList.SyncLoad;
 var
   I: Integer;
 begin
@@ -1175,8 +1350,8 @@ begin
 
   for I := 0 to fPlansCount - 1 do
   if (fPlans[I].HouseType <> htNone)
-  and ((aLoc.X - fPlans[I].Loc.X + 3 in [1..4]) and
-       (aLoc.Y - fPlans[I].Loc.Y + 4 in [1..4]) and
+  and ((aLoc.X - fPlans[I].Loc.X + 3 in [1..MAX_HOUSE_SIZE]) and
+       (aLoc.Y - fPlans[I].Loc.Y + 4 in [1..MAX_HOUSE_SIZE]) and
        (gRes.Houses[fPlans[I].HouseType].BuildArea[aLoc.Y - fPlans[I].Loc.Y + 4, aLoc.X - fPlans[I].Loc.X + 3] <> 0))
   then
   begin
@@ -1510,6 +1685,7 @@ begin
   fRepairList := TKMRepairList.Create;
   fHouseUpgradeList := TKMHouseUpgradeList.Create;
   fStructureList := TKMStructureList.Create;
+  fPearlList := TKMHousePearlList.Create;
 end;
 
 
@@ -1522,6 +1698,8 @@ begin
   fHousePlanList.Free;
   fRepairList.Free;
   fHouseUpgradeList.Free;
+  fPearlList.Free;
+  fStructureList.Free;
   for I := fWorkersCount - 1 downto 0 do
     gHands.CleanUpUnitPointer(TKMUnit(fWorkers[I].Worker));
 
@@ -1578,6 +1756,7 @@ begin
   fRepairList.Save(SaveStream);
   fHouseUpgradeList.Save(SaveStream);
   fStructureList.Save(SaveStream);
+  fPearlList.Save(SaveStream);
 end;
 
 
@@ -1598,6 +1777,7 @@ begin
   fRepairList.Load(LoadStream);
   fHouseUpgradeList.Load(LoadStream);
   fStructureList.Load(LoadStream);
+  fPearlList.Load(LoadStream);
 end;
 
 
@@ -1619,6 +1799,7 @@ begin
   fRepairList.SyncLoad;
   fHouseUpgradeList.SyncLoad;
   fStructureList.SyncLoad;
+  fPearlList.SyncLoad;
 end;
 
 
@@ -1743,6 +1924,7 @@ begin
         if bestWorker <> nil then fHouseList.GiveTask(I, bestWorker);
       end;
 end;
+
 procedure TKMHandConstructions.AssignHouseUpgrades;
 var
   I, availableWorkers, availableJobs, jobID: Integer;
@@ -1772,6 +1954,34 @@ begin
       end;
 end;
 
+procedure TKMHandConstructions.AssignPearls;
+var
+  I, availableWorkers, availableJobs, jobID: Integer;
+  myBid: Single;
+  bestWorker: TKMUnitWorker;
+begin
+  availableWorkers := GetIdleWorkerCount;
+  availableJobs := fPearlList.GetAvailableJobsCount;
+  if availableWorkers*availableJobs = 0 then Exit;
+
+  if availableJobs > availableWorkers then
+  begin
+    for I := 0 to fWorkersCount - 1 do
+      if fWorkers[I].Worker.IsIdle then
+      begin
+        jobID := fPearlList.BestBid(fWorkers[I].Worker, myBid);
+        if jobID <> -1 then fPearlList.GiveTask(jobID, fWorkers[I].Worker);
+      end;
+  end
+  else
+    for I := 0 to fPearlList.fHousesCount - 1 do
+      if (fPearlList.fHouses[i].House <> nil) and fPearlList.fHouses[i].House.Pearl.CanBuild
+      and(fPearlList.fHouses[I].Assigned < MAX_WORKERS[fPearlList.fHouses[i].House.HouseType]) then
+      begin
+        bestWorker := GetBestWorker(fPearlList.fHouses[I].House.PointBelowEntrance);
+        if bestWorker <> nil then fPearlList.GiveTask(I, bestWorker);
+      end;
+end;
 procedure TKMHandConstructions.AssignRepairs;
 var
   I, availableWorkers, availableJobs, jobID: Integer;
@@ -1838,6 +2048,7 @@ begin
   fHouseUpgradeList.UpdateState;
   fRepairList.UpdateState;
   fStructureList.UpdateState;
+  fPearlList.UpdateState;
   RemoveExtraWorkers;
 
   //In 99% of cases we have either of these situations:
@@ -1862,6 +2073,7 @@ begin
   AssignHousePlans;
   AssignFieldworks;
   AssignHouses;
+  AssignPearls;
   AssignHouseUpgrades;
   AssignStructures;
 end;

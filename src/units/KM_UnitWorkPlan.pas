@@ -1142,6 +1142,9 @@ begin
         if GatheringScript in [gsStoneCutter, gsClayMiner, gsFarmerSow, gsFarmerCorn, gsFarmerWine] then
           TKMHouseProdThatch(aUnit.Home).TakePoint(Loc);}
 
+  If gHands[aUnit.Owner].HasPearl(ptArium) then
+    ActSetByMultiplier(aUnit, 0.85);
+
   ActSetByMultiplier(aUnit);
   if gGame.Resource.SkipWater then
     for I := 0 to High(Res) do

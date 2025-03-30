@@ -7893,8 +7893,8 @@ begin
         end;
 
     //Leave dug terrain
-    for I := 1 to 4 do
-      for K := 1 to 4 do
+    for I := 1 to MAX_HOUSE_SIZE do
+      for K := 1 to MAX_HOUSE_SIZE do
         if HA[I, K] <> 0 then
         begin
           Land^[aLoc.Y + I - 4, aLoc.X + K - 3].TileOverlay := toDig3;
@@ -7903,16 +7903,16 @@ begin
 
     //if there was clay below it then remove it
     if aHouseType <> htPottery then
-      for I := 1 to 4 do
-        for K := 1 to 4 do
+      for I := 1 to MAX_HOUSE_SIZE do
+        for K := 1 to MAX_HOUSE_SIZE do
           if HA[I, K] <> 0 then
             if gMapElements[Land^[aLoc.Y + I - 4, aLoc.X + K - 3].Obj].Clay > 0 then
               Land^[aLoc.Y + I - 4, aLoc.X + K - 3].TileOverlay2 := toNone;
 
   end else
   begin
-      for I := 1 to 4 do
-        for K:=1 to 4 do
+      for I := 1 to MAX_HOUSE_SIZE do
+        for K:=1 to MAX_HOUSE_SIZE do
           if HA[I, K] <> 0 then
             Land^[aLoc.Y + I - 4, aLoc.X + K - 3].TileLock := tlNone;
   end;

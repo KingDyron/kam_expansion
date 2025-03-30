@@ -25,7 +25,8 @@ implementation
 uses
   KM_Entity, KM_ResTypes, KM_Sound, KM_ResSound,
   KM_Game, KM_CommonHelpers,
-  KM_HandsCollection, KM_Resource;
+  KM_HandsCollection, KM_HandTypes, KM_HandEntity,
+  KM_Resource;
 
 
 { TTaskSelfTrain }
@@ -44,6 +45,9 @@ begin
   else
   if gGame.Params.MBD.IsHardOrRealism then
     time := Round(time * 1.25);
+
+  if gHands[fUnit.Owner].HasPearl(ptValtaria) then
+    time := Round(time * 0.8);
 
   fSchool.TotalWorkingTime := time * 5;
 end;

@@ -16,24 +16,26 @@ type
     fStep: Single;
     fHouse: TKMHouse;
     fDirection: TKMGoInDirection;
-    fDoor: TKMPoint;
-    fStreet: TKMPoint;
+    fDoor: TKMPointDir;
+    fStreet: TKMPointDir;
     fInitiated: Boolean;
     fPushedUnit: TKMUnit;
     fWaitingForPush: Boolean;
     fUsedDoorway: Boolean;
+    fIsTrained : Boolean;
     procedure IncDoorway;
     procedure DecDoorway;
-    function FindBestExit(const aLoc: TKMPoint): TKMBestExit;
+    function FindBestExit(const aLoc: TKMPointDir): TKMBestExit;
     function TileHasIdleUnitToPush(X,Y: Word): TKMUnit;
     function TileHasUnitOnHouseEntrance: Boolean;
     procedure WalkIn;
     procedure WalkOut;
     function GetIsStarted: Boolean;
+    function IsWalkingStraight : Boolean;
   public
-    OnWalkedOut: TEvent; //NOTE: Caller must sync these events after loading, used with caution
-    OnWalkedIn: TEvent;
-    constructor Create(aUnit: TKMUnit; aAction: TKMUnitActionType; aDirection: TKMGoInDirection; aHouse: TKMHouse);
+    OnWalkedOut: TKMHouseTrainedEvent; //NOTE: Caller must sync these events after loading, used with caution
+    OnWalkedIn: TKMHouseEvent;
+    constructor Create(aUnit: TKMUnit; aAction: TKMUnitActionType; aDirection: TKMGoInDirection; aHouse: TKMHouse; aIsTrained : Boolean = false);
     constructor Load(LoadStream: TKMemoryStream); override;
     procedure SyncLoad; override;
     destructor Destroy; override;
@@ -59,7 +61,7 @@ uses
 
 
 { TUnitActionGoInOut }
-constructor TKMUnitActionGoInOut.Create(aUnit: TKMUnit; aAction: TKMUnitActionType; aDirection: TKMGoInDirection; aHouse: TKMHouse);
+constructor TKMUnitActionGoInOut.Create(aUnit: TKMUnit; aAction: TKMUnitActionType; aDirection: TKMGoInDirection; aHouse: TKMHouse; aIsTrained : Boolean = false);
 begin
   inherited Create(aUnit, aAction, True);
 
@@ -74,6 +76,7 @@ begin
     fStep := 1  //go Inside (one cell up)
   else
     fStep := 0; //go Outside (one cell down)
+  fIsTrained := aIsTrained;
 end;
 
 
@@ -91,6 +94,7 @@ begin
   LoadStream.Read(fInitiated);
   LoadStream.Read(fWaitingForPush);
   LoadStream.Read(fUsedDoorway);
+  LoadStream.Read(fIsTrained);
 end;
 
 
@@ -126,7 +130,7 @@ begin
       gdGoOutside:  if not fUnit.Visible then
                     begin
                       gTerrain.UnitRem(fUnit.PositionNext);
-                      if not KMSamePoint(fDoor, KMPOINT_ZERO) then
+                      if fDoor = KMPOINT_ZERO then
                         fUnit.PositionF := KMPointF(fDoor); //Put us back inside the house
                     end;
     end;
@@ -157,6 +161,12 @@ begin
   Result := fInitiated and not fWaitingForPush;
 end;
 
+function TKMUnitActionGoInOut.IsWalkingStraight : Boolean;
+begin
+  Result := (((fDirection = gdGoInside) and (fStreet.X - fDoor.X = 0))
+            or ((fDirection = gdGoOutside) and (fStreet.Y - fDoor.Y = 0))  );
+end;
+
 
 procedure TKMUnitActionGoInOut.IncDoorway;
 begin
@@ -178,7 +188,7 @@ end;
 
 //Attempt to find a tile below the door (on the street) we can walk to
 //We can push idle units away. Check center first
-function TKMUnitActionGoInOut.FindBestExit(const aLoc: TKMPoint): TKMBestExit;
+function TKMUnitActionGoInOut.FindBestExit(const aLoc: TKMPointDir): TKMBestExit;
 
   function ChooseBestExit(aL, aR: Boolean): TKMBestExit;
   begin
@@ -211,8 +221,21 @@ begin
     Result := beCenter
   else
   begin
-    L := fUnit.CanStepTo(aLoc.X-1, aLoc.Y, tpWalk);
-    R := fUnit.CanStepTo(aLoc.X+1, aLoc.Y, tpWalk);
+    case aLoc.Dir of
+      dirS,
+      dirN: begin
+              L := fUnit.CanStepTo(aLoc.X-1, aLoc.Y, tpWalk);
+              R := fUnit.CanStepTo(aLoc.X+1, aLoc.Y, tpWalk);
+            end;
+      dirW,
+      dirE: begin
+              L := fUnit.CanStepTo(aLoc.X, aLoc.Y-1, tpWalk);
+              R := fUnit.CanStepTo(aLoc.X, aLoc.Y+1, tpWalk);
+            end;
+      else Raise Exception.Create('Wrong Direction, TKMUnitActionGoInOut.FindBestExit');
+    end;
+    //L := fUnit.CanStepTo(aLoc.X-1, aLoc.Y, tpWalk);
+    //R := fUnit.CanStepTo(aLoc.X+1, aLoc.Y, tpWalk);
 
     Result := ChooseBestExit(L, R);
 
@@ -281,14 +304,19 @@ begin
 
   // There could be a unit walking in the house already,
   // f.e. if serf was added at point below entrance by script and he went straight into the same house
-  Result := (gTerrain.Land^[fHouse.Entrance.Y, fHouse.Entrance.X].IsUnit <> nil);
+  Result := (gTerrain.Land^[fDoor.Loc.Y, fDoor.Loc.X].IsUnit <> nil);
+  //Result := (gTerrain.Land^[fHouse.Entrance.Y, fHouse.Entrance.X].IsUnit <> nil);
 end;
 
 
 procedure TKMUnitActionGoInOut.WalkIn;
 begin
-  fUnit.Direction := dirN;  //one cell up
-  fUnit.PositionNext := KMPointAbove(fUnit.Position);
+  //fUnit.Direction := dirN;  //one cell up
+  //fUnit.PositionNext := KMPointAbove(fUnit.Position);
+
+  fUnit.Direction := fStreet.Dir;
+  fUnit.PositionNext := fDoor.Loc;
+
   gTerrain.UnitRem(fUnit.Position); // Release tile at point below house entrance
   // Unit occupy a tile on a terrain while he is walking inside house
   // House could be destroyed while while unit was walking in it, so we need to have a tile occupied on terrain for that case
@@ -298,7 +326,7 @@ begin
   gTerrain.UnitAdd(fUnit.PositionNext, fUnit);
 
   //We are walking straight
-  if fStreet.X = fDoor.X then
+  if IsWalkingStraight then
     IncDoorway;
 end;
 
@@ -306,8 +334,11 @@ end;
 //Start walking out of the house. unit is no longer in the house
 procedure TKMUnitActionGoInOut.WalkOut;
 begin
-  fUnit.Direction := KMGetDirection(fDoor, fStreet);
-  fUnit.PositionNext := fStreet;
+  //fUnit.Direction := KMGetDirection(fDoor, fStreet);
+  //fUnit.PositionNext := fStreet.Loc;
+
+  fUnit.Direction := fDoor.Dir;
+  fUnit.PositionNext := fStreet.Loc;
   gTerrain.UnitAdd(fUnit.PositionNext, fUnit); //Unit was not occupying tile while inside
 
   //Use InHouse instead of Home, since Home could be cleared via ProceedHouseClosedForWorker (f.e. when wGoingForEating = True)
@@ -318,7 +349,7 @@ begin
     TKMHouseBarracks(fHouse).RecruitsRemove(fUnit);
 
   //We are walking straight
-  if fStreet.X = fDoor.X then
+  if IsWalkingStraight then
     IncDoorway;
 end;
 
@@ -335,6 +366,7 @@ begin
 
     Result := Mix(0, offset, fStep);
   end;
+  Result := 0;
 end;
 
 
@@ -344,8 +376,25 @@ begin
     Result := KMPointF(0, 0)
   else
   begin
-    Result.X := Mix(0, gRes.Houses[fHouse.HouseType].GetDoorwayOffset(axX), fStep);
-    Result.Y := Mix(0, gRes.Houses[fHouse.HouseType].GetDoorwayOffset(axY), fStep);
+    case fDoor.Dir of
+      dirN: begin
+              Result.X := Mix(0, -gRes.Houses[fHouse.HouseType].GetDoorwayOffset(axX), fStep);
+              Result.Y := Mix(0, -gRes.Houses[fHouse.HouseType].GetDoorwayOffset(axY), fStep);
+            end;
+      dirE: begin
+              Result.Y := Mix(0, -gRes.Houses[fHouse.HouseType].GetDoorwayOffset(axX), fStep);
+              Result.X := Mix(0, -gRes.Houses[fHouse.HouseType].GetDoorwayOffset(axY), fStep);
+            end;
+      dirS: begin
+              Result.X := Mix(0, gRes.Houses[fHouse.HouseType].GetDoorwayOffset(axX), fStep);
+              Result.Y := Mix(0, gRes.Houses[fHouse.HouseType].GetDoorwayOffset(axY), fStep);
+            end;
+      dirW: begin
+              Result.Y := Mix(0, gRes.Houses[fHouse.HouseType].GetDoorwayOffset(axX), fStep);
+              Result.X := Mix(0, gRes.Houses[fHouse.HouseType].GetDoorwayOffset(axY), fStep);
+            end;
+      else Result := KMPointF(0, 0);
+    end;
   end;
 end;
 
@@ -360,8 +409,13 @@ begin
   if not fInitiated then
   begin
     //Set Door and Street locations
-    fDoor := KMPoint(fUnit.Position.X, fUnit.Position.Y - Round(fStep));
-    fStreet := KMPoint(fUnit.Position.X, fUnit.Position.Y + 1 - Round(fStep));
+    fDoor := KMPointDir(fUnit.Position.X, fUnit.Position.Y - Round(fStep), dirS);
+    //fStreet := KMPointDir(fUnit.Position.X, fUnit.Position.Y + 1 - Round(fStep), dirN);
+    If fHouse.HasMoreEntrances then
+      fDoor := fHouse.GetClosestEntrance(fUnit.Position);
+    fStreet.Loc := fDoor.DirFaceLoc;
+    //inverted direction
+    fStreet.Dir := TKMDirection(((Ord(fDoor.Dir) - 1 + 4) mod 8) + 1);
 
     case fDirection of
       gdGoInside:   // House could be destroyed on the same tick Action was created
@@ -380,12 +434,23 @@ begin
                       WalkIn;
       gdGoOutside:  begin
                       case FindBestExit(fStreet) of
-                        beLeft:    fStreet.X := fStreet.X - 1;
+                        beLeft:     case fDoor.Dir of
+                                      dirS,
+                                      dirN: fStreet.X := fStreet.X-1;
+                                      dirW,
+                                      dirE: fStreet.Y := fStreet.Y-1;
+                                      else Raise Exception.Create('');
+                                    end;
                         beCenter:  ;
-                        beRight:   fStreet.X := fStreet.X + 1;
+                        beRight:   case fDoor.Dir of
+                                      dirS,
+                                      dirN: fStreet.X := fStreet.X+1;
+                                      dirW,
+                                      dirE: fStreet.Y := fStreet.Y+1;
+                                      else Raise Exception.Create('');
+                                    end;
                         beNone:    Exit; //All street tiles are blocked by busy units. Do not exit the house, just wait
                       end;
-
                       //If we have pushed an idling unit, wait till it goes away
                       //Wait until our push request is dealt with before we move out
                       if (fPushedUnit <> nil) then
@@ -433,16 +498,16 @@ begin
       ((fDirection = gdGoOutside) and (fStep < 0.2)) or
       ((fDirection = gdGoInside) and (fStep > 0.8))
       )
-    and (fStreet.X = fDoor.X) //We are walking straight
+    and IsWalkingStraight //We are walking straight
     and (fHouse <> nil) then
     fUnit.IsExchanging := (fHouse.DoorwayUse > 1);
 
-  Assert((fHouse = nil) or KMSamePoint(fDoor, fHouse.Entrance)); //Must always go in/out the entrance of the house
+  Assert((fHouse <> nil) or (fStreet.X = fDoor.X) or (fStreet.Y = fDoor.Y){ or KMSamePoint(fDoor, fHouse.Entrance)}); //Must always go in/out the entrance of the house
 
   //Actual speed is slower if we are moving diagonally, due to the fact we are moving in X and Y
   //distance := gRes.Units[fUnit.UnitType].GetEffectiveWalkSpeed(fStreet.X - fDoor.X <> 0);
 
-  distance := fUnit.GetEffectiveWalkSpeed(fStreet.X - fDoor.X <> 0);
+  distance := fUnit.GetEffectiveWalkSpeed(not IsWalkingStraight);
 
   fStep := fStep - distance * ShortInt(fDirection);
   fUnit.PositionF := KMLerp(fDoor, fStreet, fStep);
@@ -472,7 +537,7 @@ begin
         fHouse.CurrentAction.SubActionAdd([haFlagpole]);
 
       if Assigned(OnWalkedIn) then
-        OnWalkedIn;
+        OnWalkedIn(fHouse);
 
       if fHouse <> nil then
         fUnit.InHouse := fHouse;
@@ -492,7 +557,7 @@ begin
       fUnit.PositionF := KMPointF(fStreet);
       fUnit.InHouse := nil; //We are not in a house any longer
       if Assigned(OnWalkedOut) then
-        OnWalkedOut;
+        OnWalkedOut(fHouse, fIsTrained);
     end;
   end
   else
@@ -514,6 +579,7 @@ begin
   SaveStream.Write(fInitiated);
   SaveStream.Write(fWaitingForPush);
   SaveStream.Write(fUsedDoorway);
+  SaveStream.Write(fIsTrained);
 end;
 
 

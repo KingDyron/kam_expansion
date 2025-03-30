@@ -256,7 +256,8 @@ begin
   fItems[I].fType   := aProjType;
   fItems[I].fSpeed  := aSpeed;
   fItems[I].fArc    := aArc;
-  fItems[I].fOwner  := aOwner.GetPointer;
+  If aOwner <> nil then
+    fItems[I].fOwner  := aOwner.GetPointer;
   fItems[I].fAim    := aAim;
   fItems[I].fOpponent:= aTarget;
 
@@ -350,7 +351,7 @@ begin
                                   U.HitPointsDecrease(UDamage, fOwner)
                               end else
                               begin
-                                if fOwner.UnitType <> utRecruit then
+                                if fOwner is TKMUnitWarrior then
                                   UDamage := Max(TKMUnitWarrior(fOwner).DamageUnits, 1)
                                 else
                                 begin
@@ -378,10 +379,10 @@ begin
                             begin
                               H := gHands.HousesHitTest(Round(fTarget.X), Round(fTarget.Y));
 
-                              if fOwner.UnitType = utRecruit then
-                                HDamage := 0
+                              if fOwner is TKMUnitWarrior then
+                                HDamage := Max(TKMUnitWarrior(fOwner).DamageHouse, 0)
                               else
-                                HDamage := Max(TKMUnitWarrior(fOwner).DamageHouse, 0);
+                                HDamage := 0;
 
                               if H <> nil then
                                 if fType = ptCatapultRock then

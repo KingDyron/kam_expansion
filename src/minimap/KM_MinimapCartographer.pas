@@ -49,7 +49,6 @@ end;
 procedure TKMMinimapCartographer.RevealCircle(aLoc : TKMPoint; aRadius : Word);
 var X, Y, tileID : integer;
   rec : TKMRect;
-  R, G, B : Byte;
   col: TKMColor3b;
   light: Smallint;
 begin
@@ -73,7 +72,6 @@ end;
 
 procedure TKMMinimapCartographer.SaveToStream(SaveStream: TKMemoryStream);
 var
-  I: Integer;
   L: Cardinal;
 begin
   SaveStream.PlaceMarker('MinimapCartographer');
@@ -90,7 +88,6 @@ end;
 procedure TKMMinimapCartographer.LoadFromStream(LoadStream: TKMemoryStream);
 var
   L: Cardinal;
-  I: Integer;
 begin
   LoadStream.CheckMarker('MinimapCartographer');
 

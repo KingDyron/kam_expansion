@@ -172,6 +172,17 @@ type
     procedure DebugChangePileOffset(aID : Integer; aX, aY : Integer);
   end;
 
+  TKMPearlData = record
+    StageCount : Byte;
+    StagePics : TKMWordArray;
+    Cost : TKMWarePlan;
+    SnowPic : Word;
+    ProgressPerStage : Word;
+
+    A : array of TKMAnimation;
+    function GetStagePic(aStage : Integer) : Integer;
+  end;
+
 
   TKMResHouses = class
   private
@@ -181,7 +192,7 @@ type
     fBeastAnim: array [1..2,1..5,1..3] of TKMAnimLoop;
     fMarketBeastAnim: array [1..3] of TKMAnimLoop;
     fHovelBeastAnim: array [1..3] of TKMAnimLoop;
-    function LoadHouseDat(const aPath: string): Cardinal;//deprecated
+    //function LoadHouseDat(const aPath: string): Cardinal;//deprecated
     function GetHouse(aType: TKMHouseType): TKMHouseSpec; inline;
     function GetBeastAnim(aType: TKMHouseType; aBeast, aAge:integer): TKMAnimLoop;
   public
@@ -191,6 +202,7 @@ type
     WallTower_RecruitRight,
     Merchant_Tablets,
     Silo_Tablets: TKMAnimation;
+    Pearls : array[TKMPearlType] of TKMPearlData;
 
     ProdThatch_Anims : array[TKMProdThatchAnimType] of TKMAnimation;
 
@@ -300,7 +312,7 @@ const
     htStoneWorkshop, htIronFoundry, htMerchant, htPottery, htWoodBurner,
     htAppleTree, htSmallStore, htCollectors, htTailorsShop, htCottage,
     htHouse, htPalace, htStall, htProductionThatch, htShipyard,
-    htCartographers);
+    htCartographers, htPearl);
 
   //TKMHouseType corresponds to this index in KaM scripts and libs
   //KaM scripts are 0 based, so we must use HouseTypeToIndex[H]-1 in script usage. Other cases are 1 based.
@@ -317,7 +329,7 @@ const
     41, 42, 43, 44, 45,
     46, 47, 48, 49, 50,
     51, 52, 53, 54, 55,
-    56
+    56, 57
     );
 
   WALL_HOUSES : TKMHouseTypeSet = [ htWall, htWall2, htWall3, htWall4, htWall5];
@@ -366,7 +378,7 @@ begin
     if WareInput[I] <> wtNone then //Check if house has any inputs
       Result := true;
 
-  Result := Result or (fHouseType in [htMarket, htStore, htBarracks]); //Marketplace also accepts wares
+  Result := Result or (fHouseType in [htMarket, htStore, htBarracks, htPearl]); //those buildings also accepts wares
 end;
 
 
@@ -716,7 +728,7 @@ end;
 
 //Return CRC of loaded file
 //CRC should be calculated right away, cos file may be swapped after loading
-function TKMResHouses.LoadHouseDat(const aPath: string): Cardinal;
+{function TKMResHouses.LoadHouseDat(const aPath: string): Cardinal;
 var
   S: TKMemoryStream;
   i: Integer;
@@ -742,7 +754,7 @@ begin
     S.Free;
   end;
 end;
-
+}
 
 function TKMResHouses.LoadFromJSON(aFileName : String) : Cardinal;
 
@@ -806,6 +818,7 @@ var
   S : String;
 
   PTA : TKMProdThatchAnimType;
+  PT : TKMPearlType;
 begin
 
   //jsonPath := ExeDir + //JSON_PATH + aFileName + '.json';
@@ -1193,6 +1206,45 @@ begin
     nRoot.GetAnim('WallTower_RecruitLeft', WallTower_RecruitLeft);
     nRoot.GetAnim('WallTower_RecruitRight', WallTower_RecruitRight);
     nRoot.GetAnim('School_Clock', School_Clock);
+
+    nHouses := nRoot.A['Pearls of Architecture'];
+    for I := 0 to nHouses.Count - 1 do
+    begin
+      nHouse := nHouses.O[I];
+
+      If not TKMEnumUtils.TryGetAs<TKMPearlType>(nHouse.S['PearlType'], PT) then
+        Continue;
+
+      with Pearls[PT] do
+      begin
+        nHouse.GetArray('StagePics', StagePics);
+        StageCount := length(StagePics);
+        SnowPic := nHouse.I['SnowPic'];
+        ProgressPerStage := nHouse.I['ProgressPerStage'];
+
+        nAR := nHouse.A['Animations'];
+
+        SetLength(A, nAR.Count);
+        for K := 0 to nAR.Count - 1 do
+          nAR.O[K].GetAnim(A[K]);
+
+        nAR := nHouse.A['Build Cost'];
+        Assert(nAr.Count = StageCount, 'Build cost must have the same count as stages');
+        Cost.SetCount(StageCount);
+        for K := 0 to nAR.Count - 1 do
+        begin
+          If not TKMEnumUtils.TryGetAs<TKMWareType>(nAR.O[K].S['WareType'], Cost[K].W) then
+            raise Exception.Create('Wrong ware type');
+          Cost[K].C := nAR.O[K].I['Count'];
+        end;
+
+
+      end;
+
+    end;
+
+
+
   finally
     nRoot.Free;
   end;
@@ -1553,5 +1605,13 @@ begin
   end;
 end;
 
+
+function TKMPearlData.GetStagePic(aStage: Integer): Integer;
+begin
+  If (aStage < 0) or (aStage >= StageCount) then
+    Result := -1
+  else
+    Result := StagePics[aStage];
+end;
 
 end.

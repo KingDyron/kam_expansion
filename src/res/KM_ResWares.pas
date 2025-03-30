@@ -36,6 +36,7 @@ type
     Function GetProdCount(aHouse : TKMHouseType; aWareType : TKMWareType) : Byte;
     Function GetModulo(aHouse : TKMHouseType; aWareType : TKMWareType) : Byte;
     Function ReplacesWare(aHouse : TKMHouseType; aWareType : TKMWareType; aCount : Byte) : Boolean;
+    function Title : String;
   end;
 
   TKMVirtualWareList = record
@@ -272,6 +273,11 @@ begin
           Exit(ReplaceWare);
 
 
+end;
+
+function TKMVirtualWare.Title: string;
+begin
+  Result := gResTexts[Self.TextID];
 end;
 
 procedure TKMVirtualWareList.Add( aName : String; aTextID: Word; aIconID: Word; aHouses: TKMHouseTypeSet = []);
@@ -718,7 +724,7 @@ begin
   Wares[wtBitinArmor       ].fMarketPrice := (1/PRODUCTION_RATE[wtBitinArmor]) + Wares[wtCoal].MarketPrice * 2 + Wares[wtBitinE].MarketPrice ;
 
   Wares[wtBread      ].fMarketPrice := (1/PRODUCTION_RATE[wtBread]) + Wares[wtFlour].MarketPrice / 2 + Wares[wtVegetables].MarketPrice / 2 + Wares[wtWater].MarketPrice / 2;
-  Wares[wtEgg].fMarketPrice := (1/PRODUCTION_RATE[wtEgg]) + (Wares[wtSeed].MarketPrice * 10);
+  Wares[wtEgg].fMarketPrice := Wares[wtJewerly].fMarketPrice / 7;
 end;
 
 function TKMResWares.LoadWareDistribution(aPath : String) : Cardinal;

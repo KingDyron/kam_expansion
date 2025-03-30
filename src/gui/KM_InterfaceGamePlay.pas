@@ -241,7 +241,7 @@ type
     Label_TeamName: TKMLabel;
 
     Panel_Controls: TKMPanel;
-      Button_Main: array [tbBuild..tbMenu] of TKMButton; // 4 common buttons + Return
+      Button_Main: array [tbBuild..TKMTabButtons(Byte(high(TKMTabButtons)) - 1)] of TKMButton; // 4 common buttons + Return
       Button_Back: TKMButton;
 
     Panel_Stats: TKMPanel;
@@ -631,14 +631,15 @@ var
   procedure Flip4MainButtons(ShowEm: Boolean);
   var T: TKMTabButtons;
   begin
-    for T := tbBuild to tbMenu do
+    for T := low(Button_Main) to high(Button_Main) do
       Button_Main[T].Visible := ShowEm;
     Button_Back.Visible := not ShowEm;
     Label_MenuTitle.Visible := not ShowEm;
   end;
 
 begin
-  gCursor.Mode := cmNone;
+  If not (gCursor.Mode in [cmPearlRepair, cmCustom]) then
+    gCursor.Mode := cmNone;
   if (Sender = Button_Main[tbBuild]) or (Sender = Button_Main[tbRatio])
     or (Sender = Button_Main[tbStats]) or (Sender = Button_Main[tbMenu])
     or (Sender = Button_Menu_Settings) or (Sender = Button_Menu_Quit) then
@@ -1421,13 +1422,13 @@ end;
 
 procedure TKMGamePlayInterface.Create_Controls;
 const
-  MAIN_BTN_HINT: array [tbBuild..tbMenu] of Word = (
+  MAIN_BTN_HINT: array [tbBuild..TKMTabButtons(Byte(high(TKMTabButtons)) - 1)] of Word = (
     TX_MENU_TAB_HINT_BUILD,
     TX_MENU_TAB_HINT_DISTRIBUTE,
     TX_MENU_TAB_HINT_STATISTICS,
     TX_MENU_TAB_HINT_OPTIONS);
 var
-  I: Integer;
+  I, J, gap: Integer;
   T: TKMTabButtons;
 begin
   Panel_Controls := TKMPanel.Create(Panel_Main, 0, 168, 224, 376);
@@ -1469,10 +1470,12 @@ begin
     Label_HourName := TKMLabel.Create(Panel_Main, 14, 228, 87, 30, gResTexts[1714],fntGrey,taLeft);
     Label_HourName.Hitable := false;
 
-
+    J := byte(high(Button_Main)) - byte(low(Button_Main)) + 1;
+    gap := (200 div J) - 2;
+    J := (200 - gap * J) div 2;
     // Main 4 buttons
-    for T := tbBuild to tbMenu do begin
-      Button_Main[T] := TKMButton.Create(Panel_Controls,  TB_PAD + 48 * Byte(T), 4, 42, 36, 439 + Byte(T), rxGui, bsGame);
+    for T := low(Button_Main) to high(Button_Main) do begin
+      Button_Main[T] := TKMButton.Create(Panel_Controls, J+gap * Byte(T), 4, gap - 2, 36, 439 + Byte(T), rxGui, bsGame);
       Button_Main[T].Hint := gResTexts[MAIN_BTN_HINT[T]];
       Button_Main[T].OnClick := SwitchPage;
     end;
@@ -4400,6 +4403,15 @@ procedure TKMGamePlayInterface.MouseUp(Button: TMouseButton; Shift: TShiftState;
     end
   end;
 
+  procedure HandlePearlRepairMode(const P: TKMPoint; H: TKMHouse);
+  var doRepair : Boolean;
+  begin
+    //pearl ability to quicky turn on repair buildings
+    //if ctrl is pressed it will disable building repair
+    doRepair := not H.BuildingRepair;
+    If H.IsValid and (H.BuildingRepair <> doRepair) then
+      gGame.GameInputProcess.CmdHouse(gicHouseRepairSet, H, byte(doRepair));
+  end;
 var
   P, P2: TKMPoint;
   pbj: TObject;
@@ -4688,11 +4700,20 @@ begin
                         gCursor.Custom.Tag2 := 0;
                         gCursor.Custom.RenderType := crtWireTile;
                       end;
-          end;
+            cmPearlRepair: begin
+                              H := gMySpectator.Hand.HousesHitTest(P.X, P.Y);
+                              HandlePearlRepairMode(P, H);
+                           end;
 
+        end;
       end;
     mbRight:
       begin
+        if gCursor.Mode in [cmPearlRepair] then
+        begin
+          gCursor.Mode := cmNone;
+          Exit;
+        end;
         if gCursor.Mode = cmBridges then
         begin
           gCursor.MapEdDir := IfThen(gCursor.MapEdDir - 1 < 0, 3, gCursor.MapEdDir - 1) mod 4;

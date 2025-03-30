@@ -135,6 +135,20 @@ type
     gicHouseFarmMode,          //Switch the farm mode
     gicHouseCollectorsMode,
     gicGameMessageLogReadAll,
+    gicCartographersMode,
+    gicCartographersToggleView,
+    gicCartographersSelectPlayer,
+    gicCartographersDoSpying,
+    gicHouseRepairSet,
+
+    gicPearlSelectType,
+    gicPearlConfirm,
+    gicPearlSelectResFrom,//Valtaria
+    gicPearlSelectResTo,//Valtaria
+    gicPearlSelectVResTo,//arium
+    gicPearlSelectRResTo,//ralender
+    gicPearlDoExchange,//ralender
+    gicPearlUseSpecial,
 
 
     //V.     Delivery ratios changes (and other game-global settings)
@@ -276,7 +290,20 @@ const
     gicHouseShipType,
     gicHouseShipDoWork,
     gicHouseFarmMode,
-    gicHouseCollectorsMode
+    gicHouseCollectorsMode,
+    gicCartographersMode,
+    gicCartographersToggleView,
+    gicCartographersSelectPlayer,
+    gicCartographersDoSpying,
+    gicHouseRepairSet,
+    gicPearlSelectType,
+    gicPearlConfirm,
+    gicPearlSelectResFrom,//Valtaria
+    gicPearlSelectResTo,//Valtaria
+    gicPearlSelectVResTo,//arium
+    gicPearlSelectRResTo,//ralender
+    gicPearlDoExchange,//ralender
+    gicPearlUseSpecial
     ];
 
 
@@ -375,7 +402,19 @@ const
     gicpt_Int2,// gicHouseFarmMode
     gicpt_Int1,//gicHouseCollectorsMode
     gicpt_NoParams,//gicGameMessageLogReadAll
-
+    gicpt_Int2,//gicCartographersMode
+    gicpt_Int2,//gicCartographersToggleView
+    gicpt_Int2,//gicCartographersSelectPlayer
+    gicpt_Int1,//gicCartographersDoSpying
+    gicpt_Int2,//gicHouseRepairSet,
+    gicpt_Int2,//gicPearlSelectType,
+    gicpt_Int1,//gicPearlConfirm,
+    gicpt_Int2,//gicPearlSelectResFrom,//Valtaria
+    gicpt_Int2,//gicPearlSelectResTo,//Valtaria
+    gicpt_Int2,//gicPearlSelectVResTo,//arium
+    gicpt_Int2,//gicPearlSelectRResTo,//ralender
+    gicpt_Int2,//gicPearlDoExchange,//ralender
+    gicpt_Int1,//gicPearlUseSpecial,
 
     //V.     Delivery ratios changes (and other game-global settings)
     gicpt_Int3,     // gicWareDistributionChange
@@ -611,7 +650,7 @@ uses
   KM_GameApp, KM_Game, KM_GameParams, KM_GameSettings, KM_CommonHelpers,
   KM_HandsCollection, KM_HandEntity,
   KM_HouseMarket, KM_HouseBarracks, KM_HouseSchool, KM_HouseTownHall, KM_HouseStore, KM_HouseArmorWorkshop,
-  KM_HouseQueue,
+  KM_HouseQueue, KM_HouseCartographers, KM_HousePearl,
   KM_ScriptingEvents, KM_Alerts, KM_CommonUtils, KM_RenderUI, KM_HouseSiegeWorkshop,
   KM_ResFonts, KM_Resource,
   KM_Log,
@@ -1083,7 +1122,9 @@ begin
       gicHouseForceWork, gicHouseMakeUpgrade, gicHouseCancelUpgrade, gicHouseTransferWare, gicHouseDontAcceptWorker,
       gicHouseStallBuyCoin, gicHouseStallBuyItem, gicHousePalaceOrder, gicHouseQueueAdd, gicHouseQueueRem, gicHouseMerchantSendTo, gicHouseFarmToggleGrain,
       gicHStoreSetNotAcceptFlag, gicHStoreSetNotAllowTakeOutFlag, gicHouseStoreBell, gicHousePalaceCancelOrder, gicHouseFruitTreeToggleType, gicHouseShipType,
-      gicHouseShipDoWork, gicHouseFarmMode, gicHouseCollectorsMode] then
+      gicHouseShipDoWork, gicHouseFarmMode, gicHouseCollectorsMode, gicCartographersMode, gicCartographersToggleView, gicCartographersSelectPlayer,
+      gicCartographersDoSpying, gicHouseRepairSet, gicPearlSelectType,gicPearlConfirm, gicPearlSelectResFrom, gicPearlSelectResTo, gicPearlSelectVResTo,//arium
+      gicPearlSelectRResTo, gicPearlDoExchange, gicPearlUseSpecial] then
     begin
       srcHouse := gHands.GetHouseByUID(IntParams[0]);
       if (srcHouse = nil) or srcHouse.IsDestroyed //House has been destroyed before command could be executed
@@ -1233,8 +1274,12 @@ begin
 
 
       //My gip procedures
-      gicHouseStoreBell            : if srcHouse.HouseType in [htStore, htTownhall] then
-                                      gHands[srcHouse.Owner].ProceedStoreBell(srcHouse.PointBelowEntrance);
+      gicHouseStoreBell            :  if srcHouse.HouseType in [htStore, htTownhall] then
+                                        gHands[srcHouse.Owner].ProceedStoreBell(srcHouse.PointBelowEntrance)
+                                      else
+                                      if srcHouse.HouseType in [htPearl] then
+                                        gHands[srcHouse.Owner].ProceedPearlBell(srcHouse.PointBelowEntrance);
+
       gicHouseShipDoWork             : TKMHouseShipYard(srcHouse).DoWork := not TKMHouseShipYard(srcHouse).DoWork;
       gicHouseShipType           : TKMHouseShipYard(srcHouse).SetNextShipType(IntParams[1]);
 
@@ -1258,7 +1303,22 @@ begin
                                        TKMHouseProdThatch(srcHouse).SetNextGrainType(IntParams[1], IntParams[2]);
       gicHouseFruitTreeToggleType:  TKMHouseAppleTree(srcHouse).SetNextFruitType(IntParams[1]);
 
-      gicHouseMerchantSetType      : srcHouse.SetWareSlot(IntParams[1], IntParams[2] = 1);
+      gicHouseMerchantSetType       : srcHouse.SetWareSlot(IntParams[1], IntParams[2] = 1);
+      gicCartographersMode          : TKMHouseCartographers(srcHouse).Mode := TKMCartographersMode(IntParams[1]);
+      gicCartographersToggleView    : TKMHouseCartographers(srcHouse).ToggleLayer(IntParams[1]);
+      gicCartographersSelectPlayer  : TKMHouseCartographers(srcHouse).PlayerToSpy := IntParams[1];
+      gicCartographersDoSpying      : TKMHouseCartographers(srcHouse).DoSpying := not TKMHouseCartographers(srcHouse).DoSpying;
+      gicHouseRepairSet             : srcHouse.BuildingRepair := IntParams[1] = 1;
+
+      gicPearlSelectType            : TKMHousePearl(srcHouse).SelectType(TKMPearlType(IntParams[1]));
+      gicPearlConfirm               : TKMHousePearl(srcHouse).ConfirmBuild;
+      gicPearlSelectResFrom         : TKMHousePearl(srcHouse).ResFrom := TKMWareType(IntParams[1]);
+      gicPearlSelectResTo           : TKMHousePearl(srcHouse).ResTo := TKMWareType(IntParams[1]);
+      gicPearlSelectVResTo          : TKMHousePearl(srcHouse).VResTo := IntParams[1];
+      gicPearlSelectRResTo          : TKMHousePearl(srcHouse).RResTo := TKMWareType(IntParams[1]);
+      gicPearlDoExchange            : TKMHousePearl(srcHouse).DoExchange(IntParams[1]);
+      gicPearlUseSpecial            : TKMHousePearl(srcHouse).DoUseSpecial;
+
       gicWareDistributionChange:  begin
                                     P.Stats.WareDistribution[TKMWareType(IntParams[0]), TKMHouseType(IntParams[1])] := IntParams[2];
                                     P.Houses.UpdateDemands;
@@ -1322,6 +1382,7 @@ begin
       gicGamePlayerAddDefGoals:   gHands[IntParams[0]].AI.AddDefaultGoals(IntToBool(IntParams[1]));
       gicScriptConsoleCommand:    gScriptEvents.CallConsoleCommand(HandIndex, AnsiStrParam, UnicodeStrParams);
       gicScriptSoundRemoveRq:     gGame.AddScriptSoundRemoveRequest(IntParams[0], HandIndex);
+
       else                        raise Exception.Create('Unexpected gic command');
     end;
   end;
@@ -1514,7 +1575,8 @@ end;
 procedure TKMGameInputProcess.CmdHouse(aCommandType: TKMGameInputCommandType; aHouse: TKMHouse);
 begin
   Assert(aCommandType in [gicHouseRepairToggle, gicHouseClosedForWorkerTgl, gicHBarracksAcceptRecruitsTgl, gicHouseDeliveryModeNext, gicHouseDeliveryModePrev,
-                          gicHouseForceWork, gicHouseMakeUpgrade, gicHouseCancelUpgrade, gicHouseStoreBell, gicHouseShipDoWork, gicHouseCollectorsMode]);
+                          gicHouseForceWork, gicHouseMakeUpgrade, gicHouseCancelUpgrade, gicHouseStoreBell, gicHouseShipDoWork, gicHouseCollectorsMode,
+                          gicCartographersDoSpying, gicPearlConfirm, gicPearlUseSpecial]);
   TakeCommand(MakeCommand(aCommandType, aHouse.UID));
 end;
 
@@ -1559,7 +1621,9 @@ procedure TKMGameInputProcess.CmdHouse(aCommandType: TKMGameInputCommandType; aH
 begin
   Assert(aCommandType in [gicHouseRemoveTrain, gicHouseSchoolTrainChLastUOrder, gicHouseTownHallMaxGold, gicHouseTransferWare,
                           gicHouseDontAcceptWorker, gicHouseQueueRem, gicHouseMerchantSendTo, gicHousePalaceCancelOrder,
-                          gicHouseFruitTreeToggleType, gicHouseShipType, gicHouseTownHallMaxBitin]);
+                          gicHouseFruitTreeToggleType, gicHouseShipType, gicHouseTownHallMaxBitin, gicCartographersMode,
+                          gicCartographersToggleView, gicCartographersSelectPlayer, gicHouseRepairSet, gicPearlSelectType,
+                          gicPearlSelectResFrom, gicPearlSelectResTo, gicPearlSelectVResTo, gicPearlSelectRResTo, gicPearlDoExchange]);
   //Assert((aHouse is TKMHouseSchool) or (aHouse is TKMHouseTownHall) or (aHouse is TKMHouseSiegeWorkshop));
   TakeCommand(MakeCommand(aCommandType, aHouse.UID, aValue));
 end;

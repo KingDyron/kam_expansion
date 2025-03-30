@@ -182,6 +182,9 @@ begin
       Break;
   end;
 
+  If gHands[Owner].HasPearl(ptValtaria) then
+    Dec(percante, 0.1);
+
   Result := Result - 10 * fWorklessCount + KamRandom(50, 'TKMHouseCottage.GetStageDuration');
   Result := Round(Result * percante);
 end;

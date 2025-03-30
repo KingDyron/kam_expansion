@@ -23,7 +23,7 @@ type
     Palaces,
     SiegeWorkshops,
     Barracks,
-    Stores : TList<TKMHouse>;
+    Stores: TList<TKMHouse>;
     constructor Create;
     destructor Destroy; override;
 
@@ -68,7 +68,7 @@ uses
   KM_HandTypes, KM_HandEntity,
   KM_HouseInn, KM_HouseMarket, KM_HouseBarracks, KM_HouseSchool, KM_HouseStore, KM_HouseSwineStable,
   KM_HouseTownHall, KM_HouseWoodcutters, KM_HouseSiegeWorkshop, KM_HouseWoodBurner, KM_HouseQueue,
-  KM_HouseCottage, KM_HouseCartographers,
+  KM_HouseCottage, KM_HouseCartographers, KM_HousePearl,
   KM_Resource,
   KM_GameTypes,
   KM_TerrainTypes,
@@ -101,7 +101,6 @@ begin
   Barracks.Free;
   Stores.Free;
   Markets.Free;
-
   inherited;
 end;
 
@@ -173,6 +172,7 @@ begin
     htVineyard:         Result := TKMHouseVineyard.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
     htShipyard:         Result := TKMHouseShipyard.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
     htCartographers:    Result := TKMHouseCartographers.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
+    htPearl:            Result := TKMHousePearl.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
     else             Result := TKMHouse.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
   end;
 
@@ -513,6 +513,7 @@ begin
       htVineyard:         H := TKMHouseVineyard.Load(LoadStream);
       htShipyard:         H := TKMHouseShipyard.Load(LoadStream);
       htCartographers:    H := TKMHouseCartographers.Load(LoadStream);
+      htPearl:            H := TKMHousePearl.Load(LoadStream);
 
       else                H := TKMHouse.Load(LoadStream);
     end;

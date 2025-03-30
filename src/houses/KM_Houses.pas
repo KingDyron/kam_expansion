@@ -19,6 +19,7 @@ const
 type
   TKMHouse = class;
   TKMHouseEvent = procedure(aHouse: TKMHouse) of object;
+  TKMHouseTrainedEvent = procedure(aHouse: TKMHouse; aIsTrained : Boolean) of object;
   TKMHouseFromEvent = procedure(aHouse: TKMHouse; aFrom: TKMHandID) of object;
   TKMHouseArray = array of TKMHouse;
 
@@ -76,6 +77,8 @@ type
     function ObjToStringShort(const aSeparator: String = '|'): String; override;
 
     function IsEmpty: Boolean;
+    function HasMoreEntrances : Boolean; virtual;
+    function GetClosestEntrance(aLoc : TKMPoint) : TKMPointDir; virtual;
   end;
 
   // Editable Version of TKMHouseSketch
@@ -204,7 +207,6 @@ type
     procedure SetLevel(aValue : Byte);
     function GetProductionCycle(aIndex : Byte) : Word;
     function PaintHouseWork : Boolean; virtual;
-    function GetFlagColor : Cardinal;
     procedure SetWariant(aValue : Integer);
   protected
     fWorkers: TPointerArray;
@@ -243,6 +245,7 @@ type
     function GetPositionF: TKMPointF; inline;
 
     function GetIsSelectable: Boolean; override;
+    function GetFlagColor : Cardinal;
 
     function TryDecWareDelivery(aWare: TKMWareType; aDeleteCanceled: Boolean): Boolean; virtual;
 
@@ -323,6 +326,7 @@ type
     function HasSpaceForWaresOut(aWares : TKMWareTypeSet; aAnyWare : Boolean) : Boolean;
 
     procedure CheckWorkersForSlot; virtual;
+    procedure MakeWareSlot(aWaresIn, aWaresOut : array of TKMWareType);
     procedure SetWareSlot(aSlotID : Byte; aForceChange : Boolean = false);overload;
     procedure SetWareSlot(aWare : TKMWareType);overload;
     function HasSlotWithWare(aWare : TKMWareType) : Boolean;
@@ -1007,6 +1011,15 @@ begin
             or (Position.Y = -1);
 end;
 
+function TKMHouseSketch.HasMoreEntrances : Boolean;
+begin
+  Result := false;
+end;
+
+function TKMHouseSketch.GetClosestEntrance(aLoc : TKMPoint) : TKMPointDir;
+begin
+  Result := KMPointDir(Entrance, dirS);
+end;
 
 function TKMHouseSketch.ObjToStringShort(const aSeparator: String = '|'): String;
 begin
@@ -1018,6 +1031,7 @@ begin
                    GetEnumName(TypeInfo(TKMHouseType), Integer(fType)), aSeparator,
                    TypeToString(Entrance)]);
 end;
+
 
 
 { TKMHouseSketchEdit}
@@ -1950,6 +1964,35 @@ begin
   //do something in child classes
 end;
 
+procedure TKMHouse.MakeWareSlot(aWaresIn: array of TKMWareType; aWaresOut: array of TKMWareType);
+var I : Integer;
+  K : Integer;
+begin
+  fResetDemands := true;
+  UpdateDemands;
+  fResetDemands := false;
+
+  for I := 1 to WARES_IN_OUT_COUNT do
+  begin
+    fWareInput[I] := wtNone;
+    fWareOutput[I] := wtNone;
+    TransferWare[I] := gHands[Owner].IsComputer;
+  end;
+
+  K := Low(aWaresIn);
+  for I := K to High(aWaresIn) do
+    If I - K + 1 <= WARES_IN_OUT_COUNT then
+      fWareInput[I - K + 1] := aWaresIn[I];
+
+  K := Low(aWaresOut);
+  for I := K to High(aWaresOut) do
+    If I - K + 1 <= WARES_IN_OUT_COUNT then
+      fWareOutput[I - K + 1] := aWaresOut[I];
+
+  UpdateDemands;
+end;
+
+
 procedure TKMHouse.SetWareSlot(aSlotID : Byte; aForceChange : Boolean = false);
 var I, K : integer;
   fOldWares : TKMWarePlan;
@@ -1988,14 +2031,8 @@ begin
     fWareOrder[I] := 0;
     fWareDeliveryCount[I] := 0;
     fWareDemandsClosing[I] := 0;
-  end;
-
-
-  for I := 1 to WARES_IN_OUT_COUNT do
-  begin
     fWareInput[I] := gRes.Houses[fType].WareInputSlots[fSlotID].WareInput[I];
     fWareOutput[I] := gRes.Houses[fType].WareInputSlots[fSlotID].WareOutput[I];
-    TransferWare[I] := gHands[Owner].IsComputer;
   end;
 
   for I := 0 to fOldWares.Count - 1 do
@@ -2760,6 +2797,9 @@ begin
   //if (fType in WALL_HOUSES) or (fType = htWallTower) then
   //  aAmount := aAmount * 3;
   //(NoGlyph houses MaxHealth = 0, they get destroyed instantly)
+  If gHands[Owner].HasPearl(ptRalender) then
+    aAmount := Max(aAmount div 2, 1);
+
   fDamage := Math.min(fDamage + aAmount, MaxHealth);
   if IsComplete then
   begin
@@ -5419,10 +5459,12 @@ var I : Integer;
   newParent : TKMHouseAppleTree;
 begin
   Inherited;
+
   If (aFrom = -1) or (aFrom = Owner) then
   begin
     If ParentTree = nil then
     begin
+      newParent := nil;
       //Make first valid apple tree a new parent
       for I := 0 to ChildCount - 1 do
         if ChildTree(I).IsValid() then
@@ -5430,6 +5472,8 @@ begin
           newParent := ChildTree(I);
           Break;
         end;
+      If newParent = nil then
+        Exit;
       newParent.SetParentTree(nil);
       //now add childs to this parent
       for I := 0 to ChildCount - 1 do
@@ -6385,14 +6429,16 @@ procedure TKMHousePalace.Activate(aWasBuilt : Boolean);
 begin
   Inherited;
 
-  if aWasBuilt then
-    gTerrain.PalaceExploreDeposits(Entrance);
+  //if aWasBuilt then
+  //  gTerrain.PalaceExploreDeposits(Entrance);
 
 end;
 
 function TKMHousePalace.UnitProgress(aType: TKMUnitType): Word;
 begin
   Result := Max(gRes.Units[aType].PalaceCost.PhaseDuration, 50);
+  If ghands[Owner].HasPearl(ptValtaria) then
+    Result := Round(Result * 0.9);
 end;
 
 function TKMHousePalace.GetPhaseCount(aIndex : Integer) : Byte;
@@ -6681,7 +6727,7 @@ begin
           soldier.Visible := False; //Make him invisible as he is inside the barracks
           soldier.Condition := Round(TROOPS_TRAINED_CONDITION * UNIT_MAX_CONDITION); //All soldiers start with 3/4, so groups get hungry at the same time
           //Soldier.OrderLoc := KMPointBelow(Entrance); //Position in front of the barracks facing north
-          soldier.SetActionGoIn(uaWalk, gdGoOutside, Self);
+          soldier.SetActionGoIn(uaWalk, gdGoOutside, Self, true);
           if Assigned(soldier.OnUnitTrained) then
             soldier.OnUnitTrained(soldier);
           if gHands[Owner].IsComputer then
@@ -6808,29 +6854,45 @@ begin
   begin
     fSpecialPriceTick := gGameParams.Tick + 1200;
     for I := 0 to High(fCostMultiplier) do
+    begin
       case KaMRandom(100, 'TKMHouseStall.SetRandomCost:Type') of
         0..9 : fCostMultiplier[I] := 0.1 + KaMRandom('TKMHouseStall.SetRandomCost:Count') / 2;
         10..49 : fCostMultiplier[I] := 0.4 + KaMRandom('TKMHouseStall.SetRandomCost:Count') / 2;
         50..84 : fCostMultiplier[I] := 0.3 + KaMRandom('TKMHouseStall.SetRandomCost:Count') / 2;
         85..99 : fCostMultiplier[I] := 0.2 + KaMRandom('TKMHouseStall.SetRandomCost:Count') / 2;
       end;
+      If gHands[Owner].HasPearl(ptArium) then
+        fCostMultiplier[I] := fCostMultiplier[I] * 0.8
+    end;
 
     for I := Low(fWareMultiplier) to High(fWareMultiplier) do
       fWareMultiplier[I] := 1 + KaMRandom('');
+
+    If gHands[Owner].HasPearl(ptArium) then
+      for I := Low(fWareMultiplier) to High(fWareMultiplier) do
+        fWareMultiplier[I] := fWareMultiplier[I] * 1.2
+
   end else
   begin
     if gGameParams.Tick < fSpecialPriceTick then
       Exit;
 
     for I := 0 to High(fCostMultiplier) do
+    begin
       case KaMRandom(100, 'TKMHouseStall.SetRandomCost:Type') of
         0..9 : fCostMultiplier[I] := 0.1 + KaMRandom('TKMHouseStall.SetRandomCost:Count');
         10..49 : fCostMultiplier[I] := 0.9 + KaMRandom('TKMHouseStall.SetRandomCost:Count') / 2;
         50..84 : fCostMultiplier[I] := 0.5 + KaMRandom('TKMHouseStall.SetRandomCost:Count');
         85..99 : fCostMultiplier[I] := 0.75 + KaMRandom('TKMHouseStall.SetRandomCost:Count') / 3;
       end;
+      If gHands[Owner].HasPearl(ptArium) then
+        fCostMultiplier[I] := fCostMultiplier[I] * 0.8
+    end;
     for I := Low(fWareMultiplier) to High(fWareMultiplier) do
       fWareMultiplier[I] := 0.75 + KaMRandom('') / 2;
+    If gHands[Owner].HasPearl(ptArium) then
+      for I := Low(fWareMultiplier) to High(fWareMultiplier) do
+        fWareMultiplier[I] := fWareMultiplier[I] * 1.2
   end;
 end;
 
@@ -6853,6 +6915,8 @@ begin
 
   I := 0;
   stallsQty := gHands[Owner].Stats.GetHouseQty(htStall) div 2 + 1;
+  If gHands[Owner].HasPearl(ptArium) then
+    stallsQty := 1;
   while I < length(fVWares) do
   begin
     K := KamRandom(gRes.Wares.VirtualWares.Count, 'TKMHouseStall.SetRandomWares:VWareID');

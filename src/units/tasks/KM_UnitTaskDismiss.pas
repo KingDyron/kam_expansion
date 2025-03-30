@@ -61,6 +61,20 @@ type
     function Execute: TKMTaskResult; override;
   end;
 
+  TKMTaskGoToPearl = class(TKMUnitTask)
+  private
+    fLocTo: TKMPoint;
+  protected
+    procedure InitDefaultAction; override;
+  public
+    constructor Create(aUnit: TKMUnit; aLocTo : TKMPoint);
+    constructor Load(LoadStream: TKMemoryStream); override;
+    procedure Save(SaveStream: TKMemoryStream); override;
+    function CouldBeCancelled: Boolean; override;
+
+    function Execute: TKMTaskResult; override;
+  end;
+
   TKMTaskGoToLoc = class(TKMUnitTask)
   private
     fLocTo: TKMPoint;
@@ -371,6 +385,66 @@ begin
   Inc(fPhase);
 end;
 
+
+constructor TKMTaskGoToPearl.Create(aUnit: TKMUnit; aLocTo: TKMPoint);
+begin
+  Inherited Create(aUnit);
+  fLocTo := aLocTo;
+  fType := uttGoToPearl;
+end;
+
+constructor TKMTaskGoToPearl.Load(LoadStream: TKMemoryStream);
+begin
+  Inherited;
+  LoadStream.Read(fLocTo);
+end;
+
+procedure TKMTaskGoToPearl.Save(SaveStream: TKMemoryStream);
+begin
+  Inherited;
+  SaveStream.Write(fLocTo);
+end;
+
+procedure TKMTaskGoToPearl.InitDefaultAction;
+begin
+  ///do nothing here
+end;
+
+function TKMTaskGoToPearl.CouldBeCancelled: Boolean;
+begin
+  Result := true;
+end;
+
+function TKMTaskGoToPearl.Execute: TKMTaskResult;
+begin
+  Result := trTaskContinues;
+
+  if WalkShouldAbandon then
+  begin
+    Result := trTaskDone;
+    Exit;
+  end;
+
+
+  with fUnit do
+    case fPhase of
+      0:  begin
+            SetSpeed(8, true);
+            Defence := Defence + 8;
+            SetActionWalkToSpot(fLocTo, uaWalk, 6, fUnit.AnimStep); // Preserv current AnimStep
+            fUnit.Thought := thHome;
+          end;
+      1:  begin
+            Defence := Defence - 8;
+            SetSpeed(-8, true);
+            SetActionStay(0, uaWalk);
+            fUnit.Thought := thNone;
+          end;
+      else Result := trTaskDone;
+    end;
+
+  Inc(fPhase);
+end;
 
 
 constructor TKMTaskGoToLoc.Create(aUnit: TKMUnit; aLocTo: TKMPoint);

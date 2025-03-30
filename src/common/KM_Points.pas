@@ -52,6 +52,9 @@ type
     property X : Integer read Loc.X write Loc.X;
     property Y : Integer read Loc.Y write Loc.Y;
     function DirFaceLoc : TKMPoint;
+    class operator Equal(const A, B: TKMPointDir): Boolean; overload;
+    class operator Equal(const A : TKMPointDir; B: TKMPoint): Boolean; overload;
+    class operator Equal(const A : TKMPoint; B: TKMPointDir): Boolean; overload;
   end;
 
   TKMPointExact = packed record Loc: TKMPoint; Exact: Boolean; end;
@@ -128,6 +131,7 @@ type
   function KMPoint(A : TKMPointF): TKMPoint; overload;
   function KMPointF(X,Y: Single): TKMPointF; overload;
   function KMPointF(const P: TKMPoint):  TKMPointF; overload;
+  function KMPointF(const P: TKMPointDir):  TKMPointF; overload;
   function KMPointDir(X,Y: Integer; Dir: TKMDirection): TKMPointDir; overload;
   function KMPointDir(const P: TKMPoint; Dir: TKMDirection): TKMPointDir; overload;
   function KMPointX1Y1(const P:TKMPoint): TKMPoint;
@@ -189,6 +193,7 @@ type
   function KMGetDirection(const P: TKMPointF): TKMDirection; overload;
   function KMGetDirection(const FromPos, ToPos: TKMPoint): TKMDirection; overload;
   function KMGetDirection(const FromPos, ToPos: TKMPointF): TKMDirection; overload;
+  function KMGetDirection(const FromPos, ToPos: TKMPointDir): TKMDirection; overload;
   function GetDirModifier(const aDir1, aDir2: TKMDirection): Byte;
   function GetDirDifference(const aDir1, aDir2: TKMDirection): byte;
   function KMGetVertexDir(X,Y: Integer): TKMDirection;
@@ -236,6 +241,7 @@ type
 
   function KMLerp(const A,B: TKMPoint; MixValue: Single): TKMPointF; overload;
   function KMLerp(const A,B: TKMPointF; MixValue: Single): TKMPointF; overload;
+  function KMLerp(const A,B: TKMPointDir; MixValue: Single): TKMPointF; overload;
 
   procedure KMSwapPoints(var A,B: TKMPoint);
   procedure KMSwapPointDir(var A,B: TKMPointDir);
@@ -497,6 +503,21 @@ begin
   end;
 end;
 
+class operator TKMPointDir.Equal(const A, B: TKMPointDir): Boolean;
+begin
+  Result := (A.Loc = B.Loc) and (A.Dir = B.Dir);
+end;
+
+class operator TKMPointDir.Equal(const A : TKMPointDir; B: TKMPoint): Boolean;
+begin
+  Result := (A.Loc = B);
+end;
+
+class operator TKMPointDir.Equal(const A : TKMPoint; B: TKMPointDir): Boolean;
+begin
+  Result := B = A;
+end;
+
 
 function TKMRect.ToString: String;
 begin
@@ -581,6 +602,11 @@ begin
   Result.Y := P.Y;
 end;
 
+function KMPointF(const P: TKMPointDir): TKMPointF;
+begin
+  Result.X := P.X;
+  Result.Y := P.Y;
+end;
 
 function KMPointF(X, Y: Single): TKMPointF;
 begin
@@ -1034,6 +1060,11 @@ begin
   Result := KMGetDirection(ToPos.X - FromPos.X, ToPos.Y - FromPos.Y);
 end;
 
+function KMGetDirection(const FromPos, ToPos: TKMPointDir): TKMDirection;
+begin
+  Result := KMGetDirection(ToPos.X - FromPos.X, ToPos.Y - FromPos.Y);
+end;
+
 //  -3 0 3
 //  -2   2
 //  -1 0 1
@@ -1379,6 +1410,12 @@ end;
 
 
 function KMLerp(const A,B: TKMPointF; MixValue: Single): TKMPointF;
+begin
+  Result.X := A.X + (B.X - A.X) * MixValue;
+  Result.Y := A.Y + (B.Y - A.Y) * MixValue;
+end;
+
+function KMLerp(const A,B: TKMPointDir; MixValue: Single): TKMPointF;
 begin
   Result.X := A.X + (B.X - A.X) * MixValue;
   Result.Y := A.Y + (B.Y - A.Y) * MixValue;

@@ -35,7 +35,6 @@ type
     procedure House_RefreshRepair;
     procedure House_RefreshCommon;
     procedure BarracksRefresh;
-    procedure TownHallRefresh;
     procedure WoodcuttersRefresh;
     procedure StoreRefresh;
     procedure SignRefresh;
@@ -1185,15 +1184,6 @@ begin
   Button_Barracks_Recruit.Caption := IfThen(tmp = 0, '-', IntToKStr(tmp, 1000));
   Button_Barracks_RallyPoint.Down := (gCursor.Mode = cmMarkers) and (gCursor.Tag1 = MARKER_RALLY_POINT);
 end;
-
-
-procedure TKMMapEdHouse.TownHallRefresh;
-begin
-  Button_TownHall_RallyPoint.Down := (gCursor.Mode = cmMarkers) and (gCursor.Tag1 = MARKER_RALLY_POINT);
-  WaresRow_TH_Gold_Input.OrderCount := fHouse.CheckWareIn(wtGold);
-  WaresRow_TH_Gold_Input.WareRow.WareCount := Min(MAX_WARES_IN_HOUSE, WaresRow_TH_Gold_Input.OrderCount);
-end;
-
 
 procedure TKMMapEdHouse.WoodcuttersRefresh;
 begin
