@@ -52,16 +52,16 @@ uses
   KM_Game, KM_GameInputProcess,
   KM_RenderUI,
   KM_AITypes,
-  KM_Resource, KM_ResTypes, KM_ResTexts, KM_ResFonts,
-  KM_HandsCollection, KM_HandTypes, KM_HandEntity,
+  KM_Resource, KM_ResTypes, KM_ResTexts, KM_ResFonts, KM_ResUnits,
+  KM_HandsCollection, KM_Hand, KM_HandTypes, KM_HandEntity,
   KM_UtilsExt,
 
   KM_GUIGameHouse;
 
 constructor TKMGuiGameCartographer.Create(aParent: TKMPanel);
-const CPL_HINT : array[TKMCartographersPaintLayer] of Word = (1, 2, 3, 4, 5);
+const CPL_HINT : array[TKMCartographersPaintLayer] of Word = (2199, 1160, 1161, 2200, 2201);
       CPL_TEXID : array[TKMCartographersPaintLayer] of Word = (972, 994, 991, 992, 993);
-      CM_HINT : array[TKMCartographersMode] of Word = (1, 2);
+      CM_HINT : array[TKMCartographersMode] of Word = (2202, 1820);
       CM_TEXID : array[TKMCartographersMode] of Word = (996, 995);
 var CPL : TKMCartographersPaintLayer;
     CM : TKMCartographersMode;
@@ -109,7 +109,7 @@ begin
     end;
     Button_SpyPlayer := TKMButtonFlat.Create(Panel_Spy, 167, 2, 20, 20, 32, rxGuiMain);
     Button_SpyPlayer.OnClick := SelectPlayer;
-    Button_SpyPlayer.Hint := 'Disable/Enable spying selected player';
+    Button_SpyPlayer.Hint := gResTexts[2198];
 
     top := Button_SelectPlayer[high(Button_SelectPlayer)].Bottom + 7;
     Panel_Stats := TKMPanel.Create(Panel_Spy, 0, top, Width, Panel_Spy.Height - top);
@@ -117,10 +117,12 @@ begin
       TKMBevel.Create(Panel_Stats, 0, top, 189, 135);
 
       Button_ArmyCount := TKMButtonFlat.Create(Panel_Stats, 10, top + 3, 70, 35, 665);
+      Button_ArmyCount.Hint := gResTexts[2204];
       Button_BestUnit := TKMButtonFlat.Create(Panel_Stats, 142, top + 3, 35, 35, 0);
+      Button_BestUnit.Hint := gResTexts[2205];
       top := Button_BestUnit.Bottom + 5;
 
-      TKMLabel.Create(Panel_Stats, 5, NextTop(17), 150, 15, 'Groups count:', fntMetal, taLeft);
+      TKMLabel.Create(Panel_Stats, 5, NextTop(17), 150, 15, gResTexts[2203], fntMetal, taLeft);
       for GT := Low(Button_GroupsCount) to High(Button_GroupsCount) do
       begin
         J := ord(GT) - 2;
@@ -137,15 +139,15 @@ begin
         Button_Houses[I].Hint := gRes.Houses[TKMHouseCartographers.StrategyHouse(I)].HouseName;
         TKMButtonFlat(Button_Houses[I]).Caption := '0';
       end;
-
+      Button_Houses[High(Button_Houses)].Hint := gResTexts[2206];
       SortControls(0, top + 5,  189, 10, Button_Houses, false, true);
       top := Button_Houses[high(Button_Houses)].Bottom + 7;
 
       TKMBevel.Create(Panel_Stats, 0, top, 189, 65);
       Inc(top, 3);
-      Label_Citizens := TKMLabel.Create(Panel_Stats, 5, NextTop(20), 189, 20, 'Citizens: ', fntMetal, taLeft);
-      Label_Killed := TKMLabel.Create(Panel_Stats, 5, NextTop(20), 189, 20, 'Warriors killed: ', fntMetal, taLeft);
-      Label_Weapons := TKMLabel.Create(Panel_Stats, 5, NextTop(20), 189, 20, 'Weapons: ', fntMetal, taLeft);
+      Label_Citizens := TKMLabel.Create(Panel_Stats, 5, NextTop(20), 189, 20, gResTexts[1226] + ':', fntMetal, taLeft);
+      Label_Killed := TKMLabel.Create(Panel_Stats, 5, NextTop(20), 189, 20, gResTexts[2193] + ':', fntMetal, taLeft);
+      Label_Weapons := TKMLabel.Create(Panel_Stats, 5, NextTop(20), 189, 20, gResTexts[2194] + ':', fntMetal, taLeft);
       //AI
       Inc(top, 5);
       TKMBevel.Create(Panel_Stats, 0, top, 189, 250);

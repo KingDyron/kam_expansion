@@ -109,7 +109,7 @@ uses
   KM_HouseCollection,
   KM_Units, KM_UnitWarrior, KM_UnitsCollection,
   KM_Projectiles, KM_CommonGameTypes,
-  KM_Resource, KM_ResUnits, KM_ResHouses,
+  KM_Resource, KM_ResUnits, KM_ResHouses, KM_ResTexts,
   KM_RenderPool,
   KM_Terrain;
 
@@ -738,10 +738,7 @@ end;
 function TKMHousePearl.PearlName: UnicodeString;
 begin
   case fPearlType of
-    ptValtaria    : Result := 'Obelisc';
-    ptArium       : Result := 'Icy Gardens';
-    ptAgros       : Result := 'Pristin Fountain';
-    ptRalender    : Result := 'The Founder';
+    ptValtaria..ptRalender: Result := gResTexts[byte(fPearlType) + 2208];
     else Result := '';
   end;
 end;

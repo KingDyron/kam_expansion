@@ -77,9 +77,9 @@ uses
   KM_Game, KM_GameInputProcess,
   KM_RenderUI,
   KM_AITypes,
-  KM_Resource, KM_ResTexts, KM_ResFonts,
+  KM_Resource, KM_ResTexts, KM_ResFonts, KM_ResUnits,
   KM_Cursor,
-  KM_HandsCollection, KM_HandTypes, KM_HandEntity,
+  KM_HandsCollection, KM_HandTypes, KM_HandEntity, KM_Hand,
   KM_UtilsExt,
 
   KM_GUIGameHouse;
@@ -100,16 +100,17 @@ begin
       Button_SelectType[PT] := TKMButtonFlat.Create(Panel_Build, 3 + 44 * (byte(PT) - 1), 7, 42, 35, PEARL_ICONS[PT], rxGui);
       Button_SelectType[PT].OnClick := SelectPearl;
       Button_SelectType[PT].Tag := byte(PT);
+      Button_SelectType[PT].Hint := gResTexts[byte(PT) + 2208];
     end;
 
-    CostRow := TKMCostsRowMultiMax.Create(Panel_Build, 0, 60, Width, 25);
-    CostRow.Caption := 'Build cost:';
+    CostRow := TKMCostsRowMultiMax.Create(Panel_Build, 0, 65, Width, 25);
+    CostRow.Caption := gResTexts[2037];
     CostRow.MaxInRow := 3;
     DeliveredRow := TKMCostsRowMultiMax.Create(Panel_Build, 0, 100, Panel_Build.Width, 25);
-    DeliveredRow.Caption := 'Delivered:';
+    DeliveredRow.Caption := gResTexts[2038];
     DeliveredRow.MaxInRow := 3;
 
-    Button_ConfirmBuild := TKMButton.Create(Panel_Build, 21, 150, 150, 25, 'Confirm', bsGame);
+    Button_ConfirmBuild := TKMButton.Create(Panel_Build, 1, 150, 180, 25, gResTexts[2207], bsGame);
     Button_ConfirmBuild.OnClick := Button_Confirm;
 
   Label_PearlType := TKMLabel.Create(self, 0, 5, Width, 20, '', fntOutline, taCenter);
@@ -176,11 +177,11 @@ begin
     Button_AgRecruit.Hint := gRes.units[utRecruit].GUIName;
 
     Button_AgExchange := TKMButton.Create(panel, 67, Button_ACoin.Bottom + 5, 50, 23, 5, rxGui, bsMenu);
-    Button_AgExchange.Hint := gRes.units[utRecruit].GUIName + ' x1 --> Elite unit x1';
+    Button_AgExchange.Hint := gRes.units[utRecruit].GUIName + ' x1 --> ' + gResTexts[2208] + ' x1';
     Button_AgExchange.OnClickShift := AgrosExchange;
 
     Button_AgElite := TKMButtonFlat.Create(panel, 74, Button_AgExchange.Bottom + 5, 34, 38, 665);
-    Button_AgElite.Hint := 'Elite unit';
+    Button_AgElite.Hint := gResTexts[2208];
 
 
   //ralender  -----------------
@@ -211,6 +212,7 @@ begin
   Button_UseSpecial.LineWidth := 3;
   Button_UseSpecial.BackBevelColor := $55A87332;
   Button_UseSpecial.OnClick := UseSpecial;
+  Button_UseSpecial.Hint := gResTexts[2213];
 
   Icon_Reload := TKMImage.Create(self, 0, 0, Width, 40, 0);
   Icon_Reload.ImageCenter;
@@ -341,6 +343,8 @@ begin
     ptAgros : Icon_Reload.TexID := 1004;
     ptRalender : Icon_Reload.TexID := 1005;
   end;
+
+  Button_UseSpecial.Hint := gResTexts[2213] + ': ' + gResTexts[byte(H.PearlType) + 2213];
 
   Button_UseSpecial.BackBevelColor := Label_PearlType.FontColor and $55FFFFFF;
   Button_UseSpecial.DownColor := Label_PearlType.FontColor and $C5FFFFFF;
