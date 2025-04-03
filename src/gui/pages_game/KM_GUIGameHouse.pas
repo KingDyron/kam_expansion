@@ -1161,10 +1161,10 @@ begin
   Button_KidsQty[1] := TKMButtonFlat.Create(Panel_HouseCottage, 9, 80, 28, 38, 806);
   Button_KidsQty[2] := TKMButtonFlat.Create(Panel_HouseCottage, 9, 120, 28, 38, 807);
 
-  Button_FamilyQty.Hint := 'Family';
-  Button_KidsQty[0].Hint := 'Niemowle';
-  Button_KidsQty[1].Hint := 'Dziecko';
-  Button_KidsQty[2].Hint := 'M³odzieniec';
+  Button_FamilyQty.Hint := gResTexts[2236];
+  Button_KidsQty[0].Hint := gResTexts[2237];
+  Button_KidsQty[1].Hint := gResTexts[2238];
+  Button_KidsQty[2].Hint := gResTexts[2239];
 
   for I := Low(Image_FamilyProgress) to High(Image_FamilyProgress) do
   begin
