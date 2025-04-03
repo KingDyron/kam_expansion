@@ -17,6 +17,7 @@ type
   TKMByteSetArray = array of TKMByteSet;
   PKMByte2Array = ^TKMByte2Array;
   TKMWordArray = array of Word;
+  TKMShortIntArray = array of ShortInt;
   TKMWord2Array = array of TKMWordArray;
   PKMWordArray = ^TKMWordArray;
   TKMCardinalArray = array of Cardinal;

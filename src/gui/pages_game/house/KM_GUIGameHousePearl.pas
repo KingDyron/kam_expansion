@@ -11,6 +11,7 @@ uses
 type
   TKMGuiGamePearl = class(TKMPanel)
     private
+      fLastPearlType : TKMPearlType;
       procedure Button_Confirm(Sender : TObject);
       procedure SelectPearl(Sender : TObject);
 
@@ -31,6 +32,7 @@ type
       procedure UseSpecial(Sender : TObject);
 
       procedure ToggleAcceptWares(Sender : TObject; Shift : TShiftState);
+      procedure ShowBonuses(aPearlType : TKMPearlType; aTop : Integer);
     protected
       Button_PearlType : TKMButtonFlat;
       Label_PearlType : TKMLabel;
@@ -66,6 +68,8 @@ type
       //special ability
         Button_UseSpecial : TKMButtonFlat;
         Icon_Reload : TKMImage;
+      //constant bonuses
+        Button_Bonuses :array[0..4] of TKMButtonFlat;
 
 
     public
@@ -214,6 +218,12 @@ begin
   Button_UseSpecial.OnClick := UseSpecial;
   Button_UseSpecial.Hint := gResTexts[2213];
 
+  for I := 0 to High(Button_Bonuses) do
+  begin
+    Button_Bonuses[I] := TKMButtonFlat.Create(self, 3 + I * 36, 0, 33, 33, 0, rxGui);
+    Button_Bonuses[I].Hide;
+  end;
+
   Icon_Reload := TKMImage.Create(self, 0, 0, Width, 40, 0);
   Icon_Reload.ImageCenter;
   Icon_Reload.Hitable := false;
@@ -353,6 +363,41 @@ begin
   If not Button_UseSpecial.Enabled then
     Button_UseSpecial.BackBevelColor := Button_UseSpecial.BackBevelColor and $33AAAAAA;
   Icon_Reload.AlphaStep := H.ReloadProgress;
+  ShowBonuses(H.PearlType, Button_UseSpecial.Bottom + 10);
+end;
+
+procedure TKMGuiGamePearl.ShowBonuses(aPearlType: TKMPearlType; aTop: Integer);
+const BONUS_ICON : array[TKMPearlType] of array[0..4] of Word = (
+      (0, 0, 0, 0, 0),
+      (1010, 1011, 1012, 1013, 0),
+      (1014, 1015, 1016, 1017, 1018),
+      (1019, 1020, 1021, 1022, 1023),
+      (1024, 1025, 1026, 1027, 0)
+      );
+      BONUS_HINT : array[TKMPearlType] of array[0..4] of Word = (
+      (0, 0, 0, 0, 0),
+      (2218, 2219, 2220, 2221, 0),
+      (2222, 2223, 2224, 2225, 2226),
+      (2227, 2228, 2229, 2230, 2231),
+      (2232, 2233, 2234, 2235, 0)
+      );
+var I : Integer;
+begin
+  for I := 0 to High(Button_Bonuses) do
+    Button_Bonuses[I].Top := aTop;
+
+  If aPearlType = fLastPearlType then
+    Exit;
+  fLastPearlType := aPearlType;
+
+  for I := 0 to High(Button_Bonuses) do
+  begin
+    Button_Bonuses[I].Hint := gResTexts[BONUS_HINT[fLastPearlType, I]];
+    Button_Bonuses[I].TexID := BONUS_ICON[fLastPearlType, I];
+    Button_Bonuses[I].Visible := Button_Bonuses[I].TexID > 0;
+  end;
+  SortControls(0, aTop + 5,  182, 4, [Button_Bonuses[0], Button_Bonuses[1], Button_Bonuses[2], Button_Bonuses[3], Button_Bonuses[4]], false, true);
+
 end;
 
 procedure TKMGuiGamePearl.SelectPearl(Sender: TObject);

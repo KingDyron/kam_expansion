@@ -332,7 +332,7 @@ begin
     Image_PlayerFlag.OnClick := House_FlagClicked;
     Image_PlayerFlag.HighlightOnMouseOver := true;
 
-    Label_House := TKMLabel.Create(Panel_House, 0, 14, TB_WIDTH, 0, '', fntOutline, taCenter);
+    Label_House := TKMLabel.Create(Panel_House, 0, 0, TB_WIDTH, 0, '', fntOutline, taCenter);
     Button_HouseDeliveryMode := TKMButton.Create(Panel_House,0,42,30,30,37, rxGui, bsGame);
     Button_HouseDeliveryMode.Hint := gResTexts[TX_HOUSE_TOGGLE_DELIVERS_HINT];
     Button_HouseDeliveryMode.OnClickShift := House_DeliveryModeToggle;

@@ -95,7 +95,7 @@ type
 
 
   // Base class for all TKM controls
-  TKMControl = class
+  TKMControl = class(TObject)
   public class var
     PaintCount: Cardinal;
 //  type
