@@ -310,6 +310,8 @@ begin
     Qty := Stats.GetUnitQty(UT);
     US := gRes.Units[UT];
     GT := UNIT_TO_GROUP_TYPE[UT];
+    If not (GT in [GROUP_TYPE_MIN..GROUP_TYPE_MAX]) then
+      GT := gtMelee;
     with fEvals[aPlayer].Groups[GT] do
     begin
       Count       := Count       + Qty;

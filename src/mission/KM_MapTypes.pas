@@ -53,6 +53,7 @@ type
   //* Set of mission difficulties
   TKMMissionDifficultySet = set of TKMMissionDifficulty;
 
+  TKMMissionMode = (mmClassic, mmFarmers, mmTraverse, mmBottomless, mmIronOnly, mmPacifist);
 const
   {$I KM_TextIDs.inc}
 

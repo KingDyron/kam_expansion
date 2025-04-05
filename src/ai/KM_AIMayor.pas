@@ -34,8 +34,8 @@ type
     procedure CheckAutoRepair;
     procedure CheckUnitCount;
     procedure CheckWareFlow;
-    //procedure CheckHouseCount;
-    {
+
+    procedure CheckHouseCount;
     function TryConnectToRoad(const aLoc: TKMPoint): Boolean;
     function TryBuildHouse(aHouse: TKMHouseType): Boolean;
     procedure CheckHousePlans;
@@ -43,7 +43,7 @@ type
     procedure CheckExhaustedMines;
     procedure PlanDefenceTowers;
     procedure TryBuildDefenceTower;
-    }
+
 
     procedure CheckWeaponOrderCount;
     procedure CheckArmyDemand;
@@ -618,10 +618,6 @@ begin
 end;
 
 
-
-{
-
-
 //We want to connect to nearest road piece (not necessarily built yet)
 function TKMayor.TryConnectToRoad(const aLoc: TKMPoint): Boolean;
 const
@@ -639,12 +635,14 @@ begin
   P := gHands[fOwner];
 
   //Find nearest wip or ready house
-  H := P.Houses.FindHouse(htAny, aLoc.X, aLoc.Y, 1, False);
+  //H := P.Houses.FindHouse(htAny, aLoc.X, aLoc.Y, 1, False);
+  H := P.Houses.FindHouseToBuildRoad(HOUSES_VALID, aLoc.X, aLoc.Y, 1, False);
   if H = nil then Exit; //We are screwed, no houses left
   LocTo := H.PointBelowEntrance;
 
   //Find nearest complete house to get the road connect ID
-  H := P.Houses.FindHouse(htAny, aLoc.X, aLoc.Y, 1, True);
+  //H := P.Houses.FindHouse(htAny, aLoc.X, aLoc.Y, 1, True);
+  H := P.Houses.FindHouseToBuildRoad(HOUSES_VALID, aLoc.X, aLoc.Y, 1, True);
   if H = nil then Exit; //We are screwed, no houses left
   RoadConnectID := gTerrain.GetRoadConnectID(H.PointBelowEntrance);
 
@@ -798,10 +796,10 @@ var
   P: TKMHand;
   NodeTagList: TKMPointTagList;
   Weight: Cardinal;
+  ignoreRoad : Boolean;
 begin
   Result := False;
   P := gHands[fOwner];
-  Exit;
   //Skip disabled houses
   if not P.Locks.HouseCanBuild(aHouse) then Exit;
 
@@ -814,7 +812,7 @@ begin
   //      I think the best solution would be to make FindPlaceForHouse only take a long time if we succeed in finding a place for the house, if we
   //      fail it should be quick. Doing a flood fill with radius=40 should really be avoided anyway, 11ms is a long time for placing 1 house.
   //      We could also make it not try to place houses again each update if it failed the first time, if we can't make FindPlaceForHouse quick when it fails.
-  if not fCityPlanner.FindPlaceForHouse(aHouse, Loc) then Exit;
+  if not fCityPlanner.FindPlaceForHouse(aHouse, Loc, ignoreRoad) then Exit;
 
   //Place house before road, so that road is made around it
   P.AddHousePlan(aHouse, Loc);
@@ -825,7 +823,7 @@ begin
 
   //Try to connect newly planned house to road network
   //if it is not possible - scrap the plan
-  if not TryConnectToRoad(KMPointBelow(Loc)) then
+  if not ignoreRoad and not TryConnectToRoad(KMPointBelow(Loc)) then
   begin
     P.RemHousePlan(Loc);
     Exit;
@@ -833,9 +831,11 @@ begin
   
   //I tried to use this when the bug occured but it didn't always work because AI places multiple house/field plans at once (if P.CanAddFieldPlan(KMPointBelow(Loc), ftRoad) then)
   //Fixes Classical AI bug related to houses never being finished/connected to road network
+  If not ignoreRoad then
+  begin
    P.Constructions.FieldworksList.RemFieldPlan(KMPointBelow(Loc)); //Make sure our entrance to the house has no plan (vine/corn) in front of it
    P.Constructions.FieldworksList.AddField(KMPointBelow(Loc), ftRoad, rtStone); //Place a road below house entrance to make sure it is connected to our city!
-
+  end;
   //Build fields for Farm
   if aHouse = htFarm then
   begin
@@ -853,6 +853,9 @@ begin
           //Avoid building on row with roads (so we can expand from this house)
           if I = Loc.Y + 1 then
             Inc(Weight, 1000);
+          //avoid building on clay deposits
+          Inc(Weight, gTerrain.TileIsClay(Loc.X, Loc.Y) * 200);
+
           NodeTagList.Add(KMPoint(K, I), Weight);
         end;
 
@@ -911,7 +914,7 @@ procedure TKMayor.CheckHousePlans;
 begin
   //
 end;
-}
+
 
 //Manage ware distribution
 procedure TKMayor.CheckWareFlow;
@@ -1005,7 +1008,7 @@ end;
 
 
 //Demolish any exhausted mines, they will be rebuilt if needed
-{procedure TKMayor.CheckExhaustedMines;
+procedure TKMayor.CheckExhaustedMines;
 var
   I: Integer;
   Houses: TKMHousesCollection;
@@ -1028,8 +1031,6 @@ begin
     Houses[I].Demolish(fOwner);
   end;
 end;
-}
-{
 procedure TKMayor.CheckHouseCount;
 var
   P: TKMHand;
@@ -1072,7 +1073,8 @@ begin
     //There are no more suggestions
     if H = htNone then
       Break;
-
+    If H = htPottery then
+      H := htPottery;
     //See if we can build that
     if TryBuildHouse(H) then
     begin
@@ -1088,9 +1090,9 @@ begin
 
   //Verify all plans are being connected with roads
   CheckHousePlans;
-end;}
+end;
 
-{
+
 procedure TKMayor.CheckRoadsCount;
 const
   SHORTCUT_CHECKS_PER_UPDATE = 10;
@@ -1161,7 +1163,7 @@ begin
     NodeList.Free;
   end;
 end;
-}
+
 
 procedure TKMayor.OwnerUpdate(aPlayer: TKMHandID);
 begin
@@ -1760,14 +1762,14 @@ begin
     CheckMerchants;
     if fSetup.AutoBuild then
     begin
-      //CheckHouseCount;
+      CheckHouseCount;
       //Manage wares ratios and block stone to Store
       CheckWareFlow;
 
 
-      {//Build more roads if necessary
+      //Build more roads if necessary
       if not Recorder.HasRecording then
-        CheckRoadsCount;}
+        CheckRoadsCount;
     end;
   finally
     {$IFDEF PERFLOG}

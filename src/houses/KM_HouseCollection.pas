@@ -43,6 +43,7 @@ type
     function FindHouse(aHouseType: TKMHouseType; X, Y: Word; const aIndex: Byte = 1; aOnlyCompleted: Boolean = True): TKMHouse; overload;
     function FindHouse(const aTypes: TKMHouseTypeSet; X, Y: Word; const aIndex: Byte = 1; aOnlyCompleted: Boolean = True): TKMHouse; overload;
     function FindHousesInRadius(aLoc: TKMPoint; aSqrRadius: Single; aTypes: TKMHouseTypeSet; aOnlyCompleted: Boolean = True): TKMHouseArray;
+    function FindHouseToBuildRoad(aTypes: TKMHouseTypeSet; X, Y: Word; const aIndex: Byte = 1; aOnlyCompleted: Boolean = True): TKMHouse;
     function GetHouses(aType : TKMHouseType = htAny; aBuiltOnly : Boolean = true): TKMArray<TKMHouse>;
 
     function GetTotalPointers: Cardinal;
@@ -417,6 +418,49 @@ begin
       end;
   end;
 end;
+
+//Find closest house to given position
+//or
+//Find house by index (1st, 2nd)
+function TKMHousesCollection.FindHouseToBuildRoad(aTypes: TKMHouseTypeSet; X: Word; Y: Word; const aIndex: Byte = 1; aOnlyCompleted: Boolean = True): TKMHouse;
+var
+  I, ID: Integer;
+  usePosition: Boolean;
+  bestMatch, dist: Single;
+begin
+  Result := nil;
+  ID := 0;
+  bestMatch := MaxSingle; //Any distance will be closer than that
+  usePosition := X*Y <> 0; //Calculate this once to save computing lots of multiplications
+  Assert((not usePosition) or (aIndex = 1), 'Can''t find house basing both on Position and Index');
+
+  for I := 0 to Count - 1 do
+  if (Houses[I].HouseType in aTypes)
+  and ((Houses[I].IsComplete and gTerrain.TileHasRoad(Houses[I].PointBelowEntrance)) or not aOnlyCompleted)
+  and not Houses[I].IsClosedForWorker
+  and not Houses[I].IsDestroyed then
+  begin
+    Inc(ID);
+    if usePosition then
+    begin
+      dist := KMLengthSqr(Houses[I].Position,KMPoint(X,Y));
+      if bestMatch = -1 then bestMatch := dist; //Initialize for first use
+      if dist < bestMatch then
+      begin
+        bestMatch := dist;
+        Result := Houses[I];
+      end;
+    end
+    else
+      //Take the N-th result
+      if aIndex = ID then
+      begin
+        Result := Houses[I];
+        Exit;
+      end;
+  end;
+end;
+
 
 
 function TKMHousesCollection.FindHousesInRadius(aLoc: TKMPoint; aSqrRadius: Single; aTypes: TKMHouseTypeSet; aOnlyCompleted: Boolean = True): TKMHouseArray;

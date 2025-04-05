@@ -18,7 +18,7 @@ type
   // Balance = Production - Consumption;
 
   TKMCoreBalance = record
-    StoreBalance, SchoolBalance, InnBalance, BarracksBalance, TowerBalance: Single;
+    StoreBalance, CottageBalance, SchoolBalance, InnBalance, BarracksBalance, TowerBalance: Single;
     Balance: Single; //Resulting balance
   end;
   TKMMaterialsBalance = record
@@ -27,6 +27,14 @@ type
     StoneReserve: Single;
     StoneProduction, WoodProduction: Single;
     StoneBalance, WoodBalance: Single;
+
+    TilesReserve,
+    TilesProduction,
+    TileBalance: Single;
+
+    FruitsBalance : Single;
+    WaterBalance : Single;
+
     Balance: Single; //Resulting balance
   end;
   TKMWareBalanceGold = record
@@ -38,14 +46,12 @@ type
   end;
   TKMWareBalanceFood = record
     Bread: record
-      FarmTheory, MillTheory, WellTheory, HovelTheory, BakeryTheory: Single;
-
+      FarmTheory, MillTheory, BakeryTheory: Single;
     end;
     Sausages: record
-      FarmTheory, WellTheory, SwineTheory, ButchersTheory: Single;
+      FarmTheory, SwineTheory, ButchersTheory: Single;
     end;
-
-    BreadProduction, SausagesProduction, WineProduction, FishProduction, AppleProduction: Single;
+    BreadProduction, SausagesProduction, WineProduction, FishProduction: Single;
 
     Production: Single; //How much food do we produce
     Consumption: Single; //How much food do we use
@@ -114,8 +120,9 @@ type
     procedure AppendFood;
     procedure AppendWeaponry;
 
-    procedure Append(aHouse: TKMHouseType; aCount: Byte = 1);
-    function HouseCount(aHouse: TKMHouseType): Integer;
+    procedure Append(aHouse: TKMHouseType; aCount: Byte = 1; aFromHouses : TKMHouseTypeSet = []);
+    function HouseCount(aHouse: TKMHouseType): Integer; overload;
+    function HouseCount(aHouse: TKMHouseTypeArray): Integer;overload;
 
     procedure DistributeCorn;
     procedure DistributeCoal;
@@ -133,6 +140,7 @@ type
     GoldNeed: Single; //How much gold the town needs per minute (may change over time)
     StoneNeed: Single; //How much building materials do we need for city development
     WoodNeed: Single; //How much building materials do we need for city development
+    TileNeed: Single;
     constructor Create(aPlayer: TKMHandID);
 
     procedure OwnerUpdate(aPlayer: TKMHandID);
@@ -163,6 +171,7 @@ begin
   GoldNeed := 1;
   StoneNeed := 10;
   WoodNeed := 3.5;
+  TileNeed := 0.8;
 end;
 
 
@@ -170,6 +179,15 @@ end;
 function TKMayorBalance.HouseCount(aHouse: TKMHouseType): Integer;
 begin
   Result := gHands[fOwner].Stats.GetHouseTotal(aHouse);
+end;
+
+//How many houses of certain type we have (assume all wip houses will be finished)
+function TKMayorBalance.HouseCount(aHouse: TKMHouseTypeArray): Integer;
+var HT : TKMHouseType;
+begin
+  Result := 0;
+  for HT in aHouse do
+    Inc(Result, HouseCount(HT));
 end;
 
 
@@ -198,7 +216,7 @@ begin
 end;
 
 
-procedure TKMayorBalance.Append(aHouse: TKMHouseType; aCount: Byte = 1);
+procedure TKMayorBalance.Append(aHouse: TKMHouseType; aCount: Byte = 1; aFromHouses : TKMHouseTypeSet = []);
 var
   I: Integer;
   HT : TKMHouseType;
@@ -211,7 +229,8 @@ begin
   and (gRes.Houses[aHouse].ReleasedBy <> []) then //Storehouse might be blocked
     for HT in gRes.Houses[aHouse].ReleasedBy do
       If (gHands[fOwner].Stats.GetHouseTotal(HT) = 0) then
-        Append(HT);
+        If not (HT in aFromHouses) then
+          Append(HT, 1, aFromHouses + [HT]);
 
   //If the same house is asked for independently then don't add it again, since f.e. gold and iron
   //might both ask for a coal mine, when only 1 extra is needed.
@@ -232,24 +251,32 @@ end;
 procedure TKMayorBalance.AppendCore;
 begin
   with fCore do
-  case PickMin([0, StoreBalance, SchoolBalance, InnBalance, BarracksBalance, TowerBalance]) of
+  case PickMin([0, StoreBalance, CottageBalance, SchoolBalance, InnBalance, BarracksBalance, TowerBalance]) of
     0: ;
     1: Append(htStore);
-    2: Append(htSchool);
-    3: Append(htInn);
-    4: Append(htBarracks);
-    5: begin Append(htWatchTower); Append(htWallTower); end;
+    2:  if gHands[fOwner].Locks.HouseCanBuild(htHouse) then
+          Append(htHouse)
+        else
+          Append(htCottage, 2);
+    3: Append(htSchool);
+    4: Append(htInn);
+    5: Append(htBarracks);
+    6: begin Append(htWatchTower); Append(htWallTower); end;
   end;
 end;
 
 
 procedure TKMayorBalance.AppendMaterials;
 var
-  List: array [0..2] of Single;
+  List: array [0..6] of Single;
 begin
-  List[0] := fMaterials.StoneBalance;
-  List[1] := fMaterials.WoodcutTheory - WoodNeed;
-  List[2] := fMaterials.SawmillTheory - WoodNeed;
+  List[0] := 0;
+  List[1] := fMaterials.StoneBalance;
+  List[2] := fMaterials.WoodcutTheory - WoodNeed;
+  List[3] := fMaterials.SawmillTheory - WoodNeed;
+  List[4] := fMaterials.TileBalance - TileNeed;
+  List[5] := fMaterials.FruitsBalance;
+  List[6] := fMaterials.WaterBalance;
 
   repeat
     //Do not build extra houses if we are low on building materials
@@ -259,20 +286,31 @@ begin
     and (AdviceContains(htQuarry) or (gHands[fOwner].Stats.GetHouseWip(htQuarry) > 1)) then
       Break;
 
-    case PickMin([0, List[0], List[1], List[2]]) of
+    case PickMin(List{[0, List[0], List[1], List[2], List[3]]}) of
       0:  Break;
       1:  begin
             Append(htQuarry);
-            List[0] := List[0] + PRODUCTION_RATE[wtStone];
+            List[1] := List[1] + PRODUCTION_RATE[wtStone];
           end;
       2:  begin
             Append(htWoodcutters);
-            List[1] := List[1] + PRODUCTION_RATE[wtTrunk] * 2; //Each trunk brings 2 wood
+            List[2] := List[2] + PRODUCTION_RATE[wtTrunk] * 2; //Each trunk brings 2 wood
           end;
       3:  begin
             Append(htSawmill);
+            List[3] := List[3] + PRODUCTION_RATE[wtTimber];
+          end;
+      4:  begin
             Append(htPottery);
-            List[2] := List[2] + PRODUCTION_RATE[wtTimber];
+            List[4] := List[4] + PRODUCTION_RATE[wtTile];
+          end;
+      5:  begin
+            Append(htAppleTree);
+            List[5] := List[5] + PRODUCTION_RATE[wtApple];
+          end;
+      6:  begin
+            Append(htWell);
+            List[6] := List[6] + PRODUCTION_RATE[wtWater];
           end;
     end;
 
@@ -306,30 +344,27 @@ procedure TKMayorBalance.AppendFood;
 var SkipSausage: Boolean;
 begin
   //When making iron only don't make sausages, they're inefficient if you don't use skins
-  SkipSausage := gHands[fOwner].AI.Setup.ArmyType = atIron;
+  SkipSausage := false;//gHands[fOwner].AI.Setup.ArmyType = atIron;
   
   //Pick smallest production and increase it
   //If all 3 shares 0 we whould pick Sausages first to ensure Leather supply
   with fFood do
   if Balance < 0 then
-  case PickMin([SausagesProduction + 10000*Byte(SkipSausage), BreadProduction, WineProduction, AppleProduction * 0.75]) of
+  case PickMin([SausagesProduction + 10000*Byte(SkipSausage), BreadProduction, WineProduction, FishProduction]) of
     0:  with Sausages do
-        case PickMin([FarmTheory, SwineTheory, ButchersTheory, WellTheory * 0.5]) of
+        case PickMin([FarmTheory, SwineTheory, ButchersTheory]) of
           0:  Append(htFarm, 2);
           1:  Append(htSwine);
           2:  Append(htButchers);
-          3:  Append(htWell, 3);
         end;
     1:  with Bread do
-        case PickMin([FarmTheory, MillTheory, BakeryTheory, WellTheory * 0.5, HovelTheory]) of
+        case PickMin([FarmTheory, MillTheory, BakeryTheory]) of
           0:  Append(htFarm, 2);
           1:  Append(htMill);
           2:  Append(htBakery);
-          3:  Append(htWell, 3);
-          4:  Append(htHovel, 2);
         end;
     2:  Append(htVineyard, 2);
-    3:  Append(htAppleTree, 2);
+    3:  Append(htFishermans, 1);
   end;
 end;
 
@@ -795,10 +830,13 @@ begin
     BarracksBalance := HouseCount(htBarracks)    - Byte(P.Stats.GetWarfareProduced > 0);
     TowerBalance    := HouseCount(htWallTower) + HouseCount(htWatchTower)  - 1 * gHands[fOwner].Stats.GetHouseQty(htBarracks);
 
-    Balance := Min([StoreBalance, SchoolBalance, InnBalance, BarracksBalance, TowerBalance]);
+    //If there are more schools then we need more cottage
+    CottageBalance  := (HouseCount(htCottage) + HouseCount(htHouse) * 2) - 2 - (HouseCount(htSchool));
+
+    Balance := Min([StoreBalance, SchoolBalance, InnBalance, BarracksBalance, TowerBalance, CottageBalance]);
     fCoreText := Format
-      ('%.2f Core: (Store %.2f, School %.2f, Inn %.2f, Barracks %.2f, Tower %.2f)',
-      [Balance, StoreBalance, SchoolBalance, InnBalance, BarracksBalance, TowerBalance]);
+      ('%.2f Core: (Store %.2f, Cottage/House %.2f, School %.2f, Inn %.2f, Barracks %.2f, Tower %.2f)',
+      [Balance, StoreBalance, CottageBalance, SchoolBalance, InnBalance, BarracksBalance, TowerBalance]);
   end;
 end;
 
@@ -816,6 +854,14 @@ begin
       StoneProduction := HouseCount(htQuarry) * PRODUCTION_RATE[wtStone] + Max(StoneReserve - 30, 0);
     end;
 
+    //In some maps there is no clay so pottery is blocked
+    if gHands[fOwner].Locks.HouseBlocked[htQuarry] then
+      TilesProduction := 99999
+    else
+    begin
+      TilesReserve := gHands[fOwner].Stats.GetWareBalance(wtTile) / Max(0.001,TileNeed);
+      TilesProduction := HouseCount(htPottery) * PRODUCTION_RATE[wtTile] + Max(TilesReserve - 30, 0);
+    end;
     WoodcutReserve := gHands[fOwner].Stats.GetWareBalance(wtTrunk) * 2 / Max(0.001,WoodNeed);
     WoodcutTheory := HouseCount(htWoodcutters) * PRODUCTION_RATE[wtTrunk] * 2 + Max(WoodcutReserve - 30, 0);
 
@@ -823,12 +869,25 @@ begin
     SawmillTheory := HouseCount(htSawmill) * PRODUCTION_RATE[wtTimber] + Max(SawmillReserve - 30, 0);
     WoodProduction := Min(WoodcutTheory, SawmillTheory);
 
+
+
     StoneBalance    := StoneProduction - StoneNeed;
     WoodBalance     := WoodProduction - WoodNeed;
+    TileBalance     := TilesProduction - TileNeed;
 
-    Balance := Min(StoneBalance, WoodBalance);
-    fMaterialsText := Format('%.2f Materials: (Stone %.1f-%.1f, Wood (%.1f:%.1f)-%.1f)',
-                             [Balance, StoneProduction, StoneNeed, WoodcutTheory, SawmillTheory, WoodNeed]);
+    //production rate for apples were tested with 10 fruit trees at once
+    FruitsBalance := HouseCount(htAppleTree) * PRODUCTION_RATE[wtApple]//actual count
+                      + gHands[fOwner].Stats.Wares[wtApple].ActualCnt//actual fruits count
+                      - 30//reserve
+                      - HouseCount(htCottage) * 3 - HouseCount(htHouse) * 6;//required
+
+    WaterBalance := HouseCount(htWell)//actual count
+                      + gHands[fOwner].Stats.Wares[wtWater].ActualCnt//reserve
+                      - HouseCount(htAppleTree) * 0.25 - HouseCount([htSwine, htBakery, htStables, htHovel]);//required
+
+    Balance := Min([StoneBalance, WoodBalance, TileBalance, FruitsBalance, WaterBalance]);
+    fMaterialsText := Format('%.2f Materials: (Stone %.1f-%.1f, Wood (%.1f:%.1f)-%.1f), Tiles (%.1f-%.1f), Fruits : %.1f, Water : %.1f',
+                             [Balance, StoneProduction, StoneNeed, WoodcutTheory, SawmillTheory, WoodNeed, TilesProduction, TileNeed, FruitsBalance, WaterBalance]);
   end;
 end;
 
@@ -885,29 +944,24 @@ begin
     //Calculate how much bread each link could possibly produce
     //Bread.FarmTheory calculated above
     Bread.MillTheory := HouseCount(htMill) * PRODUCTION_RATE[wtFlour] * 2;
-    Bread.WellTheory := HouseCount(htWell) * PRODUCTION_RATE[wtWater];
-    Bread.HovelTheory := HouseCount(htHovel) * PRODUCTION_RATE[wtVegetables];
     Bread.BakeryTheory := HouseCount(htBakery) * PRODUCTION_RATE[wtBread];
-    BreadProduction := Min(Bread.FarmTheory, Bread.MillTheory, Bread.BakeryTheory);
+    BreadProduction := Min([Bread.FarmTheory, Bread.MillTheory, Bread.BakeryTheory]);
 
     //Sausages
     //Calculate how many sausages each link could possibly produce
     //Sausages.FarmTheory calculated above
-    Sausages.WellTheory := HouseCount(htWell) * PRODUCTION_RATE[wtWater];
     Sausages.SwineTheory := HouseCount(htSwine) * PRODUCTION_RATE[wtPig] * 3;
     Sausages.ButchersTheory := HouseCount(htButchers) * PRODUCTION_RATE[wtSausage];
-    SausagesProduction := Min(Sausages.FarmTheory, Sausages.SwineTheory, Sausages.ButchersTheory);
+    SausagesProduction := Min([Sausages.FarmTheory, Sausages.SwineTheory, Sausages.ButchersTheory]);
 
     //Wine, Fish
     WineProduction := HouseCount(htVineyard) * PRODUCTION_RATE[wtWine] * 2;
     FishProduction := HouseCount(htFishermans) * PRODUCTION_RATE[wtFish];
-    AppleProduction := HouseCount(htAppleTree) * PRODUCTION_RATE[wtApple];
-
+    //actual count - needed
     //Count in "food units per minute"
     Production := BreadProduction * BREAD_RESTORE +
                   SausagesProduction * SAUSAGE_RESTORE +
                   WineProduction *  WINE_RESTORE +
-                  AppleProduction *  WINE_RESTORE +
                   FishProduction * FISH_RESTORE;
 
     Consumption := 0;
@@ -929,11 +983,10 @@ begin
 
     Balance := Production - Consumption + Max(Reserve - 30, 0);
     fFoodText := Format('%.2f Food: %.2f - %.2f + %.2f|', [Balance, Production, Consumption, Reserve])
-               + Format('       Bread: min(F%.2f, W%.2f, M%.2f, B%.2f)|', [Bread.FarmTheory,Bread.WellTheory, Bread.MillTheory, Bread.BakeryTheory])
-               + Format('    Sausages: min(F%.2f, W%.2f, S%.2f, B%.2f)|', [Sausages.FarmTheory,Sausages.WellTheory, Sausages.SwineTheory, Sausages.ButchersTheory])
+               + Format('       Bread: min(F%.2f, M%.2f, B%.2f)|', [Bread.FarmTheory, Bread.MillTheory, Bread.BakeryTheory])
+               + Format('    Sausages: min(F%.2f, S%.2f, B%.2f)|', [Sausages.FarmTheory, Sausages.SwineTheory, Sausages.ButchersTheory])
                + Format('        Wine: W%.2f)|', [WineProduction])
                + Format('        Fish: F%.2f)|', [FishProduction])
-               + Format('        Apple: W%.2f)|', [AppleProduction])
                + Format('  Food value: %.2f + %.2f + %.2f + %.2f|', [BreadProduction * BREAD_RESTORE, SausagesProduction * SAUSAGE_RESTORE, WineProduction * WINE_RESTORE, FishProduction * FISH_RESTORE]);
   end;
 end;

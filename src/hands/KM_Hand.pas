@@ -1550,15 +1550,17 @@ begin
     end;
 
     //Avoid placing houses in choke-points _/house\_ by checking upper corners
-    if not (aHouseType in [htGoldMine, htIronMine, htBitinMine]) then
+    if not (aHouseType in [htGoldMine, htIronMine, htBitinMine, htAppleTree]) then
       if (gTerrain.Land^[Ty-1, Tx - 1].Passability * [tpMakeRoads, tpWalkRoad] = [])
       or (gTerrain.Land^[Ty-1, Tx + 1].Passability * [tpMakeRoads, tpWalkRoad] = [])
       then
         Exit;
-
+    //make sure AI doesn't build on clay deposits
+    If (aHouseType = htPottery) and (gTerrain.TileIsClay(tX, tY) > 0) then
+      Exit;
     //Make sure we can add road below house, full width + 1 on each side
     //Terrain already checked we are 1 tile away from map edge
-    if (I = 4) and not (aHouseType in [htGoldMine, htIronMine, htBitinMine]) then
+    if (I = 4) and not (aHouseType in [htGoldMine, htIronMine, htBitinMine, htAppleTree]) then
       if (gTerrain.Land^[Ty+1, Tx - 1].Passability * [tpMakeRoads, tpWalkRoad] = [])
       or (gTerrain.Land^[Ty+1, Tx    ].Passability * [tpMakeRoads, tpWalkRoad] = [])
       or (gTerrain.Land^[Ty+1, Tx + 1].Passability * [tpMakeRoads, tpWalkRoad] = [])
@@ -1566,6 +1568,7 @@ begin
         Exit;
 
     //This tile must not contain fields/houseplans of allied players or self
+    If aHouseType <> htAppleTree then
     for J := 0 to gHands.Count - 1 do
       if fAlliances[J] = atAlly then
       begin

@@ -914,7 +914,7 @@ begin
   if not KMSamePoint(fPositionRound, fHome.Entrance) then
     raise ELocError.Create('Working from wrong spot', fPositionRound);
 
-  well := gHands.GetClosestHouse(fHome.Entrance, [htWell], [], 6);
+  well := gHands.GetClosestHouse(fHome.Entrance, [htWell], [], IfThen(gHands[Owner].IsComputer, 12, 6));
 
   //no well found
   if well = nil then

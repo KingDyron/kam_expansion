@@ -316,7 +316,7 @@ begin
   //Avoid Coal fields (must be BEFORE Gold/Iron mines)
   for Y := 1 to fMapY - 1 do
   for X := 1 to fMapX - 1 do
-    if (gTerrain.TileIsCoal(X, Y) > 1) then
+    if (gTerrain.TileIsCoal(X, Y) > 1) or (gTerrain.TileIsClay(X, Y) > 1) then
       AvoidBuilding[Y,X] := AVOID_BUILDING_COAL_TILE;
 
   //Avoid areas where Gold/Iron mines should be

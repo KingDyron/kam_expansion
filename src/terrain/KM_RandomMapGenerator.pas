@@ -568,15 +568,20 @@ begin
       case RMGSettings.Locs.InitialResources of
         0:
           begin
-            Resources[wtStone] := 70;
-            Resources[wtTimber] := 50;
-            Resources[wtGold] := 60;
+            Resources[wtStone] := 80;
+            Resources[wtTimber] := 60;
+            Resources[wtGold] := 75;
             Resources[wtWine] := 60;
             Resources[wtBread] := 35;
             Resources[wtSausage] := 15;
             Resources[wtFish] := 30;
-            Units[utSerf] := 4;
-            Units[utBuilder] := 3;
+
+            Resources[wtVegetables] := 40;
+            Resources[wtApple] := 60;
+            Resources[wtTile] := 40;
+
+            Units[utSerf] := 6;
+            Units[utBuilder] := 4;
             InitResStr := 'Low';
           end;
         1:
@@ -588,8 +593,13 @@ begin
             Resources[wtBread] := 50;
             Resources[wtSausage] := 30;
             Resources[wtFish] := 40;
-            Units[utSerf] := 5;
-            Units[utBuilder] := 4;
+
+            Resources[wtVegetables] := 50;
+            Resources[wtApple] := 70;
+            Resources[wtTile] := 50;
+
+            Units[utSerf] := 7;
+            Units[utBuilder] := 5;
             InitResStr := 'Medium';
           end;
         2:
@@ -601,8 +611,13 @@ begin
             Resources[wtBread] := 65;
             Resources[wtSausage] := 45;
             Resources[wtFish] := 50;
-            Units[utSerf] := 7;
-            Units[utBuilder] := 5;
+
+            Resources[wtVegetables] := 60;
+            Resources[wtApple] := 100;
+            Resources[wtTile] := 70;
+
+            Units[utSerf] := 8;
+            Units[utBuilder] := 6;
             InitResStr := 'High';
           end;
       end;

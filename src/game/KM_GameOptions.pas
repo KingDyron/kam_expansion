@@ -15,8 +15,10 @@ type
     SpeedAfterPT: Single; //Game speed after peacetime (usually slower)
     RandomSeed: Integer;
     MissionDifficulty: TKMMissionDifficulty;
+    //new variables
     MissionBuiltInDifficulty: TKMMissionBuiltInDifficulty;
     Weather : TKMSettingsWeather;
+    Mode : TKMMissionMode;
     constructor Create;
     procedure Reset;
     procedure Save(SaveStream: TKMemoryStream; aWeather : Boolean = true);
@@ -60,11 +62,14 @@ begin
   LoadStream.Read(SpeedAfterPT);
   LoadStream.Read(RandomSeed);
   LoadStream.Read(MissionDifficulty, SizeOf(MissionDifficulty));
-  If aWeather then
-  begin
-    LoadStream.Read(MissionBuiltInDifficulty, SizeOf(MissionBuiltInDifficulty));
-    LoadStream.Read(Weather, SizeOf(Weather));
-  end;
+  //the variables above are the same for KaM Remake
+  //if we want to have their server to work also in expansion
+  //we need to read our settings later
+  if not aWeather then
+    Exit;
+  LoadStream.Read(MissionBuiltInDifficulty, SizeOf(MissionBuiltInDifficulty));
+  LoadStream.Read(Weather, SizeOf(Weather));
+  LoadStream.Read(Mode, SizeOf(Mode));
 end;
 
 
@@ -75,11 +80,14 @@ begin
   SaveStream.Write(SpeedAfterPT);
   SaveStream.Write(RandomSeed);
   SaveStream.Write(MissionDifficulty, SizeOf(MissionDifficulty));
-  if aWeather then
-  begin
-    SaveStream.Write(MissionBuiltInDifficulty, SizeOf(MissionBuiltInDifficulty));
-    SaveStream.Write(Weather, SizeOf(Weather));
-  end;
+  //the variables above are the same for KaM Remake
+  //if we want to have their server to work also in expansion
+  //we need to write our settings later
+  if not aWeather then
+    Exit;
+  SaveStream.Write(MissionBuiltInDifficulty, SizeOf(MissionBuiltInDifficulty));
+  SaveStream.Write(Weather, SizeOf(Weather));
+  SaveStream.Write(Mode, SizeOf(Mode));
 end;
 
 

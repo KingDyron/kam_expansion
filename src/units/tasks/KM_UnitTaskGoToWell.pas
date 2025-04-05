@@ -116,7 +116,7 @@ begin
       3:  if fWell.CheckWareOut(wtWater) > 0 then
           begin
             SetActionLockedStay(5, uaWalk); //take water
-            fWell.DecProgress(200);
+            fWell.DecProgress(150);
             fWell.WareTakeFromOut(wtWater, 1, true);
             fHasWater := true;
           end else
@@ -125,7 +125,7 @@ begin
             {Inc(fPhase2);
             if fPhase2 < 5 then //wait only 5 times, then go back to home with nothing
               fPhase := 2;}
-            fWell.DecProgress(200);
+            fWell.DecProgress(150);
             fHasWater := true;
           end;
       //go back to house

@@ -74,7 +74,8 @@ type
     function Count : Integer;
     function Add(aLoc : TKMPoint) : Integer; Overload;
     function Add(aX, aY : Integer) : Integer; Overload;
-    function Delete(aLoc : TKMPoint) : Boolean;
+    function Delete(aLoc : TKMPoint) : Boolean; Overload;
+    function Delete(aIndex : Integer) : Boolean; Overload;
     function Contains(X, Y : Integer) : Boolean; Overload;
     function Contains(aLoc : TKMPoint) : Boolean; Overload;
     function IndexOf(aLoc : TKMPoint) : Integer;
@@ -392,6 +393,18 @@ begin
     self[I] := self[I + 1];
   SetLength(self, high(self));
 end;
+
+function TKMPointArrayHelper.Delete(aIndex: Integer): Boolean;
+var I : Integer;
+begin
+  if aIndex = -1 then
+    Exit(false);
+  Result := true;
+  for I := aIndex to High(self) - 1 do
+    self[I] := self[I + 1];
+  SetLength(self, high(self));
+end;
+
 
 function TKMPointArrayHelper.Contains(aLoc: TKMPoint): Boolean;
 var I : integer;
