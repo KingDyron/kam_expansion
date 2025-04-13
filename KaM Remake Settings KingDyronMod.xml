@@ -2,7 +2,7 @@
 <Root>
   <Main>
     <GFX FullScreen="False" VSync="True" ResolutionWidth="1360" ResolutionHeight="768" RefreshRate="60" FPSCap="60"/>
-    <Window Left="-146" Top="82" Width="1024" Height="883" State="2"/>
+    <Window Left="449" Top="33" Width="1024" Height="720" State="2"/>
     <Misc NoRenderMaxTime="1000"/>
   </Main>
   <Game>
@@ -24,12 +24,12 @@
     <Campaign CampaignLastDifficulty="4"/>
     <Replay Autopause="False" ShowBeacons="False" Savepoint="True" SavepointFrequency="3000"/>
     <MapEd HistoryDepth="250" MaxTerrainHeight="150"/>
-    <Multiplayer Name="NoName2" LastIP="194.87.226.195" LastPort="56789" LastRoom="1" LastPassword="" FlashOnMessage="True"/>
+    <Multiplayer Name="NoName2asd" LastIP="194.87.226.195" LastPort="56789" LastRoom="1" LastPassword="" FlashOnMessage="True"/>
     <Misc AsyncGameResLoader="True" BeastPanelExpanded="False" WaresPanelExpanded="False False False False False False False False False False False " HousesPanelExpanded="False False False False False False False False False False False "/>
-    <Menu FavouriteMaps="" CampaignName="HKS" LobbyMapType="5" CampaignID="0" CampaignMapID="14">
-      <Singleplayer Type="0" ScenarioMapCRC="2005009674" MissionMapCRC="3221235012" TacticMapCRC="3221235012" SpecialMapCRC="3221235012" SaveFileName="autosave"/>
+    <Menu FavouriteMaps="" CampaignName="HKS" LobbyMapType="4" CampaignID="0" CampaignMapID="5">
+      <Singleplayer Type="0" ScenarioMapCRC="4260406409" MissionMapCRC="3221235012" TacticMapCRC="3221235012" SpecialMapCRC="3221235012" SaveFileName="autosave01"/>
       <Replay Type="1" SPSaveName="Nowa Misja 2" MPSaveName="paused"/>
-      <MapEd MapType="0" NewMapX="32" NewMapY="32" SPMapCRC="2005009674" MPMapCRC="2987465520" MPMapName="Nowa Misja" DLMapCRC="0"/>
+      <MapEd MapType="0" NewMapX="32" NewMapY="32" SPMapCRC="1158755150" MPMapCRC="2987465520" MPMapName="Nowa Misja" DLMapCRC="0"/>
     </Menu>
     <Debug SaveRandomChecks="True" SaveGameAsText="False"/>
   </Game>

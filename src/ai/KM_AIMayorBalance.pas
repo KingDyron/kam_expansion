@@ -18,7 +18,8 @@ type
   // Balance = Production - Consumption;
 
   TKMCoreBalance = record
-    StoreBalance, CottageBalance, SchoolBalance, InnBalance, BarracksBalance, TowerBalance: Single;
+    StoreBalance, CottageBalance, SchoolBalance, InnBalance, BarracksBalance, TowerBalance, MarketBalance,
+    TownhallBalance, PalaceBalance, PearlBalance: Single;
     Balance: Single; //Resulting balance
   end;
   TKMMaterialsBalance = record
@@ -61,33 +62,46 @@ type
   TKMWareBalanceWarfare = record
     SteelWeapon: record
       CoalTheory, IronTheory, SteelTheory, SmithyTheory: Single;
+      DoBuild : Boolean;
     end;
+
     SteelArmor: record
       CoalTheory, IronTheory, SteelTheory, SmithyTheory: Single;
+      DoBuild : Boolean;
     end;
+
     WoodWeapon: record
       TrunkTheory, WoodTheory, WorkshopTheory: Single;
+      DoBuild : Boolean;
     end;
+
     LeatherArmor: record
-      TrunkTheory, WoodTheory: Single; //Shields
-      FarmTheory, WellTheory, SwineTheory, TanneryTheory: Single; //Armor
-      WorkshopTheory: Single;
+      TrunkTheory, WoodTheory, ArmoryTheory: Single; //Shields
+      FarmTheory, SwineTheory, TanneryTheory, TailorsTheory: Single; //Armor
+      HovelTheory : Single;//Quivers
+      DoBuild : Boolean;
     end;
     Horse: record
-      FarmTheory, WellTheory, StablesTheory: Single;
+      FarmTheory, StablesTheory: Single;
+      DoBuild : Boolean;
+    end;
+    SiegeMachines: record
+      CoalTheory, SteelTheory, FoundryTheory, StoneWorkshopTheory, SiegeTheory: Single;
+      Balance : Single;
     end;
 
     //Ratios at which warfare should be produced in workshops/smithies
-    OrderRatio: array[WEAPON_MIN..WEAPON_MAX] of Single;
+    OrderRatio: array [WARE_MIN..WARE_MAX] of Single;
 
-    Warfare: array [WARFARE_MIN..WARFARE_MAX] of record
+    Warfare: array [WARE_MIN..WARE_MAX] of record
       Production, Demand, Balance: Single;
     end;
+
 
     Balance: Single; //Resulting balance
   end;
 
-  TWarfareDemands = array[WARE_MIN..WARE_MAX] of Single;
+  TWarfareDemands = array [WARE_MIN..WARE_MAX] of Single;
 
 type
   TKMayorBalance = class
@@ -123,6 +137,9 @@ type
     procedure Append(aHouse: TKMHouseType; aCount: Byte = 1; aFromHouses : TKMHouseTypeSet = []);
     function HouseCount(aHouse: TKMHouseType): Integer; overload;
     function HouseCount(aHouse: TKMHouseTypeArray): Integer;overload;
+    function HouseUnlocked(aHouse: TKMHouseType): Boolean;overload;
+    function HouseUnlocked(aHouses: TKMHouseTypeArray): Boolean;overload;
+    function AllHouseUnlocked(aHouses: TKMHouseTypeArray): Boolean;
 
     procedure DistributeCorn;
     procedure DistributeCoal;
@@ -190,12 +207,33 @@ begin
     Inc(Result, HouseCount(HT));
 end;
 
+function TKMayorBalance.HouseUnlocked(aHouse: TKMHouseType): Boolean;
+begin
+  Result := not gHands[fOwner].Locks.HouseBlocked[aHouse];
+end;
+
+function TKMayorBalance.HouseUnlocked(aHouses: TKMHouseTypeArray): Boolean;
+var HT : TKMHouseType;
+begin
+  Result := false;
+  for HT in aHouses do
+    Result := Result or HouseUnlocked(HT);
+end;
+
+function TKMayorBalance.AllHouseUnlocked(aHouses: TKMHouseTypeArray): Boolean;
+var HT : TKMHouseType;
+begin
+  Result := false;
+  for HT in aHouses do
+    Result := Result and HouseUnlocked(HT);
+end;
+
 
 function TKMayorBalance.WeaponUsed(aWare: TKMWareType): Boolean;
 begin
   case gHands[fOwner].AI.Setup.ArmyType of
-    atLeather:         Result := aWare in [wtWoodenShield, wtLeatherArmor, wtAxe, wtLance, wtBow, wtHorse];
-    atIron:            Result := aWare in [wtIronShield, wtIronArmor, wtSword, wtPike, wtCrossbow, wtHorse];
+    atLeather:         Result := aWare in [wtWoodenShield, wtPlateArmor, wtLeatherArmor, wtAxe, wtLance, wtBow, wtMace, wtHorse];
+    atIron:            Result := aWare in [wtIronShield, wtIronArmor, wtSword, wtPike, wtCrossbow, wtFlail, wtHorse];
     atIronAndLeather:  Result := True;
     atIronThenLeather: Result := True;
     else               Result := False;
@@ -226,6 +264,7 @@ begin
   if aHouse in [htAny, htNone] then Exit;
   
   if not gHands[fOwner].Locks.HouseCanBuild(aHouse)
+  and not gHands[fOwner].Locks.HouseBlocked[aHouse]
   and (gRes.Houses[aHouse].ReleasedBy <> []) then //Storehouse might be blocked
     for HT in gRes.Houses[aHouse].ReleasedBy do
       If (gHands[fOwner].Stats.GetHouseTotal(HT) = 0) then
@@ -251,7 +290,7 @@ end;
 procedure TKMayorBalance.AppendCore;
 begin
   with fCore do
-  case PickMin([0, StoreBalance, CottageBalance, SchoolBalance, InnBalance, BarracksBalance, TowerBalance]) of
+  case PickMin([0, StoreBalance, CottageBalance, SchoolBalance, InnBalance, BarracksBalance, TowerBalance, MarketBalance, TownhallBalance, PalaceBalance, PearlBalance]) of
     0: ;
     1: Append(htStore);
     2:  if gHands[fOwner].Locks.HouseCanBuild(htHouse) then
@@ -262,6 +301,10 @@ begin
     4: Append(htInn);
     5: Append(htBarracks);
     6: begin Append(htWatchTower); Append(htWallTower); end;
+    7: Append(htMarket);
+    8: Append(htTownhall);
+    9: Append(htPalace);
+    10: Append(htpearl);
   end;
 end;
 
@@ -376,12 +419,17 @@ var
   I, TmpWare: TKMWareType;
   Tmp: Single;
   WeaponsCount, J, K: Integer;
-  Weapons: array[0..MAX_WEAPON_TYPES-1] of TKMWareType;
-  WeaponSatisfactions: array[0..MAX_WEAPON_TYPES-1] of Single;
+  Weapons: array of TKMWareType;
+  WeaponSatisfactions: array of Single;
 begin
   //List all the required weapons
   J := 0;
-  for I := WARFARE_MIN to WARFARE_MAX do
+  K := 0;
+  for I in WARES_WARFARE do
+    inc(K);
+  SetLength(Weapons, K);
+  SetLength(WeaponSatisfactions, K);
+  for I in WARES_WARFARE do
     if WeaponUsed(I) and (fWarfare.Warfare[I].Demand > 0)
     and (fWarfare.Warfare[I].Production < fWarfare.Warfare[I].Demand) then
     begin
@@ -410,50 +458,68 @@ begin
   case Weapons[J] of
     wtIronShield,
     wtIronArmor:  with fWarfare.SteelArmor do
-                    case PickMin([CoalTheory, IronTheory, SteelTheory, SmithyTheory]) of
-                      0: Append(htCoalMine);
-                      1: begin Append(htIronMine); Append(htBitinMine); end;
-                      2: Append(htIronSmithy);
-                      3: begin Append(htArmorSmithy); Append(htIronFoundry);end;
-                    end;
+                    If DoBuild then
+                      case PickMin([CoalTheory, IronTheory, SteelTheory, SmithyTheory]) of
+                        0: Append(htCoalMine);
+                        1: begin Append(htIronMine); Append(htBitinMine); end;
+                        2: Append(htIronSmithy);
+                        3: Append(htArmorSmithy);
+                      end;
+    wtFlail,
     wtSword,
     wtPike,
     wtCrossbow:     with fWarfare.SteelWeapon do
-                    case PickMin([CoalTheory, IronTheory, SteelTheory, SmithyTheory]) of
-                      0: Append(htCoalMine);
-                      1: begin Append(htIronMine); Append(htBitinMine); end;
-                      2: Append(htIronSmithy);
-                      3: begin Append(htWeaponSmithy); Append(htIronFoundry);end;
-                    end;
-    wtWoodenShield:      with fWarfare.LeatherArmor do
-                    case PickMin([TrunkTheory, WoodTheory, WorkshopTheory*fWarfare.OrderRatio[wtWoodenShield]]) of
-                      0: Append(htWoodcutters);
-                      1: Append(htSawmill);
-                      2: Append(htArmorWorkshop);
-                    end;
-    wtLeatherArmor:       with fWarfare.LeatherArmor do
-                    case PickMin([FarmTheory, WellTheory * 0.5, SwineTheory, TanneryTheory, WorkshopTheory{*fWarfare.OrderRatio[wtLeatherArmor]}]) of
-                      0: Append(htFarm);
-                      1: Append(htWell, 3);
-                      2: Append(htSwine);
-                      3: Append(htTannery);
-                      4: Append(htArmorWorkshop);
-                    end;
+                      If DoBuild then
+                        case PickMin([CoalTheory, IronTheory, SteelTheory, SmithyTheory]) of
+                          0: Append(htCoalMine);
+                          1: begin Append(htIronMine); Append(htBitinMine); end;
+                          2: Append(htIronSmithy);
+                          3: Append(htWeaponSmithy);
+                        end;
+    wtWoodenShield: with fWarfare.LeatherArmor do
+                      If DoBuild then
+                        case PickMin([TrunkTheory, WoodTheory, ArmoryTheory*fWarfare.OrderRatio[wtWoodenShield]]) of
+                          0: Append(htWoodcutters);
+                          1: Append(htSawmill);
+                          2: Append(htArmorWorkshop);
+                        end;
+    wtQuiver,
+    wtLeatherArmor: with fWarfare.LeatherArmor do
+                      If DoBuild then
+                        case PickMin([FarmTheory, SwineTheory, TanneryTheory, TailorsTheory]) of
+                          0: Append(htFarm);
+                          1: Append(htSwine);
+                          2: Append(htTannery);
+                          3: Append(htTailorsShop);
+                        end;
+    wtMace,
     wtAxe,
     wtLance,
     wtBow:         with fWarfare.WoodWeapon do
-                    case PickMin([TrunkTheory, WoodTheory, WorkshopTheory]) of
-                      0: Append(htWoodcutters);
-                      1: Append(htSawmill);
-                      2: Append(htWeaponWorkshop);
-                    end;
+                    If DoBuild then
+                      case PickMin([TrunkTheory, WoodTheory, WorkshopTheory]) of
+                        0: Append(htWoodcutters);
+                        1: Append(htSawmill);
+                        2: Append(htWeaponWorkshop);
+                      end;
     wtHorse:       with fWarfare.Horse do
-                    case PickMin([FarmTheory, WellTheory * 0.5, StablesTheory]) of
-                      0: Append(htFarm, 2);
-                      1: Append(htWell, 4);
-                      2: Append(htStables);
-                    end;
+                    If DoBuild then
+                      case PickMin([FarmTheory, StablesTheory]) of
+                        0: Append(htFarm, 2);
+                        1: Append(htStables);
+                      end;
   end;
+
+  with fWarfare.SiegeMachines do
+    If Balance < 0 then
+    case PickMin([CoalTheory, SteelTheory, FoundryTheory, StoneWorkshopTheory, SiegeTheory]) of
+      0: Append(htCoalMine, 2);
+      1: Append(htIronSmithy);
+      2: Append(htIronFoundry);
+      3: Append(htStoneWorkshop);
+      4: Append(htSiegeWorkshop);
+    end;
+
 end;
 
 
@@ -466,7 +532,7 @@ end;
 procedure TKMayorBalance.DistributeCoal;
 var
   CoalProductionRate, CoalConsumptionRate, CoalReserve: Single;
-  GoldPerMin, SteelPerMin, WeaponsPerMin, ArmorPerMin: Single;
+  GoldPerMin, SteelPerMin, WeaponsPerMin, ArmorPerMin, SiegePerMin: Single;
   ExtraCoal, DeficitCoal: Single;
 begin
   with fWarfare do
@@ -477,20 +543,25 @@ begin
 
     //Theoretical steel production
     SteelPerMin := Min(HouseCount(htIronMine) * PRODUCTION_RATE[wtIronOre],
-                       HouseCount(htIronSmithy) * PRODUCTION_RATE[wtIron]);
+                       HouseCount(htIronSmithy) * PRODUCTION_RATE[wtIron],
+                       HouseCount(htIronFoundry) * PRODUCTION_RATE[wtSteelE] * 2);
 
     //Theoretical weapon production
     WeaponsPerMin := Min(HouseCount(htWeaponSmithy) * PRODUCTION_RATE[wtSword],
                          Warfare[wtSword].Demand
                          + Warfare[wtPike].Demand
-                         + Warfare[wtCrossbow].Demand);
+                         + Warfare[wtCrossbow].Demand
+                         + Warfare[wtFlail].Demand);
 
     //Theoretical armor production
     ArmorPerMin := Min(HouseCount(htArmorSmithy) * PRODUCTION_RATE[wtIronArmor],
                        Warfare[wtIronShield].Demand + Warfare[wtIronArmor].Demand);
 
+    SiegePerMin := Min(HouseCount(htIronFoundry) * PRODUCTION_RATE[wtSteelE],
+                      Warfare[wtSteelE].Demand / 3);
+
     //Current coal consumption
-    CoalConsumptionRate := GoldPerMin/2 + SteelPerMin + WeaponsPerMin + ArmorPerMin;
+    CoalConsumptionRate := GoldPerMin/2 + SteelPerMin + WeaponsPerMin + ArmorPerMin + SiegePerMin;
   end;
   CoalReserve := gHands[fOwner].Stats.GetWareBalance(wtCoal) / Max(1,CoalConsumptionRate);
   CoalProductionRate := HouseCount(htCoalMine) * PRODUCTION_RATE[wtCoal] + Max(CoalReserve - 30, 0);
@@ -502,6 +573,7 @@ begin
     fGold.CoalTheory := GoldPerMin + ExtraCoal * 2;
     fWarfare.SteelWeapon.CoalTheory := WeaponsPerMin + ExtraCoal / 2; //Takes 2 coal to make each weapon
     fWarfare.SteelArmor.CoalTheory := ArmorPerMin + ExtraCoal / 2; //Takes 2 coal to make each armor
+    fWarfare.SiegeMachines.CoalTheory := SiegePerMin + ExtraCoal; //Takes 1 coal to make 2 SteelE
   end
   else
   begin
@@ -511,13 +583,14 @@ begin
     fGold.CoalTheory := Max(0, GoldPerMin - DeficitCoal * 2); //Each coal makes 2 gold
     fWarfare.SteelWeapon.CoalTheory := Max(0, WeaponsPerMin - DeficitCoal);
     fWarfare.SteelArmor.CoalTheory := Max(0, ArmorPerMin - DeficitCoal);
+    fWarfare.SiegeMachines.CoalTheory := Max(0, SiegePerMin - DeficitCoal);
   end;
 end;
 
 
 procedure TKMayorBalance.DistributeSteel;
 var
-  WeaponsPerMin, ArmorPerMin: Single;
+  WeaponsPerMin, ArmorPerMin, SiegePerMin: Single;
 
   SteelPerMin, SteelConsumptionRate: Single;
   ExtraSteel, DeficitSteel: Single;
@@ -534,16 +607,19 @@ begin
     WeaponsPerMin := Min(HouseCount(htWeaponSmithy) * PRODUCTION_RATE[wtSword],
                       Warfare[wtSword].Demand
                       + Warfare[wtPike].Demand
-                      + Warfare[wtCrossbow].Demand);
+                      + Warfare[wtCrossbow].Demand
+                      + Warfare[wtFlail].Demand);
 
     //Theoretical armor production
     ArmorPerMin := Min(HouseCount(htArmorSmithy) * PRODUCTION_RATE[wtIronArmor],
                       Warfare[wtIronArmor].Demand
                       + Warfare[wtIronShield].Demand);
+    SiegePerMin := Min(HouseCount(htIronFoundry) * PRODUCTION_RATE[wtSteelE],
+                      Warfare[wtSteelE].Demand);
   end;
 
   //Current steel consumption
-  SteelConsumptionRate := WeaponsPerMin + ArmorPerMin;
+  SteelConsumptionRate := WeaponsPerMin + ArmorPerMin + SiegePerMin;
 
   if SteelPerMin >= SteelConsumptionRate then
   begin
@@ -551,6 +627,7 @@ begin
     ExtraSteel := SteelPerMin - SteelConsumptionRate;
     fWarfare.SteelWeapon.SteelTheory := WeaponsPerMin + ExtraSteel;
     fWarfare.SteelArmor.SteelTheory := ArmorPerMin + ExtraSteel;
+    fWarfare.SiegeMachines.SteelTheory := Max(0, SiegePerMin + ExtraSteel);
   end
   else
   begin
@@ -559,6 +636,7 @@ begin
     DeficitSteel := SteelConsumptionRate - SteelPerMin;
     fWarfare.SteelWeapon.SteelTheory := Max(0, WeaponsPerMin - DeficitSteel);
     fWarfare.SteelArmor.SteelTheory := Max(0, ArmorPerMin - DeficitSteel);
+    fWarfare.SiegeMachines.SteelTheory := Max(0, SiegePerMin - DeficitSteel);
   end;
 
   IronConsumption := SteelConsumptionRate; //Any not being used for steel is excess
@@ -678,7 +756,8 @@ begin
   with fGold do
   begin
     //How much Gold do we need
-    Consumption := GoldNeed + Byte(HouseCount(htBarracks) > 0) * gHands[fOwner].AI.Setup.WarriorsPerMinute;
+    Consumption := GoldNeed + Byte(HouseCount(htBarracks) > 0) * gHands[fOwner].AI.Setup.WarriorsPerMinute
+                   + Byte(HouseCount(htTownhall) > 0) * gHands[fOwner].AI.Setup.WarriorsPerMinute;
 
     GoldOreReserve := gHands[fOwner].Stats.GetWareBalance(wtGoldOre) / Max(1,(2 * Consumption));
 
@@ -711,10 +790,12 @@ begin
       //Wood
       //All 3 produced at the same speed
       WorkshopTheory := HouseCount(htWeaponWorkshop) * PRODUCTION_RATE[wtLance];
+      DoBuild := AllHouseUnlocked([htBarracks, htWeaponWorkshop]);
 
-      Warfare[wtAxe].Production := Min(TrunkTheory, WoodTheory, WorkshopTheory) * OrderRatio[wtAxe];
-      Warfare[wtLance].Production := Min(TrunkTheory, WoodTheory, WorkshopTheory) * OrderRatio[wtLance];
-      Warfare[wtBow].Production := Min(TrunkTheory, WoodTheory, WorkshopTheory) * OrderRatio[wtBow];
+      fWarfare.Warfare[wtAxe].Production := Min(TrunkTheory, WoodTheory, WorkshopTheory) * OrderRatio[wtAxe];
+      fWarfare.Warfare[wtLance].Production := Min(TrunkTheory, WoodTheory, WorkshopTheory) * OrderRatio[wtLance];
+      fWarfare.Warfare[wtBow].Production := Min(TrunkTheory, WoodTheory, WorkshopTheory) * OrderRatio[wtBow];
+      fWarfare.Warfare[wtMace].Production := Min(TrunkTheory, WoodTheory, WorkshopTheory) * OrderRatio[wtMace];
     end;
 
     with LeatherArmor do
@@ -722,13 +803,18 @@ begin
       //Trunk
       //Wood
       //FarmTheory calculated above
-      WellTheory := HouseCount(htWell) * PRODUCTION_RATE[wtWater];
       SwineTheory := HouseCount(htSwine) * PRODUCTION_RATE[wtSkin] * 2;
       TanneryTheory := HouseCount(htTannery) * PRODUCTION_RATE[wtLeather];
-      WorkshopTheory := HouseCount(htArmorWorkshop) * PRODUCTION_RATE[wtLeatherArmor];
 
-      Warfare[wtWoodenShield].Production := Min(TrunkTheory, WoodTheory, WorkshopTheory * OrderRatio[wtWoodenShield]);
-      Warfare[wtLeatherArmor].Production := Min(Min(FarmTheory, SwineTheory), Min(TanneryTheory, WorkshopTheory * OrderRatio[wtLeatherArmor]));
+      ArmoryTheory := HouseCount(htArmorWorkshop) * PRODUCTION_RATE[wtWoodenShield];
+      HovelTheory  := HouseCount(htHovel) * PRODUCTION_RATE[wtFeathers]; //feathers needed for quivers
+      TailorsTheory := HouseCount(htTailorsShop) * PRODUCTION_RATE[wtLeatherArmor];
+
+      DoBuild := HouseUnlocked(htBarracks) and HouseUnlocked([htArmorWorkshop, htTailorsShop]);
+
+      Warfare[wtWoodenShield].Production := Min(TrunkTheory, WoodTheory, ArmoryTheory * OrderRatio[wtWoodenShield]);
+      Warfare[wtLeatherArmor].Production := Min(Min(FarmTheory, SwineTheory), Min(TanneryTheory, TailorsTheory * OrderRatio[wtLeatherArmor]));
+      Warfare[wtQuiver].Production := Min(Min(FarmTheory, SwineTheory), Min(TanneryTheory, TailorsTheory * OrderRatio[wtQuiver]));
     end;
   end;
 end;
@@ -744,11 +830,13 @@ begin
     begin
       //Coal/steel/iron calculated above
       SmithyTheory := HouseCount(htWeaponSmithy) * PRODUCTION_RATE[wtPike];
+      DoBuild := HouseUnlocked(htBarracks) and HouseUnlocked([htArmorSmithy, htWeaponSmithy]);
 
       //All 3 weapons are the same for now
       Warfare[wtSword].Production := Min(Min(CoalTheory, IronTheory), Min(SteelTheory, SmithyTheory)) * OrderRatio[wtSword];
       Warfare[wtPike].Production := Min(Min(CoalTheory, IronTheory), Min(SteelTheory, SmithyTheory)) * OrderRatio[wtPike];
       Warfare[wtCrossbow].Production := Min(Min(CoalTheory, IronTheory), Min(SteelTheory, SmithyTheory)) * OrderRatio[wtCrossbow];
+      Warfare[wtFlail].Production := Min(Min(CoalTheory, IronTheory), Min(SteelTheory, SmithyTheory)) * OrderRatio[wtFlail];
     end;
 
     //Armor
@@ -757,6 +845,7 @@ begin
     begin
       //Coal/steel/iron calculated above
       SmithyTheory := HouseCount(htArmorSmithy) * PRODUCTION_RATE[wtIronArmor];
+      DoBuild := HouseUnlocked(htBarracks) and HouseUnlocked([htArmorSmithy, htWeaponSmithy]);
 
       Warfare[wtIronShield].Production := Min(Min(CoalTheory, IronTheory), Min(SteelTheory, SmithyTheory)) * OrderRatio[wtIronShield];
       Warfare[wtIronArmor].Production := Min(Min(CoalTheory, IronTheory), Min(SteelTheory, SmithyTheory)) * OrderRatio[wtIronArmor];
@@ -769,6 +858,7 @@ procedure TKMayorBalance.UpdateBalanceWarfare;
 var
   I: TKMWareType;
   S: UnicodeString;
+  SiegeNeeded : Single;
 begin
   UpdateBalanceLeather;
   UpdateBalanceIron;
@@ -776,9 +866,22 @@ begin
   with fWarfare do
   begin
     //Horse.FarmTheory calculated above
-    Horse.WellTheory := HouseCount(htWell) * PRODUCTION_RATE[wtWater];
     Horse.StablesTheory := HouseCount(htStables) * PRODUCTION_RATE[wtHorse];
+
+    Horse.DoBuild := AllHouseUnlocked([htStables, htBarracks])
+                     and (AllHouseUnlocked([htArmorWorkshop, htTailorsShop, htWeaponWorkshop])
+                          or AllHouseUnlocked([htArmorSmithy, htWeaponSmithy]) );
+
     Warfare[wtHorse].Production := Min(Horse.FarmTheory, Horse.StablesTheory);
+    //stone workshop creates 2 different wares for machines
+    SiegeNeeded := gHands[fOwner].AI.Mayor.ArmyDemand[gtMachines] * gHands[fOwner].AI.Mayor.ArmyDemand[gtNone] / 20;
+    SiegeMachines.SteelTheory := SiegeMachines.SteelTheory - (HouseCount(htIronFoundry) * PRODUCTION_RATE[wtSteelE]);
+    SiegeMachines.CoalTheory := SiegeMachines.CoalTheory - (HouseCount(htIronFoundry) * PRODUCTION_RATE[wtSteelE]);
+    SiegeMachines.StoneWorkshopTheory := HouseCount(htStoneWorkshop) * PRODUCTION_RATE[wtLog] - SiegeNeeded;
+    SiegeMachines.FoundryTheory := HouseCount(htIronFoundry) * PRODUCTION_RATE[wtSteelE] - SiegeNeeded;
+    SiegeMachines.SiegeTheory := HouseCount(htSiegeWorkshop) - SiegeNeeded ;
+    //for every 20 machines we need 1 siege workshop
+    SiegeMachines.Balance := Min([SiegeMachines.CoalTheory, SiegeMachines.SteelTheory, SiegeMachines.SiegeTheory, SiegeMachines.FoundryTheory, SiegeMachines.StoneWorkshopTheory]);
 
     for I := WARFARE_MIN to WARFARE_MAX do
       Warfare[I].Balance := Warfare[I].Production - Warfare[I].Demand;
@@ -792,8 +895,8 @@ begin
     S := Format('%.2f Weaponry: |', [Balance]);
     with fWarfare.LeatherArmor do
     begin
-      S := S + Format('WoodShields: T%.1f : W%.1f : W%.1f|', [TrunkTheory, WoodTheory, WorkshopTheory*OrderRatio[wtWoodenShield]]);
-      S := S + Format('LeatherArm: F%.1f : W%.1f : S%.1f : T%.1f : W%.1f|', [FarmTheory, WellTheory, SwineTheory, TanneryTheory, WorkshopTheory*OrderRatio[wtLeatherArmor]]);
+      S := S + Format('WoodShields: T%.1f : W%.1f : W%.1f|', [TrunkTheory, WoodTheory, ArmoryTheory*OrderRatio[wtWoodenShield]]);
+      S := S + Format('LeatherArm: F%.1f : S%.1f : T%.1f : W%.1f|', [FarmTheory, SwineTheory, TanneryTheory, TailorsTheory*OrderRatio[wtLeatherArmor]]);
     end;
 
     with fWarfare.WoodWeapon do
@@ -823,7 +926,7 @@ begin
   with fCore do
   begin
     //Balance = Available - Required + Reserve
-    StoreBalance    := HouseCount(htStore)       - 1; //HouseCount(htAny) / 35;
+    StoreBalance    := HouseCount(htStore)       - 1 - (HouseCount(htAny) * 0.01 - 1);
     //Build 2 schools if we need to equip a lot of warriors per minute
     SchoolBalance   := HouseCount(htSchool)      - 1 - Byte((gHands[fOwner].Stats.GetHouseQty(htBarracks) > 0) and (gHands[fOwner].AI.Setup.WarriorsPerMinute > 2));
     InnBalance      := HouseCount(htInn)         - P.Stats.GetCitizensCount / 80;
@@ -833,7 +936,14 @@ begin
     //If there are more schools then we need more cottage
     CottageBalance  := (HouseCount(htCottage) + HouseCount(htHouse) * 2) - 2 - (HouseCount(htSchool));
 
-    Balance := Min([StoreBalance, SchoolBalance, InnBalance, BarracksBalance, TowerBalance, CottageBalance]);
+    MarketBalance  := HouseCount(htMarket) - HouseCount(htAny) / 85;
+    TownhallBalance := HouseCount(htTownhall) - Min(1, HouseCount(htMetallurgists) / 2);
+    //needs atleast 85 buildings to build a palace
+    PalaceBalance := HouseCount(htPalace) * 10000 - HouseCount(htAny) / 85 + 1;
+    //needs atleast 100 houses to build pearl
+    PearlBalance := HouseCount(htPearl) * 10000 - HouseCount(htAny) / 100 + 1;
+
+    Balance := Min([StoreBalance, SchoolBalance, InnBalance, BarracksBalance, TowerBalance, CottageBalance, MarketBalance, TownhallBalance, PalaceBalance, PearlBalance]);
     fCoreText := Format
       ('%.2f Core: (Store %.2f, Cottage/House %.2f, School %.2f, Inn %.2f, Barracks %.2f, Tower %.2f)',
       [Balance, StoreBalance, CottageBalance, SchoolBalance, InnBalance, BarracksBalance, TowerBalance]);
@@ -878,7 +988,7 @@ begin
     //production rate for apples were tested with 10 fruit trees at once
     FruitsBalance := HouseCount(htAppleTree) * PRODUCTION_RATE[wtApple]//actual count
                       + gHands[fOwner].Stats.Wares[wtApple].ActualCnt//actual fruits count
-                      - 30//reserve
+                      - 2//reserve
                       - HouseCount(htCottage) * 3 - HouseCount(htHouse) * 6;//required
 
     WaterBalance := HouseCount(htWell)//actual count
@@ -906,8 +1016,8 @@ begin
   PigPerMin   := HouseCount(htSwine) * PRODUCTION_RATE[wtPig] * BEAST_COST;
   HorsePerMin := HouseCount(htStables) * PRODUCTION_RATE[wtHorse] * BEAST_COST;
   CornConsumption := FlourPerMin + PigPerMin + HorsePerMin;
-  CornReserve := gHands[fOwner].Stats.GetWareBalance(wtCorn) / Max(CornConsumption,0.001);
-  CornProduction := HouseCount(htFarm) * PRODUCTION_RATE[wtCorn] + Max(CornReserve - 30, 0);
+  CornReserve := gHands[fOwner].Stats.Wares[wtCorn].ActualCnt / Max(CornConsumption,0.001);
+  CornProduction := HouseCount(htFarm) * PRODUCTION_RATE[wtCorn] + CornReserve;
 
   if CornProduction >= CornConsumption then
   begin
@@ -1000,21 +1110,23 @@ begin
   //Convert army request into how many weapons are needed
   with fWarfare do
   begin
-    for WT := WARFARE_MIN to WARFARE_MAX do
+    for WT := low(aNeeds) to high(aNeeds) do
       Warfare[WT].Demand := aNeeds[WT];
 
     //Calculate ratios at which warfare should be produced in workshops
-    OrderRatio[wtWoodenShield] := aNeeds[wtWoodenShield] / Max(0.001,(aNeeds[wtWoodenShield] + aNeeds[wtLeatherArmor]));
-    OrderRatio[wtLeatherArmor]  := aNeeds[wtLeatherArmor]  / Max(0.001,(aNeeds[wtWoodenShield] + aNeeds[wtLeatherArmor]));
-    OrderRatio[wtAxe]  := aNeeds[wtAxe]  / Max(0.001,(aNeeds[wtAxe] + aNeeds[wtLance] + aNeeds[wtBow]));
-    OrderRatio[wtLance] := aNeeds[wtLance] / Max(0.001,(aNeeds[wtAxe] + aNeeds[wtLance] + aNeeds[wtBow]));
-    OrderRatio[wtBow]  := aNeeds[wtBow]  / Max(0.001,(aNeeds[wtAxe] + aNeeds[wtLance] + aNeeds[wtBow]));
+    OrderRatio[wtWoodenShield] := aNeeds[wtWoodenShield] / Max(0.001,(aNeeds[wtWoodenShield] + aNeeds[wtPlateArmor]));
+    OrderRatio[wtLeatherArmor]  := aNeeds[wtLeatherArmor]  / Max(0.001,(aNeeds[wtLeatherArmor] + aNeeds[wtQuiver]));
+    OrderRatio[wtAxe]  := aNeeds[wtAxe]  / Max(0.001,(aNeeds[wtAxe] + aNeeds[wtLance] + aNeeds[wtBow] + aNeeds[wtMace]));
+    OrderRatio[wtLance] := aNeeds[wtLance] / Max(0.001,(aNeeds[wtAxe] + aNeeds[wtLance] + aNeeds[wtBow] + aNeeds[wtMace]));
+    OrderRatio[wtBow]  := aNeeds[wtBow]  / Max(0.001,(aNeeds[wtAxe] + aNeeds[wtLance] + aNeeds[wtBow] + aNeeds[wtMace]));
+    OrderRatio[wtMace]  := aNeeds[wtMace]  / Max(0.001,(aNeeds[wtAxe] + aNeeds[wtLance] + aNeeds[wtBow] + aNeeds[wtMace]));
 
     OrderRatio[wtIronShield] := aNeeds[wtIronShield] / Max(0.001,(aNeeds[wtIronShield] + aNeeds[wtIronArmor]));
     OrderRatio[wtIronArmor]  := aNeeds[wtIronArmor]  / Max(0.001,(aNeeds[wtIronShield] + aNeeds[wtIronArmor]));
-    OrderRatio[wtSword]     := aNeeds[wtSword]     / Max(0.001,(aNeeds[wtSword] + aNeeds[wtPike] + aNeeds[wtCrossbow]));
-    OrderRatio[wtPike] := aNeeds[wtPike] / Max(0.001,(aNeeds[wtSword] + aNeeds[wtPike] + aNeeds[wtCrossbow]));
-    OrderRatio[wtCrossbow]   := aNeeds[wtCrossbow]   / Max(0.001,(aNeeds[wtSword] + aNeeds[wtPike] + aNeeds[wtCrossbow]));
+    OrderRatio[wtSword]     := aNeeds[wtSword]     / Max(0.001,(aNeeds[wtSword] + aNeeds[wtPike] + aNeeds[wtCrossbow] + aNeeds[wtFlail]));
+    OrderRatio[wtPike] := aNeeds[wtPike] / Max(0.001,(aNeeds[wtSword] + aNeeds[wtPike] + aNeeds[wtCrossbow] + aNeeds[wtFlail]));
+    OrderRatio[wtCrossbow]   := aNeeds[wtCrossbow]   / Max(0.001,(aNeeds[wtSword] + aNeeds[wtPike] + aNeeds[wtCrossbow] + aNeeds[wtFlail]));
+    OrderRatio[wtFlail]   := aNeeds[wtFlail]   / Max(0.001,(aNeeds[wtSword] + aNeeds[wtPike] + aNeeds[wtCrossbow] + aNeeds[wtFlail]));
   end;
 end;
 

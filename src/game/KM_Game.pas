@@ -170,7 +170,7 @@ type
     procedure Start(const aMissionFullFilePath, aName: UnicodeString; aFullCRC, aSimpleCRC: Cardinal; aCampaign: TKMCampaign;
                     aCampMap: Byte; aLocation: ShortInt; aColor: Cardinal; aMapDifficulty: TKMMissionDifficulty = mdNone;
                     aAIType: TKMAIType = aitNone;
-                    aBDifficulty: TKMMissionBuiltInDifficulty = mdbNormal);
+                    aBDifficulty: TKMMissionBuiltInDifficulty = mdbNormal; aMode : TKMMissionMode = mmClassic);
 
     procedure AfterStart;
     procedure MapEdStartEmptyMap(aSizeX, aSizeY: Integer);
@@ -546,7 +546,7 @@ end;
 procedure TKMGame.Start(const aMissionFullFilePath, aName: UnicodeString; aFullCRC, aSimpleCRC: Cardinal; aCampaign: TKMCampaign;
                             aCampMap: Byte; aLocation: ShortInt; aColor: Cardinal;
                             aMapDifficulty: TKMMissionDifficulty = mdNone; aAIType: TKMAIType = aitNone;
-                            aBDifficulty: TKMMissionBuiltInDifficulty = mdbNormal);
+                            aBDifficulty: TKMMissionBuiltInDifficulty = mdbNormal; aMode : TKMMissionMode = mmClassic);
 const
   GAME_PARSE: array [TKMGameMode] of TKMMissionParsingMode = (
     mpmSingle, mpmSingle, mpmMulti, mpmMulti, mpmEditor, mpmSingle, mpmSingle);
@@ -581,6 +581,7 @@ begin
   fCampaignMap := aCampMap;
   fParams.MissionDifficulty := aMapDifficulty;
   fParams.MissionBuiltInDifficulty := aBDifficulty;
+  fParams.MPMode := aMode;
   fAIType := aAIType;
 
   if fParams.IsMultiPlayerOrSpec then
@@ -938,6 +939,9 @@ const
     fOptions.Peacetime := gNetworking.NetGameOptions.Peacetime;
     fOptions.SpeedPT := gNetworking.NetGameOptions.SpeedPT;
     fOptions.SpeedAfterPT := gNetworking.NetGameOptions.SpeedAfterPT;
+
+    If gGameParams.MPMode = mmTraverse then
+      fOptions.Peacetime := 0;
 
     isPT := IsPeacetime;
 
@@ -2173,6 +2177,7 @@ begin
     gameInfo.MissionMode := fParams.MissionMode;
     gameInfo.MissionDifficulty := fParams.MissionDifficulty;
     gameInfo.MissionBuiltInDifficulty := fParams.MissionBuiltInDifficulty;
+    gameInfo.MPMode := fParams.MPMode;
     gameInfo.MapSizeX := gTerrain.MapX;
     gameInfo.MapSizeY := gTerrain.MapY;
     gameInfo.PlayerCount := gHands.Count;
@@ -2623,6 +2628,7 @@ begin
       fParams.MissionMode := gameInfo.MissionMode;
       fParams.MissionDifficulty := gameInfo.MissionDifficulty;
       fParams.MissionBuiltInDifficulty := gameInfo.MissionBuiltInDifficulty;
+      fParams.MPMode := gameInfo.MPMode;
       fMapTxtInfo.Free; // Free previously create gGame's fMapTxtInfo, which was created in TKMGame.Create
       fMapTxtInfo := gameInfo.TxtInfo;
       gameInfo.TxtInfo := nil; // Don't Free MapTxtInfo object in gameInfo, its used by our game

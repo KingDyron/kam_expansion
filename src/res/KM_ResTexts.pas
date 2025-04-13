@@ -152,7 +152,7 @@ begin
   // No strings were found
   if topId = -1 then Exit;
 
-  Assert(topId <= 2248, 'Don''t allow too many strings for no reason');
+  //Assert(topId <= 2248, 'Don''t allow too many strings for no reason');
 
   // Don't shrink the array, we might be overloading base locale with a partial translation
   if Length(aArray) < topId + 1 then

@@ -10,6 +10,7 @@ uses
 type
   TKMTaskSelfTrain = class(TKMUnitTask)
   private
+    fTime : Word;
     fSchool: TKMHouseSchool;
   public
     constructor Create(aUnit: TKMUnit; aSchool: TKMHouseSchool);
@@ -24,14 +25,13 @@ type
 implementation
 uses
   KM_Entity, KM_ResTypes, KM_Sound, KM_ResSound,
-  KM_Game, KM_CommonHelpers,
+  KM_Game, KM_CommonHelpers, KM_MapTypes,
   KM_HandsCollection, KM_HandTypes, KM_HandEntity,
   KM_Resource;
 
 
 { TTaskSelfTrain }
 constructor TKMTaskSelfTrain.Create(aUnit: TKMUnit; aSchool: TKMHouseSchool);
-var time : Integer;
 begin
   inherited Create(aUnit);
 
@@ -39,17 +39,19 @@ begin
   fSchool   := TKMHouseSchool(aSchool.GetPointer);
   fUnit.Visible := False;
 
-  time := gRes.Units[fUnit.UnitType].SchoolTime;
+  fTime := gRes.Units[fUnit.UnitType].SchoolTime;
   if gGame.Params.MBD.IsEasy then
-    time := Round(time * 0.8)
+    fTime := Round(fTime * 0.8)
   else
   if gGame.Params.MBD.IsHardOrRealism then
-    time := Round(time * 1.25);
+    fTime := Round(fTime * 1.25);
 
   if gHands[fUnit.Owner].HasPearl(ptValtaria) then
-    time := Round(time * 0.8);
+    fTime := Round(fTime * 0.8);
+  if gGame.Params.MPMode = mmPacifist then
+    fTime := Round(fTime * 0.75);
 
-  fSchool.TotalWorkingTime := time * 5;
+  fSchool.TotalWorkingTime := fTime * 5;
 end;
 
 
@@ -58,6 +60,7 @@ begin
   inherited;
   LoadStream.CheckMarker('TaskSelfTrain');
   LoadStream.Read(fSchool, 4);
+  LoadStream.Read(fTime);
 end;
 
 
@@ -83,7 +86,6 @@ end;
 
 
 function TKMTaskSelfTrain.Execute:TKMTaskResult;
-var time : Integer;
 begin
   Result := trTaskContinues;
 
@@ -93,40 +95,33 @@ begin
     //School will cancel the training on own destruction
     raise Exception.Create('Unexpected error. Destoyed school erases the task');
 
-  time := gRes.Units[fUnit.UnitType].SchoolTime;
-  if gGame.Params.MBD.IsEasy then
-    time := Round(time * 0.8)
-  else
-  if gGame.Params.MBD.IsHardOrRealism then
-    time := Round(time * 1.25);
-
   with fUnit do
     case fPhase of
       0: begin
           fSchool.SetState(hstWork);
           //fSchool.CurrentAction.SubActionWork(haWork1);
 
-          SetActionLockedStay(time, uaWalk);
+          SetActionLockedStay(fTime, uaWalk);
         end;
       1: begin
           //fSchool.CurrentAction.SubActionWork(haWork2);
-          SetActionLockedStay(time, uaWalk);
+          SetActionLockedStay(fTime, uaWalk);
         end;
       2: begin
           //fSchool.CurrentAction.SubActionWork(haWork3);
-          SetActionLockedStay(time, uaWalk);
+          SetActionLockedStay(fTime, uaWalk);
         end;
       3: begin
           //fSchool.CurrentAction.SubActionWork(haWork4);
-          SetActionLockedStay(time, uaWalk);
+          SetActionLockedStay(fTime, uaWalk);
         end;
       4: begin
           //fSchool.CurrentAction.SubActionWork(haWork5);
-          SetActionLockedStay(time, uaWalk);
+          SetActionLockedStay(fTime, uaWalk);
         end;
       5: begin
           fSchool.SetState(hstIdle);
-          SetActionLockedStay(9, uaWalk);
+          SetActionLockedStay(5, uaWalk);
          end;
       6: begin
           gSoundPlayer.Play(sfxSchoolDing, fSchool.Entrance);
@@ -154,6 +149,7 @@ begin
   inherited;
   SaveStream.PlaceMarker('TaskSelfTrain');
   SaveStream.Write(fSchool.UID);
+  SaveStream.Write(fTime);
 end;
 
 

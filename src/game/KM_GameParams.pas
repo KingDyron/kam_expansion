@@ -25,7 +25,7 @@ type
 
     fMissionDifficulty: TKMMissionDifficulty;
     fMissionBuiltInDifficulty: TKMMissionBuiltInDifficulty;
-
+    fMPMissionMode : TKMMissionMode;
     fDynamicFOW: Boolean;
 
     fBlockPointerOperations: Boolean;
@@ -70,6 +70,7 @@ type
     property MissionDifficulty: TKMMissionDifficulty read fMissionDifficulty write fMissionDifficulty;
     property MissionBuiltInDifficulty: TKMMissionBuiltInDifficulty read fMissionBuiltInDifficulty write fMissionBuiltInDifficulty;
     property MBD: TKMMissionBuiltInDifficulty read fMissionBuiltInDifficulty write fMissionBuiltInDifficulty;
+    property MPMode: TKMMissionMode read fMPMissionMode write fMPMissionMode;
     property DynamicFOW: Boolean read GetDynamicFOW write SetDynamicFOW;
     property BlockPointerOperations: Boolean read fBlockPointerOperations;
 
@@ -131,6 +132,7 @@ begin
   fTick := 0;
   fMissionDifficulty := mdNone;
   fMissionBuiltInDifficulty := mdbNormal;
+  fMPMissionMode := mmClassic;
   DynamicFOW := False;
 
   aSetGameTickEvent := SetTick;

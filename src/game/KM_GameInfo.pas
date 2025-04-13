@@ -33,6 +33,7 @@ type
     MissionMode: TKMissionMode; //Fighting or Build-a-City map
     MissionDifficulty: TKMMissionDifficulty;
     MissionBuiltInDifficulty: TKMMissionBuiltInDifficulty;
+    MPMode : TKMMissionMode;
     MapSizeX, MapSizeY: Integer;
 
     PlayerCount: Byte;
@@ -131,6 +132,7 @@ procedure TKMGameInfo.Load(LoadStream: TKMemoryStream);
     LoadStream.Read(MissionMode, SizeOf(MissionMode));
     LoadStream.Read(MissionDifficulty, SizeOf(MissionDifficulty));
     LoadStream.Read(MissionBuiltInDifficulty, SizeOf(MissionBuiltInDifficulty));
+    LoadStream.Read(MPMode, SizeOf(MPMode));
     LoadStream.Read(MapSizeX);
     LoadStream.Read(MapSizeY);
     LoadStream.Read(CampaignID, SizeOf(CampaignID));
@@ -209,6 +211,7 @@ begin
   SaveStream.Write(MissionMode, SizeOf(MissionMode));
   SaveStream.Write(MissionDifficulty, SizeOf(MissionDifficulty));
   SaveStream.Write(MissionBuiltInDifficulty, SizeOf(MissionBuiltInDifficulty));
+  SaveStream.Write(MPMode, SizeOf(MPMode));
   SaveStream.Write(MapSizeX);
   SaveStream.Write(MapSizeY);
   SaveStream.Write(CampaignID, SizeOf(CampaignID));

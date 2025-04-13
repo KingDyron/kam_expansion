@@ -57,7 +57,7 @@ type
     procedure LoadGameFromScript(const aMissionFullFilePath, aGameName: String; aFullCRC, aSimpleCRC: Cardinal; aCampaign: TKMCampaign;
                                  aMap: Byte; aGameMode: TKMGameMode; aDesiredLoc: ShortInt; aDesiredColor: Cardinal;
                                  aDifficulty: TKMMissionDifficulty = mdNone; aAIType: TKMAIType = aitNone;
-                                 aBDifficulty: TKMMissionBuiltInDifficulty = mdbNormal );
+                                 aBDifficulty: TKMMissionBuiltInDifficulty = mdbNormal; aMode : TKMMissionMode = mmClassic);
     procedure LoadGameSavePoint(aTick: Cardinal);
     procedure LoadGameFromScratch(aSizeX, aSizeY: Integer; aGameMode: TKMGameMode);
     function SaveName(const aName, aExt: UnicodeString; aIsMultiplayer: Boolean): UnicodeString;
@@ -111,7 +111,7 @@ type
                            aBDifficulty: TKMMissionBuiltInDifficulty = mdbNormal);
     procedure NewSingleSave(const aSaveName: UnicodeString);
     procedure NewMultiplayerMap(const aFileName: UnicodeString; aMapKind: TKMMapKind; aCRC: Cardinal; aSpectating: Boolean;
-                                aDifficulty: TKMMissionDifficulty; aBDifficulty: TKMMissionBuiltInDifficulty);
+                                aDifficulty: TKMMissionDifficulty; aBDifficulty: TKMMissionBuiltInDifficulty; aMode : TKMMissionMode);
     procedure NewMultiplayerCampaignMap(const aFilePath,aFileName: UnicodeString; aMapKind: TKMMapKind; aCRC: Cardinal; aSpectating: Boolean;
                                 aDifficulty: TKMMissionDifficulty; aBDifficulty: TKMMissionBuiltInDifficulty);
     procedure NewMultiplayerSave(const aSaveName: UnicodeString; Spectating: Boolean);
@@ -797,7 +797,7 @@ end;
 procedure TKMGameApp.LoadGameFromScript(const aMissionFullFilePath, aGameName: String; aFullCRC, aSimpleCRC: Cardinal; aCampaign: TKMCampaign;
                                         aMap: Byte; aGameMode: TKMGameMode; aDesiredLoc: ShortInt; aDesiredColor: Cardinal;
                                         aDifficulty: TKMMissionDifficulty = mdNone; aAIType: TKMAIType = aitNone;
-                                        aBDifficulty: TKMMissionBuiltInDifficulty = mdbNormal);
+                                        aBDifficulty: TKMMissionBuiltInDifficulty = mdbNormal; aMode : TKMMissionMode = mmClassic);
 var
   loadError, missionFullFilePath, gameName: String;
 begin
@@ -811,7 +811,7 @@ begin
 
   CreateGame(aGameMode);
   try
-    gGame.Start(missionFullFilePath, gameName, aFullCRC, aSimpleCRC, aCampaign, aMap, aDesiredLoc, aDesiredColor, aDifficulty, aAIType, aBDifficulty);
+    gGame.Start(missionFullFilePath, gameName, aFullCRC, aSimpleCRC, aCampaign, aMap, aDesiredLoc, aDesiredColor, aDifficulty, aAIType, aBDifficulty, aMode);
   except
     on E : Exception do
     begin
@@ -971,7 +971,7 @@ end;
 
 procedure TKMGameApp.NewMultiplayerMap(const aFileName: UnicodeString; aMapKind: TKMMapKind; aCRC: Cardinal; aSpectating: Boolean;
                                        aDifficulty: TKMMissionDifficulty;
-                                        aBDifficulty: TKMMissionBuiltInDifficulty);
+                                        aBDifficulty: TKMMissionBuiltInDifficulty; aMode : TKMMissionMode);
 var
   gameMode: TKMGameMode;
 begin
@@ -981,7 +981,7 @@ begin
     gameMode := gmMulti;
 
   LoadGameFromScript(TKMapsCollection.FullPath(aFileName, '.dat', aMapKind, aCRC), aFileName,
-                     aCRC, 0, nil, 0, gameMode, 0, NO_OVERWRITE_COLOR, aDifficulty, aitNone, aBDifficulty);
+                     aCRC, 0, nil, 0, gameMode, 0, NO_OVERWRITE_COLOR, aDifficulty, aitNone, aBDifficulty, aMode);
 
   //Starting the game might have failed (e.g. fatal script error)
   if gGame <> nil then

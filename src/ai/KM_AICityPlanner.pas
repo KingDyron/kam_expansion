@@ -102,7 +102,6 @@ begin
   case aHouse of
     htStore:           Result := NextToHouse(aHouse, [htAny], [], aLoc);
     htArmorSmithy:     Result := NextToHouse(aHouse, [htIronSmithy, htCoalMine, htBarracks], [], aLoc);
-    htArmorWorkshop:   Result := NextToHouse(aHouse, [htTannery, htBarracks], [], aLoc);
     htBakery:          Result := NextToHouse(aHouse, [htMill], [], aLoc);
     htBarracks:        Result := NextToHouse(aHouse, [htAny], [], aLoc);
     htWatchTower:      Result := NextToHouse(aHouse, [htBarracks], [], aLoc);
@@ -121,7 +120,9 @@ begin
     htSchool:          Result := NextToHouse(aHouse, [htStore, htBarracks], [], aLoc);
     htTannery:         Result := NextToHouse(aHouse, [htSwine], [], aLoc);
     htWeaponSmithy:    Result := NextToHouse(aHouse, [htIronSmithy, htCoalMine, htBarracks], [], aLoc);
-    htWeaponWorkshop:  Result := NextToHouse(aHouse, [htSawmill, htBarracks], [], aLoc);
+    htWeaponWorkshop,
+    htArmorWorkshop:   Result := NextToHouse(aHouse, [htSawmill, htBarracks], [], aLoc);
+    htTailorsShop:  Result := NextToHouse(aHouse, [htTannery, htBarracks], [], aLoc);
 
     htCoalMine:      Result := NextToOre(aHouse, wtCoal, aLoc);
     htGoldMine:      Result := NextToOre(aHouse, wtGoldOre, aLoc);
@@ -147,15 +148,16 @@ begin
                         else
                           aIgnoreRoad := true;
                       end;
-
+    htStoneWorkshop:  Result := NextToHouse(aHouse, [htWoodCutters, htQuarry], [], aLoc);
+    htIronFoundry:  Result := NextToHouse(aHouse, [htIronSmithy, htCoalMine], [], aLoc);
     //htMarketplace:;
-    htSiegeWorkshop: Result := NextToHouse(aHouse, [htIronSmithy,htCoalMine], [], aLoc);
+    htSiegeWorkshop: Result := NextToHouse(aHouse, [htIronFoundry, htStoneWorkshop], [], aLoc);
     htTownHall: Result := NextToHouse(aHouse, [htAny], [], aLoc);
     //htWatchTower:;
   end;
 
   //If we failed to find something, try to place the house anywhere (better than ignoring it)
-  if not Result and not (aHouse in [htAppleTree, htCoalMine, htGoldMine, htIronMine, htBitinMine, htQuarry, htFarm, htVineyard, htFishermans, htWell, htPottery, htIronFoundry, htHovel]) then
+  if not Result and not (aHouse in [htAppleTree, htCoalMine, htGoldMine, htIronMine, htBitinMine, htQuarry, htFarm, htVineyard, htFishermans, htWell, htPottery, htHovel]) then
     Result := NextToHouse(aHouse, [htAny], [], aLoc);
 end;
 
@@ -565,7 +567,8 @@ begin
   //offsets of child trees
   points := [KMPoint(-2, 0),
             KMPoint(2, 0),
-            KMPoint(0, -2)];
+            KMPoint(0, -2),
+            KMPoint(-1, 2)];
 
   for I := 0 to count - 1 do
   begin

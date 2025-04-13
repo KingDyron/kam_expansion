@@ -22,7 +22,7 @@ uses
 type
   TKMMapStartEvent = procedure (const aData: UnicodeString; aMapKind: TKMMapKind; aCRC: Cardinal; Spectating: Boolean;
                                 aMissionDifficulty: TKMMissionDifficulty;
-                                aBDifficulty: TKMMissionBuiltInDifficulty) of object;
+                                aBDifficulty: TKMMissionBuiltInDifficulty; aMode : TKMMissionMode) of object;
   TKMCampaignMapStartEvent = procedure (const aFilePath, aFileName: UnicodeString; aMapKind: TKMMapKind; aCRC: Cardinal; Spectating: Boolean;
                                 aMissionDifficulty: TKMMissionDifficulty;
                                 aBDifficulty: TKMMissionBuiltInDifficulty) of object;
@@ -208,7 +208,7 @@ type
     procedure StartClick; //All required arguments are in our class
     procedure SendPlayerListAndRefreshPlayersSetup(aPlayerIndex: TKMNetHandleIndex = NET_ADDRESS_OTHERS);
     procedure UpdateGameOptions(aPeacetime: Word; aSpeedPT, aSpeedAfterPT: Single; aDifficulty: TKMMissionDifficulty;
-                                aMBD : TKMMissionBuiltInDifficulty; aWeather : TKMSettingsWeather);
+                                aMBD : TKMMissionBuiltInDifficulty; aWeather : TKMSettingsWeather; aMode : TKMMissionMode);
     procedure SendGameOptions;
     procedure RequestFileTransfer;
     procedure VoteReturnToLobby;
@@ -749,6 +749,7 @@ begin
   NetGameOptions.SpeedPT := fSaveInfo.GameOptions.SpeedPT;
   NetGameOptions.SpeedAfterPT := fSaveInfo.GameOptions.SpeedAfterPT;
   NetGameOptions.Weather := fSaveInfo.GameOptions.Weather.Copy;
+  NetGameOptions.Mode := fSaveInfo.GameOptions.Mode;
   NetGameOptions.MissionBuiltInDifficulty := fSaveInfo.GameOptions.MissionBuiltInDifficulty;
   SendGameOptions;
   if Assigned(OnGameOptions) then OnGameOptions;
@@ -1168,7 +1169,7 @@ end;
 
 
 procedure TKMNetworking.UpdateGameOptions(aPeacetime: Word; aSpeedPT, aSpeedAfterPT: Single; aDifficulty: TKMMissionDifficulty;
-                                aMBD : TKMMissionBuiltInDifficulty;  aWeather : TKMSettingsWeather);
+                                aMBD : TKMMissionBuiltInDifficulty;  aWeather : TKMSettingsWeather; aMode : TKMMissionMode);
 begin
   fNetGameOptions.Peacetime := aPeacetime;
   fNetGameOptions.SpeedPT := aSpeedPT;
@@ -1176,7 +1177,7 @@ begin
   fNetGameOptions.MissionDifficulty := aDifficulty;
   fNetGameOptions.MissionBuiltInDifficulty := aMBD;
   fNetGameOptions.Weather := aWeather.Copy;
-
+  fNetGameOptions.Mode := aMode;
   fNetPlayers.ResetReady;
   MyNetPlayer.ReadyToStart := True;
 
@@ -2654,7 +2655,7 @@ begin
     ngkCampaign: OnStartCampaignMap(fMapInfo.FullPath('.dat'), fMapInfo.Name, fMapInfo.Kind, fMapInfo.CRC, MyNetPlayer.IsSpectator,
                                     fNetGameOptions.MissionDifficulty, fNetGameOptions.MissionBuiltInDifficulty);
     ngkMap:  OnStartMap(fMapInfo.FileNameWithoutHash, fMapInfo.Kind, fMapInfo.CRC, MyNetPlayer.IsSpectator,
-                         fNetGameOptions.MissionDifficulty, fNetGameOptions.MissionBuiltInDifficulty);
+                         fNetGameOptions.MissionDifficulty, fNetGameOptions.MissionBuiltInDifficulty, fNetGameOptions.Mode);
     ngkSave: OnStartSave(fSaveInfo.FileName, MyNetPlayer.IsSpectator);
   else
     raise Exception.Create('Unexpected fSelectGameKind');
@@ -2768,6 +2769,7 @@ begin
     MPGameInfo.GameOptions.MissionDifficulty := fNetGameOptions.MissionDifficulty;
     MPGameInfo.GameOptions.MissionBuiltInDifficulty := fNetGameOptions.MissionBuiltInDifficulty;
     MPGameInfo.GameOptions.Weather := fNetGameOptions.Weather.Copy;
+    MPGameInfo.GameOptions.Mode := fNetGameOptions.Mode;
 
     for I := 1 to NetPlayers.Count do
     begin

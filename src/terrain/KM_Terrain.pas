@@ -7430,7 +7430,8 @@ begin
       Y := aLoc.Y + i - 4;
       //Inset one tile from map edges
       Result := Result and TileInMapCoords(X, Y, 1);
-
+      If not Result then
+        Exit;
       case aHouseType of
         htIronMine: Result := Result and CanPlaceIronMine(X, Y);
         htGoldMine: Result := Result and CanPlaceGoldMine(X, Y);
@@ -7459,7 +7460,8 @@ begin
                       end;
         else         Result := Result and (tpBuild in Land^[Y,X].Passability);
       end;
-
+      If not Result then
+        Exit;
 
       if aHouseType <> htAppleTree then
         for L := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do

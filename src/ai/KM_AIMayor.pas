@@ -27,7 +27,8 @@ type
     fDefenceTowers: TKMPointTagList;
 
     WarfareRatios: TWarfareDemands;
-    ArmyDemand : TAIArmyDemandF;
+    fArmyDemand : TAIArmyDemandF;
+    fPearlChecked : Boolean;
     procedure SetArmyDemand(aDemand : TAIArmyDemand);
 
     function GetMaxPlans: Byte;
@@ -50,6 +51,7 @@ type
     procedure CheckMarketTrades;
     procedure CheckSilos;
     procedure CheckMerchants;
+    procedure CheckPearl;
     function NeedsWare(aWare : TKMWareType) : Boolean;
     function WareToMaxCount(aWare : TKMWareType) : Integer;
     function WareFromMinCount(aWare : TKMWareType) : Integer;
@@ -66,6 +68,7 @@ type
     procedure AfterMissionInit;
     procedure OwnerUpdate(aPlayer: TKMHandID);
     function BalanceText: UnicodeString;
+    property ArmyDemand : TAIArmyDemandF read fArmyDemand;
 
     procedure UpdateState(aTick: Cardinal);
     procedure Save(SaveStream: TKMemoryStream);
@@ -80,6 +83,7 @@ uses
   KM_Hand, KM_HandsCollection, KM_HandTypes,
   KM_AIFields, KM_Terrain,
   KM_Houses, KM_HouseSchool, KM_HouseStore, KM_HouseBarracks, KM_HouseMarket, KM_HouseQueue, KM_HouseTownHall,
+  KM_HousePearl,
   KM_Units, KM_UnitsCollection, KM_UnitActionWalkTo, KM_UnitTaskGoEat, KM_UnitTaskDelivery,
   KM_Resource, KM_ResUnits, KM_AITypes,
   KM_CommonUtils, KM_DevPerfLog, KM_DevPerfLogTypes;
@@ -455,7 +459,7 @@ begin
       for K := 1 to WARES_IN_OUT_COUNT do
         WareOrder := WareOrder + H.WareOrder[K];
 
-    if not H.IsDestroyed and ((WareOrder = 0) or (H.HouseType in [htProductionThatch, htTailorsShop, htIronFoundry])) then
+    if not H.IsDestroyed and ((WareOrder = 0) or (H.HouseType in [htStoneWorkshop, htProductionThatch, htTailorsShop, htIronFoundry])) then
     case H.HouseType of
       htProductionThatch: for K := 1 to WARES_IN_OUT_COUNT do
                           begin
@@ -543,7 +547,7 @@ begin
                               wtStoneBolt : If (H.CheckWareIn(wtStone) > 0)
                                             and ((gHands[fOwner].Stats.GetHouseQty(htWatchTower) > 0)
                                                   or UnitUnlocked(utCatapult, htSiegeWorkshop)
-                                                  or((UnitUnlocked(utRogue, htTownHall) and (ArmyDemand[gtRanged] > 0))))
+                                                  or((UnitUnlocked(utRogue, htTownHall) and (fArmyDemand[gtRanged] > 0))))
                                             then H.WareOrder[K] := 6;
 
                               wtLog : If MachinesUnlocked and NeedsWare(wtLog) then H.WareOrder[K] := 6;
@@ -979,6 +983,11 @@ begin
                   BlockWare(wtApple, [], 0, 50);
                   BlockWare(wtVegetables, [], 0, 50);
 
+                  BlockWare(wtWine, [], 0, 200);
+                  BlockWare(wtBread, [], 0, 200);
+                  BlockWare(wtSausage, [], 0, 200);
+                  BlockWare(wtFish, [], 0, 200);
+
                   //We like to always keep a supply of these
                   {S.NotAcceptFlag[wtTimber] := S.CheckWareIn(wtTimber) > 50;
                   S.NotAcceptFlag[wtStone] := S.CheckWareIn(wtStone) > 50;
@@ -997,10 +1006,11 @@ begin
                   BlockWare(wtIron, [htWeaponSmithy, htArmorSmithy], 0, 20000 );
                   BlockWare(wtIronOre, [htIronSmithy], 0, 20000 );
                   BlockWare(wtGoldOre, [htMetallurgists], 0, 20000 );
-                  BlockWare(wtCorn, [htSwine, htStables, htWoodburner], 0, 20000 );
-                  BlockWare(wtSeed, [htMill, htHovel], 0, 20000 );
+                  BlockWare(wtCorn, [htSwine, htStables, htWoodburner], 0, 50 );
+                  BlockWare(wtSeed, [htMill, htHovel], 0, 50 );
                   BlockWare(wtFlour, [htBakery], 0, 20000 );
                   BlockWare(wtLeather, [htArmorWorkshop, htTailorsShop], 0, 20000);
+                  BlockWare(wtStoneBolt, [htWatchTower], 50, 20000);
 
                 end;
     end;
@@ -1232,7 +1242,6 @@ begin
   Summ := 0;
   for GT := low(TKMGroupType) to High(TKMGroupType) do
     Summ := Summ + aDemand[GT];
-
   if Summ = 0 then
   begin
     for GT := low(TKMGroupType) to High(TKMGroupType) do
@@ -1242,13 +1251,16 @@ begin
     for GT := low(TKMGroupType) to High(TKMGroupType) do
       demands[GT] := aDemand[GT] / Summ;
 
-  ArmyDemand := demands;
+  demands[gtNone] := Summ;
+  fArmyDemand := demands;
   //Store ratios localy in Mayor to place weapon orders
   //Leather
   WarfareRatios[wtLeatherArmor] := demands[gtMelee]  * GetUnitRatio(utAxeFighter)
                                  + demands[gtMounted] * GetUnitRatio(utScout)
                                  + demands[gtAntiHorse]  * GetUnitRatio(utLanceCarrier)
                                  + demands[gtRanged]  * GetUnitRatio(utBowman);
+
+  WarfareRatios[wtPlateArmor] := demands[gtWreckers]  * GetUnitRatio(utMaceFighter);
 
   WarfareRatios[wtWoodenShield] :=     demands[gtMelee]  * GetUnitRatio(utAxeFighter)
                                  + demands[gtMounted] * GetUnitRatio(utScout);
@@ -1277,6 +1289,12 @@ begin
   WarfareRatios[wtPlateArmor] := demands[gtWreckers] * GetUnitRatio(utMaceFighter);
 
   WarfareRatios[wtFlail] := demands[gtWreckers] * GetUnitRatio(utFlailFighter);
+  WarfareRatios[wtSteelE] := (demands[gtMachines] * (GetUnitRatio(utCatapult) + GetUnitRatio(utBallista) )
+                              + demands[gtMachinesMelee] * (GetUnitRatio(utRam) + GetUnitRatio(utWoodenWall) )) * 3 ;
+  WarfareRatios[wtLog] := (demands[gtMachines] * (GetUnitRatio(utCatapult) + GetUnitRatio(utBallista) )
+                              + demands[gtMachinesMelee] * (GetUnitRatio(utRam) + GetUnitRatio(utWoodenWall) )) * 4 ;
+  WarfareRatios[wtWheel] := (demands[gtMachines] * (GetUnitRatio(utCatapult) + GetUnitRatio(utBallista) )
+                              + demands[gtMachinesMelee] * (GetUnitRatio(utRam) + GetUnitRatio(utWoodenWall) )) * 4 ;
   //How many warriors we would need to equip per-minute
   IronPerMin := fSetup.WarriorsPerMinute(atIron);
   LeatherPerMin := fSetup.WarriorsPerMinute(atLeather);
@@ -1440,37 +1458,37 @@ begin
     wtPig: Result := HasHouses([htButchers]) and not HasHouses([htSwine]);
     wtSkin: Result := HasHouses([htTannery, htShipYard]);
 
-    wtWoodenShield: Result := ((ArmyDemand[gtMelee] > 0) or (ArmyDemand[gtMounted] > 0))
+    wtWoodenShield: Result := ((fArmyDemand[gtMelee] > 0) or (fArmyDemand[gtMounted] > 0))
                               and gHands[fOwner].Locks.UnitsUnlocked([utAxeFighter, utScout])
                         and HasHouses([htBarracks]);
-    wtIronShield: Result := ((ArmyDemand[gtMelee] > 0) or (ArmyDemand[gtMounted] > 0))
+    wtIronShield: Result := ((fArmyDemand[gtMelee] > 0) or (fArmyDemand[gtMounted] > 0))
                               and gHands[fOwner].Locks.UnitsUnlocked([utSwordFighter, utKnight])
                         and HasHouses([htBarracks]);
-    wtLeatherArmor: Result := ((ArmyDemand[gtMelee] > 0) or (ArmyDemand[gtMounted] > 0)or (ArmyDemand[gtRanged] > 0)or (ArmyDemand[gtAntiHorse] > 0))
+    wtLeatherArmor: Result := ((fArmyDemand[gtMelee] > 0) or (fArmyDemand[gtMounted] > 0)or (fArmyDemand[gtRanged] > 0)or (fArmyDemand[gtAntiHorse] > 0))
                               and gHands[fOwner].Locks.UnitsUnlocked([utAxeFighter, utScout, utLanceCarrier, utBowMan])
                         and HasHouses([htBarracks]);
-    wtIronArmor: Result := ((ArmyDemand[gtMelee] > 0) or (ArmyDemand[gtMounted] > 0)or (ArmyDemand[gtRanged] > 0)or (ArmyDemand[gtAntiHorse] > 0))
+    wtIronArmor: Result := ((fArmyDemand[gtMelee] > 0) or (fArmyDemand[gtMounted] > 0)or (fArmyDemand[gtRanged] > 0)or (fArmyDemand[gtAntiHorse] > 0))
                               and gHands[fOwner].Locks.UnitsUnlocked([utSwordFighter, utKnight, utPikeman, utCrossBowMan])
                         and HasHouses([htBarracks]);
-    wtAxe: Result := ((ArmyDemand[gtMelee] > 0) or (ArmyDemand[gtMounted] > 0))
+    wtAxe: Result := ((fArmyDemand[gtMelee] > 0) or (fArmyDemand[gtMounted] > 0))
                               and gHands[fOwner].Locks.UnitsUnlocked([utAxeFighter, utScout])
                         and HasHouses([htBarracks]);
-    wtSword: Result := ((ArmyDemand[gtMelee] > 0) or (ArmyDemand[gtMounted] > 0))
+    wtSword: Result := ((fArmyDemand[gtMelee] > 0) or (fArmyDemand[gtMounted] > 0))
                               and gHands[fOwner].Locks.UnitsUnlocked([utSwordFighter, utKnight])
                         and HasHouses([htBarracks]);
-    wtLance: Result := ((ArmyDemand[gtAntiHorse] > 0) or (ArmyDemand[gtMounted] > 0))
+    wtLance: Result := ((fArmyDemand[gtAntiHorse] > 0) or (fArmyDemand[gtMounted] > 0))
                               and gHands[fOwner].Locks.UnitsUnlocked([utLanceCarrier])
                         and HasHouses([htBarracks]);
-    wtPike: Result := (ArmyDemand[gtAntiHorse] > 0)
+    wtPike: Result := (fArmyDemand[gtAntiHorse] > 0)
                               and gHands[fOwner].Locks.UnitsUnlocked([utPikeman])
                         and HasHouses([htBarracks]);
-    wtBow: Result := (ArmyDemand[gtRanged] > 0)
+    wtBow: Result := (fArmyDemand[gtRanged] > 0)
                               and gHands[fOwner].Locks.UnitsUnlocked([utBowMan])
                         and HasHouses([htBarracks]);
-    wtCrossbow: Result := (ArmyDemand[gtRanged] > 0)
+    wtCrossbow: Result := (fArmyDemand[gtRanged] > 0)
                               and gHands[fOwner].Locks.UnitsUnlocked([utCrossBowMan])
                         and HasHouses([htBarracks]);
-    wtHorse: Result := (ArmyDemand[gtMounted] > 0)
+    wtHorse: Result := (fArmyDemand[gtMounted] > 0)
                         and gHands[fOwner].Locks.UnitsUnlocked([utScout, utKnight])
                         and HasHouses([htBarracks]);
     wtBitin: Result := HasHouses([htIronFoundry]);
@@ -1478,17 +1496,17 @@ begin
     //wtBitinOre: Result := gHands[fOwner].Stats.GetHouseQty([htIronSmithy]) > 0;  //don't trade bitin ore
     wtStoneBolt: Result := HasUnits([utRogue, utCatapult]) or HasHouses([htWatchTower]);
 
-    wtBitinE: Result := ((ArmyDemand[gtMachines] > 0) or (ArmyDemand[gtMachinesMelee] > 0) or (ArmyDemand[gtShips] > 0))
+    wtBitinE: Result := ((fArmyDemand[gtMachines] > 0) or (fArmyDemand[gtMachinesMelee] > 0) or (fArmyDemand[gtShips] > 0))
                         and gHands[fOwner].Locks.UnitsUnlocked([utSwordFighter, utCrossbowman, utPikeman, utKnight, utCatapult, utBallista, utWarrior, utRam, utBattleShip])
                         and HasHouses([htSiegeWorkshop, htBarracks, htTownhall, htShipyard]);
 
     wtSteelE,
-    wtLog: Result := ((ArmyDemand[gtMachines] > 0) or (ArmyDemand[gtMachinesMelee] > 0) or (ArmyDemand[gtShips] > 0))
+    wtLog: Result := ((fArmyDemand[gtMachines] > 0) or (fArmyDemand[gtMachinesMelee] > 0) or (fArmyDemand[gtShips] > 0))
                         and gHands[fOwner].Locks.UnitsUnlocked([utBallista, utCatapult, utRam, utBattleShip])
                         and not HasWare(aWare, 20)//no need to make a lot of it
                         and HasHouses([htSiegeWorkshop, htShipyard]);
 
-    wtWheel: Result := ((ArmyDemand[gtMachines] > 0) or (ArmyDemand[gtMachinesMelee] > 0))
+    wtWheel: Result := ((fArmyDemand[gtMachines] > 0) or (fArmyDemand[gtMachinesMelee] > 0))
                         and gHands[fOwner].Locks.UnitsUnlocked([utBallista, utCatapult, utRam])
                         and not HasWare(aWare, 20)//no need to make a lot of it
                         and HasHouses([htSiegeWorkshop]);
@@ -1734,6 +1752,25 @@ begin
   Merchants.Free;
 end;
 
+procedure TKMayor.CheckPearl;
+var H : TKMHousePearl;
+  PT : TKMPearlType;
+begin
+  If fPearlChecked then
+    Exit;
+  If gHands[fOwner].Stats.GetHouseQty(htPearl) > 0 then
+  begin
+    H := TKMHousePearl(gHands[fOwner].Houses.FindHouse(htPearl, 0, 0) );
+    If H <> nil then
+    begin
+      PT := TKMPearlType(KaMRandom( ord(high(TKMPearlType)),  'TKMMayor.CheckPearl') + 1);
+      H.SelectType(PT);
+      H.ConfirmBuild;
+      fPearlChecked := true;
+    end;
+  end;
+end;
+
 function TKMayor.BalanceText: UnicodeString;
 begin
   Result := fBalance.BalanceText;
@@ -1760,6 +1797,7 @@ begin
     CheckMarketTrades;
     CheckSilos;
     CheckMerchants;
+    CheckPearl;
     if fSetup.AutoBuild then
     begin
       CheckHouseCount;
@@ -1788,13 +1826,14 @@ begin
   fDefenceTowers.SaveToStream(SaveStream);
 
   SaveStream.Write(WarfareRatios, SizeOf(WarfareRatios));
-  SaveStream.Write(ArmyDemand, SizeOf(ArmyDemand));
+  SaveStream.Write(fArmyDemand, SizeOf(fArmyDemand));
 
   fBalance.Save(SaveStream);
   fCityPlanner.Save(SaveStream);
   fPathFindingRoad.Save(SaveStream);
   fPathFindingRoadShortcuts.Save(SaveStream);
   fRecorder.Save(SaveStream);
+  SaveStream.Write(fPearlChecked);
 end;
 
 
@@ -1808,13 +1847,14 @@ begin
   fDefenceTowers.LoadFromStream(LoadStream);
 
   LoadStream.Read(WarfareRatios, SizeOf(WarfareRatios));
-  LoadStream.Read(ArmyDemand, SizeOf(ArmyDemand));
+  LoadStream.Read(fArmyDemand, SizeOf(fArmyDemand));
 
   fBalance.Load(LoadStream);
   fCityPlanner.Load(LoadStream);
   fPathFindingRoad.Load(LoadStream);
   fPathFindingRoadShortcuts.Load(LoadStream);
   fRecorder.Load(LoadStream);
+  LoadStream.Read(fPearlChecked);
 end;
 
 

@@ -312,6 +312,7 @@ type
     procedure TakeOverHouse(aHouse : TKMHouse);
     procedure TakeOverAppleTree(aHouse : TKMHouse);
     procedure PearlBuilt(aType : TKMPearlType);
+    procedure PearlDestroyed(aType : TKMPearlType);
     function HasPearl(aType : TKMPearlType) : Boolean;
 
     function GetClosestHouse(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aWareSet : TKMWareTypeSet = [wtAll];  aMaxDistance : Single = 999) : TKMHouse;
@@ -947,6 +948,7 @@ end;
 procedure TKMHand.AfterMissionInit(aFlattenRoads: Boolean);
 var I : Integer;
   H : TKMHouseStore;
+  UT : TKMUnitType;
 begin
   if (Self = nil) or not Enabled then Exit;
 
@@ -967,6 +969,50 @@ begin
         H.MaxCount := 3000000;
     end;
 
+    If gGame.Params.MPMode = mmFarmers then
+    begin
+      fLocks.HouseLock[htAppleTree]     := hlGranted;
+      fLocks.HouseLock[htFarm]          := hlGranted;
+      fLocks.HouseLock[htVineyard]      := hlGranted;
+
+      fLocks.HouseLock[htCollectors]          := hlNotVisible;
+      fLocks.HouseLock[htProductionThatch]    := hlNotVisible;
+    end else
+    If gGame.Params.MPMode = mmBottomless then
+    begin
+      fLocks.HouseLock[htWell]     := hlNotVisible;
+    end else
+    If gGame.Params.MPMode = mmIronOnly then
+    begin
+      fLocks.HouseLock[htTownhall]     := hlNotVisible;
+      fLocks.HouseLock[htPalace]     := hlNotVisible;
+      for UT in [WARRIOR_MIN..WARRIOR_MAX] do
+        IF not (UT in WARRIORS_IRON) then
+          fLocks.SetUnitBlocked(UT, htAny, ulNotVisible);
+
+      fLocks.HouseLock[htCoalmine]          := hlGranted;
+      fLocks.HouseLock[htIronmine]          := hlGranted;
+      fLocks.HouseLock[htIronSmithy]      := hlGranted;
+    end else
+    If gGame.Params.MPMode = mmPacifist then
+    begin
+      fLocks.HouseLock[htTownhall]     := hlNotVisible;
+      fLocks.HouseLock[htPalace]     := hlNotVisible;
+      fLocks.HouseLock[htWall]     := hlNotVisible;
+      fLocks.HouseLock[htWall2]     := hlNotVisible;
+      fLocks.HouseLock[htWall3]     := hlNotVisible;
+      fLocks.HouseLock[htWall4]     := hlNotVisible;
+      fLocks.HouseLock[htWall5]     := hlNotVisible;
+      fLocks.HouseLock[htWatchTower]     := hlNotVisible;
+      fLocks.HouseLock[htWallTower]     := hlNotVisible;
+
+      for UT in [WARRIOR_MIN..WARRIOR_MAX] do
+          fLocks.SetUnitBlocked(UT, htAny, ulNotVisible);
+
+      fLocks.SetUnitBlocked(utFighter, htBarracks, ulUnlocked);
+      fLocks.SetUnitBlocked(utRam, htBarracks, ulUnlocked);
+      fLocks.SetUnitBlocked(utWoodenWall, htBarracks, ulUnlocked);
+    end;
 
 end;
 
@@ -2649,6 +2695,11 @@ end;
 procedure TKMHand.PearlBuilt(aType: TKMPearlType);
 begin
   fPearlsBuilt[aType] := true;
+end;
+
+procedure TKMHand.PearlDestroyed(aType: TKMPearlType);
+begin
+  fPearlsBuilt[aType] := false;
 end;
 
 function TKMHand.HasPearl(aType: TKMPearlType): Boolean;

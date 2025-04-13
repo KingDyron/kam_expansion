@@ -382,7 +382,7 @@ uses
   KM_UnitActionFight, KM_UnitActionGoInOut, KM_UnitActionWalkTo, KM_UnitActionStay,
   KM_UnitActionStormAttack, KM_Resource, KM_ResUnits, KM_UnitGroup,
   KM_UnitTaskCollectWares, KM_UnitTaskDismiss,
-  KM_Game,
+  KM_Game, KM_MapTypes,
   KM_GameParams, KM_CommonUtils, KM_RenderDebug, KM_UnitVisual,
   KM_CommonExceptions, KM_CommonHelpers,
   KM_UnitGroupTypes,
@@ -400,7 +400,7 @@ begin
   fOrderTargetShip   := nil;
   fRequestedFood     := False;
   fRequestedAmmo     := False;
-  fInfinityAmmo      := False;
+  fInfinityAmmo      := gGame.Params.MPMode = mmNoAmmo;
   fNextOrder         := woNone;
   fOrder             := woNone;
   fOrderLoc          := aLoc.Loc;
@@ -411,6 +411,8 @@ begin
   fDamageHouse := gRes.Units[aUnitType].HouseDamage;
 
   fRageTime := 0;
+  If fInfinityAmmo then
+    fBoltCount := 1000;
 end;
 
 

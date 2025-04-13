@@ -313,6 +313,7 @@ type
     function AllowDeliveryModeChange: Boolean;
     procedure IssueResourceDepletedMsg;
     function GetResourceDepletedMessageId: SmallInt;
+    function GetStyleGuiIcon : Word;
 
     property ResourceDepleted: Boolean read fResourceDepletedMsgIssued write fResourceDepletedMsgIssued;
     property OrderCompletedMsgIssued: Boolean read fOrderCompletedMsgIssued;
@@ -917,7 +918,8 @@ uses
   TypInfo, SysUtils, Math, KromUtils,
   KM_CommonHelpers,
   KM_Entity, KM_HandsCollection,
-  KM_Game,KM_GameParams, KM_Terrain, KM_RenderPool, KM_RenderAux, KM_Sound,
+  KM_Game,KM_GameParams, KM_MapTypes,
+  KM_Terrain, KM_RenderPool, KM_RenderAux, KM_Sound,
   KM_Hand, KM_HandLogistics, KM_HandTypes,
   KM_Units, KM_UnitWarrior, KM_HouseWoodcutters,
   KM_Resource, KM_ResSound, KM_ResTexts, KM_ResUnits, KM_ResMapElements,
@@ -1196,6 +1198,14 @@ begin
     end;
 
   end;
+  If gGame.Params.MPMode = mmBottomless then
+    for I := 1 to WARES_IN_OUT_COUNT do
+    begin
+      if fWareInput[I] = wtWater then
+        fWareInput[I] := wtNone;
+      if fWareOutput[I] = wtWater then
+        fWareOutput[I] := wtNone;
+    end;
 
   for I := 0 to high(fWareOutPool) do
     fWareOutPool[I] := 0;
@@ -3316,6 +3326,14 @@ end;
 procedure TKMHouse.SetStyle(aValue : Byte);
 begin
   fStyle := EnsureRange(aValue, 0, Length(HSpec.Styles));
+end;
+
+function TKMHouse.GetStyleGuiIcon : Word;
+begin
+  IF fStyle = 0 then
+    Result := 389//default look
+  else
+    Result := HSpec.Styles[fStyle - 1].Icon;
 end;
 
 procedure TKMHouse.SetLevel(aValue : Byte);
@@ -5635,6 +5653,8 @@ end;
 
 function TKMHouseAppleTree.NeedWater(aChildID : Integer = 0): Boolean;
 begin
+  If gGame.Params.MPMode = mmBottomless then
+    Exit(false);
   if aChildID > 0 then
     if ChildTree(aChildID - 1) <> nil then //this house might be destroyed;
       Exit(ChildTree(aChildID - 1).NeedWater)

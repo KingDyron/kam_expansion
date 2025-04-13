@@ -74,6 +74,7 @@ type
 implementation
 uses
   Math,
+  KM_GameParams, KM_MapTypes,
   KM_Resource,
   KM_ResUnits,
   KM_ResMapElements;
@@ -129,6 +130,21 @@ begin
   for H := HOUSE_MIN to HOUSE_MAX do
     if aType in gRes.Houses[H].ReleasedBy then
       fHouseUnlocked[H] := True;
+
+  If gGameParams.MPMode = mmTraverse then
+  begin
+    case aType of
+      htSawMill:  begin
+                    fHouseUnlocked[htWatchTower] := true;
+                    fHouseUnlocked[htWall] := true;
+                    fHouseUnlocked[htWall2] := true;
+                    fHouseUnlocked[htWall3] := true;
+                    fHouseUnlocked[htWall4] := true;
+                    fHouseUnlocked[htWall5] := true;
+                  end;
+      htStoneWorkshop: fHouseUnlocked[htWatchTower] := true;
+    end;
+  end;
 end;
 
 

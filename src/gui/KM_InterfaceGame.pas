@@ -249,7 +249,8 @@ const
     utSmith,
     utFisher
   );
-  StatNonWorkerHouse: array[0..7] of TKMHouseType = (htStore, htSchool, htInn, htTownhall, htPalace, htCottage, htHouse, htWell);
+  StatNonWorkerHouse: array[0..9] of TKMHouseType = (htStore, htCottage, htHouse, htSchool, htInn, htMarket,
+                                                      htTownhall, htPalace, htPearl, htWell);
   {
   StatPlan: array [0..STATS_LINES_CNT-1] of record
     HouseType: array [0..4] of TKMHouseType;

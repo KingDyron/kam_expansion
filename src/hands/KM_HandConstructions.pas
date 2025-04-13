@@ -322,7 +322,7 @@ const
     6, {hovel}          0,{sign}              3,{Bitin}         4,{wallTower}        2{well},  10{stone workshop},
     8 {iron foundry},   10{Merchant},          8{Pottery},       6{WoodBurner},       4{AppleTree}, 4, {small store}
     6 {Collectors},      6{TailorsShop},       4{Cottage},       8{House},            10,           2,{Stall}
-    10{htProductionThatch}, 6{shipyard},       6{Cartographers}, 15{Pearl}
+    10{htProductionThatch}, 6{shipyard},       6{Cartographers}, 15{Pearl}, 1
   );
 
 

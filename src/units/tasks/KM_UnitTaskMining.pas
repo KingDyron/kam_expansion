@@ -41,7 +41,7 @@ uses
   KM_Game,
   KM_Houses, KM_HouseWoodcutters, KM_HouseSwineStable, KM_HouseSiegeWorkshop, KM_HouseWoodBurner, KM_HouseQueue,
   KM_HandsCollection, KM_HandTypes, KM_HandEntity,
-  KM_MapEditor, KM_MapEdTypes,
+  KM_MapEditor, KM_MapEdTypes, KM_MapTypes,
   KM_Resource, KM_ResMapElements, KM_ResTexts, KM_Log, KM_ResTileset, KM_ResTilesetTypes,
   KM_Hand, KM_ResUnits, KM_ScriptingEvents, KM_Terrain;
 
@@ -776,6 +776,10 @@ begin
                     or (Home.CheckWareOut(WorkPlan.Prod[I].W) < Home.GetMaxOutWare)
                     or gRes.Houses[Home.HouseType].CanOverFill then
                   begin
+                    If gGame.Params.MPMode = mmTraverse then
+                      If WorkPlan.Prod[I].W = wtStoneBolt then
+                        WorkPlan.Prod[I].C := WorkPlan.Prod[I].C * 2;
+
                     Home.ProduceWare(WorkPlan.Prod[I].W, WorkPlan.Prod[I].C);
                     if WorkPlan.Prod[I].C > 0 then
                       Home.IncProductionCycle(WorkPlan.Prod[I].W);

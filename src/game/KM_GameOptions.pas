@@ -52,6 +52,7 @@ begin
   MissionDifficulty := mdNone;
   MissionBuiltInDifficulty := mdbNormal;
   Weather.SetDefault;
+  Mode := mmClassic;
 end;
 
 

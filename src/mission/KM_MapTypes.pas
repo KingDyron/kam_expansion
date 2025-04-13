@@ -53,7 +53,7 @@ type
   //* Set of mission difficulties
   TKMMissionDifficultySet = set of TKMMissionDifficulty;
 
-  TKMMissionMode = (mmClassic, mmFarmers, mmTraverse, mmBottomless, mmIronOnly, mmPacifist);
+  TKMMissionMode = (mmClassic, mmFarmers, mmTraverse, mmBottomless, mmIronOnly, mmPacifist, mmNoAmmo);
 const
   {$I KM_TextIDs.inc}
 
@@ -140,7 +140,8 @@ const
   MAP_FOLDER_NAME: array [TKMMapKind] of string = ('', MAPS_FOLDER_NAME, MAPS_MP_FOLDER_NAME, MAPS_DL_FOLDER_NAME, CAMPAIGNSMP_FOLDER_NAME);
 
   CUSTOM_MAP_PARAM_DESCR_TX: array[TKMCustomScriptParam] of Integer = (TX_MAP_CUSTOM_PARAM_TH_TROOP_COST, TX_MAP_CUSTOM_PARAM_MARKET_PRICE);
-
+  MAP_MP_MOD_TEXT: array[TKMMissionMode] of Word = (2241, 2242, 2243, 2244, 2245, 2246, 2253);
+  MAP_MP_MOD_DESC: array[TKMMissionMode] of Word = (2247, 2248, 2249, 2250, 2251, 2252, 2254);
 
 implementation
 

@@ -228,6 +228,8 @@ type
             TrackBar_NightSpeed, TrackBar_NightTime: TKMTrackBar;
             CheckBox_DynamicLight: TKMCheckBox;
 
+          DropBox_MissionMode : TKMDropList;
+
       Memo_Posts: TKMMemo;
       Button_Post: TKMButtonFlat;
       Edit_Post: TKMEdit;
@@ -610,7 +612,7 @@ begin
       Radio_MapType.Add(gResTexts[TX_LOBBY_MAP_SPECIAL]);
       Radio_MapType.Add(gResTexts[TX_LOBBY_MAP_RANDOM]); //RMG
       Radio_MapType.Add(gResTexts[TX_LOBBY_MAP_SAVED]);
-      Radio_MapType.Add('Campaigns');
+      Radio_MapType.Add(gResTexts[227]);
       Radio_MapType.ItemIndex := 0;
       Radio_MapType.OnClick := MapTypeChanged;
 
@@ -677,7 +679,7 @@ begin
 
       Button_ShowOptions := TKMButton.Create(Panel_Setup, 5, Panel_Setup.Height - 30, Panel_Setup.Width - 10, 25, gResTexts[116], bsMenu);
       Button_ShowOptions.OnClick := ShowOptions;
-
+      Button_ShowOptions.Anchors := [anLeft, anBottom];
 
     Button_Back := TKMButton.Create(Panel_Lobby, 30, 723, 220, 30, gResTexts[TX_LOBBY_QUIT], bsMenu);
     Button_Back.Anchors := [anLeft, anBottom];
@@ -702,6 +704,7 @@ end;
 procedure TKMMenuLobby.CreatePanelOptions(aParent: TKMPanel);
 var speedsCnt, Top : Integer;
   MBD : TKMMissionBuiltInDifficulty;
+  MM : TKMMissionMode;
 begin
   Panel_SetupOptions := TKMPanel.Create(aParent, 0, 0, 600, 400);
   Panel_SetupOptions.Centerize;
@@ -764,6 +767,19 @@ begin
         DropBox_BuilInDifficulty.ItemIndex := byte(MBD);
     end;
 
+    DropBox_MissionMode := TKMDropList.Create(Panel_GameOptions,  DropBox_BuilInDifficulty.Left,
+                                                                  DropBox_BuilInDifficulty.Bottom + 10,
+                                                                  DropBox_BuilInDifficulty.Width, 20,
+                                                                  fntMetal, gResTexts[2241], bsMenu);
+    DropBox_MissionMode.Anchors := [anLeft, anBottom];
+    DropBox_MissionMode.OnChange := GameOptionsChange;
+    DropBox_MissionMode.Hint := gResTexts[MAP_MP_MOD_DESC[mmClassic]];
+    for MM := Low(TKMMissionMode) to High(TKMMissionMode) do
+    begin
+      DropBox_MissionMode.Add(gResTexts[MAP_MP_MOD_TEXT[MM]], byte(MM));
+      if MM = mmClassic then
+        DropBox_MissionMode.ItemIndex := byte(MM);
+    end;
 
   Top := Panel_GameOptions.Bottom + 5;
 
@@ -857,6 +873,7 @@ begin
     CheckBox_DynamicLight := TKMCheckBox.Create(Panel_Weather,Panel_Weather.Width div 2 + 6,140,200,20,gResTexts[2099], fntGrey);
     CheckBox_DynamicLight.OnClick := WeatherChange;
     CheckBox_DynamicLight.Hint := gResTexts[2100];
+
 end;
 
 procedure TKMMenuLobby.CreateChatMenu(aParent: TKMPanel);
@@ -1307,7 +1324,8 @@ begin
     if not aPreserveMaps then
       UpdateMapList(True);
 
-    DropCol_Maps.Show;
+    DropCol_Maps.Visible := Radio_MapType.ItemIndex <> 6;
+    DropCol_Campaigns.Visible := Radio_MapType.ItemIndex = 6;
     Label_MapName.Hide;
     Button_Start.Caption := gResTexts[TX_LOBBY_START]; //Start
     Button_Start.Disable;
@@ -1325,6 +1343,7 @@ begin
     Radio_MapType.Disable;
     Radio_MapType.ItemIndex := 0;
     DropCol_Maps.Hide;
+    DropCol_Campaigns.Hide;
     Label_MapName.Show;
     Button_Start.Caption := gResTexts[TX_LOBBY_READY]; //Ready
     Button_Start.Enable;
@@ -1345,6 +1364,7 @@ procedure TKMMenuLobby.GameOptionsChange(Sender: TObject);
 var
   MD: TKMMissionDifficulty;
   MBD: TKMMissionBuiltInDifficulty;
+  MM : TKMMissionMode;
 begin
   if DropBox_Difficulty.Visible
     and (DropBox_Difficulty.Count > 0)
@@ -1356,11 +1376,15 @@ begin
     MBD := TKMMissionBuiltInDifficulty(DropBox_BuilInDifficulty.ItemIndex)
   else
     MBD := mdbNormal;
+  MM := TKMMissionMode(DropBox_MissionMode.ItemIndex);
+  DropBox_MissionMode.Hint := gResTexts[MAP_MP_MOD_DESC[MM]];
+
+
   //Update the game options
   gNetworking.UpdateGameOptions(EnsureRange(TrackBar_LobbyPeacetime.Position, 0, 300),
                                 TrackBarPos2Speed(TrackBar_SpeedPT.Position),
                                 TrackBarPos2Speed(TrackBar_SpeedAfterPT.Position),
-                                MD, MBD, fWeather);
+                                MD, MBD, fWeather, MM);
 
   //Refresh the data to controls
   Lobby_OnGameOptions;
@@ -1397,6 +1421,7 @@ procedure TKMMenuLobby.Lobby_OnGameOptions;
 var
   MD: TKMMissionDifficulty;
   MBD: TKMMissionBuiltInDifficulty;
+  MM : TKMMissionMode;
 begin
   TrackBar_LobbyPeacetime.Position := gNetworking.NetGameOptions.Peacetime;
 
@@ -1412,6 +1437,8 @@ begin
 
   MBD := gNetworking.NetGameOptions.MissionBuiltInDifficulty;
     DropBox_BuilInDifficulty.SelectByTag(Byte(MBD));
+  MM := gNetworking.NetGameOptions.Mode;
+  DropBox_MissionMode.SelectByTag(byte(MM));
 
   UpdateGameOptionsUI;
 end;

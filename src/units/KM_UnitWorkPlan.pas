@@ -72,7 +72,7 @@ uses
   KM_ResUnits,
   KM_Houses, KM_HouseWoodcutters, KM_HouseSiegeWorkshop, KM_HouseWoodBurner, KM_HouseQueue,
   KM_HouseSwineStable,
-  KM_MapEditor, KM_MapEdTypes,
+  KM_MapEditor, KM_MapEdTypes, KM_MapTypes,
   KM_Terrain, KM_ResWares, KM_Log, KM_ResMapElements, KM_ResTileset, KM_ResTilesetTypes,
   KM_Resource, KM_CommonUtils, KM_HandsCollection, Math;
 
@@ -311,10 +311,15 @@ begin
 
   for I := 0 to WARES_IN_OUT_COUNT - 1 do
   begin
+
     Res[I].W := H.WareInput[I+1];
 
     if Res[I].W <> wtNone then
       Res[I].C := 1;
+
+    If gGame.Params.MPMode = mmBottomless then
+      If Res[I].W = wtWater then
+        Res[I].W := wtNone;
 
     if not ((wtAll in gRes.Units[aUnit.UnitType].ProducesWares)
       or (H.WareOutput[I+1] in gRes.Units[aUnit.UnitType].ProducesWares)) then
@@ -326,7 +331,6 @@ begin
     if Prod[I].W <> wtNone then
       if Prod[I].W <> wtSawDust then
         Prod[I].C := gRes.Houses[fHome].GetWareProdCt(Prod[I].W);
-
   end;
 
   if length(gRes.Houses[H.HouseType].WorkAnim) > 0 then
@@ -1155,6 +1159,9 @@ begin
     else
     if gGame.Params.MBD.IsHardOrRealism then
       ActSetByMultiplier(aUnit, 1.25);
+
+    if gGame.Params.MPMode = mmBottomless then
+      ActSetByMultiplier(aUnit, 1.1);
 
   if aUnit.Home.HouseType = htProductionThatch then
   begin

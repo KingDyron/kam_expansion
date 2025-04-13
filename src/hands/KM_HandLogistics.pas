@@ -1255,6 +1255,10 @@ begin
           and gHands[fOwner].HasPearl(ptAgros) then
         Importance := diHigh1;
 
+      //Stone to towers
+      if (Loc_House <> nil) and (Loc_House.HouseType = htPearl) then
+        Importance := diHigh1;
+
       Form_UpdateDemandNode(aWare,I);
     end;
   end;

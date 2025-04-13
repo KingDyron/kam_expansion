@@ -53,6 +53,7 @@ type
     //overriden
     procedure WareAddToIn(aWare: TKMWareType; aCount: Integer = 1; aFromStaticScript: Boolean = False); override;
     function CanHasWorker(aType : TKMUnitType) : Boolean; override;
+    procedure Demolish(aFrom: TKMHandID; IsSilent: Boolean = False); virtual;
     //new
     function CanBuild : Boolean;
     function BuildCost : TKMWarePlan;
@@ -254,6 +255,12 @@ begin
               and not IsDestroyed
               and IsComplete
               and not IsClosedForWorker;
+end;
+
+procedure TKMHousePearl.Demolish(aFrom: TKMHandID; IsSilent: Boolean = False);
+begin
+  gHands[Owner].PearlDestroyed(fPearlType);
+  Inherited;
 end;
 
 //new
