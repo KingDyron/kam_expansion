@@ -100,6 +100,7 @@ type
     procedure Store_BellClick(Sender : TObject);
     procedure Ship_Clicked(Sender: TObject; Shift : TShiftState);
     procedure CollectorsClicked(Sender: TObject; Shift : TShiftState);
+    procedure SetHouseStyleClicked(Sender: TObject; Shift : TShiftState);
   protected
     Panel_House: TKMScrollPanel;
       Label_House: TKMLabel;
@@ -122,6 +123,7 @@ type
       Label_House_UnderConstruction,Label_House_Demolish: TKMLabel;
       Image_HouseConstructionWood, Image_HouseConstructionStone, Image_HouseConstructionTile: TKMImage;
       Label_HouseConstructionWood, Label_HouseConstructionStone, Label_HouseConstructionTile: TKMLabel;
+      Button_SetHouseStyle : TKMButton;
 
       Button_House_DemolishYes,Button_House_DemolishNo: TKMButton;
       WaresProdCt_Common: array [1..WARES_IN_OUT_COUNT * 2] of TKMLabel;
@@ -415,13 +417,16 @@ begin
     Image_HouseConstructionWood.ImageCenter;
     Image_HouseConstructionStone := TKMImage.Create(Panel_House,70,170,40,40,654);
     Image_HouseConstructionStone.ImageCenter;
-
     Image_HouseConstructionTile := TKMImage.Create(Panel_House,120,170,40,40,709);
     Image_HouseConstructionTile.ImageCenter;
 
     Label_HouseConstructionWood  := TKMLabel.Create(Panel_House,40,210,gRes.Wares[wtTimber].Title,fntGrey,taCenter);
     Label_HouseConstructionStone := TKMLabel.Create(Panel_House,90,210,gRes.Wares[wtStone].Title,fntGrey,taCenter);
     Label_HouseConstructionTile := TKMLabel.Create(Panel_House,140,210,gRes.Wares[wtStone].Title,fntGrey,taCenter);
+
+    Button_SetHouseStyle := TKMButton.Create(Panel_House,71,230,40,30,389, rxGui,bsGame);
+    Button_SetHouseStyle.Hint := gResTexts[1814];
+    Button_SetHouseStyle.OnClickShift := SetHouseStyleClicked;
 
     Label_House_Demolish := TKMLabel.Create(Panel_House,0,130,TB_WIDTH,0,gResTexts[TX_HOUSE_DEMOLISH],fntGrey,taCenter);
     Label_House_Demolish.WordWrap := True;
@@ -1486,6 +1491,8 @@ begin
     Label_HouseConstructionWood.Show;
     Label_HouseConstructionStone.Show;
     Label_HouseConstructionTile.Show;
+    Button_SetHouseStyle.Visible := (Length(fHouse.HSpec.Styles) > 0) and (Length(fHouse.HSpec.Levels) = 0);
+    Button_SetHouseStyle.TexID := fHouse.GetStyleGuiIcon;
     if aHouse.IsUpgrading then
     begin
       With gRes.Houses[aHouse.HouseType].Levels[aHouse.CurrentLevel] do
@@ -1542,6 +1549,7 @@ begin
   Label_HouseConstructionWood.Hide;
   Label_HouseConstructionStone.Hide;
   Label_HouseConstructionTile.Hide;
+  Button_SetHouseStyle.Hide;
   Label_House_Demolish.Hide;
   Button_House_DemolishYes.Hide;
   Button_House_DemolishNo.Hide;
@@ -4295,6 +4303,15 @@ procedure TKMGUIGameHouse.CollectorsClicked(Sender: TObject; Shift: TShiftState)
 begin
   if fHouse is TKMHouseCollectors then
     gGame.GameInputProcess.CmdHouse(gicHouseCollectorsMode, fHouse);
+end;
+
+procedure TKMGUIGameHouse.SetHouseStyleClicked(Sender: TObject; Shift: TShiftState);
+var I : Integer;
+begin
+  I := fHouse.Style;
+  IncLoop(I, 0, length(fHouse.HSpec.Styles), IfThen(ssRight in Shift, -1, 1));
+
+  gGame.GameInputProcess.CmdHouse(gicHouseStyleSet, fHouse, I);
 end;
 
 procedure TKMGUIGameHouse.Save(SaveStream: TKMemoryStream);
