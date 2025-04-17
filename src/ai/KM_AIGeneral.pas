@@ -1158,8 +1158,9 @@ begin
     if fDefencePositions[I].DefenceType = dtBackLine then
       if fDefencePositions[I].CurrentGroup <> nil then
         if fDefencePositions[I].CurrentGroup.IsDead then
-        //if fDefencePositions[I].CurrentGroup.FlagBearer.IsIdle then
-          fDefencePositions[I].CurrentGroup.OrderHalt(true, true);
+          if fDefencePositions[I].CurrentGroup.Count > 0 then
+          //if fDefencePositions[I].CurrentGroup.FlagBearer.IsIdle then
+            fDefencePositions[I].CurrentGroup.OrderHalt(true, true);
 end;
 
 

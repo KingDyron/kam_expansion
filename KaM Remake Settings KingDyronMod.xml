@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Root>
   <Main>
-    <GFX FullScreen="False" VSync="True" ResolutionWidth="1360" ResolutionHeight="768" RefreshRate="60" FPSCap="60"/>
+    <GFX FullScreen="False" VSync="True" ResolutionWidth="1920" ResolutionHeight="1080" RefreshRate="60" FPSCap="60"/>
     <Window Left="449" Top="33" Width="1024" Height="720" State="2"/>
     <Misc NoRenderMaxTime="1000"/>
   </Main>
   <Game>
     <GFX Brightness="0" AlphaShadows="True" LoadFullFonts="False"/>
     <SFX Volume="0.4500"/>
-    <Music Enabled="True" Volume="0.0000" Shuffle="False"/>
+    <Music Enabled="True" Volume="0.1500" Shuffle="False"/>
     <Video Enabled="False" Stretch="True" Startup="True" Volume="0.5000"/>
     <Weather Enabled="True" MaxCount="10" MaxSpawnCount="4" MinInterval="200" MaxInterval="3000" MaxLifeTime="1200" MaxCloudSpeed="0.1000" DecParticles="9" NightSpeed="10" NightTime="15" DynamicLight="True"/>
     <GameCommon Locale="pol">
@@ -26,10 +26,10 @@
     <MapEd HistoryDepth="250" MaxTerrainHeight="150"/>
     <Multiplayer Name="NoName2asd" LastIP="194.87.226.195" LastPort="56789" LastRoom="1" LastPassword="" FlashOnMessage="True"/>
     <Misc AsyncGameResLoader="True" BeastPanelExpanded="False" WaresPanelExpanded="False False False False False False False False False False False " HousesPanelExpanded="False False False False False False False False False False False "/>
-    <Menu FavouriteMaps="" CampaignName="HKS" LobbyMapType="4" CampaignID="0" CampaignMapID="5">
-      <Singleplayer Type="0" ScenarioMapCRC="4260406409" MissionMapCRC="3221235012" TacticMapCRC="3221235012" SpecialMapCRC="3221235012" SaveFileName="autosave01"/>
+    <Menu FavouriteMaps="" CampaignName="HKS" LobbyMapType="4" CampaignID="0" CampaignMapID="19">
+      <Singleplayer Type="0" ScenarioMapCRC="1195747287" MissionMapCRC="3221235012" TacticMapCRC="3221235012" SpecialMapCRC="3221235012" SaveFileName="autosave"/>
       <Replay Type="1" SPSaveName="Nowa Misja 2" MPSaveName="paused"/>
-      <MapEd MapType="0" NewMapX="32" NewMapY="32" SPMapCRC="1158755150" MPMapCRC="2987465520" MPMapName="Nowa Misja" DLMapCRC="0"/>
+      <MapEd MapType="0" NewMapX="32" NewMapY="32" SPMapCRC="2114714243" MPMapCRC="2987465520" MPMapName="Nowa Misja" DLMapCRC="0"/>
     </Menu>
     <Debug SaveRandomChecks="True" SaveGameAsText="False"/>
   </Game>

@@ -127,13 +127,14 @@ type
           Button_Grains : array[GRAIN_MIN..GRAIN_MAX] of TKMButtonFlat;
           GrainViewer : TKMGrainViewer;
           Grain_Wares : array[0..4] of TKMWaresRow;
-          Grain_GrowingTime : TKMLabel;
+          Grain_GrowingTime, Grain_RegrowingTime : TKMWaresRow;
 
         Panel_Fruit : TKMPanel;
           Button_Fruits : array of TKMButtonFlat;
           Fruit_Viewer : TKMFruitViewer;
           Fruit_Crops : TKMWaresRow;
-          Fruit_GrowingTime,
+          Fruit_GrowingTime, Fruit_RegrowingTime : TKMWaresRow;
+          //Fruit_GrowingTime,
           Terrain_Best,
           Terrain_Worst : TKMLabel;
           Fruit_ClimateViewer : TKMClimateViewer;
@@ -408,9 +409,19 @@ begin
     end;
   end;
 
-  Grain_GrowingTime := TKMLabel.Create(Panel_Grain, 20, 230, 400, 20, '', fntMetal, taLeft);
+  Grain_GrowingTime := TKMWaresRow.Create(Panel_Grain, 20, 230, 140, false);
+  Grain_GrowingTime.TxtOffset := -115;
+  Grain_GrowingTime.TextOffset := 45;
+  Grain_GrowingTime.WareCount := 1;
+  Grain_GrowingTime.TexID := 1028;
+  Grain_GrowingTime.Hint := gResTexts[2185];
 
-
+  Grain_ReGrowingTime := TKMWaresRow.Create(Panel_Grain, Grain_GrowingTime.Right + 20, 230, 140, false);
+  Grain_ReGrowingTime.TxtOffset := -115;
+  Grain_ReGrowingTime.TextOffset := 45;
+  Grain_ReGrowingTime.WareCount := 1;
+  Grain_ReGrowingTime.TexID := 1029;
+  Grain_ReGrowingTime.Hint := gResTexts[2186];
 end;
 
 procedure TKMGUIGameGuide.CreateFruits;
@@ -438,7 +449,7 @@ begin
   Fruit_Crops.TextOffset := 25;
   Fruit_Crops.WareCount := 1;
   Fruit_Crops.TexID := gRes.Wares[wtApple].GUIIcon;
-  Fruit_GrowingTime := TKMLabel.Create(Panel_Fruit, 20, 230, 400, 20, '', fntMetal, taLeft);
+  //Fruit_GrowingTime := TKMLabel.Create(Panel_Fruit, 20, 230, 400, 20, '', fntMetal, taLeft);
 
   Terrain_Best := TKMLabel.Create(Panel_Fruit, 20, 310, 430, 20, '', fntMetal, taLeft);
   Terrain_Best.FontColor := $FF22D000;
@@ -446,6 +457,21 @@ begin
   Terrain_Worst.FontColor := $FF2200D0;
 
   Fruit_ClimateViewer := TKMClimateViewer.Create(Panel_Fruit, 20, 370, 430, 100);
+
+
+  Fruit_GrowingTime := TKMWaresRow.Create(Panel_Fruit, 20, 230, 140, false);
+  Fruit_GrowingTime.TxtOffset := -115;
+  Fruit_GrowingTime.TextOffset := 45;
+  Fruit_GrowingTime.WareCount := 1;
+  Fruit_GrowingTime.TexID := 1028;
+  Fruit_GrowingTime.Hint := gResTexts[2185];
+
+  Fruit_ReGrowingTime := TKMWaresRow.Create(Panel_Fruit, Fruit_GrowingTime.Right + 20, 230, 140, false);
+  Fruit_ReGrowingTime.TxtOffset := -115;
+  Fruit_ReGrowingTime.TextOffset := 45;
+  Fruit_ReGrowingTime.WareCount := 1;
+  Fruit_ReGrowingTime.TexID := 1029;
+  Fruit_ReGrowingTime.Hint := gResTexts[2186];
 
 end;
 
@@ -793,14 +819,15 @@ begin
   h := time div (60 * 60 * 10) mod 24;
   m := time div (60 * 10) mod 60;
   s := time div 10 mod 60;
-  cap := gResTexts[2185] + '|    ';
+  cap := '';//gResTexts[2185] + '|    ';
   If h > 0 then
     cap := cap + h.ToString + 'h ';
   If m > 0 then
     cap := cap + m.ToString + 'm ';
   If s > 0 then
     cap := cap + s.ToString + 's ';
-
+  Grain_GrowingTime.Caption := cap;
+  Grain_ReGrowingTime.Hide;
   If fSelectedGrain in GRAIN_GRASS then
   begin
     regStage := GT.Stage[lastStage].NextStage;
@@ -808,15 +835,16 @@ begin
     h := time div (60 * 60 * 10) mod 24;
     m := time div (60 * 10) mod 60;
     s := time div 10 mod 60;
-    cap := cap + '|' + gResTexts[2186] + '|    ';
+    cap := '';
     If h > 0 then
       cap := cap + h.ToString + 'h ';
     If m > 0 then
       cap := cap + m.ToString + 'm ';
     If s > 0 then
       cap := cap + s.ToString + 's ';
+    Grain_ReGrowingTime.Caption := cap;
+    Grain_ReGrowingTime.Show;
   end;
-  Grain_GrowingTime.Caption := cap;
 
 
 end;
@@ -850,7 +878,7 @@ begin
   h := time div (60 * 60 * 10) mod 24;
   m := time div (60 * 10) mod 60;
   s := time div 10 mod 60;
-  cap := gResTexts[2185] + '|    ';
+  cap := '';
   If h > 0 then
     cap := cap + h.ToString + 'h ';
   If m > 0 then
@@ -858,21 +886,22 @@ begin
   If s > 0 then
     cap := cap + s.ToString + 's ';
 
+  Fruit_GrowingTime.Caption := cap;
   time := (F.StagesCount - F.MatureTreeStage) * F.ProgressPerStage;
   h := time div (60 * 60 * 10) mod 24;
   m := time div (60 * 10) mod 60;
   s := time div 10 mod 60;
-  cap := cap + '|' + gResTexts[2186] + '|    ';
+  cap := '';
   If h > 0 then
     cap := cap + h.ToString + 'h ';
   If m > 0 then
     cap := cap + m.ToString + 'm ';
   If s > 0 then
     cap := cap + s.ToString + 's ';
+  Fruit_ReGrowingTime.Caption := cap;
 
 
   Fruit_Crops.Caption := F.Fruits.ToString(ffNumber, 3, 3);
-  Fruit_GrowingTime.Caption := cap;
   climOrder := [tcDry1, tcDry2, tcWarm1, tcWarm2, tcWet1, tcWet2, tcNeutral, tcCold1, tcCold2];
   for I := 0 to High(climOrder) do
     for J := I to High(climOrder) do
