@@ -1086,6 +1086,9 @@ var tmpDir : TKMDirection;
   tmpLeft : Byte;
 begin
   Result := 0; //turn right}
+  If (aDir2 = aDir1) or (aDir2 = dirNA) or (aDir1 = dirNA) then
+    Exit(0);
+
   tmpDir := aDir1;
   tmpLeft := 0;
   while tmpDir <> aDir2 do

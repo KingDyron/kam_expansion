@@ -207,6 +207,8 @@ type
     function PlanConnectRoad(aHand, X1, Y1, X2, Y2: Integer; aCompleted: Boolean): Boolean;
     function PlanRemove(aHand, X, Y: Integer): Boolean;
 
+    procedure PlayerAllowField(const aPlayer: Integer; aFieldType : Byte; aAllow : Boolean);
+    procedure PlayerAllowFieldEx(const aPlayer: Integer; aFieldType : TKMLockFieldType; aAllow : Boolean);
     procedure PlayerAllianceChange(aHand1, aHand2: Byte; aCompliment, aAllied: Boolean);
     procedure PlayerAllianceNFogChange(aHand1, aHand2: Byte; aCompliment, aAllied, aSyncAllyFog: Boolean);
     procedure PlayerAddDefaultGoals(aHand: Byte; aBuildings: Boolean);
@@ -612,6 +614,42 @@ begin
   end;
 end;
 
+
+procedure TKMScriptActions.PlayerAllowField(const aPlayer: Integer; aFieldType : Byte; aAllow : Boolean);
+begin
+  try
+    //Verify all input parameters
+    if InRange(aPlayer, 0, gHands.Count - 1)
+      and gHands[aPlayer].Enabled then
+    begin
+      gHands[aPlayer].Locks.SetFieldLocked(TKMLockFieldType(aFieldType), not aAllow);
+    end
+    else
+      LogIntParamWarn('Actions.PlayerAllowField', [aPlayer, byte(aFieldType), Byte(aAllow)]);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+
+end;
+
+procedure TKMScriptActions.PlayerAllowFieldEx(const aPlayer: Integer; aFieldType : TKMLockFieldType; aAllow : Boolean);
+begin
+  try
+    //Verify all input parameters
+    if InRange(aPlayer, 0, gHands.Count - 1)
+      and gHands[aPlayer].Enabled then
+    begin
+      gHands[aPlayer].Locks.SetFieldLocked(aFieldType, not aAllow);
+    end
+    else
+      LogIntParamWarn('Actions.PlayerAllowFieldEx', [aPlayer, byte(aFieldType), Byte(aAllow)]);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+
+end;
 
 //* Version: 5097
 //* Change whether player1 is allied to player2.
@@ -1087,7 +1125,8 @@ begin
     Result := UID_NONE;
     //Verify all input parameters
     if InRange(aHand, 0, gHands.Count - 1) and (gHands[aHand].Enabled)
-    and (aType in [UNIT_TYPE_TO_ID[WARRIOR_MIN]..UNIT_TYPE_TO_ID[WARRIOR_MAX]])
+    and (aType in [0..UNIT_TYPE_TO_ID[UNIT_MAX]])
+    and (UNIT_ID_TO_TYPE[aType] in UNITS_HUMAN)
     and gTerrain.TileInMapCoords(X,Y)
     and (TKMDirection(aDir+1) in [dirN..dirNW])
     and (aCount > 0)
@@ -1124,7 +1163,7 @@ begin
     Result := UID_NONE;
     //Verify all input parameters
     if InRange(aHand, 0, gHands.Count - 1) and (gHands[aHand].Enabled)
-    and (aType in UNITS_WARRIORS)
+    and (aType in UNITS_HUMAN)
     and gTerrain.TileInMapCoords(X,Y)
     and (aDir in [dirN..dirNW])
     and (aCount > 0)
@@ -1155,7 +1194,9 @@ begin
 
     //Verify all input parameters
     if InRange(aHand, 0, gHands.Count - 1) and (gHands[aHand].Enabled)
-    and (aType in [UNIT_TYPE_TO_ID[CITIZEN_MIN] .. UNIT_TYPE_TO_ID[CITIZEN_MAX]])
+    and (aType in [0..UNIT_TYPE_TO_ID[UNIT_MAX]])
+    and (UNIT_ID_TO_TYPE[aType] in UNITS_HUMAN)
+    //and (aType in [UNIT_TYPE_TO_ID[CITIZEN_MIN] .. UNIT_TYPE_TO_ID[CITIZEN_MAX]])
     and gTerrain.TileInMapCoords(X, Y)
     and (TKMDirection(aDir + 1) in [dirN .. dirNW]) then
     begin
@@ -1184,7 +1225,8 @@ begin
 
     //Verify all input parameters
     if InRange(aHand, 0, gHands.Count - 1) and (gHands[aHand].Enabled)
-    and (aType in UNITS_CITIZEN)
+    and (aType in UNITS_HUMAN)
+    //and (aType in UNITS_CITIZEN)
     and gTerrain.TileInMapCoords(X, Y)
     and (aDir in [dirN .. dirNW]) then
     begin

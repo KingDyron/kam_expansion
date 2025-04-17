@@ -10,10 +10,10 @@ type
   private
     fDesireToSteer, fStuckFor: Byte; //Likelihood of changing direction
     fVertexOccupied: TKMPoint; //The diagonal vertex we are currently occupying
-    fNextPos: TKMPoint; //The tile we are currently walking to
+    fNextPos: TKMPointDir; //The tile we are currently walking to
     procedure IncVertex(const aFrom, aTo: TKMPoint);
     procedure DecVertex;
-    function ChooseNextStep(out Point: TKMPoint): Boolean;
+    function ChooseNextStep(out Point: TKMPointDir): Boolean;
   public
     constructor Create(aUnit: TKMUnit; aActionType: TKMUnitActionType; aLocked: Boolean);
     constructor Load(LoadStream: TKMemoryStream); override;
@@ -37,7 +37,8 @@ begin
 
   Assert(aUnit is TKMUnitAnimal); //Only animals do steering
   fVertexOccupied := KMPOINT_ZERO;
-  fNextPos        := KMPOINT_ZERO;
+  fNextPos.Loc        := KMPOINT_ZERO;
+  fNextPos.Dir        := aUnit.Direction;
 end;
 
 
@@ -94,12 +95,13 @@ begin
 end;
 
 
-function TKMUnitActionSteer.ChooseNextStep(out Point: TKMPoint): Boolean;
+function TKMUnitActionSteer.ChooseNextStep(out Point: TKMPointDir): Boolean;
 var
   I,K,J: Integer;
   loc: TKMPoint;
   list: TKMPointList;
   goodSpot: Boolean;
+  oldLoc : TKMPoint;
 begin
   Inc(fDesireToSteer);
   //Default is the next tile in the direction we're going
@@ -120,13 +122,15 @@ begin
           for J:=0 to 5*Byte(goodSpot) do
             list.Add(KMPoint(loc.X+I, loc.Y+K));
         end;
-    Result := list.GetRandom(Point);
+    Result := list.GetRandom(Point.Loc);
+    Point.Dir := KMGetDirection(fUnit.PositionPrev, Point.Loc);
     list.Free;
   end
   else
   begin
-    Point := loc;
+    Point.Loc := loc;
     Result := True;
+    Point.Dir := KMGetDirection(fUnit.PositionPrev, Point.Loc);
   end;
 end;
 
@@ -138,10 +142,12 @@ var
   dx, dy: Shortint;
   walkX, walkY, distance: Single;
   firstStep: Boolean;
+  oldDir : TKMDirection;
 begin
-  if KMSamePoint(fNextPos, KMPOINT_ZERO) then
+  if KMSamePoint(fNextPos.Loc, KMPOINT_ZERO) then
   begin
-    fNextPos := fUnit.Position; //Set fNextPos to current pos so it initializes on the first run
+    fNextPos.Loc := fUnit.Position; //Set fNextPos to current pos so it initializes on the first run
+    fNextPos.Dir := fUnit.Direction;
     firstStep := True;
   end
   else
@@ -150,6 +156,24 @@ begin
   // Use umtWalk move type here, since we just want to evaluate if we are close enough
   //distance := gRes.Units[fUnit.UnitType].GetEffectiveWalkSpeed(False);
   distance := fUnit.GetEffectiveWalkSpeed(False);
+  //check if we need to change direction
+
+   //Update unit direction so we are facing the way we are going
+  //Save unit dir in case we will need to restore it
+  oldDir := fUnit.Direction;
+  //Update unit direction according to next Node
+  If (oldDir <> fNextPos.Dir) and USE_UNIT_TURN_AROUND then
+  begin
+    //in original KaM units were turning, not sudenly changing their direction
+    If GetDirDifference(oldDir, fNextPos.Dir) = 1 then
+      fUnit.Direction := DIR_TO_PREV[oldDir]
+    else
+      fUnit.Direction := DIR_TO_NEXT[oldDir];
+
+      {KMGetDirection(fNodeList[fNodePos], fNodeList[fNodePos+1]);}
+    Exit(arActContinues);
+  end else
+    fUnit.Direction := fNextPos.Dir;
 
   if KMSamePointF(fUnit.PositionF, KMPointF(fNextPos), distance/2) then
   begin
@@ -171,14 +195,31 @@ begin
       Exit;
     end;
     fStuckFor := 0;
-    
+
     //Do some house keeping because we have now stepped on a new tile
-    fUnit.PositionNext := fNextPos;
+    fUnit.PositionNext := fNextPos.Loc;
     fUnit.Walk(fUnit.PositionPrev, fUnit.PositionNext); //Pre-occupy next tile
     if KMStepIsDiag(fUnit.PositionPrev,fUnit.PositionNext) then
       IncVertex(fUnit.PositionPrev,fUnit.PositionNext);
-    //Update unit direction so we are facing the way we are going
-    fUnit.Direction := KMGetDirection(fUnit.PositionPrev, fUnit.PositionNext);
+
+
+
+    fNextPos.Dir := KMGetDirection(fUnit.PositionPrev, fUnit.PositionNext);
+    //If fNextPos.Dir <> fUnit.Direction then
+    //  Exit(arActContinues);
+    //Update unit direction according to next Node
+    If (fNextPos.Dir <> fUnit.Direction) and USE_UNIT_TURN_AROUND then
+    begin
+      //in original KaM units were turning, not sudenly changing their direction
+      If GetDirDifference(oldDir, fNextPos.Dir) = 1 then
+        fUnit.Direction := DIR_TO_PREV[oldDir]
+      else
+        fUnit.Direction := DIR_TO_NEXT[oldDir];
+
+        {KMGetDirection(fNodeList[fNodePos], fNodeList[fNodePos+1]);}
+      Exit(arActContinues);
+    end else
+      fUnit.Direction := fNextPos.Dir;
   end;
 
   walkX := fNextPos.X - fUnit.PositionF.X;

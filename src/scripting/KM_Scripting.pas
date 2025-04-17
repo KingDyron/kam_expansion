@@ -934,6 +934,8 @@ begin
     RegisterMethodCheck(c, 'function  PlanConnectRoad(aHand: Integer; X1: Integer; Y1: Integer; X2: Integer; Y2: Integer; aCompleted: Boolean): Boolean');
     RegisterMethodCheck(c, 'function  PlanRemove(aHand: Integer; X, Y: Integer): Boolean');
     RegisterMethodCheck(c, 'procedure PlayerAddDefaultGoals(aHand: Byte; aBuildings: Boolean)');
+    RegisterMethodCheck(c, 'procedure PlayerAllowField(const aPlayer: Integer; aFieldType : Byte; aAllow : Boolean)');
+    RegisterMethodCheck(c, 'procedure PlayerAllowFieldEx(const aPlayer: Integer; aFieldType : TKMLockFieldType; aAllow : Boolean)');
     RegisterMethodCheck(c, 'procedure PlayerAllianceChange(aHand1: Byte; aHand2: Byte; aCompliment: Boolean; aAllied: Boolean)');
     RegisterMethodCheck(c, 'procedure PlayerAllianceNFogChange(aHand1: Byte; aHand2: Byte; aCompliment: Boolean; aAllied: Boolean; aSyncAllyFog: Boolean)');
     RegisterMethodCheck(c, 'procedure PlayerDefeat(aHand: Integer)');
@@ -1732,6 +1734,8 @@ begin
       RegisterMethod(@TKMScriptActions.PlanConnectRoad, 'PlanConnectRoad');
       RegisterMethod(@TKMScriptActions.PlanRemove, 'PlanRemove');
       RegisterMethod(@TKMScriptActions.PlayerAddDefaultGoals, 'PlayerAddDefaultGoals');
+      RegisterMethod(@TKMScriptActions.PlayerAllowField, 'PlayerAllowField');
+      RegisterMethod(@TKMScriptActions.PlayerAllowFieldEx, 'PlayerAllowFieldEx');
       RegisterMethod(@TKMScriptActions.PlayerAllianceChange, 'PlayerAllianceChange');
       RegisterMethod(@TKMScriptActions.PlayerAllianceNFogChange, 'PlayerAllianceNFogChange');
       RegisterMethod(@TKMScriptActions.PlayerDefeat, 'PlayerDefeat');

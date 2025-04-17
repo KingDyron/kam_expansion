@@ -1266,8 +1266,6 @@ begin
         fUnit.Direction := DIR_TO_PREV[oldDir]
       else
         fUnit.Direction := DIR_TO_NEXT[oldDir];
-
-        {KMGetDirection(fNodeList[fNodePos], fNodeList[fNodePos+1]);}
       Exit;
     end else
       fUnit.Direction := nextDir;
