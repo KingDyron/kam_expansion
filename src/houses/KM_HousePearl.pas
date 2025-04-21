@@ -53,7 +53,7 @@ type
     //overriden
     procedure WareAddToIn(aWare: TKMWareType; aCount: Integer = 1; aFromStaticScript: Boolean = False); override;
     function CanHasWorker(aType : TKMUnitType) : Boolean; override;
-    procedure Demolish(aFrom: TKMHandID; IsSilent: Boolean = False); virtual;
+    procedure Demolish(aFrom: TKMHandID; IsSilent: Boolean = False); override;
     //new
     function CanBuild : Boolean;
     function BuildCost : TKMWarePlan;

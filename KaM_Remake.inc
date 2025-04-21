@@ -59,4 +59,4 @@
 
 //Enable some debug features
 {.$DEFINE DEBUG}
-{$DEFINE DEBUG_CRC}
+{.$DEFINE DEBUG_CRC}

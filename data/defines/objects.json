@@ -2401,7 +2401,7 @@
 	  },
 	  {
 		"AddGrowableTree" : true,
-		"AxeHitTimes" : 15, "TrunksCount" : 1, "TreeGrowAge" : 8, "FallTreeAnimObj" : 0, "Stump" : 15, "IsFruit" : 0, "MatureTree" : 3,
+		"AxeHitTimes" : 15, "TrunksCount" : 2, "TreeGrowAge" : 8, "FallTreeAnimObj" : 0, "Stump" : 15, "IsFruit" : 0, "MatureTree" : 3,
 		"Stages": [
 					{"SnowPic" : 777, "AnimSteps" : [622, 623, 624, 623]},   
 					{"SnowPic" : 778, "AnimSteps" : [625, 626, 627, 626]},   

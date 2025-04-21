@@ -4,6 +4,7 @@
 	- dodano flagi dla strzechy produkcyjnej
 	- dodano przycisk do zmiany wyglądu budynku podczas jego budowy
 	- maksymalny rozmiar budynku został zwiększony z 4 do 5. Przygotowania do "Perły Architektury"
+	- Pałac ma teraz ikonki dla podziemnych surowców
 
 [$55FF55]Jednostki
 	- dodano opis do operatora i zbieracza
@@ -19,7 +20,7 @@
 	- sformatowano dane budynków. Usunięte zbędne dane oraz wszystko jest zapisywane w pliku Json
 	- dodano skrót klawiszowy do przycisku pracownika w panelu budynku, 
 		który przeniesię cię do szkoły z wybranym automatycznie typem pracownika
-		(Shift + LMB na iconie pracownika)
+		(Shift + LPM na iconie pracownika)
 	- zwiększono koszt Jajek w targowisku
 
 [$55FF55]Realizm
@@ -35,187 +36,187 @@
 	- "Godzina" pod minimapą pokazuje AM oraz PM jeśli gracz ma angielski jako język systemowy
 	- dodano brakujące jednostki w przewodniku
 	- dodano skrót klawiszowy aby szybko otworzyć przewodnik z wybranym typem jednostki/budynku
-		(w panelu budynku LPM + Shift na iconie budynku, w panelu jednostki LMB + Shift na zwoju jednostki)
-	- added button in main menu to show changelog
-	- fixed names of subpages in MapEd
-	- added missing texts (1886, 1887) in English version  
-	- cottage panel didn't have it's own texts in libx file, "family", "baby", etc.   
-	- added button in `credits menu` to send you directly to KaM Expansion discord server  
-	- house icon in build panel is disabled if you can't build it
-		(There can be only one Production Thatch)  
+		(w panelu budynku LPM + Shift na iconie budynku, w panelu jednostki LPM + Shift na zwoju jednostki)
+	- dodano przycisk w menu głównym aby wyświetlić listę zmian 
+	- porawiono nazwy podzakładek w edytorze map
+	- dodano brakujące teksty w weersji angielskiej (1886, 1887)
+	- panel chaty mieszkalnej nie posiadał tekstów w pliku libx (family, dziecko, etc)
+	- dodano przycisk w "Autorzy" aby bezpośrednio przekierować na kanał discord-a
+	- icona budynku w panelu budowania jest wyłączona, jeśli budynek nie może być postawiony
+		(tyczy się głównie Strzechy Produkcyjnej, którą można postawić tylko raz)
 
 [$0000FF]KaM Expansion v1.11
 [$55FF55]TSK:
-	- unlocked fisherman
-	- mission 2, players had revealed full map, no message and attack from player 2, 
-		added coal objects
-	- mission 7, added quivers and operators  to enemy towers
-	- mission 8, slowed down enemy equip rate. Their attacks where once every 5 minutes.
-	- mission 9, added tailor's shop to the enemy on the right 
-	- mission 20, player 2 had `Iron Units` only
+	- odblokowano rybaka
+	- misja 2, gracz miał odkrytę całą mapę, dodano wiadomość o ataku przeciwnika, 
+		dodano obiekty z węglem
+	- misja 7, dodano kołczay oraz brakujących operatorów dla wroga
+	- misja 8, spowolniono rekrutację przeciwnika. Atakowali co 5 minut
+	- misja 9, dodano zakłady kaletnicze dla przeciwnika po prawej stronie
+	- misja 20, sojusznik teraz może szkolić wszystkie jednostki
 	
 [$55FF55]TPR:
-	- deleted `standard unlocking` script 
-	- mission 8, was too hard as for `normal` difficulty 
-	- mission 12,added stone bolts to enemies store houses
-	- mission 14, added stone and clay deposits, added stone bolts to enemies store houses
+	- usunięto skrypt na "standardowe odblokowywanie"
+	- misja 8, była zbyt trudna na normalnym poziomie trudności
+	- misja 12, dodano kamienie pociski wrogowi
+	- misja 14, dodano pokłady kamienia oraz gliny. Dodano kamienne pociski wrogowi
 	
 [$55FF55]TUA:
-	- deleted unnecessary stone masons
-	- mission 17, increased enemy attack delay 
-	- mission 21, was to hard as for normal difficulty 
-	- mission 22, added stone bolts to enemies store houses
-	- Mission 22-27, stone road was replaced with new types of road 
-	- mission 27 - 30 were reduced to only mission 27. Player selection in campaign menu 
-		was added, so there is no need to have the same 4 maps
+	- usunięto niepotrzebnych kamieniarzy
+	- misja 17, zwiększono czas rekrutacji przeciwnika
+	- misja 21, była zbyt trudna na normalnym poziomie trudności
+	- misja 22, dodano kamienie pociski wrogowi
+	- misja 22-27, kamienne drogi są zastąpione nowymi typami dróg
+	- misja 27 - 30 zostały zredukowane do misji 27. Dodano wybór gracza
+		w panelu kampanii.
 		
-[$55FF55]Houses:
-	- fixed glitch in animation of Fruit Tree house 
-	- while attacking Fruit trees, units attacks from EVERY surrounding tiles of orchard
-	- fixed a bug in the map editor when changing ware slot in Production Thatch 
+[$55FF55]Budynki:
+	- naprawiono animację drzewa owocowego
+	- podczas ataku drzewa owocowego jednostki atakują CAŁY sad
+	- poprawiono błąd w edytorze map podczas zmiany slotu towarów w strzesze produkcyjnej
 	
-[$55FF55]Units:
-	- builder while building road (hitting with hammer) goes to Inn when he gets hungry, 
-		now he only goes when he is still waiting for resources
+[$55FF55]Jednostki:
+	- budowniczy kiedy budował drogi (uderzał młotem) szedł do Gospody kiedy jest głodny,
+		teraz idzie jeśli nadal czeka na towar
 
-[$55FF55]Other:
-	- fixed json data directory (data\defines) 
-	- error shows up while clicking house site on which builder currently is, fixed 
-	- saving campaign map with `ctrl+S` saved it in `Maps` folder, 
-		now it's in the campaign's directory 
-	- added Quick Save `(ctrl + shift + S)` 
-	- added location selection in Campaign 
-	- fixed a bug related to recruits shooting from archery tower
-	- fixed server list 
-	- fixed loading map from KaM Remake Beta +r15000 
+[$55FF55]Inne:
+	- naprawiono ściężkę plików json (data\defines)
+	- poprawiono: błąd podczas wybierania planu budynku na którym aktualnie jest budowniczy
+	- zapisywanie mapy kampanii za pomocą "ctrl + S" zapisywało ją w folderze "Maps",
+		teraz zapisuje w folderze kampanii
+	- dodano skrót klawiszowy do szybkiego zapisu gry(ctrl + shift + S)
+	- dodano wybór gracza w kampanii
+	- naprawiono błąd związany z rekrutami w wieży strzelniczej
+	- poprawiono listę serwerów
+	- poprawiono ładowanie map z KaM Remake Beta +r15000
 
-[$55FF55]Interface:
-	- fixed error when showing stats 
-	- icon of armory workshop was changed to plate armor with shield
+[$55FF55]Interfejs:
+	- naprawiono błąd podczas wyświetlania statystyk
+	- ikona warsztatu pancerzy została zmieniona
 
 
 [$0000FF]KaM Expansion Version 1.1 Co-op and World update
-[$55FF55]Interface:
-	+added scroll bar to almost every panel. In small resolutions not everything was visible
-	+added Libx Name for missions. Mission name can be different depending on Language
-	+added mobile hints
-	-bevel effect is improved. It makes panels look more 3D
-	-improved checking alliances in Map Editor
-	-can't zoom map whit mouse whell while cursor is at left panel
-	-Transporting ship when is idle and is near land will automatically unload units
+[$55FF55]Interfejs:
+	+ dodano suwaki do większości panelów
+	+ dodano nazwę mapy z pliku libx. Nazwa misji jest zależna od języka gry
+	+ dodano pływające podpowiedzi
+	- efekt głębii został wzmocniony aby uzyskać efekt 3D
+	- ulepszono zaznaczanie sojuszy w edytorze map
+	- nie można przybliżać/oddalać mapy kiety kursor jest na lewym panelu
 	
 [$55FF55]AI:
-	+added Defend Positions, soldiers will protect this area when attacked even when it's far away
-	+added "Record Building"
+	- statek transportowy automatycznie rozładuje jednostki
+	+ dodano pozycje ochrony, żołnierze będą bronić tego terenu jeśli ktoś je zaatakuje
+	+ dodano nagrywanie budowania
 	
-[$55FF55]Wares:
-	+added wares: Hay, Vegetables, Feathers, Mace, Flail, Plate Armor, Bitin Armor
-	+Hay, Vegetables and Straw as food for animals have different affection
-	+added by-product "Manure". Farmer uses it to speed up growing crops 
-	+boots speeds up work outside for citizens
-	+added wares placable on the map (not objects)
-	+added progress bar for Vineyard
-	-the prices of wares are based on their production
-	-changed ware name from Sawdust to Shavings
-	-changed ware name from Pigs to Meat
+[$55FF55]Surowce:
+	+ dodano surowce: Siano, Warzywa, Pióra, Maczuga, Kiścień, Zbroja płytkowa, Kolczuga bitynowa
+	+ Siano, Warzywa oraz słoma są jako pokarm dla zwierząt
+	+ dodano produkt uboczny Nawóz. Chłop wykorzystuje go na polu
+	+ buty przyspieszają pracę cywili
+	+ dodano towary stawiane na ziemi w edytorze map (nie obiekty)
+	+ dodano pasek progresu do winnicy
+	- koszt surowców jest bazowany na ich produkcji
+	- zmieniono nazwę surowca z "Trociny" na "Wióry"
+	- zmieniono nazwę surowca z "Świnie" na "Mięso"
 	
-[$55FF55]Building:
-	+added Stall in which we can buy by-products
-	+added Production Thatch. Big house for many workers
-	+added Shipyard
-	+added 3 types of road
-	+added structures that can be built on the map
-	+added decorations that can be placed on the map
-	+added progress icons that shows age of the animals
-	+added progress wheel. Shows how many work is done in the house
-	+added indestructibility of buildings 
-	+added grass field and vegetables fields
-	+added few different types of crops
-	+building any field (except wooden road) flattens terrain 
-	+Apple tree is changed to Fruit Tree. It can plant many tree types
-	+added blocking roads, fields, house levels, structures and decorations 
-	+Changing ware slot can be forced with pressing "Shift"
-	+added "Hide wares" options to Storehouse. It shows only wares there are in store.
-	+added "Bell" button in Storehouse and Townhall. 
-		After click every idle citizen goes close to the house
-	+siege machines need 4 Operators to drive out of Siege Workshop 
-	+Fruit Tree(apple tree) house is now a modular house. It can be built close to each other
-	+Collector has now a new mode where he can be a Hunter. He sets traps for animals
-	+added structure "Mine shaft". Mines can be built on it to mine wherever ore deposits are
-	+added "Saw only" and "Cut only" in Farm
-	-emissary will send wares through shipyard if possible
-	-selected house has blue outline
-	-citizens if they need water and well is nearby, will go themselves for it
-	-Stone road is selected by default. It can be changed with right click on another road type
-	-Laborers building is imrpoved
-	-Cottage and House works different, it's improved
-	-by-products have a cyclic production now instead of random
-	-after killing enemy you get by-products
-	-fixed a bug with upgrading buildings
-	-fixed a bug with Market 
-	-fixed a smoke in cottage
-	-fixed a bug with a farmer. He didn't want to cut crops while having "Force Working" on
-	-Cottage and house placed in map editor (after starting the map) already has few workless citizens
-	-throwing rock in watch tower has been slowed down
+[$55FF55]Budynki:
+	+ dodano stragan w którym można kupować produkty uboczne
+	+ dodano Strzechę Produkcyjną. Wielki budynek do wielkiej prokucji
+	+ dodano Stocznię
+	+ dodano 3 rodzaje dróg
+	+ dodano struktury, które można budować
+	+ dodano dekoracje, które można postawić na mapie
+	+ dodano ikony progresu rozwoju zwierząt
+	+ dodano koło progresu pracy. Pokazuje ile trwa praca w budynku
+	+ dodano niezniszczalność budynku
+	+ dodano łąkę i warzywniak
+	+ dodano kilka rodzajów zbóż
+	+ budowanie pól wygładza lekko teren
+	+ Jabłoń zamieniono na Sad
+	+ dodano blokowanie dróg, pól, sktruktur i dekoracji
+	+ zmiana slotu towarów może być wymuszona używając klawisza Shift
+	+ dodano "ukryj" do spichlerza. Pokazuje tylko towary, które aktualnie są w spichlerzu
+	+ dodano przycisk "dzwona" do spichlerza i ratusza
+	+ machiny oblężnicze potrzebują 4 operatorów do wytworzenia
+	+ Sad jest teraz budynkiem modułowym. Może być budowany obok siebie
+	+ Chata zbieracza ma teraz dwa tryby, Zbieracza oraz łowcy
+	+ dodano strukturę szybów kopalnianych
+	+ dodano Tylko siej/Tylko ścinaj dla chłopa w gospodarstwie
+	- emisariusz wybierze drogę przez wodę aby przesłać towary
+	- zaznaczony budynek posiada otoczkę
+	- pracownicy jeśli potrzebują wodę, sami pójdą do studni jeśli wystarczająco blisko
+	- Kamienna droga jest domyślna. Można to zmienić klikając PPM na ikonę drogi
+	- budowanie budynków przez budowaniczych jest ulepszone
+	- ulepszono zasadę działania chaty mieszkalnej i domu mieszkalnego
+	- produkty uboczne mają teraz produkcję cykliczną(wcześniej była losowa)
+	- po zabiciu przeciwnika otrzymujesz produkty uboczne
+	- naprawiono błąd z ulepszaniem budynków
+	- naprawiono błąd z targowiskiem
+	- poprawiono dym w chacie mieszkalnej
+	- naprawiono błąd z chłopem, który nie ścinał zboża mimo wymuszonej pracy
+	- chata mieszkalna i dom mieszkalny jeśli są postawione od początku gry, 
+		mają w sobie jakichś bezrobotnych
+	- żucanie kamienia w wieży obronnej zostało spowolnione
 
-[$55FF55]Units:
-	+citizens go to the Storehouse to put on boots when they have free time
-	+added immortality of units 
-	+added possibility to change units flag color in Map Editor
-	+Woodcutter plants tree sapling, from which will grow every tree type depending on terrain kind
-	+added new working unit: Collector
-	+added new working unit: Operator
-	+added new support unit: Medic
-	+added new support unit: Shield Bearer
-	+added new support unit: Spiked Trap
-	+added new support unit: Mobile Wall
-	+added new support unit: Lekter
-	+added new support unit: Pyro
-	+added new fighting unit: Fighter
-	+added new fighting unit: Clubman
-	+added new fighting unit: Mace Fighter
-	+added new fighting unit: Flail Fighter
-	+added new support unit: Boat
-	+added new support unit: Transporting Ship
-	+added new Fighting unit: Battle Ship
-	+added new types of Animals
-	+added blocking units for each type of training house
-	+units trained in palace have special, unique skills
-	-soldiers can be dismissed
-	-units equipped in barracks have the same condition as recruits
-	-units HP is now shown as hearts
-	-units Condition is now shown as food bar
-	-selected unit has an arrow above it
-	-unit's death animation is now seperated, so after death tile is unlocked ASAP for another unit
-	-trained unit will take Fruit juice (when possible) to fill up its condition
-	-selecting ally's units is enabled by default
+[$55FF55]Jednostki:
+	+ cywile zakładają buty jeśli mają wolny czas
+	+ dodano nieśmiertelność jednostek
+	+ dodano możliwość zmiany flagi jednostki
+	+ Drwal sadzi sadzonkę, z której później wyrośnie drzewo
+	+ dodano nową jednostkę: Zbieracz
+	+ dodano nową jednostkę: Operator
+	+ dodano nową jednostkę: Medyk
+	+ dodano nową jednostkę: Tarczownik
+	+ dodano nową jednostkę: Kolczasta płapka
+	+ dodano nową jednostkę: Ruchoma ściana
+	+ dodano nową jednostkę: Lekter
+	+ dodano nową jednostkę: Piroman
+	+ dodano nową jednostkę: Bojownik
+	+ dodano nową jednostkę: Wandal
+	+ dodano nową jednostkę: Osiłek
+	+ dodano nową jednostkę: Burzyciel
+	+ dodano nową jednostkę: Łódka
+	+ dodano nową jednostkę: Statek transportowy
+	+ dodano nową jednostkę: Statek bitewny
+	+ dodano nowe zwierzęta
+	+ dodano blokowanie jednostki w każdym rodzaju budynku 
+	+ jednostki szkolone w pałacu mają specjalne umiejętności
+	- żołnierze mogą być zwolnieni
+	- żołnierze szkoleni w koszarach mają tą samą wytrzymałość co rekruci
+	- życie jednostek jest pokazane jako passek serc
+	- wytrzymałość jednostki jest pokazana jako pasek żywności
+	- zaznaczona jednostka ma nad sobą strzałkę
+	- animacja jednostki jest oddzielona, aby jednostki mogli się przez nią poruszać
+	- szkolone jednostki zabiorą sok owocowy aby uzupełnić wytrzymałość
+	- zaznaczanie jednostek przeciwnika możliwe domyślnie (można wyłączyć skryptami)
 
-[$55FF55]General:
-	+added tutorials for each aspect of town building and battle
-	+added panel where messages you get in game can be reviewed
-	+added multiplayer campaign
-	+added new trees and objects
-	+added night. It's optional. Can be disabled in "Options" menu
-	+added Weather. It's optional. Can be disabled in "Options" menu
-	+added built-in difficulty levels
-	+added few tree types
-	+added achievements
-	+KaM logo has been changed
-	+added message after finishing all campaign missions (if it has one)
-	-loading game resources is speeded up
-	-every tree needs different axe hits and give different amount of tree trunks (1-3)
-	-testing campaign map include campaign data and script files
-	-fixed not showing message about attacked houses or units
-	-fixed a bug in "Guide" panel.
-	-fixed a bug while saving campaign mission. It was saving in Maps folder instead of Campaign folder
+[$55FF55]Główne:
+	+ dodano samouczki budowania i walki
+	+ dodano panel z wiadomościami
+	+ dodano kampanię dla wielu graczy
+	+ dodano nowe objekty i drzewa
+	+ dodano noc. Opcjonalne, można wyłączyć w ustawieniach
+	+ dodano pogodę. Opcjonalne, można wyłączyć w ustawieniach
+	+ dodano wbudowane poziomy trudności
+	+ dodano kilka rodzai drzew owocowych
+	+ dodano osiągnięcia
+	+ zmieniono logo KaM 
+	+ dodano wiadomość na koniec kampanii (po przejściu wszystkich misji)
+	- przyspieszono ładowanie zasobów gry
+	- każde drzewo wymaga różnej ilości uderzeń topora oraz daje różną ilość drewna
+	- testowanie mapy kampanii uwzględnia wszystkie powiązane pliki
+	- poprawiono wiadomości głosowe o atakowanych jednostkach/budynkach
+	- naprawion błąd w przewodniku
+	- naprawiono zapisywanie mapy kampanii (zapisywało w folderze Maps)
 
-[$55FF55]MapEd:
-	+added a brush with which you can set wares in houses
-	+added new terrain "Barren land"
-	+added filter for objects in "Objects Pallete"
-	+added "Copy and Paste" option for goals
-	+added new decoration tile that blocks growing for trees and crops
-	+messages from LIBX files can be changed directly in map editor
-	+added Campaign map editor (flags, nodes, etc)
-	-decoration tiles order sorted out
-	-decoration tile brush has check box for not override already placed ones
+[$55FF55]Edytor map:
+	+ dodano pędzel do surowców (stawianych na ziemi)
+	+ dodano nowy rodzaj terenu: Pustkowia
+	+ dodano filtr do obiektów
+	+ dodano opcję kopiuj-wklej do warunków wygranej w edytorze map
+	+ dodano płytkę dekoracyjną, która wyłącza rośnięcie roślin
+	+ wiadomości w pliku LIBX mogą być zmienione w edytorze map
+	+ dodano edytor mapy kampanii
+	- posortowano płytki dekoracyjne
+	- dodano możliwość nie zastąpywania płytek dekoracyjnych

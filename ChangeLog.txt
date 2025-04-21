@@ -1,9 +1,12 @@
-﻿[$0000FF]KaM Expansion v1.12
+﻿[$0000FF] WARNING : English version may not be written well. The original language is Polish
+
+[$0000FF]KaM Expansion v1.12
 [$55FF55]Houses
 	- added list of what kind of workers can work in house(in-game guide).     
 	- added flags to production thatch   
 	- added button to change house style before builders completes house   
 	- max House size is changed from 4 to 5. Prepared for building "The Pearls of Architecture"   
+	- Palace got icons for underground  deposits
 
 [$55FF55]Units
 	- added description for the operator and collector  

@@ -2161,7 +2161,11 @@ var
   tmpX, tmpY : Integer;
 begin
   SetLength(area, fMapX , fMapY);
-  FillChar(area, SizeOf(area), #0);
+  //FillChar(area, SizeOf(area), #0);
+  for I := 0 to fMapX - 1 do
+  for K := 0 to fMapY - 1 do
+    area[I, K] := 0;
+
   SetLength(tmpArr, 0);
   rec := KMRectGrow(KMRect(aLoc), aRadius);
   rec.FitInMap(fMapX - 1, fMapY - 1);

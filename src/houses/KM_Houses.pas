@@ -6426,8 +6426,8 @@ procedure TKMHousePalace.Activate(aWasBuilt : Boolean);
 begin
   Inherited;
 
-  //if aWasBuilt then
-  //  gTerrain.PalaceExploreDeposits(Entrance);
+  if aWasBuilt then
+    gTerrain.PalaceExploreDeposits(Entrance);
 
 end;
 

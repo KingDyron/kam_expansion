@@ -780,7 +780,7 @@ begin
       if MM = mmClassic then
         DropBox_MissionMode.ItemIndex := byte(MM);
     end;
-
+    DropBox_MissionMode.Hide;
   Top := Panel_GameOptions.Bottom + 5;
 
   Panel_Weather := TKMPanel.Create(Panel_SetupOptions, 5, Top, Panel_SetupOptions.Width, 110);
