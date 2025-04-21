@@ -126,7 +126,7 @@ var HT : TKMHouseType;
   HA : TKMHouseActionType;
   P : TKMPanel;
 begin
-  inherited Create(gpTutorial);
+  inherited Create(gpDebug);
 
   fOnPageChange := aOnPageChange;
   OnEscKeyDown := BackClick;

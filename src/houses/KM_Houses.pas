@@ -6769,13 +6769,52 @@ end;
 
 
 procedure TKMHousePalace.Paint;
+  procedure PaintDeposits;
+  var list : TKMPointTagList;
+    I, tile : Integer;
+    C, factor : Cardinal;
+  begin
+    list := TKMPointTagList.Create;
+    gTerrain.FindDeposits(Entrance, 25, list, true);
+
+    for I := 0 to list.Count - 1 do
+    begin
+      case list.Tag[I] of
+        1: C := $FF00d5ff;
+        2: C := $FFFF0000;
+        3: C := $FF0000FF;
+        4: C := $FF000000;
+        else
+          C := $FFFFFFFF;
+      end;
+      case list.Tag[I] of
+        1: tile := 750; //gold
+        2: tile := 751; //iron
+        3: tile := 752; //bitin
+        4: tile := 753; //coal
+        else
+          tile := 0;
+      end;
+      factor := list.Tag2[I] * 15 + 40;
+      factor := factor shl 24;
+      factor := factor or $00FFFFFF;
+      C := C and factor;
+      gRenderAux.CircleOnTerrain(list[I].X - 0.5, list[I].Y - 0.5, 0.2, C, 0);//.Quad(list[I].X, list[I].Y, C);
+      gRenderPool.RenderTerrain.RenderTile(tile, list[I].X, list[I].Y, 0);
+    end;
+    list.Free;
+  end;
 var I : Integer;
 begin
   Inherited;
 
   if fBuildState = hbsDone then
+  begin
     for I := 1 to 4 do
-      gRenderPool.AddHousePalaceFlags(HouseType, fPosition, I, FlagAnimStep + I * 10, gHands[Owner].FlagColor);
+        gRenderPool.AddHousePalaceFlags(HouseType, fPosition, I, FlagAnimStep + I * 10, gHands[Owner].FlagColor);
+    if gMySpectator.Selected = self then
+      PaintDeposits;
+  end;
 
 end;
 

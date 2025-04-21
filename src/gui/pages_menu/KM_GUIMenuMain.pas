@@ -11,6 +11,7 @@ type
   TKMMenuMain = class(TKMMenuPageCommon)
   private
     fOnPageChange: TKMMenuChangeEventText;
+    fChangeLog : Boolean;
     procedure ButtonClick(Sender: TObject);
   protected
     Panel_MainMenu: TKMPanel;
@@ -25,10 +26,12 @@ type
     Button_MM_Credits: TKMButton;
     Button_MM_Quit: TKMButton;
     Button_MM_Debug: TKMButton;
+    Image_ChangeLog : TKMImage;
     //Switch_Test : TKMSwitch;
   public
-    constructor Create(aParent: TKMPanel; aOnPageChange: TKMMenuChangeEventText);
+    constructor Create(aParent: TKMPanel; aWithChangeLog : Boolean; aOnPageChange: TKMMenuChangeEventText);
     procedure Show;
+    procedure HideChangeLog;
   end;
 
 
@@ -42,12 +45,12 @@ uses
 
 
 { TKMGUIMenuMain }
-constructor TKMMenuMain.Create(aParent: TKMPanel; aOnPageChange: TKMMenuChangeEventText);
+constructor TKMMenuMain.Create(aParent: TKMPanel; aWithChangeLog : Boolean;  aOnPageChange: TKMMenuChangeEventText);
 begin
   inherited Create(gpMainMenu);
 
   fOnPageChange := aOnPageChange;
-
+  fChangeLog := aWithChangeLog;
   //Without anchors this page is centered on resize
   Panel_MainMenu := TKMPanel.Create(aParent, 0, 0, aParent.Width, aParent.Height);
   Panel_MainMenu.AnchorsCenter;
@@ -69,6 +72,12 @@ begin
       Button_MM_Credits      := TKMButton.Create(Panel_MMButtons,0,240,350,30,gResTexts[TX_MENU_CREDITS],bsMenu);
       Button_MM_Quit         := TKMButton.Create(Panel_MMButtons,0,300,350,30,gResTexts[TX_MENU_QUIT],bsMenu);
       Button_MM_Debug        := TKMButton.Create(Panel_MMButtons,0,350,350,30,'Debug Houses',bsMenu);
+
+      Image_ChangeLog         := TKMImage.Create(Panel_MMButtons.MasterPanel, 15, 30, 50, 50, 105, rxGuiMain);
+      Image_ChangeLog.Center;
+      Image_ChangeLog.HighlightOnMouseOver := true;
+      Image_ChangeLog.Visible := aWithChangeLog;
+
       Button_MM_SinglePlayer.OnClick := ButtonClick;
       Button_MM_MultiPlayer.OnClick  := ButtonClick;
       Button_MM_MapEd.OnClick        := ButtonClick;
@@ -78,7 +87,7 @@ begin
       Button_MM_Credits.OnClick      := ButtonClick;
       Button_MM_Quit.OnClick         := ButtonClick;
       Button_MM_Debug.OnClick         := ButtonClick;
-
+      Image_ChangeLog.OnClick         := ButtonClick;
       Image_MM_HasAch := TKMImage.Create(Panel_MMButtons, Button_MM_Achievements.Right - 15, Button_MM_Achievements.Top - 10, 35, 33, 105, rxGuiMain);
       Image_MM_HasAch.Hitable := false;
       Image_MM_HasAch.Hide;
@@ -130,6 +139,9 @@ begin
   if Sender = Button_MM_Debug then
     fOnPageChange(gpDebug);
 
+  If Sender = Image_ChangeLog then
+    fOnPageChange(gpChangeLog);
+
 
 
   if Sender = Button_MM_Quit then
@@ -141,6 +153,12 @@ procedure TKMMenuMain.Show;
 begin
   Panel_MainMenu.Show;
   Image_MM_HasAch.Visible := gAchievements.AnythingToShow;
+  Image_ChangeLog.Visible := fChangeLog;
+end;
+
+procedure TKMMenuMain.HideChangeLog;
+begin
+  Image_ChangeLog.Hide;
 end;
 
 

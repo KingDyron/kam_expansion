@@ -3013,6 +3013,7 @@ function TKMUnit.UpdateVisibility: Boolean;
 var
   newCurrPosition: TKMPoint;
   placedOnOccupiedTile: Boolean;
+  wasTrained : Boolean;
 begin
   Result := False;
   if fInHouse = nil then Exit; //There's nothing to update, we are always visible
@@ -3020,6 +3021,7 @@ begin
   if fInHouse.IsDestroyed then //Someone has destroyed the house we were in
   begin
     fVisible := True;
+    wasTrained := (Action is TKMUnitActionGoInOut) and TKMUnitActionGoInOut(Action).IsTrained;
     // If we are walking into/out of the house then don't set our position, ActionGoInOut will sort it out
     if not (Action is TKMUnitActionGoInOut)
     or not TKMUnitActionGoInOut(Action).IsStarted then
@@ -3059,7 +3061,9 @@ begin
       //OnWarriorWalkOut usually happens in TUnitActionGoInOut, otherwise the warrior doesn't get assigned a group
       //Do this after setting terrain usage since OnWarriorWalkOut calls script events
       if (Self is TKMUnitWarrior) then
-        TKMUnitWarrior(Self).WalkedOut(nil, false);
+      begin
+        TKMUnitWarrior(Self).WalkedOut(nil, wasTrained);
+      end;
 
       if Action is TKMUnitActionGoInOut then
         SetActionLockedStay(0, uaWalk); //Abandon the walk out in this case

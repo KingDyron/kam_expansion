@@ -224,6 +224,7 @@ procedure TKMHouseCartographers.Paint;
   var
     I : Integer;
     C, factor : Cardinal;
+    tile: Word;
   begin
 
     for I := 0 to fUndergoundDeposits.Count - 1 do
@@ -236,11 +237,21 @@ procedure TKMHouseCartographers.Paint;
         else
           C := $FFFFFFFF;
       end;
+      case fUndergoundDeposits.Tag[I] of
+        1: tile := 750; //gold
+        2: tile := 751; //iron
+        3: tile := 752; //bitin
+        4: tile := 753; //coal
+        else
+          tile := 0;
+      end;
       factor := fUndergoundDeposits.Tag2[I] * 15 + 40;
       factor := factor shl 24;
       factor := factor or $00FFFFFF;
       C := C and factor;
-      gRenderAux.Quad(fUndergoundDeposits[I].X, fUndergoundDeposits[I].Y, C);
+      //gRenderAux.Quad(fUndergoundDeposits[I].X, fUndergoundDeposits[I].Y, C);
+      gRenderAux.CircleOnTerrain(fUndergoundDeposits[I].X - 0.5, fUndergoundDeposits[I].Y - 0.5, 0.2, C, 0);
+      gRenderPool.RenderTerrain.RenderTile(tile, fUndergoundDeposits[I].X, fUndergoundDeposits[I].Y, 0);
     end;
   end;
 

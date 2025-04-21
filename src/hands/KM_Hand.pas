@@ -701,7 +701,18 @@ function TKMHand.AddUnit(aUnitType: TKMUnitType; const aLoc: TKMPoint; aAutoPlac
 begin
 
   if aUnitType in [WARRIOR_MIN..WARRIOR_MAX] then
-    Result := fUnitGroups.AddGroup(fID, aUnitType, aLoc.X, aLoc.Y, dirN, 1, 1).FlagBearer
+  begin
+    If aCheat then
+    begin
+      Result := AddUnit(aUnitType,  KMPointDir(aLoc, dirS), aAutoPlace, aRequiredWalkConnect, aCheat, aMakeCheckpoint);
+      If Result <> nil then
+      begin
+        //WarriorWalkedOut(TKMUnitWarrior(Result), nil, true);
+        TKMUnitWarrior(Result).OnWarriorWalkOut := WarriorWalkedOut;
+      end;
+    end else
+      Result := fUnitGroups.AddGroup(fID, aUnitType, aLoc.X, aLoc.Y, dirN, 1, 1).FlagBearer;
+  end
   else
     Result := AddUnit(aUnitType,  KMPointDir(aLoc, dirS), aAutoPlace, aRequiredWalkConnect, aCheat, aMakeCheckpoint);
 end;

@@ -23,6 +23,7 @@ type
                         gpOptions,
                         gpCredits,
                         gpDebug,
+                        gpChangeLog,
                       gpLoading,
                       gpError,
                       gpMapEdCampaign,

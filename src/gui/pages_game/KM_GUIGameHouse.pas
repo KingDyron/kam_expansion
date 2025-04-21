@@ -2212,7 +2212,7 @@ begin
                         ProgressBar_BigWare.AddBevel := false;
                         ProgressBar_BigWare.Show;
 
-                        Pottery_ClayTitle.Top := ProgressBar_BigWare.Top - 17;
+                        Pottery_ClayTitle.Top := ProgressBar_BigWare.Top - 20;
                         Pottery_ClayCount.Top := ProgressBar_BigWare.Bottom;
                         Pottery_ClayCount.Width := ProgressBar_BigWare.Width - 3;
                         Pottery_ClayCount.Caption := IntToStr(TKMHousePottery(aHouse).StoredClay) + '/' + IntToStr(TKMHousePottery(aHouse).MAX_CLAY_TO_STORE);

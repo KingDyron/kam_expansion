@@ -768,7 +768,11 @@
 	{"ID": 746, "Walkable": true, "Roadable": true, "CornersTerKinds": ["tkStone", "tkStone", "tkBarrenLand", "tkBarrenLand"]},
 	{"ID": 747, "Walkable": true, "Roadable": false, "HasWater": true, "CornersTerKinds": ["tkBarrenLand", "tkWater", "tkBarrenLand", "tkBarrenLand"], "AnimLayers": [{"Frames": 1, "Anims": [5174, 5175, 5176, 5177, 5178, 5179, 5180, 5181]}]},
     {"ID": 748, "Walkable": true, "Roadable": false, "HasWater": true, "CornersTerKinds": ["tkBarrenLand", "tkBarrenLand", "tkWater", "tkWater"], "AnimLayers": [{"Frames": 1, "Anims": [5182, 5183, 5184, 5185, 5186, 5187, 5188, 5189]}]},
-    {"ID": 749, "Walkable": false, "Roadable": false, "HasWater": true, "CornersTerKinds": ["tkWater", "tkWater", "tkWater", "tkBarrenLand"], "AnimLayers": [{"Frames": 1, "Anims": [5206, 5207, 5208, 5209, 5210, 5211, 5212, 5213]}]}
+    {"ID": 749, "Walkable": false, "Roadable": false, "HasWater": true, "CornersTerKinds": ["tkWater", "tkWater", "tkWater", "tkBarrenLand"], "AnimLayers": [{"Frames": 1, "Anims": [5206, 5207, 5208, 5209, 5210, 5211, 5212, 5213]}]},
+	{"ID": 750, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
+	{"ID": 751, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
+	{"ID": 752, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
+	{"ID": 753, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]}
     
   ]
 }

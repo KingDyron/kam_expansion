@@ -46,6 +46,7 @@ type
     property Direction: TKMGoInDirection read fDirection;
     function GetDoorwaySlide(aCheck: TKMCheckAxis): Single;
     function GetDoorwaySlides: TKMPointF;
+    property IsTrained : Boolean read fIsTrained;
     function Execute: TKMActionResult; override;
     procedure Save(SaveStream: TKMemoryStream); override;
   end;

@@ -28,7 +28,8 @@ uses
   KM_GUIMapEdCampaignMap,
   KM_GUIMenuTutorials,
   KM_GUIMenuAchievements,
-  KM_GUIMenuDebug;
+  KM_GUIMenuDebug,
+  KM_GUIMenuChangeLog;
 
 
 type
@@ -52,8 +53,11 @@ type
     fMenuTutorials: TKMMenuTutorial;
     fMenuAchievements: TKMMenuAchievements;
     fMenuDebug: TKMMenuDebug;
+    fMenuChangeLog: TKMMenuChangeLog;
 
     fMenuPage: TKMMenuPageCommon;
+
+    function ChangeLogText : String;
   protected
     Panel_Menu: TKMPanel;
     Panel_Background: TKMImage;
@@ -98,12 +102,13 @@ implementation
 uses
   KM_Main,
   KM_GameApp,
-  KM_ResTexts, KM_ResTypes,
+  KM_ResTexts, KM_ResTypes, KM_ResLocales,
   KM_RenderUI,
   KM_NetworkTypes,
   KM_CampaignTypes,
   KM_Log,
-  KM_GameSettings;
+  KM_GameSettings,
+  IOUtils;
 
 
 { TKMMainMenuInterface }
@@ -118,6 +123,7 @@ constructor TKMMainMenuInterface.Create(X,Y: Word; aCampaigns: TKMCampaignsColle
                                         aOnNetworkInit: TEvent);
 var
   S: TKMShape;
+  changeLog : String;
 begin
   inherited Create(X,Y);
 
@@ -131,8 +137,8 @@ begin
   Panel_Background := TKMImage.Create(Panel_Menu, 0, 0, 1000, 1000, 17, rxGuiMain);
   Panel_Background.Tiled := True;
   TKMImage.Create(Panel_Menu, -18, -18, 1071, 822, 18, rxGuiMain).AnchorsCenter;
-
-  fMenuMain          := TKMMenuMain.Create(Panel_Menu, PageChange);
+  changeLog := ChangeLogText;
+  fMenuMain          := TKMMenuMain.Create(Panel_Menu, changeLog <> '', PageChange);
   fMenuSinglePlayer  := TKMMenuSinglePlayer.Create(Panel_Menu, PageChange);
   fMenuCampaigns     := TKMMenuCampaigns.Create(Panel_Menu, aCampaigns, PageChange);
   fMenuCampaign      := TKMMenuCampaign.Create(Panel_Menu, aCampaigns, PageChange);
@@ -150,6 +156,7 @@ begin
   fMenuTutorials     := TKMMenuTutorial.Create(Panel_Menu, PageChange);
   fMenuAchievements  := TKMMenuAchievements.Create(Panel_Menu, PageChange);
   fMenuDebug  := TKMMenuDebug.Create(Panel_Menu, PageChange);
+  fMenuChangeLog := TKMMenuChangeLog.Create(Panel_Menu, changeLog, PageChange);
 
   fMenuSingleMap.OnNewSingleMap     := aOnNewSingleMap;
   fMenuSinglePlayer.OnNewSingleMap  := aOnNewSingleMap;
@@ -213,6 +220,7 @@ begin
   fMenuTutorials.Free;
   fMenuAchievements.Free;
   fMenuDebug.Free;
+  fMenuChangeLog.Free;
   inherited;
 end;
 
@@ -284,7 +292,7 @@ begin
       Panel_Menu.Childs[I].Hide;
 
   Label_Version.Caption := '';
-
+  fMenuMain.HideChangeLog;
   case Dest of
     gpMainMenu:     begin
                       Label_Version.Caption := String(GAME_VERSION);
@@ -372,6 +380,10 @@ begin
                       fMenuDebug.Show;
                       fMenuPage := fMenuDebug;
                     end;
+    gpChangeLog:    begin
+                      fMenuChangeLog.Show;
+                      fMenuPage := fMenuChangeLog;
+                    end;
   end;
 end;
 
@@ -416,6 +428,21 @@ end;
 procedure TKMMainMenuInterface.SetOnOptionsChange(aEvent: TEvent);
 begin
   fMenuOptions.GUICommonOptions.OnOptionsChange := aEvent;
+end;
+
+function TKMMainMenuInterface.ChangeLogText: string;
+var loc : String;
+begin
+  Result := '';
+  loc := gResLocales.UserLocale;
+  If FileExists(ExeDir + 'ChangeLog.' + loc +'.txt') then
+    Result := TFile.ReadAllText(ExeDir + 'ChangeLog.' + loc +'.txt')
+  else
+  If FileExists(ExeDir + 'ChangeLog.eng.txt') then
+    Result := TFile.ReadAllText(ExeDir + 'ChangeLog.eng.txt')
+  else
+  If FileExists(ExeDir + 'ChangeLog.txt') then
+    Result := TFile.ReadAllText(ExeDir + 'ChangeLog.txt');
 end;
 
 

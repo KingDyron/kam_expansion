@@ -31,7 +31,7 @@
 			[
 				"htNone","htBarracks","htTownHall","htPalace","htSiegeWorkshop","htShipYard",
 				"htNone","htWall","htWall2","htWall3","htWall4","htWall5",
-				"htNone","htWallTower","htWatchTower","htCartographers", "htPearl"
+				"htNone","htWallTower","htWatchTower"
 			]
 		}
 	],
@@ -40,7 +40,7 @@
 		{
 			"TitleID" : 2078,
 			"GuiIcon" : 0,
-			"Houses" : ["htSchool","htInn","htBarracks","htTownHall","htStore","htSmallStore","htCottage","htHouse","htPalace", "htPearl"]
+			"Houses" : ["htSchool","htInn","htBarracks","htTownHall","htStore","htSmallStore","htCottage","htHouse","htPalace"]
 		},
 		{
 			"TitleID" : 2079,
@@ -70,7 +70,7 @@
 		{
 			"TitleID" : 2084,
 			"GuiIcon" : 0,
-			"Houses" : ["htMarket","htMerchant","htCollectors","htTailorsShop","htCartographers"]
+			"Houses" : ["htMarket","htMerchant","htCollectors","htTailorsShop","htStall"]
 		}
 	],
 	"Houses" : 

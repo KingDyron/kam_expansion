@@ -300,6 +300,8 @@ var
 
     for I := 0 to gHands[fOwner].Houses.SiegeWorkshops.Count - 1 do
     begin
+      If gHands[fOwner].Houses.SiegeWorkshops[I].HouseType <> htSiegeWorkshop then
+        Exit;
       HSW := TKMHouseSiegeWorkshop(gHands[fOwner].Houses.SiegeWorkshops[I]);
 
       if not HSW.IsValid then

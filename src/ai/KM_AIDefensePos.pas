@@ -403,12 +403,25 @@ begin
           fPositionPatrol.Loc := KMPointRandomInRadius(Position.Loc, Radius);
           inc(J);
         end;
-        fPositionPatrol.Dir := KMGetDirection(Position.Loc, fPositionPatrol.Loc);
-
-        If CurrentGroup.CanWalkTo(fPositionPatrol.Loc, 0) then
+        If J >= 10 then
         begin
-          CurrentGroup.OrderWalk(fPositionPatrol.Loc, True, wtokAIGotoDefencePos, fPositionPatrol.Dir);
+          fPositionPatrol := Position;
+          If CurrentGroup.CanWalkTo(fPositionPatrol.Loc, 0) then
+          begin
+            CurrentGroup.OrderWalk(fPositionPatrol.Loc, True, wtokAIGotoDefencePos, fPositionPatrol.Dir);
+            fTimer := 0;
+          end;
           fTimer := 0;
+        end else
+        begin
+
+          fPositionPatrol.Dir := KMGetDirection(Position.Loc, fPositionPatrol.Loc);
+
+          If CurrentGroup.CanWalkTo(fPositionPatrol.Loc, 0) then
+          begin
+            CurrentGroup.OrderWalk(fPositionPatrol.Loc, True, wtokAIGotoDefencePos, fPositionPatrol.Dir);
+            fTimer := 0;
+          end;
         end;
       end;
 

@@ -1,39 +1,41 @@
 ﻿[$0000FF]KaM Expansion v1.12
-[$55FF55]Houses
-	- added list of what kind of workers can work in house(in-game guide).     
-	- added flags to production thatch   
-	- added button to change house style before builders completes house   
-	- max House size is changed from 4 to 5. Prepared for building "The Pearls of Architecture"   
+[$55FF55]Budynki
+	- dodano listę pracowników, którzy mogą pracować w danym budynku (przewodnik w grze)
+	- dodano flagi dla strzechy produkcyjnej
+	- dodano przycisk do zmiany wyglądu budynku podczas jego budowy
+	- maksymalny rozmiar budynku został zwiększony z 4 do 5. Przygotowania do "Perły Architektury"
 
-[$55FF55]Units
-	- added description for the operator and collector  
-	- increased HP and Defense for Mobile Wall   
-	- Fighter attack reduced to 5 and defense to 0   
-	- fixed sand snake pivot points(they were too much to the right and down)   
-	- ranged units will have increased `max range`  if bitin was used in their production   
-	- added "rotate" animation for units to prevent luring with horses 
-		(to see if it's a good solution)
+[$55FF55]Jednostki
+	- dodano opis do operatora i zbieracza
+	- zwiększono życie i defensywę Ruchomej Ściany
+	- zmniejszono atak bojownika do 5 oraz jego obronę do 0  
+	- poprawiono animację pustynnego węża
+	- jednostki strzeleckie będą miały większy zasięg, jeśli bityn został użyty do ich szkolenia/produkcji
+	- dodano animację obrotu jednostek by zapobiec łatwego unikania pocisków przez konne jednostki
 
-[$55FF55]Other
-	- death animation didn't appear at the edge of the map   
-	- formatted patterns in the map editor    
-	- formatted House data. Deleted unused variables and saved full data to the JSON file   
-	- added a shortcut to Button_Worker in house panel to switch to the school house with 
-		needed worker type automatically selected (Shift + LMB on worker icon)
-	- Eggs price in marketplace is increased   
+[$55FF55]Inne
+	- animacja śmierci nie pojawiała się na skraju mapy
+	- sformatowano szablony w edytorze map
+	- sformatowano dane budynków. Usunięte zbędne dane oraz wszystko jest zapisywane w pliku Json
+	- dodano skrót klawiszowy do przycisku pracownika w panelu budynku, 
+		który przeniesię cię do szkoły z wybranym automatycznie typem pracownika
+		(Shift + LMB na iconie pracownika)
+	- zwiększono koszt Jajek w targowisku
 
-[$55FF55]Realism
-	- max range of ranged units is reduced when it's dark  
+[$55FF55]Realizm
+	- maksymalny zasięg jednostek jest zmniejszony kiedy jest ciemno
 
-[$55FF55]Interface
-	- added new tabs in guide for grain/grass/vegetables stats. For fruit trees and animals as well. 
-	- fixed: lobby, campaign drop list doesn't hide when host was transferred   
-	- fixed: "Settings" button in MP lobby hides when changing game resolution (thanks FanTasMa)  
-	- goals panel: added icons of what houses must be destroyed   
-	- "Hour" under Minimap shows AM and PM if player has English as a system language  
-	- added missing units in game guide panel  
-	- added shortcut to quickly open in-game-guide with type of entity currently selected 
-		(in house's panel click house icon with shift, in unit's panel click scroll with shift+LMB)  
+[$55FF55]Interfejs
+	- dodano nowe zakładki do przewodnika w grze. 
+		Teraz można przeglądać parametry zbóż, drzew oraz zwierząt
+	- naprawiono błąd w lobby. Lista kampanii nie znikała kiedy host został przeniesiony
+	- naprawiono błąd w lobby. Przycisk "Ustawienia" znikał gdy zmieniało się rozdzielczość 
+		(dzięki FanTasMa)  
+	- panel zwycięstw: dodano ikony budynków jakie trzeba zniszczyć
+	- "Godzina" pod minimapą pokazuje AM oraz PM jeśli gracz ma angielski jako język systemowy
+	- dodano brakujące jednostki w przewodniku
+	- dodano skrót klawiszowy aby szybko otworzyć przewodnik z wybranym typem jednostki/budynku
+		(w panelu budynku LPM + Shift na iconie budynku, w panelu jednostki LMB + Shift na zwoju jednostki)
 	- added button in main menu to show changelog
 	- fixed names of subpages in MapEd
 	- added missing texts (1886, 1887) in English version  

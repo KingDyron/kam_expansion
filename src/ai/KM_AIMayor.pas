@@ -1800,14 +1800,18 @@ begin
     CheckPearl;
     if fSetup.AutoBuild then
     begin
-      CheckHouseCount;
+      //CheckHouseCount;
       //Manage wares ratios and block stone to Store
       CheckWareFlow;
 
 
+      {
+        //CheckHouseCount;
       //Build more roads if necessary
       if not Recorder.HasRecording then
         CheckRoadsCount;
+      }
+
     end;
   finally
     {$IFDEF PERFLOG}

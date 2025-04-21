@@ -168,7 +168,7 @@
       <cbApsFrameGui10 Checked="False"/>
       <cbApsFrameGui20 Checked="False"/>
     </Perf_Logs>
-    <AI Collapsed="False">
+    <AI Collapsed="True">
       <chkAIEye Checked="False"/>
       <chkBuild Checked="False"/>
       <chkCombat Checked="False"/>
@@ -218,7 +218,7 @@
       <chkShowGameTick Checked="False"/>
       <chkViewport Checked="False"/>
     </Debug_Output>
-    <Debug_Terrain Collapsed="True">
+    <Debug_Terrain Collapsed="False">
       <chkShowTerrainIds Checked="False"/>
       <chkShowTerrainKinds Checked="False"/>
       <chkShowTerrainOverlays Checked="False"/>
@@ -241,7 +241,7 @@
       <chkDebugLayer2 Checked="True"/>
       <chkDebugLayer3 Checked="True"/>
     </Debug_Terrain>
-    <Debug_Render Collapsed="False">
+    <Debug_Render Collapsed="True">
       <chkSelectionBuffer Checked="False"/>
       <chkShowRoutes Checked="False"/>
       <chkShowWires Checked="False"/>

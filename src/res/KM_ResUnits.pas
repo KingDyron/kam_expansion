@@ -1216,17 +1216,33 @@ const
 var
   UT: TKMUnitType;
   //act : TKMUnitActionType;
-  //dir : TKMDirection;
+  dir : TKMDirection;
 begin
   inherited;
 
   for UT := utNone to UNIT_MAX do
       fItems[UT] := TKMUnitSpec.Create(UT);
 
+
+  ShipSketch[dirN].Create(0, 0, 12844, 13);
+  ShipSketch[dirNE].Create(0, 0, 12857, 14);
+  ShipSketch[dirE].Create(0, 0, 12871, 14);
+  ShipSketch[dirSE].Create(0, 0, 12885, 14);
+  ShipSketch[dirS].Create(0, 0, 12899, 14);
+  ShipSketch[dirSW].Create(0, 0, 12913, 14);
+  ShipSketch[dirW].Create(0, 0, 12927, 14);
+  ShipSketch[dirNW].Create(0, 0, 12941, 14);
+
+  for dir := dirN to dirNW do
+  begin
+    FishermansShipSketch[dir].Create(0, 0, 14666 + (byte(dir) - 1) * 6, 6);
+    BattleShipSketch[dir].Create(0, 0, 14714 + (byte(dir) - 1) * 16, 16);
+  end;
+
   Explosion.Create(10, 0, [13354, 13355, 13356, 13357, 13358]);
   Explosion.Extend(0);
   RageAnim.Create(10, 0, [14843, 14844, 14845, 14844]);
-
+  BootsAnim.Create(10, 0, 9596, 6);
   fCRC := fCRC xor LoadFromJson(gRes.JsonData[dtUnits]);
 
   for UT := UNIT_MIN to UNIT_MAX do
@@ -1236,6 +1252,7 @@ begin
     fItems[UT].fUnitSpecInfo.StepsPerTileStorm     := Round(1    / (fItems[UT].Speed * STORM_SPEEDUP));
     fItems[UT].fUnitSpecInfo.StepsPerTileStormDiag := Round(1.41 / (fItems[UT].Speed * STORM_SPEEDUP));
   end;
+
   CalculateTroopTrainOrder;
 end;
 
