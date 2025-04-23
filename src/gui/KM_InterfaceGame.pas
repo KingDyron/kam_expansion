@@ -114,13 +114,13 @@ const
     htWeaponSmithy, htArmorSmithy, htBarracks, htStore, htWatchTower,
     htFishermans, htMarket, htTownHall, htPottery);}
 
-  GUIHouseOrderFull: array [1..54] of TKMHouseType = (
+  GUIHouseOrderFull: array [1..53] of TKMHouseType = (
     htSchool, htInn, htCottage, htHouse,  htStore,
     htQuarry, htWoodcutters, htSawmill, htPottery, htCollectors,//
 
     htWell, htAppleTree, htFarm, htVineyard, htFishermans,
     htSmallStore, htGoldMine, htIronMine, htBitinMine, htCoalMine,//
-    htMarket, htMerchant, htStall, htPearl,
+    htMarket, htMerchant, htStall,{ htPearl,}
     htMill, htBakery, htSwine, htButchers, htTannery,
     htStables, htHovel, htWeaponWorkshop, htArmorWorkshop, htTailorsShop,
     htMetallurgists, htIronSmithy, htWeaponSmithy, htArmorSmithy, htIronFoundry,

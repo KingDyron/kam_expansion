@@ -1544,13 +1544,12 @@
 1597:Flat terrain
 1598:Tiles grid
 1599:Save file does not exist
-1600:Attack: 
-1601:Defense: 
-1602:Ammo: 
-1603:Health: 
+1600:Attack:
+1601:Defense:
+1602:Ammo:
+1603:Health:
 1604:Instant Kill
 1605:Store filled:
-
 1606:Bitin Steel
 1607:Bitin Ore
 1608:Vegetables
@@ -1562,7 +1561,6 @@
 1614:Steel part
 1615:Bitin plate
 1616:Water
-
 1617:Horizontal Wall
 1618:Horizontal Wall Gate
 1619:Vertical Wall
@@ -1580,7 +1578,6 @@
 1631:Seed
 1632:Pottery
 1633:Wooden Entanglements
-
 1634:Base Resources
 1635:Ores
 1636:Wooden weapons
@@ -1592,11 +1589,10 @@
 1642:Fruits
 1643:Machines Ranged
 1644:Emissary's house
-1645:Valuable Metals 
+1645:Valuable Metals
 1646:Siege Ammo
 1647:Economy products V1
 1648:Economy products V2
-
 1649:Important Houses
 1650:Basic Houses
 1651:Economy Houses
@@ -1604,8 +1600,6 @@
 1653:Workshops
 1654:Defensive
 1655:Additional
-
-
 1657:Basic
 1658:Food
 1659:Products
@@ -1625,14 +1619,13 @@
 1673:GIANT
 1674:Ram
 1675:Collector's hut
-1676:Tailor's hut 
+1676:Tailor's hut
 1677:Silo
 1678:Cottage
 1679:Residential house
 1680:Paladin
 1681:Palace
 1682:Civilians
-
 1683:This pottery is not occupied
 1684:This hovel is not occupied
 1685:This apple tree is not occupied
@@ -1644,7 +1637,6 @@
 1691:This emissary's house is not occupied
 1692:This Collector's hut is not occupied
 1693:This Tailor's is not occupied
-
 1694:Coal lv.1
 1695:Coal lv.2
 1696:Coal lv.3
@@ -1669,15 +1661,15 @@
 1715:Game time
 1716:Transfer ware to outpuy
 1717:Cancel transfering
-1718:Set the player to whom merchant will send wares: 
+1718:Set the player to whom merchant will send wares:
 1719:Upgrade this house
 1720:Cancel upgrading this house
 1721:This house is fully upgraded
 1722:Mounted archer
-
 1723:You can defend your city whith walls.||Can be built without connecting to road.
 1724:In the hovel you can obtain feathers, which are needed to produce bread.
 1725:The stone sign is used to convey information to players.1726:With this building you can mine the rare mineral bityne ore.
+1726:With this building you can mine a rare mineral, which is bitinite ore.
 1727:The archery tower reveals a large area of land. Recruits' accuracy is very good and they can kill an enemy with one shot.
 1728:You will find a lot of water in the well. Pigs, horses and chickens will need it in their development. The Bakery and apple tree also require it.||The worker will go to fetch water himself if a well is built close to him.
 1729:Here you can produce: stone projectiles needed for watch towers, logs and wheels for siege machines, as well as sawdust used in the burner.
@@ -1721,7 +1713,6 @@
 1767:The farm is very important to provide food for animals.
 1768:A well-armed army needs good weapons.
 1769:Here you will commission the production of basic weapons.
-
 1770:The Recruit with an axe is not an expensive unit. They can show their value in large numbers.||This unit has the "Storm" skill, which gives a temporary, uncontrolled acceleration.
 1771:A recruit armed with leather armor, a wooden shield and an axe is good at hand-to-hand combat. Its shield also protects him from enemy arrows.||This unit has the "Storm" skill, which gives a temporary, uncontrolled acceleration.
 1772:Iron armor and a long sword are the recipe for a soldier who can deal with pikemen. It will defend itself against all air arrows with his shield.||This unit has the "Storm" skill, which gives a temporary, uncontrolled acceleration.
@@ -1747,7 +1738,6 @@
 1792:Sub-menu 7
 1793:Patterns
 1794:Set game speed
-
 1795:Scroll: Default
 1796:Scroll: Houser
 1797:Scroll: Unit
@@ -1789,10 +1779,9 @@
 1833:Override objects
 1834:Patterns
 1835:Delete pattern
-1836:Are you sure to delete this pattern : 
+1836:Are you sure to delete this pattern :
 1837:Use terrain mask
 1838:Join group
-1839:Size of the eraser
 1839:Citizens
 1840:Remove all defenses
 1841:In siege workshop
@@ -1813,7 +1802,7 @@
 1856:Deleting this pattern will be permanent.|Are you sure to do it?
 1857:Layers
 1858:Disable player
-1859:Set maximum levels for houses to be build by player. [--] or [max] means no limits 
+1859:Set maximum levels for houses to be build by player. [--] or [max] means no limits
 1860:Fruit juice
 1861:Bitin parts
 1862:Pearls
@@ -1848,7 +1837,6 @@
 1891:Location Y
 1892:Location (X,Y):
 1893:Herbs
-
 1894:Time
 1895:Buildings
 1896:Troops
@@ -1860,33 +1848,33 @@
 1902:All units/citizens
 1903:Reach place
 1904:Reveal place
-1905:Victory goal has been made: 
-1906:Survival goal not completed: 
-
+1905:Victory goal has been made:
+1906:Survival goal not completed:
 1907:Cost
 1908:Demands
 1909:Offers
 1910:Unlocked after:
 1911:By-porducts
-1912:Unit cost: 
-1913:Horse attack: 
-1914:Speed: 
-1915:Reveal range: 
-1916:House attack: 
+1912:Unit cost:
+1913:Horse attack:
+1914:Speed:
+1915:Reveal range:
+1916:House attack:
 1917:Click to find house that produces this ware
 1918:Pike machine
 1919:A durable machine that strengthens the antihorse group in which it is located. Multiple spears will make short work of cavalry.||Attack three units at once
 1920:The ammunition cart can be loaded with ballistic missiles and stones. All ballistas and catapults in the group will not need to bring resorces if the cart has them.
 1921:The wolf is very dangerous and predatory. Once trained, it will serve you in the fight against your opponent. He is agile and can easily avoid arrows. He attacks quickly, but is easily injured.
+1922:Stock the group with bullets/ammo.
 1923:Bitin shield
 1924:Group will be automatically equipped with bitin plates.
 1925:Show message
-1926:Message will appear after finishing or failing the goal. 
+1926:Message will appear after finishing or failing the goal.
 1927:Disable/Enable ware delivery
 1928:Destroy:
 1929:Kill:
-1930:Complete all victory goals to time: 
-1931:Survive to time: 
+1930:Complete all victory goals to time:
+1931:Survive to time:
 1932:Defend buildings:
 1933:Defend units:
 1934:Of player:
@@ -1917,10 +1905,8 @@
 1959:Buy by-products
 1960:Workers
 1961:Unload units/wares
-1962:Assign to ship
 1962:No resources found
 1963:Wreckers
-
 1964:Clubman
 1965:Mace fighter
 1966:Wrecker
@@ -1972,7 +1958,8 @@
 2012:Carrots
 2013:Cabbages
 2014:Tomatos
-2015:Potatos
+2015:Potatoes
+2016:Potatoes
 2017:Apple
 2018:Cherry
 2019:Black apple
@@ -2019,7 +2006,7 @@
 2060:Clouds speed
 2061:Decrease particles
 2062:Spawn time (min / max)
-2063:Quantity (max / spawn) 
+2063:Quantity (max / spawn)
 2064:Lifetime of clouds in seconds
 2065:Enabled
 2066:Overwrite
@@ -2028,13 +2015,12 @@
 2069:Environment
 2070:Day duration:
 2071:Time of day:
-2072:Default day duration [ 0 : stops time, 1: 60 minutes, 10: 30 minutes, 20: 5 minutes ] 
+2072:Default day duration [ 0 : stops time, 1: 60 minutes, 10: 30 minutes, 20: 5 minutes ]
 2073:Default time of day at the start of the game [ 0-8: day, 9-12 : night, 13-24: day ]
 2074:Ware
 2075:Units
 2076:Wares
 2077:Unit type
-
 2078:Important
 2079:Basic
 2080:Economy
@@ -2042,13 +2028,11 @@
 2082:Workshops
 2083:Defensive
 2084:Additional
-
 2085:Campfire with rocks
 2086:Campfire
 2087:Lamp
 2088:Lantern
 2089:Wares on ground
-
 2090:Sort
 2091:Everything
 2092:Trees
@@ -2095,7 +2079,7 @@
 2133:Total units from every defence positions
 2134:Total units from attacking positions
 2135:Attacking positions
-2136:Total attacking positions of type : 
+2136:Total attacking positions of type :
 2137:Units count based on defence positions
 2138:Override overlays
 2139:Work suspended with a this plant type
@@ -2172,12 +2156,11 @@
 2210:Icy Gardens
 2211:Pristine Fountain
 2212:Statue of the Founder
-2213:Use special abillity
+2213:Use special ability
 2214:Bell: speeds up citizens and increases their defense so they can reach Obelisc as fast as possible
 2215:Repair: enables house repair for every damaged house
-2216:Horn: every soldier close to the pearl gets frenzy effect 
+2216:Horn: every soldier close to the pearl gets frenzy effect
 2217:Rally: every idle citizen goes to the pearl and starts shooting enemy units
-
 2218:Speeds up units training by 10%
 2219:Allows separation of soldiers from the fight
 2220:Increases condition for newly trained units
@@ -2186,15 +2169,15 @@
 2223:The number of stalls does not affect the amount of resources that the shopkeeper offers
 2224:Decreased production time of resources
 2225:Reduced time for building and repairing buildings
-2226:Zwiększa prędkość dla jednostek w pobliżu perły
-2227:Increases speed for units near the pearl
+2226:Increases speed for units near the pearl
+2227:Increases unit attack
 2228:Increases the speed of newly trained units
 2229:Increases the attack range of ranged units
 2230:Increases the priority of carrying stone bolts to watch towers
 2231:Increases attack for units near the pearl
 2232:Increases unit defense
 2233:Increases the durability of buildings
-2234:Increases the max amount of healt points for newly trained units
+2234:Increases the max amount of health points for newly trained units
 2235:Increases defense for units near the pearl
 2236:Families
 2237:Babies

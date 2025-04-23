@@ -37,12 +37,12 @@
 36:Železo
 37:Zlato
 38:Sudy vína
-39:Obilí
+39:Sláma
 40:Bochníky
 41:Mouka
 42:Kůže
 43:Klobásy
-44:Prasata
+44:Maso
 45:Usně
 46:Dřevěné štíty
 47:Železné štíty
@@ -89,17 +89,17 @@
 88:Nevolníci zásobují vaše budovy nezbytnými surovinami.||Nezapomeňte, že budovy musí být propojeny cestami.
 89:Abyste mohl težit dřevo pro pilu, potřebujete dřevorubce.||Dřevorubec se také nezávisle stará o znovuzalesňování vykácených ploch.
 90:Horník těží nerosty z uhelných, železných a zlatých dolů.
-91:Chovatel zvířectva vykrmuje ve stajích a vepřínech koně a prasata obilím.
-92:Farmář pěstuje a sklízí obilí na farmě.||Také lisuje víno vypěstované na vinici.
+91:Chovatel zvířectva vykrmuje ve stajích a vepřínech koně a prasata Slámou, zeleninou a senem.
+92:Farmář pěstuje a sklízí obilniny a zeleninu na farmě.||Také lisuje víno vypěstované na vinici.
 93:Tesař pracuje na pile, ve zbrojní dílně a ve výrobně brnění.
-94:Pekař peče chléb v pekárně.||Mele také mouku z obilí ve větrném mlýně.
+94:Pekař peče chléb v pekárně.||Mele také mouku ze zrní ve větrném mlýně.
 95:Řezník vyrábí klobásy v řeznictví a kůže v koželužně.
 96:Rybář chytá ryby v řekách a mořích.||Pozor, ne každá voda je plná ryb!
 97:Dělník staví budovy a cesty. Stačí mu ukázat na vybrané místo a o splnění vašeho rozkazu se již postará sám.||Také opravuje poškozené budovy.
 98:Aby měli dělníci dostatek materiálu na stavbu cest a domů, kameník pro ně těží a brousí kámen.
 99:Železné zbroje a zbraně jsou vyráběny kovářem v kovárně brnění a zbraní.
 100:Hutník vyrábí truhlice plné zlata a ocel z příslušných rud.
-101:Rekrut může být vybaven jako voják v hradu.||Obývá také strážní věž.
+101:Rekrut může být vybaven jako voják v hradu.||Obývá také lukostřeleckou věž.
 102:K výběru budov
 103:K rozdělení produktů
 104:Ke statistice
@@ -309,7 +309,7 @@
 310:Jazyk:
 311:Kvalita stínů:
 312:Nízká
-313:Vysoká
+313:|Podržením Shift umístíte několik domů
 314:Nahrávám... prosím čekejte
 315:Došlo k chybě!
 316:Načítám novou lokalizaci
@@ -610,7 +610,7 @@
 621:Čas hry:|%s
 622:Zastavit oddíl
 623:Spojit oddíl
-624:Samostatný voják
+624:Samostatná jednotka (%s). Oddělte jednu jednotku od jednotky (Ctrl + %s)
 625:Záznamy ze hry
 626:Ukázat záznam
 627:Nepodporovaný formát %s
@@ -774,6 +774,7 @@
 820:Kožené
 821:Kombinované
 822:Stažené mapy
+823:Upozornění: První „Opakující se“ útok pošle všechny jednotky, které má AI hráč, na útočící základny. Při každém dalším „opakovaném“ útoku (stejně jako při „jednom útoku“) však vyšle dostatek skupin k překročení „Minimálního počtu jednotek k útoku“
 824:Přesunout
 825:Ukázat PDF
 826:Chyba při zapínání zobrazovacího programu pro PDF
@@ -1155,6 +1156,7 @@
 1203:Ostrá maska - využije automaticky vytvořené přechody
 1204:Vlatní ceny jednotek v radnici
 1205:Vlastní ceny surovin v tržišti
+1206:Možnost štětce
 1209:Opravit terén
 1210:Pokusí se opravit terén pro umožnění použití štětce
 1211:Opravit terén pro použití štětce
@@ -1493,3 +1495,710 @@
 1544:Počet sloupců ve skupině. Pokud je roven 0, počítač vezme v potaz zadefinované formace.
 1545:Vyhladit zdroje uhlí
 1546:Zásoby uhlí ve vybrané oblasti budou automaticky vyhlazené od okrajů (pole s nízkým obsahem uhlí) do středu (pole s vysokým obsahem uhlí)
+1547:U jiného hráče došlo k chybě desynchronizace. Pošlete nám prosím tuto zprávu o selhání, pomůže nám to opravit.%sDalší chybová zpráva hráče je:%s
+1548:Vrátit zpět
+1549:Vpřed
+1550:Tráva
+1551:Mech
+1552:Bledá tráva
+1553:Tráva na hlíně
+1554:Hlína
+1555:Pobřežní písek
+1556:Travní písek 1
+1557:Travní písek 2
+1558:Travní písek 3
+1559:Písek
+1560:Bažina
+1561:Travnatá voda
+1562:Woda
+1563:Prudká voda
+1564:Náhodné
+1565:Sníh na trávě
+1566:Sníh na hlíně
+1567:Sníh
+1568:Hluboký sníh
+1569:Led
+1570:Kámen
+1571:Zlatá hora
+1572:Železná hora
+1573:Dlažební kámen
+1574:Štěrk
+1575:Uhlí
+1576:Zlato
+1577:Železo
+1578:Láva
+1579:Propast
+1580:Všechny neuložené změny budou ztraceny. Ukončit?
+1581:Varování
+1582:Žádné překrytí
+1583:Fáze překrytí kopání 1
+1584:Fáze překrytí kopání 2
+1585:Fáze překrytí kopání 3
+1586:Fáze překrytí kopání 4
+1587:Překrytí cestou
+1588:Původní
+1589:Použití nastavení sestavení umělé inteligence pro více hráčů na hráče %d
+1590:Nastavení hry více hráčů pro hráče s umělou inteligencí %d
+1591:Varování: Toto přepíše všechna stávající nastavení AI pro hráče %d. Pokračovat?
+1592:Uloží aktuální heslo pro budoucí použití
+1593:Počet ryb
+1594:Uložit mapu
+1595:Mapa uložena
+1596:Ukládání mapy
+1597:Rovný terén
+1598:Mřížka dlaždic
+1599:Uložený soubor neexistuje
+1600:Útok:
+1601:Obrana:
+1602:Střely:
+1603:Zdraví:
+1604:Okamžité zabití
+1605:Sklad naplněn:
+1606:Bitinová ocel
+1607:Bitinová ruda
+1608:Zelenina
+1609:Kamenný projektil
+1610:Balistický projektil
+1611:Kolo
+1612:Kláda
+1613:Toulec šípů
+1614:Ocelová část
+1615:Bitinový plát
+1616:Voda
+1617:Horizontální hradba
+1618:Horizontální brána
+1619:Vertikální hradba
+1620:Vertikální brána
+1621:Konec hradby
+1622:Kurník
+1623:Kamenná cedule
+1624:Bitinový důl
+1625:Lukostřelecká věž
+1626:Studna
+1627:Tesařská dílna
+1628:Slévárna železa
+1629:Vybavení z radnice
+1630:Dlaždice
+1631:Zrní
+1632:Hrnčířství
+1633:Dřevěné nástrahy
+1634:Základní zdroje
+1635:Rudy
+1636:Dřevěné zbraně
+1637:Železné zbraně
+1638:Obrana
+1639:Továrna na dřevěné uhlí
+1640:Ovocný strom
+1641:Hobliny
+1642:Ovoce
+1643:Stroje na dálku
+1644:Vyslancův dům
+1645:Cenné kovy
+1646:Obléhací munice
+1647:Ekonomické produkty V1
+1648:Ekonomické produkty V2
+1649:Základní stavby
+1650:Produkční stavby
+1651:Strategické stavby
+1652:Doly
+1653:Dílny
+1654:Obrana
+1655:Další
+1657:Základní
+1658:Jídlo
+1659:Produkty
+1660:Rudy
+1661:Cenné
+1662:Válčení
+1663:Stroje
+1664:[LMB] Zakázat doručení [RMB] Povolit vyndání
+1665:Měď
+1666:Stříbro
+1667:Jantar
+1668:Diamanty
+1669:Šperky
+1670:Boty
+1671:Na štítku je napsáno
+1672:GOLEM
+1673:VELKÝ
+1674:Beranidlo
+1675:Sběratelská chata
+1676:Krejčovská bouda
+1677:Silo
+1678:Chata
+1679:Obytný dům
+1680:Paladin
+1681:Palác
+1682:Civilisté
+1683:Toto hrnčířství není obsazené
+1684:Tento kurník není obsazený
+1685:Tento ovocný strom není obsazený
+1686:Tento bitinový důl není obsazený
+1687:Tato slévárna železa není obsazená
+1688:Tato tesařská dílna není obsazená
+1689:Tato továrna na dřevěné uhlí není obsazená
+1690:tato lukostřelecká věž není obsazená
+1691:Tento vyslancův dům není obsazený
+1692:tato sběratelská chata není obsazená
+1693:Tento krejčí není obsazený
+1694:Uhlí lv.1
+1695:Uhlí lv.2
+1696:Uhlí lv.3
+1697:Uhlí lv.4
+1698:Uhlí lv.5
+1699:Jíl lv.1
+1700:Jíl lv.2
+1701:Jíl lv.3
+1702:Jíl lv.4
+1703:Jíl lv.5
+1704:Plot 1
+1705:Plot 2
+1706:Plot 3
+1707:Plot 4
+1708:Plot 5
+1709:Plot 6
+1710:Nekonečný zdroj
+1711:Nekonečný jíl
+1712:Nekonečné uhlí
+1713:Datum
+1714:Hodina
+1715:Herní čas
+1716:Převést zboží na výstup
+1717:Zrušení převodu
+1718:Nastavte hráče, kterému obchodník pošle zboží:
+1719:Vylepšete tento dům
+1720:Zrušit vylepšení tohoto domu
+1721:Tento dům je plně vylepšený
+1722:Jezdecký lučištník
+1723:Své město můžete bránit zdmi.||Lze postavit bez připojení k silnici.
+1724:V kurníku můžete získat peří, které je potřeba k výrobě toulce a bot.
+1725:Kamenné znamení se používá k předávání informací hráčům.
+1726:S touto budovou můžete těžit vzácný minerál - bitinovou rudu.
+1727:Lukostřelecká věž odhaluje velkou plochu země. Přesnost rekrutů je velmi dobrá a dokážou zabít nepřítele na jeden výstřel.
+1728:Ve studni najdete spoustu vody. Prasata, koně a slepice to budou ve svém vývoji potřebovat. Vyžaduje to i pekárna a ovocné stromy.||Dělník si půjde sám nabrat vodu, pokud bude poblíž něj postavena studna.
+1729:Zde můžete vyrábět: kamenné projektily potřebné pro strážní věže, klády a kola pro obléhací stroje a také hobliny používané v továrně na dřevěné uhlí.
+1730:Slévárna železa zpracovává železo na díly potřebné pro stavbu obléhacích strojů. Vyrábí také bitinové pláty používané k posilování strojů a jednotek v kasárnách.
+1731:S vyslancem můžete převést vybrané zboží na své spojence.|Můžete posílat zboží do vzdálených částí mapy, pokud je postavena loděnice.
+1732:Střešní dlaždice potřebné pro expanzi města se vyrábějí v hrnčířství.
+1733:Jedná se o jedinou budovu, která dokáže produkovat uhlí z obnovitelné suroviny – dřeva. Potřebuje podpal ve formě slámy a paliva, tedy hoblin nebo uhlí.
+1734:Strom poskytuje hodně ovoce. Lidé v domech je potřebují k jídlu. Jedná se o modulární stavbu, takže si můžete vytvořit obrovský ovocný sad.
+1735:V této budově sběratel získává cenné materiály z kamenů, skal a ruin. Lze z nich vyrobit šperky, které jsou cenné při výměně na tržišti. Vyžaduje se také při výcviku elitních jednotek v paláci.
+1736:Krejčí šije boty díky svým dovednostem. Každý občan, který pracuje v neustálém pohybu, je může dostat do školy. Umí také vyrábět kožené brnění a toulce na šípy.
+1737:Do sila lze ukládat různé suroviny. Dokud nevydáte takový příkaz, nebudou expedovány. Budovu lze rozšířit na třetí úroveň.
+1738:Malý obytný dům s nepracujícími občany připravenými na školení.
+1739:Obytný dům pojme mnohem více lidí než chata.
+1740:Cvičí se zde elitní jednotky, které budou podporovat vaše jednotky v boji a poskytovat jim další bonusy.
+1741:Škola může školit nezaměstnané občany pro určená povolání.
+1742:Sklad je nejdůležitější stavbou, protože bude skladovat všechny vyrobené suroviny, pokud je v ní místo.
+1743:Hladoví civilisté se sem přijdou nakrmit. Dodáváno s nádobím nebo jablečnou šťávou přispívá k efektivitě jídla.
+1744:Vojáci jsou cvičeni v kasárnách. Strategicky využívejte jejich držení.
+1745:Na radnici přicházejí nejrůznější bojovníci. Každý z nich má za své služby stanovenou cenu.
+1746:Rybář potřebuje k lovu ryb blízkou vodní hladinu.
+1747:Místo, kde můžete vyměnit zboží za to, které potřebujete více.
+1748:Zde bude kovář vyrábět železné zbraně pro nové rekruty.
+1749:Díky vyrobeným dřevěným štítům a plátové zbroji budou vaše jednotky v bitvě odolnější.
+1750:S moukou a vodou upeče pekař pro vaše lidi čerstvý chléb.
+1751:Řezník připraví klobásy.
+1752:Ke spalování kovů je potřeba uhlí které horník natěží zde.
+1753:Horník těží zlatou rudu.
+1754:Horník těží železnou rudu.
+1755:Železné a bitinové rudy se taví na železo a bitin.
+1756:Použijte obléhací dílnu k vybudování výkonných obléhacích strojů. Každý stroj má své vlastní konstrukční schéma.
+1757:Do školy jsou dodávány truhly se zlatem, aby se zaplatilo za výcvik nových civilistů.
+1758:Mlýn zpracovává zrní dříve nasbírané farmáři na čistou mouku.
+1759:Pila je jednou z nejdůležitějších budov. Vyrábí prkna pro stavebnictví a výrobu zbraní. Jako vedlejší produkt vznikají hobliny, které využijete v továrně na dřevěné uhlí.
+1760:Pro nábor jezdců je nutné mít koně ze stáje. Jejich chov můžete urychlit použitím pestré stravy. Koně budou jistě spokojeni se senem.
+1761:Chovaná prasata jsou určena k výrobě uzenin a kůží. Lze je vykrmovat pomocí pestré stravy. Prasata budou jistě spokojena se zeleninou.
+1762:Koželuh zpracovává usně na kůže potřebné pro výrobu brnění a obuvi.
+1763:Víno je nejsnáze dostupné jídlo. Ve velkém množství mohou nahradit chléb nebo ryby. Rolník pracující na vinici potřebuje minimálně 9 políček vína.
+1764:Dřevorubec kácí blízké stromy a kmeny ukládá ve své chýši. Kmeny stromů se používají k výrobě mnoha materiálů.
+1765:Strážná věž. Určitě nejlepší na obranu města. Jeden kamenný projektil z něj vystřelený zabije nepřítele a zraní několik blízkých. Balistické praky na vrcholu věže mají velký dosah. Vezměte v úvahu dobu nabíjení. Nezasáhne ani blízké cíle.
+1766:V tomto domě se zpracovává kámen přivezený kameníkem z nedalekých hor. Kámen je důležitý stavební materiál. Lze zpracovat do kamenných projektilů.
+1767:Farma je velmi důležitá pro zajištění potravy pro zvířata.
+1768:Dobře vyzbrojená armáda potřebuje dobré zbraně.
+1769:Zde zadáte výrobu základních zbraní.
+1770:Rekrut se sekerou není drahá jednotka. Ve velkém počtu může ukázat svou hodnotu.||Tato jednotka má dovednost "Útok", která poskytuje dočasné, nekontrolovatelné zrychlení.
+1771:Rekrut vyzbrojený koženou zbrojí, dřevěným štítem a sekerou je dobrý v boji zblízka. Jeho štít ho také chrání před nepřátelskými šípy.||Tato jednotka má dovednost "Útok", která poskytuje dočasné, nekontrolované zrychlení.
+1772:Železná zbroj a dlouhý meč jsou receptem na vojáka, který si poradí s kopiníky. Bude se bránit proti všem vzdušným šípům pomocí svého štítu.||Tato jednotka má dovednost "Útok", která poskytuje dočasné, nekontrolované zrychlení.|| Lze vybavit bitinovým kroužkovým brněním.
+1773:Jeho šípy nejsou příliš silné, ale budou perfektní jako podpora v první linii.||Vyžaduje toulce s šípy.
+1774:Kuše je smrtící zbraň. Nabíjení šroubů trvá dlouho, ale vynahrazují to svou silou úderu.||Vyžaduje toulce s šípy.||Lze vybavit bitinovým kroužkovým brněním.
+1775:Jezdci byli vždy velkou hrozbou. Kopí jim odolají mnohem lépe než meče nebo sekery.
+1776:Halapartník s železným brněním vydrží mnohem déle než kopiník.
+1777:Lehká jízda vám pomůže prozkoumat mnohem více terénu než ostatní vojáci. Skvěle si poradí s jednotkami na blízko.
+1778:Díky svému brnění je kůň pomalejší, ale mnohem odolnější. Je schopen přežít salvu šípů.||Lze vybavit bitinovým kroužkovým brněním.
+1779:Barbara lze zakoupit na radnici. Jeho síla převyšuje všechny jednotky v kasárnách.
+1780:Rebelové s vidlemi jsou nejlevnější jednotkou, kterou lze pořídit. Jejich množství pomáhá zastavit nepřítele, zatímco skuteční rytíři začínají svůj výcvik.
+1781:Střelci z praku střílejí kameny na protivníky.||Vyžadují kamenné projektily.
+1782:Válečník je nejmocnější základní jednotka. Díky svému brnění odolá těžkým zásahům a je účinný proti budovám.||Lze vybavit bitinovým kroužkovým brněním.
+1783:Nedostatek brnění na jezdci mu umožňuje překonat dlouhé vzdálenosti za kratší dobu.
+1784:Obléhací stroj přizpůsobený k ničení budov z velké vzdálenosti. Proti pohybujícím se cílům není přesný. Vyžaduje dlouhou dobu nabíjení střely.||Vyžaduje dodání kamenných projektilů.
+1785:Balistický projektil vystřelený z tohoto stroje prorazí jakýkoli pancíř a přinesou smrt. Není efektivní pro ničení budov.||Vyžaduje balistický projektil.
+1786:Odolnost a houževnatost tohoto stroje je schopen prorazit salvou šípů a jednotek stojících mu v cestě, jen aby zničil masivní zdi a budovy.
+1787:GOLEM byl vytvořen pro kampaň KamStar. Nedá se vycvičit.
+1788:GIGANT byl vytvořen pro kampaň KamStar. Nedá se vycvičit.
+1789:Paladin je vyzbrojen zbrojí z tepané oceli. Obyčejné střely na něj nepůsobí. Jeho silný meč snadno porazí jakýkoli typ jednotky. Těžká zbroj zpomaluje jeho chůzi, nicméně ho ochrání téměř před každým úderem. V pěším oddíle podpoří ostatní bonusem k obraně. Ovládá dovednost „Zuřivost“.
+1790:Střelec na koni může uniknout z jakékoli riskantní situace.Vyžaduje vybavení toulci.Být v družstvu střelců zvýší jejich dostřel a zároveň sníží jejich minimální dostřel.
+1791:Další nastavení hráče
+1792:Podmenu 7
+1793:Vzory
+1794:Nastavte rychlost hry
+1795:Svitek: Výchozí
+1796:Svitek: Domek
+1797:Svitek: Jednotka
+1798:Svitek: Pírko
+1799:Svitek: Zavřený
+1800:Svitek: Uzavřeno razítkem
+1801:Svitek s razítkem 1
+1802:Svitek s razítkem 1
+1803:Svitek se štítem 1
+1804:Svitek se štítem 1
+1805:Svitek s mincí
+1806:Velký svitek s razítky
+1807:Velký svitek s peřím
+1808:Speciální pěchota
+1809:Speciální střelci
+1810:Nasycení
+1811:Stiskněte [ctrl] a klikněte na znaménko pro úpravu zprávy;
+1812:Nastavte vzhled nově umístěného domu
+1813:Změňte vstup a výstup zboží
+1814:Nastavit vzhled vybraných domů
+1815:Nádobí
+1816:Vynutit práci. Dělník udělá svou práci, i když je jeho dům plný.
+1817:Zastavit vynucení práce
+1818:Povolit/zakázat nucenou práci. Dělník udělá svou práci, i když je jeho dům plný.
+1819:Přida boty
+1820:Špion
+1821:Špión se může vplížit mezi nepřátelské obranné linie. Objeví za vás oblast a shromáždí důležité informace o poloze nepřítele. Je tichý a chytrý, ale není odolný.
+1822:Terénní kartáč
+1823:Terénní maska
+1824:Přidejte vzor objektů
+1825:Přidejte vzor výšky
+1826:Vzory
+1827:Použijte vzor
+1828:Přidejte pracovníky
+1829:Uložit vzory
+1830:Obnovit
+1831:Přejmenovat
+1832:Smazat
+1833:Přepsat objekty
+1834:Vzory
+1835:Smazat vzor
+1836:Jste si jisti odstraněním této šablony :
+1837:Použít terenní masku
+1838:Připojit se ke skupině
+1839:Civilisté
+1840:Odstranění všech položek
+1841:V obléhací dílně
+1842:Nepracující občané
+1843:Upravit zásobník zpráv
+1844:Zprávy
+1845:ID zprávy
+1846:Čas
+1847:Text ID (.libx soubor)
+1848:Čas (v cyklech)
+1849:Přidat zprávu
+1850:Smazat zprávu
+1851:Text zprávy
+1852:Svitek zprávy
+1853:Uložit vrstvy mapy
+1854:Načíst vrstvy mapy
+1855:Plný terén
+1856:Smazání tohoto vzoru bude trvalé.|Opravdu to uděláte?
+1857:Vrstvy
+1858:Zakázat hráče
+1859:Nastavte maximální úrovně pro domy, které má hráč postavit. [--] nebo [max] znamená bez omezení
+1860:Ovocný džus
+1861:Bitinové díly
+1862:Perly
+1863:Kožené listy
+1864:Mince
+1865:Železná objímka
+1866:Pryskyřice
+1867:Drahokam
+1868:Budova nebude potřebovat suroviny pro zpracování výrobků.
+1869:Vyplňte nový umístěný dům automaticky. [LMB + SHIFT] Přepnutí na náhodný výběr.
+1870:Nekonečno
+1871:Povolit/zakázat nekonečnou munici
+1872:Vozík s municí
+1873:Munice
+1874:Šipky
+1875:Kamenné projektily
+1876:Balistové projektily
+1877:Med
+1878:Certifikát
+1879:Jehla
+1880:Dřevěný plát
+1881:Skály
+1882:z paláce
+1883:Stroje na blízko
+1884:Barva vlajky:
+1885:Budovy z karty:
+1886:Všechny budovy
+1887:Všechny jednotky
+1888:Dosáhněte místa
+1889:Odhalte místo
+1890:Lokace X
+1891:Lokace Y
+1892:Lokace (X,Y):
+1893:Byliny
+1894:Čas
+1895:Budovy
+1896:Vojáci
+1897:Vojenské prostředky
+1898:Nevolníci a školy
+1899:Ekonomické budovy
+1900:Budovy typu
+1901:Všechny budovy
+1902:Všechny jednotky/občané
+1903:Dosáhnout místa
+1904:Odhalte místo
+1905:Vítězný cíl byl splněn:
+1906:Cíl přežití nebyl splněn:
+1907:Náklady
+1908:Požadavky
+1909:Nabídky
+1910:Odemčeno po:
+1911:Produkuje vedlejší produkty:
+1912:Cena jednotky:
+1913:Útok na jízdu:
+1914:Rychlost:
+1915:Objevování:
+1916:Útok na budovy:
+1917:Kliknutím najděte dům, který toto zboží vyrábí
+1918:Stroj na kopí
+1919:Robustní stroj, který se díky svým kopím rychle vypořádá s jízdou.||Když je v protijezdeckém oddíle, posiluje útok ostatních jednotek.||Útočí na tři jednotky najednou.
+1920:Vozík s municí lze naložit balistickými střelami a kamennými projektily. Všechny balisty a katapulty ve skupině nebudou muset vozit prostředky, pokud je má vozík.
+1921:Vlk je velmi nebezpečný a dravý. Po natrénování vám poslouží v boji proti soupeři. Je obratný a snadno se vyhýbá šípům. Útočí rychle, ale snadno se zraní.
+1922:Zásobte jednotku municí.
+1923:Bitinový štít
+1924:Skupina bude automaticky vybavena bitinovými pláty.
+1925:Zobrazit zprávu
+1926:Zpráva se objeví po dokončení nebo nesplnění cíle.
+1927:Zakázat/Povolit doručení zboží
+1928:Zničit:
+1929:Zabít:
+1930:Splňte včas všechny vítězné cíle:
+1931:Přežít do času:
+1932:Bránit budovy:
+1933:Bránit jednotky:
+1934:Hráče:
+1935:Cvičený vlk
+1936:Poloměr obranné pozice
+1937:Všichni občané
+1938:Zadaný dům
+1939:Uspořádejte pozice
+1940:Povolit/zakázat přesun skupin mezi volnou obrannou pozicí od poslední k první.
+1941:Válečná mlha
+1942:Vyberte dlaždice pro vzory
+1943:Smazat výběr terénu
+1944:Nakreslete hranice válečné mlhy
+1945:Odstraňte hranice válečné mlhy
+1946:Vedlejší produkty
+1947:Průvodce
+1948:Vítězné cíle
+1949:Vaše bitinové důlní žíly jsou vyčerpané.
+1950:Sběratel nemůže najít další zdroje.
+1951:Vaše zásoby jílu jsou vyčerpané.
+1952:Dokončeno
+1953:Nastavit barvu
+1954:Věk zvířat
+1955:Prase
+1956:Kůň
+1957:Slepice
+1958:Prodat zboží
+1959:Kup produkty
+1960:Pracovníci
+1961:Vyložte jednotky/zboží
+1962:Nebyly nalezeny žádné zdroje
+1963:Demolisté
+1964:Vandal
+1965:Bojovník s kyjem
+1966:Demolista
+1967:Operátor
+1968:Přepravní loď
+1969:Štítonoš
+1970:Bojovník
+1971:Špičatá past
+1972:Mobilní stěna
+1973:Seno
+1974:Stánek
+1975:Pracovní dílna
+1976:Sběrač
+1977:Kyj
+1978:Řemdih
+1979:Peří
+1980:Plátové brnění
+1981:Bitinové kroužkové brnění
+1982:Městské tutoriály
+1983:Loděnice
+1984:Spusťte výukovou misi
+1985:Název mapy
+1986:Prodejte jeden zdroj za: %d. Kliknutím pravým tlačítkem prodáte vše za: %d
+1987:Prodat: [ %s x %d ] za: [ %s x %d ]
+1988:Vyměnit: [ %s x %d ] za : [ %s x %d ]
+1989:Válečné tutoriály
+1990:Travnatá pole
+1991:Zeleninový záhon
+1992:Kamenná cesta
+1993:Dřevěná cesta
+1994:Dlažební kámen
+1995:Exkluzivní cesta
+1996:Ničitel
+1997:Medik
+1998:Skryjte všechno zboží, které není ve skladu
+1999:Skrýt
+2000:Pšenice
+2001:Žito
+2002:Oves
+2003:Rýže
+2004:Kukuřice
+2005:Slunečnice
+2006:Dýně
+2007:Tráva
+2008:Jetel
+2009:Vojtěška
+2010:Hnůj
+2011:Svolejte nepracující občany do této budovy
+2012:Mrkev
+2013:Zelí
+2014:Rajčata
+2015:Brambory
+2016:Brambory
+2017:Jabloň
+2018:Třešeň
+2019:Černá jabloň
+2020:Umístěte plán budovy
+2021:Stavební pokrok
+2022:Lodě
+2023:Válečné lodě
+2024:Loď
+2025:Banánovník
+2026:Kokosová palma
+2027:Zvířecí spawner
+2028:Vojsko
+2029:Maximální bitové brnění
+2030:Zrušte výběr aktuálního výběru
+2031:Strážci
+2032:Potřebné zboží:
+2033:Začít stavění lodí
+2034:Zastavit stavění lodí
+2035:Struktury
+2036:Dekorace
+2037:Požadavky
+2038:Doručeno:
+2039:Struktura
+2040:Začít rybařit
+2041:Začít těžit ložiska
+2042:Zastavit rybaření
+2043:Zastavit těžbu ložisek
+2044:Dřevěný most
+2045:Dřevěný most vám umožní přejít vodu a dostat se na druhou stranu
+2046:Kamenný most
+2047:Propojení obou břehů umožní kamenný most. Můžete na něm postavit cestu.
+2048:Kamenná parcela
+2049:Kamenná terasa
+2050:Kamenná terasa je místo určené pro stavbu na vodě
+2051:Slaměný keř
+2052:Sněhové objekty
+2053:Počasí
+2054:Povolit/zakázat počasí
+2055:Max mraky na mapě 50x50
+2056:Max vytvořil mraky na mapě 50x50
+2057:Minimální doba spawnování v sekundách
+2058:Maximální doba spawnování v sekundách
+2059:Životnost
+2060:Rychlost mraků
+2061:Snížit částice
+2062:Doba spawnování (min/max)
+2063:Množství (max / spawn)
+2064:Životnost mraků v sekundách
+2065:Povoleno
+2066:Přepsat
+2067:Přepsat nastavení počasí
+2068:Snížit částice: 1 (všechny částice) -> 10 (žádné částice)
+2069:Prostředí
+2070:Délka dne:
+2071:Denní doba:
+2072:Výchozí délka dne [ 0 : zastaví čas, 1: 60 minut, 10: 30 minut, 20: 5 minut ]
+2073:Výchozí čas dne na začátku hry [ 0-8: den, 9-12: noc, 13-24: den]
+2074:Výrobek
+2075:Jednotky
+2076:Výrobky
+2077:Typ jednotky
+2078:Důležité domy
+2079:Základní domy
+2080:Ekonomické domy
+2081:Doly
+2082:Dílny
+2083:Obrana
+2084:Další
+2085:Táborák s kameny
+2086:Táborák
+2087:Lampa
+2088:Lucerna
+2089:Zboží na zemi
+2090:Seřadit
+2091:Všechno
+2092:Stromy
+2093:Ovocné stromy
+2094:Obiloviny a ovoce
+2095:Suroviny
+2096:Ostatní
+2097:Seřadit podle atributů objektu
+2098:Nástroje
+2099:Dynamické světlo
+2100:On/Off dynamické světlo z domů nebo objektů
+2101:Vejce
+2102:Pyromaniak
+2103:Vlajkonoš
+2104:Nezničitelný
+2105:Nesmrtelný
+2106:Realismus
+2107:Vestavěná úroveň obtížnosti
+2108:Úspěchy
+2109:Musíš něčím zaplatit|Vyrob 100 truhel zlata||Nádoby plné zlata|Vyrob 1000 truhel zlata||Zlato, zlato všude|Vyrob 10 000 truhel zlata||Pamatuj na jídlo|Vyrob 1000 jídla||Jídlo je zdraví|Vyrob 10 000 jídla||Dej jídlo! |Vyrob 100 000 potravin||Občané pro vesnici|Vyrob 500 jednotek||Občané pro město|Vyrob 1000 jednotek||Občané pro království|Vyrob 5000 jednotek||První vítězství|Vyhraj libovolnou hru||Boj začíná|Vyhraj 10 her||Přejdi do bitvy! |Vyhrajte 100 her||Hrajte vždy a všude |Vyhrajte 1000 her||Nápověda specialistů 1|Získejte cvičeného vlka z paláce||Nápověda specialistů 2|Získejte paladina v paláci||Nápověda specialistů 3|Získejte špeha v paláci||Reálný život|Vyhrajte hru v režimu Realismus||Rostliny hnijí! |Vyhrajte hru v režimu Realismus 15krát||Jídlo se kazí a zvířata umírají? Vyhrajte hru v režimu Realismus 34krát||Peklo na zemi a lidé v hrobkách Vyhrajte hru v režimu Realismus 666krát.
+2110:Deaktivuje stárnoucí rostliny na dlaždici
+2111:Změní množství zdrojů v domě pod kurzorem
+2112:Náhodné množství
+2113:Minimální množství zboží
+2114:Maximální množství zboží
+2115:Min/max množství
+2116:Seznam zpráv
+2117:Text z druhého jazyka
+2118:Nastavte chráněnou oblast
+2119:Chráněná oblast
+2120:Skladované zboží
+2121:Ložiska zlaté rudy skrytá pod zemí
+2122:Ložiska železné rudy ukrytá pod zemí
+2123:Ložiska bitinové rudy skrytá pod zemí
+2124:Šachta pro zlatý důl
+2125:Šachta pro železný důl
+2126:V loděnici
+2127:Sklízet a zasévat
+2128:Pouze sklízet
+2129:Pouze zasévat
+2130:Duplikát
+2131:Přidat cíl
+2132:Ložiska uhlí skrytá pod zemí
+2133:Celkový počet jednotek ze všech obranných pozic
+2134:Celkový počet jednotek z útočných pozic
+2135:Útočné pozice
+2136:Celkový počet útočných pozic typu:
+2137:Jednotky se počítají na základě obranných pozic
+2138:Přepsat překryvné vrstvy
+2139:Práce pozastavena s tímto typem zařízení
+2140:Zasejte náhodné rostliny
+2141:Sběratel: vyhledává a sbírá zboží
+2142:Hunter: nastraží pasti, aby zabíjel zvířata a sbíral jejich kůži a maso
+2143:Neúrodná země
+2144:Jelen
+2145:Srnka
+2146:Liška
+2147:Kanec
+2148:Medvěd
+2149:Kachna
+2150:Králík
+2151:Lední medvěd
+2152:Had
+2153:Pavouk
+2154:Spamovací poloměr
+2155:Max. množství zvířat
+2156:Tempo spamování
+2157:Stavební pokrok
+2158:Vandal si se svým kyjem rychle poradí s nepřátelskými budovami a také zničí protivníkovi brnění.
+2159:Vyzbrojen kyjem a plátovým brněním, tento bojovník s kyjem je ideální pro bourání nepřátelských budov, zatímco ostatní bojují s nepřátelskými vojáky.
+2160:Jediným útokem řemdihu dokáže zničit jakýkoli základ. Železná zbroj pro něj není žádnou překážkou při porážce nepřítele.
+2161:Jakmile Pyromaniak přiblíží svou pochodeň k budově, bude hořet, dokud nezůstane jen popel.
+2162:Vlajkonoš převezme jakoukoli nepřátelskou budovu, která pak bude patřit vám.
+2163:S medikem získáte schopnost léčit jednotky během boje. Čím více jich ve skupině máte, tím viditelnější je jejich účinek.
+2164:S lodí budete moci překročit vody a chytit lahodné ryby. Také pokud je blízko země, bude pro vás shromažďovat zdroje.
+2165:Loď dopraví vaše jednotky na druhou stranu moře. Pojme dokonce i stroje, ale počítejte s tím, že její prostor je omezený.
+2166:Loď vyzbrojená velkými kušemi a odolnou konstrukcí trupu se v boji ukáže jako ideální.
+2167:Po nasazení je špičatá past téměř neviditelná. Kdykoli najde příležitost zabít nepřítele, využije ji.
+2168:Je to jediná jednotka pro jednorázové použití. Když zasáhne budovu, poškodí její konstrukci nebo ji dokonce úplně zničí.
+2169:Tuto budovu lze umístit pouze jednou, ale může v ní být až pět pracovníků, kteří budou tvrdě pracovat, aby co nejrychleji shromáždili požadované zdroje.
+2170:V loděnici budete stavět lodě, které mohou proplouvat vodami a sbírat suroviny, přepravovat jednotky nebo zaútočit na nepřítele.
+2171:Díky stánku si budete moci nakoupit vedlejší produkty za mince.
+2172:Počet vlajek
+2173:Počet bodů
+2174:Pozice textu
+2175:Levá
+2176:Pravá
+2177:Odemknout po:
+2178:Nastavit barvu vlajky
+2179:Upravit mapu
+2180:Kampaně
+2181:Hra uložena
+2182:Nastavit maximální dodávku zboží|%d / %d
+2183:Nastavit variantu vzhledu vybraného domu
+2184:Nasbíraná hlína
+2185:Doba růstu
+2186:Dorůstá každých
+2187:Plodiny:
+2188:Nejlepší terén
+2189:Nejhorší terén
+2190:Operátor může ovládat balistický prak umístěný na vrcholu strážní věže. Také bez jeho pomoci nelze použít obléhací stroje.
+2191:Sběratel bude těžit hlínu a vyrábět z ní střešní tašky na stavbu budov. Může také sbírat zdroje ze země nebo lovit zvířata.
+2192:Cíle útoku
+2193:Zabito vojáků
+2194:Zbraně
+2195:Rozsah útoku
+2196:Dům kartografa
+2197:Perla architektury
+2198:Povolit/zakázat špehování vybraného hráče
+2199:Zobrazit podzemní ložiska
+2200:Ukažte zvířecí spawnery
+2201:Zobrazit objekty se zdroji/vedlejšími produkty
+2202:Objevitel
+2203:Počet vojáků:
+2204:Odhadovaný počet vojáků
+2205:Nejlepší typ jednotky
+2206:Zdi
+2207:Potvrdit stavbu
+2208:Elitní jednotka
+2209:Obelisk
+2210:Ledové zahrady
+2211:Nedotčená fontána
+2212:Socha zakladatele
+2213:Použijte speciální schopnost
+2214:Zvon: Zrychluje občany a zvyšuje jejich obranu, aby se dostali k Obelisku co nejrychleji
+2215:Oprava: umožňuje opravu domu pro každý poškozený dům
+2216:Roh: každý voják v blízkosti perly dostane efekt šílenství
+2217:Shromáždění: každý nečinný občan jde do perly a začne střílet nepřátelské jednotky
+2218:Zrychluje trénink jednotek o 10 %
+2219:Umožňuje oddělení vojáků od boje
+2220:Zvyšuje kondici pro nově vycvičené jednotky
+2221:Léčí jednotky poblíž perly
+2222:Snížená cena mincí a vedlejších produktů na stánku
+2223:Počet stánků nemá vliv na množství zdrojů, které obchodník nabízí
+2224:Snížení doby výroby zdrojů
+2225:Zkrácený čas na stavbu a opravy budov
+2226:Zvyšuje rychlost jednotek poblíž perly
+2227:Zvyšuje útok jednotky
+2228:Zvyšuje rychlost nově vycvičených jednotek
+2229:Zvyšuje dosah útoku jednotek na dálku
+2230:Zvyšuje prioritu přenášení kamenných šroubů do strážních věží
+2231:Zvyšuje útok jednotek poblíž perly
+2232:Zvyšuje obranu jednotky
+2233:Zvyšuje odolnost budov
+2234:Zvyšuje maximální počet bodů zdraví pro nově vycvičené jednotky
+2235:Zvyšuje obranu jednotek poblíž perly
+2236:Rodiny
+2237:Batolata
+2238:Děti
+2239:Dorost
+2240:Hrad
+2241:Klasický
+2242:Farmáři
+2243:Traverzovat
+2244:Bezedná studna
+2245:Pouze železo
+2246:Pacifista
+2247:Žádné změny, klasická hra
+2248:Ovocný strom, Farma a Vinohrad jsou odemčeny od začátku. Pracovní dílna a sběratelská chata jsou zablokovány.
+2249:Strážná věž se odemyká po Tesařské dílně, Lukostřelecká věž a Stěny po Pile. Zvyšuje se výroba kamenných projektilů. Mírové čas vypnutý.
+2250:Není třeba stavět studny a při výrobě není potřeba žádná voda. Delší doba výroby.
+2251:Odemčené pouze železné jednotky. Železná kovárna, uhelný důl a železný důl jsou odemčeny od začátku.
+2252:Každá bojová jednotka je zablokována kromě bojovníka, mobilní stěny a beranidla. Radnice a palác jsou zablokovány. Tréninková jednotek je zrychlené.
+2253:Bez munice
+2254:Jednotky nebudou vyžadovat munici.

@@ -144,7 +144,8 @@ end;
 
 function TKMAchievement.GetIsCompleted : Boolean;
 begin
-  Result := Progress = MaxProgress;
+  //Result := Progress = MaxProgress;
+  Result := true;
 end;
 
 procedure TKMAchievement.SetIsCompleted(aValue : Boolean);
@@ -208,15 +209,22 @@ begin
   AddNew( AddToList('Gold', NextText, 100) );
     AddToLast( AddToList('', NextText, 1000) );
     AddToLast( AddToList('', NextText, 10000) );
-    AddToLast( AddToList('', textID, 100000) );
+    AddToLast( AddToList('', NextText, 65535) );
 
   AddNew( AddToList('Food', NextText, 1000) );
     AddToLast( AddToList('', NextText, 10000) );
-    AddToLast( AddToList('', NextText, 100000) );
+    AddToLast( AddToList('', NextText, 80000) );
+    AddToLast( AddToList('', NextText, 200000) );
 
   AddNew( AddToList('TrainedUnits', NextText, 500) );
     AddToLast( AddToList('', NextText, 1000) );
     AddToLast( AddToList('', NextText, 5000) );
+    AddToLast( AddToList('', NextText, 20000) );
+
+  AddNew( AddToList('TrainedWarriors', NextText, 500) );
+    AddToLast( AddToList('', NextText, 2000) );
+    AddToLast( AddToList('', NextText, 10000) );
+    AddToLast( AddToList('', NextText, 866204) );
 
   AddNew( AddToList('GamesWon', NextText, 1) );
     AddToLast( AddToList('', NextText, 10) );
@@ -226,11 +234,33 @@ begin
   AddNew( AddToList('Palace', NextText, 1, false) );
     AddToLast( AddToList('', NextText, 1, false) );
     AddToLast( AddToList('', NextText, 1, false) );
+    AddToLast( AddToList('', NextText, 1, false) );
 
   AddNew( AddToList('Realism', NextText, 1) );
     AddToLast( AddToList('', NextText, 15) );
     AddToLast( AddToList('', NextText, 34) );
     AddToLast( AddToList('', NextText, 666) );
+
+  AddNew( AddToList('Jewelry', NextText, 5) );
+    AddToLast( AddToList('', NextText, 20) );
+    AddToLast( AddToList('', NextText, 100) );
+    AddToLast( AddToList('', NextText, 300) );
+    AddToLast( AddToList('', NextText, 664) );
+
+  AddNew( AddToList('TutorialCity', NextText, 3, false) );
+    AddToLast( AddToList('', NextText, 3, false) );
+    AddToLast( AddToList('', NextText, 3, false) );
+    AddToLast( AddToList('', NextText, 3, false) );
+
+  AddNew( AddToList('TutorialBattle', NextText, 3, false) );
+    AddToLast( AddToList('', NextText, 3, false) );
+    AddToLast( AddToList('', NextText, 3, false) );
+    AddToLast( AddToList('', NextText, 3, false) );
+
+  AddNew( AddToList('Pearls', NextText, 1, false) );
+    AddToLast( AddToList('', NextText, 1, false) );
+    AddToLast( AddToList('', NextText, 1, false) );
+    AddToLast( AddToList('', NextText, 1, false) );
 
   ReloadTexts;
   LoadProgress;
@@ -496,7 +526,11 @@ end;
 
 procedure TKMAchievements.UnitTrained(aUnitType: TKMUnitType; aCount: Integer);
 begin
-  Find('TrainedUnits').IncProgress(aCount);
+  If aUnitType in UNITS_CITIZEN then
+    Find('TrainedUnits').IncProgress(aCount);
+
+  If aUnitType in UNITS_WARRIORS then
+    Find('TrainedWarriors').IncProgress(aCount);
 
   if aUnitType = utTrainedWolf then
     Find('Palace').IncProgress(aCount);
@@ -504,6 +538,8 @@ begin
     Find('Palace0').IncProgress(aCount);
   if aUnitType = utSpy then
     Find('Palace1').IncProgress(aCount);
+  if aUnitType = utLekter then
+    Find('Palace2').IncProgress(aCount);
 end;
 
 procedure TKMAchievements.GameWon;

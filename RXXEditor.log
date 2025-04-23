@@ -1,17 +1,6 @@
    Timestamp    Elapsed     Delta  Thread    Description
 ========================
-    Date: 2025.04.21
+    Date: 2025.04.22
 ========================
-18:22:12.606     0,000s       0ms  11988    Log is up and running. Game version: KaM Expansion: v1.0
-18:22:14.906     2,300s    2300ms  11988    GUI - 977
-18:22:17.953     5,348s    3048ms  11988    Trimmed 49214176
-18:22:20.847     8,241s    2893ms  11988    GUIMain - 105
-18:22:27.975    15,369s    7128ms  11988    Trimmed 49214176
-18:22:34.484    21,878s    6509ms  11988    Houses - 2710
-18:22:37.397    24,791s    2913ms  11988    Trimmed 49214176
-18:22:43.271    30,665s    5874ms  11988    Tileset - 5449
-18:22:55.528    42,922s   12257ms  11988    Trimmed 49214176
-18:22:58.329    45,723s    2801ms  11988    Trees - 1227
-18:23:02.241    49,635s    3911ms  11988    Trimmed 49214176
-18:23:12.024    59,418s    9783ms  11988    Units - 15213
-18:23:15.224    62,618s    3199ms  11988    Trimmed 49214176
+17:47:23.123     0,004s       4ms  23444    Log is up and running. Game version: KaM Expansion: v1.0
+17:47:30.575     7,457s    7453ms  23444    Trees - 1
