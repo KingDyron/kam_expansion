@@ -3401,6 +3401,25 @@
 	  },
 	  {
 		"DuplicateFromLast" : [ [1219], [1220], [1221], [1223], [1224], [1225], [1226], [1227], [1228], [1229], [1230], [1231], [1232], [1233]]  
+	  },
+	  {
+		"AddGrowableTree" : true,
+		"AxeHitTimes" : 15, "TrunksCount" : 1, "TreeGrowAge" : 6, "FallTreeAnimObj" : 562, "Stump" : 15, "IsFruit" : 6, "MatureTree" : 4,
+		"Stages": [
+					{"SnowPic" : 255, "AnimSteps" : [1234, 1235, 1236, 1235]},   
+					{"SnowPic" : 255, "AnimSteps" : [1237, 1238, 1239, 1238]},   
+					{"SnowPic" : 255, "AnimSteps" : [1240, 1241, 1242, 1241]},   
+					{"SnowPic" : 255, "AnimSteps" : [1243, 1244, 1245, 1244]},   
+					{"SnowPic" : 255, "AnimSteps" : [1246, 1247, 1248, 1247]},   
+					{"SnowPic" : 255, "AnimSteps" : [1249, 1250, 1251, 1250]},   
+					{"SnowPic" : 255, "AnimSteps" : [1252, 1253, 1254, 1253]}   
+		]
+	  },
+	  {
+		"AddObject" : true,
+		"AnimSteps" : [1255, 1256, 1257, 1258, 1259, 1260, 1260, 1260, 1260, 1260, 1260],
+		"PlaceableInEditor" : false,
+		"CanBeRemoved" : true
 	  }
   ],
   "Grain Types" : [
@@ -3446,8 +3465,8 @@
 		"GrainType" : "gftRye",
 		"GuiIcon"	: 826,
 		"TextID"	: 1,
-		"Straw"		: 2.5,
-		"Seeds"		: 1.6,
+		"Straw"		: 2.3,
+		"Seeds"		: 1.3,
 		"Hay"		: 0,
 		"Dead"		: {"Object" : 493, "Terrain": 62},
 		"Stages"	: [
@@ -3456,7 +3475,7 @@
 						{"Object" : 0, "Terrain": 59, "NextStage" : 0, "Age" : 1400, "GivesWares" : false, "CanBeCut": false, "CanBePlant" : false},
 						{"Object" : 322, "Terrain": 59, "NextStage" : 0, "Age" : 3600, "GivesWares" : false, "CanBeCut": false, "CanBePlant" : false},
 						{"Object" : 306, "Terrain": 60, "NextStage" : 0, "Age" : 7000, "GivesWares" : false, "CanBeCut": false, "CanBePlant" : false},
-						{"Object" : 307, "Terrain": 60, "NextStage" : 0, "Age" : 12000, "GivesWares" : true, "CanBeCut": true, "CanBePlant" : false},
+						{"Object" : 307, "Terrain": 60, "NextStage" : 0, "Age" : 10600, "GivesWares" : true, "CanBeCut": true, "CanBePlant" : false},
 						{"Object" : 0, "Terrain": 63, "NextStage" : 0, "Age" : 0, "GivesWares" : false, "CanBeCut": false, "CanBePlant" : true}
 					]
 	
@@ -3542,7 +3561,7 @@
 		"GrainType" : "gftStrawBush",
 		"GuiIcon"	: 829,
 		"TextID"	: 1,
-		"Straw"		: 3,
+		"Straw"		: 4,
 		"Seeds"		: 0.1,
 		"Hay"		: 0,
 		"Dead"		: {"Object" : 505, "Terrain": 62},
@@ -3550,9 +3569,9 @@
 						{"Object" : 0, 		"Terrain": 62, 	"NextStage" : 0, "Age" : 0, 	"GivesWares" : false, 	"CanBeCut": false,	"CanBePlant" : true},
 						{"Object" : 0, 		"Terrain": 664, 	"NextStage" : 0, "Age" : 200, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
 						{"Object" : 329, 	"Terrain": 665, 	"NextStage" : 0, "Age" : 2000, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
-						{"Object" : 473, 	"Terrain": 665, 	"NextStage" : 0, "Age" : 3600, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
-						{"Object" : 474, 	"Terrain": 665, 	"NextStage" : 0, "Age" : 6400, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
-						{"Object" : 475, 	"Terrain": 665, 	"NextStage" : 0, "Age" : 8400, 	"GivesWares" : true, 	"CanBeCut": true, 	"CanBePlant" : false},
+						{"Object" : 473, 	"Terrain": 665, 	"NextStage" : 0, "Age" : 4000, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 474, 	"Terrain": 665, 	"NextStage" : 0, "Age" : 8000, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : false},
+						{"Object" : 475, 	"Terrain": 665, 	"NextStage" : 0, "Age" : 12000, 	"GivesWares" : true, 	"CanBeCut": true, 	"CanBePlant" : false},
 						{"Object" : 476, 		"Terrain": 666, 	"NextStage" : 0, "Age" : 0, 	"GivesWares" : false, 	"CanBeCut": false, 	"CanBePlant" : true}
 					]
 	
@@ -3956,6 +3975,24 @@
 		"tcWet2" : 1.3,  
 		"tcNeutral" : 0.7,  
 		"tcCold1" : 0.4,  
+		"tcCold2" : 0.2  
+	},
+	{
+		"MatureTreeStage" : 4,
+		"ProgressPerStage" : 1800,
+		"Fruits" : 1,
+		"GuiIcon" : 1030,
+		"HintID" : 2255,
+		"Stages" : [555, 556, 557, 558, 559, 560, 561],
+		
+		"tcDry1" : 3.5,
+		"tcDry2" : 1,
+		"tcWarm1" : 1.5,
+		"tcWarm2" : 2.5,
+		"tcWet1" : 1.8,  
+		"tcWet2" : 2,  
+		"tcNeutral" : 1.3,  
+		"tcCold1" : 0.8,  
 		"tcCold2" : 0.2  
 	}
   ],

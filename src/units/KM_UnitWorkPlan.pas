@@ -737,6 +737,7 @@ begin
                           begin
                             WalkStyle(tmp, uaWalk,uaWork,6,0,uaSpec,gsCollector);
                             SubActAdd(haWork3, 10);
+                            TMPInt := 1;
                           end else
                             WalkStyle(tmp, uaWalk,uaWork,Prod[0].C,0,uaSpec,gsCollector);
                         end else

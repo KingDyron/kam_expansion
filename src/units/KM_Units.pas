@@ -15,6 +15,8 @@ uses
 //Virtual - declared and used (overriden) always
 //Abstract - declared but must be overriden in child classes
 
+const
+  MAX_WH_WARES = 5;
 type
   TKMUnit = class;
   TKMUnitWorker = class;
@@ -390,7 +392,7 @@ type
     procedure Deliver(aFrom: TKMHouse; aTo: TKMPoint; aWare: TKMWareType; aID: integer); overload;
     procedure Deliver(aFrom: TKMHouse; aToStruc: TKMStructure; aWare: TKMWareType; aID: integer); overload;
     function TryDeliverFrom(aFrom: TKMHouse): Boolean;
-    procedure DelegateDelivery(aToSerf: TKMUnitSerf);
+    procedure DelegateDelivery(aToSerf: TKMUnit);
 
     property Carry: TKMWareType read GetCarry;
     procedure CarryGive(aWare: TKMWareType);
@@ -399,6 +401,64 @@ type
 
     function ObjToString(const aSeparator: String = '|'): String; override;
 
+    function UpdateState: Boolean; override;
+  end;
+
+  TKMWHCarry = array[0..MAX_WH_WARES - 1] of TKMWareType;
+
+  TKMWHDeliver = record
+    Empty : Boolean;
+    ToHouse : TKMHouse;
+    ToUnit : TKMUnit;
+    ToStruct : TKMStructure;
+    ToLoc : TKMPoint;
+    Ware : TKMWareType;
+    ID : Integer;//delivery id
+    function Valid : Boolean;
+  end;
+
+  TKMWHDelivery = record
+    FromHouse : TKMHouse;
+    List : array[0..MAX_WH_WARES - 1] of TKMWHDeliver;
+  end;
+  //WarehouseMan - transports all wares between houses but up to 5 at a time
+  TKMUnitWHMan = class(TKMCivilUnit)
+  private
+    fCarryWares: TKMWHCarry;
+    fDelivery: TKMWHDelivery;
+    fHasDelivery : Boolean;
+    procedure SortWares;
+    function GetEmptyDeliveryID : Integer;
+    procedure TaskDeliver;
+  protected
+    procedure PaintUnit(aTickLag: Single); override;
+  public
+    constructor Create(aID: Cardinal; aUnitType: TKMUnitType; const aLoc: TKMPointDir; aOwner: TKMHandID; aInHouse: TKMHouse);
+    constructor Load(LoadStream: TKMemoryStream); override;
+    procedure SyncLoad; override;
+    procedure Save(SaveStream: TKMemoryStream); override;
+
+    procedure SetDeliveryHouseFrom(aHouse : TKMHouse);
+    procedure AddDelivery(toHouse: TKMHouse; aWare: TKMWareType; aID: integer); overload;
+    procedure AddDelivery(toUnit: TKMUnit; aWare: TKMWareType; aID: integer); overload;
+    procedure AddDelivery(aTo: TKMPoint; aWare: TKMWareType; aID: integer); overload;
+    procedure AddDelivery(aToStruc: TKMStructure; aWare: TKMWareType; aID: integer); overload;
+    procedure DelegateDelivery(aToSerf: TKMUnit);
+    function GetValidDeliveryIndex : Integer;
+    function EmptySlotsCount : Byte;
+
+    procedure CarryGive(aWare: TKMWareType);
+    procedure CarryTake(aWare : TKMWareType);
+    procedure AbandonDelivery(aID : Integer);
+    property Delivery : TKMWHDelivery read fDelivery;
+    procedure SetNewDelivery(aID : Integer; aHouse : TKMHouse; aUnit : TKMUnit; aStruct : TKMStructure;
+                              aLoc : TKMPoint; aWare : TKMWareType; aDelID : Integer);
+    procedure ResetDelivery(aID : Integer);
+    procedure ResetFromHouse;
+
+    function CanAddNextDelivery(aFromHouse : TKMHouse = nil) : Boolean;
+    property HasDelivery : Boolean read fHasDelivery write fHasDelivery;
+    function ObjToString(const aSeparator: String = '|'): String; override;
     function UpdateState: Boolean; override;
   end;
 
@@ -480,6 +540,7 @@ type
 
       property Units[aIndex : Integer] : TKMUnit read GetItem; default;
       property Count : Integer read fCount;
+      function Contains(aUnit : TKMUnit) : Boolean;
 
       procedure SaveToStream(aSaveStream : TKMemoryStream);
       procedure LoadFromStream(aLoadStream : TKMemoryStream);
@@ -710,7 +771,7 @@ begin
   end;
 
   if fThought <> thNone then
-    gRenderPool.AddUnitThought(fType, act, Direction, fThought, xPaintPos, yPaintPos);
+    gRenderPool.AddUnitThought(fType, act, Direction, V.AnimStep, fThought, xPaintPos, yPaintPos);
 end;
 
 
@@ -1145,7 +1206,7 @@ end;
 
 
 //Delegate delivery to other serf
-procedure TKMUnitSerf.DelegateDelivery(aToSerf: TKMUnitSerf);
+procedure TKMUnitSerf.DelegateDelivery(aToSerf: TKMUnit);
 begin
   Assert(Task is TKMTaskDeliver, 'UnitTask is not TKMTaskDeliver');
 
@@ -1191,7 +1252,7 @@ begin
     gRenderPool.AddUnit(UnitType, ID, uaWalkArm, V.Dir, V.AnimStep, V.AnimFraction, xPaintPos, yPaintPos, IfThen(FlagColor <> 0, FlagColor, gHands[Owner].GameFlagColor), False);
 
   if fThought <> thNone then
-    gRenderPool.AddUnitThought(fType, act, V.Dir, fThought, xPaintPos, yPaintPos);
+    gRenderPool.AddUnitThought(fType, act, V.Dir, V.AnimStep, fThought, xPaintPos, yPaintPos);
 end;
 
 
@@ -1282,6 +1343,321 @@ begin
     rtExclusive: fCarrySpeed := -5;
   end;
   Result := Result - ConvertSpeed(fCarrySpeed, aIsDiag);
+end;
+
+{TKMUnitWHMan}
+
+function TKMWHDeliver.Valid: Boolean;
+begin
+  Result := not Empty
+            and ((toHouse <> nil) or (toUnit <> nil) or (toStruct <> nil) or (ToLoc <> KMPOINT_ZERO))
+            and (Ware in WARES_VALID)
+            and (ID <> DELIVERY_NO_ID);
+end;
+constructor TKMUnitWHMan.Create(aID: Cardinal; aUnitType: TKMUnitType; const aLoc: TKMPointDir; aOwner: TKMHandID; aInHouse: TKMHouse);
+var I : Integer;
+begin
+  Inherited;
+
+  fDelivery.FromHouse := nil;
+  for I := low(fDelivery.List) to High(fDelivery.List) do
+  begin
+    fCarryWares[I] := wtNone;
+    fDelivery.List[I].Empty := true;
+    fDelivery.List[I].ToHouse := nil;
+    fDelivery.List[I].ToUnit := nil;
+    fDelivery.List[I].ToStruct := nil;
+    fDelivery.List[I].ToLoc := KMPOINT_ZERO;
+  end;
+
+end;
+
+constructor TKMUnitWHMan.Load(LoadStream: TKMemoryStream);
+begin
+  Inherited;
+end;
+
+procedure TKMUnitWHMan.SyncLoad;
+begin
+  Inherited;
+end;
+
+procedure TKMUnitWHMan.Save(SaveStream: TKMemoryStream);
+begin
+  Inherited;
+end;
+
+procedure TKMUnitWHMan.PaintUnit(aTickLag: Single);
+var
+  ID: Integer;
+  V: TKMUnitVisualState;
+  act: TKMUnitActionType;
+  xPaintPos, yPaintPos: Single;
+begin
+
+  V := fVisual.GetLerp(aTickLag);
+  act := V.Action;
+
+  xPaintPos := V.PositionF.X + UNIT_OFF_X + V.SlideX;
+  yPaintPos := V.PositionF.Y + UNIT_OFF_Y + V.SlideY;
+
+  ID := UID * Byte(not (act in [uaDie, uaEat]));
+
+  gRenderPool.AddUnit(UnitType, ID, act, V.Dir, V.AnimStep, V.AnimFraction, xPaintPos, yPaintPos, IfThen(FlagColor <> 0, FlagColor, gHands[Owner].GameFlagColor), True);
+
+  if fTask is TKMTaskDie then Exit; //Do not show unnecessary arms
+
+  gRenderPool.AddUnit(UnitType, ID, uaWalkArm, V.Dir, V.AnimStep, V.AnimFraction, xPaintPos, yPaintPos, IfThen(FlagColor <> 0, FlagColor, gHands[Owner].GameFlagColor), False);
+
+  if fThought <> thNone then
+    gRenderPool.AddUnitThought(fType, act, V.Dir, V.AnimStep, fThought, xPaintPos, yPaintPos);
+end;
+
+function TKMUnitWHMan.GetEmptyDeliveryID: Integer;
+var I : Integer;
+begin
+  Result := -1;
+  for I := low(fDelivery.List) to High(fDelivery.List) do
+    If fDelivery.List[I].Empty then
+      Exit(I);
+end;
+
+function TKMUnitWHMan.GetValidDeliveryIndex: Integer;
+var I : Integer;
+begin
+  Result := -1;
+  for I := low(fDelivery.List) to High(fDelivery.List) do
+    If ((fDelivery.List[I].ToHouse <> nil)
+      or (fDelivery.List[I].ToUnit <> nil)
+      or (fDelivery.List[I].ToStruct <> nil)
+      or (fDelivery.List[I].ToLoc <> KMPOINT_ZERO))
+      and (fDelivery.List[I].Ware <> wtNone)
+      and (fDelivery.List[I].ID <> DELIVERY_NO_ID)
+      and not fDelivery.List[I].Empty
+      and gHands[Owner].Deliveries.Queue.IsDeliveryAlowed(fDelivery.List[I].ID) then
+      Exit(I);
+end;
+
+function TKMUnitWHMan.EmptySlotsCount: Byte;
+var I : Integer;
+begin
+  Result := 0;
+  for I := low(fDelivery.List) to High(fDelivery.List) do
+    IF fDelivery.List[I].Empty then
+      Inc(Result);
+end;
+
+procedure TKMUnitWHMan.SetDeliveryHouseFrom(aHouse: TKMHouse);
+begin
+  Assert((fDelivery.FromHouse = nil) or (fDelivery.FromHouse = aHouse), 'TKMUnitWHMan.SetDeliveryHouseFrom');
+  fDelivery.FromHouse := aHouse;
+end;
+
+procedure TKMUnitWHMan.AddDelivery(toHouse: TKMHouse; aWare: TKMWareType; aID: Integer);
+var I : Integer;
+begin
+  I := GetEmptyDeliveryID;
+  Assert(I <> -1, 'TKMUnitWHMan.AddDelivery 1');
+  fDelivery.List[I].ToHouse := toHouse;
+  fDelivery.List[I].Ware := aWare;
+  fDelivery.List[I].ID := aID;
+  fDelivery.List[I].Empty := false;
+  fHasDelivery := true;
+end;
+
+procedure TKMUnitWHMan.AddDelivery(toUnit: TKMUnit; aWare: TKMWareType; aID: Integer);
+var I : Integer;
+begin
+  I := GetEmptyDeliveryID;
+  Assert(I <> -1, 'TKMUnitWHMan.AddDelivery 2');
+  fDelivery.List[I].ToUnit := toUnit;
+  fDelivery.List[I].Ware := aWare;
+  fDelivery.List[I].ID := aID;
+  fDelivery.List[I].Empty := false;
+  fHasDelivery := true;
+end;
+
+procedure TKMUnitWHMan.AddDelivery(aTo: TKMPoint; aWare: TKMWareType; aID: Integer);
+var I : Integer;
+begin
+  I := GetEmptyDeliveryID;
+  Assert(I <> -1, 'TKMUnitWHMan.AddDelivery 3');
+  fDelivery.List[I].ToLoc := aTo;
+  fDelivery.List[I].Ware := aWare;
+  fDelivery.List[I].ID := aID;
+  fDelivery.List[I].Empty := false;
+  fHasDelivery := true;
+end;
+
+procedure TKMUnitWHMan.AddDelivery(aToStruc: TKMStructure; aWare: TKMWareType; aID: Integer);
+var I : Integer;
+begin
+  I := GetEmptyDeliveryID;
+  Assert(I <> -1, 'TKMUnitWHMan.AddDelivery 4');
+  fDelivery.List[I].ToStruct := aToStruc;
+  fDelivery.List[I].Ware := aWare;
+  fDelivery.List[I].ID := aID;
+  fDelivery.List[I].Empty := false;
+  fHasDelivery := true;
+end;
+
+//Delegate delivery to other serf
+procedure TKMUnitWHMan.DelegateDelivery(aToSerf: TKMUnit);
+begin
+  {Assert(Task is TKMTaskDeliver, 'UnitTask is not TKMTaskDeliver');
+
+  TKMTaskDeliver(Task).DelegateToOtherSerf(aToSerf); //Update task to be used with new serf
+  aToSerf.fTask := Task; //Set delivery task to new serf
+
+  //AbandonWalk if needed and cleanup task pointer, but do not free task object, as it was delegated to other serf already
+  CancelTask(False);}
+end;
+
+procedure TKMUnitWHMan.SetNewDelivery(aID: Integer; aHouse: TKMHouse; aUnit: TKMUnit; aStruct: TKMStructure;
+                                      aLoc: TKMPoint; aWare: TKMWareType; aDelID: Integer);
+begin
+  fDelivery.List[aID].ToHouse := aHouse;
+  fDelivery.List[aID].ToUnit := aUnit;
+  fDelivery.List[aID].ToStruct := aStruct;
+  fDelivery.List[aID].ToLoc := aLoc;
+  fDelivery.List[aID].Ware := aWare;
+  fDelivery.List[aID].ID := aDelID;
+  fDelivery.List[aID].Empty := false;
+end;
+
+procedure TKMUnitWHMan.ResetDelivery(aID: Integer);
+begin
+  fDelivery.List[aID].ToHouse := nil;
+  fDelivery.List[aID].ToUnit := nil;
+  fDelivery.List[aID].ToStruct := nil;
+  fDelivery.List[aID].ToLoc := KMPOINT_ZERO;
+  fDelivery.List[aID].Ware := wtNone;
+  fDelivery.List[aID].ID := DELIVERY_NO_ID;
+  fDelivery.List[aID].Empty := true;
+end;
+
+procedure TKMUnitWHMan.ResetFromHouse;
+begin
+  fDelivery.FromHouse := nil;
+end;
+
+function TKMUnitWHMan.CanAddNextDelivery(aFromHouse : TKMHouse = nil): Boolean;
+begin
+  Result := ((fDelivery.FromHouse = nil) or (aFromHouse = fDelivery.FromHouse) or (aFromHouse = nil) ) and (GetEmptyDeliveryID <> -1);
+end;
+
+procedure TKMUnitWHMan.SortWares;
+var tmp : TKMWHCarry;
+  I, J : Integer;
+begin
+  for I := low(tmp) to High(tmp) do
+    tmp[I] := wtNone;
+
+  J := 0;
+  for I := Low(fCarryWares) to High(fCarryWares) do
+    If fCarryWares[I] <> wtNone then
+    begin
+      tmp[J] := fCarryWares[I];
+      Inc(J);
+    end;
+  fCarryWares := tmp;
+end;
+
+procedure TKMUnitWHMan.CarryGive(aWare: TKMWareType);
+var I : Integer;
+begin
+  Assert(aWare <> wtNone, 'TKMUnitWHMan.CarryGive');
+  for I := Low(fCarryWares) to High(fCarryWares) do
+    If fCarryWares[I] = wtNone then
+    begin
+      fCarryWares[I] := aWare;
+      Break;
+    end;
+end;
+
+procedure TKMUnitWHMan.CarryTake(aWare: TKMWareType);
+var I : integer;
+begin
+  Assert(aWare <> wtNone, 'TKMUnitWHMan.CarryTake');
+  for I := Low(fCarryWares) to High(fCarryWares) do
+    If fCarryWares[I] = aWare then
+    begin
+      fCarryWares[I] := wtNone;
+      Break;
+    end;
+  SortWares;
+end;
+
+procedure TKMUnitWHMan.AbandonDelivery(aID: Integer);
+var I : Integer;
+begin
+  If aID = DELIVERY_NO_ID then
+    Exit;
+
+  for I := 0 to MAX_WH_WARES - 1 do
+    If fDelivery.List[I].ID = aID then
+    begin
+      fDelivery.List[I].ID := DELIVERY_NO_ID;
+      fDelivery.List[I].ToHouse := nil;
+      fDelivery.List[I].ToUnit := nil;
+      fDelivery.List[I].ToStruct := nil;
+      fDelivery.List[I].ToLoc := KMPOINT_ZERO;
+      fDelivery.List[I].Ware := wtNone;
+      fDelivery.List[I].Empty := true;
+      Exit;
+    end;
+end;
+
+
+procedure TKMUnitWHMan.TaskDeliver;
+begin
+  fTask := TKMTaskWHDeliver.Create(self);
+end;
+
+function TKMUnitWHMan.ObjToString(const aSeparator: string = '|'): string;
+var I : Integer;
+begin
+  Result := Inherited + '|';
+    Result := Result + byte(fCarryWares[0]).ToString;
+  for I := 1 to High(fCarryWares) do
+    Result := Result + ', ' + byte(fCarryWares[I]).ToString;
+end;
+
+function TKMUnitWHMan.UpdateState: Boolean;
+var
+  oldThought: TKMUnitThought;
+  wasIdle: Boolean;
+begin
+  Result := True; //Required for override compatibility
+  wasIdle := IsIdle;
+  if fAction = nil then raise ELocError.Create(gRes.Units[UnitType].GUIName+' has no action at start of TKMUnitSerf.UpdateState',fPositionRound);
+  if inherited UpdateState then
+    Exit;
+
+  oldThought := fThought;
+  fThought := thNone;
+
+  CheckCondition;
+
+  //Only show quest thought if we have been idle since the last update (not HadTask)
+  //and not thinking anything else (e.g. death)
+  If fHasDelivery then
+    TaskDeliver;
+  if fTask = nil then
+  begin
+    Inc(fIdleTimer);
+    if wasIdle and not IsHungry and (KaMRandom(2, 'TKMUnitSerf.UpdateState') = 0) then
+      fThought := thQuest
+    else
+    if oldThought <> thQuest then
+      fThought := oldThought;
+
+    SetActionStay(60,uaWalk); //Stay idle
+  end else
+    fIdleTimer := 0;
+
+  if fAction = nil then
+    raise ELocError.Create(gRes.Units[UnitType].GUIName+' has no action at end of TKMUnitSerf.UpdateState', fPositionRound);
 end;
 
 { TKMWorker }
@@ -1425,7 +1801,7 @@ begin
   gRenderPool.AddUnit(UnitType, ID, V.Action, V.Dir, V.AnimStep, V.AnimFraction, xPaintPos, yPaintPos, IfThen(FlagColor <> 0, FlagColor, gHands[Owner].GameFlagColor), True);
 
   if fThought <> thNone then
-    gRenderPool.AddUnitThought(fType, V.Action, V.Dir, fThought, xPaintPos, yPaintPos);
+    gRenderPool.AddUnitThought(fType, V.Action, V.Dir, V.AnimStep, fThought, xPaintPos, yPaintPos);
 end;
 
 
@@ -3152,6 +3528,7 @@ const
       -1,
       -1,
       -1,
+      -1,
       -1
     );
 begin
@@ -3980,6 +4357,18 @@ begin
   if not InRange(aIndex, 0, fCount - 1) then
     Exit;
   Result := TKMUnit(fList[aIndex]);
+end;
+
+function TKMUnitsArray.Contains(aUnit: TKMUnit): Boolean;
+var I : Integer;
+begin
+  Result := false;
+  If aUnit = nil then
+    Exit;
+  for I := 0 to fCount - 1 do
+    if TKMUnit(fList[I]) = aUnit then
+      Exit(true);
+
 end;
 
 procedure TKMUnitsArray.SaveToStream(aSaveStream : TKMemoryStream);

@@ -243,7 +243,10 @@ begin
 
   // Start the Music playback as soon as loading is complete
   if not NoMusic and gGameSettings.SFX.MusicEnabled then
+  begin
+    gMusic.SelectPlaylist(gGameSettings.SFX.Playlist);
     gMusic.PlayMenuTrack;
+  end;
 
   gMusic.ToggleShuffle(gGameSettings.SFX.ShuffleOn); //Determine track order
 

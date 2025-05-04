@@ -552,7 +552,14 @@ begin
           if fRoadType = rtWooden then
             Thought := thWood
           else
-            Thought := thStone;
+          if fRoadType = rtStone then
+            Thought := thStone
+          else
+          if fRoadType = rtClay then
+            Thought := thTile
+          else
+          if fRoadType = rtExclusive then
+            Thought := thExclusive;
 
           if not fIsDigged then
           begin

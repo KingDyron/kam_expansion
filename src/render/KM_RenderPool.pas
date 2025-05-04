@@ -183,7 +183,7 @@ type
     procedure AddHouseEater(const Loc: TKMPoint; aUnit: TKMUnitType; aAct: TKMUnitActionType; aDir: TKMDirection; StepId: Integer; OffX,OffY: Single; FlagColor: TColor4);
     procedure AddUnit(aUnit: TKMUnitType; aUID: Integer; aAct: TKMUnitActionType; aDir: TKMDirection; StepId: Integer; StepFrac: Single; pX,pY: Single; FlagColor: TColor4; NewInst: Boolean; DoImmediateRender: Boolean = False; DoHighlight: Boolean = False; HighlightColor: TColor4 = 0; aAlphaStep : Single = -1);
     procedure AddUnitCarry(aCarry: TKMWareType; aUID: Integer; aDir: TKMDirection; StepId: Integer; StepFrac: Single; pX,pY: Single; FlagColor: TColor4);
-    procedure AddUnitThought(aUnit: TKMUnitType; aAct: TKMUnitActionType; aDir: TKMDirection; Thought: TKMUnitThought; pX,pY: Single);
+    procedure AddUnitThought(aUnit: TKMUnitType; aAct: TKMUnitActionType; aDir: TKMDirection; aStep : Cardinal; Thought: TKMUnitThought; pX,pY: Single);
     procedure AddUnitFlag(aUnit: TKMUnitType; aAct: TKMUnitActionType; aDir: TKMDirection; FlagAnim: Integer; pX,pY: Single; FlagColor: TColor4; DoImmediateRender: Boolean = False);
     procedure AddUnitWithDefaultArm(aUnit: TKMUnitType; aUID: Integer; aAct: TKMUnitActionType; aDir: TKMDirection; StepId: Integer; pX,pY: Single; FlagColor: TColor4; DoImmediateRender: Boolean = False; DoHignlight: Boolean = False; HighlightColor: TColor4 = 0);
     procedure AddUnitBitin(pX, pY : Single);
@@ -1750,33 +1750,41 @@ end;
 
 
 procedure TKMRenderPool.AddUnitThought(aUnit: TKMUnitType; aAct: TKMUnitActionType;
-                                     aDir: TKMDirection;
+                                     aDir: TKMDirection;  aStep : Cardinal;
                                      Thought: TKMUnitThought; pX,pY: Single);
+const
+  ICON_OFF_X = 19;
+  ICON_OFF_Y = -81;
 var
   cornerX, cornerY, ground: Single;
   R: TRXData;
   A: TKMAnimation;
   id, id0, step, animCount: Integer;
+  height : Single;
 begin
   if Thought = thNone then Exit;
   R := fRXData[rxUnits];
 
   // Unit position
-  animCount := THOUGHT_BOUNDS[Thought, 2] - THOUGHT_BOUNDS[Thought, 1];
-  A := gRes.Units[aUnit].UnitAnim[aAct, aDir];
   step := gTerrain.AnimStep mod animCount + 1;
-  id0 := THOUGHT_BOUNDS[Thought, 2] + 1 - step;
-
+  //animCount := THOUGHT_BOUNDS[Thought, 2] - THOUGHT_BOUNDS[Thought, 1];
+  A := gRes.Units.Thought;//gRes.Units[aUnit].UnitAnim[aAct, aDir];
+  id0 := gRes.Units[aUnit].UnitAnim[aAct, aDir].Animation[aStep];
   // Units feet
   ground := pY + (R.Pivot[id0].Y + R.Size[id0].Y) / CELL_SIZE_PX;
   // The thought should be slightly lower than the unit so it goes OVER warrior flags
   ground := ground + THOUGHT_X_OFFSET;
 
-  id := id0;
-
-  cornerX := pX + R.Pivot[id].X / CELL_SIZE_PX;
-  cornerY := gTerrain.RenderFlatToHeight(pX, pY) + (R.Pivot[id].Y + R.Size[id].Y) / CELL_SIZE_PX - 1.5;
+  id := A.Animation[step] + 1;
+  height := gTerrain.RenderFlatToHeight(pX, pY);
+  cornerX := pX + (R.Pivot[id].X + A.X) / CELL_SIZE_PX;
+  cornerY := height + (R.Pivot[id].Y + R.Size[id].Y + A.Y) / CELL_SIZE_PX - 1.5;
   fRenderList.AddSpriteG(rxUnits, id, 0, cornerX, cornerY, pX, ground, Round(pX), Round(pY));
+
+  id := THOUGHT_ICON[Thought];
+  cornerX := pX + (ICON_OFF_X + R.Pivot[id].X + A.X) / CELL_SIZE_PX;
+  cornerY := height + (ICON_OFF_Y + R.Pivot[id].Y + R.Size[id].Y + A.Y) / CELL_SIZE_PX;
+  fRenderList.AddSprite(rxUnits, id, cornerX, cornerY, Round(pX), Round(pY));
 end;
 
 

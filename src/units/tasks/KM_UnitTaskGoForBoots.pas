@@ -66,7 +66,7 @@ begin
   with fUnit do
     case fPhase of
       0:  begin
-            Thought := thHome;
+            Thought := thBoots;
             SetActionWalkToSpot(fHouse.PointBelowEntrance);
           end;
       1:  SetActionGoIn(uaWalk, gdGoInside, fHouse);

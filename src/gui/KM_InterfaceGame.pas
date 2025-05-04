@@ -206,10 +206,10 @@ const
 
   );
 
-  School_Order: array [0..15] of TKMUnitType = (
+  School_Order: array [0..16] of TKMUnitType = (
     utSerf, utBuilder, utStonemason, utWoodcutter, utCarpenter,
     utClayPicker, utFisher, utFarmer, utBaker, utAnimalBreeder, utButcher,
-    utMiner, utMetallurgist, utSmith, utOperator, utRecruit);
+    utMiner, utMetallurgist, utSmith, utOperator, utRecruit, utWarehouseMan);
 
   SiegeWorkshop_Order: array [0..4] of TKMUnitType = (
     utCatapult, utBallista, utRam, utWoodenWall, utSpikedTrap);

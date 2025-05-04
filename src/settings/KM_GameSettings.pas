@@ -38,6 +38,7 @@ type
   public
     MusicEnabled: Boolean;
     ShuffleOn: Boolean;
+    Playlist : Byte;
     property MusicVolume: Single read fMusicVolume write SetMusicVolume;
     property SoundFXVolume: Single read fSoundFXVolume write SetSoundFXVolume;
   end;
@@ -482,6 +483,7 @@ begin
     SFX.MusicEnabled := nMusic.Attributes['Enabled'].AsBoolean(True);
     SFX.MusicVolume  := nMusic.Attributes['Volume'].AsFloat(0.5);
     SFX.ShuffleOn    := nMusic.Attributes['Shuffle'].AsBoolean(False);
+    SFX.Playlist    := nMusic.Attributes['Playlist'].AsInteger(0);
 
   // Video
   nVideo := nGameSettings.AddOrFindChild('Video');
@@ -714,6 +716,7 @@ begin
     nMusic.Attributes['Enabled']  := SFX.MusicEnabled; // Reversed value
     nMusic.Attributes['Volume']   := SFX.MusicVolume;
     nMusic.Attributes['Shuffle']  := SFX.ShuffleOn;
+    nMusic.Attributes['Playlist']  := SFX.Playlist;
 
   // Video
   nVideo := nGameSettings.AddOrFindChild('Video');

@@ -2185,10 +2185,10 @@ begin
   gRenderPool.AddUnit(fType, UID, act, V.Dir, V.AnimStep, V.AnimFraction, unitPos.X, unitPos.Y, IfThen(FlagColor <> 0, FlagColor, gHands[Owner].GameFlagColor), True);
 
   if (fThought <> thNone) then
-    gRenderPool.AddUnitThought(fType, act, V.Dir, fThought, unitPos.X, unitPos.Y)
+    gRenderPool.AddUnitThought(fType, act, V.Dir, V.AnimStep, fThought, unitPos.X, unitPos.Y)
   else
   if (gGameParams.IsMapEditor and BitinAdded) then
-    gRenderPool.AddUnitThought(fType, act, V.Dir, thArmor, unitPos.X, unitPos.Y);
+    gRenderPool.AddUnitThought(fType, act, V.Dir, V.AnimStep, thArmor, unitPos.X, unitPos.Y);
     
 
 
@@ -2292,11 +2292,11 @@ begin
   gRenderPool.AddUnit(UnitType, ID, uaWalkArm, V.Dir, V.AnimStep, V.AnimFraction, xPaintPos, yPaintPos, fFlagColor, False);
 
   if fThought in [thDeath,thEat] then
-    gRenderPool.AddUnitThought(fType, act, V.Dir, fThought, xPaintPos, yPaintPos)
+    gRenderPool.AddUnitThought(fType, act, V.Dir, V.AnimStep, fThought, xPaintPos, yPaintPos)
   else
   if gMySpectator.HandID = Owner then
   //if fFlagColor = gHands[Owner].GameFlagColor then
-    gRenderPool.AddUnitThought(fType, act, V.Dir, thSpy, xPaintPos, yPaintPos);
+    gRenderPool.AddUnitThought(fType, act, V.Dir, V.AnimStep, thSpy, xPaintPos, yPaintPos);
 end;
 
 constructor TKMUnitWarriorPaladin.Create(aID: Cardinal; aUnitType: TKMUnitType; const aLoc: TKMPointDir; aOwner: ShortInt; aInHouse: TKMHouse);
@@ -2394,7 +2394,7 @@ begin
   {gRenderPool.AddUnit(fType, UID, act, V.Dir, V.AnimStep, V.AnimFraction, unitPos.X, unitPos.Y, IfThen(FlagColor <> 0, FlagColor, gHands[Owner].GameFlagColor), True);
 
   if (fThought <> thNone) then
-    gRenderPool.AddUnitThought(fType, act, V.Dir, fThought, unitPos.X, unitPos.Y)
+    gRenderPool.AddUnitThought(fType, act, V.Dir, V.AnimStep, fThought, unitPos.X, unitPos.Y)
   else
   if (gGameParams.IsMapEditor and BitinAdded) then
     gRenderPool.AddUnitThought(fType, act, V.Dir, thArmor, unitPos.X, unitPos.Y);
@@ -3145,10 +3145,10 @@ begin
   gRenderPool.AddUnit(fType, UID, act, dir, animStep, V.AnimFraction, unitPos.X, unitPos.Y, IfThen(FlagColor <> 0, FlagColor, gHands[Owner].GameFlagColor), True, false, false, 0, AlphaStep);
 
   if (fThought <> thNone) then
-    gRenderPool.AddUnitThought(fType, act, V.Dir, fThought, unitPos.X, unitPos.Y)
+    gRenderPool.AddUnitThought(fType, act, V.Dir, V.AnimStep, fThought, unitPos.X, unitPos.Y)
   else
   if (gGameParams.IsMapEditor and BitinAdded) then
-    gRenderPool.AddUnitThought(fType, act, V.Dir, thArmor, unitPos.X, unitPos.Y);
+    gRenderPool.AddUnitThought(fType, act, V.Dir, V.AnimStep, thArmor, unitPos.X, unitPos.Y);
 
 
 
@@ -3258,10 +3258,10 @@ begin
   gRenderPool.AddUnit(fType, UID, act, dir, animStep, V.AnimFraction, unitPos.X, unitPos.Y, IfThen(FlagColor <> 0, FlagColor, gHands[Owner].GameFlagColor), True);
 
   if (fThought <> thNone) then
-    gRenderPool.AddUnitThought(fType, act, V.Dir, fThought, unitPos.X, unitPos.Y)
+    gRenderPool.AddUnitThought(fType, act, V.Dir, V.AnimStep, fThought, unitPos.X, unitPos.Y)
   else
   if (gGameParams.IsMapEditor and BitinAdded) then
-    gRenderPool.AddUnitThought(fType, act, V.Dir, thArmor, unitPos.X, unitPos.Y);
+    gRenderPool.AddUnitThought(fType, act, V.Dir, V.AnimStep, thArmor, unitPos.X, unitPos.Y);
 
 end;
 

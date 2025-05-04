@@ -377,7 +377,7 @@ begin
     case fPhase of
       0:  begin
             SetActionWalkToSpot(fLocTo, uaWalk, 3, fUnit.AnimStep); // Preserv current AnimStep
-            fUnit.Thought := thHome;
+            fUnit.Thought := thImportant;
           end;
       else Result := trTaskDone;
     end;
@@ -432,7 +432,7 @@ begin
             SetSpeed(8, true);
             Defence := Defence + 8;
             SetActionWalkToSpot(fLocTo, uaWalk, 6, fUnit.AnimStep); // Preserv current AnimStep
-            fUnit.Thought := thHome;
+            fUnit.Thought := thImportant;
           end;
       1:  begin
             Defence := Defence - 8;

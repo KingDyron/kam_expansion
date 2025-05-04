@@ -107,7 +107,7 @@ begin
   with fUnit do
     case fPhase of
       0:  begin
-            Thought := thQuest;
+            Thought := thBucket;
             SetActionGoIn(uaWalk, gdGoOutside, Home);
             Home.SetState(hstEmpty);
           end;
@@ -129,7 +129,10 @@ begin
             fHasWater := true;
           end;
       //go back to house
-      4: SetActionGoIn(uaWalk, gdGoOutside, fWell);
+      4:  begin
+            SetActionGoIn(uaWalk, gdGoOutside, fWell);
+            Thought := thNone;
+          end;
       5: SetActionWalkToSpot(Home.PointBelowEntrance);
       6: SetActionGoIn(uaWalk, gdGoInside, Home);
       //unit back at home
@@ -209,6 +212,7 @@ begin
       0:  begin
             SetActionWalkToSpot(fPearl.GetClosestEntrance(Position).DirFaceLoc);
             SetSpeed(10, true);
+            Thought := thImportant
           end;
       1:  SetActionGoIn(uaWalk, gdGoInside, fPearl);//enter the well
       2:  SetActionLockedStay(30, uaWalk); //prepare before attacking
@@ -232,6 +236,7 @@ begin
       4:begin
           SetActionGoIn(uaWalk, gdGoOutside, fPearl);
           SetSpeed(-10, true);
+          Thought := thNone;
         end;
       else Result := trTaskDone;
     end;

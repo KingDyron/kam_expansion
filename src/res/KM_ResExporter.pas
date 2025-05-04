@@ -413,14 +413,14 @@ begin
             end;
           end;
 
-        fullFolderPath := folderPath + 'Thoughts' + PathDelim;
+        {fullFolderPath := folderPath + 'Thoughts' + PathDelim;
         ForceDirectories(fullFolderPath);
         for T := thEat to High(TKMUnitThought) do
           for STEP := THOUGHT_BOUNDS[T,1] to  THOUGHT_BOUNDS[T,2] do
           begin
             spritePack.ExportFullImageData(fullFolderPath, STEP+1);
             used[STEP+1] := True;
-          end;
+          end;}
 
         if not aExportUnused then Exit;
 

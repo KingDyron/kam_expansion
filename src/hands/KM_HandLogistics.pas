@@ -85,7 +85,7 @@ type
 
   PKMDeliveryQueueItem = ^TKMDeliveryQueueItem;
   TKMDeliveryQueueItem = record
-    Serf: TKMUnitSerf;
+    Serf: TKMUnit;
     IsFromUnit: Boolean; //Delivery was redispatched, so now we start delivery from current serf position
     OfferID: Integer;
     OfferWare: TKMWareType;
@@ -156,7 +156,7 @@ type
   private
     function GetCost: Single; inline;
   public
-    Serf: TKMUnitSerf;
+    Serf: TKMUnit;
     QueueID: Integer;
     OfferWare: TKMWareType;
     DemandWare: TKMWareType;
@@ -169,8 +169,8 @@ type
     OfferToDemand: TKMDeliveryRouteCalcCost;
     Addition: Single;
 
-    constructor Create(aSerf: TKMUnitSerf); overload;
-    constructor Create(aImportance: TKMDemandImportance; aSerf: TKMUnitSerf; oWT, dWT: TKMWareType; iO, iD: Integer; iQ: Integer = DELIVERY_NO_ID); overload;
+    constructor Create(aSerf: TKMUnit); overload;
+    constructor Create(aImportance: TKMDemandImportance; aSerf: TKMUnit; oWT, dWT: TKMWareType; iO, iD: Integer; iQ: Integer = DELIVERY_NO_ID); overload;
 
     property Cost: Single read GetCost;
     procedure ResetValues;
@@ -258,21 +258,21 @@ type
     function ValidOffer(oWT: TKMWareType; iO: Integer): Boolean; {$IFNDEF DEBUG}inline;{$ENDIF}
     function ValidDemand(dWT: TKMWareType; iD: Integer): Boolean; {$IFNDEF DEBUG}inline;{$ENDIF}
     function ValidDelivery(oWT, dWT: TKMWareType; iO, iD: Integer; aIgnoreOffer: Boolean = False): Boolean; {$IFNDEF DEBUG}inline;{$ENDIF}
-    function SerfCanDoDelivery(oWT: TKMWareType; iO: Integer; aSerf: TKMUnitSerf): Boolean;
-    function TryCalculateBid(aCalcKind: TKMDeliveryCalcKind; var aBidCost: TKMDeliveryBid; aSerf: TKMUnitSerf = nil): Boolean; overload;
-    function TryCalculateBidBasic(aCalcKind: TKMDeliveryCalcKind; var aBidBasicCost: TKMDeliveryBid; aSerf: TKMUnitSerf = nil;
+    function SerfCanDoDelivery(oWT: TKMWareType; iO: Integer; aSerf: TKMUnit): Boolean;
+    function TryCalculateBid(aCalcKind: TKMDeliveryCalcKind; var aBidCost: TKMDeliveryBid; aSerf: TKMUnit = nil): Boolean; overload;
+    function TryCalculateBidBasic(aCalcKind: TKMDeliveryCalcKind; var aBidBasicCost: TKMDeliveryBid; aSerf: TKMUnit = nil;
                                   aAllowOffroad: Boolean = False): Boolean; overload;
     function TryCalculateBidBasic(aCalcKind: TKMDeliveryCalcKind; aOfferPos: TKMPoint; aOfferCnt: Cardinal; aOfferHouseType: TKMHouseType;
-                                  aOwner: TKMHandID; var aBidBasicCost: TKMDeliveryBid; aSerf: TKMUnitSerf = nil;
+                                  aOwner: TKMHandID; var aBidBasicCost: TKMDeliveryBid; aSerf: TKMUnit = nil;
                                   aAllowOffroad: Boolean = False): Boolean; overload;
-    function TryCalcSerfBidValue(aCalcKind: TKMDeliveryCalcKind; aSerf: TKMUnitSerf; const aOfferPos: TKMPoint; var aBidBasicCost: TKMDeliveryBid): Boolean;
+    function TryCalcSerfBidValue(aCalcKind: TKMDeliveryCalcKind; aSerf: TKMUnit; const aOfferPos: TKMPoint; var aBidBasicCost: TKMDeliveryBid): Boolean;
     function TryCalcRouteCost(aCalcKind: TKMDeliveryCalcKind; aFromPos, aToPos: TKMPoint; aRouteStep: TKMDeliveryRouteStep; aDistance : Single; var aRoutCost: TKMDeliveryRouteCalcCost;
                               aSecondPass: TKMTerrainPassability = tpNone): Boolean;
 //    function GetUnitsCntOnPath(aNodeList: TKMPointList): Integer;
 
-    function DoChooseBestBid(aCalcEventType: TKMDeliveryBidCalcEventType;aBestImportance: TKMDemandImportance; aSerf: TKMUnitSerf;
+    function DoChooseBestBid(aCalcEventType: TKMDeliveryBidCalcEventType;aBestImportance: TKMDemandImportance; aSerf: TKMUnit;
                              const aOfferPos: TKMPoint; aAllowOffroad: Boolean = False): TKMDeliveryBid;
-    function ChooseBestBid(aBestImportance: TKMDemandImportance; aSerf: TKMUnitSerf = nil): TKMDeliveryBid;
+    function ChooseBestBid(aBestImportance: TKMDemandImportance; aSerf: TKMUnit = nil): TKMDeliveryBid;
     function ChooseBestBidBasic(aBestImportance: TKMDemandImportance; aAllowOffroad: Boolean): TKMDeliveryBid;
     function ChooseBestSerfBid(const aOfferPos: TKMPoint): TKMDeliveryBid;
     function GetDemandCount(aWare: TKMWareType): Integer;
@@ -305,11 +305,11 @@ type
     function GetDeliveriesToHouseCnt(aHouse: TKMHouse; aWare: TKMWareType): Integer;
 
     function GetAvailableDeliveriesCount: Integer;
-    procedure ReAssignDelivery(iQ: Integer; aSerf: TKMUnitSerf);
-    procedure AssignDelivery(oWT, dWT: TKMWareType; iO, iD: Integer; aSerf: TKMUnitSerf);
-    function AskForDelivery(aSerf: TKMUnitSerf; aHouse: TKMHouse = nil): Boolean;
-    procedure CheckForBetterDemand(aDeliveryID: Integer; out aToHouse: TKMHouse; out aToUnit: TKMUnit; out aToStruc: TKMStructure;  aSerf: TKMUnitSerf);
-    procedure DeliveryFindBestDemand(aSerf: TKMUnitSerf; aDeliveryId: Integer; aWare: TKMWareType; out aToHouse: TKMHouse; out aToUnit: TKMUnit; out aToStruct: TKMStructure;  out aForceDelivery: Boolean);
+    procedure ReAssignDelivery(iQ: Integer; aSerf: TKMUnit);
+    procedure AssignDelivery(oWT, dWT: TKMWareType; iO, iD: Integer; aSerf: TKMUnit);
+    function AskForDelivery(aSerf: TKMUnit; aHouse: TKMHouse = nil): Boolean;
+    procedure CheckForBetterDemand(aDeliveryID: Integer; out aToHouse: TKMHouse; out aToUnit: TKMUnit; out aToStruc: TKMStructure;  aSerf: TKMUnit);
+    procedure DeliveryFindBestDemand(aSerf: TKMUnit; aDeliveryId: Integer; aWare: TKMWareType; out aToHouse: TKMHouse; out aToUnit: TKMUnit; out aToStruct: TKMStructure;  out aForceDelivery: Boolean);
     procedure TakenOffer(iQ: Integer);
     procedure GaveDemand(iQ: Integer);
     procedure AbandonDelivery(iQ: Integer); //Occurs when unit is killed or something alike happens
@@ -341,17 +341,24 @@ type
     fQueue: TKMDeliveries;
 
     fSerfCount: Integer;
-    fSerfs: array of TKMUnitSerf;
+    fSerfs: array of TKMUnit;
+
+    fWHCount: Integer;
+    fWHMen: array of TKMUnit;
 
     procedure RemSerf(aIndex: Integer);
+    procedure RemWH(aIndex: Integer);
     procedure RemoveExtraSerfs;
     function GetIdleSerfCount: Integer;
+    function GetIdleWHCount: Integer;
     function GetQueue: TKMDeliveries;
+    procedure AssignWareHouseMan;
   public
     constructor Create(aHandIndex: TKMHandID);
     destructor Destroy; override;
 
-    procedure AddSerf(aSerf: TKMUnitSerf);
+    procedure AddSerf(aSerf: TKMUnit);
+    procedure AddWHMan(aWH: TKMUnit);
     property Queue: TKMDeliveries read GetQueue;
 
     procedure Save(SaveStream: TKMemoryStream);
@@ -417,6 +424,10 @@ begin
   for I := 0 to fSerfCount - 1 do
     SaveStream.Write(fSerfs[I].UID);
 
+  SaveStream.Write(fWHCount);
+  for I := 0 to fWHCount - 1 do
+    SaveStream.Write(fWHMen[I].UID);
+
   fQueue.Save(SaveStream);
 end;
 
@@ -432,6 +443,12 @@ begin
   for I := 0 to fSerfCount - 1 do
     LoadStream.Read(fSerfs[I], 4);
 
+  LoadStream.Read(fWHCount);
+  SetLength(fSerfs, fWHCount);
+  for I := 0 to fWHCount - 1 do
+    LoadStream.Read(fWHMen[I], 4);
+
+
   fQueue.Load(LoadStream);
 end;
 
@@ -444,23 +461,38 @@ begin
   for I := 0 to fSerfCount - 1 do
   begin
     U := gHands.GetUnitByUID(Integer(fSerfs[I]));
-    Assert(U is TKMUnitSerf, 'Non-serf in delivery list');
-    fSerfs[I] := TKMUnitSerf(U);
+    Assert((U is TKMUnitSerf), 'Non-serf in delivery list');
+    fSerfs[I] := U;
+  end;
+  for I := 0 to fWHCount - 1 do
+  begin
+    U := gHands.GetUnitByUID(Integer(fWHMen[I]));
+    Assert((U is TKMUnitWHMan), 'Non-WH man in delivery list');
+    fWHMen[I] := U;
   end;
   fQueue.SyncLoad;
 end;
 
 
 //Add the Serf to the List
-procedure TKMHandLogistics.AddSerf(aSerf: TKMUnitSerf);
+procedure TKMHandLogistics.AddSerf(aSerf: TKMUnit);
 begin
   if fSerfCount >= Length(fSerfs) then
     SetLength(fSerfs, fSerfCount + LENGTH_INC);
 
-  fSerfs[fSerfCount] := TKMUnitSerf(aSerf.GetPointer);
+  fSerfs[fSerfCount] := aSerf.GetPointer;
   Inc(fSerfCount);
 end;
 
+//Add the Serf to the List
+procedure TKMHandLogistics.AddWHMan(aWH: TKMUnit);
+begin
+  if fWHCount >= Length(fWHMen) then
+    SetLength(fWHMen, fWHCount + LENGTH_INC);
+
+  fWHMen[fWHCount] := aWH.GetPointer;
+  Inc(fWHCount);
+end;
 
 //Remove died Serf from the List
 procedure TKMHandLogistics.RemSerf(aIndex: Integer);
@@ -473,6 +505,17 @@ begin
 
   Dec(fSerfCount);
 end;
+//Remove died Serf from the List
+procedure TKMHandLogistics.RemWH(aIndex: Integer);
+begin
+  gHands.CleanUpUnitPointer(TKMUnit(fWHMen[aIndex]));
+
+  //Serf order is not important, so we just move last one into freed spot
+  if aIndex <> fWHCount - 1 then
+    fWHMen[aIndex] := fWHMen[fWHCount - 1];
+
+  Dec(fWHCount);
+end;
 
 
 function TKMHandLogistics.GetIdleSerfCount: Integer;
@@ -481,10 +524,19 @@ var
 begin
   Result := 0;
   for I := 0 to fSerfCount - 1 do
-    if fSerfs[I].IsIdle then
+    if fSerfs[I].IsIdle and (fSerfs[I].UnitType = utSerf) then
       Inc(Result);
 end;
 
+function TKMHandLogistics.GetIdleWHCount: Integer;
+var
+  I: Integer;
+begin
+  Result := 0;
+  for I := 0 to fWHCount - 1 do
+    if fWHMen[I].IsIdle then
+      Inc(Result);
+end;
 
 function TKMHandLogistics.GetQueue: TKMDeliveries;
 begin
@@ -502,8 +554,114 @@ begin
   for I := fSerfCount - 1 downto 0 do
     if fSerfs[I].IsDeadOrDying then
       RemSerf(I);
+
+  for I := fWHCount - 1 downto 0 do
+    if fWHMen[I].IsDeadOrDying then
+      RemWH(I);
 end;
 
+
+procedure TKMHandLogistics.AssignWareHouseMan;
+  function AnyWHCanDoDelivery(oWT: TKMWareType; iO: Integer): Boolean;
+  var
+    I: Integer;
+  begin
+    Result := False;
+    for I := 0 to fWHCount - 1 do
+      if fWHMen[I].IsIdle and fQueue.SerfCanDoDelivery(oWT, iO, fWHMen[I]) then
+        Exit(True);
+  end;
+
+var availableDeliveries, availableWH, availableWHSlots : Integer;
+  I, K, iD, iO: Integer;
+  dWT, oWT: TKMWareType;
+  offerPos: TKMPoint;
+  bid, serfBid: TKMDeliveryBid;
+  bestImportance: TKMDemandImportance;
+  fromHouse : TKMHouse;
+begin
+  availableWH := GetIdleWHCount;
+
+  IF availableWH = 0 then
+    Exit;
+
+  availableDeliveries := fQueue.GetAvailableDeliveriesCount;
+  If availableDeliveries = 0 then
+    Exit;
+
+  availableWHSlots := availableWH * MAX_WH_WARES;
+  //I is not used anywhere, but we must loop through once for each delivery available so each one is taken
+  for I := 0 to availableDeliveries - 1 do
+  begin
+    IF availableWHSlots = 0 then
+      Exit;
+    //First we decide on the best delivery to be done based on current Offers and Demands
+    //We need to choose the best delivery out of all of them, otherwise we could get
+    //a further away storehouse when there are multiple possibilities.
+    //Note: All deliveries will be taken, because we have enough serfs to fill them all.
+    //The important concept here is to always get the shortest delivery when a delivery can be taken to multiple places.
+    bestImportance := Low(TKMDemandImportance);
+
+    fQueue.fBestBidCandidates.Clear;
+    fQueue.fBestBidCandidates.EnlargeTo(1024);
+
+    for dWT := Low(fQueue.fDemandCount) to High(fQueue.fDemandCount) do
+      for oWT := WARE_MIN to WARE_MAX do
+      if oWT in WARES_VALID then
+        if fQueue.ValidWareTypePair(oWT, dWT) then
+          for iD := 0 to fQueue.fDemandCount[dWT] - 1 do
+            if fQueue.ValidDemand(dWT, iD)
+              and (fQueue.fDemand[dWT, iD].Importance >= bestImportance) then //Skip any less important than the best we found
+              for iO := 0 to fQueue.fOfferCount[oWT] - 1 do
+                if fQueue.ValidOffer(oWT, iO)
+                and fQueue.ValidDelivery(oWT, dWT, iO, iD) then
+                begin
+                  If AnyWHCanDoDelivery(oWT, iO) then //Only choose this delivery if at least one of the serfs can do it
+                  begin
+                    bid := TKMDeliveryBid.Create(fQueue.fDemand[dWT,iD].Importance, nil, oWT, dWT, iO, iD);
+                    if fQueue.TryCalculateBid(dckFast, bid) then
+                    begin
+                      fQueue.fBestBidCandidates.Push(bid);
+                      bestImportance := bid.Importance;
+                    end
+                    else
+                      bid.Free;
+                  end;
+                end;
+
+    bid := fQueue.ChooseBestBid(bestImportance);
+
+    //Found bid give us the best delivery to do at this moment. Now find the best serf for the job.
+    if bid <> nil then
+    begin
+      fromHouse := fQueue.fOffer[bid.OfferWare, bid.OfferID].Loc_House;
+      offerPos := fromHouse.PointBelowEntrance;
+      fQueue.fBestBidCandidates.Clear;
+      fQueue.fBestBidCandidates.EnlargeTo(fSerfCount);
+      serfBid := nil;
+      for K := 0 to fWHCount - 1 do
+        if fWHMen[K].IsIdle and TKMUnitWHMan(fWHMen[K]).CanAddNextDelivery(fromHouse) then
+          if fQueue.SerfCanDoDelivery(bid.OfferWare, bid.OfferID, fWHMen[K]) then
+          begin
+            serfBid := TKMDeliveryBid.Create(fWHMen[K]);
+
+            if fQueue.TryCalcSerfBidValue(dckFast, fWHMen[K], offerPos, serfBid) then
+              fQueue.fBestBidCandidates.Push(serfBid);
+          end;
+
+      serfBid := fQueue.ChooseBestSerfBid(offerPos);
+
+      if serfBid <> nil then
+      begin
+        fQueue.AssignDelivery(bid.OfferWare, bid.DemandWare, bid.OfferID, bid.DemandID, serfBid.Serf);
+        serfBid.Free;
+      end;
+      bid.Free;
+    end;
+    Dec(availableWHSlots);
+  end;
+
+end;
 
 procedure TKMHandLogistics.UpdateState(aTick: Cardinal);
 
@@ -532,6 +690,8 @@ begin
     fQueue.UpdateState;
     RemoveExtraSerfs;
 
+    AssignWareHouseMan;
+
     availableSerfs := GetIdleSerfCount;
     if availableSerfs = 0 then Exit;
 
@@ -542,7 +702,7 @@ begin
     if availableDeliveries > availableSerfs then
     begin
       for I := 0 to fSerfCount - 1 do
-        if fSerfs[I].IsIdle then
+        if fSerfs[I].IsIdle and (fSerfs[I] is TKMUnitSerf) then
           fQueue.AskForDelivery(fSerfs[I]);
     end
     else
@@ -671,7 +831,7 @@ begin
   {$IFDEF USE_VIRTUAL_TREEVIEW}
   if (gGame = nil) or gGame.ReadyToStop then Exit;
   if not AllowFormLogisticsChange then Exit;
-  if not ( oWT in WARES_VALID) then EXIT:
+  if not ( aWare in WARES_VALID) then EXIT;
   if aI >= fOfferCount[aWare] then Exit;
 
 
@@ -722,8 +882,8 @@ begin
 
   with fQueue[aI] do
   begin
-    if (DemandID = DELIVERY_NO_ID) or (DemandWare in [wtNone, wtFood, wtAny]) then Exit;
-    if (OfferID = DELIVERY_NO_ID) or (OfferWare in [wtNone, wtFood, wtAny]) then Exit;
+    if (DemandID = DELIVERY_NO_ID) or (DemandWare in [wtNone, wtFood, wtAll]) then Exit;
+    if (OfferID = DELIVERY_NO_ID) or (OfferWare in [wtNone, wtFood, wtAll]) then Exit;
 
     if not fDemand[DemandWare, DemandID].IsActive
       or not fOffer[OfferWare, OfferID].IsActive then Exit;
@@ -1478,7 +1638,7 @@ end;
 
 
 // Delivery is only permitted if the serf can access the From house.
-function TKMDeliveries.SerfCanDoDelivery(oWT: TKMWareType; iO: Integer; aSerf: TKMUnitSerf): Boolean;
+function TKMDeliveries.SerfCanDoDelivery(oWT: TKMWareType; iO: Integer; aSerf: TKMUnit): Boolean;
 var
   locA, locB: TKMPoint;
 begin
@@ -1503,7 +1663,11 @@ end;
 
 function TKMDeliveries.GetWareType(aQueueID: Integer): TKMWareType;
 begin
-  Result := fQueue[aQueueID].Serf.Carry;
+  If fQueue[aQueueID].Serf is TKMUnitSerf then
+  Result := TKMUnitSerf(fQueue[aQueueID].Serf).Carry
+  else
+  If fQueue[aQueueID].Serf is TKMUnitWHMan then
+    Result := wtNone;//TKMUnitWHMan(fQueue[aQueueID].Serf).Carry
 
   if Result in WARES_VALID then Exit;
 
@@ -1573,7 +1737,7 @@ end;
 
 //Try to Calc bid cost between serf and offer house
 //Return False and aSerfBidValue = NOT_REACHABLE_DEST_VALUE, if house is not reachable by serf
-function TKMDeliveries.TryCalcSerfBidValue(aCalcKind: TKMDeliveryCalcKind; aSerf: TKMUnitSerf; const aOfferPos: TKMPoint;
+function TKMDeliveries.TryCalcSerfBidValue(aCalcKind: TKMDeliveryCalcKind; aSerf: TKMUnit; const aOfferPos: TKMPoint;
                                            var aBidBasicCost: TKMDeliveryBid): Boolean;
 begin
   aBidBasicCost.SerfToOffer.Value := 0;
@@ -1654,7 +1818,7 @@ end;
 
 
 function TKMDeliveries.TryCalculateBidBasic(aCalcKind: TKMDeliveryCalcKind; var aBidBasicCost: TKMDeliveryBid;
-                                            aSerf: TKMUnitSerf = nil; aAllowOffroad: Boolean = False): Boolean;
+                                            aSerf: TKMUnit = nil; aAllowOffroad: Boolean = False): Boolean;
 var
   iO: Integer;
   oWT: TKMWareType;
@@ -1669,7 +1833,7 @@ end;
 
 //Calc bid cost between offer object (house, serf) and demand object (house, unit - worker or warrior)
 function TKMDeliveries.TryCalculateBidBasic(aCalcKind: TKMDeliveryCalcKind; aOfferPos: TKMPoint; aOfferCnt: Cardinal; aOfferHouseType: TKMHouseType;
-                                            aOwner: TKMHandID; var aBidBasicCost: TKMDeliveryBid; aSerf: TKMUnitSerf = nil;
+                                            aOwner: TKMHandID; var aBidBasicCost: TKMDeliveryBid; aSerf: TKMUnit = nil;
                                             aAllowOffroad: Boolean = False): Boolean;
 var
   iD, distr, maxWareIn: Integer;
@@ -1783,7 +1947,7 @@ begin
 end;
 
 
-function TKMDeliveries.TryCalculateBid(aCalcKind: TKMDeliveryCalcKind; var aBidCost: TKMDeliveryBid; aSerf: TKMUnitSerf = nil): Boolean;
+function TKMDeliveries.TryCalculateBid(aCalcKind: TKMDeliveryCalcKind; var aBidCost: TKMDeliveryBid; aSerf: TKMUnit = nil): Boolean;
 var
   iO, iD: Integer;
   oWT, dWT: TKMWareType;
@@ -1857,7 +2021,7 @@ begin
 end;
 
 
-procedure TKMDeliveries.CheckForBetterDemand(aDeliveryID: Integer; out aToHouse: TKMHouse; out aToUnit: TKMUnit; out aToStruc: TKMStructure;  aSerf: TKMUnitSerf);
+procedure TKMDeliveries.CheckForBetterDemand(aDeliveryID: Integer; out aToHouse: TKMHouse; out aToUnit: TKMUnit; out aToStruc: TKMStructure;  aSerf: TKMUnit);
 var
   iD, iO, bestD, oldD: Integer;
   oldDWT, dWT, bestDWT, oWT: TKMWareType;
@@ -1872,7 +2036,8 @@ begin
     oWT := fQueue[aDeliveryID].OfferWare;
     oldD := fQueue[aDeliveryID].DemandID;
     oldDWT := fQueue[aDeliveryID].DemandWare;
-
+    If iO = -1 then
+      iO := -1;
     //Special rule to prevent an annoying situation: If we were delivering to a unit
     //do not look for a better demand. Deliveries to units are closely watched/controlled
     //by the player. For example if player orders food for group A, then after serfs start
@@ -1977,7 +2142,7 @@ begin
 end;
 
 // Find best Demand for the given delivery. Could return same or nothing
-procedure TKMDeliveries.DeliveryFindBestDemand(aSerf: TKMUnitSerf; aDeliveryId: Integer; aWare: TKMWareType;
+procedure TKMDeliveries.DeliveryFindBestDemand(aSerf: TKMUnit; aDeliveryId: Integer; aWare: TKMWareType;
                                                out aToHouse: TKMHouse; out aToUnit: TKMUnit; out aToStruct: TKMStructure; out aForceDelivery: Boolean);
 
   function ValidBestDemand(dWT, oldDWT: TKMWareType; iD, iOldID: Integer): Boolean;
@@ -2187,7 +2352,7 @@ end;
 
 // Find best bid from the candidates list
 // Build exact route instead (dckAccurate)
-function TKMDeliveries.DoChooseBestBid(aCalcEventType: TKMDeliveryBidCalcEventType; aBestImportance: TKMDemandImportance; aSerf: TKMUnitSerf;
+function TKMDeliveries.DoChooseBestBid(aCalcEventType: TKMDeliveryBidCalcEventType; aBestImportance: TKMDemandImportance; aSerf: TKMUnit;
                                        const aOfferPos: TKMPoint; aAllowOffroad: Boolean = False): TKMDeliveryBid;
 var
   K, bidsToCompare: Integer;
@@ -2230,7 +2395,7 @@ begin
 end;
 
 
-function TKMDeliveries.ChooseBestBid(aBestImportance: TKMDemandImportance; aSerf: TKMUnitSerf = nil): TKMDeliveryBid;
+function TKMDeliveries.ChooseBestBid(aBestImportance: TKMDemandImportance; aSerf: TKMUnit = nil): TKMDeliveryBid;
 begin
   Result := DoChooseBestBid(bceBid, aBestImportance, aSerf, KMPOINT_ZERO);
 end;
@@ -2250,7 +2415,7 @@ end;
 
 //Should issue a job based on requesters location and job importance
 //Serf may ask for a job from within a house after completing previous delivery
-function TKMDeliveries.AskForDelivery(aSerf: TKMUnitSerf; aHouse: TKMHouse = nil): Boolean;
+function TKMDeliveries.AskForDelivery(aSerf: TKMUnit; aHouse: TKMHouse = nil): Boolean;
 var
   iQ, iD, iO: Integer;
   dWT, oWT: TKMWareType;
@@ -2344,7 +2509,7 @@ begin
 end;
 
 
-procedure TKMDeliveries.ReAssignDelivery(iQ: Integer; aSerf: TKMUnitSerf);
+procedure TKMDeliveries.ReAssignDelivery(iQ: Integer; aSerf: TKMUnit);
 begin
   Assert(iQ < fQueueCount, 'iQ >= fQueueCount!');
   Assert(fQueue[iQ].JobStatus = jsTaken);
@@ -2352,17 +2517,23 @@ begin
   if gLog.CanLogDelivery() then
     gLog.LogDelivery(Format('Hand [%d] - Reassign delivery ID %d from serf ID: %d to serf ID: %d', [fOwner, iQ, fQueue[iQ].Serf.UID, aSerf.UID]));
 
-  fQueue[iQ].Serf.DelegateDelivery(aSerf);
+  If fQueue[iQ].Serf is TKMUnitSerf then
+    TKMUnitSerf(fQueue[iQ].Serf).DelegateDelivery(aSerf)
+  else
+  If fQueue[iQ].Serf is TKMUnitWHMan then
+    TKMUnitWHMan(fQueue[iQ].Serf).DelegateDelivery(aSerf);
 
   gHands.CleanUpUnitPointer(TKMUnit(fQueue[iQ].Serf));
-  fQueue[iQ].Serf := TKMUnitSerf(aSerf.GetPointer);
+  fQueue[iQ].Serf := aSerf.GetPointer;
   Form_UpdateQueueNode(iQ);
 end;
 
 
-procedure TKMDeliveries.AssignDelivery(oWT, dWT: TKMWareType; iO, iD: Integer; aSerf: TKMUnitSerf);
+procedure TKMDeliveries.AssignDelivery(oWT, dWT: TKMWareType; iO, iD: Integer; aSerf: TKMUnit);
 var
   I, K: Integer;
+  serf : TKMUnitSerf;
+  WH : TKMUnitWHMan;
 begin
   //Find a place where Delivery will be written to after Offer-Demand pair is found
   I := 0;
@@ -2382,7 +2553,7 @@ begin
   fQueue[I].OfferID := iO;
   fQueue[I].OfferWare := oWT;
   fQueue[I].JobStatus := jsTaken;
-  fQueue[I].Serf := TKMUnitSerf(aSerf.GetPointer);
+  fQueue[I].Serf := aSerf.GetPointer;
 
   {$IFDEF USE_VIRTUAL_TREEVIEW}
   fQueue[I].Node := nil;
@@ -2397,15 +2568,33 @@ begin
 
   if gLog.CanLogDelivery then
     gLog.LogDelivery('Creating delivery ID ' + IntToStr(I));
+  If (aSerf is TKMUnitSerf) then
+  begin
+    serf := TKMUnitSerf(aSerf);
+    //Now we have best job and can perform it
+    if fDemand[dWT,iD].Loc_Structure <> nil then
+      serf.Deliver(fOffer[oWT,iO].Loc_House, fDemand[dWT,iD].Loc_Structure, oWT, I)
+    else
+    if fDemand[dWT,iD].Loc_House <> nil then
+      serf.Deliver(fOffer[oWT,iO].Loc_House, fDemand[dWT,iD].Loc_House, oWT, I)
+    else
+      serf.Deliver(fOffer[oWT,iO].Loc_House, fDemand[dWT,iD].Loc_Unit, oWT, I);
+  end else
+  If (aSerf is TKMUnitWHMan) then
+  begin
+    WH := TKMUnitWHMan(aSerf);
+    WH.SetDeliveryHouseFrom(fOffer[oWT,iO].Loc_House);
+    if fDemand[dWT,iD].Loc_Structure <> nil then
+      WH.AddDelivery(fDemand[dWT,iD].Loc_Structure, oWT, I)
+    else
+    if fDemand[dWT,iD].Loc_House <> nil then
+      WH.AddDelivery(fDemand[dWT,iD].Loc_House, oWT, I)
+    else
+      WH.AddDelivery(fDemand[dWT,iD].Loc_Unit, oWT, I);
 
-  //Now we have best job and can perform it
-  if fDemand[dWT,iD].Loc_Structure <> nil then
-    aSerf.Deliver(fOffer[oWT,iO].Loc_House, fDemand[dWT,iD].Loc_Structure, oWT, I)
-  else
-  if fDemand[dWT,iD].Loc_House <> nil then
-    aSerf.Deliver(fOffer[oWT,iO].Loc_House, fDemand[dWT,iD].Loc_House, oWT, I)
-  else
-    aSerf.Deliver(fOffer[oWT,iO].Loc_House, fDemand[dWT,iD].Loc_Unit, oWT, I)
+  end else
+    raise Exception.Create('TKMDeliveries.AssignDelivery, unit is not serf or WHman');
+
 end;
 
 
@@ -2746,7 +2935,7 @@ begin
   for I := 0 to fQueueCount - 1 do
     with fQueue[I] do
     begin
-      Serf := TKMUnitSerf(gHands.GetUnitByUID(Integer(Serf)));
+      Serf := gHands.GetUnitByUID(Integer(Serf));
       Form_UpdateQueueNode(I);
     end;
 end;
@@ -3191,13 +3380,13 @@ end;
 
 
 { TKMDeliveryBid }
-constructor TKMDeliveryBid.Create(aSerf: TKMUnitSerf);
+constructor TKMDeliveryBid.Create(aSerf: TKMUnit);
 begin
   Create(Low(TKMDemandImportance), aSerf, wtNone, wtNone, DELIVERY_NO_ID, DELIVERY_NO_ID);
 end;
 
 
-constructor TKMDeliveryBid.Create(aImportance: TKMDemandImportance; aSerf: TKMUnitSerf; oWT, dWT: TKMWareType; iO, iD: Integer; iQ: Integer = DELIVERY_NO_ID);
+constructor TKMDeliveryBid.Create(aImportance: TKMDemandImportance; aSerf: TKMUnit; oWT, dWT: TKMWareType; iO, iD: Integer; iQ: Integer = DELIVERY_NO_ID);
 begin
   inherited Create;
 
