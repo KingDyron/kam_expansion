@@ -28,14 +28,28 @@ type
   // Track/Song - song we are playing now from the list
   // Other/Briefing - voice file we play for campaign briefing
   //todo: Would be nice to choose just 2 terms and stick to them
+  TKMMusicFile = record
+    Dir, Title : string;
+  end;
+  TKMMusicID = record
+    Playlist, ID : Byte;
+  end;
+  TKMMusicFileArray = array of TKMMusicFile;
+
+  TKMMusicPlaylist = record
+    DirName : String;
+    Color : String;
+    Count : Byte;
+    Tracks : TKMMusicFileArray;
+    Order : TIntegerDynArray;
+  end;
+  TKMMusicPlaylistArray = array of TKMMusicPlaylist;
+
   TKMMusicLib = class
   private type
     TKMFadeState = (fsNone, fsFadeOut, fsFadeIn, fsFaded);
   private
     fCount: Integer;
-    fIndex: Integer; //Points to the index in TrackOrder of the current track
-    fTracks: TStringDynArray;
-    fTrackOrder: TIntegerDynArray; //Each index points to an index of MusicTracks
     //MIDICount,MIDIIndex:integer;
     //MIDITracks: array[1..256]of string;
     fIsInitialized: Boolean;
@@ -50,9 +64,21 @@ type
     fToPlayAfterFade: UnicodeString;
     fFadedToPlayOther: Boolean;
     fOtherVolume: Single;
+
+    //all tracks in one
+    fIndex: Integer; //Points to the index in TrackOrder of the current track
+    fTracks: array of TKMMusicID;//all tracks in one
+    fTrackOrder: TIntegerDynArray; //Each index points to an index of MusicTracks
+    //playlists
+    fPlaylists : TKMMusicPlaylistArray;
+    fPlaylistIndex, fMusicIndex : Integer;
+
     procedure PlayFile(const FileName: UnicodeString);
     procedure PlayOtherFile(const FileName: UnicodeString);
+    procedure AddNewPlayList(aDirPath : String);
+    procedure AddMusicToLast(aPath : String);
     procedure ScanTracks(const aPath: UnicodeString);
+    procedure ScanDirectories(const aPath: UnicodeString);
     procedure ShuffleSongs; //should not be seen outside of this class
     procedure UnshuffleSongs;
 
@@ -61,6 +87,7 @@ type
     procedure SetMuted(const aMuted: Boolean);
     function GetMuted: Boolean;
     function GetPrevVolume: Single;
+    procedure PlayTrack;
 
     property PrevVolume: Single read GetPrevVolume write fPrevVolume;
   public
@@ -90,7 +117,15 @@ type
     procedure PauseToPlayFile(const aFileName: UnicodeString; aVolume: Single);
     procedure StopPlayingOtherFile;
     function GetTrackTitle: UnicodeString;
+
+    function PlayListCount : Byte;
+    function PlayListName(aIndex : Integer) : String;
+    function PlayListColor(aIndex : Integer) : String;
+    property PlaylistIndex : Integer read fPlaylistIndex;
+    procedure SelectPlaylist(aIndex : Integer);
+
     procedure UpdateStateIdle; //Used for fading
+
   end;
 
 
@@ -100,7 +135,7 @@ var
 
 implementation
 uses
-  SysUtils, KromUtils, Math,
+  SysUtils, KromUtils, Math, IOUtils,
   KM_Defaults,
   KM_Log, KM_CommonUtils;
 
@@ -122,7 +157,14 @@ begin
   if not DirectoryExists(ExeDir + 'Music') then
     ForceDirectories(ExeDir + 'Music');
 
+  fCount := 0;
   ScanTracks(ExeDir + 'Music' + PathDelim);
+  ScanDirectories(ExeDir + 'Music' + PathDelim);
+  //Cut to length
+  SetLength(fTracks, fCount);
+  SetLength(fTrackOrder, fCount);
+
+  fIndex := -1;
 
 
   {$IFDEF USELIBZPLAY}
@@ -287,56 +329,91 @@ begin
 end;
 
 
+procedure TKMMusicLib.AddNewPlayList(aDirPath: string);
+var I, J : integer;
+  colorStr : String;
+begin
+  I := length(fPlaylists);
+  SetLength(fPlaylists, I + 1);
+  fPlaylists[I].DirName := ExtractFileName(Copy(aDirPath, 1, length(aDirPath) - 1));
+  fPlaylists[I].Color := '';
+  If (fPlaylists[I].DirName[1] = '[') and (fPlaylists[I].DirName[2] = '$') and (fPlaylists[I].DirName[9] = ']') then
+    fPlaylists[I].Color := Copy(fPlaylists[I].DirName, 1, 9);
+
+end;
+
+procedure TKMMusicLib.AddMusicToLast(aPath: string);
+var I, J, K, L : Integer;
+  ext : String;
+begin
+  ext := GetFileExt(aPath);
+  If not
+    ( (ext = 'MP3') //Allow all formats supported by both libraries
+      or (ext = 'MP2')
+      or (ext = 'MP1')
+      or (ext = 'WAV')
+      or (ext = 'OGG')
+      {$IFDEF USEBASS} //Formats supported by BASS but not LibZPlay
+      or (ext = 'AIFF')
+      {$ENDIF}
+      {$IFDEF USELIBZPLAY} //Formats supported by LibZPlay but not BASS
+      or (ext = 'FLAC')
+      or (ext = 'OGA')
+      or (ext = 'AC3')
+      or (ext = 'AAC')
+      {$ENDIF}
+    ) then
+    Exit;
+  I := high(fPlaylists);
+
+  J := fPlaylists[I].Count;
+  Inc(fPlaylists[I].Count);
+  If fPlaylists[I].Count > length(fPlaylists[I].Tracks) then
+  begin
+    Setlength(fPlaylists[I].Tracks, fPlaylists[I].Count + 16);
+    Setlength(fPlaylists[I].Order, fPlaylists[I].Count + 16);
+  end;
+  ext := ExtractFileName(aPath);
+  fPlaylists[I].Tracks[J].Dir := aPath;
+
+  for K := 1 to length(ext) do
+    If not (ext[K] in [' ', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-']) then
+    begin
+      L := K;
+      Break;
+    end;
+
+
+  fPlaylists[I].Tracks[J].Title := TruncateExt(copy(ext, L, length(ext)));
+  fPlaylists[I].Order[J] := J;
+
+  Inc(fCount);
+  if fCount > Length(fTracks) then
+    SetLength(fTracks, Length(fTracks) + 32);
+
+  fTracks[fCount - 1].Playlist := I;
+  fTracks[fCount - 1].ID := J;
+end;
+
 procedure TKMMusicLib.ScanTracks(const aPath: UnicodeString);
 var
   searchRec: TSearchRec;
+  path : String;
 begin
   if not fIsInitialized then Exit;
-  fCount := 0;
   if not DirectoryExists(aPath) then Exit;
 
-  SetLength(fTracks, 255);
+  AddNewPlayList(aPath);
 
-  FindFirst(aPath + '*.*', faAnyFile - faDirectory, searchRec);
-  try
-    repeat
-      if (GetFileExt(searchRec.Name) = 'MP3') //Allow all formats supported by both libraries
-      or (GetFileExt(searchRec.Name) = 'MP2')
-      or (GetFileExt(searchRec.Name) = 'MP1')
-      or (GetFileExt(searchRec.Name) = 'WAV')
-      or (GetFileExt(searchRec.Name) = 'OGG')
-      {$IFDEF USEBASS} //Formats supported by BASS but not LibZPlay
-      or (GetFileExt(SearchRec.Name) = 'AIFF')
-      {$ENDIF}
-      {$IFDEF USELIBZPLAY} //Formats supported by LibZPlay but not BASS
-      or (GetFileExt(searchRec.Name) = 'FLAC')
-      or (GetFileExt(searchRec.Name) = 'OGA')
-      or (GetFileExt(searchRec.Name) = 'AC3')
-      or (GetFileExt(searchRec.Name) = 'AAC')
-      {$ENDIF}
-      then
-      begin
-        Inc(fCount);
-        if fCount > Length(fTracks) then
-          SetLength(fTracks, Length(fTracks) + 32);
+  for path in TDirectory.GetFiles(aPath) do
+    AddMusicToLast(path);
+end;
 
-        fTracks[fCount - 1] := aPath + searchRec.Name;
-      end;
-      {if GetFileExt(SearchRec.Name)='MID' then
-      begin
-        Inc(MIDICount);
-        MIDITracks[MIDICount] := Path + SearchRec.Name;
-      end;}
-    until (FindNext(searchRec) <> 0);
-  finally
-    FindClose(searchRec);
-  end;
-
-  //Cut to length
-  SetLength(fTracks, fCount);
-  SetLength(fTrackOrder, fCount);
-
-  fIndex := -1;
+procedure TKMMusicLib.ScanDirectories(const aPath: UnicodeString);
+var path : String;
+begin
+  for path in TDirectory.GetDirectories(aPath) do
+    ScanTracks(path + PathDelim);
 end;
 
 
@@ -346,12 +423,14 @@ var
 begin
   if not fIsInitialized then Exit;
   if fCount = 0 then Exit; //no music files found
-  if fIndex = 0 then Exit; //It's already playing
+  if (fIndex = 0) or (fMusicIndex = 0) then Exit; //It's already playing
   fIndex := 0;
+  fMusicIndex := 0;
   // There was audio crackling after loading screen, here we fix it by setting a delay and fading the volume.
   prevVolume := fVolume;
   fVolume := 0;
-  PlayFile(fTracks[0]);
+  //PlayFile(fTracks[0]);
+  PlayTrack;
   fVolume := prevVolume;
   UnfadeStarting;
 end;
@@ -363,9 +442,13 @@ begin
   if fCount = 0 then Exit; //no music files found
   if fFadeState <> fsNone then Exit;
 
-  //Set next index, looped or random
-  fIndex := (fIndex + 1) mod fCount;
-  PlayFile(fTracks[fTrackOrder[fIndex]]);
+  If fPlaylistIndex = 0 then
+    //Set next index, looped or random
+    fIndex := (fIndex + 1) mod fCount
+  else
+    fMusicIndex := (fMusicIndex + 1) mod fPlaylists[fPlaylistIndex - 1].Count;
+  //PlayFile(fTracks[fTrackOrder[fIndex]]);
+  PlayTrack;
 end;
 
 
@@ -375,8 +458,13 @@ begin
   if fCount = 0 then Exit; //no music files found
   if fFadeState <> fsNone then Exit;
 
-  fIndex := (fIndex + fCount - 1) mod fCount;
-  PlayFile(fTracks[fTrackOrder[fIndex]]);
+  If fPlaylistIndex = 0 then
+    //Set next index, looped or random
+    fIndex := (fIndex + fCount - 1) mod fCount
+  else
+    fMusicIndex := (fMusicIndex + fPlaylists[fPlaylistIndex - 1].Count - 1) mod fPlaylists[fPlaylistIndex - 1].Count;
+  //PlayFile(fTracks[fTrackOrder[fIndex]]);
+  PlayTrack;
 end;
 
 
@@ -424,6 +512,7 @@ begin
   {$IFDEF USELIBZPLAY} ZPlayer.StopPlayback; {$ENDIF}
   {$IFDEF USEBASS} BASS_ChannelStop(fBassStream); {$ENDIF}
   fIndex := -1;
+  fMusicIndex := -1;
 end;
 
 
@@ -446,6 +535,19 @@ end;
 function TKMMusicLib.GetPrevVolume: Single;
 begin
   Result := IfThen(fPrevVolume = 0, 0.5, fPrevVolume);
+end;
+
+procedure TKMMusicLib.PlayTrack;
+begin
+  If fPlaylistIndex > 0 then
+  begin
+    with fPlaylists[fPlaylistIndex - 1] do
+      PlayFile(Tracks[Order[fMusicIndex]].Dir);
+  end else
+  begin
+    with fPlaylists[fTracks[fTrackOrder[fIndex]].Playlist] do
+      PlayFile(Tracks[fTracks[fTrackOrder[fIndex]].ID].Dir);
+  end;
 end;
 
 
@@ -483,34 +585,50 @@ end;
 
 procedure TKMMusicLib.ShuffleSongs;
 var
-  I, R, curSong: Integer;
+  J, I, R, curSong, curPlaylist: Integer;
 begin
   if fIndex = -1 then Exit; // Music is disabled
 
   // Stay on the current song
   curSong := fTrackOrder[fIndex];
-
   // Shuffle everything except for first (menu) track
   for I := fCount - 1 downto 1 do
   begin
     R := RandomRange(1, I);
     KromUtils.SwapInt(fTrackOrder[R], fTrackOrder[I]);
-    if fTrackOrder[I] = curSong then
+    if (fTrackOrder[I] = curSong) and (fPlaylistIndex = 0) then
       fIndex := I;
+  end;
+  curSong := fMusicIndex;
+  for J := 0 to High(fPlaylists) do
+  for I := fPlaylists[J].Count - 1 downto 1 do
+  begin
+    R := RandomRange(1, I);
+    KromUtils.SwapInt(fPlaylists[J].Order[R], fPlaylists[J].Order[I]);
+    If (fPlaylistIndex > 0) and (J = fPlaylistIndex - 1) and (fPlaylists[J].Order[I] = curSong) then
+      fMusicIndex := I;
   end;
 end;
 
 
 procedure TKMMusicLib.UnshuffleSongs;
 var
-  I: Integer;
+  I, J : Integer;
 begin
   if fIndex = -1 then Exit; // Music is disabled
   fIndex := fTrackOrder[fIndex];
-
+  If fPlaylistIndex > 0 then
+  begin
+    fMusicIndex := fPlaylists[fPlaylistIndex - 1].Order[fMusicIndex];
+  end;
   //Reset every index of the TrackOrder array
   for I := 0 to fCount - 1 do
     fTrackOrder[I] := I;
+  for I := 0 to High(fPlaylists) do
+    for J := 0 to fPlaylists[I].Count - 1 do
+      fPlaylists[I].Order[J] := J;
+
+
 end;
 
 
@@ -583,6 +701,28 @@ begin
   {$ENDIF}
 end;
 
+
+procedure TKMMusicLib.SelectPlaylist(aIndex: Integer);
+var I : Integer;
+begin
+  If fPlaylistIndex = aIndex then
+    Exit;
+  fPlaylistIndex := aIndex;
+  If fPlaylistIndex > 0 then
+  begin
+    fMusicIndex := 0;
+    If fIndex >= 0 then
+    begin
+      If fTracks[fTrackOrder[fIndex]].Playlist = fPlaylistIndex - 1 then
+        fMusicIndex := fTracks[fTrackOrder[fIndex]].ID;
+      fIndex := 0;
+    end;
+  end else
+  begin
+    fIndex := 0;
+  end;
+  PlayTrack;
+end;
 
 procedure TKMMusicLib.UpdateStateIdle;
 begin
@@ -668,10 +808,41 @@ end;
 
 function TKMMusicLib.GetTrackTitle: UnicodeString;
 begin
+  Result := '';
   if not fIsInitialized then Exit;
-  if not InRange(fIndex, Low(fTracks), High(fTracks)) then Exit;
+  If fPlaylistIndex > 0 then
+  begin
+    with fPlaylists[fPlaylistIndex - 1] do
+    begin
+      if not InRange(fMusicIndex, 0, Count - 1) then Exit;
 
-  Result := TruncateExt(ExtractFileName(fTracks[fTrackOrder[fIndex]]));
+      Result := Color + Tracks[Order[fMusicIndex]].Title;
+
+    end;
+
+  end else
+  begin
+    if not InRange(fIndex, Low(fTracks), High(fTracks)) then Exit;
+
+    with fPlaylists[fTracks[fTrackOrder[fIndex]].Playlist] do
+      Result := PlayListColor(fTracks[fTrackOrder[fIndex]].Playlist)
+                + Tracks[fTracks[fTrackOrder[fIndex]].ID].Title;
+  end;
+end;
+
+function TKMMusicLib.PlayListCount : Byte;
+begin
+  Result := length(fPlaylists);
+end;
+
+function TKMMusicLib.PlayListName(aIndex : Integer) : String;
+begin
+  Result := fPlaylists[aIndex].DirName;
+end;
+
+function TKMMusicLib.PlayListColor(aIndex: Integer): string;
+begin
+  Result := fPlaylists[aIndex].Color;
 end;
 
 

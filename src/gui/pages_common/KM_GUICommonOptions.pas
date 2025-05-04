@@ -116,6 +116,7 @@ type
         TrackBar_SFX, TrackBar_Music: TKMTrackBar;
         CheckBox_MusicOff: TKMCheckBox;
         CheckBox_ShuffleOn: TKMCheckBox;
+        DropList_Playlist: TKMDropList;
       Panel_Lang: TKMPanel;
         Radio_Lang: TKMRadioGroup;
         Image_Lang_Flags: array of TKMImage;
@@ -382,9 +383,10 @@ end;
 
 
 procedure TKMGUICommonOptions.CreateSound(var aTopBlock: Integer; var aLeftBlock: Integer);
+var I : Integer;
 begin
   // SFX section
-  Panel_Sound := TKMPanel.Create(Panel_Options, aLeftBlock, aTopBlock, 280, 175);
+  Panel_Sound := TKMPanel.Create(Panel_Options, aLeftBlock, aTopBlock, 280, 195);
   NextBlock(aTopBlock, Panel_Sound);
   Panel_Sound.Anchors := [anLeft];
     TKMLabel.Create(Panel_Sound,6,0,270,20,gResTexts[TX_MENU_OPTIONS_SOUND],fntOutline,taLeft);
@@ -394,12 +396,25 @@ begin
     TrackBar_Music     := TKMTrackBar.Create(Panel_Sound, 10, 77, 256, OPT_SLIDER_MIN, OPT_SLIDER_MAX);
     CheckBox_MusicOff  := TKMCheckBox.Create(Panel_Sound, 10, 127, 256, 20, gResTexts[TX_MENU_OPTIONS_MUSIC_DISABLE], fntMetal);
     CheckBox_ShuffleOn := TKMCheckBox.Create(Panel_Sound, 10, 147, 256, 20, gResTexts[TX_MENU_OPTIONS_MUSIC_SHUFFLE], fntMetal);
+
+    DropList_Playlist := TKMDropList.Create(Panel_Sound, 10, 167, 256, 20, fntMetal, 'Playlist', bsGame);
+    DropList_Playlist.Add(gResTexts[1060]);
+    If gMusic.PlayListCount > 0 then
+    begin
+      DropList_Playlist.Add(gResTexts[121]);
+      for I := 1 to gMusic.PlayListCount - 1 do
+        DropList_Playlist.Add(gMusic.PlayListName(I));
+    end;
+    DropList_Playlist.ItemIndex := 0;
+    DropList_Playlist.Hint := gResTexts[2256];
+
     TrackBar_SFX.Caption   := gResTexts[TX_MENU_SFX_VOLUME];
     TrackBar_Music.Caption := gResTexts[TX_MENU_MUSIC_VOLUME];
     TrackBar_SFX.OnChange      := Change;
     TrackBar_Music.OnChange    := Change;
     CheckBox_MusicOff.OnClick  := Change;
     CheckBox_ShuffleOn.OnClick := Change;
+    DropList_Playlist.OnChange := Change;
 end;
 
 
@@ -709,6 +724,8 @@ begin
   TrackBar_Music.Enabled        := not CheckBox_MusicOff.Checked;
   CheckBox_ShuffleOn.Checked    := gGameSettings.SFX.ShuffleOn;
   CheckBox_ShuffleOn.Enabled    := not CheckBox_MusicOff.Checked;
+  DropList_Playlist.Enabled     := not CheckBox_MusicOff.Checked;
+  DropList_Playlist.ItemIndex   := gGameSettings.SFX.Playlist;
   CheckBox_SnowHouses.Checked   := gGameSettings.GFX.AllowSnowHouses;
   CheckBox_SnowObjects.Checked   := gGameSettings.GFX.AllowSnowObjects;
 
@@ -812,6 +829,8 @@ begin
 
   gSoundPlayer.UpdateSoundVolume(gGameSettings.SFX.SoundFXVolume);
   gMusic.Volume := gGameSettings.SFX.MusicVolume;
+  gGameSettings.SFX.Playlist := DropList_Playlist.ItemIndex;
+  gMusic.SelectPlaylist(gGameSettings.SFX.Playlist);
 
   gGameSettings.Video.Enabled         := CheckBox_VideoEnable.Checked;
   gGameSettings.Video.VideoStretch    := CheckBox_VideoStretch.Checked;
