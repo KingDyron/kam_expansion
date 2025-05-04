@@ -753,8 +753,6 @@ begin
     fConstructions.AddWorker(TKMUnitWorker(Result));
   if Result is TKMUnitSerf then
     fDeliveries.AddSerf(Result);
-  if Result is TKMUnitWHMan then
-    fDeliveries.AddWHMan(Result);
 
   if not aCheat then
     fStats.UnitCreated(aUnitType, False)
@@ -803,8 +801,6 @@ begin
     fConstructions.AddWorker(TKMUnitWorker(aUnit));
   if aUnit.UnitType = utSerf then
     fDeliveries.AddSerf(aUnit);
-  if aUnit.UnitType = utWarehouseMan then
-    fDeliveries.AddWHMan(aUnit);
 
   if NeverHungry and not gGameParams.IsMapEditor then
       aUnit.NeverHungry := true;

@@ -158,7 +158,6 @@ begin
     utDeerMale..ANIMAL_MAX,
     utWatersnake..utDuck:         Result := TKMUnitAnimal.Create(uid, aUnitType, pointDir, aOwner);
     utFish:                       Result := TKMUnitFish.Create(uid, pointDir, aOwner);
-    utWarehouseMan:                Result := TKMUnitWHMan.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
   else
     raise ELocError.Create('Add ' + gRes.Units[aUnitType].GUIName, pointDir.Loc);
   end;
@@ -386,7 +385,6 @@ begin
       utWolf,
       utDeerMale..ANIMAL_MAX,
       utWatersnake..utDuck:     U := TKMUnitAnimal.Load(LoadStream);
-      utWarehouseMan:                   U := TKMUnitWHMan.Load(LoadStream);
     else
       U := nil;
     end;

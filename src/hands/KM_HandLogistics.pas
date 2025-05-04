@@ -342,23 +342,15 @@ type
 
     fSerfCount: Integer;
     fSerfs: array of TKMUnit;
-
-    fWHCount: Integer;
-    fWHMen: array of TKMUnit;
-
     procedure RemSerf(aIndex: Integer);
-    procedure RemWH(aIndex: Integer);
     procedure RemoveExtraSerfs;
     function GetIdleSerfCount: Integer;
-    function GetIdleWHCount: Integer;
     function GetQueue: TKMDeliveries;
-    procedure AssignWareHouseMan;
   public
     constructor Create(aHandIndex: TKMHandID);
     destructor Destroy; override;
 
     procedure AddSerf(aSerf: TKMUnit);
-    procedure AddWHMan(aWH: TKMUnit);
     property Queue: TKMDeliveries read GetQueue;
 
     procedure Save(SaveStream: TKMemoryStream);
@@ -424,10 +416,6 @@ begin
   for I := 0 to fSerfCount - 1 do
     SaveStream.Write(fSerfs[I].UID);
 
-  SaveStream.Write(fWHCount);
-  for I := 0 to fWHCount - 1 do
-    SaveStream.Write(fWHMen[I].UID);
-
   fQueue.Save(SaveStream);
 end;
 
@@ -442,12 +430,6 @@ begin
   SetLength(fSerfs, fSerfCount);
   for I := 0 to fSerfCount - 1 do
     LoadStream.Read(fSerfs[I], 4);
-
-  LoadStream.Read(fWHCount);
-  SetLength(fSerfs, fWHCount);
-  for I := 0 to fWHCount - 1 do
-    LoadStream.Read(fWHMen[I], 4);
-
 
   fQueue.Load(LoadStream);
 end;
@@ -464,12 +446,6 @@ begin
     Assert((U is TKMUnitSerf), 'Non-serf in delivery list');
     fSerfs[I] := U;
   end;
-  for I := 0 to fWHCount - 1 do
-  begin
-    U := gHands.GetUnitByUID(Integer(fWHMen[I]));
-    Assert((U is TKMUnitWHMan), 'Non-WH man in delivery list');
-    fWHMen[I] := U;
-  end;
   fQueue.SyncLoad;
 end;
 
@@ -484,16 +460,6 @@ begin
   Inc(fSerfCount);
 end;
 
-//Add the Serf to the List
-procedure TKMHandLogistics.AddWHMan(aWH: TKMUnit);
-begin
-  if fWHCount >= Length(fWHMen) then
-    SetLength(fWHMen, fWHCount + LENGTH_INC);
-
-  fWHMen[fWHCount] := aWH.GetPointer;
-  Inc(fWHCount);
-end;
-
 //Remove died Serf from the List
 procedure TKMHandLogistics.RemSerf(aIndex: Integer);
 begin
@@ -505,18 +471,6 @@ begin
 
   Dec(fSerfCount);
 end;
-//Remove died Serf from the List
-procedure TKMHandLogistics.RemWH(aIndex: Integer);
-begin
-  gHands.CleanUpUnitPointer(TKMUnit(fWHMen[aIndex]));
-
-  //Serf order is not important, so we just move last one into freed spot
-  if aIndex <> fWHCount - 1 then
-    fWHMen[aIndex] := fWHMen[fWHCount - 1];
-
-  Dec(fWHCount);
-end;
-
 
 function TKMHandLogistics.GetIdleSerfCount: Integer;
 var
@@ -525,16 +479,6 @@ begin
   Result := 0;
   for I := 0 to fSerfCount - 1 do
     if fSerfs[I].IsIdle and (fSerfs[I].UnitType = utSerf) then
-      Inc(Result);
-end;
-
-function TKMHandLogistics.GetIdleWHCount: Integer;
-var
-  I: Integer;
-begin
-  Result := 0;
-  for I := 0 to fWHCount - 1 do
-    if fWHMen[I].IsIdle then
       Inc(Result);
 end;
 
@@ -554,114 +498,8 @@ begin
   for I := fSerfCount - 1 downto 0 do
     if fSerfs[I].IsDeadOrDying then
       RemSerf(I);
-
-  for I := fWHCount - 1 downto 0 do
-    if fWHMen[I].IsDeadOrDying then
-      RemWH(I);
 end;
 
-
-procedure TKMHandLogistics.AssignWareHouseMan;
-  function AnyWHCanDoDelivery(oWT: TKMWareType; iO: Integer): Boolean;
-  var
-    I: Integer;
-  begin
-    Result := False;
-    for I := 0 to fWHCount - 1 do
-      if fWHMen[I].IsIdle and fQueue.SerfCanDoDelivery(oWT, iO, fWHMen[I]) then
-        Exit(True);
-  end;
-
-var availableDeliveries, availableWH, availableWHSlots : Integer;
-  I, K, iD, iO: Integer;
-  dWT, oWT: TKMWareType;
-  offerPos: TKMPoint;
-  bid, serfBid: TKMDeliveryBid;
-  bestImportance: TKMDemandImportance;
-  fromHouse : TKMHouse;
-begin
-  availableWH := GetIdleWHCount;
-
-  IF availableWH = 0 then
-    Exit;
-
-  availableDeliveries := fQueue.GetAvailableDeliveriesCount;
-  If availableDeliveries = 0 then
-    Exit;
-
-  availableWHSlots := availableWH * MAX_WH_WARES;
-  //I is not used anywhere, but we must loop through once for each delivery available so each one is taken
-  for I := 0 to availableDeliveries - 1 do
-  begin
-    IF availableWHSlots = 0 then
-      Exit;
-    //First we decide on the best delivery to be done based on current Offers and Demands
-    //We need to choose the best delivery out of all of them, otherwise we could get
-    //a further away storehouse when there are multiple possibilities.
-    //Note: All deliveries will be taken, because we have enough serfs to fill them all.
-    //The important concept here is to always get the shortest delivery when a delivery can be taken to multiple places.
-    bestImportance := Low(TKMDemandImportance);
-
-    fQueue.fBestBidCandidates.Clear;
-    fQueue.fBestBidCandidates.EnlargeTo(1024);
-
-    for dWT := Low(fQueue.fDemandCount) to High(fQueue.fDemandCount) do
-      for oWT := WARE_MIN to WARE_MAX do
-      if oWT in WARES_VALID then
-        if fQueue.ValidWareTypePair(oWT, dWT) then
-          for iD := 0 to fQueue.fDemandCount[dWT] - 1 do
-            if fQueue.ValidDemand(dWT, iD)
-              and (fQueue.fDemand[dWT, iD].Importance >= bestImportance) then //Skip any less important than the best we found
-              for iO := 0 to fQueue.fOfferCount[oWT] - 1 do
-                if fQueue.ValidOffer(oWT, iO)
-                and fQueue.ValidDelivery(oWT, dWT, iO, iD) then
-                begin
-                  If AnyWHCanDoDelivery(oWT, iO) then //Only choose this delivery if at least one of the serfs can do it
-                  begin
-                    bid := TKMDeliveryBid.Create(fQueue.fDemand[dWT,iD].Importance, nil, oWT, dWT, iO, iD);
-                    if fQueue.TryCalculateBid(dckFast, bid) then
-                    begin
-                      fQueue.fBestBidCandidates.Push(bid);
-                      bestImportance := bid.Importance;
-                    end
-                    else
-                      bid.Free;
-                  end;
-                end;
-
-    bid := fQueue.ChooseBestBid(bestImportance);
-
-    //Found bid give us the best delivery to do at this moment. Now find the best serf for the job.
-    if bid <> nil then
-    begin
-      fromHouse := fQueue.fOffer[bid.OfferWare, bid.OfferID].Loc_House;
-      offerPos := fromHouse.PointBelowEntrance;
-      fQueue.fBestBidCandidates.Clear;
-      fQueue.fBestBidCandidates.EnlargeTo(fSerfCount);
-      serfBid := nil;
-      for K := 0 to fWHCount - 1 do
-        if fWHMen[K].IsIdle and TKMUnitWHMan(fWHMen[K]).CanAddNextDelivery(fromHouse) then
-          if fQueue.SerfCanDoDelivery(bid.OfferWare, bid.OfferID, fWHMen[K]) then
-          begin
-            serfBid := TKMDeliveryBid.Create(fWHMen[K]);
-
-            if fQueue.TryCalcSerfBidValue(dckFast, fWHMen[K], offerPos, serfBid) then
-              fQueue.fBestBidCandidates.Push(serfBid);
-          end;
-
-      serfBid := fQueue.ChooseBestSerfBid(offerPos);
-
-      if serfBid <> nil then
-      begin
-        fQueue.AssignDelivery(bid.OfferWare, bid.DemandWare, bid.OfferID, bid.DemandID, serfBid.Serf);
-        serfBid.Free;
-      end;
-      bid.Free;
-    end;
-    Dec(availableWHSlots);
-  end;
-
-end;
 
 procedure TKMHandLogistics.UpdateState(aTick: Cardinal);
 
@@ -689,9 +527,6 @@ begin
   try
     fQueue.UpdateState;
     RemoveExtraSerfs;
-
-    AssignWareHouseMan;
-
     availableSerfs := GetIdleSerfCount;
     if availableSerfs = 0 then Exit;
 

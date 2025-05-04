@@ -659,7 +659,6 @@ type
     utFarmer,       utCarpenter,    utBaker,         utButcher,
     utFisher,       utBuilder,      utStonemason,    utSmith,
     utMetallurgist, utRecruit,      utOperator,      utClayPicker,
-    utWarehouseMan,
 
     utMilitia,      utAxeFighter,   utSwordFighter,  utBowman,
     utCrossbowman,  utLanceCarrier, utPikeman,       utScout,
@@ -691,7 +690,7 @@ const
   UNIT_MIN = utSerf;
   UNIT_MAX = utSpider;
   CITIZEN_MIN = utSerf;
-  CITIZEN_MAX = utWarehouseMan;
+  CITIZEN_MAX = utClayPicker;
   WARRIOR_MIN = utMilitia;
   WARRIOR_MAX = utLekter;
   WARRIOR_EQUIPABLE_BARRACKS_MIN = utMilitia; //Available from barracks
@@ -709,7 +708,7 @@ const
   UNITS_CITIZEN = [CITIZEN_MIN..CITIZEN_MAX];
   UNITS_WARRIORS = [WARRIOR_MIN..WARRIOR_MAX];
   UNITS_HUMAN = [HUMANS_MIN..HUMANS_MAX];
-  UNITS_NEW = [utOperator, utClayPicker, utWarehouseMan, utRam .. HUMANS_MAX];
+  UNITS_NEW = [utOperator, utClayPicker, utRam .. HUMANS_MAX];
   WARRIORS_IRON = [utSwordFighter, utCrossbowman, utPikeman, utKnight, utWarrior, utFlailFighter, utShieldBearer];
   SPECIAL_UNITS = [utPaladin, utTrainedWolf, utArcher, utSpy, utAmmoCart, utShip, utBoat, utBattleShip, utPyro, utLekter];
 

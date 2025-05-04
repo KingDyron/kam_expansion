@@ -180,7 +180,7 @@ type
 const
   //This is a map of the valid values for !SET_UNIT,
   //TSK did not had place for new warriors that were inserted in the middle(!)
-  UNIT_OLD_ID_TO_TYPE: array[0..47] of TKMUnitType = (
+  UNIT_OLD_ID_TO_TYPE: array[0..46] of TKMUnitType = (
     utSerf,utWoodcutter,utMiner,utAnimalBreeder,utFarmer,
     utCarpenter,utBaker,utButcher,utFisher,utBuilder,
     utStonemason,utSmith,utMetallurgist,utRecruit, //Units
@@ -189,13 +189,13 @@ const
     utWolf,utFish,utWatersnake,utSeastar,utCrab,
     utWaterflower,utWaterleaf,utDuck, utRam, utGolem, utGiant, utOperator, utClayPicker,
     utDeerMale, utDeerFemale, utFox, utBoar, utBear, utLandDuck, utRabbit,
-    utWhiteBear, utSandSnake, utSpider, utWarehouseMan); //Animals
+    utWhiteBear, utSandSnake, utSpider); //Animals
 
   //and the corresponing unit that will be created (matches KaM behavior)
   UNIT_TYPE_TO_OLD_ID: array[TKMUnitType] of integer = (
     -1, -1, //utNone, utAny
     0,1,2,3,4,5,6,7,8,9,10,11,12,13, //Citizens
-    35, 36, 47,
+    35, 36,
     14,15,16,17,18,19,20,21,22,23, //Warriors
     -1,-1,-1,-1, -1,-1, -1, -1, -1, -1, -1, - 1, -1, -1, -1, -1, //TPR warriors (can't be placed with SET_UNIT)
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -203,7 +203,7 @@ const
     44, 45, 46); //Animals
 
   //This is a map of the valid values for !SET_GROUP, and the corresponing unit that will be created (matches KaM behavior)
-  UNIT_ID_TO_TYPE: array[0..76] of TKMUnitType = (
+  UNIT_ID_TO_TYPE: array[0..75] of TKMUnitType = (
     utSerf,utWoodcutter,utMiner,utAnimalBreeder,utFarmer,
     utCarpenter,utBaker,utButcher,utFisher,utBuilder,
     utStonemason,utSmith,utMetallurgist,utRecruit, //Units
@@ -220,14 +220,14 @@ const
     utSpikedTrap, utWoodenWall, utClayPicker,
     utTorchMan, utMedic, utBattleShip, utBoat,
     utPyro, utLekter, utDeerMale, utDeerFemale, utFox, utBoar, utBear,
-    utLandDuck, utRabbit,utWhiteBear, utSandSnake, utSpider, utWarehouseMan,
+    utLandDuck, utRabbit,utWhiteBear, utSandSnake, utSpider,
     utNone, utNone, utNone
     );
 
   UNIT_TYPE_TO_ID: array[TKMUnitType] of ShortInt = (
     -1, -1, //utNone, utAny
     0,1,2,3,4,5,6,7,8,9,10,11,12,13, //Citizens
-    51,56,73,//new citizens
+    51,56,//new citizens
     14,15,16,17,18,19,20,21,22,23, //Warriors
     24,25,26,27, 28,29,//TPR warriors
     38, 39, 40, 41, 42, 43, 44, 45, 46, 47,//My Warriors
@@ -513,7 +513,6 @@ const
     [uaWalk, uaSpec, uaDie, uaEat], //Recruit
     [uaWalk, uaSpec, uaDie, uaEat], //operator
     [uaWalk, uaWork, uaDie, uaEat, uaSpec, uaWork1, uaStay], //ClayPicker
-    [uaWalk, uaSpec, uaDie, uaEat], //warehouseman
     [uaWalk, uaWork, uaSpec, uaDie, uaEat], //Militia
     [uaWalk, uaWork, uaSpec, uaDie, uaEat], //Axeman
     [uaWalk, uaWork, uaSpec, uaDie, uaEat], //Swordsman
@@ -633,7 +632,6 @@ function TKMUnitSpec.GetGUIIcon: Word;
 begin
   case fUnitType of
     utNone, utAny:  Result := 0;
-    utWarehouseMan: Result := 882;
     utClayPicker: Result := 882;
     utBarbarian:    Result := 70;
     utCatapult:    Result := 684;
@@ -741,7 +739,7 @@ const
   MM_COLOR: array[TKMUnitType] of Cardinal = (
     0,0,0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0, 0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,
     $B0B0B0,$B08000,$B08000,$80B0B0,$00B0B0,$B080B0,$00B000,$80B0B0,
     $80B0B0 ,$80B0B0,$80B0B0,$80B0B0,$80B0B0, $80B0B0, $80B0B0, $80B0B0, $80B0B0, $80B0B0,
     $80B0B0, $80B0B0 ,$80B0B0,$80B0B0, $80B0B0, $80B0B0 ,$80B0B0,$80B0B0,$80B0B0,$80B0B0,
@@ -861,7 +859,6 @@ begin
     utWhiteBear:         Result := 2151;
     utSandSnake:         Result := 2152;
     utSpider:            Result := 2153;
-    utWarehouseMan:            Result := 2153;
   else
     Result := TX_UNITS_NAMES__29 + UNIT_TYPE_TO_ID[fUnitType];
   end;
