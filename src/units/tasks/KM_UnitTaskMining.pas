@@ -314,12 +314,18 @@ begin
     0:  if WorkPlan.HasToWalk then
         begin
           if WorkPlan.GatheringScript = gsCollector then
+          begin
             case WorkPlan.WorkDir of
               dirN : fObjectType := gTerrain.Land^[WorkPlan.Loc.Y - 1, WorkPlan.Loc.X].Obj;
               dirS : fObjectType := gTerrain.Land^[WorkPlan.Loc.Y + 1, WorkPlan.Loc.X].Obj;
               dirE : fObjectType := gTerrain.Land^[WorkPlan.Loc.Y, WorkPlan.Loc.X + 1].Obj;
               dirW : fObjectType := gTerrain.Land^[WorkPlan.Loc.Y, WorkPlan.Loc.X - 1].Obj;
             end;
+            If WorkPlan.TMPInt = 1 then
+              Thought := thDiamond
+            else
+              Thought := thWood;
+          end;
 
 
           fDistantResAcquired := False; // we will set distant resource as acquired when we gather it
@@ -358,10 +364,13 @@ begin
           end;
           If (WorkPlan.GatheringScript in [gsHunter]) and (WorkPlan.TMPInt = 1) then
           begin
-              if (Home.CheckWareIn(wtLance) > 0) and not Home.DontNeedRes then
-                Home.ProduceWare(wtLance, -1)
-              else
-                Result := trTaskDone;
+            If WorkPlan.TMPInt = 1 then
+              Thought := thBow;
+
+            if (Home.CheckWareIn(wtLance) > 0) and not Home.DontNeedRes then
+              Home.ProduceWare(wtLance, -1)
+            else
+              Result := trTaskDone;
           end;
 
         end

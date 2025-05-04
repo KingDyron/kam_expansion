@@ -383,9 +383,9 @@ const
   //Wine     = +20% (We changed this to +30% for balance)
   //Fish     = +50%
   BREAD_RESTORE = 0.50;
-  SAUSAGE_RESTORE = 0.30;
-  WINE_RESTORE = 0.20;
-  FISH_RESTORE = 0.50;
+  SAUSAGE_RESTORE = 0.35;
+  WINE_RESTORE = 0.25;
+  FISH_RESTORE = 0.7;
   APPLE_RESTORE = 0.15;
   VEGE_RESTORE = 0.20;
 
@@ -659,6 +659,7 @@ type
     utFarmer,       utCarpenter,    utBaker,         utButcher,
     utFisher,       utBuilder,      utStonemason,    utSmith,
     utMetallurgist, utRecruit,      utOperator,      utClayPicker,
+    utWarehouseMan,
 
     utMilitia,      utAxeFighter,   utSwordFighter,  utBowman,
     utCrossbowman,  utLanceCarrier, utPikeman,       utScout,
@@ -690,7 +691,7 @@ const
   UNIT_MIN = utSerf;
   UNIT_MAX = utSpider;
   CITIZEN_MIN = utSerf;
-  CITIZEN_MAX = utClayPicker;
+  CITIZEN_MAX = utWarehouseMan;
   WARRIOR_MIN = utMilitia;
   WARRIOR_MAX = utLekter;
   WARRIOR_EQUIPABLE_BARRACKS_MIN = utMilitia; //Available from barracks
@@ -708,7 +709,7 @@ const
   UNITS_CITIZEN = [CITIZEN_MIN..CITIZEN_MAX];
   UNITS_WARRIORS = [WARRIOR_MIN..WARRIOR_MAX];
   UNITS_HUMAN = [HUMANS_MIN..HUMANS_MAX];
-  UNITS_NEW = [utOperator, utClayPicker, utRam .. HUMANS_MAX];
+  UNITS_NEW = [utOperator, utClayPicker, utWarehouseMan, utRam .. HUMANS_MAX];
   WARRIORS_IRON = [utSwordFighter, utCrossbowman, utPikeman, utKnight, utWarrior, utFlailFighter, utShieldBearer];
   SPECIAL_UNITS = [utPaladin, utTrainedWolf, utArcher, utSpy, utAmmoCart, utShip, utBoat, utBattleShip, utPyro, utLekter];
 
@@ -795,12 +796,17 @@ type
   TKMGoInDirection = (gdGoOutside=-1, gdGoInside=1); //Switch to set if unit goes into house or out of it
 
 type
-  TKMUnitThought = (thNone, thEat, thHome, thBuild, thStone, thWood, thDeath, thQuest, thDismiss, thArmor, thSpy);
+  TKMUnitThought = (thNone, thEat, thHome, thBuild, thStone, thWood, thDeath, thQuest,
+                    thDismiss, thArmor, thSpy, thTile, thExclusive, thImportant,
+                    thBucket, thBoots, thDiamond, thBow);
 
 const //Corresponding indices in units.rx
-  THOUGHT_BOUNDS: array [TKMUnitThought, 1..2] of Word = (
+  {THOUGHT_BOUNDS: array [TKMUnitThought, 1..2] of Word = (
   (0,0), (6250,6257), (6258,6265), (6266,6273), (6274,6281), (6282,6289), (6290,6297), (6298,6305), (6314,6321), (9603,9609), (10558,10564)
-  );
+  );}
+  THOUGHT_ICON: array[TKMUnitThought] of Word = (0, 15222, 15223, 15224, 15225, 15226, 15227,
+                                                  15228, 15229, 15230, 15231, 15232, 15233, 15234,
+                                                  15235, 15236, 15237, 15238);
 
   UNIT_OFF_X = -0.5;
   UNIT_OFF_Y = -0.4;
@@ -808,7 +814,7 @@ const //Corresponding indices in units.rx
   //Offsetting layers of units we control what goes above or below
   //using smaller values to minimize impact on other objects and keeping withing map bounds
   FLAG_X_OFFSET = 0.01; //Flag is offset to be rendered above/below the flag carrier
-  THOUGHT_X_OFFSET = 0.02; //Thought is offset to be rendered always above the flag
+  THOUGHT_X_OFFSET = 0.04; //Thought is offset to be rendered always above the flag
 
   //TileCursors
   TC_OUTLINE = 0;
@@ -824,7 +830,8 @@ type
         uttGoEat,     uttMining,          uttDie,        uttGoOutShowHungry,  uttAttackHouse,
         uttThrowRock, uttBuildPalisade, uttBuildRemove, uttBuildHouseUpgrade, uttGoGetBoots, uttBuildStructure,
         uttGoToShip, uttBuildGrassLand, uttUnloadFromShip, uttGoToStore, uttGoToLoc, uttCollectWares, uttUnloadWares,
-        uttGoToWell, uttTakeOverHouse, uttMerchant, uttCartographer, uttBuildPearl, uttPearlRally, uttGoToPearl);
+        uttGoToWell, uttTakeOverHouse, uttMerchant, uttCartographer, uttBuildPearl, uttPearlRally, uttGoToPearl,
+        uttWHDeliver);
 
   TKMUnitActionName = (uanStay, uanWalkTo, uanGoInOut, uanAbandonWalk, uanFight, uanStormAttack, uanSteer);
 
