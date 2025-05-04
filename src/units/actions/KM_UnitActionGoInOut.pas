@@ -452,6 +452,7 @@ begin
                                     end;
                         beNone:    Exit; //All street tiles are blocked by busy units. Do not exit the house, just wait
                       end;
+
                       //If we have pushed an idling unit, wait till it goes away
                       //Wait until our push request is dealt with before we move out
                       if (fPushedUnit <> nil) then
@@ -514,6 +515,10 @@ begin
   fUnit.PositionF := KMLerp(fDoor, fStreet, fStep);
   fUnit.Visible := (fHouse = nil) or (fHouse.IsDestroyed) or (fStep > 0); //Make unit invisible when it's inside of House
 
+  IF fDirection = gdGoInside then
+    fUnit.Direction := KMGetDirection(fStreet, fDoor)
+  else
+    fUnit.Direction := KMGetDirection(fDoor, fStreet);
   if (fStep <= 0) or (fStep >= 1) then
   begin
     Result := arActDone;
