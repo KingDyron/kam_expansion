@@ -26,7 +26,10 @@ const
   MIN_RESOLUTION_HEIGHT = 720;          //Lowest supported resolution Y
   MIN_NIGHT_DARKNESS    = 0.25;
   NIGHT_SPEED           = 360;
-  MAX_NIGHT_SPEED           = 21;       //21 * 360
+  MAX_NIGHT_SPEED       = 21;       //21 * 360
+  MAX_X_RESOLUTION      = 1920;
+  MAX_Y_RESOLUTION      = 1080;
+  SCALE_INTERFACE       = false;
   // It would be nice to have the declaration as:
   // GAME_REVISION_NUM = {$I KM_Revision.inc}
   // This would also allow to disuse the initialization section down below
@@ -829,8 +832,7 @@ type
         uttGoEat,     uttMining,          uttDie,        uttGoOutShowHungry,  uttAttackHouse,
         uttThrowRock, uttBuildPalisade, uttBuildRemove, uttBuildHouseUpgrade, uttGoGetBoots, uttBuildStructure,
         uttGoToShip, uttBuildGrassLand, uttUnloadFromShip, uttGoToStore, uttGoToLoc, uttCollectWares, uttUnloadWares,
-        uttGoToWell, uttTakeOverHouse, uttMerchant, uttCartographer, uttBuildPearl, uttPearlRally, uttGoToPearl,
-        uttWHDeliver);
+        uttGoToWell, uttTakeOverHouse, uttMerchant, uttCartographer, uttBuildPearl, uttPearlRally, uttGoToPearl);
 
   TKMUnitActionName = (uanStay, uanWalkTo, uanGoInOut, uanAbandonWalk, uanFight, uanStormAttack, uanSteer);
 

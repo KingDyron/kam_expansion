@@ -249,8 +249,8 @@ const
     utSmith,
     utFisher
   );
-  StatNonWorkerHouse: array[0..9] of TKMHouseType = (htStore, htCottage, htHouse, htSchool, htInn, htMarket,
-                                                      htTownhall, htPalace, htPearl, htWell);
+  StatNonWorkerHouse: array[0..8] of TKMHouseType = (htStore, htCottage, htHouse, htSchool, htInn, htMarket,
+                                                      htTownhall, htPalace, htWell);
   {
   StatPlan: array [0..STATS_LINES_CNT-1] of record
     HouseType: array [0..4] of TKMHouseType;
@@ -663,6 +663,8 @@ begin
   begin
     if GetKeyState(gResKeys[kfMapDragScroll]) < 0 then
     begin
+      X := Round(X * gRender.InterfaceScale);
+      Y := Round(Y * gRender.InterfaceScale);
       UpdateGameCursor(X, Y, Shift);
       VP.X := fDragScrollingViewportPos.X + (fDragScrollingCursorPos.X - X) / (CELL_SIZE_PX * fViewport.Zoom);
       VP.Y := fDragScrollingViewportPos.Y + (fDragScrollingCursorPos.Y - Y) / (CELL_SIZE_PX * fViewport.Zoom);

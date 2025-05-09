@@ -9,17 +9,22 @@ uses
 
 
 type
-  TKMHouseStatIcon = class
+  TKMHouseStatIcon = class(TKMControl)
     public
-      SPic : TKMImage;
-      SQt, SWip : TKMLabel;
+      TexID : Word;
+      ColorQT, ColorWip : Cardinal;
+      SQt, SWip : String;
       Constructor Create(aPanel: TKMPanel; X, Y, aTexID: Integer; aHouseType : Byte);
+      procedure Paint;override;
   end;
-  TKMUnitStatIcon = class
+  TKMUnitStatIcon = class(TKMControl)
     public
-      SPic : TKMImage;
-      SQt, SWip : TKMLabel;
+      TexID : Word;
+      FlagColor : Cardinal;
+      ColorQT, ColorWip : Cardinal;
+      SQt, SWip : String;
       Constructor Create(aPanel: TKMPanel; X, Y, aTexID: Integer; aUnitType : Byte);
+      procedure Paint;override;
   end;
 
   TKMGUIGameStats = class
@@ -64,20 +69,24 @@ const
   HOUSE_W = 30;
 var
   HT : TKMHouseType;
-
 begin
+  Inherited Create(aPanel, X, Y, HOUSE_W, 30);
   HT := TKMHouseType(aHouseType);
+  Hint := gRes.Houses[HT].HouseName;
+  Tag := aHouseType;
+  TexID := aTexID;
+  SQt := '-';
+  SWip := '';
+  ColorQT := clStatsUnitDefault;
+  ColorWip := clStatsUnitDefault;
+end;
 
-  SPic := TKMImage.Create(aPanel, X, Y, HOUSE_W, 30, aTexID);
-  SPic.ImageCenter;
-  SPic.Hint := gRes.Houses[HT].HouseName;
-  SPic.Tag := aHouseType;
-
-  SWip := TKMLabel.Create(aPanel, X + HOUSE_W, Y, '', fntGrey, taRight);
-  SWip.Hitable := false;
-
-  SQt := TKMLabel.Create(aPanel, X + HOUSE_W - 2, Y+16, '-', fntGrey, taRight);
-  SQt.Hitable := false;
+procedure TKMHouseStatIcon.Paint;
+begin
+  Inherited;
+  TKMRenderUI.WritePicture(AbsLeft, AbsTop, Width, Height, [], rxGui, TexID, Enabled);
+  TKMRenderUI.WriteText(AbsLeft - 2, AbsTop, Width, SWip, fntGrey, taRight, ColorWip);
+  TKMRenderUI.WriteText(AbsLeft, AbsTop + 16, Width, SQt, fntGrey, taRight, ColorQT);
 end;
 
 constructor TKMUnitStatIcon.Create(aPanel: TKMPanel; X, Y, aTexID: Integer; aUnitType : Byte);
@@ -86,18 +95,23 @@ const
 var
   UT : TKMUnitType;
 begin
+  Inherited Create(aPanel, X, Y, UNIT_W, 30);
   UT := TKMUnitType(aUnitType);
+  Hint := gRes.Units[UT].GUIName;
+  Tag := aUnitType;
+  TexID := aTexID;
+  SQt := '-';
+  SWip := '';
+  ColorQT := clStatsUnitDefault;
+  ColorWip := clStatsUnitDefault;
+end;
 
-  SPic := TKMImage.Create(aPanel, X, Y, UNIT_W, 30, aTexID);
-  SPic.ImageCenter;
-  SPic.Hint := gRes.Units[UT].GUIName;
-  SPic.Tag := aUnitType;
-
-  SWip := TKMLabel.Create(aPanel, X + UNIT_W, Y , '', fntGrey, taRight);
-  SWip.Hitable := false;
-
-  SQt := TKMLabel.Create(aPanel, X + UNIT_W - 2, Y + 16, '-', fntGrey, taRight);
-  SQt.Hitable := false;
+procedure TKMUnitStatIcon.Paint;
+begin
+  Inherited;
+  TKMRenderUI.WritePicture(AbsLeft, AbsTop, Width, Height, [], rxGui, TexID, Enabled, FlagColor);
+  TKMRenderUI.WriteText(AbsLeft - 2, AbsTop, Width, SWip, fntGrey, taRight, ColorWip);
+  TKMRenderUI.WriteText(AbsLeft, AbsTop + 16, Width, SQt, fntGrey, taRight, ColorQT);
 end;
 
 constructor TKMGUIGameStats.Create(aParent: TKMPanel; aOnShowStats: TNotifyEvent; aSetViewportEvent: TPointFEvent);
@@ -109,6 +123,7 @@ var
   UT: TKMUnitType;
   offX: Integer;
   aHouses : TKMHouseTypeArray;
+  housesUsed : TKMHouseTypeSet;
 
 begin
   inherited Create;
@@ -123,12 +138,13 @@ begin
   Panel_Stats.AnchorsStretch;
   //Panel_Stats.Anchors := [anLeft, anTop, anBottom];
 
-  TKMBevel.Create(Panel_Stats, 5, (HOUSE_W+2), TB_WIDTH - 5, 90 );
+  TKMBevel.Create(Panel_Stats, 5, (HOUSE_W+2), TB_WIDTH - 5, HOUSE_W * 3 );
 
   Stat_Units[utSerf] := TKMUnitStatIcon.Create(Panel_Stats, 5, HOUSE_W, gRes.Units[utSerf].GUIIcon, byte(utSerf));
   Stat_Units[utBuilder] := TKMUnitStatIcon.Create(Panel_Stats, 5 + UNIT_W, HOUSE_W, gRes.Units[utBuilder].GUIIcon, byte(utBuilder));
 
   Stat_Army := TKMUnitStatIcon.Create(Panel_Stats, 5 + (UNIT_W div 2), HOUSE_W*2 + 2, 665, 0);
+  Stat_Army.Hint := gResTexts[266];
 
   SetLength(Stat_Houses[utSerf], length(StatNonWorkerHouse));
   for I := 0 to High(StatNonWorkerHouse) do
@@ -169,14 +185,6 @@ var U : TKMUnitType;
   I : Integer;
 begin
   FreeAndNil(fHouseSketch);
-  for U := CITIZEN_MIN to CITIZEN_MAX do
-  begin
-    Stat_Units[U].Free;
-    for I := 0 to High(Stat_Houses[U]) do
-      Stat_Houses[U][I].Free;
-
-  end;
-
   inherited
 end;
 
@@ -240,39 +248,39 @@ var
 begin
 
   //Serfs and builder are together so they need to be counted seperately
-  Stat_Units[utSerf].SPic.FlagColor := gMySpectator.Hand.FlagColor;
-  Stat_Units[utBuilder].SPic.FlagColor := gMySpectator.Hand.FlagColor;
+  Stat_Units[utSerf].FlagColor := gMySpectator.Hand.FlagColor;
+  Stat_Units[utBuilder].FlagColor := gMySpectator.Hand.FlagColor;
   uqty := gMySpectator.Hand.Stats.GetUnitQty(utSerf);
   uwipQty := gMySpectator.Hand.Stats.GetUnitTraining(utSerf) - gMySpectator.Hand.Stats.GetUnitDismissing(utSerf);
-  Stat_Units[utSerf].SQt.Caption := IfThen(uqty > 0, IntToStr(uqty), '-');
+  Stat_Units[utSerf].SQt := IfThen(uqty > 0, IntToStr(uqty), '-');
 
-  Stat_Units[utSerf].SWip.Caption := IfThen(uwipQty > 0, '+' + IntToStr(uwipQty), '');
+  Stat_Units[utSerf].SWip := IfThen(uwipQty > 0, '+' + IntToStr(uwipQty), '');
 
   uqty := gMySpectator.Hand.Stats.GetUnitQty(utBuilder);
   uwipQty := gMySpectator.Hand.Stats.GetUnitTraining(utBuilder) - gMySpectator.Hand.Stats.GetUnitDismissing(utBuilder);
-  Stat_Units[utBuilder].SQt.Caption := IfThen(uqty > 0, IntToStr(uqty), '-');
-  Stat_Units[utBuilder].SWip.Caption := IfThen(uwipQty > 0, '+' + IntToStr(uwipQty), '');
+  Stat_Units[utBuilder].SQt := IfThen(uqty > 0, IntToStr(uqty), '-');
+  Stat_Units[utBuilder].SWip := IfThen(uwipQty > 0, '+' + IntToStr(uwipQty), '');
 
-  Stat_Army.SQT.Caption := IntToStr(gMySpectator.Hand.Stats.GetArmyCount);
-  Stat_Army.SPic.FlagColor := gMySpectator.Hand.FlagColor;
+  Stat_Army.SQT := IntToStr(gMySpectator.Hand.Stats.GetArmyCount);
+  Stat_Army.FlagColor := gMySpectator.Hand.FlagColor;
 
   for K := 0 to High(Stat_Houses[utSerf]) do
   begin
-    HT := TKMHouseType(Stat_Houses[utSerf][K].SPic.Tag);
+    HT := TKMHouseType(Stat_Houses[utSerf][K].Tag);
     qty := gMySpectator.Hand.Stats.GetHouseQty(HT);
     wipQty := gMySpectator.Hand.Stats.GetHouseWip(HT);
-    Stat_Houses[utSerf][K].SQt.Caption := IfThen(qty > 0, IntToStr(qty), '-');
-    Stat_Houses[utSerf][K].SWip.Caption := IfThen(wipQty > 0, '+' +IntToStr(wipQty), '');
+    Stat_Houses[utSerf][K].SQt := IfThen(qty > 0, IntToStr(qty), '-');
+    Stat_Houses[utSerf][K].SWip := IfThen(wipQty > 0, '+' +IntToStr(wipQty), '');
 
     if qty > 0 then
     begin
-      Stat_Houses[utSerf][K].SPic.OnClick := House_Stat_Clicked;
-      Stat_Houses[utSerf][K].SPic.HighlightOnMouseOver := true;
+      Stat_Houses[utSerf][K].OnClick := House_Stat_Clicked;
+      //Stat_Houses[utSerf][K].HighlightOnMouseOver := true;
     end
     else
     begin
-      Stat_Houses[utSerf][K].SPic.OnClick := nil;
-      Stat_Houses[utSerf][K].SPic.HighlightOnMouseOver := false;
+      Stat_Houses[utSerf][K].OnClick := nil;
+      //Stat_Houses[utSerf][K].SPic.HighlightOnMouseOver := false;
     end;
   end;
   //now update for the rest of the units
@@ -284,11 +292,11 @@ begin
     uqty := gMySpectator.Hand.Stats.GetUnitQty(UT);
     uwipQty := gMySpectator.Hand.Stats.GetUnitTraining(UT) - gMySpectator.Hand.Stats.GetUnitDismissing(UT);
 
-    Stat_Units[UT].SPic.FlagColor := gMySpectator.Hand.FlagColor;
+    Stat_Units[UT].FlagColor := gMySpectator.Hand.FlagColor;
 
     for K := 0 to High(Stat_Houses[UT]) do
     begin
-      HT := TKMHouseType(Stat_Houses[UT][K].SPic.Tag);
+      HT := TKMHouseType(Stat_Houses[UT][K].Tag);
       qty := gMySpectator.Hand.Stats.GetHouseQty(HT);
 
       if HT <> htBarracks then
@@ -297,46 +305,46 @@ begin
       if HT = htWallTower then
         hTotalConstrOpenedQty := hTotalConstrOpenedQty + gMySpectator.Hand.Stats.GetHouseOpenedQty(HT);
 
-      Stat_Houses[UT][K].SPic.TexID := gRes.Houses[HT].GUIIcon;
+      Stat_Houses[UT][K].TexID := gRes.Houses[HT].GUIIcon;
       wipQty := gMySpectator.Hand.Stats.GetHouseWip(HT);
-      Stat_Houses[UT][K].SQt.Caption := IfThen(qty > 0, IntToStr(qty), '-');
-      Stat_Houses[UT][K].SWip.Caption := IfThen(wipQty > 0, '+' +IntToStr(wipQty), '');
+      Stat_Houses[UT][K].SQt := IfThen(qty > 0, IntToStr(qty), '-');
+      Stat_Houses[UT][K].SWip := IfThen(wipQty > 0, '+' +IntToStr(wipQty), '');
 
       if qty > 0 then
       begin
-        Stat_Houses[UT][K].SPic.OnClick := House_Stat_Clicked;
-        Stat_Houses[UT][K].SPic.HighlightOnMouseOver := true;
+        Stat_Houses[UT][K].OnClick := House_Stat_Clicked;
+        //Stat_Houses[UT][K].HighlightOnMouseOver := true;
       end
       else
       begin
-        Stat_Houses[UT][K].SPic.OnClick := nil;
-        Stat_Houses[UT][K].SPic.HighlightOnMouseOver := false;
+        Stat_Houses[UT][K].OnClick := nil;
+        //Stat_Houses[UT][K].HighlightOnMouseOver := false;
       end;
     end;
     doHighlight := hTotalConstrOpenedQty > uqty + uwipQty;
 
     if doHighlight then
-      Stat_Units[UT].SWip.FontColor := clStatsUnitMissingHL
+      Stat_Units[UT].ColorWip := clStatsUnitMissingHL
     else
-      Stat_Units[UT].SWip.FontColor := clStatsUnitDefault;
+      Stat_Units[UT].ColorWip := clStatsUnitDefault;
 
     if doHighlight then
-      Stat_Units[UT].SQt.FontColor := clStatsUnitMissingHL
+      Stat_Units[UT].ColorQT := clStatsUnitMissingHL
     else
-      Stat_Units[UT].SQt.FontColor := clStatsUnitDefault;
+      Stat_Units[UT].ColorQT := clStatsUnitDefault;
 
-    Stat_Units[UT].SQt.Caption := IfThen(not doHighlight and (uQty  = 0), '-', IntToStr(uQty));
+    Stat_Units[UT].SQt := IfThen(not doHighlight and (uQty  = 0), '-', IntToStr(uQty));
 
     if  uqty + uwipQty > hTotalConstrOpenedQty then
-      Stat_Units[UT].SQt.Caption := IntToStr(uQty) + '^';
+      Stat_Units[UT].SQt := IntToStr(uQty) + '^';
 
     if uwipQty > 0 then
-      Stat_Units[UT].SWip.Caption := '+' + IntToStr(uwipQty)
+      Stat_Units[UT].SWip := '+' + IntToStr(uwipQty)
     else
     if uwipQty < 0 then
-      Stat_Units[UT].SWip.Caption := IntToStr(uwipQty)
+      Stat_Units[UT].SWip := IntToStr(uwipQty)
     else
-      Stat_Units[UT].SWip.Caption := '';
+      Stat_Units[UT].SWip := '';
       
   end;
 
@@ -356,10 +364,10 @@ procedure TKMGUIGameStats.House_Stat_Clicked(Sender: TObject);
 var
   HT: TKMHouseType;
 begin
-  Assert(Sender is TKMImage);
+  Assert(Sender is TKMHouseStatIcon);
   if not Assigned(fSetViewportEvent) then Exit;
 
-  HT := TKMHouseType(TKMImage(Sender).Tag);
+  HT := TKMHouseType(TKMHouseStatIcon(Sender).Tag);
 
   gMySpectator.Hand.GetNextHouseWSameType(HT, fLastHouseUIDs[HT], fHouseSketch, [hstHouse, hstHousePlan]);
   if not fHouseSketch.IsEmpty then

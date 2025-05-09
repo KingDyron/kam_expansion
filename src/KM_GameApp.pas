@@ -412,9 +412,15 @@ begin
   if Self = nil then Exit;
   if fIsExiting then Exit;
 
+
   gRender.Resize(X, Y);
   gVideoPlayer.Resize(X, Y);
 
+  If SCALE_INTERFACE and (X > MAX_X_RESOLUTION) and (Y > MAX_Y_RESOLUTION) then
+  begin
+    X := MAX_X_RESOLUTION;
+    Y := MAX_Y_RESOLUTION;
+  end;
   //Main menu is invisible while in game, but it still exists and when we return to it
   //it must be properly sized (player could resize the screen while playing)
   fMainMenuInterface.Resize(X, Y);
@@ -473,6 +479,8 @@ end;
 
 procedure TKMGameApp.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
+  X := Round(X / gRender.InterfaceScale);
+  Y := Round(Y / gRender.InterfaceScale);
   if gVideoPlayer.IsActive then
   begin
     gVideoPlayer.MouseDown(Button, Shift, X, Y);
@@ -494,7 +502,8 @@ begin
   if not InRange(X, 1, gRender.ScreenX - 1)
   or not InRange(Y, 1, gRender.ScreenY - 1) then
     Exit; // Exit if Cursor is outside of frame
-
+  X := Round(X / gRender.InterfaceScale);
+  Y := Round(Y / gRender.InterfaceScale);
   if gGame <> nil then
     gGame.ActiveInterface.MouseMove(Shift,X,Y)
   else
@@ -525,6 +534,8 @@ end;
 
 procedure TKMGameApp.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
+  X := Round(X / gRender.InterfaceScale);
+  Y := Round(Y / gRender.InterfaceScale);
   if gGame <> nil then
     gGame.ActiveInterface.MouseUp(Button,Shift,X,Y)
   else
@@ -536,6 +547,8 @@ procedure TKMGameApp.MouseWheel(Shift: TShiftState; WheelSteps: Integer; X, Y: I
 begin
   aHandled := False;
   if Self = nil then Exit;
+  X := Round(X / gRender.InterfaceScale);
+  Y := Round(Y / gRender.InterfaceScale);
 
   if gGame <> nil then
     gGame.ActiveInterface.MouseWheel(Shift, WheelSteps, X, Y, aHandled)
@@ -1331,7 +1344,9 @@ begin
     if gGame <> nil then
       gGame.Render(gRender)
     else
+    begin
       fMainMenuInterface.Paint;
+    end;
 
     gRender.RenderBrightness(gGameSettings.GFX.Brightness);
   {$IFDEF PERFLOG}

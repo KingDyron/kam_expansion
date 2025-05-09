@@ -37,6 +37,7 @@ type
     class procedure ApplyClipX        (X1,X2: SmallInt);
     class procedure ApplyClipY        (Y1,Y2: SmallInt);
   public
+    class procedure SetupScale        (aScale : Single);
     class procedure SetupClipX        (X1,X2: SmallInt);
     class procedure SetupClipY        (Y1,Y2: SmallInt);
     class procedure ReleaseClipX;
@@ -87,6 +88,7 @@ class procedure TKMRenderUI.ApplyClipX(X1,X2: SmallInt);
 var
   cp: array[0..3] of Double; //Function uses 8byte floats //ClipPlane X+Y+Z=-D
 begin
+
   glEnable(GL_CLIP_PLANE0);
   glEnable(GL_CLIP_PLANE1);
   FillChar(cp, SizeOf(cp), 0);
@@ -110,6 +112,11 @@ begin
   glClipPlane(GL_CLIP_PLANE3, @cp);
 end;
 
+
+class procedure TKMRenderUI.SetupScale(aScale : Single);
+begin
+  glScaleF(aScale, aScale, 1);
+end;
 
 class procedure TKMRenderUI.SetupClipX(X1,X2: SmallInt);
 var

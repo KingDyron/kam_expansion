@@ -63,7 +63,7 @@ begin
       gResTexts[TX_CREDITS_PROGRAMMING] + '|Krom|Lewin|Rey|King Dyron||' +
       gResTexts[TX_CREDITS_ADDITIONAL_PROGRAMMING] + '|Alex|andreus|Danjb|ZblCoder||' +
       gResTexts[TX_CREDITS_ADDITIONAL_GRAPHICS] + '|StarGazer|Malin|H.A.H.|King Dyron|Kinghts Dzapan|Siegfried89||' +
-      gResTexts[TX_CREDITS_ADDITIONAL_MUSIC] + '|Andre Sklenar - www.juicelab.cz||' +
+      gResTexts[TX_CREDITS_ADDITIONAL_MUSIC] + '|Andre Sklenar - www.juicelab.cz|Jaimy - KaM Revisited Soundtrack||' +
       gResTexts[TX_CREDITS_ADDITIONAL_SOUNDS] + '|trb1914||' +
       gResTexts[TX_CREDITS_ADDITIONAL_TRANSLATIONS] + '|' + gResLocales.TranslatorCredits + '|' +
       gResTexts[TX_CREDITS_SPECIAL] + '|Memgor-for making this mod with me|KaM Community members',

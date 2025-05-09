@@ -385,6 +385,7 @@ begin
       utWolf,
       utDeerMale..ANIMAL_MAX,
       utWatersnake..utDuck:     U := TKMUnitAnimal.Load(LoadStream);
+      utFish:                     U := TKMUnitFish.Load(LoadStream);
     else
       U := nil;
     end;

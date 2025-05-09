@@ -1766,7 +1766,7 @@ begin
   R := fRXData[rxUnits];
 
   // Unit position
-  step := gTerrain.AnimStep mod animCount + 1;
+  step := gTerrain.AnimStep;
   //animCount := THOUGHT_BOUNDS[Thought, 2] - THOUGHT_BOUNDS[Thought, 1];
   A := gRes.Units.Thought;//gRes.Units[aUnit].UnitAnim[aAct, aDir];
   id0 := gRes.Units[aUnit].UnitAnim[aAct, aDir].Animation[aStep];

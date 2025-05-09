@@ -30,7 +30,6 @@ type
 
     fFPS: Single;
     fFPSString: String;
-
     procedure DoRestore(Sender: TObject);
     procedure DoActivate(Sender: TObject);
     procedure DoDeactivate(Sender: TObject);

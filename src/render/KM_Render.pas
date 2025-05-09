@@ -34,6 +34,8 @@ type
     fBlind: Boolean;
     fQuery: TKMRenderQuery;
 
+    fInterfaceScale : Single;
+
     procedure InitFBO;
     procedure SaveBufferToFile(aUseFBOBuffer: Boolean; var aWidth, aHeight: Integer; var aPixelData: TKMCardinalArray);
     function GetMaxFBOSize: Cardinal;
@@ -65,6 +67,7 @@ type
     property ScreenX: Word read fScreenX;
     property ScreenY: Word read fScreenY;
     property Blind: Boolean read fBlind;
+    property InterfaceScale : Single read fInterfaceScale;
 
     property Query: TKMRenderQuery read fQuery;
 
@@ -187,6 +190,14 @@ end;
 procedure TKMRender.Resize(aWidth, aHeight: Integer);
 begin
   if fBlind then Exit;
+
+  If (aWidth > MAX_X_RESOLUTION) and (aHeight > MAX_Y_RESOLUTION) then
+  begin
+    fInterfaceScale := Min(aWidth / MAX_X_RESOLUTION, aHeight / MAX_Y_RESOLUTION);
+  end else
+  begin
+    fInterfaceScale := 1;
+  end;
 
   fScreenX := max(aWidth, 1);
   fScreenY := max(aHeight, 1);
@@ -376,6 +387,7 @@ begin
 
   glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT or GL_STENCIL_BUFFER_BIT);
   SetRenderMode(rm2D);
+  //glScalef(2, 2, 1);
 
   //RC.Activate for OSX
 end;
@@ -405,7 +417,6 @@ end;
 procedure TKMRender.EndFrame;
 begin
   if fBlind then Exit;
-
   glFinish;
   fRenderControl.SwapBuffers;
 end;

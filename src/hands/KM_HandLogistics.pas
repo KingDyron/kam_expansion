@@ -1499,10 +1499,7 @@ end;
 function TKMDeliveries.GetWareType(aQueueID: Integer): TKMWareType;
 begin
   If fQueue[aQueueID].Serf is TKMUnitSerf then
-  Result := TKMUnitSerf(fQueue[aQueueID].Serf).Carry
-  else
-  If fQueue[aQueueID].Serf is TKMUnitWHMan then
-    Result := wtNone;//TKMUnitWHMan(fQueue[aQueueID].Serf).Carry
+  Result := TKMUnitSerf(fQueue[aQueueID].Serf).Carry;
 
   if Result in WARES_VALID then Exit;
 
@@ -2353,10 +2350,7 @@ begin
     gLog.LogDelivery(Format('Hand [%d] - Reassign delivery ID %d from serf ID: %d to serf ID: %d', [fOwner, iQ, fQueue[iQ].Serf.UID, aSerf.UID]));
 
   If fQueue[iQ].Serf is TKMUnitSerf then
-    TKMUnitSerf(fQueue[iQ].Serf).DelegateDelivery(aSerf)
-  else
-  If fQueue[iQ].Serf is TKMUnitWHMan then
-    TKMUnitWHMan(fQueue[iQ].Serf).DelegateDelivery(aSerf);
+    TKMUnitSerf(fQueue[iQ].Serf).DelegateDelivery(aSerf);
 
   gHands.CleanUpUnitPointer(TKMUnit(fQueue[iQ].Serf));
   fQueue[iQ].Serf := aSerf.GetPointer;
@@ -2368,7 +2362,6 @@ procedure TKMDeliveries.AssignDelivery(oWT, dWT: TKMWareType; iO, iD: Integer; a
 var
   I, K: Integer;
   serf : TKMUnitSerf;
-  WH : TKMUnitWHMan;
 begin
   //Find a place where Delivery will be written to after Offer-Demand pair is found
   I := 0;
@@ -2414,22 +2407,7 @@ begin
       serf.Deliver(fOffer[oWT,iO].Loc_House, fDemand[dWT,iD].Loc_House, oWT, I)
     else
       serf.Deliver(fOffer[oWT,iO].Loc_House, fDemand[dWT,iD].Loc_Unit, oWT, I);
-  end else
-  If (aSerf is TKMUnitWHMan) then
-  begin
-    WH := TKMUnitWHMan(aSerf);
-    WH.SetDeliveryHouseFrom(fOffer[oWT,iO].Loc_House);
-    if fDemand[dWT,iD].Loc_Structure <> nil then
-      WH.AddDelivery(fDemand[dWT,iD].Loc_Structure, oWT, I)
-    else
-    if fDemand[dWT,iD].Loc_House <> nil then
-      WH.AddDelivery(fDemand[dWT,iD].Loc_House, oWT, I)
-    else
-      WH.AddDelivery(fDemand[dWT,iD].Loc_Unit, oWT, I);
-
-  end else
-    raise Exception.Create('TKMDeliveries.AssignDelivery, unit is not serf or WHman');
-
+  end;
 end;
 
 

@@ -412,6 +412,7 @@ var
   T1, T2, tx, ty: Integer;
   Alpha: Byte;
 begin
+  {
   for HT := HOUSE_MIN to HOUSE_MAX do
   for Lay := 1 to 2 do //House is rendered in two layers since Stone does not covers Wood parts in e.g. Sawmill
   begin
@@ -444,6 +445,7 @@ begin
     fRXData.HasMask[ID1] := True;
     fRXData.Flag[ID2] := 0;
   end;
+  }
 end;
 
 
@@ -590,8 +592,8 @@ var
   offsetX, offsetY, newWidth, newHeight: Word;
   FoundPixel: Boolean;
 begin
-  Exit;
   Result := 0;
+  Exit;
 
   for I := 1 to fRXData.Count do
   if fRXData.Flag[I] <> 0 then
@@ -701,7 +703,8 @@ begin
     rxxOne:   begin
                 aStream.Write(RXX_VERSION_1[1], Length(RXX_VERSION_1));
 
-                metadata := GAME_REVISION + ' ' + FormatDateTime('yyyy/mm/dd hh:nn:ss', Now);
+                metadata := GAME_REVISION + ' ' + FormatDateTime('yyyy/mm/dd hh:nn:ss', Now)
+                ;
                 metadataLen := Length(metadata);
 
                 aStream.Write(metadataLen, 2);

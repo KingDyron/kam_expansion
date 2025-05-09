@@ -15,7 +15,9 @@ uses
   KM_Particles in '..\..\src\weather\KM_Particles.pas',
   KM_Weather in '..\..\src\weather\KM_Weather.pas',
   KM_WeatherCollection in '..\..\src\weather\KM_WeatherCollection.pas',
-  KM_WeatherTypes in '..\..\src\weather\KM_WeatherTypes.pas';
+  KM_WeatherTypes in '..\..\src\weather\KM_WeatherTypes.pas',
+  KM_GUIGameHousePearl in '..\..\src\gui\pages_game\house\KM_GUIGameHousePearl.pas',
+  KM_GUIGameHouseCartographer in '..\..\src\gui\pages_game\house\KM_GUIGameHouseCartographer.pas';
 
 {$IFDEF WDC}
 {$R *.res}

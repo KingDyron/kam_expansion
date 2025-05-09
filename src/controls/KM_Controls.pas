@@ -2181,7 +2181,6 @@ function TKMMasterControl.HitControl(X,Y: Integer; aIncludeDisabled: Boolean = F
 
 begin
   if Self = nil then Exit(nil);
-
   Result := ScanChild(fMasterPanel, X, Y);
 end;
 
@@ -2348,10 +2347,9 @@ var
   str: string;
 begin
   if Self = nil then Exit;
-
+  TKMRenderUI.SetupScale(gRender.InterfaceScale);
   // Reset counter
   TKMControl.PaintCount := 0;
-
   fMasterPanel.Paint;
 
   if MODE_DESIGN_CONTROLS and (CtrlOver <> nil) then
@@ -2363,6 +2361,7 @@ begin
 
     TKMRenderUI.WriteText(CtrlOver.AbsLeft, CtrlOver.AbsTop - 14, 0, str, fntGrey, taLeft);
   end;
+  TKMRenderUI.SetupScale(1);
 end;
 
 

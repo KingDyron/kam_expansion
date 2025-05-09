@@ -108,6 +108,8 @@
         <DCCReference Include="..\..\src\weather\KM_Weather.pas"/>
         <DCCReference Include="..\..\src\weather\KM_WeatherCollection.pas"/>
         <DCCReference Include="..\..\src\weather\KM_WeatherTypes.pas"/>
+        <DCCReference Include="..\..\src\gui\pages_game\house\KM_GUIGameHousePearl.pas"/>
+        <DCCReference Include="..\..\src\gui\pages_game\house\KM_GUIGameHouseCartographer.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

@@ -322,6 +322,7 @@ type
       Label_GameTime, Label_MapName: TKMLabel;
       Panel_Track: TKMPanel;
         Label_Menu_Track: TKMLabel;
+        Bevel_Menu_Track: TKMBevel;
         Button_Menu_TrackUp, Button_Menu_TrackDown: TKMButton;
 
       Panel_Save: TKMPanel;
@@ -1099,7 +1100,7 @@ begin
 
   UpdateReplayBar;
 
-  fViewport.Resize(X, Y);
+  fViewport.Resize(Round(X * gRender.InterfaceScale), Round(Y * gRender.InterfaceScale));
 end;
 
 
@@ -1595,8 +1596,10 @@ begin
   TKMLabel.Create(Panel_Menu, 0, 240, TB_WIDTH, 30, gResTexts[TX_WORD_MAP] + ':', fntOutline, taCenter);
   Label_MapName := TKMLabel.Create(Panel_Menu, -3, 260, TB_WIDTH + 3, 20, '', fntGrey, taCenter);
 
-  Panel_Track := TKMPanel.Create(Panel_Menu, 0, PANEL_TRACK_TOP, TB_WIDTH, 60);
-  TKMLabel.Create(Panel_Track, 0, 0, TB_WIDTH, 30, gResTexts[TX_MUSIC_PLAYER], fntOutline, taCenter);
+  Panel_Track := TKMPanel.Create(Panel_Menu, 0, PANEL_TRACK_TOP + 5, TB_WIDTH, 60);
+  TKMLabel.Create(Panel_Track, 0, -3, TB_WIDTH, 30, gResTexts[TX_MUSIC_PLAYER], fntOutline, taCenter);
+  Bevel_Menu_Track := TKMBevel.Create(Panel_Track, 23, 15, TB_WIDTH - 46, 30);
+  Bevel_Menu_Track.BackAlpha := 0.7;
   Label_Menu_Track := TKMLabel.Create(Panel_Track, 23, 21, TB_WIDTH - 46, 30, '', fntGrey, taCenter);
   Label_Menu_Track.Hitable := False; // It can block hits for the track Up/Down buttons as they overlap
 
@@ -2525,6 +2528,7 @@ begin
   Label_Menu_Track.Top := IfThen(Label_Menu_Track.WordWrap, 19, 22);
   Button_Menu_TrackUp.Height := IfThen(Label_Menu_Track.WordWrap, 38, 30);
   Button_Menu_TrackDown.Height := IfThen(Label_Menu_Track.WordWrap, 38, 30);
+  Bevel_Menu_Track.Height := IfThen(Label_Menu_Track.WordWrap, 38, 30);
 
   Label_GameTime.Caption := TimeToString(gGame.MissionTime);
 
@@ -4128,6 +4132,8 @@ begin
 
   fMyControls.MouseDown(X, Y, Shift, Button);
 
+  X := Round(X * gRender.InterfaceScale);
+  Y := Round(Y * gRender.InterfaceScale);
   if (gGame.IsPaused and (fUIMode in [umSP, umMP]) and BLOCK_GAME_ON_PAUSE) or (fMyControls.CtrlOver <> nil)
   or gMySpectator.Hand.InCinematic then
     Exit;
@@ -4235,6 +4241,8 @@ begin
 
   fMyControls.MouseMove(X,Y,Shift);
 
+  X := Round(X * gRender.InterfaceScale);
+  Y := Round(Y * gRender.InterfaceScale);
   if fPlacingBeacon then
   begin
     // Beacons are a special case, the cursor should be shown over controls to (you can place it on the minimap)
@@ -4446,6 +4454,8 @@ begin
   end;
 
   if gGame.IsPaused and (fUIMode in [umSP, umMP]) and BLOCK_GAME_ON_PAUSE then Exit;
+  X := Round(X * gRender.InterfaceScale);
+  Y := Round(Y * gRender.InterfaceScale);
 
   P := gCursor.Cell; // It's used in many places here
 

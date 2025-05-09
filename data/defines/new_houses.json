@@ -10,7 +10,7 @@
 				"htNone","htQuarry","htWoodcutters","htSawmill","htPottery","htCollectors",
 				"htNone","htWell","htAppleTree","htFarm","htVineyard","htFishermans",
 				"htNone","htSmallStore","htGoldMine","htIronMine","htBitinMine","htCoalMine",
-				"htNone","htMarket","htMerchant","htStall","htSign"
+				"htNone","htMarket","htMerchant","htStall", "htCartographers","htSign"
 			]
 		},
 		{
@@ -31,7 +31,7 @@
 			[
 				"htNone","htBarracks","htTownHall","htPalace","htSiegeWorkshop","htShipYard",
 				"htNone","htWall","htWall2","htWall3","htWall4","htWall5",
-				"htNone","htWallTower","htWatchTower", "htCartographers", "htPearl"
+				"htNone","htWallTower","htWatchTower", "htPearl"
 			]
 		}
 	],
@@ -3510,7 +3510,7 @@
 					"HideSupplies" : False,
 					"Anim" : 
 					[
-						{"X" : 62,"Y" : -87,"Steps" : [1165,1166,1167,1163,1164]}
+						{"X" : 62,"Y" : -87,"Steps" : [1166,1167,1168,1164,1165]}
 					]
 				},
 				{
@@ -3525,7 +3525,7 @@
 					"HideSupplies" : False,
 					"Anim" : 
 					[
-						{"X" : 62,"Y" : -87,"Steps" : [1165,1166,1167,1163,1164]}
+						{"X" : 62,"Y" : -87,"Steps" : [1166,1167,1168,1164,1165]}
 					]
 				}
 			],

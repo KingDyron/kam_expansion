@@ -1,4 +1,31 @@
-﻿[$0000FF]KaM Expansion v1.12
+﻿
+[$0000FF]KaM Expansion v1.20
+[$55FF55]TUA
+	- misja 10, dodano hutnika do mennicy
+	- misja 8, zablokowano kolczugę bitynową w targowisku
+	- misja 10, dodano zbieraczy zamiast kamieniarzy w garncarni; Usunięto duży kamień na drodze przeciwnika
+[$55FF55]Budynki
+	- dodano nowy budynek: Dom Kartografa
+	- dodano nowy budynek: Perła Architektury
+	- poprawiono animację flagi w drugim poziomie silosa
+	
+[$55FF55]Jednostki
+	- dodano nowe chmurki myśli
+
+[$55FF55]Inne
+	- usunięto folder "speech" w folderze "data\sfx". 
+		Niektóre języki mogły wybrać ten folder jako domyślny
+	- dodano playlisty do muzyki. Każdy folder z muzykami w folderze "Music"
+		będzie traktowany jako osobna playlista
+	- dodano nową playlistę zrobioną przez Jaimy
+	- dodano trypy multiplayer
+
+[$55FF55]Realizm
+
+[$55FF55]Interfejs
+
+
+[$0000FF]KaM Expansion v1.12
 [$55FF55]Budynki
 	- dodano listę pracowników, którzy mogą pracować w danym budynku (przewodnik w grze)
 	- dodano flagi dla strzechy produkcyjnej
@@ -11,7 +38,8 @@
 	- zwiększono życie i defensywę Ruchomej Ściany
 	- zmniejszono atak bojownika do 5 oraz jego obronę do 0  
 	- poprawiono animację pustynnego węża
-	- jednostki strzeleckie będą miały większy zasięg, jeśli bityn został użyty do ich szkolenia/produkcji
+	- jednostki strzeleckie będą miały większy zasięg, 
+		jeśli bityn został użyty do ich szkolenia/produkcji
 	- dodano animację obrotu jednostek by zapobiec łatwego unikania pocisków przez konne jednostki
 
 [$55FF55]Inne
@@ -36,7 +64,8 @@
 	- "Godzina" pod minimapą pokazuje AM oraz PM jeśli gracz ma angielski jako język systemowy
 	- dodano brakujące jednostki w przewodniku
 	- dodano skrót klawiszowy aby szybko otworzyć przewodnik z wybranym typem jednostki/budynku
-		(w panelu budynku LPM + Shift na iconie budynku, w panelu jednostki LPM + Shift na zwoju jednostki)
+		(w panelu budynku LPM + Shift na iconie budynku, 
+		w panelu jednostki LPM + Shift na zwoju jednostki)
 	- dodano przycisk w menu głównym aby wyświetlić listę zmian 
 	- porawiono nazwy podzakładek w edytorze map
 	- dodano brakujące teksty w weersji angielskiej (1886, 1887)
