@@ -27,7 +27,7 @@
       <tbWaterLight Position="130"/>
       <chkInterpolatedAnims Checked="False"/>
     </Graphic_tweaks>
-    <User_Interface Collapsed="True">
+    <User_Interface Collapsed="False">
       <chkUIControlsBounds Checked="False"/>
       <chkUIControlsID Checked="False"/>
       <chkUITextBounds Checked="False"/>
@@ -202,7 +202,7 @@
       <edDebugText Text=""/>
       <chkFindObjByUID Checked="False"/>
     </Debug_Input>
-    <Game_additional Collapsed="True">
+    <Game_additional Collapsed="False">
       <chkLoadUnsupSaves Checked="True"/>
       <RGPlayer ItemIndex="0"/>
       <seMaxImageSize Value="2000"/>

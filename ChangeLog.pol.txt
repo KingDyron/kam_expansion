@@ -3,7 +3,8 @@
 [$55FF55]TUA
 	- misja 10, dodano hutnika do mennicy
 	- misja 8, zablokowano kolczugę bitynową w targowisku
-	- misja 10, dodano zbieraczy zamiast kamieniarzy w garncarni; Usunięto duży kamień na drodze przeciwnika
+	- misja 10, dodano zbieraczy zamiast kamieniarzy w garncarni; 
+		Usunięto duży kamień na drodze przeciwnika
 [$55FF55]Budynki
 	- dodano nowy budynek: Dom Kartografa
 	- dodano nowy budynek: Perła Architektury
@@ -23,6 +24,8 @@
 [$55FF55]Realizm
 
 [$55FF55]Interfejs
+	- w panelu z wiadomościami zmieniono zwykły tekst, na tekst przewijany
+		Wiadomości które są za długie nie mieściły się w obszerze panelu.
 
 
 [$0000FF]KaM Expansion v1.12

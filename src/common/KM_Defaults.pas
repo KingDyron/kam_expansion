@@ -23,7 +23,7 @@ const
   MENU_DESIGN_X         = 1024;         //Thats the size menu was designed for. All elements are placed in this size
   MENU_DESIGN_Y         = 768;          //Thats the size menu was designed for. All elements are placed in this size
   MIN_RESOLUTION_WIDTH  = 1024;         //Lowest supported resolution X
-  MIN_RESOLUTION_HEIGHT = 720;          //Lowest supported resolution Y
+  MIN_RESOLUTION_HEIGHT = 800;          //Lowest supported resolution Y
   MIN_NIGHT_DARKNESS    = 0.25;
   NIGHT_SPEED           = 360;
   MAX_NIGHT_SPEED       = 21;       //21 * 360
