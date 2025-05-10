@@ -2,7 +2,7 @@
 {$I KaM_Remake.inc}
 interface
 uses
-  KM_Controls, KM_ControlsBase, KM_ControlsEdit,
+  KM_Controls, KM_ControlsBase, KM_ControlsEdit, KM_ControlsMemo,
   KM_CommonClasses,
   KM_ResTypes, KM_ControlsList,
   System.Classes;
@@ -21,7 +21,7 @@ type
       Image_Background,
       Image_ClosePanel: TKMImage;
       Columnbox_Messages : TKMColumnBox;
-      Label_Message: TKMLabel;
+      Memo_Message: TKMMemo;
       Image_MessageKind: TKMImage;
   public
     constructor Create(aParent: TKMPanel; aOnShow : TNotifyEvent);
@@ -66,11 +66,13 @@ begin
   Columnbox_Messages.ShowLines := true;
   Columnbox_Messages.OnClick := SelectListItem;
   Columnbox_Messages.OnChange := SelectListItem;
-  Label_Message := TKMLabel.Create(Panel_Messages, 30, Columnbox_Messages.Bottom, Panel_Messages.Width - 60 - 40, Panel_Messages.Height - 250, '', fntMetal, taLeft);
-  Label_Message.WordWrap := true;
 
-  Image_MessageKind := TKMImage.Create(Panel_Messages, Label_Message.Right + 2, Label_Message.Top + 5, 40, 50, 0, rxGui);
+  Memo_Message := TKMMemo.Create(Panel_Messages, 30, Columnbox_Messages.Bottom, Panel_Messages.Width - 60 - 40,
+                                  Panel_Messages.Height - Columnbox_Messages.Bottom - 65, fntMetal, bsGame, false);
+  Memo_Message.WordWrap := true;
 
+  Image_MessageKind := TKMImage.Create(Panel_Messages, Memo_Message.Right + 2, Memo_Message.Top + 5, 40, 50, 0, rxGui);
+  Image_MessageKind.ImageAnchors := [anRight, anTop];
   Hide;
 end;
 
@@ -140,13 +142,13 @@ procedure TKMGUIGameMessagesPopUp.SelectListItem(Sender: TObject);
 var aIndex : integer;
 begin
   aIndex := Columnbox_Messages.ItemIndex;
-  Label_Message.Caption := '';
+  Memo_Message.Text := '';
   Image_MessageKind.TexID := 0;
   if aIndex = -1 then
     Exit;
   if aIndex > high(gMySpectator.Hand.MessageStack) then Exit;
   
-  Label_Message.Caption := gGame.TextMission.ParseTextMarkup(gMySpectator.Hand.MessageStack[aIndex].Text);
+  Memo_Message.Text := gGame.TextMission.ParseTextMarkup(gMySpectator.Hand.MessageStack[aIndex].Text);
   Image_MessageKind.TexID := MSG_ICON[gMySpectator.Hand.MessageStack[aIndex].Kind];
 end;
 
