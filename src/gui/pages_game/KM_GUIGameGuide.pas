@@ -3,7 +3,7 @@
 interface
 uses
   KM_Defaults, KM_Points,
-  KM_Controls, KM_ControlsBase, KM_CommonClasses,
+  KM_Controls, KM_ControlsBase, KM_CommonClasses, KM_CommonTypes,
   KM_ControlsWaresRow, KM_ControlsMemo, KM_ControlsScroll,
   KM_Pics, KM_ResTypes, KM_TerrainTypes,
   KM_InterfaceGame, KM_ScriptingTypes,
@@ -43,7 +43,9 @@ type
       fCount : Byte;
       fClimateOrder : TKMTerrainClimatArray;
     public
-      fCaption : array[TKMTerrainClimat] of String;
+      ClimateColor : array[TKMTerrainClimat] of TKMColor3f;
+      Caption : array[TKMTerrainClimat] of String;
+
       constructor Create(aParent : TKMPanel; aLeft, aTop, aWidth, aHeight : Integer);
       procedure SetOrder(aOrder : TKMTerrainClimatArray);
       procedure Paint; override;
@@ -159,14 +161,13 @@ type
 
 implementation
 uses  KM_RenderUI, KM_Resource, KM_HandsCollection,
-      KM_CommonTypes,
       KM_UtilsExt,
       KM_HouseSiegeWorkshop,
       KM_ResUnits, KM_ResHouses, KM_ResTexts, KM_ResFonts, KM_ResMapElements,
       KM_ResTileSet, KM_ResTileSetTypes,
       KM_TerrainPainter,
       KM_CommonUtils,
-      SysUtils;
+      SysUtils, Math;
 
 constructor TKMGUIGameGuide.Create(aParent: TKMPanel; aOnShow : TNotifyEvent);
 var I, top : Integer;
@@ -857,6 +858,7 @@ var F : TKMFruitTree;
   h,m,s : Byte;
   climOrder : TKMTerrainClimatArray;
   clim : TKMTerrainClimat;
+  best, worst : Single;
   procedure CompareClimates(var A : TKMTerrainClimat; var B: TKMTerrainClimat);
   var tmp : TKMTerrainClimat;
   begin
@@ -919,12 +921,33 @@ begin
   Fruit_ClimateViewer.SetOrder(climOrder);
 
   I := (F.StagesCount - F.MatureTreeStage) * F.ProgressPerStage;
+
+  best := 0;
+  worst := 100;
+
+  for clim in climOrder do
+  begin
+    If F.ClimateMulti[clim] > best then
+      best := F.ClimateMulti[clim];
+
+    If F.ClimateMulti[clim] < worst then
+      worst := F.ClimateMulti[clim];
+  end;
+  best := best - 1;
   for clim in climOrder do
   begin
     //how many fruits per 2 hours
     time := Round(72000 / (I / F.ClimateMulti[clim]));
     J := Round(F.Fruits * F.ClimateMulti[clim] * time);
-    Fruit_ClimateViewer.fCaption[clim] := J.ToString;
+    Fruit_ClimateViewer.Caption[clim] := J.ToString;
+    If InRange(F.ClimateMulti[clim], 0.9, 1.20) then
+      Fruit_ClimateViewer.ClimateColor[clim].SetColor(0, 0, 1)
+    else
+    If F.ClimateMulti[clim] > 1 then
+      Fruit_ClimateViewer.ClimateColor[clim].SetColor(0, (F.ClimateMulti[clim] - 1) / best, 1 - ((F.ClimateMulti[clim] - 1) / best))
+    else
+      Fruit_ClimateViewer.ClimateColor[clim].SetColor(1 - (F.ClimateMulti[clim] - worst), 0, (F.ClimateMulti[clim] - worst));
+
   end;
 end;
 
@@ -1340,10 +1363,10 @@ begin
     end;
     for J := 0 to High(terr) do
     begin
-      TKMRenderUI.WriteBevel(l + gap * I - 2, T + J * 43 - 2, 36, 36);
+      TKMRenderUI.WriteBevel(l + gap * I - 4, T + J * 43 - 4, 40, 40, ClimateColor[fClimateOrder[I]]);
       TKMRenderUI.WritePictureWithPivot(l + gap * I, T + J * 43, rxTiles, Combo[terr[J], terr[J], 1] + 1);
     end;
-    TKMRenderUI.WriteText(l + gap * I, T + J * 43, 40, fCaption[fClimateOrder[I]], fntGrey, taLeft);
+    TKMRenderUI.WriteText(l + gap * I, T + J * 43, 40, Caption[fClimateOrder[I]], fntGrey, taLeft);
   end;
 end;
 
