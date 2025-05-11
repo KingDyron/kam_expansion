@@ -3420,6 +3420,30 @@
 		"AnimSteps" : [1255, 1256, 1257, 1258, 1259, 1260, 1260, 1260, 1260, 1260, 1260],
 		"PlaceableInEditor" : false,
 		"CanBeRemoved" : true
+	  },
+	  {
+		"AddGrowableTree" : true,
+		"AxeHitTimes" : 6, "TrunksCount" : 0, "TreeGrowAge" : 3, "FallTreeAnimObj" : 255, "Stump" : 255, "IsFruit" : 7, "MatureTree" : 4,
+		"Stages": [
+					{"SnowPic" : 255, "AnimSteps" : [1261]}, 
+					{"SnowPic" : 255, "AnimSteps" : [1262]}, 
+					{"SnowPic" : 255, "AnimSteps" : [1263]}, 
+					{"SnowPic" : 255, "AnimSteps" : [1264]}, 
+					{"SnowPic" : 255, "AnimSteps" : [1265]}, 
+					{"SnowPic" : 255, "AnimSteps" : [1266]}, 
+					{"SnowPic" : 255, "AnimSteps" : [1267]}, 
+					{"SnowPic" : 255, "AnimSteps" : [1268]}, 
+					{"SnowPic" : 255, "AnimSteps" : [1269]}, 
+					{"SnowPic" : 255, "AnimSteps" : [1270]}, 
+					{"SnowPic" : 255, "AnimSteps" : [1271]}, 
+					{"SnowPic" : 255, "AnimSteps" : [1272]}, 
+					{"SnowPic" : 255, "AnimSteps" : [1273]}, 
+					{"SnowPic" : 255, "AnimSteps" : [1274]}, 
+					{"SnowPic" : 255, "AnimSteps" : [1275]}, 
+					{"SnowPic" : 255, "AnimSteps" : [1276]}, 
+					{"SnowPic" : 255, "AnimSteps" : [1277]}, 
+					{"SnowPic" : 255, "AnimSteps" : [1278]}
+		]
 	  }
   ],
   "Grain Types" : [
@@ -3889,7 +3913,7 @@
   "Fruit Trees" : [
 	{
 		"MatureTreeStage" : 4,
-		"ProgressPerStage" : 800,
+		"ProgressPerStage" : 1000,
 		"Fruits" : 3,
 		"GuiIcon" : 918,
 		"HintID" : 2017,
@@ -3916,7 +3940,7 @@
 		"tcDry1" : 0.6,
 		"tcDry2" : 0.45,
 		"tcWarm1" : 1.25,
-		"tcWarm2" : 1.5,
+		"tcWarm2" : 1.8,
 		"tcWet1" : 0.75,  
 		"tcWet2" : 0.7,  
 		"tcNeutral" : 1,  
@@ -3954,7 +3978,7 @@
 		"tcWarm1" : 1.2,
 		"tcWarm2" : 1.3,
 		"tcWet1" : 1.4,  
-		"tcWet2" : 1.5,  
+		"tcWet2" : 1.6,  
 		"tcNeutral" : 0.8,  
 		"tcCold1" : 0.6,  
 		"tcCold2" : 0.4  
@@ -3978,12 +4002,12 @@
 		"tcCold2" : 0.2  
 	},
 	{
-		"MatureTreeStage" : 4,
-		"ProgressPerStage" : 1800,
-		"Fruits" : 1,
+		"MatureTreeStage" : 5,
+		"ProgressPerStage" : 2200,
+		"Fruits" : 1.4,
 		"GuiIcon" : 1030,
 		"HintID" : 2255,
-		"Stages" : [555, 556, 557, 558, 559, 560, 561],
+		"Stages" : [390, 555, 556, 557, 558, 559, 560, 561],
 		
 		"tcDry1" : 3.5,
 		"tcDry2" : 1,
@@ -3994,6 +4018,24 @@
 		"tcNeutral" : 1.3,  
 		"tcCold1" : 0.8,  
 		"tcCold2" : 0.2  
+	},
+	{
+		"MatureTreeStage" : 12,
+		"ProgressPerStage" : 800,
+		"Fruits" : 0.5,
+		"GuiIcon" : 1031,
+		"HintID" : 2257,
+		"Stages" : [563, 564, 565, 566, 567, 568, 569, 570, 571, 572, 573, 574, 575, 576, 577, 578, 579, 580],
+		
+		"tcDry1" : 3,
+		"tcDry2" : 1,
+		"tcWarm1" : 2.8,
+		"tcWarm2" : 2.5,
+		"tcWet1" : 5,  
+		"tcWet2" : 3.5,  
+		"tcNeutral" : 3.2,  
+		"tcCold1" : 2,  
+		"tcCold2" : 1  
 	}
   ],
   "tcNone" : [],
