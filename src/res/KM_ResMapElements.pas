@@ -577,6 +577,7 @@ var I, K, J, aID, MatureTreeAge : Integer;
   tmpCost : TKMVWarePlanCommon;
   DT : TKMDecorationType;
   animSteps :array of TKMWordArray;
+  inEditor : Boolean;
 begin
   jsonPath :=  aPath;
 
@@ -616,6 +617,7 @@ begin
       MatureTreeAge := nObject.I['MatureTree'];
       tmpElement.TreeGrowAge := nObject.I['TreeGrowAge'];
       nArr2 := nObject.A['Stages'];
+      inEditor := not nobject.B['NotPlaceableInEditor'];
       for K := 0 to nArr2.Count - 1 do
       begin
         aID := length(gMapElements);
@@ -641,7 +643,7 @@ begin
           TreeGrowAge := tmpElement.TreeGrowAge * (K + 1);
           SnowPic := tmpElement.SnowPic;
 
-          Stump := -1;
+          Stump := IfThen(inEditor, -1, 12);
           CuttableTree := K >= MatureTreeAge;
           DiagonalBlocked := true;
           DiagonalBlocked := true;

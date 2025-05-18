@@ -397,7 +397,6 @@ end;
 
 procedure TKMMusicLib.ScanTracks(const aPath: UnicodeString);
 var
-  searchRec: TSearchRec;
   path : String;
 begin
   if not fIsInitialized then Exit;
@@ -585,7 +584,7 @@ end;
 
 procedure TKMMusicLib.ShuffleSongs;
 var
-  J, I, R, curSong, curPlaylist: Integer;
+  J, I, R, curSong: Integer;
 begin
   if fIndex = -1 then Exit; // Music is disabled
 
@@ -703,7 +702,6 @@ end;
 
 
 procedure TKMMusicLib.SelectPlaylist(aIndex: Integer);
-var I : Integer;
 begin
   If fPlaylistIndex = aIndex then
     Exit;

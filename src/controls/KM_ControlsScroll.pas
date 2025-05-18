@@ -105,6 +105,7 @@ type
     function GetAbsDrawRight: Integer; override;
     function GetAbsDrawBottom: Integer; override;
 
+
     procedure UpdateVisibility; override;
   public
     DoScrollUpdate : Boolean;
@@ -936,6 +937,7 @@ function TKMScrollPanel.GetAbsDrawBottom: Integer;
 begin
   Result := Parent.AbsTop + fClipRect.Bottom + 20*Byte(AllowScrollH and not fScrollBarH.Visible);
 end;
+
 
 
 procedure TKMScrollPanel.Paint;

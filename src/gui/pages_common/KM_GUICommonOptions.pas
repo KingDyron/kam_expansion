@@ -826,6 +826,7 @@ begin
 
   TrackBar_Music.Enabled      := not CheckBox_MusicOff.Checked;
   CheckBox_ShuffleOn.Enabled  := not CheckBox_MusicOff.Checked;
+  DropList_Playlist.Enabled  := not CheckBox_MusicOff.Checked;
 
   gSoundPlayer.UpdateSoundVolume(gGameSettings.SFX.SoundFXVolume);
   gMusic.Volume := gGameSettings.SFX.MusicVolume;

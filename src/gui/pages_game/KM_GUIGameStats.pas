@@ -123,7 +123,6 @@ var
   UT: TKMUnitType;
   offX: Integer;
   aHouses : TKMHouseTypeArray;
-  housesUsed : TKMHouseTypeSet;
 
 begin
   inherited Create;
@@ -181,8 +180,6 @@ end;
 
 
 destructor TKMGUIGameStats.Destroy;
-var U : TKMUnitType;
-  I : Integer;
 begin
   FreeAndNil(fHouseSketch);
   inherited
