@@ -6426,8 +6426,8 @@ procedure TKMHousePalace.Activate(aWasBuilt : Boolean);
 begin
   Inherited;
 
-  if aWasBuilt then
-    gTerrain.PalaceExploreDeposits(Entrance);
+  //if aWasBuilt then
+  //  gTerrain.PalaceExploreDeposits(Entrance);
 
 end;
 
@@ -6769,7 +6769,7 @@ end;
 
 
 procedure TKMHousePalace.Paint;
-  procedure PaintDeposits;
+  {procedure PaintDeposits;
   var list : TKMPointTagList;
     I, tile : Integer;
     C, factor : Cardinal;
@@ -6803,7 +6803,7 @@ procedure TKMHousePalace.Paint;
       gRenderPool.RenderTerrain.RenderTile(tile, list[I].X, list[I].Y, 0);
     end;
     list.Free;
-  end;
+  end; }
 var I : Integer;
 begin
   Inherited;
@@ -6812,8 +6812,8 @@ begin
   begin
     for I := 1 to 4 do
         gRenderPool.AddHousePalaceFlags(HouseType, fPosition, I, FlagAnimStep + I * 10, gHands[Owner].FlagColor);
-    if gMySpectator.Selected = self then
-      PaintDeposits;
+    {if gMySpectator.Selected = self then
+      PaintDeposits;}
   end;
 
 end;
