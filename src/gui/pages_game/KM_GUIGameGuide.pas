@@ -11,7 +11,7 @@ uses
 
 
 type
-  TKMGuidePageType = (gtUnits, gtHouses, gtGrain, gtFruitTree, gtAnimals);
+  TKMGuidePageType = (gtUnits, gtHouses, gtGrain, gtFruitTree, gtAnimals, gtObjects);
 
   TKMGrainViewer = class(TKMControl)
     private
@@ -63,6 +63,15 @@ type
       procedure UpdateState(aTickCount: Cardinal);override;
       procedure Paint; override;
   end;
+  TKMObjectViewer = class(TKMControl)
+    private
+      fObject : Word;
+    public
+      AnimStep : Cardinal;
+      procedure SetObject(aObj : Word);
+      procedure UpdateState(aTickCount: Cardinal);override;
+      procedure Paint; override;
+  end;
 
   TKMGUIGameGuide = class
   private
@@ -82,15 +91,18 @@ type
     procedure GrainClick(Sender : TOBject);
     procedure FruitClick(Sender : TOBject);
     procedure AnimalClick(Sender : TOBject);
+    procedure ObjectClick(Sender : TOBject);
 
     procedure RefreshUnit;
     procedure RefreshHouse;
     procedure RefreshGrain;
     procedure RefreshFruit;
     procedure RefreshAnimal;
+    procedure RefreshObjects;
     procedure CreateGrains;
     procedure CreateFruits;
     procedure CreateAnimals;
+    procedure CreateObjects;
   protected
     Pin_Open : TKMButtonFlatPin;
     Panel_Guide : TKMPanel;
@@ -148,6 +160,13 @@ type
           Animal_Crops : array[0..3] of TKMWaresRow;
           Animal_CropsLabel : TKMLabel;
 
+        Panel_Objects : TKMPanel;
+          Panel_SelectObj : TKMScrollPanel;
+          Button_Obj : array of TKMButtonFlat;
+          Objects_Viewer : TKMObjectViewer;
+          Button_ObjVWares : array of TKMButtonFlat;
+          Button_Ware : TKMButtonFlat;
+
   public
     constructor Create(aParent: TKMPanel; aOnShow : TNotifyEvent);
 
@@ -164,9 +183,10 @@ uses  KM_RenderUI, KM_Resource, KM_HandsCollection,
       KM_UtilsExt,
       KM_HouseSiegeWorkshop,
       KM_ResUnits, KM_ResHouses, KM_ResTexts, KM_ResFonts, KM_ResMapElements,
-      KM_ResTileSet, KM_ResTileSetTypes,
+      KM_ResTileSet, KM_ResTileSetTypes, KM_ResWares,
       KM_TerrainPainter,
       KM_CommonUtils,
+      KM_GameApp,
       SysUtils, Math;
 
 constructor TKMGUIGameGuide.Create(aParent: TKMPanel; aOnShow : TNotifyEvent);
@@ -202,6 +222,7 @@ begin
       gtGrain: Button_Page[PT].TexID := gRes.Wares[wtVegetables].GUIIcon;
       gtFruitTree: Button_Page[PT].TexID := gRes.Wares[wtApple].GUIIcon;
       gtAnimals: Button_Page[PT].TexID := 915;
+      gtObjects: Button_Page[PT].TexID := 385;
     end;
     Button_Page[PT].OnClick := Guide_SelectType;
     Button_Page[PT].Tag := byte(PT);
@@ -360,6 +381,7 @@ begin
   CreateGrains;
   CreateFruits;
   CreateAnimals;
+  CreateObjects;
   Hide;
 end;
 
@@ -512,6 +534,50 @@ begin
     Animal_Crops[I].TextOffset := 25;
     Animal_Crops[I].WareCount := 1;
   end;
+
+end;
+
+procedure TKMGUIGameGuide.CreateObjects;
+var I, C, vCount : Integer;
+begin
+  Panel_Objects := TKMPanel.Create(Panel_Scroll, 10, 10, 470, 650);
+  Panel_Objects.AnchorsStretch;
+
+  Objects_Viewer := TKMObjectViewer.Create(Panel_Objects, 285, 10, 165, 200);
+  Objects_Viewer.SetObject(255);
+
+  with TKMBevel.Create(Panel_Objects, 10, 0, 235, 655) do
+    AnchorsStretch;
+
+  Panel_SelectObj := TKMScrollPanel.Create(Panel_Objects, 15, 0, 235, 650, [saVertical], bsGame, ssGame);
+  Panel_SelectObj.AnchorsStretch;
+  Panel_SelectObj.ChildPanel.AnchorsStretch;
+  SetLength(Button_Obj, length(gMapElements));
+  C := 0;
+  for I := 0 to High(gMapElements) do
+  If (length(gMapElements[I].VWares) > 0) or KM_ResMapElements.ObjectIsWare(I) then
+  begin
+    Button_Obj[C] := TKMButtonFlat.Create(Panel_SelectObj, C mod 3 * 76, 5 + C div 3 * 76, 73, 73, 0, rxTrees);
+    Button_Obj[C].TexID := gMapElements[I].Anim.Step[1] + 1;
+    Button_Obj[C].Tag := I;
+    Button_Obj[C].OnClick := ObjectClick;
+    vCount := Max(vCount,length(gMapElements[I].VWares));
+    Inc(C);
+  end;
+
+  Panel_SelectObj.ScrollV.WheelStep := 76;
+  Setlength(Button_Obj, C);
+
+  Setlength(Button_ObjVWares, vCount);
+
+  for I := 0 to High(Button_ObjVWares) do
+  begin
+    Button_ObjVWares[I] := TKMButtonFlat.Create(Panel_Objects, 278 + I mod 2 * 92, 230 + I div 2 * 42, 90, 40, 0);
+    Button_ObjVWares[I].Hide;
+  end;
+
+  Button_Ware := TKMButtonFlat.Create(Panel_Objects, 325, 230, 80, 30, 0);
+  Button_Ware.Hide;
 
 end;
 
@@ -1003,9 +1069,40 @@ begin
     Animal_CropsLabel.Caption := gResTexts[2187] + '  (' + gRes.Houses[htCollectors].HouseName + ')'
   else
     Animal_CropsLabel.Caption := gResTexts[2187];
+end;
 
+procedure TKMGUIGameGuide.RefreshObjects;
+var obj : Word;
+  I : Integer;
+  vWareName : String;
+  vWare : TKMVirtualWare;
+begin
+  Panel_Objects.Show;
+  for I := 0 to High(Button_ObjVWares) do
+    Button_ObjVWares[I].Hide;
+  Button_Ware.Hide;
+  obj := Objects_Viewer.fObject;
 
-
+  If length(gMapElements[obj].VWares) > 0 then
+  begin
+    for I := 0 to High(gMapElements[obj].VWares) do
+    begin
+      Button_ObjVWares[I].Show;
+      vWareName := gMapElements[obj].VWares[I].W;
+      vWare := gRes.Wares.VirtualWares.WareS[vWareName];
+      Button_ObjVWares[I].TexID := vWare.GUIIcon;
+      Button_ObjVWares[I].Hint := vWare.Title;
+      with gMapElements[obj].VWares[I] do
+      Button_ObjVWares[I].Caption := Format('%d%% : %d - %d', [Ch, cMin, cMax])
+    end;
+  end else
+  begin
+    Button_Ware.TexID := gRes.Wares[ObjectGetWare(obj)].GUIIcon;
+    Button_Ware.Hint := gRes.Wares[ObjectGetWare(obj)].Title;
+    Button_Ware.Show;
+  end;
+    
+  //Objects_Viewer.
 end;
 
 procedure TKMGUIGameGuide.RefreshPanel;
@@ -1072,6 +1169,7 @@ begin
   Panel_Grain.Hide;
   Panel_Fruit.Hide;
   Panel_Animals.Hide;
+  Panel_Objects.Hide;
   Image_Selected.Hide;
   Icons_Workers.hide;
   case fType of
@@ -1080,6 +1178,7 @@ begin
     gtGrain: RefreshGrain;
     gtFruitTree: RefreshFruit;
     gtAnimals: RefreshAnimal;
+    gtObjects: RefreshObjects;
   end;
 end;
 procedure TKMGUIGameGuide.Guide_SelectIcon(Sender: TObject);
@@ -1194,6 +1293,12 @@ begin
   fSelectedAnimal := TKMUnitType(TKMButtonFlat(Sender).Tag);
   Animal_Viewer.SetAnimalType(fSelectedAnimal);
   RefreshAnimal;
+end;
+
+procedure TKMGUIGameGuide.ObjectClick(Sender: TObject);
+begin
+  Objects_Viewer.SetObject(TKMControl(Sender).Tag);
+  RefreshObjects;
 end;
 
 
@@ -1366,7 +1471,7 @@ begin
       TKMRenderUI.WriteBevel(l + gap * I - 4, T + J * 43 - 4, 40, 40, ClimateColor[fClimateOrder[I]]);
       TKMRenderUI.WritePictureWithPivot(l + gap * I, T + J * 43, rxTiles, Combo[terr[J], terr[J], 1] + 1);
     end;
-    TKMRenderUI.WriteText(l + gap * I, T + J * 43, 40, Caption[fClimateOrder[I]], fntGrey, taLeft);
+    //TKMRenderUI.WriteText(l + gap * I, T + J * 43, 40, Caption[fClimateOrder[I]], fntGrey, taLeft);
   end;
 end;
 
@@ -1412,6 +1517,37 @@ begin
     A := gRes.Units[fAnimalType].UnitAnim[uaWalk, fDir];
 
   TKMRenderUI.WritePictureWithPivot(cX, cY, rxUnits, A.Animation[AnimStep] + 1);
+end;
+
+procedure TKMObjectViewer.SetObject(aObj: Word);
+begin
+  fObject := aObj;
+end;
+
+procedure TKMObjectViewer.UpdateState(aTickCount: Cardinal);
+begin
+  Inherited;
+  Inc(AnimStep);
+end;
+
+procedure TKMObjectViewer.Paint;
+var cX, cY : Integer;
+  id : Word;
+  step : Cardinal;
+  A : TKMAnimLoop;
+begin
+  Inherited;
+
+  TKMRenderUI.WriteBevel(ABSLeft, ABSTop, Width, Height);
+  cX := AbsLeft + Width div 2;//center
+  cY := AbsTop + Height - 80;//center
+  A := gMapElements[fObject].Anim;
+  If A.Count = 0 then
+    Exit;
+  step := AnimStep mod A.Count + 1;
+  id := A.Step[step];
+  TKMRenderUI.WritePictureWithPivot(cX, cY, rxTrees, id + 1);
+  //TKMRenderUI.WritePicture(AbsLeft, AbsTop, Width, Height)
 end;
 
 end.
