@@ -218,7 +218,7 @@
       <chkShowGameTick Checked="False"/>
       <chkViewport Checked="False"/>
     </Debug_Output>
-    <Debug_Terrain Collapsed="True">
+    <Debug_Terrain Collapsed="False">
       <chkShowTerrainIds Checked="False"/>
       <chkShowTerrainKinds Checked="False"/>
       <chkShowTerrainOverlays Checked="False"/>

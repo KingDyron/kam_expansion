@@ -131,6 +131,7 @@ type
     function CanPlaceShipYard(X, Y: Word): Boolean;
     function CanPlaceHouse(aLoc: TKMPoint; aHouseType: TKMHouseType): Boolean;
     function CanPlaceHouseFromScript(aHouseType: TKMHouseType; const aLoc: TKMPoint): Boolean;
+    function TDCanPlaceHouse(aHouseType: TKMHouseType; const aLoc: TKMPoint): Boolean;
     function CanPlaceStructure(const aLoc : TKMPoint; aIndex, aRot : Word) : Boolean;
     procedure PlaceStructure(const aLoc : TKMPoint; aIndex, aRot : Word);
     procedure PlaceStructureTile(const aLoc : TKMPoint; aIndex, aRot, aTileIndex : Word);
@@ -5687,8 +5688,9 @@ begin
   if not Result then Exit; //We have no corn here actually, nothing to cut
   If Land^[aLoc.Y,aLoc.X].TileOverlay2 = toInfinity then
     Exit;
-  Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := GetTileCornTile(aLoc, 6);
-  Land^[aLoc.Y,aLoc.X].Obj := GetTileCornObject(aLoc, 6);
+  aStage := gFieldGrains[Land^[aLoc.Y,aLoc.X].GrainType].StagesCount - 1;
+  Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := GetTileCornTile(aLoc, aStage);
+  Land^[aLoc.Y,aLoc.X].Obj := GetTileCornObject(aLoc, aStage);
   Land^[aLoc.Y,aLoc.X].FieldAge := 0;
 end;
 
@@ -7591,6 +7593,66 @@ begin
     //Check if there are units below placed BEFORE the house is added
     //Units added AFTER the house will be autoplaced around it
     Result := Result and (Land^[TY, TX].IsUnit = nil);
+
+    if not Result then Exit;
+  end;
+end;
+
+//Simple checks when placing houses from the TD script:
+function TKMTerrain.TDCanPlaceHouse(aHouseType: TKMHouseType; const aLoc: TKMPoint): Boolean;
+var
+  I, K, L, M: Integer;
+  HA: TKMHouseAreaNew;
+  TX, TY: Integer;
+begin
+  Result := True;
+  HA := gRes.Houses[aHouseType].BuildArea;
+
+  for I := 1 to MAX_HOUSE_SIZE do
+  for K := 1 to MAX_HOUSE_SIZE do
+  if (HA[I,K] <> 0) then
+  begin
+    TX := aLoc.X + K - 3 - gRes.Houses[aHouseType].EntranceOffsetX;
+    TY := aLoc.Y + I - 4 - gRes.Houses[aHouseType].EntranceOffsetY;
+    Result := Result and TileInMapCoords(TX, TY, 1) //Inset one tile from map edges
+    //We don't use CanBuild since you are allowed to place houses from the script over trees but not over units
+              and TileIsWalkable(KMPoint(TX, TY))  //Tile must be walkable
+              and not TileIsCornField(KMPoint(TX, TY))
+              and not TileIsWineField(KMPoint(TX, TY))
+              and not TileHasPalisade(TX, TY)
+              and not TileHasRoad(KMPoint(TX, TY));//in tower defense we can't place house on any type of field
+
+    //Mines must be on a mountain edge
+    if aHouseType = htIronMine then
+      Result := Result and TileGoodForIronMine(TX,TY);
+    if aHouseType = htGoldMine then
+      Result := Result and TileGoodForGoldMine(TX,TY);
+    if aHouseType = htBitinMine then
+      Result := Result and (TileGoodForIronMine(TX,TY) or TileGoodForGoldMine(TX,TY));
+
+    for L := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do
+    for M := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do
+    if TileInMapCoords(TX+M, TY+L) and (Land^[TY+L, TX+M].TileLock in [tlFenced,tlDigged,tlHouse]) then
+      Result := False;
+
+    //Check surrounding tiles for another house that overlaps
+    if not (aHouseType in IGNORE_HOUSE_BLOCK) then
+    for L := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do
+    for M := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do
+    if TileInMapCoords(TX+M, TY+L) and (Land^[TY+L, TX+M].TileLock in [tlFenced,tlDigged,tlHouse, tlWall, tlWallFence]) then
+      Result := False;
+
+    //Check if there are units below placed BEFORE the house is added
+    //Units added AFTER the house will be autoplaced around it
+    Result := Result and (Land^[TY, TX].IsUnit = nil);
+    If HA[I,K] = 2 then //no unit below house entrance
+    begin
+      Result := Result  and (Land^[TY + 1, TX].IsUnit = nil)
+                        and not TileIsCornField(KMPoint(TX, TY + 1))
+                        and not TileIsWineField(KMPoint(TX, TY + 1))
+                        and not TileHasPalisade(TX, TY + 1)
+                        and not TileHasRoad(KMPoint(TX, TY + 1));
+    end;
 
     if not Result then Exit;
   end;

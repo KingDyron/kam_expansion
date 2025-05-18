@@ -91,6 +91,7 @@ type
     function HouseBarracksRecruitsCount(aBarracks: Integer): Integer;
     function HouseBarracksRecruitBlock(aHouseID: Integer): Boolean;
     function HouseBuildingProgress(aHouseID: Integer): Integer;
+    function HouseCanPlace(aHouseType: byte; aX, aY : Integer; aIgnoreObjects : Boolean): Boolean;
     function HouseCanReachResources(aHouseID: Integer): Boolean;
     function HouseDamage(aHouseID: Integer): Integer;
     function HouseDeliveryBlocked(aHouseID: Integer): Boolean;
@@ -249,6 +250,8 @@ type
     function StatUnitTypeCount(aHand, aUnitType: Byte): Integer;
     function StatUnitTypeCountEx(aHand: Integer; aUnitType: TKMUnitType): Integer;
     function StatResourceTotalCount(aHand: Integer; aWareType: TKMWareType): Integer;
+
+    function TDHouseCanPlace(aHouseType: byte; aX, aY : Integer): Boolean;
 
     function UnitAllowAllyToSelect(aUnitID: Integer): Boolean;
     function UnitAt(aX, aY: Integer): Integer;
@@ -2903,7 +2906,21 @@ begin
   end;
 end;
 
+//version Expansion v1.20
+function TKMScriptStates.HouseCanPlace(aHouseType: byte; aX, aY : Integer; aIgnoreObjects : Boolean): Boolean;
+begin
+  try
+    Result := false;
+    If InRange(aHouseType, 0, HOUSE_DAT_COUNT - 1) then
+      Result := gTerrain.CanPlaceHouseFromScript(HOUSE_ID_TO_TYPE[aHouseType], KMPoint(aX, aY))
+    else
+      LogIntParamWarn('States.HouseCanPlace', [aHouseType]);
 
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
 //* Version: 5993
 //* Returns True if the specified house can reach the resources that it mines (coal, stone, fish, etc.)
 //* Result: Reachable
@@ -6169,5 +6186,19 @@ begin
   end;
 end;
 
+function TKMScriptStates.TDHouseCanPlace(aHouseType: byte; aX, aY : Integer): Boolean;
+begin
+  try
+    Result := false;
+    If InRange(aHouseType, 0, HOUSE_DAT_COUNT - 1) then
+      Result := gTerrain.TDCanPlaceHouse(HOUSE_ID_TO_TYPE[aHouseType], KMPoint(aX, aY))
+    else
+      LogIntParamWarn('States.TDHouseCanPlace', [aHouseType]);
+
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
 
 end.

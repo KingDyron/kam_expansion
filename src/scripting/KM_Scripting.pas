@@ -566,6 +566,7 @@ begin
     RegisterMethodCheck(c, 'function  HouseBarracksRecruitBlock(aHouseID: Integer): Boolean');
     RegisterMethodCheck(c, 'function  HouseBarracksRecruitsCount(aBarracks: Integer): Integer');
     RegisterMethodCheck(c, 'function  HouseBuildingProgress(aHouseID: Integer): Integer');
+    RegisterMethodCheck(c, 'function  HouseCanPlace(aHouseType: byte; aX, aY : Integer; aIgnoreObjects : Boolean): Boolean');
     RegisterMethodCheck(c, 'function  HouseCanReachResources(aHouseID: Integer): Boolean');
     RegisterMethodCheck(c, 'function  HouseDamage(aHouseID: Integer): Integer');
     RegisterMethodCheck(c, 'function  HouseDeliveryBlocked(aHouseID: Integer): Boolean');
@@ -714,6 +715,9 @@ begin
     RegisterMethodCheck(c, 'function  StatUnitTypeCount(aHand: Byte; aUnitType: Byte): Integer');
     RegisterMethodCheck(c, 'function  StatUnitTypeCountEx(aHand: Integer; aUnitType: TKMUnitType): Integer');
     RegisterMethodCheck(c, 'function  StatResourceTotalCount(aHand: Integer; aWareType: TKMWareType): Integer');
+    //tower defence
+    RegisterMethodCheck(c, 'function  TDHouseCanPlace(aHouseType: byte; aX, aY : Integer): Boolean');
+
     RegisterMethodCheck(c, 'function  UnitAllowAllyToSelect(aUnitID: Integer): Boolean');
     RegisterMethodCheck(c, 'function  UnitAt(aX, aY: Integer): Integer');
     RegisterMethodCheck(c, 'function  UnitCarrying(aUnitID: Integer): Integer');
@@ -1380,6 +1384,7 @@ begin
       RegisterMethod(@TKMScriptStates.HouseBarracksRecruitBlock, 'HouseBarracksRecruitBlock');
       RegisterMethod(@TKMScriptStates.HouseBarracksRecruitsCount, 'HouseBarracksRecruitsCount');
       RegisterMethod(@TKMScriptStates.HouseBuildingProgress, 'HouseBuildingProgress');
+      RegisterMethod(@TKMScriptStates.HouseCanPlace, 'HouseCanPlace');
       RegisterMethod(@TKMScriptStates.HouseCanReachResources, 'HouseCanReachResources');
       RegisterMethod(@TKMScriptStates.HouseDamage, 'HouseDamage');
       RegisterMethod(@TKMScriptStates.HouseDeliveryBlocked, 'HouseDeliveryBlocked');
@@ -1526,6 +1531,9 @@ begin
       RegisterMethod(@TKMScriptStates.StatUnitTypeCount, 'StatUnitTypeCount');
       RegisterMethod(@TKMScriptStates.StatUnitTypeCountEx, 'StatUnitTypeCountEx');
       RegisterMethod(@TKMScriptStates.StatResourceTotalCount, 'StatResourceTotalCount');
+      //tower defence
+      RegisterMethod(@TKMScriptStates.TDHouseCanPlace, 'TDHouseCanPlace');
+
       RegisterMethod(@TKMScriptStates.UnitAllowAllyToSelect, 'UnitAllowAllyToSelect');
       RegisterMethod(@TKMScriptStates.UnitAt, 'UnitAt');
       RegisterMethod(@TKMScriptStates.UnitCarrying, 'UnitCarrying');
