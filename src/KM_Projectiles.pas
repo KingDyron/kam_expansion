@@ -319,6 +319,10 @@ begin
 
           U := gTerrain.UnitsHitTestF(fTarget);
 
+          If (U <> nil) and (fOpponent <> U) then
+            If gHands.GetUnitByUID(U.UID) = U then
+              gScriptEvents.ProcUnitHit(U, fOwner);
+
           if fType = ptCatapultRock then
             HitAllInRadius(fOwner, U, fTarget, 1.3, 200, 2);
           //Projectile can miss depending on the distance to the unit

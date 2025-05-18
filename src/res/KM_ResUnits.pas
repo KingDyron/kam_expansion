@@ -198,12 +198,12 @@ const
     35, 36,
     14,15,16,17,18,19,20,21,22,23, //Warriors
     -1,-1,-1,-1, -1,-1, -1, -1, -1, -1, -1, - 1, -1, -1, -1, -1, //TPR warriors (can't be placed with SET_UNIT)
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     24,25,26,27,28,29,30,31, 37, 38, 39, 40, 41, 42, 43,
     44, 45, 46); //Animals
 
   //This is a map of the valid values for !SET_GROUP, and the corresponing unit that will be created (matches KaM behavior)
-  UNIT_ID_TO_TYPE: array[0..75] of TKMUnitType = (
+  UNIT_ID_TO_TYPE: array[0..76] of TKMUnitType = (
     utSerf,utWoodcutter,utMiner,utAnimalBreeder,utFarmer,
     utCarpenter,utBaker,utButcher,utFisher,utBuilder,
     utStonemason,utSmith,utMetallurgist,utRecruit, //Units
@@ -221,6 +221,7 @@ const
     utTorchMan, utMedic, utBattleShip, utBoat,
     utPyro, utLekter, utDeerMale, utDeerFemale, utFox, utBoar, utBear,
     utLandDuck, utRabbit,utWhiteBear, utSandSnake, utSpider,
+    utMobileTower,
     utNone, utNone, utNone
     );
 
@@ -232,7 +233,7 @@ const
     24,25,26,27, 28,29,//TPR warriors
     38, 39, 40, 41, 42, 43, 44, 45, 46, 47,//My Warriors
     48, 49, 50, 52, 53, 54, 55, 57, 58, 59, 60,
-    61, 62,//pyro, lekter
+    61, 62, 73,//pyro, lekter, mobile wall
     30,31,32,33,34,35,36,37, //Animals
     63, 64, 65, 66, 67, 68, 69, 70, 71, 72);//deerMale .. utWarehouseMan
 
@@ -554,6 +555,7 @@ const
     [uaWalk, uaWork, uaDie, uaEat],//utBoat
     [uaWalk, uaWork, uaDie, uaEat, uaStay],//utPyro
     [uaWalk, uaWork, uaDie, uaEat, uaStay],//utLekter
+    [uaWalk, uaWork, uaDie, uaEat, uaStay],//utMobileTower
 
     [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], //Animals
     [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk],//deermale
@@ -618,7 +620,8 @@ const
     ftRanged,
     ftMelee,
     ftMelee,
-    ftMelee
+    ftMelee,
+    ftRanged
   );
 begin
   If fUnitType in UNITS_WARRIORS then
@@ -744,7 +747,7 @@ const
     $80B0B0 ,$80B0B0,$80B0B0,$80B0B0,$80B0B0, $80B0B0, $80B0B0, $80B0B0, $80B0B0, $80B0B0,
     $80B0B0, $80B0B0 ,$80B0B0,$80B0B0, $80B0B0, $80B0B0 ,$80B0B0,$80B0B0,$80B0B0,$80B0B0,
     $80B0B0,$80B0B0,$80B0B0,$80B0B0,$80B0B0,$80B0B0,$80B0B0,$80B0B0,$80B0B0,$80B0B0,$80B0B0,
-    $80B0B0,$80B0B0,$80B0B0); //Exact colors can be tweaked
+    $80B0B0,$80B0B0,$80B0B0,$80B0B0); //Exact colors can be tweaked
 begin
   Result := MM_COLOR[fUnitType] or $FF000000;
 end;

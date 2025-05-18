@@ -371,6 +371,20 @@ type
     procedure OrderAttackHouse(aTargetHouse: TKMHouse; aForced: Boolean = True);override;
   end;
 
+  TKMUnitWarriorTower = class(TKMUnitWarrior)
+  private
+    const
+      MAX_ARCHERS = 4;
+      ARCHER_RELOAD_TIME = 20;// 2 seconds
+    var
+      fArcher : array[0..MAX_ARCHERS - 1] of Cardinal;
+    procedure CkeckForEnemies;
+  public
+    constructor Load(LoadStream: TKMemoryStream); override;
+    procedure Save(SaveStream: TKMemoryStream); override;
+    function UpdateState : Boolean; override;
+  end;
+
 
 implementation
 uses
@@ -386,7 +400,8 @@ uses
   KM_GameParams, KM_CommonUtils, KM_RenderDebug, KM_UnitVisual,
   KM_CommonExceptions, KM_CommonHelpers,
   KM_UnitGroupTypes,
-  KM_ScriptingEvents;
+  KM_ScriptingEvents,
+  KM_Projectiles;
 
 
 { TKMUnitWarrior }
@@ -1704,6 +1719,7 @@ function TKMUnitWarrior.GetProjectileType: TKMProjectileType;
 begin
   Assert(IsRanged or CanShootAndFight, 'Can''t get projectile type for not ranged warriors');
   case UnitType of
+    utMobileTower,
     utGolem,
     utArcher,
     utBowman:     Result := ptArrow;
@@ -3488,6 +3504,68 @@ begin
   fNextOrder := woTakeOverHouse;
   fNextOrderForced := aForced;
   SetOrderHouseTarget(aTargetHouse);
+end;
+
+
+constructor TKMUnitWarriorTower.Load(LoadStream: TKMemoryStream);
+begin
+  Inherited;
+  LoadStream.ReadData(fArcher);
+end;
+
+procedure TKMUnitWarriorTower.Save(SaveStream: TKMemoryStream);
+begin
+  Inherited;
+  SaveStream.WriteData(fArcher);
+end;
+
+procedure TKMUnitWarriorTower.CkeckForEnemies;
+  function HasReadyArcher : Boolean;
+  var I : Integer;
+  begin
+    Result := false;
+    for I := 0 to MAX_ARCHERS - 1 do
+      If gGameParams.Tick > fArcher[I] then
+        Exit(true);
+
+  end;
+
+var I : Integer;
+  U : TKMUnit;
+begin
+  If not HasReadyArcher then
+    Exit;
+
+  U := gTerrain.UnitsHitTestWithinRad(Position, GetFightMinRange, GetFightMaxRange, Owner, atEnemy, dirNA, not RANDOM_TARGETS);
+  //no unit found so no need to check every archer
+  If (U = nil) or (U.IsDeadOrDying) then
+    Exit;
+
+  for I := 0 to MAX_ARCHERS - 1 do
+  If gGameParams.Tick > fArcher[I] then
+  begin
+    If U = nil then
+    begin
+      U := gTerrain.UnitsHitTestWithinRad(Position, GetFightMinRange, GetFightMaxRange, Owner, atEnemy, dirNA, not RANDOM_TARGETS);
+      //no unit found so no need to check every archer
+      If (U = nil) or (U.IsDeadOrDying) then
+        Exit;
+    end;
+
+    gProjectiles.AimTarget(PositionF, U, ProjectileType, self, RangeMax, RangeMin);
+    fArcher[I] := gGameParams.Tick + ARCHER_RELOAD_TIME + KamRandom(10, 'TKMUnitWarriorTower.CkeckForEnemies');
+    U := nil;
+  end;
+
+end;
+
+function TKMUnitWarriorTower.UpdateState : Boolean;
+begin
+  Result := Inherited;
+  If not Result then
+    Exit;
+  If fTicker mod 3 = 0 then
+    CkeckForEnemies;
 end;
 
 end.
