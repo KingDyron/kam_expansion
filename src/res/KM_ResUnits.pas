@@ -683,6 +683,7 @@ begin
     utWhiteBear : Result := 969;
     utSandSnake : Result := 970;
     utSpider : Result := 971;
+      utMobileTower: Result := 1038;
   else
     if IsCitizen then
       Result := 141 + UNIT_TYPE_TO_ID[fUnitType]
@@ -730,6 +731,7 @@ begin
       utMedic: Result := 860;
       utPyro: Result := 947;
       utLekter: Result := 951;
+      utMobileTower: Result := 1037;
     end;
   end;
 end;
@@ -862,6 +864,7 @@ begin
     utWhiteBear:         Result := 2151;
     utSandSnake:         Result := 2152;
     utSpider:            Result := 2153;
+    utMobileTower:       Result := 2276;
   else
     Result := TX_UNITS_NAMES__29 + UNIT_TYPE_TO_ID[fUnitType];
   end;

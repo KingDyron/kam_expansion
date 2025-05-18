@@ -79,6 +79,7 @@ type
     function IsEmpty: Boolean;
     function HasMoreEntrances : Boolean; virtual;
     function GetClosestEntrance(aLoc : TKMPoint) : TKMPointDir; virtual;
+    function Entrances : TKMPointDirArray; virtual;
   end;
 
   // Editable Version of TKMHouseSketch
@@ -448,7 +449,8 @@ type
     property ProductionCycle[aIndex : Byte] : Word read GetProductionCycle;
     function GetWareInIndex(aWare : TKMWareType) : Byte;
     function GetWareOutIndex(aWare : TKMWareType) : Byte;
-    function IsValid(aHouseType : TKMHouseType = htAny; aDifferent : Boolean = false; aBuilt : Boolean = false) : Boolean;
+    function IsValid(aHouseType : TKMHouseType = htAny; aDifferent : Boolean = false; aBuilt : Boolean = false) : Boolean; overload;
+    function IsValid(aHouseType : TKMHouseTypeSet; aBuiltOnly : Boolean = true) : Boolean; overload;
     function PlaceRoad : Boolean; virtual;
 
 
@@ -1021,6 +1023,11 @@ end;
 function TKMHouseSketch.GetClosestEntrance(aLoc : TKMPoint) : TKMPointDir;
 begin
   Result := KMPointDir(Entrance, dirS);
+end;
+
+function TKMHouseSketch.Entrances: TKMPointDirArray;
+begin
+  Result := [KMPointDir(Entrance, dirS)];
 end;
 
 function TKMHouseSketch.ObjToStringShort(const aSeparator: String = '|'): String;
@@ -3316,6 +3323,14 @@ begin
     Result := Result and ((HouseType <> aHouseType) or (aHouseType = htAny))
   else
     Result := Result and ((HouseType = aHouseType) or (aHouseType = htAny));
+end;
+
+function TKMHouse.IsValid(aHouseType: TKMHouseTypeSet; aBuiltOnly: Boolean = true): Boolean;
+begin
+  Result := (self <> nil)
+            and not self.IsDestroyed
+            and (not aBuiltOnly or IsComplete)
+            and ((fType in aHouseType) or (htAny in aHouseType));
 end;
 
 function TKMHouse.PlaceRoad: Boolean;

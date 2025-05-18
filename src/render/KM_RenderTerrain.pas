@@ -1512,11 +1512,12 @@ begin
     fncHousePlan:  if Pos in [dirN,dirS] then texID:=105 else texID:=117; //Plan (Ropes)
     fncWine:       if Pos in [dirN,dirS] then texID:=462 else texID:=466; //Fence (Wood)
     fncCorn:       if Pos in [dirN,dirS] then texID:=461 else texID:=465; //Fence (Stones)
-    fncWoodenBridge:  if Pos in [dirN,dirS] then texID:=817 else texID:=817; //Fence (Wood)
+    fncWoodenBridge:  texID:=817; //Fence (Wood)
     fncStoneBridge:   if Pos in [dirS] then texID:=819 else texID:=818; //Fence (Stones)
     fncGrassLand:  if Pos in [dirN,dirS] then texID:=835 else texID:=836; //Fence
     fncVegeField:  if Pos in [dirN,dirS] then texID:=123 else texID:=124; //Fence
-    fncAppleTree:  if Pos in [dirN,dirS] then texID:=109 else texID:=109; //Fence
+    fncAppleTree:  texID:=109; //Fence
+    fncPasture:     texID:=109; //Fence
     else          texID := 0;
   end;
   if not (aFence in [fncHousePlan]) then

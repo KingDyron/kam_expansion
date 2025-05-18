@@ -69,7 +69,7 @@ uses
   KM_HandTypes, KM_HandEntity,
   KM_HouseInn, KM_HouseMarket, KM_HouseBarracks, KM_HouseSchool, KM_HouseStore, KM_HouseSwineStable,
   KM_HouseTownHall, KM_HouseWoodcutters, KM_HouseSiegeWorkshop, KM_HouseWoodBurner, KM_HouseQueue,
-  KM_HouseCottage, KM_HouseCartographers, KM_HousePearl,
+  KM_HouseCottage, KM_HouseCartographers, KM_HousePearl, KM_HousePasture, KM_HouseForest,
   KM_Resource,
   KM_GameTypes,
   KM_TerrainTypes,
@@ -174,6 +174,8 @@ begin
     htShipyard:         Result := TKMHouseShipyard.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
     htCartographers:    Result := TKMHouseCartographers.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
     htPearl:            Result := TKMHousePearl.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
+    htPasture:          Result := TKMHousePasture.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
+    htForest:           Result := TKMHouseForest.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
     else             Result := TKMHouse.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
   end;
 
@@ -558,6 +560,8 @@ begin
       htShipyard:         H := TKMHouseShipyard.Load(LoadStream);
       htCartographers:    H := TKMHouseCartographers.Load(LoadStream);
       htPearl:            H := TKMHousePearl.Load(LoadStream);
+      htPasture:          H := TKMHousePasture.Load(LoadStream);
+      htForest:           H := TKMHouseForest.Load(LoadStream);
 
       else                H := TKMHouse.Load(LoadStream);
     end;

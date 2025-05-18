@@ -94,6 +94,7 @@ type
     function PearlName : UnicodeString;
     function HasMoreEntrances : Boolean; override;
     function GetClosestEntrance(aLoc : TKMPoint) : TKMPointDir; override;
+    function Entrances : TKMPointDirArray; override;
 
     procedure DoUseSpecial;
     procedure DoExchange(aCount : Byte);
@@ -754,6 +755,17 @@ function TKMHousePearl.HasMoreEntrances: Boolean;
 begin
   Result := true;
 end;
+
+function TKMHousePearl.Entrances: TKMPointDirArray;
+begin
+  Result := [
+              KMPointDir(Entrance.X, Entrance.Y, dirS),
+              KMPointDir(Entrance.X - 2, Entrance.Y - 2, dirW),
+              KMPointDir(Entrance.X, Entrance.Y - 4, dirN),
+              KMPointDir(Entrance.X + 2, Entrance.Y - 2, dirE)
+            ];
+end;
+
 
 function TKMHousePearl.GetClosestEntrance(aLoc: TKMPoint): TKMPointDir;
 const  ENTRANCE_POS : array[1..4] of TKMPoint = ( (X : 0; Y : 0),

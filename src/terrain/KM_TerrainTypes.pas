@@ -29,7 +29,7 @@ type
                     vuNESW);   //Vertex is used NE-SW like this: /
 
   TKMFenceKind = (fncNone, fncCorn, fncWine, fncHousePlan, fncHouseFence, fncWoodenBridge, fncStoneBridge, fncGrassLand, fncVegeField,
-                    fncAppleTree);
+                    fncAppleTree, fncPasture);
 
   //Farmers/Woodcutters preferred activity
   TKMPlantAct = (taCut, taPlant, taAny);

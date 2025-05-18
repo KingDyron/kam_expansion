@@ -251,6 +251,7 @@ type
     function CompareBids(A, B: TKMDeliveryBid): Boolean; inline;
 
     function GetSerfActualPos(aSerf: TKMUnit): TKMPoint;
+    function HousesAreConnected(aLocHouse, aToHouse : TKMHouse) : Boolean;
     procedure CloseDelivery(aID: Integer);
     procedure CloseDemand(aWare: TKMWareType; aID: Integer);
     procedure CloseOffer(aWare: TKMWareType; aID: Integer);
@@ -1299,6 +1300,19 @@ begin
   end;
 end;
 
+function TKMDeliveries.HousesAreConnected(aLocHouse: TKMHouse; aToHouse: TKMHouse): Boolean;
+var I, K : Integer;
+  entr1, entr2 : TKMPointDirArray;
+begin
+  Result := false;
+  entr1 := aLocHouse.Entrances;
+  entr2 := aToHouse.Entrances;
+
+  for I := 0 to High(entr1) do
+  for K := 0 to High(entr2) do
+    If gTerrain.RouteCanBeMade(entr1[I].DirFaceLoc, entr2[K].DirFaceLoc, tpWalkRoad) then
+      Exit(true);
+end;
 
 function TKMDeliveries.ValidWareTypePair(oWT, dWT: TKMWareType): Boolean;
 begin
@@ -1344,7 +1358,8 @@ begin
             ( //House-House delivery should be performed only if there's a connecting road
             (demand.Loc_House <> nil) and
             (
-            gTerrain.RouteCanBeMade(offer.Loc_House.PointBelowEntrance, demand.Loc_House.PointBelowEntrance, tpWalkRoad)
+            HousesAreConnected(offer.Loc_House, demand.Loc_House)
+            //gTerrain.RouteCanBeMade(offer.Loc_House.PointBelowEntrance, demand.Loc_House.PointBelowEntrance, tpWalkRoad)
             or (CONNECT_ROAD_TO_WALLS and (demand.Loc_House.HouseType in WALL_HOUSES) and gTerrain.RouteCanBeMade(offer.Loc_House.PointBelowEntrance, demand.Loc_House.PointBelowEntrance, tpWalk, 1))
             )
             )

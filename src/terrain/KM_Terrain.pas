@@ -8176,10 +8176,15 @@ procedure TKMTerrain.UpdateFences(const aLoc: TKMPoint; aCheckSurrounding: Boole
   var H : TKMHouse;
   begin
     H := TKMHouse(House(aLoc));
-
-    if not fLoading and (Assigned(H) and (H is TKMHouseAppleTree)) then //fruit tree has it's own fences
-      Result := fncAppleTree
-    else
+    Result := fncNone;
+    if not fLoading and Assigned(H) then //fruit tree has it's own fences
+    begin
+      case H.HouseType of
+        htAppleTree : Result := fncAppleTree;
+        htPasture : Result := fncPasture;
+        htForest : Result := fncPasture;
+      end;
+    end else
     if Land^[aLoc.Y,aLoc.X].TileLock in [tlFenced, tlDigged,tlWallFence, tlStructure] then
       Result := fncHouseFence
     else
@@ -8202,9 +8207,7 @@ procedure TKMTerrain.UpdateFences(const aLoc: TKMPoint; aCheckSurrounding: Boole
       Result := fncCorn
     else }
     if TileIsWineField(aLoc) then
-      Result := fncWine
-    else
-      Result := fncNone;
+      Result := fncWine;
   end;
 
   function GetFenceEnabled(X, Y: SmallInt): Boolean;
@@ -8219,7 +8222,7 @@ procedure TKMTerrain.UpdateFences(const aLoc: TKMPoint; aCheckSurrounding: Boole
        (TileIsVegeField(aLoc) and TileIsVegeField(KMPoint(X,Y))) or //Both are Grass
 
        (
-        House(aLoc).IsValid(htAppleTree) and House(X, Y).IsValid(htAppleTree)
+        House(aLoc).IsValid([htAppleTree, htPasture, htForest]) and House(X, Y).IsValid([htAppleTree, htPasture, htForest])
        ) or //Both are appletree
 
 
