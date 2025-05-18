@@ -47,6 +47,7 @@ type
       Button_AssignToShip: TKMButton;
       Button_Boat_Fish : TKMButton;
       Button_Boat_Wares : TKMButton;
+      Button_SerfCarry : TKMButtonFlat;
 
       Panel_Unit_Dismiss: TKMPanel;
          Label_Unit_Dismiss: TKMLabel;
@@ -153,6 +154,9 @@ begin
 
     Button_AssignToShip           := TKMButton.Create(Panel_Unit, 0, 145, 28, 28, 820, rxGui, bsGame);
     Button_AssignToShip.OnClick   := Unit_AssignToShipClick;
+
+    Button_SerfCarry              := TKMButtonFlat.Create(Panel_Unit, 64, 145, 28, 28, 0, rxGui);
+    Button_SerfCarry.Hitable      := false;
 
     Button_Boat_Fish  := TKMButton.Create(Panel_Unit, 0, 145, 28, 28, 820, rxGuiMain, bsGame);
     Button_Boat_Wares := TKMButton.Create(Panel_Unit, 0 + 30, 145, 28, 28, 820, rxGuiMain, bsGame);
@@ -318,7 +322,7 @@ begin
   Image_UnitPic.FlagColor     := gHands[aUnit.Owner].FlagColor;
 
   Button_AssignToShip.Visible := (gRes.Units[aUnit.UnitType].ShipWeight > 0) or (aUnit.UnitType = utShip);
-  Button_AssignToShip.Enabled := not aUnit.IsAssigningToShip;
+  Button_AssignToShip.Enabled := not aUnit.IsAssigningToShip and (gHands[aUnit.Owner].Stats.GetUnitQty(utShip) > 0);
 
   Button_Boat_Fish.Visible := (aUnit.UnitType = utBoat);
   Button_Boat_Wares.Visible := (aUnit.UnitType = utBoat);
@@ -371,6 +375,7 @@ begin
   begin
     Units_Ship.UnitPlan := TKMUnitWarriorShip(aUnit).GetAllUnitsInside;
   end;
+  Button_SerfCarry.Visible := aUnit.UnitType = utSerf;
 end;
 
 
@@ -397,6 +402,10 @@ begin
   Button_Unit_Dismiss.Visible := SHOW_DISMISS_UNITS_BTN
                                  and aUnit.Dismissable   // Its possible to block dismiss from scripts
                                  and gMySpectator.IsSelectedMyObj; // Allow to dismiss only our units
+  If Button_SerfCarry.Visible then
+    If TKMUnitSerf(aUnit).Carry <> wtNone then
+      Button_SerfCarry.TexID := gRes.Wares[TKMUnitSerf(aUnit).Carry].GUIIcon;
+
   Image_HPBar.Hide;
   if aUnit.IsDismissing
     or aUnit.DismissInProgress then //Check if we started dismiss process
@@ -821,7 +830,7 @@ begin
   Button_Army_Join.Enabled    := acceptOrders and not aGroup.FlagBearer.IsHero;
   Button_Army_Join.Visible    := not aGroup.FlagBearer.IsHero;
   Button_Army_Feed.Enabled    := acceptOrders;
-  Button_AssignToShip.Enabled := acceptOrders;
+  Button_AssignToShip.Enabled := acceptOrders and (gHands[aGroup.Owner].Stats.GetUnitQty(utShip) > 0);
   Button_Boat_Wares.Enabled := acceptOrders
 end;
 
@@ -832,8 +841,7 @@ begin
   acceptOrders := (gMySpectator.Selected <> nil) // just in case
                   and gMySpectator.IsSelectedMyObj;  // do not allow orders for allied units (for now)
 
-  Button_AssignToShip.Enabled := acceptOrders;
-  Button_AssignToShip.Enabled := acceptOrders;
+  Button_AssignToShip.Enabled := acceptOrders and (gHands[aUnit.Owner].Stats.GetUnitQty(utShip) > 0);
   Button_Boat_Fish.Enabled := acceptOrders;
   Button_Boat_Wares.Enabled := acceptOrders;
 end;
