@@ -14,7 +14,6 @@ type
   TKMGUIGameHouse = class
   private
     fHouse: TKMHouse;
-    fIsOrderRefreshed : Boolean;
     fAnimStep: Cardinal;
     fLastWareOutput : Byte;
     fLastSiegeUnit : Byte;
@@ -22,6 +21,7 @@ type
     fLastBarracksUnit: Byte; //Last unit that was selected in Barracks, global for all barracks player owns
     fLastTHUnit: Byte; //Last unit that was selected in Townhall, global for all townhalls player owns
     fLastPalaceUnit: Byte;
+
     fSetViewportEvent: TPointFEvent;
     fSelectNextHouse : TEvent;
     fStoreWareOrder : array of array of TKMWareType;
@@ -29,6 +29,7 @@ type
     function HasAnyUnit(unitArr : array of TKMUnitType; OnlyVisible : Boolean) : Boolean;overload;
     function NextUnit(startFrom : Byte; unitArr : array of TKMUnitType; toLast : Boolean = false) : Integer;
     function PreviousUnit(startFrom : Byte; unitArr : array of TKMUnitType; toLast : Boolean = false) : Integer;
+    procedure CheckLastSelected(var A : Byte; unitArr : array of TKMUnitType);
     procedure Create_HouseTownhall;
     procedure Create_HouseBarracks;
     procedure Create_HouseMarket;
@@ -323,7 +324,6 @@ begin
   fSetViewportEvent := aSetViewportEvent;
   self.fSelectNextHouse := aSelectNextEvent;
   fAnimStep := 0;
-  fIsOrderRefreshed := false;
   Panel_House := TKMScrollPanel.Create(aParent, TB_PAD, 44, TB_WIDTH + 9, aParent.Height - 50, [saVertical], bsMenu, ssCommon);
   Panel_House.AnchorsStretch;
   Panel_House.DoScrollUpdate := false;
@@ -1350,16 +1350,6 @@ begin
       Exit;
     end;
 
-  if not fIsOrderRefreshed then
-    if fHouse.HouseType in [htSchool, htBarracks, htTownhall, htSiegeWorkshop, htPalace, htShipyard] then
-    begin
-      fIsOrderRefreshed := true;
-      fLastSchoolUnit := Max(PreviousUnit(length(SCHOOL_GAME_ORDER), SCHOOL_GAME_ORDER, true), 0);
-      fLastSiegeUnit := Max(PreviousUnit(length(SIEGE_GAME_ORDER), SIEGE_GAME_ORDER, true), 0);
-      fLastBarracksUnit := Max(PreviousUnit(length(BARRACKS_GAME_ORDER), BARRACKS_GAME_ORDER, true), 0);
-      fLastTHUnit := Max(PreviousUnit(length(TH_GAME_ORDER), TH_GAME_ORDER, true), 0);
-      fLastPalaceUnit := Max(PreviousUnit(length(PALACE_UNITS_ORDER), PALACE_UNITS_ORDER, true), 0);
-    end;
   AskDemolish := aAskDemolish;
 
   Inc(fAnimStep);
@@ -1681,6 +1671,15 @@ begin
   rowRes := 1;
   line := 0;
   base := 2;
+
+  //check if last selected unit is unlocked
+  case fHouse.HouseType of
+    htSchool        : CheckLastSelected(fLastSchoolUnit, SCHOOL_GAME_ORDER);
+    htSiegeWorkshop : CheckLastSelected(fLastSiegeUnit, SIEGE_GAME_ORDER);
+    htBarracks      : CheckLastSelected(fLastBarracksUnit, BARRACKS_GAME_ORDER);
+    htTownhall      : CheckLastSelected(fLastTHUnit, TH_GAME_ORDER);
+    htPalace        : CheckLastSelected(fLastPalaceUnit, PALACE_UNITS_ORDER);
+  end;
 
   case aHouse.HouseType of
     htMarket:         begin
@@ -2561,6 +2560,13 @@ begin
     end;
 
 end;
+
+procedure TKMGUIGameHouse.CheckLastSelected(var A : Byte; unitArr : array of TKMUnitType);
+begin
+  If gHands[fHouse.Owner].Locks.GetUnitBlocked(unitArr[A], fHouse.HouseType) = ulNotVisible then
+    A := PreviousUnit(length(unitArr), unitArr, true);
+end;
+
 procedure TKMGUIGameHouse.UpdateHotkeys;
 begin
   // School
@@ -2679,7 +2685,6 @@ begin
           If SCHOOL_GAME_ORDER[I] = UT then
           begin
             fLastSchoolUnit := I;
-            fIsOrderRefreshed := true;
           end;
 
         gMySpectator.Selected := house;
