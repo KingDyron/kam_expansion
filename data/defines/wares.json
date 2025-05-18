@@ -319,6 +319,33 @@
 		],
 		"CoinPrice" : 0.3,
 		"MaxCountInStall" : 112
+	},  
+	{
+		"Name":"vtFurniture",
+		"TextID" : 2260, 
+		"IconID" : 945, 
+		"ProductionCountMin" : 1, 
+		"ProductionCountMax" : 1, 
+		"ProduceInHouses" : ["htSawmill", "htStoneWorkshop"],
+		"ProduceAfterWares" : [
+			{"Ware" : "wtTimber", "Min" : 1, "Cycles" : 40},
+			{"Ware" : "wtLog", "Min" : 1, "Cycles" : 40}
+		],
+		"CoinPrice" : 0.3,
+		"MaxCountInStall" : 112
+	},  
+	{
+		"Name":"vtSapling",
+		"TextID" : 2261, 
+		"IconID" : 945, 
+		"ProductionCountMin" : 1, 
+		"ProductionCountMax" : 1, 
+		"ProduceInHouses" : ["htWoodCutters"],
+		"ProduceAfterWares" : [
+			{"Ware" : "wtTrunk", "Min" : 1, "Cycles" : 20}
+		],
+		"CoinPrice" : 0.3,
+		"MaxCountInStall" : 112
 	}
   ],
   "VirtualWaresPalaceOrder" : [

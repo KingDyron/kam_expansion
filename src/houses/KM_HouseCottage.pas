@@ -22,6 +22,8 @@ type
     fKidTime, fKidTimeMax: TKMCardinalArray;
     fKidAge: array of TKMWorklessAge;
 
+    fFurnitures: Byte;//amount of taken furnitures 1 pic = 40 furnitures
+
     function GetStageDuration(aNewKidsCount : Byte) : Integer;
     function AddKid(aFamily, aTick : Cardinal; aFromScript : Boolean = false) : byte;
     procedure GrowKid(aIndex : Integer; aTick : Cardinal; aFromScript : Boolean = false);
@@ -148,7 +150,8 @@ procedure TKMHouseCottage.ProductionComplete(aTick : Cardinal);
 var I : Integer;
 begin
   Inc(fWorklessCount);
-
+  If fFurnitures > 0 then
+    fFurnitures := fFurnitures - 1;
   for I := 0 to high(fWorklessTime) do
     if fWorklessTime[I] = 99999999 then
     begin
@@ -216,6 +219,8 @@ begin
 
   Result := Result - 10 * fWorklessCount + KamRandom(50, 'TKMHouseCottage.GetKidDuration');
   Result := Round(Result * percante * KID_AGE_MULTIPLIER[aAge]);
+  If fFurnitures > 0 then
+    Result := Round(Result * 0.8);
 end;
 
 
@@ -315,6 +320,7 @@ begin
   else
   if HouseType = htHouse then
     fMaxCount := 20;
+  LoadStream.Read(fFurnitures);
 end;
 
 procedure TKMHouseCottage.Save(SaveStream: TKMemoryStream);
@@ -338,6 +344,7 @@ begin
   SaveStream.Write(nCount);
   for I := 0 to nCount - 1 do
   SaveStream.Write(fKidAge[I], SizeOf(fKidAge[I]));
+  SaveStream.Write(fFurnitures);
 
 end;
 
@@ -362,6 +369,10 @@ begin
       WareTakeFromIn(wtApple)
     else
       Exit;
+
+  If fFurnitures = 0 then
+    If gHands[Owner].VirtualWareTake('vtFurniture') then
+      fFurnitures := 40;
 
   Add;
   Inc(fProductionCycles[aFamily mod 3 + 1]);
