@@ -674,7 +674,7 @@ type
     utClubMan,      utMaceFighter,  utFlailFighter,  utShieldBearer,
     utFighter,      utSpikedTrap,   utWoodenWall,    utTorchMan,
     utMedic,        utBattleShip,   utBoat,          utPyro,
-    utLekter,
+    utLekter,       utMobileTower,
 
     utWolf,         utFish,         utWatersnake,    utSeastar,
     utCrab,         utWaterflower,  utWaterleaf,     utDuck,
@@ -695,13 +695,13 @@ const
   CITIZEN_MIN = utSerf;
   CITIZEN_MAX = utClayPicker;
   WARRIOR_MIN = utMilitia;
-  WARRIOR_MAX = utLekter;
+  WARRIOR_MAX = utMobileTower;
   WARRIOR_EQUIPABLE_BARRACKS_MIN = utMilitia; //Available from barracks
   WARRIOR_EQUIPABLE_BARRACKS_MAX = utKnight;
   WARRIOR_EQUIPABLE_TH_MIN = utBarbarian; //Available from Townhall
   WARRIOR_EQUIPABLE_TH_MAX =  utWarrior;
   HUMANS_MIN = utSerf;
-  HUMANS_MAX =  utLekter;
+  HUMANS_MAX =  utMobileTower;
   ANIMAL_MIN = utWolf;
   ANIMAL_MAX = utSpider;
   WARRIOR_BITIN_EQUIPABLE = [ utSwordFighter, utCrossbowman, utPikeman, utKnight, utCatapult, utShieldBearer,
@@ -791,7 +791,8 @@ const
     gtShips,
     gtShips,
     gtWreckers,
-    gtMelee
+    gtMelee,
+    gtMachines
     );
 
 type
@@ -923,9 +924,9 @@ type
   TKMRoadType = (rtNone, rtStone, rtWooden, rtClay, rtExclusive);
 
 Type
-  TKMGrainType = (gftNone, gftWheat, gftRye, gftOat, gftRice, gftCorn, gftSunflower, gftStrawBush,
-                    gftGrass, gftClover, gftLucerne,
-                    gftPumpkin, gftCarrots, gftCabbages, gftTomatos, gftPotatos,
+  TKMGrainType = (gftNone, gftWheat, gftRye, gftOat, gftRice, gftCorn, gftSunflower, gftStrawBush, gftCapvioli,
+                    gftGrass, gftClover, gftLucerne, gftReed,
+                    gftPumpkin, gftCarrots, gftCabbages, gftTomatos, gftPotatos, gftPalm,
                     gftWinePurple, gftWineWhite, gftWineBlack, gftWineRed, gftRaspberry, gftBlackberry,
                     gftWildRose, gftWildStrawberry, gftPomegranate, gftCactus, gftIceSticks, gftRandom);
   TKMGrainTypeSet = set of TKMGrainType;
@@ -935,34 +936,34 @@ const
   GRAIN_FARM_SET_NONE : TKMGrainFarmSet = (gftNone, gftNone, gftNone);
   ROAD_GUI_PIC : array[TKMRoadType] of Word = (0, 335, 822, 823, 824);
   GRAIN_GUI_PIC : array[TKMGrainType] of Word = (967,//None
-                                                825, 826, 827, 828, 829, 830, 931,//grain
-                                                832, 833, 834,//grass
-                                                831, 886, 887, 888, 889,//vege
+                                                825, 826, 827, 828, 829, 830, 931, 1034,//grain
+                                                832, 833, 834, 1036,//grass
+                                                831, 886, 887, 888, 889, 1035,//vege
                                                 981, 982, 983, 984, 985, 986, 987, 988, 989,//wine
                                                 926, 927,//wine
                                                 968);//random
 
   GRAIN_GUI_HINT : array[TKMGrainType] of Word = (2139,//none
-                                                2000, 2001, 2002, 2003, 2004, 2005, 2051,//grain
-                                                2007, 2008, 2009,//grass
-                                                2006, 2012, 2013, 2014, 2015,//vege
-                                                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,//wine
+                                                2000, 2001, 2002, 2003, 2004, 2005, 2051, 2262,//grain
+                                                2007, 2008, 2009, 2263,//grass
+                                                2006, 2012, 2013, 2014, 2015, 2264,//vege
+                                                2265, 2266, 2267, 2268, 2269, 2270, 2271, 2272, 2273, 2274, 2275,//wine
                                                 2140);//random
   GRAIN_GRAIN_MIN = gftWheat;
-  GRAIN_GRAIN_MAX = gftStrawBush;
+  GRAIN_GRAIN_MAX = gftCapvioli;
   GRAIN_GRASS_MIN = gftGrass;
-  GRAIN_GRASS_MAX = gftLucerne;
+  GRAIN_GRASS_MAX = gftReed;
   GRAIN_VEGE_MIN = gftPumpkin;
-  GRAIN_VEGE_MAX = gftPotatos;
+  GRAIN_VEGE_MAX = gftPalm;
   GRAIN_WINE_MIN = gftWinePurple;
   GRAIN_WINE_MAX = gftIceSticks;
   GRAIN_MIN = gftWheat;
   GRAIN_MAX = gftIceSticks;
   GRAIN_VALID = [GRAIN_MIN..GRAIN_MAX];
 
-  GRAIN_GUI_ORDER : array[0..8] of TKMGrainType = (gftWheat, gftRye, gftOat, gftStrawBush, gftRice, gftCorn, gftSunflower, gftRandom, gftNone);
-  GRASS_GUI_ORDER : array[0..4] of TKMGrainType = (gftGrass, gftClover, gftLucerne, gftRandom, gftNone);
-  VEGE_GUI_ORDER : array[0..6] of TKMGrainType = (gftPumpkin, gftCarrots, gftCabbages, gftTomatos, gftPotatos, gftRandom, gftNone);
+  GRAIN_GUI_ORDER : array[0..9] of TKMGrainType = (gftWheat, gftRye, gftOat, gftStrawBush, gftRice, gftCorn, gftSunflower, gftCapvioli, gftRandom, gftNone);
+  GRASS_GUI_ORDER : array[0..5] of TKMGrainType = (gftGrass, gftClover, gftLucerne, gftReed, gftRandom, gftNone);
+  VEGE_GUI_ORDER : array[0..7] of TKMGrainType = (gftPumpkin, gftCarrots, gftCabbages, gftTomatos, gftPotatos, gftPalm, gftRandom, gftNone);
 
   GRAIN_GRAIN : set of TKMGrainType = [GRAIN_GRAIN_MIN..GRAIN_GRAIN_MAX];
   GRAIN_WINE : set of TKMGrainType = [GRAIN_WINE_MIN..GRAIN_WINE_MAX];
@@ -1311,7 +1312,8 @@ const
     0,
     1, 2.4, 6, 6,
     0.5, 10, 10,
-    2, 2, 2, 2, 10, 10
+    2, 2, 2, 2, 10, 10,
+    10
   );
 
 const
