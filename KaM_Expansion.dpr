@@ -450,7 +450,9 @@ uses
   KM_GUIGameHouseCartographer in 'src\gui\pages_game\house\KM_GUIGameHouseCartographer.pas',
   KM_HousePearl in 'src\houses\KM_HousePearl.pas',
   KM_GUIGameHousePearl in 'src\gui\pages_game\house\KM_GUIGameHousePearl.pas',
-  KM_GUIMenuChangeLog in 'src\gui\pages_menu\KM_GUIMenuChangeLog.pas';
+  KM_GUIMenuChangeLog in 'src\gui\pages_menu\KM_GUIMenuChangeLog.pas',
+  KM_HouseForest in 'src\houses\KM_HouseForest.pas',
+  KM_HousePasture in 'src\houses\KM_HousePasture.pas';
 
 //KM_PerfLog in 'src\unused\KM_PerfLog.pas', //unused
 

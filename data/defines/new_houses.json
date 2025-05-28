@@ -4253,8 +4253,8 @@
 			"TextID" : 2278,
 			"DescriptionID" : 2170,
 			"MaxHealth" : 200,
-			"WoodPic" : 5,
-			"StonePic" : 5,
+			"WoodPic" : 2767,
+			"StonePic" : 2766,
 			"SnowPic" : 0,
 			"WoodCost" : 11,
 			"StoneCost" : 0,
@@ -4268,15 +4268,19 @@
 			"NeedsPlayerOrder" : False,
 			"BuildIcon" : 1000,
 			"TabletID" : 1001,
-			"MaxInWares" : 5,
+			"MaxInWares" : 2,
 			"MaxOutWares" : 50,
 			"CanForceWork" : False,
 			"UnoccupiedMsgId" : -1,
 			"CanOverfill" : False,
 			"GatheringScript" : "gsNone",
-			"WareInput" : ["wtCorn","wtSeed","wtHay","wtVegetables","wtWater"],
+			"WareInput" : ["wtCorn","wtSeed","wtHay","wtVegetables"],
 			"WareOutput" : ["wtPig","wtSkin","wtFeathers","wtEgg","wtNone","wtNone"],
 			"UnlockAfter" : ["htFarm"],
+			"SupplyIn1" : [2772,2773],
+			"SupplyIn2" : [2774,2776],
+			"SupplyIn3" : [2768,2769],
+			"SupplyIn4" : [2770,2771],
 			"ha_Fire1" : {"X" : -68,"Y" : -177,"Steps" : [1623,1624,1625,1620,1621,1622]},
 			"ha_Fire2" : {"X" : 0,"Y" : 0,"Steps" : [1637,1632,1633,1634,1635,1636]},
 			"ha_Fire3" : {"X" : -15,"Y" : -185,"Steps" : [1620,1621,1622,1623,1624,1625]},
@@ -4295,11 +4299,11 @@
 			"TilePileOffset" : {"X" : 70,"Y" : 25},
 			"Build_Area" : 
 			[
-				[0,0,0,0,0],
-				[1,2,1,1,0],
-				[1,1,1,1,0],
-				[1,1,1,1,0],
-				[1,1,2,1,0]
+				[1,1,1,1,1],
+				[1,1,1,1,1],
+				[1,1,1,1,1],
+				[1,1,1,1,1],
+				[1,1,2,1,1]
 			],
 			"Ground_Area" : 
 			[
@@ -4468,7 +4472,7 @@
 		{
 			"PearlType" : "ptValtaria",
 			"StagePics" : [2715, 2716, 2717, 2718, 2719, 2720],
-			"SnowPic" : 2714,
+			"SnowPic" : 2777,
 			"ProgressPerStage" : 7,
 			"Animations" : 
 			[
@@ -4528,7 +4532,7 @@
 		{
 			"PearlType" : "ptRalender",
 			"StagePics" : [2758, 2759, 2760, 2761, 2762, 2763, 2764, 2765],
-			"SnowPic" : 2714,
+			"SnowPic" : 2777,
 			"ProgressPerStage" : 5,
 			"Build Cost":
 			[

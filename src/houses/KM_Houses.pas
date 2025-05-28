@@ -252,6 +252,7 @@ type
 
     procedure MakeSound; virtual; //Swine/stables make extra sounds
     property Tick : Cardinal read fTick;
+    property SnowStep : Single read fSnowStep write fSnowStep;
 
   public
     //fWareIn, fWareBlocked: array[1..WARES_IN_OUT_COUNT] of Byte; // Ware count in input
@@ -459,6 +460,7 @@ type
     procedure UpdateDemands; virtual;
     procedure PostLoadMission; virtual;
     function ObjToString(const aSeparator: String = '|'): String; override;
+    procedure IncSnowStep;virtual;
     procedure IncAnimStep;
     procedure UpdateState(aTick: Cardinal); virtual;
     procedure Paint; virtual;
@@ -4244,10 +4246,25 @@ begin
 end;
 
 
-procedure TKMHouse.IncAnimStep;
+procedure TKMHouse.IncSnowStep;
 const
   //How much ticks it takes for a house to become completely covered in snow
   SNOW_TIME = 600;
+var
+  wasOnSnow: Boolean;
+begin
+  if (FlagAnimStep mod 10 = 0) and gGameParams.IsMapEditor then
+  begin
+    wasOnSnow := fIsOnSnow;
+    CheckOnSnow;
+    if not wasOnSnow or not fIsOnSnow then
+      fSnowStep := 0;
+  end;
+  if fIsOnSnow and (fSnowStep < 1) then
+    fSnowStep := Min(fSnowStep + (1 + Byte(gGameParams.IsMapEditor) * 10) / SNOW_TIME, 1);
+end;
+
+procedure TKMHouse.IncAnimStep;
 var
   I, K: Integer;
   wasOnSnow: Boolean;
@@ -4257,17 +4274,7 @@ begin
   WorkAnimStepPrev := WorkAnimStep;
   Inc(WorkAnimStep);
 
-  if (FlagAnimStep mod 10 = 0) and gGameParams.IsMapEditor then
-  begin
-    wasOnSnow := fIsOnSnow;
-    CheckOnSnow;
-    if not wasOnSnow or not fIsOnSnow then
-      fSnowStep := 0;
-  end;
-
-  if fIsOnSnow and (fSnowStep < 1) then
-    fSnowStep := Min(fSnowStep + (1 + Byte(gGameParams.IsMapEditor) * 10) / SNOW_TIME, 1);
-
+  IncSnowStep;
   //FlagAnimStep is a sort of counter to reveal terrain once a sec
   if gGameParams.DynamicFOW and (FlagAnimStep mod FOW_PACE = 0) then
   begin

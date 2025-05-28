@@ -5370,6 +5370,34 @@
 			"dirNW" : {"X" : 0,"Y" : 0,"Steps" : [396,397,398,399,400,401,402,403]}
 		}
 	],
+	"PastureAnimals":[
+		{
+			"AnimalType" : "patCow",
+			"Skin" : 1.3,
+			"Meat" : 0.8,
+			"Age" : 2000,
+			"KillAge" : 30000,
+			"Size" : 0.3,
+			"Colors" : [[$FFFFFFFF, $FFFFFF00], [$FFFFFFFF, $FFFFFF00], [$FFFFFFFF, $FFFFFF00]],
+			"LyingAnim" : {"Start" : 15487, "Count1" : 12, "Count2" : 4 },
+			"paaWalk" : {"Start" : 15359, "Count" : 16},
+			"paaEat" : {"Start" : 15663, "Count" : 3},
+			"paaWatch" : {"Start" : 15615, "Count" : 6}
+		},
+		{
+			"AnimalType" : "patGoose",
+			"Feathers" : 0.3,
+			"Eggs" : 0.2,
+			"Meat" : 0.1,
+			"Age" : 1200,
+			"Size" : 0.1,
+			"KillAge" : 15000,
+			"LyingAnim" : {"Start" : 15928, "Count1" : 7, "Count2" : 1},
+			"paaWalk" : {"Start" : 15687, "Count" : 8},
+			"paaEat" : {"Start" : 15904, "Count" : 3},
+			"paaWatch" : {"Start" : 15752, "Count" : 19, "NoBackwardAnim" : true}
+		}
+	],
 	"School Order" : ["utSerf","utBuilder","utStonemason","utWoodcutter","utCarpenter","utClayPicker","utFisher","utFarmer","utBaker","utAnimalBreeder","utButcher","utMiner","utMetallurgist","utSmith","utOperator","utRecruit"],
 	"Barracks Order" : ["utFighter","utMilitia","utAxeFighter","utSwordFighter","utBowman","utCrossbowman","utLanceCarrier","utPikeman","utMaceFighter","utFlailFighter","utScout","utKnight"],
 	"Townhall Order" : ["utFighter","utRebel","utRogue","utClubMan","utVagabond","utShieldBearer","utBarbarian","utWarrior"],

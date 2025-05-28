@@ -234,6 +234,7 @@ type
   function KMLength(const A, B: TKMPointF): Single; overload;
   function KMLengthDiag(X, Y: Integer): Single; overload;
   function KMLengthDiag(const A, B: TKMPoint): Single; overload;
+  function KMLengthDiag(const A, B: TKMPointF): Single; overload;
   function KMLengthDiag(X,Y: Integer; const B: TKMPoint): Single; overload;
   function KMLengthSqr(const A, B: TKMPoint): Integer; overload;
   function KMLengthSqr(const X1, Y1, X2, Y2: Integer): Integer; overload;
@@ -1365,6 +1366,19 @@ end;
 function KMLengthDiag(const A, B: TKMPoint): Single;
 var
   absX, absY: Integer;
+begin
+  absX := Abs(A.X - B.X);
+  absY := Abs(A.Y - B.Y);
+  if absX > absY then
+    Result := absX + absY * 0.41
+  else
+    Result := absY + absX * 0.41;
+end;
+
+//Rough and faster Length as combination of straight and diagonal
+function KMLengthDiag(const A, B: TKMPointF): Single;
+var
+  absX, absY: Single;
 begin
   absX := Abs(A.X - B.X);
   absY := Abs(A.Y - B.Y);
