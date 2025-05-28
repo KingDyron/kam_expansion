@@ -432,6 +432,10 @@ type
 
   TKMBridgeTileRect = array of array of TKMBridgeTile;
 
+type
+  TKMPastureAnimalType = (patNone, patCow, patGoose);
+   TKMPastureAnimalAction = (paaWalk, paaEat, paaWatch, paaLayDown, paaLying, paaStandUp);
+
 const
   {$I KM_TextIDs.inc}
 

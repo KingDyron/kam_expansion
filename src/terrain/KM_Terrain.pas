@@ -8177,7 +8177,7 @@ procedure TKMTerrain.UpdateFences(const aLoc: TKMPoint; aCheckSurrounding: Boole
   begin
     H := TKMHouse(House(aLoc));
     Result := fncNone;
-    if not fLoading and Assigned(H) then //fruit tree has it's own fences
+    if not fLoading and Assigned(H) and (H.HouseType in [htAppleTree, htPasture, htForest]) then //fruit tree has it's own fences
     begin
       case H.HouseType of
         htAppleTree : Result := fncAppleTree;

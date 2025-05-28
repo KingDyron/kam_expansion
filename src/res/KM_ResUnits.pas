@@ -40,6 +40,17 @@ type
 
   TKMUnitSprite2 = array [1..18] of SmallInt; //Sound indices vs sprite ID
 
+  TKMPasAnimalSpec = record
+    Feathers,
+    Eggs,
+    Meat,
+    Skin : Single;
+    Age, KillAge : Word;//how much time it needs to get wares
+    Size : Single;
+    Colors : array of array[0..1] of Cardinal;
+    Anim : array[TKMPastureAnimalAction, dirN..dirNW] of TKMAnimation;
+  end;
+
   TKMUnitSpec = class
   private
     fUnitType: TKMUnitType;
@@ -160,6 +171,7 @@ type
     RageAnim,
     Explosion,
     Thought : TKMAnimation;
+    PastureAnimals: array[TKMPastureAnimalType] of TKMPasAnimalSpec;//Anim : array[TKMPastureAnimalType, TKMPastureAnimalAction, dirN..dirNW] of TKMAnimation;
     constructor Create;
     destructor Destroy; override;
 
@@ -175,6 +187,10 @@ type
     procedure LoadCustomData(aLoadStream: TKMemoryStream);
     function LoadFromJson(aPath : String) : Cardinal;
     Procedure ReloadJSONData(UpdateCRC: Boolean);
+  end;
+
+  TKMPastureAnimalTypeHelper = record helper for TKMPastureAnimalType
+    function Spec : TKMPasAnimalSpec;
   end;
 
 const
@@ -1554,6 +1570,7 @@ begin
 end;
 
 function TKMResUnits.LoadFromJson(aPath: string) : Cardinal;
+  const WATCH_DURATION = 10;
 
   function UnitTypeArray(arr : TJsonArray; out aUnits : TKMUnitTypeArray) : Boolean;
   var I : Integer;
@@ -1573,13 +1590,106 @@ function TKMResUnits.LoadFromJson(aPath: string) : Cardinal;
     Result := Length(tmp) > 0;
   end;
 
-var I : Integer;
+  procedure AnimalLayDownAnim(aAnimal : TKMPastureAnimalType; aStart, aCount, aLyingCount : Integer);
+  var fulC, I, K : Integer;
+    dir : TKMDirection;
+    steps : TKMWordArray;
+  begin
+    fulC := aCount + aLyingCount;
+    I := 0;
+    for dir := dirN to dirNW do
+    begin
+      PastureAnimals[aAnimal].Anim[paaLayDown, dir].Create(0, 0, aStart + I * fulC, aCount, 0, false);
+      PastureAnimals[aAnimal].Anim[paaStandUp, dir].Create(0, 0, aStart + I * fulC, aCount, 0, true);
+      //create lying animation
+      SetLength(steps, aLyingCount * 2 + WATCH_DURATION * 2);
+      //look to left
+      for K := 0 to WATCH_DURATION - 1 do
+        steps[K] := aStart + I * fulC + aCount;
+      //move head to right
+      for K := 0 to aLyingCount - 1 do
+        steps[K + WATCH_DURATION] := aStart + I * fulC + aCount + K;
+      //look to right
+      for K := 0 to WATCH_DURATION - 1 do
+        steps[K + WATCH_DURATION + aLyingCount] := aStart + I * fulC + aCount + (aLyingCount - 1);
+      for K := 0 to aLyingCount - 1 do
+        steps[K + WATCH_DURATION + aLyingCount + WATCH_DURATION] := aStart + I * fulC + aCount + (aLyingCount - 1) - K;
+
+      PastureAnimals[aAnimal].Anim[paaLying, dir].Create(0, 0, steps);
+      //PastureAnimalsAnim[aAnimal, paaStandUp, dir].Create(0, 0, aStart + I * fulC, aCount, 0, false);
+      //PastureAnimalsAnim : array[TKMPastureAnimalType, TKMPastureAnimalAction, dirN..dirNW] of TKMAnimation;
+      inc(I);
+    end;
+
+  end;
+
+  procedure AnimalAnimation(aAnimal : TKMPastureAnimalType; aAction : TKMPastureAnimalAction; aStart, aCount : Integer);
+  var dir : TKMDirection;
+  begin
+    for dir := dirN to dirNW do
+    begin
+      PastureAnimals[aAnimal].Anim[aAction, dir].Create(0, 0, aStart + (byte(dir) - 1) * aCount, aCount);
+    end;
+  end;
+
+  procedure AnimalEatAnimation(aAnimal : TKMPastureAnimalType; aAction : TKMPastureAnimalAction; aStart, aCount : Integer);
+  var dir : TKMDirection;
+    steps : TKMWordArray;
+    K, I : Integer;
+  begin
+    I := 0;
+    for dir := dirN to dirNW do
+    begin
+      SetLength(steps, aCount * 2);
+      for K := 0 to aCount - 1 do
+      begin
+        steps[K] := aStart + K + aCount * I;
+        steps[K + aCount] := aStart + (aCount - 1) - K + aCount * I;
+      end;
+      PastureAnimals[aAnimal].Anim[aAction, dir].Create(0, 0, steps);
+      Inc(I);
+    end;
+
+  end;
+  procedure AnimalWatchAnimation(aAnimal : TKMPastureAnimalType; aAction : TKMPastureAnimalAction; aStart, aCount : Integer; aBackward : Boolean);
+  var dir : TKMDirection;
+    steps : TKMWordArray;
+    K, I : Integer;
+  begin
+    I := 0;
+    for dir := dirN to dirNW do
+    begin
+      SetLength(steps, aCount * (1 + byte(aBackward)) + WATCH_DURATION * 2);
+      for K := 0 to WATCH_DURATION - 1 do
+      begin
+        //look to left
+        steps[K] := aStart + I * aCount;
+        //look to right
+        steps[K + WATCH_DURATION + aCount] := aStart + I * aCount + (aCount - 1);
+      end;
+
+      for K := 0 to aCount - 1 do
+      begin
+        //turn to right
+        steps[K + WATCH_DURATION] := aStart + I * aCount + K;
+        If aBackward then
+        steps[K + WATCH_DURATION + aCount + WATCH_DURATION] := aStart + I * aCount + (aCount - 1) - K;
+      end;
+      PastureAnimals[aAnimal].Anim[aAction, dir].Create(0, 0, steps);
+      Inc(I);
+    end;
+
+  end;
+
+var I, K : Integer;
   nArr: TJsonArray;
-  nRoot, nAnim : TKMJson;
+  nRoot, nAnim, nAnim2 : TKMJson;
   UT : TKMUnitType;
   WT : TKMWareType;
   dir : TKMDirection;
-  S : String;
+  S, S2 : String;
+  PA : TKMPastureAnimalType;
+  PAA: TKMPastureAnimalAction;
   //tmp : TKMUnitTypeArray;
 begin
   if not FileExists(aPath) then
@@ -1611,9 +1721,65 @@ begin
         raise Exception.Create('Wrong TKMDirection');
       nAnim.GetAnim(S, fSerfCarryNew[WT, dir]);
     end;
+  end;
+
+  nArr := nRoot.A['PastureAnimals'];
+  for I := 0 to nArr.Count - 1 do
+  begin
+    nAnim := nArr.O[I];
+    if not TKMEnumUtils.TryGetAs<TKMPastureAnimalType>(nArr.O[I].S['AnimalType'],  PA) then
+      raise Exception.Create('Wrong pasture AnimalType');
+
+    with PastureAnimals[PA] do
+    begin
+      Feathers := nAnim.D['Feathers'];
+      Meat := nAnim.D['Meat'];
+      Skin := nAnim.D['Skin'];
+      Eggs := nAnim.D['Eggs'];
+      Size := nAnim.D['Size'];
+
+      If nAnim.Contains('Colors') then
+        with nAnim.A['Colors'] do
+        begin
+          SetLength(Colors, Count);
+
+          for K := 0 to Count - 1 do
+          begin
+            Colors[K, 0] := A[K].L[0];
+            Colors[K, 1] := A[K].L[1];
+          end;
+        end;
+
+      Age := nAnim.I['Age'];
+      KillAge := nAnim.I['KillAge'];
+    end;
+    If nAnim.Contains('LyingAnim') then
+    begin
+      nAnim2 := nAnim.O['LyingAnim'];
+      AnimalLayDownAnim(PA, nAnim2.I['Start'], nAnim2.I['Count1'], nAnim2.I['Count2']);
+    end;
+
+    for PAA := Low(TKMPastureAnimalAction) to High(TKMPastureAnimalAction) do
+    begin
+      if not TKMEnumUtils.GetName<TKMPastureAnimalAction>(PAA,  S2) then
+        raise Exception.Create('Wrong TKMPastureAnimalAction');
+      If not nAnim.Contains(S2) then
+        Continue;
+      nAnim2 := nAnim.O[S2];
+      if PAA = paaWatch then
+        AnimalWatchAnimation(PA, PAA, nAnim2.I['Start'], nAnim2.I['Count'], not nAnim2.B['NoBackwardAnim'] )
+      else
+      If PAA = paaEat then
+        AnimalEatAnimation(PA, PAA, nAnim2.I['Start'], nAnim2.I['Count'])
+      else
+        AnimalAnimation(PA, PAA, nAnim2.I['Start'], nAnim2.I['Count']);
+    end;
+
 
 
   end;
+
+
 
   //townhall
   nRoot.GetArray('Townhall Order', TH_GAME_ORDER);
@@ -1726,4 +1892,8 @@ begin
 
 end;
 
+function TKMPastureAnimalTypeHelper.Spec: TKMPasAnimalSpec;
+begin
+  Result := gRes.Units.PastureAnimals[self];
+end;
 end.

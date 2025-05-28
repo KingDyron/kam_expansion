@@ -335,6 +335,7 @@ const
   WALL_HOUSES : TKMHouseTypeSet = [ htWall, htWall2, htWall3, htWall4, htWall5];
   IGNORE_HOUSE_BLOCK : TKMHouseTypeSet = [htWall..htWall5, htAppleTree];
 
+  PEARL_ICONS: array[TKMPearlType] of Word = (0, 1006, 1007, 1008, 1009);
 Var
   HOUSE_GUI_TAB_ORDER : array of record
     TextID, GuiIcon : Word;
