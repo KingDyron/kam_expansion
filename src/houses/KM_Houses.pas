@@ -253,6 +253,7 @@ type
     procedure MakeSound; virtual; //Swine/stables make extra sounds
     property Tick : Cardinal read fTick;
     property SnowStep : Single read fSnowStep write fSnowStep;
+    property IsOnSnow : Boolean read fIsOnSnow write fIsOnSnow;
 
   public
     //fWareIn, fWareBlocked: array[1..WARES_IN_OUT_COUNT] of Byte; // Ware count in input

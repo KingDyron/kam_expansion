@@ -26,6 +26,7 @@ type
     fDoRally : Boolean;
     fResFrom, fResTo, fRResTo : TKMWareType;
     fVResTo : Byte;
+    fSnowStepPearl : Single;
     function PearlCenter : TKMPoint;
     Procedure SetBuildCost;
     procedure MakeRally;
@@ -51,7 +52,7 @@ type
     procedure UpdateState(aTick: Cardinal); override;
     procedure Paint; override;
     //overriden
-    procedure IncSnowStep;override;
+    procedure IncSnowStepPearl;
     procedure WareAddToIn(aWare: TKMWareType; aCount: Integer = 1; aFromStaticScript: Boolean = False); override;
     function CanHasWorker(aType : TKMUnitType) : Boolean; override;
     procedure Demolish(aFrom: TKMHandID; IsSilent: Boolean = False); override;
@@ -115,7 +116,7 @@ type
 implementation
 uses
   Classes,
-  KM_Game,
+  KM_Game, KM_GameParams,
   KM_CommonUtils,
   KM_HandsCollection, KM_Hand, KM_HandTypes, KM_HandEntity,
   KM_HouseHelpers,
@@ -166,6 +167,7 @@ begin
   LoadStream.ReadData(fReloadTime);
   LoadStream.ReadData(fMaxReloadTime);
   LoadStream.ReadData(fWorkingTime);
+  LoadStream.ReadData(fSnowStepPearl);
 end;
 
 procedure TKMHousePearl.Save(SaveStream: TKMemoryStream);
@@ -187,6 +189,7 @@ begin
   SaveStream.Write(fReloadTime);
   SaveStream.Write(fMaxReloadTime);
   SaveStream.Write(fWorkingTime);
+  SaveStream.Write(fSnowStepPearl);
 end;
 
 destructor TKMHousePearl.Destroy;
@@ -200,6 +203,7 @@ begin
   If Completed then
     IF fPearlType <> ptNone then
     begin
+      IncSnowStepPearl;
       If aTick mod 100 = 0 then
         MakeAuraEffect;
       If fPearlType = ptRalender then
@@ -229,7 +233,7 @@ begin
   IF fPearlType <> ptNone then
   begin
     If Completed then
-      gRenderPool.AddHousePearl(fPearlType, fPosition, fBuildStage, 1, 1, SnowStep, gHands[Owner].FlagColor, false)
+      gRenderPool.AddHousePearl(fPearlType, fPosition, fBuildStage, 1, 1, fSnowStepPearl, gHands[Owner].FlagColor, false)
     else
     If Confirmed then
     begin
@@ -244,13 +248,18 @@ end;
 
 
 //overriden
-procedure TKMHousePearl.IncSnowStep;
+procedure TKMHousePearl.IncSnowStepPearl;
+const
+  //How much ticks it takes for a house to become completely covered in snow
+  SNOW_TIME = 1200;
 begin
-  If Completed then
-    Inherited
-  else
-    SnowStep := 0;
+  If not Completed then
+    Exit;
+
+  if IsOnSnow and (fSnowStepPearl < 1) then
+    fSnowStepPearl := Min(fSnowStepPearl + (1 + Byte(gGameParams.IsMapEditor) * 10) / SNOW_TIME, 1);
 end;
+
 procedure TKMHousePearl.WareAddToIn(aWare: TKMWareType; aCount: Integer = 1; aFromStaticScript: Boolean = False);
 var I : Integer;
 begin
