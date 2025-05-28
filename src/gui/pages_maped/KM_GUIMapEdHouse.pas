@@ -21,6 +21,7 @@ type
     procedure Create_TownHall;
     procedure Create_Woodcutters;
     procedure Create_Sign(aParent: TKMPanel);
+    procedure Create_Pearl;
 
     procedure HouseChange(Sender: TObject; aValue: Integer);
     procedure HouseHealthChange(Sender: TObject; Shift: TShiftState);
@@ -67,6 +68,11 @@ type
     procedure Panel_HouseBuildWaresChange(Sender : TObject; aCount : Integer);
     procedure ColorCodeChange(Sender : TObject);
     procedure Panel_FarmChange(Sender : TObject; Shift: TShiftState);
+
+    procedure Pearl_Change(Sender : TObject);
+    procedure Pearl_ChangeShift(Sender : TObject; Shift: TShiftState);
+    procedure Pearl_ChangeWares(Sender : TObject; X: Integer);
+    procedure Pearl_Refresh;
   protected
     Panel_HouseAdditional: TKMPanel;
       Button_HouseForceWork : TKMButton;
@@ -141,6 +147,14 @@ type
       Bevel_HouseSignBehind : TKMBevel;
       Image_HouseSignClose: TKMImage;
 
+    Panel_HousePearl : TKMPanel;
+      Button_PearlType : TKMButtonFlat;
+      Bar_Stage : TKMPercentBar;
+      Button_Stage_Inc, Button_Stage_Dec : TKMButton;
+      WaresRow_Stage_Delivered : TKMWareOrderRow;
+      Bar_Stage_Progreess : TKMPercentBar;
+      Button_Progress_Inc, Button_Progress_Dec : TKMButton;
+
     Button_PlayerSelect: array [0..MAX_HANDS-1] of TKMFlatButtonShape;//select player in merchant's house
   public
     constructor Create(aParent: TKMPanel);
@@ -163,6 +177,7 @@ uses
   KM_HandsCollection, KM_HandTypes, KM_HandEntity,
   KM_ResTexts, KM_Resource, KM_RenderUI, KM_ResUnits,
   KM_HouseBarracks, KM_HouseTownHall, KM_HouseStore,
+  KM_HousePearl,
   KM_ResFonts, KM_ResTypes,
   KM_Cursor, KM_UtilsExt, KM_CommonUtils,
    KM_Game, KM_MainSettings;
@@ -182,6 +197,7 @@ begin
   Create_TownHall;
   Create_Woodcutters;
   Create_Sign(aParent);
+  Create_Pearl;
 end;
 
 
@@ -546,6 +562,29 @@ begin
     Button_Woodcutters_CuttingPoint.OnClick := SetRallyPointClick;
 end;
 
+procedure TKMMapEdHouse.Create_Pearl;
+var top : Integer;
+begin
+  Panel_HousePearl := TKMPanel.Create(Panel_House,0,85 + 40,Panel_House.Width - 10,400);
+    Button_PearlType := TKMButtonFlat.Create(Panel_HousePearl, 0, 0, Panel_HousePearl.Width, 40, 0, rxGui);
+    Button_PearlType.OnClick :=  Pearl_Change;
+    top := Button_PearlType.Bottom + 5;
+    Button_Stage_Dec := TKMButton.Create(Panel_HousePearl, 0, top, 20, 20, '-', bsGame);
+    Bar_Stage := TKMPercentBar.Create(Panel_HousePearl, 20, top, Panel_HousePearl.Width - 40, 20);
+    Button_Stage_Inc := TKMButton.Create(Panel_HousePearl, Panel_HousePearl.Width - 20, top, 20, 20, '+', bsGame);
+    Button_Stage_Dec.OnClickShift := Pearl_ChangeShift;
+    Button_Stage_Inc.OnClickShift := Pearl_ChangeShift;
+    inc(top, 25);
+    WaresRow_Stage_Delivered := TKMWareOrderRow.Create(Panel_HousePearl, 0, top, Panel_HousePearl.Width);
+    WaresRow_Stage_Delivered.OnChange := Pearl_ChangeWares;
+
+    inc(top, 25);
+    Button_Progress_Dec := TKMButton.Create(Panel_HousePearl, 0, top, 20, 20, '-', bsGame);
+    Bar_Stage_Progreess := TKMPercentBar.Create(Panel_HousePearl, 20, top, Panel_HousePearl.Width - 40, 20);
+    Button_Progress_Inc := TKMButton.Create(Panel_HousePearl, Panel_HousePearl.Width - 20, top, 20, 20, '+', bsGame);
+    Button_Progress_Dec.OnClickShift := Pearl_ChangeShift;
+    Button_Progress_Inc.OnClickShift := Pearl_ChangeShift;
+end;
 
 {Barracks page}
 procedure TKMMapEdHouse.Create_Barracks;
@@ -1054,6 +1093,10 @@ begin
                     end;
     htMerchant:     begin
                       MerchantChange(nil);
+                    end;
+    htPearl:        begin
+                      Panel_HousePearl.Show;
+                      Pearl_Refresh;
                     end;
   else
     Panel_HouseWoodcutters.Hide;
@@ -1716,6 +1759,148 @@ begin
     IncLoop(C, -1, maxW);
   fHouse.PicWariant := C;
   Button_HouseWariant.Caption := IntToStr(fHouse.PicWariant + 1);
+end;
+
+procedure TKMMapEdHouse.Pearl_Change(Sender : TObject);
+var PL : TKMHousePearl;
+  pt, stage, progress : Word;
+begin
+  PL := TKMHousePearl(fHouse);
+  stage := PL.BuildStage;
+  progress := PL.StageProgress;
+  If Sender = Button_PearlType then
+  begin
+    pt := byte(PL.PearlType);
+
+    IncLoop(pt, 0, byte(high(TKMPearlType)) );
+    PL.SelectType(TKMPearlType(pt));
+  end else
+  If PL.PearlType <> ptNone then
+  begin
+
+    If Sender = Button_Stage_Inc then
+    begin
+      stage := PL.BuildStage + 1;
+    end else
+    If Sender = Button_Stage_Dec then
+    begin
+      stage := Max(PL.BuildStage - 1, 0);
+    end else
+    If Sender = Button_Progress_Inc then
+    begin
+      progress := progress + gRes.Houses.Pearls[PL.PearlType].ProgressPerStage;
+    end else
+    If Sender = Button_Progress_Dec then
+    begin
+      progress := Max(progress - gRes.Houses.Pearls[PL.PearlType].ProgressPerStage, 0);
+    end;
+
+  end;
+  PL.SetStage(stage);
+  PL.SetStageProgress(progress);
+
+  Pearl_Refresh;
+end;
+
+procedure TKMMapEdHouse.Pearl_ChangeShift(Sender: TObject; Shift: TShiftState);
+var PL : TKMHousePearl;
+  pt, stage, progress, I : Word;
+begin
+  PL := TKMHousePearl(fHouse);
+  stage := PL.BuildStage;
+  progress := PL.StageProgress;
+  I := 1;
+  If ssRight in Shift then I := I * 2;
+  If ssShift in Shift  then I := I * 2;
+  If ssCtrl in Shift  then I := I * 2;
+  If ssAlt in Shift  then I := I * 2;
+
+  If PL.PearlType <> ptNone then
+  begin
+
+    If Sender = Button_Stage_Inc then
+    begin
+      stage := PL.BuildStage + I;
+    end else
+    If Sender = Button_Stage_Dec then
+    begin
+      stage := Max(PL.BuildStage - I, 0);
+    end else
+    If Sender = Button_Progress_Inc then
+    begin
+      progress := progress + gRes.Houses.Pearls[PL.PearlType].ProgressPerStage * I;
+    end else
+    If Sender = Button_Progress_Dec then
+    begin
+      progress := Max(progress - gRes.Houses.Pearls[PL.PearlType].ProgressPerStage * I, 0);
+    end;
+  end;
+
+  PL.SetStage(stage);
+  PL.SetStageProgress(progress);
+
+  Pearl_Refresh;
+end;
+
+procedure TKMMapEdHouse.Pearl_ChangeWares(Sender : TObject; X: Integer);
+var PL : TKMHousePearl;
+  I, S : Integer;
+begin
+  PL := TKMHousePearl(fHouse);
+  S := PL.BuildStage;
+  If S < gRes.Houses.Pearls[PL.PearlType].StageCount then
+  begin
+    I := PL.Delivered[S].C + X;
+    PL.Delivered[S].C := EnsureRange(I, 0, PL.BuildCost[S].C) ;
+  end;
+  Pearl_Refresh;
+end;
+
+procedure TKMMapEdHouse.Pearl_Refresh;
+var PL : TKMHousePearl;
+  maxStage : Byte;
+begin
+  PL := TKMHousePearl(fHouse);
+
+  Button_PearlType.TexID := PEARL_ICONS[PL.PearlType];
+
+  case PL.PearlType of
+    ptValtaria : Button_PearlType.BackBevelColor := $FF00CC30 and $55FFFFFF;
+    ptArium : Button_PearlType.BackBevelColor := $FF9999FF and $55FFFFFF;
+    ptAgros : Button_PearlType.BackBevelColor := $FF99FFB1 and $55FFFFFF;
+    ptRalender : Button_PearlType.BackBevelColor:= $FFFF33F3 and $55FFFFFF;
+    else Button_PearlType.BackBevelColor := $FFFFFFFF and $55FFFFFF;
+  end;
+  maxStage := gRes.Houses.Pearls[PL.PearlType].StageCount;
+  Button_Stage_Inc.Enabled := PL.BuildStage < maxStage;
+  Button_Stage_Dec.Enabled := PL.BuildStage > 0;
+  Button_Progress_Inc.Enabled := (PL.BuildStage < maxStage) and (PL.StageProgress < PL.MaxProgress);
+  Button_Progress_Dec.Enabled := (PL.BuildStage < maxStage) and (PL.StageProgress > 0);
+
+  Bar_Stage.LinesCount := Max(maxStage - 1, 0);
+  Bar_Stage.Position := 0;
+  Bar_Stage_Progreess.Position := 0;
+  Bar_Stage_Progreess.Caption := '';
+  WaresRow_Stage_Delivered.Disable;
+  If maxStage > 0 then
+  begin
+    Bar_Stage.Position := PL.BuildStage / maxStage;
+    If PL.BuildStage < maxStage then
+    begin
+      WaresRow_Stage_Delivered.Enable;
+      WaresRow_Stage_Delivered.WareRow.TexID := gRes.Wares[PL.BuildCost[PL.BuildStage].W].GuiIcon;
+      WaresRow_Stage_Delivered.OrderCntMax := PL.BuildCost[PL.BuildStage].C;
+      WaresRow_Stage_Delivered.OrderCount := PL.Delivered[PL.BuildStage].C;
+      WaresRow_Stage_Delivered.WareRow.WareCntAsNumber := true;
+      WaresRow_Stage_Delivered.WareRow.WareCount := PL.Delivered[PL.BuildStage].C;
+      Bar_Stage_Progreess.Position := PL.Progress;
+      Bar_Stage_Progreess.Caption := PL.StageProgress.ToString + ' / ' + PL.MaxProgress.ToString;
+    end;
+  end;
+  {Button_PearlType : TKMButtonFlat;
+  Bar_Stage_Progreess : TKMPercentBar;
+  Button_Stage_Inc, Button_Stage_Dec : TKMButton;
+  WaresRow_Stage_Delivered : TKMWareOrderRow;}
 end;
 
 end.

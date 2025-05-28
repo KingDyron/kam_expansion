@@ -117,7 +117,12 @@ type
     ctSetHouseIndestructible,
     ctSetUnitImmortal,
     ctSetFarmGrainType,
-    ctSetHouseWariant
+    ctSetHouseWariant,
+    ctSetPearlType,
+    ctSetPearlStage,
+    ctSetPearlProgress,
+    ctSetPearlWares,
+    ctSetPearlConfirmBuild
     );
 
 const
@@ -225,7 +230,12 @@ const
     'SET_HOUSE_INDESTRUCTIBLE',
     'SET_UNIT_IMMORTAL',
     'SET_FARM_GRAIN_TYPE',
-    'SET_HOUSE_WARIANT'
+    'SET_HOUSE_WARIANT',
+    'SET_PEARL_TYPE',
+    'SET_PEARL_STAGE',
+    'SET_PEARL_PROGRESS',
+    'SET_PEARL_WARE',
+    'SET_PEARL_CONFIRM_BUILD'
     );
 type
   TKMMissionParserCommon = class

@@ -81,14 +81,13 @@ uses
   KM_Game, KM_GameInputProcess,
   KM_RenderUI,
   KM_AITypes,
-  KM_Resource, KM_ResTexts, KM_ResFonts, KM_ResUnits,
+  KM_Resource, KM_ResTexts, KM_ResFonts, KM_ResUnits, KM_ResHouses,
   KM_Cursor,
   KM_HandsCollection, KM_HandTypes, KM_HandEntity, KM_Hand,
   KM_UtilsExt,
 
   KM_GUIGameHouse;
 
-const PEARL_ICONS: array[TKMPearlType] of Word = (0, 1006, 1007, 1008, 1009);
 
 constructor TKMGuiGamePearl.Create(aParent: TKMPanel);
 var PT : TKMPearlType;

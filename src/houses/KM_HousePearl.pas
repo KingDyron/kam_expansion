@@ -51,6 +51,7 @@ type
     procedure UpdateState(aTick: Cardinal); override;
     procedure Paint; override;
     //overriden
+    procedure IncSnowStep;override;
     procedure WareAddToIn(aWare: TKMWareType; aCount: Integer = 1; aFromStaticScript: Boolean = False); override;
     function CanHasWorker(aType : TKMUnitType) : Boolean; override;
     procedure Demolish(aFrom: TKMHandID; IsSilent: Boolean = False); override;
@@ -98,6 +99,16 @@ type
 
     procedure DoUseSpecial;
     procedure DoExchange(aCount : Byte);
+
+    //map editor
+    procedure SetStage(aStage : Integer);
+    procedure SetStageProgress(aProgress : Word);
+    procedure MapEdConfirm;
+    procedure SetWaresCount(aCount : Integer);
+    function BuildStage : Byte;
+    property StageProgress : Word read fProgress;
+    property MaxProgress : Word read fMaxProgress;
+    function WaresDeliveredCount : Word;
 
   end;
 
@@ -218,7 +229,7 @@ begin
   IF fPearlType <> ptNone then
   begin
     If Completed then
-      gRenderPool.AddHousePearl(fPearlType, fPosition, fBuildStage, 1, 1, 0, gHands[Owner].FlagColor, false)
+      gRenderPool.AddHousePearl(fPearlType, fPosition, fBuildStage, 1, 1, SnowStep, gHands[Owner].FlagColor, false)
     else
     If Confirmed then
     begin
@@ -233,6 +244,13 @@ end;
 
 
 //overriden
+procedure TKMHousePearl.IncSnowStep;
+begin
+  If Completed then
+    Inherited
+  else
+    SnowStep := 0;
+end;
 procedure TKMHousePearl.WareAddToIn(aWare: TKMWareType; aCount: Integer = 1; aFromStaticScript: Boolean = False);
 var I : Integer;
 begin
@@ -327,7 +345,7 @@ end;
 
 procedure TKMHousePearl.SelectType(aType: TKMPearlType);
 begin
-  If fConfirmed then
+  If fConfirmed and not gGame.Params.IsMapEditor then
     Exit;
   fPearlType := aType;
   SetBuildCost;
@@ -821,5 +839,88 @@ begin
   end;
 end;
 
+//map editor
+procedure TKMHousePearl.SetStage(aStage : Integer);
+var maxStage : Byte;
+begin
+  maxStage := gRes.Houses.Pearls[fPearlType].StageCount;
+  fBuildStage := EnsureRange(aStage, 0, maxStage);
+  fProgress := 0;
+  fConfirmed := false;
+  If maxStage > 0 then
+  begin
+    fConfirmed := true;
+    fIsCompleted := false;
+    if fBuildStage = maxStage then
+    begin
+      fIsCompleted := true;
+    end else
+    If fBuildStage < maxStage then
+      fMaxProgress := gRes.Houses.Pearls[fPearlType].ProgressPerStage * fBuildCost[fBuildStage].C;
+  end;
+end;
+
+procedure TKMHousePearl.SetStageProgress(aProgress : Word);
+var maxProg : Integer;
+begin
+  If fBuildStage = gRes.Houses.Pearls[fPearlType].StageCount then
+  begin
+    fProgress:= 0;
+    Exit;
+  end;
+  maxProg := Min(fMaxProgress, gRes.Houses.Pearls[fPearlType].ProgressPerStage * fDelivered[fBuildStage].C);
+  fProgress := EnsureRange(aProgress, 0, maxProg);
+  If fProgress = fMaxProgress then
+  begin
+    SetStageProgress(0);
+    SetStage(fBuildStage + 1);
+  end;
+end;
+
+procedure TKMHousePearl.MapEdConfirm;
+var I : Integer;
+begin
+  fConfirmed := true;
+
+  If fBuildStage = gRes.Houses.Pearls[fPearlType].StageCount then
+  begin
+    fProgress:= 0;
+    ActivatePearl;
+    Exit;
+  end else
+  begin
+    I := fBuildCost[fBuildStage].C - fDelivered[fBuildStage].C;
+    gHands[Owner].Constructions.PearlList.AddHouse(self);
+    If I > 0 then
+    begin
+      gHands[Owner].Deliveries.Queue.AddDemand(self, nil, fBuildCost[fBuildStage].W, I);
+    end;
+
+  end;
+end;
+
+function TKMHousePearl.BuildStage : Byte;
+begin
+  Result := fBuildStage;
+end;
+
+function TKMHousePearl.WaresDeliveredCount : Word;
+begin
+  If BuildStage = gRes.Houses.Pearls[PearlType].StageCount then
+    Exit(0);
+
+  Result := fDelivered[BuildStage].C;
+
+end;
+
+procedure TKMHousePearl.SetWaresCount(aCount : Integer);
+var i : Integer;
+begin
+  If BuildStage = gRes.Houses.Pearls[PearlType].StageCount then
+    Exit;
+  for I := 0 to BuildStage - 1 do
+    fDelivered[I].C := fBuildCost[I].C;
+  fDelivered[BuildStage].C := aCount;
+end;
 
 end.

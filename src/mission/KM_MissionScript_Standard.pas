@@ -51,6 +51,7 @@ uses
   KM_Game, KM_GameParams, KM_GameTypes, KM_HandsCollection,
   KM_UnitsCollection, KM_UnitWarrior,
   KM_HouseCollection, KM_HouseBarracks, KM_HouseStore,
+  KM_HousePearl,
   KM_AI,
   KM_Resource, KM_ResHouses, KM_ResUnits, KM_ResWares, KM_ResMapElements,
   KM_CommonClasses, KM_CommonTypes, KM_Terrain,
@@ -1208,6 +1209,46 @@ begin
                           end else
                             AddError('ct_SetHouseFlagColor without prior declaration of House');
                          end;
+    ctSetPearlType:   if fLastHand <> HAND_NONE then
+                         begin
+                          if (fLastHouse <> nil) then
+                          begin
+                            TKMHousePearl(fLastHouse).SelectType(TKMPearlType(P[0]));
+                          end else
+                            AddError('ctSetPearlType without prior declaration of House');
+                         end;
+    ctSetPearlStage:   if fLastHand <> HAND_NONE then
+                         begin
+                          if (fLastHouse <> nil) then
+                          begin
+                            TKMHousePearl(fLastHouse).SetStage(P[0]);
+                          end else
+                            AddError('ctSetPearlStage without prior declaration of House');
+                         end;
+    ctSetPearlWares:   if fLastHand <> HAND_NONE then
+                         begin
+                          if (fLastHouse <> nil) then
+                          begin
+                            TKMHousePearl(fLastHouse).SetWaresCount(P[0]);
+                          end else
+                            AddError('ctSetPearlWares without prior declaration of House');
+                         end;
+    ctSetPearlProgress:   if fLastHand <> HAND_NONE then
+                         begin
+                          if (fLastHouse <> nil) then
+                          begin
+                            TKMHousePearl(fLastHouse).SetStageProgress(P[0]);
+                          end else
+                            AddError('ctSetPearlProgress without prior declaration of House');
+                         end;
+    ctSetPearlConfirmBuild:   if fLastHand <> HAND_NONE then
+                         begin
+                          if (fLastHouse <> nil) then
+                          begin
+                            TKMHousePearl(fLastHouse).MapEdConfirm;
+                          end else
+                            AddError('ctSetPearlConfirmBuild without prior declaration of House');
+                         end;
 
    end;
 end;
@@ -1646,6 +1687,20 @@ begin
           AddCommand(ctSetFarmGrainType, [ord(TThatch(H).GrainType), ord(TThatch(H).GrassType), ord(TThatch(H).VegeType)]);
         If H.PicWariant >= 0 then
           AddCommand(ctSetHouseWariant, [H.PicWariant]);
+
+        If H.HouseType = htPearl then
+          with TKMHousePearl(H) do
+          begin
+            If PearlType <> ptNone then
+            begin
+              AddCommand(ctSetPearlType, [byte(PearlType)]);
+              AddCommand(ctSetPearlStage, [BuildStage]);
+              AddCommand(ctSetPearlWares, [WaresDeliveredCount]);
+              AddCommand(ctSetPearlProgress, [StageProgress]);
+              AddCommand(ctSetPearlConfirmBuild, []);
+            end;
+
+          end;
 
       end;
     end;
