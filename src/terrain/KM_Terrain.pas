@@ -536,7 +536,7 @@ begin
   fMapX := Min(aWidth,  MAX_MAP_SIZE);
   fMapY := Min(aHeight, MAX_MAP_SIZE);
   fMapRect := KMRect(1, 1, fMapX, fMapY);
-
+  fNightFactor := Round((gGame.Weather.Settings.NightTime / 3) * LocalNightSpeed);
   for I := 1 to fMapY do
     for K := 1 to fMapX do
     begin
