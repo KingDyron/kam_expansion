@@ -651,10 +651,12 @@
         <DCCReference Include="src\minimap\KM_MinimapCartographer.pas"/>
         <DCCReference Include="src\gui\pages_game\house\KM_GUIGameHouseCartographer.pas"/>
         <DCCReference Include="src\houses\KM_HousePearl.pas"/>
-        <DCCReference Include="src\gui\pages_game\house\KM_GUIGameHousePearl.pas"/>
         <DCCReference Include="src\gui\pages_menu\KM_GUIMenuChangeLog.pas"/>
         <DCCReference Include="src\houses\KM_HouseForest.pas"/>
         <DCCReference Include="src\houses\KM_HousePasture.pas"/>
+        <DCCReference Include="src\gui\pages_game\house\KM_GUIGameHousePasture.pas"/>
+        <DCCReference Include="src\gui\pages_game\house\KM_GUIGameHousePearl.pas"/>
+        <DCCReference Include="src\gui\pages_game\house\KM_GUIGameHouseForest.pas"/>
         <None Include="KM_TextIDs.inc"/>
         <None Include="KaM_Remake.dpr"/>
         <None Include="KaM_Remake.inc"/>

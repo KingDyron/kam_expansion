@@ -4474,6 +4474,7 @@
 			"StagePics" : [2715, 2716, 2717, 2718, 2719, 2720],
 			"SnowPic" : 2777,
 			"ProgressPerStage" : 7,
+			"SnowAnimStartsFromIndex" : 0,
 			"Animations" : 
 			[
 				{"X" : 70,"Y" : -298,"Steps" : [1168,1169,1170,1171,1172,1173,1174,1175,1176,1177]}
@@ -4491,8 +4492,9 @@
 		{
 			"PearlType" : "ptArium",
 			"StagePics" : [2729, 2721, 2722, 2723, 2724, 2725, 2726, 2727, 2728],
-			"SnowPic" : 2714,
+			"SnowPic" : 2779,
 			"ProgressPerStage" : 5,
+			"SnowAnimStartsFromIndex" : 0,
 			"Build Cost":
 			[
 				{"WareType" : "wtIron", "Count" : 8},
@@ -4509,8 +4511,9 @@
 		{
 			"PearlType" : "ptAgros",
 			"StagePics" : [2756, 2755, 2754, 2753, 2752, 2751, 2750, 2731, 2730],
-			"SnowPic" : 2714,
+			"SnowPic" : 2780,
 			"ProgressPerStage" : 5,
+			"SnowAnimStartsFromIndex" : 2,
 			"Animations" : 
 			[
 				{"X" : 0,"Y" : 0,"StepStart" : 2732, "Count" : 17},
@@ -4532,8 +4535,9 @@
 		{
 			"PearlType" : "ptRalender",
 			"StagePics" : [2758, 2759, 2760, 2761, 2762, 2763, 2764, 2765],
-			"SnowPic" : 2777,
+			"SnowPic" : 2781,
 			"ProgressPerStage" : 5,
+			"SnowAnimStartsFromIndex" : 0,
 			"Build Cost":
 			[
 				{"WareType" : "wtStone", "Count" : 15},

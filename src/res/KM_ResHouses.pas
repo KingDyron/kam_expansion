@@ -178,6 +178,7 @@ type
     Cost : TKMWarePlan;
     SnowPic : Word;
     ProgressPerStage : Word;
+    SnowAnimations : Byte;
 
     A : array of TKMAnimation;
     function GetStagePic(aStage : Integer) : Integer;
@@ -1222,6 +1223,7 @@ begin
         StageCount := length(StagePics);
         SnowPic := nHouse.I['SnowPic'];
         ProgressPerStage := nHouse.I['ProgressPerStage'];
+        SnowAnimations := nHouse.I['SnowAnimStartsFromIndex'];
 
         nAR := nHouse.A['Animations'];
 

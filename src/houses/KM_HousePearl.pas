@@ -52,6 +52,7 @@ type
     procedure UpdateState(aTick: Cardinal); override;
     procedure Paint; override;
     //overriden
+    procedure IncAnimStep;override;
     procedure IncSnowStepPearl;
     procedure WareAddToIn(aWare: TKMWareType; aCount: Integer = 1; aFromStaticScript: Boolean = False); override;
     function CanHasWorker(aType : TKMUnitType) : Boolean; override;
@@ -247,17 +248,27 @@ begin
 end;
 
 
+
 //overriden
+
+procedure TKMHousePearl.IncAnimStep;
+begin
+  Inherited;
+  If Completed then
+    IF fPearlType <> ptNone then
+      IncSnowStepPearl;
+end;
 procedure TKMHousePearl.IncSnowStepPearl;
 const
   //How much ticks it takes for a house to become completely covered in snow
   SNOW_TIME = 1200;
 begin
-  If not Completed then
-    Exit;
-
-  if IsOnSnow and (fSnowStepPearl < 1) then
-    fSnowStepPearl := Min(fSnowStepPearl + (1 + Byte(gGameParams.IsMapEditor) * 10) / SNOW_TIME, 1);
+  if IsOnSnow then
+  begin
+    if (fSnowStepPearl < 1) then
+      fSnowStepPearl := Min(fSnowStepPearl + (1 + Byte(gGameParams.IsMapEditor) * 10) / SNOW_TIME, 1)
+  end else
+    fSnowStepPearl := 0;
 end;
 
 procedure TKMHousePearl.WareAddToIn(aWare: TKMWareType; aCount: Integer = 1; aFromStaticScript: Boolean = False);
@@ -875,8 +886,10 @@ begin
   If fBuildStage = gRes.Houses.Pearls[fPearlType].StageCount then
   begin
     fProgress:= 0;
+    fIsCompleted := true;
     Exit;
   end;
+  fIsCompleted := false;
   maxProg := Min(fMaxProgress, gRes.Houses.Pearls[fPearlType].ProgressPerStage * fDelivered[fBuildStage].C);
   fProgress := EnsureRange(aProgress, 0, maxProg);
   If fProgress = fMaxProgress then

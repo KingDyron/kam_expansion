@@ -105,6 +105,8 @@ type
 
     procedure RenderSprite(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
                            HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1); overload;
+    procedure RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+                           HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1);
 
     procedure RenderSprite(aRX: TRXType; aId: Integer; aX, aY: Single; Col: TColor4; DoHighlight: Boolean = False;
                            HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1);overload;
@@ -1038,7 +1040,7 @@ begin
     else
       fRenderList.AddSprite(rxHouses, picStone, CornerX(picStone), CornerY(picStone){, gX, gY}, aLoc.X, aLoc.Y, $0);
 
-    for I := 0 to High(P.A) do
+    for I := IfThen(aSnowStep > 0, P.SnowAnimations, 0) to High(P.A) do
     begin
       id := P.A[I].Animation[gTerrain.AnimStep] + 1;
       fRenderList.AddSprite(rxHouses, id, CornerX(id) + P.A[I].X / CELL_SIZE_PX, CornerY(id) + P.A[I].Y / CELL_SIZE_PX
@@ -2163,6 +2165,171 @@ begin
 end;
 
 
+procedure TKMRenderPool.RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+                                   HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1);
+var
+  tX, tY: Integer;
+  rX, rY: Single;
+  night : Single;
+begin
+  tX := EnsureRange(Round(aX), 1, gTerrain.MapX - 1);
+  tY := EnsureRange(Round(aY), 1, gTerrain.MapY - 1);
+  //Do not render if sprite is under FOW
+  if not aForced and (gMySpectator.FogOfWar.CheckVerticeRenderRev(tX, tY) <= FOG_OF_WAR_MIN) then
+    Exit;
+
+  rX := RoundToTilePixel(aX);
+  rY := RoundToTilePixel(aY);
+
+  night := aNight;//gTerrain.GetNightAtTile(tX, tY);
+
+  ///no shadow first
+  glClear(GL_STENCIL_BUFFER_BIT);
+
+  // Setup stencil mask
+  glEnable(GL_STENCIL_TEST);
+  glStencilFunc(GL_ALWAYS, 1, 1);
+  glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+
+  glPushAttrib(GL_COLOR_BUFFER_BIT);
+    // Do not render anything on screen while setting up stencil mask
+    glColorMask(False, False, False, False);
+
+    // disable shadows
+    glEnable(GL_ALPHA_TEST);
+    glBlendFunc(GL_ONE, GL_ZERO);
+
+    glAlphaFunc(GL_GEQUAL, 0.8);
+    with gGFXData[aRX,aId] do
+    begin
+      glColor4f(1, 1, 1, 1);
+      //glStencilOp(GL_DECR, GL_DECR, GL_DECR);
+      TKMRender.BindTexture(Tex.TexID);
+      glBegin(GL_QUADS);
+        glTexCoord2f(Tex.u1,Tex.v2); glVertex2f(rX                     , rY         );
+        glTexCoord2f(Tex.u2,Tex.v2); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY         );
+        glTexCoord2f(Tex.u2,Tex.v1); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY-pxHeight/CELL_SIZE_PX);
+        glTexCoord2f(Tex.u1,Tex.v1); glVertex2f(rX                     , rY-pxHeight/CELL_SIZE_PX);
+      glEnd;
+      TKMRender.BindTexture(0);
+    end;
+
+    glDisable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_ALWAYS, 0);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Revert alpha mode
+
+  glPopAttrib;
+
+  glStencilFunc(GL_EQUAL, 1, 1);
+  glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+  glColorMask(True, True, True, True);
+
+
+  with gGFXData[aRX, aId] do
+  begin
+    // FOW is rendered over the top so no need to make sprites black anymore
+    //glColor4ub(255 * TERRAIN_DARK, 255 * TERRAIN_DARK, 255 * TERRAIN_DARK, 255);
+    glColor4f(1 * night,1 * night,1 * night, 0 - aAlphaStep);
+
+    TKMRender.BindTexture(Tex.TexID);
+    if DoHighlight then
+      glColor4f((HighlightColor AND $FF / 255) * night,
+                (HighlightColor SHR 8 AND $FF / 255) * night,
+                (HighlightColor SHR 16 AND $FF / 255) * night,
+                 0 - aAlphaStep);
+    glBegin(GL_QUADS);
+      glTexCoord2f(Tex.u1, Tex.v2); glVertex2f(rX                     , rY                      );
+      glTexCoord2f(Tex.u2, Tex.v2); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY                      );
+      glTexCoord2f(Tex.u2, Tex.v1); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY-pxHeight/CELL_SIZE_PX);
+      glTexCoord2f(Tex.u1, Tex.v1); glVertex2f(rX                     , rY-pxHeight/CELL_SIZE_PX);
+    glEnd;
+    TKMRender.BindTexture(0);
+  end;
+  glDisable(GL_STENCIL_TEST);
+
+  if (gGFXData[aRX, aId].Alt.TexID <> 0) then
+    with gGFXData[aRX, aId] do
+    begin
+      //glColor4ubv(@Col);
+      glColor4ub( Round(Col AND $FF * (0.7 + night / 4)),
+                  Round(Col SHR 8 AND $FF * (0.7 + night / 4)),
+                  Round(Col SHR 16 AND $FF * (0.7 + night / 4)),
+                  Round(Col SHR 24 and $FF * (0.7 + night / 4) * Abs(aAlphaStep) )
+                  );
+      TKMRender.BindTexture(Alt.TexID);
+      glBegin(GL_QUADS);
+        glTexCoord2f(Alt.u1, Alt.v2); glVertex2f(rX                     , rY                      );
+        glTexCoord2f(Alt.u2, Alt.v2); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY                      );
+        glTexCoord2f(Alt.u2, Alt.v1); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY-pxHeight/CELL_SIZE_PX);
+        glTexCoord2f(Alt.u1, Alt.v1); glVertex2f(rX                     , rY-pxHeight/CELL_SIZE_PX);
+      glEnd;
+      TKMRender.BindTexture(0);
+    end;
+
+  ///render shadow now
+  glClear(GL_STENCIL_BUFFER_BIT);
+
+  // Setup stencil mask
+  glEnable(GL_STENCIL_TEST);
+  glStencilFunc(GL_ALWAYS, 1, 1);
+  glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+
+  glPushAttrib(GL_COLOR_BUFFER_BIT);
+    // Do not render anything on screen while setting up stencil mask
+    glColorMask(False, False, False, False);
+
+    // disable shadows
+    glEnable(GL_ALPHA_TEST);
+    glBlendFunc(GL_ONE, GL_ZERO);
+
+    glAlphaFunc(GL_LESS, 0.8);
+    with gGFXData[aRX,aId] do
+    begin
+      glColor4f(1, 1, 1, 1);
+      //glStencilOp(GL_DECR, GL_DECR, GL_DECR);
+      TKMRender.BindTexture(Tex.TexID);
+      glBegin(GL_QUADS);
+        glTexCoord2f(Tex.u1,Tex.v2); glVertex2f(rX                     , rY         );
+        glTexCoord2f(Tex.u2,Tex.v2); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY         );
+        glTexCoord2f(Tex.u2,Tex.v1); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY-pxHeight/CELL_SIZE_PX);
+        glTexCoord2f(Tex.u1,Tex.v1); glVertex2f(rX                     , rY-pxHeight/CELL_SIZE_PX);
+      glEnd;
+      TKMRender.BindTexture(0);
+    end;
+
+    glDisable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_ALWAYS, 0);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Revert alpha mode
+
+  glPopAttrib;
+
+  glStencilFunc(GL_EQUAL, 1, 1);
+  glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+  glColorMask(True, True, True, True);
+
+
+  with gGFXData[aRX, aId] do
+  begin
+    // FOW is rendered over the top so no need to make sprites black anymore
+    //glColor4ub(255 * TERRAIN_DARK, 255 * TERRAIN_DARK, 255 * TERRAIN_DARK, 255);
+    if aAlphaStep <> -1 then
+      glColor4f(1,1,1,  (0 - aAlphaStep) * night)
+    else
+      glColor4f(1,1,1,  1 * night);
+
+    TKMRender.BindTexture(Tex.TexID);
+    if DoHighlight then
+      glColor3ub(HighlightColor AND $FF, HighlightColor SHR 8 AND $FF, HighlightColor SHR 16 AND $FF);
+    glBegin(GL_QUADS);
+      glTexCoord2f(Tex.u1, Tex.v2); glVertex2f(rX                     , rY                      );
+      glTexCoord2f(Tex.u2, Tex.v2); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY                      );
+      glTexCoord2f(Tex.u2, Tex.v1); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY-pxHeight/CELL_SIZE_PX);
+      glTexCoord2f(Tex.u1, Tex.v1); glVertex2f(rX                     , rY-pxHeight/CELL_SIZE_PX);
+    glEnd;
+    TKMRender.BindTexture(0);
+  end;
+  glDisable(GL_STENCIL_TEST);
+end;
 // Param - defines at which level alpha-test will be set (acts like a threshhold)
 // Then we render alpha-tested Mask to stencil buffer. Only those pixels that are
 // white there will have sprite rendered
@@ -3433,7 +3600,7 @@ begin
     sp2 := fRenderList[aId + 1];
 
   if (sp1.AlphaStep = -1) or (sp1.RX = rxUnits) then
-    gRenderPool.RenderSprite(sp1.RX, sp1.Id, sp1.Loc.X, sp1.Loc.Y, gTerrain.GetNightAtTile(sp1.NightLoc), sp1.TeamColor, sp1.HighlightColor <> 0, sp1.HighlightColor, false, sp1.AlphaStep)
+    gRenderPool.RenderSpritePool(sp1.RX, sp1.Id, sp1.Loc.X, sp1.Loc.Y, gTerrain.GetNightAtTile(sp1.NightLoc), sp1.TeamColor, sp1.HighlightColor <> 0, sp1.HighlightColor, false, sp1.AlphaStep)
   else
   begin
     // Houses are rendered as Wood+Stone part. For Stone we want to skip

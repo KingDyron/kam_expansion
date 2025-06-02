@@ -9,18 +9,18 @@ uses
 
 const
   MAX_ANIMALS = 10;
-  ANIMAL_SPEED = 8 / 240;
 const
   ANIMAL_ACTION_COUNT = byte(high(TKMPastureAnimalAction)) + 1;
 type
   TKMPastureAnimal = record
     AnimalType : TKMPastureAnimalType;
-    Age : Word;
+    Age : Integer;
     Pos, WalkTo, Speed : TKMPointF;
     Dir, ToDir : TKMDirection;
     Action : TKMPastureAnimalAction;
     ActionCycles : Word;
     AnimStep : Word;
+    Color : Byte;
   end;
 
   TKMHousePasture = class(TKMHouse)
@@ -43,11 +43,14 @@ type
 
     procedure UpdateState(aTick: Cardinal); override;
     procedure Paint; override;
+
+    procedure BuyAnimal(aAnimal : TKMPastureAnimalType);
   end;
 
 implementation
 uses
   Classes,
+  KM_HandsCollection,
   KM_RenderPool, KM_RenderAux,
   KM_Resource, KM_ResUnits,
   KM_CommonUtils;
@@ -93,13 +96,6 @@ constructor TKMHousePasture.Create(aUID: Integer; aHouseType: TKMHouseType; PosX
 var I : Integer;
 begin
   Inherited;
-  for I := 0 to MAX_ANIMALS - 1 do
-    begin
-      fAnimals[I].AnimalType := patCow;
-      fAnimals[I].Pos := GetPositionForAnimal;
-      fAnimals[I].Dir := DirN;
-      SetNewAction(fAnimals[I]);
-    end;
 end;
 
 function TKMHousePasture.IsAnimalAt(aLoc: TKMPointF): Boolean;
@@ -149,7 +145,7 @@ begin
     Action := paaWalk;
     WalkTo := GetPositionForAnimal;
     ToDir := KMGetDirection(Pos, WalkTo);
-    len := KMLength(Pos, WalkTo) / ANIMAL_SPEED;
+    len := KMLength(Pos, WalkTo) / AnimalType.Spec.Speed;
     Speed.X := (WalkTo.X - Pos.X) / len;
     Speed.Y := (WalkTo.Y - Pos.Y) / len;
   end;
@@ -212,7 +208,7 @@ begin
       AnimalType := patNone;
       Exit;
     end else
-    If Age mod AnimalType.Spec.Age = 0 then
+    If (AnimalType.Spec.Age > 0) and (Age mod AnimalType.Spec.Age = 0) then
     begin
       FillWare(wtFeathers, AnimalType.Spec.Feathers);
       FillWare(wtEgg, AnimalType.Spec.Eggs);
@@ -230,7 +226,7 @@ begin
                       Dir := DIR_TO_NEXT[Dir];
                       AnimStep := 0;
                   end else
-                  If KMSamePointF(Pos, WalkTo, ANIMAL_SPEED / 2) then
+                  If KMSamePointF(Pos, WalkTo, AnimalType.Spec.Speed / 2) then
                   begin
                     Pos := WalkTo;
                     SetNewAction(aAnimal);
@@ -249,6 +245,27 @@ begin
   end;
 end;
 
+procedure TKMHousePasture.BuyAnimal(aAnimal: TKMPastureAnimalType);
+var I : Integer;
+begin
+  //check for free space
+  for I := 0 to MAX_ANIMALS - 1 do
+    If fAnimals[I].AnimalType = patNone then
+    begin
+      If not gHands[Owner].VirtualWareTake('vtCoin', aAnimal.Spec.Cost) then
+        Exit;
+      fAnimals[I].AnimalType := aAnimal;
+      fAnimals[I].Pos := GetPositionForAnimal;
+      fAnimals[I].Dir := DirN;
+      fAnimals[I].Age := -KaMRandom(1000, ' TKMHousePasture.BuyAnimal : age');
+      fAnimals[I].Color := KaMRandom(length(aAnimal.Spec.Colors), 'TKMHousePasture.BuyAnimal : color');
+      SetNewAction(fAnimals[I]);
+      Exit;
+    end;
+
+
+end;
+
 procedure TKMHousePasture.UpdateState(aTick: Cardinal);
 var I : Integer;
 begin
@@ -263,6 +280,7 @@ end;
 
 procedure TKMHousePasture.Paint;
 var I : Integer;
+  spec : TKMPasAnimalSpec;
 begin
   Inherited;
   If IsComplete then
@@ -276,11 +294,12 @@ begin
                                   //gRes.Units[utLandDuck].UnitAnim[uaWalk,fAnimals[I].Dir],
                                   fAnimals[I].AnimStep,
                                   FlagColor, rxUnits);}
+        spec := fAnimals[I].AnimalType.Spec;
         gRenderPool.AddHousePastureAnimal(KMPointF(Entrance.X + fAnimals[I].Pos.X - 1.5, Entrance.Y + fAnimals[I].Pos.Y - 3.5),
                                           fAnimals[I].AnimalType,
                                           fAnimals[I].Action, fAnimals[I].Dir,
                                           fAnimals[I].AnimStep,
-                                          $FF004777, icWhite);
+                                          Spec.Colors[fAnimals[I].Color, 1], Spec.Colors[fAnimals[I].Color, 0]);
       end;
 
   end;

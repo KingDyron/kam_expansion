@@ -462,7 +462,7 @@ type
     procedure PostLoadMission; virtual;
     function ObjToString(const aSeparator: String = '|'): String; override;
     procedure IncSnowStep;virtual;
-    procedure IncAnimStep;
+    procedure IncAnimStep;virtual;
     procedure UpdateState(aTick: Cardinal); virtual;
     procedure Paint; virtual;
   end;

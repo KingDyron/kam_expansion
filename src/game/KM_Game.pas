@@ -1435,6 +1435,8 @@ begin
 
   fMapEditor.OnEyedropper := fMapEditorInterface.GuiTerrain.GuiTiles.TilesTableSetTileTexId;
   fMapEditor.MissionDefSavePath := fParams.Name + '.dat';
+  Options.Weather.SetDefault;
+  fWeather.Settings.SetDefault;
   gTerrain.MakeNewMap(aSizeX, aSizeY, True);
   fTerrainPainter.InitEmpty;
   fMapEditor.History.MakeCheckpoint(caAll, gResTexts[TX_MAPED_HISTORY_CHPOINT_INITIAL]);

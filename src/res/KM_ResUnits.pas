@@ -44,9 +44,12 @@ type
     Feathers,
     Eggs,
     Meat,
-    Skin : Single;
-    Age, KillAge : Word;//how much time it needs to get wares
+    Skin, Speed : Single;
+    Age, KillAge,//how much time it needs to get wares
+    GuiIcon,
+    Cost : Word;
     Size : Single;
+    Hint : Word;
     Colors : array of array[0..1] of Cardinal;
     Anim : array[TKMPastureAnimalAction, dirN..dirNW] of TKMAnimation;
   end;
@@ -1737,18 +1740,21 @@ begin
       Skin := nAnim.D['Skin'];
       Eggs := nAnim.D['Eggs'];
       Size := nAnim.D['Size'];
-
-      If nAnim.Contains('Colors') then
-        with nAnim.A['Colors'] do
+      Cost := nAnim.I['Cost'];
+      GuiIcon := nAnim.I['GuiIcon'];
+      Hint := nAnim.I['Hint'];
+      Speed := nAnim.I['Speed'] / 240;
+      with nAnim.A['Colors'] do
+      begin
+        SetLength(Colors, Count + 1);
+        Colors[0, 0] := $FFFFFFFF;
+        Colors[0, 1] := $FFFFFFFF;
+        for K := 1 to Count do
         begin
-          SetLength(Colors, Count);
-
-          for K := 0 to Count - 1 do
-          begin
-            Colors[K, 0] := A[K].L[0];
-            Colors[K, 1] := A[K].L[1];
-          end;
+          Colors[K, 0] := A[K - 1].L[0];
+          Colors[K, 1] := A[K - 1].L[1];
         end;
+      end;
 
       Age := nAnim.I['Age'];
       KillAge := nAnim.I['KillAge'];
