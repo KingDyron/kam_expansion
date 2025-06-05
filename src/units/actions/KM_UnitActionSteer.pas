@@ -101,7 +101,6 @@ var
   loc: TKMPoint;
   list: TKMPointList;
   goodSpot: Boolean;
-  oldLoc : TKMPoint;
 begin
   Inc(fDesireToSteer);
   //Default is the next tile in the direction we're going

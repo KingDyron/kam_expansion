@@ -433,13 +433,13 @@ type
   TKMBridgeTileRect = array of array of TKMBridgeTile;
 
 type
-  TKMPastureAnimalType = (patNone, patCow, patGoose, patRabbit, patChicken, patBull, patSheep);
+  TKMPastureAnimalType = (patNone, patCow, patGoose, patRabbit, patChicken, patBull, patSheep, patOstrich);
   TKMPastureAnimalAction = (paaWalk, paaEat, paaWatch, paaLayDown, paaLying, paaStandUp);
 
 const
   ANIMALS_COUNT = byte(high(TKMPastureAnimalType));
   PASTURE_ANIMALS_ORDER : array[0..ANIMALS_COUNT - 1] of TKMPastureAnimalType = (
-    patChicken, patGoose, patRabbit, patSheep, patCow, patBull
+    patChicken, patGoose, patOstrich, patRabbit, patSheep, patCow, patBull
   );
   {$I KM_TextIDs.inc}
 

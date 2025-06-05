@@ -24,7 +24,7 @@ type
       fStyle, fMaxStyles : Byte;// how many clouds are in the same entity
       fClouds : array of TKMPointF;//make more clouds at the same time to add variety
 
-      fCurrentClimate : TKMTerrainClimat;
+      fCurrentClimate : TKMTerrainClimate;
 
       function GetRandomPos(aPos : TKMPointF; aRadius : Single) : TKMPointF;
       function CanAnimBeStopped : Boolean;
@@ -221,7 +221,7 @@ begin
 end;
 
 procedure TKMWeather.SetClimate;
-var oldC : TKMTerrainClimat;
+var oldC : TKMTerrainClimate;
 begin
   oldC := fCurrentClimate;
 

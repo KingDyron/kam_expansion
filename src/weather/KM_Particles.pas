@@ -23,7 +23,7 @@ type
       procedure AddRain(aStartPos : TKMPointF);
       procedure AddWhiteLightning(aStartPos : TKMPointF);
       procedure AddGoldLightning(aStartPos : TKMPointF);
-      procedure AddWeatherParticle(aStartPos : TKMPointF; aClimate : TKMTerrainClimat);
+      procedure AddWeatherParticle(aStartPos : TKMPointF; aClimate : TKMTerrainClimate);
 
       procedure Delete(aIndex : Integer);
 
@@ -114,7 +114,7 @@ begin
     );
 end;
 
-procedure TKMParticlesCollection.AddWeatherParticle(aStartPos: TKMPointF; aClimate: TKMTerrainClimat);
+procedure TKMParticlesCollection.AddWeatherParticle(aStartPos: TKMPointF; aClimate: TKMTerrainClimate);
 begin
   case aClimate of
     tcNone,

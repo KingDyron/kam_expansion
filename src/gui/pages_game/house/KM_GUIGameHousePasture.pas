@@ -63,6 +63,7 @@ var I : Integer;
   PAT : TKMPastureAnimalType;
   top : Integer;
   animal : TKMPasAnimalSpec;
+  S : String;
 begin
   Inherited Create(aParent, 0, 100, aParent.Width - 8, 600);
   fCoinIndex := gRes.Wares.VirtualWares.WareS['vtCoin'].Index;
@@ -83,12 +84,20 @@ begin
     begin
       PAT := PASTURE_ANIMALS_ORDER[I];
       animal := Pat.Spec;
-      top := I * 65;
+      top := I * 35;
       View_Animal[I] := TKMAnimalCostView.Create(Panel_Shop, 0, top, Width, PAT);
       View_Animal[I].CoinTexID := gRes.Wares.VirtualWares[fCoinIndex].GUIIcon;
       Button_Buy[I] := TKMButtonFlat.Create(Panel_Shop, 0, top, 30, 30, animal.GuiIcon);
       Button_Buy[I].OnClick := BuyAnimal_Click;
-      Button_Buy[I].Hint := Format(gResTexts[2280], [gResTexts[animal.Hint], animal.Cost]);
+      //what it produces:
+      S := '|' + gResTexts[140] + ':|';
+      If animal.Feathers > 0 then S := S + gRes.Wares[wtFeathers].Title + ' x'+ animal.Feathers.ToString(ffNumber, 1, 1) + '|';
+      If animal.Eggs > 0 then S := S + gRes.Wares[wtEgg].Title + ' x'+ animal.Eggs.ToString(ffNumber, 1, 1) + '|';
+      If animal.Meat > 0 then S := S + gRes.Wares[wtPig].Title + ' x'+ animal.Meat.ToString(ffNumber, 1, 1) + '|';
+      If animal.Skin > 0 then S := S + gRes.Wares[wtSkin].Title + ' x'+ animal.Skin.ToString(ffNumber, 1, 1) + '|';
+
+
+      Button_Buy[I].Hint := Format(gResTexts[2280] + S, [gResTexts[animal.Hint], animal.Cost]);
       Button_Buy[I].Tag := I;
 
       {TKMBevel.Create(Panel_Shop, 0, top - 1, Width, 62);
@@ -155,7 +164,6 @@ begin
   Panel_Shop.Show;
   for I := low(Button_Buy) to high(Button_Buy) do
     Button_Buy[I].Enabled := gHands[fPasture.Owner].VirtualWare[fCoinIndex] > PASTURE_ANIMALS_ORDER[I].Spec.Cost;
-
 end;
 
 procedure TKMGuiGamePasture.BuyAnimal_Click(Sender : TObject);
@@ -168,7 +176,7 @@ constructor TKMAnimalCostView.Create(aParent: TKMPanel; aLeft: Integer; aTop: In
 var
   animal : TKMPasAnimalSpec;
 begin
-  Inherited Create(aParent, aLeft, aTop, aWidth, 60);
+  Inherited Create(aParent, aLeft, aTop, aWidth, 30);
 
   animal := aAnimal.Spec;
   fTexID := animal.GuiIcon;
@@ -197,10 +205,10 @@ begin
   TKMRenderUI.WritePicture(al + 3, at + 3, 30, 30, [], rxGui, fTexID);
   }
   //cost
-  TKMRenderUI.WritePicture(al + 3, at + 35, 20, 20, [], rxGui, CoinTexID);
-  TKMRenderUI.WriteText(al + 22, at + 37, 100, fCost, fntGrey, taLeft);
+  TKMRenderUI.WritePicture(aR - 60, at + 5, 20, 20, [], rxGui, CoinTexID);
+  TKMRenderUI.WriteText(aR - 40, at + 7, 100, fCost, fntGrey, taLeft);
 
-  //Wares
+  {//Wares
   TKMRenderUI.WritePicture(aR - 75, at, 30, 30, [], rxGui, gRes.Wares[wtFeathers].GUIIcon);
   TKMRenderUI.WriteText(aR - 65, at + 13, 30, fFeathers, fntGrey, taLeft);
 
@@ -211,7 +219,7 @@ begin
   TKMRenderUI.WriteText(aR - 65, at + 43, 30, fSkin, fntGrey, taLeft);
 
   TKMRenderUI.WritePicture(aR - 35, at + 30, 30, 30, [], rxGui, gRes.Wares[wtPig].GUIIcon);
-  TKMRenderUI.WriteText(aR - 25, at + 43, 30, fPig, fntGrey, taLeft);
+  TKMRenderUI.WriteText(aR - 25, at + 43, 30, fPig, fntGrey, taLeft);}
 end;
 
 end.

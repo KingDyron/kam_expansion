@@ -192,8 +192,8 @@ type
                                 aChosenTiles: TKMPointDirList);
     function FindFishWater(const aLoc: TKMPoint; aRadius: Integer; const aAvoidLoc: TKMPoint; aIgnoreWorkingUnits:
                            Boolean; out aFishPoint: TKMPointDir): Boolean;
-    function FindBestClimatType(const aLoc: TKMPoint): TKMTerrainClimat;
-    function FindBestTreeClimatType(const aLoc: TKMPoint): TKMTerrainClimat;
+    function FindBestClimatType(const aLoc: TKMPoint): TKMTerrainClimate;
+    function FindBestTreeClimatType(const aLoc: TKMPoint): TKMTerrainClimate;
     function CanFindFishingWater(const aLoc: TKMPoint; aRadius: Integer): Boolean;
 
     function CanReachTileInDistance(const aLoc1, aLoc2: TKMPoint; aPassability : TKMTerrainPassability; aMaxDistance : Integer = 10) : Boolean;
@@ -4670,10 +4670,10 @@ begin
 end;
 
 
-function TKMTerrain.FindBestClimatType(const aLoc: TKMPoint): TKMTerrainClimat;
+function TKMTerrain.FindBestClimatType(const aLoc: TKMPoint): TKMTerrainClimate;
 const
   // Dependancy found empirically
-  TERKIND_TO_TREE_TYPE: array[TKMTerrainKind] of TKMTerrainClimat = (
+  TERKIND_TO_TREE_TYPE: array[TKMTerrainKind] of TKMTerrainClimate = (
     tcNone,             //    tkCustom,
     tcWarm1,            //    tkGrass,
     tcWarm1,            //    tkMoss,
@@ -4708,7 +4708,7 @@ const
   );
 var
   I, K: Integer;
-  treeType: TKMTerrainClimat;
+  treeType: TKMTerrainClimate;
   verticeCornerTKinds: TKMTerrainKindCorners;
 begin
   // Find tree type to plant by vertice corner terrain kinds
@@ -4728,10 +4728,10 @@ begin
     end;
 end;
 
-function TKMTerrain.FindBestTreeClimatType(const aLoc: TKMPoint): TKMTerrainClimat;
+function TKMTerrain.FindBestTreeClimatType(const aLoc: TKMPoint): TKMTerrainClimate;
 const
   // Dependancy found empirically
-  TERKIND_TO_TREE_TYPE: array[TKMTerrainKind] of TKMTerrainClimat = (
+  TERKIND_TO_TREE_TYPE: array[TKMTerrainKind] of TKMTerrainClimate = (
     tcNone,             //    tkCustom,
     tcWarm1,            //    tkGrass,
     tcWarm1,            //    tkMoss,
@@ -4766,7 +4766,7 @@ const
   );
 var
   I, K: Integer;
-  treeType: TKMTerrainClimat;
+  treeType: TKMTerrainClimate;
   verticeCornerTKinds: TKMTerrainKindCorners;
 begin
   // Find tree type to plant by vertice corner terrain kinds
@@ -4794,7 +4794,7 @@ end;
 
 function TKMTerrain.ChooseTreeToPlace(const aLoc: TKMPoint; aTreeAge: TKMChopableAge; aAlwaysPlaceTree: Boolean): Integer;
 var
-  bestTreeType: TKMTerrainClimat;
+  bestTreeType: TKMTerrainClimate;
 begin
   //Result := OBJ_NONE;
   //This function randomly chooses a tree object based on the terrain type. Values matched to KaM, using all soil tiles.
@@ -8222,11 +8222,11 @@ procedure TKMTerrain.UpdateFences(const aLoc: TKMPoint; aCheckSurrounding: Boole
        (TileIsVegeField(aLoc) and TileIsVegeField(KMPoint(X,Y))) or //Both are Grass
 
        (
-        House(aLoc).IsValid([htAppleTree, htPasture, htForest]) and House(X, Y).IsValid([htAppleTree, htPasture, htForest])
-       ) or //Both are appletree
-
-
-       ((Land^[aLoc.Y, aLoc.X].BridgeType > 0) and (Land^[Y, X].BridgeType > 0)) or //Both are Wine
+        House(aLoc).IsValid([htAppleTree, htPasture, htForest], false) and House(X, Y).IsValid([htAppleTree, htPasture, htForest], false)
+        and (House(aLoc).HouseType = House(X, Y).HouseType)
+       )
+       or
+       ((Land^[aLoc.Y, aLoc.X].BridgeType > 0) and (Land^[Y, X].BridgeType > 0)) or //Both are bridges
        ((Land^[aLoc.Y, aLoc.X].TileLock in [tlFenced, tlDigged, tlWallFence, tlStructure]) and
         (Land^[Y, X].TileLock in [tlFenced, tlDigged, tlWallFence, tlStructure])) then //Both are either house fence
       Result := False;

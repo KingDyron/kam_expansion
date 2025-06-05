@@ -4268,7 +4268,6 @@ end;
 procedure TKMHouse.IncAnimStep;
 var
   I, K: Integer;
-  wasOnSnow: Boolean;
   HA: TKMHouseAreaNew;
 begin
   Inc(FlagAnimStep);
@@ -5699,7 +5698,7 @@ begin
 end;
 
 procedure TKMHouseAppleTree.SetProgress(aIgnoreWater : Boolean = false);
-var tc : TKMTerrainClimat;
+var tc : TKMTerrainClimate;
 begin
   if fGrowPhase = gFruitTrees[fFruitTreeID].StagesCount - 1 then //max
     fProgress := 0
@@ -5970,7 +5969,7 @@ end;
 procedure TKMHouseAppleTree.Activate(aWasBuilt: Boolean);
 var obj : Word;
     I, K : Integer;
-    TC : TKMTerrainClimat;
+    TC : TKMTerrainClimate;
 begin
   fProgress := 0;
   fGrowPhase := 0;

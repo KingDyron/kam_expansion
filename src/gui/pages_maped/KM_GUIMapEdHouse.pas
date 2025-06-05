@@ -1804,7 +1804,7 @@ end;
 
 procedure TKMMapEdHouse.Pearl_ChangeShift(Sender: TObject; Shift: TShiftState);
 var PL : TKMHousePearl;
-  pt, stage, progress, I : Word;
+  stage, progress, I : Word;
 begin
   PL := TKMHousePearl(fHouse);
   stage := PL.BuildStage;

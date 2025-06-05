@@ -434,7 +434,7 @@ function TKMMainMenuInterface.ChangeLogText: string;
 var loc : String;
 begin
   Result := '';
-  loc := gResLocales.UserLocale;
+  loc := String(gResLocales.UserLocale);
   If FileExists(ExeDir + 'ChangeLog.' + loc +'.txt') then
     Result := TFile.ReadAllText(ExeDir + 'ChangeLog.' + loc +'.txt')
   else

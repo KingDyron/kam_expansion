@@ -269,7 +269,7 @@ uses
   KM_HandLogistics, KM_HandsCollection, KM_Resource, KM_ResMapElements,
   KM_Game,
   KM_Hand, KM_HandTypes, KM_HandEntity, KM_TerrainTypes,
-  KM_HouseHelpers,
+  KM_HouseHelpers, KM_HousePasture,
   Math,
   KM_ScriptingEvents;
 
@@ -1488,6 +1488,10 @@ begin
 
           if not ((fHouse.HouseType = htAppleTree) and KMSamePoint(fHouse.Entrance, fCellsToDig[fLastToDig])) then
             gTerrain.RemoveObject(fCellsToDig[fLastToDig]); //All objects are removed
+
+          If fHouse.HouseType = htPasture then
+            gTerrain.SetLand( TKMHousePasture(fHouse).GetPastureTileType, fCellsToDig[fLastToDig].X, fCellsToDig[fLastToDig].Y, 255);
+
           Dec(fLastToDig);
         end;
     7:  begin

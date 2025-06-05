@@ -552,7 +552,11 @@ begin
     Label_MobilHint.Caption := gCursor.Hint;
     Label_MobilHint.FontColor := icWhite;
     Label_MobilHint.Left := gCursor.Pixel.X;
+
+    Label_MobilHint.CursorY := gCursor.Pixel.Y;
     Label_MobilHint.Top := gCursor.Pixel.Y;
+    If Label_MobilHint.AbsBottom > Panel_Main.Height then
+      Label_MobilHint.Top := gCursor.Pixel.Y - Label_MobilHint.Height;
 
     Label_MobilHint.Show;
     Label_MobilHint.Paint;
@@ -618,7 +622,11 @@ begin
     Label_MobilHint.Caption := fHintCtrl.Hint;
     Label_MobilHint.FontColor := icWhite;
     Label_MobilHint.Left := gCursor.Pixel.X;
+
     Label_MobilHint.Top := gCursor.Pixel.Y;
+    Label_MobilHint.CursorY := gCursor.Pixel.Y;
+    If Label_MobilHint.AbsBottom > Panel_Main.Height then
+      Label_MobilHint.Top := gCursor.Pixel.Y - Label_MobilHint.Height;
 
     Label_MobilHint.Show;
     Label_MobilHint.Paint;

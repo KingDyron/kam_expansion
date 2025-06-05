@@ -100,7 +100,7 @@ type
     Stage : array of Word;
     HintID,
     GuiIcon : Word;
-    ClimateMulti: array[TKMTerrainClimat] of Single;
+    ClimateMulti: array[TKMTerrainClimate] of Single;
     function StagesCount : Byte;
     function GetStage(aObj : Word) : Byte;
   end;
@@ -138,7 +138,7 @@ var
   gMapElements: array of TKMMapElement;
   gFieldGrains: array[TKMGrainType] of TKMGrainDat;
   gFruitTrees : array of TKMFruitTree;
-  gTreeTypeID : array[TKMTerrainClimat] of TIntegerArray;
+  gTreeTypeID : array[TKMTerrainClimate] of TIntegerArray;
   gDecorations : TKMDecorationArray;
 const
   //Chopable tree, Chopdown animation,
@@ -572,7 +572,7 @@ var I, K, J, aID, MatureTreeAge : Integer;
   tmpGrain : TKMGrainDat;
   tmpElement : TKMMapElement;
   GT : TKMGrainType;
-  TT : TKMTerrainClimat;
+  TT : TKMTerrainClimate;
   S : String;
   tmpCost : TKMVWarePlanCommon;
   DT : TKMDecorationType;
@@ -924,16 +924,16 @@ begin
     for K := 0 to nArr2.Count - 1 do
       gFruitTrees[I].Stage[K] := nArr2.I[K];
     gFruitTrees[I].ClimateMulti[tcNone] := 1;
-    for TT := Low(TKMTerrainClimat) to High(TKMTerrainClimat) do
+    for TT := Low(TKMTerrainClimate) to High(TKMTerrainClimate) do
       if TT <> tcNone then
-        if TKMEnumUtils.GetName<TKMTerrainClimat>(TT, S) then
+        if TKMEnumUtils.GetName<TKMTerrainClimate>(TT, S) then
           gFruitTrees[I].ClimateMulti[TT] := nObject.D[S];
 
   end;
 
-  for TT := Low(TKMTerrainClimat) to High(TKMTerrainClimat) do
+  for TT := Low(TKMTerrainClimate) to High(TKMTerrainClimate) do
   begin
-    if TKMEnumUtils.GetName<TKMTerrainClimat>(TT, S) then
+    if TKMEnumUtils.GetName<TKMTerrainClimate>(TT, S) then
       JSONArrToValidArr(nObjects.A[S], gTreeTypeID[TT]);
   end;
 

@@ -1513,6 +1513,7 @@ end;
 
 function TKMDeliveries.GetWareType(aQueueID: Integer): TKMWareType;
 begin
+  Result := wtNone;
   If fQueue[aQueueID].Serf is TKMUnitSerf then
   Result := TKMUnitSerf(fQueue[aQueueID].Serf).Carry;
 

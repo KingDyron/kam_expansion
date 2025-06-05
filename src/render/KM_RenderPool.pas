@@ -1062,9 +1062,6 @@ procedure TKMRenderPool.AddHousePasture(aLoc: TKMPoint; aFlagColor: Cardinal = 0
                                        aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
 var
   rxData: TRXData;
-  id: Integer;
-  P : TKMPearlData;
-  I : Integer;
 
   function CornerX(aX, aY, aPic: Integer): Single;
   begin
@@ -1116,12 +1113,20 @@ begin
 
   id := A.Animation[aAnimStep];
 
-  cornerX := aLoc.X + (rxData.Pivot[id].X) / CELL_SIZE_PX - 1;
-  cornerY := aLoc.Y + (rxData.Pivot[id].Y + rxData.Size[id].Y) / CELL_SIZE_PX - 1
-                   - gTerrain.LandExt^[aLoc.RY + 1, aLoc.RX].RenderHeight / CELL_HEIGHT_DIV;
+  {gX := pX + (R.Pivot[Id0].X + R.Size[Id0].X/2) / CELL_SIZE_PX;
+  gY := pY + (R.Pivot[Id0].Y + R.Size[Id0].Y) / CELL_SIZE_PX;
 
-  gX := aLoc.X + (rxData.Pivot[id].X + rxData.Size[id].X / 2) / CELL_SIZE_PX - 1;
-  gY := aLoc.Y + (rxData.Pivot[id].Y + rxData.Size[id].Y) / CELL_SIZE_PX - 1.5;
+  cornerX := pX + R.Pivot[Id].X / CELL_SIZE_PX;
+  cornerY := pY - gTerrain.RenderHeightAt(gX, gY) + (R.Pivot[Id].Y + R.Size[Id].Y) / CELL_SIZE_PX;
+  }
+
+
+  gX := aLoc.X + (rxData.Pivot[id].X + rxData.Size[id].X / 2) / CELL_SIZE_PX{ - 1};
+  gY := aLoc.Y + (rxData.Pivot[id].Y + rxData.Size[id].Y) / CELL_SIZE_PX{ - 1.5};
+
+  cornerX := aLoc.X + (rxData.Pivot[id].X) / CELL_SIZE_PX{ - 1};
+  cornerY := aLoc.Y + (rxData.Pivot[id].Y + rxData.Size[id].Y) / CELL_SIZE_PX{ - 1}
+                   - gTerrain.RenderHeightAt(gX, gY);
 
   if aDoImmediateRender then
     RenderSprite(rxUnits, id, cornerX, cornerY, C1, true, C2)
@@ -1870,7 +1875,7 @@ var
   cornerX, cornerY, ground: Single;
   R: TRXData;
   A: TKMAnimation;
-  id, id0, step, animCount: Integer;
+  id, id0, step: Integer;
   height : Single;
 begin
   if Thought = thNone then Exit;

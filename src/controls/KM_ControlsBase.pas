@@ -56,12 +56,11 @@ type
     fTextSize: TKMPoint;
     fStrikethrough: Boolean;
     fTabWidth: Integer;
-
-    procedure SetCaption(const aCaption: UnicodeString);
     procedure SetWordWrap(aValue: Boolean);
     procedure ReformatText;
     procedure SetFont(const Value: TKMFont);
   protected
+    procedure SetCaption(const aCaption: UnicodeString); virtual;
     procedure SetWidth(aValue: Integer); override;
 
     function GetIsPainted: Boolean; override;
@@ -89,7 +88,10 @@ type
   end;
 
   TKMHintLabel = class(TKMLabel)
+    protected
+    procedure SetCaption(const aCaption: UnicodeString); override;
     public
+      CursorY : Integer;
       procedure Paint; override;
   end;
 
@@ -497,6 +499,13 @@ begin
   if fStrikethrough then
     TKMRenderUI.WriteShape(TextLeft, AbsTop + fTextSize.Y div 2 - 2, fTextSize.X, 3, col, $FF000000);
 end;
+
+procedure TKMHintLabel.SetCaption(const aCaption: UnicodeString);
+var tmp : Integer;
+begin
+  Inherited;
+  Height := gRes.Fonts[fFont].GetTextSize(fText, tmp).Y + 10;
+end;
 // Send caption to render
 procedure TKMHintLabel.Paint;
 var
@@ -519,16 +528,16 @@ begin
 
   bevelSize.X := (tmp + 1) * R.Size[884].X - 40;
 
-  TKMRenderUI.WriteBevel(AbsLeft + 40, AbsTop + 10, bevelSize.X + 10, bevelSize.Y + 10, 1, 0.75);
+  TKMRenderUI.WriteBevel(AbsLeft + 40, AbsTop + 5, bevelSize.X + 10, bevelSize.Y + 10, 1, 0.75);
   //TKMRenderUI.WriteBevel(AbsLeft, AbsTop - 1, bevelSize.X + 60, 5,TKMColor3f.New(0.82, 0.5, 0), 1, 1);
 
   for I := 0 to tmp do
-    TKMRenderUI.WritePicture(AbsLeft + R.Size[884].X * I, AbsTop, R.Size[884].X, R.Size[884].Y, [], rxGui, 884, true);
+    TKMRenderUI.WritePicture(AbsLeft + R.Size[884].X * I, CursorY, R.Size[884].X, R.Size[884].Y, [], rxGui, 884, true);
 
-  TKMRenderUI.WritePicture(AbsLeft + 50, AbsTop + 3, R.Size[885].X, R.Size[885].Y, [], rxGui, 885, true);//left
-  TKMRenderUI.WritePicture(AbsLeft - 10 + (tmp + 1) * R.Size[884].X, AbsTop + 3, R.Size[885].X, R.Size[885].Y, [], rxGui, 885, true);//right
+  TKMRenderUI.WritePicture(AbsLeft + 50, CursorY - 2, R.Size[885].X, R.Size[885].Y, [], rxGui, 885, true);//left
+  TKMRenderUI.WritePicture(AbsLeft - 10 + (tmp + 1) * R.Size[884].X, CursorY - 2, R.Size[885].X, R.Size[885].Y, [], rxGui, 885, true);//right
 
-  TKMRenderUI.WriteText(AbsLeft + 45, AbsTop + 15, bevelSize.X, fText, fFont, fTextAlign, col, False, False, False, false, fTabWidth);
+  TKMRenderUI.WriteText(AbsLeft + 45, AbsTop + 10, bevelSize.X, fText, fFont, fTextAlign, col, False, False, False, false, fTabWidth);
 end;
 
 { TKMLabelScroll }

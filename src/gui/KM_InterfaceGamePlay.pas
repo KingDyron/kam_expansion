@@ -4454,8 +4454,8 @@ begin
   end;
 
   if gGame.IsPaused and (fUIMode in [umSP, umMP]) and BLOCK_GAME_ON_PAUSE then Exit;
-  X := Round(X * gRender.InterfaceScale);
-  Y := Round(Y * gRender.InterfaceScale);
+  //X := Round(X * gRender.InterfaceScale);
+  //Y := Round(Y * gRender.InterfaceScale);
 
   P := gCursor.Cell; // It's used in many places here
 

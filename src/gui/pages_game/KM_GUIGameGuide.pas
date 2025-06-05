@@ -43,8 +43,8 @@ type
       fCount : Byte;
       fClimateOrder : TKMTerrainClimatArray;
     public
-      ClimateColor : array[TKMTerrainClimat] of TKMColor3f;
-      Caption : array[TKMTerrainClimat] of String;
+      ClimateColor : array[TKMTerrainClimate] of TKMColor3f;
+      Caption : array[TKMTerrainClimate] of String;
 
       constructor Create(aParent : TKMPanel; aLeft, aTop, aWidth, aHeight : Integer);
       procedure SetOrder(aOrder : TKMTerrainClimatArray);
@@ -554,6 +554,7 @@ begin
   Panel_SelectObj.ChildPanel.AnchorsStretch;
   SetLength(Button_Obj, length(gMapElements));
   C := 0;
+  vCount := 0;
   for I := 0 to High(gMapElements) do
   If (length(gMapElements[I].VWares) > 0) or KM_ResMapElements.ObjectIsWare(I) then
   begin
@@ -923,10 +924,10 @@ var F : TKMFruitTree;
   time, I, J : Integer;
   h,m,s : Byte;
   climOrder : TKMTerrainClimatArray;
-  clim : TKMTerrainClimat;
+  clim : TKMTerrainClimate;
   best, worst : Single;
-  procedure CompareClimates(var A : TKMTerrainClimat; var B: TKMTerrainClimat);
-  var tmp : TKMTerrainClimat;
+  procedure CompareClimates(var A : TKMTerrainClimate; var B: TKMTerrainClimate);
+  var tmp : TKMTerrainClimate;
   begin
     If F.ClimateMulti[B] > F.ClimateMulti[A] then
     begin
