@@ -4460,5 +4460,23 @@
 		"TextID": 2088,
 		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
 	}
+  ],
+  "GrowingTrees" : [
+	{"ObjectID" : 92, "Size" : 0.25},
+	{"ObjectID" : 102, "Size" : 0.4},
+	{"ObjectID" : 116, "Size" : 0.15},
+	{"ObjectID" : 121, "Size" : 0.2},
+	{"ObjectID" : 157, "Size" : 0.35},
+	{"ObjectID" : 167, "Size" : 0.4},
+	{"ObjectID" : 368, "Size" : 0.6},
+	{"ObjectID" : 371, "Size" : 0.55},
+	{"ObjectID" : 374, "Size" : 0.3},
+	{"ObjectID" : 378, "Size" : 0.7},
+	{"ObjectID" : 382, "Size" : 0.65},
+	{"ObjectID" : 391, "Size" : 0.65},
+	{"ObjectID" : 427, "Size" : 0.45},
+	{"ObjectID" : 434, "Size" : 0.4},
+	{"ObjectID" : 555, "Size" : 0.4},
+	{"ObjectID" : 581, "Size" : 0.35}
   ]
 }

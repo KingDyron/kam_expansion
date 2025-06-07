@@ -113,6 +113,7 @@ type
     procedure RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY, aNight: Single; aId2: Integer = 0; aStoneProgress: Single = 0; X2: Single = 0; Y2: Single = 0);
     procedure RenderMapElement1(aIndex: Word; aAnimStep: Cardinal; LocX,LocY: Integer; aLoopAnim: Boolean; aDoImmediateRender: Boolean = False; aDeleting: Boolean = False; aOnTop: Boolean = False);
     procedure RenderMapElement4(aIndex: Word; aAnimStep: Cardinal; pX,pY: Integer; aIsDouble: Boolean; aDoImmediateRender: Boolean = False; aDeleting: Boolean = False; aOnTop: Boolean = False);
+
     procedure RenderHouseOutline(aHouseSketch: TKMHouseSketch; aCol: Cardinal = icCyan);
 
     // Terrain rendering sub-class
@@ -197,6 +198,8 @@ type
     procedure AddUnitWithDefaultArm(aUnit: TKMUnitType; aUID: Integer; aAct: TKMUnitActionType; aDir: TKMDirection; StepId: Integer; pX,pY: Single; FlagColor: TColor4; DoImmediateRender: Boolean = False; DoHignlight: Boolean = False; HighlightColor: TColor4 = 0);
     procedure AddUnitBitin(pX, pY : Single);
     procedure RenderMapElement(aIndex: Word; aAnimStep,pX,pY: Integer; aDoImmediateRender: Boolean = False; aDeleting: Boolean = False; aOnTop: Boolean = False);
+    procedure RenderTree(aIndex: Word; aAnimStep: Cardinal; LocX,LocY: Single; nightLoc : TKMPoint;
+                        aDoImmediateRender: Boolean = False; aDeleting: Boolean = False);
     procedure RenderSpriteOnTile(const aLoc: TKMPoint; aId: Integer; aFlagColor: TColor4 = $FFFFFFFF; aRX : TRXType = rxGui);
     procedure RenderSpriteOnTerrain(const aLoc: TKMPointF; aId: Integer; aFlagColor: TColor4 = $FFFFFFFF; aForced: Boolean = False; aRX : TRXType = rxGui);
     procedure RenderTile(aTerrainId: Word; pX,pY,Rot: Integer);
@@ -767,6 +770,47 @@ begin
     else
       fRenderList.AddSpriteG(rxTrees, Id, 0, cornerX, cornerY, gX, gY, LocX,LocY);
   end;
+end;
+
+procedure TKMRenderPool.RenderTree(aIndex: Word; aAnimStep: Cardinal; LocX: Single; LocY: Single; nightLoc : TKMPoint;
+                                  aDoImmediateRender: Boolean = False; aDeleting: Boolean = False);
+var
+  R: TRXData;
+  pX, pY : Single;
+  Step: Integer;
+  cornerX, cornerY: Single;
+  gX, gY: Single;
+  Id, Id0: Integer;
+  FOW: Byte;
+  A : TKMAnimLoop;
+begin
+  A := gMapElements[aIndex].Anim;
+  if A.Count = 0 then Exit;
+
+  step := aAnimStep mod A.Count + 1;
+  Id := gMapElements[aIndex].Anim.Step[step] + 1;
+  Id0 := gMapElements[aIndex].Anim.Step[1] + 1;
+
+  if Id <= 0 then exit;
+
+  R := fRXData[rxTrees];
+  pX := LocX - 1;
+  pY := LocY - 1;
+
+  if gGameSettings.GFX.AllowSnowObjects then
+    if (gMapElements[aIndex].SnowPic > 255) and (gTerrain.TileIsSnow(Round(pX), round(pY))) then
+      Id := gMapElements[aIndex].SnowPic;
+
+  gX := pX + (R.Pivot[Id0].X + R.Size[Id0].X/2) / CELL_SIZE_PX;
+  gY := pY + (R.Pivot[Id0].Y + R.Size[Id0].Y) / CELL_SIZE_PX;
+
+  cornerX := pX + R.Pivot[Id].X / CELL_SIZE_PX;
+  cornerY := pY - gTerrain.RenderHeightAt(gX, gY) + (R.Pivot[Id].Y + R.Size[Id].Y) / CELL_SIZE_PX;
+
+  if aDoImmediateRender then
+      RenderSprite(rxTrees, Id, cornerX, cornerY, $FFFFFFFF, aDeleting, DELETE_COLOR)
+  else
+    fRenderList.AddSpriteG(rxTrees, Id, 0, cornerX, cornerY, gX, gY, nightLoc.X,nightLoc.Y);
 end;
 
 

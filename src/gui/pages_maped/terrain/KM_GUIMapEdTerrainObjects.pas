@@ -355,6 +355,7 @@ begin
 
     Panel_ObjectsTable := TKMScrollPanel.Create(PopUp_ObjectsPalette, PopUp_ObjectsPalette.Width div 2 - 600, 0, 1200, PopUp_ObjectsPalette.Height - 125, [saVertical], bsMenu, ssCommon);
     Panel_ObjectsTable.AnchorsStretch;
+    Panel_ObjectsTable.ChildPanel.AnchorsStretch;
     Panel_ObjectsTable.ScrollV.WheelStep := 100;
     Panel_ObjectsTable.MouseWheelStep := 100;
 

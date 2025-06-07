@@ -118,6 +118,11 @@ type
     procedure Add(aType : TKMDecorationType; aID, aGuiIcon, aTextID : Word; aCost : TKMVWarePlanCommon);
   end;
 
+  TKMGrowingTree = record
+    ObjID : Word;
+    Size : Single;
+  end;
+
   function ObjectIsChoppableTree(aObjId: Integer): Boolean; overload;
   function ObjectIsChoppableTree(aObjId: Integer; aStage: TKMChopableAge): Boolean; overload;
   function ObjectIsChoppableTree(aObjId: Integer; aStages: TKMChopableAgeSet): Boolean; overload;
@@ -140,6 +145,8 @@ var
   gFruitTrees : array of TKMFruitTree;
   gTreeTypeID : array[TKMTerrainClimate] of TIntegerArray;
   gDecorations : TKMDecorationArray;
+  gGrowingTrees : array of TKMGrowingTree;
+
 const
   //Chopable tree, Chopdown animation,
   //Age1, Age2, Age3, Age4, Falling, Stump
@@ -960,6 +967,17 @@ begin
       DT := dtObject;
     gDecorations.Add(DT, nObject.I['ID'], nObject.I['GuiIcon'], nObject.I['TextID'], tmpCost);
   end;
+
+
+  nArr := nObjects.A['GrowingTrees'];
+
+  SetLength(gGrowingTrees, nArr.Count);
+  for I := 0 to nArr.Count - 1 do
+  begin
+    nObject := nArr.O[I];
+    gGrowingTrees[I].ObjID := nObject.I['ObjectID'];
+    gGrowingTrees[I].Size := nObject.D['Size'];
+  end;
     
 
 
@@ -1158,7 +1176,6 @@ begin
     caAgeFall: Result := (gMapElements[aObjID].FallTreeAnimObj = 0)
                 and (gMapElements[aObjID].CuttableTree = false)
                 and (gMapElements[aObjID].LandStump = 0)
-                and (gMapElements[aObjID].NextTreeAgeObj = 0)
                 and (gMapElements[aObjID].NextTreeAgeObj = 0);
 
     caAgeStump: for I := 0 to high(STUMPS) do
