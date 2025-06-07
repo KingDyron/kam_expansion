@@ -3437,6 +3437,28 @@ begin
   if not (gMySpectator.Selected is TKMHouseStore) then
     Exit;
   W := TKMWareType(TKMButtonFlat(Sender).Tag);
+  If (ssShift in Shift) then
+  begin
+    //Red triangle - block delivery to barracks
+    if ssLeft in Shift then
+      gGame.GameInputProcess.CmdHouse(gicStoreHouseBlockAll, TKMHouse(gMySpectator.Selected), 0)
+    else
+    //Orange triange - block take resources from
+    if ssRight in Shift then
+      gGame.GameInputProcess.CmdHouse(gicStoreHouseBlockAll, TKMHouse(gMySpectator.Selected), 1);
+  end else
+  If (ssCtrl in Shift) then
+  begin
+    //Red triangle - block delivery to barracks
+    if ssLeft in Shift then
+      gGame.GameInputProcess.CmdHouse(gicStoreHouseUnlockAll, TKMHouse(gMySpectator.Selected), 0)
+    else
+    //Orange triange - block take resources from
+    if ssRight in Shift then
+      gGame.GameInputProcess.CmdHouse(gicStoreHouseUnlockAll, TKMHouse(gMySpectator.Selected), 1);
+
+  end;
+
   //Red triangle - block delivery to barracks
   if ssLeft in Shift then
     gGame.GameInputProcess.CmdHouse(gicHouseStoreNotAcceptFlag, TKMHouse(gMySpectator.Selected), W)

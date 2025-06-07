@@ -40,8 +40,10 @@ type
     procedure SetNewDeliveryMode(aValue: TKMDeliveryMode); override;
     function CanHaveWareType(aWare: TKMWareType): Boolean; override;
     procedure Save(SaveStream: TKMemoryStream); override;
+
     property TotalCount : Integer read fTotalCount;
     property MaxCount : Integer read fMaxCount write fMaxCount;
+    procedure BlockAll(aTakeOut, aBlocked : Boolean);
   end;
 const
   MAX_STORE_CAPACITY = 4000;
@@ -321,6 +323,19 @@ begin
                             )
                             );
 
+end;
+
+procedure TKMHouseStore.BlockAll(aTakeOut: Boolean; aBlocked: Boolean);
+var WT : TKMWareType;
+begin
+  If aTakeOut then
+  begin
+    for WT := Low(NotAllowTakeOutFlag) to High(NotAllowTakeOutFlag) do
+      NotAllowTakeOutFlag[WT] := aBlocked;
+
+  end else
+    for WT := Low(NotAcceptFlag) to High(NotAcceptFlag) do
+      NotAcceptFlag[WT] := aBlocked;
 end;
 
 

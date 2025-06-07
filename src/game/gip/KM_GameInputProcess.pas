@@ -151,6 +151,8 @@ type
     gicPearlUseSpecial,
 
     gicHouseStyleSet,
+    gicStoreHouseUnlockAll,
+    gicStoreHouseBlockAll,
 
 
     //V.     Delivery ratios changes (and other game-global settings)
@@ -306,7 +308,9 @@ const
     gicPearlSelectRResTo,//ralender
     gicPearlDoExchange,//ralender
     gicPearlUseSpecial,
-    gicHouseStyleSet
+    gicHouseStyleSet,
+    gicStoreHouseUnlockAll,
+    gicStoreHouseBlockAll
     ];
 
 
@@ -419,6 +423,8 @@ const
     gicpt_Int2,//gicPearlDoExchange,//ralender
     gicpt_Int1,//gicPearlUseSpecial,
     gicpt_Int2,//gicHouseStyleSet
+    gicpt_Int2,//gicStoreHouseUnlockAll
+    gicpt_Int2, //gicStoreHouseBlockAll
     //V.     Delivery ratios changes (and other game-global settings)
     gicpt_Int3,     // gicWareDistributionChange
     gicpt_AnsiStr1, // gicWareDistributions
@@ -1128,7 +1134,7 @@ begin
       gicHStoreSetNotAcceptFlag, gicHStoreSetNotAllowTakeOutFlag, gicHouseStoreBell, gicHousePalaceCancelOrder, gicHouseFruitTreeToggleType, gicHouseShipType,
       gicHouseShipDoWork, gicHouseFarmMode, gicHouseCollectorsMode, gicCartographersMode, gicCartographersToggleView, gicCartographersSelectPlayer,
       gicCartographersDoSpying, gicHouseRepairSet, gicPearlSelectType,gicPearlConfirm, gicPearlSelectResFrom, gicPearlSelectResTo, gicPearlSelectVResTo,//arium
-      gicPearlSelectRResTo, gicPearlDoExchange, gicPearlUseSpecial, gicHouseStyleSet] then
+      gicPearlSelectRResTo, gicPearlDoExchange, gicPearlUseSpecial, gicHouseStyleSet, gicStoreHouseUnlockAll, gicStoreHouseBlockAll] then
     begin
       srcHouse := gHands.GetHouseByUID(IntParams[0]);
       if (srcHouse = nil) or srcHouse.IsDestroyed //House has been destroyed before command could be executed
@@ -1314,6 +1320,8 @@ begin
       gicCartographersDoSpying      : TKMHouseCartographers(srcHouse).DoSpying := not TKMHouseCartographers(srcHouse).DoSpying;
       gicHouseRepairSet             : srcHouse.BuildingRepair := IntParams[1] = 1;
       gicHouseStyleSet              : srcHouse.Style := IntParams[1];
+      gicStoreHouseUnlockAll        : TKMHouseStore(srcHouse).BlockAll(IntParams[1] = 1, false);
+      gicStoreHouseBlockAll        : TKMHouseStore(srcHouse).BlockAll(IntParams[1] = 1, true);
 
       gicPearlSelectType            : TKMHousePearl(srcHouse).SelectType(TKMPearlType(IntParams[1]));
       gicPearlConfirm               : TKMHousePearl(srcHouse).ConfirmBuild;
@@ -1629,7 +1637,7 @@ begin
                           gicHouseFruitTreeToggleType, gicHouseShipType, gicHouseTownHallMaxBitin, gicCartographersMode,
                           gicCartographersToggleView, gicCartographersSelectPlayer, gicHouseRepairSet, gicPearlSelectType,
                           gicPearlSelectResFrom, gicPearlSelectResTo, gicPearlSelectVResTo, gicPearlSelectRResTo, gicPearlDoExchange,
-                          gicHouseStyleSet]);
+                          gicHouseStyleSet, gicStoreHouseUnlockAll, gicStoreHouseBlockAll]);
   //Assert((aHouse is TKMHouseSchool) or (aHouse is TKMHouseTownHall) or (aHouse is TKMHouseSiegeWorkshop));
   TakeCommand(MakeCommand(aCommandType, aHouse.UID, aValue));
 end;
