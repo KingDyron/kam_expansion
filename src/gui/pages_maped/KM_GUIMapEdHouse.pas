@@ -887,6 +887,7 @@ begin
       ResRow_Ware_Output[lastRow].WareRow.TexID := gRes.Wares[ware].GUIIcon;
       ResRow_Ware_Output[lastRow].WareRow.Caption := gRes.Wares[ware].Title;
       ResRow_Ware_Output[lastRow].Hint := gRes.Wares[ware].Title;
+      ResRow_Ware_Output[lastRow].OrderCntMax := fHouse.GetMaxOutWare;
       ResRow_Ware_Output[lastRow].WareRow.WareCount := fHouse.CheckWareOut(ware);
       ResRow_Ware_Output[lastRow].OrderCount := fHouse.CheckWareOut(ware);
       ResRow_Ware_Output[lastRow].Show;
@@ -1320,7 +1321,7 @@ begin
 
     if (Sender = ResRow_Ware_Output[lastRow]) and (aValue > 0) then
     begin
-      newCountAdd := Math.Min(aValue, MAX_WARES_IN_HOUSE - fHouse.CheckWareOut(ware));
+      newCountAdd := Math.Min(aValue, fHouse.GetMaxOutWare - fHouse.CheckWareOut(ware));
       if gRes.Houses[fHouse.HouseType].IsWorkshop then
         newCountAdd := Math.Min(newCountAdd, MAX_WARES_OUT_WORKSHOP - fHouse.CheckWareOut(wtAll));
       fHouse.WareAddToOut(ware, newCountAdd);
@@ -1332,6 +1333,7 @@ begin
       fHouse.WareTakeFromOut(ware, newCountAdd);
     end;
 
+    ResRow_Ware_Output[lastRow].OrderCntMax := fHouse.GetMaxOutWare;
     ResRow_Ware_Output[lastRow].OrderCount := fHouse.CheckWareOut(ware);
     ResRow_Ware_Output[lastRow].WareRow.WareCount := ResRow_Ware_Output[lastRow].OrderCount;
     Inc(lastRow);

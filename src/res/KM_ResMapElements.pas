@@ -121,6 +121,7 @@ type
   TKMGrowingTree = record
     ObjID : Word;
     Size : Single;
+    GuiIcon : Word;
   end;
 
   function ObjectIsChoppableTree(aObjId: Integer): Boolean; overload;
@@ -977,6 +978,7 @@ begin
     nObject := nArr.O[I];
     gGrowingTrees[I].ObjID := nObject.I['ObjectID'];
     gGrowingTrees[I].Size := nObject.D['Size'];
+    gGrowingTrees[I].GuiIcon := nObject.I['GuiIcon'];
   end;
     
 

@@ -173,6 +173,10 @@ begin
     Exit;
   entr := Entrance;
 
+
+  I := ResOut[1];
+  If I > 0 then
+    gRenderPool.AddForestLogs(Position, I);
   for I := 0 to fCount - 1 do
   begin
     gRenderPool.RenderTree(fTrees[I].Obj, FlagAnimStep + I,

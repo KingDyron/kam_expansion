@@ -191,6 +191,9 @@ type
     procedure AddHousePotteryTiles(const aLoc: TKMPoint; aTileID: Byte);
     procedure AddHouseMerchantChests(const aLoc: TKMPoint; aOffsetX, aOffsetY : Integer);
     procedure AddHouseEater(const Loc: TKMPoint; aUnit: TKMUnitType; aAct: TKMUnitActionType; aDir: TKMDirection; StepId: Integer; OffX,OffY: Single; FlagColor: TColor4);
+    procedure AddForestLogs(const aLoc: TKMPoint; aCount : Byte; aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
+
+
     procedure AddUnit(aUnit: TKMUnitType; aUID: Integer; aAct: TKMUnitActionType; aDir: TKMDirection; StepId: Integer; StepFrac: Single; pX,pY: Single; FlagColor: TColor4; NewInst: Boolean; DoImmediateRender: Boolean = False; DoHighlight: Boolean = False; HighlightColor: TColor4 = 0; aAlphaStep : Single = -1);
     procedure AddUnitCarry(aCarry: TKMWareType; aUID: Integer; aDir: TKMDirection; StepId: Integer; StepFrac: Single; pX,pY: Single; FlagColor: TColor4);
     procedure AddUnitThought(aUnit: TKMUnitType; aAct: TKMUnitActionType; aDir: TKMDirection; aStep : Cardinal; Thought: TKMUnitThought; pX,pY: Single);
@@ -1589,6 +1592,34 @@ begin
             AddHouseSupplySprite(id);
         end;
     end;
+end;
+
+procedure TKMRenderPool.AddForestLogs(const aLoc: TKMPoint; aCount: Byte; aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
+var
+  id, I, K, I2, count: Integer;
+  rxData: TRXData;
+
+  procedure AddHouseSupplySprite(aId: Integer);
+  var
+    CornerX, CornerY: Single;
+  begin
+    if aId = 0 then Exit;
+
+    CornerX := aLoc.X + rxData.Pivot[aId].X / CELL_SIZE_PX - 1;
+    CornerY := aLoc.Y + (rxData.Pivot[aId].Y + rxData.Size[aId].Y) / CELL_SIZE_PX - 1
+                     - gTerrain.LandExt^[aLoc.Y + 1, aLoc.X].RenderHeight / CELL_HEIGHT_DIV;
+
+    if aDoImmediateRender then
+    begin
+      RenderSprite(rxHouses, aId, CornerX, CornerY, $0, aDoHighlight, aHighlightColor)
+    end else
+      fRenderList.AddSprite(rxHouses, aId, CornerX, CornerY, aLoc.X, aLoc.Y);
+  end;
+begin
+  rxData := fRXData[rxHouses];
+  aCount := Min(aCount, 33);
+  id := 2784 + aCount - 1;
+  AddHouseSupplySprite(id);
 end;
 
 

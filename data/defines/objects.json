@@ -4462,21 +4462,22 @@
 	}
   ],
   "GrowingTrees" : [
-	{"ObjectID" : 92, "Size" : 0.25},
-	{"ObjectID" : 102, "Size" : 0.4},
-	{"ObjectID" : 116, "Size" : 0.15},
-	{"ObjectID" : 121, "Size" : 0.2},
-	{"ObjectID" : 157, "Size" : 0.35},
-	{"ObjectID" : 167, "Size" : 0.4},
-	{"ObjectID" : 368, "Size" : 0.6},
-	{"ObjectID" : 371, "Size" : 0.55},
-	{"ObjectID" : 374, "Size" : 0.3},
-	{"ObjectID" : 378, "Size" : 0.7},
-	{"ObjectID" : 382, "Size" : 0.65},
-	{"ObjectID" : 391, "Size" : 0.65},
-	{"ObjectID" : 427, "Size" : 0.45},
-	{"ObjectID" : 434, "Size" : 0.4},
-	{"ObjectID" : 555, "Size" : 0.4},
-	{"ObjectID" : 581, "Size" : 0.35}
+	{"ObjectID" : 92, "Size" : 0.25, "GuiIcon" : 1046},
+	{"ObjectID" : 102, "Size" : 0.4, "GuiIcon" : 1047},
+	{"ObjectID" : 116, "Size" : 0.15, "GuiIcon" : 1048},
+	{"ObjectID" : 121, "Size" : 0.2, "GuiIcon" : 1049},
+	{"ObjectID" : 157, "Size" : 0.35, "GuiIcon" : 1050},
+	{"ObjectID" : 167, "Size" : 0.4, "GuiIcon" : 1051},
+	{"ObjectID" : 368, "Size" : 0.6, "GuiIcon" : 1052},
+	{"ObjectID" : 371, "Size" : 0.55, "GuiIcon" : 1053},
+	{"ObjectID" : 374, "Size" : 0.3, "GuiIcon" : 1054},
+	{"ObjectID" : 378, "Size" : 0.7, "GuiIcon" : 1055},
+	{"ObjectID" : 382, "Size" : 0.65, "GuiIcon" : 1056},
+	{"ObjectID" : 391, "Size" : 0.65, "GuiIcon" : 1057},
+	{"ObjectID" : 427, "Size" : 0.45, "GuiIcon" : 1058},
+	{"ObjectID" : 434, "Size" : 0.4, "GuiIcon" : 1059},
+	{"ObjectID" : 555, "Size" : 0.4, "GuiIcon" : 1060},
+	{"ObjectID" : 581, "Size" : 0.35, "GuiIcon" : 1061},
+	{"ObjectID" : 590, "Size" : 0.45, "GuiIcon" : 1062}
   ]
 }
