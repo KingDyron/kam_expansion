@@ -135,8 +135,9 @@ begin
   case aUnitType of
     utSerf:                       Result := TKMUnitSerf.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
     utBuilder:                    Result := TKMUnitWorker.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
+    utWoodcutter:                 Result := TKMUnitWoodcutter.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
     utClayPicker,
-    utWoodCutter..utFisher,
+    utMiner..utFisher,
     {utBuilder,}
     utStonemason..utMetallurgist: Result := TKMUnitCitizen.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
     utOperator,

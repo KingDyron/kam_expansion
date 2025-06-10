@@ -375,6 +375,13 @@ type
     procedure TaskGetWork; override;
   end;
 
+  TKMUnitWoodcutter = class(TKMUnitCitizen)
+  private
+    procedure TaskCutForest;
+  protected
+    procedure TaskGetWork; override;
+  end;
+
   //Serf - transports all wares between houses
   TKMUnitSerf = class(TKMCivilUnit)
   private
@@ -499,7 +506,7 @@ uses
   KM_Game, KM_GameParams, KM_GameApp,
   KM_RenderPool, KM_RenderAux, KM_ResTexts,
   KM_HandsCollection, KM_UnitWarrior, KM_Resource,
-  KM_Hand, KM_MapEdTypes, KM_HousePearl,
+  KM_Hand, KM_MapEdTypes, KM_HousePearl, KM_HouseForest,
   KM_CommonHelpers,
   KM_UnitActionAbandonWalk,
   KM_UnitActionFight,
@@ -525,6 +532,8 @@ uses
   KM_UnitTaskGoToWell,
   KM_UnitTaskMerchant,
   KM_UnitTaskCartographer,
+  KM_UnitTaskWoodCutter,
+
   KM_SpecialAnim,
   KM_GameTypes,
   KM_HandTypes,
@@ -1079,6 +1088,29 @@ begin
 
   if enemy <> nil then
     fTask := TKMTaskThrowRock.Create(Self, enemy);
+end;
+
+procedure TKMUnitWoodcutter.TaskCutForest;
+var TF : TKMHouseForest;
+  I : Integer;
+begin
+  If Home = nil then
+    Exit;
+  If Home.HouseType <> htForest then
+    Exit;
+  TF := TKMHouseForest(Home);
+  I := TF.HasTreeToCut;
+  If I = -1 then
+    Exit;
+  fTask := TKMTaskForestCutting.Create(self, Home, I);
+end;
+
+procedure TKMUnitWoodcutter.TaskGetWork;
+begin
+  If Home.HouseType = htForest then
+    TaskCutForest
+  else
+    Inherited;
 end;
 
 
@@ -3144,6 +3176,7 @@ const
       -1,                      //uttGoToShip
       TX_UNIT_TASK_ROAD,        //uttBuildGrassland
       -1,                      //uttUnloadFromShip
+      -1,
       -1,
       -1,
       -1,

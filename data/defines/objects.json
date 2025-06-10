@@ -2085,11 +2085,10 @@
 		"DontPlantNear" : true,
 		
 		"IsFruit" : 3, 
-		"AxeHitTimes" : 15,
-		"TrunksCount" : 1,
+		"AxeHitTimes" : 0,
 		"TreeGrowAge" : 34,
 		"FallTreeAnimObj" : 0,
-		"Stump" : 15,
+		"Stump" : 0,
 		"NextTreeAgeObj" : 395
 	  },
 	  {
@@ -4464,8 +4463,8 @@
   "GrowingTrees" : [
 	{"ObjectID" : 92, "Size" : 0.25, "GuiIcon" : 1046},
 	{"ObjectID" : 102, "Size" : 0.4, "GuiIcon" : 1047},
-	{"ObjectID" : 116, "Size" : 0.15, "GuiIcon" : 1048},
-	{"ObjectID" : 121, "Size" : 0.2, "GuiIcon" : 1049},
+	{"ObjectID" : 116, "Size" : 0.25, "GuiIcon" : 1048},
+	{"ObjectID" : 121, "Size" : 0.25, "GuiIcon" : 1049},
 	{"ObjectID" : 157, "Size" : 0.35, "GuiIcon" : 1050},
 	{"ObjectID" : 167, "Size" : 0.4, "GuiIcon" : 1051},
 	{"ObjectID" : 368, "Size" : 0.6, "GuiIcon" : 1052},

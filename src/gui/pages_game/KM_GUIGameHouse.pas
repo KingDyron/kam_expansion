@@ -2225,7 +2225,7 @@ begin
                       end;
           htCartographers : Panel_Cartographers.Show(fHouse, base + line * 25 + 20 + 50);
           htPasture : Panel_Pasture.Show(fHouse, base + line * 25 + 20 + 50);
-          htForest : Panel_Forest.Show(fHouse, base + line * 25 + 20 + 50);
+          htForest : Panel_Forest.Show(fHouse, base + line * 25 + 20 + 55);
       end;
 
 

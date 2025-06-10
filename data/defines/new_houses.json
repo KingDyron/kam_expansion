@@ -4339,10 +4339,14 @@
 			"MaxOutWares" : 33,
 			"CanForceWork" : true,
 			"UnoccupiedMsgId" : -1,
-			"CanOverfill" : true,
+			"CanOverfill" : false,
 			"GatheringScript" : "gsNone",
 			"UnlockAfter" : ["htSawmill"],
 			"WareOutput" : ["wtTrunk"],
+			"WorkerTypes" : 
+			[
+				{"UnitType" : "utWoodcutter","MaxCount" : 1}
+			],
 			"ha_Fire1" : {"X" : -68,"Y" : -177,"Steps" : [1623,1624,1625,1620,1621,1622]},
 			"ha_Fire2" : {"X" : 0,"Y" : 0,"Steps" : [1637,1632,1633,1634,1635,1636]},
 			"ha_Fire3" : {"X" : -15,"Y" : -185,"Steps" : [1620,1621,1622,1623,1624,1625]},

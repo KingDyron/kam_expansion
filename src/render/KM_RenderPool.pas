@@ -600,7 +600,8 @@ begin
   with gTerrain do
     for I := 0 to FallingTrees.Count - 1 do
     begin
-      RenderMapElement1(FallingTrees.Tag[I], aAnimStep - FallingTrees.Tag2[I], FallingTrees[I].X, FallingTrees[I].Y, False);
+      RenderTree(FallingTrees.Tag[I], aAnimStep - FallingTrees.Tag2[I], FallingTrees[I].X, FallingTrees[I].Y, KMPoint(FallingTrees[I]));
+      //RenderMapElement1(FallingTrees.Tag[I], aAnimStep - FallingTrees.Tag2[I], FallingTrees[I].X, FallingTrees[I].Y, False);
       Assert(AnimStep - FallingTrees.Tag2[I] <= 100, 'Falling tree overrun?');
     end;
 
@@ -1596,7 +1597,7 @@ end;
 
 procedure TKMRenderPool.AddForestLogs(const aLoc: TKMPoint; aCount: Byte; aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
 var
-  id, I, K, I2, count: Integer;
+  id: Integer;
   rxData: TRXData;
 
   procedure AddHouseSupplySprite(aId: Integer);

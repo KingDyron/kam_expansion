@@ -72,8 +72,8 @@ type
     LandExt: PKMLandExt;
 
     Fences: TKMLandFences;
-    Lights,
-    FallingTrees: TKMPointTagList;
+    Lights: TKMPointTagList;
+    FallingTrees: TKMPointFTagList;
 
     constructor Create;
     destructor Destroy; override;
@@ -215,7 +215,8 @@ type
 
 
     function FallTree(const aLoc: TKMPoint): Boolean;
-    procedure ChopTree(const aLoc: TKMPoint);
+    procedure AddFallingTree(aLoc : TKMPointF; aObjID : Word);
+    procedure ChopTree(const aID: Integer);
     procedure RemoveObject(const aLoc: TKMPoint);
     procedure RemoveObjectsKilledByRoad(const aLoc: TKMPoint);
     procedure SetWareOnGround(aLoc : TKMPoint; aWare : TKMWareType; aCount : Integer);
@@ -499,7 +500,7 @@ begin
   inherited;
   fAnimStep := 0;
   //TERRAIN_DARK := MIN_NIGHT_DARKNESS + (Sin(fNightFactor / NIGHT_SPEED) + 1) * 0.6 * (1 - MIN_NIGHT_DARKNESS);
-  FallingTrees := TKMPointTagList.Create;
+  FallingTrees := TKMPointFTagList.Create;
   Lights := TKMPointTagList.Create;
   fTileset := gRes.Tileset; //Local shortcut
 
@@ -5440,13 +5441,14 @@ begin
   aID := Land^[aLoc.Y,aLoc.X].Obj;
   if gMapElements[aID].CuttableTree then
   begin
+    Land^[aLoc.Y,aLoc.X].TreeAge := 0;
     if gMapElements[aID].LandStump = 0 then
       Land^[aLoc.Y,aLoc.X].Obj := 255
     else
       Land^[aLoc.Y,aLoc.X].Obj := gMapElements[aID].LandStump;
 
     if gMapElements[aID].FallTreeAnimObj > 0 then
-      FallingTrees.Add(aLoc, gMapElements[aID].FallTreeAnimObj, fAnimStep);
+      FallingTrees.Add(KMPointF(aLoc), gMapElements[aID].FallTreeAnimObj, fAnimStep);
 
     if gMySpectator.FogOfWar.CheckTileRevelation(aLoc.X, aLoc.Y) >= 255 then
       gSoundPlayer.Play(sfxTreeDown, aLoc, True);
@@ -5474,45 +5476,58 @@ begin
     
 end;
 
+procedure TKMTerrain.AddFallingTree(aLoc: TKMPointF; aObjID: Word);
+begin
+  if gMapElements[aObjID].CuttableTree then
+  begin
+    if gMapElements[aObjID].FallTreeAnimObj > 0 then
+      FallingTrees.Add(aLoc, gMapElements[aObjID].FallTreeAnimObj, fAnimStep);
+
+    if gMySpectator.FogOfWar.CheckTileRevelation(aLoc.RX, aLoc.RY) >= 255 then
+      gSoundPlayer.Play(sfxTreeDown, aLoc, True);
+  end;
+
+end;
+
 
 // Remove the tree and place stump instead
-procedure TKMTerrain.ChopTree(const aLoc: TKMPoint);
+procedure TKMTerrain.ChopTree(const aID: Integer);
 var
   H: TKMHouse;
   removeStamp: Boolean;
+  loc : TKMPoint;
 begin
-  Land^[aLoc.Y,aLoc.X].TreeAge := 0;
-  FallingTrees.Remove(aLoc);
-
+  loc := KMPoint(FallingTrees[aID]);
+  FallingTrees.Delete(aID);
   // Check if that tree was near house entrance (and stamp will block its entrance)
   //  E       entrance
   //   S      stamp
   removeStamp := False;
-  H := gHands.HousesHitTest(aLoc.X - 1, aLoc.Y - 1);
+  H := gHands.HousesHitTest(loc.X - 1, loc.Y - 1);
   if (H <> nil) 
-    and (H.Entrance.X = aLoc.X - 1)
-    and (H.Entrance.Y + 1 = aLoc.Y) then
+    and (H.Entrance.X = loc.X - 1)
+    and (H.Entrance.Y + 1 = loc.Y) then
     removeStamp := True;
 
   if not removeStamp then
   begin
     //  E       entrance
     //  S       stamp
-    H := gHands.HousesHitTest(aLoc.X, aLoc.Y - 1);
+    H := gHands.HousesHitTest(loc.X, loc.Y - 1);
     if (H <> nil) 
-      and (H.Entrance.X = aLoc.X)
-      and (H.Entrance.Y + 1 = aLoc.Y) then
+      and (H.Entrance.X = loc.X)
+      and (H.Entrance.Y + 1 = loc.Y) then
       removeStamp := True;
   end;
 
   if removeStamp then
-    Land^[aLoc.Y,aLoc.X].Obj := OBJ_NONE;
+    Land^[loc.Y,loc.X].Obj := OBJ_NONE;
 
   //Update passability after all object manipulations
-  UpdatePassability(KMRectGrow(KMRect(aLoc), 1));
+  UpdatePassability(KMRectGrow(KMRect(loc), 1));
 
   //WalkConnect takes diagonal passability into account
-  UpdateWalkConnect([wcWalk, wcRoad, wcWork], KMRectGrowTopLeft(KMRect(aLoc)), True); //Trees block diagonals
+  UpdateWalkConnect([wcWalk, wcRoad, wcWork], KMRectGrowTopLeft(KMRect(loc)), True); //Trees block diagonals
 end;
 
 
@@ -9249,7 +9264,7 @@ begin
     //Update falling trees animation
     for T := FallingTrees.Count - 1 downto 0 do
     if fAnimStep >= FallingTrees.Tag2[T] + Cardinal(gMapElements[FallingTrees.Tag[T]].Anim.Count - 1) then
-      ChopTree(FallingTrees[T]); //Make the tree turn into a stump
+      ChopTree(T); //Make the tree turn into a stump
 
     //Process every 200th (TERRAIN_PACE) tile, offset by fAnimStep
     A := fAnimStep mod TERRAIN_PACE;

@@ -9,7 +9,8 @@ uses
 
 type
   TKMForestTree = record
-    Age, ID : Byte;
+    Age : Word;
+    ID : Byte;
     Obj : Word;
     Pos : TKMPointF;
 
@@ -19,6 +20,10 @@ type
   private
     fCount : Byte;
     fTrees : array of TKMForestTree;
+    fCuttingAnimStep : Word;
+    fCuttingAnimDir : TKMDirection;
+    fCuttingPos : TKMPointF;
+
     function TreeWillCollide(aTreeID : Byte; aLoc : TKMPointF) : Boolean;
     function GetRandomPosForTree(aTreeID : Byte) : TKMPointF;
   protected
@@ -29,25 +34,31 @@ type
     function GetClosestEntrance(aLoc: TKMPoint): TKMPointDir; override;
     function Entrances : TKMPointDirArray; override;
 
-    function AddTree(aTreeID : Byte) : Boolean;
+    function AddTree(aTreeID : Byte) : Boolean; overload;
+    function AddTree(aTreeID : Byte; aCount : Byte) : Boolean; overload;
     procedure UpdateState(aTick: Cardinal); Override;
     procedure Paint; override;
+
+    function HasTreeToCut : Integer;
+    procedure StartCuttingTree(aID : Integer);
+    procedure CutTree(aID : Integer);
+    function TreeObjID(aID : Integer) : Integer;
   end;
 
 
 implementation
 uses
-  Classes,
+  Classes, SysUtils,
   KM_CommonUtils,
   KM_RenderPool,
-  KM_ResMapElements;
+  KM_ResMapElements,
+  KM_Terrain,
+  KM_Units;
 
 constructor TKMHouseForest.Create(aUID: Integer; aHouseType: TKMHouseType; PosX: Integer; PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
-var I : Integer;
 begin
   Inherited;
-  while AddTree(KaMRandom(length(gGrowingTrees), '')) do
-    Inc(I);
+  fCount := 0;
 end;
 
 function TKMHouseForest.HasMoreEntrances: Boolean;
@@ -57,12 +68,15 @@ end;
 
 function TKMHouseForest.Entrances: TKMPointDirArray;
 begin
+  Result := Inherited;
+{
   Result := [
               KMPointDir(Entrance.X, Entrance.Y, dirS),
               KMPointDir(Entrance.X - 2, Entrance.Y - 2, dirW),
               KMPointDir(Entrance.X, Entrance.Y - 4, dirN),
               KMPointDir(Entrance.X + 2, Entrance.Y - 2, dirE)
             ];
+  }
 end;
 
 function TKMHouseForest.GetClosestEntrance(aLoc: TKMPoint): TKMPointDir;
@@ -76,7 +90,7 @@ var I : Integer;
   lastDist, tmp : Single;
 begin
   Result := Inherited;
-
+  {
   lastDist := 99999;
   for I := low(ENTRANCE_POS) to High(ENTRANCE_POS) do
   begin
@@ -88,7 +102,7 @@ begin
       Result.Dir := ENTRANCE_DIR[I];
     end;
   end;
-
+     }
 end;
 
 function TKMHouseForest.TreeWillCollide(aTreeID : Byte; aLoc : TKMPointF) : Boolean;
@@ -107,8 +121,8 @@ var I : Byte;
 begin
   I := 0;
   repeat
-    Result.X := KaMRandomS1(4.75, 'TKMHousePasture.GetPositionForAnimal 1');
-    Result.Y := KaMRandomS1(4, 'TKMHousePasture.GetPositionForAnimal 2');
+    Result.X := KaMRandomS1(4.5, 'TKMHousePasture.GetPositionForAnimal 1');
+    Result.Y := KaMRandomS1(3, 'TKMHousePasture.GetPositionForAnimal 2');
     Inc(I);
   until (I >= 10) or not TreeWillCollide(aTreeID, Result);//max 10 tries
 
@@ -130,12 +144,72 @@ begin
     SetLength(fTrees, fCount + 5);
 
   fTrees[fCount - 1].Pos := newLoc;
-  fTrees[fCount - 1].Age := 1;
+  fTrees[fCount - 1].Age := KaMRandom(4 * TERRAIN_PACE, 'TKMHouseForest.AddTree');
   fTrees[fCount - 1].Obj := 390{gGrowingTrees[aTreeID].ObjID};  //tree sapling
   fTrees[fCount - 1].ID := aTreeID;
-
-
 end;
+
+function TKMHouseForest.AddTree(aTreeID: Byte; aCount: Byte): Boolean;
+var I : Integer;
+begin
+  Result := false;
+  for I := 0 to aCount - 1 do
+    If AddTree(aTreeID) then
+      Result := true;
+end;
+
+function TKMHouseForest.HasTreeToCut: Integer;
+var I : integer;
+begin
+  Result := -1;
+  for I := 0 to fCount - 1 do
+    If ObjectIsChoppableTree(fTrees[I].Obj, caAgeFull) then
+      Exit(I);
+end;
+
+procedure TKMHouseForest.StartCuttingTree(aID: Integer);
+var loc : TKMPointF;
+begin
+  fCuttingAnimStep := 1;
+  case KaMRandom(4, 'TKMHouseForest.StartCuttingTree') of
+    0 : fCuttingAnimDir := dirNW;
+    1 : fCuttingAnimDir := dirNE;
+    2 : fCuttingAnimDir := dirSW;
+    3 : fCuttingAnimDir := dirSE
+    else
+      fCuttingAnimDir := dirNA;
+  end;
+  loc := fTrees[aID].Pos;
+  case fCuttingAnimDir of
+    dirNE: loc := loc + KMPointF(-0.5, 0.5);
+    dirSE: loc := loc + KMPointF(-0.5, -0.5);
+    dirSW: loc := loc + KMPointF(0.5, -0.5);
+    dirNW: loc := loc + KMPointF(0.5, 0.5);
+    else
+      raise Exception.Create('TKMHouseForest.StartCuttingTree : wrong direction');
+  end;
+  fCuttingPos := KMPointF(loc.X + Entrance.X - 2.75, loc.Y + Entrance.Y - 4.75);
+end;
+
+procedure TKMHouseForest.CutTree(aID: Integer);
+var obj : Integer;
+begin
+  fCuttingAnimStep := 0;
+  fCuttingAnimDir := dirNA;
+
+  gTerrain.AddFallingTree(KMPointF(fTrees[aID].Pos.X + Entrance.X - 1.75, fTrees[aID].Pos.Y + Entrance.Y - 3.75), fTrees[aID].Obj);
+  obj := fTrees[aID].Obj;
+  fTrees[aID] := fTrees[fCount - 1];
+  //fTrees[fCount - 1].ID := 0;
+  dec(fCount);
+  ProduceWare(wtTrunk, gMapElements[obj].TrunksCount);
+end;
+
+function TKMHouseForest.TreeObjID(aID: Integer): Integer;
+begin
+  Result := fTrees[aID].Obj;
+end;
+
 
 procedure TKMHouseForest.UpdateState(aTick: Cardinal);
 var I : Integer;
@@ -143,23 +217,23 @@ begin
   Inherited;
   If not IsComplete then
     Exit;
-  If aTick mod TERRAIN_PACE <> 0 then
-    Exit;
+  If fCuttingAnimStep > 0 then
+    Inc(fCuttingAnimStep);
 
   for I := 0 to fCount - 1 do
   with fTrees[I] do
   begin
-    If Age = 255 then
+    If Age = high(word) then
       Continue;
     Inc(Age);
-    If Age = 8 then
+    If Age = 8 * TERRAIN_PACE then
       Obj := gGrowingTrees[ID].ObjID
     else
-    If Age = gMapElements[Obj].TreeGrowAge + 8 then
+    If Age = (gMapElements[Obj].TreeGrowAge * TERRAIN_PACE) + (8 * TERRAIN_PACE) then
     begin
       Obj := gMapElements[Obj].NextTreeAgeObj;
       If ObjectIsChoppableTree(Obj, caAgeFull) then
-        Age := 255;
+        Age := high(word);
     end;
   end;
 end;
@@ -180,10 +254,12 @@ begin
   for I := 0 to fCount - 1 do
   begin
     gRenderPool.RenderTree(fTrees[I].Obj, FlagAnimStep + I,
-                                  fTrees[I].Pos.X + entr.X - 2, fTrees[I].Pos.Y + entr.Y - 4,
+                                  fTrees[I].Pos.X + entr.X - 1.75, fTrees[I].Pos.Y + entr.Y - 3.75,
                                   entr);
   end;
 
+  If fCuttingAnimStep > 0 then
+    gRenderPool.AddUnit(utWoodCutter, TKMUnit(Worker).UID, uaWork, fCuttingAnimDir, fCuttingAnimStep - 1, 0, fCuttingPos.X, fCuttingPos.Y, GetFlagColor, True);
 end;
 
 end.

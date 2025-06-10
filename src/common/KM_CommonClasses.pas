@@ -363,7 +363,6 @@ type
     procedure LoadFromStream(LoadStream: TKMemoryStream); override;
   end;
 
-
   TKMPointDirList = class //Used for finding fishing places, fighting positions, etc.
   private
     fItems: array of TKMPointDir; //0..Count-1
@@ -415,6 +414,45 @@ type
     procedure AddNew(const aLoc: TKMPoint; aTag2: Cardinal = 0);
     function GetPointsCnt(aIndex: Integer): Word; overload;
     function GetPointsCnt(const aLoc: TKMPoint): Word; overload;
+  end;
+
+  TKMPointFList = class
+  private
+    fCount: Integer;
+    fItems: array of TKMPointF; //0..Count-1
+    function GetPoint(aIndex: Integer): TKMPointF; inline;
+    procedure SetPoint(aIndex: Integer; const aValue: TKMPointF); inline; //1..Count
+    function GetLast: TKMPointF;
+  public
+    constructor Create;
+
+    property Count: Integer read fCount write fCount;
+    property Items[aIndex: Integer]: TKMPointF read GetPoint write SetPoint; default;
+    property Last: TKMPointF read GetLast;
+    function IsEmpty: Boolean;
+
+    procedure Clear; virtual;
+    procedure Add(const aLoc: TKMPointF); overload; virtual;
+    procedure Add(X, Y: Single); overload;
+    function  Remove(const aLoc: TKMPointF): Integer; virtual;
+    procedure Delete(aIndex: Integer); virtual;
+    function Contains(const aLoc: TKMPointF): Boolean;
+    function IndexOf(const aLoc: TKMPointF): Integer;
+    procedure SaveToStream(SaveStream: TKMemoryStream); virtual;
+    procedure LoadFromStream(LoadStream: TKMemoryStream); virtual;
+  end;
+
+  TKMPointFTagList = class(TKMPointFList)
+  public
+    Tag, Tag2: array of Cardinal; //0..Count-1
+    procedure Clear; override;
+    procedure Add(const aLoc: TKMPointF; aTag: Cardinal; aTag2: Cardinal = 0); reintroduce; virtual;
+
+    function IndexOf(const aLoc: TKMPointF; aTag: Cardinal; aTag2: Cardinal): Integer; overload;
+    function Remove(const aLoc: TKMPointF): Integer; override;
+    procedure Delete(aIndex: Integer); override;
+    procedure SaveToStream(SaveStream: TKMemoryStream); override;
+    procedure LoadFromStream(LoadStream: TKMemoryStream); override;
   end;
 
 
@@ -1109,6 +1147,198 @@ begin
   SetLength(fItems, fCount);
   if fCount > 0 then
     LoadStream.Read(fItems[0], SizeOf(fItems[0]) * fCount);
+end;
+
+{ TKMPointFList }
+constructor TKMPointFList.Create;
+begin
+  inherited;
+end;
+
+
+procedure TKMPointFList.Clear;
+begin
+  fCount := 0;
+end;
+
+
+procedure TKMPointFList.Add(const aLoc: TKMPointF);
+begin
+  if fCount >= Length(fItems) then
+    SetLength(fItems, fCount + 32);
+  fItems[fCount] := aLoc;
+  Inc(fCount);
+end;
+
+
+procedure TKMPointFList.Add(X, Y: Single);
+begin
+  Add(KMPointF(X, Y));
+end;
+
+
+//Remove point from the list if is there. Return index of removed entry or -1 on failure
+function TKMPointFList.Remove(const aLoc: TKMPointF): Integer;
+var
+  I: Integer;
+begin
+  Result := -1;
+
+  //Scan whole list to detect duplicate entries
+  for I := 0 to fCount - 1 do
+    if KMSamePointF(fItems[I], aLoc) then
+      Result := I;
+
+  //Remove found entry
+  if (Result <> -1) then
+    Delete(Result);
+end;
+
+
+procedure TKMPointFList.Delete(aIndex: Integer);
+begin
+  if not InRange(aIndex, 0, Count-1) then Exit;
+  if (aIndex <> fCount - 1) then
+    Move(fItems[aIndex+1], fItems[aIndex], SizeOf(fItems[aIndex]) * (fCount - 1 - aIndex));
+  Dec(fCount);
+end;
+
+function TKMPointFList.Contains(const aLoc: TKMPointF): Boolean;
+begin
+  Result := IndexOf(aLoc) <> -1;
+end;
+
+
+function TKMPointFList.IndexOf(const aLoc: TKMPointF): Integer;
+var
+  I: Integer;
+begin
+  Result := -1;
+  for I := fCount - 1 downto 0 do
+  if KMSamePointF(aLoc, fItems[I]) then
+  begin
+    Result := I;
+    Break;
+  end;
+end;
+
+
+function TKMPointFList.GetLast: TKMPointF;
+begin
+  if IsEmpty then
+    raise Exception.Create('No points in list');
+  Result := fItems[fCount - 1];
+end;
+
+
+function TKMPointFList.IsEmpty: Boolean;
+begin
+  Result := fCount = 0;
+end;
+
+function TKMPointFList.GetPoint(aIndex: Integer): TKMPointF;
+begin
+  Result := fItems[aIndex];
+end;
+
+
+procedure TKMPointFList.SetPoint(aIndex: Integer; const aValue: TKMPointF);
+begin
+  fItems[aIndex] := aValue;
+end;
+
+procedure TKMPointFList.SaveToStream(SaveStream: TKMemoryStream);
+begin
+  SaveStream.Write(fCount);
+  if fCount > 0 then
+    SaveStream.Write(fItems[0], SizeOf(fItems[0]) * fCount);
+end;
+
+
+procedure TKMPointFList.LoadFromStream(LoadStream: TKMemoryStream);
+begin
+  LoadStream.Read(fCount);
+  SetLength(fItems, fCount);
+  if fCount > 0 then
+    LoadStream.Read(fItems[0], SizeOf(fItems[0]) * fCount);
+end;
+
+
+{ TKMPointFTagList }
+procedure TKMPointFTagList.Clear;
+begin
+  inherited;
+end;
+
+
+procedure TKMPointFTagList.Add(const aLoc: TKMPointF; aTag: Cardinal; aTag2: Cardinal = 0);
+begin
+  inherited Add(aLoc);
+
+  if fCount >= Length(Tag) then  SetLength(Tag, fCount + 32); //Expand the list
+  if fCount >= Length(Tag2) then SetLength(Tag2, fCount + 32); //+32 is just a way to avoid further expansions
+  Tag[fCount-1]  := aTag;
+  Tag2[fCount-1] := aTag2;
+end;
+
+function TKMPointFTagList.IndexOf(const aLoc: TKMPointF; aTag, aTag2: Cardinal): Integer;
+var
+  I: Integer;
+begin
+  Result := -1;
+  for I := fCount - 1 downto 0 do
+  if KMSamePointF(aLoc, fItems[I]) and (aTag = Tag[I]) and (aTag2 = Tag2[I]) then
+  begin
+    Result := I;
+    Break;
+  end;
+end;
+
+
+function TKMPointFTagList.Remove(const aLoc: TKMPointF): Integer;
+begin
+  Result := inherited Remove(aLoc);
+  //Tags are moved by Delete function. No need to move them here
+end;
+
+
+procedure TKMPointFTagList.Delete(aIndex: Integer);
+begin
+  if not InRange(aIndex, 0, Count - 1) or (Count = 0) then Exit;
+
+  inherited Delete(aIndex);
+
+  //Note that fCount is already decreased by 1
+  if (aIndex <> fCount) then
+  begin
+    Move(Tag[aIndex+1], Tag[aIndex], SizeOf(Tag[aIndex]) * (fCount - aIndex));
+    Move(Tag2[aIndex+1], Tag2[aIndex], SizeOf(Tag2[aIndex]) * (fCount - aIndex));
+  end;
+end;
+
+
+procedure TKMPointFTagList.SaveToStream(SaveStream: TKMemoryStream);
+begin
+  inherited; //Writes Count
+
+  if fCount > 0 then
+  begin
+    SaveStream.Write(Tag[0], SizeOf(Tag[0]) * fCount);
+    SaveStream.Write(Tag2[0], SizeOf(Tag2[0]) * fCount);
+  end;
+end;
+
+procedure TKMPointFTagList.LoadFromStream(LoadStream: TKMemoryStream);
+begin
+  inherited; //Reads Count
+
+  SetLength(Tag, fCount);
+  SetLength(Tag2, fCount);
+  if fCount > 0 then
+  begin
+    LoadStream.Read(Tag[0], SizeOf(Tag[0]) * fCount);
+    LoadStream.Read(Tag2[0], SizeOf(Tag2[0]) * fCount);
+  end;
 end;
 
 
