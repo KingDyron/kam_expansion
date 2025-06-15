@@ -15,6 +15,7 @@ type
   private
     fLastPage : TKMDevelopmentTreeType;
     procedure SwitchPage(Sender : TObject); virtual;
+    procedure HideFromID(aID : Integer);
   protected
     Button_SwitchTree : array[TKMDevelopmentTreeType] of TKMButton;
       Tree : array[TKMDevelopmentTreeType] of record
@@ -41,33 +42,22 @@ constructor TKMGUICommonDevelopment.Create(aParent: TKMPanel; aLeft: Integer; aT
 const
   TREE_TYPE_ICON : array[TKMDevelopmentTreeType] of Word = (39, 322);
 var dtt : TKMDevelopmentTreeType;
-
   procedure CreateNext(aType : TKMDevelopmentTreeType; var aToButton : TKMDevButton;  aDevelopment : TKMDevelopment; aTop : Byte);
   var I : integer;
   begin
     with Tree[aType] do
     begin
-      Inc(fCount);
-
       aToButton.Button_Tree := TKMButtonFlat.Create(Panel, 3 + aDevelopment.X * 34, aTop * DISTANCE_BETWEEN_ROWS, 31, 31, aDevelopment.GuiIcon);
       aToButton.Button_Tree.Hint := gRes.Development.GetText(aDevelopment.HintID);
       aToButton.Button_Tree.BackAlpha := 1;
+      aToButton.Button_Tree.Tag := fCount;
+      //aToButton.ID := fCount;
+      Inc(fCount);
     end;
     SetLength(aToButton.Next, length(aDevelopment.Next));
     for I := 0 to High(aDevelopment.Next) do
       CreateNext(aType, aToButton.Next[I], aDevelopment.Next[I], aTop + 1);
-    {If Tree[aType].fCount > Length(Tree[aType].Button_Tree) then
-      SetLength(Tree[aType].Button_Tree, Tree[aType].fCount + 32);}
-
-    {with Tree[aType] do
-    begin
-      Button_Tree[fCount - 1] := TKMButtonFlat.Create(Panel, aDevelopment.X * 37, aTop * DISTANCE_BETWEEN_ROWS, 33, 33, aDevelopment.GuiIcon);
-      Button_Tree[fCount - 1].Hint := gResTexts[aDevelopment.TextID];
-    end;}
-
-
   end;
-
 begin
   Inherited Create(aParent, aLeft, aTop, aWidth, aHeight);
   AnchorsStretch;
@@ -84,6 +74,25 @@ begin
     CreateNext(dtt, Tree[dtt].Button_Tree, gRes.Development[dtt].FirstItem, 0);
     Tree[dtt].Panel.Visible := fLastPage = dtt;
   end;
+  //HideFromID(10);
+end;
+
+procedure TKMGUICommonDevelopment.HideFromID(aID: Integer);
+  procedure CheckButtons(var aButton: TKMDevButton; aShow : Boolean);
+  var I : integer;
+    doShow : Boolean;
+  begin
+    doShow := true;
+    If aButton.Button_Tree.Tag = aID then
+      doShow := false;
+
+    aButton.Button_Tree.Visible := aShow and doShow;
+
+    for I := 0 to High(aButton.Next) do
+      CheckButtons(aButton.Next[I], aShow and doShow);
+  end;
+begin
+  CheckButtons(Tree[fLastPage].Button_Tree, true);
 end;
 
 procedure TKMGUICommonDevelopment.SwitchPage(Sender: TObject);
@@ -103,6 +112,8 @@ procedure TKMGUICommonDevelopment.Paint;
   var I : Integer;
     cent : TKMPoint;
   begin
+    If not aTo.Button_Tree.Visible then
+      Exit;
     cent := aTo.Button_Tree.AbsCenter;
     TKMRenderUI.WriteLine(aFrom.X, aFrom.Y, aFrom.X, (DISTANCE_BETWEEN_ROWS div 2) + aFrom.Y, $FFFFFFFF);//  \/
     TKMRenderUI.WriteLine(aFrom.X, (DISTANCE_BETWEEN_ROWS div 2) + aFrom.Y,
