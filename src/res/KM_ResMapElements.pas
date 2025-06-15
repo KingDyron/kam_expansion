@@ -979,6 +979,10 @@ begin
     gGrowingTrees[I].ObjID := nObject.I['ObjectID'];
     gGrowingTrees[I].Size := nObject.D['Size'];
     gGrowingTrees[I].GuiIcon := nObject.I['GuiIcon'];
+    K := gGrowingTrees[I].ObjID;
+
+    while gMapElements[K].NextTreeAgeObj > 0 do
+      K := gMapElements[K].NextTreeAgeObj;
   end;
     
 

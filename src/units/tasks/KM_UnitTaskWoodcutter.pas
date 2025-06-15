@@ -59,7 +59,6 @@ begin
 end;
 
 function TKMTaskForestCutting.Execute: TKMTaskResult;
-var timeToWork : Integer;
 begin
   Result := trTaskContinues;
   //Target could have been killed by another Tower or in a fight
@@ -71,6 +70,7 @@ begin
   with fUnit do
     case fPhase of
       0:  begin
+            fForest.SetState(hstEmpty);
             fForest.StartCuttingTree(fTreeID);
             SetActionStay(0, uaWork, true);
             fPhase2 := 0;
@@ -90,6 +90,7 @@ begin
             SetActionStay(5, uaWalk);
           end;
       3:  begin
+            fForest.SetState(hstIdle);
             SetActionStay(50, uaWalk);
           end;
       else Result := trTaskDone;

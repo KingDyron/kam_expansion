@@ -5,7 +5,7 @@ uses
   Classes, SysUtils,
   KromUtils,
 //  KM_IoXML,
-  KM_Defaults, KM_CommonTypes, KM_CommonClasses, KM_ResTilesetTypes;
+  KM_Defaults, KM_CommonTypes, KM_CommonClasses, KM_ResTypes, KM_ResTilesetTypes, KM_TerrainTypes;
 
 
 var
@@ -18,9 +18,33 @@ var
 type
   TKMTilesParamsArray = array{ [0..TILES_CNT-1]} of TKMTileParams;
 
+
+  TKMTerrainOverlayFunction = (tofNone, tofRoadDig, tofRoad, tofInfinity, tofBlock, tofBlockBuilding, tofStopGrowing);
+  //tofNone = decorative tile overlay
+
+  {TKMTileOverlay = byte;(toNone, toDig1, toDig2, toDig3, toDig4, toRoad,
+                    toCoal1, toCoal2, toCoal3, toCoal4, toCoal5,
+                    toClay1, toClay2, toClay3, toClay4, toClay5,
+                    toFence1, toFence2, toFence3, toFence4, toFence5, toFence6,
+                    toDig3Wooden, toDig4Wooden, toDig3Clay, toDig4Clay, toDig3Exclusive, toDig4Exclusive,
+                    toGold, toIron, toBitin, toCoal);}
+  TKMTerrainOverlayParams = record
+    TileID, ViewAs : Word;
+    FirstLayer : Boolean;
+    CanTree : Boolean;
+    Rotate : Boolean;
+    Visible, ViewInGame : Boolean;
+    W : TKMWareType;
+    resCount : Byte;
+    funct : TKMTerrainOverlayFunction;
+    Hint : Word;
+  end;
+
+  TKMTerrainOverlayParamsArray = array of TKMTerrainOverlayParams;
   TKMResTileset = class
   private
     fTiles: TKMTilesParamsArray;
+    fOverlays : TKMTerrainOverlayParamsArray;
 
 //    fXML: TKMXmlDocument;
     fCRC: Cardinal;
@@ -41,6 +65,7 @@ type
     function GetTilesJsonPath: string;
 
     function GetTileParams(aIndex: Word): TKMTileParams;
+    function GetOverlayParams(aIndex: Word): TKMTerrainOverlayParams;
   protected
     // For Batcher
     property Tiles: TKMTilesParamsArray read fTiles write fTiles;
@@ -62,6 +87,8 @@ type
 //    procedure ExportPatternDat(const aFilename: string);
 
     property Tile[aIndex: Word]: TKMTileParams read GetTileParams; default;
+    property Overlay[aIndex: Word]: TKMTerrainOverlayParams read GetOverlayParams;
+    function OverlayCount : Word;
     procedure SetTileColors(var aTileColors: TKMColor3bArray);
 
     function TileIsWater(aTile: Word): Boolean;
@@ -94,13 +121,53 @@ type
     class function TileIsAllowedToSet(aTile: Word): Boolean;
   end;
 
+  TKMTerrainOverlayHelper = record helper for TKMTileOverlay
+    function Params : TKMTerrainOverlayParams;
+    function IsRoadDir: Boolean;
+    function IsRoad: Boolean;
+    function IsRoadOrDig: Boolean;
+
+    function IsWare(aWare: TKMWareType) : Boolean;
+    function ResCount : byte;
+    function AllowTree : Boolean;
+    function IsInfinite : Boolean;
+    function IsFirstLayer : Boolean;
+    function IsSecondLayer : Boolean;
+    function StopsGrowing : Boolean;
+    function Visible : Boolean;
+    function ViewInGame : Boolean;
+    function TileID : Word;
+    function Rotate : Boolean;
+  end;
+
+const
+  OVERLAY_NONE = 0;
+  OVERLAY_DIG_1 = 1;
+  OVERLAY_DIG_2 = 2;
+  OVERLAY_DIG_3 = 3;
+  OVERLAY_DIG_4 = 4;
+  OVERLAY_ROAD = 5;
+  OVERLAY_DIG_WOOD_3 = 27;
+  OVERLAY_DIG_WOOD_4 = 28;
+  OVERLAY_DIG_CLAY_3 = 29;
+  OVERLAY_DIG_CLAY_4 = 30;
+  OVERLAY_DIG_EXCLUSIVE_3 = 31;
+  OVERLAY_DIG_EXCLUSIVE_4 = 32;
+  UNDERGROUND_GOLD_ID = 34;
+  UNDERGROUND_IRON_ID = 35;
+  UNDERGROUND_BITIN_ID = 36;
+  UNDERGROUND_COAL_ID = 37;
+
+var
+  GuiOverlayOrder : array of Word;
 
 implementation
 uses
   TypInfo, Math,
   KM_JsonHelpers, JsonDataObjects,
   KM_FileIO,
-  KM_CommonUtils, KM_CommonClassesExt, KM_JsonUtils;
+  KM_CommonUtils, KM_CommonClassesExt, KM_JsonUtils,
+  KM_Resource;
 
 const
 //  TILES_XML_PATH = 'data' + PathDelim + 'defines' + PathDelim + 'tiles.xml';
@@ -570,6 +637,16 @@ begin
   Result := fTiles[aIndex];
 end;
 
+function TKMResTileset.GetOverlayParams(aIndex: Word): TKMTerrainOverlayParams;
+begin
+  Result := fOverlays[aIndex];
+end;
+
+function TKMResTileset.OverlayCount: Word;
+begin
+  Result := length(fOverlays);
+end;
+
 
 //procedure TKMResTileset.SaveToXML;
 //var
@@ -832,6 +909,29 @@ begin
         end;
       end;
     end;
+
+    nTiles := nRoot.A['Overlays'];
+    SetLength(fOverlays, Min(nTiles.Count, 255));
+    for I := 0 to high(fOverlays) do
+      with fOverlays[I] do
+      begin
+        nTile := nTiles.O[I];
+        TileID := nTile.I['TileID'];
+        ViewAs := nTile.I['ViewAs'];
+        FirstLayer := nTile.B['IsFirstLayer'];
+        Visible := nTile.B['Visible'];
+        ViewInGame := nTile.B['ViewInGame'];
+        CanTree := nTile.B['CanTree'];
+        Rotate := nTile.B['Rotate'];
+        W := TKMWareType(nTile.I['Ware']);
+        resCount := nTile.I['WareCount'];
+        funct := TKMTerrainOverlayFunction(nTile.I['Function']);
+      end;
+    nTiles := nRoot.A['OverlayGuiOrder'];
+    SetLength(GuiOverlayOrder, nTiles.Count);
+    for I := 0 to nTiles.Count - 1 do
+      GuiOverlayOrder[I] := nTiles.I[I];
+
   finally
     nRoot.Free;
   end;
@@ -853,5 +953,69 @@ begin
   Result := not ArrayContains(aTile, TILES_NOT_ALLOWED_TO_SET);
 end;
 
+function TKMTerrainOverlayHelper.Params: TKMTerrainOverlayParams;
+begin
+  Result := gRes.Tileset.Overlay[Word(self)];
+end;
+
+function TKMTerrainOverlayHelper.IsRoadDir: Boolean;
+begin
+  Result := gRes.Tileset.Overlay[Word(self)].funct = tofRoadDig;
+end;
+
+function TKMTerrainOverlayHelper.IsRoad: Boolean;
+begin
+  Result := gRes.Tileset.Overlay[Word(self)].funct = tofRoad;
+end;
+function TKMTerrainOverlayHelper.IsRoadOrDig: Boolean;
+begin
+  Result := gRes.Tileset.Overlay[Word(self)].funct in [tofRoad, tofRoadDig];
+end;
+
+function TKMTerrainOverlayHelper.IsWare(aWare : TKMWareType) : Boolean;
+begin
+  Result := gRes.Tileset.Overlay[Word(self)].W = aWare;
+end;
+function TKMTerrainOverlayHelper.ResCount : Byte;
+begin
+  Result := gRes.Tileset.Overlay[Word(self)].resCount;
+end;
+function TKMTerrainOverlayHelper.AllowTree : Boolean;
+begin
+  Result := gRes.Tileset.Overlay[Word(self)].CanTree;
+end;
+function TKMTerrainOverlayHelper.IsInfinite : Boolean;
+begin
+  Result := gRes.Tileset.Overlay[Word(self)].funct = tofInfinity;
+end;
+function TKMTerrainOverlayHelper.IsFirstLayer : Boolean;
+begin
+  Result := gRes.Tileset.Overlay[Word(self)].FirstLayer;
+end;
+function TKMTerrainOverlayHelper.IsSecondLayer : Boolean;
+begin
+  Result := not gRes.Tileset.Overlay[Word(self)].FirstLayer;
+end;
+function TKMTerrainOverlayHelper.StopsGrowing : Boolean;
+begin
+  Result := gRes.Tileset.Overlay[Word(self)].funct = tofStopGrowing;
+end;
+
+function TKMTerrainOverlayHelper.ViewInGame : Boolean;
+begin
+  Result := gRes.Tileset.Overlay[Word(self)].ViewInGame;
+end;
+function TKMTerrainOverlayHelper.Visible : Boolean;
+begin
+  Result := gRes.Tileset.Overlay[Word(self)].Visible;
+end;
+function TKMTerrainOverlayHelper.TileID : Word;
+begin
+  Result := gRes.Tileset.Overlay[Word(self)].TileID;
+end;
+function TKMTerrainOverlayHelper.Rotate : Boolean;
+begin
+  Result := gRes.Tileset.Overlay[Word(self)].Rotate;
+end;
 
 end.

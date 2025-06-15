@@ -286,6 +286,7 @@ uses
   KM_Resource, KM_ResUnits, KM_Hand, KM_ResMapElements,
   KM_PathFindingRoad,
   KM_Terrain,
+  KM_ResTileset,
   KM_CommonUtils, KM_CommonClasses, KM_CommonClassesExt;
 
 const
@@ -1101,7 +1102,7 @@ begin
     if gTerrain.TileInMapCoords(X, Y) then
     begin
       //Can't remove if tile is locked (house or roadwork)
-      if (gTerrain.Land^[Y, X].TileOverlay = toRoad) and (gTerrain.Land^[Y, X].TileLock = tlNone) then
+      if (gTerrain.Land^[Y, X].TileOverlay.IsRoad) and (gTerrain.Land^[Y, X].TileLock = tlNone) then
         gTerrain.RemRoad(Pos);
     end
     else
@@ -4248,7 +4249,7 @@ begin
   try
     Result := True;
     if gTerrain.TileInMapCoords(X, Y)
-      and (aOverlay in [Low(TKMTileOverlay)..High(TKMTileOverlay)]) then
+      and (aOverlay in [0..gRes.Tileset.OverlayCount]) then
       gTerrain.SetOverlay(KMPoint(X, Y), aOverlay, aOverwrite)
     else
     begin

@@ -15,7 +15,7 @@ uses
   Classes, Math,
   KM_CommonUtils,
   KM_Resource, KM_ResSprites,
-  KM_HandTypes, KM_ResTypes, KM_ResTilesetTypes;
+  KM_HandTypes, KM_ResTypes, KM_ResTileset, KM_ResTilesetTypes;
 
 
 procedure WriteTileToStream(S: TKMemoryStream; const aTileBasic: TKMTerrainTileBasic; aTileOwner: TKMHandID; aGameSave: Boolean);
@@ -83,7 +83,7 @@ begin
   S.Write(aTileBasic.Obj);                //5
   S.Write(aTileBasic.IsCustom);           //7
 
-  overlay := toNone;
+  overlay := OVERLAY_NONE;
   coal_overlay := aTileBasic.TileOverlay2;
   // Player roads (when tile owner is specified) should not be saved as an overlay, when save .map file
   // since player roads are set for each player in the dat file
@@ -171,8 +171,8 @@ begin
     aTileBasic.IsCustom := False;
     aTileBasic.IsHidden := False;
     aTileBasic.BlendingLvl := TERRAIN_DEF_BLENDING_LVL;
-    aTileBasic.TileOverlay := toNone;
-    aTileBasic.TileOverlay2 := toNone;
+    aTileBasic.TileOverlay := OVERLAY_NONE;
+    aTileBasic.TileOverlay2 := OVERLAY_NONE;
     aTileBasic.RoadType := rtNone;
     aTileBasic.GrainType := gftNone;
     aTileBasic.Ware.W := 0;
@@ -192,12 +192,12 @@ begin
     if aGameRev > 10968 then
       aStream.Read(aTileBasic.TileOverlay, SizeOf(aTileBasic.TileOverlay)) //8
     else
-      aTileBasic.TileOverlay := toNone;
+      aTileBasic.TileOverlay := OVERLAY_NONE;
 
     if (aGameRev > 14786) and CheckModRev then
       aStream.Read(aTileBasic.TileOverlay2, SizeOf(aTileBasic.TileOverlay2)) //10
     else
-      aTileBasic.TileOverlay2 := toNone;
+      aTileBasic.TileOverlay2 := OVERLAY_NONE;
 
     if (aGameRev > 15000) and CheckModRev then
       aStream.Read(aTileBasic.IsHidden) //11

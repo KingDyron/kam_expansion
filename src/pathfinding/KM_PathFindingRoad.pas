@@ -40,7 +40,7 @@ type
 
 implementation
 uses
-  KM_HandsCollection, KM_TerrainTypes, KM_Terrain, KM_Hand;
+  KM_HandsCollection, KM_TerrainTypes, KM_ResTileset, KM_Terrain, KM_Hand;
 
 
 { TKMPathFindingRoad }
@@ -128,7 +128,7 @@ end;
 function TKMPathFindingRoad.DestinationReached(aX, aY: Word): Boolean;
 begin
   Result := ((aX = fLocB.X) and (aY = fLocB.Y)) //We reached destination point
-            or ((gTerrain.Land^[aY, aX].TileOverlay = toRoad) //We reached destination road network
+            or ((gTerrain.Land^[aY, aX].TileOverlay.IsRoad) //We reached destination road network
                and (fRoadConnectID <> 0) //No network
                and (gTerrain.GetRoadConnectID(KMPoint(aX, aY)) = fRoadConnectID));
 end;

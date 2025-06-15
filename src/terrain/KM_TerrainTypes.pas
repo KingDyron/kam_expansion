@@ -8,13 +8,20 @@ uses
 
 type
   //* Tile overlay type
-  TKMTileOverlay = (toNone, toDig1, toDig2, toDig3, toDig4, toRoad,
+  TKMTileOverlayOLD = (toNone, toDig1, toDig2, toDig3, toDig4, toRoad,
                     toCoal1, toCoal2, toCoal3, toCoal4, toCoal5,
                     toClay1, toClay2, toClay3, toClay4, toClay5,
                     toFence1, toFence2, toFence3, toFence4, toFence5, toFence6, toInfinity, toInfinityClay,
                     toInfinityCoal, toBlock, toBlockBuilding,
                     toDig3Wooden, toDig4Wooden, toDig3Clay, toDig4Clay, toDig3Exclusive, toDig4Exclusive,
                     toStopGrowing, toGold, toIron, toBitin, toCoal);
+  TKMTileOverlay = byte;{(toNone, toDig1, toDig2, toDig3, toDig4, toRoad,
+                    toCoal1, toCoal2, toCoal3, toCoal4, toCoal5,
+                    toClay1, toClay2, toClay3, toClay4, toClay5,
+                    toFence1, toFence2, toFence3, toFence4, toFence5, toFence6, toInfinity, toInfinityClay,
+                    toInfinityCoal, toBlock, toBlockBuilding,
+                    toDig3Wooden, toDig4Wooden, toDig3Clay, toDig4Clay, toDig3Exclusive, toDig4Exclusive,
+                    toStopGrowing, toGold, toIron, toBitin, toCoal);}
 
 
   // Tile corners
@@ -199,7 +206,7 @@ const
   OBJ_INVISIBLE = 254; //Special object without any attributes set
   HEIGHT_RAND_VALUE = 8;
   //overlays, that considered as road: basically road and dig4, which looks almost like a finished road
-  ROAD_LIKE_OVERLAYS: set of TKMTileOverlay = [toDig4, toRoad, toDig3Clay, toDig4Wooden, toDig4Exclusive];
+  {ROAD_LIKE_OVERLAYS: set of TKMTileOverlay = [toDig4, toRoad, toDig3Clay, toDig4Wooden, toDig4Exclusive];
   COAL_LIKE_OVERLAYS: set of TKMTileOverlay = [toCoal1..toCoal5, toInfinityCoal];
   TILE_OVERLAY_2 : set of TKMTileOverlay = [toCoal1..toBlockBuilding, toStopGrowing..toCoal];
   TILE_OVERLAY_ALLOW_TREES: set of TKMTileOverlay = [toNone, toGold, toIron, toBitin, toCoal, toStopGrowing,
@@ -210,7 +217,7 @@ const
                                                           619, 620, 621, 622, 623,
                                                           603, 604, 605, 606, 607, 608, 617, 626, 627,
                                                           679, 680, 681, 682, 683, 684, 685, 686, 689,
-                                                          694, 695, 696, 697);
+                                                          694, 695, 696, 697);}
 
   WINE_TERRAIN_ID = 55;
   CORN_STAGE5_OBJ_ID = 58;
@@ -221,7 +228,8 @@ const
 implementation
 uses
   SysUtils, Math,
-  KM_CommonUtils, KromUtils, KM_GameParams, KM_GameSettings;
+  KM_CommonUtils, KromUtils, KM_GameParams, KM_GameSettings,
+  KM_ResTileset;
 
 
 { TKMTerrainLayer }
@@ -381,7 +389,8 @@ end;
 
 function TileOverlayVisibleInGame(aOverlay : TKMTileOverlay) : Boolean;
 begin
-  case aOverlay of
+  Result := aOverlay.Params.ViewInGame;
+  {case aOverlay of
     toInfinity,
     toBlock,
     toStopGrowing,
@@ -389,7 +398,7 @@ begin
     toBlockBuilding : Result := false;
     else Result := true;
 
-  end;
+  end;}
 end;
 
 end.

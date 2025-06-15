@@ -558,8 +558,8 @@ begin
         BlendingLvl  := TERRAIN_DEF_BLENDING_LVL;
         //Uncomment to enable random trees, but we don't want that for the map editor by default
         //if KaMRandom(16)=0 then Obj := ChopableTrees[KaMRandom(13)+1,4];
-        TileOverlay  := toNone;
-        TileOverlay2  := toNone;
+        TileOverlay  := OVERLAY_NONE;
+        TileOverlay2  := OVERLAY_NONE;
         IsHidden     := false;
         TileLock     := tlNone;
         JamMeter     := 0;
@@ -697,12 +697,12 @@ begin
         if gameRev > 14786 then
           Land^[I,J].TileOverlay2 := tileBasic.TileOverlay2
         else
-          Land^[I,J].TileOverlay2 := toNone;
+          Land^[I,J].TileOverlay2 := OVERLAY_NONE;
 
-        if Land^[I,J].TileOverlay2 in [toGold, toIron, toBitin] then
+        if Land^[I,J].TileOverlay2 in [UNDERGROUND_GOLD_ID, UNDERGROUND_IRON_ID, UNDERGROUND_BITIN_ID] then
           Land^[I,J].Ware.C2 := 5//it has always 5 ores in it
         else
-        if Land^[I,J].TileOverlay2 in [toCoal] then
+        if Land^[I,J].TileOverlay2 in [UNDERGROUND_COAL_ID] then
           Land^[I,J].Ware.C2 := 10//coal has always 10 ores in it
         else
           Land^[I,J].Ware.C2 := 0;
@@ -813,8 +813,8 @@ const
       TileBasic.IsCustom  := False;
       TileBasic.BlendingLvl := TERRAIN_DEF_BLENDING_LVL;
       TileBasic.LayersCnt := 0;
-      TileBasic.TileOverlay := toNone;
-      TileBasic.TileOverlay2 := toNone;
+      TileBasic.TileOverlay := OVERLAY_NONE;
+      TileBasic.TileOverlay2 := OVERLAY_NONE;
     end
     else
     begin
@@ -1519,9 +1519,9 @@ begin
   Result := //TileIsSoil(X,Y)
     {and }not gMapElements[Land^[Y,X].Obj].AllBlocked
     and (Land^[Y,X].TileLock = tlNone)
-    and gRes.Tileset[TILE_OVERLAY_IDS[Land^[Y,X].TileOverlay2]].Walkable
-    and not (Land^[Y,X].TileOverlay in ROAD_LIKE_OVERLAYS)
-    and not (Land^[Y,X].TileOverlay2 in COAL_LIKE_OVERLAYS)
+    and gRes.Tileset[Land^[Y,X].TileOverlay2.Params.TileID].Walkable
+    and not (Land^[Y,X].TileOverlay.IsRoadOrDig)
+    and not (Land^[Y,X].TileOverlay2.IsWare(wtCoal))
     //and not TileIsWineField(KMPoint(X,Y))
     //and not TileIsCornField(KMPoint(X,Y))
     //and not TileIsGrassField(KMPoint(X,Y))
@@ -1580,8 +1580,8 @@ function TKMTerrain.TileGoodToPlantTree(X,Y: Word): Boolean;
           //Tiles above or to the left can't be road/field/locked
           if (I <= 0) and (K <= 0) then
             if (Land^[P.Y,P.X].TileLock <> tlNone)
-            or (Land^[P.Y,P.X].TileOverlay in ROAD_LIKE_OVERLAYS)
-            or not (Land^[Y,X].TileOverlay2 in TILE_OVERLAY_ALLOW_TREES)
+            or (Land^[P.Y,P.X].TileOverlay.IsRoadOrDig)
+            or not (Land^[Y,X].TileOverlay2.AllowTree)
             or TileIsCornField(P)
             or TileIsWineField(P) then
               Result := True;
@@ -1622,8 +1622,8 @@ begin
     and }not IsObjectsNearby //This function checks surrounding tiles
     and (Land^[Y,X].TileLock = tlNone)
     and (X > 1) and (Y > 1) //Not top/left of map, but bottom/right is ok
-    and not (Land^[Y,X].TileOverlay in ROAD_LIKE_OVERLAYS)
-    and (Land^[Y,X].TileOverlay2 in TILE_OVERLAY_ALLOW_TREES)
+    and not (Land^[Y,X].TileOverlay.IsRoadOrDig)
+    and (Land^[Y,X].TileOverlay2.AllowTree)
     and not HousesNearVertex
     and not TileHasClay(X, Y)
     and not Is_NW_SE_OnlyVertex
@@ -1674,9 +1674,12 @@ begin
   Result := IfThen(Land[Y, X].HasNoLayers, fTileset[Land^[Y, X].BaseLayer.Terrain].Coal, 0);
 
   aTO := Land[Y, X].TileOverlay2;
-  Result := Result + IfThen(aTO in COAL_LIKE_OVERLAYS, fTileset[TILE_OVERLAY_IDS[aTO]].Coal, 0);
-  if Land[Y, X].TileOverlay2 = toCoal then
-    Result := Result + Land[Y, X].Ware.C2;
+
+  if aTO = UNDERGROUND_COAL_ID then
+    Result := Result + Land[Y, X].Ware.C2
+  else
+  If gRes.Tileset.Overlay[aTo].W = wtCoal then
+    Result := Result + gRes.Tileset.Overlay[aTo].resCount;
 
   //Result := Result + gMapElements[Land[Y,X].Obj].Coal;
 end;
@@ -1693,7 +1696,7 @@ end;
 function TKMTerrain.TileIsIron(X,Y: Word): Byte;
 begin
   Result := IfThen(Land[Y, X].HasNoLayers, fTileset[Land^[Y, X].BaseLayer.Terrain].Iron, 0);
-  if Land[Y, X].TileOverlay2 = toIron then
+  if Land[Y, X].TileOverlay2 = UNDERGROUND_IRON_ID then
     Result := Result + Land[Y, X].Ware.C2;
   //Result := Result + gMapElements[Land[Y,X].Obj].Iron;
 end;
@@ -1702,7 +1705,7 @@ end;
 function TKMTerrain.TileIsBitinIron(X,Y: Word): Byte;
 begin
   Result := IfThen(Land[Y, X].HasNoLayers, fTileset[Land^[Y, X].BaseLayer.Terrain].Bitin, 0);
-  if Land[Y, X].TileOverlay2 = toBitin then
+  if Land[Y, X].TileOverlay2 = UNDERGROUND_BITIN_ID then
     Result := Result + Land[Y, X].Ware.C2;
   //Result := Result + gMapElements[Land[Y,X].Obj].Bitin;
 end;
@@ -1711,7 +1714,7 @@ end;
 function TKMTerrain.TileIsGold(X,Y: Word): Byte;
 begin
   Result := IfThen(Land[Y, X].HasNoLayers, fTileset[Land^[Y, X].BaseLayer.Terrain].Gold, 0);
-  if Land[Y, X].TileOverlay2 = toGold then
+  if Land[Y, X].TileOverlay2 = UNDERGROUND_GOLD_ID then
     Result := Result + Land[Y, X].Ware.C2;
   //Result := Result + gMapElements[Land[Y,X].Obj].Gold;
 end;
@@ -2006,7 +2009,7 @@ end;
 
 function TKMTerrain.TileHasRoad(X,Y: Integer): Boolean;
 begin
-  Result := TileInMapCoords(X, Y) and (Land^[Y, X].TileOverlay = toRoad);
+  Result := TileInMapCoords(X, Y) and (Land^[Y, X].TileOverlay.IsRoad);
 end;
 
 
@@ -2017,10 +2020,10 @@ begin
 
   //Tile can't be used as a field if there is road or any other overlay
   if fMapEditor then
-    Result := (gGame.MapEditor.LandMapEd^[aLoc.Y,aLoc.X].CornOrWine = 1) and (Land^[aLoc.Y,aLoc.X].TileOverlay = toNone)
+    Result := (gGame.MapEditor.LandMapEd^[aLoc.Y,aLoc.X].CornOrWine = 1) and (Land^[aLoc.Y,aLoc.X].TileOverlay = OVERLAY_NONE)
   else
     Result := fTileset[Land^[aLoc.Y, aLoc.X].BaseLayer.Terrain].Corn
-              and (Land^[aLoc.Y,aLoc.X].TileOverlay = toNone);
+              and (Land^[aLoc.Y,aLoc.X].TileOverlay = OVERLAY_NONE);
 end;
 
 
@@ -2030,10 +2033,10 @@ begin
 
   //Tile can't be used as a field if there is road or any other overlay
   if fMapEditor then
-    Result := (gGame.MapEditor.LandMapEd^[Y,X].CornOrWine = 1) and (Land^[Y,X].TileOverlay = toNone)
+    Result := (gGame.MapEditor.LandMapEd^[Y,X].CornOrWine = 1) and (Land^[Y,X].TileOverlay = OVERLAY_NONE)
   else
     Result := fTileset[Land^[Y, X].BaseLayer.Terrain].Corn
-              and (Land^[Y,X].TileOverlay = toNone);
+              and (Land^[Y,X].TileOverlay = OVERLAY_NONE);
 end;
 
 function TKMTerrain.TileIsGrassField(const aLoc : TKMPoint): Boolean;
@@ -2042,10 +2045,10 @@ begin
 
   //Tile can't be used as a field if there is road or any other overlay
   if fMapEditor then
-    Result := (gGame.MapEditor.LandMapEd^[aLoc.Y,aLoc.X].CornOrWine = 3) and (Land^[aLoc.Y,aLoc.X].TileOverlay = toNone)
+    Result := (gGame.MapEditor.LandMapEd^[aLoc.Y,aLoc.X].CornOrWine = 3) and (Land^[aLoc.Y,aLoc.X].TileOverlay = OVERLAY_NONE)
   else
     Result := fTileset[Land^[aLoc.Y, aLoc.X].BaseLayer.Terrain].Grass
-              and (Land^[aLoc.Y,aLoc.X].TileOverlay = toNone);
+              and (Land^[aLoc.Y,aLoc.X].TileOverlay = OVERLAY_NONE);
 
 end;
 
@@ -2058,10 +2061,10 @@ function TKMTerrain.TileIsVegeField(const aLoc : TKMPoint): Boolean;
 begin
   //Tile can't be used as a field if there is road or any other overlay
   if fMapEditor then
-    Result := (gGame.MapEditor.LandMapEd^[aLoc.Y,aLoc.X].CornOrWine = 4) and (Land^[aLoc.Y,aLoc.X].TileOverlay = toNone)
+    Result := (gGame.MapEditor.LandMapEd^[aLoc.Y,aLoc.X].CornOrWine = 4) and (Land^[aLoc.Y,aLoc.X].TileOverlay = OVERLAY_NONE)
   else
     Result := fTileset[Land^[aLoc.Y, aLoc.X].BaseLayer.Terrain].Vegetables
-              and (Land^[aLoc.Y,aLoc.X].TileOverlay = toNone);
+              and (Land^[aLoc.Y,aLoc.X].TileOverlay = OVERLAY_NONE);
 
 end;
 function TKMTerrain.TileIsVegeField(const X, Y: Word): Boolean;
@@ -2098,15 +2101,17 @@ var area : TKMByte2Array;
   tmpPoints : TKMPointArray;
   tmpTags : Integer;
 
-  function HasDeposit(X, Y : Integer; aType : TKMTileOverlay = toNone) : Boolean;
+  function HasDeposit(X, Y : Integer; aType : TKMTileOverlay = OVERLAY_NONE) : Boolean;
+  var aTO : TKMTileOverlay;
   begin
-    if aType = toNone then
-      Result := (Land[Y, X].TileOverlay2 in [toGold, toIron, toBitin, toCoal]) and (Land[Y, X].Ware.C2 > 0)
+    aTO := Land[Y, X].TileOverlay2;
+    if aType = OVERLAY_NONE then
+      Result := (aTO in [UNDERGROUND_GOLD_ID, UNDERGROUND_IRON_ID, UNDERGROUND_BITIN_ID, UNDERGROUND_COAL_ID]) and (Land[Y, X].Ware.C2 > 0)
     else
-      Result := (Land[Y, X].TileOverlay2 = aType) and (Land[Y, X].Ware.C2 > 0);
+      Result := (aTO = aType) and (Land[Y, X].Ware.C2 > 0);
   end;
 
-  procedure CheckTile(X, Y : Integer; aDistance : Integer; aType : TKMTileOverlay = toNone);
+  procedure CheckTile(X, Y : Integer; aDistance : Integer; aType : TKMTileOverlay = OVERLAY_NONE);
   begin
     if (area[X, Y] <> 0) or not HasDeposit(X, Y, aType) then
       Exit;
@@ -2117,7 +2122,7 @@ var area : TKMByte2Array;
     //if (aType = toNone) or (Land[K, I].TileOverlay2 = aType) then
     begin
       aType := Land[K, I].TileOverlay2;
-      area[X, Y] := byte(Land[K, I].TileOverlay2) - byte(toGold) + 1;
+      area[X, Y] := Land[K, I].TileOverlay2 - UNDERGROUND_GOLD_ID + 1;
       tmpPoints.Add(X, Y);
       if (X - 1 >= 1) then
       begin
@@ -2176,7 +2181,7 @@ begin
     if (area[I, K] = 0) and HasDeposit(I, K) then
     begin
       tmpPoints.Clear;
-      CheckTile(I, K, 0, toNone);
+      CheckTile(I, K, 0, OVERLAY_NONE);
       if tmpPoints.Count > 0 then
       begin
         //find avarage point
@@ -2235,12 +2240,14 @@ var
   I, K : Integer;
 
 
-  function HasDeposit(X, Y : Integer; aType : TKMTileOverlay = toNone) : Boolean;
+  function HasDeposit(X, Y : Integer; aType : TKMTileOverlay = OVERLAY_NONE) : Boolean;
+  var aTO : TKMTileOverlay;
   begin
-    if aType = toNone then
-      Result := (Land[Y, X].TileOverlay2 in [toGold, toIron, toBitin, toCoal]) and (Land[Y, X].Ware.C2 > 0)
+    aTO := Land[Y, X].TileOverlay2;
+    if aType = OVERLAY_NONE then
+      Result := (aTO in [UNDERGROUND_GOLD_ID, UNDERGROUND_IRON_ID, UNDERGROUND_BITIN_ID, UNDERGROUND_COAL_ID]) and (Land[Y, X].Ware.C2 > 0)
     else
-      Result := (Land[Y, X].TileOverlay2 = aType) and (Land[Y, X].Ware.C2 > 0);
+      Result := (aTO = aType) and (Land[Y, X].Ware.C2 > 0);
   end;
 
 begin
@@ -2249,7 +2256,7 @@ begin
   for I := rec.Left to rec.Right do
   for K := rec.Top to rec.Bottom do
     if HasDeposit(I, K) then
-      aDeposits.Add(KMPoint(I, K), byte(Land[K, I].TileOverlay2) - byte(toGold) + 1, Land[K, I].Ware.C2);
+      aDeposits.Add(KMPoint(I, K), byte(Land[K, I].TileOverlay2) - UNDERGROUND_GOLD_ID + 1, Land[K, I].Ware.C2);
 end;
 
 
@@ -2258,15 +2265,18 @@ var area : TKMByte2Array;
   rec : TKMRect;
   I, K : Integer;
 
-  function HasDeposit(X, Y : Integer; aType : TKMTileOverlay = toNone) : Boolean;
+
+  function HasDeposit(X, Y : Integer; aType : TKMTileOverlay = OVERLAY_NONE) : Boolean;
+  var aTO : TKMTileOverlay;
   begin
-    if aType = toNone then
-      Result := (Land[Y, X].TileOverlay2 in [toGold, toIron, toBitin, toCoal]) and (Land[Y, X].Ware.C2 > 0)
+    aTO := Land[Y, X].TileOverlay2;
+    if aType = OVERLAY_NONE then
+      Result := (aTO in [UNDERGROUND_GOLD_ID, UNDERGROUND_IRON_ID, UNDERGROUND_BITIN_ID, UNDERGROUND_COAL_ID]) and (Land[Y, X].Ware.C2 > 0)
     else
-      Result := (Land[Y, X].TileOverlay2 = aType) and (Land[Y, X].Ware.C2 > 0);
+      Result := (aTO = aType) and (Land[Y, X].Ware.C2 > 0);
   end;
 
-  procedure CheckTile(X, Y : Integer; aDistance : Integer; aType : TKMTileOverlay = toNone);
+  procedure CheckTile(X, Y : Integer; aDistance : Integer; aType : TKMTileOverlay = OVERLAY_NONE);
   begin
     if (area[X, Y] <> 0) or not HasDeposit(X, Y, aType) then
       Exit;
@@ -2277,7 +2287,7 @@ var area : TKMByte2Array;
     //if (aType = toNone) or (Land[K, I].TileOverlay2 = aType) then
     begin
       aType := Land[K, I].TileOverlay2;
-      area[X, Y] := byte(Land[Y, X].TileOverlay2) - byte(toGold) + 1;
+      area[X, Y] := Land[K, I].TileOverlay2 - UNDERGROUND_GOLD_ID + 1;
       aDeposits.AddUnique(KMPoint(X, Y), area[X, Y], Land[K, I].Ware.C2);
       if (X - 1 >= 1) then
       begin
@@ -2308,7 +2318,7 @@ begin
   for I := rec.Left to rec.Right do
   for K := rec.Top to rec.Bottom do
     if (area[I, K] = 0) and HasDeposit(I, K) then
-      CheckTile(I, K, 0, toNone);
+      CheckTile(I, K, 0, OVERLAY_NONE);
 end;
 
 procedure TKMTerrain.FindValuableObjects(const aLoc: TKMPoint; aRadius: Byte; aObjects: TKMPointTagList);
@@ -2400,10 +2410,10 @@ begin
   //Tile can't be used as a winefield if there is road or any other overlay
   //It also must have right object on it
   if fMapEditor then
-    Result := (gGame.MapEditor.LandMapEd^[aLoc.Y,aLoc.X].CornOrWine = 2) and (Land^[aLoc.Y,aLoc.X].TileOverlay = toNone)
+    Result := (gGame.MapEditor.LandMapEd^[aLoc.Y,aLoc.X].CornOrWine = 2) and (Land^[aLoc.Y,aLoc.X].TileOverlay = OVERLAY_NONE)
   else
     Result := fTileset[Land^[aLoc.Y, aLoc.X].BaseLayer.Terrain].Wine
-              and (Land^[aLoc.Y,aLoc.X].TileOverlay = toNone)
+              and (Land^[aLoc.Y,aLoc.X].TileOverlay = OVERLAY_NONE)
               and ObjectIsWine(aLoc);
 end;
 
@@ -2415,10 +2425,10 @@ begin
   //Tile can't be used as a winefield if there is road or any other overlay
   //It also must have right object on it
   if fMapEditor then
-    Result := (gGame.MapEditor.LandMapEd^[Y,X].CornOrWine = 2) and (Land^[Y,X].TileOverlay = toNone)
+    Result := (gGame.MapEditor.LandMapEd^[Y,X].CornOrWine = 2) and (Land^[Y,X].TileOverlay = OVERLAY_NONE)
   else
     Result := fTileset[Land^[Y, X].BaseLayer.Terrain].Wine
-              and (Land^[Y,X].TileOverlay = toNone)
+              and (Land^[Y,X].TileOverlay = OVERLAY_NONE)
               and ObjectIsWine(X, Y)
 end;
 
@@ -3127,7 +3137,7 @@ begin
     X2 := aList[I].X;
 
     Land^[Y2, X2].TileOwner   := aOwner;
-    Land^[Y2, X2].TileOverlay := toRoad;
+    Land^[Y2, X2].TileOverlay := OVERLAY_ROAD;
     Land^[Y2, X2].FieldAge    := 0;
     Land^[Y2, X2].RoadType := TKMRoadType(aList.Tag[I]);
     if gMapElements[Land^[Y2, X2].Obj].WineOrCorn then
@@ -3162,7 +3172,7 @@ end;
 procedure TKMTerrain.RemRoad(const aLoc: TKMPoint);
 begin
   Land^[aLoc.Y,aLoc.X].TileOwner := -1;
-  Land^[aLoc.Y,aLoc.X].TileOverlay := toNone;
+  Land^[aLoc.Y,aLoc.X].TileOverlay := OVERLAY_NONE;
   Land^[aLoc.Y,aLoc.X].FieldAge  := 0;
   UpdateFences(aLoc);
   UpdatePassability(KMRectGrowBottomRight(KMRect(aLoc)));
@@ -3203,7 +3213,7 @@ var I : Integer;
   GT : TKMGrainType;
 begin
   Land^[aLoc.Y,aLoc.X].TileOwner := -1;
-  Land^[aLoc.Y,aLoc.X].TileOverlay := toNone;
+  Land^[aLoc.Y,aLoc.X].TileOverlay := OVERLAY_NONE;
   GT := Land^[aLoc.Y,aLoc.X].GrainType;
   Land^[aLoc.Y,aLoc.X].GrainType := gftNone;
 
@@ -3242,7 +3252,7 @@ var
   R: TKMRect;
 begin
   Land^[aLoc.Y,aLoc.X].TileOwner := -1;
-  Land^[aLoc.Y,aLoc.X].TileOverlay := toNone;
+  Land^[aLoc.Y,aLoc.X].TileOverlay := OVERLAY_NONE;
 
 
   if fMapEditor then
@@ -3306,7 +3316,7 @@ begin
             SetObject(P, OBJ_NONE);
         end;
 
-        if Land^[I, K].TileOverlay = toRoad then
+        if Land^[I, K].TileOverlay = OVERLAY_ROAD then
           RemRoad(P);
         if TileIsCornField(P) or TileIsWineField(P) then
           RemField(P);
@@ -3332,7 +3342,7 @@ procedure TKMTerrain.SetField_Init(const aLoc: TKMPoint; aOwner: TKMHandID; aRem
 begin
   Land^[aLoc.Y,aLoc.X].TileOwner   := aOwner;
   if aRemoveOverlay then
-    Land^[aLoc.Y,aLoc.X].TileOverlay := toNone;
+    Land^[aLoc.Y,aLoc.X].TileOverlay := OVERLAY_NONE;
 
 
   Land^[aLoc.Y,aLoc.X].FieldAge    := 0;
@@ -3356,7 +3366,7 @@ begin
     Exit;
   SetField_Init(aLoc, aOwner);
 
-  Land^[aLoc.Y,aLoc.X].TileOverlay := toRoad;
+  Land^[aLoc.Y,aLoc.X].TileOverlay := OVERLAY_ROAD;
   Land^[aLoc.Y,aLoc.X].RoadType := aRoadType;
 
   SetField_Complete(aLoc, ftRoad);
@@ -3469,31 +3479,31 @@ begin
   case aRoadType of
     rtNone, rtStone :
                       case Land^[aLoc.Y,aLoc.X].TileOverlay of
-                        toDig1: Land^[aLoc.Y,aLoc.X].TileOverlay := toDig2;
-                        toDig2: Land^[aLoc.Y,aLoc.X].TileOverlay := toDig3;
-                        toDig3: Land^[aLoc.Y,aLoc.X].TileOverlay := toDig4;
-                        else Land^[aLoc.Y,aLoc.X].TileOverlay := toDig1;
+                        OVERLAY_DIG_1: Land^[aLoc.Y,aLoc.X].TileOverlay := OVERLAY_DIG_2;
+                        OVERLAY_DIG_2: Land^[aLoc.Y,aLoc.X].TileOverlay := OVERLAY_DIG_3;
+                        OVERLAY_DIG_3: Land^[aLoc.Y,aLoc.X].TileOverlay := OVERLAY_DIG_4;
+                        else Land^[aLoc.Y,aLoc.X].TileOverlay := OVERLAY_DIG_1;
                       end;
     rtWooden :
               case Land^[aLoc.Y,aLoc.X].TileOverlay of
-                toDig1: Land^[aLoc.Y,aLoc.X].TileOverlay := toDig2;
-                toDig2: Land^[aLoc.Y,aLoc.X].TileOverlay := toDig3Wooden;
-                toDig3Wooden: Land^[aLoc.Y,aLoc.X].TileOverlay := toDig4Wooden;
-                else Land^[aLoc.Y,aLoc.X].TileOverlay := toDig1;
+                OVERLAY_DIG_1: Land^[aLoc.Y,aLoc.X].TileOverlay := OVERLAY_DIG_2;
+                OVERLAY_DIG_2: Land^[aLoc.Y,aLoc.X].TileOverlay := OVERLAY_DIG_WOOD_3;
+                OVERLAY_DIG_WOOD_3: Land^[aLoc.Y,aLoc.X].TileOverlay := OVERLAY_DIG_WOOD_4;
+                else Land^[aLoc.Y,aLoc.X].TileOverlay := OVERLAY_DIG_1;
               end;
     rtClay :
               case Land^[aLoc.Y,aLoc.X].TileOverlay of
-                toDig1: Land^[aLoc.Y,aLoc.X].TileOverlay := toDig2;
-                toDig2: Land^[aLoc.Y,aLoc.X].TileOverlay := toDig3Clay;
-                toDig3Clay: Land^[aLoc.Y,aLoc.X].TileOverlay := toDig4Clay;
-                else Land^[aLoc.Y,aLoc.X].TileOverlay := toDig1;
+                OVERLAY_DIG_1: Land^[aLoc.Y,aLoc.X].TileOverlay := OVERLAY_DIG_2;
+                OVERLAY_DIG_2: Land^[aLoc.Y,aLoc.X].TileOverlay := OVERLAY_DIG_CLAY_3;
+                OVERLAY_DIG_CLAY_3: Land^[aLoc.Y,aLoc.X].TileOverlay := OVERLAY_DIG_CLAY_4;
+                else Land^[aLoc.Y,aLoc.X].TileOverlay := OVERLAY_DIG_1;
               end;
     rtExclusive :
               case Land^[aLoc.Y,aLoc.X].TileOverlay of
-                toDig1: Land^[aLoc.Y,aLoc.X].TileOverlay := toDig2;
-                toDig2: Land^[aLoc.Y,aLoc.X].TileOverlay := toDig3Exclusive;
-                toDig3Exclusive: Land^[aLoc.Y,aLoc.X].TileOverlay := toDig4Exclusive;
-                else Land^[aLoc.Y,aLoc.X].TileOverlay := toDig1;
+                OVERLAY_DIG_1: Land^[aLoc.Y,aLoc.X].TileOverlay := OVERLAY_DIG_2;
+                OVERLAY_DIG_2: Land^[aLoc.Y,aLoc.X].TileOverlay := OVERLAY_DIG_EXCLUSIVE_3;
+                OVERLAY_DIG_EXCLUSIVE_3: Land^[aLoc.Y,aLoc.X].TileOverlay := OVERLAY_DIG_EXCLUSIVE_4;
+                else Land^[aLoc.Y,aLoc.X].TileOverlay := OVERLAY_DIG_1;
               end;
 
   end;
@@ -3502,7 +3512,7 @@ end;
 
 procedure TKMTerrain.ResetDigState(const aLoc: TKMPoint);
 begin
-  Land^[aLoc.Y,aLoc.X].TileOverlay:=toNone;
+  Land^[aLoc.Y,aLoc.X].TileOverlay:=OVERLAY_NONE;
 end;
 
 
@@ -4054,7 +4064,7 @@ begin
   Result := false;
   aLoc.Loc := aLoc.DirFaceLoc;
 
-  if Land^[aLoc.Y,aLoc.X].TileOverlay2 = toInfinity then
+  if Land^[aLoc.Y,aLoc.X].TileOverlay2.IsInfinite then
     Exit(true);
   W := GetWareOnGround(aLoc.Loc);
 
@@ -4337,19 +4347,19 @@ begin
     for I := Max(aLoc.Y - miningRect.Top, 1) to Min(aLoc.Y + miningRect.Bottom, fMapY - 1) do
       for K := Max(aLoc.X - miningRect.Left, 1) to Min(aLoc.X + miningRect.Right, fMapX - 1) do
         begin
-          case Land^[I, K].TileOverlay2 of
-            toClay1 :
-                      if InRange(I - aLoc.Y, - miningRect.Top + 2, miningRect.Bottom - 2)
-                        and InRange(K - aLoc.X, - miningRect.Left + 2, miningRect.Right - 2) then
-                          aPoints[0].Add(KMPoint(K, I));
-            toClay2 : if InRange(I - aLoc.Y, - miningRect.Top + 1, miningRect.Bottom - 1)
-                        and InRange(K - aLoc.X, - miningRect.Left + 1, miningRect.Right - 1) then
-                          aPoints[1].Add(KMPoint(K, I));
-            toClay3 : aPoints[2].Add(KMPoint(K, I));
-            toClay4 : aPoints[3].Add(KMPoint(K, I));
-            toInfinityClay,
-            toClay5 : aPoints[4].Add(KMPoint(K, I));
-          end;
+          If Land^[I, K].TileOverlay2.IsWare(wtTile) then
+            case Land^[I, K].TileOverlay2.ResCount of
+              1 :
+                        if InRange(I - aLoc.Y, - miningRect.Top + 2, miningRect.Bottom - 2)
+                          and InRange(K - aLoc.X, - miningRect.Left + 2, miningRect.Right - 2) then
+                            aPoints[0].Add(KMPoint(K, I));
+              2 : if InRange(I - aLoc.Y, - miningRect.Top + 1, miningRect.Bottom - 1)
+                          and InRange(K - aLoc.X, - miningRect.Left + 1, miningRect.Right - 1) then
+                            aPoints[1].Add(KMPoint(K, I));
+              3 : aPoints[2].Add(KMPoint(K, I));
+              4 : aPoints[3].Add(KMPoint(K, I));
+              else aPoints[4].Add(KMPoint(K, I));
+            end;
         end;
     Exit;
   end;
@@ -4360,19 +4370,17 @@ begin
     for I := Max(aLoc.Y - miningRect.Top, 1) to Min(aLoc.Y + miningRect.Bottom, fMapY - 1) do
       for K := Max(aLoc.X - miningRect.Left, 1) to Min(aLoc.X + miningRect.Right, fMapX - 1) do
       begin
-        case Land^[I, K].TileOverlay2 of
-          toCoal1 : if InRange(I - aLoc.Y, - miningRect.Top + 2, miningRect.Bottom - 2) then
+        If Land^[I, K].TileOverlay2.IsWare(wtCoal) then
+          case Land^[I, K].TileOverlay2.ResCount of
+          1 : if InRange(I - aLoc.Y, - miningRect.Top + 2, miningRect.Bottom - 2) then
                       if InRange(K - aLoc.X, - miningRect.Left + 2, miningRect.Right - 2) then
                         aPoints[0].Add(KMPoint(K, I));
-          toCoal2 : if InRange(I - aLoc.Y, - miningRect.Top + 1, miningRect.Bottom - 1) then
+          2 : if InRange(I - aLoc.Y, - miningRect.Top + 1, miningRect.Bottom - 1) then
                       if InRange(K - aLoc.X, - miningRect.Left + 1, miningRect.Right - 1) then
                         aPoints[1].Add(KMPoint(K, I));
-          toCoal3 : aPoints[2].Add(KMPoint(K, I));
-          toCoal4 : aPoints[3].Add(KMPoint(K, I));
-
-          toInfinityCoal,
-          toCoal5 : aPoints[4].Add(KMPoint(K, I));
-          toCoal : aPoints[0].Add(KMPoint(K, I));
+          3 : aPoints[2].Add(KMPoint(K, I));
+          4 : aPoints[3].Add(KMPoint(K, I));
+          else aPoints[0].Add(KMPoint(K, I));
         end;
       end;
 
@@ -4451,9 +4459,9 @@ begin
 
       if isOnMineShaft then
         if (Land^[I, K].Ware.C2 > 0)
-        and ( ((aWare = wtGoldOre) and (Land^[I, K].TileOverlay2 = toGold))
-              or ((aWare = wtIronOre) and (Land^[I, K].TileOverlay2 = toIron))
-              or ((aWare = wtBitinOre) and (Land^[I, K].TileOverlay2 = toBitin))
+        and ( ((aWare = wtGoldOre) and (Land^[I, K].TileOverlay2 = UNDERGROUND_GOLD_ID))
+              or ((aWare = wtIronOre) and (Land^[I, K].TileOverlay2 = UNDERGROUND_IRON_ID))
+              or ((aWare = wtBitinOre) and (Land^[I, K].TileOverlay2 = UNDERGROUND_BITIN_ID))
               )
         then
           aPoints[0].Add(KMPoint(K, I));
@@ -5344,7 +5352,7 @@ begin
   if not TileInMapCoords(aLoc.X, aLoc.Y) then Exit;
   if not gGame.TerrainPainter.CanEditTile(aLoc.X, aLoc.Y) then Exit;
 
-  if aOverlay = toRoad then
+  if aOverlay.Params.funct = tofRoad then
   begin
     SetRoad(aLoc, HAND_NONE, rtStone);
     Exit;
@@ -5352,20 +5360,20 @@ begin
 
   changed := False;
 
-  if aOverlay in TILE_OVERLAY_2 then
+  if aOverlay.IsSecondLayer then
   begin
     if not gCursor.MapEdOverrideCustomTiles then
-      If Land^[aLoc.Y, aLoc.X].TileOverlay2 <> toNone then
+      If Land^[aLoc.Y, aLoc.X].TileOverlay2 <> OVERLAY_NONE then
         Exit;
 
 
     Land^[aLoc.Y, aLoc.X].TileOverlay2 := aOverlay;
     changed := true;
     Land^[aLoc.Y, aLoc.X].Ware.C2 := 0;
-    if aOverlay in [toGold, toIron, toBitin] then
+    if aOverlay in [UNDERGROUND_GOLD_ID, UNDERGROUND_IRON_ID, UNDERGROUND_BITIN_ID] then
       Land^[aLoc.Y, aLoc.X].Ware.C2 := 5
     else
-    if aOverlay in [toCoal] then
+    if aOverlay in [UNDERGROUND_COAL_ID] then
       Land^[aLoc.Y, aLoc.X].Ware.C2 := 10;
 
 
@@ -5374,13 +5382,13 @@ begin
   if aOverwrite then
   begin
     if not gCursor.MapEdOverrideCustomTiles then
-      If Land^[aLoc.Y, aLoc.X].TileOverlay <> toNone then
+      If Land^[aLoc.Y, aLoc.X].TileOverlay <> OVERLAY_NONE then
         Exit;
       if CanAddField(aLoc.X, aLoc.Y, ftRoad)                       //Can we add road
-        or ((Land^[aLoc.Y, aLoc.X].TileOverlay = toRoad)
+        or ((Land^[aLoc.Y, aLoc.X].TileOverlay = OVERLAY_ROAD)
             and (gHands.HousesHitTest(aLoc.X, aLoc.Y) = nil)) then //or Can we destroy road
       begin
-        if Land^[aLoc.Y, aLoc.X].TileOverlay = toRoad then
+        if Land^[aLoc.Y, aLoc.X].TileOverlay = OVERLAY_ROAD then
           RemRoad(aLoc);
 
         Land^[aLoc.Y, aLoc.X].TileOverlay := aOverlay;
@@ -5390,7 +5398,7 @@ begin
 
         UpdateFences(aLoc);
 
-        if (aOverlay in ROAD_LIKE_OVERLAYS) and gMapElements[Land^[aLoc.Y, aLoc.X].Obj].WineOrCorn then
+        if (aOverlay.IsRoadOrDig) and gMapElements[Land^[aLoc.Y, aLoc.X].Obj].WineOrCorn then
           RemoveObject(aLoc);
 
         changed := True;
@@ -5399,7 +5407,7 @@ begin
   else
   begin
     if not gCursor.MapEdOverrideCustomTiles then
-      If Land^[aLoc.Y, aLoc.X].TileOverlay <> toNone then
+      If Land^[aLoc.Y, aLoc.X].TileOverlay <> OVERLAY_NONE then
         Exit;
     if CanAddField(aLoc.X, aLoc.Y, ftRoad)
       and not TileIsWineField(KMPoint(aLoc.X, aLoc.Y))
@@ -5415,8 +5423,8 @@ begin
     end;
   end;
 
-  if aOverlay = toNone then
-    if gTerrain.Land^[aLoc.Y, aLoc.X].TileOverlay2 <> toNone then
+  if aOverlay = OVERLAY_NONE then
+    if gTerrain.Land^[aLoc.Y, aLoc.X].TileOverlay2 <> OVERLAY_NONE then
     begin
       gTerrain.Land^[aLoc.Y, aLoc.X].TileOverlay2 := aOverlay;
       Land^[aLoc.Y, aLoc.X].Ware.C2 := 0;
@@ -5436,7 +5444,7 @@ var
   aID: Integer;
 begin
   Result := False;
-  if Land[aLoc.Y, aLoc.X].TileOverlay2 = toInfinity then
+  if Land[aLoc.Y, aLoc.X].TileOverlay2.IsInfinite then
     Exit(true);
   aID := Land^[aLoc.Y,aLoc.X].Obj;
   if gMapElements[aID].CuttableTree then
@@ -5701,7 +5709,7 @@ begin
   Result := Result or (TileIsGrassField(aLoc) and (aStage in [4, 5]));}
   Result := (aStage >= CORN_AGE_MAX);
   if not Result then Exit; //We have no corn here actually, nothing to cut
-  If Land^[aLoc.Y,aLoc.X].TileOverlay2 = toInfinity then
+  If Land^[aLoc.Y,aLoc.X].TileOverlay2.IsInfinite then
     Exit;
   aStage := gFieldGrains[Land^[aLoc.Y,aLoc.X].GrainType].StagesCount - 1;
   Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := GetTileCornTile(aLoc, aStage);
@@ -5717,7 +5725,7 @@ begin
   Result := TileIsWineField(aLoc) and gFieldGrains[GetGrainType(aLoc)].Stage[aStage].CanBeCut;
   if not Result then Exit; //We have no wine here actually, nothing to cut
 
-  If Land^[aLoc.Y,aLoc.X].TileOverlay2 = toInfinity then
+  If Land^[aLoc.Y,aLoc.X].TileOverlay2.IsInfinite then
     Exit;
   Land^[aLoc.Y,aLoc.X].FieldAge := 1;
   Land^[aLoc.Y,aLoc.X].Obj := gFieldGrains[GetGrainType(aLoc)].Stage[0].Obj; //Reset the grapes
@@ -6091,7 +6099,7 @@ begin
 
   Result := True;
 
-  if Land^[aLoc.Y,aLoc.X].TileOverlay2 = toInfinity then
+  if Land^[aLoc.Y,aLoc.X].TileOverlay2.IsInfinite then
     Exit;
 
   if gMapElements[Land^[aLoc.Y,aLoc.X].Obj].Stone > 0 then
@@ -6156,7 +6164,7 @@ begin
   isCorner := false;
   isOverlayCoal := false;
 
-  if Land^[aLoc.Y,aLoc.X].TileOverlay2 in [toInfinity .. toInfinityCoal] then
+  if Land^[aLoc.Y,aLoc.X].TileOverlay2.IsInfinite then
     Exit;
 
   if aWare = wtJewerly then
@@ -6175,13 +6183,6 @@ begin
         SetObject(aLoc, Land^[aLoc.Y,aLoc.X].Obj - 1);
 
       Result := true;
-    end else
-    case Land^[aLoc.Y,aLoc.X].TileOverlay2 of
-      toClay1 : Land^[aLoc.Y,aLoc.X].TileOverlay2 := toNone;
-      toClay2 : Land^[aLoc.Y,aLoc.X].TileOverlay2 := toClay1;
-      toClay3 : Land^[aLoc.Y,aLoc.X].TileOverlay2 := toClay2;
-      toClay4 : Land^[aLoc.Y,aLoc.X].TileOverlay2 := toClay3;
-      toClay5 : Land^[aLoc.Y,aLoc.X].TileOverlay2 := toClay4;
     end;
     Exit;
   end;
@@ -6243,13 +6244,13 @@ begin
 
     if (aWare = wtCoal) then
     begin
-      if Land^[aLoc.Y,aLoc.X].TileOverlay2 in COAL_LIKE_OVERLAYS then
+      if Land^[aLoc.Y,aLoc.X].TileOverlay2.Params.W = wtCoal then
       begin
         isOverlayCoal := true;
         Result := true;
       end;
 
-      case Land^[aLoc.Y,aLoc.X].TileOverlay2 of
+     { case Land^[aLoc.Y,aLoc.X].TileOverlay2 of
 
         toCoal1 : Land^[aLoc.Y,aLoc.X].TileOverlay2 := toNone;
         toCoal2 : Land^[aLoc.Y,aLoc.X].TileOverlay2 := toCoal1;
@@ -6257,7 +6258,7 @@ begin
         toCoal4 : Land^[aLoc.Y,aLoc.X].TileOverlay2 := toCoal3;
         toCoal5 : Land^[aLoc.Y,aLoc.X].TileOverlay2 := toCoal4;
 
-      end;
+      end;}
 
     end;
     if not isOverlayCoal then
@@ -6304,7 +6305,7 @@ begin
         isCorner := true;
         Land^[aLoc.Y,aLoc.X].Ware.C2 := Land^[aLoc.Y,aLoc.X].Ware.C2 - 1;
         if Land^[aLoc.Y,aLoc.X].Ware.C2 = 0 then
-          Land^[aLoc.Y,aLoc.X].TileOverlay2 := toNone;
+          Land^[aLoc.Y,aLoc.X].TileOverlay2 := OVERLAY_NONE;
       end;
   end;
 
@@ -6351,13 +6352,13 @@ begin
   if Land^[aLoc.Y,aLoc.X].TileLock in [tlNone, tlFenced, tlFieldWork, tlRoadWork, tlWallEmpty, tlStructure] then
   begin
     if TileIsWalkable(aLoc)
-      and gRes.Tileset[TILE_OVERLAY_IDS[Land^[aLoc.Y,aLoc.X].TileOverlay2]].Walkable
+      and gRes.Tileset[gRes.Tileset.Overlay[Land^[aLoc.Y,aLoc.X].TileOverlay2].TileID].Walkable
       and not gMapElements[Land^[aLoc.Y,aLoc.X].Obj].AllBlocked
       and ((Land^[aLoc.Y,aLoc.X].Ware.C < 5) or (Land^[aLoc.Y,aLoc.X].Ware.W = 0))
       and CheckHeightPass(aLoc, hpWalking) then
       AddPassability(tpWalk);
 
-    if (Land^[aLoc.Y,aLoc.X].TileOverlay = toRoad)
+    if (Land^[aLoc.Y,aLoc.X].TileOverlay = OVERLAY_ROAD)
     and (tpWalk in Land^[aLoc.Y,aLoc.X].Passability) then //Not all roads are walkable, they must also have CanWalk passability
       AddPassability(tpWalkRoad);
 
@@ -6376,7 +6377,7 @@ begin
       and not TileIsWineField(aLoc)
       and not TileIsGrassField(aLoc)
       and not TileIsVegeField(aLoc)
-      and not gRes.Tileset[TILE_OVERLAY_IDS[Land^[aLoc.Y,aLoc.X].TileOverlay2]].NotBuildable
+      and not gRes.Tileset[Land^[aLoc.Y,aLoc.X].TileOverlay2.Params.TileID].NotBuildable
       and (Land^[aLoc.Y,aLoc.X].TileLock in [tlNone])
       and TileInMapCoords(aLoc.X, aLoc.Y, 1)
       and CheckHeightPass(aLoc, hpBuilding) then
@@ -6392,7 +6393,7 @@ begin
     if TileIsRoadable(aLoc)
       and not gMapElements[Land^[aLoc.Y,aLoc.X].Obj].AllBlocked
       and (Land^[aLoc.Y,aLoc.X].TileLock in [tlNone, tlWallEmpty])
-      and (Land^[aLoc.Y,aLoc.X].TileOverlay <> toRoad)
+      and (Land^[aLoc.Y,aLoc.X].TileOverlay <> OVERLAY_ROAD)
       and CheckHeightPass(aLoc, hpWalking)
       and not (Land^[aLoc.Y,aLoc.X].Obj in [80, 81])
       and not TileHasPalisade(aLoc.X,aLoc.Y) then
@@ -6403,7 +6404,7 @@ begin
 
     if TileIsWater(aLoc)
       and (Land^[aLoc.Y,aLoc.X].TileLock in [tlNone, tlStructure])
-      and gRes.Tileset[TILE_OVERLAY_IDS[Land^[aLoc.Y,aLoc.X].TileOverlay2]].Walkable
+      and gRes.Tileset[Land^[aLoc.Y,aLoc.X].TileOverlay2.Params.TileID].Walkable
       and not gMapElements[Land^[aLoc.Y,aLoc.X].Obj].AllBlocked
       and ((Land^[aLoc.Y,aLoc.X].Ware.C < 5) or (Land^[aLoc.Y,aLoc.X].Ware.W = 0))
       and CheckHeightPass(aLoc, hpFish) then
@@ -6413,8 +6414,8 @@ begin
       and TileHasTerrainKinds(aLoc.X, aLoc.Y, [tkCoastSand, tkSand, tkGrassSand3, tkBarrenLand])
       and not gMapElements[Land^[aLoc.Y,aLoc.X].Obj].AllBlocked
       //TileLock checked in outer begin/end
-      and not (Land^[aLoc.Y,aLoc.X].TileOverlay in ROAD_LIKE_OVERLAYS)
-      and not (Land^[aLoc.Y,aLoc.X].TileOverlay2 <> toNone)
+      and not (Land^[aLoc.Y,aLoc.X].TileOverlay.IsRoadOrDig)
+      and not (Land^[aLoc.Y,aLoc.X].TileOverlay2 <> OVERLAY_NONE)
       and not TileIsCornField(aLoc)
       and not TileIsWineField(aLoc)
       and not TileIsGrassField(aLoc)
@@ -6431,8 +6432,8 @@ begin
       and not TileIsWineField(aLoc)
       and not TileIsGrassField(aLoc)
       and not TileIsVegeField(aLoc)
-      and not (Land^[aLoc.Y,aLoc.X].TileOverlay in ROAD_LIKE_OVERLAYS)
-      and gRes.Tileset[TILE_OVERLAY_IDS[Land^[aLoc.Y,aLoc.X].TileOverlay2]].Walkable
+      and not (Land^[aLoc.Y,aLoc.X].TileOverlay.IsRoadOrDig)
+      and gRes.Tileset[Land^[aLoc.Y,aLoc.X].TileOverlay2.Params.TileID].Walkable
       and ((Land^[aLoc.Y,aLoc.X].Ware.C < 5) or (Land^[aLoc.Y,aLoc.X].Ware.W = 0))
       and CheckHeightPass(aLoc, hpWalking) then
       AddPassability(tpWolf);
@@ -6444,8 +6445,8 @@ begin
       and not TileIsVegeField(aLoc)
       and not TileHasWater(aLoc)
       and TileHasTerrainKinds(aLoc.X, aLoc.Y, [tkSnow, tkSnowOnDirt, tkSnowOnGrass, tkDeepSnow])
-      and not (Land^[aLoc.Y,aLoc.X].TileOverlay in ROAD_LIKE_OVERLAYS)
-      and gRes.Tileset[TILE_OVERLAY_IDS[Land^[aLoc.Y,aLoc.X].TileOverlay2]].Walkable then
+      and not (Land^[aLoc.Y,aLoc.X].TileOverlay.IsRoadOrDig)
+      and gRes.Tileset[Land^[aLoc.Y,aLoc.X].TileOverlay2.Params.TileID].Walkable then
       AddPassability(tpPolarBear);
 
     if HasPassability(tpWalk)
@@ -6455,8 +6456,8 @@ begin
       and not TileIsVegeField(aLoc)
       and not TileHasWater(aLoc)
       and TileHasTerrainKinds(aLoc.X, aLoc.Y, [tkDirt, tkGrassDirt, tkPaleGrass, tkSnowOnDirt, tkGravel, tkCoal])
-      and not (Land^[aLoc.Y,aLoc.X].TileOverlay in ROAD_LIKE_OVERLAYS)
-      and gRes.Tileset[TILE_OVERLAY_IDS[Land^[aLoc.Y,aLoc.X].TileOverlay2]].Walkable then
+      and not (Land^[aLoc.Y,aLoc.X].TileOverlay.IsRoadOrDig)
+      and gRes.Tileset[Land^[aLoc.Y,aLoc.X].TileOverlay2.Params.TileID].Walkable then
       AddPassability(tpFox);
   end;
 
@@ -7358,7 +7359,7 @@ begin
       if HA[I,K] = 2 then
         if aHouseStage = hsBuilt then
           if TKMHouse(aHouse).PlaceRoad then
-            Land^[Y,X].TileOverlay := toRoad;
+            Land^[Y,X].TileOverlay := OVERLAY_ROAD;
 
     end;
   SetHouse(TKMHouse(aHouse).Position, TKMHouse(aHouse).HouseType, aHouseStage, aOwner, aFlattenTerrain);
@@ -7980,7 +7981,7 @@ begin
       for K := 1 to MAX_HOUSE_SIZE do
         if HA[I, K] <> 0 then
         begin
-          Land^[aLoc.Y + I - 4, aLoc.X + K - 3].TileOverlay := toDig3;
+          Land^[aLoc.Y + I - 4, aLoc.X + K - 3].TileOverlay := OVERLAY_DIG_3;
           Land^[aLoc.Y + I - 4, aLoc.X + K - 3].TileLock    := tlNone;
         end;
 
@@ -7990,7 +7991,7 @@ begin
         for K := 1 to MAX_HOUSE_SIZE do
           if HA[I, K] <> 0 then
             if gMapElements[Land^[aLoc.Y + I - 4, aLoc.X + K - 3].Obj].Clay > 0 then
-              Land^[aLoc.Y + I - 4, aLoc.X + K - 3].TileOverlay2 := toNone;
+              Land^[aLoc.Y + I - 4, aLoc.X + K - 3].TileOverlay2 := OVERLAY_NONE;
 
   end else
   begin
@@ -9149,7 +9150,7 @@ var aStage : Integer;
   FA : Byte;
   GT : TKMGrainType;
 begin
-  if Land[aLoc.Y, aLoc.X].TileOverlay2 = toStopGrowing then
+  if Land[aLoc.Y, aLoc.X].TileOverlay2.StopsGrowing then
     Exit;
 
   FA := Land[aLoc.Y, aLoc.X].FieldAge;

@@ -438,6 +438,7 @@ type
 
 const
   ANIMALS_COUNT = byte(high(TKMPastureAnimalType));
+  MAX_ANIMALS = 10;
   PASTURE_ANIMALS_ORDER : array[0..ANIMALS_COUNT - 1] of TKMPastureAnimalType = (
     patChicken, patGoose, patOstrich, patRabbit, patSheep, patCow, patBull
   );

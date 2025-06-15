@@ -3824,7 +3824,7 @@ begin
     Result := False;
     //-1 stands for any player
     if InRange(aHand, -1, gHands.Count - 1) and gTerrain.TileInMapCoords(X, Y) then
-      Result := (gTerrain.Land^[Y,X].TileOverlay = toRoad)
+      Result := (gTerrain.Land^[Y,X].TileOverlay.IsRoad)
                 and ((aHand = -1) or (gTerrain.Land^[Y, X].TileOwner = aHand))
     else
       LogIntParamWarn('States.IsRoadAt', [aHand, X, Y]);
@@ -4457,7 +4457,7 @@ begin
       Result := gTerrain.Land^[Y, X].TileOverlay
     else
     begin
-      Result := toNone;
+      Result := OVERLAY_NONE;
       LogIntParamWarn('States.MapTileOverlay', [X, Y]);
     end;
   except

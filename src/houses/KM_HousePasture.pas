@@ -8,8 +8,6 @@ uses
   KM_ResTypes, KM_TerrainTypes;
 
 const
-  MAX_ANIMALS = 10;
-const
   ANIMAL_ACTION_COUNT = byte(high(TKMPastureAnimalAction)) + 1;
 type
   TKMPastureAnimal = record
@@ -21,11 +19,13 @@ type
     ActionCycles : Word;
     AnimStep : Word;
     Color : Byte;
+    Multi, Multi2, Multi3 : Byte;
   end;
 
   TKMHousePasture = class(TKMHouse)
   private
     fAnimals : array[0..MAX_ANIMALS - 1] of TKMPastureAnimal;
+    fFoodSilos : array[1..WARES_IN_OUT_COUNT] of Byte;
     fFill : array[1..WARES_IN_OUT_COUNT] of Single;
     fBestClimate : TKMTerrainClimate;
     fObjects : array[0..2] of Word;
@@ -34,7 +34,7 @@ type
     procedure FillWare(aWareType : TKMWareType; aAmount : Single);
     procedure SetAnimalActionWalk(var aAnimal : TKMPastureAnimal);
     procedure SetNewAction(var aAnimal : TKMPastureAnimal);
-    procedure UpdateAnimal(var aAnimal : TKMPastureAnimal);
+    procedure UpdateAnimal(var aAnimal : TKMPastureAnimal; aID, aTick : Cardinal);
     procedure CheckClimate;
   protected
   public
@@ -47,8 +47,13 @@ type
     procedure Paint; override;
 
     procedure BuyAnimal(aAnimal : TKMPastureAnimalType);
+    procedure SellAnimal(aIndex : Integer);
+    function GetAnimal(aIndex : Integer) : TKMPastureAnimal;
 
     function GetPastureTileType : Word;
+
+    Constructor Load(LoadStream : TKMemoryStream);Override;
+    procedure Save(SaveStream : TKMemoryStream);Override;
   end;
 
 implementation
@@ -101,6 +106,27 @@ constructor TKMHousePasture.Create(aUID: Integer; aHouseType: TKMHouseType; PosX
 begin
   Inherited;
   CheckClimate;
+  FillChar(fFoodSilos, SizeOf(fFoodSilos), #0);
+end;
+
+Constructor TKMHousePasture.Load(LoadStream : TKMemoryStream);
+begin
+  Inherited;
+  LoadStream.ReadData(fAnimals);
+  LoadStream.ReadData(fFill);
+  LoadStream.ReadData(fBestClimate);
+  LoadStream.ReadData(fObjects);
+  LoadStream.ReadData(fFoodSilos);
+end;
+
+procedure TKMHousePasture.Save(SaveStream : TKMemoryStream);
+begin
+  Inherited;
+  SaveStream.WriteData(fAnimals);
+  SaveStream.WriteData(fFill);
+  SaveStream.WriteData(fBestClimate);
+  SaveStream.WriteData(fObjects);
+  SaveStream.WriteData(fFoodSilos);
 end;
 
 procedure TKMHousePasture.CheckClimate;
@@ -195,7 +221,6 @@ end;
 
 procedure TKMHousePasture.FillWare(aWareType: TKMWareType; aAmount: Single);
 var I, C : Integer;
-
 begin
   I := GetWareOutIndex(aWareType);
   If I < 1 then
@@ -265,7 +290,7 @@ begin
 
 end;
 
-procedure TKMHousePasture.UpdateAnimal(var aAnimal : TKMPastureAnimal);
+procedure TKMHousePasture.UpdateAnimal(var aAnimal : TKMPastureAnimal; aID, aTick : Cardinal);
 begin
   with aAnimal do
   begin
@@ -274,17 +299,39 @@ begin
     Inc(Age);
     If Age >= AnimalType.Spec.KillAge then
     begin
-      FillWare(wtPig, AnimalType.Spec.Meat);
-      FillWare(wtSkin, AnimalType.Spec.Skin);
+      FillWare(wtPig, AnimalType.Spec.Meat * Multi3 / 2);
+      FillWare(wtSkin, AnimalType.Spec.Skin * Multi3 / 2);
       Age := 0;
       AnimalType := patNone;
       Exit;
     end else
     If (AnimalType.Spec.Age > 0) and (Age mod AnimalType.Spec.Age = 0) then
     begin
-      FillWare(wtFeathers, AnimalType.Spec.Feathers);
-      FillWare(wtEgg, AnimalType.Spec.Eggs);
+      FillWare(wtFeathers, AnimalType.Spec.Feathers * Multi / 2);
+      FillWare(wtEgg, AnimalType.Spec.Eggs * Multi2 / 2);
     end;
+    If (aTick + (aID + 1)) mod (MAX_ANIMALS * 200) = (MAX_ANIMALS + aID * 200)  then
+    begin
+      If AnimalType.Spec.Age > 0 then
+      begin
+        If fFoodSilos[1] > 0 then
+          begin Inc(Multi); Dec(fFoodSilos[1]) end;//corn increases feathers
+        If fFoodSilos[2] > 0 then
+          begin Inc(Multi2); Dec(fFoodSilos[2]) end;//hey increases eggs
+        If fFoodSilos[3] > 0 then
+          begin Inc(Multi3); Dec(fFoodSilos[3]) end;//vegetables increases meat
+        If fFoodSilos[4] > 0 then
+          begin Inc(Age, 200); Dec(fFoodSilos[4]) end;//seeds increases Age
+      end else
+      begin
+        If fFoodSilos[1] > 0 then begin Inc(Age, 200); Dec(fFoodSilos[1]) end;//corn increases Age
+        If fFoodSilos[2] > 0 then begin Inc(Age, 200); Dec(fFoodSilos[2]) end;//hey increases Age
+        If fFoodSilos[3] > 0 then begin Inc(Multi3); Dec(fFoodSilos[3]) end;//vegetables increases meat
+        //If fFoodSilos[4] > 0 then ;//seeds increases nowthing
+      end;
+    end;
+
+
     //inc action animation
     Inc(AnimStep);
 
@@ -337,6 +384,18 @@ begin
 
 
 end;
+procedure TKMHousePasture.SellAnimal(aIndex : Integer);
+begin
+  gHands[Owner].VirtualWareTake('vtCoin', - fAnimals[aIndex].AnimalType.Spec.Cost div 2);
+  fAnimals[aIndex].AnimalType := patNone;
+  fAnimals[aIndex].Age := 0;
+end;
+
+function TKMHousePasture.GetAnimal(aIndex : Integer) : TKMPastureAnimal;
+begin
+  Result := fAnimals[aIndex];
+end;
+
 
 function TKMHousePasture.GetPastureTileType: Word;
 begin
@@ -361,8 +420,15 @@ begin
   Inherited;
   If not IsComplete then
     Exit;
+  for I := 1 to WARES_IN_OUT_COUNT do
+    If (fFoodSilos[I] = 0) and (ResIn[I] > 0) then //check if it can fill sth
+    begin
+      WareTakeFromIn(WareInput[I], 1, true);
+      fFoodSilos[I] := 10;//max is 10
+    end;
+
   for I := 0 to MAX_ANIMALS - 1 do
-    UpdateAnimal(fAnimals[I]);
+    UpdateAnimal(fAnimals[I], I, aTick);
 
 end;
 
@@ -379,6 +445,12 @@ begin
   begin
     //gRenderPool.AddHousePasture(Entrance, FlagColor);
     entr := Entrance;
+    for I := 1 to WARES_IN_OUT_COUNT do
+      If fFoodSilos[I] > 0 then
+      begin
+        K := 2818 + (I - 1) * 10 + (fFoodSilos[I] - 1);
+        gRenderPool.AddPastureSilos(Position, K);
+      end;
     for I := 0 to MAX_ANIMALS - 1 do
       If fAnimals[I].AnimalType <> patNone then
       begin

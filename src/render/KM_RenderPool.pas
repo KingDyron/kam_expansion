@@ -192,6 +192,7 @@ type
     procedure AddHouseMerchantChests(const aLoc: TKMPoint; aOffsetX, aOffsetY : Integer);
     procedure AddHouseEater(const Loc: TKMPoint; aUnit: TKMUnitType; aAct: TKMUnitActionType; aDir: TKMDirection; StepId: Integer; OffX,OffY: Single; FlagColor: TColor4);
     procedure AddForestLogs(const aLoc: TKMPoint; aCount : Byte; aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
+    procedure AddPastureSilos(const aLoc: TKMPoint; aID : Word; aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
 
 
     procedure AddUnit(aUnit: TKMUnitType; aUID: Integer; aAct: TKMUnitActionType; aDir: TKMDirection; StepId: Integer; StepFrac: Single; pX,pY: Single; FlagColor: TColor4; NewInst: Boolean; DoImmediateRender: Boolean = False; DoHighlight: Boolean = False; HighlightColor: TColor4 = 0; aAlphaStep : Single = -1);
@@ -232,7 +233,7 @@ uses
   KM_GameParams, KM_Utils, KM_ResTilesetTypes, KM_DevPerfLog, KM_DevPerfLogTypes,
   KM_HandTypes,
   KM_Projectiles, KM_SpecialAnim, KM_Particles,
-  KM_TerrainTypes,
+  KM_TerrainTypes, KM_ResTileset,
   KM_AITypes;
 
 
@@ -1623,6 +1624,31 @@ begin
   AddHouseSupplySprite(id);
 end;
 
+procedure TKMRenderPool.AddPastureSilos(const aLoc: TKMPoint; aID: Word; aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
+var
+  rxData: TRXData;
+
+  procedure AddHouseSupplySprite;
+  var
+    CornerX, CornerY: Single;
+  begin
+    if aId = 0 then Exit;
+
+    CornerX := aLoc.X + rxData.Pivot[aId].X / CELL_SIZE_PX - 1;
+    CornerY := aLoc.Y + (rxData.Pivot[aId].Y + rxData.Size[aId].Y) / CELL_SIZE_PX - 1
+                     - gTerrain.LandExt^[aLoc.Y + 1, aLoc.X].RenderHeight / CELL_HEIGHT_DIV;
+
+    if aDoImmediateRender then
+    begin
+      RenderSprite(rxHouses, aId, CornerX, CornerY, $0, aDoHighlight, aHighlightColor)
+    end else
+      fRenderList.AddSprite(rxHouses, aId, CornerX, CornerY, aLoc.X, aLoc.Y);
+  end;
+begin
+  rxData := fRXData[rxHouses];
+  AddHouseSupplySprite;
+end;
+
 
 procedure TKMRenderPool.AddHouseMarketSupply(const aLoc: TKMPoint; aResType: TKMWareType; aResCount: Word; aAnimStep: Integer);
 var
@@ -2821,7 +2847,7 @@ begin
 
   if not gTerrain.TileInMapCoords(X, Y) then Exit;
 
-  if (gTerrain.Land^[Y,X].TileOverlay = toRoad)
+  if (gTerrain.Land^[Y,X].TileOverlay.IsRoad)
   or (gMySpectator.Hand.HousesHitTest(X, Y) <> nil)
   or (gTerrain.TileIsWineField(P))
   or (gTerrain.TileHasPalisade(X, Y))
@@ -2874,7 +2900,7 @@ begin
         and (gTerrain.TileIsCornField(P)                   // show only for corn + wine + roads
           or gTerrain.TileIsWineField(P)
           or gTerrain.TileHasPalisade(P.X, P.Y)
-          or (gTerrain.Land^[I, K].TileOverlay = toRoad)) then
+          or (gTerrain.Land^[I, K].TileOverlay.IsRoad)) then
         RenderWireTile(P, gHands[gTerrain.Land^[I, K].TileOwner].FlagColor, 0.05);
     end;
 end;
@@ -2984,7 +3010,7 @@ begin
     cmOverlays:   begin
                     RenderWireTile(P, icCyan);
                     if gCursor.Tag1 > 0 then
-                      RenderTile(TILE_OVERLAY_IDS[TKMTileOverlay(gCursor.Tag1)], P.X, P.Y, 0);
+                      RenderTile(gRes.Tileset.Overlay[gCursor.Tag1].TileID, P.X, P.Y, 0);
                     end;
     cmObjects:    begin
                     // If there's object below - paint it in Red
@@ -3264,7 +3290,7 @@ begin
   end;
 
   if (aHighlightAll or not isRendered) and
-    (((gTerrain.Land^[P.Y, P.X].TileOverlay <> toNone)
+    (((gTerrain.Land^[P.Y, P.X].TileOverlay <> OVERLAY_NONE)
         and (gTerrain.Land^[P.Y, P.X].TileLock = tlNone)) //Sometimes we can point road tile under the house, do not show Cyan quad then
       or (gGame.MapEditor.LandMapEd^[P.Y, P.X].CornOrWine <> 0)) then
     RenderWireTile(P, icCyan); // Cyan quad
@@ -3417,7 +3443,7 @@ begin
   end;
 
   if (aHighlightAll or not isRendered) and
-    (((gTerrain.Land^[P.Y, P.X].TileOverlay = toRoad)
+    (((gTerrain.Land^[P.Y, P.X].TileOverlay.IsRoad)
         and (gTerrain.Land^[P.Y, P.X].TileLock = tlNone)) //Sometimes we can point road tile under the house, do not show Cyan quad then
       or (gGame.MapEditor.LandMapEd^[P.Y, P.X].CornOrWine <> 0))
     and (gTerrain.Land^[P.Y, P.X].TileOwner <> gMySpectator.HandID) then //Only if tile has other owner

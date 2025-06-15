@@ -279,6 +279,7 @@ end;
 procedure TKMWaresRow.Paint;
 var
   I: Integer;
+  CentY : Integer;
 begin
   inherited;
 
@@ -287,15 +288,15 @@ begin
     TKMRenderUI.WriteText(AbsLeft + 4 + TextOffset, AbsTop + 3, Width-8, fFinCap, fntGame, taLeft, CapColor);
   end;
 
-
+  CentY := AbsTop + (Height div 2);
   //Render in reverse order so the rightmost resource is on top (otherwise lighting looks wrong)
   if WareCntAsNumber then
   begin
-    TKMRenderUI.WriteText(AbsLeft + Width - 18 - 70 + 24 + TextOffset, AbsTop + 3, 40, IntToKStr(WareCount, 1000), fntGame, taRight, $FFE0E0E0);
-    TKMRenderUI.WritePicture(AbsLeft + Width - 18 + TxtOffset, AbsTop + 3, 14, 14, [], RX, TexID);
+    TKMRenderUI.WriteText(AbsLeft + Width - 18 - 70 + 24 + TextOffset, CentY - 7, 40, IntToKStr(WareCount, 1000), fntGame, taRight, $FFE0E0E0);
+    TKMRenderUI.WritePicture(AbsLeft + Width - 18 + TxtOffset, AbsTop, 14, Height, [], RX, TexID);
   end else
     for I := Min(WareCount - 1, MaxWares) downto 0 do
-      TKMRenderUI.WritePicture(AbsLeft + Width - 18 - I * Spacing + TxtOffset, AbsTop + 3, 14, 14,
+      TKMRenderUI.WritePicture(AbsLeft + Width - 18 - I * Spacing + TxtOffset, AbsTop, 14, 14,
                                 [], RX, TexID, Enabled, $FFFF00FF, 0.25 * (I mod 2));
 end;
 

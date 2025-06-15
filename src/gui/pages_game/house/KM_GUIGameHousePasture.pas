@@ -35,9 +35,12 @@ type
       procedure RefreshShop;
 
       procedure BuyAnimal_Click(Sender : TObject);
+      procedure SellAnimal_Click(Sender : TObject);
     protected
       Button_Page :array[TKMPasturePageType] of TKMButton;
+
       Panel_Animals : TKMPanel;
+        Button_Count : array [0..MAX_ANIMALS - 1] of TKMButtonFlat;
 
       Panel_Shop : TKMPanel;
         View_Animal : array [0..high(PASTURE_ANIMALS_ORDER)] of TKMAnimalCostView;
@@ -55,8 +58,8 @@ uses
 
 
 constructor TKMGuiGamePasture.Create(aParent: TKMPanel);
-const PAGE_HINT : array[TKMPasturePageType] of Word = (1, 2);
-      PAGE_TEX_ID : array[TKMPasturePageType] of Word = (1, 2);
+const PAGE_HINT : array[TKMPasturePageType] of Word = (2288, 2287);
+      PAGE_TEX_ID : array[TKMPasturePageType] of Word = (874, 867);
 
 var I : Integer;
   PPT : TKMPasturePageType;
@@ -76,7 +79,12 @@ begin
   end;
 
   Panel_Animals := TKMPanel.Create(self, 0, 30, Width, Height);
-
+    for I := 0 to High(Button_Count) do
+      begin
+        Button_Count[I] := TKMButtonFlat.Create(Panel_Animals, I mod 5 * 33, I div 5 * 37, 30, 34, 0);
+        Button_Count[I].Tag := I;
+        Button_Count[I].OnClick := SellAnimal_Click;
+      end;
 
   Panel_Shop := TKMPanel.Create(self, 0, 30, Width, Height);
 
@@ -154,8 +162,18 @@ begin
 end;
 
 procedure TKMGuiGamePasture.RefreshAnimals;
+var I : Integer;
+  animal : TKMPastureAnimal;
 begin
   Panel_Animals.Show;
+  for I := 0 to High(Button_Count) do
+  begin
+    animal := fPasture.GetAnimal(I);
+    //Button_Count[I].Visible := animal.AnimalType <> patNone;
+    Button_Count[I].TexID := animal.AnimalType.Spec.GuiIcon;
+    Button_Count[I].Hint := gResTexts[animal.AnimalType.Spec.Hint];
+  end;
+
 end;
 
 procedure TKMGuiGamePasture.RefreshShop;
@@ -168,7 +186,13 @@ end;
 
 procedure TKMGuiGamePasture.BuyAnimal_Click(Sender : TObject);
 begin
-  fPasture.BuyAnimal(PASTURE_ANIMALS_ORDER[TKMControl(Sender).Tag]);
+  //fPasture.BuyAnimal(PASTURE_ANIMALS_ORDER[TKMControl(Sender).Tag]);
+  gGame.GameInputProcess.CmdHouse(gicHousePastureBuyAnimal, TKMHouse(fPasture), TKMControl(Sender).Tag);
+end;
+
+procedure TKMGuiGamePasture.SellAnimal_Click(Sender : TObject);
+begin
+  gGame.GameInputProcess.CmdHouse(gicHousePastureSellAnimal, TKMHouse(fPasture), TKMControl(Sender).Tag);
 end;
 
 

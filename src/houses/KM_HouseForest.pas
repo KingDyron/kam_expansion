@@ -30,9 +30,9 @@ type
   public
     constructor Create(aUID: Integer; aHouseType: TKMHouseType; PosX, PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
 
-    function HasMoreEntrances : Boolean; override;
+    {function HasMoreEntrances : Boolean; override;
     function GetClosestEntrance(aLoc: TKMPoint): TKMPointDir; override;
-    function Entrances : TKMPointDirArray; override;
+    function Entrances : TKMPointDirArray; override;}
 
     function AddTree(aTreeID : Byte) : Boolean; overload;
     function AddTree(aTreeID : Byte; aCount : Byte) : Boolean; overload;
@@ -43,12 +43,17 @@ type
     procedure StartCuttingTree(aID : Integer);
     procedure CutTree(aID : Integer);
     function TreeObjID(aID : Integer) : Integer;
+    property TotalCount : Byte read fCount;
+
+    Constructor Load(LoadStream : TKMemoryStream);Override;
+    procedure Save(SaveStream : TKMemoryStream);Override;
   end;
 
 
 implementation
 uses
   Classes, SysUtils,
+  KM_HandsCollection,
   KM_CommonUtils,
   KM_RenderPool,
   KM_ResMapElements,
@@ -61,6 +66,34 @@ begin
   fCount := 0;
 end;
 
+Constructor TKMHouseForest.Load(LoadStream : TKMemoryStream);
+var I : Integer;
+begin
+  Inherited;
+  LoadStream.Read(fCount);
+  LoadStream.Read(fCuttingAnimStep);
+  LoadStream.Read(fCuttingAnimDir);
+  LoadStream.Read(fCuttingPos);
+
+  SetLength(fTrees, fCount);
+  for I := 0 to fCount - 1 do
+    LoadStream.ReadData(fTrees[I]);
+end;
+
+procedure TKMHouseForest.Save(SaveStream : TKMemoryStream);
+var I : Integer;
+begin
+  Inherited;
+  SaveStream.Write(fCount);
+  SaveStream.Write(fCuttingAnimStep);
+  SaveStream.Write(fCuttingAnimDir);
+  SaveStream.Write(fCuttingPos);
+
+  for I := 0 to fCount - 1 do
+    SaveStream.WriteData(fTrees[I]);
+end;
+
+{
 function TKMHouseForest.HasMoreEntrances: Boolean;
 begin
   Result := true;
@@ -69,14 +102,14 @@ end;
 function TKMHouseForest.Entrances: TKMPointDirArray;
 begin
   Result := Inherited;
-{
+
   Result := [
               KMPointDir(Entrance.X, Entrance.Y, dirS),
               KMPointDir(Entrance.X - 2, Entrance.Y - 2, dirW),
               KMPointDir(Entrance.X, Entrance.Y - 4, dirN),
               KMPointDir(Entrance.X + 2, Entrance.Y - 2, dirE)
             ];
-  }
+
 end;
 
 function TKMHouseForest.GetClosestEntrance(aLoc: TKMPoint): TKMPointDir;
@@ -90,7 +123,7 @@ var I : Integer;
   lastDist, tmp : Single;
 begin
   Result := Inherited;
-  {
+
   lastDist := 99999;
   for I := low(ENTRANCE_POS) to High(ENTRANCE_POS) do
   begin
@@ -102,15 +135,16 @@ begin
       Result.Dir := ENTRANCE_DIR[I];
     end;
   end;
-     }
+
 end;
+}
 
 function TKMHouseForest.TreeWillCollide(aTreeID : Byte; aLoc : TKMPointF) : Boolean;
 var I : Integer;
 begin
   Result := false;
   for I := 0 to fCount - 1 do
-    If KMLengthDiag(aLoc, fTrees[I].Pos) <= gGrowingTrees[fTrees[I].ID].Size + gGrowingTrees[aTreeID].Size then
+    If KMLength(aLoc, fTrees[I].Pos) <= gGrowingTrees[fTrees[I].ID].Size + gGrowingTrees[aTreeID].Size then
       Exit(true);
 end;
 
@@ -138,6 +172,8 @@ begin
   Result := true;
   If newLoc.X = -1 then//there is no place for new tree
     Exit(false);
+  If not gHands[Owner].VirtualWareTake('vtSapling') then
+    Exit;
 
   inc(fCount);
   If length(fTrees) < fCount then
@@ -192,7 +228,7 @@ begin
 end;
 
 procedure TKMHouseForest.CutTree(aID: Integer);
-var obj : Integer;
+var obj: Integer;
 begin
   fCuttingAnimStep := 0;
   fCuttingAnimDir := dirNA;
@@ -203,6 +239,10 @@ begin
   //fTrees[fCount - 1].ID := 0;
   dec(fCount);
   ProduceWare(wtTrunk, gMapElements[obj].TrunksCount);
+  IncProductionCycle(1);
+
+  if ProductionCycle[2] mod 5 = 0 then
+    gHands[Owner].VirtualWareTake('vtSapling', -1);
 end;
 
 function TKMHouseForest.TreeObjID(aID: Integer): Integer;

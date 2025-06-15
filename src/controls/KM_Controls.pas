@@ -174,6 +174,7 @@ type
     function GetHeight: Integer;
     function GetWidth: Integer;
     function GetCenter: TKMPoint;
+    function GetABSCenter: TKMPoint;
 
     function GetVisible: Boolean;
     procedure SetAbsLeft(aValue: Integer);
@@ -301,6 +302,7 @@ type
     property BaseHeight: Integer read fBaseHeight write fBaseHeight;
 
     property Center: TKMPoint read GetCenter;
+    property AbsCenter: TKMPoint read GetAbsCenter;
     property ID: Integer read fID;
     function GetIDsStr: String;
     property Hint: UnicodeString read GetHint write SetHint; //Text that shows up when cursor is over that control, mainly for Buttons
@@ -1068,7 +1070,10 @@ function TKMControl.GetCenter: TKMPoint;
 begin
   Result := KMPoint(GetLeft + (GetWidth div 2), GetTop + (GetHeight div 2));
 end;
-
+function TKMControl.GetAbsCenter: TKMPoint;
+begin
+  Result := KMPoint(GetAbsLeft + (GetWidth div 2), GetAbsTop + (GetHeight div 2));
+end;
 
 function TKMControl.GetSelfAbsLeft: Integer;
 begin

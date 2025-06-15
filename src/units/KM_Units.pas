@@ -1099,6 +1099,8 @@ begin
   If Home.HouseType <> htForest then
     Exit;
   TF := TKMHouseForest(Home);
+  If TF.CheckWareOut(wtTrunk) >= TF.GetMaxOutWare then
+    Exit;
   I := TF.HasTreeToCut;
   If I = -1 then
     Exit;

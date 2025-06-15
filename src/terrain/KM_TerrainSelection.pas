@@ -912,7 +912,7 @@ begin
 
   tileTypeTo := 152;
   tileTypeFrom := 152;
-  aCO := toCoal1;
+  //aCO := toCoal1;
   for I := 0 to 4 do
   begin
     case I of
@@ -957,7 +957,7 @@ begin
   end;
 
 
-  for I := 0 to 4 do
+  {for I := 0 to 4 do
   begin
     case I of
        0: aCO := toCoal1;
@@ -1004,7 +1004,7 @@ begin
         if CheckTilesAround(X, Y, aCO) then
           gTerrain.Land^[Y, X].TileOverlay2 := TKMTileOverlay(byte(aCO) + 1);
       end;
-  end;
+  end;}
 end;
 
 

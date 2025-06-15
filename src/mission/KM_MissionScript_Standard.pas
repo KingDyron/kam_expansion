@@ -58,7 +58,7 @@ uses
   KM_HandTypes,
   KM_CommonExceptions,
   KM_ResTypes,
-  KM_TerrainTypes,
+  KM_TerrainTypes, KM_ResTileset,
   KM_MapTypes,
   KM_AITypes;
 
@@ -1712,7 +1712,7 @@ begin
       for iX := 1 to gTerrain.MapX do
         if gTerrain.Land^[iY,iX].TileOwner = gHands[I].ID then
         begin
-          if gTerrain.Land^[iY,iX].TileOverlay = toRoad then
+          if gTerrain.Land^[iY,iX].TileOverlay.IsRoad then
           begin
             H := gHands.HousesHitTest(iX, iY);
             //Don't place road under the entrance of houses (it will be placed there if the house is destroyed on mission start)

@@ -323,7 +323,7 @@
 	{
 		"Name":"vtFurniture",
 		"TextID" : 2260, 
-		"IconID" : 945, 
+		"IconID" : 1063, 
 		"ProductionCountMin" : 1, 
 		"ProductionCountMax" : 1, 
 		"ProduceInHouses" : ["htSawmill", "htStoneWorkshop"],
@@ -337,7 +337,7 @@
 	{
 		"Name":"vtSapling",
 		"TextID" : 2261, 
-		"IconID" : 945, 
+		"IconID" : 1064, 
 		"ProductionCountMin" : 1, 
 		"ProductionCountMax" : 1, 
 		"ProduceInHouses" : ["htWoodCutters"],

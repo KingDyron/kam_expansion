@@ -20,7 +20,8 @@ uses
   KM_ResStructures,
   KM_JsonData,
   KM_TerrainTypes,
-  KM_ResPatterns;
+  KM_ResPatterns,
+  KM_ResDevelopment;
 
 
 type
@@ -42,6 +43,7 @@ type
     fMapElements: TKMResMapElements;
     fStructures : TKMResStructures;
     fPatterns : TKMResPatterns;
+    fDevelopment : TKMDevelopmentTreeCollection;
 
   public
     OnLoadingStep: TEvent;
@@ -74,6 +76,7 @@ type
     property Wares: TKMResWares read fWares;
     property Structures: TKMResStructures read fStructures;
     property Patterns: TKMResPatterns read fPatterns;
+    property Development: TKMDevelopmentTreeCollection read fDevelopment;
     procedure ReloadJSONData(UpdateCRC : Boolean; aEvent : TAnsiStringEvent);
 
 
@@ -131,6 +134,7 @@ begin
   FreeAndNil(gResKeyFuncs);
   FreeAndNil(fStructures);
   FreeAndNil(fPatterns);
+  FreeAndNil(fDevelopment);
 
   inherited;
 end;
@@ -162,7 +166,8 @@ begin
             fMapElements.CRC xor
             fTileset.CRC xor
             fWares.CRC xor
-            fStructures.CRC
+            fStructures.CRC xor
+            fDevelopment.CRC
             //xor fSprites.CRC //skip it
             ;
 end;
@@ -213,12 +218,17 @@ begin
   StepRefresh;
   gLog.AddTime('ReadGFX is done');
   fDataState := rlsMenu;
+
+  fDevelopment := TKMDevelopmentTreeCollection.Create;
+  fDevelopment.LoadFromJson(ExeDir + 'data' + PathDelim + 'defines' + PathDelim + 'DevelopmentTree.Json');
+
   gLog.AddTime('Resource loading state - Menu');
 
   fUnits.ExportCSV(ExeDir+'Export\Units.csv');
   fWares.ExportCSV(ExeDir+'Export\Wares.csv');
   fHouses.ExportCSV(ExeDir+'Export\Houses.csv');
   fMapElements.AfterResourceLoad;
+
 end;
 
 

@@ -330,8 +330,7 @@ end;
 
 
 procedure TKMMusicLib.AddNewPlayList(aDirPath: string);
-var I, J : integer;
-  colorStr : String;
+var I : integer;
 begin
   I := length(fPlaylists);
   SetLength(fPlaylists, I + 1);
@@ -375,7 +374,7 @@ begin
   end;
   ext := ExtractFileName(aPath);
   fPlaylists[I].Tracks[J].Dir := aPath;
-
+  L := 0;
   for K := 1 to length(ext) do
     If not (ext[K] in [' ', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-']) then
     begin

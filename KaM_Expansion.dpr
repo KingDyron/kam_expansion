@@ -455,7 +455,9 @@ uses
   KM_GUIGameHousePasture in 'src\gui\pages_game\house\KM_GUIGameHousePasture.pas',
   KM_GUIGameHousePearl in 'src\gui\pages_game\house\KM_GUIGameHousePearl.pas',
   KM_GUIGameHouseForest in 'src\gui\pages_game\house\KM_GUIGameHouseForest.pas',
-  KM_UnitTaskWoodcutter in 'src\units\tasks\KM_UnitTaskWoodcutter.pas';
+  KM_UnitTaskWoodcutter in 'src\units\tasks\KM_UnitTaskWoodcutter.pas',
+  KM_ResDevelopment in 'src\res\KM_ResDevelopment.pas',
+  KM_GUICommonDevelopment in 'src\gui\pages_common\KM_GUICommonDevelopment.pas';
 
 //KM_PerfLog in 'src\unused\KM_PerfLog.pas', //unused
 

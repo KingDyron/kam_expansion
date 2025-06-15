@@ -7,21 +7,6 @@ uses
    KM_Controls, KM_ControlsBase, KM_ControlsSwitch,
    KM_Defaults, KM_Pics, KM_TerrainTypes;
 
-const
-  OVERLAY_GUI_ORDER : array[0..36] of TKMTileOverlay =
-  ( toNone, toDig1, toDig2, toDig3, toDig4, toRoad,  //first toNone is to delete overlays
-    toDig3Wooden, toDig4Wooden, toDig3Clay, toDig4Clay, toDig3Exclusive, toDig4Exclusive,
-    toNone, //new row
-    toNone, //new row
-    toFence1, toFence2, toFence3, toFence4, toFence5, toFence6,
-    toNone, //new row
-    toCoal1, toCoal2, toCoal3, toCoal4, toCoal5,
-    toNone, //new row
-    toInfinity, {toInfinityClay, }toInfinityCoal,toStopGrowing, toBlock, toBlockBuilding,
-    toNone, //new row
-    toGold, toIron, toBitin, toCoal
-  );
-
 type
   TKMMapEdTerrainOverlays = class(TKMMapEdSubMenuPage)
   private
@@ -48,7 +33,7 @@ type
 implementation
 uses
   TypInfo,
-  KM_ResFonts, KM_ResTexts, KM_ResTypes,
+  KM_ResFonts, KM_ResTexts, KM_ResTypes, KM_ResTileset, KM_Resource,
   KM_Cursor, KM_RenderUI, KM_InterfaceGame;
 
 
@@ -57,7 +42,7 @@ const
   BTN_SIZE = 34;
   BTNS_PER_ROW = 6;
 
-  OVERLAY_HINTS_TX: array [TKMTileOverlay] of Integer =
+  {OVERLAY_HINTS_TX: array [TKMTileOverlay] of Integer =
                             (TX_MAPED_TERRAIN_OVERLAY_TO_NONE, TX_MAPED_TERRAIN_OVERLAY_TO_DIG1,
                              TX_MAPED_TERRAIN_OVERLAY_TO_DIG2, TX_MAPED_TERRAIN_OVERLAY_TO_DIG3,
                              TX_MAPED_TERRAIN_OVERLAY_TO_DIG4, TX_MAPED_TERRAIN_OVERLAY_TO_ROAD,
@@ -81,7 +66,7 @@ const
                     toClay1, toClay2, toClay3, toClay4, toClay5,
                     toFence1, toFence2, toFence3, toFence4, toFence5, toFence6, toInfinity);}
 var
-  TTO: TKMTileOverlay;
+  TTO: Word;
   top, I, J, C: Integer;
 begin
   inherited Create;
@@ -112,10 +97,10 @@ begin
   top := BTN_SIZE + 20;
   J := 0;
   C := 0;
-  for I := 0 to High(OVERLAY_GUI_ORDER) do
+  for I := 0 to High(GuiOverlayOrder) do
   begin
-    TTO := OVERLAY_GUI_ORDER[I];
-    if (I > 0) and (TTO = toNone) then
+    TTO := GuiOverlayOrder[I];
+    if (I > 0) and (TTO = 0) then
     begin
       C := 0;
       top := OverlaysTable[J - 1].Bottom + 2;
@@ -126,15 +111,15 @@ begin
                                                              top + (C div BTNS_PER_ROW) * BTN_SIZE,
                                                              BTN_SIZE,
                                                              BTN_SIZE,
-                                                             IfThen(TILE_OVERLAY_IDS[TTO] > 0, TILE_OVERLAY_IDS[TTO] + 1, 0),
+                                                             IfThen(gRes.Tileset.Overlay[TTO].TileID > 0, gRes.Tileset.Overlay[TTO].TileID + 1, 0),
                                                              rxTiles);
-    OverlaysTable[J].Tag := byte(TTO);
+    OverlaysTable[J].Tag := TTO;
 //    OverlaysTable[J].Caption := IntToStr(OverlaysTable[J].Tag);
 //    OverlaysTable[J].CapOffsetY := -8;
 //    OverlaysTable[J].TexOffsetY := 6;
 //    OverlaysTable[J].CapColor := icYellow;
-    if OVERLAY_HINTS_TX[TTO] > 0 then
-      OverlaysTable[J].Hint := gResTexts[OVERLAY_HINTS_TX[TTO]];
+    if gRes.Tileset.Overlay[TTO].Hint > 0 then
+      OverlaysTable[J].Hint := gResTexts[gRes.Tileset.Overlay[TTO].Hint];
     OverlaysTable[J].OnClick := OverlayChange;
 
     inc(C);

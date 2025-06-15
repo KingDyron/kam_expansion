@@ -20,7 +20,7 @@ uses
   KM_GUIGameResultsMP,
   KM_GUIGameBuild, KM_GUIGameChat, KM_GUIGameHouse, KM_GUIGameUnit, KM_GUIGameRatios, KM_GUIGameStats,
   KM_GuiGameCustomPanel, KM_GUIGameGuide, KM_GUIGameGoalsPopUp, KM_GUIGameWaresPopUp, KM_GUIGameStructure,
-  KM_GUIGameMessagesPopUp,
+  KM_GUIGameMessagesPopUp, KM_GuiCommonDevelopment,
   KM_GUIGameSpectator;
 
 
@@ -34,7 +34,7 @@ const
 type
   //tbNone is the last, since we use Byte(Value) at some places
   //todo: refactor
-  TKMTabButtons = (tbBuild, tbRatio, tbStats, tbMenu, tbNone);
+  TKMTabButtons = (tbBuild, tbRatio, tbStats, tbTree, tbMenu, tbNone);
 
   TKMGamePlayInterface = class(TKMUserInterfaceGame)
   private
@@ -59,6 +59,7 @@ type
     fGuiGameResultsSP: TKMGameResultsSP;
     fGuiGameResultsMP: TKMGameResultsMP;
     fGuiGameMessages: TKMGUIGameMessagesPopUp;
+    fGuiGameDevelopment: TKMGUICommonDevelopment;
     // Not saved
     fOpenedMenu: TKMTabButtons;
     fShowTeamNames: Boolean; // True while the SC_SHOW_TEAM key is pressed
@@ -612,6 +613,8 @@ begin
   fGuiMenuOptions.Hide;
   fGuiGameUnit.Hide;
   fGuiGameStructure.Hide;
+  fGuiGameDevelopment.Hide;
+
 end;
 
 
@@ -643,6 +646,7 @@ begin
     gCursor.Mode := cmNone;
   if (Sender = Button_Main[tbBuild]) or (Sender = Button_Main[tbRatio])
     or (Sender = Button_Main[tbStats]) or (Sender = Button_Main[tbMenu])
+     or (Sender = Button_Main[tbTree])
     or (Sender = Button_Menu_Settings) or (Sender = Button_Menu_Quit) then
     begin
       if gMySpectator.Selected is TKMHouse then
@@ -696,6 +700,13 @@ begin
     fGuiGameStats.Show;
     fOpenedMenu := tbStats;
   end else
+  if Sender = Button_Main[tbTree] then
+  begin
+    Label_MenuTitle.Caption := 'Development tree';
+    fGuiGameDevelopment.Show;
+    fOpenedMenu := tbTree;
+  end else
+
   begin
     fOpenedMenu := tbMenu;
     if (Sender = Button_Main[tbMenu])
@@ -1427,6 +1438,7 @@ const
     TX_MENU_TAB_HINT_BUILD,
     TX_MENU_TAB_HINT_DISTRIBUTE,
     TX_MENU_TAB_HINT_STATISTICS,
+    TX_MENU_TAB_HINT_BUILD,
     TX_MENU_TAB_HINT_OPTIONS);
 var
   I, J, gap: Integer;
@@ -1491,6 +1503,7 @@ begin
   fGuiGameBuild := TKMGUIGameBuild.Create(Panel_Controls);
   fGuiGameRatios := TKMGUIGameRatios.Create(Panel_Controls, fUIMode in [umSP, umMP]);
   fGuiGameStats := TKMGUIGameStats.Create(Panel_Controls, ShowStats, SetViewportPos);
+  fGuiGameDevelopment := TKMGUICommonDevelopment.Create(Panel_Controls, TB_PAD, 44, TB_WIDTH, Panel_Controls.Height - 50);
   Create_Menu;
     Create_Save;
     Create_Load;

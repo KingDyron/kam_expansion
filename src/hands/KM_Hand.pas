@@ -1472,6 +1472,9 @@ begin
     Exit(true);
 
   case aHouseType of
+    htForest,
+    htPasture,
+
     htCartographers,
     htPearl,
     htProductionThatch : Result := Stats.GetHouseTotal(aHouseType) <= 0;

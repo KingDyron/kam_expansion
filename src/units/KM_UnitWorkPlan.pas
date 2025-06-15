@@ -608,6 +608,7 @@ begin
                               wtWine: GatheringScript := gsFarmerWine;
                             end;
                           end;
+      htForest, htPasture: Exit;
     end;
 
   tmp := KMPointDir(1, 1, dirNA);

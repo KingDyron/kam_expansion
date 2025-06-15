@@ -142,7 +142,7 @@ uses
   KM_Hand, KM_HandsCollection, KM_HandEntityHelper, KM_HandTypes,
   KM_CommonUtils, KM_RenderDebug,
   KM_UnitGroupTypes,
-  KM_ResTypes;
+  KM_ResTypes, KM_ResTileset;
 
 //defines default defence position radius for static AI 
 const
@@ -636,7 +636,7 @@ begin
       Exit;
 
     // Delete tile overlay (road/corn/wine)
-    if gTerrain.Land^[P.Y,P.X].TileOverlay = toRoad then
+    if gTerrain.Land^[P.Y,P.X].TileOverlay.Params.funct = tofRoad then
     begin
       if not fieldsChanged then
         removeTxID := TX_WORD_ROAD;
@@ -644,12 +644,12 @@ begin
       gTerrain.RemRoad(P);
       fieldsChanged := True;
     end else
-    if gTerrain.Land^[P.Y,P.X].TileOverlay <> toNone then
+    if gTerrain.Land^[P.Y,P.X].TileOverlay <> OVERLAY_NONE then
     begin
       if not fieldsChanged then
         removeTxID := TX_WORD_OVERLAY;
 
-      gTerrain.SetOverlay(P, toNone, True);
+      gTerrain.SetOverlay(P, OVERLAY_NONE, True);
       fieldsChanged := True;
     end;
 
@@ -692,7 +692,7 @@ begin
   //Fisrt try to change owner of object on tile
   if not ChangeEntityOwner(gMySpectator.HitTestCursorWGroup, gMySpectator.HandID) or aChangeOwnerForAll then
     //then try to change owner tile (road/field/wine)
-    if ((gTerrain.Land^[P.Y, P.X].TileOverlay = toRoad) or (LandMapEd^[P.Y, P.X].CornOrWine <> 0))
+    if ((gTerrain.Land^[P.Y, P.X].TileOverlay.Params.funct = tofRoad) or (LandMapEd^[P.Y, P.X].CornOrWine <> 0))
       and (gTerrain.Land^[P.Y, P.X].TileOwner <> gMySpectator.HandID) then
     begin
       gTerrain.Land^[P.Y, P.X].TileOwner := gMySpectator.HandID;
@@ -931,13 +931,13 @@ begin
 
   P := KMPoint(X,Y);
   gHands.RemAnyHouse(P);
-  if gTerrain.Land^[P.Y,P.X].TileOverlay = toRoad then
+  if gTerrain.Land^[P.Y,P.X].TileOverlay.Params.Funct = tofRoad then
   begin
     gTerrain.RemRoad(P);
   end else
-  if gTerrain.Land^[P.Y,P.X].TileOverlay <> toNone then
+  if gTerrain.Land^[P.Y,P.X].TileOverlay <> OVERLAY_NONE then
   begin
-    gTerrain.SetOverlay(P, toNone, True);
+    gTerrain.SetOverlay(P, OVERLAY_NONE, True);
   end;
 
   if gTerrain.TileIsCornField(P) then
@@ -1685,7 +1685,7 @@ begin
         or gTerrain.TileIsWineField(P)
         or gTerrain.TileHasPalisade(P.X, P.Y)
         or gTerrain.TileIsGrassField(P.X, P.Y)
-        or (gTerrain.Land^[P.Y,P.X].TileOverlay = toRoad)
+        or (gTerrain.Land^[P.Y,P.X].TileOverlay.Params.Funct = tofRoad)
         or (gHands.HousesHitTest(P.X, P.Y) <> nil) then
         gRenderPool.RenderWireTile(P, icCyan) //Cyan quad
       else
