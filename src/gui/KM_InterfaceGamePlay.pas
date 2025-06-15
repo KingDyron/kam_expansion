@@ -639,6 +639,7 @@ var
       Button_Main[T].Visible := ShowEm;
     Button_Back.Visible := not ShowEm;
     Label_MenuTitle.Visible := not ShowEm;
+    Button_Main[tbTree].Hide;
   end;
 
 begin
@@ -1440,6 +1441,7 @@ const
     TX_MENU_TAB_HINT_STATISTICS,
     TX_MENU_TAB_HINT_BUILD,
     TX_MENU_TAB_HINT_OPTIONS);
+  MAIN_BTN_ICON: array [tbBuild..TKMTabButtons(Byte(high(TKMTabButtons)) - 1)] of Word = (439, 440, 441, 442, 442);
 var
   I, J, gap: Integer;
   T: TKMTabButtons;
@@ -1488,10 +1490,28 @@ begin
     J := (200 - gap * J) div 2;
     // Main 4 buttons
     for T := low(Button_Main) to high(Button_Main) do begin
-      Button_Main[T] := TKMButton.Create(Panel_Controls, J+gap * Byte(T), 4, gap - 2, 36, 439 + Byte(T), rxGui, bsGame);
+      Button_Main[T] := TKMButton.Create(Panel_Controls, J+gap * Byte(T), 4, gap - 2, 36, MAIN_BTN_ICON[T], rxGui, bsGame);
       Button_Main[T].Hint := gResTexts[MAIN_BTN_HINT[T]];
       Button_Main[T].OnClick := SwitchPage;
     end;
+    Button_Main[tbTree].Hide;
+
+    J := 0;
+    for T := low(Button_Main) to high(Button_Main) do
+      If Button_Main[T].Visible then
+        inc(J);
+
+    gap := (200 div J) - 2;
+    J := (200 - gap * J) div 2;
+    I := 0;
+    for T := low(Button_Main) to high(Button_Main) do
+      If Button_Main[T].Visible then
+      begin
+        Button_Main[T].Left := J + gap * I;
+        Button_Main[T].Width := gap - 2;
+        Inc(I);
+      end;
+
     Button_Back := TKMButton.Create(Panel_Controls, TB_PAD, 4, 42, 36, 443, rxGui, bsGame);
     Button_Back.OnClick := SwitchPage;
     Button_Back.Hint := gResTexts[TX_MENU_TAB_HINT_GO_BACK];
