@@ -441,6 +441,7 @@ const
   PANEL_ALLIES_WIDTH = 840;
   PANEL_TRACK_TOP = 285;
   REPLAYBAR_DEFAULT_WIDTH = 400;
+  SHOW_TREE_TAB = true;
 
   KEY_FUNCS_ALLOWED_ON_PAUSE: TKMKeyFunctionSet = [
     kfMusicPrevTrack, kfMusicNextTrack, kfMusicDisable, kfMusicShuffle, kfMusicVolumeUp, kfMusicVolumeDown,  kfMusicMute,
@@ -639,7 +640,7 @@ var
       Button_Main[T].Visible := ShowEm;
     Button_Back.Visible := not ShowEm;
     Label_MenuTitle.Visible := not ShowEm;
-    Button_Main[tbTree].Hide;
+    Button_Main[tbTree].Visible := SHOW_TREE_TAB and ShowEm;
   end;
 
 begin
@@ -1439,9 +1440,9 @@ const
     TX_MENU_TAB_HINT_BUILD,
     TX_MENU_TAB_HINT_DISTRIBUTE,
     TX_MENU_TAB_HINT_STATISTICS,
-    TX_MENU_TAB_HINT_BUILD,
+    2890,
     TX_MENU_TAB_HINT_OPTIONS);
-  MAIN_BTN_ICON: array [tbBuild..TKMTabButtons(Byte(high(TKMTabButtons)) - 1)] of Word = (439, 440, 441, 442, 442);
+  MAIN_BTN_ICON: array [tbBuild..TKMTabButtons(Byte(high(TKMTabButtons)) - 1)] of Word = (439, 440, 441, 452, 442);
 var
   I, J, gap: Integer;
   T: TKMTabButtons;
@@ -1494,7 +1495,7 @@ begin
       Button_Main[T].Hint := gResTexts[MAIN_BTN_HINT[T]];
       Button_Main[T].OnClick := SwitchPage;
     end;
-    Button_Main[tbTree].Hide;
+    Button_Main[tbTree].Visible := SHOW_TREE_TAB;
 
     J := 0;
     for T := low(Button_Main) to high(Button_Main) do
