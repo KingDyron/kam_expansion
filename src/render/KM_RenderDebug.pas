@@ -227,6 +227,7 @@ const
   FARM_COLOR = icYellow;
   WINEYARD_COLOR = icLightCyan;
   SELECTED_ORE_COLOR = icLight2Red;
+  CLAY_ORE_COLOR = icAmberBrown;
 
   procedure AddOrePoints(aOreP, aAllOreP: TKMPointListArray);
   var
@@ -345,7 +346,7 @@ const
 var
   I, J, K: Integer;
   H: TKMHouse;
-  ironOreP, goldOreP, coalOreP, oreP, selectedOreP: TKMPointListArray;
+  ironOreP, clayOreP, goldOreP, coalOreP, oreP, selectedOreP: TKMPointListArray;
   woodcutterPts, quarryPts, fisherHutPts, farmPts, wineyardPts: TKMPointList;
   houseDirPts: TKMPointDirList;
   housePts, selectedPts: TKMPointList;
@@ -360,6 +361,7 @@ begin
   SetLength(ironOreP, 3);
   SetLength(goldOreP, 3);
   SetLength(coalOreP, 3);
+  SetLength(clayOreP, 3);
   SetLength(selectedOreP, 3);
 
   for I := 0 to Length(oreP) - 1 do
@@ -368,6 +370,7 @@ begin
     ironOreP[I] := TKMPointList.Create;
     goldOreP[I] := TKMPointList.Create;
     coalOreP[I] := TKMPointList.Create;
+    clayOreP[I] := TKMPointList.Create;
     selectedOreP[I] := TKMPointList.Create;
   end;
 
@@ -407,7 +410,7 @@ begin
                           Continue;
 
                         gTerrain.FindOrePointsByDistance(H.PointBelowEntrance, wtTile, oreP);
-                        AddOrePoints(oreP, ironOreP);
+                        AddOrePoints(oreP, clayOreP);
                       end;
         htGoldMine:   begin
                         if not IsAreaInClip(H.PointBelowEntrance, 11) then
@@ -491,6 +494,7 @@ begin
   PaintOrePoints(ironOreP, IRON_ORE_COLOR);
   PaintOrePoints(goldOreP, GOLD_ORE_COLOR);
   PaintOrePoints(coalOreP, COAL_ORE_COLOR);
+  PaintOrePoints(clayOreP, CLAY_ORE_COLOR);
   PaintOrePoints(selectedOreP, 0, True);
 
   PaintMiningPoints(woodcutterPts, WOODCUTTER_COLOR, False, False, True);

@@ -172,7 +172,6 @@ type
     property CurrentOrder : TKMWarriorOrder  read fOrder;
 
     function CanJoinToGroup(aGroup : Pointer) : Boolean;
-    procedure SetRageTime(aTime : Word);
 
     procedure SetAttackingUnit(aUnit: TKMUnit);
 
@@ -180,11 +179,19 @@ type
 
     procedure SetActionGoIn(aAction: TKMUnitActionType; aGoDir: TKMGoInDirection; aHouse: TKMHouse; aisTrained : Boolean = false); override;
 
+
+    ///scripting:
+    procedure SetRageTime(aTime : Word);
+    function GetStats : TKMUnitStats;override;
+    procedure SetStats(aStats: TKMUnitStats);override;
+
     function ObjToStringShort(const aSeparator: String = '|'): String; override;
     function ObjToString(const aSeparator: String = '|'): String; override;
 
     procedure Save(SaveStream: TKMemoryStream); override;
     function UpdateState: Boolean; override;
+
+
   end;
 
   TKMUnitWarriorSpy = class(TKMUnitWarrior)
@@ -1610,6 +1617,23 @@ end;
 procedure TKMUnitWarrior.SetRageTime(aTime : Word);
 begin
   fRageTime := RAGE_TIME_DELAY + aTime;
+end;
+
+function TKMUnitWarrior.GetStats : TKMUnitStats;
+begin
+  Result := Inherited;
+  Result.DamageHouse := fDamageHouse;
+  Result.DamageUnits := fDamageUnits;
+  Result.Ammo := fBoltCount;
+  Result.GroupID := TKMUnitGroup(Group).UID;
+end;
+
+procedure TKMUnitWarrior.SetStats(aStats: TKMUnitStats);
+begin
+  Inherited;
+  fDamageHouse := aStats.DamageHouse;
+  fDamageUnits := aStats.DamageUnits;
+  fBoltCount := aStats.Ammo
 end;
 
 function TKMUnitWarrior.GetAimSoundDelay: Byte;

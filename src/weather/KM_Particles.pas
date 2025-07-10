@@ -15,15 +15,18 @@ type
       fCount : Integer;
       fCounter : Cardinal;
       fParticles : TKMParticles;
+
+      ParticlesAnims : array of TKMAnimation;
     protected
     public
       constructor Create;
-      procedure Add(aStartPos, aSpeed : TKMPointF; aLifeTime : Cardinal; aRX : TRXType; aAnimation : TKMAnimation; aInFront : Boolean = false);
+      procedure Add(aStartPos, aSpeed : TKMPointF; aLifeTime : Cardinal; aRX : TRXType; var aAnimation : TKMAnimation; aInFront : Boolean = false);
       procedure AddSnow(aStartPos : TKMPointF);
       procedure AddRain(aStartPos : TKMPointF);
       procedure AddWhiteLightning(aStartPos : TKMPointF);
       procedure AddGoldLightning(aStartPos : TKMPointF);
       procedure AddWeatherParticle(aStartPos : TKMPointF; aClimate : TKMTerrainClimate);
+      procedure AddDustParticle(aStartPos : TKMPointF);
 
       procedure Delete(aIndex : Integer);
 
@@ -40,14 +43,34 @@ implementation
 uses
   Math,
   KM_Game,
-  KM_RenderPool;
+  KM_RenderPool,
+  KM_Resource;
 constructor TKMParticlesCollection.Create;
 begin
   Inherited;
   fCount := 0;
+
+  ParticlesAnims := [
+                      Anim(0, 0, [1025]),//snow
+                      Anim(0, 0, [818]),//rain
+                      //white lightnings
+                      Anim(0, 0, [1026]),//snow
+                      Anim(0, 0, [1026]),//snow
+                      Anim(0, 0, [1027]),//snow
+                      Anim(0, 0, [1028]),//snow
+                      Anim(0, 0, [1029]),//snow
+                      Anim(0, 0, [1030]),//snow
+                      //yellow lightnings
+                      Anim(0, 0, [1032]),//snow
+                      Anim(0, 0, [1033]),//snow
+                      Anim(0, 0, [1034]),//snow
+                      Anim(0, 0, [1035]),//snow
+                      Anim(0, 0, [1036]),//snow
+                      Anim(0, 0, [1037])//snow
+                    ]
 end;
 
-procedure TKMParticlesCollection.Add(aStartPos: TKMPointF; aSpeed: TKMPointF; aLifeTime: Cardinal; aRX : TRXType; aAnimation: TKMAnimation; aInFront: Boolean = False);
+procedure TKMParticlesCollection.Add(aStartPos: TKMPointF; aSpeed: TKMPointF; aLifeTime: Cardinal; aRX : TRXType; var aAnimation: TKMAnimation; aInFront: Boolean = False);
 begin
   if not KMInRect(aStartPos, gGame.GamePlayInterface.Viewport.GetClip) then
     Exit;
@@ -66,7 +89,7 @@ begin
     Speed := aSpeed;
     LifeTime := aLifeTime;
     Age := 0;
-    Animation := aAnimation;
+    Animation := @aAnimation;
     Deleted := false;
     InFront := aInFront;
     RX := aRX
@@ -79,7 +102,7 @@ begin
   Add(aStartPos, //startpos
       KMPointF(-0.025, 0.05), //speed/vector
       20, rxTrees, //lifeTime, rxType
-      Anim(0, 0, [1025]),
+      ParticlesAnims[2],
       true
     );
 end;
@@ -89,7 +112,7 @@ begin
   Add(aStartPos, //startpos
       KMPointF(-0.1, 0.2), //speed/vector
       10, rxTrees, //lifeTime, rxType
-      Anim(0, 0, [818]),
+      ParticlesAnims[1],
       true
     );
 end;
@@ -99,7 +122,7 @@ begin
   Add(aStartPos, //startpos
       KMPointF(0, 0), //speed/vector
       2, rxTrees, //lifeTime, rxType
-      Anim(0, 0, [1026 + Random(6)]),
+      ParticlesAnims[2 + Random(6)],
       true
     );
 end;
@@ -109,7 +132,7 @@ begin
   Add(aStartPos, //startpos
       KMPointF(0, 0), //speed/vector
       2, rxTrees, //lifeTime, rxType
-      Anim(0, 0, [1032 + Random(6)]),
+      ParticlesAnims[8 + Random(6)],
       true
     );
 end;
@@ -131,14 +154,28 @@ begin
   end;
 end;
 
+procedure TKMParticlesCollection.AddDustParticle(aStartPos: TKMPointF);
+const MAX_SPEED = 0.5;
+var rSpeed : TKMPointF;
+begin
+  rSpeed.X := (Random(100) / 100 * MAX_SPEED) - MAX_SPEED / 2;
+  rSpeed.Y := (Random(100) / 100 * MAX_SPEED) - MAX_SPEED / 2;
+  Add(aStartPos, //startpos
+      rSpeed, //speed/vector
+      gRes.Units.BootsAnim.Count, rxUnits, //lifeTime, rxType
+      gRes.Units.BootsAnim,
+      true
+    );
+end;
+
 procedure TKMParticlesCollection.Delete(aIndex: Integer);
-var I : Integer;
 begin
   if not InRange(aIndex, 0, fCount - 1) then
   Exit;
 
-  for I := aIndex to fCount - 2 do
-    fParticles[I] := fParticles[I + 1];
+  {for I := aIndex to fCount - 2 do
+    fParticles[I] := fParticles[I + 1];}
+  fParticles[aIndex] := fParticles[fCount - 1];
   Dec(fCount);
 end;
 
@@ -168,7 +205,7 @@ begin
     if not Deleted then
       if KMInRect(Pos, aClipRect) then
       begin
-        gRenderPool.AddAnimation(Pos, Animation, Age, 0, RX, false, false, 0, InFront);
+        gRenderPool.AddAnimation(Pos, Animation^, Age, 0, RX, false, false, 0, InFront);
       end;
 
 end;

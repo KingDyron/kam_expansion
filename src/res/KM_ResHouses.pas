@@ -759,6 +759,7 @@ end;
 }
 
 function TKMResHouses.LoadFromJSON(aFileName : String) : Cardinal;
+const SKIP_GUI_HOUSES : set of TKMHouseType = [htPearl, htCartographers, htForest, htPasture];
 
   Procedure SetValue(var A : Integer; B : Integer; aCondition : Boolean = true); Overload;
   begin
@@ -793,7 +794,7 @@ function TKMResHouses.LoadFromJSON(aFileName : String) : Cardinal;
         Inc(K);
       end;
 
-      if (aHouses[I] = aHouseType) then
+      if (aHouses[I] = aHouseType) or (aHouses[I] in SKIP_GUI_HOUSES)  then
         Continue;
 
       SetLength(Result[K - 1], J + 1);
@@ -801,8 +802,24 @@ function TKMResHouses.LoadFromJSON(aFileName : String) : Cardinal;
       Result[K - 1, J] := aHouses[I];
       Inc(J);
     end;
+  end;
 
-
+  procedure SkipHouses(var aHouses : TKMHouseTypeArray);
+  var I, C : Integer;
+    newArr : TKMHouseTypeArray;
+  begin
+    C := 0;
+    SetLength(newArr, length(aHouses));
+    for I := high(aHouses) to 0 do
+      IF aHouses[I] in SKIP_GUI_HOUSES then
+        Continue
+      else
+      begin
+        newArr[C] := aHouses[I];
+        Inc(C);
+      end;
+    SetLength(newArr, C);
+    aHouses := newArr;
   end;
 
 var
@@ -863,6 +880,7 @@ begin
         HOUSE_VICTORY_ORDER[I].GuiIcon := nAR[I].I['GuiIcon'];
 
         nAR.O[I].GetArray('Houses', HOUSE_VICTORY_ORDER[I].H);
+        SkipHouses(HOUSE_VICTORY_ORDER[I].H);
       end;
     end;
     nHouses := nRoot.A['Houses'];

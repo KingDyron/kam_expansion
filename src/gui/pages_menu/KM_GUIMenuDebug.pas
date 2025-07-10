@@ -8,7 +8,9 @@ uses
   KM_Controls, KM_ControlsBase, KM_ControlsList, KM_ControlsSwitch, KM_ControlsScroll,
   KM_ControlsEdit,
   KM_CommonTypes, KM_InterfaceDefaults, KM_InterfaceTypes,
-  KM_ResTypes, KM_ResHouses;
+  KM_ResTypes, KM_ResHouses,
+
+  KM_GUICommonDevelopment;
 
 
 const
@@ -40,6 +42,7 @@ type
     fHouse : TKMHouseType;
 
     fCopiedAnim : TKMAnimation;
+    fSelectedDev : Pointer;
 
     procedure BackClick(Sender: TObject);
     procedure SaveClick(Sender: TObject);
@@ -61,6 +64,8 @@ type
     function Spec : TKMHouseSpec;
     procedure EditAnimationPos;
 
+    procedure TreeButtonClicked(Sender: TObject);
+    procedure TreeDevelopmentChange(Sender : TObject);
   protected
     Panel_Debug: TKMPanel;
       Button_T_Back : TKMButton;
@@ -87,7 +92,13 @@ type
           //supply pile offsets
             Pile_X, Pile_Y : array[0..2] of TKMNumericEdit;
 
-
+          //development tree
+          Tree : TKMGUICommonDevelopment;
+            Dev_GuiIcon : TKMNumericEdit;
+            Position_X : TKMNumericEdit;
+            Button_AddDev : TKMButton;
+            Button_DelDev : TKMButton;
+            Button_SavDev : TKMButton;
 
 
 
@@ -102,7 +113,7 @@ type
 implementation
 uses
   KM_ResTexts, KM_ResFonts, KM_Resource,
-  KM_CommonUtils, KM_RenderUI, KM_Pics,
+  KM_CommonUtils, KM_RenderUI, KM_Pics,  KM_ResDevelopment,
   IOUtils;
 
 const
@@ -162,6 +173,9 @@ begin
   House_Viewer.Left := (Panel_Debug.Width div 2) - (House_Viewer.Width div 2);
   House_Viewer.Top := (Panel_Debug.Height div 2) - (House_Viewer.Height div 2);
 
+
+  Tree := TKMGUICommonDevelopment.Create(Panel_Debug, Panel_Debug.Width div 2 - 90, 50, 180, Panel_Debug.Height - 125);
+  Tree.OnButtonClicked := TreeButtonClicked;
 
   TKMBevel.Create(Panel_Debug, 30, 30, 270, 680);
   Panel_Edit_Scroll := TKMScrollPanel.Create(Panel_Debug, 30, 30, 270, 680, [saVertical], bsGame, ssGame);
@@ -257,6 +271,22 @@ begin
         Pile_Y[I].OnChange := PileOffsetChanged;
     end;
 
+    P := AddNewPanel;//development
+      Dev_GuiIcon := TKMNumericEdit.Create(P, 30, 10, 0, 2000);
+      Dev_GuiIcon.OnChange := TreeDevelopmentChange;
+      Dev_GuiIcon.Width := 80;
+
+      Position_X := TKMNumericEdit.Create(P, 30, 40, -1, 5);
+      Position_X.OnChange := TreeDevelopmentChange;
+      Position_X.Width := 80;
+
+      Button_AddDev := TKMButton.Create(P, 30, 70, 75, 25, 'Add', bsGame);
+      Button_AddDev.OnClick := TreeDevelopmentChange;
+      Button_DelDev := TKMButton.Create(P, 30, 95, 75, 25, 'Del', bsGame);
+      Button_DelDev.OnClick := TreeDevelopmentChange;
+      Button_SavDev := TKMButton.Create(P, 30, 120, 75, 25, 'Save', bsGame);
+      Button_SavDev.OnClick := TreeDevelopmentChange;
+
   Switch_Type.Selected := 0;
   SwitchType(nil);
 end;
@@ -309,7 +339,7 @@ procedure TKMMenuDebug.RefreshControls;
 var I : Integer;
 begin
   for I := 0 to High(Panel_Type) do
-    Panel_Type[I].Enabled := fHouse in HOUSES_VALID;
+    Panel_Type[I].Enabled := ((fHouse in HOUSES_VALID) and (Switch_Type.Selected < 2)) or (Switch_Type.Selected = 2);
 
     Edit_X.Enabled := fSelectedAnim <> -1;
     Edit_Y.Enabled := fSelectedAnim <> -1;
@@ -491,9 +521,16 @@ end;
 procedure TKMMenuDebug.SwitchType(Sender: TObject);
 var I : Integer;
 begin
+  If Tree = nil then
+    Exit;
+  Tree.Visible := Switch_Type.Selected = 2;
+  ColumnBox_Houses.Visible := Switch_Type.Selected < 2;
+  House_Viewer.Visible := Switch_Type.Selected < 2;
+
   case Switch_Type.Selected of
     0 : Label_Type.Caption := 'Animations';
     1 : Label_Type.Caption := 'Supply Pile Offset';
+    2 : Label_Type.Caption := 'Development tree';
   end;
   for I := 0 to High(Panel_Type) do
     Panel_Type[I].Visible := Switch_Type.Selected = I;
@@ -526,6 +563,149 @@ begin
   A.X := Edit_X.Value;
   A.Y := Edit_Y.Value;
   Spec.DebugChangeAnimation(HA, A);
+end;
+
+
+procedure  TKMMenuDebug.TreeButtonClicked(Sender: TObject);
+var I : Integer;
+  dev : PKMDevelopment;
+begin
+  I := TKMControl(Sender).Tag;
+  dev := PKMDevelopment(I);
+  fSelectedDev := dev;
+  Position_X.Value := dev.X;
+  Dev_GuiIcon.Value := dev.GuiIcon;
+end;
+
+procedure TKMMenuDebug.TreeDevelopmentChange(Sender : TObject);
+var
+  dev, devParent, next : PKMDevelopment;
+  oldX : Byte;
+
+  function GetPositionY : Byte;
+  var tmp : PKMDevelopment;
+  begin
+    Result := 0;
+    tmp := dev;
+    while tmp.Parent <> nil do
+    begin
+      Inc(Result);
+      tmp := tmp.Parent;
+    end;
+  end;
+
+  function CheckCollision(aX : Byte) : Boolean;
+  var I : Integer;
+    takenPlaces : TKMByteArray;
+  begin
+    Result := false;
+    takenPlaces := gRes.Development.GetAllTakenAtY(Tree.CurrentPage, GetPositionY);
+    for I := 0 to high(takenPlaces) do
+      If (takenPlaces[I] = aX)then
+        Exit(true);
+  end;
+
+  procedure SetNextPos;
+  var I : Integer;
+    J, K: Integer;
+  begin
+    J := EnsureRange(Position_X.Value - oldX, -1, 1);
+    K := oldX;
+    IncLoop(K, 0, 4, J);
+    If CheckCollision(K) then
+      for I := 1 to 4 do
+      begin
+        //dev.X := (oldX + (I * J)) mod 5;
+        IncLoop(K, 0, 4, J);
+        If not CheckCollision(K) then
+          Break;
+      end;
+    dev.X := K;
+  end;
+
+  function GetFreeSpace : Byte;
+  var I, J, K : Integer;
+    Collides : Boolean;
+    takenPlaces : TKMByteArray;
+  begin
+    Result := 255;
+    If length(dev.Next) = 5 then
+      Exit;
+    takenPlaces := gRes.Development.GetAllTakenAtY(Tree.CurrentPage, GetPositionY + 1);
+    for J := 0 to 4 do
+    begin
+      K := (dev.X + J) mod 5;
+      Collides := false;
+      for I := 0 to high(takenPlaces) do
+        If (K = takenPlaces[I]) then
+          Collides := true;
+
+      If not Collides then
+        Exit(K);
+    end;
+
+  end;
+
+var temp : Byte;
+  I, aIndex : Integer;
+begin
+
+  If sender = Button_SavDev then
+  begin
+    gRes.Development.SaveTOJson;
+    Exit;
+  end;
+
+
+
+  dev := PKMDevelopment(fSelectedDev);
+  If dev = nil then
+    Exit;
+  devParent := dev.Parent;
+  If Sender = Position_X then
+  begin
+    oldX := dev.X;
+
+    SetNextPos;
+
+    Position_X.Value := Dev.X;
+    Tree.RefreshButton(dev);
+  end else
+  If sender = Dev_GuiIcon then
+  begin
+    dev.GuiIcon := Dev_GuiIcon.Value;
+    Tree.RefreshButton(dev);
+  end else
+  If sender = Button_AddDev then
+  begin
+    temp := GetFreeSpace;
+    If temp <> 255 then
+    begin
+      SetLength(dev.Next, length(dev.Next) + 1);
+      next := @dev.Next[high(dev.Next)];
+      next.X := temp;
+      next.Parent := dev;
+
+      Tree.ReloadTrees;
+    end;
+  end else
+  If sender = Button_DelDev then
+  begin
+    If (devParent = nil) or (dev = nil) or (dev.Parent <> devParent) then
+      Exit;
+    aIndex := -1;
+    for I := 0 to High(devParent.Next) do
+      If @devParent.Next[I] = dev then
+        aIndex := I;
+    If aIndex = -1 then
+      Exit;
+
+    devParent.Next[aIndex] := devParent.Next[high(devParent.Next)];
+    SetLength(devParent.Next, high(devParent.Next));
+
+    Tree.ReloadTrees;
+  end;
+
 end;
 
 

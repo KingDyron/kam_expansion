@@ -316,7 +316,6 @@ begin
       animation : TKMAnimation;
       DIR: TKMDirection;
       WT: TKMWareType;
-      T: TKMUnitThought;
       STEP, spriteID:integer;
       used: array of Boolean;
       rxData: TRXData;

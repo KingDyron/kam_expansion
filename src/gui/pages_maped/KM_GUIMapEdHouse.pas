@@ -6,7 +6,7 @@ uses
    Vcl.Controls,
    KM_Controls, KM_ControlsBase, KM_ControlsProgressBar, KM_ControlsWaresRow, KM_Points,
    KM_Defaults, KM_Pics, KM_Houses, KM_InterfaceGame, KM_ResHouses, KM_ControlsPopUp, KM_ControlsEdit, KM_ControlsScroll,
-   KM_ControlsSwitch;
+   KM_ControlsSwitch, KM_ResTypes;
 
 type
   TKMMapEdHouse = class
@@ -15,6 +15,8 @@ type
     fStorehouseItem: Byte; //Selected ware in storehouse
     fBarracksItem: ShortInt; //Selected ware in barracks, or -1 for recruit
 
+    fStoreHouseWaresCopied : Boolean;
+    fStoreHouseWares : array[WARE_MIN..WARE_MAX] of Word;
     procedure Create_Common(aParent: TKMPanel);
     procedure Create_Store;
     procedure Create_Barracks;
@@ -124,6 +126,8 @@ type
       Image_TotalCount : TKMimage;
       Bar_TotalCount   : TKMPercentBar;
       Bevel_Store      : TKMBevel;
+      Button_CopyWares,
+      Button_PasteWares  : TKMButton;
 
     Panel_HouseBarracks: TKMPanel;
       Button_Barracks_RallyPoint: TKMButtonFlat;
@@ -178,7 +182,7 @@ uses
   KM_ResTexts, KM_Resource, KM_RenderUI, KM_ResUnits,
   KM_HouseBarracks, KM_HouseTownHall, KM_HouseStore,
   KM_HousePearl,
-  KM_ResFonts, KM_ResTypes,
+  KM_ResFonts,{ KM_ResTypes,}
   KM_Cursor, KM_UtilsExt, KM_CommonUtils,
    KM_Game, KM_MainSettings;
 
@@ -465,6 +469,13 @@ begin
   Button_StoreDec.OnClickShift    := StoreChange;
   Button_StoreInc100.OnClickShift := StoreChange;
   Button_StoreInc.OnClickShift    := StoreChange;
+
+  Button_CopyWares := TKMButton.Create(Panel_HouseAdditional, Panel_HouseAdditional.Width - 55, 37 + top, 25, 25, '\/', bsGame);
+  Button_CopyWares.Hint := 'Copy wares';
+  Button_CopyWares.OnClickShift := StoreChange;
+  Button_PasteWares := TKMButton.Create(Panel_HouseAdditional, Panel_HouseAdditional.Width - 30, 37 + top, 25, 25, '/\', bsGame);
+  Button_PasteWares.Hint := 'Paste wares';
+  Button_PasteWares.OnClickShift := StoreChange;
 
   Panel_HouseStore := TKMScrollPanel.Create(Panel_House,5,Bevel_Store.Bottom + 3,Panel_House.Width,Panel_House.Height - Bevel_Store.Bottom - 3 - 40, [saVertical], bsGame, ssCommon);
   top := 0;
@@ -1016,6 +1027,8 @@ begin
   Image_TotalCount.Visible := false;
   Bar_TotalCount.Visible := false;
   Bevel_Store.Visible := false;
+  Button_PasteWares.Visible := false;
+  Button_CopyWares.Visible := false;
   Button_Barracks_Recruit.Hide;
 
   Button_Grain.Visible := fHouse.HouseType in [htFarm, htProductionThatch];
@@ -1059,6 +1072,9 @@ begin
                       Button_StoreInc.Visible := true;
                       Image_TotalCount.Visible := true;
                       Bar_TotalCount.Visible := true;
+                      Button_PasteWares.Visible := true;
+                      Button_CopyWares.Visible := true;
+                      Button_PasteWares.Enabled := fStoreHOuseWaresCopied;
                       Panel_HouseStore.Show;
                       StoreRefresh;
                       //Reselect the ware so the display is updated
@@ -1500,13 +1516,27 @@ end;
 
 procedure TKMMapEdHouse.StoreChange(Sender: TObject; Shift: TShiftState);
 var
-  ware: TKMWareType;
+  ware, WT: TKMWareType;
   store: TKMHouseStore;
   newCount: Word;
 begin
   store := TKMHouseStore(fHouse);
   ware := TKMWareType(Button_Store[fStorehouseItem].Tag);
 
+  If sender = Button_CopyWares then
+  begin
+    for WT := WARE_MIN to WARE_MAX do
+        fStoreHouseWares[WT] := store.CheckWareIn(WT);
+    fStoreHOuseWaresCopied := true;
+    Button_PasteWares.Enabled := fStoreHOuseWaresCopied;
+    Exit;
+  end else
+  If sender = Button_PasteWares then
+  begin
+    If fStoreHOuseWaresCopied then
+      for WT := WARE_MIN to WARE_MAX do
+        store.SetWareInCnt(WT, fStoreHouseWares[WT]);
+  end;
   //We need to take no more than it is there, thats part of bugtracking idea
   if (Sender = Button_StoreDec100) or (Sender = Button_StoreDec) then begin
     newCount := Math.Min(store.CheckWareIn(ware), GetMultiplicator(Shift) * TKMButton(Sender).Tag);

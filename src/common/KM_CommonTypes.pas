@@ -121,6 +121,8 @@ type
     function IsLinear : Boolean;
   end;
 
+  PKAnimation = ^TKMAnimation;
+
   function Anim(aX, aY : Integer; aAnimation : TKMWordArray; aOffset : Byte = 0) : TKMAnimation;overload;
   function Anim(aX, aY, StepStart, aCount : Integer; aOffset : Byte = 0; doBackWard : Boolean = false) : TKMAnimation;overload;
   function Anim(aAnimation : TKMAnimLoop) : TKMAnimation;overload;

@@ -11,7 +11,7 @@ type
     Speed,
     Pos : TKMPointF;
     LifeTime, Age : Cardinal;
-    Animation : TKMAnimation;
+    Animation : PKAnimation;
     Deleted, InFront : Boolean;
     RX : TRXType;
     procedure Save(SaveStream : TKMemoryStream);

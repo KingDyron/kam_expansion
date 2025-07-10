@@ -5495,7 +5495,7 @@
 	"School Order" : ["utSerf","utBuilder","utStonemason","utWoodcutter","utCarpenter","utClayPicker","utFisher","utFarmer","utBaker","utAnimalBreeder","utButcher","utMiner","utMetallurgist","utSmith","utOperator","utRecruit"],
 	"Barracks Order" : ["utFighter","utMilitia","utAxeFighter","utSwordFighter","utBowman","utCrossbowman","utLanceCarrier","utPikeman","utMaceFighter","utFlailFighter","utScout","utKnight"],
 	"Townhall Order" : ["utFighter","utRebel","utRogue","utClubMan","utVagabond","utShieldBearer","utBarbarian","utWarrior"],
-	"SiegeWorkshop Order" : ["utBallista","utCatapult","utRam","utWoodenWall", "utMobileTower"],
+	"SiegeWorkshop Order" : ["utBallista","utCatapult","utRam","utWoodenWall"],
 	"Palace Order" : ["utFighter","utTorchMan","utPyro","utLekter","utMedic","utArcher","utPaladin","utSpy","utTrainedWolf","utAmmoCart","utPikeMachine","utSpikedTrap"],
 	"Shipyard Order" : ["utBoat","utShip","utBattleShip"]
 }

@@ -328,6 +328,11 @@ type
     class function GetDefaultCondition: Integer;
 
 
+    ///scripting
+    function GetStats : TKMUnitStats; virtual;
+    procedure SetStats( aStats : TKMUnitStats); virtual;
+
+
   end;
 
   //Common class for all civil units
@@ -2457,6 +2462,35 @@ begin
     fSpeed := aValue / 240;
     UpdateSpeed;
   end;
+end;
+
+function TKMUnit.GetStats : TKMUnitStats;
+begin
+  Result.GroupID := -1;
+  Result.UnitType := UnitType;
+  Result.Attack := fAttack;
+  Result.Defence := fDefence;
+  Result.AttackHorse := fAttackHorse;
+  Result.HP := fHitPoints;
+  Result.MaxHP := fHitPointsMax;
+  Result.Speed := Round(fSpeed * 240);
+  Result.Sight := fSight;
+  Result.Condition := Condition;
+  Result.DamageHouse := 0;
+  Result.DamageUnits := 0;
+  Result.Ammo := 0;
+end;
+
+procedure TKMUnit.SetStats(aStats: TKMUnitStats);
+begin
+  fAttack := aStats.Attack;
+  fDefence := aStats.Defence;
+  fAttackHorse := aStats.AttackHorse;
+  fHitPoints := aStats.HP;
+  fHitPointsMax := aStats.MaxHP;
+  SetSpeed(aStats.Speed);
+  fSight := aStats.Sight;
+  Condition := aStats.Condition;
 end;
 
 procedure TKMUnit.AssignToShip(aShip : Pointer);

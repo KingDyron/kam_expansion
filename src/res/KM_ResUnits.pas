@@ -167,7 +167,7 @@ type
     function GetSerfCarry(aType: TKMWareType; aDir: TKMDirection): TKMAnimation;
     procedure CalculateTroopTrainOrder;
   public
-    BootsAnim : TKMAnimLoop;
+    BootsAnim : TKMAnimation;
     FishermansShipSketch,
     BattleShipSketch,
     ShipSketch : TKMUnitShipSketch;

@@ -233,26 +233,51 @@ end;
 
 procedure TKMCampaignsCollection.SortCampaigns;
 
+const MAIN_ORDER : array[0..6] of String = (
+    'HKS', 'KSU', 'KSN', 'KSO', 'TUA', 'TSK', 'TPR');
+
   //Return True if items should be exchanged
   function Compare(A, B: TKMCampaign): Boolean;
   begin
-    //TSK is first
+    {//TSK is first
     if      A.ShortName = 'TSK' then Result := False
     else if B.ShortName = 'TSK' then Result := True
     //TPR is second
     else if A.ShortName = 'TPR' then Result := False
     else if B.ShortName = 'TPR' then Result := True
     //Others are left in existing order (alphabetical)
-    else                            Result := CompareTextLogical(A.GetCampaignTitle, B.GetCampaignTitle) > 0;
+    else}
+    Result := CompareTextLogical(A.GetCampaignTitle, B.GetCampaignTitle) > 0;
   end;
 
+
 var
-  I, K: Integer;
+  I, K, J, F: Integer;
 begin
-  for I := 0 to Count - 1 do
-    for K := I to Count - 1 do
-      if Compare(Campaigns[I], Campaigns[K]) then
-        SwapInt(Cardinal(fList.List[I]), Cardinal(fList.List[K]));
+  //first set main campaigns order
+  K := 0;
+  for J := 0 to High(MAIN_ORDER) do
+  begin
+    F := -1;
+    //findCampaign
+    for I := 0 to Count - 1 do
+      If fList.List[I].ShortName = MAIN_ORDER[J] then
+      begin
+        F := I;
+      end;
+    If F = -1 then
+      Continue;
+
+    SwapInt(Cardinal(fList.List[K]), Cardinal(fList.List[F]));
+    Inc(K);
+  end;
+
+
+  for I := K to Count - 1 do
+    for J := I to Count - 1 do
+      if Compare(Campaigns[I], Campaigns[J]) then
+        SwapInt(Cardinal(fList.List[I]), Cardinal(fList.List[J]));
+
 end;
 
 

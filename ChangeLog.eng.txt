@@ -1,6 +1,73 @@
-﻿[$0000FF] WARNING : English version may not be written well. The original language is Polish
+﻿[$0000FF] WARNING : The English version may not be written well. The original language is Polish
 
-[$0000FF]KaM Expansion v1.12
+[$0000FF]KaM Expansion patch v1.13
+[$55FF55]TUA
+	- mission 5, add mettalurgist 
+	- mission 8, block bitin armor in the market 
+	- mission 10, add clay pickers and remove stonemasons; Deleted stone object is on the enemy road 
+[$55FF55]Houses
+	- fix flag animation in the second level of the silo  
+	- delete log in Fruit tree house when it's connected to the other Fruit tree
+	- increased mining range for Pottery by 2 tiles in every direction  
+
+[$55FF55]Units
+	- added new types of clouds/thoughts for citizens  
+
+[$55FF55]Wares
+	- added new by-product: furniture. Created in the sawmill and the carpenters workshop. 
+		Used by the cottage and the house, to speed up production  
+	- added new by-product: tree sapling. No usage at the moment 
+
+[$55FF55]interface
+	- not visible unit is selected by default in barracks/townhall/palace interface  
+	- Well icon overlaps in statistics panel 
+	- add new page to in-game guide for objects that contains wares/by-products  
+	- "Assign to ship" button is disabled when there is no transporting ship 
+	- added icon of ware in serf's panel to show what he is carrying 
+	- added missing text for grapes in in-game guide  
+	- fixed new units scroll sprites 
+	- added copy/paste wares in storehouse panel
+
+[$55FF55]Other
+	- added music playlists  
+	- added new music playlist made by [$55FF55]jaimy.k[$FFFFFF]
+	- added multiplayer modes  
+	- added new crop type: Capvioli (max seeds and growing time)  
+	- increased growing time of the Strawbush  
+	- added new grass type: Reed tree (max hay) 
+	- addded new vegetable type: Sugar palm (max vegetables)  
+	- added new tree: Lemon tree  
+	- added new tree: Black berry tree  
+	- added new tree: Redredish tree  
+	- added new tree: Curvyly tree  
+	- balanced grains (growing time, crops)  
+	- added block everything option to storehouse (use shift or ctrl) 
+	- fixed: after creating a new map tiles are affected by night effect
+	- tile overlays were formatted, so the can be added quickly 
+	
+[$55FF55]Maps
+	- added SP : 
+			Border Rivers
+			Brynhildr's Faith_
+			Mountainous Region
+			Wilderness
+			K&M Tower Defense
+			
+	- added MP
+		Europe
+		A Midwinter's Day
+		Adventure of Ruthenia
+		Alagsor2
+		Cold Steel Mountains
+		Darkness
+		Horseshoe
+		Lost in the Sands
+		Welcome to the Jungle
+		A New Dawn
+		Eruption 8p
+		Horizon 10P
+
+[$0000FF]KaM Expansion patch v1.12
 [$55FF55]Houses
 	- added list of what kind of workers can work in house(in-game guide).     
 	- added flags to production thatch   
@@ -45,7 +112,7 @@
 	- house icon in build panel is disabled if you can't build it
 		(There can be only one Production Thatch)  
 
-[$0000FF]KaM Expansion v1.11
+[$0000FF]KaM Expansion patch v1.11
 [$55FF55]TSK:
 	- unlocked fisherman
 	- mission 2, players had revealed full map, no message and attack from player 2, 

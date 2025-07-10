@@ -52,6 +52,7 @@ type
 implementation
 uses
   KM_Entity,
+  KM_Points,
   KM_Units, KM_HandLogistics,
   KM_Resource,
   KM_HandsCollection, KM_Hand, KM_HandTypes, KM_HandEntity,
@@ -394,7 +395,7 @@ begin
     step := 0
   else
     step := Trunc(gRes.Houses.School_Clock.Count * (WorkingTime / TotalWorkingTime));
-  gRenderPool.AddAnimation(Position, gRes.Houses.School_Clock, step, gHands[Owner].FlagColor, rxHouses);
+  gRenderPool.AddAnimationG(KMPointF(Position), gRes.Houses.School_Clock, step, gHands[Owner].FlagColor, rxHouses);
 end;
 
 

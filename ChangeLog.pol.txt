@@ -1,34 +1,72 @@
 ﻿
-[$0000FF]KaM Expansion v1.20
-[$55FF55]TUA
-	- misja 10, dodano hutnika do mennicy
+[$0000FF]KaM Expansion patch v1.13
+[$55FF55]Ostateczny Autorytet
+	- misja 5, dodano hutnika
 	- misja 8, zablokowano kolczugę bitynową w targowisku
-	- misja 10, dodano zbieraczy zamiast kamieniarzy w garncarni; 
-		Usunięto duży kamień na drodze przeciwnika
+	- misja 10, dodano zbieraczy i usunięto kamieniarzy; Usunięto kamień z drogi przeciwnika
 [$55FF55]Budynki
-	- dodano nowy budynek: Dom Kartografa
-	- dodano nowy budynek: Perła Architektury
-	- poprawiono animację flagi w drugim poziomie silosa
-	
+	- Poprawiono animację flagi w silosie poziom 2
+	- usunięto kłodę z drzew owocowych podporządkowanych pod inne drzewo
+	- zwiększono zasięg wydobycia garncarni o 2 kratki w każdą stronę
+
 [$55FF55]Jednostki
 	- dodano nowe chmurki myśli
 
-[$55FF55]Inne
-	- usunięto folder "speech" w folderze "data\sfx". 
-		Niektóre języki mogły wybrać ten folder jako domyślny
-	- dodano playlisty do muzyki. Każdy folder z muzykami w folderze "Music"
-		będzie traktowany jako osobna playlista
-	- dodano nową playlistę zrobioną przez Jaimy
-	- dodano trypy multiplayer
-
-[$55FF55]Realizm
+[$55FF55]Surowce
+	- dodano produkt uboczny: meble. Tworzone w tartaku i warsztacie ciesielskim
+		Używane w chacie i domie mieszkalnym do przyspieszenia produkcji
+	- dodano produkt uboczny: sadzonka. Brak zastosowania na ten moment
 
 [$55FF55]Interfejs
-	- w panelu z wiadomościami zmieniono zwykły tekst, na tekst przewijany
-		Wiadomości które są za długie nie mieściły się w obszerze panelu.
+	- niewidoczna jednostka domyślnie zaznaczona w panelu koszar/ratusza/pałacu  
+	- ikona studni nachodziła na inne ikony w panelu statystyk
+	- dodano nową stronę do przewodnika o informacjach obiektów posiadające surowce
+	- przycisk wysłania jednostki na statek jest wyłączony kiedy gracz nie ma statku
+	- dodano ikonę surowca, który aktualnie nosi pomocnik
+	- dodano brakujące teksty krzewów owocowych
+	- poprawiono grafiki zwojów jednostek
+	- dodano przyciski kopiuj/wklej towary do spichlerza
+
+[$55FF55]Inne
+	- dodano kolekcje muzyk
+	- dodano muzyki stworzone przez [$55FF55]jaimy.k[$FFFFFF]  
+	- dodano tryby multiplayer 
+	- dodano nowy rodzaj zboża: Kopłuszka
+	- dodano nową rodzaj trawy: Krzew trzcinowy 
+	- dodano nową rodzaj ważyw: Palma cukrowa
+	- zbalansowano czas rośnięcia i zbiory upraw
+	- dodano nowe drzewo: Cytrynowiec
+	- dodano nowe drzewo: Ożyna
+	- dodano nowe drzewo: Czerwinica
+	- dodano nowe drzewo: Krzywodłoga 
+	- dodano możliwość zablokowaniu/odblokowaniu wszystkich surowców na raz w spichlerzu (shift i ctrl) 
+	- poprawion: po stworzeniu nowej mapy, posiadała ona efekt nocy
+	- płytki dekoracyjne zostały sformatowane
+	
+[$55FF55]Mapy
+	- dodane SP : 
+			Border Rivers
+			Brynhildr's Faith_
+			Mountainous Region
+			Wilderness
+			K&M Tower Defense
+			
+	- dodane MP
+		Europe
+		A Midwinter's Day
+		Adventure of Ruthenia
+		Alagsor2
+		Cold Steel Mountains
+		Darkness
+		Horseshoe
+		Lost in the Sands
+		Welcome to the Jungle
+		A New Dawn
+		Eruption 8p
+		Horizon 10P
 
 
-[$0000FF]KaM Expansion v1.12
+[$0000FF]KaM Expansion patch v1.12
 [$55FF55]Budynki
 	- dodano listę pracowników, którzy mogą pracować w danym budynku (przewodnik w grze)
 	- dodano flagi dla strzechy produkcyjnej
@@ -77,7 +115,7 @@
 	- icona budynku w panelu budowania jest wyłączona, jeśli budynek nie może być postawiony
 		(tyczy się głównie Strzechy Produkcyjnej, którą można postawić tylko raz)
 
-[$0000FF]KaM Expansion v1.11
+[$0000FF]KaM Expansion patch v1.11
 [$55FF55]TSK:
 	- odblokowano rybaka
 	- misja 2, gracz miał odkrytę całą mapę, dodano wiadomość o ataku przeciwnika, 

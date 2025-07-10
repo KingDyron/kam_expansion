@@ -442,6 +442,7 @@ end;
 
 procedure TKMMapEdUnit.Show(aGroup: TKMUnitGroup);
 var C : Cardinal;
+  oldI : Integer;
 begin
   fUnit := nil;
   fGroup := aGroup;
@@ -470,6 +471,17 @@ begin
 
   Button_Ship.Visible := fGroup.UnitType = utShip;
   Button_Boat.Visible := fGroup.UnitType = utBoat;
+  If Button_Ship.Visible then
+    If PopUp_Ship.Visible then
+    begin
+      oldI := ColumnBox_Units.ItemIndex;
+      RefreshShipList;
+      SelectShipUnit(oldI);
+    end;
+
+  If Button_Boat.Visible then
+    If PopUp_Boat.Visible then
+      RefreshBoat;
 
   if fGroup.IsRanged then
   begin

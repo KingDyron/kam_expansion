@@ -270,6 +270,9 @@ type
     function  UnitOrderWalk(aUnitID: Integer; X, Y: Integer): Boolean;
     function  UnitSetInstantKill(aUnitID: Integer; isInstant: Boolean): Boolean;
     procedure UnitBlockWalking(aUnitID: Integer; aBlock : Boolean);
+    //new
+    procedure UnitSetRage(aUnitID, aDuration : Integer);
+    procedure UnitSetStats(aUnitID : Integer; aStats : TKMUnitStats);
   end;
 
 
@@ -5115,7 +5118,7 @@ begin
         if aDefence > 0 then
           U.Defence := aDefence;
 
-        if not InRange(aSpeed, -8, 8) then
+        if aSpeed > 0 then
           U.SetSpeed(aSpeed);
 
         if aSight > 0 then
@@ -5400,6 +5403,45 @@ begin
   end;
 end;
 
+procedure TKMScriptActions.UnitSetRage(aUnitID: Integer; aDuration: Integer);
+var
+  U: TKMUnit;
+begin
+  try
+    if (aUnitID > 0) then
+    begin
+      U := fIDCache.GetUnit(aUnitID);
+      if U <> nil then
+        If U is TKMUnitWarrior then
+          TKMUnitWarrior(U).SetRageTime(aDuration);
+    end
+    else
+      LogIntParamWarn('Actions.UnitBlockWalking', [aUnitID]);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
+procedure TKMScriptActions.UnitSetStats(aUnitID: Integer; aStats: TKMUnitStats);
+var
+  U: TKMUnit;
+begin
+  try
+    if (aUnitID > 0) then
+    begin
+      U := fIDCache.GetUnit(aUnitID);
+      if U <> nil then
+        If U is TKMUnitWarrior then
+          TKMUnitWarrior(U).SetStats(aStats);
+    end
+    else
+      LogIntParamWarn('Actions.UnitBlockWalking', [aUnitID]);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
 //* Version: 5099
 //* Kills the specified unit.
 //* Silent means the death animation (ghost) and sound won't play

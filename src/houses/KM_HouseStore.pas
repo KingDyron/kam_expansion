@@ -34,6 +34,7 @@ type
     function CheckWareIn(aWare: TKMWareType): Word; override;
     function CheckWareOut(aWare: TKMWareType): Word; override;
     function CheckWareTotal(aWare: TKMWareType): Word; override;
+    procedure SetWareInCnt(aWare : TKMWareType; aValue : Integer);
     procedure WareTakeFromOut(aWare: TKMWareType; aCount: Word = 1; aFromScript: Boolean = False); override;
     function WareCanAddToIn(aWare: TKMWareType): Boolean; override;
     function WareOutputAvailable(aWare: TKMWareType; const aCount: Word): Boolean; override;
@@ -217,6 +218,12 @@ end;
 function TKMHouseStore.CheckWareTotal(aWare: TKMWareType): Word;
 begin
   Result := CheckWareIn(aWare);
+end;
+
+procedure TKMHouseStore.SetWareInCnt(aWare: TKMWareType; aValue: Integer);
+begin
+  if aWare in WARES_VALID then
+    fWaresCount[aWare] := aValue;
 end;
 
 procedure TKMHouseStore.Demolish(aFrom: TKMHandID; IsSilent: Boolean = False);

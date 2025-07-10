@@ -10,7 +10,7 @@
     <SFX Volume="0.4500"/>
     <Music Enabled="False" Volume="0.2000" Shuffle="False" Playlist="2"/>
     <Video Enabled="False" Stretch="True" Startup="True" Volume="0.5000"/>
-    <Weather Enabled="True" MaxCount="10" MaxSpawnCount="4" MinInterval="200" MaxInterval="3000" MaxLifeTime="1200" MaxCloudSpeed="0.1000" DecParticles="9" NightSpeed="10" NightTime="15" DynamicLight="True"/>
+    <Weather Enabled="True" MaxCount="10" MaxSpawnCount="4" MinInterval="200" MaxInterval="3000" MaxLifeTime="1200" MaxCloudSpeed="0.1000" DecParticles="0" NightSpeed="10" NightTime="3" DynamicLight="True"/>
     <GameCommon Locale="eng">
       <UI DefaultZoom="1.0000" ZoomBehaviour="1"/>
       <Speed Medium="3.0000" Fast="6.0000" VeryFast="10.0000" Pace="100" ScrollSpeed="20.0000"/>
@@ -18,7 +18,7 @@
       <SavePoints Enabled="True" Frequency="9000" Limit="30"/>
       <PlayersColor Mode="1" Self="0707FF" Ally="07FFFF" Enemy="FFFF00"/>
       <WareDistribution Value="" SavedBetweenGames="True"/>
-      <Misc SpecShowBeacons="False" ShowGameTime="False" ShowGameSpeed="False" DayGamesCount="1" LastDayGamePlayed="2025.1.21 0:0:0"/>
+      <Misc SpecShowBeacons="False" ShowGameTime="False" ShowGameSpeed="False" DayGamesCount="2" LastDayGamePlayed="2025.6.26 0:0:0"/>
       <Tweaks AllowSnowHouses="True" AllowSnowObjects="True" InterpolatedRender="True" InterpolatedAnimations="False"/>
     </GameCommon>
     <Campaign CampaignLastDifficulty="4"/>
@@ -26,10 +26,10 @@
     <MapEd HistoryDepth="250" MaxTerrainHeight="150"/>
     <Multiplayer Name="NoName2asd" LastIP="194.87.226.195" LastPort="56789" LastRoom="1" LastPassword="" FlashOnMessage="True"/>
     <Misc AsyncGameResLoader="True" BeastPanelExpanded="False" WaresPanelExpanded="False False False False False False False False False False False " HousesPanelExpanded="False False False False False False False False False False False "/>
-    <Menu FavouriteMaps="" CampaignName="HKS" LobbyMapType="4" CampaignID="4" CampaignMapID="19">
-      <Singleplayer Type="0" ScenarioMapCRC="3374017887" MissionMapCRC="3221235012" TacticMapCRC="3221235012" SpecialMapCRC="3221235012" SaveFileName="autosave"/>
+    <Menu FavouriteMaps="" CampaignName="KSU" LobbyMapType="4" CampaignID="4" CampaignMapID="17">
+      <Singleplayer Type="0" ScenarioMapCRC="4260406409" MissionMapCRC="3221235012" TacticMapCRC="3221235012" SpecialMapCRC="3221235012" SaveFileName="autosave"/>
       <Replay Type="1" SPSaveName="Nowa Misja 2" MPSaveName="paused"/>
-      <MapEd MapType="0" NewMapX="32" NewMapY="32" SPMapCRC="1650773717" MPMapCRC="2987465520" MPMapName="Nowa Misja" DLMapCRC="0"/>
+      <MapEd MapType="1" NewMapX="32" NewMapY="32" SPMapCRC="155231399" MPMapCRC="261420939" MPMapName="Eruption 8p" DLMapCRC="0"/>
     </Menu>
     <Debug SaveRandomChecks="True" SaveGameAsText="False"/>
   </Game>

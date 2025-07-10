@@ -491,7 +491,8 @@ uses
   KM_Game, KM_GameParams, KM_GameTypes, KM_GameSettings, KM_Cursor,
   KM_ScriptingEvents, KM_Utils, KM_DevPerfLogTypes,
   KM_Maps,
-  KM_CommonExceptions;
+  KM_CommonExceptions,
+  KM_Particles;
 
 
 { TKMTerrain }
@@ -3911,7 +3912,7 @@ begin
     wtIronOre:  Result := KMRect(7, 11, 5, 2);
     wtCoal:     Result := KMRect(4,  5, 5, 2);
     wtBitinOre: Result := KMRect(9, 13, 8, 3);
-    wtTile:     Result := KMRect(7,  8, 8, 5);
+    wtTile:     Result := KMRect(9,  7, 10, 9);
     wtJewerly:     Result := KMRect(7,  8, 8, 6);
   else
     Result := KMRECT_ZERO;
@@ -3940,18 +3941,36 @@ begin
       or ((aWare = wtTile) and TileHasClay(K,I))
       or ((aWare = wtCoal)    and TileHasCoal(K,I)) then
       begin
-        //Poorest ore gets mined in range - 2
-        if InRange(I - aLoc.Y, - miningRect.Top + 2, miningRect.Bottom - 2)
-          and InRange(K - aLoc.X, - miningRect.Left + 2, miningRect.Right - 2) then
-            aPoints[0].Add(KMPoint(K, I))
-        //Second poorest ore gets mined in range - 1
-        else
-        if InRange(I - aLoc.Y, - miningRect.Top + 1, miningRect.Bottom - 1)
-          and InRange(K - aLoc.X, - miningRect.Left + 1, miningRect.Right - 1) then
-            aPoints[1].Add(KMPoint(K, I))
-        else
-          //Always mine second richest ore
-          aPoints[2].Add(KMPoint(K, I));
+        If aWare = wtTile then
+        begin
+          //Poorest ore gets mined in range - 4
+          if InRange(I - aLoc.Y, - miningRect.Top + 4, miningRect.Bottom - 4)
+            and InRange(K - aLoc.X, - miningRect.Left + 4, miningRect.Right - 4) then
+              aPoints[0].Add(KMPoint(K, I))
+          //Second poorest ore gets mined in range - 1
+          else
+          if InRange(I - aLoc.Y, - miningRect.Top + 1, miningRect.Bottom - 1)
+            and InRange(K - aLoc.X, - miningRect.Left + 1, miningRect.Right - 1) then
+              aPoints[1].Add(KMPoint(K, I))
+          else
+            //Always mine second richest ore
+            aPoints[2].Add(KMPoint(K, I));
+
+        end else
+        begin
+          //Poorest ore gets mined in range - 2
+          if InRange(I - aLoc.Y, - miningRect.Top + 2, miningRect.Bottom - 2)
+            and InRange(K - aLoc.X, - miningRect.Left + 2, miningRect.Right - 2) then
+              aPoints[0].Add(KMPoint(K, I))
+          //Second poorest ore gets mined in range - 1
+          else
+          if InRange(I - aLoc.Y, - miningRect.Top + 1, miningRect.Bottom - 1)
+            and InRange(K - aLoc.X, - miningRect.Left + 1, miningRect.Right - 1) then
+              aPoints[1].Add(KMPoint(K, I))
+          else
+            //Always mine second richest ore
+            aPoints[2].Add(KMPoint(K, I));
+        end;
       end;
     end;
 end;
@@ -3978,8 +3997,8 @@ begin
           C := TileIsClay(K, I);
           case C of
             0 : ;//do nothing
-            1 : if InRange(I - aLoc.Y, - miningRect.Top + 2, miningRect.Bottom - 2)
-                        and InRange(K - aLoc.X, - miningRect.Left + 2, miningRect.Right - 2) then
+            1 : if InRange(I - aLoc.Y, - miningRect.Top + 4, miningRect.Bottom - 4)
+                        and InRange(K - aLoc.X, - miningRect.Left + 4, miningRect.Right - 4) then
                           aClayLocs[0].Add(KMPoint(K, I));
             2 : if InRange(I - aLoc.Y, - miningRect.Top + 1, miningRect.Bottom - 1)
                         and InRange(K - aLoc.X, - miningRect.Left + 1, miningRect.Right - 1) then
@@ -5298,6 +5317,7 @@ begin
       begin
         TKMHouseAppleTree(H).FruitType := gMapElements[aID].IsFruit - 1;
         TKMHouseAppleTree(H).GrowPhase := gFruitTrees[gMapElements[aID].IsFruit - 1].GetStage(aID);
+        isObjectSet := true;
       end;
     end;
 
@@ -7983,6 +8003,7 @@ begin
         begin
           Land^[aLoc.Y + I - 4, aLoc.X + K - 3].TileOverlay := OVERLAY_DIG_3;
           Land^[aLoc.Y + I - 4, aLoc.X + K - 3].TileLock    := tlNone;
+          gParticles.AddDustParticle(KMPointF(aLoc.X + K - 3, aLoc.Y + I - 4));
         end;
 
     //if there was clay below it then remove it

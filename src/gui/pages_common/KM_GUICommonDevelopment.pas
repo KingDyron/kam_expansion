@@ -10,24 +10,32 @@ type
   TKMDevButton = record
     Button_Tree : TKMButtonFlat;
     Next : array of TKMDevButton;
+    Dev : PKMDevelopment;
   end;
   TKMGUICommonDevelopment = class(TKMPanel)
   private
     fLastPage : TKMDevelopmentTreeType;
     procedure SwitchPage(Sender : TObject); virtual;
     procedure HideFromID(aID : Integer);
+    procedure ButtonClicked(Sender : TObject);
   protected
     Button_SwitchTree : array[TKMDevelopmentTreeType] of TKMButton;
       Tree : array[TKMDevelopmentTreeType] of record
         fCount : Word;
         Panel : TKMScrollPanel;
+          ButtonsList : array of TKMButtonFlat;
           Button_Tree : TKMDevButton;
       end;
 
   public
+    OnButtonClicked : TNotifyEvent;
     constructor Create(aParent : TKMPanel; aLeft, aTop, aWidth, aHeight : Integer);
 
     procedure Paint; override;
+
+    procedure ReloadTrees(aCurrentPageOnly : Boolean = true);
+    procedure RefreshButton(aTag : Pointer);
+    property CurrentPage : TKMDevelopmentTreeType read fLastPage;
   end;
 
 implementation
@@ -42,8 +50,8 @@ constructor TKMGUICommonDevelopment.Create(aParent: TKMPanel; aLeft: Integer; aT
 const
   TREE_TYPE_ICON : array[TKMDevelopmentTreeType] of Word = (39, 322);
 var dtt : TKMDevelopmentTreeType;
-  procedure CreateNext(aType : TKMDevelopmentTreeType; var aToButton : TKMDevButton;  aDevelopment : TKMDevelopment; aTop : Byte);
-  var I : integer;
+  procedure CreateNext(aType : TKMDevelopmentTreeType; var aToButton : TKMDevButton;  aDevelopment : PKMDevelopment; aTop : Byte);
+  var I, J : integer;
   begin
     with Tree[aType] do
     begin
@@ -51,12 +59,18 @@ var dtt : TKMDevelopmentTreeType;
       aToButton.Button_Tree.Hint := gRes.Development.GetText(aDevelopment.HintID);
       aToButton.Button_Tree.BackAlpha := 1;
       aToButton.Button_Tree.Tag := fCount;
+      aToButton.Button_Tree.Tag := Integer(aDevelopment);
+      aToButton.Button_Tree.OnClick := ButtonClicked;
+      aToButton.Dev := aDevelopment;
       //aToButton.ID := fCount;
       Inc(fCount);
+      If fCount > length(ButtonsList) then
+        SetLength(ButtonsList, fCount + 32);
+      ButtonsList[fCount - 1] := aToButton.Button_Tree;
     end;
     SetLength(aToButton.Next, length(aDevelopment.Next));
     for I := 0 to High(aDevelopment.Next) do
-      CreateNext(aType, aToButton.Next[I], aDevelopment.Next[I], aTop + 1);
+      CreateNext(aType, aToButton.Next[I], @aDevelopment.Next[I], aTop + 1);
   end;
 begin
   Inherited Create(aParent, aLeft, aTop, aWidth, aHeight);
@@ -73,6 +87,8 @@ begin
     Tree[dtt].Panel.ChildPanel.AnchorsStretch;
     CreateNext(dtt, Tree[dtt].Button_Tree, gRes.Development[dtt].FirstItem, 0);
     Tree[dtt].Panel.Visible := fLastPage = dtt;
+
+    //SetLength(Tree[dtt].ButtonsList, Tree[dtt].fCount);
   end;
   //HideFromID(10);
 end;
@@ -104,6 +120,88 @@ begin
     Button_SwitchTree[dtt].ShowImageEnabled := fLastPage = dtt;
     Tree[dtt].Panel.Visible := fLastPage = dtt;
   end;
+
+end;
+
+procedure TKMGUICommonDevelopment.ButtonClicked(Sender: TObject);
+begin
+  If Assigned(OnButtonClicked) then
+    OnButtonClicked(Sender);
+end;
+
+procedure TKMGUICommonDevelopment.ReloadTrees(aCurrentPageOnly : Boolean = true);
+var dtt : TKMDevelopmentTreeType;
+    oldCount : Integer;
+
+  procedure CreateNext(aType : TKMDevelopmentTreeType; var aToButton : TKMDevButton; aDevelopment : PKMDevelopment; aTop : Byte);
+  var I, J : integer;
+  begin
+    with Tree[aType] do
+    begin
+      //aToButton.ID := fCount;
+      Inc(fCount);
+      If fCount > length(ButtonsList) then
+        SetLength(ButtonsList, fCount + 32);
+
+      If ButtonsList[fCount - 1] = nil then
+        ButtonsList[fCount - 1] := TKMButtonFlat.Create(Panel, 3 + aDevelopment.X * 34, aTop * DISTANCE_BETWEEN_ROWS, 31, 31, aDevelopment.GuiIcon)
+      else
+      begin
+        ButtonsList[fCount - 1].Left := 3 + aDevelopment.X * 34;
+        ButtonsList[fCount - 1].Top := aTop * DISTANCE_BETWEEN_ROWS;
+        ButtonsList[fCount - 1].TexID := aDevelopment.GuiIcon;
+      end;
+      ButtonsList[fCount - 1].Show;
+
+      aToButton.Button_Tree := ButtonsList[fCount - 1];
+      aToButton.Button_Tree.Hint := gRes.Development.GetText(aDevelopment.HintID);
+      aToButton.Button_Tree.BackAlpha := 1;
+      aToButton.Button_Tree.Tag := fCount - 1;
+      aToButton.Button_Tree.Tag := Integer(aDevelopment);
+      aToButton.Button_Tree.OnClick := ButtonClicked;
+      aToButton.Dev := aDevelopment;
+    end;
+    SetLength(aToButton.Next, length(aDevelopment.Next));
+    for I := 0 to High(aDevelopment.Next) do
+      CreateNext(aType, aToButton.Next[I], @aDevelopment.Next[I], aTop + 1);
+  end;
+
+  procedure ReloadType(aType : TKMDevelopmentTreeType);
+  var I : Integer;
+  begin
+    oldCount := Tree[aType].fCount;
+    Tree[aType].fCount := 0;
+
+    for I := 0 to oldCount - 1 do
+      Tree[aType].ButtonsList[I].Hide;
+
+    CreateNext(aType, Tree[aType].Button_Tree, gRes.Development[aType].FirstItem, 0);
+
+    SetLength(Tree[aType].ButtonsList, Tree[aType].fCount);
+  end;
+begin
+  If aCurrentPageOnly then
+  begin
+    ReloadType(fLastPage);
+  end else
+  for dtt := Low(TKMDevelopmentTreeType) to High(TKMDevelopmentTreeType) do
+  begin
+    ReloadType(dtt);
+  end;
+end;
+
+procedure TKMGUICommonDevelopment.RefreshButton(aTag: Pointer);
+var I : Integer;
+  dev : PKMDevelopment;
+begin
+
+  for I := 0 to Tree[fLastPage].fCount - 1 do
+    If Tree[fLastPage].ButtonsList[I].Tag = Integer(aTag) then
+    begin
+      dev := PKMDevelopment(aTag);
+      Tree[fLastPage].ButtonsList[I].TexID := dev.GuiIcon;
+      Tree[fLastPage].ButtonsList[I].Left := 3 + dev.X * 34;
+    end;
 
 end;
 

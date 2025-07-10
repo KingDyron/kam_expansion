@@ -283,6 +283,10 @@ type
     function UnitTypeToID(aUnitType: TKMUnitType): Integer;
     function UnitIDToType(aUnitType: Integer): TKMUnitType;
 
+    //new
+    function UnitStats(aUnitID: Integer): TKMUnitStats;
+
+
     function WareTypeName(aWareType: Byte): AnsiString;
     function WareTypeNameEx(aWareType: TKMWareType): AnsiString;
     function WareTypeToID(aWareType: TKMWareType): Integer;
@@ -5322,6 +5326,30 @@ begin
       U := fIDCache.GetUnit(aUnitID);
       if U <> nil then
         Result := U.UnitType;
+    end
+    else
+      LogIntParamWarn('States.UnitTypeEx', [aUnitID]);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
+
+function TKMScriptStates.UnitStats(aUnitID: Integer): TKMUnitStats;
+var
+  U: TKMUnit;
+begin
+  try
+    Result.ID := -1; //-1 if unit id is invalid
+    if aUnitID > 0 then
+    begin
+      U := fIDCache.GetUnit(aUnitID);
+      if U <> nil then
+      begin
+        Result := U.GetStats;
+        Result.ID := aUnitID;
+      end;
     end
     else
       LogIntParamWarn('States.UnitTypeEx', [aUnitID]);

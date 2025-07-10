@@ -2,7 +2,7 @@ unit KM_ResDevelopment;
 {$I KaM_Remake.inc}
 interface
 uses
-  Classes,
+  Classes, KM_CommonTypes,
   JsonDataObjects,
   KM_JsonHelpers;
 
@@ -21,7 +21,7 @@ type
     private
       fList : TKMDevelopment;
     public
-      property FirstItem : TKMDevelopment read fList;
+      function FirstItem : PKMDevelopment;
 
       procedure LoadFromJson(JSON : TKMJson);
   end;
@@ -42,6 +42,10 @@ type
       procedure LoadFromJson(aPath : String);
       procedure ReloadTexts;
       function GetText(aID : Integer): String;
+
+      function GetAllTakenAtY(aType :TKMDevelopmentTreeType; aY: Byte): TKMByteArray;
+
+      procedure SaveTOJson;
   end;
 
 implementation
@@ -51,6 +55,11 @@ uses
     KM_Defaults,
     KM_ResLocales, KM_ResTexts;
 const TREE_TYPE_STRING : array[TKMDevelopmentTreeType] of String = ('Economy', 'Army');
+
+function TKMDevelopmentTree.FirstItem: PKMDevelopment;
+begin
+  Result := @fList;
+end;
 
 procedure TKMDevelopmentTree.LoadFromJson(JSON: TKMJson);
 var aID : Word;
@@ -172,5 +181,67 @@ begin
   Result := fTexts[aID];
 end;
 
+function TKMDevelopmentTreeCollection.GetAllTakenAtY(aType :TKMDevelopmentTreeType; aY: Byte): TKMByteArray;
+  procedure CheckNext(aDev :PKMDevelopment; aTop : Byte);
+  var I : Integer;
+  begin
+    If aTop = aY then
+    begin
+      SetLength(Result, length(Result) + 1);
+      Result[high(Result)] := aDev.X;
+    end;
+
+    If aTop + 1 <= aY then
+      for I := 0 to High(aDev.Next) do
+        CheckNext(@aDev.Next[I], aTop + 1);
+  end;
+
+begin
+  SetLength(Result, 0);
+  CheckNext(Tree[aType].FirstItem, 0);
+end;
+
+procedure TKMDevelopmentTreeCollection.SaveTOJson;
+var nRoot : TKMJsonSaver;
+  procedure SaveDevelopment(aDev : PKMDevelopment);
+  var I : Integer;
+  begin
+
+    nRoot.Write('HintID', aDev.HintID, true);
+    nRoot.Write('GuiIcon', aDev.GuiIcon);
+    nRoot.Write('X', aDev.X);
+    If length(aDev.Next) > 0 then
+    begin
+      nRoot.WriteArray('Next');
+
+      for I := 0 to High(aDev.Next) do
+      begin
+        nRoot.WriteObject('', I = 0);
+          SaveDevelopment(@aDev.Next[I]);
+        nRoot.EndObject;
+      end;
+      nRoot.EndArray;
+    end;
+  end;
+var dtt : TKMDevelopmentTreeType;
+begin
+  nRoot := TKMJsonSaver.Create;
+  try
+    nRoot.BeginFile;
+
+    for dtt := Low(fTree) to High(fTree) do
+    begin
+      nRoot.WriteObject(TREE_TYPE_STRING[dtt], dtt = dttEconomy);
+      SaveDevelopment(fTree[dtt].FirstItem);
+      nRoot.EndObject;
+    end;
+
+    nRoot.EndFile;
+
+    nRoot.SaveToFile(ExeDir + 'Export' + PathDelim + 'DevelopmentTree.json')
+  finally
+    nRoot.Free;
+  end;
+end;
 
 end.

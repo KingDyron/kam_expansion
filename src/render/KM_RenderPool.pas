@@ -786,7 +786,6 @@ var
   cornerX, cornerY: Single;
   gX, gY: Single;
   Id, Id0: Integer;
-  FOW: Byte;
   A : TKMAnimLoop;
 begin
   A := gMapElements[aIndex].Anim;
@@ -1245,7 +1244,7 @@ procedure TKMRenderPool.AddAnimation(const aLoc: TKMPoint; aAnim: TKMAnimation; 
 var
   id: Cardinal;
   rxData: TRXData;
-  cornerX, cornerY: Single;
+  cornerX, cornerY, gX, gY: Single;
 begin
   if aAnim.Count = 0 then
     Exit;
@@ -1254,9 +1253,12 @@ begin
 
   id := aAnim.Animation[aAnimStep];
 
+  gX := aLoc.X + (rxData.Pivot[id].X + rxData.Size[id].X / 2) / CELL_SIZE_PX{ - 1};
+  gY := aLoc.Y + (rxData.Pivot[id].Y + rxData.Size[id].Y) / CELL_SIZE_PX{ - 1.5};
+
   cornerX := aLoc.X + (rxData.Pivot[id].X + aAnim.X) / CELL_SIZE_PX - 1;
   cornerY := aLoc.Y + (rxData.Pivot[id].Y + aAnim.Y + rxData.Size[id].Y) / CELL_SIZE_PX - 1
-                   - gTerrain.LandExt^[aLoc.Y + 1, aLoc.X].RenderHeight / CELL_HEIGHT_DIV;
+                    - gTerrain.RenderHeightAt(gX, gY);
   if aFront then
     fRenderList.AddSpriteFront(aRX, id, cornerX, cornerY, aLoc.X, aLoc.Y, aFlagColor, aAlphaStep)
   else
@@ -1272,7 +1274,7 @@ procedure TKMRenderPool.AddAnimation(const aLoc: TKMPointF; aAnim: TKMAnimation;
 var
   id: Cardinal;
   rxData: TRXData;
-  cornerX, cornerY: Single;
+  cornerX, cornerY, gX, gY: Single;
 begin
   if aAnim.Count = 0 then
     Exit;
@@ -1280,9 +1282,12 @@ begin
   rxData := fRXData[aRX];
 
   id := aAnim.Animation[aAnimStep];
+  gX := aLoc.X + (rxData.Pivot[id].X + rxData.Size[id].X / 2) / CELL_SIZE_PX{ - 1};
+  gY := aLoc.Y + (rxData.Pivot[id].Y + rxData.Size[id].Y) / CELL_SIZE_PX{ - 1.5};
 
   cornerX := aLoc.X + (rxData.Pivot[id].X + aAnim.X) / CELL_SIZE_PX - 1;
-  cornerY := aLoc.Y + (rxData.Pivot[id].Y + aAnim.Y + rxData.Size[id].Y) / CELL_SIZE_PX - 1;
+  cornerY := aLoc.Y + (rxData.Pivot[id].Y + aAnim.Y + rxData.Size[id].Y) / CELL_SIZE_PX - 1
+                    - gTerrain.RenderHeightAt(gX, gY);
 
   if aFront then
     fRenderList.AddSpriteFront(aRX, id, cornerX, cornerY, aLoc.RX, aLoc.RY, aFlagColor, aAlphaStep)
@@ -1309,12 +1314,13 @@ begin
 
   id := aAnim.Animation[aAnimStep];
 
-  cornerX := aLoc.X + (rxData.Pivot[id].X) / CELL_SIZE_PX - 1;
-  cornerY := aLoc.Y + (rxData.Pivot[id].Y + rxData.Size[id].Y) / CELL_SIZE_PX - 1
-                   - gTerrain.LandExt^[aLoc.RY + 1, aLoc.RX].RenderHeight / CELL_HEIGHT_DIV;
-
   gX := aLoc.X + (rxData.Pivot[id].X + rxData.Size[id].X / 2) / CELL_SIZE_PX - 1;
   gY := aLoc.Y + (rxData.Pivot[id].Y + rxData.Size[id].Y) / CELL_SIZE_PX - 1.5;
+
+  cornerX := aLoc.X + (rxData.Pivot[id].X) / CELL_SIZE_PX - 1;
+  cornerY := aLoc.Y + (rxData.Pivot[id].Y + rxData.Size[id].Y) / CELL_SIZE_PX - 1
+                    - gTerrain.RenderHeightAt(gX, gY);
+
   if aFront then
     fRenderList.AddSpriteFront(aRX, id, cornerX, cornerY, aLoc.RX, aLoc.RY, aFlagColor, aAlphaStep)
   else

@@ -3,7 +3,7 @@ unit KM_JsonHelpers;
 interface
 uses
   Classes, KM_Defaults, KM_CommonTypes, KM_ResTypes,
-  KM_Points,
+  KM_Points, KromUtils,
   JsonDataObjects;
 
 
@@ -153,8 +153,128 @@ type
       procedure SaveToFile(aPath : String);
   end;
 
+  TKMJsonArrayNew  = class;
+  TKMJsonObject = class;
+  TKMJsonValueType = (jvtNone, jvtBoolean, jvtInteger, jvtString, jvtSingle, jvtObject, jvtArray);
+  TKMJsonValue = record
+  private
+    procedure AddNewLine(var aText : String);
+    procedure AddTabs(var aText : String; aCount : Integer);
+  public
+    Name,
+    Value : Pointer;
+    ValueType : TKMJsonValueType;
+    procedure SaveToObject(var aText : String; aLeft : Integer; aInOneLine : Boolean);
+    procedure SaveToArray(var aText : String; aLeft : Integer; aInOneLine : Boolean);
+  end;
+
+  PKMJsonValue = ^TKMJsonValue;
+
+  TKMJsonValueArray = array of TKMJsonValue;
+
+  TKMJsonObject = class
+  private
+    fCount : Integer;
+    fList : TKMJsonValueArray;
+    fIsOneLiner : Boolean;
+    fName : String;
+    procedure AddTabs(var aText : String; aCount : Integer);
+    procedure AddToList(var aName, aValue : String; aType : TKMJsonValueType);
+    procedure AddObjectToList(aName : String; aObject : TKMJsonObject);
+    procedure AddArrayToList(aName : String; aArray : TKMJsonArrayNew);
+    procedure AddValue(aName, aValue : String; aType : TKMJsonValueType);
+    procedure SaveToText(var aText : String; aLeft : Integer; aInOneLine : Boolean);
+    procedure LoadFromText(var aText : String; var aID, aLine : Cardinal);
+
+    function IndexOf(aName : String) : Integer;
+    function GetValue(aName : String) : PKMJsonValue;
+
+    function GetI(aName : String) : Integer;
+    function GetD(aName : String) : Single;
+    function GetS(aName : String) : String;
+    function GetB(aName : String) : Boolean;
+    function GetO(aName : String) : TKMJsonObject;
+    function GetA(aName : String) : TKMJsonArrayNew;
+
+    procedure SetI(aName : String; aValue : Integer);
+    procedure SetD(aName : String; aValue : Single);
+    procedure SetS(aName : String; aValue : String);
+    procedure SetB(aName : String; aValue : Boolean);
+  public
+    destructor Destroy; override;
+    procedure LoadFromFile(aPath : String);
+    procedure SaveToFile(aPath : String);
+    procedure Add(aName, aValue : String); overload;
+    procedure Add(aName : String; aValue : Byte); overload;
+    procedure Add(aName : String; aValue : ShortInt); overload;
+    procedure Add(aName : String; aValue : Word); overload;
+    procedure Add(aName : String; aValue : Integer); overload;
+    procedure Add(aName : String; aValue : Cardinal); overload;
+    procedure Add(aName : String; aValue : Single); overload;
+    procedure Add(aName : String; aValue : Boolean); overload;
+    function AddObject(aName : String; aOneLiner : Boolean = false): TKMJsonObject;
+    function AddArray(aName : String; aOneLiner : Boolean = false): TKMJsonArrayNew;
+
+    property I[aName : String] : Integer read GetI write SetI;
+    property D[aName : String] : Single read GetD write SetD;
+    property S[aName : String] : String read GetS write SetS;
+    property B[aName : String] : Boolean read GetB write SetB;
+    property O[aName : String] : TKMJsonObject read GetO;
+    property A[aName : String] : TKMJsonArrayNew read GetA;
+
+    property Name : String read fName write fName;
+
+  end;
+
+  TKMJsonArrayNew = class
+  private
+    fCount : Integer;
+    fList : TKMJsonValueArray;
+    fIsOneLiner : Boolean;
+    fName : String;
+    procedure AddTabs(var aText : String; aCount : Integer);
+    procedure AddToList(aValue : String; aType : TKMJsonValueType);
+    procedure AddObjectToList(aObject : TKMJsonObject);
+    procedure AddArrayToList(aArray : TKMJsonArrayNew);
+    procedure SaveToText(var aText : String; aLeft : Integer; aInOneLine : Boolean);
+    procedure LoadFromText(var aText : String; var aID, aLine : Cardinal);
+
+    function GetI(aIndex : Word) : Integer;
+    function GetD(aIndex : Word) : Single;
+    function GetS(aIndex : Word) : String;
+    function GetB(aIndex : Word) : Boolean;
+    function GetO(aIndex : Word) : TKMJsonObject;
+    function GetA(aIndex : Word) : TKMJsonArrayNew;
+
+    procedure SetI(aIndex : Word; aValue : Integer);
+    procedure SetD(aIndex : Word; aValue : Single);
+    procedure SetS(aIndex : Word; aValue : String);
+    procedure SetB(aIndex : Word; aValue : Boolean);
+  public
+    destructor Destroy; override;
+    procedure Add(aValue : String); overload;
+    procedure Add(aValue : Byte); overload;
+    procedure Add(aValue : ShortInt); overload;
+    procedure Add(aValue : Word); overload;
+    procedure Add(aValue : Integer); overload;
+    procedure Add(aValue : Cardinal); overload;
+    procedure Add(aValue : Single); overload;
+    procedure Add(aValue : Boolean); overload;
+    function AddObject(aOneLiner : Boolean = false): TKMJsonObject;
+    function AddArray(aOneLiner : Boolean = false): TKMJsonArrayNew;
+
+    property I[aIndex : Word] : Integer read GetI write SetI;
+    property D[aIndex : Word] : Single read GetD write SetD;
+    property S[aIndex : Word] : String read GetS write SetS;
+    property B[aIndex : Word] : Boolean read GetB write SetB;
+    property O[aIndex : Word] : TKMJsonObject read GetO;
+    property A[aIndex : Word] : TKMJsonArrayNew read GetA;
+
+    property Name : String read fName write fName;
+  end;
+
 implementation
-uses KromUtils, IOUtils, KM_CommonClassesExt,
+uses IOUtils, KM_CommonClassesExt,
     SysUtils, Math;
 
 constructor TKMJsonHelper.Create(aPath: string);
@@ -1364,5 +1484,1022 @@ begin
   AddLine('"' + aValue + '"');
 end;
 
+procedure TKMJsonValue.AddNewLine(var aText : String);
+begin
+  aText := aText + #10;
+end;
+
+procedure TKMJsonValue.AddTabs(var aText : String; aCount : Integer);
+var I : Integer;
+begin
+  for I := 1 to aCount do
+    aText := aText + #9;
+end;
+
+procedure TKMJsonValue.SaveToObject(var aText : String; aLeft : Integer; aInOneLine : Boolean);
+var
+  s1, s2 : String;
+begin
+
+  If not (ValueType in [jvtObject, jvtArray]) then
+  begin
+    s1 := String(Name);
+    s2 := String(Value);
+    If not aInOneLine then
+    begin
+      AddNewLine(aText);
+      AddTabs(aText, aLeft);
+    end;
+  end;
+
+  case ValueType of
+    jvtNone,
+    jvtBoolean,
+    jvtInteger,
+    jvtSingle: aText := aText + Format('"%s" : %s', [string(Name), string(Value)]);
+    jvtString: aText := aText + Format('"%s" : "%s"', [string(Name), string(Value)]);
+    jvtObject: begin
+                //AddNewLine(aText);
+                //AddTabs(aText, aLeft);
+                TKMJsonObject(Value).SaveToText(aText, aLeft, aInOneLine);
+               end;
+    jvtArray: begin
+                //AddNewLine(aText);
+                //AddTabs(aText, aLeft);
+                TKMJsonArrayNew(Value).SaveToText(aText, aLeft, aInOneLine);
+               end;
+  end;
+end;
+
+
+procedure TKMJsonValue.SaveToArray(var aText : String; aLeft : Integer; aInOneLine : Boolean);
+var
+  s1, s2 : String;
+begin
+
+  If not (ValueType in [jvtObject, jvtArray]) then
+  begin
+    s1 := String(Name);
+    s2 := String(Value);
+    If not aInOneLine then
+    begin
+      AddNewLine(aText);
+      AddTabs(aText, aLeft);
+    end;
+  end;
+
+  case ValueType of
+    jvtNone,
+    jvtBoolean,
+    jvtInteger,
+    jvtSingle: aText := aText + Format('%s', [string(Value)]);
+    jvtString: aText := aText + Format('"%s"', [string(Value)]);
+    jvtObject: begin
+                TKMJsonObject(Value).SaveToText(aText, aLeft, aInOneLine);
+               end;
+    jvtArray: begin
+                TKMJsonArrayNew(Value).SaveToText(aText, aLeft, aInOneLine);
+               end;
+  end;
+end;
+
+//////////////////////////////////////            TKMJsonObject
+procedure TKMJsonObject.LoadFromFile(aPath: string);
+var S : String;
+  StringList : TStringList;
+  I, L : Cardinal;
+begin
+  If not FileExists(aPath) then
+    Exit;
+  StringList := TStringList.Create;
+  try
+    StringList.LoadFromFile(aPath);
+    S := StringList.Text;
+
+    I := 1;
+    while SysUtils.CharInSet(S[I], [#9, #10, ' ']) do
+    begin
+      Inc(I);
+    end;
+    fName := '';
+    L := 1;
+    LoadFromText(S, I, L);
+  finally
+
+  end;
+end;
+
+procedure TKMJsonObject.LoadFromText(var aText: string; var aID, aLine: Cardinal);
+var newObj : TKMJsonObject;
+  newArray : TKMJsonArrayNew;
+  vName : String;
+  vValue : String;
+  isValueSingle : Boolean;
+  nextValueExpected : Boolean;
+  procedure SkipComment;
+  begin
+    while (aText[aID] <> #10) and (aID < length(aText)) do
+      Inc(aID);
+  end;
+
+  procedure GetName;
+  var startID, aCount : Cardinal;
+  begin
+    Inc(aID);
+    aCount := 0;
+    startID := aID;
+    while (aText[aID] <> '"') and (aID < length(aText)) do
+    begin
+      Assert(not SysUtils.CharInSet(aText[aID], [#10]), 'Invalid symbols in value name at line : ' + aLine.ToString);
+      Inc(aCount);
+      Inc(aID);
+    end;
+    vName := Copy(aText, startID, aCount);
+    Assert(length(vName) <> 0, 'name of a parameter is invalid at line : ' + aLine.ToString);
+    Inc(aID);
+  end;
+
+  procedure GetStringValue;
+  var startID, aCount : Cardinal;
+  begin
+    Inc(aID);
+    aCount := 0;
+    startID := aID;
+    while (aText[aID] <> '"') and (aID < length(aText)) do
+    begin
+      Inc(aCount);
+      If aText[aID] = #10 then
+        Inc(aLine);
+      Inc(aID);
+    end;
+    vValue := Copy(aText, startID, aCount);
+    Assert(length(vValue) <> 0, 'string value of a parameter is invalid at line : ' + aLine.ToString);
+    Inc(aID);
+    IF aText[aID] = ',' then
+      nextValueExpected := true;
+  end;
+
+  procedure GetNumericValue;
+  var startID, aCount : Cardinal;
+  begin
+    aCount := 0;
+    startID := aID;
+    while SysUtils.CharInSet(aText[aID], ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']) and (aID < length(aText)) do
+    begin
+      Inc(aCount);
+      If aText[aID] = '.' then
+        isValueSingle := true;
+      Inc(aID);
+    end;
+    vValue := Copy(aText, startID, aCount);
+    Assert(length(vValue) <> 0, 'numeric value of a parameter is invalid at line : ' + aLine.ToString);
+    IF aText[aID] = ',' then
+      nextValueExpected := true;
+    //Inc(aID);
+  end;
+
+  procedure GetBooleanValue;
+  var checkString : String;
+    I : Integer;
+  begin
+
+    if SysUtils.CharInSet(aText[aID], ['f', 'F']) then
+      CheckString := 'false'
+    else
+    if SysUtils.CharInSet(aText[aID], ['t', 'T']) then
+      CheckString := 'true';
+
+    for I := 1 to length(CheckString) do
+    begin
+      Assert(LowerCase(aText[aID]) = CheckString[I], 'Boolean value is invalid at line : ' + aLine.ToString);
+      Inc(aID);
+    end;
+    vValue := CheckString;
+
+    IF aText[aID] = ',' then
+      nextValueExpected := true;
+  end;
+
+  procedure SkipAfterName;
+  var colonFound : Boolean;
+  begin
+    colonFound := false;
+
+    while SysUtils.CharInSet(aText[aID], [#$D, #10, #9, ' ', ':']) and (aID < length(aText)) do
+    begin
+      //Assert(aText[aID] <> #10, ': expected but #10 found');
+      If aText[aID] = ':' then
+      begin
+        Assert(not colonFound, 'double " : " found at line : ' + aLine.ToString);
+        colonFound := true;
+      end;
+      If aText[aID] = #10 then
+        Inc(aLine);
+      Inc(aID);
+    end;
+
+  end;
+
+  procedure AddNewValue(aType : TKMJsonValueType);
+  begin
+    AddToList(vName ,vValue, aType);
+    //nextValueExpected := false;
+  end;
+  procedure AddNewObject;
+  begin
+    AddObjectToList(vName, newObj);
+    //nextValueExpected := false;
+  end;
+  procedure AddNewArray;
+  begin
+    AddArrayToList(vName, newArray);
+    //nextValueExpected := false;
+  end;
+
+  procedure CheckForOneLiner;
+  var I, J : integer;
+  begin
+    I := aID;
+    J := 0;
+    while (aText[I] <> #10) and (J < 6) do
+    begin
+      If SysUtils.CharInSet(aText[I], ['"', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'f', 'F', 't', 'T', '[']) then
+        Inc(J);
+      Inc(I);
+    end;
+    fIsOneLiner := J > 2;
+  end;
+
+var objectFinished : Boolean;
+  tmpText : String;
+begin
+  fCount := 0;
+  objectFinished := false;
+  nextValueExpected := false;
+  Assert(aText[aID] = '{', 'Json doesn''t start with { at line : ' + aLine.ToString);
+  CheckForOneLiner;
+  tmpText := Copy(aText, aID, length(aText));
+  Inc(aID);
+  Repeat
+
+    If (aText[aID] = '/') and (aText[aID + 1] = '/') then
+      SkipComment
+    else
+    If (aText[aID] = '"')then
+    begin
+      If fCount > 0 then
+        Assert(nextValueExpected, ', not found after the parameter: "' + vName + '" : ' + vValue + '   at line : ' + aLine.ToString);
+      nextValueExpected := false;
+      GetName;
+      SkipAfterName;
+      If aText[aID] = '"' then
+      begin
+        GetStringValue;
+        AddNewValue(jvtString);
+      end else
+      If SysUtils.CharInSet(aText[aID], ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']) then
+      begin
+        isValueSingle := false;
+        GetNumericValue;
+        If isValueSingle then
+          AddNewValue(jvtSingle)
+        else
+          AddNewValue(jvtInteger);
+      end else
+      If SysUtils.CharInSet(aText[aID], ['f', 'F', 't', 'T']) then
+      begin
+        isValueSingle := false;
+        GetBooleanValue;
+        AddNewValue(jvtBoolean);
+      end else
+      If aText[aID] = '{' then
+      begin
+        newObj := TKMJsonObject.Create;
+        newObj.Name := vName;
+        newObj.LoadFromText(aText, aID, aLine);
+        AddNewObject;
+        If aText[aID] = ',' then
+          nextValueExpected := true;
+        //Inc(aID);
+      end else
+      If aText[aID] = '[' then
+      begin
+        newArray := TKMJsonArrayNew.Create;
+        newArray.Name := vName;
+        newArray.LoadFromText(aText, aID, aLine);
+        AddNewArray;
+        If aText[aID] = ',' then
+          nextValueExpected := true;
+        //Inc(aID);
+      end;
+    end else
+    If aText[aID] = ',' then
+      nextValueExpected := true
+    else
+      If aText[aID] = #10 then
+        Inc(aLine);
+
+    If aText[aID] = '}' then
+    begin
+      Assert(not nextValueExpected, 'Next parameter expected but found : } at line : ' + aLine.ToString);
+      objectFinished := true;
+    end;
+    Assert(aText[aID] <> ']', 'unexpected ] found at line : ' + aLine.ToString);
+    Inc(aID);
+  Until (aID > length(aText)) or objectFinished;
+end;
+
+procedure TKMJsonObject.SaveToFile(aPath: string);
+var S : string;
+  stringList : TStringList;
+begin
+  S := '';
+  stringList := TStringList.Create;
+  try
+    SaveToText(S, 0, fIsOneLiner);
+    stringList.Add(S);
+    stringList.SaveToFile(aPath);
+  finally
+    stringList.Free;
+  end;
+end;
+
+destructor TKMJsonObject.Destroy;
+var I : integer;
+begin
+  for I := 0 to High(fList) do
+    If fList[I].ValueType in [jvtObject, jvtArray] then
+    begin
+      TObject(fList[I].Value).Free;
+    end;
+  Inherited;
+end;
+
+procedure TKMJsonObject.AddTabs(var aText: string; aCount: Integer);
+var I : Integer;
+begin
+  for I := 1 to aCount do
+    aText := aText + #9;
+end;
+
+procedure TKMJsonObject.AddToList(var aName, aValue : String; aType : TKMJsonValueType);
+begin
+  Inc(fCount);
+  If fCount > length(fList) then
+    SetLength(fList, fCount + 10);
+  String(fList[fCount - 1].Name) := aName;
+  String(fList[fCount - 1].Value) := aValue;
+  fList[fCount - 1].ValueType := aType;
+end;
+procedure TKMJsonObject.AddObjectToList(aName : String; aObject : TKMJsonObject);
+begin
+  aObject.fName := aName;
+  Inc(fCount);
+  If fCount > length(fList) then
+    SetLength(fList, fCount + 10);
+  String(fList[fCount - 1].Name) := aName;
+  fList[fCount - 1].Value := Pointer(aObject);
+  fList[fCount - 1].ValueType := jvtObject;
+end;
+procedure TKMJsonObject.AddArrayToList(aName : String; aArray : TKMJsonArrayNew);
+begin
+  aArray.fName := aName;
+  Inc(fCount);
+  If fCount > length(fList) then
+    SetLength(fList, fCount + 10);
+  String(fList[fCount - 1].Name) := aName;
+  fList[fCount - 1].Value := Pointer(aArray);
+  fList[fCount - 1].ValueType := jvtArray;
+end;
+
+procedure TKMJsonObject.AddValue(aName: string; aValue: string; aType : TKMJsonValueType);
+begin
+  AddToList(
+    aName,//fDataList[AddStringToData(aName)],
+    aValue,//fDataList[AddStringToData(aValue)],
+    aType
+    );
+end;
+
+procedure TKMJsonObject.Add(aName: string; aValue: string);       begin AddValue(aName, aValue, jvtString); end;
+procedure TKMJsonObject.Add(aName : String; aValue : Byte);       begin AddValue(aName, aValue.ToString, jvtInteger); end;
+procedure TKMJsonObject.Add(aName : String; aValue : ShortInt);   begin AddValue(aName, aValue.ToString, jvtInteger); end;
+procedure TKMJsonObject.Add(aName : String; aValue : Word);       begin AddValue(aName, aValue.ToString, jvtInteger); end;
+procedure TKMJsonObject.Add(aName : String; aValue : Integer);    begin AddValue(aName, aValue.ToString, jvtInteger); end;
+procedure TKMJsonObject.Add(aName : String; aValue : Cardinal);   begin AddValue(aName, aValue.ToString, jvtInteger); end;
+procedure TKMJsonObject.Add(aName : String; aValue : Single);     begin AddValue(aName, aValue.ToString, jvtSingle); end;
+procedure TKMJsonObject.Add(aName : String; aValue : Boolean);    begin AddValue(aName, aValue.ToString(true), jvtBoolean); end;
+
+function TKMJsonObject.AddObject(aName : String; aOneLiner : Boolean = false): TKMJsonObject;
+begin
+  Result := TKMJsonObject.Create;
+  Result.fName := aName;
+  Result.fIsOneLiner := aOneLiner;
+  Inc(fCount);
+  If fCount > length(fList) then
+    SetLength(fList, fCount + 10);
+  String(fList[fCount - 1].Name) := aName;
+  fList[fCount - 1].Value := Pointer(Result);
+  fList[fCount - 1].ValueType := jvtObject;
+end;
+
+function TKMJsonObject.AddArray(aName: string; aOneLiner : Boolean = false): TKMJsonArrayNew;
+begin
+  Result := TKMJsonArrayNew.Create;
+  Result.fName := aName;
+  Result.fIsOneLiner := aOneLiner;
+  Inc(fCount);
+  If fCount > length(fList) then
+    SetLength(fList, fCount + 10);
+  String(fList[fCount - 1].Name) := aName;
+  fList[fCount - 1].Value := Pointer(Result);
+  fList[fCount - 1].ValueType := jvtArray;
+end;
+
+function TKMJsonObject.IndexOf(aName: string): Integer;
+var I : Integer;
+begin
+  Result := -1;
+  for I := 0 to fCount - 1 do
+    if aName = String(fList[I].Name) then
+      Exit;
+end;
+
+function TKMJsonObject.GetValue(aName: string): PKMJsonValue;
+var I : Integer;
+begin
+  Result := nil;
+  I := IndexOf(aName);
+  If I = -1 then
+    Exit;
+  Result := @fList[I];
+end;
+
+function TKMJsonObject.GetI(aName : String) : Integer;
+var V : PKMJsonValue;
+begin
+  Result := 0;
+  V := GetValue(aName);
+  If V <> nil then
+    Assert(TryStrToInt(String(V.Value), Result), 'Value:' + String(V.Value) + '; is not integer');
+end;
+
+function TKMJsonObject.GetD(aName : String) : Single;
+var V : PKMJsonValue;
+begin
+  Result := 0;
+  V := GetValue(aName);
+  If V <> nil then
+    Assert(TryStrToFloat(String(V.Value), Result), 'Value:' + String(V.Value) + '; is not single');
+end;
+
+function TKMJsonObject.GetS(aName : String) : String;
+var V : PKMJsonValue;
+begin
+  Result := '';
+  V := GetValue(aName);
+  If V <> nil then
+    Result := String(V.Value);
+end;
+function TKMJsonObject.GetB(aName : String) : Boolean;
+var V : PKMJsonValue;
+begin
+  Result := false;
+  V := GetValue(aName);
+  If V <> nil then
+    Result := String(V.Value) = 'true';
+end;
+
+function TKMJsonObject.GetO(aName : String) : TKMJsonObject;
+var V : PKMJsonValue;
+begin
+  Result := nil;
+  V := GetValue(aName);
+  If V <> nil then
+    If TObject(V.Value) is TKMJsonObject then
+    Result := TKMJsonObject(V.Value);
+end;
+
+function TKMJsonObject.GetA(aName : String) : TKMJsonArrayNew;
+var V : PKMJsonValue;
+begin
+  Result := nil;
+  V := GetValue(aName);
+  If V <> nil then
+    If TObject(V.Value) is TKMJsonArrayNew then
+      Result := TKMJsonArrayNew(V.Value);
+end;
+
+procedure TKMJsonObject.SetI(aName : String; aValue : Integer);
+var V : PKMJsonValue;
+begin
+  V := GetValue(aName);
+
+  If V <> nil then
+  begin
+    V.ValueType := jvtInteger;
+    String(V.Value) := aValue.ToString
+  end else
+    Add(aName, aValue);
+end;
+
+procedure TKMJsonObject.SetD(aName : String; aValue : Single);
+var V : PKMJsonValue;
+begin
+  V := GetValue(aName);
+  If V <> nil then
+  begin
+    V.ValueType := jvtSingle;
+    String(V.Value) := aValue.ToString
+  end else
+    Add(aName, aValue);
+end;
+
+procedure TKMJsonObject.SetS(aName : String; aValue : String);
+var V : PKMJsonValue;
+begin
+  V := GetValue(aName);
+  If V <> nil then
+  begin
+    V.ValueType := jvtString;
+    String(V.Value) := aValue
+  end else
+    Add(aName, aValue);
+end;
+
+procedure TKMJsonObject.SetB(aName : String; aValue : Boolean);
+var V : PKMJsonValue;
+begin
+  V := GetValue(aName);
+  If V <> nil then
+  begin
+    V.ValueType := jvtBoolean;
+    String(V.Value) := aValue.ToString(true)
+  end else
+    Add(aName, aValue);
+end;
+
+procedure TKMJsonObject.SaveToText(var aText : String; aLeft : Integer; aInOneLine : Boolean);
+var I : Integer;
+begin
+
+
+  If fName <> '' then
+  begin
+    If aLeft > 0 then
+      If not aInOneLine then
+        aText := aText + #10;
+    If not aInOneLine then
+      AddTabs(aText, aLeft);
+    aText := aText + '"' + fName + '":';
+  end else
+  If aLeft > 0 then
+    If not aInOneLine then
+    begin
+      aText := aText + #10;//make new line and spaces before {
+      AddTabs(aText, aLeft);
+    end;
+
+  //make new line after name
+  If aLeft > 0 then
+    If not (aInOneLine or fIsOneLiner) then
+    begin
+      aText := aText + #10;
+      AddTabs(aText, aLeft);
+    end;
+
+  aText := aText + '{';
+
+  If fCount > 0 then
+  begin
+    //save first value
+    fList[0].SaveToObject(aText, aLeft + 1, aInOneLine or fIsOneLiner);
+    for I := 1 to fCount - 1 do
+    begin
+      aText := aText + ',';
+      fList[I].SaveToObject(aText, aLeft + 1, aInOneLine or fIsOneLiner);
+    end;
+  end;
+  If not (aInOneLine or fIsOneLiner) then
+  begin
+    aText := aText + #10;
+    AddTabs(aText, aLeft);
+  end;
+  aText := aText + '}';
+
+end;
+
+//////////////////////////////////////            TKMJsonArray
+
+procedure TKMJsonArrayNew.AddTabs(var aText: string; aCount: Integer);
+var I : Integer;
+begin
+  for I := 1 to aCount do
+    aText := aText + #9;
+end;
+
+procedure TKMJsonArrayNew.AddToList(aValue: string; aType: TKMJsonValueType);
+begin
+  Inc(fCount);
+  If fCount > length(fList) then
+    SetLength(fList, fCount + 10);
+  String(fList[fCount - 1].Name) := '';
+  String(fList[fCount - 1].Value) := aValue;
+  fList[fCount - 1].ValueType := aType;
+end;
+
+procedure TKMJsonArrayNew.AddObjectToList(aObject : TKMJsonObject);
+begin
+  aObject.fName := '';
+  Inc(fCount);
+  If fCount > length(fList) then
+    SetLength(fList, fCount + 10);
+  String(fList[fCount - 1].Name) := '';
+  fList[fCount - 1].Value := Pointer(aObject);
+  fList[fCount - 1].ValueType := jvtObject;
+end;
+procedure TKMJsonArrayNew.AddArrayToList(aArray : TKMJsonArrayNew);
+begin
+  aArray.fName := '';
+  Inc(fCount);
+  If fCount > length(fList) then
+    SetLength(fList, fCount + 10);
+  String(fList[fCount - 1].Name) := '';
+  fList[fCount - 1].Value := Pointer(aArray);
+  fList[fCount - 1].ValueType := jvtArray;
+end;
+
+
+
+function TKMJsonArrayNew.GetI(aIndex : Word) : Integer;
+begin
+  Result := 0;
+  If aIndex < fCount then
+    Assert(TryStrToInt(String(fList[aIndex].Value), Result), 'Value:' + String(fList[aIndex].Value) + '; is not integer');
+end;
+
+function TKMJsonArrayNew.GetD(aIndex : Word) : Single;
+begin
+  Result := 0;
+  If aIndex < fCount then
+    Assert(TryStrToFloat(String(fList[aIndex].Value), Result), 'Value:' + String(fList[aIndex].Value) + '; is not Single');
+end;
+function TKMJsonArrayNew.GetS(aIndex : Word) : String;
+begin
+  Result := '';
+  If aIndex < fCount then
+    Result := String(fList[aIndex].Value);
+end;
+function TKMJsonArrayNew.GetB(aIndex : Word) : Boolean;
+begin
+  Result := false;
+  If aIndex < fCount then
+    Result := String(fList[aIndex].Value) = 'true';
+end;
+
+function TKMJsonArrayNew.GetO(aIndex : Word) : TKMJsonObject;
+begin
+  Result := nil;
+  If aIndex < fCount then
+  begin
+    If TObject(fList[aIndex].Value) is TKMJsonObject then
+      Result := TKMJsonObject(fList[aIndex].Value);
+  end;
+end;
+
+function TKMJsonArrayNew.GetA(aIndex : Word) : TKMJsonArrayNew;
+begin
+  Result := nil;
+  If aIndex < fCount then
+  begin
+    If TObject(fList[aIndex].Value) is TKMJsonArrayNew then
+      Result := TKMJsonArrayNew(fList[aIndex].Value);
+  end;
+end;
+
+procedure TKMJsonArrayNew.SetI(aIndex : Word; aValue : Integer);
+begin
+  If aIndex < fCount then
+  begin
+    fList[aIndex].ValueType := jvtInteger;
+    String(fList[aIndex].Value) := aValue.ToString;
+  end else
+    Add(aValue);
+end;
+
+procedure TKMJsonArrayNew.SetD(aIndex : Word; aValue : Single);
+begin
+  If aIndex < fCount then
+  begin
+    fList[aIndex].ValueType := jvtSingle;
+    String(fList[aIndex].Value) := aValue.ToString;
+  end else
+    Add(aValue);
+end;
+
+procedure TKMJsonArrayNew.SetS(aIndex : Word; aValue : String);
+begin
+  If aIndex < fCount then
+  begin
+    fList[aIndex].ValueType := jvtString;
+    String(fList[aIndex].Value) := aValue;
+  end else
+    Add(aValue);
+end;
+procedure TKMJsonArrayNew.SetB(aIndex : Word; aValue : Boolean);
+begin
+  If aIndex < fCount then
+  begin
+    fList[aIndex].ValueType := jvtBoolean;
+    String(fList[aIndex].Value) := aValue.ToString(true);
+  end else
+    Add(aValue);
+end;
+
+destructor TKMJsonArrayNew.Destroy;
+var I : integer;
+begin
+  for I := 0 to High(fList) do
+    If fList[I].ValueType in [jvtObject, jvtArray] then
+    begin
+      TObject(fList[I].Value).Free;
+    end;
+  Inherited;
+end;
+procedure TKMJsonArrayNew.Add(aValue : String);     begin AddToList(aValue, jvtString); end;
+procedure TKMJsonArrayNew.Add(aValue : Byte);       begin AddToList(aValue.ToString, jvtInteger); end;
+procedure TKMJsonArrayNew.Add(aValue : ShortInt);   begin AddToList(aValue.ToString, jvtInteger); end;
+procedure TKMJsonArrayNew.Add(aValue : Word);       begin AddToList(aValue.ToString, jvtInteger); end;
+procedure TKMJsonArrayNew.Add(aValue : Integer);    begin AddToList(aValue.ToString, jvtInteger); end;
+procedure TKMJsonArrayNew.Add(aValue : Cardinal);   begin AddToList(aValue.ToString, jvtInteger); end;
+procedure TKMJsonArrayNew.Add(aValue : Single);     begin AddToList(aValue.ToString, jvtSingle); end;
+procedure TKMJsonArrayNew.Add(aValue : Boolean);    begin AddToList(aValue.ToString, jvtBoolean); end;
+
+function TKMJsonArrayNew.AddObject(aOneLiner : Boolean = false): TKMJsonObject;
+begin
+  Result := TKMJsonObject.Create;
+  Result.Name := '';
+  Result.fIsOneLiner := aOneLiner;
+  Inc(fCount);
+  If fCount > length(fList) then
+    SetLength(fList, fCount + 10);
+  String(fList[fCount - 1].Name) := '';
+  fList[fCount - 1].Value := Pointer(Result);
+  fList[fCount - 1].ValueType := jvtObject;
+end;
+
+function TKMJsonArrayNew.AddArray(aOneLiner : Boolean = false): TKMJsonArrayNew;
+begin
+  Result := TKMJsonArrayNew.Create;
+  Result.Name := '';
+  Result.fIsOneLiner := aOneLiner;
+  Inc(fCount);
+  If fCount > length(fList) then
+    SetLength(fList, fCount + 10);
+  String(fList[fCount - 1].Name) := '';
+  fList[fCount - 1].Value := Pointer(Result);
+  fList[fCount - 1].ValueType := jvtArray;
+end;
+
+
+procedure TKMJsonArrayNew.SaveToText(var aText: string; aLeft: Integer; aInOneLine: Boolean);
+var I : Integer;
+begin
+  //make new line before name
+  If aLeft > 0 then
+    If not aInOneLine then
+      aText := aText + #10;
+  If not aInOneLine then
+    AddTabs(aText, aLeft);
+
+  If fName <> '' then
+    aText := aText + '"' + fName + '":';
+    //make new line after name
+  If aLeft > 0 then
+    If not (aInOneLine or fIsOneLiner) then
+    begin
+      aText := aText + #10;
+      AddTabs(aText, aLeft);
+    end;
+
+  aText := aText + '[';
+
+  If fCount > 0 then
+  begin
+    //save first value
+    fList[0].SaveToArray(aText, aLeft + 1, aInOneLine or fIsOneLiner);
+    for I := 1 to fCount - 1 do
+    begin
+      aText := aText + ',';
+      fList[I].SaveToArray(aText, aLeft + 1, aInOneLine or fIsOneLiner);
+    end;
+  end;
+  If not (aInOneLine or fIsOneLiner) then
+  begin
+    aText := aText + #10;
+    AddTabs(aText, aLeft);
+  end;
+  aText := aText + ']';
+end;
+
+procedure TKMJsonArrayNew.LoadFromText(var aText: string; var aID, aLine: Cardinal);
+var newObj : TKMJsonObject;
+  newArray : TKMJsonArrayNew;
+  vValue : String;
+  isValueSingle : Boolean;
+  nextValueExpected : Boolean;
+
+  function CkeckChar(aChar : Char; aSet : TSetOfAnsiChar) : Boolean;
+  begin
+    Result := CharInSet(aChar, aSet);
+  end;
+
+  procedure SkipComment;
+  begin
+    while (aText[aID] <> #10) and (aID < length(aText)) do
+      Inc(aID);
+  end;
+
+  procedure GetStringValue;
+  var startID, aCount : Cardinal;
+  begin
+    Inc(aID);
+    aCount := 0;
+    startID := aID;
+    while (aText[aID] <> '"') and (aID < length(aText)) do
+    begin
+      Inc(aCount);
+      If aText[aID] = #10 then
+        Inc(aLine);
+      Inc(aID);
+    end;
+    vValue := Copy(aText, startID, aCount);
+    Assert(length(vValue) <> 0, 'string value of a parameter is invalid at line : ' + aLine.ToString);
+    Inc(aID);
+    IF aText[aID] = ',' then
+      nextValueExpected := true;
+  end;
+
+  procedure GetNumericValue;
+  var startID, aCount : Cardinal;
+  begin
+    aCount := 0;
+    startID := aID;
+    while CkeckChar(aText[aID], ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']) and (aID < length(aText)) do
+    begin
+      Inc(aCount);
+      If aText[aID] = '.' then
+        isValueSingle := true;
+      Inc(aID);
+    end;
+    vValue := Copy(aText, startID, aCount);
+    Assert(length(vValue) <> 0, 'numeric value of a parameter is invalid at line : ' + aLine.ToString);
+    IF aText[aID] = ',' then
+      nextValueExpected := true;
+    //Inc(aID);
+  end;
+
+  procedure GetBooleanValue;
+  var checkString : String;
+    I : Integer;
+  begin
+
+    if SysUtils.CharInSet(aText[aID], ['f', 'F']) then
+      CheckString := 'false'
+    else
+    if SysUtils.CharInSet(aText[aID], ['t', 'T']) then
+      CheckString := 'true';
+
+    for I := 1 to length(CheckString) do
+    begin
+      Assert(LowerCase(aText[aID]) = CheckString[I], 'Boolean value is invalid at line : ' + aLine.ToString);
+      Inc(aID);
+    end;
+    vValue := CheckString;
+
+    IF aText[aID] = ',' then
+      nextValueExpected := true;
+  end;
+
+  procedure TrySkipEmpty;
+  var colonFound : Boolean;
+  begin
+    colonFound := false;
+    while SysUtils.CharInSet(aText[aID], [#$D, #10, #9, ' ']) and (aID < length(aText)) do
+    begin
+      //Assert(aText[aID] <> #10, ': expected but #10 found');
+      If aText[aID] = ':' then
+      begin
+        Assert(not colonFound, 'double " : " found at line : ' + aLine.ToString);
+        colonFound := true;
+      end;
+      If aText[aID] = #10 then
+        Inc(aLine);
+      Inc(aID);
+    end;
+  end;
+
+  procedure AddNewValue(aType : TKMJsonValueType);
+  begin
+    AddToList(vValue, aType);
+    //nextValueExpected := false;
+  end;
+  procedure AddNewObject;
+  begin
+    AddObjectToList(newObj);
+    //nextValueExpected := false;
+  end;
+  procedure AddNewArray;
+  begin
+    AddArrayToList(newArray);
+    //nextValueExpected := false;
+  end;
+
+  procedure CheckForOneLiner;
+  var I, J : integer;
+  begin
+    I := aID;
+    J := 0;
+    while (aText[I] <> #10) and (J < 6) do
+    begin
+      If SysUtils.CharInSet(aText[I], ['"', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'f', 'F', 't', 'T', '{']) then
+        Inc(J);
+      Inc(I);
+    end;
+    fIsOneLiner := J > 2;
+  end;
+
+
+var arrayFinished : Boolean;
+begin
+  fCount := 0;
+  arrayFinished := false;
+  nextValueExpected := false;
+  Assert(aText[aID] = '[', 'Json array doesn''t start with [ at line : ' + aLine.ToString);
+  CheckForOneLiner;
+  Inc(aID);
+  Repeat
+
+    If (aText[aID] = '/') and (aText[aID + 1] = '/') then
+      SkipComment;
+
+    TrySkipEmpty;
+    If SysUtils.CharInSet(aText[aID], ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'f', 'F', 't', 'T', '"', '{', '[']) then
+    begin
+      if fCount > 0 then
+        Assert( nextValueExpected, 'next value expected in array: ' + fName +  ' at line : ' + aLine.ToString);
+    end;
+    nextValueExpected := false;
+    If aText[aID] = '"' then
+    begin
+      GetStringValue;
+      AddNewValue(jvtString);
+    end else
+    If SysUtils.CharInSet(aText[aID], ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']) then
+    begin
+      isValueSingle := false;
+      GetNumericValue;
+      If isValueSingle then
+        AddNewValue(jvtSingle)
+      else
+        AddNewValue(jvtInteger);
+    end else
+    If SysUtils.CharInSet(aText[aID], ['f', 'F', 't', 'T']) then
+    begin
+      GetBooleanValue;
+      AddNewValue(jvtBoolean);
+    end else
+    If aText[aID] = '{' then
+    begin
+      newObj := TKMJsonObject.Create;
+      //newObj.Name := self.Name;
+      newObj.LoadFromText(aText, aID, aLine);
+      AddNewObject;
+      If aText[aID] = ',' then
+        nextValueExpected := true;
+      //Inc(aText[aID]);
+    end else
+    If aText[aID] = '[' then
+    begin
+      newArray := TKMJsonArrayNew.Create;
+      //newArray.Name := self.Name;
+      newArray.LoadFromText(aText, aID, aLine);
+      AddNewArray;
+      If aText[aID] = ',' then
+        nextValueExpected := true;
+      //Inc(aText[aID]);
+    end else
+    If aText[aID] = #10 then
+      Inc(aLine);
+
+    If aText[aID] = ']' then
+    begin
+      Assert(not nextValueExpected, 'Next value expected in json array but found : } at line : ' + aLine.ToString);
+      arrayFinished := true;
+    end;
+    Assert(aText[aID] <> '}', 'unexpected } found at line : ' + aLine.ToString);
+    Inc(aID);
+  Until (aID > length(aText)) or arrayFinished;
+end;
 
 end.

@@ -6131,9 +6131,13 @@ begin
                             CurrentAction.SubAction * [haFire1..haFire8],
                             WorkAnimStep, WorkAnimStepPrev, gHands[Owner].GameFlagColor);
     If ParentTree = nil then
-    gRenderPool.AddHouseWork(HouseType, fPosition,
-                            CurrentAction.SubAction - [haWork1, haWork2],
-                            WorkAnimStep, WorkAnimStepPrev, gHands[Owner].GameFlagColor);
+    begin
+      gRenderPool.AddHouseWork(HouseType, fPosition,
+                              CurrentAction.SubAction - [haWork1, haWork2],
+                              WorkAnimStep, WorkAnimStepPrev, gHands[Owner].GameFlagColor);
+
+      gRenderPool.AddSpriteWH(fPosition, KMPOINT_ZERO, 2208, rxHouses, gHands[Owner].GameFlagColor);//log
+    end;
   end;
 
   if fStartAnim > 0 then
@@ -6791,7 +6795,7 @@ end;
 
 
 procedure TKMHousePalace.Paint;
-  {procedure PaintDeposits;
+  procedure PaintDeposits;
   var list : TKMPointTagList;
     I, tile : Integer;
     C, factor : Cardinal;
@@ -6825,7 +6829,7 @@ procedure TKMHousePalace.Paint;
       gRenderPool.RenderTerrain.RenderTile(tile, list[I].X, list[I].Y, 0);
     end;
     list.Free;
-  end; }
+  end;
 var I : Integer;
 begin
   Inherited;
@@ -6834,8 +6838,8 @@ begin
   begin
     for I := 1 to 4 do
         gRenderPool.AddHousePalaceFlags(HouseType, fPosition, I, FlagAnimStep + I * 10, gHands[Owner].FlagColor);
-    {if gMySpectator.Selected = self then
-      PaintDeposits;}
+    if gMySpectator.Selected = self then
+      PaintDeposits;
   end;
 
 end;

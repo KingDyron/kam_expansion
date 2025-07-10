@@ -492,6 +492,23 @@ begin
     Sender.AddTypeS('TKMLockFieldType', '(lftRoadStone, lftRoadWooden, lftRoadClay, lftRoadExclusive, lftPalisade,' +
                       'lftField, lftGrassField, lftVegetablesField, lftWineField, lftRemove)');
 
+    Sender.AddTypeS('TKMUnitStats', 'record ' +
+        'ID : Integer; ' +
+        'GroupID : Integer; ' +
+        'UnitType : TKMUnitType; ' +
+        'Attack: Word; ' +
+        'Defence: Word; ' +
+        'AttackHorse: Word; ' +
+        'HP: Word; ' +
+        'MaxHP: Word; ' +
+        'Speed : Word; ' +
+        'Sight : Word; ' +
+        'Condition : Word; ' +
+        'DamageHouse : Word; ' +
+        'DamageUnits : Word; ' +
+        'Ammo : Word; ' +
+      'end;');
+
     //*Types-Reg*//
 
     // Add CampaignData type and variable only after addition of all other custom types,
@@ -753,6 +770,7 @@ begin
     RegisterMethodCheck(c, 'function  WareTypeToID(aWareType: TKMWareType): Integer');
     RegisterMethodCheck(c, 'function  WareIdToType(aWareType: Integer): TKMWareType');
     RegisterMethodCheck(c, 'function  WarriorInFight(aUnitID: Integer; aCountCitizens: Boolean): Boolean');
+    RegisterMethodCheck(c, 'function  UnitStats(aUnitID: Integer): TKMUnitStats');
     //*States-Check*//
 
     c := Sender.AddClassN(nil, AnsiString(fActions.ClassName));
@@ -1000,6 +1018,9 @@ begin
     RegisterMethodCheck(c, 'function  UnitOrderWalk(aUnitID: Integer; X, Y: Integer): Boolean');
     RegisterMethodCheck(c, 'function  UnitSetInstantKill(aUnitID: Integer; isInstant: Boolean): Boolean');
     RegisterMethodCheck(c, 'procedure  UnitBlockWalking(aUnitID: Integer; aBlock: Boolean)');
+
+    RegisterMethodCheck(c, 'procedure  UnitSetRage(aUnitID: Integer; aDuration: Integer)');
+    RegisterMethodCheck(c, 'procedure  UnitSetStats(aUnitID: Integer; aStats: TKMUnitStats)');
     //*Actions-Check*//
 
     c := Sender.AddClassN(nil, AnsiString(fUtils.ClassName));
@@ -1568,6 +1589,8 @@ begin
       RegisterMethod(@TKMScriptStates.WareTypeToID, 'WareTypeToID');
       RegisterMethod(@TKMScriptStates.WareIdToType, 'WareIdToType');
       RegisterMethod(@TKMScriptStates.WarriorInFight, 'WarriorInFight');
+
+      RegisterMethod(@TKMScriptStates.UnitStats, 'UnitStats');
       //*States-Reg*//
     end;
 
@@ -1796,6 +1819,8 @@ begin
       RegisterMethod(@TKMScriptActions.UnitOrderWalk, 'UnitOrderWalk');
       RegisterMethod(@TKMScriptActions.UnitSetInstantKill, 'UnitSetInstantKill');
       RegisterMethod(@TKMScriptActions.UnitBlockWalking, 'UnitBlockWalking');
+      RegisterMethod(@TKMScriptActions.UnitSetRage, 'UnitSetRage');
+      RegisterMethod(@TKMScriptActions.UnitSetStats, 'UnitSetStats');
       //*Actions-Reg*//
     end;
 

@@ -432,6 +432,12 @@ type
 
   TKMBridgeTileRect = array of array of TKMBridgeTile;
 
+  TKMUnitStats = record
+    ID, GroupID : Integer;
+    UnitType : TKMUnitType;
+    Attack, Defence, AttackHorse, HP, MaxHP, Speed, Sight,
+    Condition, DamageHouse, DamageUnits, Ammo: Word;
+  end;
 type
   TKMPastureAnimalType = (patNone, patCow, patGoose, patRabbit, patChicken, patBull, patSheep, patOstrich);
   TKMPastureAnimalAction = (paaWalk, paaEat, paaWatch, paaLayDown, paaLying, paaStandUp);
