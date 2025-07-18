@@ -1467,6 +1467,7 @@ begin
     5:  begin
           SetActionLockedStay(IfThen(BootsAdded or gHands[Owner].HasPearl(ptArium), 5, 11),uaWork1,False);
           gTerrain.FlattenTerrain(fCellsToDig[fLastToDig]);
+          gTerrain.ResetDigState(fCellsToDig[fLastToDig]);
         end;
     6:  begin
           if BootsAdded or gHands[Owner].HasPearl(ptArium) then
@@ -1488,7 +1489,6 @@ begin
 
           if not ((fHouse.HouseType = htAppleTree) and KMSamePoint(fHouse.Entrance, fCellsToDig[fLastToDig])) then
             gTerrain.RemoveObject(fCellsToDig[fLastToDig]); //All objects are removed
-
           If fHouse.HouseType = htPasture then
             gTerrain.SetLand( TKMHousePasture(fHouse).GetPastureTileType, fCellsToDig[fLastToDig].X, fCellsToDig[fLastToDig].Y, 255);
 
@@ -1567,7 +1567,7 @@ end;
 destructor TKMTaskBuildHouse.Destroy;
 begin
   //We are no longer connected to the House (it's either done or we died)
-  gHands[fUnit.Owner].Constructions.HouseList.RemWorker(fBuildID);
+  gHands[fUnit.Owner].Constructions.HouseList.RemWorker(fBuildID, TKMUnitWorker(fUnit));
   gHands.CleanUpHousePointer(fHouse);
   FreeAndNil(fCells);
   inherited;
@@ -1644,7 +1644,10 @@ begin
         end;
     3:  begin
           //Start animation
-          SetActionLockedStay(5, uaWork, False);
+          If fUnit.UnitType = utHouseBuilder then
+            SetActionLockedStay(7, uaWork, False)
+          else
+            SetActionLockedStay(5, uaWork, False);
           Direction := fBuildFrom.Dir;
           //Remove house plan when we start the stone phase (it is still required for wood)
           //But don't do it every time we hit if it's already done!
@@ -1659,8 +1662,14 @@ begin
 
           if (fUnit.BootsAdded or gHands[Owner].HasPearl(ptArium)) and (fPhase2 mod 2 = 0)then
             fHouse.IncBuildingProgress;
+          If fUnit.UnitType = utHouseBuilder then
+            fHouse.IncBuildingProgress;
 
-          SetActionLockedStay(6, uaWork, False, 0, 5); //Do building and end animation
+          If fUnit.UnitType = utHouseBuilder then
+            SetActionLockedStay(0, uaWork, False, 0, 7)
+          else
+            SetActionLockedStay(6, uaWork, False, 0, 5); //Do building and end animation
+
           if fHouse.PlaceRoad then
               gTerrain.SetRoad(fHouse.Entrance, Owner, gTerrain.GetRoadType(fHouse.Entrance.X, fHouse.Entrance.Y + 1));
           Inc(fPhase2);
@@ -1729,7 +1738,7 @@ end;
 destructor TKMTaskBuildHouseUpgrade.Destroy;
 begin
   //We are no longer connected to the House (it's either done or we died)
-  gHands[fUnit.Owner].Constructions.HouseUpgradeList.RemWorker(fBuildID);
+  gHands[fUnit.Owner].Constructions.HouseUpgradeList.RemWorker(fBuildID, TKMUnitWorker(fUnit));
   gHands.CleanUpHousePointer(fHouse);
   FreeAndNil(fCells);
   inherited;
@@ -1818,6 +1827,8 @@ begin
     4:  begin
           //Update house on hummer hit
           fHouse.IncBuildingUpgradeProgress;
+          If fUnit.UnitType = utHouseBuilder then
+            fHouse.IncBuildingUpgradeProgress;
           if BootsAdded or gHands[Owner].HasPearl(ptArium) then
             fHouse.IncBuildingUpgradeProgress;
           SetActionLockedStay(6, uaWork, False, 0, 5); //Do building and end animation
@@ -1887,7 +1898,7 @@ end;
 destructor TKMTaskBuildPearl.Destroy;
 begin
   //We are no longer connected to the House (it's either done or we died)
-  gHands[fUnit.Owner].Constructions.PearlList.RemWorker(fBuildID);
+  gHands[fUnit.Owner].Constructions.PearlList.RemWorker(fBuildID, TKMUnitWorker(fUnit));
   gHands.CleanUpHousePointer(TKMHouse(fPearl));
   FreeAndNil(fCells);
   inherited;
@@ -1972,6 +1983,8 @@ begin
           fPearl.IncBuildingPearlProgress;
           if BootsAdded or gHands[Owner].HasPearl(ptArium) then
             fPearl.IncBuildingPearlProgress;
+          If fUnit.UnitType = utHouseBuilder then
+            fPearl.IncBuildingPearlProgress;
           SetActionLockedStay(6, uaWork, False, 0, 5); //Do building and end animation
           Inc(fPhase2);
         end;
@@ -2039,7 +2052,7 @@ end;
 
 destructor TKMTaskBuildHouseRepair.Destroy;
 begin
-  gHands[fUnit.Owner].Constructions.RepairList.RemWorker(fRepairID);
+  gHands[fUnit.Owner].Constructions.RepairList.RemWorker(fRepairID, TKMUnitWorker(fUnit));
   gHands.CleanUpHousePointer(fHouse);
   FreeAndNil(fCells);
   inherited;
@@ -2114,6 +2127,8 @@ begin
             fHouse.AddRepair;
             if BootsAdded or gHands[Owner].HasPearl(ptArium) then
               fHouse.AddRepair;
+            If fUnit.UnitType = utHouseBuilder then
+              fHouse.AddRepair;
 
             SetActionLockedStay(6, uaWork,False, 0, 5); //Do building and end animation
             inc(fPhase2);
@@ -2185,7 +2200,7 @@ end;
 destructor TKMTaskBuildStructure.Destroy;
 begin
   FreeAndNil(fCells);
-  gHands[fUnit.Owner].Constructions.StructureList.RemWorker(fBuildID);
+  gHands[fUnit.Owner].Constructions.StructureList.RemWorker(fBuildID, TKMUnitWorker(fUnit));
   inherited;
 end;
 
@@ -2262,16 +2277,24 @@ begin
             SetActionLockedStay(0, uaWalk);
           end;
       3:  begin
-            SetActionLockedStay(5, uaWork, False, 0, 0); //Start animation
+            If fUnit.UnitType = utHouseBuilder then
+              SetActionLockedStay(7, uaWork, False)
+            else
+              SetActionLockedStay(5, uaWork, False, 0, 0); //Start animation
             Direction := fBuildFrom.Dir;
           end;
       4:  begin
             fStructure.IncBuildingProgress;
+            If fUnit.UnitType = utHouseBuilder then
+              fStructure.IncBuildingProgress;
             if BootsAdded or gHands[Owner].HasPearl(ptArium) then
               fStructure.IncBuildingProgress;
 
 
-            SetActionLockedStay(6, uaWork,False, 0, 5); //Do building and end animation
+            If fUnit.UnitType = utHouseBuilder then
+              SetActionLockedStay(0, uaWork, False, 0, 7)
+            else
+              SetActionLockedStay(6, uaWork,False, 0, 5); //Do building and end animation
             inc(fPhase2);
             if fUnit.IsHungry then
               Result := trTaskDone;

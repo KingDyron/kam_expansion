@@ -19,6 +19,7 @@ type
     function GetUnit(aIndex: Integer): TKMUnit; inline;
     function GetCount: Integer;
   public
+    Feeders: TList<TKMUnit>;
     constructor Create;
     destructor Destroy; override;
     function AddUnit(aOwner: TKMHandID; aUnitType: TKMUnitType; const aLoc: TKMPointDir; aAutoPlace: Boolean = True;
@@ -63,6 +64,7 @@ begin
   inherited Create;
 
   fUnits := TKMList.Create;
+  Feeders := TList<TKMUnit>.Create;
   fAmmoCarts := TList<TKMUnit>.Create;
 end;
 
@@ -72,6 +74,7 @@ begin
   //No need to free units individually since they are Freed by TKMList.Clear command in destructor
   fUnits.Free;
   fAmmoCarts.Free;
+  Feeders.Free;
   inherited;
 end;
 
@@ -80,6 +83,7 @@ procedure TKMUnitsCollection.Clear;
 begin
   fUnits.Clear;
   fAmmoCarts.Clear;
+  Feeders.Clear;
 end;
 
 
@@ -134,12 +138,14 @@ begin
   uid := gUIDTracker.GetNewUID;
   case aUnitType of
     utSerf:                       Result := TKMUnitSerf.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
+    utHouseBuilder,
     utBuilder:                    Result := TKMUnitWorker.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
     utWoodcutter:                 Result := TKMUnitWoodcutter.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
     utClayPicker,
     utMiner..utFisher,
     {utBuilder,}
     utStonemason..utMetallurgist: Result := TKMUnitCitizen.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
+    utFeeder:                     Result := TKMUnitFeeder.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
     utOperator,
     utRecruit:                    Result := TKMUnitRecruit.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
     WARRIOR_MIN..WARRIOR_MAX:     case aUnitType of
@@ -169,8 +175,13 @@ begin
     fUnits.Add(Result);
 
     if not gGameParams.IsMapEditor then
+    begin
       if aUnitType = utAmmoCart then
-        fAmmoCarts.Add(Result);
+        fAmmoCarts.Add(Result)
+      else
+      if aUnitType = utFeeder then
+        Feeders.Add(Result);
+    end;
   end;
 end;
 
@@ -364,6 +375,7 @@ begin
     LoadStream.Read(unitType, SizeOf(unitType));
     case unitType of
       utSerf:                   U := TKMUnitSerf.Load(LoadStream);
+      utHouseBuilder,
       utBuilder:                U := TKMUnitWorker.Load(LoadStream);
       utWoodCutter..utFisher,
       {utWorker,}
@@ -372,6 +384,7 @@ begin
                                 U := TKMUnitCitizen.Load(LoadStream);
       utOperator,
       utRecruit:                U := TKMUnitRecruit.Load(LoadStream);
+      utFeeder:                 U := TKMUnitFeeder.Load(LoadStream);
       WARRIOR_MIN..WARRIOR_MAX: case unitType of
                                   utSpy           : U := TKMUnitWarriorSpy.Load(LoadStream);
                                   utAmmoCart      : U := TKMUnitWarriorAmmoCart.Load(LoadStream);
@@ -397,7 +410,10 @@ begin
     begin
       fUnits.Add(U);
       if unitType = utAmmoCart then
-        fAmmoCarts.Add(U);
+        fAmmoCarts.Add(U)
+      else
+      if unitType = utFeeder then
+        Feeders.Add(U);
     end
     else
       gLog.AddAssert('Unknown unit type in Savegame');

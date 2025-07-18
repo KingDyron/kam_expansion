@@ -2382,7 +2382,14 @@ begin
                     end;
 
     cmOverlays:     if (ssLeft in gCursor.SState) then
-                      gTerrain.SetOverlay(gCursor.Cell, TKMTileOverlay(gCursor.Tag1), ssShift in gCursor.SState); //Holding shift allows overwrite roads
+                    begin
+                      If gCursor.MapEdApplyOverlayOnRoad then
+                        If gTerrain.TileHasRoad(gCursor.Cell) then
+                          gTerrain.SetOverlay(gCursor.Cell, TKMTileOverlay(gCursor.Tag1), false) //Holding shift allows overwrite roads
+                        else
+                      else
+                        gTerrain.SetOverlay(gCursor.Cell, TKMTileOverlay(gCursor.Tag1), ssShift in gCursor.SState); //Holding shift allows overwrite roads
+                    end;
   end;
 end;
 

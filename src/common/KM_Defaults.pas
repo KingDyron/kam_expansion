@@ -662,6 +662,7 @@ type
     utFarmer,       utCarpenter,    utBaker,         utButcher,
     utFisher,       utBuilder,      utStonemason,    utSmith,
     utMetallurgist, utRecruit,      utOperator,      utClayPicker,
+    utFeeder,       utHouseBuilder,
 
     utMilitia,      utAxeFighter,   utSwordFighter,  utBowman,
     utCrossbowman,  utLanceCarrier, utPikeman,       utScout,
@@ -693,7 +694,7 @@ const
   UNIT_MIN = utSerf;
   UNIT_MAX = utSpider;
   CITIZEN_MIN = utSerf;
-  CITIZEN_MAX = utClayPicker;
+  CITIZEN_MAX = utHouseBuilder;
   WARRIOR_MIN = utMilitia;
   WARRIOR_MAX = utMobileTower;
   WARRIOR_EQUIPABLE_BARRACKS_MIN = utMilitia; //Available from barracks
@@ -711,7 +712,7 @@ const
   UNITS_CITIZEN = [CITIZEN_MIN..CITIZEN_MAX];
   UNITS_WARRIORS = [WARRIOR_MIN..WARRIOR_MAX];
   UNITS_HUMAN = [HUMANS_MIN..HUMANS_MAX];
-  UNITS_NEW = [utOperator, utClayPicker, utRam .. HUMANS_MAX];
+  {UNITS_NEW = [utOperator, utFeeder, utClayPicker, utHouseBuilder, utRam .. HUMANS_MAX];}
   WARRIORS_IRON = [utSwordFighter, utCrossbowman, utPikeman, utKnight, utWarrior, utFlailFighter, utShieldBearer];
   SPECIAL_UNITS = [utPaladin, utTrainedWolf, utArcher, utSpy, utAmmoCart, utShip, utBoat, utBattleShip, utPyro, utLekter];
 
@@ -834,7 +835,7 @@ type
         uttThrowRock, uttBuildPalisade, uttBuildRemove, uttBuildHouseUpgrade, uttGoGetBoots, uttBuildStructure,
         uttGoToShip, uttBuildGrassLand, uttUnloadFromShip, uttGoToStore, uttGoToLoc, uttCollectWares, uttUnloadWares,
         uttGoToWell, uttTakeOverHouse, uttMerchant, uttCartographer, uttBuildPearl, uttPearlRally, uttGoToPearl,
-        uttForestCutter);
+        uttForestCutter, uttFeedGroup);
 
   TKMUnitActionName = (uanStay, uanWalkTo, uanGoInOut, uanAbandonWalk, uanFight, uanStormAttack, uanSteer);
 

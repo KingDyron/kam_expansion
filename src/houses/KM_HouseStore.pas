@@ -4,7 +4,7 @@ interface
 uses
   KM_Houses,
   KM_ResTypes,
-  KM_Defaults, KM_CommonClasses;
+  KM_Defaults, KM_Points, KM_CommonClasses;
 
 type
   // Storehouse keeps all the wares and flags for them
@@ -34,6 +34,9 @@ type
     function CheckWareIn(aWare: TKMWareType): Word; override;
     function CheckWareOut(aWare: TKMWareType): Word; override;
     function CheckWareTotal(aWare: TKMWareType): Word; override;
+
+    function FoodCount : Integer;
+
     procedure SetWareInCnt(aWare : TKMWareType; aValue : Integer);
     procedure WareTakeFromOut(aWare: TKMWareType; aCount: Word = 1; aFromScript: Boolean = False); override;
     function WareCanAddToIn(aWare: TKMWareType): Boolean; override;
@@ -45,6 +48,10 @@ type
     property TotalCount : Integer read fTotalCount;
     property MaxCount : Integer read fMaxCount write fMaxCount;
     procedure BlockAll(aTakeOut, aBlocked : Boolean);
+
+    {function HasMoreEntrances : Boolean; override;
+    function GetClosestEntrance(aLoc : TKMPoint) : TKMPointDir; override;
+    function Entrances : TKMPointDirArray; override;}
   end;
 const
   MAX_STORE_CAPACITY = 4000;
@@ -220,6 +227,14 @@ begin
   Result := CheckWareIn(aWare);
 end;
 
+function TKMHouseStore.FoodCount: Integer;
+var WT : TKMWareType;
+begin
+  Result := 0;
+  for WT in WARES_HOUSE_FOOD do
+    Result := Result + fWaresCount[WT];
+end;
+
 procedure TKMHouseStore.SetWareInCnt(aWare: TKMWareType; aValue: Integer);
 begin
   if aWare in WARES_VALID then
@@ -345,5 +360,44 @@ begin
       NotAcceptFlag[WT] := aBlocked;
 end;
 
+{
+function TKMHouseStore.HasMoreEntrances: Boolean;
+begin
+  Result := true;
+end;
+
+function TKMHouseStore.Entrances: TKMPointDirArray;
+begin
+  Result := [
+              KMPointDir(Entrance.X, Entrance.Y, dirS),
+              KMPointDir(Entrance.X, Entrance.Y - 2, dirN)
+            ];
+end;
+
+
+function TKMHouseStore.GetClosestEntrance(aLoc: TKMPoint): TKMPointDir;
+const  ENTRANCE_POS : array[1..2] of TKMPoint = ( (X : 0; Y : 0),
+                                                (X : 0; Y : -2));
+const  ENTRANCE_DIR : array[1..2] of TKMDirection = (dirS, dirN);
+
+var I : Integer;
+  lastDist, tmp : Single;
+begin
+  Result := Inherited;
+  //return random for testing;
+
+  lastDist := 99999;
+  for I := low(ENTRANCE_POS) to High(ENTRANCE_POS) do
+  begin
+    tmp := KMLength(aLoc, Entrance + ENTRANCE_POS[I]);
+    If tmp < lastDist then
+    begin
+      lastDist := tmp;
+      Result.Loc := Entrance + ENTRANCE_POS[I];
+      Result.Dir := ENTRANCE_DIR[I];
+    end;
+  end;
+
+end;  }
 
 end.

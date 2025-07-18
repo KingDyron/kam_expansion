@@ -199,7 +199,7 @@ type
 const
   //This is a map of the valid values for !SET_UNIT,
   //TSK did not had place for new warriors that were inserted in the middle(!)
-  UNIT_OLD_ID_TO_TYPE: array[0..46] of TKMUnitType = (
+  UNIT_OLD_ID_TO_TYPE: array[0..48] of TKMUnitType = (
     utSerf,utWoodcutter,utMiner,utAnimalBreeder,utFarmer,
     utCarpenter,utBaker,utButcher,utFisher,utBuilder,
     utStonemason,utSmith,utMetallurgist,utRecruit, //Units
@@ -208,13 +208,13 @@ const
     utWolf,utFish,utWatersnake,utSeastar,utCrab,
     utWaterflower,utWaterleaf,utDuck, utRam, utGolem, utGiant, utOperator, utClayPicker,
     utDeerMale, utDeerFemale, utFox, utBoar, utBear, utLandDuck, utRabbit,
-    utWhiteBear, utSandSnake, utSpider); //Animals
+    utWhiteBear, utSandSnake, utSpider, utFeeder, utHouseBuilder); //Animals
 
   //and the corresponing unit that will be created (matches KaM behavior)
   UNIT_TYPE_TO_OLD_ID: array[TKMUnitType] of integer = (
     -1, -1, //utNone, utAny
     0,1,2,3,4,5,6,7,8,9,10,11,12,13, //Citizens
-    35, 36,
+    35, 36, 47, 48,
     14,15,16,17,18,19,20,21,22,23, //Warriors
     -1,-1,-1,-1, -1,-1, -1, -1, -1, -1, -1, - 1, -1, -1, -1, -1, //TPR warriors (can't be placed with SET_UNIT)
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -222,7 +222,7 @@ const
     44, 45, 46); //Animals
 
   //This is a map of the valid values for !SET_GROUP, and the corresponing unit that will be created (matches KaM behavior)
-  UNIT_ID_TO_TYPE: array[0..76] of TKMUnitType = (
+  UNIT_ID_TO_TYPE: array[0..78] of TKMUnitType = (
     utSerf,utWoodcutter,utMiner,utAnimalBreeder,utFarmer,
     utCarpenter,utBaker,utButcher,utFisher,utBuilder,
     utStonemason,utSmith,utMetallurgist,utRecruit, //Units
@@ -240,14 +240,14 @@ const
     utTorchMan, utMedic, utBattleShip, utBoat,
     utPyro, utLekter, utDeerMale, utDeerFemale, utFox, utBoar, utBear,
     utLandDuck, utRabbit,utWhiteBear, utSandSnake, utSpider,
-    utMobileTower,
+    utMobileTower, utFeeder, utHouseBuilder,
     utNone, utNone, utNone
     );
 
   UNIT_TYPE_TO_ID: array[TKMUnitType] of ShortInt = (
     -1, -1, //utNone, utAny
     0,1,2,3,4,5,6,7,8,9,10,11,12,13, //Citizens
-    51,56,//new citizens
+    51,56, 74, 75,//new citizens
     14,15,16,17,18,19,20,21,22,23, //Warriors
     24,25,26,27, 28,29,//TPR warriors
     38, 39, 40, 41, 42, 43, 44, 45, 46, 47,//My Warriors
@@ -533,6 +533,8 @@ const
     [uaWalk, uaSpec, uaDie, uaEat], //Recruit
     [uaWalk, uaSpec, uaDie, uaEat], //operator
     [uaWalk, uaWork, uaDie, uaEat, uaSpec, uaWork1, uaStay], //ClayPicker
+    [uaWalk, uaWalkTool, uaSpec, uaDie, uaEat], //feeder
+    [uaWalk, uaWork, uaSpec, uaDie, uaEat], //HouseBuilder
     [uaWalk, uaWork, uaSpec, uaDie, uaEat], //Militia
     [uaWalk, uaWork, uaSpec, uaDie, uaEat], //Axeman
     [uaWalk, uaWork, uaSpec, uaDie, uaEat], //Swordsman
@@ -607,7 +609,7 @@ end;
 // Where unit would like to be
 function TKMUnitSpec.GetDesiredPassability: TKMTerrainPassability;
 begin
-  if fUnitType in [CITIZEN_MIN..CITIZEN_MAX] - [utBuilder] then
+  if fUnitType in [CITIZEN_MIN..CITIZEN_MAX] - [utBuilder, utFeeder, utHouseBuilder] then
     Result := tpWalkRoad //Citizens except Worker
   else
     Result := GetAllowedPassability; //Workers, warriors, animals
@@ -702,7 +704,9 @@ begin
     utWhiteBear : Result := 969;
     utSandSnake : Result := 970;
     utSpider : Result := 971;
-      utMobileTower: Result := 1038;
+    utMobileTower: Result := 1038;
+    utFeeder: Result := 1069;
+    utHouseBuilder: Result := 1071;
   else
     if IsCitizen then
       Result := 141 + UNIT_TYPE_TO_ID[fUnitType]
@@ -751,6 +755,8 @@ begin
       utPyro: Result := 947;
       utLekter: Result := 951;
       utMobileTower: Result := 1037;
+      utFeeder: Result := 1070;
+      utHouseBuilder: Result := 1072;
     end;
   end;
 end;
@@ -763,7 +769,7 @@ const
   MM_COLOR: array[TKMUnitType] of Cardinal = (
     0,0,0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
     $B0B0B0,$B08000,$B08000,$80B0B0,$00B0B0,$B080B0,$00B000,$80B0B0,
     $80B0B0 ,$80B0B0,$80B0B0,$80B0B0,$80B0B0, $80B0B0, $80B0B0, $80B0B0, $80B0B0, $80B0B0,
     $80B0B0, $80B0B0 ,$80B0B0,$80B0B0, $80B0B0, $80B0B0 ,$80B0B0,$80B0B0,$80B0B0,$80B0B0,
@@ -884,6 +890,8 @@ begin
     utSandSnake:         Result := 2152;
     utSpider:            Result := 2153;
     utMobileTower:       Result := 2276;
+    utFeeder:            Result := 2291;
+    utHouseBuilder:      Result := 2294;
   else
     Result := TX_UNITS_NAMES__29 + UNIT_TYPE_TO_ID[fUnitType];
   end;
@@ -1274,6 +1282,8 @@ begin
 
   for UT := UNIT_MIN to UNIT_MAX do
   begin
+    If fItems[UT].fUnitDat.Speed < 4 then
+      fItems[UT].fUnitDat.Speed := 8;
     fItems[UT].fUnitSpecInfo.StepsPerTile          := Round(1    / fItems[UT].Speed);
     fItems[UT].fUnitSpecInfo.StepsPerTileDiag      := Round(1.41 / fItems[UT].Speed);
     fItems[UT].fUnitSpecInfo.StepsPerTileStorm     := Round(1    / (fItems[UT].Speed * STORM_SPEEDUP));

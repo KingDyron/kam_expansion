@@ -309,6 +309,8 @@ end;
 procedure TKMStructure.IncBuildingProgress;
 var count : integer;
 begin
+  IF fCompleted then
+    Exit;
   fBuildingProgress := EnsureRange(fBuildingProgress + 1, 0, Spec.MaxProgress);
   fBuildReserve := EnsureRange(fBuildReserve - 1, 0, Spec.MaxProgress);
 

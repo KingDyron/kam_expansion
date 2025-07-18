@@ -28,9 +28,13 @@ type
                     toFence1, toFence2, toFence3, toFence4, toFence5, toFence6,
                     toDig3Wooden, toDig4Wooden, toDig3Clay, toDig4Clay, toDig3Exclusive, toDig4Exclusive,
                     toGold, toIron, toBitin, toCoal);}
+  TKMTerrainOverlayConnection = record
+    Tile : Word;
+    Rot : Byte;
+  end;
   TKMTerrainOverlayParams = record
     TileID, ViewAs : Word;
-    FirstLayer : Boolean;
+    FirstLayer, RenderFirst : Boolean;
     CanTree : Boolean;
     Rotate : Boolean;
     Visible, ViewInGame : Boolean;
@@ -38,6 +42,8 @@ type
     resCount : Byte;
     funct : TKMTerrainOverlayFunction;
     Hint : Word;
+    HasRoadConnection : Boolean;
+    RoadConnection : array of TKMTerrainOverlayConnection;
   end;
 
   TKMTerrainOverlayParamsArray = array of TKMTerrainOverlayParams;
@@ -138,6 +144,8 @@ type
     function ViewInGame : Boolean;
     function TileID : Word;
     function Rotate : Boolean;
+    function BlocksWalking : Boolean;
+    function BlocksBuilding : Boolean;
   end;
 
 const
@@ -919,13 +927,31 @@ begin
         TileID := nTile.I['TileID'];
         ViewAs := nTile.I['ViewAs'];
         FirstLayer := nTile.B['IsFirstLayer'];
+        RenderFirst := nTile.B['RenderFirst'];
         Visible := nTile.B['Visible'];
         ViewInGame := nTile.B['ViewInGame'];
         CanTree := nTile.B['CanTree'];
         Rotate := nTile.B['Rotate'];
+        Hint := nTile.I['Hint'];
         W := TKMWareType(nTile.I['Ware']);
         resCount := nTile.I['WareCount'];
         funct := TKMTerrainOverlayFunction(nTile.I['Function']);
+
+
+        nTerKinds := nTile.A['Connection'];//road connection ID
+        nAnimLayers := nTile.A['ConnectionRot'];//road connection rotation
+        If (nTerKinds.Count = 16) and (nAnimLayers.Count = 16) then
+        begin
+          SetLength(RoadConnection, 16);
+          for K := 0 to 15 do
+          begin
+            RoadConnection[K].Tile := nTerKinds.I[K];
+            RoadConnection[K].Rot := nAnimLayers.I[K];
+          end;
+
+          HasRoadConnection := true;
+        end else
+          HasRoadConnection := false;
       end;
     nTiles := nRoot.A['OverlayGuiOrder'];
     SetLength(GuiOverlayOrder, nTiles.Count);
@@ -995,6 +1021,7 @@ end;
 function TKMTerrainOverlayHelper.IsSecondLayer : Boolean;
 begin
   Result := not gRes.Tileset.Overlay[Word(self)].FirstLayer;
+  //Result := not (gRes.Tileset.Overlay[Word(self)].funct in [tofRoadDig, tofRoad])
 end;
 function TKMTerrainOverlayHelper.StopsGrowing : Boolean;
 begin
@@ -1016,6 +1043,14 @@ end;
 function TKMTerrainOverlayHelper.Rotate : Boolean;
 begin
   Result := gRes.Tileset.Overlay[Word(self)].Rotate;
+end;
+function TKMTerrainOverlayHelper.BlocksWalking : Boolean;
+begin
+  Result := gRes.Tileset.Overlay[Word(self)].funct = tofBlock;
+end;
+function TKMTerrainOverlayHelper.BlocksBuilding : Boolean;
+begin
+  Result := gRes.Tileset.Overlay[Word(self)].funct = tofBlockBuilding;
 end;
 
 end.

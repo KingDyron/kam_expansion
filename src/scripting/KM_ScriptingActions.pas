@@ -271,6 +271,7 @@ type
     function  UnitSetInstantKill(aUnitID: Integer; isInstant: Boolean): Boolean;
     procedure UnitBlockWalking(aUnitID: Integer; aBlock : Boolean);
     //new
+    procedure HouseSetStats(aHouseID : Integer; aStats : TKMHouseStats);
     procedure UnitSetRage(aUnitID, aDuration : Integer);
     procedure UnitSetStats(aUnitID : Integer; aStats : TKMUnitStats);
   end;
@@ -5397,6 +5398,25 @@ begin
     end
     else
       LogIntParamWarn('Actions.UnitBlockWalking', [aUnitID]);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
+procedure TKMScriptActions.HouseSetStats(aHouseID: Integer; aStats: TKMHouseStats);
+var
+  H: TKMHouse;
+begin
+  try
+    if (aHouseID > 0) then
+    begin
+      H := fIDCache.GetHouse(aHouseID);
+      if H <> nil then
+        H.SetStats(aStats);
+    end
+    else
+      LogIntParamWarn('Actions.UnitBlockWalking', [aHouseID]);
   except
     gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
     raise;

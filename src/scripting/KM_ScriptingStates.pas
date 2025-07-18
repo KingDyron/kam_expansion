@@ -284,6 +284,7 @@ type
     function UnitIDToType(aUnitType: Integer): TKMUnitType;
 
     //new
+    function HouseStats(aHouseID: Integer): TKMHouseStats;
     function UnitStats(aUnitID: Integer): TKMUnitStats;
 
 
@@ -5335,6 +5336,29 @@ begin
   end;
 end;
 
+
+function TKMScriptStates.HouseStats(aHouseID: Integer): TKMHouseStats;
+var
+  H: TKMHouse;
+begin
+  try
+    Result.ID := -1; //-1 if unit id is invalid
+    if aHouseID > 0 then
+    begin
+      H := fIDCache.GetHouse(aHouseID);
+      if H <> nil then
+      begin
+        Result := H.GetStats;
+        Result.ID := aHouseID;
+      end;
+    end
+    else
+      LogIntParamWarn('States.UnitTypeEx', [aHouseID]);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
 
 function TKMScriptStates.UnitStats(aUnitID: Integer): TKMUnitStats;
 var

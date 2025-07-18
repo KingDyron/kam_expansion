@@ -395,7 +395,7 @@ begin
     step := 0
   else
     step := Trunc(gRes.Houses.School_Clock.Count * (WorkingTime / TotalWorkingTime));
-  gRenderPool.AddAnimationG(KMPointF(Position), gRes.Houses.School_Clock, step, gHands[Owner].FlagColor, rxHouses);
+  gRenderPool.AddHouseSchoolClock(Position, step);
 end;
 
 

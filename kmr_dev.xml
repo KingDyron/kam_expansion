@@ -208,7 +208,7 @@
       <seMaxImageSize Value="2000"/>
       <rgImageType ItemIndex="0"/>
     </Game_additional>
-    <Debug_Output Collapsed="False">
+    <Debug_Output Collapsed="True">
       <chkUIDs Checked="False"/>
       <chkSelectedObjInfo Checked="False"/>
       <chkHands Checked="False"/>

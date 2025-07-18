@@ -3728,6 +3728,18 @@
 		"PlaceableInEditor" : true,
 		"CanBeRemoved" : true,
 		"IsGrass" : 7
+	  },
+	  {
+		"AddObject" : true,
+		"ObjectID" : 473,
+		"AnimSteps" : [1404, 1405, 1406, 1405],
+		"SlowAnim" : 5,
+		"WineOrCorn" : true,
+		"RenderAsTileOverlay" : false,
+		"RotateToTile" : false,
+		"CanGrow" : false,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : true
 	  }
   ],
   "Grain Types" : [

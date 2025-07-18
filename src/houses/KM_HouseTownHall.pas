@@ -130,7 +130,8 @@ begin
         WareTakeFromIn(wtBitinArmor, 1);
         TKMUnitWarrior(U).AddBitin;
       end;
-
+    If U.UnitType = utHouseBuilder then
+      U.GiveBoots;
     Inc(Result);
   end;
 end;

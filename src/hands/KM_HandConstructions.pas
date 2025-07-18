@@ -27,7 +27,7 @@ type
     destructor Destroy; override;
 
     procedure AddHouse(aHouse: TKMHouse); //New house to build
-    procedure RemWorker(aIndex: Integer);
+    procedure RemWorker(aIndex: Integer; aWorker: TKMUnitWorker);
     procedure GiveTask(aIndex: Integer; aWorker: TKMUnitWorker);
     function BestBid(aWorker: TKMUnitWorker; out aBid: Single): Integer;
     function GetAvailableJobsCount: Integer;
@@ -51,7 +51,7 @@ type
     destructor Destroy; override;
 
     procedure AddStructure(aStructure: TKMStructure); //New house to build
-    procedure RemWorker(aIndex: Integer);
+    procedure RemWorker(aIndex: Integer; aWorker: TKMUnitWorker);
     procedure GiveTask(aIndex: Integer; aWorker: TKMUnitWorker);
     function BestBid(aWorker: TKMUnitWorker; out aBid: Single): Integer;
     function GetAvailableJobsCount: Integer;
@@ -190,7 +190,7 @@ type
     function BestBid(aWorker: TKMUnitWorker; out aBid: Single): Integer; //Calculate best bid for a given worker
     function GetAvailableJobsCount:Integer;
     procedure GiveTask(aIndex: Integer; aWorker: TKMUnitWorker);
-    procedure RemWorker(aIndex: Integer);
+    procedure RemWorker(aIndex: Integer; aWorker: TKMUnitWorker);
 
     procedure Save(SaveStream: TKMemoryStream);
     procedure Load(LoadStream: TKMemoryStream);
@@ -211,7 +211,7 @@ type
     destructor Destroy; override;
 
     procedure AddHouse(aHouse: TKMHouse); //New house to build
-    procedure RemWorker(aIndex: Integer);
+    procedure RemWorker(aIndex: Integer; aWorker: TKMUnitWorker);
     procedure GiveTask(aIndex: Integer; aWorker: TKMUnitWorker);
     function BestBid(aWorker: TKMUnitWorker; out aBid: Single): Integer;
     function GetAvailableJobsCount: Integer;
@@ -235,7 +235,7 @@ type
     destructor Destroy; override;
 
     procedure AddHouse(aHouse: TKMHouse); //New house to build
-    procedure RemWorker(aIndex: Integer);
+    procedure RemWorker(aIndex: Integer; aWorker: TKMUnitWorker);
     procedure GiveTask(aIndex: Integer; aWorker: TKMUnitWorker);
     function BestBid(aWorker: TKMUnitWorker; out aBid: Single): Integer;
     function GetAvailableJobsCount: Integer;
@@ -246,7 +246,10 @@ type
     procedure UpdateState;
   end;
 
-
+  TKMWorkerRec = record
+      Worker: TKMUnitWorker; //Pointer to Worker
+  end;
+  TKMWorkerRecArray = array of TKMWorkerRec;
   // Matchmaking service of workers to building sites, fields, repairs, etc
   TKMHandConstructions = class
   private
@@ -259,13 +262,12 @@ type
     fPearlList : TKMHousePearlList;
 
     fWorkersCount: Integer;
-    fWorkers: array of record
-      Worker: TKMUnitWorker; //Pointer to Worker
-    end;
+    fWorkers: TKMWorkerRecArray;
     procedure RemWorker(aIndex: Integer);
     procedure RemoveExtraWorkers;
     function GetIdleWorkerCount: Integer;
     function GetBestWorker(const aPoint: TKMPoint; aCheckWalk : Boolean = true): TKMUnitWorker;
+    function GetBestWorkerForHouse(const aPoint: TKMPoint; aCheckWalk : Boolean = true): TKMUnitWorker;
 
     procedure AssignFieldworks;
     procedure AssignHousePlans;
@@ -274,6 +276,8 @@ type
     procedure AssignHouseUpgrades;
     procedure AssignStructures;
     procedure AssignPearls;
+
+    procedure SortWorkers;
   public
     constructor Create;
     destructor Destroy; override;
@@ -408,14 +412,14 @@ end;
 procedure TKMHouseList.GiveTask(aIndex: Integer; aWorker: TKMUnitWorker);
 begin
   aWorker.BuildHouse(fHouses[aIndex].House, aIndex);
-  Inc(fHouses[aIndex].Assigned);
+  Inc(fHouses[aIndex].Assigned, 1 + 1 * byte(aWorker.UnitType = utHouseBuilder));
 end;
 
 
 //Whenever worker dies we need to remove him from assigned to the house
-procedure TKMHouseList.RemWorker(aIndex: Integer);
+procedure TKMHouseList.RemWorker(aIndex: Integer; aWorker: TKMUnitWorker);
 begin
-  Dec(fHouses[aIndex].Assigned);
+  Dec(fHouses[aIndex].Assigned, 1 + 1 * byte(aWorker.UnitType = utHouseBuilder));
   //If the house is complete or destroyed it will be removed in next UpdateState
 end;
 
@@ -543,14 +547,14 @@ end;
 procedure TKMStructureList.GiveTask(aIndex: Integer; aWorker: TKMUnitWorker);
 begin
   aWorker.BuildStructure(fStructures[aIndex].Structure, aIndex);
-  Inc(fStructures[aIndex].Assigned);
+  Inc(fStructures[aIndex].Assigned, 1 + 1 * byte(aWorker.UnitType = utHouseBuilder));
 end;
 
 
 //Whenever worker dies we need to remove him from assigned to the house
-procedure TKMStructureList.RemWorker(aIndex: Integer);
+procedure TKMStructureList.RemWorker(aIndex: Integer; aWorker: TKMUnitWorker);
 begin
-  Dec(fStructures[aIndex].Assigned);
+  Dec(fStructures[aIndex].Assigned, 1 + 1 * byte(aWorker.UnitType = utHouseBuilder));
   //If the house is complete or destroyed it will be removed in next UpdateState
 end;
 
@@ -692,14 +696,14 @@ end;
 procedure TKMHouseUpgradeList.GiveTask(aIndex: Integer; aWorker: TKMUnitWorker);
 begin
   aWorker.BuildHouseUpgrade(fHouses[aIndex].House, aIndex);
-  Inc(fHouses[aIndex].Assigned);
+  Inc(fHouses[aIndex].Assigned, 1 + 1 * byte(aWorker.UnitType = utHouseBuilder));
 end;
 
 
 //Whenever worker dies we need to remove him from assigned to the house
-procedure TKMHouseUpgradeList.RemWorker(aIndex: Integer);
+procedure TKMHouseUpgradeList.RemWorker(aIndex: Integer; aWorker: TKMUnitWorker);
 begin
-  Dec(fHouses[aIndex].Assigned);
+  Dec(fHouses[aIndex].Assigned, 1 + 1 * byte(aWorker.UnitType = utHouseBuilder));
   //If the house is complete or destroyed it will be removed in next UpdateState
 end;
 
@@ -838,14 +842,14 @@ end;
 procedure TKMHousePearlList.GiveTask(aIndex: Integer; aWorker: TKMUnitWorker);
 begin
   aWorker.BuildPearl(fHouses[aIndex].House, aIndex);
-  Inc(fHouses[aIndex].Assigned);
+  Inc(fHouses[aIndex].Assigned, 1 + 1 * byte(aWorker.UnitType = utHouseBuilder));
 end;
 
 
 //Whenever worker dies we need to remove him from assigned to the house
-procedure TKMHousePearlList.RemWorker(aIndex: Integer);
+procedure TKMHousePearlList.RemWorker(aIndex: Integer; aWorker: TKMUnitWorker);
 begin
-  Dec(fHouses[aIndex].Assigned);
+  Dec(fHouses[aIndex].Assigned, 1 + 1 * byte(aWorker.UnitType = utHouseBuilder));
   //If the house is complete or destroyed it will be removed in next UpdateState
 end;
 
@@ -1604,13 +1608,13 @@ end;
 procedure TKMRepairList.GiveTask(aIndex: Integer; aWorker: TKMUnitWorker);
 begin
   aWorker.BuildHouseRepair(fHouses[aIndex].House, aIndex);
-  Inc(fHouses[aIndex].Assigned);
+  Inc(fHouses[aIndex].Assigned, 1 + 1 * byte(aWorker.UnitType = utHouseBuilder));
 end;
 
 
-procedure TKMRepairList.RemWorker(aIndex: Integer);
+procedure TKMRepairList.RemWorker(aIndex: Integer; aWorker: TKMUnitWorker);
 begin
-  Dec(fHouses[aIndex].Assigned);
+  Dec(fHouses[aIndex].Assigned, 1 + 1 * byte(aWorker.UnitType = utHouseBuilder));
 end;
 
 
@@ -1707,6 +1711,29 @@ begin
 end;
 
 
+procedure TKMHandConstructions.SortWorkers;
+var newArr : TKMWorkerRecArray;
+  I, J : Integer;
+begin
+  SetLength(newArr, 0);
+  SetLength(newArr, length(fWorkers));
+
+  J := 0;
+  for I := 0 to fWorkersCount - 1 do
+    If fWorkers[I].Worker.UnitType = utHouseBuilder then
+    begin
+      newArr[J] := fWorkers[I];
+      Inc(J);
+    end;
+  for I := 0 to fWorkersCount - 1 do
+    If fWorkers[I].Worker.UnitType = utBuilder then
+    begin
+      newArr[J] := fWorkers[I];
+      Inc(J);
+    end;
+  fWorkers := newArr;
+end;
+
 //Add the Worker to the List
 procedure TKMHandConstructions.AddWorker(aWorker: TKMUnitWorker);
 begin
@@ -1715,6 +1742,7 @@ begin
 
   fWorkers[fWorkersCount].Worker := TKMUnitWorker(aWorker.GetPointer);
   Inc(fWorkersCount);
+  SortWorkers;
 end;
 
 //Remove died Worker from the List
@@ -1726,6 +1754,7 @@ begin
     Move(fWorkers[aIndex+1], fWorkers[aIndex], SizeOf(fWorkers[aIndex]) * (fWorkersCount - 1 - aIndex));
 
   Dec(fWorkersCount);
+  SortWorkers;
 end;
 
 
@@ -1822,7 +1851,7 @@ begin
   Result := nil;
   bestBid := MaxSingle;
   for I := 0 to fWorkersCount - 1 do
-    if fWorkers[I].Worker.IsIdle and (fWorkers[I].Worker.CanWalkTo(aPoint, 0) or not aCheckWalk) and (fWorkers[I].Worker.InShip = nil) and (fWorkers[I].Worker.Visible) then
+    if (fWorkers[I].Worker.UnitType = utBuilder) and fWorkers[I].Worker.IsIdle and (fWorkers[I].Worker.CanWalkTo(aPoint, 0) or not aCheckWalk) and (fWorkers[I].Worker.InShip = nil) and (fWorkers[I].Worker.Visible) then
     begin
       newBid := KMLengthDiag(fWorkers[I].Worker.Position, aPoint);
       if newBid < bestBid then
@@ -1831,6 +1860,42 @@ begin
         bestBid := newBid;
       end;
     end;
+end;
+
+function TKMHandConstructions.GetBestWorkerForHouse(const aPoint: TKMPoint; aCheckWalk: Boolean = True): TKMUnitWorker;
+var
+  I: Integer;
+  newBid, bestBid: Single;
+begin
+  Result := nil;
+  bestBid := MaxSingle;
+  for I := 0 to fWorkersCount - 1 do
+    if fWorkers[I].Worker.OnlyBuildsHouse  then
+     if fWorkers[I].Worker.IsIdle  then
+    if (fWorkers[I].Worker.CanWalkTo(aPoint, 0) or not aCheckWalk) then
+    if (fWorkers[I].Worker.InShip = nil) then
+    if (fWorkers[I].Worker.Visible) then
+    begin
+      newBid := KMLengthDiag(fWorkers[I].Worker.Position, aPoint);
+      if newBid < bestBid then
+      begin
+        Result := fWorkers[I].Worker;
+        bestBid := newBid;
+      end;
+    end;
+  //check all if no house builder is found
+  bestBid := MaxSingle;
+  If Result = nil then
+    for I := 0 to fWorkersCount - 1 do
+      if fWorkers[I].Worker.IsIdle and (fWorkers[I].Worker.CanWalkTo(aPoint, 0) or not aCheckWalk) and (fWorkers[I].Worker.InShip = nil) and (fWorkers[I].Worker.Visible) then
+      begin
+        newBid := KMLengthDiag(fWorkers[I].Worker.Position, aPoint);
+        if newBid < bestBid then
+        begin
+          Result := fWorkers[I].Worker;
+          bestBid := newBid;
+        end;
+      end;
 end;
 
 procedure TKMHandConstructions.AssignFieldworks;
@@ -1846,7 +1911,7 @@ begin
   if availableJobs > availableWorkers then
   begin
     for I := 0 to fWorkersCount - 1 do
-      if fWorkers[I].Worker.IsIdle then
+      if fWorkers[I].Worker.IsIdle and (fWorkers[I].Worker.UnitType = utBuilder) then
       begin
         jobID := fFieldworksList.BestBid(fWorkers[I].Worker, myBid);
         if jobID <> -1 then fFieldworksList.GiveTask(jobID, fWorkers[I].Worker);
@@ -1875,7 +1940,7 @@ begin
   if availableJobs > availableWorkers then
   begin
     for I := 0 to fWorkersCount - 1 do
-      if fWorkers[I].Worker.IsIdle then
+      if fWorkers[I].Worker.IsIdle and (fWorkers[I].Worker.UnitType = utBuilder) then
       begin
         jobID := fHousePlanList.BestBid(fWorkers[I].Worker, myBid);
         if jobID <> -1 then fHousePlanList.GiveTask(jobID, fWorkers[I].Worker);
@@ -1920,7 +1985,7 @@ begin
         if H is TKMHouseAppleTree then
           if TKMHouseAppleTree(H).ParentTree.IsValid then
             H := TKMHouseAppleTree(H).ParentTree;
-        bestWorker := GetBestWorker(H.PointBelowEntrance);
+        bestWorker := GetBestWorkerForHouse(H.PointBelowEntrance);
         if bestWorker <> nil then fHouseList.GiveTask(I, bestWorker);
       end;
 end;
@@ -1949,7 +2014,7 @@ begin
       if (fHouseUpgradeList.fHouses[i].House <> nil) and fHouseUpgradeList.fHouses[i].House.CheckResToBuild
       and(fHouseUpgradeList.fHouses[I].Assigned < MAX_WORKERS[fHouseUpgradeList.fHouses[i].House.HouseType]) then
       begin
-        bestWorker := GetBestWorker(fHouseUpgradeList.fHouses[I].House.PointBelowEntrance);
+        bestWorker := GetBestWorkerForHouse(fHouseUpgradeList.fHouses[I].House.PointBelowEntrance);
         if bestWorker <> nil then fHouseUpgradeList.GiveTask(I, bestWorker);
       end;
 end;
@@ -1978,7 +2043,7 @@ begin
       if (fPearlList.fHouses[i].House <> nil) and fPearlList.fHouses[i].House.Pearl.CanBuild
       and(fPearlList.fHouses[I].Assigned < MAX_WORKERS[fPearlList.fHouses[i].House.HouseType]) then
       begin
-        bestWorker := GetBestWorker(fPearlList.fHouses[I].House.PointBelowEntrance);
+        bestWorker := GetBestWorkerForHouse(fPearlList.fHouses[I].House.PointBelowEntrance);
         if bestWorker <> nil then fPearlList.GiveTask(I, bestWorker);
       end;
 end;
@@ -2006,7 +2071,7 @@ begin
       if (fRepairList.fHouses[i].House <> nil)
       and(fRepairList.fHouses[I].Assigned < MAX_WORKERS[fRepairList.fHouses[i].House.HouseType]) then
       begin
-        bestWorker := GetBestWorker(fRepairList.fHouses[I].House.PointBelowEntrance);
+        bestWorker := GetBestWorkerForHouse(fRepairList.fHouses[I].House.PointBelowEntrance);
         if bestWorker <> nil then fRepairList.GiveTask(I, bestWorker);
       end;
 end;
@@ -2036,7 +2101,7 @@ begin
       if fStructureList.fStructures[i].Structure.CanBuild then
       if (fStructureList.fStructures[I].Assigned < fStructureList.fStructures[i].Structure.MaxWorkers) then
       begin
-        bestWorker := GetBestWorker(fStructureList.fStructures[I].Structure.Position, false);
+        bestWorker := GetBestWorkerForHouse(fStructureList.fStructures[I].Structure.Position, false);
         if bestWorker <> nil then fStructureList.GiveTask(I, bestWorker);
       end;
 end;

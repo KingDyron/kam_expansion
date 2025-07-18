@@ -388,6 +388,11 @@ type
     procedure AddDemandBuildingMaterials;virtual;
     procedure SetOnFire;
     procedure TakeOver;
+    function GetStats : TKMHouseStats;
+    procedure SetStats(aStats : TKMHouseStats);
+    function GetWaresArrayIn : TIntegerArray;
+    function GetWaresArrayOut : TIntegerArray;
+    function GetWaresArrayTotal : TIntegerArray;
 
     procedure SetBuildingProgress(aProgress, aWood, aStone, aTile : Word);
 
@@ -2718,6 +2723,8 @@ procedure TKMHouse.IncBuildingUpgradeProgress;
     gScriptEvents.ProcHouseUpgraded(Self, fLevel.CurrentLevel); //At the end since it could destroy this house
   end;
 begin
+  If not fLevel.IsUpgrading then
+    Exit;
   if fBuildReserve <= 10 then
   begin
     if fBuildSupplyWood > 0 then
@@ -2967,6 +2974,66 @@ begin
   fWasTookOver := true;
 end;
 
+function TKMHouse.GetStats: TKMHouseStats;
+begin
+  Result.HouseType := HouseType;
+  Result.X := Entrance.X;
+  Result.Y := Entrance.Y;
+  Result.Owner := Owner;
+  Result.FlagX := IfThen(self is TKMHouseWFlagPoint, TKMHouseWFlagPoint(self).FlagPoint.X, 0);
+  Result.FlagY := IfThen(self is TKMHouseWFlagPoint, TKMHouseWFlagPoint(self).FlagPoint.Y, 0);
+  Result.IsDestroyed := IsDestroyed;
+  Result.IsComplete := IsComplete;
+  Result.RepairOn := BuildingRepair;
+  Result.Damage := fDamage;
+  Result.MaxHealth := MaxHealth;
+  Result.Level := CurrentLevel;
+end;
+
+procedure TKMHouse.SetStats(aStats: TKMHouseStats);
+begin
+  If self is TKMHouseWFlagPoint then
+    TKMHouseWFlagPoint(self).FlagPoint := KMPoint(aStats.FlagX, aStats.FlagY);
+  BuildingRepair := aStats.RepairOn;
+  fDamage := aStats.Damage;
+  If aStats.Level <> CurrentLevel then
+    SetLevel(aStats.Level);
+end;
+
+function TKMHouse.GetWaresArrayIn: TIntegerArray;
+var I: integer;
+begin
+  Setlength(Result, WARE_CNT);
+  for I := 1 to WARES_IN_OUT_COUNT do
+    If fWareInput[I] in WARES_VALID then
+    begin
+      Result[ WARE_TY_TO_ID[fWareInput[I]] ] := fWareIn[I];
+    end;
+end;
+
+function TKMHouse.GetWaresArrayOut: TIntegerArray;
+var I: integer;
+begin
+  Setlength(Result, WARE_CNT);
+  for I := 1 to WARES_IN_OUT_COUNT do
+    If fWareOutput[I] in WARES_VALID then
+    begin
+      Result[ WARE_TY_TO_ID[fWareOutput[I]] ] := fWareOut[I];
+    end;
+end;
+
+function TKMHouse.GetWaresArrayTotal: TIntegerArray;
+var I: integer;
+begin
+  Setlength(Result, WARE_CNT);
+  for I := 1 to WARES_IN_OUT_COUNT do
+  begin
+    If fWareInput[I] in WARES_VALID then
+      Inc(Result[ WARE_TY_TO_ID[fWareInput[I]] ], fWareIn[I]);
+    If fWareOutput[I] in WARES_VALID then
+      Inc(Result[ WARE_TY_TO_ID[fWareOutput[I]] ], fWareOut[I]);
+  end;
+end;
 
 procedure TKMHouse.SetBuildingRepair(aValue: Boolean);
 begin
@@ -6719,7 +6786,7 @@ begin
 end;
 
 procedure TKMHousePalace.UpdateState(aTick: Cardinal);
-var Soldier : TKMUnitWarrior;
+var U : TKMUnit;
   I, L : Integer;
 begin
   Inherited;
@@ -6746,16 +6813,17 @@ begin
         begin
           fTrainingID := high(byte);
           gSoundPlayer.Play(sfxnPalace, fPosition);
-          soldier := TKMUnitWarrior(gHands[Owner].TrainUnit(PALACE_UNITS_ORDER[I], Self));
-          soldier.Visible := False; //Make him invisible as he is inside the barracks
-          soldier.Condition := Round(TROOPS_TRAINED_CONDITION * UNIT_MAX_CONDITION); //All soldiers start with 3/4, so groups get hungry at the same time
+          U := gHands[Owner].TrainUnit(PALACE_UNITS_ORDER[I], Self);
+          U.Visible := False; //Make him invisible as he is inside the barracks
+          U.Condition := Round(TROOPS_TRAINED_CONDITION * UNIT_MAX_CONDITION); //All soldiers start with 3/4, so groups get hungry at the same time
           //Soldier.OrderLoc := KMPointBelow(Entrance); //Position in front of the barracks facing north
-          soldier.SetActionGoIn(uaWalk, gdGoOutside, Self, true);
-          if Assigned(soldier.OnUnitTrained) then
-            soldier.OnUnitTrained(soldier);
-          if gHands[Owner].IsComputer then
-            if gRes.Units[soldier.UnitType].CanOrderAmmo then
-              soldier.OrderAmmo;
+          U.SetActionGoIn(uaWalk, gdGoOutside, Self, true);
+          if Assigned(U.OnUnitTrained) then
+            U.OnUnitTrained(U);
+          If U is TKMUnitWarrior then
+            if gHands[Owner].IsComputer then
+              if gRes.Units[U.UnitType].CanOrderAmmo then
+                TKMUnitWarrior(U).OrderAmmo;
           fPhase[I] := 0;
         end;
 

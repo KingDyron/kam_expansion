@@ -660,6 +660,7 @@
         <DCCReference Include="src\units\tasks\KM_UnitTaskWoodcutter.pas"/>
         <DCCReference Include="src\res\KM_ResDevelopment.pas"/>
         <DCCReference Include="src\gui\pages_common\KM_GUICommonDevelopment.pas"/>
+        <DCCReference Include="src\units\tasks\KM_UnitTaskFeeder.pas"/>
         <None Include="KM_TextIDs.inc"/>
         <None Include="KaM_Remake.dpr"/>
         <None Include="KaM_Remake.inc"/>

@@ -989,7 +989,7 @@ begin
     Inc(dy, 46);
     Label_TH_Costs  := TKMLabel.Create(Panel_HouseTownhall,0,dy,TB_WIDTH,0,gResTexts[TX_HOUSE_WARE_COSTS],fntGrey,taCenter);
     Inc(dy, 20);
-    CostsRow_TH_Cost := TKMCostsRow.Create(Panel_HouseTownhall, 0, dy, TB_WIDTH, 21);
+    CostsRow_TH_Cost := TKMCostsRow.Create(Panel_HouseTownhall, 0, dy, TB_WIDTH, 21, 8);
     CostsRow_TH_Cost.RX := rxGui;
     CostsRow_TH_Cost.Visible := True;
     CostsRow_TH_Cost.Caption := gRes.Wares[wtGold].Title;
@@ -3137,6 +3137,7 @@ begin
     Button_TH_Right.Enable;
   end;
   CostsRow_TH_Cost.Count := gRes.Units[TH_GAME_ORDER[fLastTHUnit]].TownhallCost;
+  CostsRow_TH_Cost.Caption := gRes.Units[TH_GAME_ORDER[fLastTHUnit]].TownhallCost.ToString;
 
   Panel_HouseTownHall.Show;
 end;

@@ -18,6 +18,7 @@ type
   protected
     Panel_Overlays: TKMPanel;
     CheckBox_Override : TKMCheckBox;
+    CheckBox_ApplyOnRoad : TKMCheckBox;
     OverlaysTable: array of TKMButtonFlat;
 
   public
@@ -78,6 +79,10 @@ begin
   CheckBox_Override := TKMCheckBox.Create(Panel_Overlays, 9, 30, Panel_Overlays.Width, 15, gResTexts[2138], fntMetal);
   CheckBox_Override.OnClick := OverlayChange;
   CheckBox_Override.Check;
+
+  CheckBox_ApplyOnRoad := TKMCheckBox.Create(Panel_Overlays, 9, 50, Panel_Overlays.Width, 15, gResTexts[2295], fntMetal);
+  CheckBox_ApplyOnRoad.OnClick := OverlayChange;
+  CheckBox_ApplyOnRoad.UnCheck;
   {for TTO := Low(OverlaysTable) to High(OverlaysTable) do
   begin
     OverlaysTable[TTO] := TKMButtonFlat.Create(Panel_Overlays, 9 + (Byte(TTO) mod BTNS_PER_ROW) * BTN_SIZE,
@@ -94,7 +99,7 @@ begin
     OverlaysTable[TTO].Hint := gResTexts[OVERLAY_HINTS_TX[TTO]];
     OverlaysTable[TTO].OnClick := OverlayChange;
   end;}
-  top := BTN_SIZE + 20;
+  top := BTN_SIZE + 40;
   J := 0;
   C := 0;
   for I := 0 to High(GuiOverlayOrder) do
@@ -114,13 +119,12 @@ begin
                                                              IfThen(gRes.Tileset.Overlay[TTO].TileID > 0, gRes.Tileset.Overlay[TTO].TileID + 1, 0),
                                                              rxTiles);
     OverlaysTable[J].Tag := TTO;
-//    OverlaysTable[J].Caption := IntToStr(OverlaysTable[J].Tag);
-//    OverlaysTable[J].CapOffsetY := -8;
-//    OverlaysTable[J].TexOffsetY := 6;
-//    OverlaysTable[J].CapColor := icYellow;
     if gRes.Tileset.Overlay[TTO].Hint > 0 then
       OverlaysTable[J].Hint := gResTexts[gRes.Tileset.Overlay[TTO].Hint];
     OverlaysTable[J].OnClick := OverlayChange;
+
+    if gRes.Tileset.Overlay[TTO].HasRoadConnection then
+      OverlaysTable[J].BackBevelColor := $55FF0000;
 
     inc(C);
     inc(J);
@@ -138,11 +142,13 @@ var
   I : Integer;
 begin
   gCursor.MapEdOverrideCustomTiles := CheckBox_Override.Checked;
+  gCursor.MapEdApplyOverlayOnRoad := CheckBox_ApplyOnRoad.Checked;
   for I := Low(OverlaysTable) to High(OverlaysTable) do
     if Sender = OverlaysTable[I] then
     begin
       gCursor.Mode := cmOverlays;
       gCursor.Tag1 := OverlaysTable[I].Tag;
+      gCursor.MapEdOverlayOnRoad := OverlaysTable[I].Tag;
     end;
 end;
 

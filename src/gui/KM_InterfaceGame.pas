@@ -206,10 +206,10 @@ const
 
   );
 
-  School_Order: array [0..15] of TKMUnitType = (
+  School_Order: array [0..17] of TKMUnitType = (
     utSerf, utBuilder, utStonemason, utWoodcutter, utCarpenter,
     utClayPicker, utFisher, utFarmer, utBaker, utAnimalBreeder, utButcher,
-    utMiner, utMetallurgist, utSmith, utOperator, utRecruit);
+    utMiner, utMetallurgist, utSmith, utOperator, utRecruit, utFeeder, utHouseBuilder);
 
   SiegeWorkshop_Order: array [0..4] of TKMUnitType = (
     utCatapult, utBallista, utRam, utWoodenWall, utSpikedTrap);
@@ -221,13 +221,13 @@ const
   TownHall_Order: array [0..6] of TKMUnitType = (
     utRebel, utRogue, utClubMan, utVagabond, utShieldBearer, utBarbarian, utWarrior);
 
-  Soldiers_Order: array[0..36] of TKMUnitType = (
+  Soldiers_Order: array[0..37] of TKMUnitType = (
     utFighter, utMilitia, utAxeFighter, utSwordFighter, utBarbarian, utWarrior, utPaladin,
     utRogue, utBowman, utCrossbowMan, utArcher,
     utRebel, utLanceCarrier, utPikeman, utPikeMachine,
     utClubMan, utMaceFighter, utFlailFighter,
     utVagabond, utScout, utKnight, utTrainedWolf,
-    utCatapult, utBallista, utAmmoCart, utShieldBearer, utWoodenWall, utRam,{ utMobileTower,}
+    utCatapult, utBallista, utAmmoCart, utShieldBearer, utWoodenWall, utRam, utMobileTower,
     utPyro, utTorchMan, utLekter, utMedic, utSpy, utSpikedTrap, utBoat, utShip, utBattleShip);
 
   // Stats get stacked by UI logic (so that on taller screens they all were
@@ -271,13 +271,13 @@ const
     (HouseType: (htStore, htSchool, htInn, htMarket, htNone);                             UnitType: (utSerf, utBuilder))
     ); }
 
-  MapEd_Order: array [0..36] of TKMUnitType = (
+  MapEd_Order: array [0..37] of TKMUnitType = (
     utFighter, utMilitia, utAxeFighter, utSwordFighter, utBowman, utCrossbowman,
     utLanceCarrier, utPikeman, utMaceFighter, utFlailFighter,
     utScout, utKnight,
     utRebel, utRogue, utClubMan, utVagabond,utShieldBearer, utBarbarian, utWarrior,
-    utCatapult, utBallista, utRam, utWoodenWall,
-    utAmmoCart, utPikeMachine,{ utMobileTower,}
+    utCatapult, utBallista, utRam, utWoodenWall, utMobileTower,
+    utAmmoCart, utPikeMachine,
     utTorchMan, utPyro, utLekter, utMedic, utPaladin, utArcher, utSpy, utTrainedWolf, utSpikedTrap,
     utBoat, utShip, utBattleShip{, utGolem, utGiant});
 

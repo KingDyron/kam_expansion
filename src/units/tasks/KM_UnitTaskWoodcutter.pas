@@ -23,7 +23,6 @@ type
     property Forest : TKMHouseForest read fForest;
   end;
 
-
 implementation
 uses
   Math,

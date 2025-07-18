@@ -111,8 +111,6 @@ type
     procedure RenderSprite(aRX: TRXType; aId: Integer; aX, aY: Single; Col: TColor4; DoHighlight: Boolean = False;
                            HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1);overload;
     procedure RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY, aNight: Single; aId2: Integer = 0; aStoneProgress: Single = 0; X2: Single = 0; Y2: Single = 0);
-    procedure RenderMapElement1(aIndex: Word; aAnimStep: Cardinal; LocX,LocY: Integer; aLoopAnim: Boolean; aDoImmediateRender: Boolean = False; aDeleting: Boolean = False; aOnTop: Boolean = False);
-    procedure RenderMapElement4(aIndex: Word; aAnimStep: Cardinal; pX,pY: Integer; aIsDouble: Boolean; aDoImmediateRender: Boolean = False; aDeleting: Boolean = False; aOnTop: Boolean = False);
 
     procedure RenderHouseOutline(aHouseSketch: TKMHouseSketch; aCol: Cardinal = icCyan);
 
@@ -158,6 +156,8 @@ type
     procedure AddHousePasture(aLoc : TKMPoint; aFlagColor : Cardinal = 0;
                                aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
 
+    procedure AddHouseSchoolClock(const aLoc: TKMPoint; aAnimStep: Cardinal; aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
+
     procedure AddHousePastureAnimal(const aLoc: TKMPointF; aAnimal : TKMPastureAnimalType; Action : TKMPastureAnimalAction; Dir : TKMDirection;
                                   aAnimStep: Cardinal; C1, C2: TColor4;
                                   aDoImmediateRender: Boolean = False);
@@ -201,6 +201,8 @@ type
     procedure AddUnitFlag(aUnit: TKMUnitType; aAct: TKMUnitActionType; aDir: TKMDirection; FlagAnim: Integer; pX,pY: Single; FlagColor: TColor4; DoImmediateRender: Boolean = False);
     procedure AddUnitWithDefaultArm(aUnit: TKMUnitType; aUID: Integer; aAct: TKMUnitActionType; aDir: TKMDirection; StepId: Integer; pX,pY: Single; FlagColor: TColor4; DoImmediateRender: Boolean = False; DoHignlight: Boolean = False; HighlightColor: TColor4 = 0);
     procedure AddUnitBitin(pX, pY : Single);
+    procedure RenderMapElement1(aIndex: Word; aAnimStep: Cardinal; LocX,LocY: Integer; aLoopAnim: Boolean; aDoImmediateRender: Boolean = False; aDeleting: Boolean = False; aOnTop: Boolean = False);
+    procedure RenderMapElement4(aIndex: Word; aAnimStep: Cardinal; pX,pY: Integer; aIsDouble: Boolean; aDoImmediateRender: Boolean = False; aDeleting: Boolean = False; aOnTop: Boolean = False);
     procedure RenderMapElement(aIndex: Word; aAnimStep,pX,pY: Integer; aDoImmediateRender: Boolean = False; aDeleting: Boolean = False; aOnTop: Boolean = False);
     procedure RenderTree(aIndex: Word; aAnimStep: Cardinal; LocX,LocY: Single; nightLoc : TKMPoint;
                         aDoImmediateRender: Boolean = False; aDeleting: Boolean = False);
@@ -1531,6 +1533,35 @@ begin
 end;
 
 
+
+procedure TKMRenderPool.AddHouseSchoolClock(const aLoc: TKMPoint; aAnimStep: Cardinal;
+                                   aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
+var
+  id: Cardinal;
+  A: TKMAnimation;
+  rxData: TRXData;
+  cornerX, cornerY: Single;
+begin
+
+  rxData := fRXData[rxHouses];
+
+  A := gRes.Houses.School_Clock;
+  if A.Count > 0 then
+  begin
+
+    id := A.Animation[aAnimStep];
+
+    cornerX := aLoc.X + (rxData.Pivot[id].X + A.X) / CELL_SIZE_PX - 1;
+    cornerY := aLoc.Y + (rxData.Pivot[id].Y + A.Y + rxData.Size[id].Y) / CELL_SIZE_PX - 1
+                     - gTerrain.LandExt^[aLoc.Y + 1, aLoc.X].RenderHeight / CELL_HEIGHT_DIV;
+
+    if aDoImmediateRender then
+      RenderSprite(rxHouses, id, cornerX, cornerY, 0, aDoHighlight, aHighlightColor)
+    else
+      fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, aLoc.X, aLoc.Y, 0);
+  end;
+end;
+
 procedure TKMRenderPool.AddHouseSupply(aHouse: TKMHouseType; const aLoc: TKMPoint; const R1, R2, R3: array of Byte;
                                      aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
 var
@@ -1625,8 +1656,8 @@ var
   end;
 begin
   rxData := fRXData[rxHouses];
-  aCount := Min(aCount, 33);
-  id := 2784 + aCount - 1;
+  aCount := Min(aCount, 41);
+  id := 2858 + aCount - 1;
   AddHouseSupplySprite(id);
 end;
 

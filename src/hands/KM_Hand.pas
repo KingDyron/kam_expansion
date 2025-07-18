@@ -343,6 +343,8 @@ type
     procedure ResizePanel(X, Y, Width, Height : Integer);
     property CustomPanelData: TKMCustomPanelInfo read fCustomPanelData;
 
+    function GroupAddToFeeder(aGroup : TKMUnitGroup) : Boolean;
+
     procedure BuildBridge(aLoc : TKMPoint; aIndex, aRot : Word);
     //function HasBridgeBuiltAt(aLoc : TKMPoint) : Boolean;
     //property BridgesBuilt : TKMStructureBasicArray read fBridgesBuilt;
@@ -797,7 +799,7 @@ end;
 
 procedure TKMHand.UnitTrained(aUnit: TKMUnit);
 begin
-  if aUnit.UnitType = utBuilder then
+  if aUnit is TKMUnitWorker then
     fConstructions.AddWorker(TKMUnitWorker(aUnit));
   if aUnit.UnitType = utSerf then
     fDeliveries.AddSerf(aUnit);
@@ -3728,6 +3730,28 @@ begin
   //fBridgesBuilt.Add(KMStructureBasic(aLoc, aIndex, aRot));
   //gTerrain.SetBridgePlan(aLoc, aIndex, aRot, hbsDone);
   //gTerrain.PlaceBridge(aLoc, aIndex, aRot);
+end;
+
+function TKMHand.GroupAddToFeeder(aGroup : TKMUnitGroup) : Boolean;
+var I : Integer;
+  U : TKMUnitFeeder;
+begin
+  Result := false;
+  If Units.Feeders.Count = 0 then
+    Exit;
+
+  for I := 0 to Units.Feeders.Count - 1 do
+  begin
+    U := TKMUnitFeeder(Units.Feeders[I]);
+    If not U.IsDeadOrDying and not U.TaskStarted then
+      If U.CanWalkTo(aGroup.Position, 1.42) then
+      begin
+        U.AddGroupToFeed(aGroup);
+        Exit(true);
+      end;
+
+  end;
+
 end;
 
 {function TKMHand.HasBridgeBuiltAt(aLoc: TKMPoint): Boolean;

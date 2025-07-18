@@ -91,6 +91,9 @@ begin
                       uaWork1: if Step = 0 then gSoundPlayer.Play(sfxDig,fUnit.PositionF);
                       uaWork2: if Step = 8 then gSoundPlayer.Play(sfxPave,fUnit.PositionF);
                     end;
+    utHouseBuilder: case ActionType of
+                      uaWork:  if Step = 7 then gSoundPlayer.Play(sfxHousebuild,fUnit.PositionF);
+                    end;
     utFarmer:      case ActionType of
                       uaWork:  if Step = 8 then gSoundPlayer.Play(sfxCornCut,fUnit.PositionF);
                       uaWork1: if Step = 0 then gSoundPlayer.Play(sfxCornSow,fUnit.PositionF,True,0.6);

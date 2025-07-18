@@ -877,6 +877,7 @@ const
 var
   road, ID, rot: Word;
   to1, to2 : TKMTerrainOverlayParams;
+  to3: TKMTileOverlay;
 begin
 
   //Fake tiles for MapEd fields
@@ -890,8 +891,8 @@ begin
   to1 := gTerrain.Land^[pY, pX].TileOverlay.Params;
   to2 := gTerrain.Land^[pY, pX].TileOverlay2.Params;
   if gTerrain.Land^[pY, pX].TileOverlay2 <> OVERLAY_NONE then
-    If (gGameParams.IsMapEditor or to2.ViewInGame) and to2.FirstLayer then
-      RenderTile(gTerrain.Land^[pY, pX].TileOverlay2.TileID, pX, pY, IfThen(to2.Rotate, gTerrain.Land^[pY,pX].BaseLayer.Rotation, 0), DoHighlight, HighlightColor);
+    If (gGameParams.IsMapEditor or to2.ViewInGame) and to2.RenderFirst then
+      RenderTile(to2.TileID, pX, pY, IfThen(to2.Rotate, gTerrain.Land^[pY,pX].BaseLayer.Rotation, 0), DoHighlight, HighlightColor);
 
   //coal is rendered under the road
   {if gTerrain.Land^[pY, pX].TileOverlay2 in (COAL_LIKE_OVERLAYS - [toInfinityCoal, toInfinityClay]) then
@@ -933,19 +934,27 @@ begin
     RenderTile(gTerrain.Land^[pY, pX].TileOverlay.TileID, pX, pY,  IfThen(to1.Rotate, gTerrain.Land^[pY,pX].BaseLayer.Rotation, 0), DoHighlight, HighlightColor);
 
   if gTerrain.Land^[pY, pX].TileOverlay2 <> OVERLAY_NONE then
-    If (gGameParams.IsMapEditor or to2.ViewInGame) and not to2.FirstLayer then
+  begin
+    If to2.HasRoadConnection then
+    begin
+      to3 := gTerrain.Land^[pY, pX].TileOverlay2;
+      road := 0;
+      if (pY - 1 >= 1) then
+        road := road + Byte(gTerrain.Land^[pY - 1, pX].TileOverlay2 = to3) shl 0;
+      if (pX + 1 <= gTerrain.MapX - 1) then
+        road := road + Byte(gTerrain.Land^[pY, pX + 1].TileOverlay2 = to3) shl 1;
+      if (pY + 1 <= gTerrain.MapY - 1) then
+        road := road + Byte(gTerrain.Land^[pY + 1, pX].TileOverlay2 = to3) shl 2;
+      if (pX - 1 >= 1) then
+        road := road + Byte(gTerrain.Land^[pY, pX - 1].TileOverlay2 = to3) shl 3;
+      ID := to2.RoadConnection[road].Tile;
+      rot := to2.RoadConnection[road].Rot;
+      RenderTile(ID, pX, pY, rot, DoHighlight, HighlightColor);
+      //RenderTile(762 + rot, pX, pY, 0, DoHighlight, HighlightColor);
+    end else
+    If (gGameParams.IsMapEditor or to2.ViewInGame) and not to2.RenderFirst then
       RenderTile(to2.TileID, pX, pY,  IfThen(to2.Rotate, gTerrain.Land^[pY,pX].BaseLayer.Rotation, 0), DoHighlight, HighlightColor);
-
-  {case gTerrain.Land^[pY, pX].TileOverlay2 of
-    toNone : ;
-    toCoal1..toCoal5: ;
-    toInfinityCoal: ;
-    toInfinityClay: ;
-    toFence1..toFence6 : RenderTile(TILE_OVERLAY_IDS[gTerrain.Land^[pY, pX].TileOverlay2], pX, pY, 0, DoHighlight, HighlightColor);
-    else
-      if gGameParams.IsMapEditor or KM_TerrainTypes.TileOverlayVisibleInGame(gTerrain.Land^[pY, pX].TileOverlay2) then
-        RenderTile(TILE_OVERLAY_IDS[gTerrain.Land^[pY, pX].TileOverlay2], pX, pY, 0, DoHighlight, HighlightColor);
-  end; }
+  end;
 
   if gTerrain.Land^[pY, pX].TileSelected then
     RenderTile(624, pX, pY, 0);

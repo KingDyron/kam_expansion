@@ -496,6 +496,9 @@ begin
         'ID : Integer; ' +
         'GroupID : Integer; ' +
         'UnitType : TKMUnitType; ' +
+        'X: Word; ' +
+        'Y: Word; ' +
+        'Owner: Word; ' +
         'Attack: Word; ' +
         'Defence: Word; ' +
         'AttackHorse: Word; ' +
@@ -507,6 +510,21 @@ begin
         'DamageHouse : Word; ' +
         'DamageUnits : Word; ' +
         'Ammo : Word; ' +
+      'end;');
+
+    Sender.AddTypeS('TKMHouseStats', 'record ' +
+        'ID : Integer; ' +
+        'HouseType : TKMHouseType; ' +
+        'X: Word; ' +
+        'Y: Word; ' +
+        'FlagX: Word; ' +
+        'FlagY: Word; ' +
+        'IsDestroyed: Boolean; ' +
+        'IsComplete: Boolean; ' +
+        'RepairOn: Boolean; ' +
+        'Damage: Word; ' +
+        'MaxHealth : Word; ' +
+        'Level : Byte; ' +
       'end;');
 
     //*Types-Reg*//
@@ -576,6 +594,7 @@ begin
     RegisterMethodCheck(c, 'function  GroupOwner(aGroupID: Integer): Integer');
     RegisterMethodCheck(c, 'function  GroupType(aGroupID: Integer): Integer');
     RegisterMethodCheck(c, 'function  GroupTypeEx(aGroupID: Integer): TKMGroupType');
+
     RegisterMethodCheck(c, 'function  HouseAllowAllyToSelect(aHouseID: Integer): Boolean');
     RegisterMethodCheck(c, 'function  HouseAt(aX, aY: Integer): Integer');
     RegisterMethodCheck(c, 'function  HouseBarracksRallyPointX(aBarracks: Integer): Integer');
@@ -770,6 +789,7 @@ begin
     RegisterMethodCheck(c, 'function  WareTypeToID(aWareType: TKMWareType): Integer');
     RegisterMethodCheck(c, 'function  WareIdToType(aWareType: Integer): TKMWareType');
     RegisterMethodCheck(c, 'function  WarriorInFight(aUnitID: Integer; aCountCitizens: Boolean): Boolean');
+    RegisterMethodCheck(c, 'function  HouseStats(aHouseID: Integer): TKMHouseStats');
     RegisterMethodCheck(c, 'function  UnitStats(aUnitID: Integer): TKMUnitStats');
     //*States-Check*//
 
@@ -1019,6 +1039,7 @@ begin
     RegisterMethodCheck(c, 'function  UnitSetInstantKill(aUnitID: Integer; isInstant: Boolean): Boolean');
     RegisterMethodCheck(c, 'procedure  UnitBlockWalking(aUnitID: Integer; aBlock: Boolean)');
 
+    RegisterMethodCheck(c, 'procedure  HouseSetStats(aHouseID: Integer; aStats: TKMHouseStats)');
     RegisterMethodCheck(c, 'procedure  UnitSetRage(aUnitID: Integer; aDuration: Integer)');
     RegisterMethodCheck(c, 'procedure  UnitSetStats(aUnitID: Integer; aStats: TKMUnitStats)');
     //*Actions-Check*//
@@ -1590,6 +1611,7 @@ begin
       RegisterMethod(@TKMScriptStates.WareIdToType, 'WareIdToType');
       RegisterMethod(@TKMScriptStates.WarriorInFight, 'WarriorInFight');
 
+      RegisterMethod(@TKMScriptStates.HouseStats, 'HouseStats');
       RegisterMethod(@TKMScriptStates.UnitStats, 'UnitStats');
       //*States-Reg*//
     end;
@@ -1819,6 +1841,7 @@ begin
       RegisterMethod(@TKMScriptActions.UnitOrderWalk, 'UnitOrderWalk');
       RegisterMethod(@TKMScriptActions.UnitSetInstantKill, 'UnitSetInstantKill');
       RegisterMethod(@TKMScriptActions.UnitBlockWalking, 'UnitBlockWalking');
+      RegisterMethod(@TKMScriptActions.HouseSetStats, 'HouseSetStats');
       RegisterMethod(@TKMScriptActions.UnitSetRage, 'UnitSetRage');
       RegisterMethod(@TKMScriptActions.UnitSetStats, 'UnitSetStats');
       //*Actions-Reg*//

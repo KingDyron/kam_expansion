@@ -191,7 +191,7 @@ procedure TKMRender.Resize(aWidth, aHeight: Integer);
 begin
   if fBlind then Exit;
 
-  If (aWidth > MAX_X_RESOLUTION) and (aHeight > MAX_Y_RESOLUTION) then
+  If SCALE_INTERFACE and (aWidth > MAX_X_RESOLUTION) and (aHeight > MAX_Y_RESOLUTION) then
   begin
     fInterfaceScale := Min(aWidth / MAX_X_RESOLUTION, aHeight / MAX_Y_RESOLUTION);
   end else

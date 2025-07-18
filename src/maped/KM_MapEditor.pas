@@ -835,7 +835,12 @@ end;
 procedure TKMMapEditor.ChangeRoadType(const X, Y : Integer);
 begin
   If gTerrain.TileHasRoad(X, Y) {and (gTerrain.Land^[Y, X].TileOwner = gMySpectator.HandID)} then
+  begin
     gMySpectator.Hand.AddRoad(KMPoint(X, Y), gCursor.RoadType);
+    If gCursor.MapEdApplyOverlayOnRoad and (gCursor.MapEdOverlayOnRoad > 0) then
+      gTerrain.SetOverlay(KMPoint(X, Y), TKMTileOverlay(gCursor.MapEdOverlayOnRoad), false);
+  end;
+
 end;
 
 procedure TKMMapEditor.ProceedRoadCursorMode;
@@ -855,6 +860,8 @@ begin
       gTerrain.RemField(P);
 
     gMySpectator.Hand.AddRoad(P, gCursor.RoadType);
+    If gCursor.MapEdApplyOverlayOnRoad and (gCursor.MapEdOverlayOnRoad > 0) then
+      gTerrain.SetOverlay(P, TKMTileOverlay(gCursor.MapEdOverlayOnRoad), false);
     fHistory.MakeCheckpoint(caTerrain, Format(gResTexts[TX_MAPED_HISTORY_CHPOINT_ADD_SMTH], [gResTexts[TX_WORD_ROAD], P.ToString]));
   end;
 end;

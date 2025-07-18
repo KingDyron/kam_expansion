@@ -435,9 +435,20 @@ type
   TKMUnitStats = record
     ID, GroupID : Integer;
     UnitType : TKMUnitType;
+    X, Y, Owner : Word;
     Attack, Defence, AttackHorse, HP, MaxHP, Speed, Sight,
     Condition, DamageHouse, DamageUnits, Ammo: Word;
   end;
+  TKMHouseStats = record
+    ID : Integer;
+    HouseType : TKMHouseType;
+    X, Y, Owner,
+    FlagX, FlagY : Word;
+    IsDestroyed, IsComplete, RepairOn: Boolean;
+    Damage, MaxHealth: Word;
+    Level : Byte;
+  end;
+
 type
   TKMPastureAnimalType = (patNone, patCow, patGoose, patRabbit, patChicken, patBull, patSheep, patOstrich);
   TKMPastureAnimalAction = (paaWalk, paaEat, paaWatch, paaLayDown, paaLying, paaStandUp);

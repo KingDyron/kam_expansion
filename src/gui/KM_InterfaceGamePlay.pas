@@ -441,7 +441,7 @@ const
   PANEL_ALLIES_WIDTH = 840;
   PANEL_TRACK_TOP = 285;
   REPLAYBAR_DEFAULT_WIDTH = 400;
-  SHOW_TREE_TAB = false;
+  SHOW_TREE_TAB = true;
 
   KEY_FUNCS_ALLOWED_ON_PAUSE: TKMKeyFunctionSet = [
     kfMusicPrevTrack, kfMusicNextTrack, kfMusicDisable, kfMusicShuffle, kfMusicVolumeUp, kfMusicVolumeDown,  kfMusicMute,

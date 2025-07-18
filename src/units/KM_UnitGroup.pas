@@ -41,6 +41,8 @@ type
     //don't saved:
     fMapEdCount: Word;
 
+    fFoodRequested : Boolean;
+
     function GetCount: Integer;
     function GetMember(aIndex: Integer): TKMUnitWarrior;
     function GetFlagBearer: TKMUnitWarrior;
@@ -163,6 +165,8 @@ type
     property OrderTargetHouse: TKMHouse read GetOrderTargetHouse write SetOrderTargetHouse;
 
     procedure OwnerUpdate(aOwner: TKMHandID; aMoveToNewOwner: Boolean = False);
+
+    property FoodRequested : Boolean read fFoodRequested write fFoodRequested;
 
     procedure OrderAttackHouse(aHouse: TKMHouse; aClearOffenders: Boolean; aForced: Boolean = True);
     procedure OrderAttackUnit(aUnit: TKMUnit; aClearOffenders: Boolean; aForced: Boolean = True);
@@ -394,6 +398,7 @@ begin
   LoadStream.Read(fTimeSinceRequestFood);
   LoadStream.Read(fNeverHungry);
   LoadStream.Read(IsOnPatrolAttack);
+  LoadStream.Read(fFoodRequested);
 end;
 
 
@@ -479,6 +484,7 @@ begin
   SaveStream.Write(fTimeSinceRequestFood);
   SaveStream.Write(fNeverHungry);
   SaveStream.Write(IsOnPatrolAttack);
+  SaveStream.Write(fFoodRequested);
 end;
 
 
@@ -1510,6 +1516,9 @@ begin
   if aClearOffenders and CanTakeOrders then
     ClearOffenders;
 
+  If fFoodRequested then
+    Exit;
+
   //first check if any unit is somehow hungry
   doOrder := false;
   for I := 0 to Count - 1 do
@@ -1520,6 +1529,12 @@ begin
     end;
 
   if doOrder or aHungryOnly then
+  begin
+    If gHands[Owner].GroupAddToFeeder(self) then
+    begin
+      fFoodRequested := true;
+      Exit;
+    end;
     for I := 0 to Count - 1 do
       if aHungryOnly then
       begin
@@ -1529,6 +1544,7 @@ begin
       end else
       if fMembers[I].Condition <= UNIT_MAX_CONDITION * 0.8 then
         fMembers[I].OrderFood(false);
+  end;
 
     {for I := 0 to Count - 1 do
       if not aHungryOnly or (fMembers[I].Condition <= UNIT_MIN_CONDITION) then

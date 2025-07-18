@@ -430,6 +430,42 @@ type
     function PickRandomSpot(aList: TKMPointDirList; out Loc: TKMPointDir): Boolean;
     function PickNextSpot(aList: TKMPointDirList; out Loc: TKMPointDir; var aLastCellID : Byte): Boolean;
 
+    function OnlyBuildsHouse : Boolean;
+
+    function UpdateState: Boolean; override;
+  end;
+
+  TKMUnitFeederGroup = record
+    Group : Pointer;
+    FoodRequested : Word;
+  end;
+
+  TKMUnitFeeder = class(TKMCivilUnit)
+  private
+    fGroupsToFeed : array of TKMUnitFeederGroup;
+    fFoodCount : Word;
+    procedure CheckGroups;
+    function HasGroup(aGroup : Pointer) : Boolean;
+    function DeleteGroup(aGroup : Pointer) : Boolean;
+
+    function FindBestStore : TKMHouse;
+    procedure TryToFeedGroups;
+  protected
+    procedure PaintUnit(aTickLag: Single); override;
+  public
+    constructor Load(LoadStream: TKMemoryStream); override;
+    procedure Save(SaveStream: TKMemoryStream); override;
+    procedure SyncLoad; Override;
+
+    function NeededFood : Word;
+    function TaskStarted : Boolean;
+    function FirstGroup : Pointer;
+
+    procedure CollectFood(aCount : Word);
+    procedure FeedGroup(aGroup : Pointer);
+
+    procedure AddGroupToFeed(aGroup: Pointer);
+    procedure CloseUnit(aRemoveTileUsage: Boolean = True); override;
     function UpdateState: Boolean; override;
   end;
 
@@ -538,6 +574,10 @@ uses
   KM_UnitTaskMerchant,
   KM_UnitTaskCartographer,
   KM_UnitTaskWoodCutter,
+  KM_UnitTaskFeeder,
+
+  KM_UnitGroup,
+  KM_HouseStore,
 
   KM_SpecialAnim,
   KM_GameTypes,
@@ -1326,6 +1366,11 @@ begin
 end;
 
 { TKMWorker }
+function TKMUnitWorker.OnlyBuildsHouse: Boolean;
+begin
+  Result := UnitType = utHouseBuilder;
+end;
+
 procedure TKMUnitWorker.BuildHouse(aHouse: TKMHouse; aIndex: Integer);
 begin
   fTask := TKMTaskBuildHouse.Create(Self, aHouse, aIndex);
@@ -1496,6 +1541,273 @@ begin
   if fAction = nil then
     raise ELocError.Create(gRes.Units[UnitType].GUIName + ' has no action at end of TKMUnitWorker.UpdateState', fPositionRound);
 end;
+
+
+
+
+{ TKMUnitFeeder }
+
+procedure TKMUnitFeeder.CheckGroups;
+
+  procedure Delete(aIndex : integer);
+  begin
+    gHands.CleanUpGroupPointer(TKMUnitGroup(fGroupsToFeed[aIndex].Group) );
+    fGroupsToFeed[aIndex] := fGroupsToFeed[high(fGroupsToFeed)];
+    SetLength(fGroupsToFeed, high(fGroupsToFeed));
+  end;
+
+var i : integer;
+begin
+  for I := High(fGroupsToFeed) downto 0 do
+    If TKMUnitGroup(fGroupsToFeed[I].Group).IsDead then
+      Delete(I);
+end;
+
+function TKMUnitFeeder.HasGroup(aGroup: Pointer): Boolean;
+var I : Integer;
+begin
+  Result := false;
+  for I := High(fGroupsToFeed) downto 0 do
+    If fGroupsToFeed[I].Group = aGroup then
+      Exit(true);
+end;
+
+function TKMUnitFeeder.DeleteGroup(aGroup: Pointer): Boolean;
+  procedure Delete(aIndex : integer);
+  begin
+    gHands.CleanUpGroupPointer(TKMUnitGroup(fGroupsToFeed[aIndex].Group) );
+    fGroupsToFeed[aIndex] := fGroupsToFeed[high(fGroupsToFeed)];
+    SetLength(fGroupsToFeed, high(fGroupsToFeed));
+  end;
+var I : Integer;
+begin
+  Result := false;
+  for I := High(fGroupsToFeed) downto 0 do
+    If fGroupsToFeed[I].Group = aGroup then
+      Delete(I);
+end;
+
+procedure TKMUnitFeeder.AddGroupToFeed(aGroup: Pointer);
+var I : Integer;
+begin
+  I := length(fGroupsToFeed);
+  SetLength(fGroupsToFeed, I + 1);
+  fGroupsToFeed[I].Group := TKMUnitGroup(aGroup).GetPointer;
+  fGroupsToFeed[I].FoodRequested := TKMUnitGroup(aGroup).Count;
+end;
+
+function TKMUnitFeeder.FirstGroup: Pointer;
+begin
+  //delete died groups
+  CheckGroups;
+
+  If length(fGroupsToFeed) > 0 then
+    Result := fGroupsToFeed[0].Group
+  else
+    Result := nil;
+end;
+
+procedure TKMUnitFeeder.CollectFood(aCount: Word);
+begin
+  Inc(fFoodCount, aCount);
+end;
+
+procedure TKMUnitFeeder.FeedGroup(aGroup: Pointer);
+var G : TKMUnitGroup;
+  W : TKMUnitWarrior;
+  I : Integer;
+begin
+  G := aGroup;
+  If HasGroup(aGroup) then
+    DeleteGroup(aGroup);
+
+  If G.IsDead then
+    Exit;
+
+  for I := 0 to G.Count - 1 do
+  begin
+    W := G.Members[I];
+    If not W.IsDeadOrDying then
+    begin
+      If fFoodCount > 0 then
+        dec(fFoodCount);
+      W.Feed(UNIT_MAX_CONDITION);
+    end;
+  end;
+  G.FoodRequested := false;
+
+end;
+
+function TKMUnitFeeder.NeededFood: Word;
+var I : integer;
+begin
+  Result := 0;
+  for I := 0 to High(fGroupsToFeed) do
+    Inc(Result, fGroupsToFeed[I].FoodRequested);
+  Result := EnsureRange(Result - fFoodCount, 0, high(Word));
+end;
+
+function TKMUnitFeeder.TaskStarted: Boolean;
+begin
+  Result := IsHungry or ((fTask is TKMTaskFeeder) and (TKMTaskFeeder(fTask).Phase > 2));
+end;
+
+function TKMUnitFeeder.FindBestStore: TKMHouse;
+var I, lastBest, needsFood : Integer;
+  arr : TKMArray<TKMHouse>;
+  bid : array of Integer;
+  H : TKMHouseStore;
+begin
+  Result := nil;
+  arr.Clear;
+  for I := 0 to gHands[Owner].Houses.Stores.Count - 1 do
+  begin
+    H := TKMHouseStore(gHands[Owner].Houses.Stores[I]);
+    //get valid stores
+    If H.IsValid and (H.FoodCount > 0) and CanWalkTo(H.PointBelowEntrance, 1.42) then
+      arr.Add(TKMHouse(H));
+  end;
+
+  If arr.Count = 0 then
+    Exit;
+  SetLength(bid, arr.Count);
+
+  needsFood := NeededFood;
+
+  for I := 0 to arr.Count - 1 do
+  begin
+    bid[I] := 100000;
+    H := TKMHouseStore(arr[I]);
+
+    Inc(  bid[I], Round(KMLengthDiag(Position, H.Entrance))   );
+    If H.FoodCount > needsFood then
+      Dec(bid[I], H.FoodCount);
+  end;
+
+  lastBest := high(Integer);
+
+  for I := 0 to arr.Count - 1 do
+    If bid[I] < lastBest then
+    begin
+      Result := arr[I];
+      lastBest := bid[I];
+    end;
+end;
+
+procedure TKMUnitFeeder.TryToFeedGroups;
+var H : TKMHouse;
+begin
+  If length(fGroupsToFeed) = 0 then
+    Exit;
+
+  CancelTask;
+  H := FindBestStore;
+  If H = nil then
+    Exit;
+  fTask := TKMTaskFeeder.Create(self, H);
+end;
+
+procedure TKMUnitFeeder.CloseUnit(aRemoveTileUsage: Boolean = True);
+var I : integer;
+begin
+  for I := 0 to High(fGroupsToFeed) do
+  begin
+    gHands.CleanUpGroupPointer(TKMUnitGroup(fGroupsToFeed[I].Group) );
+    TKMUnitGroup(fGroupsToFeed[I].Group).FoodRequested := false;
+    TKMUnitGroup(fGroupsToFeed[I].Group).OrderFood(true);
+  end;
+  Inherited;
+end;
+
+procedure TKMUnitFeeder.PaintUnit(aTickLag: Single);
+var
+  ID: Integer;
+  V: TKMUnitVisualState;
+  xPaintPos, yPaintPos: Single;
+begin
+  V := fVisual.GetLerp(aTickLag);
+
+  xPaintPos := V.PositionF.X + UNIT_OFF_X + V.SlideX;
+  yPaintPos := V.PositionF.Y + UNIT_OFF_Y + V.SlideY;
+
+  ID := UID * Byte(not (V.Action in [uaDie, uaEat]));
+
+  gRenderPool.AddUnit(UnitType, ID, V.Action, V.Dir, V.AnimStep, V.AnimFraction, xPaintPos, yPaintPos, IfThen(FlagColor <> 0, FlagColor, gHands[Owner].GameFlagColor), True);
+
+  if fThought <> thNone then
+    gRenderPool.AddUnitThought(fType, V.Action, V.Dir, V.AnimStep, fThought, xPaintPos, yPaintPos);
+end;
+
+constructor TKMUnitFeeder.Load(LoadStream: TKMemoryStream);
+var I, J : integer;
+begin
+  Inherited;
+  LoadStream.Read(J);
+  SetLength(fGroupsToFeed, J);
+  for I := 0 to J - 1 do
+  begin
+    LoadStream.Read(fGroupsToFeed[I].FoodRequested);
+    LoadStream.Read(fGroupsToFeed[I].Group, 4);
+  end;
+  LoadStream.Read(fFoodCount);
+
+end;
+
+procedure TKMUnitFeeder.Save(SaveStream: TKMemoryStream);
+var I, J : integer;
+begin
+  Inherited;
+  J := length(fGroupsToFeed);
+  SaveStream.Write(J);
+  for I := 0 to J - 1 do
+  begin
+    SaveStream.Write(fGroupsToFeed[I].FoodRequested);
+    SaveStream.Write(TKMUnitGroup(fGroupsToFeed[I].Group).UID);
+  end;
+  SaveStream.Write(fFoodCount);
+end;
+
+procedure TKMUnitFeeder.SyncLoad;
+var I: integer;
+begin
+  Inherited;
+  for I := 0 to High(fGroupsToFeed) do
+    fGroupsToFeed[I].Group := gHands.GetGroupByUID(Integer(fGroupsToFeed[I].Group) );
+
+end;
+
+function TKMUnitFeeder.UpdateState: Boolean;
+begin
+  Result := True; //Required for override compatibility
+  if fAction = nil then
+    raise ELocError.Create(gRes.Units[UnitType].GUIName + ' has no action at start of TKMUnitWorker.UpdateState', fPositionRound);
+
+  if inherited UpdateState then Exit;
+
+  CheckCondition;
+  Inc(fTicker);
+  If fTask = nil then
+      TryToFeedGroups;
+
+  if fTask = nil then
+  begin
+    Inc(fIdleTimer);
+    if fIdleTimer > 10 then
+      GoGetBoots;
+  end else
+    fIdleTimer := 0;
+
+  if (fTask = nil) then
+    Thought := thNone; //Remove build thought if we are no longer doing anything
+
+  if (fTask = nil) and (fAction = nil) then SetActionStay(20, uaWalk);
+
+  if fAction = nil then
+    raise ELocError.Create(gRes.Units[UnitType].GUIName + ' has no action at end of TKMUnitWorker.UpdateState', fPositionRound);
+end;
+
+
+
 
 
 { TKMUnitAnimal }
@@ -1898,6 +2210,8 @@ begin
       uttBuildPearl:      fTask := TKMTaskBuildPearl.Load(LoadStream);
       uttPearlRally:      fTask := TKMTaskPearlRally.Load(LoadStream);
       uttGoToPearl:       fTask := TKMTaskGoToPearl.Load(LoadStream);
+      uttForestCutter:    fTask := TKMTaskForestCutting.Load(LoadStream);
+      uttFeedGroup:       fTask := TKMTaskFeeder.Load(LoadStream);
     else
       raise Exception.Create('TaskName can''t be handled');
     end;
@@ -2468,6 +2782,9 @@ function TKMUnit.GetStats : TKMUnitStats;
 begin
   Result.GroupID := -1;
   Result.UnitType := UnitType;
+  Result.X := Position.X;
+  Result.Y := Position.Y;
+  Result.Owner := Owner;
   Result.Attack := fAttack;
   Result.Defence := fDefence;
   Result.AttackHorse := fAttackHorse;
@@ -2931,7 +3248,7 @@ begin
     end;
 
   //Preparing house area
-  if (fType = utBuilder) and (fTask is TKMTaskBuildHouseArea)
+  if (fType in [utBuilder, utHouseBuilder]) and (fTask is TKMTaskBuildHouseArea)
   and TKMTaskBuildHouseArea(fTask).Digging
   then
     Result := tpWorker; //Special mode that allows us to walk on building sites
@@ -3212,6 +3529,7 @@ const
       -1,                      //uttGoToShip
       TX_UNIT_TASK_ROAD,        //uttBuildGrassland
       -1,                      //uttUnloadFromShip
+      -1,
       -1,
       -1,
       -1,

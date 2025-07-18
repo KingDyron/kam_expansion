@@ -5401,12 +5401,12 @@ begin
   end else
   if aOverwrite then
   begin
-    if not gCursor.MapEdOverrideCustomTiles then
+    if gGameParams.IsMapEditor and not gCursor.MapEdOverrideCustomTiles then
       If Land^[aLoc.Y, aLoc.X].TileOverlay <> OVERLAY_NONE then
         Exit;
       if CanAddField(aLoc.X, aLoc.Y, ftRoad)                       //Can we add road
         or ((Land^[aLoc.Y, aLoc.X].TileOverlay = OVERLAY_ROAD)
-            and (gHands.HousesHitTest(aLoc.X, aLoc.Y) = nil)) then //or Can we destroy road
+        and (gHands.HousesHitTest(aLoc.X, aLoc.Y) = nil)) then //or Can we destroy road
       begin
         if Land^[aLoc.Y, aLoc.X].TileOverlay = OVERLAY_ROAD then
           RemRoad(aLoc);
@@ -5426,7 +5426,8 @@ begin
   end
   else
   begin
-    if not gCursor.MapEdOverrideCustomTiles then
+
+    if gGameParams.IsMapEditor and not gCursor.MapEdOverrideCustomTiles then
       If Land^[aLoc.Y, aLoc.X].TileOverlay <> OVERLAY_NONE then
         Exit;
     if CanAddField(aLoc.X, aLoc.Y, ftRoad)
@@ -5436,9 +5437,6 @@ begin
       and not TileIsCornField(KMPoint(aLoc.X, aLoc.Y)) then
     begin
         gTerrain.Land^[aLoc.Y, aLoc.X].TileOverlay := aOverlay;
-
-
-
       changed := True;
     end;
   end;
@@ -5448,6 +5446,7 @@ begin
     begin
       gTerrain.Land^[aLoc.Y, aLoc.X].TileOverlay2 := aOverlay;
       Land^[aLoc.Y, aLoc.X].Ware.C2 := 0;
+      changed := True;
     end;
 
   if changed then
@@ -6373,6 +6372,7 @@ begin
   begin
     if TileIsWalkable(aLoc)
       and gRes.Tileset[gRes.Tileset.Overlay[Land^[aLoc.Y,aLoc.X].TileOverlay2].TileID].Walkable
+      and not Land^[aLoc.Y,aLoc.X].TileOverlay.BlocksWalking
       and not gMapElements[Land^[aLoc.Y,aLoc.X].Obj].AllBlocked
       and ((Land^[aLoc.Y,aLoc.X].Ware.C < 5) or (Land^[aLoc.Y,aLoc.X].Ware.W = 0))
       and CheckHeightPass(aLoc, hpWalking) then
@@ -6398,6 +6398,7 @@ begin
       and not TileIsGrassField(aLoc)
       and not TileIsVegeField(aLoc)
       and not gRes.Tileset[Land^[aLoc.Y,aLoc.X].TileOverlay2.Params.TileID].NotBuildable
+      and not Land^[aLoc.Y,aLoc.X].TileOverlay.BlocksBuilding
       and (Land^[aLoc.Y,aLoc.X].TileLock in [tlNone])
       and TileInMapCoords(aLoc.X, aLoc.Y, 1)
       and CheckHeightPass(aLoc, hpBuilding) then
@@ -6411,9 +6412,11 @@ begin
       AddPassability(tpBuild);
 
     if TileIsRoadable(aLoc)
+      and (tpWalk in Land^[aLoc.Y,aLoc.X].Passability)
       and not gMapElements[Land^[aLoc.Y,aLoc.X].Obj].AllBlocked
       and (Land^[aLoc.Y,aLoc.X].TileLock in [tlNone, tlWallEmpty])
       and (Land^[aLoc.Y,aLoc.X].TileOverlay <> OVERLAY_ROAD)
+      and not Land^[aLoc.Y,aLoc.X].TileOverlay.BlocksBuilding
       and CheckHeightPass(aLoc, hpWalking)
       and not (Land^[aLoc.Y,aLoc.X].Obj in [80, 81])
       and not TileHasPalisade(aLoc.X,aLoc.Y) then
@@ -6444,7 +6447,8 @@ begin
       and CheckHeightPass(aLoc, hpWalking) then //Can't crab on houses, fields and roads (can walk on fenced house so you can't kill them by placing a house on top of them)
       AddPassability(tpCrab);
 
-    if TileIsSoil(aLoc.X,aLoc.Y)
+    if HasPassability(tpWalk)
+      and TileIsSoil(aLoc.X,aLoc.Y)
       and not gMapElements[Land^[aLoc.Y,aLoc.X].Obj].AllBlocked
       //TileLock checked in outer begin/end
       //Wolf are big enough to run over roads, right?

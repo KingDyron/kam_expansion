@@ -68,6 +68,8 @@ type
     // todo: refactor to use only 1 flag here
     MapEdDir: Byte;
     MapEdDirection: TKMDirection; //direction of Units and Defence Pos
+    MapEdOverlayOnRoad : Word;
+    MapEdApplyOverlayOnRoad : Boolean;
 
     // MapEd TownDefence
     MapEdDefPosGroupType: TKMGroupType; //group type of defence position

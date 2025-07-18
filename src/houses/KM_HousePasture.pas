@@ -474,14 +474,36 @@ begin
                                         entr.Y + OBJECTS_OFFSET_Y[I]);
       for I := 0 to 4 do
       for K := 0 to 2 do
-          gRenderPool.RenderMapElement(322, FlagAnimStep + I + K,
+          gRenderPool.RenderMapElement(632, FlagAnimStep + I + K,
                                         entr.X + I - 2,
                                         entr.Y + K - 4);
       for I := 0 to 1 do
       for K := 0 to 0 do
-          gRenderPool.RenderMapElement(322, FlagAnimStep + I + K,
+          gRenderPool.RenderMapElement(632, FlagAnimStep + I + K,
                                         entr.X + I + 1,
                                         entr.Y + K - 1);
+
+        gRenderPool.RenderTree(632, FlagAnimStep,
+                              entr.X,
+                              entr.Y - 1,
+                              entr);
+        gRenderPool.RenderTree(632, FlagAnimStep,
+                              entr.X + 0.5,
+                              entr.Y - 1,
+                              entr);
+        gRenderPool.RenderTree(632, FlagAnimStep,
+                              entr.X + 0.5,
+                              entr.Y - 0.5,
+                              entr);
+
+        gRenderPool.RenderTree(632, FlagAnimStep,
+                              entr.X + 1,
+                              entr.Y - 1,
+                              entr);
+        gRenderPool.RenderTree(632, FlagAnimStep,
+                              entr.X + 1,
+                              entr.Y - 0.5,
+                              entr);
 
 
 

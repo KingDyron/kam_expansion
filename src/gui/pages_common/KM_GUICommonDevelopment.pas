@@ -51,7 +51,7 @@ const
   TREE_TYPE_ICON : array[TKMDevelopmentTreeType] of Word = (39, 322);
 var dtt : TKMDevelopmentTreeType;
   procedure CreateNext(aType : TKMDevelopmentTreeType; var aToButton : TKMDevButton;  aDevelopment : PKMDevelopment; aTop : Byte);
-  var I, J : integer;
+  var I: integer;
   begin
     with Tree[aType] do
     begin
@@ -134,7 +134,7 @@ var dtt : TKMDevelopmentTreeType;
     oldCount : Integer;
 
   procedure CreateNext(aType : TKMDevelopmentTreeType; var aToButton : TKMDevButton; aDevelopment : PKMDevelopment; aTop : Byte);
-  var I, J : integer;
+  var I: integer;
   begin
     with Tree[aType] do
     begin

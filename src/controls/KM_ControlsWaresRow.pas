@@ -519,6 +519,7 @@ end;
 procedure TKMCostsRow.Paint;
 var
   I, gap, baseLeft: Integer;
+  wd: Single;
 begin
   inherited;
   baseLeft := 0;
@@ -531,15 +532,24 @@ begin
   if Count > 0 then
   begin
     if Count <= MaxCount then
-      gap := 20
-    else
+    begin
+      gap := 20;
+      baseLeft := gap * Count;
+      baseLeft := AbsLeft + (Width - baseLeft) div 2;//Centerize
+    end else
+    begin
+      wd := MaxCount * 20 / Count;
       gap := Trunc(MaxCount * 20 / Count);
+      //gap := Trunc((Width - 20) / Count);
+      baseLeft := Round(wd * Count);
+      //baseLeft := AbsLeft + (Width - baseLeft) div 2;//Centerize
+      baseLeft := AbsLeft + ((Width - baseLeft) div 2);
+    end;
 
-    baseLeft := gap * Count;
-    baseLeft := AbsLeft + (Width - baseLeft) div 2;//Centerize
     if TexID1 <> 0 then
       for I := Count - 1 downto 0 do
-        TKMRenderUI.WritePicture(baseLeft + gap*(I), AbsTop + 15, 20, Height, [], RX, TexID1);
+        TKMRenderUI.WritePicture(baseLeft + gap*(I), AbsTop + 15, 20, Height, [], RX, TexID1,
+                                  true, $FFFF00FF, -0.2 + 0.4 * (I mod 2));
   end else
   if length(TexArr) > 0 then
   begin
