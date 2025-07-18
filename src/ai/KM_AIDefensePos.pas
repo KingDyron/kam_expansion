@@ -436,7 +436,7 @@ begin
       If CurrentGroup.CanWalkTo(aToLoc.Loc, 0) then
         CurrentGroup.OrderWalk(aToLoc.Loc, True, wtokAIGotoDefencePos, aToLoc.Dir);
     end else
-    if (PositionPatrol.Loc.X <= 0) then
+    if (PositionPatrol.Loc.X > 0) then
     begin
       Inc(fTimer);
       if fTimer = 30 then

@@ -6370,7 +6370,8 @@ begin
   //For all passability types other than CanAll, houses and fenced houses are excluded
   if Land^[aLoc.Y,aLoc.X].TileLock in [tlNone, tlFenced, tlFieldWork, tlRoadWork, tlWallEmpty, tlStructure] then
   begin
-    if TileIsWalkable(aLoc)
+    if (TileIsWalkable(aLoc)
+        or Land^[aLoc.Y,aLoc.X].TileOverlay2.AllowsBuilding)
       and gRes.Tileset[gRes.Tileset.Overlay[Land^[aLoc.Y,aLoc.X].TileOverlay2].TileID].Walkable
       and not Land^[aLoc.Y,aLoc.X].TileOverlay.BlocksWalking
       and not gMapElements[Land^[aLoc.Y,aLoc.X].Obj].AllBlocked
@@ -6391,11 +6392,12 @@ begin
           hasHousesNearTile := True;
 
     isBuildNoObj := False;
-    if ((TileIsRoadable(aLoc)
+    if (
+        (tpWalk in Land^[aLoc.Y,aLoc.X].Passability)
+        and(TileIsRoadable(aLoc)
         and not gRes.Tileset[Land^[aLoc.Y,aLoc.X].TileOverlay2.Params.TileID].NotBuildable
         and not Land^[aLoc.Y,aLoc.X].TileOverlay.BlocksBuilding)
         or Land^[aLoc.Y,aLoc.X].TileOverlay2.AllowsBuilding)
-      and (tpWalk in Land^[aLoc.Y,aLoc.X].Passability)
       and not TileIsCornField(aLoc) //Can't build houses on fields
       and not TileIsWineField(aLoc)
       and not TileIsGrassField(aLoc)
@@ -6412,12 +6414,14 @@ begin
       and((Land[aLoc.Y,aLoc.X].Obj = OBJ_NONE) or (gMapElements[Land^[aLoc.Y,aLoc.X].Obj].CanBeRemoved)) then //Only certain objects are excluded
       AddPassability(tpBuild);
 
-    if TileIsRoadable(aLoc)
-      and (tpWalk in Land^[aLoc.Y,aLoc.X].Passability)
+    if (
+      ((tpWalk in Land^[aLoc.Y,aLoc.X].Passability)
+      and TileIsRoadable(aLoc)
+      and not Land^[aLoc.Y,aLoc.X].TileOverlay.BlocksBuilding)
+        or Land^[aLoc.Y,aLoc.X].TileOverlay2.AllowsBuilding)
       and not gMapElements[Land^[aLoc.Y,aLoc.X].Obj].AllBlocked
       and (Land^[aLoc.Y,aLoc.X].TileLock in [tlNone, tlWallEmpty])
       and (Land^[aLoc.Y,aLoc.X].TileOverlay <> OVERLAY_ROAD)
-      and not Land^[aLoc.Y,aLoc.X].TileOverlay.BlocksBuilding
       and CheckHeightPass(aLoc, hpWalking)
       and not (Land^[aLoc.Y,aLoc.X].Obj in [80, 81])
       and not TileHasPalisade(aLoc.X,aLoc.Y) then

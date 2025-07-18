@@ -102,7 +102,7 @@ begin
   Add(aStartPos, //startpos
       KMPointF(-0.025, 0.05), //speed/vector
       20, rxTrees, //lifeTime, rxType
-      ParticlesAnims[2],
+      ParticlesAnims[0],
       true
     );
 end;
