@@ -19,7 +19,7 @@ type
   TKMTilesParamsArray = array{ [0..TILES_CNT-1]} of TKMTileParams;
 
 
-  TKMTerrainOverlayFunction = (tofNone, tofRoadDig, tofRoad, tofInfinity, tofBlock, tofBlockBuilding, tofStopGrowing);
+  TKMTerrainOverlayFunction = (tofNone, tofRoadDig, tofRoad, tofInfinity, tofBlock, tofBlockBuilding, tofStopGrowing, tofAllowBuild);
   //tofNone = decorative tile overlay
 
   {TKMTileOverlay = byte;(toNone, toDig1, toDig2, toDig3, toDig4, toRoad,
@@ -146,6 +146,7 @@ type
     function Rotate : Boolean;
     function BlocksWalking : Boolean;
     function BlocksBuilding : Boolean;
+    function AllowsBuilding : Boolean;
   end;
 
 const
@@ -1051,6 +1052,10 @@ end;
 function TKMTerrainOverlayHelper.BlocksBuilding : Boolean;
 begin
   Result := gRes.Tileset.Overlay[Word(self)].funct = tofBlockBuilding;
+end;
+function TKMTerrainOverlayHelper.AllowsBuilding : Boolean;
+begin
+  Result := gRes.Tileset.Overlay[Word(self)].funct = tofAllowBuild;
 end;
 
 end.

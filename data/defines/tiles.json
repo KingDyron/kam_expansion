@@ -799,7 +799,8 @@
 	{"ID": 775, "Walkable": true, "Roadable": true, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
 	{"ID": 776, "Walkable": true, "Roadable": true, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
 	{"ID": 777, "Walkable": true, "Roadable": true, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
-	{"ID": 778, "Walkable": true, "Roadable": true, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]}    
+	{"ID": 778, "Walkable": true, "Roadable": true, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]} ,
+	{"ID": 779, "Walkable": true, "Roadable": true, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]}    
   ],
   "Overlays" : [
 	{"TileID": 0, "IsFirstLayer": true, "Visible": true, "ViewInGame": false, "Ware" : 0, "WareCount" : 0, "Function" : 0, "CanTree" : true, "Hint" : 0},  
@@ -864,7 +865,8 @@
 	{"TileID": 771, "IsFirstLayer": false, "Visible": true, "ViewInGame": true, "CanTree" : true, "Hint" : 0},    
 	{"TileID": 604, "IsFirstLayer": false, "Visible": true, "ViewInGame": true, "CanTree" : true, "Hint" : 0},    
 	{"TileID": 756, "IsFirstLayer": false, "Visible": true, "ViewInGame": true, "CanTree" : true, "Hint" : 0},    
-	{"TileID": 778, "IsFirstLayer": false, "Visible": true, "ViewInGame": true, "CanTree" : true, "Hint" : 0}
+	{"TileID": 778, "IsFirstLayer": false, "Visible": true, "ViewInGame": false, "CanTree" : true, "Hint" : 0},    
+	{"TileID": 779, "IsFirstLayer": false, "Visible": true, "ViewInGame": false, "CanTree" : true, "Function" : 7, "Hint" : 0}
   ],
   
   "OverlayGuiOrder" : [0, 1, 2, 3, 4, 5,
@@ -878,7 +880,7 @@
     0,
     22, 24,33, 25, 26,
     0,
-    34, 35, 36, 37
+    34, 35, 36, 37, 43
 	]
   
 }

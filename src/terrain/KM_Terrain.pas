@@ -6391,14 +6391,15 @@ begin
           hasHousesNearTile := True;
 
     isBuildNoObj := False;
-    if TileIsRoadable(aLoc)
+    if ((TileIsRoadable(aLoc)
+        and not gRes.Tileset[Land^[aLoc.Y,aLoc.X].TileOverlay2.Params.TileID].NotBuildable
+        and not Land^[aLoc.Y,aLoc.X].TileOverlay.BlocksBuilding)
+        or Land^[aLoc.Y,aLoc.X].TileOverlay2.AllowsBuilding)
       and (tpWalk in Land^[aLoc.Y,aLoc.X].Passability)
       and not TileIsCornField(aLoc) //Can't build houses on fields
       and not TileIsWineField(aLoc)
       and not TileIsGrassField(aLoc)
       and not TileIsVegeField(aLoc)
-      and not gRes.Tileset[Land^[aLoc.Y,aLoc.X].TileOverlay2.Params.TileID].NotBuildable
-      and not Land^[aLoc.Y,aLoc.X].TileOverlay.BlocksBuilding
       and (Land^[aLoc.Y,aLoc.X].TileLock in [tlNone])
       and TileInMapCoords(aLoc.X, aLoc.Y, 1)
       and CheckHeightPass(aLoc, hpBuilding) then
@@ -8134,7 +8135,8 @@ end;
 
 function TKMTerrain.CanPlaceWell(const aLoc: TKMPoint): Boolean;
 begin
-  Result := not (TileIsSnow(aLoc.X, aLoc.Y) or TileIsSand(aLoc) or (TileIsCoal(aLoc.X, aLoc.Y) > 0));
+  Result := not (TileIsSnow(aLoc.X, aLoc.Y) or TileIsSand(aLoc) or (TileIsCoal(aLoc.X, aLoc.Y) > 0))
+    or Land[aLoc.Y, aLoc.X].TileOverlay2.AllowsBuilding;
 
 end;
 
