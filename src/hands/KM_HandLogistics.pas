@@ -1305,6 +1305,8 @@ var I, K : Integer;
   entr1, entr2 : TKMPointDirArray;
 begin
   Result := false;
+  IF (aLocHouse.HouseType in NO_ROAD_CONNECTION_HOUSES) or (aToHouse.HouseType in NO_ROAD_CONNECTION_HOUSES) then
+    Exit(true);
   entr1 := aLocHouse.Entrances;
   entr2 := aToHouse.Entrances;
 
@@ -1360,7 +1362,7 @@ begin
             (
             HousesAreConnected(offer.Loc_House, demand.Loc_House)
             //gTerrain.RouteCanBeMade(offer.Loc_House.PointBelowEntrance, demand.Loc_House.PointBelowEntrance, tpWalkRoad)
-            or (CONNECT_ROAD_TO_WALLS and (demand.Loc_House.HouseType in WALL_HOUSES) and gTerrain.RouteCanBeMade(offer.Loc_House.PointBelowEntrance, demand.Loc_House.PointBelowEntrance, tpWalk, 1))
+            or (CONNECT_ROAD_TO_WALLS and (demand.Loc_House.HouseType in NO_ROAD_CONNECTION_HOUSES) and gTerrain.RouteCanBeMade(offer.Loc_House.PointBelowEntrance, demand.Loc_House.PointBelowEntrance, tpWalk, 1))
             )
             )
             or

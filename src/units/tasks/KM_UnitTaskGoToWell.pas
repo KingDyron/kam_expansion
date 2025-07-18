@@ -111,17 +111,17 @@ begin
             SetActionGoIn(uaWalk, gdGoOutside, Home);
             Home.SetState(hstEmpty);
           end;
-      1:  SetActionWalkToSpot(fWell.PointBelowEntrance);
-      2:  SetActionGoIn(uaWalk, gdGoInside, fWell);//enter the well
-      3:  if fWell.CheckWareOut(wtWater) > 0 then
+      1:  SetActionWalkToSpot(fWell.Entrance, uaWalk, 1);
+      //2:  SetActionGoIn(uaWalk, gdGoInside, fWell);//enter the well
+      2:  if fWell.CheckWareOut(wtWater) > 0 then
           begin
-            SetActionLockedStay(5, uaWalk); //take water
+            SetActionLockedStay(20, uaWalk); //take water
             fWell.DecProgress(150);
             fWell.WareTakeFromOut(wtWater, 1, true);
             fHasWater := true;
           end else
           begin
-            SetActionLockedStay(100, uaWalk); // wait a little, maybe water will be produced soon
+            SetActionLockedStay(150, uaWalk); // wait a little, maybe water will be produced soon
             {Inc(fPhase2);
             if fPhase2 < 5 then //wait only 5 times, then go back to home with nothing
               fPhase := 2;}
@@ -129,14 +129,15 @@ begin
             fHasWater := true;
           end;
       //go back to house
-      4:  begin
-            SetActionGoIn(uaWalk, gdGoOutside, fWell);
+      {3:  begin
+            //SetActionGoIn(uaWalk, gdGoOutside, fWell);
+            SetActionLockedStay(0, uaWalk); // wait a little, maybe water will be produced soon
             Thought := thNone;
-          end;
-      5: SetActionWalkToSpot(Home.PointBelowEntrance);
-      6: SetActionGoIn(uaWalk, gdGoInside, Home);
+          end;}
+      3: SetActionWalkToSpot(Home.PointBelowEntrance);
+      4: SetActionGoIn(uaWalk, gdGoInside, Home);
       //unit back at home
-      7:  begin
+      5:  begin
             SetActionLockedStay(20, uaWalk);
             if fHasWater then
               Home.WareAddToIn(wtWater, 1, true);

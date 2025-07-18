@@ -1084,6 +1084,7 @@ begin
     for Y := 1 to gTerrain.MapY - 1 do
       if gTerrain.Land^[Y,X].TileSelected then
       begin
+        If (X > 1) and (X < gTerrain.MapX - 1) and (Y > 1) and (Y <= gTerrain.MapY - 1) then
         if ReplaceObjects or (not ReplaceObjects and (gTerrain.Land^[Y, X].Obj = 255)) then
           If aColID = 0 then
             gTerrain.Land^[Y, X].Obj := gRes.Patterns.Local[aPatternID].GetObject(X + RanX,Y + RanY)

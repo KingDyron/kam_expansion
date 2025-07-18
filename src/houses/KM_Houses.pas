@@ -3405,7 +3405,7 @@ end;
 
 function TKMHouse.PlaceRoad: Boolean;
 begin
-  Result := not (HouseType in WALL_HOUSES);
+  Result := not (HouseType in NO_ROAD_CONNECTION_HOUSES);
 end;
 
 procedure TKMHouse.SetStyle(aValue : Byte);
