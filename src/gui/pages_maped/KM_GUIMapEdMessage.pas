@@ -50,6 +50,7 @@ begin
   Image_MessageClose.HighlightOnMouseOver := True;
 
   Label_Message := TKMLabel.Create(Panel_Message, 40, 60, 7000, 0, '', fntGrey, taLeft);
+  Label_Message.WordWrap := true;
 end;
 
 

@@ -1,17 +1,18 @@
 ﻿
 [$0000FF]KaM Expansion v1.2 KamStar United
-[$55FF55]Ostateczny Autorytet
-	- misja 5, dodano hutnika
-	- misja 8, zablokowano kolczugę bitynową w targowisku
-	- misja 10, dodano zbieraczy i usunięto kamieniarzy; Usunięto kamień z drogi przeciwnika
 	
 [$55FF55]Budynki
-	- Poprawiono animację flagi w silosie poziom 2
-	- usunięto kłodę z drzew owocowych podporządkowanych pod inne drzewo
-	- zwiększono zasięg wydobycia garncarni o 2 kratki w każdą stronę
+	- dodano budynek: Dom kartografa. Dzięki niemu można zdobyć ważne 
+		informacje na temat terenu i przeciwnika.
+	- dodano budynek: Perła architektury. Specjalny budynek na specjalne okazje.
+	- dodano budynek: Szkółka leśna. Leśniczy sadzi w nim drzewa.
+	- dodano budynek: Pastwisko. Można w nim chodować różnego rodzaju zwierzynę.
+	
 
 [$55FF55]Jednostki
-	- dodano nową jednostkę: Kapitan budowy. Do kupienia w ratuszu za 18 złota
+	- dodano nową jednostkę: Kapitan budowy. Do kupienia w ratuszu za 20 złota.
+		Buduje tylko budynki lub struktury, ale robi to znacznie szybciej.
+	- dodano nową jednostkę: Jadłopodawca. Może szybko nakarmić całe oddziały.
 
 [$55FF55]Surowce
 	-produkt uboczny "sadzonka" ma zastosowanie w szkółce leśnej
@@ -19,6 +20,8 @@
 [$55FF55]Interfejs
 
 [$55FF55]Inne
+	- dodano nowe płytki dekoracyjne : murki, płotki oraz płytki funkcyjne.
+	
 	
 [$55FF55]Mapy
 	- dodane SP : 

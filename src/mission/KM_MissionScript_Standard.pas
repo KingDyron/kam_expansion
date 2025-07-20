@@ -368,28 +368,33 @@ begin
                           if PointInMap(P[1]+1, P[2]+1) and InRange(P[0], Low(HOUSE_ID_TO_TYPE), High(HOUSE_ID_TO_TYPE)) then
                             if gTerrain.CanPlaceHouseFromScript(HOUSE_ID_TO_TYPE[P[0]], KMPoint(P[1]+1, P[2]+1)) then
                             begin
-                              if P[3] = 1 then
-                              begin
-                                fLastHouse := gHands[fLastHand].AddHouseWip(HOUSE_ID_TO_TYPE[P[0]], KMPoint(nonEntranceX, P[2]+1));
-                                //fLastHouse.UpdatePosition(KMPoint(P[1]+1, P[2]+1));
-                                fLastHouse.BuildingState := hbsWood;
-                                gTerrain.SetRoad(fLastHouse.Entrance, fLastHand, rtStone);
-                                fLastHouse.AddDemandBuildingMaterials;
+                              try
+                                if P[3] = 1 then
+                                begin
+                                    fLastHouse := gHands[fLastHand].AddHouseWip(HOUSE_ID_TO_TYPE[P[0]], KMPoint(nonEntranceX, P[2]+1));
+                                    //fLastHouse.UpdatePosition(KMPoint(P[1]+1, P[2]+1));
+                                    fLastHouse.BuildingState := hbsWood;
+                                    gTerrain.SetRoad(fLastHouse.Entrance, fLastHand, rtStone);
+                                    fLastHouse.AddDemandBuildingMaterials;
 
-                                HA := gRes.Houses[fLastHouse.HouseType].BuildArea;
-                                for I := 1 to MAX_HOUSE_SIZE do
-                                for K := 1 to MAX_HOUSE_SIZE do
-                                  if HA[I, K] <> 0 then
-                                  begin
-                                    //gTerrain.RemoveObject(KMPoint(nonEntranceX + K - 3, P[2]+1 + I - 4));
-                                    //gTerrain.FlattenTerrain(KMPoint(nonEntranceX + K - 3, P[2]+1 + I - 4));
-                                    gTerrain.SetTileLock(KMPoint(nonEntranceX + K - 3, P[2]+1 + I - 4), tlDigged);
-                                  end;
-                                gHands[fLastHand].Constructions.HouseList.AddHouse(fLastHouse);
-                                //fLastHouse.UpdatePosition(KMPoint(P[1]+1, P[2]+1));
-                              end else
-                                fLastHouse := gHands[fLastHand].AddHouse(
-                                  HOUSE_ID_TO_TYPE[P[0]], P[1]+1, P[2]+1, False)
+                                    HA := gRes.Houses[fLastHouse.HouseType].BuildArea;
+                                    for I := 1 to MAX_HOUSE_SIZE do
+                                    for K := 1 to MAX_HOUSE_SIZE do
+                                      if HA[I, K] <> 0 then
+                                      begin
+                                        //gTerrain.RemoveObject(KMPoint(nonEntranceX + K - 3, P[2]+1 + I - 4));
+                                        //gTerrain.FlattenTerrain(KMPoint(nonEntranceX + K - 3, P[2]+1 + I - 4));
+                                        gTerrain.SetTileLock(KMPoint(nonEntranceX + K - 3, P[2]+1 + I - 4), tlDigged);
+                                      end;
+                                    gHands[fLastHand].Constructions.HouseList.AddHouse(fLastHouse);
+                                  //fLastHouse.UpdatePosition(KMPoint(P[1]+1, P[2]+1));
+                                end else
+                                  fLastHouse := gHands[fLastHand].AddHouse(
+                                    HOUSE_ID_TO_TYPE[P[0]], P[1]+1, P[2]+1, False);
+                              except
+                                on E: Exception do
+                                  AddError('ct_SetHouse failed, can not place house at ' + TypeToString(KMPoint(P[1]+1, P[2]+1))+'|-' + E.Message);
+                              end;
                             end
                             else
                               AddError('ct_SetHouse failed, can not place house at ' + TypeToString(KMPoint(P[1]+1, P[2]+1)));
