@@ -5,6 +5,7 @@
 	- mission 5, add mettalurgist 
 	- mission 8, block bitin armor in the market 
 	- mission 10, add clay pickers and remove stonemasons; Deleted stone object is on the enemy road 
+	
 [$55FF55]Houses
 	- fix flag animation in the second level of the silo  
 	- delete log in Fruit tree house when it's connected to the other Fruit tree
@@ -47,11 +48,11 @@
 	
 [$55FF55]Maps
 	- added SP : 
-			Border Rivers
-			Brynhildr's Faith_
-			Mountainous Region
-			Wilderness
-			K&M Tower Defense
+		Border Rivers
+		Brynhildr's Faith_
+		Mountainous Region
+		Wilderness
+		K&M Tower Defense
 			
 	- added MP
 		Europe
