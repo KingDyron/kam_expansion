@@ -2631,7 +2631,9 @@
 			"Styles" : 
 			[
 				{"GuiIcon" : 333,"StonePic" : 2485,"SnowPic" : 2487,"HideSupplies" : False},
-				{"GuiIcon" : 332,"StonePic" : 2486,"SnowPic" : 2488,"HideSupplies" : False}
+				{"GuiIcon" : 332,"StonePic" : 2486,"SnowPic" : 2488,"HideSupplies" : False},
+				{"GuiIcon" : 1073,"StonePic" : 2901,"SnowPic" : 2899,"HideSupplies" : False},
+				{"GuiIcon" : 1074,"StonePic" : 2900,"SnowPic" : 2898,"HideSupplies" : False}
 			],
 			"Levels" : 
 			[

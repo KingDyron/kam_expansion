@@ -216,6 +216,7 @@ type
     FlagAnimStep: Cardinal; //Used for Flags and Burning animation
     //WorkAnimStep: Cardinal; //Used for Work and etc.. which is not in sync with Flags
     procedure Activate(aWasBuilt: Boolean); virtual;
+    procedure AfterCreate(aWasBuilt: Boolean); virtual;
     procedure AddDemandsOnActivate(aWasBuilt: Boolean); virtual;
     function GetWareOrder(aId: Byte): Integer; virtual;
     function GetWareIn(aI: Byte): Word; virtual;
@@ -288,8 +289,8 @@ type
     procedure OwnerUpdateByScript(aOwner: TKMHandID);//Use only by scripts
 
     function GetWoodPic : Integer;
-    function GetStonePic : Integer;
-    function GetSnowPic : Integer;
+    function GetStonePic : Integer; virtual;
+    function GetSnowPic : Integer; virtual;
 
     function GetClosestCell(const aPos: TKMPoint): TKMPoint;
     function GetDistance(const aPos: TKMPoint): Single;
@@ -915,9 +916,23 @@ type
   end;
 
   TKMHouseWall = class(TKMHouse)
+    procedure UpdateWallAround;
+  protected
+    procedure AfterCreate(aWasBuilt: Boolean); override;
   public
     procedure UpdateState(aTick: Cardinal); override;
-    procedure Paint; override;
+  end;
+
+  TKMHouseWallSingle = class(TKMHouseWall)
+    fWallStyle : Byte;
+  protected
+    procedure AfterCreate(aWasBuilt: Boolean); override;
+  public
+    function GetStonePic : Integer; override;
+    function GetSnowPic : Integer; override;
+    constructor Load(LoadStream: TKMemoryStream); override;
+    procedure Save(SaveStream: TKMemoryStream); override;
+    procedure UpdateConnection;
   end;
 
   TAppleTree = TKMHouseAppleTree;
@@ -1276,6 +1291,7 @@ begin
     WareOrder[1] := 1000;
     WareOrder[2] := 0;
   end;
+  AfterCreate(false);
 end;
 
 
@@ -1490,6 +1506,11 @@ begin
     for I := 1 to WARES_IN_OUT_COUNT do
       TransferWare[I] := true;
   fIsBurning := 0;
+end;
+
+procedure TKMHouse.AfterCreate(aWasBuilt: Boolean);
+begin
+
 end;
 
 
@@ -8392,6 +8413,31 @@ begin
   
 end;
 
+procedure TKMHouseWall.UpdateWallAround;
+var cells : TKMPointDirList;
+  I : Integer;
+  H : TKMHouse;
+begin
+  If {aWasBuilt} true then
+  begin
+    cells := TKMPointDirList.Create;
+    GetListOfCellsAround(cells, tpNone);
+
+    for I := 0 to cells.Count - 1 do
+    begin
+      H := gTerrain.House(cells[I].Loc);
+      If H.IsValid(htWall5) then
+        TKMHouseWallSingle(H).UpdateConnection;
+    end;
+
+    cells.Free;
+  end;
+end;
+
+procedure TKMHouseWall.AfterCreate(aWasBuilt: Boolean);
+begin
+  UpdateWallAround;
+end;
 
 procedure TKMHouseWall.UpdateState(aTick: Cardinal);
   procedure UpdatePointBelow;
@@ -8404,6 +8450,7 @@ procedure TKMHouseWall.UpdateState(aTick: Cardinal);
       fPointBelowEntrance := aCells[0].Loc
     else
       fPointBelowEntrance := KMPointBelow(Entrance);
+    aCells.Free;
   end;
 
 begin
@@ -8415,14 +8462,67 @@ begin
   else
   If aTick mod 100 = 0 then
     UpdatePointBelow;
+end;
+
+function TKMHouseWallSingle.GetStonePic : Integer;
+begin
+  If (Style = 0) and (fWallStyle > 0) then
+    Result := gRes.Houses[fType].Styles[fWallStyle - 1].StonePic
+  else
+    Result := Inherited;
+end;
+
+function TKMHouseWallSingle.GetSnowPic : Integer;
+begin
+  If (Style = 0) and (fWallStyle > 0) then
+    Result := gRes.Houses[fType].Styles[fWallStyle - 1].SnowPic
+  else
+  Result := Inherited;
 
 end;
 
-procedure TKMHouseWall.Paint;
+procedure TKMHouseWallSingle.AfterCreate(aWasBuilt: Boolean);
+begin
+  fWallStyle := 0;
+  UpdateConnection;
+  Inherited;
+end;
+
+procedure TKMHouseWallSingle.UpdateConnection;
+var connID : Byte;
+  pX, pY : Integer;
+  newStyle : Byte;
+begin
+  pX := Entrance.X;
+  pY := Entrance.Y;
+  connID := 0;
+  connID := connID + byte(gTerrain.House(pX, pY - 1).IsValid(WALL_HOUSES)) shl 0;
+  connID := connID + byte(gTerrain.House(pX + 1, pY).IsValid(WALL_HOUSES)) shl 1;
+  connID := connID + byte(gTerrain.House(pX, pY + 1).IsValid(WALL_HOUSES)) shl 2;
+  connID := connID + byte(gTerrain.House(pX - 1, pY).IsValid(WALL_HOUSES)) shl 3;
+
+  case connID of
+    5: newStyle := 1;
+    10: newStyle := 2;
+    else newStyle := 0;
+  end;
+  If (newStyle > 0) and (CurrentLevel = 0) then
+    newStyle := newStyle + 2;
+  fWallStyle := newStyle;
+end;
+
+constructor TKMHouseWallSingle.Load(LoadStream: TKMemoryStream);
 begin
   Inherited;
-  //gRenderAux.Quad(fPointBelowEntrance.X, fPointBelowEntrance.Y);
+  LoadStream.Read(fWallStyle);
 end;
+
+procedure TKMHouseWallSingle.Save(SaveStream: TKMemoryStream);
+begin
+  Inherited;
+  SaveStream.Write(fWallStyle);
+end;
+
 
 initialization
 begin
