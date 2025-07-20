@@ -176,6 +176,7 @@ begin
     htPearl:            Result := TKMHousePearl.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
     htPasture:          Result := TKMHousePasture.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
     htForest:           Result := TKMHouseForest.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
+    htWall..htWall5:    Result := TKMHouseWall.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
     else             Result := TKMHouse.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
   end;
 
@@ -562,6 +563,7 @@ begin
       htPearl:            H := TKMHousePearl.Load(LoadStream);
       htPasture:          H := TKMHousePasture.Load(LoadStream);
       htForest:           H := TKMHouseForest.Load(LoadStream);
+      htWall..htWall5:    H := TKMHouseWall.Load(LoadStream);
 
       else                H := TKMHouse.Load(LoadStream);
     end;

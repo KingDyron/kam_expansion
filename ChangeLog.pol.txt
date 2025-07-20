@@ -7,6 +7,7 @@
 	- dodano budynek: Perła architektury. Specjalny budynek na specjalne okazje.
 	- dodano budynek: Szkółka leśna. Leśniczy sadzi w nim drzewa.
 	- dodano budynek: Pastwisko. Można w nim chodować różnego rodzaju zwierzynę.
+	- studnia nie potrzebuje drogi do jej budowy
 	
 
 [$55FF55]Jednostki
@@ -18,10 +19,10 @@
 	-produkt uboczny "sadzonka" ma zastosowanie w szkółce leśnej
 
 [$55FF55]Interfejs
+	- dodano Gospodę do okna podziału towarów
 
 [$55FF55]Inne
 	- dodano nowe płytki dekoracyjne : murki, płotki oraz płytki funkcyjne.
-	
 	
 [$55FF55]Mapy
 	- dodane SP : 

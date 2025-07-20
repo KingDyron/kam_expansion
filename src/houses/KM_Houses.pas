@@ -914,6 +914,12 @@ type
       procedure Paint; Override;
   end;
 
+  TKMHouseWall = class(TKMHouse)
+  public
+    procedure UpdateState(aTick: Cardinal); override;
+    procedure Paint; override;
+  end;
+
   TAppleTree = TKMHouseAppleTree;
   TShipyard = TKMHouseShipyard;//just a shurtcut
   TVineyard = TKMHouseVineYard;//just a shurtcut
@@ -985,7 +991,7 @@ begin
 
   fPointBelowEntrance := KMPointBelow(fEntrance);
 
-  if not (fType in WALL_HOUSES) then
+  {if not (fType in WALL_HOUSES) then
     Exit;
 
   if not gTerrain.CheckPassability(fPointBelowEntrance, tpWalk) then
@@ -998,7 +1004,7 @@ begin
       fPointBelowEntrance := KMPointAbove(fEntrance); 
 
   if not gTerrain.CheckPassability(fPointBelowEntrance, tpWalk) then
-      fPointBelowEntrance := KMPointBelow(fEntrance);
+      fPointBelowEntrance := KMPointBelow(fEntrance);}
     
   
 
@@ -2559,7 +2565,8 @@ procedure TKMHouse.IncBuildingProgress;
     fBuildWoodDelivered := 0;
     fBuildStoneDelivered := 0;
 
-    fPointBelowEntrance := KMPointBelow(fEntrance);
+    If not (fType in WALL_HOUSES) then
+      fPointBelowEntrance := KMPointBelow(fEntrance);
     gHands[Owner].Stats.HouseEnded(fType);
     Activate(True);
     //House was damaged while under construction, so set the repair mode now it is complete
@@ -2699,7 +2706,8 @@ procedure TKMHouse.IncBuildingUpgradeProgress;
     Inc(fLevel.CurrentLevel);
     fLevel.IsUpgrading := false;
     //Refresh it just in case
-    fPointBelowEntrance := KMPointBelow(fEntrance);
+    If not (fType in WALL_HOUSES) then
+      fPointBelowEntrance := KMPointBelow(fEntrance);
 
     for I := 1 to WARES_IN_OUT_COUNT do
       if isMax[I] then
@@ -2815,7 +2823,7 @@ begin
   begin
     if BuildingRepair then
       gHands[Owner].Constructions.RepairList.AddHouse(Self);
-
+    If not (fType in WALL_HOUSES) then
     fPointBelowEntrance := KMPointBelow(fEntrance);
 
     //Update fire if the house is complete
@@ -4556,8 +4564,6 @@ begin
           if HA[I,K] <> 0 then
             gHands.RevealForTeam(Owner, KMPoint(fPosition.X + K - 4, fPosition.Y + I - 4), HOUSE_PLAN_SIGHT, FOG_OF_WAR_INC, frtHouse);
     end;
-    if HouseType in WALL_HOUSES then
-      UpdateEntrancePos;
     Exit; //Don't update unbuilt houses
   end;
 
@@ -4568,10 +4574,6 @@ begin
     Inc(WorkingTime)
   else
     WorkingTime := 0;
-
-  if HouseType in WALL_HOUSES then
-    if IsUpgrading then
-      UpdateEntrancePos;
 
   //Update delivery mode, if time has come
   if (fUpdateDeliveryModeOnTick = fTick) then
@@ -8391,6 +8393,36 @@ begin
 end;
 
 
+procedure TKMHouseWall.UpdateState(aTick: Cardinal);
+  procedure UpdatePointBelow;
+  var aCells : TKMPointDirList;
+  begin
+    aCells := TKMPointDirList.Create;
+
+    GetListOfCellsAround(aCells, tpWalk);
+    IF aCells.Count > 0 then
+      fPointBelowEntrance := aCells[0].Loc
+    else
+      fPointBelowEntrance := KMPointBelow(Entrance);
+  end;
+
+begin
+  Inherited;
+  If not IsComplete then
+    If aTick mod 10 = 0 then
+      UpdatePointBelow
+    else
+  else
+  If aTick mod 100 = 0 then
+    UpdatePointBelow;
+
+end;
+
+procedure TKMHouseWall.Paint;
+begin
+  Inherited;
+  //gRenderAux.Quad(fPointBelowEntrance.X, fPointBelowEntrance.Y);
+end;
 
 initialization
 begin

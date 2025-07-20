@@ -93,8 +93,12 @@ begin
   if aToHouse.IsComplete then
   begin
     if aToHouse.IsUpgrading then
-      fDeliverKind := dkToConstruction
-    else
+    begin
+      if aToHouse.HouseType in WALL_HOUSES then
+        fDeliverKind := dkToWall
+      else
+        fDeliverKind := dkToConstruction
+    end else
       fDeliverKind := dkToHouse
   end else
   if aToHouse.HouseType in WALL_HOUSES then
@@ -300,8 +304,12 @@ begin
     if fToHouse.IsComplete then
     begin
       if fToHouse.IsUpgrading then
-        fDeliverKind := dkToConstruction
-      else
+      begin
+        if fToHouse.HouseType in WALL_HOUSES then
+          fDeliverKind := dkToWall
+        else
+          fDeliverKind := dkToConstruction
+      end else
         fDeliverKind := dkToHouse
     end else
     if fToHouse.HouseType in WALL_HOUSES then
@@ -354,8 +362,12 @@ begin
     if fToHouse.IsComplete then
     begin
       if fToHouse.IsUpgrading then
-        fDeliverKind := dkToConstruction
-      else
+      begin
+        if fToHouse.HouseType in WALL_HOUSES then
+          fDeliverKind := dkToWall
+        else
+          fDeliverKind := dkToConstruction
+      end else
         fDeliverKind := dkToHouse
     end else
     if fToHouse.HouseType in WALL_HOUSES then
@@ -423,11 +435,16 @@ begin
                               end;
                             end;
         dkToStructure,
-        dkToWall,
         dkToConstruction,
         dkToUnit:          begin
                               case Phase of
                                 5,6:  Result := dsToDestination;
+                                else  Result := dsAtDestination;
+                              end;
+                            end;
+        dkToWall:          begin
+                              case Phase of
+                                5:  Result := dsToDestination;
                                 else  Result := dsAtDestination;
                               end;
                             end;
@@ -440,7 +457,7 @@ function TKMTaskDeliver.CanAbandonWalk: Boolean;
 begin
   case fDeliverKind of
     dkToHouse:         Result := fPhase <= 8;
-    dkToWall,
+    dkToWall:          Result := fPhase <= 6;
     dkToConstruction:  Result := fPhase <= 7;
     dkToUnit:          Result := fPhase <= 6;
     dkToStructure,
@@ -609,8 +626,9 @@ begin
   case fPhase of
     0..4:;
         // First come close to point below house entrance
-    5:  SetActionWalkToSpot(fToHouse.PointBelowEntrance, uaWalk, 1.42);
-    6:  begin
+    5:  SetActionWalkToHouse(fToHouse, 1.42, uaWalk);
+    {6:  begin
+          SetActionStay(5, uaWalk);
           // Then check if there is a worker hitting house just from the entrance
           Worker := gHands[fUnit.Owner].UnitsHitTest(fToHouse.PointBelowEntrance, utBuilder);
           if (Worker <> nil) and (Worker.Task <> nil)
@@ -624,8 +642,8 @@ begin
             SetActionWalkToSpot(fToHouse.PointBelowEntrance);
 
           end;
-        end;
-    7:  begin
+        end;}
+    6:  begin
           Direction := KMGetDirection(PositionNext, fToHouse.Entrance);
           fToHouse.WareAddToBuild(Carry);
           gHands[Owner].Stats.WareConsumed(Carry);
@@ -633,7 +651,7 @@ begin
           gHands[Owner].Deliveries.Queue.GaveDemand(fDeliverID);
           gHands[Owner].Deliveries.Queue.AbandonDelivery(fDeliverID);
           fDeliverID := DELIVERY_NO_ID; //So that it can't be abandoned if unit dies while staying
-          SetActionStay(1, uaWalk);
+          SetActionStay(5, uaWalk);
         end;
     else Result := trTaskDone;
   end;
