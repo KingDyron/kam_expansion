@@ -919,6 +919,7 @@ type
     procedure UpdateWallAround;
   protected
     procedure AfterCreate(aWasBuilt: Boolean); override;
+    procedure Demolish(aFrom: TKMHandID; IsSilent: Boolean = False); override;
   public
     procedure UpdateState(aTick: Cardinal); override;
   end;
@@ -8432,6 +8433,12 @@ begin
 
     cells.Free;
   end;
+end;
+
+procedure TKMHouseWall.Demolish(aFrom: TKMHandID; IsSilent: Boolean = False);
+begin
+  Inherited;
+  UpdateWallAround;
 end;
 
 procedure TKMHouseWall.AfterCreate(aWasBuilt: Boolean);
