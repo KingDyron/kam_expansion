@@ -2217,7 +2217,7 @@ begin
   if fRageTime > RAGE_TIME_DELAY then
   begin
 
-    gRenderPool.AddAnimation(unitPos + KMPointF(0.3, -2.3), gRes.Units.RageAnim, fTicker,
+    gRenderPool.AddAnimation(unitPos + KMPointF(0.3, -1.9), gRes.Units.RageAnim, fTicker,
                             IfThen(FlagColor <> 0, FlagColor, gHands[Owner].GameFlagColor), rxUnits,
                             false, false, 0, true);
   end;

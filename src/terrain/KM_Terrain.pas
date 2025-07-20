@@ -1657,7 +1657,7 @@ end;
 
 function TKMTerrain.TileIsSnow(X, Y: Word): Boolean;
 begin
-  Result := TileHasParameter(X, Y, fTileset.TileIsSnow);
+  Result := TileHasParameter(X, Y, fTileset.TileIsSnow) or ((X*Y > 0) and Land[Y, X].TileOverlay2.IsSnow);
 end;
 
 
@@ -6379,7 +6379,7 @@ begin
       and CheckHeightPass(aLoc, hpWalking) then
       AddPassability(tpWalk);
 
-    if (Land^[aLoc.Y,aLoc.X].TileOverlay = OVERLAY_ROAD)
+    if ((Land^[aLoc.Y,aLoc.X].TileOverlay = OVERLAY_ROAD) or gTerrain.Land^[aLoc.Y,aLoc.X].TileOverlay2.IsRoadWalkable)
     and (tpWalk in Land^[aLoc.Y,aLoc.X].Passability) then //Not all roads are walkable, they must also have CanWalk passability
       AddPassability(tpWalkRoad);
 
@@ -6397,7 +6397,8 @@ begin
         and(TileIsRoadable(aLoc)
         and not gRes.Tileset[Land^[aLoc.Y,aLoc.X].TileOverlay2.Params.TileID].NotBuildable
         and not Land^[aLoc.Y,aLoc.X].TileOverlay.BlocksBuilding)
-        or Land^[aLoc.Y,aLoc.X].TileOverlay2.AllowsBuilding)
+        or Land^[aLoc.Y,aLoc.X].TileOverlay2.AllowsBuilding
+      )
       and not TileIsCornField(aLoc) //Can't build houses on fields
       and not TileIsWineField(aLoc)
       and not TileIsGrassField(aLoc)
@@ -6418,7 +6419,8 @@ begin
       ((tpWalk in Land^[aLoc.Y,aLoc.X].Passability)
       and TileIsRoadable(aLoc)
       and not Land^[aLoc.Y,aLoc.X].TileOverlay.BlocksBuilding)
-        or Land^[aLoc.Y,aLoc.X].TileOverlay2.AllowsBuilding)
+        or Land^[aLoc.Y,aLoc.X].TileOverlay2.AllowsBuilding
+      )
       and not gMapElements[Land^[aLoc.Y,aLoc.X].Obj].AllBlocked
       and (Land^[aLoc.Y,aLoc.X].TileLock in [tlNone, tlWallEmpty])
       and (Land^[aLoc.Y,aLoc.X].TileOverlay <> OVERLAY_ROAD)

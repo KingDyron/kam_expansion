@@ -337,7 +337,7 @@ function TKMUnitActionFight.ExecuteProcessMelee(Step: Byte): Boolean;
     if fUnit.InstantKill then
       aUnit.HitPointsDecrease(aUnit.HitPointsMax, fUnit)
     else
-    if (fUnit.Attack > 200) then
+    if (fUnit.Attack > 300) then
       aUnit.HitPointsDecrease(TKMUnitWarrior(fUnit).DamageUnits, fUnit)
     else
     begin

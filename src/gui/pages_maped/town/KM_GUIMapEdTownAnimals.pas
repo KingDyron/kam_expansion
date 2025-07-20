@@ -86,7 +86,7 @@ begin
   lineY := Button_PlaceAnimals[high(Button_PlaceAnimals)].Bottom + 5;
 
   NumEd_FishCount := TKMNumericEdit.Create(Panel_AnimalSpawner, 9, lineY, 1, FISH_CNT_MAX);
-  NumEd_FishCount.Hint := gResTexts[TX_MAPED_UNITS_FORMATION_COLUMNS_HINT];
+  NumEd_FishCount.Hint := gResTexts[TX_MAPED_FISH_COUNT];
   NumEd_FishCount.Anchors := [anLeft, anTop, anRight];
   NumEd_FishCount.AutoFocusable := False;
   NumEd_FishCount.OnChange := Player_AnimalClick;

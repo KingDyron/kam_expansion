@@ -16,6 +16,12 @@ uses
 
 //Hands are identified by their starting location
 type
+  TKMUnitMessage = record
+    aUnit : TKMUnit;
+    Msg : UnicodeString;
+  end;
+  TKMUnitMessageArray = array of TKMUnitMessage;
+
   TKMHandsCollection = class
   private
     fCount: Byte;
@@ -25,6 +31,8 @@ type
     //Not saved
     fTeams: TKMByteSetArray;
     fTeamsDirty: Boolean; //Need to recalc teams
+
+    fUnitMessages : TKMUnitMessageArray;
 
     function GetTeams: TKMByteSetArray;
     function GetTeamsLazy: TKMByteSetArray;
@@ -127,6 +135,7 @@ type
     procedure UpdateState(aTick: Cardinal);
     procedure UpdateVisualState;
     procedure Paint(const aRect: TKMRect; aTickLag: Single);
+    procedure PaintUnitMessages;
     function ObjToString: String;
 
 
@@ -140,11 +149,13 @@ var
 
 implementation
 uses
+  dglOpenGL,
   SysUtils,
   KromUtils,
   KM_Game, KM_GameParams, KM_Terrain, KM_AIFields,
   KM_UnitsCollection, KM_MapEdTypes,
-  KM_Resource, KM_ResUnits, KM_ResTexts,
+  KM_Resource, KM_ResUnits, KM_ResTexts, KM_Render,
+  KM_RenderAux, KM_RenderUI, KM_RenderPool, KM_ResFonts, KromOGLUtils,
   KM_Log, KM_CommonUtils, KM_DevPerfLog, KM_DevPerfLogTypes, KM_Entity,
   KM_ScriptingEvents;
 
@@ -157,6 +168,8 @@ begin
   fTeamsDirty := True;
 
   fPlayerAnimals := TKMHandAnimals.Create(HAND_ANIMAL); //Always create Animals
+  Setlength(fUnitMessages, 1);
+  fUnitMessages[0].Msg := 'Hello World';
 end;
 
 
@@ -1524,6 +1537,18 @@ begin
     fHandsList[I].Paint(aRect, aTickLag);
 
   PlayerAnimals.Paint(aRect, aTickLag);
+
+end;
+
+procedure TKMHandsCollection.PaintUnitMessages;
+{var
+  I: Integer;
+  P : TKMPointF;}
+begin
+  {for I := 0 to High(fUnitMessages) do
+  begin
+    //gRenderAux.Text(10, 10, fUnitMessages[I].Msg, $FFFFFFFF);
+  end;}
 end;
 
 

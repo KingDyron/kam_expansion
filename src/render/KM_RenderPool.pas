@@ -132,6 +132,7 @@ type
     procedure RenderBigEraseTileInt(const X,Y: Integer);
     procedure RenderAssignToShip;
   public
+    IntScale : Single;
     constructor Create(aViewport: TKMViewport; aRender: TKMRender);
     destructor Destroy; override;
 
@@ -318,7 +319,6 @@ begin
   viewportPosRound := RoundToTilePixel(fViewport.Position);
 
   glLoadIdentity; // Reset The View
-
   //Use integer division so we don't translate by half a pixel if clip is odd
   glTranslatef(fViewport.ViewportClip.X div 2, fViewport.ViewportClip.Y div 2, 0);
 
@@ -351,7 +351,6 @@ begin
   glPointSize(fViewport.Zoom * 5);
   glEnable(GL_LINE_SMOOTH);
 end;
-
 
 // Render:
 // 1. Sets viewport
@@ -442,7 +441,7 @@ begin
     PaintFlagPoints(False);
     if gGame.GamePlayInterface <> nil then
       gGame.GamePlayInterface.Alerts.Paint(1);
-
+    gHands.PaintUnitMessages;
     // Cursor overlays (including blue-wire plans), go on top of everything
     RenderForegroundUI;
 

@@ -2352,7 +2352,8 @@ var
   str: string;
 begin
   if Self = nil then Exit;
-  TKMRenderUI.SetupScale(gRender.InterfaceScale);
+  //TKMRenderUI.SetupScale(gRender.InterfaceScale);
+  TKMRenderUI.SetupScale(1);
   // Reset counter
   TKMControl.PaintCount := 0;
   fMasterPanel.Paint;

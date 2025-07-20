@@ -3467,7 +3467,7 @@ procedure TKMHouse.MakeUpgrade;
     if C > 0 then
     begin
       WareTakeFromOut(aWare, C, true);
-      Dec(Result, C);
+      Result := Result - C;
     end;
     if Result <= 0 then
       Exit;
@@ -3475,7 +3475,7 @@ procedure TKMHouse.MakeUpgrade;
     if C > 0 then
     begin
       WareTakeFromIn(aWare, C, true);
-      Dec(Result, C);
+      Result := Result - C;
     end;
 
 
@@ -6906,8 +6906,8 @@ begin
   begin
     for I := 1 to 4 do
         gRenderPool.AddHousePalaceFlags(HouseType, fPosition, I, FlagAnimStep + I * 10, gHands[Owner].FlagColor);
-    if gMySpectator.Selected = self then
-      PaintDeposits;
+    //if gMySpectator.Selected = self then
+    //  PaintDeposits;
   end;
 
 end;

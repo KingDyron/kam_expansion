@@ -67,7 +67,7 @@ type
     property ScreenX: Word read fScreenX;
     property ScreenY: Word read fScreenY;
     property Blind: Boolean read fBlind;
-    property InterfaceScale : Single read fInterfaceScale;
+    property InterfaceScale : Single read fInterfaceScale write fInterfaceScale;
 
     property Query: TKMRenderQuery read fQuery;
 
