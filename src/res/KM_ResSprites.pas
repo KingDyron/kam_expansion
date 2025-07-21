@@ -107,6 +107,7 @@ type
     procedure ExportFullImageData(const aFolder: string; aIndex: Integer);
     procedure ExportImage(const aFile: string; aIndex: Integer);
     procedure ExportMask(const aFile: string; aIndex: Integer);
+    procedure ExportUnitSprite(const aFile: string; aIndex: Integer);
 
     procedure ClearGameResGenTemp;
 
@@ -1031,10 +1032,16 @@ var
 begin
   if fRXData.Flag[aIndex] <> 1 then Exit;
 
-  ExportImage(aFolder + Format('%d_%.4d.png', [Ord(fRT)+1, aIndex]), aIndex);
+  if fRT = rxUnits then
+  begin
+    ExportUnitSprite(aFolder + Format('%d_%.4d', [Ord(fRT)+1, aIndex]), aIndex);
+  end else
+  begin
+    ExportImage(aFolder + Format('%d_%.4d.png', [Ord(fRT)+1, aIndex]), aIndex);
 
-  if fRXData.HasMask[aIndex] then
-    ExportMask(aFolder + Format('%d_%.4da.png', [Ord(fRT)+1, aIndex]), aIndex);
+    if fRXData.HasMask[aIndex] then
+      ExportMask(aFolder + Format('%d_%.4da.png', [Ord(fRT)+1, aIndex]), aIndex);
+  end;
 
   // Pivot
   s := IntToStr(fRXData.Pivot[aIndex].x) + sLineBreak + IntToStr(fRXData.Pivot[aIndex].y) + sLineBreak;
@@ -1136,6 +1143,57 @@ begin
 
     SaveToPng(pngWidth, pngHeight, pngData, aFile);
   end;
+end;
+
+procedure TKMSpritePack.ExportUnitSprite(const aFile: string; aIndex: Integer);
+var path, pathA : String;var
+  I, K: Integer;
+  pngWidth, pngHeight: Word;
+  pngData, pngDataMask: TKMCardinalArray;
+  maskColor: Cardinal;
+begin
+  path := aFile + '.png';
+  pathA := aFile + 'a.png';
+
+  pngWidth := fRXData.Size[aIndex].X;
+  pngHeight := fRXData.Size[aIndex].Y;
+
+  SetLength(pngData, pngWidth * pngHeight);
+  SetLength(pngDataMask, pngWidth * pngHeight);
+
+  //Export Mask
+  if fRXData.HasMask[aIndex] then
+  begin
+    for I := 0 to pngHeight - 1 do
+      for K := 0 to pngWidth - 1 do
+      begin
+        maskColor := GetGreyColor(fRXData.Mask[aIndex, I * pngWidth + K]);
+        {if fRT = rxHouses then
+        begin
+          maskColor := fRXData.Mask[aIndex, I * pngWidth + K];
+          if maskColor <> 0 then
+            maskColor := GetGreyColor(maskColor) or $FF000000;
+        end else
+          maskColor := (Byte(fRXData.Mask[aIndex, I * pngWidth + K] > 0) * $FFFFFF) or $FF000000;}
+        pngData[I*pngWidth + K] := (fRXData.RGBA[aIndex, I*pngWidth + K]);
+        If maskColor - $FF000000 > 0 then
+        begin
+          pngData[I * pngWidth + K] := maskColor;
+          pngDataMask[I * pngWidth + K] := $FFFFFFFF;
+        end else
+          pngDataMask[I * pngWidth + K] := $FF000000;
+      end;
+
+    SaveToPng(pngWidth, pngHeight, pngData, path);
+    SaveToPng(pngWidth, pngHeight, pngDataMask, pathA);
+  end else
+  begin
+    for I := 0 to pngHeight - 1 do
+      for K := 0 to pngWidth - 1 do
+        pngData[I*pngWidth + K] := (fRXData.RGBA[aIndex, I*pngWidth + K]);
+    SaveToPng(pngWidth, pngHeight, pngData, path);
+  end;
+
 end;
 
 
