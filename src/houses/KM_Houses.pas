@@ -64,6 +64,7 @@ type
   protected
     fPosition: TKMPoint; //House position on map, kinda virtual thing cos it doesn't match with entrance
     procedure SetPosition(const aPosition: TKMPoint); virtual;
+    procedure SetPointBelowEntrance(aValue : TKMPoint); virtual;
     constructor Create; overload;
   public
     constructor Create(aUID: Integer; aHouseType: TKMHouseType; PosX, PosY: Integer; aOwner: TKMHandID); overload;
@@ -72,7 +73,7 @@ type
 
     property Position: TKMPoint read fPosition;
     property Entrance: TKMPoint read fEntrance;
-    property PointBelowEntrance: TKMPoint read fPointBelowEntrance;
+    property PointBelowEntrance: TKMPoint read fPointBelowEntrance write SetPointBelowEntrance;
 
     function ObjToStringShort(const aSeparator: String = '|'): String; override;
 
@@ -1026,6 +1027,11 @@ begin
 
 end;
 
+
+procedure TKMHouseSketch.SetPointBelowEntrance(aValue : TKMPoint);
+begin
+  fPointBelowEntrance := aValue;
+end;
 
 procedure TKMHouseSketch.SetPosition(const aPosition: TKMPoint);
 begin

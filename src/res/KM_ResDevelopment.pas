@@ -7,7 +7,7 @@ uses
   KM_JsonHelpers;
 
 type
-  TKMDevelopmentTreeType = (dttEconomy, dttArmy);
+  TKMDevelopmentTreeType = (dttBuilder, dttEconomy, dttArmy);
 
   PKMDevelopment = ^TKMDevelopment;
   TKMDevelopment = record
@@ -54,7 +54,7 @@ uses
     IOUtils,
     KM_Defaults,
     KM_ResLocales, KM_ResTexts;
-const TREE_TYPE_STRING : array[TKMDevelopmentTreeType] of String = ('Economy', 'Army');
+const TREE_TYPE_STRING : array[TKMDevelopmentTreeType] of String = ('Builder', 'Economy', 'Army');
 
 function TKMDevelopmentTree.FirstItem: PKMDevelopment;
 begin

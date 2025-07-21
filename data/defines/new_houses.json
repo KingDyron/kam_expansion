@@ -31,7 +31,7 @@
 			[
 				"htNone","htBarracks","htTownHall","htPalace","htSiegeWorkshop","htShipYard",
 				"htNone","htWall","htWall2","htWall3","htWall4","htWall5",
-				"htNone","htWallTower","htWatchTower", "htPearl"
+				"htNone","htWallTower","htWatchTower", "htPearl", "htArena"
 			]
 		}
 	],
@@ -70,7 +70,7 @@
 		{
 			"TitleID" : 2084,
 			"GuiIcon" : 0,
-			"Houses" : ["htMarket","htMerchant","htCollectors","htTailorsShop","htStall"]
+			"Houses" : ["htMarket","htMerchant","htCollectors","htTailorsShop","htStall", "htArena"]
 		}
 	],
 	"Houses" : 
@@ -4251,7 +4251,7 @@
 		},
 		{
 			"Name" : "htPasture",
-			"GameID" : 56,
+			"GameID" : 57,
 			"TextID" : 2278,
 			"DescriptionID" : 2170,
 			"MaxHealth" : 500,
@@ -4324,7 +4324,7 @@
 		},
 		{
 			"Name" : "htForest",
-			"GameID" : 56,
+			"GameID" : 58,
 			"TextID" : 2279,
 			"DescriptionID" : 2170,
 			"MaxHealth" : 400,
@@ -4342,7 +4342,7 @@
 			"Sight" : 7,
 			"NeedsPlayerOrder" : False,
 			"BuildIcon" : 1065,
-			"TabletID" : 1067,
+			"TabletID" : 1066,
 			"MaxInWares" : 0,
 			"MaxOutWares" : 41,
 			"CanForceWork" : true,
@@ -4389,6 +4389,72 @@
 				[0,0,0,0,0],
 				[1,0,0,0,1],
 				[1,1,2,1,1]
+			]
+		},
+		{
+			"Name" : "htArena",
+			"GameID" : 59,
+			"TextID" : 2279,
+			"DescriptionID" : 2170,
+			"MaxHealth" : 400,
+			"WoodPic" : 2949,
+			"StonePic" : 2902,
+			"SnowPic" : 0,
+			"WoodCost" : 11,
+			"StoneCost" : 2,
+			"TileCost" : 4,
+			"EntranceOffsetX" : 2,
+			"EntranceOffsetY" : -1,
+			"EntranceOffsetXpx" : 20,
+			"EntranceOffsetYpx" : 10,
+			"WorkerRest" : 5,
+			"Sight" : 7,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 1065,
+			"TabletID" : 1066,
+			"MaxInWares" : 0,
+			"MaxOutWares" : 41,
+			"CanForceWork" : false,
+			"UnoccupiedMsgId" : -1,
+			"CanOverfill" : false,
+			"GatheringScript" : "gsNone",
+			"UnlockAfter" : ["htPottery"],
+			"WareOutput" : ["wtNone"],
+			
+			"ha_Idle" : {"X" : -23,"Y" : 64,"Steps" : [1106,1106,1106,1106,1106,1106,1106,1106,1106,1106,1106,1106,1106,1106,1106,1106,1107,1108,1109,1110,1111,1111,1111,1111,1111,1111,1110,1109,1108,1107]},
+			"ha_Fire1" : {"X" : -68,"Y" : -37,"Steps" : [1623,1624,1625,1620,1621,1622]},
+			"ha_Fire2" : {"X" : 40,"Y" : 0,"Steps" : [1637,1632,1633,1634,1635,1636]},
+			"ha_Fire3" : {"X" : -55,"Y" : -20,"Steps" : [1620,1621,1622,1623,1624,1625]},
+			"ha_Fire4" : {"X" : 43,"Y" : 82,"Steps" : [1617,1618,1619,1614,1615,1616]},
+			"ha_Fire5" : {"X" : -10,"Y" : 61,"Steps" : [1632,1633,1634,1635,1636,1637]},
+			"ha_Fire6" : {"X" : 25,"Y" : -24,"Steps" : [1629,1630,1631,1626,1627,1628]},
+			"ha_Fire7" : {"X" : 107,"Y" : 50,"Steps" : [1635,1636,1637,1632,1633,1634]},
+			"ha_Fire8" : {"X" : 10,"Y" : 20,"Steps" : [1621,1622,1623,1624,1625,1620]},
+			"ha_Flag1" : {"X" : 166,"Y" : -123,"Steps" : [1169,1170,1171,1172,1173,1174,1175,1176,1177,1168]},
+			"ha_Flag2" : {"X" : 167,"Y" : -20,"Steps" : [1169,1170,1171,1172,1173,1174,1175,1176,1177,1168]},
+			"WorkAnim" : 
+			[
+				{"WorkType" : "haWork2","Cycles" : 5.00000},
+				{"WorkType" : "haWork3","Cycles" : 5.00000}
+			],
+			"WoodPileOffset" : {"X" : -21,"Y" : 25},
+			"StonePileOffset" : {"X" : 8,"Y" : 28},
+			"TilePileOffset" : {"X" : 30,"Y" : 25},
+			"Build_Area" : 
+			[
+				[0,0,0,0,0],
+				[1,1,1,1,1],
+				[2,1,1,1,2],
+				[1,1,1,1,1],
+				[0,0,0,0,0]
+			],
+			"Ground_Area" : 
+			[
+				[0,0,0,0,0],
+				[2,2,2,2,2],
+				[2,1,1,1,2],
+				[2,2,2,2,2],
+				[0,0,0,0,0]
 			]
 		}
 	],
@@ -4566,5 +4632,11 @@
 				{"WareType" : "wtIron", "Count" : 8}
 			]
 		}
-	]
+	],
+	"ArenaAnim" : 
+	{
+		"dttBuilder" : 	{"X" : 0,"Y" : 0, "StepStart" : 2939, "Count" : 10},
+		"dttEconomy" : 	{"X" : 0,"Y" : 0, "StepStart" : 2903, "Count" : 17},
+		"dttArmy" : 	{"X" : 0,"Y" : 0, "StepStart" : 2920, "Count" : 11}
+	}
 }

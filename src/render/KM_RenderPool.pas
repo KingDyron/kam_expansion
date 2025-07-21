@@ -8,7 +8,7 @@ uses
   KM_Defaults, KM_CommonTypes, KM_CommonClasses, KM_Pics, KM_Points, KM_Render, KM_Viewport,
   KM_RenderTerrain, KM_ResHouses, KM_ResSprites, KM_Units, KM_HandEntity,
   KM_Houses, KM_Terrain, KM_CommonGameTypes, KM_RenderDebug,
-  KM_ResTypes;
+  KM_ResTypes, KM_ResDevelopment;
 
 type
   TKMPaintLayer = (plTerrain, plObjects, plCursors);
@@ -156,6 +156,8 @@ type
                                aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
     procedure AddHousePasture(aLoc : TKMPoint; aFlagColor : Cardinal = 0;
                                aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
+    procedure AddHouseArena(aType: TKMDevelopmentTreeType; const aLoc: TKMPoint; aAnimStep: Cardinal;
+                            aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
 
     procedure AddHouseSchoolClock(const aLoc: TKMPoint; aAnimStep: Cardinal; aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
 
@@ -1139,10 +1141,41 @@ var
   end;
 begin
   rxData := fRXData[rxHouses];
-  AddToRender(aLoc.X - 2, aLoc.Y, 0, 0, 2767);  
+  AddToRender(aLoc.X - 2, aLoc.Y, 0, 0, 2767);
   AddToRender(aLoc.X - 2, aLoc.Y - 3, 0, 0, 2768);   
   AddToRender(aLoc.X, aLoc.Y - 3, 0, 0, 2769);
   AddToRender(aLoc.X + 1, aLoc.Y - 3, 20, 0, 2770);
+end;
+procedure TKMRenderPool.AddHouseArena(aType: TKMDevelopmentTreeType; const aLoc: TKMPoint; aAnimStep: Cardinal;
+                        aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
+var
+  id: Cardinal;
+  rxData: TRXData;
+  A : TKMAnimation;
+
+  function CornerX: Single;
+  begin
+    Result := aLoc.X + rxData.Pivot[id].X / CELL_SIZE_PX - 1;
+  end;
+  function CornerY: Single;
+  begin
+    Result := aLoc.Y + (rxData.Pivot[id].Y + rxData.Size[id].Y) / CELL_SIZE_PX - 1
+                     - gTerrain.LandExt^[aLoc.Y, aLoc.X].RenderHeight / CELL_HEIGHT_DIV;
+  end;
+
+begin
+  A := gRes.Houses.ArenaAnim[aType];
+  if A.Count = 0 then
+    Exit;
+
+  rxData := fRXData[rxHouses];
+
+  id := A.Animation[aAnimStep] + 1;
+
+  if aDoImmediateRender then
+    RenderSprite(rxHouses, id, cornerX, cornerY, 0, true)
+  else
+    fRenderList.AddSprite(rxHouses, id, CornerX, CornerY, aLoc.X, aLoc.Y, 0, -1);
 end;
 
 procedure TKMRenderPool.AddHousePastureAnimal(const aLoc: TKMPointF; aAnimal : TKMPastureAnimalType; Action : TKMPastureAnimalAction; Dir : TKMDirection;

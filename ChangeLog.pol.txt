@@ -7,7 +7,11 @@
 	- dodano budynek: Perła architektury. Specjalny budynek na specjalne okazje.
 	- dodano budynek: Szkółka leśna. Leśniczy sadzi w nim drzewa.
 	- dodano budynek: Pastwisko. Można w nim chodować różnego rodzaju zwierzynę.
-	- studnia nie potrzebuje drogi do jej budowy
+	- dodano budynek: Arena. Używany do tworzenia punktów rozwoju
+	- studnia nie potrzebuje drogi do jej budowy.
+	- pojedynczy mur postawiony obok innego muru ustawi automatycznie swój wygląd.
+	- poprawiono ośnieżanie budynków.
+	
 	
 
 [$55FF55]Jednostki

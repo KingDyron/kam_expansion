@@ -458,7 +458,8 @@ uses
   KM_UnitTaskWoodcutter in 'src\units\tasks\KM_UnitTaskWoodcutter.pas',
   KM_ResDevelopment in 'src\res\KM_ResDevelopment.pas',
   KM_GUICommonDevelopment in 'src\gui\pages_common\KM_GUICommonDevelopment.pas',
-  KM_UnitTaskFeeder in 'src\units\tasks\KM_UnitTaskFeeder.pas';
+  KM_UnitTaskFeeder in 'src\units\tasks\KM_UnitTaskFeeder.pas',
+  KM_HouseArena in 'src\houses\KM_HouseArena.pas';
 
 //KM_PerfLog in 'src\unused\KM_PerfLog.pas', //unused
 

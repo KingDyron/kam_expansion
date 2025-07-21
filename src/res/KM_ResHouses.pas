@@ -4,7 +4,7 @@ interface
 uses
   Classes, Math, SysUtils,
   KM_CommonClasses, KM_CommonTypes, KM_Defaults,KM_Points, VCL.Dialogs,
-  KM_ResTypes;
+  KM_ResTypes, KM_ResDevelopment;
 
 const
   HOUSE_MIN = htArmorSmithy;
@@ -206,6 +206,7 @@ type
     Pearls : array[TKMPearlType] of TKMPearlData;
 
     ProdThatch_Anims : array[TKMProdThatchAnimType] of TKMAnimation;
+    ArenaAnim: array[TKMDevelopmentTreeType] of TKMAnimation;
 
     constructor Create;
     destructor Destroy; override;
@@ -313,7 +314,7 @@ const
     htStoneWorkshop, htIronFoundry, htMerchant, htPottery, htWoodBurner,
     htAppleTree, htSmallStore, htCollectors, htTailorsShop, htCottage,
     htHouse, htPalace, htStall, htProductionThatch, htShipyard,
-    htCartographers, htPearl, htPasture, htForest);
+    htCartographers, htPearl, htPasture, htForest, htArena);
 
   //TKMHouseType corresponds to this index in KaM scripts and libs
   //KaM scripts are 0 based, so we must use HouseTypeToIndex[H]-1 in script usage. Other cases are 1 based.
@@ -330,7 +331,7 @@ const
     41, 42, 43, 44, 45,
     46, 47, 48, 49, 50,
     51, 52, 53, 54, 55,
-    56, 57, 58, 59
+    56, 57, 58, 59, 60
     );
 
   WALL_HOUSES : TKMHouseTypeSet = [ htWall, htWall2, htWall3, htWall4, htWall5];
@@ -839,6 +840,7 @@ var
 
   PTA : TKMProdThatchAnimType;
   PT : TKMPearlType;
+  DDT : TKMDevelopmentTreeType;
 begin
 
   //jsonPath := ExeDir + //JSON_PATH + aFileName + '.json';
@@ -1222,6 +1224,13 @@ begin
     begin
       If TKMEnumUtils.GetName<TKMProdThatchAnimType>(PTA, S) then
         nHouse.GetAnim(S, ProdThatch_Anims[PTA]);
+    end;
+
+    nHouse := nRoot.O['ArenaAnim'];
+    for DDT := Low(TKMDevelopmentTreeType) to High(TKMDevelopmentTreeType) do
+    begin
+      If TKMEnumUtils.GetName<TKMDevelopmentTreeType>(DDT, S) then
+        nHouse.GetAnim(S, ArenaAnim[DDT]);
     end;
 
     nRoot.GetAnim('WallTower_RecruitLeft', WallTower_RecruitLeft);

@@ -70,6 +70,7 @@ uses
   KM_HouseInn, KM_HouseMarket, KM_HouseBarracks, KM_HouseSchool, KM_HouseStore, KM_HouseSwineStable,
   KM_HouseTownHall, KM_HouseWoodcutters, KM_HouseSiegeWorkshop, KM_HouseWoodBurner, KM_HouseQueue,
   KM_HouseCottage, KM_HouseCartographers, KM_HousePearl, KM_HousePasture, KM_HouseForest,
+  KM_HouseArena,
   KM_Resource,
   KM_GameTypes,
   KM_TerrainTypes,
@@ -178,6 +179,7 @@ begin
     htForest:           Result := TKMHouseForest.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
     htWall..htWall4:    Result := TKMHouseWall.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
     htWall5:            Result := TKMHouseWallSingle.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
+    htArena:            Result := TKMHouseArena.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
     else             Result := TKMHouse.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
   end;
 
@@ -566,6 +568,7 @@ begin
       htForest:           H := TKMHouseForest.Load(LoadStream);
       htWall..htWall4:    H := TKMHouseWall.Load(LoadStream);
       htWall5:            H := TKMHouseWallSingle.Load(LoadStream);
+      htArena:            H := TKMHouseArena.Load(LoadStream);
 
       else                H := TKMHouse.Load(LoadStream);
     end;
