@@ -194,7 +194,6 @@ type
     function GetWareOutArray: TKMByteArray;
     function GetWareOutPoolArray: TKMByteArray;
 
-    function GetWareDistribution(aID: Byte): Byte; //Will use GetRatio from mission settings to find distribution amount
     procedure SetIsClosedForWorker(aIsClosed: Boolean);
     function GetClosedForWorker : Boolean; virtual;
     procedure UpdateDeliveryMode;
@@ -222,6 +221,7 @@ type
     function GetWareOrder(aId: Byte): Integer; virtual;
     function GetWareIn(aI: Byte): Word; virtual;
     function GetWareOut(aI: Byte): Word; virtual;
+    function GetWareDistribution(aID: Byte): Byte;virtual; //Will use GetRatio from mission settings to find distribution amount
     function GetWareInLocked(aI: Byte): Word; virtual;
     procedure SetWareInManageTakeOutDeliveryMode(aWare: TKMWareType; aCntChange: Integer);
     procedure SetWareIn(aI: Byte; aValue: Word); virtual;
@@ -256,6 +256,7 @@ type
     property Tick : Cardinal read fTick;
     property SnowStep : Single read fSnowStep write fSnowStep;
     property IsOnSnow : Boolean read fIsOnSnow write fIsOnSnow;
+    property ResetDemands : Boolean read fResetDemands write fResetDemands;
 
   public
     //fWareIn, fWareBlocked: array[1..WARES_IN_OUT_COUNT] of Byte; // Ware count in input
@@ -1443,7 +1444,9 @@ procedure TKMHouse.AddDemandsOnActivate(aWasBuilt: Boolean);
 var
   I: Integer;
   W: TKMWareType;
+  updated : Boolean;
 begin
+  updated := false;
   for I := 1 to WARES_IN_OUT_COUNT do
   begin
     W := fWareInput[I];
@@ -1453,7 +1456,9 @@ begin
       wtWarfare: AddDemand(Self, nil, W, 1, dtAlways, diNorm);
       wtAll:     AddDemand(Self, nil, W, 1, dtAlways, diNorm);
       else        begin
-                    UpdateDemands;
+                    If not updated then
+                      UpdateDemands;
+                    updated := true;
                     //demandsCnt := Min(GetWareDistribution(I), GetMaxInWare - GetAcceptWareIn(W));
                     //AddDemand(Self, nil, W, demandsCnt, dtOnce, diNorm); //Every new house needs 5 resource units
                     //WareDeliveryCnt[I] := WareDeliveryCnt[I] + demandsCnt; //Keep track of how many resources we have on order (for distribution of wares)
@@ -1847,8 +1852,14 @@ var I : Integer;
 begin
   Result := 0;
   for I := 1 to WARES_IN_OUT_COUNT do
-    if aWareType = fWareInput[I] then
-      Result := fWareBlocked[I];
+    case fWareInput[I] of
+      wtNone: ;
+      wtAll:       Result := 0;
+      wtWarfare:   Result := 0;
+      else        If fWareInput[I] = aWareType then Result := fWareBlocked[I];
+    end;
+    {if aWareType = fWareInput[I] then
+      Result := fWareBlocked[I];  }
 end;
 
 procedure TKMHouse.SetAcceptWareIn(aWareType: TKMWareType; aMax: Word);
@@ -1871,7 +1882,8 @@ begin
     if (aWareType in [wtTimber, wtStone, wtTile]) then
       Exit(false);
 
-  Result := (DeliveryMode <> dmDelivery) or ((DeliveryMode = dmDelivery) and (CheckWareIn(aWareType) >= GetMaxInWare - GetAcceptWareIn(aWareType)) ) ;
+  Result := (DeliveryMode <> dmDelivery)
+            or ((DeliveryMode = dmDelivery) and (CheckWareIn(aWareType) >= GetMaxInWare - GetAcceptWareIn(aWareType)) ) ;
 
   if IsComplete then
     if IsUpgrading then
@@ -3893,8 +3905,16 @@ var
 begin
   Result := False;
   for I := 1 to WARES_IN_OUT_COUNT do
-    if aWare = fWareInput[I] then
-      Result := True;
+  begin
+    case fWareInput[I] of
+      wtNone: ;
+      wtAll:       Result := aWare in WARES_VALID;
+      wtWarfare:   Result := aWare in WARES_WARFARE;
+      else Result := aWare = fWareInput[I];
+    end;
+    If Result then
+      Exit;
+  end;
 end;
 
 

@@ -647,7 +647,6 @@ var
   end;
 
 var temp : Byte;
-  I, aIndex : Integer;
 begin
 
   If sender = Button_SavDev then
@@ -681,10 +680,11 @@ begin
     temp := GetFreeSpace;
     If temp <> 255 then
     begin
-      SetLength(dev.Next, length(dev.Next) + 1);
+      next := dev.AddNext(gRes.Development[Tree.CurrentPage].GetNewId, temp);
+      {SetLength(dev.Next, length(dev.Next) + 1);
       next := @dev.Next[high(dev.Next)];
       next.X := temp;
-      next.Parent := dev;
+      next.Parent := dev;}
 
       Tree.ReloadTrees;
     end;
@@ -693,7 +693,7 @@ begin
   begin
     If (devParent = nil) or (dev = nil) or (dev.Parent <> devParent) then
       Exit;
-    aIndex := -1;
+    {aIndex := -1;
     for I := 0 to High(devParent.Next) do
       If @devParent.Next[I] = dev then
         aIndex := I;
@@ -701,8 +701,8 @@ begin
       Exit;
 
     devParent.Next[aIndex] := devParent.Next[high(devParent.Next)];
-    SetLength(devParent.Next, high(devParent.Next));
-
+    SetLength(devParent.Next, high(devParent.Next)); }
+    devParent.RemNext(dev);
     Tree.ReloadTrees;
   end;
 

@@ -1,128 +1,176 @@
 {
+	"Builder" : 
+	{
+		"ID" : 0,
+		"HintID" : 0,
+		"GuiIcon" : 3,
+		"X" : 0,
+		"Next" : 
+		[
+			{
+				"ID" : 1,
+				"HintID" : 0,
+				"GuiIcon" : 3,
+				"X" : 1,
+				"Next" : 
+				[
+					{
+						"ID" : 2,
+						"HintID" : 0,
+						"GuiIcon" : 3,
+						"X" : 1
+					}
+				]
+			}
+		]
+	},
 	"Economy" : 
 	{
+		"ID" : 0,
 		"HintID" : 0,
 		"GuiIcon" : 771,
 		"X" : 2,
 		"Next" : 
 		[
 			{
+				"ID" : 1,
 				"HintID" : 0,
 				"GuiIcon" : 772,
 				"X" : 2,
 				"Next" : 
 				[
 					{
+						"ID" : 2,
 						"HintID" : 0,
 						"GuiIcon" : 775,
 						"X" : 2,
 						"Next" : 
 						[
 							{
+								"ID" : 3,
 								"HintID" : 0,
 								"GuiIcon" : 778,
-								"X" : 1
+								"X" : 4
 							},
 							{
+								"ID" : 4,
 								"HintID" : 0,
 								"GuiIcon" : 313,
 								"X" : 3,
 								"Next" : 
 								[
 									{
+										"ID" : 5,
 										"HintID" : 0,
 										"GuiIcon" : 776,
 										"X" : 1
 									},
 									{
+										"ID" : 6,
 										"HintID" : 0,
 										"GuiIcon" : 311,
-										"X" : 3,
+										"X" : 0,
 										"Next" : 
 										[
 											{
+												"ID" : 7,
 												"HintID" : 0,
 												"GuiIcon" : 776,
 												"X" : 1
 											},
 											{
+												"ID" : 8,
 												"HintID" : 0,
 												"GuiIcon" : 310,
 												"X" : 3,
 												"Next" : 
 												[
 													{
+														"ID" : 9,
 														"HintID" : 0,
 														"GuiIcon" : 776,
 														"X" : 0
 													},
 													{
+														"ID" : 10,
 														"HintID" : 0,
 														"GuiIcon" : 302,
 														"X" : 1,
 														"Next" : 
 														[
 															{
+																"ID" : 11,
 																"HintID" : 0,
 																"GuiIcon" : 776,
 																"X" : 2
 															},
 															{
+																"ID" : 12,
 																"HintID" : 0,
 																"GuiIcon" : 309,
 																"X" : 3,
 																"Next" : 
 																[
 																	{
+																		"ID" : 13,
 																		"HintID" : 0,
 																		"GuiIcon" : 776,
 																		"X" : 4
 																	},
 																	{
+																		"ID" : 14,
 																		"HintID" : 0,
 																		"GuiIcon" : 308,
 																		"X" : 3,
 																		"Next" : 
 																		[
 																			{
+																				"ID" : 15,
 																				"HintID" : 0,
 																				"GuiIcon" : 776,
 																				"X" : 2
 																			},
 																			{
+																				"ID" : 16,
 																				"HintID" : 0,
 																				"GuiIcon" : 308,
 																				"X" : 1,
 																				"Next" : 
 																				[
 																					{
+																						"ID" : 17,
 																						"HintID" : 0,
 																						"GuiIcon" : 776,
 																						"X" : 0
 																					},
 																					{
+																						"ID" : 18,
 																						"HintID" : 0,
 																						"GuiIcon" : 305,
 																						"X" : 0,
 																						"Next" : 
 																						[
 																							{
+																								"ID" : 19,
 																								"HintID" : 0,
 																								"GuiIcon" : 776,
 																								"X" : 2
 																							},
 																							{
+																								"ID" : 20,
 																								"HintID" : 0,
 																								"GuiIcon" : 304,
 																								"X" : 4,
 																								"Next" : 
 																								[
 																									{
+																										"ID" : 21,
 																										"HintID" : 0,
 																										"GuiIcon" : 776,
 																										"X" : 3
 																									},
 																									{
+																										"ID" : 22,
 																										"HintID" : 0,
 																										"GuiIcon" : 314,
 																										"X" : 2
@@ -148,23 +196,47 @@
 						]
 					}
 				]
+			},
+			{
+				"ID" : 23,
+				"HintID" : 0,
+				"GuiIcon" : 2,
+				"X" : 3,
+				"Next" : 
+				[
+					{
+						"ID" : 24,
+						"HintID" : 0,
+						"GuiIcon" : 1073,
+						"X" : 3
+					},
+					{
+						"ID" : 25,
+						"HintID" : 0,
+						"GuiIcon" : 0,
+						"X" : 4
+					}
+				]
 			}
 		]
 	},
 	"Army" : 
 	{
+		"ID" : 0,
 		"HintID" : 0,
 		"GuiIcon" : 773,
 		"X" : 2,
 		"Next" : 
 		[
 			{
+				"ID" : 1,
 				"HintID" : 0,
 				"GuiIcon" : 774,
 				"X" : 1,
 				"Next" : 
 				[
 					{
+						"ID" : 2,
 						"HintID" : 0,
 						"GuiIcon" : 778,
 						"X" : 0
@@ -172,27 +244,32 @@
 				]
 			},
 			{
+				"ID" : 3,
 				"HintID" : 0,
 				"GuiIcon" : 775,
 				"X" : 2
 			},
 			{
+				"ID" : 4,
 				"HintID" : 0,
 				"GuiIcon" : 776,
 				"X" : 3,
 				"Next" : 
 				[
 					{
+						"ID" : 5,
 						"HintID" : 0,
 						"GuiIcon" : 778,
 						"X" : 2
 					},
 					{
+						"ID" : 6,
 						"HintID" : 0,
 						"GuiIcon" : 779,
 						"X" : 3
 					},
 					{
+						"ID" : 7,
 						"HintID" : 0,
 						"GuiIcon" : 780,
 						"X" : 4

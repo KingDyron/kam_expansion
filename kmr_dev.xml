@@ -27,7 +27,7 @@
       <tbWaterLight Position="130"/>
       <chkInterpolatedAnims Checked="False"/>
     </Graphic_tweaks>
-    <User_Interface Collapsed="False">
+    <User_Interface Collapsed="True">
       <chkUIControlsBounds Checked="False"/>
       <chkUIControlsID Checked="False"/>
       <chkUITextBounds Checked="False"/>

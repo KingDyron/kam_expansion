@@ -662,6 +662,7 @@
         <DCCReference Include="src\gui\pages_common\KM_GUICommonDevelopment.pas"/>
         <DCCReference Include="src\units\tasks\KM_UnitTaskFeeder.pas"/>
         <DCCReference Include="src\houses\KM_HouseArena.pas"/>
+        <DCCReference Include="src\gui\pages_game\house\KM_GUIGameHouseArena.pas"/>
         <None Include="KM_TextIDs.inc"/>
         <None Include="KaM_Remake.dpr"/>
         <None Include="KaM_Remake.inc"/>

@@ -6,6 +6,7 @@ uses
   KM_Controls, KM_ControlsBase, KM_ControlsProgressBar, KM_ControlsSwitch, KM_ControlsWaresRow,
   KM_CommonClasses, KM_CommonTypes, KM_Defaults, KM_Pics, KM_ControlsPopUp, KM_ControlsEdit, KM_ControlsScroll,
   KM_GUIGameHouseCartographer, KM_GuiGameHousePearl, KM_GuiGameHousePasture, KM_GuiGameHouseForest,
+  KM_GuiGameHouseArena,
   KM_InterfaceGame, KM_Houses, KM_HouseMarket, KM_HouseQueue, KM_ResWares, KM_ResTypes;
 
 const LINE_HEIGHT = 25; //Each new Line is placed ## pixels after previous
@@ -268,6 +269,7 @@ type
     Panel_Pearl : TKMGuiGamePearl;
     Panel_Pasture : TKMGuiGamePasture;
     Panel_Forest : TKMGuiGameForest;
+    Panel_Arena : TKMGuiGameArena;
 
   public
     AskDemolish: Boolean;
@@ -547,6 +549,7 @@ begin
   Panel_Pearl := TKMGuiGamePearl.Create(Panel_House);
   Panel_Pasture := TKMGuiGamePasture.Create(Panel_House);
   Panel_Forest := TKMGuiGameForest.Create(Panel_House);
+  Panel_Arena := TKMGuiGameArena.Create(Panel_House);
 
   Create_HouseMarket;
   Create_HouseStore;
@@ -2226,6 +2229,7 @@ begin
           htCartographers : Panel_Cartographers.Show(fHouse, base + line * 25 + 20 + 50);
           htPasture : Panel_Pasture.Show(fHouse, base + line * 25 + 20 + 50);
           htForest : Panel_Forest.Show(fHouse, base + line * 25 + 20 + 55);
+          htArena : Panel_Arena.Show(fHouse, base + line * 25 + 20 + 55);
       end;
 
 

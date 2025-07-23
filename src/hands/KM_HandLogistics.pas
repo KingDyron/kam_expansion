@@ -1376,7 +1376,6 @@ begin
             (demand.Loc_Structure <> nil) and
             gTerrain.RouteCanBeMade(offer.Loc_House.PointBelowEntrance, demand.Loc_Structure.Position, tpWalk, 2)
             ));
-
   //If Demand house should abandon delivery
   Result := Result and ((demand.Loc_House = nil)
                          or not demand.Loc_House.IsComplete
@@ -1559,7 +1558,9 @@ begin
             begin
               offersTaken := 0;
               for iD := 0 to fDemandCount[dWT] - 1 do
-                if ValidDemand(dWT, iD) and not demandTaken[dWT,iD] and ValidDelivery(oWT,dWT,iO,iD) then
+                if ValidDemand(dWT, iD) then
+                if not demandTaken[dWT,iD] then
+                if ValidDelivery(oWT,dWT,iO,iD) then
                 begin
                   if fDemand[dWT,iD].DemandType = dtOnce then
                   begin

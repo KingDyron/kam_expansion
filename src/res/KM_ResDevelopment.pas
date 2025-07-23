@@ -16,12 +16,18 @@ type
     GuiIcon, ID : Word;
     Parent : PKMDevelopment;
     Next : array of TKMDevelopment;
+    function IndexOf(aDev : PKMDevelopment) : Integer;
+    function AddNext(aId : Word; aX : Byte): PKMDevelopment;
+    function RemNext(aIndex : Integer): Boolean;overload;
+    function RemNext(aDev : PKMDevelopment): Boolean;overload;
   end;
   TKMDevelopmentTree = class
     private
+      fLastID : Word;
       fList : TKMDevelopment;
     public
       function FirstItem : PKMDevelopment;
+      function GetNewId : Word;
 
       procedure LoadFromJson(JSON : TKMJson);
   end;
@@ -45,7 +51,7 @@ type
 
       function GetAllTakenAtY(aType :TKMDevelopmentTreeType; aY: Byte): TKMByteArray;
 
-      procedure SaveTOJson;
+      procedure SaveToJson;
   end;
 
 implementation
@@ -61,16 +67,24 @@ begin
   Result := @fList;
 end;
 
+function TKMDevelopmentTree.GetNewId: Word;
+begin
+  Inc(fLastId);
+  Result := fLastId;
+end;
+
 procedure TKMDevelopmentTree.LoadFromJson(JSON: TKMJson);
-var aID : Word;
+//var aID : Word;
   procedure CheckForNext(var aTo : TKMDevelopment; aJson: TKMJson);
   var nArr : TKMJsonArray;
     I : Integer;
   begin
     with aTo do
     begin
-      fList.ID := aID;
-      Inc(aID);
+      //ID := aID;
+      //Inc(aID);
+      ID := aJson.I['ID'];
+      fLastID := Max(ID, fLastID);
       HintID := aJson.I['HintID'];
 
       X := aJson.I['X'];
@@ -90,7 +104,7 @@ var aID : Word;
   end;
 
 begin
-  aID := 0;
+  //aID := 0;
   {fList.TextID := JSON.I['TextID'];
   fList.X := JSON.I['X'];
   fList.Y := JSON.I['Y'];
@@ -207,7 +221,8 @@ var nRoot : TKMJsonSaver;
   var I : Integer;
   begin
 
-    nRoot.Write('HintID', aDev.HintID, true);
+    nRoot.Write('ID', aDev.ID, true);
+    nRoot.Write('HintID', aDev.HintID);
     nRoot.Write('GuiIcon', aDev.GuiIcon);
     nRoot.Write('X', aDev.X);
     If length(aDev.Next) > 0 then
@@ -231,7 +246,7 @@ begin
 
     for dtt := Low(fTree) to High(fTree) do
     begin
-      nRoot.WriteObject(TREE_TYPE_STRING[dtt], dtt = dttEconomy);
+      nRoot.WriteObject(TREE_TYPE_STRING[dtt], dtt = Low(fTree));
       SaveDevelopment(fTree[dtt].FirstItem);
       nRoot.EndObject;
     end;
@@ -242,6 +257,44 @@ begin
   finally
     nRoot.Free;
   end;
+end;
+
+function TKMDevelopment.IndexOf(aDev: PKMDevelopment): Integer;
+var I : Integer;
+begin
+  Result := -1;
+  for I := 0 to High(Next) do
+    If @Next[I] = aDev  then
+      Exit(I);
+end;
+
+function TKMDevelopment.AddNext(aId : Word; aX : Byte): PKMDevelopment;
+var I : Integer;
+begin
+  I := length(Next);
+  SetLength(Next, I + 1);
+  Next[I].Parent := @self;
+  Result := @Next[I];
+  //Result.Parent := @self;
+  Result.X := aX;
+  Result.ID := aID;
+end;
+
+function TKMDevelopment.RemNext(aIndex: Integer): Boolean;
+begin
+  Result := false;
+  Next[aIndex] := Next[high(Next)];
+  Setlength(Next, high(Next));
+end;
+
+function TKMDevelopment.RemNext(aDev: PKMDevelopment): Boolean;
+var I : Integer;
+begin
+  Result := false;
+  I := IndexOf(aDev);
+  If I = -1 then
+    Exit;
+  Result := RemNext(I);
 end;
 
 end.

@@ -61,6 +61,7 @@ var dtt : TKMDevelopmentTreeType;
       aToButton.Button_Tree.Tag := fCount;
       aToButton.Button_Tree.Tag := Integer(aDevelopment);
       aToButton.Button_Tree.OnClick := ButtonClicked;
+      aToButton.Button_Tree.Caption := aDevelopment.ID.ToString;
       aToButton.Dev := aDevelopment;
       //aToButton.ID := fCount;
       Inc(fCount);
@@ -78,11 +79,12 @@ begin
   fLastPage := dttEconomy;
   for dtt := Low(TKMDevelopmentTreeType) to High(TKMDevelopmentTreeType) do
   begin
-    Button_SwitchTree[dtt] := TKMButton.Create(self, byte(dtt) * 37, 5, 33, 33, TREE_TYPE_ICON[dtt], rxGui, bsPaper);
+    Button_SwitchTree[dtt] := TKMButton.Create(self, byte(dtt) * 37 + 5 , 5, 33, 33, TREE_TYPE_ICON[dtt], rxGui, bsPaper);
     Button_SwitchTree[dtt].Tag := byte(dtt);
     Button_SwitchTree[dtt].OnClick := SwitchPage;
 
-    Tree[dtt].Panel := TKMScrollPanel.Create(self, 3, 42, Width - 6, Height - 42 - 5, [saVertical], bsMenu, ssGame);
+    Tree[dtt].Panel := TKMScrollPanel.Create(self, 3, 42, Width - 3, Height - 42 - 5, [saVertical], bsMenu, ssGame);
+    Tree[dtt].Panel.ScrollV.Left := Tree[dtt].Panel.ScrollV.Left;
     Tree[dtt].Panel.AnchorsStretch;
     Tree[dtt].Panel.ChildPanel.AnchorsStretch;
     CreateNext(dtt, Tree[dtt].Button_Tree, gRes.Development[dtt].FirstItem, 0);
@@ -158,6 +160,7 @@ var dtt : TKMDevelopmentTreeType;
       aToButton.Button_Tree.BackAlpha := 1;
       aToButton.Button_Tree.Tag := fCount - 1;
       aToButton.Button_Tree.Tag := Integer(aDevelopment);
+      aToButton.Button_Tree.Caption := aDevelopment.ID.ToString;
       aToButton.Button_Tree.OnClick := ButtonClicked;
       aToButton.Dev := aDevelopment;
     end;
