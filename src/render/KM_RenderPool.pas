@@ -82,6 +82,7 @@ type
     procedure RenderBackgroundUI(const aRect: TKMRect);
     // Terrain overlay cursors rendering (incl. sprites highlighting)
     procedure RenderForegroundUI;
+    procedure RenderForegroundUI_Tiles;
     procedure RenderForegroundUI_Brush;
     procedure RenderForegroundUI_BigErase;
     procedure RenderForegroundUI_ElevateEqualize;
@@ -128,6 +129,7 @@ type
     procedure RenderWireTileInt(const X,Y: Integer);
     procedure RenderWireTileIntObjBr(const X,Y: Integer);
     procedure RenderTileInt(const X, Y: Integer);
+    procedure RenderTileBrushInt(const X, Y: Integer);
 
     procedure RenderBigEraseTileInt(const X,Y: Integer);
     procedure RenderAssignToShip;
@@ -2899,6 +2901,14 @@ begin
     RenderTile(Combo[TKMTerrainKind(gCursor.Tag1), TKMTerrainKind(gCursor.Tag1),1],X,Y,0);
 end;
 
+procedure TKMRenderPool.RenderTileBrushInt(const X, Y: Integer);
+begin
+  If gCursor.MapEdDir in [0..3] then
+    RenderTile(gCursor.Tag1,X,Y,gCursor.MapEdDir)
+  else
+    RenderTile(gCursor.Tag1,X,Y, (gTerrain.AnimStep div 5) mod 4);
+end;
+
 
 procedure TKMRenderPool.RenderForegroundUI_BigErase;
 begin
@@ -2954,6 +2964,17 @@ begin
   end;
 end;
 
+procedure TKMRenderPool.RenderForegroundUI_Tiles;
+var
+  P, RP: TKMPoint;
+  size: Integer;
+  isSquare: Boolean;
+begin
+  P := gCursor.Cell;
+  size := gCursor.MapEdSize;
+  isSquare := gCursor.MapEdShape = hsSquare;
+  IterateOverArea(P, size, isSquare, RenderTileBrushInt);
+end;
 
 //Render tile owner layer
 procedure TKMRenderPool.RenderTileOwnerLayer(const aRect: TKMRect);
@@ -3072,10 +3093,10 @@ begin
                     RenderSpriteOnTile(P, TC_BLOCK);       // Red X
     cmHouses:     RenderWireHousePlan(KMPointAdd(P, gCursor.DragOffset), TKMHouseType(gCursor.Tag1), false); // Cyan quads and red Xs
     cmBrush:      RenderForegroundUI_Brush;
-    cmTiles:      if gCursor.MapEdDir in [0..3] then
+    cmTiles:      RenderForegroundUI_Tiles;{if gCursor.MapEdDir in [0..3] then
                     RenderTile(gCursor.Tag1, P.X, P.Y, gCursor.MapEdDir)
                   else
-                    RenderTile(gCursor.Tag1, P.X, P.Y, (gTerrain.AnimStep div 5) mod 4); // Spin it slowly so player remembers it is on randomized
+                    RenderTile(gCursor.Tag1, P.X, P.Y, (gTerrain.AnimStep div 5) mod 4);} // Spin it slowly so player remembers it is on randomized
     cmOverlays:   begin
                     RenderWireTile(P, icCyan);
                     if gCursor.Tag1 > 0 then

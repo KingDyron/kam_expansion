@@ -7,6 +7,7 @@ uses
   Classes, Math, SysUtils,
   KM_InterfaceDefaults,
   KM_Controls, KM_ControlsBase, KM_ControlsEdit, KM_ControlsPopUp, KM_ControlsScroll, KM_ControlsSwitch,
+  KM_ControlsTrackBar,
   KM_Defaults, KM_Pics, KM_Points;
 
 
@@ -34,6 +35,11 @@ type
       TilesRandom: TKMCheckBox;
       TilesMagicWater, TilesEyedropper, TilesRotate: TKMButtonFlat;
       NumEdit_SetTileNumber: TKMNumericEdit;
+
+      BrushSize: TKMTrackBar;
+      BrushCircle: TKMButtonFlat;
+      BrushSquare: TKMButtonFlat;
+
     TilesPalette_Button:  TKMButtonFlat;
     Panel_TilesPalettePopup: TKMPopUpPanel;
       Panel_TilesPalette: TKMScrollPanel;
@@ -98,6 +104,7 @@ constructor TKMMapEdTerrainTiles.Create(aParent: TKMPanel);
 const
   BTN_SIZE_S = 34;
   BTN_SIZE = 36;
+  BTN_BRUSH_SIZE = 24;
 
 
   TB_TLS_M = 9;
@@ -107,7 +114,7 @@ const
 
 
 var
-  I,J,K,X,Y, lineWidthCnt, texID, palW, palH, row, index: Integer;
+  I,J,K,X,Y, lineWidthCnt, texID, palW, palH, row, index, top: Integer;
 begin
   inherited Create;
 
@@ -136,9 +143,31 @@ begin
   TilesRandom := TKMCheckBox.Create(Panel_Tiles, TB_TLS_R, 25 + BTN_SIZE + 5, Panel_Tiles.Width - TB_TLS_R, 20, gResTexts[TX_MAPED_TERRAIN_TILES_RANDOM], fntMetal);
   TilesRandom.Checked := True;
   TilesRandom.OnClick := TilesChange;
+  top := TilesRandom.Bottom + 5;
+
+  BrushSize   := TKMTrackBar.Create(Panel_Tiles, TB_TLS_R, top, (Panel_Tiles.Width - (BTN_BRUSH_SIZE * 2) - 18) - 18, 1, 7);
+  BrushSize.Anchors := [anLeft, anTop, anRight];
+  BrushSize.Hint := GetHintWHotkey(TX_MAPED_TERRAIN_HEIGHTS_SIZE_HINT, gResTexts[TX_KEY_CTRL_MOUSEWHEEL]);
+  BrushSize.Position := 1;
+  BrushSize.OnChange := TilesChange;
+
+  BrushCircle := TKMButtonFlat.Create(Panel_Tiles, Panel_Tiles.Width - (BTN_BRUSH_SIZE * 2) - 18,
+                                                     top, BTN_BRUSH_SIZE, BTN_BRUSH_SIZE, 592);
+  BrushCircle.Anchors := [anTop, anRight];
+  BrushCircle.OnClick := TilesChange;
+  BrushCircle.TexOffsetX := 1;
+  BrushCircle.TexOffsetY := 1;
+
+  BrushSquare := TKMButtonFlat.Create(Panel_Tiles, Panel_Tiles.Width - BTN_BRUSH_SIZE - 9, top, BTN_BRUSH_SIZE, BTN_BRUSH_SIZE, 593);
+  BrushSquare.Anchors := [anTop, anRight];
+  BrushSquare.OnClick := TilesChange;
+  BrushSquare.TexOffsetX := 1;
+  BrushSquare.TexOffsetY := 1;
+
+  top := BrushSize.Bottom + 5;
 
   //Create scroll first to link to its MouseWheel event
-  TilesScroll := TKMScrollBar.Create(Panel_Tiles, TB_TLS_S, 23 + BTN_SIZE + 28 + 4 + MAPED_TILES_Y * 32, 194, 20, saHorizontal, bsGame);
+  TilesScroll := TKMScrollBar.Create(Panel_Tiles, TB_TLS_S, top + MAPED_TILES_Y * 32, 194, 20, saHorizontal, bsGame);
   TilesScroll.MaxValue := (TABLE_ELEMS_CNT div MAPED_TILES_Y) - MAPED_TILES_X; // 32 - 6
   TilesScroll.Position := 0;
   TilesScroll.OnChange := TilesRefresh;
@@ -146,13 +175,13 @@ begin
   for J := 0 to MAPED_TILES_Y - 1 do
     for K := 0 to MAPED_TILES_X - 1 do
     begin
-      TilesTable[J * MAPED_TILES_X + K] := TKMButtonFlat.Create(Panel_Tiles, TB_TLS_T + K * 32, 23 + BTN_SIZE + 28 + J * 32, 32, 32, 1, rxTiles);
+      TilesTable[J * MAPED_TILES_X + K] := TKMButtonFlat.Create(Panel_Tiles, TB_TLS_T + K * 32, top + J * 32, 32, 32, 1, rxTiles);
       TilesTable[J * MAPED_TILES_X + K].Tag :=  J * MAPED_TILES_X + K; //Store ID
       TilesTable[J * MAPED_TILES_X + K].OnClick := TilesChange;
       TilesTable[J * MAPED_TILES_X + K].OnMouseWheel := TilesScroll.MouseWheel;
     end;
 
-  TilesPalette_Button := TKMButtonFlat.Create(Panel_Tiles, 9, 23 + BTN_SIZE + 28 + 4 + MAPED_TILES_Y * 32 + 25, Panel_Tiles.Width - 9, 21, 0);
+  TilesPalette_Button := TKMButtonFlat.Create(Panel_Tiles, 9, top + 4 + MAPED_TILES_Y * 32 + 25, Panel_Tiles.Width - 9, 21, 0);
   TilesPalette_Button.Anchors := [anLeft, anTop, anRight];
   TilesPalette_Button.Caption := gResTexts[TX_MAPED_TERRAIN_TILES_PALETTE];
   TilesPalette_Button.CapOffsetY := -11;
@@ -246,7 +275,7 @@ end;
 
 procedure TKMMapEdTerrainTiles.TilesChange(Sender: TObject);
 var
-  isMagicWater, isEyedropper, isRotate, isRandom, isTileNum: Boolean;
+  isMagicWater, isEyedropper, isRotate, isRandom, isTileNum, isBrushSett: Boolean;
   value: Integer;
 begin
   isMagicWater := (Sender = TilesMagicWater) or (Sender = TilesPaletteMagicWater);
@@ -254,6 +283,15 @@ begin
   isRotate     := (Sender = TilesRotate) or (Sender = TilesPaletteRotate);
   isRandom     := (Sender = TilesRandom) or (Sender = TilesPaletteRandom);
   isTileNum    := (Sender = NumEdit_SetTileNumber) or (Sender = NumEdit_SetTilePaletteNumber);
+  isBrushSett  := (Sender = BrushSquare) or (Sender = BrushCircle) or (Sender = BrushSize);
+
+  gCursor.MapEdSize := BrushSize.Position;
+  If BrushSquare.Down then
+    gCursor.MapEdShape := hsSquare
+  else
+    gCursor.MapEdShape := hsCircle;
+  BrushCircle.Down := gCursor.MapEdShape = hsCircle;
+  BrushSquare.Down := gCursor.MapEdShape = hsSquare;
 
   // Do not hide palette on random check
   if not isRandom and not isTileNum then
@@ -267,7 +305,10 @@ begin
 
   TilesRotate.Down := isRotate and not TilesRotate.Down;
   TilesPaletteRotate.Down := TilesRotate.Down;
+  If isBrushSett then
+  begin
 
+  end else
   if isMagicWater then
   begin
     if TilesMagicWater.Down then
@@ -308,7 +349,6 @@ begin
       TilesTableSetTileTexId(value);
     end
   end else
-
   if (Sender is TKMButtonFlat)
     and not (Sender = TilesMagicWater)
     and not (Sender = TilesRotate)
@@ -476,6 +516,7 @@ procedure TKMMapEdTerrainTiles.Show;
 begin
   TilesSet(fLastTile);
   gCursor.MapEdDir := 0;
+  gCursor.MapEdSize :=  BrushSize.Position;
   Panel_Tiles.Show;
 end;
 

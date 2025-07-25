@@ -66,6 +66,7 @@ type
                                     aBrushMask: TKMTileMaskKind; aBlendingLvl: Integer; aUseMagicBrush: Boolean);
 
     procedure DoApplyBrush;
+    procedure DoApplyTileBrush(const X, Y: Integer);
     procedure EditTile(const aLoc: TKMPoint; aTile: Word; aRotation: Byte; aIsCustom: Boolean = True);
     procedure GenerateAddnData;
     procedure InitSize(X,Y: Word);
@@ -112,6 +113,7 @@ type
     procedure ApplySelectionBrush;
     procedure ApplyConstHeight;
     procedure ApplyElevateKind(aTerKind: TKMTerrainKind);
+    procedure ApplyTileBrush;
 
     procedure RebuildMap; overload;
     procedure RebuildMap(const aRect: TKMRect; aRandomTiles: Boolean = False); overload;
@@ -1520,6 +1522,7 @@ begin
 end;
 
 
+
 procedure TKMTerrainPainter.DoApplyBrush;
 var
   X, Y: Integer;
@@ -1548,6 +1551,28 @@ begin
   gTerrain.UpdateLighting(rect); //Also update lighting because of water
 end;
 
+procedure TKMTerrainPainter.ApplyTileBrush;
+var
+  X, Y: Integer;
+  rect: TKMRect;
+begin
+  X := fMapXc;
+  Y := fMapYc;
+
+  IterateOverArea(KMPoint(X, Y), fSize, fShape = hsSquare, DoApplyTileBrush);
+
+  rect := KMRectGrow(KMRect(KMPoint(X, Y)), (fSize div 2) + 1);
+  gTerrain.UpdatePassability(rect);
+  gTerrain.UpdateLighting(rect); //Also update lighting because of water
+end;
+
+procedure TKMTerrainPainter.DoApplyTileBrush(const X, Y: Integer);
+begin
+  if gCursor.MapEdDir in [0..3] then //Defined direction
+    EditTile(KMPoint(X, Y), gCursor.Tag1, gCursor.MapEdDir)
+  else //Random direction
+    EditTile(KMPoint(X, Y), gCursor.Tag1, KaMRandom(4, 'TKMTerrainPainter.UpdateStateIdle'));
+end;
 
 
 procedure TKMTerrainPainter.ApplyObjectsBrush;
@@ -2352,11 +2377,12 @@ begin
                     end;
     cmTiles:        if (ssLeft in gCursor.SState) then
                     begin
-
-                      if gCursor.MapEdDir in [0..3] then //Defined direction
+                      SetMapEdParams; //Set mapEd params from gGameCursor
+                      ApplyTileBrush;
+                      {if gCursor.MapEdDir in [0..3] then //Defined direction
                         EditTile(gCursor.Cell, gCursor.Tag1, gCursor.MapEdDir)
                       else //Random direction
-                        EditTile(gCursor.Cell, gCursor.Tag1, KaMRandom(4, 'TKMTerrainPainter.UpdateStateIdle'));
+                        EditTile(gCursor.Cell, gCursor.Tag1, KaMRandom(4, 'TKMTerrainPainter.UpdateStateIdle'));}
                     end;
     cmObjects:      if ssLeft in gCursor.SState then
                       if CanEditTile(gCursor.Cell.X, gCursor.Cell.Y) then
