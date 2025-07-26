@@ -104,14 +104,6 @@ type
     function PaintBucket_UnitToRender(aUnit: TObject): Boolean;
     function PaintBucket_GroupToRender(aGroup: TObject): Boolean;
 
-    procedure RenderSprite(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
-                           HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1); overload;
-    procedure RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
-                           HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1);
-
-    procedure RenderSprite(aRX: TRXType; aId: Integer; aX, aY: Single; Col: TColor4; DoHighlight: Boolean = False;
-                           HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1);overload;
-    procedure RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY, aNight: Single; aId2: Integer = 0; aStoneProgress: Single = 0; X2: Single = 0; Y2: Single = 0);
 
     procedure RenderHouseOutline(aHouseSketch: TKMHouseSketch; aCol: Cardinal = icCyan);
 
@@ -133,6 +125,16 @@ type
 
     procedure RenderBigEraseTileInt(const X,Y: Integer);
     procedure RenderAssignToShip;
+  protected
+
+    procedure RenderSprite(aRX: TRXType; aId: Integer; aX, aY: Single; Col: TColor4; DoHighlight: Boolean = False;
+                           HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1);overload;
+    procedure RenderSprite(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+                           HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1); overload; virtual;
+    procedure RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+                           HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1); virtual;
+    procedure RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY, aNight: Single;
+                                    aId2: Integer = 0; aStoneProgress: Single = 0; X2: Single = 0; Y2: Single = 0); virtual;
   public
     IntScale : Single;
     constructor Create(aViewport: TKMViewport; aRender: TKMRender);
@@ -224,8 +226,19 @@ type
     procedure SetRotation(aH,aP,aB: Integer);
 
     procedure Render(aTickLag: Single);
+
+    property BaseRender : TKMRender read fRender;
   end;
 
+  TKMRenderPoolNoNight = class(TKMRenderPool)
+  protected
+    procedure RenderSprite(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+                           HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1); overload; override;
+    procedure RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+                           HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1); override;
+    procedure RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY, aNight: Single;
+                                    aId2: Integer = 0; aStoneProgress: Single = 0; X2: Single = 0; Y2: Single = 0); override;
+  end;
 
 var
   gRenderPool: TKMRenderPool;
@@ -2186,8 +2199,8 @@ var
   rX, rY: Single;
   night : Single;
 begin
-  tX := EnsureRange(Round(aX), 1, gTerrain.MapX - 1);
-  tY := EnsureRange(Round(aY), 1, gTerrain.MapY - 1);
+  tX := EnsureRange(Round(aX), 1, gTerrain.MapX) - 1;
+  tY := EnsureRange(Round(aY), 1, gTerrain.MapY) - 1;
   //Do not render if sprite is under FOW
   if not aForced and (gMySpectator.FogOfWar.CheckVerticeRenderRev(tX, tY) <= FOG_OF_WAR_MIN) then
     Exit;
@@ -2350,8 +2363,8 @@ var
   rX, rY: Single;
   night : Single;
 begin
-  tX := EnsureRange(Round(aX), 1, gTerrain.MapX - 1);
-  tY := EnsureRange(Round(aY), 1, gTerrain.MapY - 1);
+  tX := EnsureRange(Round(aX), 1, gTerrain.MapX) - 1;
+  tY := EnsureRange(Round(aY), 1, gTerrain.MapY) - 1;
   //Do not render if sprite is under FOW
   if not aForced and (gMySpectator.FogOfWar.CheckVerticeRenderRev(tX, tY) <= FOG_OF_WAR_MIN) then
     Exit;
@@ -2523,8 +2536,8 @@ begin
   // Skip rendering if alphas are zero (occurs so non-started houses can still have child sprites)
   if (aWoodProgress = 0) and (aStoneProgress = 0) then Exit;
 
-  tX := EnsureRange(Round(aX), 1, gTerrain.MapX - 1);
-  tY := EnsureRange(Round(aY), 1, gTerrain.MapY - 1);
+  tX := EnsureRange(Round(aX), 1, gTerrain.MapX) - 1;
+  tY := EnsureRange(Round(aY), 1, gTerrain.MapY) - 1;
   if gMySpectator.FogOfWar.CheckVerticeRenderRev(tX, tY) <= FOG_OF_WAR_MIN then Exit;
 
   rX := RoundToTilePixel(aX);
@@ -2679,6 +2692,203 @@ begin
 
 end;
 
+
+
+
+procedure TKMRenderPoolNoNight.RenderSprite(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+                                   HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1);
+var
+  tX, tY: Integer;
+  rX, rY: Single;
+  night : Single;
+begin
+  tX := EnsureRange(Round(aX), 1, gTerrain.MapX) - 1;
+  tY := EnsureRange(Round(aY), 1, gTerrain.MapY) - 1;
+  //Do not render if sprite is under FOW
+  if not aForced and (gMySpectator.FogOfWar.CheckVerticeRenderRev(tX, tY) <= FOG_OF_WAR_MIN) then
+    Exit;
+
+  rX := RoundToTilePixel(aX);
+  rY := RoundToTilePixel(aY);
+
+  with gGFXData[aRX, aId] do
+  begin
+    // FOW is rendered over the top so no need to make sprites black anymore
+    glColor4ub(255, 255, 255, 255);
+
+    TKMRender.BindTexture(Tex.TexID);
+    if DoHighlight then
+      glColor3ub(HighlightColor AND $FF, HighlightColor SHR 8 AND $FF, HighlightColor SHR 16 AND $FF);
+    glBegin(GL_QUADS);
+      glTexCoord2f(Tex.u1, Tex.v2); glVertex2f(rX                     , rY                      );
+      glTexCoord2f(Tex.u2, Tex.v2); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY                      );
+      glTexCoord2f(Tex.u2, Tex.v1); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY-pxHeight/CELL_SIZE_PX);
+      glTexCoord2f(Tex.u1, Tex.v1); glVertex2f(rX                     , rY-pxHeight/CELL_SIZE_PX);
+    glEnd;
+  end;
+
+  if gGFXData[aRX, aId].Alt.TexID <> 0 then
+    with gGFXData[aRX, aId] do
+    begin
+      glColor4ubv(@Col);
+      TKMRender.BindTexture(Alt.TexID);
+      glBegin(GL_QUADS);
+        glTexCoord2f(Alt.u1, Alt.v2); glVertex2f(rX                     , rY                      );
+        glTexCoord2f(Alt.u2, Alt.v2); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY                      );
+        glTexCoord2f(Alt.u2, Alt.v1); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY-pxHeight/CELL_SIZE_PX);
+        glTexCoord2f(Alt.u1, Alt.v1); glVertex2f(rX                     , rY-pxHeight/CELL_SIZE_PX);
+      glEnd;
+    end;
+end;
+
+
+procedure TKMRenderPoolNoNight.RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+                                   HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1);
+var
+  tX, tY: Integer;
+  rX, rY: Single;
+  night : Single;
+begin
+  tX := EnsureRange(Round(aX), 1, gTerrain.MapX) - 1;
+  tY := EnsureRange(Round(aY), 1, gTerrain.MapY) - 1;
+  //Do not render if sprite is under FOW
+  if not aForced and (gMySpectator.FogOfWar.CheckVerticeRenderRev(tX, tY) <= FOG_OF_WAR_MIN) then
+    Exit;
+
+  rX := RoundToTilePixel(aX);
+  rY := RoundToTilePixel(aY);
+
+  with gGFXData[aRX, aId] do
+  begin
+    // FOW is rendered over the top so no need to make sprites black anymore
+    glColor4ub(255, 255, 255, 255);
+
+    TKMRender.BindTexture(Tex.TexID);
+    if DoHighlight then
+      glColor3ub(HighlightColor AND $FF, HighlightColor SHR 8 AND $FF, HighlightColor SHR 16 AND $FF);
+    glBegin(GL_QUADS);
+      glTexCoord2f(Tex.u1, Tex.v2); glVertex2f(rX                     , rY                      );
+      glTexCoord2f(Tex.u2, Tex.v2); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY                      );
+      glTexCoord2f(Tex.u2, Tex.v1); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY-pxHeight/CELL_SIZE_PX);
+      glTexCoord2f(Tex.u1, Tex.v1); glVertex2f(rX                     , rY-pxHeight/CELL_SIZE_PX);
+    glEnd;
+  end;
+
+  if gGFXData[aRX, aId].Alt.TexID <> 0 then
+    with gGFXData[aRX, aId] do
+    begin
+      glColor4ubv(@Col);
+      TKMRender.BindTexture(Alt.TexID);
+      glBegin(GL_QUADS);
+        glTexCoord2f(Alt.u1, Alt.v2); glVertex2f(rX                     , rY                      );
+        glTexCoord2f(Alt.u2, Alt.v2); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY                      );
+        glTexCoord2f(Alt.u2, Alt.v1); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY-pxHeight/CELL_SIZE_PX);
+        glTexCoord2f(Alt.u1, Alt.v1); glVertex2f(rX                     , rY-pxHeight/CELL_SIZE_PX);
+      glEnd;
+    end;
+end;
+// Param - defines at which level alpha-test will be set (acts like a threshhold)
+// Then we render alpha-tested Mask to stencil buffer. Only those pixels that are
+// white there will have sprite rendered
+// If there are two masks then we need to render sprite only there
+// where its mask is white AND where second mask is black
+procedure TKMRenderPoolNoNight.RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY, aNight: Single;
+  aId2: Integer = 0; aStoneProgress: Single = 0; X2: Single = 0; Y2: Single = 0);
+var
+  tX, tY: Integer;
+  rX, rY: Single;
+begin
+  // Skip rendering if alphas are zero (occurs so non-started houses can still have child sprites)
+  if (aWoodProgress = 0) and (aStoneProgress = 0) then Exit;
+
+  tX := EnsureRange(Round(aX), 1, gTerrain.MapX) - 1;
+  tY := EnsureRange(Round(aY), 1, gTerrain.MapY) - 1;
+  if gMySpectator.FogOfWar.CheckVerticeRenderRev(tX, tY) <= FOG_OF_WAR_MIN then Exit;
+
+  rX := RoundToTilePixel(aX);
+  rY := RoundToTilePixel(aY);
+
+  X2 := RoundToTilePixel(X2);
+  Y2 := RoundToTilePixel(Y2);
+
+  glClear(GL_STENCIL_BUFFER_BIT);
+
+  // Setup stencil mask
+  glEnable(GL_STENCIL_TEST);
+  glStencilFunc(GL_ALWAYS, 1, 1);
+  glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+
+  glPushAttrib(GL_COLOR_BUFFER_BIT);
+    // Do not render anything on screen while setting up stencil mask
+    glColorMask(False, False, False, False);
+
+    // Prepare stencil mask. Sprite will be rendered only where are white pixels
+    glEnable(GL_ALPHA_TEST);
+    glBlendFunc(GL_ONE, GL_ZERO);
+
+    // Wood progress
+    glAlphaFunc(GL_GREATER, 1 - aWoodProgress);
+    with gGFXData[aRX,aId] do
+    begin
+      glColor3f(1, 1, 1);
+      TKMRender.BindTexture(Alt.TexID);
+      glBegin(GL_QUADS);
+        glTexCoord2f(Alt.u1,Alt.v2); glVertex2f(rX                     , rY         );
+        glTexCoord2f(Alt.u2,Alt.v2); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY         );
+        glTexCoord2f(Alt.u2,Alt.v1); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY-pxHeight/CELL_SIZE_PX);
+        glTexCoord2f(Alt.u1,Alt.v1); glVertex2f(rX                     , rY-pxHeight/CELL_SIZE_PX);
+      glEnd;
+      TKMRender.BindTexture(0);
+    end;
+
+    // Stone progress
+    if aId2 <> 0 then
+    begin
+      glStencilOp(GL_DECR, GL_DECR, GL_DECR);
+
+      glAlphaFunc(GL_GREATER, 1 - aStoneProgress);
+        with gGFXData[aRX,aId2] do
+        begin
+          glColor3f(1, 1, 1);
+          TKMRender.BindTexture(Alt.TexID);
+          glBegin(GL_QUADS);
+            glTexCoord2f(Alt.u1,Alt.v2); glVertex2f(X2                     ,Y2         );
+            glTexCoord2f(Alt.u2,Alt.v2); glVertex2f(X2+pxWidth/CELL_SIZE_PX,Y2         );
+            glTexCoord2f(Alt.u2,Alt.v1); glVertex2f(X2+pxWidth/CELL_SIZE_PX,Y2-pxHeight/CELL_SIZE_PX);
+            glTexCoord2f(Alt.u1,Alt.v1); glVertex2f(X2                     ,Y2-pxHeight/CELL_SIZE_PX);
+          glEnd;
+          TKMRender.BindTexture(0);
+        end;
+    end;
+
+    glDisable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_ALWAYS, 0);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Revert alpha mode
+
+  glPopAttrib;
+
+  glStencilFunc(GL_EQUAL, 1, 1);
+  glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+  glColorMask(True, True, True, True);
+
+  // Render sprite
+  with gGFXData[aRX,aId] do
+  begin
+    // FOW is rendered over the top so no need to make sprites black anymore
+    glColor4ub(255, 255, 255, 255);
+
+    TKMRender.BindTexture(Tex.TexID);
+    glBegin(GL_QUADS);
+      glTexCoord2f(Tex.u1,Tex.v2); glVertex2f(rX                     , rY         );
+      glTexCoord2f(Tex.u2,Tex.v2); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY         );
+      glTexCoord2f(Tex.u2,Tex.v1); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY-pxHeight/CELL_SIZE_PX);
+      glTexCoord2f(Tex.u1,Tex.v1); glVertex2f(rX                     , rY-pxHeight/CELL_SIZE_PX);
+    glEnd;
+    TKMRender.BindTexture(0);
+  end;
+
+  glDisable(GL_STENCIL_TEST);
+end;
 
 //Render wire on tile
 //P - tile coords

@@ -30,7 +30,7 @@ type
     function GetAmount(aMat: TKMRawDeposit; aIndex: Integer): Integer;
     function GetLocation(aMat: TKMRawDeposit; aIndex: Integer): TKMPointF;
     function TileDepositExists(aMat: TKMRawDeposit; X,Y: Word): Boolean;
-    function TileDeposit(aMat: TKMRawDeposit; X,Y: Word): Byte;
+    function TileDeposit(aMat: TKMRawDeposit; X,Y: Word): Word;
     procedure FloodFill(const aMat: array of TKMRawDeposit);
     procedure RecalcAmounts(const aMat: array of TKMRawDeposit);
   public
@@ -74,7 +74,7 @@ end;
 
 
 //Get tile resource deposit
-function TKMDeposits.TileDeposit(aMat: TKMRawDeposit; X,Y: Word): Byte;
+function TKMDeposits.TileDeposit(aMat: TKMRawDeposit; X,Y: Word): Word;
 var
   curUnit: TKMUnit;
 begin

@@ -25,6 +25,7 @@ type
     InterpolatedRender: Boolean;
     AllowSnowHouses: Boolean;
     AllowSnowObjects: Boolean;
+
     property InterpolatedAnimations: Boolean read GetInterpolatedAnimations write fInterpolatedAnimations;
     property Brightness: Byte read fBrightness write SetBrightness;
   end;

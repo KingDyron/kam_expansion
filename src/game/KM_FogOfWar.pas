@@ -472,6 +472,9 @@ end;
 
 function TKMFogOfWar.CheckVerticeRenderRev(const X, Y: Word): Byte;
 begin
+  If (X = 6) and (Y = 96) then
+  Result := CheckVerticeRev(@RenderRevelation, X, Y)
+  else
   Result := CheckVerticeRev(@RenderRevelation, X, Y);
 end;
 

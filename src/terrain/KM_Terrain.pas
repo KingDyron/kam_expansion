@@ -283,13 +283,13 @@ type
     function TileGoodToPlantTree(X, Y: Word): Boolean;
     function TileIsWater(const aLoc: TKMPoint): Boolean; overload; inline;
     function TileIsWater(X, Y: Word): Boolean; overload; inline;
-    function TileIsStone(X, Y: Word): Byte; inline;
+    function TileIsStone(X, Y: Word): Word; inline;
     function TileIsSnow(X, Y: Word): Boolean; inline;
-    function TileIsCoal(X, Y: Word): Byte; inline;
-    function TileIsIron(X, Y: Word): Byte; inline;
-    function TileIsBitinIron(X, Y: Word): Byte; inline;
-    function TileIsClay(X, Y: Word): Byte; inline;
-    function TileIsGold(X, Y: Word): Byte; inline;
+    function TileIsCoal(X, Y: Word): Word; inline;
+    function TileIsIron(X, Y: Word): Word; inline;
+    function TileIsBitinIron(X, Y: Word): Word; inline;
+    function TileIsClay(X, Y: Word): Word; inline;
+    function TileIsGold(X, Y: Word): Word; inline;
     function TileIsCornField(const aLoc: TKMPoint): Boolean; overload; inline;
     function TileIsCornField(const X, Y: Word): Boolean; overload; inline;
     function TileIsGrassField(const aLoc : TKMPoint): Boolean; overload; inline;
@@ -538,7 +538,10 @@ begin
   fMapX := Min(aWidth,  MAX_MAP_SIZE);
   fMapY := Min(aHeight, MAX_MAP_SIZE);
   fMapRect := KMRect(1, 1, fMapX, fMapY);
-  fNightFactor := Round((gGame.Weather.Settings.NightTime / 3) * LocalNightSpeed);
+  IF (gGame.Weather.Settings.NightTime = 0) and (gGame.Weather.Settings.NightSpeed = 0) then
+    fNightFactor := Round((5 / 3) * LocalNightSpeed)
+  else
+    fNightFactor := Round((gGame.Weather.Settings.NightTime / 3) * LocalNightSpeed);
   for I := 1 to fMapY do
     for K := 1 to fMapX do
     begin
@@ -751,7 +754,10 @@ end;
 
 procedure TKMTerrain.AfterLoadFromFile;
 begin
-  fNightFactor := Round((gGame.Weather.Settings.NightTime / 3) * LocalNightSpeed);
+  IF (gGame.Weather.Settings.NightTime = 0) and (gGame.Weather.Settings.NightSpeed = 0) then
+    fNightFactor := Round((5 / 3) * LocalNightSpeed)
+  else
+    fNightFactor := Round((gGame.Weather.Settings.NightTime / 3) * LocalNightSpeed);
   UpdateNightAffection;
 end;
 
@@ -1662,14 +1668,14 @@ end;
 
 
 //Check if requested tile is Stone and returns Stone deposit
-function TKMTerrain.TileIsStone(X,Y: Word): Byte;
+function TKMTerrain.TileIsStone(X,Y: Word): Word;
 begin
   Result := IfThen(Land[Y, X].HasNoLayers, fTileset[Land^[Y, X].BaseLayer.Terrain].Stone, 0);
   //Result := Result + gMapElements[Land[Y,X].Obj].Stone;
 end;
 
 
-function TKMTerrain.TileIsCoal(X,Y: Word): Byte;
+function TKMTerrain.TileIsCoal(X,Y: Word): Word;
 var aTO : TKMTileOverlay;
 begin
   Result := IfThen(Land[Y, X].HasNoLayers, fTileset[Land^[Y, X].BaseLayer.Terrain].Coal, 0);
@@ -1685,7 +1691,7 @@ begin
   //Result := Result + gMapElements[Land[Y,X].Obj].Coal;
 end;
 
-function TKMTerrain.TileIsClay(X,Y: Word): Byte;
+function TKMTerrain.TileIsClay(X,Y: Word): Word;
 //var aTO : TKMTileOverlay;
 begin
   //aTO := Land[Y, X].TileOverlay2;
@@ -1694,7 +1700,7 @@ begin
 end;
 
 
-function TKMTerrain.TileIsIron(X,Y: Word): Byte;
+function TKMTerrain.TileIsIron(X,Y: Word): Word;
 begin
   Result := IfThen(Land[Y, X].HasNoLayers, fTileset[Land^[Y, X].BaseLayer.Terrain].Iron, 0);
   if Land[Y, X].TileOverlay2 = UNDERGROUND_IRON_ID then
@@ -1703,7 +1709,7 @@ begin
 end;
 
 
-function TKMTerrain.TileIsBitinIron(X,Y: Word): Byte;
+function TKMTerrain.TileIsBitinIron(X,Y: Word): Word;
 begin
   Result := IfThen(Land[Y, X].HasNoLayers, fTileset[Land^[Y, X].BaseLayer.Terrain].Bitin, 0);
   if Land[Y, X].TileOverlay2 = UNDERGROUND_BITIN_ID then
@@ -1712,7 +1718,7 @@ begin
 end;
 
 
-function TKMTerrain.TileIsGold(X,Y: Word): Byte;
+function TKMTerrain.TileIsGold(X,Y: Word): Word;
 begin
   Result := IfThen(Land[Y, X].HasNoLayers, fTileset[Land^[Y, X].BaseLayer.Terrain].Gold, 0);
   if Land[Y, X].TileOverlay2 = UNDERGROUND_GOLD_ID then

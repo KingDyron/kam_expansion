@@ -55,6 +55,7 @@ type
 
     procedure HandleScrollKeysDown(Key: Word; var aHandled: Boolean);
     procedure HandleScrollKeysUp(Key: Word; var aHandled: Boolean);
+    procedure CreateRenderPool(aRender: TKMRender);
   public
     constructor Create(aRender: TKMRender); reintroduce;
     destructor Destroy; override;
@@ -75,8 +76,8 @@ type
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X,Y: Integer); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X,Y: Integer); override;
 
+    procedure ReCreateRenderPool;
     procedure ShowDebugInfo;
-
     procedure GameSpeedChanged(aFromSpeed, aToSpeed: Single);
     procedure SyncUI(aMoveViewport: Boolean = True); virtual;
     procedure SyncUIView(const aCenter: TKMPointF); overload;
@@ -350,8 +351,7 @@ begin
   fDragScrollingViewportPos := KMPOINTF_ZERO;
 
   fPaintDefences := False;
-
-  gRenderPool := TKMRenderPool.Create(fViewport, aRender);
+  CreateRenderPool(aRender);
 end;
 
 
@@ -460,6 +460,27 @@ begin
   Bevel_DebugInfo.Height := IfThen(textSize.Y <= 1, 0, textSize.Y + BEVEL_PAD);
 
   Bevel_DebugInfo.Visible := SHOW_DEBUG_OVERLAY_BEVEL and (Trim(S) <> '') ;
+end;
+
+procedure TKMUserInterfaceGame.CreateRenderPool(aRender: TKMRender);
+begin
+  If aRender = nil then
+    aRender := gRenderPool.BaseRender;
+
+  Assert(aRender <> nil, 'TKMUserInterfaceGame.CreateRenderPool');
+  IF gRenderPool <> nil then
+    FreeAndNil(gRenderPool);
+
+  If (gGameSettings.Weather.NightSpeed = 0) and (gGameSettings.Weather.NightTime = 0) then
+  begin
+    gRenderPool := TKMRenderPoolNoNight.Create(fViewport, aRender)
+  end else
+    gRenderPool := TKMRenderPool.Create(fViewport, aRender);
+end;
+
+procedure TKMUserInterfaceGame.ReCreateRenderPool;
+begin
+  CreateRenderPool(nil);
 end;
 
 

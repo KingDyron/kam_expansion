@@ -1122,7 +1122,7 @@ procedure TKMGUICommonOptions.BackClick(Sender: TObject);
 begin
   // Return to MainMenu and restore resolution changes
   gGameAppSettings.SaveSettings;
-
+  //gMain.Inter.ActiveInterface.ReCreateRenderPool;
   if IsMenu and (fLastAlphaShadows <> gGameSettings.GFX.AlphaShadows)
     and Assigned(OnPreloadGameResources) then
     OnPreloadGameResources;  //Update loaded game resources, if we changed alpha shadow setting

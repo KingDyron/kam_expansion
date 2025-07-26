@@ -761,7 +761,7 @@ end;
 }
 
 function TKMResHouses.LoadFromJSON(aFileName : String) : Cardinal;
-const SKIP_GUI_HOUSES : set of TKMHouseType = [{htPearl, htCartographers, htForest, htPasture}];
+const SKIP_GUI_HOUSES : set of TKMHouseType = [htPearl, htCartographers, htForest, htPasture];
 
   Procedure SetValue(var A : Integer; B : Integer; aCondition : Boolean = true); Overload;
   begin
@@ -810,9 +810,11 @@ const SKIP_GUI_HOUSES : set of TKMHouseType = [{htPearl, htCartographers, htFore
   var I, C : Integer;
     newArr : TKMHouseTypeArray;
   begin
+    If SKIP_GUI_HOUSES = [] then
+      Exit;
     C := 0;
     SetLength(newArr, length(aHouses));
-    for I := high(aHouses) to 0 do
+    for I := high(aHouses) downto 0 do
       IF aHouses[I] in SKIP_GUI_HOUSES then
         Continue
       else
