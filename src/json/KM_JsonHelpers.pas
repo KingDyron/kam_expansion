@@ -37,6 +37,7 @@ type
     function GetAnim(aName : String; out aValue : TKMAnimLoop) : Boolean; Overload;
     function GetAnim(out aValue : TKMAnimLoop) : Boolean; Overload;
     function GetAnim(out aValue : TKMAnimation) : Boolean; Overload;
+    function GetAnimPack(aName : String; out aValue : TKMAnimationPack) : Boolean;
 
     function SetIfContains(aName : String; out aValue : TKMAnimation) : Boolean; overload;
     function SetIfContains(aName : String; out aValue : TKMAnimLoop) : Boolean; overload;
@@ -560,6 +561,26 @@ begin
 
   if Contains('Extend') then
     aValue.Extend(I['Extend']);
+
+end;
+
+function TKMJsonHelper.GetAnimPack(aName : String; out aValue: TKMAnimationPack): Boolean;
+var arr : TKMJsonArray;
+  I : Integer;
+  anim : TKMAnimation;
+begin
+  Result := false;
+  arr := self.A[aName];
+  If (arr = nil) or (arr.Count = 0) then
+    Exit;
+  aValue.Count := arr.Count;
+  for I := 0 to arr.Count - 1 do
+  begin
+    arr.O[I].GetAnim(anim);
+    aValue[I] := anim;
+  end;
+
+  Result := aValue.Count > 0;
 
 end;
 

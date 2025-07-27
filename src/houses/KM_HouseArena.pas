@@ -83,7 +83,7 @@ constructor TKMHouseArena.Create(aUID: Integer; aHouseType: TKMHouseType; PosX: 
 begin
   Inherited;
   fArenaAnimStep := 1;
-  fDevType := dttEconomy;
+  fDevType := dttArmy;
   fWarfareDelivered := 0;
 end;
 
@@ -313,7 +313,7 @@ begin
     Exit;
   //gRenderAux.Quad(PointBelowEntrance.X, PointBelowEntrance.Y);
   If fArenaAnimStep > 0 then
-    gRenderPool.AddHouseArena(fDevType, Position, fArenaAnimStep);
+    gRenderPool.AddHouseArena(fDevType, Position, fArenaAnimStep, [gHands[Owner].FlagColor, $FF00FF55]);
 end;
 
 end.

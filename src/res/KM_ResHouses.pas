@@ -206,7 +206,7 @@ type
     Pearls : array[TKMPearlType] of TKMPearlData;
 
     ProdThatch_Anims : array[TKMProdThatchAnimType] of TKMAnimation;
-    ArenaAnim: array[TKMDevelopmentTreeType] of TKMAnimation;
+    ArenaAnim: array[TKMDevelopmentTreeType] of TKMAnimationPack;
 
     constructor Create;
     destructor Destroy; override;
@@ -1232,7 +1232,7 @@ begin
     for DDT := Low(TKMDevelopmentTreeType) to High(TKMDevelopmentTreeType) do
     begin
       If TKMEnumUtils.GetName<TKMDevelopmentTreeType>(DDT, S) then
-        nHouse.GetAnim(S, ArenaAnim[DDT]);
+        nHouse.GetAnimPack(S, ArenaAnim[DDT]);
     end;
 
     nRoot.GetAnim('WallTower_RecruitLeft', WallTower_RecruitLeft);

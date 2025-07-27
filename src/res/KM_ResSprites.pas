@@ -1167,7 +1167,7 @@ begin
     for I := 0 to pngHeight - 1 do
       for K := 0 to pngWidth - 1 do
       begin
-        maskColor := GetGreyColor(fRXData.Mask[aIndex, I * pngWidth + K]);
+        maskColor := GetGreyColor(Round(fRXData.Mask[aIndex, I * pngWidth + K] * 0.5));
         {if fRT = rxHouses then
         begin
           maskColor := fRXData.Mask[aIndex, I * pngWidth + K];

@@ -121,6 +121,18 @@ type
     function IsLinear : Boolean;
   end;
 
+  TKMAnimationPack = record
+  private
+    fCount : Byte;
+    procedure SetCount(aValue : Byte);
+  public
+    Animations : array of TKMAnimation;
+    function GetAnimation(aIndex : Integer) : TKMAnimation;
+    procedure SetAnimation(aIndex : Integer; aValue : TKMAnimation);
+    property Count : Byte read fCount write SetCount;
+    property Item[aIndex : Integer] : TKMAnimation read GetAnimation write SetAnimation; default;
+  end;
+
   PKAnimation = ^TKMAnimation;
 
   function Anim(aX, aY : Integer; aAnimation : TKMWordArray; aOffset : Byte = 0) : TKMAnimation;overload;
@@ -665,6 +677,25 @@ begin
     If fSteps[I] <> J + I then
       Exit(false);
 end;
+
+procedure TKMAnimationPack.SetCount(aValue: Byte);
+begin
+  fCount := aValue;
+  SetLength(Animations, fCount);
+end;
+
+function TKMAnimationPack.GetAnimation(aIndex : Integer) : TKMAnimation;
+begin
+  Result := Animations[aIndex];
+end;
+
+procedure TKMAnimationPack.SetAnimation(aIndex : Integer; aValue : TKMAnimation);
+begin
+  If aIndex >= Count then
+    Count := Count + 1;
+  Animations[aIndex] := aValue;
+end;
+
 
 
 function Anim(aX, aY : Integer; aAnimation : TKMWordArray; aOffset : Byte = 0) : TKMAnimation;

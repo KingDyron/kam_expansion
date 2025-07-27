@@ -7,7 +7,7 @@ uses
   KM_JsonHelpers;
 
 type
-  TKMDevelopmentTreeType = (dttBuilder, dttEconomy, dttArmy);
+  TKMDevelopmentTreeType = (dttBuilder, dttEconomy, dttArmy, dttAll);
 
   PKMDevelopment = ^TKMDevelopment;
   TKMDevelopment = record
@@ -35,7 +35,7 @@ type
   TKMDevelopmentTreeCollection = class
     private
       fCRC : Cardinal;
-      fTree : array[TKMDevelopmentTreeType] of TKMDevelopmentTree;
+      fTree : array[dttBuilder..dttArmy] of TKMDevelopmentTree;
       fTexts : array of String;
       procedure AddText(aText : String);
 
@@ -60,7 +60,7 @@ uses
     IOUtils,
     KM_Defaults,
     KM_ResLocales, KM_ResTexts;
-const TREE_TYPE_STRING : array[TKMDevelopmentTreeType] of String = ('Builder', 'Economy', 'Army');
+const TREE_TYPE_STRING : array[TKMDevelopmentTreeType] of String = ('Builder', 'Economy', 'Army', 'ALL');
 
 function TKMDevelopmentTree.FirstItem: PKMDevelopment;
 begin
@@ -143,7 +143,7 @@ begin
   Root := TJsonObject.ParseFromFile(aPath) as TKMJson;
   try
     fCRC := Root.Crc;
-    for dtt := Low(TKMDevelopmentTreeType) to High(TKMDevelopmentTreeType) do
+    for dtt := Low(fTree) to High(fTree) do
       If Root.Contains(TREE_TYPE_STRING[dtt]) then
         fTree[dtt].LoadFromJson(root.O[TREE_TYPE_STRING[dtt]]);
   finally

@@ -19,8 +19,8 @@ type
     procedure HideFromID(aID : Integer);
     procedure ButtonClicked(Sender : TObject);
   protected
-    Button_SwitchTree : array[TKMDevelopmentTreeType] of TKMButton;
-      Tree : array[TKMDevelopmentTreeType] of record
+    Button_SwitchTree : array[dttBuilder..dttArmy] of TKMButton;
+      Tree : array[dttBuilder..dttArmy] of record
         fCount : Word;
         Panel : TKMScrollPanel;
           ButtonsList : array of TKMButtonFlat;
@@ -48,7 +48,7 @@ uses
 Const DISTANCE_BETWEEN_ROWS = 50;
 constructor TKMGUICommonDevelopment.Create(aParent: TKMPanel; aLeft: Integer; aTop: Integer; aWidth: Integer; aHeight: Integer);
 const
-  TREE_TYPE_ICON : array[TKMDevelopmentTreeType] of Word = (39, 360, 322);
+  TREE_TYPE_ICON : array[TKMDevelopmentTreeType] of Word = (39, 360, 322, 0);
 var dtt : TKMDevelopmentTreeType;
   procedure CreateNext(aType : TKMDevelopmentTreeType; var aToButton : TKMDevButton;  aDevelopment : PKMDevelopment; aTop : Byte);
   var I: integer;
@@ -77,7 +77,7 @@ begin
   Inherited Create(aParent, aLeft, aTop, aWidth, aHeight);
   AnchorsStretch;
   fLastPage := dttEconomy;
-  for dtt := Low(TKMDevelopmentTreeType) to High(TKMDevelopmentTreeType) do
+  for dtt := Low(Button_SwitchTree) to High(Button_SwitchTree) do
   begin
     Button_SwitchTree[dtt] := TKMButton.Create(self, byte(dtt) * 37 + 5 , 5, 33, 33, TREE_TYPE_ICON[dtt], rxGui, bsPaper);
     Button_SwitchTree[dtt].Tag := byte(dtt);
@@ -117,7 +117,7 @@ procedure TKMGUICommonDevelopment.SwitchPage(Sender: TObject);
 var dtt : TKMDevelopmentTreeType;
 begin
   fLastPage := TKMDevelopmentTreeType(TKMControl(Sender).Tag);
-  for dtt := Low(TKMDevelopmentTreeType) to High(TKMDevelopmentTreeType) do
+  for dtt := Low(Button_SwitchTree) to High(Button_SwitchTree) do
   begin
     Button_SwitchTree[dtt].ShowImageEnabled := fLastPage = dtt;
     Tree[dtt].Panel.Visible := fLastPage = dtt;
@@ -187,7 +187,7 @@ begin
   begin
     ReloadType(fLastPage);
   end else
-  for dtt := Low(TKMDevelopmentTreeType) to High(TKMDevelopmentTreeType) do
+  for dtt := Low(Button_SwitchTree) to High(Button_SwitchTree) do
   begin
     ReloadType(dtt);
   end;
