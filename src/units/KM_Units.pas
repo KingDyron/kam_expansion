@@ -2212,6 +2212,7 @@ begin
       uttGoToPearl:       fTask := TKMTaskGoToPearl.Load(LoadStream);
       uttForestCutter:    fTask := TKMTaskForestCutting.Load(LoadStream);
       uttFeedGroup:       fTask := TKMTaskFeeder.Load(LoadStream);
+      uttShootAtSpot:     fTask := TKMTaskShootAtSpot.Load(LoadStream);
     else
       raise Exception.Create('TaskName can''t be handled');
     end;
@@ -3529,6 +3530,7 @@ const
       -1,                      //uttGoToShip
       TX_UNIT_TASK_ROAD,        //uttBuildGrassland
       -1,                      //uttUnloadFromShip
+      -1,
       -1,
       -1,
       -1,

@@ -835,7 +835,7 @@ type
         uttThrowRock, uttBuildPalisade, uttBuildRemove, uttBuildHouseUpgrade, uttGoGetBoots, uttBuildStructure,
         uttGoToShip, uttBuildGrassLand, uttUnloadFromShip, uttGoToStore, uttGoToLoc, uttCollectWares, uttUnloadWares,
         uttGoToWell, uttTakeOverHouse, uttMerchant, uttCartographer, uttBuildPearl, uttPearlRally, uttGoToPearl,
-        uttForestCutter, uttFeedGroup);
+        uttForestCutter, uttFeedGroup, uttShootAtSpot);
 
   TKMUnitActionName = (uanStay, uanWalkTo, uanGoInOut, uanAbandonWalk, uanFight, uanStormAttack, uanSteer);
 

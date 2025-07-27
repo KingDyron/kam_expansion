@@ -225,6 +225,7 @@ begin
 
   speed := ProjectileSpeeds[aProjType] + KaMRandomS2(0.05, 'TKMProjectiles.AimTarget 5');
   aim := aEnd;
+  aRadius := aRadius + ProjectileJitterHouse[aProjType];
   target.X := aim.X + KaMRandomS2(aRadius, 'TKMProjectiles.AimTarget 8'); //So that arrows were within house area, without attitude to tile corners
   target.Y := aim.Y + KaMRandomS2(aRadius, 'TKMProjectiles.AimTarget 9');
 

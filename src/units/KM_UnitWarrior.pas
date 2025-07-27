@@ -27,7 +27,8 @@ type
     woShipBoatUnload,
     woBoatCollectWares,
     woAssignToShip,
-    woTakeOverHouse
+    woTakeOverHouse,
+    woShootAtSpot
   );
 
   TKMUnitWarrior = class(TKMUnit)
@@ -129,6 +130,7 @@ type
     procedure OrderFight(aTargetUnit: TKMUnit);
     procedure AssignToShip(aShip : Pointer); override;
     procedure UnloadFromShip(aShip : Pointer); override;
+    procedure OrderShootAtSpot(aLoc : TKMPoint);
 
     //Ranged units properties
     property AimingDelay: Byte read GetAimingDelay;
@@ -1228,6 +1230,7 @@ begin
     woShipBoatUnload: Result := IsIdle;
     woBoatCollectWares: Result := IsIdle;
     woTakeOverHouse: Result := IsIdle;
+    woShootAtSpot: Result := true;
   end;
 end;
 
@@ -1257,6 +1260,17 @@ procedure TKMUnitWarrior.UnloadFromShip(aShip: Pointer);
 begin
   fNextOrder := woShipBoatUnload;
   SetOrderShipTarget(TKMUnit(aShip));
+end;
+
+procedure TKMUnitWarrior.OrderShootAtSpot(aLoc : TKMPoint);
+const ALLOW_UNITS : set of TKMUnitType = [utCatapult, utBowMan, utCrossbowman];
+begin
+  If not IsRanged or not (UnitType in ALLOW_UNITS) then
+    Exit;
+  ClearOrderTarget;
+  fNextOrderForced := fNextOrder = woShootAtSpot;
+  fNextOrder := woShootAtSpot;
+  fOrderLoc := aLoc;
 end;
 
 function TKMUnitWarrior.PathfindingShouldAvoid: Boolean;
@@ -1470,9 +1484,10 @@ end;
 { See if we can abandon other actions in favor of more important things }
 function TKMUnitWarrior.CanInterruptAction(aForced: Boolean = True): Boolean;
 begin
-  if (Action is TKMUnitActionStay)
-    and (Task is TKMTaskAttackHouse) then
-    Result := True //We can abandon attack house if the action is stay
+  if (Action is TKMUnitActionStay) then
+    If (Task is TKMTaskAttackHouse) or (Task is TKMTaskShootAtSpot) then
+      Result := True //We can abandon attack house if the action is stay
+    else
   else
     Result := Action.CanBeInterrupted(aForced);
 end;
@@ -1979,6 +1994,30 @@ begin
                             FreeAndNil(fTask); //e.g. TaskAttackHouse
                             fTask := TKMTaskTakeOverHouse.Create(Self, GetOrderHouseTarget);
                             fOrder := woTakeOverHouse;
+                            fOrderLoc := Position; //Once the house is destroyed we will position where we are standing
+                            fNextOrder := woNone;
+                          end;
+                        end;
+                      end;
+    woShootAtSpot:    begin
+                        //No need to update order  if we are going to take over same house
+                        if (fOrder <> woShootAtSpot)
+                            or (Task = nil)
+                            or not (Task is TKMTaskShootAtSpot)
+                            or (TKMTaskShootAtSpot(Task).Loc <> fOrderLoc) then
+                        begin
+                          //Abandon walk so we can take over house
+                          if (Action is TKMUnitActionWalkTo)
+                            and not TKMUnitActionWalkTo(Action).DoingExchange
+                            and not TKMUnitActionWalkTo(Action).WasPushed then
+                            AbandonWalk;
+
+                          //Take order
+                          if CanInterruptAction(fNextOrderForced) then
+                          begin
+                            FreeAndNil(fTask); //e.g. TaskAttackHouse
+                            fTask := TKMTaskShootAtSpot.Create(Self, fOrderLoc);
+                            fOrder := woShootAtSpot;
                             fOrderLoc := Position; //Once the house is destroyed we will position where we are standing
                             fNextOrder := woNone;
                           end;

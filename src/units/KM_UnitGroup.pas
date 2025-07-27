@@ -186,6 +186,7 @@ type
     procedure OrderStorm(aClearOffenders: Boolean);
     procedure OrderWalk(const aLoc: TKMPoint; aClearOffenders: Boolean; aOrderWalkKind: TKMOrderWalkKind;
                         aDir: TKMDirection = dirNA; aForced: Boolean = True);
+    procedure OrderShootAtSpot(const aLoc: TKMPoint; aClearOffenders: Boolean);
     procedure Dismiss;
     function IsDismissCancelAvailable : Boolean;
     procedure DismissCancel;
@@ -2076,6 +2077,17 @@ begin
 
   //Script may have additional event processors
   gScriptEvents.ProcGroupOrderMove(Self, aLoc.X, aLoc.Y);
+end;
+
+procedure TKMUnitGroup.OrderShootAtSpot(const aLoc: TKMPoint; aClearOffenders: Boolean);
+var I : Integer;
+begin
+  if aClearOffenders and CanTakeOrders then
+    ClearOffenders;
+
+  for I := 0 to Count - 1 do
+    fMembers[I].OrderShootAtSpot(aLoc);
+
 end;
 
 procedure TKMUnitGroup.Dismiss;

@@ -4860,10 +4860,13 @@ begin
               gSoundPlayer.PlayWarrior(group.UnitType, spAttack);
             end
             else
+            IF ssShift in Shift then
+              gGame.GameInputProcess.CmdArmy(gicArmyShootAtSpot, group, P)
+            else
             // Ensure down click was successful (could have been over a mountain, then dragged to a walkable location)
             if fSelectingTroopDirection and group.CanWalkTo(P, 0) then
             begin
-              gGame.GameInputProcess.CmdArmy(gicArmyWalk, group, P, fSelectedDirection);
+                gGame.GameInputProcess.CmdArmy(gicArmyWalk, group, P, fSelectedDirection);
               gSoundPlayer.PlayWarrior(group.UnitType, spMove);
             end;
           end;

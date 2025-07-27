@@ -75,6 +75,16 @@ type
     procedure Save(SaveStream: TKMemoryStream); override;
   end;
 
+  TKMTaskShootAtSpot = class(TKMUnitTask)
+  private
+    fLoc: TKMPoint;
+  public
+    constructor Create(aWarrior: TKMUnitWarrior; aLoc: TKMPoint);
+    constructor Load(LoadStream: TKMemoryStream); override;
+    property Loc : TKMPoint read fLoc;
+    function Execute: TKMTaskResult; override;
+    procedure Save(SaveStream: TKMemoryStream); override;
+  end;
 
 implementation
 uses
@@ -587,6 +597,114 @@ begin
     end;
 
   Inc(fPhase);
+end;
+
+
+{ TTaskAttackHouse }
+constructor TKMTaskShootAtSpot.Create(aWarrior: TKMUnitWarrior; aLoc : TKMPoint);
+begin
+  inherited Create(aWarrior);
+  fType := uttShootAtSpot;
+  fLoc := aLoc;
+end;
+
+
+constructor TKMTaskShootAtSpot.Load(LoadStream: TKMemoryStream);
+begin
+  inherited;
+  LoadStream.CheckMarker('TaskShootAtSpot');
+  LoadStream.Read(fLoc);
+end;
+
+function TKMTaskShootAtSpot.Execute: TKMTaskResult;
+var
+   AnimLength: Integer;
+   Delay, Cycle: Integer;
+   closest: TKMPoint;
+   dir : TKMDirection;
+begin
+  Result := trTaskContinues;
+
+  //If the house is destroyed drop the task
+  if WalkShouldAbandon then
+  begin
+    Result := trTaskDone;
+    Exit;
+  end;
+
+  with TKMUnitWarrior(fUnit) do
+    case fPhase of
+      0: if KMLength(fLoc, Position) > GetFightMaxRange then
+            SetActionWalkToSpot(fLoc, uaWalk, GetFightMaxRange)
+          else
+            SetActionStay(0, uaWalk);
+      1:  begin
+            if (KMLength(fLoc, Position) < GetFightMinRange) or (KMLength(fLoc, Position) > GetFightMaxRange) then
+            begin
+              SetActionStay(0, uaWalk);
+              Result := trTaskDone;
+              Exit;
+            end;
+            If not TKMUnitWarrior(fUnit).InfinityAmmo and (TKMUnitWarrior(fUnit).BoltCount <= 0) then
+            begin
+              SetActionStay(0, uaWalk);
+              Exit;
+            end;
+            //Calculate base aiming delay
+            Delay := AimingDelay;
+
+            //Prevent rate of fire exploit by making archers pause for longer if they shot recently
+            Cycle := Max(gRes.Units[UnitType].UnitAnim[uaWork, Direction].Count, 1) - FiringDelay;
+            if NeedsToReload(Cycle) then
+              Delay := Delay + Cycle - (gGameParams.Tick - LastShootTime);
+
+            SetActionLockedStay(Delay,uaWork); //Pretend to aim
+
+            if not KMSamePoint(Position, fLoc) then //Unbuilt houses can be attacked from within
+            begin
+              Direction := KMGetDirection(PositionNext, fLoc); //Look at house
+              if UnitType in UNITS_SHIPS then
+                Direction := DIR_TO_NEXT2[Direction];
+            end;
+
+            if gMySpectator.FogOfWar.CheckTileRevelation(Round(PositionF.X), Round(PositionF.Y)) >= 255 then
+            case UnitType of
+              utBattleShip,
+              utCrossbowman: gSoundPlayer.Play(sfxCrossbowDraw, PositionF); //Aiming
+              utArcher,
+              utBowman:     gSoundPlayer.Play(sfxBowDraw,      PositionF); //Aiming
+              utRogue:  ;
+              utGolem,
+              utCatapult:  gSoundPlayer.Play(sfxBowDraw,      PositionF); //Aiming
+              utBallista:  gSoundPlayer.Play(sfxCrossbowDraw, PositionF); //Aiming
+              else           raise Exception.Create('Unknown shooter');
+            end;
+          end;
+      2:  begin
+            AnimLength := gRes.Units[UnitType].UnitAnim[uaWork, Direction].Count;
+            SetActionLockedStay(FiringDelay, uaWork, False);
+          end;
+      3:  begin
+            If TakeBolt then
+              gProjectiles.AimTarget(PositionF, fLoc.ToFloat, 0.3, ProjectileType, fUnit, RangeMax, RangeMin);
+
+            SetLastShootTime; //Record last time the warrior shot
+            AnimLength := gRes.Units[UnitType].UnitAnim[uaWork, Direction].Count;
+            SetActionLockedStay(AnimLength - FiringDelay, uaWork, False, 0, FiringDelay); //Reload for next attack
+            fPhase := 0; //Go for another shot (will be 1 after inc below)
+          end;
+    end;
+
+  Inc(fPhase);
+end;
+
+
+procedure TKMTaskShootAtSpot.Save(SaveStream: TKMemoryStream);
+begin
+  inherited;
+
+  SaveStream.PlaceMarker('TaskShootAtSpot');
+  SaveStream.Write(floc);
 end;
 
 end.

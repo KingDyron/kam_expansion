@@ -156,6 +156,7 @@ type
     gicHouseForestPlantTree,
     gicHousePastureBuyAnimal,
     gicHousePastureSellAnimal,
+    gicArmyShootAtSpot,
 
 
     //V.     Delivery ratios changes (and other game-global settings)
@@ -434,6 +435,7 @@ const
     gicpt_Int3,//gicHouseForestPlantTree,
     gicpt_Int2,//gicHousePastureBuyAnimal,
     gicpt_Int2,//gicHousePastureSellAnimal,
+    gicpt_Int3,//gicArmyShootAtSpot
     //V.     Delivery ratios changes (and other game-global settings)
     gicpt_Int3,     // gicWareDistributionChange
     gicpt_AnsiStr1, // gicWareDistributions
@@ -590,6 +592,7 @@ type
     procedure CmdArmy(aCommandType: TKMGameInputCommandType; aGroup: TKMUnitGroup; aHouse: TKMHouse); overload;
     procedure CmdArmy(aCommandType: TKMGameInputCommandType; aGroup: TKMUnitGroup; aTurnAmount, aLineAmount: ShortInt); overload;
     procedure CmdArmy(aCommandType: TKMGameInputCommandType; aGroup: TKMUnitGroup; const aLoc: TKMPoint; aDirection: TKMDirection); overload;
+    procedure CmdArmy(aCommandType: TKMGameInputCommandType; aGroup: TKMUnitGroup; const aLoc: TKMPoint); overload;
 
     procedure CmdUnit(aCommandType: TKMGameInputCommandType; aUnit: TKMUnit);overload;
     procedure CmdUnit(aCommandType: TKMGameInputCommandType; aUnit, aUnit2: TKMUnit);overload;
@@ -1110,7 +1113,8 @@ begin
     //It is possible that units/houses have died by now
     if CommandType in [gicArmyFeed, gicArmySplit, gicArmySplitSingle, gicArmyLink,
                        gicArmyAttackUnit, gicArmyAttackHouse, gicArmyHalt,
-                       gicArmyFormation, gicArmyWalk, gicArmyStorm, gicArmyAmmo, gicGroupDismiss,gicGroupDismissCancel]
+                       gicArmyFormation, gicArmyWalk, gicArmyStorm, gicArmyAmmo, gicGroupDismiss,gicGroupDismissCancel,
+                       gicArmyShootAtSpot]
     then
     begin
       srcGroup := gHands.GetGroupByUID(IntParams[0]);
@@ -1207,6 +1211,7 @@ begin
       gicArmyHalt:         srcGroup.OrderHalt(True);
       gicArmyFormation:    srcGroup.OrderFormation(IntParams[1],IntParams[2], True);
       gicArmyWalk:         srcGroup.OrderWalk(KMPoint(SmallIntParams[0], SmallIntParams[1]), True, wtokPlayerOrder, TKMDirection(SmallIntParams[2]));
+      gicArmyShootAtSpot:  srcGroup.OrderShootAtSpot(KMPoint(IntParams[1], IntParams[2]), True);
 
       gicUnitDismiss:        srcUnit.Dismiss;
       gicUnitDismissCancel:  srcUnit.DismissCancel;
@@ -1505,10 +1510,15 @@ end;
 
 procedure TKMGameInputProcess.CmdArmy(aCommandType: TKMGameInputCommandType; aGroup: TKMUnitGroup; const aLoc: TKMPoint; aDirection: TKMDirection);
 begin
-  Assert(aCommandType = gicArmyWalk);
+  Assert(aCommandType in [gicArmyWalk]);
   TakeCommand(MakeCommandSmI(aCommandType, aGroup.UID, aLoc.X, aLoc.Y, SmallInt(aDirection)));
 end;
 
+procedure TKMGameInputProcess.CmdArmy(aCommandType: TKMGameInputCommandType; aGroup: TKMUnitGroup; const aLoc: TKMPoint);
+begin
+  Assert(aCommandType in [gicArmyShootAtSpot]);
+  TakeCommand(MakeCommand(aCommandType, aGroup.UID, aLoc.X, aLoc.Y));
+end;
 
 procedure TKMGameInputProcess.CmdUnit(aCommandType: TKMGameInputCommandType; aUnit: TKMUnit);
 begin
