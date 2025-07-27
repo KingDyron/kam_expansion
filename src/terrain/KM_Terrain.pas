@@ -9294,10 +9294,13 @@ begin
         if Sin(fNightFactor / LocalNightSpeed) < 0.5 then
           Inc(fNightFactor, 10);
       end;
-    end else
+    end;{ else
     begin
-      fNightFactor := gGame.Weather.Settings.NightTime * 1000;//NIGHT_SPEED;
-    end;
+      IF (gGame.Weather.Settings.NightTime = 0) and (gGame.Weather.Settings.NightSpeed = 0) then
+        fNightFactor := Round((5 / 3) * LocalNightSpeed)
+      else
+        fNightFactor := Round((gGame.Weather.Settings.NightTime / 3) * LocalNightSpeed);
+    end;}
 
 
 
