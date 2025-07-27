@@ -3184,7 +3184,7 @@ begin
   if BlockWalking then
     Exit;
   If gTerrain.GetClosestWalkable(Position, aLoc, aDistanceMin, aDistanceMaX, locB) then
-    SetAction(TKMUnitActionWalkTo.Create(Self, locB, aActionType, 0, False, nil, nil), 0)
+    SetAction(TKMUnitActionWalkTo.Create(Self, locB, aActionType, 2, False, nil, nil), 0)
   else
     SetActionStay(20, aActionType);
 end;

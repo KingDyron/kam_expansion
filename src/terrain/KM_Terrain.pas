@@ -3107,7 +3107,7 @@ begin
     for Y := Max(aLocFrom.Y - maxR, 1) to Min(aLocFrom.Y + maxR, fMapY - 1) do
     begin
       dist := KMLength(aLocFrom, KMPoint(X, Y) );
-      If (dist >= aMin) and (dist <= aMax) then
+      If (dist > aMin) and (dist < aMax) then
         aList.Add(X, Y);
     end;
 end;
@@ -3121,7 +3121,7 @@ begin
   GetWalkableTilesAtRadius(aLocFrom, aMin, aMax, list);
 
   for I := list.Count - 1 downto 0 do
-    If not RouteCanBeMade(aLoc, list[I], tpWalk) and (GetUnit(list[I]) = nil) then
+    If not RouteCanBeMade(aLoc, list[I], tpWalk) or (GetUnit(list[I]) <> nil) then
       list.Delete(I);
   Result := list.GetClosest(aLoc, aLocTo);
 end;
