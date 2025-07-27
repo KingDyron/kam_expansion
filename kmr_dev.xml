@@ -214,7 +214,7 @@
       <chkHands Checked="False"/>
       <chkGIP Checked="False"/>
       <chkGipAsBytes Checked="False"/>
-      <chkShowFPS Checked="True"/>
+      <chkShowFPS Checked="False"/>
       <chkShowGameTick Checked="False"/>
       <chkViewport Checked="False"/>
     </Debug_Output>

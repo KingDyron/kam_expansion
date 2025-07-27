@@ -388,14 +388,11 @@ end;
 
 function TKMTerrainPainter.CanEditTile(const X: Integer; const Y: Integer): Boolean;
 begin
-  Result := false;
-
-  if gTerrain.MaskContains(fTempTerKind[Y, X]) then
-    if gTerrain.MaskContains(fTempTerKind[Y + 1, X + 1]) then
-    if gTerrain.MaskContains(fTempTerKind[Y, X + 1]) then
-    if gTerrain.MaskContains(fTempTerKind[Y + 1, X]) then
-      Result := true;
-
+  //Result := false;
+  Result := gTerrain.MaskContains(fTempTerKind[Y, X])
+            and ((Y + 1 >= gTerrain.MapY) or gTerrain.MaskContains(fTempTerKind[Y + 1, X]))
+            and ((X + 1 >= gTerrain.MapX) or gTerrain.MaskContains(fTempTerKind[Y, X + 1]))
+            and (((Y + 1 >= gTerrain.MapY) or (X + 1 >= gTerrain.MapX)) or gTerrain.MaskContains(fTempTerKind[Y + 1, X + 1]));
 end;
 
 procedure TKMTerrainPainter.SetTempTerKind;
