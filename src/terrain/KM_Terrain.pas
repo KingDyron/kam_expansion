@@ -391,6 +391,9 @@ type
     function ObjectIsChopableTree(const aLoc: TKMPoint; aStages: TKMChopableAgeSet): Boolean; overload; inline;
     function CanWalkDiagonally(const aFrom: TKMPoint; aX, aY: SmallInt): Boolean;
 
+    procedure GetWalkableTilesAtRadius(aLocFrom : TKMPoint; aMin, aMax : Single; aList : TKMPointList);
+    function GetClosestWalkable(aLoc, aLocFrom : TKMPoint; aMin, aMax : Single; out aLocTo : TKMPoint) : Boolean;
+
     function GetFieldStage(const aLoc: TKMPoint): Byte;
     function GetCornStage(const aLoc: TKMPoint): Byte;
     function GetGrassStage(const aLoc: TKMPoint): Byte;
@@ -410,6 +413,10 @@ type
     function RenderFlatToHeight(const aPoint: TKMPointF): TKMPointF; overload;
     function HeightAt(inX, inY: Single): Single;
     function RenderHeightAt(inX, inY: Single): Single;
+
+
+
+
 
     Procedure AddTerrainMask(aTerKind : TKMTerrainKind);
     Procedure ResetTerrainMask;
@@ -3090,6 +3097,36 @@ begin
   if (aFrom.X > aX) and (aFrom.Y < aY) then                                   //     A
     Result := not gMapElements[Land^[aFrom.Y+1, aFrom.X].Obj].DiagonalBlocked; //   B
 end;
+
+procedure TKMTerrain.GetWalkableTilesAtRadius(aLocFrom: TKMPoint; aMin: Single; aMax: Single; aList: TKMPointList);
+var X, Y, maxR : Integer;
+  dist : Single;
+begin
+  maxR := Round(aMax) + 1;
+  for X := Max(aLocFrom.X - maxR, 1) to Min(aLocFrom.X + maxR, fMapX - 1) do
+    for Y := Max(aLocFrom.Y - maxR, 1) to Min(aLocFrom.Y + maxR, fMapY - 1) do
+    begin
+      dist := KMLength(aLocFrom, KMPoint(X, Y) );
+      If (dist >= aMin) and (dist <= aMax) then
+        aList.Add(X, Y);
+    end;
+end;
+
+function TKMTerrain.GetClosestWalkable(aLoc: TKMPoint; aLocFrom: TKMPoint; aMin: Single; aMax: Single; out aLocTo: TKMPoint): Boolean;
+var I : Integer;
+  list : TKMPointList;
+begin
+  list := TKMPointList.Create;
+  aLocTo := KMPOINT_ZERO;
+  GetWalkableTilesAtRadius(aLocFrom, aMin, aMax, list);
+
+  for I := list.Count - 1 downto 0 do
+    If not RouteCanBeMade(aLoc, list[I], tpWalk) and (GetUnit(list[I]) = nil) then
+      list.Delete(I);
+  Result := list.GetClosest(aLoc, aLocTo);
+end;
+
+
 
 
 //Place lock on tile, any new TileLock replaces old one, thats okay

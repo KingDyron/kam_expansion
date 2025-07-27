@@ -230,6 +230,7 @@ type
     procedure SetActionWalkToUnit(aUnit: TKMUnit; aDistance:single; aActionType: TKMUnitActionType = uaWalk);
     procedure SetActionWalkFromUnit(aUnit: TKMUnit; aDistance: Single; aActionType: TKMUnitActionType = uaWalk);
     procedure SetActionWalkToSpot(const aLocB: TKMPoint; aActionType: TKMUnitActionType = uaWalk; aDistance: Single = 0; aAnimStep: Integer = 0);
+    procedure SetActionWalkFromSpot(const aLoc: TKMPoint; aDistanceMin, aDistanceMaX: Single; aActionType: TKMUnitActionType = uaWalk);
     procedure SetActionWalkToRoad(aActionType: TKMUnitActionType = uaWalk; aDistance: Single = 0;
                                          aTargetPassability: TKMTerrainPassability = tpWalkRoad; aTargetWalkConnectSet: TKMByteSet = []);
     procedure SetActionWalkPushed(const aLocB: TKMPoint; aActionType: TKMUnitActionType = uaWalk);
@@ -3108,17 +3109,19 @@ end;
 
 
 procedure TKMUnit.SetActionWalkFromHouse(aHouse: TKMHouse; aDistance: Single; aActionType: TKMUnitActionType = uaWalk);
+var locB : TKMPoint;
 begin
   if (Action is TKMUnitActionWalkTo) and not TKMUnitActionWalkTo(Action).CanAbandonExternal then
     raise Exception.Create('');
   if BlockWalking then
     Exit;
+  gTerrain.GetClosestWalkable(Position, aHouse.Entrance, aDistance, aDistance + 2, locB);
 
-
-  //todo: Make unit walk away from House
-  SetActionStay(20, aActionType);
+  If locB = KMPOINT_ZERO then
+    SetActionStay(20, aActionType)
+  else
+    SetAction(TKMUnitActionWalkTo.Create(Self, locB, aActionType, 1, False, nil, nil), 0);
 end;
-
 
 //Approach unit
 procedure TKMUnit.SetActionWalkToUnit(aUnit: TKMUnit; aDistance: Single; aActionType: TKMUnitActionType = uaWalk);
@@ -3150,14 +3153,16 @@ end;
 
 
 procedure TKMUnit.SetActionWalkFromUnit(aUnit: TKMUnit; aDistance: Single; aActionType: TKMUnitActionType = uaWalk);
+var locB : TKMPoint;
 begin
   if (Action is TKMUnitActionWalkTo) and not TKMUnitActionWalkTo(Action).CanAbandonExternal then
     raise Exception.Create('');
   if BlockWalking then
     Exit;
-
-  //todo: Make unit walk away from Unit
-  SetActionStay(20, aActionType);
+  If gTerrain.GetClosestWalkable(Position, aUnit.Position, aDistance, aDistance + 2, locB) then
+    SetAction(TKMUnitActionWalkTo.Create(Self, locB, aActionType, 1, False, nil, nil), 0)
+  else
+    SetActionStay(20, aActionType);
 end;
 
 
@@ -3171,6 +3176,18 @@ begin
   SetAction(TKMUnitActionWalkTo.Create(Self, aLocB, aActionType, aDistance, False, nil, nil), aAnimStep);
 end;
 
+procedure TKMUnit.SetActionWalkFromSpot(const aLoc: TKMPoint; aDistanceMin, aDistanceMaX: Single; aActionType: TKMUnitActionType = uaWalk);
+var locB : TKMPoint;
+begin
+  if (Action is TKMUnitActionWalkTo) and not TKMUnitActionWalkTo(Action).CanAbandonExternal then
+    raise Exception.Create('');
+  if BlockWalking then
+    Exit;
+  If gTerrain.GetClosestWalkable(Position, aLoc, aDistanceMin, aDistanceMaX, locB) then
+    SetAction(TKMUnitActionWalkTo.Create(Self, locB, aActionType, 0, False, nil, nil), 0)
+  else
+    SetActionStay(20, aActionType);
+end;
 
 procedure TKMUnit.SetActionWalkToRoad(aActionType: TKMUnitActionType = uaWalk; aDistance: Single = 0;
                                              aTargetPassability: TKMTerrainPassability = tpWalkRoad; aTargetWalkConnectSet: TKMByteSet = []);

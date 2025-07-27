@@ -637,7 +637,7 @@ begin
       0: if KMLength(fLoc, Position) > GetFightMaxRange then
             SetActionWalkToSpot(fLoc, uaWalk, GetFightMaxRange)
           else
-            SetActionStay(0, uaWalk);
+            SetActionWalkFromSpot(fLoc, GetFightMinRange, GetFightMaxRange, uaWalk);
       1:  begin
             if (KMLength(fLoc, Position) < GetFightMinRange) or (KMLength(fLoc, Position) > GetFightMaxRange) then
             begin
