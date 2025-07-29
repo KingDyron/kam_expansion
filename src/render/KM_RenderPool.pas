@@ -134,6 +134,8 @@ type
                            HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1); overload; virtual;
     procedure RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
                            HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1); virtual;
+    procedure RenderSpriteFront(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+                           HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1); virtual;
     procedure RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY, aNight: Single;
                                     aId2: Integer = 0; aStoneProgress: Single = 0; X2: Single = 0; Y2: Single = 0); virtual;
   public
@@ -2529,6 +2531,54 @@ begin
   end;
   glDisable(GL_STENCIL_TEST);
 end;
+
+
+procedure TKMRenderPool.RenderSpriteFront(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+                                   HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1);
+var
+  tX, tY: Integer;
+  rX, rY: Single;
+  night : Single;
+begin
+  tX := EnsureRange(Round(aX), 1, gTerrain.MapX) - 1;
+  tY := EnsureRange(Round(aY), 1, gTerrain.MapY) - 1;
+  //Do not render if sprite is under FOW
+  if not aForced and (gMySpectator.FogOfWar.CheckVerticeRenderRev(tX, tY) <= FOG_OF_WAR_MIN) then
+    Exit;
+
+  rX := RoundToTilePixel(aX);
+  rY := RoundToTilePixel(aY);
+
+  with gGFXData[aRX, aId] do
+  begin
+    // FOW is rendered over the top so no need to make sprites black anymore
+    glColor4ub(255, 255, 255, 255);
+
+    TKMRender.BindTexture(Tex.TexID);
+    if DoHighlight then
+      glColor3ub(HighlightColor AND $FF, HighlightColor SHR 8 AND $FF, HighlightColor SHR 16 AND $FF);
+    glBegin(GL_QUADS);
+      glTexCoord2f(Tex.u1, Tex.v2); glVertex2f(rX                     , rY                      );
+      glTexCoord2f(Tex.u2, Tex.v2); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY                      );
+      glTexCoord2f(Tex.u2, Tex.v1); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY-pxHeight/CELL_SIZE_PX);
+      glTexCoord2f(Tex.u1, Tex.v1); glVertex2f(rX                     , rY-pxHeight/CELL_SIZE_PX);
+    glEnd;
+  end;
+
+  if gGFXData[aRX, aId].Alt.TexID <> 0 then
+    with gGFXData[aRX, aId] do
+    begin
+      glColor4ubv(@Col);
+      TKMRender.BindTexture(Alt.TexID);
+      glBegin(GL_QUADS);
+        glTexCoord2f(Alt.u1, Alt.v2); glVertex2f(rX                     , rY                      );
+        glTexCoord2f(Alt.u2, Alt.v2); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY                      );
+        glTexCoord2f(Alt.u2, Alt.v1); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY-pxHeight/CELL_SIZE_PX);
+        glTexCoord2f(Alt.u1, Alt.v1); glVertex2f(rX                     , rY-pxHeight/CELL_SIZE_PX);
+      glEnd;
+    end;
+end;
+
 // Param - defines at which level alpha-test will be set (acts like a threshhold)
 // Then we render alpha-tested Mask to stencil buffer. Only those pixels that are
 // white there will have sprite rendered
@@ -4031,14 +4081,17 @@ var
   sp1, sp2: TKMRenderSprite;
   sp2Exists: Boolean;
 begin
-  // Shortcuts to Sprites info
-  if aFrontList then
+  If aFrontList then
+  begin
     sp1 := fFrontRenderList[aId]
-  else
-    sp1 := fRenderList[aId];
+    RenderSpriteFront(sp1.RX, sp1.Id, sp1.Loc.X, sp1.Loc.Y, gTerrain.GetNightAtTile(sp1.NightLoc), sp1.TeamColor, sp1.HighlightColor <> 0, sp1.HighlightColor, false, sp1.AlphaStep)
+    Exit;
+  end;
+  // Shortcuts to Sprites info
+  sp1 := fRenderList[aId];
 
   sp2Exists := (aId + 1 < fCount);
-  if sp2Exists and not aFrontList then
+  if sp2Exists then
     sp2 := fRenderList[aId + 1];
 
   if (sp1.AlphaStep = -1) or (sp1.RX = rxUnits) then
