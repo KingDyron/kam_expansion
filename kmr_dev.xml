@@ -204,7 +204,7 @@
     </Debug_Input>
     <Game_additional Collapsed="False">
       <chkLoadUnsupSaves Checked="True"/>
-      <RGPlayer ItemIndex="0"/>
+      <RGPlayer ItemIndex="10"/>
       <seMaxImageSize Value="6000"/>
       <rgImageType ItemIndex="0"/>
     </Game_additional>

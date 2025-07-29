@@ -4083,8 +4083,8 @@ var
 begin
   If aFrontList then
   begin
-    sp1 := fFrontRenderList[aId]
-    RenderSpriteFront(sp1.RX, sp1.Id, sp1.Loc.X, sp1.Loc.Y, gTerrain.GetNightAtTile(sp1.NightLoc), sp1.TeamColor, sp1.HighlightColor <> 0, sp1.HighlightColor, false, sp1.AlphaStep)
+    sp1 := fFrontRenderList[aId];
+    gRenderPool.RenderSpriteFront(sp1.RX, sp1.Id, sp1.Loc.X, sp1.Loc.Y, gTerrain.GetNightAtTile(sp1.NightLoc), sp1.TeamColor, sp1.HighlightColor <> 0, sp1.HighlightColor, false, sp1.AlphaStep);
     Exit;
   end;
   // Shortcuts to Sprites info
