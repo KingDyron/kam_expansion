@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Root>
-  <DebugForm State="0">
+  <DebugForm State="2">
     <Misc Collapsed="True">
       <chkBevel Checked="True"/>
       <rgDebugFont ItemIndex="7"/>
@@ -204,11 +204,11 @@
     </Debug_Input>
     <Game_additional Collapsed="False">
       <chkLoadUnsupSaves Checked="True"/>
-      <RGPlayer ItemIndex="0"/>
+      <RGPlayer ItemIndex="10"/>
       <seMaxImageSize Value="6000"/>
       <rgImageType ItemIndex="0"/>
     </Game_additional>
-    <Debug_Output Collapsed="False">
+    <Debug_Output Collapsed="True">
       <chkUIDs Checked="False"/>
       <chkSelectedObjInfo Checked="False"/>
       <chkHands Checked="False"/>
@@ -241,7 +241,7 @@
       <chkDebugLayer2 Checked="True"/>
       <chkDebugLayer3 Checked="True"/>
     </Debug_Terrain>
-    <Debug_Render Collapsed="True">
+    <Debug_Render Collapsed="False">
       <chkSelectionBuffer Checked="False"/>
       <chkShowRoutes Checked="False"/>
       <chkShowWires Checked="False"/>

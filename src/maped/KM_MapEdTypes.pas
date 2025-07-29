@@ -88,6 +88,17 @@ const
   MAPED_GROUP_MAX_CNT = 200; // Max number of units in group
   UNIT_REMOVE_TAG = 255; // Tag id for remove unit button
 
+const
+  UNIT_TYPES_BY_GT_LVL: array[GROUP_TYPE_MIN..GROUP_TYPE_MAX, TKMGroupLevel] of TKMUnitType =
+                          ((utMilitia,  utAxeFighter,   utSwordFighter),
+                           (utRebel,    utLanceCarrier, utPikeman),
+                           (utRogue,    utBowman,       utCrossbowman),
+                           (utVagabond, utScout,        utKnight),
+                           (utCatapult, utWoodenWall,     utBallista),
+                           (utRam,      utRam,          utRam),
+                           (utClubMan,  utMaceFighter,  utFlailFighter),
+                           (utBattleShip,  utBattleShip,  utBattleShip)
+                          );
 implementation
 
 

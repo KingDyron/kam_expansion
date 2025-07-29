@@ -80,6 +80,7 @@ type
     function GetAllAttackingUnitsCount : Word;
     function GetAlUnitsCount : Word;
     function GetAttackingPositionsCount(aGroupType : TKMGroupType) : Word;
+    function GetPositionByUID(aID: Integer): TAIDefencePosition;
 
     procedure MoveUp(aIndex: Integer);
     procedure MoveDown(aIndex: Integer);
@@ -524,6 +525,16 @@ begin
   if not InRange(aIndex, 0, Count - 1) then Exit(nil);
 
   Result := fPositions[aIndex];
+end;
+
+function TAIDefencePositions.GetPositionByUID(aID: Integer): TAIDefencePosition;
+var I : Integer;
+begin
+  Result := nil;
+  for I := 0 to Count - 1 do
+    If TAIDefencePosition(fPositions[I]).UID = aID then
+      Exit(TAIDefencePosition(fPositions[I]));
+
 end;
 
 

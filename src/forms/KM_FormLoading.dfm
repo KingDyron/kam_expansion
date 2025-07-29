@@ -6297,8 +6297,6 @@ object FormLoading: TFormLoading
     Max = 4
     Step = 1
     TabOrder = 0
-    ExplicitTop = 612
-    ExplicitWidth = 680
   end
   object Panel1: TPanel
     Left = 346
@@ -6316,7 +6314,7 @@ object FormLoading: TFormLoading
       Height = 24
       Alignment = taCenter
       AutoSize = False
-      Caption = 'Co-op and World Update'
+      Caption = 'KamStar United'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -19

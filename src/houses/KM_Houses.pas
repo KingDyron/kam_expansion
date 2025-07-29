@@ -8499,17 +8499,17 @@ end;
 
 function TKMHouseWallSingle.GetStonePic : Integer;
 begin
-  {If (Style = 0) and (fWallStyle > 0) then
+  If (Style = 0) and (fWallStyle > 0) then
     Result := gRes.Houses[fType].Styles[fWallStyle - 1].StonePic
-  else}
+  else
     Result := Inherited;
 end;
 
 function TKMHouseWallSingle.GetSnowPic : Integer;
 begin
-  {If (Style = 0) and (fWallStyle > 0) then
+  If (Style = 0) and (fWallStyle > 0) then
     Result := gRes.Houses[fType].Styles[fWallStyle - 1].SnowPic
-  else}
+  else
   Result := Inherited;
 
 end;
@@ -8526,7 +8526,6 @@ var connID : Byte;
   pX, pY : Integer;
   newStyle : Byte;
 begin
-  Exit;
   pX := Entrance.X;
   pY := Entrance.Y;
   connID := 0;

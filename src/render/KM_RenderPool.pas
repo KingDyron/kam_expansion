@@ -87,6 +87,7 @@ type
     procedure RenderForegroundUI_BigErase;
     procedure RenderForegroundUI_ElevateEqualize;
     procedure RenderForegroundUI_ObjectsBrush;
+    procedure RenderForegroundUI_DefenceGroup;
     procedure RenderForegroundUI_Markers;
     procedure RenderForegroundUI_Units;
     procedure RenderForegroundUI_UnitsCustom;
@@ -248,7 +249,7 @@ implementation
 uses
   KM_Entity,
   KM_RenderAux, KM_RenderGameAux, KM_HandsCollection, KM_Game, KM_GameSettings, KM_Sound, KM_Resource, KM_ResUnits,
-  KM_ResMapElements, KM_AIFields, KM_TerrainPainter, KM_Cursor,
+  KM_ResMapElements, KM_AIFields, KM_TerrainPainter, KM_Cursor,  KM_MapEdTypes,
   KM_Hand, KM_UnitGroup, KM_CommonUtils,
   KM_GameParams, KM_Utils, KM_ResTilesetTypes, KM_DevPerfLog, KM_DevPerfLogTypes,
   KM_HandTypes,
@@ -3024,6 +3025,8 @@ begin
                              gMySpectator.Hand.FlagColor);
                           end;
     MARKER_DEFENCE:       begin
+                            if gCursor.MapEdDefPosSetGroup then
+                              RenderForegroundUI_DefenceGroup;
                             RenderSpriteOnTile(P, Ord(gCursor.MapEdDirection) + 510, gMySpectator.Hand.FlagColor);
                             {case gCursor.MapEdDefPosGroupType of
                               gtMelee:            RenderSpriteOnTile(P, 371, gMySpectator.Hand.FlagColor);
@@ -3040,6 +3043,7 @@ begin
                               RenderWireTile(P, icBlue, 0.1);
                             if gCursor.MapEdDefPosType = dtGuardLine then
                               RenderWireTile(P, icOrange, 0.1);
+
                           end;
     MARKER_CENTERSCREEN:  RenderSpriteOnTile(P, 391, gMySpectator.Hand.FlagColor);
     MARKER_AISTART:       RenderSpriteOnTile(P, 390, gMySpectator.Hand.FlagColor);
@@ -3517,6 +3521,30 @@ begin
   end;
 end;
 
+procedure TKMRenderPool.RenderForegroundUI_DefenceGroup;
+var
+  P: TKMPoint;
+  dir : TKMDirection;
+  UT: TKMUnitType;
+  formation: TKMFormation;
+  groupType : TKMGroupType;
+begin
+  Assert(gGameParams.IsMapEditor);
+
+  groupType := gCursor.MapEdDefPosGroupType;
+  dir := gCursor.MapEdDirection;
+  UT := UNIT_TYPES_BY_GT_LVL[groupType, gCursor.MapEdDefPosGroupLevel];
+
+  P := gCursor.Cell;
+  if gTerrain.CanPlaceUnit(P, UT) then
+  begin
+    formation := gMySpectator.Hand.AI.General.DefencePositions.TroopFormations[groupType];
+    DoRenderGroup(UT, KMPointDir(P, dir), formation.NumUnits, formation.UnitsPerRow, gMySpectator.Hand.FlagColor)
+  end
+  else
+    RenderSpriteOnTile(P, TC_BLOCK);
+
+end;
 procedure TKMRenderPool.RenderForegroundUI_UnitsCustom;
 var
   P: TKMPoint;

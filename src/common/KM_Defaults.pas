@@ -43,7 +43,7 @@ var
   TERRAIN_DARK: Single;
 const
   GAME_VERSION_CUSTOM_POSTFIX = ''; // Custom postfix for the test builds
-  GAME_VERSION_PREFIX   = 'KaM Expansion: Co-op & World Update'; //Game version string displayed in menu corner
+  GAME_VERSION_PREFIX   = 'KaM Expansion: KamStar United'; //Game version string displayed in menu corner
   VERSION_NAME = '';
 var
   //Game revision is set in initialisation block

@@ -1254,23 +1254,14 @@ end;
 
 
 procedure TKMMapEditor.AddDefenceMarker(const aLoc: TKMPoint);
-const
-  UNIT_TYPES_BY_GT_LVL: array[GROUP_TYPE_MIN..GROUP_TYPE_MAX, TKMGroupLevel] of TKMUnitType =
-                          ((utMilitia,  utAxeFighter,   utSwordFighter),
-                           (utRebel,    utLanceCarrier, utPikeman),
-                           (utRogue,    utBowman,       utCrossbowman),
-                           (utVagabond, utScout,        utKnight),
-                           (utCatapult, utWoodenWall,     utBallista),
-                           (utRam,      utRam,          utRam),
-                           (utClubMan,  utMaceFighter,  utFlailFighter),
-                           (utBattleShip,  utBattleShip,  utBattleShip)
-                          );
 
 var
   groupType: TKMGroupType;
   dir: TKMDirection;
   G: TKMUnitGroup;
   formation : TKMFormation;
+  I : Integer;
+  DP : TAIDefencePosition;
 begin
   dir := gCursor.MapEdDirection;
   groupType := gCursor.MapEdDefPosGroupType;
@@ -1293,11 +1284,13 @@ begin
                                      aLoc, dir, formation.UnitsPerRow, formation.NumUnits);
   end;
 
-  gMySpectator.Hand.AI.General.DefencePositions.Add(KMPointDir(aLoc, dir),
+  I := gMySpectator.Hand.AI.General.DefencePositions.Add(KMPointDir(aLoc, dir),
                                                     groupType,
                                                     gCursor.MapEdSize,
                                                     gCursor.MapEdDefPosType);
-
+  DP := gMySpectator.Hand.AI.General.DefencePositions.GetPositionByUID(I);
+  IF DP <> nil then
+    DP.DontRestock := gMySpectator.Hand.AI.General.DPDontRestock;
 end;
 
 procedure TKMMapEditor.AddDefendMarker(const aLoc: TKMPoint);
