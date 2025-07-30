@@ -771,6 +771,7 @@ begin
 end;
 
 
+
 // Manage house is closed for worker process
 procedure TKMSettledUnit.ProceedHouseClosedForWorker;
 var

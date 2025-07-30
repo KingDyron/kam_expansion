@@ -4412,7 +4412,7 @@
 			"NeedsPlayerOrder" : False,
 			"BuildIcon" : 1075,
 			"TabletID" : 1076,
-			"MaxInWares" : 5,
+			"MaxInWares" : 3,
 			"MaxOutWares" : 0,
 			"CanForceWork" : false,
 			"UnoccupiedMsgId" : -1,

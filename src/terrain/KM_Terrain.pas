@@ -8422,6 +8422,7 @@ begin
   //Valid range of tiles is 0..MapXY-2 because we check height from (Xc+1,Yc+1) to (Xc+2,Yc+2)
   //We cannot ask for height at the bottom row (MapY-1) because that row is not on the visible map,
   //and does not have a vertex below it
+
   Xc := EnsureRange(Trunc(inX), 0, fMapX-1);
   Yc := EnsureRange(Trunc(inY), 0, fMapY-1);
 

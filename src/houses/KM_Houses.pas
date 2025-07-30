@@ -1855,7 +1855,7 @@ begin
     case fWareInput[I] of
       wtNone: ;
       wtAll:       Result := 0;
-      wtWarfare:   Result := 0;
+      //wtWarfare:   Result := 0;
       else        If fWareInput[I] = aWareType then Result := fWareBlocked[I];
     end;
     {if aWareType = fWareInput[I] then
@@ -1935,7 +1935,7 @@ var I : integer;
 begin
   Result := false;
   for I := 1 to High(fWareInput) do
-      if gRes.Wares[fWareInput[I]].IsValid then
+      if fWareInput[I] in [WARE_MIN..WARE_MAX, wtFood, wtWarfare] then
         Exit(true);
 
 end;
@@ -3710,7 +3710,6 @@ begin
   if CurrentLevel > 0 then
     if HSpec.Levels[CurrentLevel - 1].MaxInWares > 0 then
       Result := HSpec.Levels[CurrentLevel - 1].MaxInWares;
-
 end;
 
 function TKMHouse.GetMaxOutWare: Word;

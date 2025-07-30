@@ -65,6 +65,7 @@ type
     property OnUserAction: TKMUserActionEvent read fOnUserAction write fOnUserAction;
 
     function CursorToMapCoord(X, Y: Integer): TKMPointF;
+    function MapCoordToScreenPos(X, Y: Single): TKMPointF;
 
     procedure DebugControlsUpdated(aSenderTag: Integer); override;
 
@@ -831,6 +832,13 @@ begin
   Result.X := fViewport.Position.X + (X-fViewport.ViewRect.Right/2-GetToolbarWidth/2)/CELL_SIZE_PX/fViewport.Zoom;
   Result.Y := fViewport.Position.Y + (Y-fViewport.ViewRect.Bottom/2)/CELL_SIZE_PX/fViewport.Zoom;
   Result.Y := gTerrain.ConvertCursorToMapCoord(Result.X, Result.Y);
+end;
+
+function TKMUserInterfaceGame.MapCoordToScreenPos(X, Y: Single): TKMPointF;
+begin
+  Y := gTerrain.RenderFlatToHeight(X, Y);
+  Result.X := ((X - fViewport.Position.X) * CELL_SIZE_PX * fViewport.Zoom) + fViewport.ViewRect.Right/2 +GetToolbarWidth/2;
+  Result.Y := ((Y - fViewport.Position.Y) * CELL_SIZE_PX * fViewport.Zoom) + fViewport.ViewRect.Bottom/2;
 end;
 
 

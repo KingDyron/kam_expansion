@@ -2272,13 +2272,14 @@ begin
     for I := 1 to WARES_IN_OUT_COUNT do
     begin
       if I in aID then
-        if gRes.Wares[aHouse.WareInput[I]].IsValid then
+        If aHouse.WareInput[I] in [WARE_MIN..WARE_MAX, wtFood, wtWarfare] then
+        //if gRes.Wares[aHouse.WareInput[I]].IsValid then
         begin
           WT := aHouse.WareInput[I];
 
           WaresRow_Common[RowRes].Spacing := 14;
           WaresRow_Common[RowRes].Tag := I;
-          WaresRow_Common[RowRes].WareCntAsNumber := aHouse.GetMaxInWare >= 10;
+          WaresRow_Common[RowRes].WareCntAsNumber := (aHouse.GetMaxInWare >= 10) or (WT in [wtFood, wtWarfare]);
           WaresRow_Common[RowRes].ShowName := not WaresRow_Common[RowRes].WareCntAsNumber;
 
           WaresRow_Common[RowRes].TexID := gRes.Wares[WT].GUIIcon;
@@ -2318,7 +2319,7 @@ begin
 
 
           Image_WareIn_Accept[RowRes].Spacing := WaresRow_Common[RowRes].Spacing;
-          Image_WareIn_Accept[RowRes].CntAsNumber := aHouse.GetMaxInWare >= 10;
+          Image_WareIn_Accept[RowRes].CntAsNumber := WaresRow_Common[RowRes].WareCntAsNumber;
           Image_WareIn_Accept[RowRes].MaxCount := aHouse.GetMaxInWare;
           Image_WareIn_Accept[RowRes].Top := WaresRow_Common[RowRes].Top;
           Image_WareIn_Accept[RowRes].Count := aHouse.GetAcceptWareIn(aHouse.WareInput[I]);

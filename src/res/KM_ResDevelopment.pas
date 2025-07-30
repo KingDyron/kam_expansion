@@ -14,7 +14,7 @@ const
   DEVELOPMENT_MAX = dttArmy;
   DEVELOPMENT_MAX_ALL = dttAll;
   DEVELOPMENT_VALID = [DEVELOPMENT_MIN..DEVELOPMENT_MAX];
-
+  DEVELOPMENT_COUNT = byte(DEVELOPMENT_MAX) - byte(DEVELOPMENT_MIN) + 1;
 type
   PKMDevelopment = ^TKMDevelopment;
   TKMDevelopment = record
@@ -60,6 +60,9 @@ type
 
       procedure SaveToJson;
   end;
+const
+  TREE_TYPE_ICON : array[TKMDevelopmentTreeType] of Word = (0, 39, 360, 322, 0);
+  TREE_TYPE_STRING : array[TKMDevelopmentTreeType] of String = ('None', 'Builder', 'Economy', 'Army', 'ALL');
 
 implementation
 uses
@@ -67,7 +70,6 @@ uses
     IOUtils,
     KM_Defaults,
     KM_ResLocales, KM_ResTexts;
-const TREE_TYPE_STRING : array[TKMDevelopmentTreeType] of String = ('None', 'Builder', 'Economy', 'Army', 'ALL');
 
 function TKMDevelopmentTree.FirstItem: PKMDevelopment;
 begin

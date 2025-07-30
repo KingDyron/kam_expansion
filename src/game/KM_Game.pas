@@ -348,7 +348,8 @@ uses
   KM_ServerSettings,
   KM_Supervisor,
   KM_MapUtils, KM_Utils,
-  KM_Cursor;
+  KM_Cursor{,
+  KM_RenderUI};
 
 const
   LAST_SAVES_MAX_CNT = 5; // Max number of save names to collect for crashreport
@@ -1646,6 +1647,7 @@ begin
 end;
 
 procedure TKMGame.Render(aRender: TKMRender);
+//var testPos : TKMPointF;
 begin
   {$IFDEF PERFLOG}
   gPerfLogs.SectionEnter(psFrameFullC);
@@ -1668,6 +1670,12 @@ begin
 
     aRender.SetRenderMode(rm2D);
 
+    {testPos := gGame.ActiveInterface.MapCoordToScreenPos(50, 50);
+    testPos.X := testPos.X / (gGame.ActiveInterface.Viewport.Zoom);
+    testPos.Y := testPos.Y / (gGame.ActiveInterface.Viewport.Zoom);
+    TKMRenderUI.SetupScale(gGame.ActiveInterface.Viewport.Zoom);
+    TKMRenderUI.WriteText(Trunc(testPos.X)div CELL_SIZE_PX, Trunc(testPos.Y * CELL_SIZE_PX) div CELL_SIZE_PX, 200, 'Hello world, that''s it', fntGrey, taLeft);
+    TKMRenderUI.SetupScale(1/gGame.ActiveInterface.Viewport.Zoom);}
     // Do not render UI when do save map to FBO
     if not SAVE_MAP_TO_FBO_RENDER then
       fActiveInterface.Paint;

@@ -23,6 +23,7 @@ type
     function Entrances : TKMPointDirArray;  override;
     function ShouldAbandonDeliveryTo(aWareType: TKMWareType): Boolean; override;
     procedure WareAddToIn(aWare: TKMWareType; aCount: Integer = 1; aFromStaticScript: Boolean = False); override;
+    function CheckWareIn(aWare: TKMWareType): Word; override;
 
     constructor Create(aUID: Integer; aHouseType: TKMHouseType; PosX, PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
 
@@ -32,6 +33,9 @@ type
     Constructor Load(LoadStream : TKMemoryStream);Override;
     procedure Save(SaveStream : TKMemoryStream);Override;
   end;
+
+const
+  FESTIVAL_DURATION = 1200;
 
 implementation
 uses
@@ -200,6 +204,15 @@ begin
   UpdateDemands;
 end;
 
+function TKMHouseArena.CheckWareIn(aWare: TKMWareType): Word;
+begin
+  case aWare of
+    wtWarfare : Result := fWarfareDelivered;
+    wtFood : Result := fFoodDelivered;
+    else Result :=  0;
+  end;
+end;
+
 procedure TKMHouseArena.AddDemandsOnActivate(aWasBuilt: Boolean);
 begin
   UpdateDemands;
@@ -245,7 +258,7 @@ begin
 
     resDelivering := WareDeliveryCnt[I] - WareDemandsClosing[I];
 
-    maxDistribution := Max(0, Min(GetWareDistribution(I), GetMaxInWare{ - GetAcceptWareIn(WareInput[I])}));
+    maxDistribution := Max(0, Min(GetWareDistribution(I), GetMaxInWare - GetAcceptWareIn(WareInput[I]) ));
     if ResetDemands then
       maxDistribution := 0;
 
@@ -301,8 +314,17 @@ begin
   begin
     //If aTick mod 600 = 0 then
     //  UpdatePointBelowEntrance;
-    If fArenaAnimStep > 0 then
+    If fDevType <> dttNone then
+    begin
       Inc(fArenaAnimStep);
+      IF fArenaAnimStep = FESTIVAL_DURATION then
+      begin
+        fArenaAnimStep := 0;
+        gHands[Owner].AddDevPoint( fDevType, IfThen(fDevType = dttAll, 1, 3) );
+        fDevType := dttNone;
+      end;
+    end;
+
   end;
 end;
 

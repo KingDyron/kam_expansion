@@ -323,6 +323,7 @@ type
     procedure AddDevPoint(aType : TKMDevelopmentTreeType; aCount : Word = 1);
     function  TakeDevPoint(aType : TKMDevelopmentTreeType; aCount : Word = 1) : Boolean;
     function  HasDevPoint(aType : TKMDevelopmentTreeType; aCount : Word = 1) : Boolean;
+    function DevPoints(aType : TKMDevelopmentTreeType) : Word;
 
     function GetClosestHouse(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aWareSet : TKMWareTypeSet = [wtAll];  aMaxDistance : Single = 999) : TKMHouse;
     function GetClosestStore(aLoc : TKMPoint; aWare: TKMWareType) : TKMHouse;
@@ -2760,7 +2761,7 @@ end;
 procedure TKMHand.AddDevPoint(aType : TKMDevelopmentTreeType; aCount : Word = 1);
 var dtt : TKMDevelopmentTreeType;
 begin
-  Assert(aType in dttNone);
+  Assert(aType <> dttNone);
   if aType = dttAll then
   begin
     for dtt := DEVELOPMENT_MIN to DEVELOPMENT_MAX do
@@ -2781,6 +2782,12 @@ function  TKMHand.HasDevPoint(aType : TKMDevelopmentTreeType; aCount : Word = 1)
 begin
   Assert(aType in DEVELOPMENT_VALID);
   Result := fDevPoints[aType] >= aCount;
+end;
+
+function  TKMHand.DevPoints(aType: TKMDevelopmentTreeType): Word;
+begin
+  Assert(aType in DEVELOPMENT_VALID);
+  Result := fDevPoints[aType];
 end;
 
 
@@ -3095,7 +3102,7 @@ begin
   end;
 
   SaveStream.WriteData(fPearlsBuilt);
-
+  SaveStream.WriteData(fDevPoints);
   //fBridgesBuilt.SaveToStream(SaveStream);
 end;
 
@@ -3198,6 +3205,7 @@ begin
   end;
 
   LoadStream.ReadData(fPearlsBuilt);
+  LoadStream.ReadData(fDevPoints);
 
   //fBridgesBuilt.LoadFromStream(LoadStream);
 

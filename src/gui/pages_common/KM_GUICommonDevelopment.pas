@@ -47,8 +47,6 @@ uses
 
 Const DISTANCE_BETWEEN_ROWS = 50;
 constructor TKMGUICommonDevelopment.Create(aParent: TKMPanel; aLeft: Integer; aTop: Integer; aWidth: Integer; aHeight: Integer);
-const
-  TREE_TYPE_ICON : array[TKMDevelopmentTreeType] of Word = (0, 39, 360, 322, 0);
 var dtt : TKMDevelopmentTreeType;
   procedure CreateNext(aType : TKMDevelopmentTreeType; var aToButton : TKMDevButton;  aDevelopment : PKMDevelopment; aTop : Byte);
   var I: integer;
