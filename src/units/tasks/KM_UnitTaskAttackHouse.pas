@@ -620,8 +620,6 @@ function TKMTaskShootAtSpot.Execute: TKMTaskResult;
 var
    AnimLength: Integer;
    Delay, Cycle: Integer;
-   closest: TKMPoint;
-   dir : TKMDirection;
 begin
   Result := trTaskContinues;
 
@@ -681,7 +679,6 @@ begin
             end;
           end;
       2:  begin
-            AnimLength := gRes.Units[UnitType].UnitAnim[uaWork, Direction].Count;
             SetActionLockedStay(FiringDelay, uaWork, False);
           end;
       3:  begin

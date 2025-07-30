@@ -500,7 +500,7 @@ type
 
   TKMUnitFish = class(TKMUnitAnimal)
   private
-    fFishCount: Byte; //1-255
+    fFishCount: Word; //1-255
   protected
     function GetPaintActionType(aAct: TKMUnitActionType): TKMUnitActionType; override;
     //procedure PaintUnit(aTickLag: Single); override;
@@ -508,8 +508,8 @@ type
     constructor Create(aID: Cardinal; const aLoc: TKMPointDir; aOwner: TKMHandID); overload;
     constructor Load(LoadStream: TKMemoryStream); override;
 
-    property FishCount: Byte read fFishCount write fFishCount;
-    function ReduceFish(aCount : Integer = 1) : Byte;
+    property FishCount: Word read fFishCount write fFishCount;
+    function ReduceFish(aCount : Integer = 1) : Word;
 
     procedure Save(SaveStream: TKMemoryStream); override;
 
@@ -2025,7 +2025,7 @@ begin
 end;
 
 
-function TKMUnitFish.ReduceFish(aCount : Integer = 1) : Byte;
+function TKMUnitFish.ReduceFish(aCount : Integer = 1) : Word;
 begin
   Result := Min(aCount, fFishCount);
 

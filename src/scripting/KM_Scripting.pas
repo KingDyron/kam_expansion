@@ -526,6 +526,7 @@ begin
         'MaxHealth : Word; ' +
         'Level : Byte; ' +
       'end;');
+    Sender.AddTypeS('TKMUnitThought', '(thNone, thEat, thHome, thBuild, thStone, thWood, thDeath, thQuest, thDismiss, thArmor, thSpy, thTile, thExclusive, thImportant, thBucket, thBoots, thDiamond, thBow, thTalk)');
 
     //*Types-Reg*//
 
@@ -947,6 +948,10 @@ begin
     RegisterMethodCheck(c, 'procedure OverlayTextSetFont(aHand: ShortInt; aFont: TKMFont)');
     RegisterMethodCheck(c, 'procedure OverlayTextSetFormatted(aHand: ShortInt; aText: AnsiString; aParams: array of const)');
     RegisterMethodCheck(c, 'procedure OverlayTextSetWordWrap(aHand: ShortInt; aWordWrap: Boolean)');
+    RegisterMethodCheck(c, 'procedure OverlayTextSetAlignToCenter(aHand: ShortInt; aSet: Boolean)');
+    RegisterMethodCheck(c, 'procedure OverlayTextSetAddBevel(aHand: ShortInt; aSet: Boolean)');
+    RegisterMethodCheck(c, 'procedure OverlayTextSetFromBottom(aHand: ShortInt; aSet: Boolean)');
+    RegisterMethodCheck(c, 'procedure OverlayTextSetMaxWidth(aHand: ShortInt; aSet: Word)');
     RegisterMethodCheck(c, 'function PanelControlAdd(aPlayer : Shortint; aInfo : TKMControlInfo) : Integer');
     RegisterMethodCheck(c, 'procedure PanelControlChange(aPlayer : Shortint; aButtonID : Integer; aInfo : TKMControlInfo)');
     RegisterMethodCheck(c, 'procedure PanelControlVisible(aPlayer : Shortint; aButtonID : Integer; aVisible : Boolean)');
@@ -1040,8 +1045,11 @@ begin
     RegisterMethodCheck(c, 'procedure  UnitBlockWalking(aUnitID: Integer; aBlock: Boolean)');
 
     RegisterMethodCheck(c, 'procedure  HouseSetStats(aHouseID: Integer; aStats: TKMHouseStats)');
+    RegisterMethodCheck(c, 'procedure  MoveCamera(aPlayer, aX, aY : Integer)');
+    RegisterMethodCheck(c, 'procedure  ResetZoom(aPlayer: Integer)');
     RegisterMethodCheck(c, 'procedure  UnitSetRage(aUnitID: Integer; aDuration: Integer)');
     RegisterMethodCheck(c, 'procedure  UnitSetStats(aUnitID: Integer; aStats: TKMUnitStats)');
+    RegisterMethodCheck(c, 'procedure  UnitSetThought(aUnitID : Integer; aThought : TKMUnitThought)');
     //*Actions-Check*//
 
     c := Sender.AddClassN(nil, AnsiString(fUtils.ClassName));
@@ -1758,6 +1766,10 @@ begin
       RegisterMethod(@TKMScriptActions.OverlayTextSetFont, 'OverlayTextSetFont');
       RegisterMethod(@TKMScriptActions.OverlayTextSetFormatted, 'OverlayTextSetFormatted');
       RegisterMethod(@TKMScriptActions.OverlayTextSetWordWrap, 'OverlayTextSetWordWrap');
+      RegisterMethod(@TKMScriptActions.OverlayTextSetAlignToCenter, 'OverlayTextSetAlignToCenter');
+      RegisterMethod(@TKMScriptActions.OverlayTextSetAddBevel, 'OverlayTextSetAddBevel');
+      RegisterMethod(@TKMScriptActions.OverlayTextSetFromBottom, 'OverlayTextSetFromBottom');
+      RegisterMethod(@TKMScriptActions.OverlayTextSetMaxWidth, 'OverlayTextSetMaxWidth');
 
       RegisterMethod(@TKMScriptActions.PanelControlAdd, 'PanelControlAdd');
       RegisterMethod(@TKMScriptActions.PanelControlChange, 'PanelControlChange');
@@ -1842,8 +1854,11 @@ begin
       RegisterMethod(@TKMScriptActions.UnitSetInstantKill, 'UnitSetInstantKill');
       RegisterMethod(@TKMScriptActions.UnitBlockWalking, 'UnitBlockWalking');
       RegisterMethod(@TKMScriptActions.HouseSetStats, 'HouseSetStats');
+      RegisterMethod(@TKMScriptActions.MoveCamera, 'MoveCamera');
+      RegisterMethod(@TKMScriptActions.ResetZoom, 'ResetZoom');
       RegisterMethod(@TKMScriptActions.UnitSetRage, 'UnitSetRage');
       RegisterMethod(@TKMScriptActions.UnitSetStats, 'UnitSetStats');
+      RegisterMethod(@TKMScriptActions.UnitSetThought, 'UnitSetThought');
       //*Actions-Reg*//
     end;
 

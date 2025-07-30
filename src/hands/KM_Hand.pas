@@ -12,7 +12,7 @@ uses
   KM_CommonClasses, KM_CommonTypes, KM_Defaults, KM_Points,
   KM_HandEntity, KM_HandTypes, KM_CommonClassesExt,
   KM_ScriptingTypes,
-  KM_ResTypes, KM_ResFonts, KM_ResStructures;
+  KM_ResTypes, KM_ResFonts, KM_ResStructures, KM_ResDevelopment;
 
 
 type
@@ -102,6 +102,7 @@ type
     //fBridgesBuilt : TKMStructureBasicArray;
     fCustomPanelData : TKMCustomPanelInfo;
     fPearlsBuilt : array[TKMPearlType] of Boolean;
+    fDevPoints : array[DEVELOPMENT_MIN..DEVELOPMENT_MAX] of Word;
 
     function IsDisabled: Boolean;
     function GetColorIndex: Byte;
@@ -223,6 +224,10 @@ type
     property OverlayParams: TKMVarValueList read fOverlayParams;
     procedure SetOverlayTextWordWrap(aWordWrap: Boolean);
     procedure SetOverlayTextFont(aFont: TKMFont);
+    procedure SetOverlayAddBevel(aAdd: Boolean);
+    procedure SetOverlayFromBottom(aAdd: Boolean);
+    procedure SetOverlayToCenter(aCenter: Boolean);
+    procedure SetOverlayMaxWidth(maxWidth: Word);
     procedure AddAIType(aHandAIType: TKMAIType);
 
     procedure PostLoadMission;
@@ -314,6 +319,10 @@ type
     procedure PearlBuilt(aType : TKMPearlType);
     procedure PearlDestroyed(aType : TKMPearlType);
     function HasPearl(aType : TKMPearlType) : Boolean;
+
+    procedure AddDevPoint(aType : TKMDevelopmentTreeType; aCount : Word = 1);
+    function  TakeDevPoint(aType : TKMDevelopmentTreeType; aCount : Word = 1) : Boolean;
+    function  HasDevPoint(aType : TKMDevelopmentTreeType; aCount : Word = 1) : Boolean;
 
     function GetClosestHouse(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aWareSet : TKMWareTypeSet = [wtAll];  aMaxDistance : Single = 999) : TKMHouse;
     function GetClosestStore(aLoc : TKMPoint; aWare: TKMWareType) : TKMHouse;
@@ -1320,6 +1329,25 @@ begin
   fOverlayTextSettings.Font := aFont;
 end;
 
+procedure TKMHand.SetOverlayAddBevel(aAdd: Boolean);
+begin
+  fOverlayTextSettings.AddBevel := aAdd;
+end;
+
+procedure TKMHand.SetOverlayFromBottom(aAdd: Boolean);
+begin
+  fOverlayTextSettings.FromBottom := aAdd;
+end;
+
+procedure TKMHand.SetOverlayToCenter(aCenter: Boolean);
+begin
+  fOverlayTextSettings.AllignTextToCenter := aCenter;
+end;
+
+procedure TKMHand.SetOverlayMaxWidth(maxWidth: Word);
+begin
+  fOverlayTextSettings.MaxWidth := maxWidth;
+end;
 
 procedure TKMHand.SetOverlayTextWordWrap(aWordWrap: Boolean);
 begin
@@ -2728,6 +2756,33 @@ begin
     Exit(false);
   Result := fPearlsBuilt[aType];
 end;
+
+procedure TKMHand.AddDevPoint(aType : TKMDevelopmentTreeType; aCount : Word = 1);
+var dtt : TKMDevelopmentTreeType;
+begin
+  Assert(aType in dttNone);
+  if aType = dttAll then
+  begin
+    for dtt := DEVELOPMENT_MIN to DEVELOPMENT_MAX do
+      Inc(fDevPoints[dtt], aCount);
+  end else
+    Inc(fDevPoints[aType], aCount);
+end;
+
+function  TKMHand.TakeDevPoint(aType : TKMDevelopmentTreeType; aCount : Word = 1) : Boolean;
+begin
+  Assert(aType in DEVELOPMENT_VALID);
+  Result := fDevPoints[aType] >= aCount;
+  If Result then
+    Dec(fDevPoints[aType], aCount);
+end;
+
+function  TKMHand.HasDevPoint(aType : TKMDevelopmentTreeType; aCount : Word = 1) : Boolean;
+begin
+  Assert(aType in DEVELOPMENT_VALID);
+  Result := fDevPoints[aType] >= aCount;
+end;
+
 
 function TKMHand.GetClosestHouse(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aWareSet : TKMWareTypeSet = [wtAll]; aMaxDistance : Single = 999) : TKMHouse;
 var I : Integer;

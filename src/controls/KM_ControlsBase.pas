@@ -83,8 +83,19 @@ type
     property TextSize: TKMPoint read fTextSize;
     function TextLeft: Integer;
     property TextVAlign: TKMTextVAlign read fTextVAlign write fTextVAlign;
+    property TextHAlign: TKMTextAlign read fTextAlign write fTextAlign;
     property Font: TKMFont read fFont write SetFont;
     procedure Paint; override;
+  end;
+
+  TKMOverlayLabel = class(TKMLabel)
+    protected
+      procedure SetCaption(const aCaption: UnicodeString); override;
+    public
+      FromBottom,
+      AddBevel : Boolean;
+
+      procedure Paint;override;
   end;
 
   TKMHintLabel = class(TKMLabel)
@@ -499,6 +510,45 @@ begin
   if fStrikethrough then
     TKMRenderUI.WriteShape(TextLeft, AbsTop + fTextSize.Y div 2 - 2, fTextSize.X, 3, col, $FF000000);
 end;
+
+procedure TKMOverlayLabel.SetCaption(const aCaption: UnicodeString);
+//var tmp : Integer;
+begin
+  Inherited;
+  //Height := gRes.Fonts[fFont].GetTextSize(fText, tmp).Y + 10;
+end;
+// Send caption to render
+procedure TKMOverlayLabel.Paint;
+var
+  t: Integer;
+  col: Cardinal;
+begin
+  inherited;
+
+  if Enabled then
+    col := FontColor
+  else
+    col := $FF888888;
+
+  t := 0;
+  if Height > 0 then
+  begin
+    case fTextVAlign of
+      tvaNone,
+      tvaTop:     ;
+      tvaMiddle:  t := (Height - fTextSize.Y) div 2;
+      tvaBottom:  t := Height - fTextSize.Y;
+    end;
+  end;
+  If AddBevel then
+    TKMRenderUI.WriteBevel(AbsLeft, AbsTop - 3, Width, fTextSize.Y + 6);
+
+  TKMRenderUI.WriteText(AbsLeft, AbsTop + t, Width, fText, fFont, fTextAlign, col, False, False, False, false, fTabWidth);
+
+  if fStrikethrough then
+    TKMRenderUI.WriteShape(TextLeft, AbsTop + fTextSize.Y div 2 - 2, fTextSize.X, 3, col, $FF000000);
+end;
+
 
 procedure TKMHintLabel.SetCaption(const aCaption: UnicodeString);
 var tmp : Integer;

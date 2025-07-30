@@ -83,8 +83,9 @@ constructor TKMHouseArena.Create(aUID: Integer; aHouseType: TKMHouseType; PosX: 
 begin
   Inherited;
   fArenaAnimStep := 1;
-  fDevType := dttArmy;
+  fDevType := dttNone;
   fWarfareDelivered := 0;
+  fFoodDelivered := 0;
 end;
 
 Constructor TKMHouseArena.Load(LoadStream : TKMemoryStream);

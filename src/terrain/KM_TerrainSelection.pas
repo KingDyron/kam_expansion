@@ -879,7 +879,7 @@ end;
 procedure TKMSelection.SetNiceCoal;
 var
   I, X, Y, tileTypeTo, tileTypeFrom: Integer;
-  aCO : TKMTileOverlay;
+  //aCO : TKMTileOverlay;
 begin
   {for X := 1 to gTerrain.MapX do
     for Y := 1 to gTerrain.MapY do

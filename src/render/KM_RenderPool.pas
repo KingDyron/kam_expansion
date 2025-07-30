@@ -2068,7 +2068,7 @@ const
   ICON_OFF_X = 19;
   ICON_OFF_Y = -81;
 var
-  cornerX, cornerY, ground: Single;
+  cornerX, cornerY{, ground}: Single;
   R: TRXData;
   A: TKMAnimation;
   id, id0, step: Integer;
@@ -2083,20 +2083,22 @@ begin
   A := gRes.Units.Thought;//gRes.Units[aUnit].UnitAnim[aAct, aDir];
   id0 := gRes.Units[aUnit].UnitAnim[aAct, aDir].Animation[aStep];
   // Units feet
-  ground := pY + (R.Pivot[id0].Y + R.Size[id0].Y) / CELL_SIZE_PX;
+  // := pY + (R.Pivot[id0].Y + R.Size[id0].Y) / CELL_SIZE_PX;
   // The thought should be slightly lower than the unit so it goes OVER warrior flags
-  ground := ground + THOUGHT_X_OFFSET;
+  //ground := ground + THOUGHT_X_OFFSET;
 
   id := A.Animation[step] + 1;
   height := gTerrain.RenderFlatToHeight(pX, pY);
   cornerX := pX + (R.Pivot[id].X + A.X) / CELL_SIZE_PX;
   cornerY := height + (R.Pivot[id].Y + R.Size[id].Y + A.Y) / CELL_SIZE_PX - 1.5;
-  fRenderList.AddSpriteG(rxUnits, id, 0, cornerX, cornerY, pX, ground, Round(pX), Round(pY));
+  fRenderList.AddSpriteFront(rxUnits, id, cornerX, cornerY, Round(pX), Round(pY));
+  //fRenderList.AddSpriteG(rxUnits, id, 0, cornerX, cornerY, pX, ground, Round(pX), Round(pY));
 
   id := THOUGHT_ICON[Thought];
   cornerX := pX + (ICON_OFF_X + R.Pivot[id].X + A.X) / CELL_SIZE_PX;
   cornerY := height + (ICON_OFF_Y + R.Pivot[id].Y + R.Size[id].Y + A.Y) / CELL_SIZE_PX;
-  fRenderList.AddSprite(rxUnits, id, cornerX, cornerY, Round(pX), Round(pY));
+  fRenderList.AddSpriteFront(rxUnits, id, cornerX, cornerY, Round(pX), Round(pY));
+  //fRenderList.AddSprite(rxUnits, id, cornerX, cornerY, Round(pX), Round(pY));
 end;
 
 
@@ -2538,7 +2540,6 @@ procedure TKMRenderPool.RenderSpriteFront(aRX: TRXType; aId: Integer; aX, aY, aN
 var
   tX, tY: Integer;
   rX, rY: Single;
-  night : Single;
 begin
   tX := EnsureRange(Round(aX), 1, gTerrain.MapX) - 1;
   tY := EnsureRange(Round(aY), 1, gTerrain.MapY) - 1;
@@ -2758,7 +2759,6 @@ procedure TKMRenderPoolNoNight.RenderSprite(aRX: TRXType; aId: Integer; aX, aY, 
 var
   tX, tY: Integer;
   rX, rY: Single;
-  night : Single;
 begin
   tX := EnsureRange(Round(aX), 1, gTerrain.MapX) - 1;
   tY := EnsureRange(Round(aY), 1, gTerrain.MapY) - 1;
@@ -2805,7 +2805,6 @@ procedure TKMRenderPoolNoNight.RenderSpritePool(aRX: TRXType; aId: Integer; aX, 
 var
   tX, tY: Integer;
   rX, rY: Single;
-  night : Single;
 begin
   tX := EnsureRange(Round(aX), 1, gTerrain.MapX) - 1;
   tY := EnsureRange(Round(aY), 1, gTerrain.MapY) - 1;
@@ -3237,7 +3236,7 @@ end;
 
 procedure TKMRenderPool.RenderForegroundUI_Tiles;
 var
-  P, RP: TKMPoint;
+  P: TKMPoint;
   size: Integer;
   isSquare: Boolean;
 begin

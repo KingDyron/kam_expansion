@@ -802,7 +802,7 @@ type
 type
   TKMUnitThought = (thNone, thEat, thHome, thBuild, thStone, thWood, thDeath, thQuest,
                     thDismiss, thArmor, thSpy, thTile, thExclusive, thImportant,
-                    thBucket, thBoots, thDiamond, thBow);
+                    thBucket, thBoots, thDiamond, thBow, thTalk);
 
 const //Corresponding indices in units.rx
   {THOUGHT_BOUNDS: array [TKMUnitThought, 1..2] of Word = (
@@ -810,7 +810,7 @@ const //Corresponding indices in units.rx
   );}
   THOUGHT_ICON: array[TKMUnitThought] of Word = (0, 15222, 15223, 15224, 15225, 15226, 15227,
                                                   15228, 15229, 15230, 15231, 15232, 15233, 15234,
-                                                  15235, 15236, 15237, 15238);
+                                                  15235, 15236, 15237, 15238, 17074);
 
   UNIT_OFF_X = -0.5;
   UNIT_OFF_Y = -0.4;
@@ -855,7 +855,7 @@ const
 const
   // Fish counts
   FISH_CNT_DEFAULT = 10;
-  FISH_CNT_MAX = 255;
+  FISH_CNT_MAX = high(word);
 
 
 type

@@ -921,8 +921,8 @@ type
     procedure UpdateWallAround;
   protected
     procedure AfterCreate(aWasBuilt: Boolean); override;
-    procedure Demolish(aFrom: TKMHandID; IsSilent: Boolean = False); override;
   public
+    procedure Demolish(aFrom: TKMHandID; IsSilent: Boolean = False); override;
     procedure UpdateState(aTick: Cardinal); override;
   end;
 

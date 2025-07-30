@@ -236,6 +236,10 @@ type
     procedure OverlayAppend(aHand: TKMHandID; const aMarkup: AnsiString; aParams: array of const);
     procedure OverlaySetWordWrap(aHand: TKMHandID; aWordWrap: Boolean);
     procedure OverlaySetFont(aHand: TKMHandID; aFont: TKMFont);
+    procedure OverlayAddBevel(aHand: TKMHandID; aSet: Boolean);
+    procedure OverlayFromBottom(aHand: TKMHandID; aSet: Boolean);
+    procedure OverlayAlignToCenter(aHand: TKMHandID; aSet: Boolean);
+    procedure OverlayMaxWidth(aHand: TKMHandID; aSet: Word);
 
     property CampaignName: TKMCampaignId read fCampaignName;
     property CampaignMap: Byte read fCampaignMap;
@@ -1889,6 +1893,51 @@ begin
       gHands[I].SetOverlayTextFont(aFont)
   else
     gHands[aHand].SetOverlayTextFont(aFont);
+end;
+
+procedure TKMGame.OverlayAddBevel(aHand: TKMHandID; aSet: Boolean);
+var
+  I: Integer;
+begin
+  if aHand = HAND_NONE then
+    for I := 0 to gHands.Count - 1 do
+      gHands[I].SetOverlayAddBevel(aSet)
+  else
+    gHands[aHand].SetOverlayAddBevel(aSet);
+end;
+
+procedure TKMGame.OverlayFromBottom(aHand: TKMHandID; aSet: Boolean);
+var
+  I: Integer;
+begin
+  if aHand = HAND_NONE then
+    for I := 0 to gHands.Count - 1 do
+      gHands[I].SetOverlayFromBottom(aSet)
+  else
+    gHands[aHand].SetOverlayFromBottom(aSet);
+  OverlayUpdate;
+end;
+
+procedure TKMGame.OverlayAlignToCenter(aHand: TKMHandID; aSet: Boolean);
+var
+  I: Integer;
+begin
+  if aHand = HAND_NONE then
+    for I := 0 to gHands.Count - 1 do
+      gHands[I].SetOverlayToCenter(aSet)
+  else
+    gHands[aHand].SetOverlayToCenter(aSet);
+end;
+
+procedure TKMGame.OverlayMaxWidth(aHand: TKMHandID; aSet: Word);
+var
+  I: Integer;
+begin
+  if aHand = HAND_NONE then
+    for I := 0 to gHands.Count - 1 do
+      gHands[I].SetOverlayMaxWidth(aSet)
+  else
+    gHands[aHand].SetOverlayMaxWidth(aSet);
 end;
 
 

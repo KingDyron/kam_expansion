@@ -7,8 +7,15 @@ uses
   KM_JsonHelpers;
 
 type
-  TKMDevelopmentTreeType = (dttBuilder, dttEconomy, dttArmy, dttAll);
+  TKMDevelopmentTreeType = (dttNone, dttBuilder, dttEconomy, dttArmy, dttAll);
 
+const
+  DEVELOPMENT_MIN = dttBuilder;
+  DEVELOPMENT_MAX = dttArmy;
+  DEVELOPMENT_MAX_ALL = dttAll;
+  DEVELOPMENT_VALID = [DEVELOPMENT_MIN..DEVELOPMENT_MAX];
+
+type
   PKMDevelopment = ^TKMDevelopment;
   TKMDevelopment = record
     HintID : Word;
@@ -35,7 +42,7 @@ type
   TKMDevelopmentTreeCollection = class
     private
       fCRC : Cardinal;
-      fTree : array[dttBuilder..dttArmy] of TKMDevelopmentTree;
+      fTree : array[DEVELOPMENT_MIN..DEVELOPMENT_MAX] of TKMDevelopmentTree;
       fTexts : array of String;
       procedure AddText(aText : String);
 
@@ -60,7 +67,7 @@ uses
     IOUtils,
     KM_Defaults,
     KM_ResLocales, KM_ResTexts;
-const TREE_TYPE_STRING : array[TKMDevelopmentTreeType] of String = ('Builder', 'Economy', 'Army', 'ALL');
+const TREE_TYPE_STRING : array[TKMDevelopmentTreeType] of String = ('None', 'Builder', 'Economy', 'Army', 'ALL');
 
 function TKMDevelopmentTree.FirstItem: PKMDevelopment;
 begin

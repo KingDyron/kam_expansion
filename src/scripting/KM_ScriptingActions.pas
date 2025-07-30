@@ -173,6 +173,10 @@ type
     procedure OverlayTextSetFormatted(aHand: Shortint; const aText: AnsiString; aParams: array of const);
     procedure OverlayTextSetFont(aHand: Shortint; aFont: TKMFont);
     procedure OverlayTextSetWordWrap(aHand: Shortint; aWordWrap: Boolean);
+    procedure OverlayTextSetAlignToCenter(aHand: Shortint; aSet: Boolean);
+    procedure OverlayTextSetAddBevel(aHand: Shortint; aSet: Boolean);
+    procedure OverlayTextSetFromBottom(aHand: Shortint; aSet: Boolean);
+    procedure OverlayTextSetMaxWidth(aHand: Shortint; aSet: Word);
     procedure OverlayTextAppend(aHand: Shortint; const aText: AnsiString);
     procedure OverlayTextAppendFormatted(aHand: Shortint; const aText: AnsiString; aParams: array of const);
 
@@ -272,8 +276,11 @@ type
     procedure UnitBlockWalking(aUnitID: Integer; aBlock : Boolean);
     //new
     procedure HouseSetStats(aHouseID : Integer; aStats : TKMHouseStats);
+    procedure MoveCamera(aPlayer, aX, aY : Integer);
+    procedure ResetZoom(aPlayer: Integer);
     procedure UnitSetRage(aUnitID, aDuration : Integer);
     procedure UnitSetStats(aUnitID : Integer; aStats : TKMUnitStats);
+    procedure UnitSetThought(aUnitID : Integer; aThought : TKMUnitThought);
   end;
 
 
@@ -4436,6 +4443,66 @@ begin
   end;
 end;
 
+procedure TKMScriptActions.OverlayTextSetAlignToCenter(aHand: Shortint; aSet: Boolean);
+begin
+  try
+    if InRange(aHand, -1, gHands.Count - 1) then //-1 means all players
+    begin
+      gGame.OverlayAlignToCenter(aHand, aSet);
+    end
+    else
+      LogParamWarn('Actions.OverlayTextSetAlignToCenter', [aHand, aSet]);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
+procedure TKMScriptActions.OverlayTextSetAddBevel(aHand: ShortInt; aSet: Boolean);
+begin
+  try
+    if InRange(aHand, -1, gHands.Count - 1) then //-1 means all players
+    begin
+      gGame.OverlayAddBevel(aHand, aSet);
+    end
+    else
+      LogParamWarn('Actions.OverlayTextSetAddBevel', [aHand, aSet]);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
+procedure TKMScriptActions.OverlayTextSetFromBottom(aHand: ShortInt; aSet: Boolean);
+begin
+  try
+    if InRange(aHand, -1, gHands.Count - 1) then //-1 means all players
+    begin
+      gGame.OverlayFromBottom(aHand, aSet);
+    end
+    else
+      LogParamWarn('Actions.OverlayTextSetFromBottom', [aHand, aSet]);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
+procedure TKMScriptActions.OverlayTextSetMaxWidth(aHand: ShortInt; aSet: Word);
+begin
+  try
+    if InRange(aHand, -1, gHands.Count - 1) then //-1 means all players
+    begin
+      gGame.OverlayMaxWidth(aHand, aSet);
+    end
+    else
+      LogParamWarn('Actions.OverlayTextSetMaxWidth', [aHand, aSet]);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
 
 //* Version: 5333
 //* Appends to text overlaid on top left of screen.
@@ -5422,6 +5489,43 @@ begin
     raise;
   end;
 end;
+procedure TKMScriptActions.MoveCamera(aPlayer, aX, aY : Integer);
+var I : integer;
+begin
+  try
+    If aPlayer = -1 then
+    begin
+      for I := 0 to gHands.Count - 1 do
+        If gMySpectator.HandID = gHands[I].ID then
+          gGame.ActiveInterface.Viewport.Position := KMPointF(aX, aY);
+    end else
+      If InRange(aPlayer, 0, gHands.Count - 1) and (gMySpectator.HandID = aPlayer) then
+        gGame.ActiveInterface.Viewport.Position := KMPointF(aX, aY);
+
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
+procedure TKMScriptActions.ResetZoom(aPlayer: Integer);
+var I : integer;
+begin
+  try
+    If aPlayer = -1 then
+    begin
+      for I := 0 to gHands.Count - 1 do
+        If gMySpectator.HandID = gHands[I].ID then
+          gGame.ActiveInterface.Viewport.ResetZoom;
+    end else
+      If InRange(aPlayer, 0, gHands.Count - 1) and (gMySpectator.HandID = aPlayer) then
+        gGame.ActiveInterface.Viewport.ResetZoom;
+
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
 
 procedure TKMScriptActions.UnitSetRage(aUnitID: Integer; aDuration: Integer);
 var
@@ -5452,8 +5556,7 @@ begin
     begin
       U := fIDCache.GetUnit(aUnitID);
       if U <> nil then
-        If U is TKMUnitWarrior then
-          TKMUnitWarrior(U).SetStats(aStats);
+        U.SetStats(aStats);
     end
     else
       LogIntParamWarn('Actions.UnitBlockWalking', [aUnitID]);
@@ -5462,6 +5565,26 @@ begin
     raise;
   end;
 end;
+
+procedure TKMScriptActions.UnitSetThought(aUnitID : Integer; aThought : TKMUnitThought);
+var
+  U: TKMUnit;
+begin
+  try
+    if (aUnitID > 0) then
+    begin
+      U := fIDCache.GetUnit(aUnitID);
+      if U <> nil then
+        U.Thought := aThought;
+    end
+    else
+      LogIntParamWarn('Actions.UnitBlockWalking', [aUnitID]);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
 //* Version: 5099
 //* Kills the specified unit.
 //* Silent means the death animation (ghost) and sound won't play

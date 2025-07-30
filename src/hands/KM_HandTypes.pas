@@ -30,6 +30,10 @@ type
   TKMOverlayTextSettings = record
     WordWrap: Boolean;
     Font: TKMFont;
+    MaxWidth : Word;
+    FromBottom : Boolean;
+    AddBevel : Boolean;
+    AllignTextToCenter : Boolean;
   end;
 
   TKMConsolCommandType = (

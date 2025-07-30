@@ -232,7 +232,7 @@ type
     Label_Time: TKMLabel;
     Label_ClockSpeedActual, Label_ClockSpeedRecorded: TKMLabel;
 
-    Label_ScriptedOverlay: TKMLabel; // Label that can be set from script
+    Label_ScriptedOverlay: TKMOverlayLabel; // Label that can be set from script
     Button_ScriptedOverlay: TKMButton;
     Label_OverlayShow, Label_OverlayHide: TKMLabel;
 
@@ -1349,7 +1349,7 @@ procedure TKMGamePlayInterface.Create_ScriptingOverlay;
 const
   LEFT = 260;
 begin
-  Label_ScriptedOverlay := TKMLabel.Create(Panel_Main, LEFT, 110, Panel_Main.Width - LEFT - 5, 0, '', fntMetal, taLeft);
+  Label_ScriptedOverlay := TKMOverlayLabel.Create(Panel_Main, LEFT, 110, Panel_Main.Width - LEFT - 5, 20, '', fntMetal, taLeft);
   Label_ScriptedOverlay.Anchors := [anTop, anLeft, anRight];
 
   Button_ScriptedOverlay := TKMButton.Create(Panel_Main, 260, 92, 15, 15, '', bsGame);
@@ -3066,10 +3066,28 @@ end;
 
 
 procedure TKMGamePlayInterface.SetScriptedOverlay(const aText: UnicodeString; const aSettings: TKMOverlayTextSettings);
+const
+  LEFT = 260;
+var lines : Integer;
 begin
+  //rendering settings
+  IF aSettings.MaxWidth = 0 then
+    Label_ScriptedOverlay.Width     := Panel_Main.Width - LEFT - 5
+  else
+    Label_ScriptedOverlay.Width     := aSettings.MaxWidth;
+  If aSettings.AllignTextToCenter then
+    Label_ScriptedOverlay.TextHAlign := taCenter
+  else
+    Label_ScriptedOverlay.TextHAlign := taLeft;
+
+  //now apply texts
+  Label_ScriptedOverlay.FromBottom := aSettings.FromBottom;
   Label_ScriptedOverlay.Caption   := aText;
   Label_ScriptedOverlay.WordWrap  := aSettings.WordWrap;
   Label_ScriptedOverlay.Font      := aSettings.Font;
+
+  //add bevel if needed
+  Label_ScriptedOverlay.AddBevel := aSettings.AddBevel;
 
   UpdateOverlayControls;
 end;
@@ -3097,19 +3115,49 @@ end;
 procedure TKMGamePlayInterface.UpdateOverlayControls;
 var
   overlayTop, overlayLeft: Integer;
+  pHeight : Integer;
 begin
   overlayTop := 12;
   overlayLeft := 258;
 
-  if Panel_ReplayFOW.Visible then
-    overlayTop := Panel_ReplayFOW.Top + Panel_ReplayFOW.Height - 5;
+  If Label_ScriptedOverlay.FromBottom then
+  begin
+    pHeight := Label_ScriptedOverlay.Parent.Height;
+    //set new anchors
+    Label_ScriptedOverlay.Anchors   := [anBottom, anLeft, anRight];
+    Button_ScriptedOverlay.Anchors  := [anBottom, anLeft];
+    Label_OverlayShow.Anchors       := [anBottom, anLeft];
+    Label_OverlayHide.Anchors       := [anBottom, anLeft];
 
-  overlayTop := Max(overlayTop, IfThen(Label_Time.Visible, 20, 0) + IfThen(Image_Clock.Visible, Image_Clock.Bottom, 0) + 5);
+    //set new position
+    overlayTop := pHeight - 32;
+    Label_ScriptedOverlay.Top := pHeight - Label_ScriptedOverlay.TextSize.Y - 32 - 3;
 
-  Label_ScriptedOverlay.Top := overlayTop + 19;
-  Button_ScriptedOverlay.Top := overlayTop + 1;
-  Label_OverlayShow.Top := overlayTop + 2;
-  Label_OverlayHide.Top := overlayTop;
+    Button_ScriptedOverlay.Top := overlayTop + 1;
+    Label_OverlayShow.Top := overlayTop + 2;
+    Label_OverlayHide.Top := overlayTop;
+
+  end else
+  begin
+    if Panel_ReplayFOW.Visible then
+      overlayTop := Panel_ReplayFOW.Top + Panel_ReplayFOW.Height - 5;
+
+    overlayTop := Max(overlayTop, IfThen(Label_Time.Visible, 20, 0) + IfThen(Image_Clock.Visible, Image_Clock.Bottom, 0) + 5);
+
+    //set new anchors
+    Label_ScriptedOverlay.Anchors   := [anTop, anLeft, anRight];
+    Button_ScriptedOverlay.Anchors  := [anTop, anLeft];
+    Label_OverlayShow.Anchors       := [anTop, anLeft];
+    Label_OverlayHide.Anchors       := [anTop, anLeft];
+
+    Label_ScriptedOverlay.Top := overlayTop + 19;
+    Button_ScriptedOverlay.Top := overlayTop + 1;
+    Label_OverlayShow.Top := overlayTop + 2;
+    Label_OverlayHide.Top := overlayTop;
+
+    Button_ScriptedOverlay.Anchors := [anTop, anLeft];
+    Label_OverlayShow.Anchors := [anTop, anLeft];
+  end;
 
   Label_ScriptedOverlay.Left := overlayLeft + 5;
   Button_ScriptedOverlay.Left := overlayLeft;

@@ -19,8 +19,8 @@ type
     procedure HideFromID(aID : Integer);
     procedure ButtonClicked(Sender : TObject);
   protected
-    Button_SwitchTree : array[dttBuilder..dttArmy] of TKMButton;
-      Tree : array[dttBuilder..dttArmy] of record
+    Button_SwitchTree : array[DEVELOPMENT_MIN..DEVELOPMENT_MAX] of TKMButton;
+      Tree : array[DEVELOPMENT_MIN..DEVELOPMENT_MAX] of record
         fCount : Word;
         Panel : TKMScrollPanel;
           ButtonsList : array of TKMButtonFlat;
@@ -48,7 +48,7 @@ uses
 Const DISTANCE_BETWEEN_ROWS = 50;
 constructor TKMGUICommonDevelopment.Create(aParent: TKMPanel; aLeft: Integer; aTop: Integer; aWidth: Integer; aHeight: Integer);
 const
-  TREE_TYPE_ICON : array[TKMDevelopmentTreeType] of Word = (39, 360, 322, 0);
+  TREE_TYPE_ICON : array[TKMDevelopmentTreeType] of Word = (0, 39, 360, 322, 0);
 var dtt : TKMDevelopmentTreeType;
   procedure CreateNext(aType : TKMDevelopmentTreeType; var aToButton : TKMDevButton;  aDevelopment : PKMDevelopment; aTop : Byte);
   var I: integer;
