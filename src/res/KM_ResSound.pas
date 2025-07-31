@@ -170,7 +170,7 @@ const
     'lanceman', 'pikeman', 'cavalry', 'knights', 'barbarian',
     'bowman', 'lanceman', 'barbarian', 'cavalry', 'machines', 'machines', 'machines', '', '', 'paladin',
     'bowman', 'lanceman', 'wolf', 'machines', 'machines', 'machines',
-    'swordman', 'bowman', 'crossbowman', 'vagabond', 'lanceman', 'machines', 'machines',
+    'swordman', 'bowman', 'crossbowman', 'cavalry', 'lanceman', 'machines', 'machines',
     'knights', 'bowman', '', '', 'crossbowman', 'axeman', 'machines');
 
   WARRIOR_SFX: array[TWarriorSpeech] of string = (
