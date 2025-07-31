@@ -1669,6 +1669,17 @@ begin
   if length(R3) > 0 then
     if gRes.Houses[aHouse].IsWorkshop then
     begin
+      {for I := 1 to length(R2) do
+        if R2[I - 1] > 0 then
+        begin
+          count := Min(R2[I - 1], MAX_WARES_IN_HOUSE);
+          for K := 1 to count do
+          begin
+            id := gRes.Houses[aHouse].SupplyOut[I, K] + 1;
+            AddHouseSupplySprite(id);
+          end;
+        end;}
+
       for K := 0 to 19 do
         if R3[K] > 0 then
         begin
@@ -1676,6 +1687,7 @@ begin
           id := gRes.Houses[aHouse].SupplyOut[I2, K mod MAX_WARES_IN_HOUSE + 1] + 1;
           AddHouseSupplySprite(id);
         end;
+
     end
     else
     begin

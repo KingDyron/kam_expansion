@@ -157,6 +157,8 @@ type
     gicHousePastureBuyAnimal,
     gicHousePastureSellAnimal,
     gicArmyShootAtSpot,
+    gicArenaSelectFestival,
+    gicArenaStartFestival,
 
 
     //V.     Delivery ratios changes (and other game-global settings)
@@ -317,7 +319,9 @@ const
     gicStoreHouseBlockAll,
     gicHouseForestPlantTree,
     gicHousePastureBuyAnimal,
-    gicHousePastureSellAnimal
+    gicHousePastureSellAnimal,
+    gicArenaSelectFestival,
+    gicArenaStartFestival
     ];
 
 
@@ -436,6 +440,8 @@ const
     gicpt_Int2,//gicHousePastureBuyAnimal,
     gicpt_Int2,//gicHousePastureSellAnimal,
     gicpt_Int3,//gicArmyShootAtSpot
+    gicpt_Int2,//gicArenaSelectFestival,
+    gicpt_Int1,//gicArenaStartFestival,
     //V.     Delivery ratios changes (and other game-global settings)
     gicpt_Int3,     // gicWareDistributionChange
     gicpt_AnsiStr1, // gicWareDistributions
@@ -672,9 +678,10 @@ uses
   KM_Supervisor,
   KM_HandsCollection, KM_HandEntity,
   KM_HouseMarket, KM_HouseBarracks, KM_HouseSchool, KM_HouseTownHall, KM_HouseStore, KM_HouseArmorWorkshop,
-  KM_HouseQueue, KM_HouseCartographers, KM_HousePearl, KM_HouseForest, KM_HousePasture,
-  KM_ScriptingEvents, KM_Alerts, KM_CommonUtils, KM_RenderUI, KM_HouseSiegeWorkshop,
-  KM_ResFonts, KM_Resource,
+  KM_HouseQueue, KM_HouseCartographers, KM_HousePearl, KM_HouseForest, KM_HousePasture, KM_HouseSiegeWorkshop,
+  KM_HouseArena,
+  KM_ScriptingEvents, KM_Alerts, KM_CommonUtils, KM_RenderUI,
+  KM_ResFonts, KM_Resource, KM_ResDevelopment,
   KM_Log,
   KM_UnitWarrior;
 
@@ -1148,7 +1155,7 @@ begin
       gicHouseShipDoWork, gicHouseFarmMode, gicHouseCollectorsMode, gicCartographersMode, gicCartographersToggleView, gicCartographersSelectPlayer,
       gicCartographersDoSpying, gicHouseRepairSet, gicPearlSelectType,gicPearlConfirm, gicPearlSelectResFrom, gicPearlSelectResTo, gicPearlSelectVResTo,//arium
       gicPearlSelectRResTo, gicPearlDoExchange, gicPearlUseSpecial, gicHouseStyleSet, gicStoreHouseUnlockAll, gicStoreHouseBlockAll, gicHouseForestPlantTree,
-      gicHousePastureBuyAnimal, gicHousePastureSellAnimal] then
+      gicHousePastureBuyAnimal, gicHousePastureSellAnimal, gicArenaSelectFestival, gicArenaStartFestival] then
     begin
       srcHouse := gHands.GetHouseByUID(IntParams[0]);
       if (srcHouse = nil) or srcHouse.IsDestroyed //House has been destroyed before command could be executed
@@ -1349,6 +1356,8 @@ begin
       gicPearlSelectRResTo          : TKMHousePearl(srcHouse).RResTo := TKMWareType(IntParams[1]);
       gicPearlDoExchange            : TKMHousePearl(srcHouse).DoExchange(IntParams[1]);
       gicPearlUseSpecial            : TKMHousePearl(srcHouse).DoUseSpecial;
+      gicArenaSelectFestival         : TKMHouseArena(srcHouse).FestivalType := TKMDevelopmentTreeType(IntParams[1]);
+      gicArenaStartFestival          : TKMHouseArena(srcHouse).StartFestival;
 
       gicWareDistributionChange:  begin
                                     P.Stats.WareDistribution[TKMWareType(IntParams[0]), TKMHouseType(IntParams[1])] := IntParams[2];
@@ -1612,7 +1621,7 @@ procedure TKMGameInputProcess.CmdHouse(aCommandType: TKMGameInputCommandType; aH
 begin
   Assert(aCommandType in [gicHouseRepairToggle, gicHouseClosedForWorkerTgl, gicHBarracksAcceptRecruitsTgl, gicHouseDeliveryModeNext, gicHouseDeliveryModePrev,
                           gicHouseForceWork, gicHouseMakeUpgrade, gicHouseCancelUpgrade, gicHouseStoreBell, gicHouseShipDoWork, gicHouseCollectorsMode,
-                          gicCartographersDoSpying, gicPearlConfirm, gicPearlUseSpecial]);
+                          gicCartographersDoSpying, gicPearlConfirm, gicPearlUseSpecial, gicArenaStartFestival]);
   TakeCommand(MakeCommand(aCommandType, aHouse.UID));
 end;
 
@@ -1660,7 +1669,8 @@ begin
                           gicHouseFruitTreeToggleType, gicHouseShipType, gicHouseTownHallMaxBitin, gicCartographersMode,
                           gicCartographersToggleView, gicCartographersSelectPlayer, gicHouseRepairSet, gicPearlSelectType,
                           gicPearlSelectResFrom, gicPearlSelectResTo, gicPearlSelectVResTo, gicPearlSelectRResTo, gicPearlDoExchange,
-                          gicHouseStyleSet, gicStoreHouseUnlockAll, gicStoreHouseBlockAll, gicHousePastureBuyAnimal, gicHousePastureSellAnimal]);
+                          gicHouseStyleSet, gicStoreHouseUnlockAll, gicStoreHouseBlockAll, gicHousePastureBuyAnimal, gicHousePastureSellAnimal,
+                          gicArenaSelectFestival]);
   //Assert((aHouse is TKMHouseSchool) or (aHouse is TKMHouseTownHall) or (aHouse is TKMHouseSiegeWorkshop));
   TakeCommand(MakeCommand(aCommandType, aHouse.UID, aValue));
 end;

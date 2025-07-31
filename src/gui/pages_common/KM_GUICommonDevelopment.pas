@@ -90,6 +90,7 @@ begin
 
     //SetLength(Tree[dtt].ButtonsList, Tree[dtt].fCount);
   end;
+  SwitchPage(Button_SwitchTree[Low(Button_SwitchTree)])
   //HideFromID(10);
 end;
 

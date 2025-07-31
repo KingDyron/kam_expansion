@@ -27,6 +27,13 @@ type
 
     constructor Create(aUID: Integer; aHouseType: TKMHouseType; PosX, PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
 
+    property FestivalType : TKMDevelopmentTreeType read fDevType write fDevType;
+    procedure StartFestival;
+    function FoodCost : Byte;
+    function WarfareCost : Byte;
+    function FestivalStarted : Boolean;
+    function CanStartFestival : Boolean;
+
     procedure UpdateDemands; override;
     procedure UpdateState(aTick: Cardinal); override;
     procedure Paint; override;
@@ -86,7 +93,7 @@ end;
 constructor TKMHouseArena.Create(aUID: Integer; aHouseType: TKMHouseType; PosX: Integer; PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
 begin
   Inherited;
-  fArenaAnimStep := 1;
+  fArenaAnimStep := 0;
   fDevType := dttNone;
   fWarfareDelivered := 0;
   fFoodDelivered := 0;
@@ -287,21 +294,65 @@ begin
 end;
 
 procedure TKMHouseArena.UpdatePointBelowEntrance;
-  var entrs: TKMPointDirArray;
-      I : Integer;
-      P : TKMPoint;
+var entrs: TKMPointDirArray;
+    I : Integer;
+    P : TKMPoint;
+begin
+  entrs := Entrances;
+  for I := 0 to High(entrs) do
   begin
-    entrs := Entrances;
-    for I := 0 to High(entrs) do
+    P := entrs[I].DirFaceLoc;
+    If gTerrain.CheckPassability(P, tpWalk) then
     begin
-      P := entrs[I].DirFaceLoc;
-      If gTerrain.CheckPassability(P, tpWalk) then
-      begin
-        PointBelowEntrance := P;
-        Exit;
-      end;
+      PointBelowEntrance := P;
+      Exit;
     end;
   end;
+end;
+
+procedure TKMHouseArena.StartFestival;
+begin
+  If not CanStartFestival then
+    Exit;
+  Dec(fFoodDelivered, FoodCost);
+  Dec(fWarfareDelivered, WarfareCost);
+  fArenaAnimStep := 1;
+end;
+
+function TKMHouseArena.FestivalStarted: Boolean;
+begin
+  Result := (fArenaAnimStep > 0);
+end;
+
+function TKMHouseArena.CanStartFestival: Boolean;
+begin
+  Result := (fDevType <> dttNone)
+            and (fFoodDelivered > FoodCost)
+            and (fWarfareDelivered > WarfareCost);
+end;
+
+function TKMHouseArena.FoodCost : Byte;
+begin
+  Result := 0;
+  case fDevType of
+    dttBuilder : Result := 9;
+    dttEconomy : Result := 8;
+    dttArmy : Result := 5;
+    dttAll : Result := 6;
+  end;
+end;
+
+function TKMHouseArena.WarfareCost : Byte;
+begin
+  Result := 0;
+  case fDevType of
+    dttBuilder : Result := 0;
+    dttEconomy : Result := 0;
+    dttArmy : Result := 7;
+    dttAll : Result := 4;
+  end;
+end;
+
 
 procedure TKMHouseArena.UpdateState(aTick: Cardinal);
 begin
@@ -314,7 +365,7 @@ begin
   begin
     //If aTick mod 600 = 0 then
     //  UpdatePointBelowEntrance;
-    If fDevType <> dttNone then
+    If (fDevType <> dttNone) and (fArenaAnimStep > 0) then
     begin
       Inc(fArenaAnimStep);
       IF fArenaAnimStep = FESTIVAL_DURATION then
