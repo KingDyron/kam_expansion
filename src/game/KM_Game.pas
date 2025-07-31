@@ -300,6 +300,8 @@ type
     property Weather : TKMWeatherCollection read fWeather;
     function Achievements : TKMAchievements;
 
+    procedure RefreshDevelopmentTree;
+
     procedure SetSeed(aSeed: Integer);
 
     property LastSaves: TKMLimitedUniqueList<string> read fLastSaves;
@@ -3125,6 +3127,13 @@ begin
     Exit(nil);
 
   Result := gAchievements;
+end;
+
+procedure TKMGame.RefreshDevelopmentTree;
+begin
+  If fParams.IsMapEditor then
+    Exit;
+  fGamePlayInterface.RefreshDevelopmentTree;
 end;
 
 procedure TKMGame.SetSeed(aSeed: Integer);

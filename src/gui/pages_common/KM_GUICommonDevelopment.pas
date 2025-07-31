@@ -7,18 +7,18 @@ uses
   KM_CommonTypes, KM_Defaults, KM_ResTypes, KM_ResDevelopment;
 
 type
+  PKMDevButton = ^TKMDevButton;
   TKMDevButton = record
     Button_Tree : TKMButtonFlat;
     Next : array of TKMDevButton;
+    Parent : PKMDevButton;
     Dev : PKMDevelopment;
   end;
   TKMGUICommonDevelopment = class(TKMPanel)
   private
-    fLastPage : TKMDevelopmentTreeType;
-    procedure SwitchPage(Sender : TObject); virtual;
-    procedure HideFromID(aID : Integer);
     procedure ButtonClicked(Sender : TObject);
   protected
+    fLastPage : TKMDevelopmentTreeType;
     Button_SwitchTree : array[DEVELOPMENT_MIN..DEVELOPMENT_MAX] of TKMButton;
       Tree : array[DEVELOPMENT_MIN..DEVELOPMENT_MAX] of record
         fCount : Word;
@@ -27,16 +27,19 @@ type
           Button_Tree : TKMDevButton;
       end;
 
+    procedure HideFromID(aID : Integer); virtual;
+    procedure SwitchPage(Sender : TObject); virtual;
   public
     OnButtonClicked : TNotifyEvent;
     constructor Create(aParent : TKMPanel; aLeft, aTop, aWidth, aHeight : Integer);
 
     procedure Paint; override;
 
-    procedure ReloadTrees(aCurrentPageOnly : Boolean = true);
+    procedure ReloadTrees(aCurrentPageOnly : Boolean = true); virtual;
     procedure RefreshButton(aTag : Pointer);
     property CurrentPage : TKMDevelopmentTreeType read fLastPage;
   end;
+
 
 implementation
 uses
@@ -56,8 +59,8 @@ var dtt : TKMDevelopmentTreeType;
       aToButton.Button_Tree := TKMButtonFlat.Create(Panel, 3 + aDevelopment.X * 34, aTop * DISTANCE_BETWEEN_ROWS, 31, 31, aDevelopment.GuiIcon);
       aToButton.Button_Tree.Hint := gRes.Development.GetText(aDevelopment.HintID);
       aToButton.Button_Tree.BackAlpha := 1;
-      aToButton.Button_Tree.Tag := fCount;
-      aToButton.Button_Tree.Tag := Integer(aDevelopment);
+      aToButton.Button_Tree.Tag := aDevelopment.ID;
+      aToButton.Button_Tree.Tag2 := Integer(@aToButton);
       aToButton.Button_Tree.OnClick := ButtonClicked;
       aToButton.Button_Tree.Caption := aDevelopment.ID.ToString;
       aToButton.Dev := aDevelopment;
@@ -69,7 +72,10 @@ var dtt : TKMDevelopmentTreeType;
     end;
     SetLength(aToButton.Next, length(aDevelopment.Next));
     for I := 0 to High(aDevelopment.Next) do
+    begin
       CreateNext(aType, aToButton.Next[I], @aDevelopment.Next[I], aTop + 1);
+      aToButton.Next[I].Parent := @aToButton;
+    end;
   end;
 begin
   Inherited Create(aParent, aLeft, aTop, aWidth, aHeight);
@@ -80,6 +86,7 @@ begin
     Button_SwitchTree[dtt] := TKMButton.Create(self, byte(dtt) * 37 + 5 , 5, 33, 33, TREE_TYPE_ICON[dtt], rxGui, bsPaper);
     Button_SwitchTree[dtt].Tag := byte(dtt);
     Button_SwitchTree[dtt].OnClick := SwitchPage;
+    Button_SwitchTree[dtt].Hint := gResTexts[TREE_TYPE_HINT[dtt]];
 
     Tree[dtt].Panel := TKMScrollPanel.Create(self, 3, 42, Width - 3, Height - 42 - 5, [saVertical], bsMenu, ssGame);
     Tree[dtt].Panel.ScrollV.Left := Tree[dtt].Panel.ScrollV.Left;
@@ -157,15 +164,18 @@ var dtt : TKMDevelopmentTreeType;
       aToButton.Button_Tree := ButtonsList[fCount - 1];
       aToButton.Button_Tree.Hint := gRes.Development.GetText(aDevelopment.HintID);
       aToButton.Button_Tree.BackAlpha := 1;
-      aToButton.Button_Tree.Tag := fCount - 1;
-      aToButton.Button_Tree.Tag := Integer(aDevelopment);
+      aToButton.Button_Tree.Tag := aDevelopment.ID;
+      aToButton.Button_Tree.Tag2 := Integer(@aToButton);
       aToButton.Button_Tree.Caption := aDevelopment.ID.ToString;
       aToButton.Button_Tree.OnClick := ButtonClicked;
       aToButton.Dev := aDevelopment;
     end;
     SetLength(aToButton.Next, length(aDevelopment.Next));
     for I := 0 to High(aDevelopment.Next) do
+    begin
       CreateNext(aType, aToButton.Next[I], @aDevelopment.Next[I], aTop + 1);
+      aToButton.Next[I].Parent := @aToButton;
+    end;
   end;
 
   procedure ReloadType(aType : TKMDevelopmentTreeType);
@@ -215,11 +225,14 @@ procedure TKMGUICommonDevelopment.Paint;
     If not aTo.Button_Tree.Visible then
       Exit;
     cent := aTo.Button_Tree.AbsCenter;
-    TKMRenderUI.WriteLine(aFrom.X, aFrom.Y, aFrom.X, (DISTANCE_BETWEEN_ROWS div 2) + aFrom.Y, $FFFFFFFF);//  \/
+    TKMRenderUI.WriteLine(aFrom.X, aFrom.Y, aFrom.X, (DISTANCE_BETWEEN_ROWS div 2) + aFrom.Y,
+                          aTo.Button_Tree.DownColor, 65535, aTo.Button_Tree.LineWidth);//  \/
     TKMRenderUI.WriteLine(aFrom.X, (DISTANCE_BETWEEN_ROWS div 2) + aFrom.Y,
-                          cent.X, cent.Y - (DISTANCE_BETWEEN_ROWS div 2), $FFFFFFFF);//  <>
+                          cent.X, cent.Y - (DISTANCE_BETWEEN_ROWS div 2),
+                          aTo.Button_Tree.DownColor, 65535, aTo.Button_Tree.LineWidth);//  <>
 
-    TKMRenderUI.WriteLine(cent.X, cent.Y, cent.X, cent.Y - (DISTANCE_BETWEEN_ROWS div 2), $FFFFFFFF);//  /\
+    TKMRenderUI.WriteLine(cent.X, cent.Y, cent.X, cent.Y - (DISTANCE_BETWEEN_ROWS div 2),
+                          aTo.Button_Tree.DownColor, 65535, aTo.Button_Tree.LineWidth);//  /\
     for I := 0 to high(aTo.Next) do
       MakeLine(cent, aTo.Next[I]);
   end;

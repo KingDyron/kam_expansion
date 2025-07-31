@@ -32,10 +32,12 @@ type
     private
       fLastID : Word;
       fList : TKMDevelopment;
+      function GetCount : Word;
     public
       function FirstItem : PKMDevelopment;
       function GetNewId : Word;
 
+      property Count : Word read GetCount;
       procedure LoadFromJson(JSON : TKMJson);
   end;
 
@@ -71,6 +73,11 @@ uses
     IOUtils,
     KM_Defaults,
     KM_ResLocales, KM_ResTexts;
+
+function TKMDevelopmentTree.GetCount: Word;
+begin
+  Result := fLastID + 1;
+end;
 
 function TKMDevelopmentTree.FirstItem: PKMDevelopment;
 begin

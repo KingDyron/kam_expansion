@@ -324,6 +324,7 @@ type
     function  TakeDevPoint(aType : TKMDevelopmentTreeType; aCount : Word = 1) : Boolean;
     function  HasDevPoint(aType : TKMDevelopmentTreeType; aCount : Word = 1) : Boolean;
     function DevPoints(aType : TKMDevelopmentTreeType) : Word;
+    procedure UnlockDevelopment(aType : TKMDevelopmentTreeType; aID : Integer);
 
     function GetClosestHouse(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aWareSet : TKMWareTypeSet = [wtAll];  aMaxDistance : Single = 999) : TKMHouse;
     function GetClosestStore(aLoc : TKMPoint; aWare: TKMWareType) : TKMHouse;
@@ -2784,10 +2785,19 @@ begin
   Result := fDevPoints[aType] >= aCount;
 end;
 
-function  TKMHand.DevPoints(aType: TKMDevelopmentTreeType): Word;
+function TKMHand.DevPoints(aType: TKMDevelopmentTreeType): Word;
 begin
   Assert(aType in DEVELOPMENT_VALID);
   Result := fDevPoints[aType];
+end;
+
+procedure TKMHand.UnlockDevelopment(aType: TKMDevelopmentTreeType; aID: Integer);
+begin
+  If TakeDevPoint(aType) then
+  begin
+    fLocks.DevelopmentLock[aType, aID] := dlUnlocked;
+    gGame.RefreshDevelopmentTree;
+  end;
 end;
 
 

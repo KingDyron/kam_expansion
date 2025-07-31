@@ -20,7 +20,7 @@ uses
   KM_GUIGameResultsMP,
   KM_GUIGameBuild, KM_GUIGameChat, KM_GUIGameHouse, KM_GUIGameUnit, KM_GUIGameRatios, KM_GUIGameStats,
   KM_GuiGameCustomPanel, KM_GUIGameGuide, KM_GUIGameGoalsPopUp, KM_GUIGameWaresPopUp, KM_GUIGameStructure,
-  KM_GUIGameMessagesPopUp, KM_GuiCommonDevelopment,
+  KM_GUIGameMessagesPopUp, KM_GuiGameDev,
   KM_GUIGameSpectator;
 
 
@@ -59,7 +59,7 @@ type
     fGuiGameResultsSP: TKMGameResultsSP;
     fGuiGameResultsMP: TKMGameResultsMP;
     fGuiGameMessages: TKMGUIGameMessagesPopUp;
-    fGuiGameDevelopment: TKMGUICommonDevelopment;
+    fGuiGameDevelopment: TKMGUIGameDevelopment;
     // Not saved
     fOpenedMenu: TKMTabButtons;
     fShowTeamNames: Boolean; // True while the SC_SHOW_TEAM key is pressed
@@ -378,6 +378,7 @@ type
     procedure MessageLog_Update(aFullRefresh: Boolean);
     procedure ShowGuide(aUnitType : TKMUnitType); overload;
     procedure ShowGuide(aHouseType : TKMHouseType); overload;
+    procedure RefreshDevelopmentTree;
 
     property UIMode: TUIMode read fUIMode;
     property CustomPanel : TKMGuiGameCustomPanel read fGuiGameCustomPanel;
@@ -1440,7 +1441,7 @@ const
     TX_MENU_TAB_HINT_BUILD,
     TX_MENU_TAB_HINT_DISTRIBUTE,
     TX_MENU_TAB_HINT_STATISTICS,
-    2890,
+    2290,
     TX_MENU_TAB_HINT_OPTIONS);
   MAIN_BTN_ICON: array [tbBuild..TKMTabButtons(Byte(high(TKMTabButtons)) - 1)] of Word = (439, 440, 441, 452, 442);
 var
@@ -1524,7 +1525,7 @@ begin
   fGuiGameBuild := TKMGUIGameBuild.Create(Panel_Controls);
   fGuiGameRatios := TKMGUIGameRatios.Create(Panel_Controls, fUIMode in [umSP, umMP]);
   fGuiGameStats := TKMGUIGameStats.Create(Panel_Controls, ShowStats, SetViewportPos);
-  fGuiGameDevelopment := TKMGUICommonDevelopment.Create(Panel_Controls, TB_PAD, 44, TB_WIDTH, Panel_Controls.Height - 50);
+  fGuiGameDevelopment := TKMGUIGameDevelopment.Create(Panel_Controls);
   Create_Menu;
     Create_Save;
     Create_Load;
@@ -2488,6 +2489,12 @@ end;
 procedure TKMGamePlayInterface.ShowGuide(aHouseType : TKMHouseType);
 begin
   fGuiGameGuide.Show(aHouseType);
+end;
+
+procedure TKMGamePlayInterface.RefreshDevelopmentTree;
+begin
+  If fGuiGameDevelopment.Visible then
+    fGuiGameDevelopment.ReloadTrees;
 end;
 
 // Sync displayed messages with queue
@@ -5103,6 +5110,8 @@ begin
   // Keep on updating these menu pages as game data keeps on changing
   if fGuiGameBuild.Visible then
     fGuiGameBuild.UpdateState;
+  if fGuiGameDevelopment.Visible then
+    fGuiGameDevelopment.RefreshLabels;
   if fGuiGameGoals.Visible then
     fGuiGameGoals.UpdateState;
   if fGuiGameWares.Visible then

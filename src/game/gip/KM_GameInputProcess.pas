@@ -160,6 +160,7 @@ type
     gicArenaSelectFestival,
     gicArenaStartFestival,
 
+    gicUnlockDevelopment,
 
     //V.     Delivery ratios changes (and other game-global settings)
     gicWareDistributionChange,   //Change of distribution for 1 ware
@@ -442,6 +443,7 @@ const
     gicpt_Int3,//gicArmyShootAtSpot
     gicpt_Int2,//gicArenaSelectFestival,
     gicpt_Int1,//gicArenaStartFestival,
+    gicpt_Int2,//gicUnlockDevelopment
     //V.     Delivery ratios changes (and other game-global settings)
     gicpt_Int3,     // gicWareDistributionChange
     gicpt_AnsiStr1, // gicWareDistributions
@@ -631,6 +633,8 @@ type
     procedure CmdGame(aCommandType: TKMGameInputCommandType; aParam1, aParam2: Integer); overload;
     procedure CmdGame(aCommandType: TKMGameInputCommandType; aValue: Integer); overload;
     procedure CmdGame(aCommandType: TKMGameInputCommandType; aValue: Single); overload;
+
+    procedure CmdHand(aCommandType: TKMGameInputCommandType; aValue1, aValue2 : Integer);
 
     procedure CmdGameBeacon(const aLocF: TKMPointF; aOwner: TKMHandID; aColor: Cardinal);
 
@@ -1359,6 +1363,8 @@ begin
       gicArenaSelectFestival         : TKMHouseArena(srcHouse).FestivalType := TKMDevelopmentTreeType(IntParams[1]);
       gicArenaStartFestival          : TKMHouseArena(srcHouse).StartFestival;
 
+      gicUnlockDevelopment          : P.UnlockDevelopment(TKMDevelopmentTreeType(IntParams[0]), IntParams[1]);
+
       gicWareDistributionChange:  begin
                                     P.Stats.WareDistribution[TKMWareType(IntParams[0]), TKMHouseType(IntParams[1])] := IntParams[2];
                                     P.Houses.UpdateDemands;
@@ -1745,6 +1751,12 @@ procedure TKMGameInputProcess.CmdGame(aCommandType: TKMGameInputCommandType; aVa
 begin
   Assert(aCommandType = gicGameSpeed);
   TakeCommand(MakeCommandNoHand(aCommandType, aValue));
+end;
+
+procedure TKMGameInputProcess.CmdHand(aCommandType: TKMGameInputCommandType; aValue1, aValue2 : Integer);
+begin
+  Assert(aCommandType in [gicUnlockDevelopment]);
+  TakeCommand(MakeCommand(aCommandType, aValue1, aValue2));
 end;
 
 

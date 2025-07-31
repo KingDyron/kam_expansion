@@ -4,7 +4,7 @@ interface
 uses
   KM_ResHouses,
   KM_CommonClasses, KM_Defaults,
-  KM_ResTypes, KM_HandTypes;
+  KM_ResTypes, KM_HandTypes, KM_ResDevelopment;
 
 
 type
@@ -27,6 +27,7 @@ type
     fStructureLock,
     fDecorationLock : array of TKMHandUnitLock;
     fUnitBlocked: array[TKMUnitHouseBlock] of TKMArray<TKMUnitBlockRec>;
+    fDevLock: array[DEVELOPMENT_MIN..DEVELOPMENT_MAX] of array of TKMHandDevLock;
     procedure UpdateReqDone(aType: TKMHouseType);
 
     function GetHouseBlocked(aHouseType: TKMHouseType): Boolean;
@@ -44,6 +45,9 @@ type
     procedure SetDecorationLock(aIndex : Integer; aValue : TKMHandUnitLock);
     function HouseToType(aHouseType : TKMHouseType) : TKMUnitHouseBlock;
     function GetUnitBlockArray(aType : TKMUnitHouseBlock) : TKMArray<TKMUnitBlockRec>;
+
+    function GetDevLock(aType : TKMDevelopmentTreeType; aID : Integer) : TKMHandDevLock;
+    procedure SetDevLock(aType : TKMDevelopmentTreeType; aID : Integer; aValue : TKMHandDevLock);
   public
     AllowToTrade: array [WARE_MIN..WARE_MAX] of Boolean; //Allowance derived from mission script
     constructor Create;
@@ -63,6 +67,8 @@ type
     function GetUnitBlocked(aUnitType: TKMUnitType; aHouseType: TKMHouseType): TKMHandUnitLock;
     function UnitUnlocked(aUnitType : TKMUnitType; aHouseType: TKMHouseType = htAny) : Boolean;
     function UnitsUnlocked(aUnitType : array of TKMUnitType; aHouseType: TKMHouseType = htAny) : Boolean;
+
+    property DevelopmentLock[aType : TKMDevelopmentTreeType; aID : Integer] : TKMHandDevLock read GetDevLock write SetDevlock;
 
     function FieldLocked(aType : TKMLockFieldType) : Boolean;//if field is locked than it's not visible
     procedure SetFieldLocked(aType : TKMLockFieldType; aLocked : Boolean);
@@ -86,6 +92,7 @@ var
   W: TKMWareType;
   HT: TKMHouseType;
   I : Integer;
+  dtt : TKMDevelopmentTreeType;
 begin
   inherited;
 
@@ -118,6 +125,16 @@ begin
     fUnitBlocked[uhtPalace].Add(TKMUnitBlockRec.Create(PALACE_UNITS_ORDER[I]));
   for I := 0 to High(SHIPYARD_ORDER) do
     fUnitBlocked[uhtShipyard].Add(TKMUnitBlockRec.Create(SHIPYARD_ORDER[I]));
+
+
+  for dtt := Low(fDevLock) to High(fDevLock) do
+  begin
+    SetLength(fDevLock[dtt], gRes.Development.Tree[dtt].Count);
+    for I := 0 to High(fDevLock[dtt]) do
+    begin
+      fDevLock[dtt, I] := dlNone;
+    end;
+  end;
 
 
 end;
@@ -249,6 +266,16 @@ end;
 function TKMHandLocks.GetUnitBlockArray(aType: TKMUnitHouseBlock): TKMArray<TKMUnitBlockRec>;
 begin
   Result := fUnitBlocked[aType];
+end;
+
+function TKMHandLocks.GetDevLock(aType : TKMDevelopmentTreeType; aID : Integer) : TKMHandDevLock;
+begin
+  Result := fDevLock[aType, aID];
+end;
+
+procedure TKMHandLocks.SetDevLock(aType : TKMDevelopmentTreeType; aID : Integer; aValue : TKMHandDevLock);
+begin
+  fDevLock[aType, aID] := aValue;
 end;
 
 function TKMHandLocks.HouseToType(aHouseType: TKMHouseType): TKMUnitHouseBlock;

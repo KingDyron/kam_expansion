@@ -19,6 +19,13 @@ type
     hlGranted, // Always allowed
     hlNotVisible// Don't show in gui
   );
+  //* Development lock state
+  TKMHandDevLock = (
+    dlNone,
+    dlBlocked, // Never allowed
+    dlUnlocked, // Always allowed
+    dlNotVisible// Don't show in gui
+  );
   //* House lock state
   TKMHandUnitLock = (
     ulUnlocked,
