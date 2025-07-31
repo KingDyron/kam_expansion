@@ -243,7 +243,7 @@ begin
 
   Icons_Workers := TKMUnitsButtonsMulti.Create(Panel_Scroll, 260, 30, 200, 200);
   ////////////////////////Houses
-  Panel_House := TKMPanel.Create(Panel_Scroll, -5, 340, 490, 400);
+  Panel_House := TKMPanel.Create(Panel_Scroll, -5, 370, 490, 400);
   Panel_House.Hitable := false;
 
     TKMBevel.Create(Panel_House, 20, 0, 450, Panel_House.Height - 10);

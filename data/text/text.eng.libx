@@ -1666,8 +1666,8 @@
 1720:Cancel upgrading this house
 1721:This house is fully upgraded
 1722:Mounted archer
-1723:You can defend your city whith walls.||Can be built without connecting to road.
-1724:In the hovel you can obtain feathers, which are needed to produce bread.
+1723:You can defend your city with walls.||Can be built without connecting to road.
+1724:In the hovel you can obtain feathers and eggs valuable in the market.
 1725:The stone sign is used to convey information to players.1726:With this building you can mine the rare mineral bityne ore.
 1726:With this building you can mine a rare mineral, which is bitinite ore.
 1727:The archery tower reveals a large area of land. Recruits' accuracy is very good and they can kill an enemy with one shot.
@@ -1678,8 +1678,8 @@
 1732:Roof tiles required for the expansion of the city are produced in the pottery.
 1733:This is the only building that can produce coal from the renewable raw material - wood. It needs kindling in the form of corn and fuel, i.e. sawdust or coal.
 1734:The tree grows a lot of fruit. People in the houses need them for food. It is a modular building, so you can create a huge orchard.
-1735: In this building, a collector extracts valuable materials from stones, rocks and ruins. They can be used to make a jewerly, which is valuable when exchanged at the marketplace. It is also required in the training of elite units in the palace.
-1736: A tailor sews boots thanks to his skills. Any citizen who works in constant motion can get them in school. He can also produce leather armor and quivers.
+1735:In this building, a collector extracts valuable materials from stones, rocks and ruins. They can be used to make a jewellery, which is valuable when exchanged at the marketplace. It is also required in the training of elite units in the palace.
+1736:A tailor sews boots thanks to his skills. Any citizen who works in constant motion can get them in school. He can also produce leather armor and quivers.
 1737:The silo can store various raw materials. They will not be touched until you give such an order. The building can be expanded to the third level.
 1738:A small residential building housing workless citizens ready for training.
 1739:A Residential House can accommodate many more people than a Cottage.
@@ -1854,7 +1854,7 @@
 1908:Demands
 1909:Offers
 1910:Unlocked after:
-1911:By-porducts
+1911:By-products
 1912:Unit cost:
 1913:Horse attack:
 1914:Speed:
@@ -2220,7 +2220,7 @@
 2274:Cacti
 2275:Fremon
 2276:Mobile tower
-2277:Durable siege machine carrying archers inside. It will spot the enemy from a far and start firing a hail of arrows at him.
+2277:Durable siege machine carrying archers inside. It will spot the enemy from afar and start firing a hail of arrows at him.
 2278:Pasture
 2279:Forest nursery
 2280:Buy: %s for %d coins
@@ -2246,4 +2246,7 @@
 2300:Development points:
 2301:Start festival
 2302:Current points
-2303:Select festival
+2303:Choose festival
+2304:A recruit protected on all sides by a sturdy shield.
+2305:The cheapest unit in the game. It can be recruited in many places.
+2306:Defensive walls will strengthen your city's position, but there's no such convenience on the front. A mobile wall is an excellent choice to support your warriors.

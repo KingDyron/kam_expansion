@@ -969,7 +969,7 @@
 		{
 			"UnitType" : "utMilitia",
 			"GameID" : 14,
-			"DescriptionID" : 0,
+			"DescriptionID" : 1770,
 			"SchoolTime" : 30,
 			"HitPoints" : 3,
 			"Attack" : 35,
@@ -1041,7 +1041,7 @@
 		{
 			"UnitType" : "utAxeFighter",
 			"GameID" : 15,
-			"DescriptionID" : 0,
+			"DescriptionID" : 1771,
 			"SchoolTime" : 30,
 			"HitPoints" : 3,
 			"Attack" : 35,
@@ -1115,7 +1115,7 @@
 		{
 			"UnitType" : "utSwordFighter",
 			"GameID" : 16,
-			"DescriptionID" : 0,
+			"DescriptionID" : 1772,
 			"SchoolTime" : 30,
 			"HitPoints" : 3,
 			"Attack" : 55,
@@ -1189,7 +1189,7 @@
 		{
 			"UnitType" : "utBowman",
 			"GameID" : 17,
-			"DescriptionID" : 0,
+			"DescriptionID" : 1773,
 			"SchoolTime" : 30,
 			"HitPoints" : 1,
 			"Attack" : 60,
@@ -1262,7 +1262,7 @@
 		{
 			"UnitType" : "utCrossbowman",
 			"GameID" : 18,
-			"DescriptionID" : 0,
+			"DescriptionID" : 1774,
 			"SchoolTime" : 30,
 			"HitPoints" : 1,
 			"Attack" : 120,
@@ -1335,7 +1335,7 @@
 		{
 			"UnitType" : "utLanceCarrier",
 			"GameID" : 19,
-			"DescriptionID" : 0,
+			"DescriptionID" : 1775,
 			"SchoolTime" : 30,
 			"HitPoints" : 3,
 			"Attack" : 25,
@@ -1400,7 +1400,7 @@
 		{
 			"UnitType" : "utPikeman",
 			"GameID" : 20,
-			"DescriptionID" : 0,
+			"DescriptionID" : 1776,
 			"SchoolTime" : 30,
 			"HitPoints" : 3,
 			"Attack" : 35,
@@ -1465,7 +1465,7 @@
 		{
 			"UnitType" : "utScout",
 			"GameID" : 21,
-			"DescriptionID" : 0,
+			"DescriptionID" : 1777,
 			"SchoolTime" : 30,
 			"HitPoints" : 4,
 			"Attack" : 35,
@@ -1532,7 +1532,7 @@
 		{
 			"UnitType" : "utKnight",
 			"GameID" : 22,
-			"DescriptionID" : 0,
+			"DescriptionID" : 1778,
 			"SchoolTime" : 30,
 			"HitPoints" : 4,
 			"Attack" : 55,
@@ -1599,7 +1599,7 @@
 		{
 			"UnitType" : "utBarbarian",
 			"GameID" : 23,
-			"DescriptionID" : 0,
+			"DescriptionID" : 1779,
 			"SchoolTime" : 30,
 			"HitPoints" : 4,
 			"Attack" : 75,
@@ -1668,7 +1668,7 @@
 		{
 			"UnitType" : "utRebel",
 			"GameID" : 24,
-			"DescriptionID" : 0,
+			"DescriptionID" : 1780,
 			"SchoolTime" : 30,
 			"HitPoints" : 3,
 			"Attack" : 25,
@@ -1729,7 +1729,7 @@
 		{
 			"UnitType" : "utRogue",
 			"GameID" : 25,
-			"DescriptionID" : 0,
+			"DescriptionID" : 1781,
 			"SchoolTime" : 30,
 			"HitPoints" : 1,
 			"Attack" : 60,
@@ -1798,7 +1798,7 @@
 		{
 			"UnitType" : "utWarrior",
 			"GameID" : 26,
-			"DescriptionID" : 0,
+			"DescriptionID" : 1782,
 			"SchoolTime" : 30,
 			"HitPoints" : 4,
 			"Attack" : 75,
@@ -1867,7 +1867,7 @@
 		{
 			"UnitType" : "utVagabond",
 			"GameID" : 27,
-			"DescriptionID" : 0,
+			"DescriptionID" : 1783,
 			"SchoolTime" : 30,
 			"HitPoints" : 4,
 			"Attack" : 35,
@@ -1928,7 +1928,7 @@
 		{
 			"UnitType" : "utCatapult",
 			"GameID" : 28,
-			"DescriptionID" : 0,
+			"DescriptionID" : 1784,
 			"SchoolTime" : 30,
 			"HitPoints" : 4,
 			"Attack" : 180,
@@ -1996,7 +1996,7 @@
 		{
 			"UnitType" : "utBallista",
 			"GameID" : 29,
-			"DescriptionID" : 0,
+			"DescriptionID" : 1785,
 			"SchoolTime" : 30,
 			"HitPoints" : 4,
 			"Attack" : 500,
@@ -2414,7 +2414,7 @@
 		{
 			"UnitType" : "utRam",
 			"GameID" : 38,
-			"DescriptionID" : 0,
+			"DescriptionID" : 1786,
 			"SchoolTime" : 30,
 			"HitPoints" : 10,
 			"Attack" : 3,
@@ -2482,7 +2482,7 @@
 		{
 			"UnitType" : "utGolem",
 			"GameID" : 39,
-			"DescriptionID" : 0,
+			"DescriptionID" : 1787,
 			"SchoolTime" : 30,
 			"HitPoints" : 20,
 			"Attack" : 199,
@@ -2550,7 +2550,7 @@
 		{
 			"UnitType" : "utGiant",
 			"GameID" : 40,
-			"DescriptionID" : 0,
+			"DescriptionID" : 1788,
 			"SchoolTime" : 30,
 			"HitPoints" : 7,
 			"Attack" : 250,
@@ -2618,7 +2618,7 @@
 		{
 			"UnitType" : "utPaladin",
 			"GameID" : 41,
-			"DescriptionID" : 0,
+			"DescriptionID" : 1789,
 			"SchoolTime" : 30,
 			"HitPoints" : 9,
 			"Attack" : 115,
@@ -2711,7 +2711,7 @@
 		{
 			"UnitType" : "utArcher",
 			"GameID" : 42,
-			"DescriptionID" : 0,
+			"DescriptionID" : 1790,
 			"SchoolTime" : 30,
 			"HitPoints" : 1,
 			"Attack" : 60,
@@ -2804,7 +2804,7 @@
 		{
 			"UnitType" : "utSpy",
 			"GameID" : 43,
-			"DescriptionID" : 0,
+			"DescriptionID" : 1821,
 			"SchoolTime" : 30,
 			"HitPoints" : 1,
 			"Attack" : 35,
@@ -3492,7 +3492,7 @@
 		{
 			"UnitType" : "utShieldBearer",
 			"GameID" : 52,
-			"DescriptionID" : 0,
+			"DescriptionID" : 2304,
 			"SchoolTime" : 200,
 			"HitPoints" : 4,
 			"Attack" : 5,
@@ -3561,7 +3561,7 @@
 		{
 			"UnitType" : "utFighter",
 			"GameID" : 53,
-			"DescriptionID" : 0,
+			"DescriptionID" : 2305,
 			"SchoolTime" : 100,
 			"HitPoints" : 3,
 			"Attack" : 5,
@@ -3736,7 +3736,7 @@
 		{
 			"UnitType" : "utWoodenWall",
 			"GameID" : 55,
-			"DescriptionID" : 0,
+			"DescriptionID" : 2306,
 			"SchoolTime" : 30,
 			"HitPoints" : 15,
 			"Attack" : 5,
