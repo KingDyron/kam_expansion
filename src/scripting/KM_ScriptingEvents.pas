@@ -470,7 +470,7 @@ end;
 function TKMScriptEvents.HasConsoleCommands: Boolean;
 begin
   Result := fConsoleCommands.Count > 0;
-  if gGameParams.IsSingleplayerGame then
+  if (gGameParams <> nil) and gGameParams.IsSingleplayerGame then
   begin
     Result := true;
   end;

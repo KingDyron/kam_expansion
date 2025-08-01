@@ -3075,7 +3075,6 @@ end;
 procedure TKMGamePlayInterface.SetScriptedOverlay(const aText: UnicodeString; const aSettings: TKMOverlayTextSettings);
 const
   LEFT = 260;
-var lines : Integer;
 begin
   //rendering settings
   IF aSettings.MaxWidth = 0 then
@@ -3165,7 +3164,7 @@ begin
     Button_ScriptedOverlay.Anchors := [anTop, anLeft];
     Label_OverlayShow.Anchors := [anTop, anLeft];
   end;
-
+  Label_ScriptedOverlay.Visible := Label_ScriptedOverlay.Caption <> '';
   Label_ScriptedOverlay.Left := overlayLeft + 5;
   Button_ScriptedOverlay.Left := overlayLeft;
   Label_OverlayShow.Left := overlayLeft + 3;

@@ -541,7 +541,7 @@ begin
     end;
   end;
   If AddBevel then
-    TKMRenderUI.WriteBevel(AbsLeft, AbsTop - 3, Width, fTextSize.Y + 6);
+    TKMRenderUI.WriteBevel(AbsLeft - 3, AbsTop - 3, Width + 6, fTextSize.Y + 6);
 
   TKMRenderUI.WriteText(AbsLeft, AbsTop + t, Width, fText, fFont, fTextAlign, col, False, False, False, false, fTabWidth);
 
