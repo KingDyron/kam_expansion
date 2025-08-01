@@ -36,6 +36,7 @@ type
     public
       function FirstItem : PKMDevelopment;
       function GetNewId : Word;
+      function GetItem(aID : Integer) : PKMDevelopment;
 
       property Count : Word read GetCount;
       procedure LoadFromJson(JSON : TKMJson);
@@ -82,6 +83,28 @@ end;
 function TKMDevelopmentTree.FirstItem: PKMDevelopment;
 begin
   Result := @fList;
+end;
+
+function TKMDevelopmentTree.GetItem(aID: Integer): PKMDevelopment;
+  procedure Find(aDev : PKMDevelopment);
+  var I : integer;
+  begin
+    If Result <> nil then
+      Exit;
+
+    If aDev.ID = aID then
+    begin
+      Result := aDev;
+      Exit;
+    end;
+    for I := 0 to High(aDev.Next) do
+      Find(@aDev.Next[I]);
+
+  end;
+
+begin
+  Result := nil;
+  Find(FirstItem);
 end;
 
 function TKMDevelopmentTree.GetNewId: Word;

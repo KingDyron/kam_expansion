@@ -40,7 +40,7 @@ var
 begin
   inherited Create;
 
-  Panel_BlockTrade := TKMScrollPanel.Create(aParent, 9, 28, aParent.Width - 9, aParent.Height - 40, [saVertical], bsMenu, ssCommon);
+  Panel_BlockTrade := TKMScrollPanel.Create(aParent, 9, 28 + 30, aParent.Width - 9, aParent.Height - 40, [saVertical], bsMenu, ssCommon);
   Panel_BlockTrade.ScrollV.Left := Panel_BlockTrade.ScrollV.Left + 20;
 
 

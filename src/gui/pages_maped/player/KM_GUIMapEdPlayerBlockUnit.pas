@@ -52,7 +52,7 @@ var
 begin
   inherited Create;
   fCounter := 0;
-  Panel_BlockUnit := TKMScrollPanel.Create(aParent, 9, 28, aParent.Width - 9, 400, [saVertical], bsMenu, ssCommon);
+  Panel_BlockUnit := TKMScrollPanel.Create(aParent, 9, 28 + 30, aParent.Width - 9, 400, [saVertical], bsMenu, ssCommon);
   Panel_BlockUnit.Height := Panel_BlockUnit.MasterPanel.Height - Panel_BlockUnit.AbsTop - 25;
   Panel_BlockUnit.AnchorsStretch;
 

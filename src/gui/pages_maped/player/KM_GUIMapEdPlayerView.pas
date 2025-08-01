@@ -84,7 +84,7 @@ constructor TKMMapEdPlayerView.Create(aParent: TKMPanel);
 begin
   inherited Create;
 
-  Panel_PlayerView := TKMPanel.Create(aParent, 0, 28, aParent.Width, 400);
+  Panel_PlayerView := TKMPanel.Create(aParent, 0, 28 + 30, aParent.Width, 400);
   with TKMLabel.Create(Panel_PlayerView, 0, PAGE_TITLE_Y, Panel_PlayerView.Width, 0, gResTexts[TX_MAPED_FOG], fntOutline, taCenter) do
     Anchors := [anLeft, anTop, anRight];
   Button_Reveal         := TKMButtonFlat.Create(Panel_PlayerView, 9, 30, 33, 33, 394);
@@ -194,7 +194,7 @@ var kind : TKMMessageKind;
 begin
   inherited Create;
 
-  Panel_PlayerAdd := TKMScrollPanel.Create(aParent, 0, 33, aParent.Width + 25, aParent.Height - 40, [saVertical], bsMenu, ssCommon);
+  Panel_PlayerAdd := TKMScrollPanel.Create(aParent, 0, 33 + 30, aParent.Width + 25, aParent.Height - 40, [saVertical], bsMenu, ssCommon);
   Panel_PlayerAdd.ScrollV.Left := Panel_PlayerAdd.ScrollV.Left + 20;
   Panel_PlayerAdd.AnchorsStretch;
 

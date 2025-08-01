@@ -58,7 +58,7 @@ uses
   KM_HandTypes,
   KM_CommonExceptions,
   KM_ResTypes,
-  KM_TerrainTypes, KM_ResTileset,
+  KM_TerrainTypes, KM_ResTileset, KM_ResDevelopment,
   KM_MapTypes,
   KM_AITypes;
 
@@ -1254,6 +1254,11 @@ begin
                           end else
                             AddError('ctSetPearlConfirmBuild without prior declaration of House');
                          end;
+    ctPlayerLockDev:      if fLastHand <> HAND_NONE then
+                          begin
+                            gHands[fLastHand].UnlockDevelopmentScript(TKMDevelopmentTreeType(P[0]), P[1], TKMHandDevLock(P[2]));
+                          end else
+                            AddError('ctPlayerLockDev without prior declaration of hand');
 
    end;
 end;
@@ -1281,6 +1286,7 @@ var
   params: TIntegerArray;
   FT : TKMLockFieldType;
   UHT: TKMUnitHouseBlock;
+  dtt: TKMDevelopmentTreeType;
   procedure AddData(const aText: AnsiString);
   begin
     if commandLayerCount = -1 then //No layering
@@ -1600,6 +1606,13 @@ begin
     for WT := WARE_MIN to WARE_MAX do
       if not gHands[I].Locks.AllowToTrade[WT] then
         AddCommand(ctBlockTrade, [WARE_TY_TO_ID[WT]]);
+
+    gHands[I].Locks.CheckDevLocksMapEd;
+    for dtt := DEVELOPMENT_MIN to DEVELOPMENT_MAX do
+      for K := 0 to gHands[I].Locks.DevelopmentCount(dtt) - 1 do
+        If gHands[I].Locks.DevelopmentLock[dtt, K] <> dlNone then
+          AddCommand(ctPlayerLockDev, [byte(dtt), K, byte(gHands[I].Locks.DevelopmentLock[dtt, K])]);
+
 
     //Houses
     storeCount := 0;

@@ -45,6 +45,7 @@ type
 
     fTexts: array of TUnicodeStringArray;
     fForceDefaultLocale: Boolean; //Force to use default Locale (Eng)
+    fMapEdChanged : Boolean;
     function GetTexts(aIndex: Word): UnicodeString;
     {$IFDEF WDC}
     function GetTextsArgs(aIndex: Word; aArgs: array of const): string;
@@ -228,6 +229,7 @@ begin
 
   InitLocaleIds;
   fForceDefaultLocale := False;
+  fMapEdChanged := false;
 end;
 
 
@@ -444,6 +446,7 @@ end;
 
 procedure TKMTextLibraryMulti.SetText(aLocale, aIndex: Word; aText : UnicodeString);
 begin
+  fMapEdChanged := true;
   if InRange(aIndex, 0, high(fTexts[aLocale])) then
     fTexts[aLocale, aIndex] := aText
   else
@@ -459,6 +462,8 @@ var I, K : Integer;
   list : TStringList;
   S : String;
 begin
+  If not fMapEdChanged then
+    Exit;
   list := TStringList.Create;
 
   for I := 0 to High(fTexts) do //locales

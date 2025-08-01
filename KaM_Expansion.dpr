@@ -461,7 +461,8 @@ uses
   KM_UnitTaskFeeder in 'src\units\tasks\KM_UnitTaskFeeder.pas',
   KM_HouseArena in 'src\houses\KM_HouseArena.pas',
   KM_GUIGameHouseArena in 'src\gui\pages_game\house\KM_GUIGameHouseArena.pas',
-  KM_GUIGameDev in 'src\gui\pages_game\KM_GUIGameDev.pas';
+  KM_GUIGameDev in 'src\gui\pages_game\KM_GUIGameDev.pas',
+  KM_GUIMapEdPlayerBlockDev in 'src\gui\pages_maped\player\KM_GUIMapEdPlayerBlockDev.pas';
 
 //KM_PerfLog in 'src\unused\KM_PerfLog.pas', //unused
 

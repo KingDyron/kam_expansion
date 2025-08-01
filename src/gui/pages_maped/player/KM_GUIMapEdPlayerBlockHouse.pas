@@ -68,7 +68,7 @@ var
 begin
   inherited Create;
 
-  Panel_BlockHouse := TKMPanel.Create(aParent, 0, 28, aParent.Width, aParent.MasterParent.Height - 350);
+  Panel_BlockHouse := TKMPanel.Create(aParent, 0, 28 + 30, aParent.Width, aParent.MasterParent.Height - 350);
   Panel_BlockHouse.Height := Panel_BlockHouse.MasterPanel.Height - Panel_BlockHouse.AbsTop;
 
   with TKMLabel.Create(Panel_BlockHouse, 0, PAGE_TITLE_Y, Panel_BlockHouse.Width, 0, gResTexts[TX_MAPED_BLOCK_HOUSES], fntOutline, taCenter) do

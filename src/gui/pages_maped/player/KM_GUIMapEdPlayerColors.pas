@@ -63,7 +63,7 @@ var
 begin
   inherited Create;
 
-  Panel_Color := TKMPanel.Create(aParent, 0, 28, aParent.Width, 400);
+  Panel_Color := TKMPanel.Create(aParent, 0, 28 + 30, aParent.Width, 400);
   with TKMLabel.Create(Panel_Color, 0, PAGE_TITLE_Y, Panel_Color.Width, 0, gResTexts[TX_MAPED_PLAYER_COLORS], fntOutline, taCenter) do
     Anchors := [anLeft, anTop, anRight];
   with TKMBevel.Create(Panel_Color, (9 + (((Panel_Color.Width - 9) div 2) - ((SCOLOR_C * SCOLOR_S) div 2))) - 2, 30, (SCOLOR_C * SCOLOR_S) + 2, (SCOLOR_R * SCOLOR_S) + 2) do

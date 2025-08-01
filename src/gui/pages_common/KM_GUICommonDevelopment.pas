@@ -17,6 +17,7 @@ type
   TKMGUICommonDevelopment = class(TKMPanel)
   private
     procedure ButtonClicked(Sender : TObject);
+    procedure ButtonClickedShift(Sender : TObject; Shift : TShiftState);
   protected
     fLastPage : TKMDevelopmentTreeType;
     Button_SwitchTree : array[DEVELOPMENT_MIN..DEVELOPMENT_MAX] of TKMButton;
@@ -29,8 +30,10 @@ type
 
     procedure HideFromID(aID : Integer); virtual;
     procedure SwitchPage(Sender : TObject); virtual;
+    function CreateButton(aParent : TKMPanel) : TKMButtonFlat; virtual;
   public
     OnButtonClicked : TNotifyEvent;
+    OnButtonClickedShift : TNotifyEventShift;
     constructor Create(aParent : TKMPanel; aLeft, aTop, aWidth, aHeight : Integer);
 
     procedure Paint; override;
@@ -41,6 +44,8 @@ type
   end;
 
 
+Const DISTANCE_BETWEEN_ROWS = 50;
+
 implementation
 uses
   SysUtils, Math, KM_UtilsExt,
@@ -48,7 +53,6 @@ uses
   KM_ResSound, KM_InterfaceGame,
   KM_ResTexts, KM_RenderUI, KM_ResFonts, KM_Resource;
 
-Const DISTANCE_BETWEEN_ROWS = 50;
 constructor TKMGUICommonDevelopment.Create(aParent: TKMPanel; aLeft: Integer; aTop: Integer; aWidth: Integer; aHeight: Integer);
 var dtt : TKMDevelopmentTreeType;
   procedure CreateNext(aType : TKMDevelopmentTreeType; var aToButton : TKMDevButton;  aDevelopment : PKMDevelopment; aTop : Byte);
@@ -56,12 +60,21 @@ var dtt : TKMDevelopmentTreeType;
   begin
     with Tree[aType] do
     begin
-      aToButton.Button_Tree := TKMButtonFlat.Create(Panel, 3 + aDevelopment.X * 34, aTop * DISTANCE_BETWEEN_ROWS, 31, 31, aDevelopment.GuiIcon);
+      aToButton.Button_Tree := CreateButton(Panel);
+
+      aToButton.Button_Tree.Left := 3 + aDevelopment.X * 34;
+      aToButton.Button_Tree.Top := aTop * DISTANCE_BETWEEN_ROWS;
+      aToButton.Button_Tree.Width := 31;
+      aToButton.Button_Tree.Height := 31;
+      aToButton.Button_Tree.TexID := aDevelopment.GuiIcon;
+
+      //aToButton.Button_Tree := TKMButtonFlat.Create(Panel, 3 + aDevelopment.X * 34, aTop * DISTANCE_BETWEEN_ROWS, 31, 31, aDevelopment.GuiIcon);
       aToButton.Button_Tree.Hint := gRes.Development.GetText(aDevelopment.HintID);
       aToButton.Button_Tree.BackAlpha := 1;
       aToButton.Button_Tree.Tag := aDevelopment.ID;
       aToButton.Button_Tree.Tag2 := Integer(@aToButton);
       aToButton.Button_Tree.OnClick := ButtonClicked;
+      aToButton.Button_Tree.OnClickShift := ButtonClickedShift;
       aToButton.Button_Tree.Caption := aDevelopment.ID.ToString;
       aToButton.Dev := aDevelopment;
       //aToButton.ID := fCount;
@@ -131,10 +144,20 @@ begin
 
 end;
 
+function TKMGUICommonDevelopment.CreateButton(aParent : TKMPanel): TKMButtonFlat;
+begin
+  Result := TKMButtonFlat.Create(aParent, 0, 0, 0, 0, 0, rxGui);
+end;
+
 procedure TKMGUICommonDevelopment.ButtonClicked(Sender: TObject);
 begin
   If Assigned(OnButtonClicked) then
     OnButtonClicked(Sender);
+end;
+procedure TKMGUICommonDevelopment.ButtonClickedShift(Sender : TObject; Shift : TShiftState);
+begin
+  If Assigned(OnButtonClickedShift) then
+    OnButtonClickedShift(Sender, Shift);
 end;
 
 procedure TKMGUICommonDevelopment.ReloadTrees(aCurrentPageOnly : Boolean = true);
@@ -152,8 +175,16 @@ var dtt : TKMDevelopmentTreeType;
         SetLength(ButtonsList, fCount + 32);
 
       If ButtonsList[fCount - 1] = nil then
-        ButtonsList[fCount - 1] := TKMButtonFlat.Create(Panel, 3 + aDevelopment.X * 34, aTop * DISTANCE_BETWEEN_ROWS, 31, 31, aDevelopment.GuiIcon)
-      else
+      begin
+        ButtonsList[fCount - 1] := CreateButton(Panel);
+
+        ButtonsList[fCount - 1].Left := 3 + aDevelopment.X * 34;
+        ButtonsList[fCount - 1].Top := aTop * DISTANCE_BETWEEN_ROWS;
+        ButtonsList[fCount - 1].Width := 31;
+        ButtonsList[fCount - 1].Height := 31;
+        ButtonsList[fCount - 1].TexID := aDevelopment.GuiIcon;
+        //ButtonsList[fCount - 1] := TKMButtonFlat.Create(Panel, 3 + aDevelopment.X * 34, aTop * DISTANCE_BETWEEN_ROWS, 31, 31, aDevelopment.GuiIcon)
+      end else
       begin
         ButtonsList[fCount - 1].Left := 3 + aDevelopment.X * 34;
         ButtonsList[fCount - 1].Top := aTop * DISTANCE_BETWEEN_ROWS;
@@ -168,6 +199,7 @@ var dtt : TKMDevelopmentTreeType;
       aToButton.Button_Tree.Tag2 := Integer(@aToButton);
       aToButton.Button_Tree.Caption := aDevelopment.ID.ToString;
       aToButton.Button_Tree.OnClick := ButtonClicked;
+      aToButton.Button_Tree.OnClickShift := ButtonClickedShift;
       aToButton.Dev := aDevelopment;
     end;
     SetLength(aToButton.Next, length(aDevelopment.Next));

@@ -1,79 +1,123 @@
-﻿unit KM_GUIGameDev;
+unit KM_GUIMapEdPlayerBlockDev;
 {$I KaM_Remake.inc}
 interface
 uses
-  StrUtils, SysUtils, Classes,
-  KM_CommonClasses,
-  KM_Defaults,
-  KM_Controls, KM_ControlsBase,
-  KM_GuiCommonDevelopment, KM_ResDevelopment;
-
+   Classes,
+   KM_Controls, KM_ControlsBase,
+   KM_GUICommonDevelopment,
+   KM_Defaults,
+   KM_HandTypes,
+   KM_Points;
 
 type
-  TKMGUIGameDevelopment = class(TKMGUICommonDevelopment)
+  TKMButtonFlatBlock = class(TKMButtonFlat)
+  public
+    DevBlock : TKMHandDevLock;
+    procedure Paint; override;
+  end;
+
+  TKMMapEdPlayerBlockDevs = class(TKMGUICommonDevelopment)
   protected
-    Label_DevPointsCount : array[DEVELOPMENT_MIN..DEVELOPMENT_MAX] of TKMLabel;
+    function CreateButton(aParent : TKMPanel) : TKMButtonFlat; override;
+
     procedure SwitchPage(Sender : TObject); override;
-    procedure DevClicked(Sender : TObject);
+    procedure DevClicked(Sender : TObject; Shift : TShiftState);
   public
     constructor Create(aParent : TKMPanel);
+
     procedure ReloadTrees(aCurrentPageOnly : Boolean = true); override;
-    procedure RefreshLabels;
-    procedure Show; override;
   end;
 
 implementation
 uses
-  Math,
-  KM_CommonTypes,
-  KM_HandsCollection, KM_HandLocks, KM_HandTypes,
-  KM_Game, KM_GameInputProcess,
-  KM_InterfaceGame,
-  KM_ResTypes, KM_ResFonts,
-  KM_RenderUI;
+  KM_CommonClasses,
+  KM_HandsCollection, KM_HandLocks,
+  KM_Cursor, KM_RenderUI, KM_ResFonts, KM_Resource, KM_ResTypes, KM_ResDevelopment,
+  KM_Utils, KM_CommonUtils,
+  Math;
 
-constructor TKMGUIGameDevelopment.Create(aParent: TKMPanel);
-var dtt : TKMDevelopmentTreeType;
+
+function TKMMapEdPlayerBlockDevs.CreateButton(aParent : TKMPanel) : TKMButtonFlat;
 begin
-  Inherited Create(aParent, TB_PAD, 44, TB_WIDTH, aParent.Height - 50);
-  OnButtonClicked := DevClicked;
+  Result := TKMButtonFlatBlock.Create(aParent, 0, 0, 0, 0, 0, rxGui);
+end;
 
-  for dtt := Low(Label_DevPointsCount) to High(Label_DevPointsCount) do
-  begin
-    Label_DevPointsCount[dtt] := TKMLabel.Create(self, Button_SwitchTree[dtt].Left + 3,
-                                                  Button_SwitchTree[dtt].Top - 5,
-                                                  Button_SwitchTree[dtt].Width, 20, '', fntGrey, taRight);
-    Label_DevPointsCount[dtt].Hitable := false;
+procedure TKMButtonFlatBlock.Paint;
+var id : Integer;
+begin
+  Inherited;
+  id := 0;
+  case DevBlock of
+    dlNone : ;
+    dlBlocked : id := 32;
+    dlUnlocked : id := 33;
+    dlNotVisible : id := 91;
+    else id := 0;
   end;
 
+  if id > 0 then
+    TKMRenderUI.WritePicture(AbsLeft, AbsTop, 15, 15, [], rxGuiMain, id);
+
+
 end;
 
-procedure TKMGUIGameDevelopment.RefreshLabels;
-var dtt : TKMDevelopmentTreeType;
+constructor TKMMapEdPlayerBlockDevs.Create(aParent : TKMPanel);
 begin
-  for dtt := Low(Label_DevPointsCount) to High(Label_DevPointsCount) do
-  begin
-    Label_DevPointsCount[dtt].Caption := gMySpectator.Hand.DevPoints(dtt).ToString;
-    If gMySpectator.Hand.DevPoints(dtt) = 0 then
-      Label_DevPointsCount[dtt].SetColor($FF5151FF)
-    else
-      Label_DevPointsCount[dtt].SetColor($FF51FF53);
-  end;
+  Inherited Create(aParent, 15, 28 + 30, aParent.Width - 30, aParent.Height - 60);
+  OnButtonClickedShift := DevClicked;
 end;
 
-procedure TKMGUIGameDevelopment.Show;
-begin
-  Inherited Show;
-  ReloadTrees;
-end;
-
-procedure TKMGUIGameDevelopment.SwitchPage(Sender: TObject);
+procedure TKMMapEdPlayerBlockDevs.SwitchPage(Sender: TObject);
 begin
   Inherited;
   ReloadTrees;
 end;
 
-procedure TKMGUIGameDevelopment.ReloadTrees(aCurrentPageOnly: Boolean = True);
+procedure TKMMapEdPlayerBlockDevs.DevClicked(Sender : TObject; Shift : TShiftState);
+var B : TKMButtonFlat;
+  oldLock : TKMHandDevLock;
+  locks : TKMHandLocks;
+  I : Integer;
+begin
+  If gMySpectator = nil then
+    Exit;
+  If not gMySpectator.Hand.Enabled then
+    Exit;
+
+  locks := gMySpectator.Hand.Locks;
+  B := TKMButtonFlat(Sender);
+  oldLock := locks.DevelopmentLock[fLastPage,B.Tag];
+  I := byte(oldLock);
+
+  If ssRight in Shift then
+    IncLoop(I, byte(low(TKMHandDevLock)), byte(high(TKMHandDevLock)), -1)
+  else
+  If ssShift in Shift then
+    I := byte(dlUnlocked)
+  else
+  If ssCtrl in Shift then
+    I := byte(dlNotVisible)
+  else
+  If ssAlt in Shift then
+    I := byte(dlBlocked)
+  else
+    IncLoop(I, byte(low(TKMHandDevLock)), byte(high(TKMHandDevLock)), 1);
+
+
+  If ssShift in Shift then
+  begin
+    locks.ForceUnlockDevMapEd(fLastPage, B.Tag);
+  end else
+    locks.DevelopmentLock[fLastPage,B.Tag] := TKMHandDevLock(I);
+
+  If oldLock <> locks.DevelopmentLock[fLastPage,B.Tag] then
+  begin
+    //Locks.CheckDevLocksMapEd;
+    ReloadTrees;
+  end;
+end;
+
+procedure TKMMapEdPlayerBlockDevs.ReloadTrees(aCurrentPageOnly: Boolean = True);
 const UNLOCKED_COLOR_DOWN = $FF00FF00;
     BLOCKED_COLOR = $FF0000FF;
     DEFAULT_COLOR = $FFFFB200;
@@ -101,6 +145,7 @@ var dtt : TKMDevelopmentTreeType;
     B.BackBevelColor := $7700FF00;
     B.DownColor := $FF00FF00;
     B.LineWidth := 3;
+    TKMButtonFlatBlock(B).DevBlock := dlUnlocked;
 
     for I := 0 to High(aToButton.Next) do
     If aToButton.Next[I].Button_Tree.DownColor <> UNLOCKED_COLOR_DOWN then
@@ -116,8 +161,8 @@ var dtt : TKMDevelopmentTreeType;
       end;}
     end;
 
-    //If aToButton.Parent <> nil then
-      //UnlockPrevious(aType, aToButton.Parent);
+    If aToButton.Parent <> nil then
+      UnlockPrevious(aType, aToButton.Parent);
   end;
 
   procedure CheckNext(aType : TKMDevelopmentTreeType; var aToButton : TKMDevButton; aTop : Byte; aState : TKMHandDevLock);
@@ -128,15 +173,16 @@ var dtt : TKMDevelopmentTreeType;
     with Tree[aType] do
       B := aToButton.Button_Tree;
 
-    B.Enabled := aState in [dlNone, dlUnlocked];
+    B.Enabled := true;//aState in [dlNone, dlUnlocked];
     //set default
     B.Down := false;
     B.BackBevelColor := 0;
     B.DownColor := TO_UNLOCK_COLOR;
     B.LineWidth := 1;
 
-    B.Visible := aState <> dlNotVisible;
+    //B.Visible := aState <> dlNotVisible;
     B.Tag2 := 0;
+    TKMButtonFlatBlock(B).DevBlock := aState;
     If aState = dlUnlocked then
       unlockedList.Add(@aToButton)
     else
@@ -165,7 +211,7 @@ var dtt : TKMDevelopmentTreeType;
         If (aState = dlNone) and (nextState = dlNone) then
           aToButton.Next[I].Button_Tree.DownColor := TO_UNLOCK_COLOR //can be unlocked
         else
-        If (nextState = dlBlocked) then
+        If (nextState in [dlBlocked, dlNotVisible]) then
           aToButton.Next[I].Button_Tree.DownColor := BLOCKED_COLOR; //path is blocked
 
 
@@ -188,8 +234,6 @@ begin
   If not gMySpectator.Hand.Enabled then
     Exit;
 
-  RefreshLabels;
-
   locks := gMySpectator.Hand.Locks;
   If aCurrentPageOnly then
     ReloadType(fLastPage)
@@ -198,25 +242,5 @@ begin
     ReloadType(dtt);
 end;
 
-procedure TKMGUIGameDevelopment.DevClicked(Sender: TObject);
-var B : TKMButtonFlat;
-begin
-  B := TKMButtonFlat(Sender);
-
-  If B.Tag2 <> 1 then  //tag2 = 1, means that this development can be unlocked
-    Exit;
-
-  If gMySpectator = nil then
-    Exit;
-
-  If not gMySpectator.Hand.Enabled then
-    Exit;
-
-  If gMySpectator.Hand.Locks.DevelopmentLock[fLastPage, B.Tag] <> dlNone then
-    Exit;
-
-  //gMySpectator.Hand.UnlockDevelopment(fLastPage, B.Tag);
-  gGame.GameInputProcess.CmdHand(gicUnlockDevelopment, byte(fLastPage), B.Tag);
-end;
 
 end.

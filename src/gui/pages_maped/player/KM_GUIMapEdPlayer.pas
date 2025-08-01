@@ -11,10 +11,11 @@ uses
    KM_GUIMapEdPlayerBlockUnit,
    KM_GUIMapEdPlayerColors,
    KM_GUIMapEdPlayerGoals,
-   KM_GUIMapEdPlayerView;
+   KM_GUIMapEdPlayerView,
+   KM_GUIMapEdPlayerBlockDev;
 
 type
-  TKMPlayerTab = (ptGoals, ptColor, ptBlockHouse, ptBlockTrade, ptBlockUnit, ptView, ptAdd);
+  TKMPlayerTab = (ptGoals, ptColor, ptBlockHouse, ptBlockTrade, ptBlockUnit, ptBlockDev, ptView, ptAdd);
 
   TKMMapEdPlayer = class(TKMMapEdMenuPage)
   private
@@ -26,6 +27,7 @@ type
     fGuiPlayerColors: TKMMapEdPlayerColors;
     fGuiPlayerView: TKMMapEdPlayerView;
     fGuiPlayerAdditional: TKMMapEdPlayerAdditional;
+    fGuiPlayerBlockDevs: TKMMapEdPlayerBlockDevs;
 
     procedure PageChange(Sender: TObject);
   protected
@@ -58,8 +60,8 @@ uses
 { TKMMapEdPlayer }
 constructor TKMMapEdPlayer.Create(aParent: TKMPanel; aOnPageChange: TNotifyEvent);
 const
-  TAB_GLYPH: array [TKMPlayerTab] of Word    = (8,         1159,     38,    327,   141,   393, 754);
-  TAB_RXX  : array [TKMPlayerTab] of TRXType = (rxGuiMain, rxHouses, rxGui, rxGui, rxGui, rxGui, rxGui);
+  TAB_GLYPH: array [TKMPlayerTab] of Word    = (8,         1159,     38,    327,   141,     141,   393, 754);
+  TAB_RXX  : array [TKMPlayerTab] of TRXType = (rxGuiMain, rxHouses, rxGui, rxGui, rxGui,   rxGui, rxGui, rxGui);
 var
   PT: TKMPlayerTab;
 begin
@@ -72,7 +74,7 @@ begin
 
   for PT := Low(TKMPlayerTab) to High(TKMPlayerTab) do
   begin
-    Button_Player[PT] := TKMButton.Create(Panel_Player, 9 + SMALL_PAD_W * Byte(PT), 0, SMALL_PAD_W, SMALL_TAB_H,  TAB_GLYPH[PT], TAB_RXX[PT], bsPaper);
+    Button_Player[PT] := TKMButton.Create(Panel_Player, 9 + 45 + SMALL_PAD_W * (Byte(PT) mod 4), (byte(PT) div 4) * SMALL_PAD_W, SMALL_PAD_W, SMALL_TAB_H,  TAB_GLYPH[PT], TAB_RXX[PT], bsPaper);
     Button_Player[PT].OnClick := PageChange;
   end;
 
@@ -83,6 +85,7 @@ begin
   fGuiPlayerBlockUnit := TKMMapEdPlayerBlockUnit.Create(Panel_Player);
   fGuiPlayerView := TKMMapEdPlayerView.Create(Panel_Player);
   fGuiPlayerAdditional := TKMMapEdPlayerAdditional.Create(Panel_Player);
+  fGuiPlayerBlockDevs := TKMMapEdPlayerBlockDevs.Create(Panel_Player);
 end;
 
 
@@ -95,6 +98,7 @@ begin
   fGuiPlayerBlockUnit.Free;
   fGuiPlayerView.Free;
   fGuiPlayerAdditional.Free;
+  //fGuiPlayerBlockDevs.Free;//it's destroyed in panels
   inherited;
 end;
 
@@ -112,6 +116,7 @@ begin
   fGuiPlayerBlockUnit.Hide;
   fGuiPlayerView.Hide;
   fGuiPlayerAdditional.Hide;
+  fGuiPlayerBlockDevs.Hide;
 
   if (Sender = Button_Player[ptGoals]) then
     GuiPlayerGoals.Show
@@ -127,6 +132,9 @@ begin
   else
   if (Sender = Button_Player[ptBlockUnit]) then
     fGuiPlayerBlockUnit.Show
+  else
+  if (Sender = Button_Player[ptBlockDev]) then
+    fGuiPlayerBlockDevs.Show
   else
   if (Sender = Button_Player[ptView]) then
     fGuiPlayerView.Show
@@ -147,8 +155,10 @@ begin
     ptBlockHouse: fGuiPlayerBlockHouse.Show;
     ptBlockTrade: fGuiPlayerBlockTrade.Show;
     ptBlockUnit:  fGuiPlayerBlockUnit.Show;
+    ptBlockDev:   fGuiPlayerBlockDevs.Show;
     ptView:       fGuiPlayerView.Show;
     ptAdd:       fGuiPlayerAdditional.Show;
+
   end;
 
   //Signal that active page has changed, that may affect layers visibility
@@ -183,6 +193,7 @@ begin
     ptBlockHouse: Result := fGuiPlayerBlockHouse.Visible;
     ptBlockTrade: Result := fGuiPlayerBlockTrade.Visible;
     ptBlockUnit:  Result := fGuiPlayerBlockUnit.Visible;
+    ptBlockDev:   Result := fGuiPlayerBlockDevs.Visible;
     ptView:       Result := fGuiPlayerView.Visible;
     ptAdd:       Result := fGuiPlayerAdditional.Visible;
     else          Result := False;
@@ -199,6 +210,7 @@ begin
   if fGuiPlayerBlockUnit.Visible then fGuiPlayerBlockUnit.Show;
   if fGuiPlayerView.Visible then fGuiPlayerView.Show;
   if fGuiPlayerAdditional.Visible then fGuiPlayerAdditional.Show;
+  if fGuiPlayerBlockDevs.Visible then fGuiPlayerBlockDevs.Show;
   UpdatePlayerColor;
 end;
 
@@ -211,12 +223,14 @@ const
     TX_MAPED_BLOCK_HOUSES,
     TX_MAPED_BLOCK_TRADE,
     TX_MAPED_BLOCK_UNITS,
+    TX_MAPED_BLOCK_UNITS,
     TX_MAPED_FOG,
     1791);
 var
   PT: TKMPlayerTab;
 begin
   for PT := Low(TKMPlayerTab) to High(TKMPlayerTab) do
+    If ord(PT) <= 6 then
     Button_Player[PT].Hint := GetHintWHotkey(TAB_HINT[PT], MAPED_SUBMENU_HOTKEYS[Ord(PT)]);
 end;
 

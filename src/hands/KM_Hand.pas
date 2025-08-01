@@ -325,6 +325,7 @@ type
     function  HasDevPoint(aType : TKMDevelopmentTreeType; aCount : Word = 1) : Boolean;
     function DevPoints(aType : TKMDevelopmentTreeType) : Word;
     procedure UnlockDevelopment(aType : TKMDevelopmentTreeType; aID : Integer);
+    procedure UnlockDevelopmentScript(aType : TKMDevelopmentTreeType; aID : Integer; aLock : TKMHandDevLock);
 
     function GetClosestHouse(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aWareSet : TKMWareTypeSet = [wtAll];  aMaxDistance : Single = 999) : TKMHouse;
     function GetClosestStore(aLoc : TKMPoint; aWare: TKMWareType) : TKMHouse;
@@ -996,6 +997,9 @@ begin
       if (H <> nil) and not H.IsDestroyed then
         H.MaxCount := 3000000;
     end;
+
+    If not gGame.Params.IsMapEditor then
+      fLocks.CheckDevLocksGame;
 
     If gGame.Params.MPMode = mmFarmers then
     begin
@@ -2798,6 +2802,11 @@ begin
     fLocks.DevelopmentLock[aType, aID] := dlUnlocked;
     gGame.RefreshDevelopmentTree;
   end;
+end;
+
+procedure TKMHand.UnlockDevelopmentScript(aType: TKMDevelopmentTreeType; aID: Integer; aLock : TKMHandDevLock);
+begin
+  fLocks.DevelopmentLock[aType, aID] := aLock;
 end;
 
 

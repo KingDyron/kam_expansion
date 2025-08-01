@@ -122,7 +122,8 @@ type
     ctSetPearlStage,
     ctSetPearlProgress,
     ctSetPearlWares,
-    ctSetPearlConfirmBuild
+    ctSetPearlConfirmBuild,
+    ctPlayerLockDev
     );
 
 const
@@ -235,7 +236,8 @@ const
     'SET_PEARL_STAGE',
     'SET_PEARL_PROGRESS',
     'SET_PEARL_WARE',
-    'SET_PEARL_CONFIRM_BUILD'
+    'SET_PEARL_CONFIRM_BUILD',
+    'SET_PLAYER_DEV_LOCK'
     );
 type
   TKMMissionParserCommon = class

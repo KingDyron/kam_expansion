@@ -69,6 +69,13 @@ type
     function UnitsUnlocked(aUnitType : array of TKMUnitType; aHouseType: TKMHouseType = htAny) : Boolean;
 
     property DevelopmentLock[aType : TKMDevelopmentTreeType; aID : Integer] : TKMHandDevLock read GetDevLock write SetDevlock;
+    function DevelopmentCount(aType : TKMDevelopmentTreeType) : Word;
+
+    procedure ForceUnlockDevMapEd(aType : TKMDevelopmentTreeType; aID : Integer);
+    procedure CheckDevLocksMapEd;
+    procedure CheckDevLocksGame;
+
+
 
     function FieldLocked(aType : TKMLockFieldType) : Boolean;//if field is locked than it's not visible
     procedure SetFieldLocked(aType : TKMLockFieldType; aLocked : Boolean);
@@ -277,6 +284,112 @@ procedure TKMHandLocks.SetDevLock(aType : TKMDevelopmentTreeType; aID : Integer;
 begin
   fDevLock[aType, aID] := aValue;
 end;
+
+function TKMHandLocks.DevelopmentCount(aType : TKMDevelopmentTreeType) : Word;
+begin
+  Result := length(fDevLock[aType]);
+end;
+
+
+
+procedure TKMHandLocks.CheckDevLocksMapEd;
+var dtt : TKMDevelopmentTreeType;
+
+  //in map ed we want as few commends as possible
+  //so to unlock previous, just ignore it and set it to dlNone
+  procedure UnlockPrevious(aType : TKMDevelopmentTreeType; aDev : PKMDevelopment);
+  begin
+    fDevLock[aType, aDev.ID] := dlNone;
+    If aDev.Parent <> nil then
+      UnlockPrevious(aType, aDev.Parent);
+  end;
+
+  procedure CheckDev(aType : TKMDevelopmentTreeType; aDev : PKMDevelopment; aState : TKMHandDevLock; aForceState : Boolean = false);
+  var nextState : TKMHandDevLock;
+    I : integer;
+  begin
+    fDevLock[dtt, aDev.ID] := aState;
+
+    If aState = dlUnlocked then
+      If aDev.Parent <> nil then
+        UnlockPrevious(aType, aDev.Parent);
+
+    for I := 0 to High(aDev.Next) do
+    begin
+      If aForceState then
+        nextState := dlNone
+      else
+      begin
+        nextState := fDevLock[dtt, aDev.Next[I].ID];
+        If aState in [dlBlocked, dlNotVisible] then
+        begin
+          nextState := dlNone;
+          aForceState := true;
+        end;
+
+      end;
+
+      CheckDev(aType, @aDev.Next[I], nextState, aForceState);
+    end;
+  end;
+
+begin
+  for dtt := DEVELOPMENT_MIN to DEVELOPMENT_MAX do
+    CheckDev(dtt, gRes.Development[dtt].FirstItem, fDevLock[dtt, 0]);
+end;
+
+procedure TKMHandLocks.ForceUnlockDevMapEd(aType: TKMDevelopmentTreeType; aID: Integer);
+  //in map ed we want as few commends as possible
+  //so to unlock previous, just ignore it and set it to dlNone
+  procedure UnlockPrevious(aType : TKMDevelopmentTreeType; aDev : PKMDevelopment);
+  begin
+    If aDev = nil then
+      Exit;
+    fDevLock[aType, aDev.ID] := dlNone;
+    If aDev.Parent <> nil then
+      UnlockPrevious(aType, aDev.Parent);
+  end;
+
+begin
+  fDevLock[aType, aID] := dlUnlocked;
+  UnlockPrevious(aType, gRes.Development[aType].GetItem(aID).Parent);
+end;
+
+procedure TKMHandLocks.CheckDevLocksGame;
+var dtt : TKMDevelopmentTreeType;
+
+
+  procedure UnlockPrevious(aType : TKMDevelopmentTreeType; aDev : PKMDevelopment);
+  begin
+    fDevLock[aType, aDev.ID] := dlUnlocked;
+    If aDev.Parent <> nil then
+      UnlockPrevious(aType, aDev.Parent);
+  end;
+
+  procedure CheckDev(aType : TKMDevelopmentTreeType; aDev : PKMDevelopment; aState : TKMHandDevLock);
+  var nextState : TKMHandDevLock;
+    I : integer;
+  begin
+    fDevLock[aType, aDev.ID] := aState;
+
+    If aState = dlUnlocked then
+      If aDev.Parent <> nil then
+        UnlockPrevious(aType, aDev.Parent);
+
+    for I := 0 to High(aDev.Next) do
+    begin
+      nextState := fDevLock[dtt, aDev.Next[I].ID];
+      If aState in [dlBlocked, dlNotVisible] then
+        nextState := aState;
+      CheckDev(aType, @aDev.Next[I], nextState);
+    end;
+  end;
+
+begin
+  for dtt := DEVELOPMENT_MIN to DEVELOPMENT_MAX do
+    CheckDev(dtt, gRes.Development[dtt].FirstItem, fDevLock[dtt, 0]);
+end;
+
 
 function TKMHandLocks.HouseToType(aHouseType: TKMHouseType): TKMUnitHouseBlock;
 begin
