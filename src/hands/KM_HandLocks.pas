@@ -481,6 +481,8 @@ end;
 
 procedure TKMHandLocks.Save(SaveStream: TKMemoryStream);
 var UHT : TKMUnitHouseBlock;
+  dtt : TKMDevelopmentTreeType;
+  I, K : integer;
 begin
   SaveStream.PlaceMarker('HandLocks');
   SaveStream.Write(fHandHouseLock, SizeOf(fHandHouseLock));
@@ -491,11 +493,21 @@ begin
   SaveStream.Write(fHouseUnlocked, SizeOf(fHouseUnlocked));
   SaveStream.Write(fHandHouseMaxLvl, SizeOf(fHandHouseMaxLvl));
   SaveStream.Write(fFieldBlocked, SizeOf(fFieldBlocked));
+
+  for dtt := DEVELOPMENT_MIN to DEVELOPMENT_MAX do
+  begin
+    K := length(fDevLock[dtt]);
+    SaveStream.Write(K);
+    for I := 0 to K - 1 do
+      SaveStream.WriteData(fDevLock[dtt, I]);
+  end;
 end;
 
 
 procedure TKMHandLocks.Load(LoadStream: TKMemoryStream);
 var UHT : TKMUnitHouseBlock;
+  dtt : TKMDevelopmentTreeType;
+  I, K : integer;
 begin
   LoadStream.CheckMarker('HandLocks');
   LoadStream.Read(fHandHouseLock, SizeOf(fHandHouseLock));
@@ -508,6 +520,13 @@ begin
   LoadStream.Read(fHandHouseMaxLvl, SizeOf(fHandHouseMaxLvl));
   LoadStream.Read(fFieldBlocked, SizeOf(fFieldBlocked));
 
+  for dtt := DEVELOPMENT_MIN to DEVELOPMENT_MAX do
+  begin
+    LoadStream.Read(K);
+    SetLength(fDevLock[dtt], K);
+    for I := 0 to K - 1 do
+      LoadStream.ReadData(fDevLock[dtt, I]);
+  end;
 end;
 
 
