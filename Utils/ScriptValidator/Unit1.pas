@@ -6,7 +6,6 @@ uses
   Windows, Messages, Classes, Controls, Dialogs, Forms, StdCtrls, StrUtils, SysUtils,
   FileCtrl,
   KM_Defaults,
-  KM_JsonData,
    KM_Scripting, shellapi;
 
 type
