@@ -45,6 +45,10 @@ type
 
 
 Const DISTANCE_BETWEEN_ROWS = 50;
+    UNLOCKED_COLOR_DOWN = $FF00FF00;
+    BLOCKED_COLOR = $FF0000FF;
+    DEFAULT_COLOR = $FFFFB200;
+    TO_UNLOCK_COLOR = $FF888888;
 
 implementation
 uses
@@ -265,8 +269,23 @@ procedure TKMGUICommonDevelopment.Paint;
 
     TKMRenderUI.WriteLine(cent.X, cent.Y, cent.X, cent.Y - (DISTANCE_BETWEEN_ROWS div 2),
                           aTo.Button_Tree.DownColor, 65535, aTo.Button_Tree.LineWidth);//  /\
+    //first render grey color
+    //then red
+    //then blue
+    //then green
+
     for I := 0 to high(aTo.Next) do
-      MakeLine(cent, aTo.Next[I]);
+      IF aTo.Button_Tree.DownColor = TO_UNLOCK_COLOR then
+        MakeLine(cent, aTo.Next[I]);
+    for I := 0 to high(aTo.Next) do
+      IF aTo.Button_Tree.DownColor = BLOCKED_COLOR then
+        MakeLine(cent, aTo.Next[I]);
+    for I := 0 to high(aTo.Next) do
+      IF aTo.Button_Tree.DownColor = DEFAULT_COLOR then
+        MakeLine(cent, aTo.Next[I]);
+    for I := 0 to high(aTo.Next) do
+      IF aTo.Button_Tree.DownColor = UNLOCKED_COLOR_DOWN then
+        MakeLine(cent, aTo.Next[I]);
   end;
 var I : integer;
 begin

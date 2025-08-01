@@ -102,12 +102,21 @@ end;
 Constructor TKMHouseArena.Load(LoadStream : TKMemoryStream);
 begin
   Inherited;
+  LoadStream.ReadData(fArenaAnimStep);
+  LoadStream.ReadData(fDevType);
+  LoadStream.ReadData(fWarfareDelivered);
+  LoadStream.ReadData(fFoodDelivered);
 end;
 
 procedure TKMHouseArena.Save(SaveStream : TKMemoryStream);
 begin
   Inherited;
+  SaveStream.WriteData(fArenaAnimStep);
+  SaveStream.WriteData(fDevType);
+  SaveStream.WriteData(fWarfareDelivered);
+  SaveStream.WriteData(fFoodDelivered);
 end;
+
 
 function TKMHouseArena.ShouldAbandonDeliveryTo(aWareType: TKMWareType): Boolean;
 begin

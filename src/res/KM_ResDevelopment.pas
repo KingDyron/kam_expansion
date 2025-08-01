@@ -64,7 +64,7 @@ type
       procedure SaveToJson;
   end;
 const
-  TREE_TYPE_ICON : array[TKMDevelopmentTreeType] of Word = (0, 39, 360, 322, 0);
+  TREE_TYPE_ICON : array[TKMDevelopmentTreeType] of Word = (0, 1079, 1077, 1080, 1081);
   TREE_TYPE_STRING : array[TKMDevelopmentTreeType] of String = ('None', 'Builder', 'Economy', 'Army', 'ALL');
   TREE_TYPE_HINT : array[TKMDevelopmentTreeType] of Word = (0, 2297, 2298, 2299, 1060);
 

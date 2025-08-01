@@ -14,7 +14,7 @@ type
   protected
     Label_DevPointsCount : array[DEVELOPMENT_MIN..DEVELOPMENT_MAX] of TKMLabel;
     procedure SwitchPage(Sender : TObject); override;
-    procedure DevClicked(Sender : TObject);
+    procedure DevClicked(Sender : TObject; Shift : TShiftState);
   public
     constructor Create(aParent : TKMPanel);
     procedure ReloadTrees(aCurrentPageOnly : Boolean = true); override;
@@ -36,7 +36,7 @@ constructor TKMGUIGameDevelopment.Create(aParent: TKMPanel);
 var dtt : TKMDevelopmentTreeType;
 begin
   Inherited Create(aParent, TB_PAD, 44, TB_WIDTH, aParent.Height - 50);
-  OnButtonClicked := DevClicked;
+  OnButtonClickedShift := DevClicked;
 
   for dtt := Low(Label_DevPointsCount) to High(Label_DevPointsCount) do
   begin
@@ -74,10 +74,6 @@ begin
 end;
 
 procedure TKMGUIGameDevelopment.ReloadTrees(aCurrentPageOnly: Boolean = True);
-const UNLOCKED_COLOR_DOWN = $FF00FF00;
-    BLOCKED_COLOR = $FF0000FF;
-    DEFAULT_COLOR = $FFFFB200;
-    TO_UNLOCK_COLOR = $FF888888;
 
 var dtt : TKMDevelopmentTreeType;
   locks : TKMHandLocks;
@@ -198,11 +194,12 @@ begin
     ReloadType(dtt);
 end;
 
-procedure TKMGUIGameDevelopment.DevClicked(Sender: TObject);
+procedure TKMGUIGameDevelopment.DevClicked(Sender: TObject; Shift : TShiftState);
 var B : TKMButtonFlat;
 begin
+  If not (ssLeft in Shift) then
+    Exit;
   B := TKMButtonFlat(Sender);
-
   If B.Tag2 <> 1 then  //tag2 = 1, means that this development can be unlocked
     Exit;
 

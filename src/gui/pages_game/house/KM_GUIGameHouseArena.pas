@@ -45,7 +45,7 @@ begin
   for dtt := Low(Button_Points) to High(Button_Points) do
   begin
     I := byte(dtt);
-    Button_Points[dtt] := TKMButtonFlat.Create(self, I * 35, 30, 32, 32, TREE_TYPE_ICON[dtt]);
+    Button_Points[dtt] := TKMButtonFlat.Create(self, I * 39 - 5, 30, 37, 35, TREE_TYPE_ICON[dtt]);
     Button_Points[dtt].Caption := '';
     Button_Points[dtt].Hint := gResTexts[2300]+ ' ' + gResTexts[TREE_TYPE_HINT[dtt]];
     Button_Points[dtt].Tag := I;
@@ -56,7 +56,7 @@ begin
   for dtt := Low(Button_FestivalType) to High(Button_FestivalType) do
   begin
     I := byte(dtt) - 1;
-    Button_FestivalType[dtt] := TKMButtonFlat.Create(self, I * 35 + 17 + 5, top + 20, 32, 32, TREE_TYPE_ICON[dtt]);
+    Button_FestivalType[dtt] := TKMButtonFlat.Create(self, I * 39 + 10 + 5, top + 20, 37, 35, TREE_TYPE_ICON[dtt]);
     case dtt of
       dttAll : Button_FestivalType[dtt].Hint := gResTexts[2300]+ ' ' + gResTexts[TREE_TYPE_HINT[dtt]] + ' x1';
       else Button_FestivalType[dtt].Hint := gResTexts[2300]+ ' ' + gResTexts[TREE_TYPE_HINT[dtt]] + ' x3';

@@ -118,10 +118,6 @@ begin
 end;
 
 procedure TKMMapEdPlayerBlockDevs.ReloadTrees(aCurrentPageOnly: Boolean = True);
-const UNLOCKED_COLOR_DOWN = $FF00FF00;
-    BLOCKED_COLOR = $FF0000FF;
-    DEFAULT_COLOR = $FFFFB200;
-    TO_UNLOCK_COLOR = $FF888888;
 
 var dtt : TKMDevelopmentTreeType;
   locks : TKMHandLocks;
@@ -150,7 +146,7 @@ var dtt : TKMDevelopmentTreeType;
     for I := 0 to High(aToButton.Next) do
     If aToButton.Next[I].Button_Tree.DownColor <> UNLOCKED_COLOR_DOWN then
     begin
-      If not aToButton.Next[I].Button_Tree.Enabled then
+      If aToButton.Next[I].Button_Tree.DownColor = BLOCKED_COLOR then
         aToButton.Next[I].Button_Tree.DownColor := BLOCKED_COLOR//path is blocked
       else
         SetButtonColor(aToButton.Next[I].Button_Tree, DEFAULT_COLOR, 2, DEFAULT_COLOR and $22FFFFFF, 1)

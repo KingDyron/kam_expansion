@@ -1443,7 +1443,7 @@ const
     TX_MENU_TAB_HINT_STATISTICS,
     2290,
     TX_MENU_TAB_HINT_OPTIONS);
-  MAIN_BTN_ICON: array [tbBuild..TKMTabButtons(Byte(high(TKMTabButtons)) - 1)] of Word = (439, 440, 441, 452, 442);
+  MAIN_BTN_ICON: array [tbBuild..TKMTabButtons(Byte(high(TKMTabButtons)) - 1)] of Word = (439, 440, 441, 1078, 442);
 var
   I, J, gap: Integer;
   T: TKMTabButtons;
