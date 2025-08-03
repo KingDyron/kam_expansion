@@ -363,7 +363,7 @@ begin
       'fntOutline, fntArial, fntMonospaced)');
     Sender.AddTypeS('TKMGroupOrder', '(goNone, goWalkTo, goAttackHouse, goAttackUnit, goStorm)');
     Sender.AddTypeS('TKMGroupType', '(gtNone, gtAny, gtMelee, gtAntiHorse, gtRanged, ' +
-      'gtMounted)');
+      'gtMounted, gtMachines, gtMachinesMelee, gtWreckers, gtShips)');
     Sender.AddTypeS('TKMHandHouseLock', '(hlNone, hlDefault, hlBlocked, hlGranted)');
     Sender.AddTypeS('TKMHouseType', '(htNone, htAny, htArmorSmithy, htArmorWorkshop, htBakery, ' +
       'htBarracks, htButchers, htCoalMine, htFarm, htFishermans, ' +
@@ -377,7 +377,10 @@ begin
       'htStoneWorkshop,   htIronFoundry,     htMerchant,      htPottery,       htWoodBurner, ' +
       'htAppleTree,       htSmallStore,      htCollectors,    htTailorsShop,   htCottage, ' +
       'htHouse,           htPalace,          htStall,         htProductionThatch, ' +
-      'htShipYard)');
+      'htShipYard,        htCartographers,   htPearl,         htPasture,       htForest,' +
+      'htArena)'
+      );
+
     Sender.AddTypeS('TKMMissionDifficulty', '(mdNone, mdEasy3, mdEasy2, mdEasy1, mdNormal, ' +
       'mdHard1, mdHard2, mdHard3)');
     Sender.AddTypeS('TKMPoint', 'record ' +
@@ -404,11 +407,13 @@ begin
       'mkGradient)');
     Sender.AddTypeS('TKMTileOverlay', '(toNone, toDig1, toDig2, toDig3, toDig4, ' +
       'toRoad)');
+
     Sender.AddTypeS('TKMUnitType', '(utNone, utAny,' +
       'utSerf,         utWoodcutter,   utMiner,         utAnimalBreeder,' +
       'utFarmer,       utCarpenter,    utBaker,         utButcher,' +
       'utFisher,       utBuilder,      utStonemason,    utSmith,' +
       'utMetallurgist, utRecruit,      utOperator,      utClayPicker,' +
+      'utFeeder,       utHouseBuilder,' +
       'utMilitia,      utAxeFighter,   utSwordFighter,  utBowman,' +
       'utCrossbowman,  utLanceCarrier, utPikeman,       utScout,' +
       'utKnight,       utBarbarian,' +
@@ -418,14 +423,14 @@ begin
       'utTrainedWolf,  utAmmoCart,     utPikeMachine,   utShip,' +
       'utClubMan,      utMaceFighter,  utFlailFighter,  utShieldBearer,' +
       'utFighter,      utSpikedTrap,   utWoodenWall,    utTorchMan,' +
-      'utMedic, ' +
-      'utBattleShip,   utBoat,          utPyro, ' +
-      'utLekter, ' +
+      'utMedic,        utBattleShip,   utBoat,          utPyro,' +
+      'utLekter,       utMobileTower,' +
       'utWolf,         utFish,         utWatersnake,    utSeastar, ' +
       'utCrab,         utWaterflower,  utWaterleaf,     utDuck,' +
       'utDeerMale,     utDeerFemale,   utFox,           utBoar,' +
       'utBear,         utLandDuck,     utRabbit,        utWhiteBear,' +
       'utSandSnake,    utSpider)');
+
     Sender.AddTypeS('TKMWareType', '(wtNone, wtTrunk, wtStone, wtTimber, wtIronOre, ' +
       'wtGoldOre, wtCoal, wtIron, wtGold, wtWine, ' +
       'wtCorn, wtBread, wtFlour, wtLeather, wtSausage, ' +
@@ -437,9 +442,9 @@ begin
       'wtWheel,    wtBolt,          wtQuiver,     wtWater,        wtTile,' +
       'wtSeed,     wtSawDust,       wtApple,      wtJewerly,      wtBoots,' +
       'wtHay,      wtMace,          wtFlail,      wtFeathers,     wtPlateArmor,' +
-      'wtBitinArmor,' +
+      'wtBitinArmor, wtEgg' +
       // Special ware types
-      'wtAll, wtWarfare, wtFood)');
+      'wtAll, wtWarfare, wtFood, wtValuable)');
     Sender.AddTypeS('TKMWoodcutterMode', '(wmChopAndPlant, wmChop, wmPlant)');
     // Dependent types of level 1
     Sender.AddTypeS('TKMAIAttackInfo', 'record ' +
@@ -495,7 +500,7 @@ begin
     Sender.AddTypeS('TKMUnitStats', 'record ' +
         'ID: Integer; ' +
         'GroupID: Integer; ' +
-        //'UnitType: TKMUnitType; ' +
+        'UnitType: TKMUnitType; ' +
         'X: Word; ' +
         'Y: Word; ' +
         'Owner: Word; ' +

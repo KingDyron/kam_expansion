@@ -3001,6 +3001,8 @@ var P : TKMpoint;
   UT : TKMUnitMainData;
 begin
   Result := Inherited;
+  If IsDeadOrDying then
+    Exit;
   if gGameParams.Tick mod 25 <> 0 then
     Exit;
 

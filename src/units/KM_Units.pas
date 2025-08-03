@@ -2784,7 +2784,7 @@ end;
 function TKMUnit.GetStats : TKMUnitStats;
 begin
   Result.GroupID := -1;
-  //Result.UnitType := UnitType;
+  Result.UnitType := UnitType;
   Result.X := Position.X;
   Result.Y := Position.Y;
   Result.Owner := Owner;

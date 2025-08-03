@@ -434,7 +434,7 @@ type
 
   TKMBridgeTileRect = array of array of TKMBridgeTile;
 
-  TKMUnitStats = record
+  TKMUnitStats = packed record
     ID, GroupID : Integer;
     UnitType : TKMUnitType;
     X, Y, Owner : Word;

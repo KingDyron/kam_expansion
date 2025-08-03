@@ -70,6 +70,7 @@ type
     function GetGroupsInRadius(const aLoc: TKMPoint; aSqrRadius: Single; aIndex: TKMHandID; aAlliance: TKMAllianceType; aTypes: TKMGroupTypeSet = GROUP_TYPES_VALID): TKMUnitGroupArray;
     function GetGroupsMemberInRadius(const aLoc: TKMPoint; aSqrRadius: Single; aIndex: TKMHandID; aAlliance: TKMAllianceType; var aUGA: TKMUnitGroupArray; aTypes: TKMGroupTypeSet = GROUP_TYPES_VALID): TKMUnitArray;
     function GetClosestUnit(const aLoc: TKMPoint; aIndex: TKMHandID; aAlliance: TKMAllianceType): TKMUnit;
+    function GetClosestUnitForAttack(const aGroup: Pointer; aIndex: TKMHandID; aAlliance: TKMAllianceType): TKMUnit;
     function GetClosestHouse(const aLoc: TKMPoint; aIndex: TKMHandID; aAlliance: TKMAllianceType; aTypes: TKMHouseTypeSet = HOUSES_VALID; aOnlyCompleted: Boolean = True): TKMHouse;overload;
     function GetClosestHouse(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aWareSet : TKMWareTypeSet = [wtAll]; aMaxDistance : Single = 999): TKMHouse;overload;
     function GetHousesInRadius(const aLoc: TKMPoint; aSqrRadius: Single; aIndex: TKMHandID; aAlliance: TKMAllianceType; aTypes: TKMHouseTypeSet = HOUSES_VALID; aOnlyCompleted: Boolean = True): TKMHouseArray; overload;
@@ -582,6 +583,31 @@ begin
   end;
 end;
 
+//Check opponents for closest Unit with given Alliance setting
+function TKMHandsCollection.GetClosestUnitForAttack(const aGroup: Pointer; aIndex: TKMHandID; aAlliance: TKMAllianceType): TKMUnit;
+var
+  I: Integer;
+  U: TKMUnit;
+  G : TKMUnitGroup;
+  ignoreShips : Boolean;
+  searchSet : TKMUnitTypeSet;
+begin
+  Result := nil;
+  G := TKMUnitGroup(aGroup);
+  ignoreShips := not (G.GroupType in [gtRanged, gtShips, gtMachines]);
+  searchSet := [Low(TKMUnitType)..High(TKMUnitType)];
+  If ignoreShips then
+    searchSet := searchSet - [utShip, utBoat, utBattleShip];
+  for I := 0 to fCount - 1 do
+    if (I <> aIndex) and (fHandsList[aIndex].Alliances[I] = aAlliance) then
+    begin
+      U := fHandsList[I].Units.GetClosestUnit(G.Position, searchSet);
+
+      if (U <> nil)
+      and ((Result = nil) or (KMLengthSqr(U.PositionF, KMPointF(G.Position)) < KMLengthSqr(Result.PositionF, KMPointF(G.Position)))) then
+        Result := U;
+    end;
+end;
 
 function TKMHandsCollection.GetCount: Byte;
 begin
