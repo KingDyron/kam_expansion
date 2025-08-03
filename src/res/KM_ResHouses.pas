@@ -295,7 +295,8 @@ const
 
       (TexStart: 0; Count: 0;), //rtAll
       (TexStart: 0; Count: 0;), //rtWarfare
-      (TexStart: 0; Count: 0;)  //rtFood
+      (TexStart: 0; Count: 0;),  //rtFood
+      (TexStart: 0; Count: 0;)  //rtValueable
     );
 
   //These tables are used to convert between KaM script IDs and Remake enums

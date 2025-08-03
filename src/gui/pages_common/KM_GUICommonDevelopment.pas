@@ -31,6 +31,8 @@ type
     procedure HideFromID(aID : Integer); virtual;
     procedure SwitchPage(Sender : TObject); virtual;
     function CreateButton(aParent : TKMPanel) : TKMButtonFlat; virtual;
+    procedure SetUpButton(B : TKMButtonFlat; aDev : PKMDevelopment);  virtual;
+    procedure RefreshSingle(B : TKMButtonFlat; aDev : PKMDevelopment);  virtual;
   public
     OnButtonClicked : TNotifyEvent;
     OnButtonClickedShift : TNotifyEventShift;
@@ -70,6 +72,7 @@ var dtt : TKMDevelopmentTreeType;
       aToButton.Button_Tree.Top := aTop * DISTANCE_BETWEEN_ROWS;
       aToButton.Button_Tree.Width := 31;
       aToButton.Button_Tree.Height := 31;
+      aToButton.Button_Tree.DownColor := TO_UNLOCK_COLOR;
       aToButton.Button_Tree.TexID := aDevelopment.GuiIcon;
 
       //aToButton.Button_Tree := TKMButtonFlat.Create(Panel, 3 + aDevelopment.X * 34, aTop * DISTANCE_BETWEEN_ROWS, 31, 31, aDevelopment.GuiIcon);
@@ -79,7 +82,8 @@ var dtt : TKMDevelopmentTreeType;
       aToButton.Button_Tree.Tag2 := Integer(@aToButton);
       aToButton.Button_Tree.OnClick := ButtonClicked;
       aToButton.Button_Tree.OnClickShift := ButtonClickedShift;
-      aToButton.Button_Tree.Caption := aDevelopment.ID.ToString;
+      //aToButton.Button_Tree.Caption := aDevelopment.ID.ToString;
+      SetUpButton(aToButton.Button_Tree, aDevelopment);
       aToButton.Dev := aDevelopment;
       //aToButton.ID := fCount;
       Inc(fCount);
@@ -153,6 +157,16 @@ begin
   Result := TKMButtonFlat.Create(aParent, 0, 0, 0, 0, 0, rxGui);
 end;
 
+procedure TKMGUICommonDevelopment.SetUpButton(B : TKMButtonFlat; aDev : PKMDevelopment);
+begin
+  //only for child
+end;
+
+procedure TKMGUICommonDevelopment.RefreshSingle(B: TKMButtonFlat; aDev: PKMDevelopment);
+begin
+  //only for child
+end;
+
 procedure TKMGUICommonDevelopment.ButtonClicked(Sender: TObject);
 begin
   If Assigned(OnButtonClicked) then
@@ -187,6 +201,7 @@ var dtt : TKMDevelopmentTreeType;
         ButtonsList[fCount - 1].Width := 31;
         ButtonsList[fCount - 1].Height := 31;
         ButtonsList[fCount - 1].TexID := aDevelopment.GuiIcon;
+        ButtonsList[fCount - 1].DownColor := TO_UNLOCK_COLOR;
         //ButtonsList[fCount - 1] := TKMButtonFlat.Create(Panel, 3 + aDevelopment.X * 34, aTop * DISTANCE_BETWEEN_ROWS, 31, 31, aDevelopment.GuiIcon)
       end else
       begin
@@ -201,7 +216,8 @@ var dtt : TKMDevelopmentTreeType;
       aToButton.Button_Tree.BackAlpha := 1;
       aToButton.Button_Tree.Tag := aDevelopment.ID;
       aToButton.Button_Tree.Tag2 := Integer(@aToButton);
-      aToButton.Button_Tree.Caption := aDevelopment.ID.ToString;
+      SetUpButton(aToButton.Button_Tree, aDevelopment);
+      //aToButton.Button_Tree.Caption := aDevelopment.ID.ToString;
       aToButton.Button_Tree.OnClick := ButtonClicked;
       aToButton.Button_Tree.OnClickShift := ButtonClickedShift;
       aToButton.Dev := aDevelopment;
@@ -242,13 +258,14 @@ procedure TKMGUICommonDevelopment.RefreshButton(aTag: Pointer);
 var I : Integer;
   dev : PKMDevelopment;
 begin
+  dev := PKMDevelopment(aTag);
 
   for I := 0 to Tree[fLastPage].fCount - 1 do
-    If Tree[fLastPage].ButtonsList[I].Tag = Integer(aTag) then
+    If Tree[fLastPage].ButtonsList[I].Tag = dev.ID then
     begin
-      dev := PKMDevelopment(aTag);
       Tree[fLastPage].ButtonsList[I].TexID := dev.GuiIcon;
       Tree[fLastPage].ButtonsList[I].Left := 3 + dev.X * 34;
+      RefreshSingle(Tree[fLastPage].ButtonsList[I], dev);
     end;
 
 end;

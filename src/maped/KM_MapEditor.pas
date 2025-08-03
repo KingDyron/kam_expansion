@@ -719,7 +719,7 @@ begin
   begin
 
     WT := H.WareInput[I];
-    if not (WT in [wtNone ,wtAll, wtFood, wtWarfare]) then
+    if not (WT in [wtNone ,wtAll, wtFood, wtWarfare, wtValuable]) then
     begin
       if gCursor.MapEd_WaresRandomCount and (lC < 6) then
         C := lC + KaMRandom( IfThen(hc = 6, H.GetMaxInWare, hc) - lC + 1, 'TKMMapEditor.SetRandomRes 1')
@@ -729,7 +729,7 @@ begin
     end;
 
     WT := H.WareOutput[I];
-    if not (WT in [wtNone ,wtAll, wtFood, wtWarfare]) then
+    if not (WT in [wtNone ,wtAll, wtFood, wtWarfare, wtValuable]) then
     begin
       if gCursor.MapEd_WaresRandomCount and (lC < 6) then
         C := lC + KaMRandom( IfThen(hc = 6, H.GetMaxOutWare, hc) - lC + 1, 'TKMMapEditor.SetRandomRes 1')

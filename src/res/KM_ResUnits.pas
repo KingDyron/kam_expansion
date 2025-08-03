@@ -286,7 +286,7 @@ const
     3, 3, 3, 1, 1,
     1, 2, 3, 1, 2,
     3, 1,
-    0,0,0
+    0,0,0,0
   );
   UNITS_WITH_BOOTS : set of TKMUnitType = [utSerf, utWoodcutter, utStonemason, utFisher, utBuilder, utFarmer];
   var
@@ -1182,7 +1182,7 @@ begin
       raise Exception.Create('Wrong WareType')
     else
     begin
-      if WT in [wtNone, wtWarfare, wtAll, wtFood] then
+      if WT in [wtNone, wtWarfare, wtAll, wtFood, wtValuable] then
         Continue;
 
       SetLength(BarracksCost, length(BarracksCost) + 1);

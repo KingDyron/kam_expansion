@@ -1684,7 +1684,7 @@ begin
           AddCommand(ctSetHouseNoRes, []);
 
         for J := 1 to 4 do
-          if not(H.WareInput[J] in [wtNone, wtAll, wtWarfare, wtFood]) then
+          if not(H.WareInput[J] in [wtNone, wtAll, wtWarfare, wtFood, wtValuable]) then
             if H.GetAcceptWareIn(H.WareInput[J]) > 0 then
               AddCommand(ctSetHouseAcceptWare, [byte(H.WareInput[J])]);
 

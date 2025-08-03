@@ -10,11 +10,21 @@ uses
 
 
 type
+  TKMButtonFlatDevGame = class(TKMButtonFlat)
+  public
+    Cost : Byte;
+    procedure Paint; override;
+  end;
+
   TKMGUIGameDevelopment = class(TKMGUICommonDevelopment)
   protected
     Label_DevPointsCount : array[DEVELOPMENT_MIN..DEVELOPMENT_MAX] of TKMLabel;
     procedure SwitchPage(Sender : TObject); override;
     procedure DevClicked(Sender : TObject; Shift : TShiftState);
+
+    function CreateButton(aParent : TKMPanel) : TKMButtonFlat; override;
+    procedure SetUpButton(B : TKMButtonFlat; aDev : PKMDevelopment); override;
+    procedure RefreshSingle(B : TKMButtonFlat; aDev : PKMDevelopment);  override;
   public
     constructor Create(aParent : TKMPanel);
     procedure ReloadTrees(aCurrentPageOnly : Boolean = true); override;
@@ -96,8 +106,8 @@ var dtt : TKMDevelopmentTreeType;
     //B.Down := true;
     B.BackBevelColor := $7700FF00;
     B.DownColor := $FF00FF00;
-    B.LineWidth := 3;
-
+    B.LineWidth := 4;
+    TKMButtonFlatDevGame(B).Cost := 0;
     for I := 0 to High(aToButton.Next) do
     If aToButton.Next[I].Button_Tree.DownColor <> UNLOCKED_COLOR_DOWN then
     begin
@@ -129,7 +139,7 @@ var dtt : TKMDevelopmentTreeType;
     B.Down := false;
     B.BackBevelColor := 0;
     B.DownColor := TO_UNLOCK_COLOR;
-    B.LineWidth := 1;
+    B.LineWidth := 2;
 
     B.Visible := aState <> dlNotVisible;
     B.Tag2 := 0;
@@ -137,9 +147,7 @@ var dtt : TKMDevelopmentTreeType;
       unlockedList.Add(@aToButton)
     else
     If (aToButton.Parent = nil) and (aState = dlNone) then
-      SetButtonColor(aToButton.Button_Tree, DEFAULT_COLOR, 2, DEFAULT_COLOR and $44FFFFFF, 1);
-
-
+      SetButtonColor(aToButton.Button_Tree, DEFAULT_COLOR, 3, DEFAULT_COLOR and $44FFFFFF, 1);
 
       //UnlockPrevious(aType, @aToButton);
     for I := 0 to High(aToButton.Dev.Next) do
@@ -156,7 +164,7 @@ var dtt : TKMDevelopmentTreeType;
 
       If aToButton.Next[I].Button_Tree.DownColor <> UNLOCKED_COLOR_DOWN then
         if (aState = dlUnlocked) and (nextState = dlNone) then
-          SetButtonColor(aToButton.Next[I].Button_Tree, DEFAULT_COLOR, 2, DEFAULT_COLOR and $44FFFFFF, 1)
+          SetButtonColor(aToButton.Next[I].Button_Tree, DEFAULT_COLOR, 3, DEFAULT_COLOR and $44FFFFFF, 1)
         else
         If (aState = dlNone) and (nextState = dlNone) then
           aToButton.Next[I].Button_Tree.DownColor := TO_UNLOCK_COLOR //can be unlocked
@@ -168,6 +176,21 @@ var dtt : TKMDevelopmentTreeType;
     end;
   end;
 
+  procedure CheckToUnlock(aType : TKMDevelopmentTreeType; var aToButton : TKMDevButton);
+  var I : Integer;
+  begin
+    If aToButton.Button_Tree.DownColor = DEFAULT_COLOR then
+    begin
+      IF gMySpectator.Hand.DevPoints(aType) >= aToButton.Dev.Cost then
+        aToButton.Button_Tree.BackBevelColor := DEFAULT_COLOR and $22FFFFFF
+      else
+        aToButton.Button_Tree.BackBevelColor := $770000A0;
+    end;
+    for I := 0 to High(aToButton.Next) do
+      CheckToUnlock(aType, aToButton.Next[I]);
+
+  end;
+
   procedure ReloadType(aType : TKMDevelopmentTreeType);
   var I : Integer;
   begin
@@ -175,7 +198,7 @@ var dtt : TKMDevelopmentTreeType;
     CheckNext(aType, Tree[aType].Button_Tree, 0, locks.DevelopmentLock[aType, 0]);
     for I := 0 to unlockedList.Count - 1 do
       UnlockPrevious(aType, unlockedList[I]);
-
+    CheckToUnlock(aType, Tree[aType].Button_Tree);
   end;
 
 begin
@@ -214,6 +237,34 @@ begin
 
   //gMySpectator.Hand.UnlockDevelopment(fLastPage, B.Tag);
   gGame.GameInputProcess.CmdHand(gicUnlockDevelopment, byte(fLastPage), B.Tag);
+end;
+
+
+function TKMGUIGameDevelopment.CreateButton(aParent : TKMPanel) : TKMButtonFlat;
+begin
+  Result := TKMButtonFlatDevGame.Create(aParent, 0, 0, 0, 0, 0, rxGui);
+
+end;
+
+procedure TKMGUIGameDevelopment.SetUpButton(B : TKMButtonFlat; aDev : PKMDevelopment);
+begin
+  TKMButtonFlatDevGame(B).Cost := aDev.Cost;
+end;
+
+procedure TKMGUIGameDevelopment.RefreshSingle(B : TKMButtonFlat; aDev : PKMDevelopment);
+begin
+  TKMButtonFlatDevGame(B).Cost := aDev.Cost;
+end;
+
+procedure TKMButtonFlatDevGame.Paint;
+var textCol : Cardinal;
+begin
+  inherited;
+  If Cost > 0 then
+  begin
+    textCol := IfThen(Enabled, CapColor, $FF888888);
+    TKMRenderUI.WriteText(AbsLeft + 3, AbsTop - 3, Width, 'x' + Cost.ToString, fntGrey, taRight, textCol);
+  end;
 end;
 
 end.

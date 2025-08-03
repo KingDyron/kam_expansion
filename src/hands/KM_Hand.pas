@@ -2796,8 +2796,10 @@ begin
 end;
 
 procedure TKMHand.UnlockDevelopment(aType: TKMDevelopmentTreeType; aID: Integer);
+var dev : PKMDevelopment;
 begin
-  If TakeDevPoint(aType) then
+  dev := gRes.Development.Tree[aType].GetItem(aID);
+  If TakeDevPoint(aType, dev.Cost) then
   begin
     fLocks.DevelopmentLock[aType, aID] := dlUnlocked;
     gGame.RefreshDevelopmentTree;
@@ -3361,6 +3363,7 @@ begin
             wtNone : ;
             wtFood : ;
             wtAll : ;
+            wtValuable : ;
             wtWarfare : ;
             else          Inc(Stats.Wares[H.WareInput[J]].ActualCnt, H.ResIn[J] );
           end;
@@ -3369,6 +3372,7 @@ begin
           wtNone : ;
           wtFood : ;
           wtAll : ;
+          wtValuable : ;
           wtWarfare : ;
           else          Inc(Stats.Wares[H.WareOutput[J]].ActualCnt, H.ResOut[J] );
         end;

@@ -2420,6 +2420,7 @@ begin
         wtNone:     WTS := [];
         wtWarfare:  WTS := WARES_WARFARE;
         wtFood:     WTS := WARES_FOOD;
+        wtValuable: WTS := WARES_VALUABLE;
         wtAll:      WTS := WARES_VALID;
         else        WTS := [aWareType];
       end;

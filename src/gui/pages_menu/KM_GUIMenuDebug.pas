@@ -8,7 +8,7 @@ uses
   KM_Controls, KM_ControlsBase, KM_ControlsList, KM_ControlsSwitch, KM_ControlsScroll,
   KM_ControlsEdit,
   KM_CommonTypes, KM_InterfaceDefaults, KM_InterfaceTypes,
-  KM_ResTypes, KM_ResHouses,
+  KM_ResTypes, KM_ResHouses, KM_ResDevelopment,
 
   KM_GUICommonDevelopment;
 
@@ -32,6 +32,19 @@ type
       procedure SetHouseType(aHouse : TKMHouseType);
       procedure UpdateState(aGlobalTickCount : Cardinal); override;
       procedure Paint; Override;
+  end;
+  TKMButtonFlatDevMenu = class(TKMButtonFlat)
+  public
+    Dev : PKMDevelopment;
+    Cost : Byte;
+    procedure Paint; override;
+  end;
+
+  TKMGUIDevelopmentDebug = class(TKMGUICommonDevelopment)
+    protected
+      function CreateButton(aParent : TKMPanel) : TKMButtonFlat; override;
+      procedure SetUpButton(B : TKMButtonFlat; aDev : PKMDevelopment); override;
+      procedure RefreshSingle(B : TKMButtonFlat; aDev : PKMDevelopment);  override;
   end;
 
   TKMMenuDebug = class(TKMMenuPageCommon)
@@ -64,7 +77,7 @@ type
     function Spec : TKMHouseSpec;
     procedure EditAnimationPos;
 
-    procedure TreeButtonClicked(Sender: TObject);
+    procedure TreeButtonClicked(Sender: TObject; Shift : TShiftState);
     procedure TreeDevelopmentChange(Sender : TObject);
   protected
     Panel_Debug: TKMPanel;
@@ -93,9 +106,11 @@ type
             Pile_X, Pile_Y : array[0..2] of TKMNumericEdit;
 
           //development tree
-          Tree : TKMGUICommonDevelopment;
+          Tree : TKMGUIDevelopmentDebug;
             Dev_GuiIcon : TKMNumericEdit;
             Position_X : TKMNumericEdit;
+            Cost : TKMNumericEdit;
+            HintID : TKMNumericEdit;
             Button_AddDev : TKMButton;
             Button_DelDev : TKMButton;
             Button_SavDev : TKMButton;
@@ -113,7 +128,7 @@ type
 implementation
 uses
   KM_ResTexts, KM_ResFonts, KM_Resource,
-  KM_CommonUtils, KM_RenderUI, KM_Pics,  KM_ResDevelopment,
+  KM_CommonUtils, KM_RenderUI, KM_Pics,
   IOUtils;
 
 const
@@ -174,8 +189,8 @@ begin
   House_Viewer.Top := (Panel_Debug.Height div 2) - (House_Viewer.Height div 2);
 
 
-  Tree := TKMGUICommonDevelopment.Create(Panel_Debug, Panel_Debug.Width div 2 - 90, 50, 180, Panel_Debug.Height - 125);
-  Tree.OnButtonClicked := TreeButtonClicked;
+  Tree := TKMGUIDevelopmentDebug.Create(Panel_Debug, Panel_Debug.Width div 2 - 90, 50, 180, Panel_Debug.Height - 125);
+  Tree.OnButtonClickedShift := TreeButtonClicked;
 
   TKMBevel.Create(Panel_Debug, 30, 30, 270, 680);
   Panel_Edit_Scroll := TKMScrollPanel.Create(Panel_Debug, 30, 30, 270, 680, [saVertical], bsGame, ssGame);
@@ -275,16 +290,27 @@ begin
       Dev_GuiIcon := TKMNumericEdit.Create(P, 30, 10, 0, 2000);
       Dev_GuiIcon.OnChange := TreeDevelopmentChange;
       Dev_GuiIcon.Width := 80;
+      Dev_GuiIcon.Hint := 'Gui Icon';
 
       Position_X := TKMNumericEdit.Create(P, 30, 40, -1, 5);
       Position_X.OnChange := TreeDevelopmentChange;
       Position_X.Width := 80;
+      Position_X.Hint := 'Position X';
 
-      Button_AddDev := TKMButton.Create(P, 30, 70, 75, 25, 'Add', bsGame);
+      Cost := TKMNumericEdit.Create(P, 30, 70, 1, 10);
+      Cost.OnChange := TreeDevelopmentChange;
+      Cost.Width := 80;
+      Cost.Hint := 'Cost';
+
+      HintID := TKMNumericEdit.Create(P, 30, 100, 0, 300);
+      HintID.OnChange := TreeDevelopmentChange;
+      HintID.Width := 80;
+      HintID.Hint := 'Hint';
+      Button_AddDev := TKMButton.Create(P, 30, 130, 75, 25, 'Add', bsGame);
       Button_AddDev.OnClick := TreeDevelopmentChange;
-      Button_DelDev := TKMButton.Create(P, 30, 95, 75, 25, 'Del', bsGame);
+      Button_DelDev := TKMButton.Create(P, 30, 155, 75, 25, 'Del', bsGame);
       Button_DelDev.OnClick := TreeDevelopmentChange;
-      Button_SavDev := TKMButton.Create(P, 30, 120, 75, 25, 'Save', bsGame);
+      Button_SavDev := TKMButton.Create(P, 30, 180, 75, 25, 'Save', bsGame);
       Button_SavDev.OnClick := TreeDevelopmentChange;
 
   Switch_Type.Selected := 0;
@@ -566,15 +592,15 @@ begin
 end;
 
 
-procedure  TKMMenuDebug.TreeButtonClicked(Sender: TObject);
-var I : Integer;
-  dev : PKMDevelopment;
+procedure  TKMMenuDebug.TreeButtonClicked(Sender: TObject; Shift : TShiftState);
+var dev : PKMDevelopment;
 begin
-  I := TKMControl(Sender).Tag;
-  dev := PKMDevelopment(I);
+  dev := PKMDevelopment(TKMButtonFlatDevmenu(Sender).Dev);
   fSelectedDev := dev;
   Position_X.Value := dev.X;
   Dev_GuiIcon.Value := dev.GuiIcon;
+  Cost.Value := dev.Cost;
+  HintID.Value := dev.HintID;
 end;
 
 procedure TKMMenuDebug.TreeDevelopmentChange(Sender : TObject);
@@ -661,6 +687,17 @@ begin
   If dev = nil then
     Exit;
   devParent := dev.Parent;
+
+  If Sender = HintID then
+  begin
+    dev.HintID := HintID.Value;
+    Tree.RefreshButton(dev);
+  end else
+  If Sender = Cost then
+  begin
+    dev.Cost := Cost.Value;
+    Tree.RefreshButton(dev);
+  end else
   If Sender = Position_X then
   begin
     oldX := dev.X;
@@ -680,7 +717,7 @@ begin
     temp := GetFreeSpace;
     If temp <> 255 then
     begin
-      next := dev.AddNext(gRes.Development[Tree.CurrentPage].GetNewId, temp);
+      {next := }dev.AddNext(gRes.Development[Tree.CurrentPage].GetNewId, temp);
       {SetLength(dev.Next, length(dev.Next) + 1);
       next := @dev.Next[high(dev.Next)];
       next.X := temp;
@@ -802,6 +839,35 @@ begin
 
 end;
 
+function TKMGUIDevelopmentDebug.CreateButton(aParent : TKMPanel) : TKMButtonFlat;
+begin
+  Result := TKMButtonFlatDevMenu.Create(aParent, 0, 0, 0, 0, 0, rxGui);
 
+end;
+
+procedure TKMGUIDevelopmentDebug.SetUpButton(B : TKMButtonFlat; aDev : PKMDevelopment);
+begin
+  TKMButtonFlatDevMenu(B).Dev := aDev;
+  TKMButtonFlatDevMenu(B).Cost := aDev.Cost;
+end;
+
+procedure TKMGUIDevelopmentDebug.RefreshSingle(B : TKMButtonFlat; aDev : PKMDevelopment);
+begin
+  TKMButtonFlatDevMenu(B).Cost := aDev.Cost;
+  TKMButtonFlatDevMenu(B).Hint := gRes.Development.GetText(aDev.HintID);
+end;
+
+procedure TKMButtonFlatDevMenu.Paint;
+var textCol : Cardinal;
+begin
+  inherited;
+  If Cost > 0 then
+  begin
+    textCol := IfThen(Enabled, CapColor, $FF888888);
+    TKMRenderUI.WriteText(AbsLeft + 3, AbsTop - 3, Width, 'x' + Cost.ToString, fntGrey, taRight, textCol);
+
+  end;
+  TKMRenderUI.WriteText(AbsLeft, AbsTop + height - 13, Width, Dev.ID.ToString, fntMini, taCenter);
+end;
 
 end.

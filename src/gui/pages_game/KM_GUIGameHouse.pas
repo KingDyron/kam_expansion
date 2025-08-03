@@ -2272,14 +2272,14 @@ begin
     for I := 1 to WARES_IN_OUT_COUNT do
     begin
       if I in aID then
-        If aHouse.WareInput[I] in [WARE_MIN..WARE_MAX, wtFood, wtWarfare] then
+        If aHouse.WareInput[I] in [WARE_MIN..WARE_MAX, wtFood, wtWarfare, wtValuable] then
         //if gRes.Wares[aHouse.WareInput[I]].IsValid then
         begin
           WT := aHouse.WareInput[I];
 
           WaresRow_Common[RowRes].Spacing := 14;
           WaresRow_Common[RowRes].Tag := I;
-          WaresRow_Common[RowRes].WareCntAsNumber := (aHouse.GetMaxInWare >= 10) or (WT in [wtFood, wtWarfare]);
+          WaresRow_Common[RowRes].WareCntAsNumber := (aHouse.GetMaxInWare >= 10) or (WT in [wtFood, wtWarfare, wtValuable]);
           WaresRow_Common[RowRes].ShowName := not WaresRow_Common[RowRes].WareCntAsNumber;
 
           WaresRow_Common[RowRes].TexID := gRes.Wares[WT].GUIIcon;
@@ -4215,7 +4215,7 @@ var H : TKMHouse;
   I, J : integer;
 begin
   ware := TKMWareType(TKMButton(Sender).Tag);
-  if ware in [wtAll, wtNone, wtFood] then Exit;
+  if ware in [wtAll, wtNone, wtFood, wtValuable] then Exit;
 
   H := TKMHouse(gMySpectator.Selected);
   J := -1;

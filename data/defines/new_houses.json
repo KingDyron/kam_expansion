@@ -4419,7 +4419,7 @@
 			"CanOverfill" : false,
 			"GatheringScript" : "gsNone",
 			"UnlockAfter" : ["htPottery"],
-			"WareInput" : ["wtFood", "wtWarfare"],
+			"WareInput" : ["wtFood", "wtWarfare", "wtValuable"],
 			
 			"ha_Idle" : {"X" : -23,"Y" : 64,"Steps" : [1106,1106,1106,1106,1106,1106,1106,1106,1106,1106,1106,1106,1106,1106,1106,1106,1107,1108,1109,1110,1111,1111,1111,1111,1111,1111,1110,1109,1108,1107]},
 			"ha_Fire1" : {"X" : -68,"Y" : -37,"Steps" : [1623,1624,1625,1620,1621,1622]},

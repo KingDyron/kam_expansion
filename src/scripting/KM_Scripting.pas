@@ -493,9 +493,9 @@ begin
                       'lftField, lftGrassField, lftVegetablesField, lftWineField, lftRemove)');
 
     Sender.AddTypeS('TKMUnitStats', 'record ' +
-        'ID : Integer; ' +
-        'GroupID : Integer; ' +
-        'UnitType : TKMUnitType; ' +
+        'ID: Integer; ' +
+        'GroupID: Integer; ' +
+        //'UnitType: TKMUnitType; ' +
         'X: Word; ' +
         'Y: Word; ' +
         'Owner: Word; ' +
@@ -504,12 +504,12 @@ begin
         'AttackHorse: Word; ' +
         'HP: Word; ' +
         'MaxHP: Word; ' +
-        'Speed : Word; ' +
-        'Sight : Word; ' +
-        'Condition : Word; ' +
-        'DamageHouse : Word; ' +
-        'DamageUnits : Word; ' +
-        'Ammo : Word; ' +
+        'Speed: Word; ' +
+        'Sight: Word; ' +
+        'Condition: Word; ' +
+        'DamageHouse: Word; ' +
+        'DamageUnits: Word; ' +
+        'Ammo: Word; ' +
       'end;');
 
     Sender.AddTypeS('TKMHouseStats', 'record ' +

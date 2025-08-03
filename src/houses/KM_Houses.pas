@@ -1935,7 +1935,7 @@ var I : integer;
 begin
   Result := false;
   for I := 1 to High(fWareInput) do
-      if fWareInput[I] in [WARE_MIN..WARE_MAX, wtFood, wtWarfare] then
+      if fWareInput[I] in [WARE_MIN..WARE_MAX, wtFood, wtWarfare, wtValuable] then
         Exit(true);
 
 end;
@@ -1994,7 +1994,7 @@ begin
 
   for I := 1 to WARES_IN_OUT_COUNT do
   begin
-    if not (fWareInput[I] in [wtNone, wtAll, wtFood, wtWarfare]) then
+    if not (fWareInput[I] in [wtNone, wtAll, wtFood, wtWarfare, wtValuable]) then
     begin
       if (fWareIn[I] > 0) then
         Exit(false);
@@ -2002,7 +2002,7 @@ begin
       if not (((fWareBlocked[I] = GetMaxInWare) and not IsAI) or IsAI) then
         Exit(false);
     end;
-    if not (fWareOutput[I] in [wtNone, wtAll, wtFood, wtWarfare]) then
+    if not (fWareOutput[I] in [wtNone, wtAll, wtFood, wtWarfare, wtValuable]) then
       if not (fWareOut[I] = 0) then
         Exit(false);
 
@@ -3987,7 +3987,7 @@ procedure TKMHouse.SetWareInCnt(aWare : TKMWareType; aValue : Integer);
 var I : Integer;
 begin
   for I := low(fWareIn) to High(fWareIn) do
-    if not (aWare in [wtAll, wtNone, wtFood]) then
+    if not (aWare in [wtAll, wtNone, wtFood, wtValuable]) then
       if fWareInput[I] = aWare then
         fWareIn[I] := aValue;
 

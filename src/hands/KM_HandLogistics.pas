@@ -1321,7 +1321,8 @@ begin
   Result := (dWT = oWT)
             or (dWT = wtAll)
             or ((dWT = wtWarfare) and (oWT in WARES_WARFARE))
-            or ((dWT = wtFood) and (oWT in WARES_FOOD));
+            or ((dWT = wtFood) and (oWT in WARES_FOOD))
+            or ((dWT = wtValuable) and (oWT in WARES_VALUABLE));
 end;
 
 
@@ -1835,7 +1836,7 @@ begin
     end;
 
     if oWT = wtWater then
-      aBidCost.IncAddition(100000);//water is the lowest possible priority, because citizen can go to well by himself
+      aBidCost.IncAddition(100000);//water is the lowest possible priority, because citizen can go to well by themselfs
     
     //Delivering weapons from store to barracks, make it lowest priority when there are >50 of that weapon in the barracks.
     //In some missions the storehouse has vast amounts of weapons, and we don't want the serfs to spend the whole game moving these.
@@ -1854,6 +1855,10 @@ begin
       and (fDemand[dWT,iD].Loc_House.HouseType in WALL_HOUSES)
       and (fDemand[dWT,iD].Loc_House.IsUpgrading) then
         aBidCost.IncAddition(1000);//Silo is not that important so deliver his wares later
+
+    if (fDemand[dWT,iD].Loc_House <> nil)
+      and (fDemand[dWT,iD].Loc_House.HouseType = htArena) then
+        aBidCost.IncAddition(500);//arena is not that important
 
     //When delivering food to warriors, add a random amount to bid to ensure that a variety of food is taken. Also prefer food which is more abundant.
     if (fDemand[dWT,iD].Loc_Unit <> nil) and (dWT = wtFood) then

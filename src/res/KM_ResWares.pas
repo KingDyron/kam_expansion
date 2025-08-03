@@ -141,7 +141,7 @@ const
     41, 42, 43, 44, 45, 46,
     47, 48, 49, 50, 51,
 
-    0, 0, 0 //rtAll, rtWarfare, rtFood
+    0, 0, 0, 0 //rtAll, rtWarfare, rtFood
     );
   RES_COUNT = 52;
   WARE_ID_TO_TYPE: array [0..RES_COUNT-1] of TKMWareType = (
@@ -163,14 +163,14 @@ const
    WARES_PROD_COUNT: array [TKMWareType] of byte = (
     0,//wtNone
     1, 3, 2, 1, 1, 1, 1, 2,//wtTrunk..wtGold
-    1, 1, 2, 1, 2, 3, 1, 1,//wtWine..wtSkin
+    1, 1, 2, 1, 2, 2, 1, 1,//wtWine..wtSkin
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, //wtWoodenShield .. wtArbalet
     1, 1, 1, 1, 1, 2, 1, //wtHorse..wtLog
     2, 1, 2, 2, 2, //wtSteelE..wtQuiver
     1, 2, 1, 2, 3, 1,//wtWater
     2, 1, 1, 1, 1, 1,//wtBoots, wtHay..wtPlateArmor
     1, 1,//wtBitinArmor, wtEgg
-    0, 0, 0//wtFood,wtAny, wtWarfare
+    0, 0, 0, 0//wtFood,wtAny, wtWarfare, wtValuable
 
   );
   //How many of resource gets produced per minute on AVERAGE
@@ -354,7 +354,7 @@ const
     $FFBF00, $FFBF00, $00BFFF, $00BFFF, $00BFFF,
     $FFBF00, $FFBF00, $00BFFF, $00BFFF, $00BFFF,
     $00BFFF, $FFBF00,
-    $004080,$004080,$004080 //wtAll, wtFood, wtWarfare
+    $004080,$004080,$004080,$004080 //wtAll, wtFood, wtWarfare, wtValuable
     );
 begin
   Result := WARE_COLOR[fType];
@@ -452,9 +452,10 @@ begin
     wtAll:             Result := 657;
     wtWarfare:         Result := 658;
     wtFood:            Result := 659;
+    wtValuable:        Result := 1111;
     wtBitin:           Result := 682;
     wtBitinOre:        Result := 688;
-    wtVegetables:             Result := 681;
+    wtVegetables:      Result := 681;
 
     wtStoneBolt:        Result := 695;
     wtBolt:             Result := 696;
@@ -491,6 +492,7 @@ begin
     wtAll:             Result := TX_RESOURCES_ALL;
     wtWarfare:         Result := TX_RESOURCES_WARFARE;
     wtFood:            Result := TX_RESOURCES_FOOD;
+    wtValuable:        Result := 1661;
     wtBitinOre: Result := 1607;
     wtBitin: Result :=1606;
     wtVegetables: Result := 1608;

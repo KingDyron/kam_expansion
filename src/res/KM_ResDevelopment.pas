@@ -15,6 +15,7 @@ const
   DEVELOPMENT_MAX_ALL = dttAll;
   DEVELOPMENT_VALID = [DEVELOPMENT_MIN..DEVELOPMENT_MAX];
   DEVELOPMENT_COUNT = byte(DEVELOPMENT_MAX) - byte(DEVELOPMENT_MIN) + 1;
+
 type
   PKMDevelopment = ^TKMDevelopment;
   TKMDevelopment = record
@@ -22,6 +23,7 @@ type
     X{, Y} : Byte;//grid position
     GuiIcon, ID : Word;
     Parent : PKMDevelopment;
+    Cost : Byte;
     Next : array of TKMDevelopment;
     function IndexOf(aDev : PKMDevelopment) : Integer;
     function AddNext(aId : Word; aX : Byte): PKMDevelopment;
@@ -46,6 +48,7 @@ type
     private
       fCRC : Cardinal;
       fTree : array[DEVELOPMENT_MIN..DEVELOPMENT_MAX] of TKMDevelopmentTree;
+      fTextCount : Word;
       fTexts : array of String;
       procedure AddText(aText : String);
 
@@ -126,6 +129,8 @@ procedure TKMDevelopmentTree.LoadFromJson(JSON: TKMJson);
       ID := aJson.I['ID'];
       fLastID := Max(ID, fLastID);
       HintID := aJson.I['HintID'];
+      Cost := aJson.I['Cost'];
+      Cost := max(Cost, 1);
 
       X := aJson.I['X'];
       //Y := aJson.I['Y'];
@@ -227,12 +232,15 @@ begin
   end;
   if count > 0 then
     AddText(Copy(S, K, count + 1));
-
+  fTextCount := Length(fTexts);
 end;
 
 function TKMDevelopmentTreeCollection.GetText(aID : Integer): String;
 begin
-  Result := fTexts[aID];
+  If aId < fTextCount then
+    Result := fTexts[aID]
+  else
+    Result := 'Unknown text : ' + aID.ToString;
 end;
 
 function TKMDevelopmentTreeCollection.GetAllTakenAtY(aType :TKMDevelopmentTreeType; aY: Byte): TKMByteArray;
@@ -265,6 +273,7 @@ var nRoot : TKMJsonSaver;
     nRoot.Write('HintID', aDev.HintID);
     nRoot.Write('GuiIcon', aDev.GuiIcon);
     nRoot.Write('X', aDev.X);
+    nRoot.Write('Cost', aDev.Cost);
     If length(aDev.Next) > 0 then
     begin
       nRoot.WriteArray('Next');

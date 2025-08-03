@@ -12,7 +12,7 @@ type
   private
     fDevType : TKMDevelopmentTreeType;
     fArenaAnimStep : Cardinal;
-    fWarfareDelivered, fFoodDelivered : Byte;
+    fWarfareDelivered, fFoodDelivered, fValuableDelivered : Byte;
     procedure UpdatePointBelowEntrance;
   protected
     procedure AddDemandsOnActivate(aWasBuilt: Boolean); override;
@@ -31,6 +31,7 @@ type
     procedure StartFestival;
     function FoodCost : Byte;
     function WarfareCost : Byte;
+    function ValuableCost : Byte;
     function FestivalStarted : Boolean;
     function CanStartFestival : Boolean;
 
@@ -47,6 +48,7 @@ const
 implementation
 uses
   Classes,
+  KM_Game,
   KM_HandsCollection, KM_HandLogistics,
   KM_RenderPool, KM_RenderAux,
   KM_Resource,
@@ -122,7 +124,8 @@ function TKMHouseArena.ShouldAbandonDeliveryTo(aWareType: TKMWareType): Boolean;
 begin
   Result := Inherited
              or ((fWarfareDelivered > 10) and (aWareType in WARES_WARFARE))
-             or ((fFoodDelivered > 10) and (aWareType in WARES_HOUSE_FOOD));
+             or ((fFoodDelivered > 10) and (aWareType in WARES_HOUSE_FOOD))
+             or ((fValuableDelivered > 15) and (aWareType in WARES_VALUABLE));
 end;
 
 procedure TKMHouseArena.WareAddToIn(aWare: TKMWareType; aCount: Integer = 1; aFromStaticScript: Boolean = False);
@@ -202,6 +205,35 @@ begin
         Break;
       end;
   end else
+  If aWare in WARES_VALUABLE then
+  begin
+    case aWare of
+      wtEgg: Inc(fValuableDelivered, 9);
+      wtFeathers: Inc(fValuableDelivered, 3);
+      wtBitin: Inc(fValuableDelivered, 15);
+      wtIron: Inc(fValuableDelivered, 9);
+      wtGold: Inc(fValuableDelivered, 5);
+      wtJewerly: Inc(fValuableDelivered, 250);
+    end;
+    for I := 1 to WARES_IN_OUT_COUNT do
+      if wtValuable = WareInput[I] then
+      begin
+        //Don't allow the static script to overfill houses
+        if aFromStaticScript then
+          aCount := EnsureRange(aCount, 0, GetMaxInWare);
+        //ResIn[I] := ResIn[I] + aCount;
+        if aFromStaticScript then
+        begin
+          WareDeliveryCnt[I] := WareDeliveryCnt[I] + aCount;
+          ordersRemoved := gHands[Owner].Deliveries.Queue.TryRemoveDemand(Self, aWare, aCount);
+          WareDeliveryCnt[I] := WareDeliveryCnt[I] - ordersRemoved;
+        end else
+        begin
+          WareDeliveryCnt[I] := WareDeliveryCnt[I] - aCount;
+        end;
+        Break;
+      end;
+  end else
   for I := 1 to WARES_IN_OUT_COUNT do
     if aWare = WareInput[I] then
     begin
@@ -225,6 +257,7 @@ begin
   case aWare of
     wtWarfare : Result := fWarfareDelivered;
     wtFood : Result := fFoodDelivered;
+    wtValuable : Result := fValuableDelivered;
     else Result :=  0;
   end;
 end;
@@ -238,10 +271,13 @@ end;
 function TKMHouseArena.GetWareDistribution(aID: Byte): Byte;
 begin
   If WareInput[aID] = wtFood then
-    Result := 2
+    Result := 3
+  else
+  If WareInput[aID] = wtValuable then
+    Result := 3
   else
   If WareInput[aID] = wtWarfare then
-    Result := 2
+    Result := 3
   else
     Result := gHands[Owner].Stats.WareDistribution[WareInput[aID],HouseType];
 
@@ -337,7 +373,8 @@ function TKMHouseArena.CanStartFestival: Boolean;
 begin
   Result := (fDevType <> dttNone)
             and (fFoodDelivered > FoodCost)
-            and (fWarfareDelivered > WarfareCost);
+            and (fWarfareDelivered > WarfareCost)
+            and (fValuableDelivered > ValuableCost);
 end;
 
 function TKMHouseArena.FoodCost : Byte;
@@ -362,6 +399,17 @@ begin
   end;
 end;
 
+function TKMHouseArena.ValuableCost : Byte;
+begin
+  Result := 0;
+  case fDevType of
+    dttBuilder : Result := 5;
+    dttEconomy : Result := 9;
+    dttArmy : Result := 6;
+    dttAll : Result := 8;
+  end;
+end;
+
 
 procedure TKMHouseArena.UpdateState(aTick: Cardinal);
 begin
@@ -381,6 +429,7 @@ begin
       begin
         fArenaAnimStep := 0;
         gHands[Owner].AddDevPoint( fDevType, IfThen(fDevType = dttAll, 1, 3) );
+        gGame.RefreshDevelopmentTree;
         fDevType := dttNone;
       end;
     end;

@@ -427,7 +427,7 @@ var
 
   function DoProduceWare(aWare : TKMWareType) : Boolean;
   begin
-    if aWare in [wtAll, wtNone, wtWarfare, wtFood] then
+    if aWare in [wtAll, wtNone, wtWarfare, wtFood, wtValuable] then
       Exit(false);
     if not (aWare in WARES_WARFARE) then
       Exit(false);
@@ -1686,7 +1686,7 @@ begin
           Continue;
         WT := wtNone;
         for J := 1 to 4 do
-          if not (gRes.Houses[HT2].WareOutput[J] in [wtNone, wtAll, wtFood, wtWarfare]) and Silos[I].HasSlotWithWare(gRes.Houses[HT2].WareOutput[J]) then
+          if not (gRes.Houses[HT2].WareOutput[J] in [wtNone, wtAll, wtFood, wtWarfare, wtValuable]) and Silos[I].HasSlotWithWare(gRes.Houses[HT2].WareOutput[J]) then
           begin
             WT := gRes.Houses[HT2].WareOutput[J];
             Break;

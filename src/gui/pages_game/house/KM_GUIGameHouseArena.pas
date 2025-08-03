@@ -19,7 +19,7 @@ type
     protected
       Button_Points : array[DEVELOPMENT_MIN..DEVELOPMENT_MAX] of TKMButtonFlat;
         Button_FestivalType : array[DEVELOPMENT_MIN..DEVELOPMENT_MAX_ALL] of TKMButtonFlat;
-        WareRow_Cost : array[0..1] of TKMWaresRow;
+        WareRow_Cost : array[0..2] of TKMWaresRow;
         Button_StartFestival : TKMButton;
     public
       constructor Create(aParent: TKMPanel);
@@ -73,6 +73,9 @@ begin
     If I = 0 then
       WT := wtFood
     else
+    If I = 2 then
+      WT := wtValuable
+    else
       WT := wtWarfare;
     WareRow_Cost[I] := TKMWaresRow.Create(self, 0, top + 28 * I, Width);
     WareRow_Cost[I].WareCntAsNumber := true;
@@ -80,7 +83,7 @@ begin
     WareRow_Cost[I].Hint := gResTexts[1907] + ': ' + gRes.Wares[WT].Title;
   end;
 
-  inc(top, 55);
+  top := WareRow_Cost[high(WareRow_Cost)].Bottom + 5;
 
   Button_StartFestival := TKMButton.Create(self, 0, top, Width, 25, gResTexts[2301], bsGame);
   Button_StartFestival.OnClick := Start_Click;
@@ -114,6 +117,7 @@ begin
     WareRow_Cost[I].Enabled := not Arena.FestivalStarted;
   WareRow_Cost[0].WareCount := Arena.FoodCost;
   WareRow_Cost[1].WareCount := Arena.WarfareCost;
+  WareRow_Cost[2].WareCount := Arena.ValuableCost;
   Button_StartFestival.Enabled := not Arena.FestivalStarted and Arena.CanStartFestival;
 end;
 

@@ -72,7 +72,7 @@ function TKMWareDistribution.GetWareDistribution(aWare: TKMWareType; aHouse: TKM
 var I, K : Integer;
 begin
   //Some houses has different count of wares, so use Max word instead of max 5 wares
-  if aWare in [wtAll, wtWarfare, wtFood] then
+  if aWare in [wtAll, wtWarfare, wtFood, wtValuable] then
     Exit(1);
   if aHouse in [htStore, htBarracks, htMarket] then
     Exit(1);

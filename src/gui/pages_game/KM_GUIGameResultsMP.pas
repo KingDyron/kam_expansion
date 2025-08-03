@@ -156,7 +156,7 @@ type
         Columnbox_Wares: TKMColumnBox;    //columnBox for Quantities charts
         Columnbox_WaresGDP: TKMColumnBox; //columnBox for GDP charts
         Charts_Wares: array[TKMStatType] of array[TKMWareType] of TKMChart; //One for each kind
-        Charts_WaresGDP: array[TKMStatType] of array [0..2] of TKMChart;
+        Charts_WaresGDP: array[TKMStatType] of array [0..3] of TKMChart;
         Label_NoWareData: TKMLabel;
         Panel_ChartWare_Type: TKMPanel;
           Radio_ChartWareType: TKMRadioGroup;
@@ -198,7 +198,7 @@ const
   SUBMENU_RIGHT_WIDTH = 170;
   BTN_BACK_TO_GAME_LEFT = RESULTS_X_PADDING + 330;
 
-  GDPWares: array [0..2] of TKMWareType = (wtAll, wtWarfare, wtFood);
+  GDPWares: array [0..3] of TKMWareType = (wtAll, wtWarfare, wtFood, wtValuable);
 
 
 function GetWareIdInGDPArr(aWare: TKMWareType): Integer;

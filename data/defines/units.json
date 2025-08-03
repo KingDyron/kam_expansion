@@ -4765,14 +4765,7 @@
 			"MaxRange" : 12,
 			"StrikeSteps" : [5],
 			"ProducesWares" : ["wtAll"],
-			"SiegeWorkshopPhasesCount" : 4,
-			"SiegeWorkshopCost" : 
-			[
-				{"WareType" : "wtLog","Count" : 3},
-				{"WareType" : "wtSteelE","Count" : 1},
-				{"WareType" : "wtWheel","Count" : 1},
-				{"WareType" : "wtNone","Count" : 0}
-			],
+			"TownhallCost" : 50,
 			"Animations" : 
 			[
 				{"ActionType" : "uaWalk","Dir" : "dirN","X" : 0,"Y" : 0,"StepStart" : 15328,"Count" : 15},
@@ -5615,8 +5608,8 @@
 	],
 	"School Order" : ["utSerf","utBuilder","utStonemason","utWoodcutter","utCarpenter","utClayPicker","utFisher","utFarmer","utBaker","utAnimalBreeder","utButcher","utMiner","utMetallurgist","utSmith","utOperator","utRecruit"],
 	"Barracks Order" : ["utFighter","utMilitia","utAxeFighter","utSwordFighter","utBowman","utCrossbowman","utLanceCarrier","utPikeman","utMaceFighter","utFlailFighter","utScout","utKnight"],
-	"Townhall Order" : ["utFighter","utRebel","utRogue","utClubMan","utVagabond","utShieldBearer","utBarbarian","utWarrior", "utFeeder", "utHouseBuilder"],
-	"SiegeWorkshop Order" : ["utBallista","utCatapult","utRam","utWoodenWall", "utMobileTower"],
+	"Townhall Order" : ["utFighter","utRebel","utRogue","utClubMan","utVagabond","utShieldBearer","utBarbarian","utWarrior", "utMobileTower", "utFeeder", "utHouseBuilder"],
+	"SiegeWorkshop Order" : ["utBallista","utCatapult","utRam","utWoodenWall"],
 	"Palace Order" : ["utFighter","utTorchMan","utPyro","utLekter","utMedic","utArcher","utPaladin","utSpy","utTrainedWolf","utAmmoCart","utPikeMachine","utSpikedTrap"],
 	"Shipyard Order" : ["utBoat","utShip","utBattleShip"]
 }
