@@ -466,6 +466,7 @@ begin
   LoadStream.Read(fDamageUnits);
   LoadStream.Read(fDamageHouse);
   LoadStream.Read(fRamTicker);
+  LoadStream.Read(fRageTime);
 
 end;
 
@@ -510,6 +511,7 @@ begin
   SaveStream.Write(fDamageUnits);
   SaveStream.Write(fDamageHouse);
   SaveStream.Write(fRamTicker);
+  SaveStream.Write(fRageTime);
 end;
 
 
