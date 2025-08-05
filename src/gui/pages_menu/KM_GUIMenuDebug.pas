@@ -717,7 +717,10 @@ begin
     temp := GetFreeSpace;
     If temp <> 255 then
     begin
-      {next := }dev.AddNext(gRes.Development[Tree.CurrentPage].GetNewId, temp);
+      next := dev.AddNext(gRes.Development[Tree.CurrentPage].GetNewId, temp);
+      next.GuiIcon := dev.GuiIcon + 1;
+      next.HintID := dev.HintID + 1;
+      next.Cost := 1;
       {SetLength(dev.Next, length(dev.Next) + 1);
       next := @dev.Next[high(dev.Next)];
       next.X := temp;

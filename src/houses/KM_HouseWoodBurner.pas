@@ -91,7 +91,11 @@ begin
 
   if fFuel > 0 then
   begin
-    fFuel := fFuel - 0.002;
+    If gHands[Owner].EconomyDevUnlocked(16) then
+      fFuel := fFuel - 0.00170
+    else
+      fFuel := fFuel - 0.002;
+
     fFuelTime := aTick + 300;
   end;
 

@@ -14,6 +14,7 @@ type
     fTotalCount : Integer;
     fWaresCount: array [WARE_MIN .. WARE_MAX] of Word;
     procedure SetWareCnt(aWareType: TKMWareType; aValue: Word);
+    function GetMaxCount : Integer;
   protected
     procedure Activate(aWasBuilt: Boolean); override;
   public
@@ -46,7 +47,7 @@ type
     procedure Save(SaveStream: TKMemoryStream); override;
 
     property TotalCount : Integer read fTotalCount;
-    property MaxCount : Integer read fMaxCount write fMaxCount;
+    property MaxCount : Integer read GetMaxCount write fMaxCount;
     procedure BlockAll(aTakeOut, aBlocked : Boolean);
 
     {function HasMoreEntrances : Boolean; override;
@@ -101,14 +102,22 @@ begin
         WareAIBlockAouto[RT] := false;
       end;
 
-  if HouseType = htStore then
-    fMaxCount := MAX_STORE_CAPACITY
-  else
-    fMaxCount := MAX_SMALL_STORE_CAPACITY;
+  fMaxCount := MAX_STORE_CAPACITY;
   //ChangedByAIBuildScript := false;
 end;
 
 
+function TKMHouseStore.GetMaxCount: Integer;
+begin
+  Result := fMaxCount;
+
+  If gHands[Owner].BuildDevUnlocked(24) then
+    Result := Result + 1500;
+  If gHands[Owner].BuildDevUnlocked(25) then
+    Result := Result + 2000;
+  If gHands[Owner].BuildDevUnlocked(27) then
+    Result := high(Integer);
+end;
 
 procedure TKMHouseStore.SetWareCnt(aWareType: TKMWareType; aValue: Word);
 var
@@ -131,7 +140,7 @@ begin
   for W := Low(fWaresCount) to High(fWaresCount) do
     fTotalCount := (fWaresCount[W] * WARE_WEIGHT[W])  + fTotalCount;
   if gHands[Owner].IsHuman then
-    if fTotalCount >= fMaxCount then
+    if fTotalCount >= MaxCount then
     begin
       StoreFilled := true;
       if DeliveryMode = dmDelivery then

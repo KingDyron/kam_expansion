@@ -420,7 +420,11 @@ var list : TKMPointTagList;
   rect : TKMRect;
 begin
   list := TKMPointTagList.Create;
-  rect := KMRectGrow(aLoc, 15);
+  If gHands[Owner].BuildDevUnlocked(22) then
+    rect := KMRectGrow(aLoc, 20)
+  else
+    rect := KMRectGrow(aLoc, 15);
+
   gTerrain.FindDepositsWithDistance(aLoc, 15, list, 1);
 
   //delete old data from this place

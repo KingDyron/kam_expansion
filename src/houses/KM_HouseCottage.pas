@@ -33,6 +33,9 @@ type
     procedure AddFamily;
     procedure TakeFamily(aIndex : Integer);
     function GetKidDuration(aAge : TKMWorklessAge) : Word;
+    function GetMaxCount : Byte;
+    property MaxCount : Byte read GetMaxCount;
+
   protected
     procedure Activate(aWasBuilt: Boolean); override;
   public
@@ -85,7 +88,7 @@ begin
   SetLength(fKidBornTime, fFamiliesCount);
   SetLength(fKidBornMaxTime, fFamiliesCount);
   SetLength(fFamilyKidCount, fFamiliesCount);
-  SetLength(fWorklessTime, fMaxCount);
+  SetLength(fWorklessTime, MaxCount);
   if not gGame.Params.IsMapEditor then
     if not aWasBuilt then
     begin
@@ -103,13 +106,20 @@ begin
           fKidAge[C] := TKMWorklessAge(KamRandom(3, 'Baby age'))
 
         end;
-      C := KamRandom(fMaxCount + 1, 'Baby age');
+      C := KamRandom(MaxCount + 1, 'Baby age');
       for I := 1 to C do
         ProductionComplete(1);
 
 
     end;
 
+end;
+
+function TKMHouseCottage.GetMaxCount: Byte;
+begin
+  Result := fMaxCount;
+  If (HouseType = htCottage) and gHands[Owner].BuildDevUnlocked(2) then
+    Inc(Result, 3);
 end;
 
 procedure TKMHouseCottage.AddFamily;
@@ -187,6 +197,10 @@ begin
 
   If gHands[Owner].HasPearl(ptValtaria) then
     Dec(percante, 0.1);
+
+  If gHands[Owner].BuildDevUnlocked(0) then
+    Dec(percante, 0.1);
+
 
   Result := Result - 10 * fWorklessCount + KamRandom(50, 'TKMHouseCottage.GetStageDuration');
   Result := Round(Result * percante);
@@ -282,7 +296,7 @@ end;
 procedure TKMHouseCottage.TakeWorkless;
 var I : Integer;
 begin
-  fWorklessCount := EnsureRange(fWorklessCount - 1, 0, fMaxCount);
+  fWorklessCount := EnsureRange(fWorklessCount - 1, 0, MaxCount);
 
   for I := high(fWorklessTime) downto 0 do
     if fWorklessTime[I] <> 99999999 then
@@ -314,12 +328,8 @@ begin
   for I := 0 to nCount - 1 do
     LoadStream.Read(fKidAge[I], SizeOf(fKidAge[I]));
 
+  LoadStream.Read(fMaxCount);
 
-  if HouseType = htCottage then
-    fMaxCount := 5
-  else
-  if HouseType = htHouse then
-    fMaxCount := 20;
   LoadStream.Read(fFurnitures);
 end;
 
@@ -344,6 +354,7 @@ begin
   SaveStream.Write(nCount);
   for I := 0 to nCount - 1 do
   SaveStream.Write(fKidAge[I], SizeOf(fKidAge[I]));
+  SaveStream.Write(fMaxCount);
   SaveStream.Write(fFurnitures);
 
 end;
@@ -433,7 +444,7 @@ begin
   Inherited;
   if not IsComplete then
     Exit;
-  if fMaxCount = 0 then Exit;
+  if MaxCount = 0 then Exit;
 
 
   for I := fFamiliesCount - 1 downto 0 do
@@ -443,7 +454,7 @@ begin
     if not (fKidBornTime[I] >= fKidBornMaxTime[I]) then
       Continue;
     fKidBornTime[I] := 0;
-    if KidCount + fWorklessCount >= fMaxCount then
+    if KidCount + fWorklessCount >= MaxCount then
       fKidBornMaxTime[I] := 100 + KaMRandom(50, 'TKMHouseCottage.UpdateState')
     else
     begin

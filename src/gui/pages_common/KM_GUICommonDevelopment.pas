@@ -308,7 +308,7 @@ var I : integer;
 begin
   If Visible then
   begin
-    TKMRenderUI.WriteBevel(AbsLeft, AbsTop, Width, Height, 1, 0.7);
+    TKMRenderUI.WriteBevel(AbsLeft, AbsTop, Width, Height, 1, 0.4);
     TKMRenderUI.SetupClipY(AbsTop + 42, AbsTop + Height - 5);
     for I := 0 to high(Tree[fLastPage].Button_Tree.Next) do
     begin

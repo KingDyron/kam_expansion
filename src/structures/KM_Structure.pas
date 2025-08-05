@@ -314,6 +314,12 @@ begin
   fBuildingProgress := EnsureRange(fBuildingProgress + 1, 0, Spec.MaxProgress);
   fBuildReserve := EnsureRange(fBuildReserve - 1, 0, Spec.MaxProgress);
 
+  If gHands[Owner].BuildDevUnlocked(15) then
+  begin
+    fBuildingProgress := EnsureRange(fBuildingProgress + 1, 0, Spec.MaxProgress);
+    fBuildReserve := EnsureRange(fBuildReserve - 1, 0, Spec.MaxProgress);
+  end;
+
   count := length(Basic.Order);//total count of tiles
 
   if fPlaced then

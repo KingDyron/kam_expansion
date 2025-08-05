@@ -14,6 +14,7 @@ type
     fArenaAnimStep : Cardinal;
     fWarfareDelivered, fFoodDelivered, fValuableDelivered : Byte;
     procedure UpdatePointBelowEntrance;
+    function FestivalDuration : Word;
   protected
     procedure AddDemandsOnActivate(aWasBuilt: Boolean); override;
     function GetWareDistribution(aID: Byte): Byte;override; //Will use GetRatio from mission settings to find distribution amount
@@ -287,6 +288,14 @@ begin
 
 end;
 
+function TKMHouseArena.FestivalDuration : Word;
+begin
+  Result := FESTIVAL_DURATION;
+
+  if gHands[Owner].EconomyDevUnlocked(4) then
+    Result := 900;
+end;
+
 procedure TKMHouseArena.UpdateDemands;
 Const MAX_ORDERS = 10;
   function MaxOrders : Word;
@@ -425,7 +434,7 @@ begin
     If (fDevType <> dttNone) and (fArenaAnimStep > 0) then
     begin
       Inc(fArenaAnimStep);
-      IF fArenaAnimStep = FESTIVAL_DURATION then
+      IF fArenaAnimStep >= FestivalDuration then
       begin
         fArenaAnimStep := 0;
         gHands[Owner].AddDevPoint( fDevType, IfThen(fDevType = dttAll, 1, 3) );

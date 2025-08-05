@@ -132,7 +132,7 @@ type
     fNeverHungry : Boolean;
 
     //pecialEffect : array of Reco
-    function GetDesiredPassability: TKMTerrainPassability;
+    function GetDesiredPassability: TKMTerrainPassability; virtual;
     function GetHitPointsMax: Byte;
     procedure SetDirection(aValue: TKMDirection);
     procedure SetAction(aAction: TKMUnitAction; aStep: Integer = 0);
@@ -152,6 +152,7 @@ type
     procedure DoDismiss;virtual;
     procedure SetDefence(aValue : SmallInt);
     function GetDefence : SmallInt;virtual;
+    function GetSight : SmallInt;virtual;
     procedure SetAttack(aValue : SmallInt);
     function GetAttack : SmallInt; virtual;
     procedure UpdateLastTimeTrySetActionWalk;
@@ -264,7 +265,7 @@ type
     property  Defence : SmallInt read  GetDefence write SetDefence;
     property  ProjectilesDefence : Single read  fProjectileDefence write fProjectileDefence;
     property  Speed : Single read fSpeed;
-    property  Sight : SmallInt read fSight write fSight ;
+    property  Sight : SmallInt read GetSight write fSight;
     function GetProjectileDefence(isBolt : Boolean) : Single;
     procedure SetSpeed(aValue : SmallInt; addTo : Boolean = false);
     procedure AssignToShip(aShip : Pointer); virtual;
@@ -395,6 +396,7 @@ type
     function GetCarry: TKMWareType;
   protected
     procedure PaintUnit(aTickLag: Single); override;
+    function GetDesiredPassability: TKMTerrainPassability; override;
   public
     constructor Create(aID: Cardinal; aUnitType: TKMUnitType; const aLoc: TKMPointDir; aOwner: TKMHandID; aInHouse: TKMHouse);
     constructor Load(LoadStream: TKMemoryStream); override;
@@ -432,6 +434,7 @@ type
     function PickNextSpot(aList: TKMPointDirList; out Loc: TKMPointDir; var aLastCellID : Byte): Boolean;
 
     function OnlyBuildsHouse : Boolean;
+    function GetEffectiveWalkSpeed(aIsDiag: Boolean): Single; override;
 
     function UpdateState: Boolean; override;
   end;
@@ -1248,6 +1251,14 @@ begin
 end;
 
 
+function TKMUnitSerf.GetDesiredPassability: TKMTerrainPassability;
+begin
+  Result := Inherited;
+
+  IF gHands[Owner].EconomyDevUnlocked(26) then
+    Result := tpWalk;
+end;
+
 procedure TKMUnitSerf.PaintUnit(aTickLag: Single);
 var
   ID: Integer;
@@ -1371,6 +1382,14 @@ end;
 function TKMUnitWorker.OnlyBuildsHouse: Boolean;
 begin
   Result := UnitType = utHouseBuilder;
+end;
+
+function TKMUnitWorker.GetEffectiveWalkSpeed(aIsDiag: Boolean): Single;
+begin
+  Result := Inherited;
+
+  If gHands[Owner].BuildDevUnlocked(14) then
+    Result := Result - ConvertSpeed(-2, aIsDiag);
 end;
 
 procedure TKMUnitWorker.BuildHouse(aHouse: TKMHouse; aIndex: Integer);
@@ -2347,6 +2366,7 @@ begin
   //Exit;
   addSpeed := 0;
   case gTerrain.GetRoadType(fPositionRound) of
+    rtWooden: If gHands[Owner].BuildDevUnlocked(6) then addSpeed := -1;
     rtStone : addSpeed := -2;
     rtClay: addSpeed := -4;
     rtExclusive: addSpeed := -10;
@@ -2762,6 +2782,12 @@ begin
     Result := Defence + Self.ProjectilesDefence / 4
   else
     Result := Defence + Self.ProjectilesDefence;
+
+  If (UnitType = utSwordFighter) and gHands[Owner].ArmyDevUnlocked(8) then
+    Result := Result + 1;
+
+  If (UnitType in [utRam, utWoodenWall]) and gHands[Owner].ArmyDevUnlocked(29) then
+    Result := Result + 3;
 end;
 
 procedure TKMUnit.SetSpeed(aValue: SmallInt; addTo: Boolean = false);
@@ -3572,14 +3598,18 @@ end;
 
 
 procedure TKMUnit.UpdateHitPoints(UseEffect : Boolean = true);
+var restorePace : Byte;
 begin
   if UnitType in UNITS_SHIPS then   //do not increase health if it's ship
     Exit;
+  restorePace := HITPOINT_RESTORE_PACE;
+  If gHands[Owner].ArmyDevUnlocked(10) then
+    restorePace := restorePace - 20;
   //Use fHitPointCounter as a counter to restore hit points every X ticks (Humbelum says even when in fights)
-  if HITPOINT_RESTORE_PACE = 0 then Exit; //0 pace means don't restore
+  if restorePace = 0 then Exit; //0 pace means don't restore
 
   if fHitPointCounter > 200 then//wait minimum 20 seconds
-    if (fHitPointCounter mod HITPOINT_RESTORE_PACE = 0) and (fHitPoints < HitPointsMax) then
+    if (fHitPointCounter mod restorePace = 0) and (fHitPoints < HitPointsMax) then
       Inc(fHitPoints);
 
   Inc(fHitPointCounter, 1); //Increasing each tick by 1 would require 13,6 years to overflow Cardinal
@@ -3611,6 +3641,15 @@ begin
   Result := Max(Result, 0);
 end;
 
+function TKMUnit.GetSight : SmallInt;
+begin
+  Result := fSight;
+
+  If gHands[Owner].ArmyDevUnlocked(23) then
+    Inc(Result, 4);
+end;
+
+
 Procedure TKMUnit.SetDefence(aValue : SmallInt);
 begin
   fDefence := Max(aValue, 0);
@@ -3640,7 +3679,6 @@ begin
   end;
 
   Result := Max(Result, 1);
-
 end;
 
 Procedure TKMUnit.SetAttack(aValue : SmallInt);
@@ -4023,6 +4061,10 @@ begin
 
   //Update hunger
   if not (fNeverHungry or Immortal) then
+    If (UnitType in SIEGE_MACHINES) and gHands[Owner].ArmyDevUnlocked(30) then
+    begin
+      //do nothing
+    end else
     if (fTicker mod Max(fConditionPace, 1) = 0) then
     begin
       If (fCondition > 0)
@@ -4043,7 +4085,12 @@ begin
 
     if gTerrain.TileHasPalisade(fPositionRound.X, fPositionRound.Y) then
       if gHands.CheckAlliance(Owner, gTerrain.Land^[fPositionRound.Y, fPositionRound.X].TileOwner) = atEnemy then
-        HitPointsDecrease(45, 1, nil);
+      begin
+        If gHands[Owner].ArmyDevUnlocked(15) then
+          HitPointsDecrease(60, 2, nil)
+        else
+          HitPointsDecrease(45, 1, nil);
+      end;
     //check if unit is on locked tile;
 
     if gTerrain.AvoidTile(Position) and IsIdle then

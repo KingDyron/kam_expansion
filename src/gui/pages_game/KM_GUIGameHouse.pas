@@ -1501,9 +1501,9 @@ begin
       end;
    end else
     begin
-      Label_HouseConstructionWood.Caption := IntToStr(aHouse.GetBuildWoodDelivered) + ' / ' + IntToStr(gRes.Houses[aHouse.HouseType].WoodCost);
-      Label_HouseConstructionStone.Caption := IntToStr(aHouse.GetBuildStoneDelivered) + ' / ' + IntToStr(gRes.Houses[aHouse.HouseType].StoneCost);
-      Label_HouseConstructionTile.Caption := IntToStr(aHouse.TileDelivered) + ' / ' + IntToStr(gRes.Houses[aHouse.HouseType].TileCost);
+      Label_HouseConstructionWood.Caption := IntToStr(aHouse.GetBuildWoodDelivered) + ' / ' + IntToStr(aHouse.WoodCost);
+      Label_HouseConstructionStone.Caption := IntToStr(aHouse.GetBuildStoneDelivered) + ' / ' + IntToStr(aHouse.StoneCost);
+      Label_HouseConstructionTile.Caption := IntToStr(aHouse.TileDelivered) + ' / ' + IntToStr(aHouse.TileCost);
     end;
 
     Label_House.Show;
@@ -2496,6 +2496,10 @@ begin
           CostsRow_Costs[I].Hide;
           Continue;
         end;
+        IF (W = wtMace) and gHands[aHouse.Owner].EconomyDevUnlocked(20) then
+          SetLength(Warr, high(Warr));
+        IF (W = wtPlateArmor) and gHands[aHouse.Owner].EconomyDevUnlocked(21) then
+          SetLength(Warr, high(Warr));
         Label_Common_Costs.Show;
         CostsRow_Costs[I].TexArr := gRes.Wares.WaresArrToIconArr(Warr);
 
@@ -3141,8 +3145,8 @@ begin
     Image_TH_Right.Show;
     Button_TH_Right.Enable;
   end;
-  CostsRow_TH_Cost.Count := gRes.Units[TH_GAME_ORDER[fLastTHUnit]].TownhallCost;
-  CostsRow_TH_Cost.Caption := gRes.Units[TH_GAME_ORDER[fLastTHUnit]].TownhallCost.ToString;
+  CostsRow_TH_Cost.Count := townHall.UnitCost(TH_GAME_ORDER[fLastTHUnit]);
+  CostsRow_TH_Cost.Caption := CostsRow_TH_Cost.Count.ToString;
 
   Panel_HouseTownHall.Show;
 end;

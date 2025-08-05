@@ -1950,6 +1950,7 @@ begin
 
   case aProj of
     ptTowerBolt:      A := gRes.Units[utCrossbowman].UnitAnim[uaSpec, aDir];
+    ptWallBolt,
     ptArrow:     A := gRes.Units[utBowman].UnitAnim[uaSpec, aDir];
     ptBallistaBolt:      A := gRes.Units[utBallista].UnitAnim[uaSpec, aDir];
     ptBolt:      A := gRes.Units[utCrossbowman].UnitAnim[uaSpec, aDir];
@@ -2083,7 +2084,7 @@ var
   cornerX, cornerY{, ground}: Single;
   R: TRXData;
   A: TKMAnimation;
-  id, id0, step: Integer;
+  id, {id0,} step: Integer;
   height : Single;
 begin
   if Thought = thNone then Exit;
@@ -2093,7 +2094,7 @@ begin
   step := gTerrain.AnimStep;
   //animCount := THOUGHT_BOUNDS[Thought, 2] - THOUGHT_BOUNDS[Thought, 1];
   A := gRes.Units.Thought;//gRes.Units[aUnit].UnitAnim[aAct, aDir];
-  id0 := gRes.Units[aUnit].UnitAnim[aAct, aDir].Animation[aStep];
+  //id0 := gRes.Units[aUnit].UnitAnim[aAct, aDir].Animation[aStep];
   // Units feet
   // := pY + (R.Pivot[id0].Y + R.Size[id0].Y) / CELL_SIZE_PX;
   // The thought should be slightly lower than the unit so it goes OVER warrior flags

@@ -235,6 +235,7 @@ function TKMUnitActionFight.ExecuteProcessRanged(Step: Byte): Boolean;
 var
   W: TKMUnitWarrior;
   dir : TKMDirection;
+  I : integer;
 begin
   Result := False;
 
@@ -293,6 +294,12 @@ begin
         gProjectiles.AimTarget(fUnit.PositionF, KMPointFAdd(fOpponent.PositionF, KMPointF(-2, 0)), 1, W.ProjectileType, fUnit, W.RangeMax, W.RangeMin);//aim a little bit to the left
       if W.TakeBolt then
         gProjectiles.AimTarget(fUnit.PositionF, KMPointFAdd(fOpponent.PositionF, KMPointF(2, 0)), 1, W.ProjectileType, fUnit, W.RangeMax, W.RangeMin);//aim a little bit to the right}
+    end else
+    If (W.UnitType = utCatapult) and gHands[W.Owner].ArmyDevUnlocked(33) then
+    begin
+      for I := 0 to 2 do
+        If W.TakeBolt then
+          gProjectiles.AimTarget(fUnit.PositionF, fOpponent, W.ProjectileType, fUnit, W.RangeMax, W.RangeMin);
     end else
       if W.TakeBolt then
         gProjectiles.AimTarget(fUnit.PositionF, fOpponent, W.ProjectileType, fUnit, W.RangeMax, W.RangeMin);

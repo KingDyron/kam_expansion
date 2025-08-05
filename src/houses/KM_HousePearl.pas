@@ -428,6 +428,10 @@ begin
   If Completed then
     Exit;
   Inc(fProgress);
+
+  If gHands[Owner].BuildDevUnlocked(19) then
+    Inc(fProgress);
+
   If fProgress >= fMaxProgress then
   begin
     Inc(fBuildStage);
@@ -512,6 +516,7 @@ end;
 procedure TKMHousePearl.MakeAuraEffect;
 var I : Integer;
   effectType : TKMUnitEffectType;
+  maxDist : Word;
 begin
   effectType := uetNone;
 
@@ -522,9 +527,13 @@ begin
     ptAgros : effectType := uetAttack;
     ptRalender : effectType := uetDefence;
   end;
+  maxDist := 10;
+
+  If gHands[Owner].BuildDevUnlocked(18) then
+    maxDist := 14;
 
   for I := 0 to gHands[Owner].Units.Count - 1 do
-    If (KMLengthDiag(gHands[Owner].Units[I].Position, PearlCenter) <= 10)
+    If (KMLengthDiag(gHands[Owner].Units[I].Position, PearlCenter) <= maxDist)
       and not gHands[Owner].Units[I].IsDeadOrDying then
       gHands[Owner].Units[I].SetEffect(effectType, 100);
 end;
@@ -773,6 +782,9 @@ begin
     ptRalender: fMaxReloadTime := 3000;
     else fMaxReloadTime := 1;
   end;
+
+  If gHands[Owner].EconomyDevUnlocked(19) then
+    fMaxReloadTime := Round(fMaxReloadTime * 0.80);
 
   case fPearlType of
     ptRalender: fWorkingTime := 1200;

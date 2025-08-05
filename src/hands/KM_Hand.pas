@@ -277,6 +277,7 @@ type
     function CanAddHousePlanAI(aX, aY: Word; aHouseType: TKMHouseType; aCheckInfluence: Boolean): Boolean;
     function CanAddStructurePlan(const aLoc : TKMPoint; aIndex, aRot : Word) : Boolean;
     function HasVWares(aCost : TKMVWarePlanCommon) : Boolean;
+    function HasVWaresDec(aCost : TKMVWarePlanCommon) : Boolean;
     function CanPlaceDecoration(const aLoc : TKMPoint; aIndex : Word) : Boolean;
     function CanBuildHouse(aHouseType : TKMHouseType) : Boolean;
     procedure AddFirstStorehouse(aEntrance: TKMPoint);
@@ -326,6 +327,11 @@ type
     function DevPoints(aType : TKMDevelopmentTreeType) : Word;
     procedure UnlockDevelopment(aType : TKMDevelopmentTreeType; aID : Integer);
     procedure UnlockDevelopmentScript(aType : TKMDevelopmentTreeType; aID : Integer; aLock : TKMHandDevLock);
+    function DevUnlocked(aType : TKMDevelopmentTreeType; aID : Integer) : Boolean;
+    function BuildDevUnlocked(aID : Integer) : Boolean;
+    function EconomyDevUnlocked(aID : Integer) : Boolean;
+    function ArmyDevUnlocked(aID : Integer) : Boolean;
+    procedure UnlockSpecialWalls;
 
     function GetClosestHouse(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aWareSet : TKMWareTypeSet = [wtAll];  aMaxDistance : Single = 999) : TKMHouse;
     function GetClosestStore(aLoc : TKMPoint; aWare: TKMWareType) : TKMHouse;
@@ -467,7 +473,6 @@ function TKMHandCommon.AddUnit(aUnitType: TKMUnitType; const aLoc: TKMPoint; aMa
 begin
   //Animals are autoplaced by default
   Result := fUnits.AddUnit(fID, aUnitType, KMPointDir(aLoc, dirS), True);
-
 
   if gGameParams.IsMapEditor and aMakeCheckpoint then
     gGame.MapEditor.History.MakeCheckpoint(caUnits, Format(gResTexts[TX_MAPED_HISTORY_CHPOINT_ADD_SMTH],
@@ -977,6 +982,7 @@ end;
 procedure TKMHand.AfterMissionInit(aFlattenRoads: Boolean);
 var I : Integer;
   H : TKMHouseStore;
+  HT : TKMHouseType;
   UT : TKMUnitType;
 begin
   if (Self = nil) or not Enabled then Exit;
@@ -1045,6 +1051,12 @@ begin
       fLocks.SetUnitBlocked(utRam, htBarracks, ulUnlocked);
       fLocks.SetUnitBlocked(utWoodenWall, htBarracks, ulUnlocked);
     end;
+  for HT := htWall to htWall5 do
+  begin
+    fLocks.HouseMaxLvl[HT]     := Min(fLocks.HouseMaxLvl[HT], 2);
+    If fLocks.HouseMaxLvl[HT] = 0 then
+      fLocks.HouseMaxLvl[HT] := 2;
+  end;
 
 end;
 
@@ -1508,12 +1520,12 @@ begin
     Exit(true);
 
   case aHouseType of
+    htPearl : Result := Stats.GetHouseTotal(aHouseType) <= 0;
     htForest,
     htPasture,
 
     htCartographers,
-    htPearl,
-    htProductionThatch : Result := Stats.GetHouseTotal(aHouseType) <= 0;
+    htProductionThatch : Result := Stats.GetHouseTotal(aHouseType) <= 0 + byte(gMySpectator.Hand.BuildDevUnlocked(27));
     else
       Result := true;
   end;
@@ -1588,6 +1600,23 @@ begin
       Exit(false);
 end;
 
+function TKMHand.HasVWaresDec(aCost: TKMVWarePlanCommon): Boolean;
+var I : Integer;
+  Count : Integer;
+begin
+  Result := true;
+  for I := 0 to High(aCost) do
+    with aCost[I] do
+    begin
+      Count := C;
+      If BuildDevUnlocked(1) then
+        Count := Round(Count * 0.9);
+
+      if self.VirtualWare[W] < Count then
+        Exit(false);
+    end;
+end;
+
 function TKMHand.CanPlaceDecoration(const aLoc: TKMPoint; aIndex: Word): Boolean;
 begin
   Result := true;
@@ -1602,7 +1631,7 @@ begin
   Result := Result and (not gTerrain.IsReservedForAI(aLoc) or IsComputer);
   if not Result then
     Exit;
-  Result := Result and HasVWares(gDecorations[aIndex].Cost);
+  Result := Result and HasVWaresDec(gDecorations[aIndex].Cost);
 end;
 
 function TKMHand.CanAddHousePlanAI(aX, aY: Word; aHouseType: TKMHouseType; aCheckInfluence: Boolean): Boolean;
@@ -1796,7 +1825,7 @@ end;}
 
 
 procedure TKMHand.AddJewerly(aObjectType: Word);
-var K, count : integer;
+var K, count, chance : integer;
   WareAdded : Boolean;
   ware : String;
 begin
@@ -1808,6 +1837,12 @@ begin
   begin
     for K := 0 to High(gMapElements[aObjectType].VWares) do
       with gMapElements[aObjectType].VWares[K] do
+      begin
+        chance := Ch;
+
+        if EconomyDevUnlocked(3) then
+          Ch := Ch + 15;
+
         if KamRandom(101, 'TKMHand.AddJewerly') < Ch then
         begin
           ware := W;
@@ -1815,11 +1850,12 @@ begin
           WareAdded := true;
           Break;
         end;
+      end;
 
   end;
-
-  if (KamRandom(101, 'TKMHand.AddJewerly') < gMapElements[aObjectType].VWareChance) or (gMapElements[aObjectType].VWareChance = 0) then
-    SetVirtualWareCnt(ware, count);
+  If count > 0 then
+    if (KamRandom(101, 'TKMHand.AddJewerly') < gMapElements[aObjectType].VWareChance) or (gMapElements[aObjectType].VWareChance = 0) then
+      SetVirtualWareCnt(ware, count);
 
 
 end;
@@ -1905,11 +1941,16 @@ begin
 end;
 
 procedure TKMHand.PlaceDecoration(const aLoc: TKMPoint; aIndex: Word);
-var I : integer;
+var I, count : integer;
 begin
   with gDecorations[aIndex] do
     for I := 0 to High(Cost) do
-      VirtualWareTake(Cost[I].W, Cost[I].C);
+    begin
+      count := Cost[I].C;
+      If BuildDevUnlocked(1) then
+        count := Round(count * 0.9);
+      VirtualWareTake(Cost[I].W, count);
+    end;
   gTerrain.PlaceDecoration(aLoc, aIndex);
   if (ID = gMySpectator.HandID) and not gGameParams.IsReplayOrSpectate then
     gSoundPlayer.Play(sfxPlacemarker);
@@ -2799,9 +2840,16 @@ procedure TKMHand.UnlockDevelopment(aType: TKMDevelopmentTreeType; aID: Integer)
 var dev : PKMDevelopment;
 begin
   dev := gRes.Development.Tree[aType].GetItem(aID);
-  If TakeDevPoint(aType, dev.Cost) then
+  If (Locks.DevelopmentLock[aType, aID] = dlNone) and TakeDevPoint(aType, dev.Cost) then
   begin
     fLocks.DevelopmentLock[aType, aID] := dlUnlocked;
+
+    If (aType = dttEconomy) and (aID = 1) then
+      AddDevPoint(dttArmy, 3);
+
+    If (aType = dttBuilder) and (aID = 29) then
+      UnlockSpecialWalls;
+
     gGame.RefreshDevelopmentTree;
   end;
 end;
@@ -2809,6 +2857,41 @@ end;
 procedure TKMHand.UnlockDevelopmentScript(aType: TKMDevelopmentTreeType; aID: Integer; aLock : TKMHandDevLock);
 begin
   fLocks.DevelopmentLock[aType, aID] := aLock;
+
+  If (aType = dttEconomy) and (aID = 1) then
+    AddDevPoint(dttArmy, 3);
+
+  If (aType = dttBuilder) and (aID = 29) then
+    UnlockSpecialWalls;
+end;
+
+procedure TKMHand.UnlockSpecialWalls;
+var HT : TKMHouseType;
+begin
+
+  for HT := htWall to htWall5 do
+    If (fLocks.HouseMaxLvl[HT] = 0) or (fLocks.HouseMaxLvl[HT] = 2) then
+      fLocks.HouseMaxLvl[HT] := 3;
+end;
+
+function TKMHand.DevUnlocked(aType : TKMDevelopmentTreeType; aID : Integer) : Boolean;
+begin
+  Result := fLocks.DevelopmentLock[aType, aID] = dlUnlocked;
+end;
+
+function TKMHand.BuildDevUnlocked(aID : Integer) : Boolean;
+begin
+  Result := DevUnlocked(dttBuilder, aID);
+end;
+
+function TKMHand.EconomyDevUnlocked(aID : Integer) : Boolean;
+begin
+  Result := DevUnlocked(dttEconomy, aID);
+end;
+
+function TKMHand.ArmyDevUnlocked(aID : Integer) : Boolean;
+begin
+  Result := DevUnlocked(dttArmy, aID);
 end;
 
 

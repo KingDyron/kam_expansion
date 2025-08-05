@@ -144,10 +144,11 @@ end;
 
 function TKMTaskAttackHouse.Execute: TKMTaskResult;
 var
-   AnimLength: Integer;
+   AnimLength, I: Integer;
    Delay, Cycle: Integer;
    closest: TKMPoint;
    dir : TKMDirection;
+   damage : Word;
 begin
   Result := trTaskContinues;
 
@@ -278,6 +279,12 @@ begin
                 if TakeBolt then
                   gProjectiles.AimTarget(fUnit.PositionF, KMPointAffectDir(KMPointF(fHouse.GetRandomCellWithin), dir, 1), 0.2, ProjectileType, fUnit, RangeMax, RangeMin);//aim to the right
               end else
+              If (UnitType = utCatapult) and gHands[Owner].ArmyDevUnlocked(33) then
+              begin
+                for I := 0 to 2 do
+                  If TakeBolt then
+                    gProjectiles.AimTarget(fUnit.PositionF, fHouse, ProjectileType, fUnit, RangeMax, RangeMin);
+              end else
               If TakeBolt then
                 gProjectiles.AimTarget(PositionF, fHouse, ProjectileType, fUnit, RangeMax, RangeMin);
 
@@ -297,10 +304,19 @@ begin
               begin
                 SetActionLockedStay(0, uaWork, true, 0, 1); // no pause for torchman
                 gSpecAnim.Add(gRes.Units.Explosion, fUnit.PositionF, 1, rxUnits, true);
-                if not fUnit.IsDeadOrDying then
-                  gHands.HitAllInRadius(fUnit, fUnit, fUnit.PositionF, 2.5, 199, 2, 200);
-                if not fUnit.IsDeadOrDying then
-                  gHands.HitAllInRadius(fUnit, fUnit, fUnit.PositionF, 1.43, 220, 5, 350);
+                If gHands[Owner].ArmyDevUnlocked(18) then
+                begin
+                  if not fUnit.IsDeadOrDying then
+                    gHands.HitAllInRadius(fUnit, fUnit, fUnit.PositionF, 4.5, 199, 2, 300);
+                  if not fUnit.IsDeadOrDying then
+                    gHands.HitAllInRadius(fUnit, fUnit, fUnit.PositionF, 2.43, 220, 6, 400);
+                end else
+                begin
+                  if not fUnit.IsDeadOrDying then
+                    gHands.HitAllInRadius(fUnit, fUnit, fUnit.PositionF, 2.5, 199, 2, 200);
+                  if not fUnit.IsDeadOrDying then
+                    gHands.HitAllInRadius(fUnit, fUnit, fUnit.PositionF, 1.43, 220, 5, 350);
+                end;
                 //if not fUnit.Immortal then
                   fUnit.Kill(-1, false, false);
               end else
@@ -313,7 +329,12 @@ begin
                 if fUnit.UnitType <> utTorchMan then
                 begin
                   if fHouse.HouseType in WALL_HOUSES then
+                  begin
+                    damage := Max(TKMUnitWarrior(fUnit).DamageHouse div 3, 1);
+                    If gHands[Owner].ArmyDevUnlocked(14) then
+                      damage := Max(Round(damage * 0.7), 1);
                     fHouse.AddDamage(Max(TKMUnitWarrior(fUnit).DamageHouse div 3, 1), fUnit)
+                  end
                   else
                     fHouse.AddDamage(TKMUnitWarrior(fUnit).DamageHouse, fUnit);
                 end;
@@ -620,6 +641,7 @@ function TKMTaskShootAtSpot.Execute: TKMTaskResult;
 var
    AnimLength: Integer;
    Delay, Cycle: Integer;
+   I : integer;
 begin
   Result := trTaskContinues;
 
@@ -682,6 +704,12 @@ begin
             SetActionLockedStay(FiringDelay, uaWork, False);
           end;
       3:  begin
+            If (UnitType = utCatapult) and gHands[Owner].ArmyDevUnlocked(33) then
+            begin
+              for I := 0 to 2 do
+                If TakeBolt then
+                  gProjectiles.AimTarget(fUnit.PositionF, fLoc.ToFloat, 0.5, ProjectileType, fUnit, RangeMax, RangeMin);
+            end else
             If TakeBolt then
               gProjectiles.AimTarget(PositionF, fLoc.ToFloat, 0.3, ProjectileType, fUnit, RangeMax, RangeMin);
 

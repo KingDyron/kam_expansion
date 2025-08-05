@@ -1598,7 +1598,7 @@ begin
 
   // Set pass only for 1st fast calculation
   if aCalcKind = dckFast then
-    aBidBasicCost.SerfToOffer.Pass := tpWalkRoad;
+    aBidBasicCost.SerfToOffer.Pass := aSerf.DesiredPassability;
   //Also prefer deliveries near to the serf
   //Serf gets to first house with tpWalkRoad, if not possible, then with tpWalk
   Result := TryCalcRouteCost(aCalcKind, GetSerfActualPos(aSerf), aOfferPos, drsSerfToOffer, 0, aBidBasicCost.SerfToOffer, tpWalk);
@@ -1720,7 +1720,10 @@ begin
         Exit;
 
       // Just set it to non-tpNone value, which will mark this calculation as a valid
-      aBidBasicCost.OfferToDemand.Pass := tpWalkRoad;
+      If gHands[fOwner].EconomyDevUnlocked(26) then
+        aBidBasicCost.OfferToDemand.Pass := tpNone
+      else
+        aBidBasicCost.OfferToDemand.Pass := tpWalkRoad;
       //Resource ratios are also considered
       aBidBasicCost.OfferToDemand.Value := maxWareIn + (maxWareIn - distr)*4 + KaMRandom(maxWareIn + 1 - 3*distr, 'TKMDeliveries.TryCalculateBidBasic');
     end
@@ -1735,7 +1738,10 @@ begin
       // We should not set it on dckAccurate stage since we already set it on dckFast and we could overwrite its value
       // (F.e. setting tpWalkRoad over tpWalk, which was set because serf is offroad atm)
       if aCalcKind = dckFast then
-        aBidBasicCost.OfferToDemand.Pass := tpWalkRoad;
+        If gHands[fOwner].EconomyDevUnlocked(26) then
+          aBidBasicCost.OfferToDemand.Pass := tpWalkRoad
+        else
+          aBidBasicCost.OfferToDemand.Pass := tpWalkRoad;
 
       Result := TryCalcRouteCost(aCalcKind, aOfferPos, fDemand[dWT,iD].Loc_House.PointBelowEntrance, drsOfferToDemand, 0, aBidBasicCost.OfferToDemand, secondPass);
 
@@ -2037,7 +2043,7 @@ procedure TKMDeliveries.DeliveryFindBestDemand(aSerf: TKMUnit; aDeliveryId: Inte
         if H.IsComplete
           and not H.IsDestroyed
           and H.CanHaveWareType(dWT) then
-          Result := Result and gTerrain.RouteCanBeMade(H.PointBelowEntrance, demand.Loc_House.PointBelowEntrance, tpWalkRoad);
+          Result := Result and gTerrain.RouteCanBeMade(H.PointBelowEntrance, demand.Loc_House.PointBelowEntrance, aSerf.DesiredPassability);
       end;
   end;
 

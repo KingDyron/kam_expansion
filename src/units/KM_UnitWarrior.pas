@@ -91,6 +91,7 @@ type
     procedure PaintUnit(aTickLag: Single); override;
     procedure DoDismiss;override;
     function IsSelected : Boolean; override;
+    function RageDelay : Word; virtual;
   public
     OnWarriorDismissed: TKMWarriorEvent; //Separate event from OnUnitDied to report to Group
     OnWarriorDied: TKMWarriorEvent; //Separate event from OnUnitDied to report to Group
@@ -183,7 +184,7 @@ type
 
 
     ///scripting:
-    procedure SetRageTime(aTime : Word);
+    procedure SetRageTime(aTime : Word); virtual;
     function GetStats : TKMUnitStats;override;
     procedure SetStats(aStats: TKMUnitStats);override;
 
@@ -220,11 +221,13 @@ type
     procedure PaintUnit(aTickLag: Single); override;
     function GetDefence : SmallInt;override;
     function GetAttack : SmallInt; override;
+    function RageDelay : Word; override;
   public
     constructor Create(aID: Cardinal; aUnitType: TKMUnitType; const aLoc: TKMPointDir; aOwner: TKMHandID; aInHouse: TKMHouse);
     constructor Load(LoadStream: TKMemoryStream); override;
     function UpdateState : Boolean; override;
     procedure Save(SaveStream: TKMemoryStream); override;
+
   end;
 
   TKMUnitWarriorAmmoCart = class(TKMUnitWarrior)
@@ -640,6 +643,7 @@ procedure TKMUnitWarrior.Kill(aFrom: TKMHandID; aShowAnimation, aForceDelay: Boo
 var
   alreadyDeadOrDying: Boolean;
   I : Integer;
+  aMulti : byte;
 begin
   alreadyDeadOrDying := IsDeadOrDying; //Inherited will kill the unit
 
@@ -648,36 +652,37 @@ begin
     if aFrom >= 0 then
     with gHands[aFrom] do
     begin
+      aMulti := 1 + byte(gHands[Owner].ArmyDevUnlocked(11));
       if UnitType in WARRIORS_IRON then
       begin
-        VirtualWareTake('vtIronFerrule', -2);
-        VirtualWareTake('vtNeedle', -1);
+        VirtualWareTake('vtIronFerrule', -2 * aMulti);
+        VirtualWareTake('vtNeedle', -1 * aMulti);
       end else
       if UnitType in SIEGE_MACHINES then
       begin
-        VirtualWareTake('vtIronFerrule', -4);
-        VirtualWareTake('vtWoodenPlate', -10);
+        VirtualWareTake('vtIronFerrule', -4 * aMulti);
+        VirtualWareTake('vtWoodenPlate', -10 * aMulti);
       end else
       if UnitType in UNITS_SHIPS then
       begin
-        VirtualWareTake('vtIronFerrule', -2);
-        VirtualWareTake('vtWoodenPlate', -10);
-        VirtualWareTake('vtNeedle', -5);
-        VirtualWareTake('vtLeatherSheet', -10);
-        VirtualWareTake('vtPearl', -1);
+        VirtualWareTake('vtIronFerrule', -2 * aMulti);
+        VirtualWareTake('vtWoodenPlate', -10 * aMulti);
+        VirtualWareTake('vtNeedle', -5 * aMulti);
+        VirtualWareTake('vtLeatherSheet', -10 * aMulti);
+        VirtualWareTake('vtPearl', -1 * aMulti);
       end else
       if UnitType in SPECIAL_UNITS then
       begin
         for I := 0 to high(gRes.Units[UnitType].PalaceCost.Wares) do
-          VirtualWareTake(gRes.Units[UnitType].PalaceCost.Wares[I].W, gRes.Units[UnitType].PalaceCost.Wares[I].C div 5);
+          VirtualWareTake(gRes.Units[UnitType].PalaceCost.Wares[I].W, - gRes.Units[UnitType].PalaceCost.Wares[I].C div 5 * aMulti);
 
       end else
       begin
-        VirtualWareTake('vtNeedle', -1);
-        VirtualWareTake('vtGemStone', -1);
-        VirtualWareTake('vtCoin', -1);
-        VirtualWareTake('vtLeatherSheet', -1);
-        VirtualWareTake('vtWoodenPlate', -2);
+        VirtualWareTake('vtNeedle', -1 * aMulti);
+        VirtualWareTake('vtGemStone', -1 * aMulti);
+        VirtualWareTake('vtCoin', -1 * aMulti);
+        VirtualWareTake('vtLeatherSheet', -1 * aMulti);
+        VirtualWareTake('vtWoodenPlate', -2 * aMulti);
       end;
     end;
 
@@ -864,6 +869,25 @@ begin
     uatStoneBolt: If doMax then Inc(fBoltCount, 20) else Inc(fBoltCount, 10);
     uatBolt: If doMax then Inc(fBoltCount, 30) else  Inc(fBoltCount, 15);
   end;
+
+  If (gGame.Params.Tick > 1) and gHands[Owner].ArmyDevUnlocked(19) then
+    case gRes.Units[UnitType].AmmoType of
+      uatNone: ;
+      uatArrow: Inc(fBoltCount, 20);
+      uatRogueStone: Inc(fBoltCount, 20);
+      uatStoneBolt: Inc(fBoltCount, 5);
+      uatBolt: Inc(fBoltCount, 7);
+    end;
+
+  If (gGame.Params.Tick > 1) and gHands[Owner].ArmyDevUnlocked(20) then
+    case gRes.Units[UnitType].AmmoType of
+      uatNone: ;
+      uatArrow: Inc(fBoltCount, 30);
+      uatRogueStone: Inc(fBoltCount, 30);
+      uatStoneBolt: Inc(fBoltCount, 7);
+      uatBolt: Inc(fBoltCount, 10);
+    end;
+
 
   fRequestedAmmo := false;
 end;
@@ -1267,7 +1291,7 @@ end;
 procedure TKMUnitWarrior.OrderShootAtSpot(aLoc : TKMPoint);
 const ALLOW_UNITS : set of TKMUnitType = [utCatapult, utBowMan, utCrossbowman];
 begin
-  If not IsRanged or not (UnitType in ALLOW_UNITS) then
+  If not IsRanged then
     Exit;
   ClearOrderTarget;
   fNextOrderForced := fNextOrder = woShootAtSpot;
@@ -1550,11 +1574,15 @@ end;
 
 procedure TKMUnitWarrior.UpdateHitPoints(UseEffect : Boolean = true);
 var medicsCount : Byte;
+  restorePace : Byte;
 begin
   if UnitType in UNITS_SHIPS then   //do not increase health if it's ship
     Exit;
+  restorePace := HITPOINT_RESTORE_PACE;
+  If gHands[Owner].ArmyDevUnlocked(10) then
+    restorePace := restorePace - 20;
   //Use fHitPointCounter as a counter to restore hit points every X ticks (Humbelum says even when in fights)
-  if HITPOINT_RESTORE_PACE = 0 then Exit; //0 pace means don't restore
+  if restorePace = 0 then Exit; //0 pace means don't restore
   medicsCount := 0;
   if Group <> nil then
   begin
@@ -1563,13 +1591,13 @@ begin
   end;
   if medicsCount > 0 then
   begin
-    if (fTicker mod (HITPOINT_RESTORE_PACE div medicsCount) = 0)
+    if (fTicker mod (restorePace div medicsCount) = 0)
       and (fHitPoints < HitPointsMax) then
       Inc(fHitPoints);
 
   end else
   if (fHitPointCounter > 200) then
-    if (fHitPointCounter mod (  HITPOINT_RESTORE_PACE) = 0)
+    if (fHitPointCounter mod restorePace = 0)
       and (fHitPoints < HitPointsMax) then
       Inc(fHitPoints);
 
@@ -1582,7 +1610,7 @@ end;
 function TKMUnitWarrior.GetDefence : SmallInt;
 begin
   Result := Inherited;
-  Result := Result + 2 * Result * byte(fRageTime > RAGE_TIME_DELAY);
+  Result := Result + 2 * Result * byte(fRageTime > RageDelay);
 
   if not (UnitType in SPECIAL_UNITS) then
     if UNIT_TO_GROUP_TYPE[UnitType] = gtMelee then
@@ -1591,12 +1619,18 @@ begin
           Result := Result + 1;
   If gHands[Owner].HasPearl(ptRalender) then
     Result := Result + 1;
+
+  If (UnitType = utFighter) and gHands[Owner].ArmyDevUnlocked(1) then
+    Result := Result + 1;
+
+  If (UnitType in [utRam, utWoodenWall]) and gHands[Owner].ArmyDevUnlocked(29) then
+    Result := Result + 3;
 end;
 
 function TKMUnitWarrior.GetAttack : SmallInt;
 begin
   Result := Inherited;
-  Result := Result + 2 * Result * byte(fRageTime > RAGE_TIME_DELAY);
+  Result := Result + 2 * Result * byte(fRageTime > RageDelay);
 
   if not (UnitType in SPECIAL_UNITS) then
     if UNIT_TO_GROUP_TYPE[UnitType] = gtAntiHorse then
@@ -1607,6 +1641,16 @@ begin
   If gHands[Owner].HasPearl(ptAgros) then
     Result := Result + 20;
 
+  If (UnitType = utFighter) and gHands[Owner].ArmyDevUnlocked(1) then
+    Result := Result + 5;
+
+  If (UnitType in [utLanceCarrier, utMilitia, utAxeFighter, utBowman]) and gHands[Owner].ArmyDevUnlocked(6) then
+    Result := Result + 15;
+  If (UnitType = utCrossbowMan) and gHands[Owner].ArmyDevUnlocked(7) then
+    Result := Result + 20;
+
+  If (UnitType = utPikeMachine) and gHands[Owner].ArmyDevUnlocked(24) then
+    Result := Result + 40;
 end;
 
 function TKMUnitWarrior.GetEffectiveWalkSpeed(aIsDiag: Boolean): Single;
@@ -1618,6 +1662,12 @@ begin
       if fGroup <> nil then
         if TKMUnitGroup(fGroup).HasUnitType(utTrainedWolf) then
           Result := Result + 1/((1 + byte(aIsDiag) * 0.41) / (3/240)); //add 3 to speed if there is wolf in the group
+
+  If (UnitType in UNITS_SHIPS) and gHands[Owner].ArmyDevUnlocked(2) then
+    Result := Result + 1/((1 + byte(aIsDiag) * 0.41) / (4/240));
+
+  If (UnitType = utVagabond) and gHands[Owner].ArmyDevUnlocked(28) then
+    Result := Result + 1/((1 + byte(aIsDiag) * 0.41) / (3/240));
 end;
 
 function TKMUnitWarrior.CanJoinToGroup(aGroup: Pointer): Boolean;
@@ -1634,7 +1684,7 @@ end;
 
 procedure TKMUnitWarrior.SetRageTime(aTime : Word);
 begin
-  fRageTime := RAGE_TIME_DELAY + aTime;
+  fRageTime := RageDelay + aTime;
 end;
 
 function TKMUnitWarrior.GetStats : TKMUnitStats;
@@ -1666,7 +1716,7 @@ end;
 function TKMUnitWarrior.GetDamageUnit: Word;
 begin
   Result := fDamageUnits;
-  Result := Result + 2 * Result * byte(fRageTime > RAGE_TIME_DELAY);
+  Result := Result + 2 * Result * byte(fRageTime > RageDelay);
   if gHands[Owner].IsAffectedbyMBD then
   begin
     if gGameParams.MBD.IsEasy then
@@ -1681,12 +1731,15 @@ begin
       if UNIT_TO_GROUP_TYPE[UnitType] = gtWreckers then
         if TKMUnitGroup(fGroup).HasUnitType(utPyro) then //
           Result := Result + 1;
+
+  If (UnitType = utTrainedWolf) and gHands[Owner].ArmyDevUnlocked(25) then
+    Result := Result * 2;
 end;
 
 function TKMUnitWarrior.GetDamageHouse: Word;
 begin
   Result := fDamageHouse;
-  Result := Result + 2 * Result * byte(fRageTime > RAGE_TIME_DELAY);
+  Result := Result + 2 * Result * byte(fRageTime > RageDelay);
   if gHands[Owner].IsAffectedbyMBD then
   begin
     if gGameParams.MBD.IsEasy then
@@ -1701,6 +1754,11 @@ begin
       if UNIT_TO_GROUP_TYPE[UnitType] = gtWreckers then
         if TKMUnitGroup(fGroup).HasUnitType(utPyro) then //
           Result := Result + 2;
+end;
+
+function TKMUnitWarrior.RageDelay: Word;
+begin
+  Result := RAGE_TIME_DELAY;
 end;
 
 function TKMUnitWarrior.IsSelected: Boolean;
@@ -1754,6 +1812,8 @@ begin
 
   If gHands[Owner].HasPearl(ptAgros) then
     Result := Result + 2;
+  If (UnitType = utCatapult) and gHands[Owner].ArmyDevUnlocked(32) then
+    Result := Result + 1;
 end;
 
 
@@ -2256,7 +2316,7 @@ begin
   unitPos.Y := V.PositionF.Y + UNIT_OFF_Y + V.SlideY;
 
 
-  if fRageTime > RAGE_TIME_DELAY then
+  if fRageTime > RageDelay then
   begin
 
     gRenderPool.AddAnimation(unitPos + KMPointF(0.3, -1.9), gRes.Units.RageAnim, fTicker,
@@ -2409,6 +2469,13 @@ function TKMUnitWarriorPaladin.GetAttack: SmallInt;
 begin
   Result := Inherited;
   //Result := Result +  2 * Result * byte(fRageDuration > 0);
+end;
+
+function TKMUnitWarriorPaladin.RageDelay : Word;
+begin
+  Result := Inherited;
+  If gHands[Owner].ArmyDevUnlocked(27) then
+    Result := Result - 200;
 end;
 
 function TKMUnitWarriorPaladin.UpdateState: Boolean;
@@ -2597,16 +2664,24 @@ begin
                       Inc(fAmmo[uatRogueStone], IfThen(doMax, GetAmmoMaxCount(uatRogueStone), 180 + KamRandom(40, 'TKMUnitWarriorAmmoCart.ReloadAmmo2') ));
                       if fAmmo[uatRogueStone] > GetAmmoMinCount(uatRogueStone) then
                         fAmmoRequested[uatRogueStone] := false;
-
                     end else
                     begin
                       Inc(fAmmo[uatStoneBolt], IfThen(doMax, GetAmmoMaxCount(uatStoneBolt), 20));
+
+                      If (gGame.Params.Tick > 1) and gHands[Owner].ArmyDevUnlocked(21) then
+                          Inc(fAmmo[uatStoneBolt], 10);
+
                       if fAmmo[uatStoneBolt] > GetAmmoMinCount(uatStoneBolt) then
                         fAmmoRequested[uatStoneBolt] := false;
+
                     end;
                   end;
     wtBolt :    begin
                   Inc(fAmmo[uatBolt], IfThen(doMax, GetAmmoMaxCount(uatBolt), 30));
+
+                  If (gGame.Params.Tick > 1) and gHands[Owner].ArmyDevUnlocked(21) then
+                      Inc(fAmmo[uatBolt], 10);
+
                   if fAmmo[uatBolt] > GetAmmoMinCount(uatBolt) then
                     fAmmoRequested[uatBolt] := false;
                 end;

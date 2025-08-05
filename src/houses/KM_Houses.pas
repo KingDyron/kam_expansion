@@ -105,7 +105,9 @@ type
     class var DummyHouseSketch: TKMHouseSketchEdit;
   end;
 
-
+  TKMHouseBuildCost = record
+    Wood,Stone,Tile : Byte;
+  end;
   TKMHouse = class(TKMHouseSketch)
   private
     fWariant : Integer;
@@ -188,7 +190,7 @@ type
     fDontNeedRes : Boolean;
     fIsBurning : Byte;
     fWasTookOver : Boolean;
-
+    fBuildCost : TKMHouseBuildCost;
     procedure CheckOnSnow;
     function GetWareInArray: TKMByteArray;
     function GetWareOutArray: TKMByteArray;
@@ -215,6 +217,7 @@ type
     fBuildState: TKMHouseBuildState; // = (hbsGlyph, hbsNoGlyph, hbsWood, hbsStone, hbsDone);
     FlagAnimStep: Cardinal; //Used for Flags and Burning animation
     //WorkAnimStep: Cardinal; //Used for Work and etc.. which is not in sync with Flags
+    procedure SetCost;
     procedure Activate(aWasBuilt: Boolean); virtual;
     procedure AfterCreate(aWasBuilt: Boolean); virtual;
     procedure AddDemandsOnActivate(aWasBuilt: Boolean); virtual;
@@ -257,6 +260,7 @@ type
     property SnowStep : Single read fSnowStep write fSnowStep;
     property IsOnSnow : Boolean read fIsOnSnow write fIsOnSnow;
     property ResetDemands : Boolean read fResetDemands write fResetDemands;
+
 
   public
     //fWareIn, fWareBlocked: array[1..WARES_IN_OUT_COUNT] of Byte; // Ware count in input
@@ -388,6 +392,12 @@ type
     procedure AddDamage(aAmount: Word; aAttacker: TObject; aIsEditor: Boolean = False; aFromParent : Boolean = false); virtual;
     procedure AddRepair(aAmount: Word = 5);
     procedure UpdateDamage;
+
+    function WoodCost : Byte;
+    function StoneCost : Byte;
+    function TileCost : Byte;
+    function TotalCost : Byte;
+    function HealthSupplyStep : Byte;
     procedure AddDemandBuildingMaterials;virtual;
     procedure SetOnFire;
     procedure TakeOver;
@@ -453,6 +463,7 @@ type
     function IsMineShaft : Boolean;
     function CanTaskProduceWare(aWare : TKMWareType) : Boolean;virtual;
 
+    function GetVWareModulo(W : Integer; aWare : TKMWareType) : Byte;
     procedure IncProductionCycle(aIndex : Integer);overload;
     procedure IncProductionCycle(aWare : TKMWareType);overload;
     procedure IncProductionCycle(aWare : TKMWareType; aCount : Integer);overload;
@@ -616,6 +627,8 @@ type
       property ParentTree : TKMHouse read GetParentTree write SetParentTree;
       function ChildTree(aIndex : Integer) : TKMHouseAppleTree;
       function ChildCount : Integer;
+
+
       procedure AddDemandBuildingMaterials; override;
 
       function GetFruitType : Byte;
@@ -918,10 +931,14 @@ type
   end;
 
   TKMHouseWall = class(TKMHouse)
+  private
     procedure UpdateWallAround;
   protected
+    fTicker : Cardinal;
     procedure AfterCreate(aWasBuilt: Boolean); override;
   public
+    constructor Load(LoadStream: TKMemoryStream); override;
+    procedure Save(SaveStream: TKMemoryStream); override;
     procedure Demolish(aFrom: TKMHandID; IsSilent: Boolean = False); override;
     procedure UpdateState(aTick: Cardinal); override;
   end;
@@ -963,7 +980,8 @@ uses
   KM_CommonExceptions, KM_JSONUtils,
   KM_UnitTaskThrowRock,
   KM_ResTileset,
-  KM_Achievements;
+  KM_Achievements,
+  KM_Projectiles, KM_CommonGameTypes;
 
 const
   // Delay, in ticks, from user click on DeliveryMode btn, to tick, when mode will be really set.
@@ -1183,6 +1201,8 @@ begin
   fBuildReserve     := 0;
   fBuildingProgress := 0;
   fDamage           := 0; //Undamaged yet
+
+  SetCost;
 
   fPlacedOverRoad   := gTerrain.TileHasRoad(Entrance);
 
@@ -1409,6 +1429,7 @@ begin
     LoadStream.Read(fNotAcceptWorkers[I], 4);
 
   fFoodToRot.LoadFromStream(LoadStream);
+  LoadStream.ReadData(fBuildCost);
 end;
 
 
@@ -1480,11 +1501,16 @@ procedure TKMHouse.Activate(aWasBuilt: Boolean);
 var
   P1, P2: TKMPoint;
   I : Integer;
+  sight : Word;
 begin
   // Only activated houses count
   gHands[Owner].Locks.HouseCreated(fType);
   gHands[Owner].Stats.HouseCreated(fType, aWasBuilt);
   fLevel.UpgradingTime := gGameParams.Tick + 100;
+  sight := gRes.Houses[fType].Sight;
+
+  If (HouseType = htWallTower) and gHands[Owner].BuildDevUnlocked(20) then
+    sight := Sight + 5;
 
   gHands.RevealForTeam(Owner, KMPoint(fPosition.X, fPosition.Y), gRes.Houses[fType].Sight, FOG_OF_WAR_MAX, frtHouse);
 
@@ -2622,7 +2648,7 @@ begin
   if (fBuildState = hbsWood) and (fBuildReserve <= 0) and (fBuildSupplyWood > 0) then
   begin
     Dec(fBuildSupplyWood);
-    Inc(fBuildReserve, gRes.Houses[fType].HealthSupplyStep);
+    Inc(fBuildReserve, HealthSupplyStep);
   end;
 
   if (fBuildState = hbsStone) and (fBuildReserve <= 0) and ((fBuildSupplyStone > 0) or (fBuildSupplyTile > 0)) then
@@ -2634,14 +2660,14 @@ begin
         if fBuildSupplyTile > 0 then
         begin
           Dec(fBuildSupplyTile);
-          Inc(fBuildReserve, gRes.Houses[fType].HealthSupplyStep + 5);
+          Inc(fBuildReserve, HealthSupplyStep + 5);
         end;
 
     end else
     if fBuildSupplyStone > 0 then
     begin
       Dec(fBuildSupplyStone);
-      Inc(fBuildReserve, gRes.Houses[fType].HealthSupplyStep + 5);
+      Inc(fBuildReserve, HealthSupplyStep + 5);
     end;
   end;
 
@@ -2913,11 +2939,66 @@ begin
     gScriptEvents.ProcHouseRepaired(Self, oldDmg - fDamage, fDamage);
 end;
 
+
+procedure TKMHouse.SetCost;
+begin
+  fBuildCost.Wood := HSpec.WoodCost;
+  fBuildCost.Stone := HSpec.StoneCost;
+  fBuildCost.Tile := HSpec.TileCost;
+
+  If (HouseType = htWoodcutters) and gHands[Owner].BuildDevUnlocked(5) then
+    Dec(fBuildCost.Wood, 2);
+  If (HouseType = htPottery) and gHands[Owner].BuildDevUnlocked(8) then
+    fBuildCost.Tile := 0;
+  If (HouseType = htMill) and gHands[Owner].BuildDevUnlocked(10) then
+    fBuildCost.Tile := 0;
+
+  If (HouseType in WALL_HOUSES) and gHands[Owner].BuildDevUnlocked(16) then
+  begin
+    fBuildCost.Wood := Max(fBuildCost.Tile - 1, 0);
+    fBuildCost.Stone := Max(fBuildCost.Tile - 1, 0);
+    fBuildCost.Tile := Max(fBuildCost.Tile - 1, 0);
+  end;
+  If (HouseType = htBarracks) and gHands[Owner].BuildDevUnlocked(17) then
+  begin
+    fBuildCost.Wood := Max(fBuildCost.Tile - 1, 0);
+    fBuildCost.Stone := Max(fBuildCost.Tile - 1, 0);
+    fBuildCost.Tile := Max(fBuildCost.Tile - 1, 0);
+  end;
+end;
+
+
+function TKMHouse.WoodCost : Byte;
+begin
+  Result := fBuildCost.Wood;
+end;
+
+function TKMHouse.StoneCost : Byte;
+begin
+  Result := fBuildCost.Stone;
+end;
+
+function TKMHouse.TileCost : Byte;
+begin
+  Result := fBuildCost.Tile;
+end;
+
+
+function TKMHouse.TotalCost : Byte;
+begin
+  Result := WoodCost + StoneCost + TileCost;
+end;
+
+function TKMHouse.HealthSupplyStep: Byte;
+begin
+  Result := HSpec.MaxHealth div TotalCost;
+end;
+
 procedure TKMHouse.AddDemandBuildingMaterials;
 begin
-  gHands[Owner].Deliveries.Queue.AddDemand(self, nil, wtTimber, gRes.Houses[self.HouseType].WoodCost, dtOnce, diHigh5);
-  gHands[Owner].Deliveries.Queue.AddDemand(self, nil, wtStone, gRes.Houses[self.HouseType].StoneCost, dtOnce, diHigh5);
-  gHands[Owner].Deliveries.Queue.AddDemand(self, nil, wtTile, gRes.Houses[self.HouseType].TileCost, dtOnce, diHigh5);
+  gHands[Owner].Deliveries.Queue.AddDemand(self, nil, wtTimber, WoodCost, dtOnce, diHigh5);
+  gHands[Owner].Deliveries.Queue.AddDemand(self, nil, wtStone, StoneCost, dtOnce, diHigh5);
+  gHands[Owner].Deliveries.Queue.AddDemand(self, nil, wtTile, TileCost, dtOnce, diHigh5);
 end;
 
 procedure TKMHouse.SetBuildingProgress(aProgress: Word; aWood: Word; aStone: Word; aTile: Word);
@@ -2926,9 +3007,9 @@ var I, newAmount, resNeeded, plannedToRemove : Integer;
 begin
   if gGameParams.Mode = gmMapEd then
   begin
-    fBuildSupplyWood := EnsureRange(aWood, 0, HSpec.WoodCost);
-    fBuildSupplyStone := EnsureRange(aStone, 0, HSpec.StoneCost);
-    fBuildSupplyTile := EnsureRange(aTile, 0, HSpec.TileCost);
+    fBuildSupplyWood := EnsureRange(aWood, 0, WoodCost);
+    fBuildSupplyStone := EnsureRange(aStone, 0, StoneCost);
+    fBuildSupplyTile := EnsureRange(aTile, 0, TileCost);
     if fBuildSupplyWood < HSpec.WoodCost then //not enough wood, so max progress is BuildSuppyWood / HSpec.TotalBuildSupply;
       progress := BuildSupplyWood / HSpec.TotalBuildSupply
     else
@@ -2963,7 +3044,7 @@ begin
       gHands[Owner].Deliveries.Queue.AddDemand(self, nil, wtStone, -newAmount, dtOnce, diHigh4);
     end;
 
-    newAmount := EnsureRange(aTile, -BuildSupplyTile, gRes.Houses[HouseType].TileCost - GetBuildTileDelivered);
+    newAmount := EnsureRange(aTile, -BuildSupplyTile, TileCost - GetBuildTileDelivered);
     if newAmount > 0 then
     begin
       resNeeded := gHands[Owner].Deliveries.Queue.TryRemoveDemand(self, wtTile, newAmount, plannedToRemove);
@@ -3015,6 +3096,11 @@ end;
 procedure TKMHouse.SetOnFire;
 begin
   fIsBurning := EnsureRange(fIsBurning + 1, 0, 20);
+  If (HouseType in WALL_HOUSES) and gHands[Owner].BuildDevUnlocked(21) then
+    fIsBurning := 0;
+
+  If (HouseType in WALL_HOUSES) and gHands[Owner].ArmyDevUnlocked(17) then
+    fIsBurning := EnsureRange(fIsBurning + 1, 0, 20);
 end;
 
 procedure TKMHouse.TakeOver;
@@ -3340,6 +3426,11 @@ begin
       Warr := gRes.Wares[ware].OrderCost;
       canPickOrder := true;
 
+      IF (ware = wtMace) and gHands[Owner].EconomyDevUnlocked(20) then
+        SetLength(Warr, high(Warr));
+      IF (ware = wtPlateArmor) and gHands[Owner].EconomyDevUnlocked(21) then
+        SetLength(Warr, high(Warr));
+
       for K := 0 to high(Warr) do
         if gRes.Wares[Warr[K]].IsValid then
           NeededWare[Warr[K]] := 0;
@@ -3348,6 +3439,7 @@ begin
       for K := 0 to high(Warr) do
         if gRes.Wares[Warr[K]].IsValid then
           Inc(NeededWare[Warr[K]]);
+
 
       canPickOrder := canPickOrder and (WareOrder[resI] > 0);
       if fType <> htProductionThatch then
@@ -3619,15 +3711,13 @@ end;
 
 function TKMHouse.IsMineShaft : Boolean;
 begin
-  //Result := false;
-  Exit(true);
+  Result := false;
 
-  //Memgor said there is no need for miner to be on mineshaft to mine hidden deposits
-  //mineshaft is only to place mines wherever you want
-  {
   if not (HouseType in [htGoldMine, htIronMine, htBitinMine]) then
     Exit;
-  Result := gTerrain.TileIsMineShaft(Entrance);}
+  If gHands[Owner].BuildDevUnlocked(23) then
+    Exit;
+  Result := gTerrain.TileIsMineShaft(Entrance);
 end;
 
 function TKMHouse.CanTaskProduceWare(aWare: TKMWareType): Boolean;
@@ -3685,8 +3775,8 @@ begin
     hbsStone:  begin
                   Result := ((fBuildSupplyStone > 0) or (fBuildReserve > 0));
 
-                  if (fBuildStoneDelivered = gRes.Houses[fType].StoneCost) then
-                    Result := Result or (gRes.Houses[fType].TileCost = 0) or (fBuildSupplyTile > 0) or (fBuildReserve > 0);
+                  if (fBuildStoneDelivered = StoneCost) then
+                    Result := Result or (TileCost = 0) or (fBuildSupplyTile > 0) or (fBuildReserve > 0);
               end;
     hbsDone:  if IsUpgrading then
                 Result := (fBuildSupplyWood > 0) or (fBuildSupplyStone > 0) or (fBuildSupplyTile > 0) or (fBuildReserve > 0)
@@ -3710,6 +3800,9 @@ begin
   if CurrentLevel > 0 then
     if HSpec.Levels[CurrentLevel - 1].MaxInWares > 0 then
       Result := HSpec.Levels[CurrentLevel - 1].MaxInWares;
+
+  If (HouseType = htSmallStore) and gHands[Owner].BuildDevUnlocked(23) then
+    Result := Result + 50 * (CurrentLevel + 1);
 end;
 
 function TKMHouse.GetMaxOutWare: Word;
@@ -3722,6 +3815,10 @@ begin
     if HSpec.Levels[CurrentLevel - 1].MaxInWares > 0 then
       Result := HSpec.Levels[CurrentLevel - 1].MaxInWares;}
 
+  If (HouseType = htFarm) and gHands[Owner].BuildDevUnlocked(12) then
+    Result := Result + 5;
+  If (HouseType = htProductionThatch) and gHands[Owner].BuildDevUnlocked(22) then
+    Result := Result + 20;
 end;
 
 
@@ -3855,9 +3952,9 @@ end;
 function TKMHouse.NeedsWareToBuild(aWare: TKMWareType): Boolean;
 begin
   case aWare of
-    wtTimber:   Result := fBuildWoodDelivered < gRes.Houses[fType].WoodCost;
-    wtStone:    Result := fBuildStoneDelivered < gRes.Houses[fType].StoneCost;
-    wtTile:     Result := fBuildTileDelivered < gRes.Houses[fType].TileCost;
+    wtTimber:   Result := fBuildWoodDelivered < WoodCost;
+    wtStone:    Result := fBuildStoneDelivered < StoneCost;
+    wtTile:     Result := fBuildTileDelivered < TileCost;
     else
       Result := false;
   end;
@@ -3867,9 +3964,9 @@ function TKMHouse.WareAddToBuild(aWare: TKMWareType; aCount: Integer = 1) : Bool
 var maxWood, maxStone, maxTile : Byte;
 begin
   Result := true;
-  maxWood := gRes.Houses[fType].WoodCost;
-  maxStone := gRes.Houses[fType].StoneCost;
-  maxTile := gRes.Houses[fType].TileCost;
+  maxWood := WoodCost;
+  maxStone := StoneCost;
+  maxTile := TileCost;
 
   if IsUpgrading then
   begin
@@ -4360,6 +4457,8 @@ begin
   for I := 0 to newCount - 1 do
     SaveStream.Write(TKMUnit(fNotAcceptWorkers[I]).UID);
   fFoodToRot.SaveToStream(SaveStream);
+
+  SaveStream.WriteData(fBuildCost);
 end;
 
 
@@ -4407,6 +4506,14 @@ begin
         if HA[I,K] <> 0 then
           gHands.RevealForTeam(Owner, KMPoint(fPosition.X + K - 4, fPosition.Y + I - 4), gRes.Houses[fType].Sight, FOG_OF_WAR_INC, frtHouse);
   end;
+end;
+
+function TKMHouse.GetVWareModulo(W: Integer; aWare : TKMWareType): Byte;
+begin
+  Result := gRes.Wares.VirtualWares[W].GetModulo(HouseType, aWare);
+
+  If gHands[Owner].BuildDevUnlocked(4) and (gRes.Wares.VirtualWares[W].Name = 'vtFurnitures') then
+    Result := Max(Result - 1, 0);
 end;
 
 procedure TKMHouse.IncProductionCycle(aIndex: Integer);
@@ -4722,7 +4829,7 @@ begin
     hbsStone :  begin
                   progress := EnsureRange(fBuildingProgress / H.MaxWoodHealth, 0, 1);//wood progress
                   stoneProgress := EnsureRange((fBuildingProgress - H.MaxWoodHealth) / H.MaxStoneHealth, 0, 1);
-                  if (gRes.Houses[fType].StoneCost = 0) and (gRes.Houses[fType].TileCost = 0) then
+                  if (gRes.Houses[fType].StoneCost = 0) and (TileCost = 0) then
                   begin
                     progress := progress * 2;
                     if progress > 1 then
@@ -5165,15 +5272,22 @@ begin
 end;
 
 procedure TKMHouseWell.UpdateState(aTick: Cardinal);
+  function MaxWater : Byte;
+  begin
+    Result := 1;
+    If gHands[Owner].EconomyDevUnlocked(13) then
+      Result := 2;
+  end;
+
 begin
   if not IsComplete then  Exit;
-  if CheckWareOut(wtWater) > 0 then
+  if CheckWareOut(wtWater) >= MaxWater then
     Exit;
   if fProgress > 0 then
     Dec(fProgress);
   if fProgress = 0 then
   begin
-    ProduceWare(wtWater);
+    ProduceWare(wtWater, MaxWater);
     Inc(fProductionCycles[1]);
     if fProductionCycles[1] mod 50 = 0  then
     begin
@@ -5461,9 +5575,9 @@ procedure TKMHouseAppleTree.AddDemandBuildingMaterials;
 begin
   if ParentTree.IsValid then
   begin
-    gHands[ParentTree.Owner].Deliveries.Queue.AddDemand(ParentTree, nil, wtTimber, gRes.Houses[self.HouseType].WoodCost, dtOnce, diHigh5);
-    gHands[ParentTree.Owner].Deliveries.Queue.AddDemand(ParentTree, nil, wtStone, gRes.Houses[self.HouseType].StoneCost, dtOnce, diHigh5);
-    gHands[ParentTree.Owner].Deliveries.Queue.AddDemand(ParentTree, nil, wtTile, gRes.Houses[self.HouseType].TileCost, dtOnce, diHigh5);
+    gHands[ParentTree.Owner].Deliveries.Queue.AddDemand(ParentTree, nil, wtTimber, WoodCost, dtOnce, diHigh5);
+    gHands[ParentTree.Owner].Deliveries.Queue.AddDemand(ParentTree, nil, wtStone, StoneCost, dtOnce, diHigh5);
+    gHands[ParentTree.Owner].Deliveries.Queue.AddDemand(ParentTree, nil, wtTile, TileCost, dtOnce, diHigh5);
   end else
     Inherited;
 end;
@@ -5748,9 +5862,17 @@ begin
     else
     begin
       fPhase := 3 + KamRandom(5, 'TKMHouseAppleTree.SetProgress'); //make it sapling again
-      fGrowPhase := 0;
+
+      If gHands[Owner].EconomyDevUnlocked(28) then
+        fGrowPhase := gFruitTrees[fFruitTreeID].MatureTreeStage
+      else
+        fGrowPhase := 0;
+
       if fNextFruitTreeID <> fFruitTreeID then
+      begin
         FruitType := fNextFruitTreeID;
+        fGrowPhase := 0;
+      end;
       gHands[Owner].VirtualWareTake('vtHerbs', -10)
 
     end;
@@ -6306,7 +6428,10 @@ begin
   for I := low(fTiles) to High(fTiles) do
     If fTiles[I] = 0 then
     begin
-      fTiles[I] := gGame.Params.Tick + 1800;
+      If gHands[Owner].BuildDevUnlocked(7) then
+        fTiles[I] := gGame.Params.Tick + 1400
+      else
+        fTiles[I] := gGame.Params.Tick + 1800;
       Exit;
     end;
   Inc(fStoredClay);
@@ -6479,8 +6604,11 @@ begin
       Exit;
   end;
 
-
   fillSkin := fFill * 2;
+
+  If gHands[Owner].EconomyDevUnlocked(5) then
+    fFill := fFill * 1.25;
+
   ProduceWareFromFill(wtPig, fFill);
   if Ut = utLandDuck then
     ProduceWareFromFill(wtFeathers, fillSkin)
@@ -6576,13 +6704,22 @@ end;
 function TKMHousePalace.UnitProgress(aType: TKMUnitType): Word;
 begin
   Result := Max(gRes.Units[aType].PalaceCost.PhaseDuration, 50);
-  If ghands[Owner].HasPearl(ptValtaria) then
+  If gHands[Owner].HasPearl(ptValtaria) then
+    Result := Round(Result * 0.9);
+
+  If (aType = utSpy) and gHands[Owner].ArmyDevUnlocked(0) then
+    Result := Round(Result * 0.8);
+
+  If (aType = utSpy) and gHands[Owner].ArmyDevUnlocked(4) then
     Result := Round(Result * 0.9);
 end;
 
 function TKMHousePalace.GetPhaseCount(aIndex : Integer) : Byte;
 begin
   Result := gRes.Units[PALACE_UNITS_ORDER[aIndex]].PalaceCost.PhaseCount;
+
+  If (PALACE_UNITS_ORDER[aIndex] = utSpy) and gHands[Owner].ArmyDevUnlocked(5) then
+    Result := Max(Result - 1, 1);
 end;
 
 function TKMHousePalace.GetCurrentPhase(aIndex : Integer) : Byte;
@@ -7146,6 +7283,9 @@ begin
   if (CostTo = 0) or (costFrom = 0) then
     Exit(0);
 
+  If gHands[Owner].EconomyDevUnlocked(15) then
+    costFrom := 0.8;
+
   Result := Round(costTo / Min(costTo, costFrom));
 end;
 
@@ -7359,7 +7499,10 @@ begin
   for I := low(fTiles) to High(fTiles) do
     If fTiles[I] = 0 then
     begin
-      fTiles[I] := gGame.Params.Tick + 1800;
+        If gHands[Owner].BuildDevUnlocked(7) then
+          fTiles[I] := gGame.Params.Tick + 1400
+        else
+          fTiles[I] := gGame.Params.Tick + 1800;
       Exit;
     end;
   Inc(fStoredClay);
@@ -8460,6 +8603,18 @@ begin
   end;
 end;
 
+constructor TKMHouseWall.Load(LoadStream: TKMemoryStream);
+begin
+  Inherited;
+  LoadStream.Read(fTicker);
+end;
+
+procedure TKMHouseWall.Save(SaveStream: TKMemoryStream);
+begin
+  Inherited;
+  SaveStream.Write(fTicker);
+end;
+
 procedure TKMHouseWall.Demolish(aFrom: TKMHandID; IsSilent: Boolean = False);
 begin
   Inherited;
@@ -8485,6 +8640,33 @@ procedure TKMHouseWall.UpdateState(aTick: Cardinal);
     aCells.Free;
   end;
 
+  function AttackDelay: Byte;
+  begin
+    Case HouseType of
+      htWall : Result := 35;
+      htWall2 : Result := 25;
+      htWall3 : Result := 35;
+      htWall4 : Result := 25;
+      htWall5 : Result := 20;
+      else
+        Result := 10;
+    End;
+  end;
+
+  procedure AttackTheEnemy;
+  var U : TKMUnit;
+    from : TKMPoint;
+  begin
+    from := GetRandomCellWithin;
+
+    U := gTerrain.UnitsHitTestWithinRad(from, 2, 8, Owner, atEnemy, dirNA, not RANDOM_TARGETS);
+    //no unit found so no need to check every archer
+    If (U = nil) or (U.IsDeadOrDying) then
+      Exit;
+    Inc(fTicker, KaMRandom(3, ''));
+    gProjectiles.AimTarget(from.ToFloat, U.PositionF, 0.2, ptWallBolt, nil, 15, 0);//(from.ToFloat, U, ptWallBolt, nil, 0, 15.99);
+  end;
+
 begin
   Inherited;
   If not IsComplete then
@@ -8492,8 +8674,15 @@ begin
       UpdatePointBelow
     else
   else
-  If aTick mod 100 = 0 then
-    UpdatePointBelow;
+  begin
+    Inc(fTicker);
+    If aTick mod 100 = 0 then
+      UpdatePointBelow;
+
+    If CurrentLevel = 2 then
+      if fTicker mod AttackDelay = 0 then
+        AttackTheEnemy;
+  end;
 end;
 
 function TKMHouseWallSingle.GetStonePic : Integer;
@@ -8539,7 +8728,10 @@ begin
     else newStyle := 0;
   end;
   If (newStyle > 0) and (CurrentLevel = 0) then
-    newStyle := newStyle + 2;
+    newStyle := newStyle + 2
+  else
+  If (newStyle > 0) and (CurrentLevel = 2) then
+    newStyle := newStyle + 4;
   fWallStyle := newStyle;
 end;
 

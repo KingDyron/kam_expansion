@@ -174,6 +174,10 @@ begin
   begin
     fUnits.Add(Result);
 
+    If gGame.Params.Tick > 0 then
+      if gHands[Result.Owner].EconomyDevUnlocked(10) then
+        Result.ConditionPace := Result.ConditionPace + 1;
+
     if not gGameParams.IsMapEditor then
     begin
       if aUnitType = utAmmoCart then

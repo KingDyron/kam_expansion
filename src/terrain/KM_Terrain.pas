@@ -223,7 +223,7 @@ type
     function GetWareOnGround(aLoc : TKMPoint) : TKMWareType;
     function GetWareOnGroundCount(aLoc : TKMPoint) : Byte;
 
-    procedure SowCorn(const aLoc: TKMPoint; aGrainType : TKMGrainFarmSet; aAddManure : Boolean);
+    procedure SowCorn(const aLoc: TKMPoint; aGrainType : TKMGrainFarmSet; aAddManure, aAddBonus : Boolean);
     function CutCorn(const aLoc: TKMPoint): Boolean;
     function CutGrapes(const aLoc: TKMPoint): Boolean;
 
@@ -4400,7 +4400,13 @@ begin
   Assert(Length(aPoints) = ORE_DENSITY_MAX_TYPES, 'Wrong length of Points array: ' + IntToStr(Length(aPoints)));
 
   miningRect := GetMiningRect(aWare);
-
+  If isOnMineShaft then
+  begin
+    Dec(miningRect.Top, 2);
+    Dec(miningRect.Left, 2);
+    Dec(miningRect.Bottom, 2);
+    Dec(miningRect.Right, 2);
+  end;
 
 
   //Try to find Clay
@@ -5690,7 +5696,7 @@ begin
 end;
 
 
-procedure TKMTerrain.SowCorn(const aLoc: TKMPoint; aGrainType : TKMGrainFarmSet;  aAddManure : Boolean);
+procedure TKMTerrain.SowCorn(const aLoc: TKMPoint; aGrainType : TKMGrainFarmSet;  aAddManure, aAddBonus : Boolean);
 var GFT2 : TKMGrainType;
 begin
   GFT2 := gftNone;
@@ -5721,6 +5727,9 @@ begin
   Land^[aLoc.Y,aLoc.X].FieldAge := 1;
   if aAddManure then
     Land^[aLoc.Y,aLoc.X].FieldAge := 10;
+
+  if aAddBonus then
+    Land^[aLoc.Y,aLoc.X].FieldAge := Land^[aLoc.Y,aLoc.X].FieldAge + 3;
 
   Land^[aLoc.Y,aLoc.X].GrainType := GFT2;
   Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain  := GetTileCornTile(aLoc, 1); //Plant it right away, don't wait for update state

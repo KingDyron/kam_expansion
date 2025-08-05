@@ -66,18 +66,19 @@ uses
   KM_Sound, KM_UnitWarrior,
   KM_CommonUtils, KM_Defaults,
   KM_CommonTypes,
-  KM_ScriptingEvents;
+  KM_ScriptingEvents,
+  KM_Particles;
 
 
 const
-  ProjectileLaunchSounds: array[TKMProjectileType] of TSoundFX = (sfxBowShoot, sfxCrossbowShoot, sfxNone, sfxRockThrow{sfxCatapultShoot}, {sfxCatapultShoot}sfxBalistaShoot, sfxBalistaShoot, sfxCrossbowShoot);
-  ProjectileHitSounds:   array[TKMProjectileType] of TSoundFX = (sfxArrowHit, sfxArrowHit, sfxArrowHit, sfxNone, sfxSiegeBuildingSmash, sfxSiegeBuildingSmash, sfxArrowHit);
-  ProjectileSpeeds: array[TKMProjectileType] of Single = (0.75, 0.8, 0.6, 1.1, 0.5, 1, 1.3);
-  ProjectileArcs: array[TKMProjectileType,1..2] of Single = ((1.6, 0.5), (1.4, 0.4), (2.5, 1), (1.2, 0.2), (0.5, 0.2), (0.5, 0.2), (1.4, 0.4)); //Arc curve and random fraction
-  ProjectileJitter: array[TKMProjectileType] of Single = (0.26, 0.29, 0.26, 0.2, 0.29, 0.15, 0.1); //Fixed Jitter added every time
-  ProjectileJitterHouse: array[TKMProjectileType] of Single = (0.6, 0.6, 0.6, 0, 0.6, 0.2, 0); //Fixed Jitter added every time
+  ProjectileLaunchSounds: array[TKMProjectileType] of TSoundFX = (sfxBowShoot, sfxCrossbowShoot, sfxNone, sfxRockThrow{sfxCatapultShoot}, {sfxCatapultShoot}sfxBalistaShoot, sfxBalistaShoot, sfxCrossbowShoot, sfxBowShoot);
+  ProjectileHitSounds:   array[TKMProjectileType] of TSoundFX = (sfxArrowHit, sfxArrowHit, sfxArrowHit, sfxNone, sfxSiegeBuildingSmash, sfxSiegeBuildingSmash, sfxArrowHit, sfxArrowHit);
+  ProjectileSpeeds: array[TKMProjectileType] of Single = (0.75, 0.8, 0.6, 1.1, 0.5, 1, 1.3, 0.75);
+  ProjectileArcs: array[TKMProjectileType,1..2] of Single = ((1.6, 0.5), (1.4, 0.4), (2.5, 1), (1.2, 0.2), (0.5, 0.2), (0.5, 0.2), (1.4, 0.4), (1.4, 0.4)); //Arc curve and random fraction
+  ProjectileJitter: array[TKMProjectileType] of Single = (0.26, 0.29, 0.26, 0.2, 0.29, 0.15, 0.1, 0.1); //Fixed Jitter added every time
+  ProjectileJitterHouse: array[TKMProjectileType] of Single = (0.6, 0.6, 0.6, 0, 0.6, 0.2, 0, 0); //Fixed Jitter added every time
   // Jitter added according to target's speed (moving target harder to hit) Note: Walking = 0.1, so the added jitter is 0.1*X
-  ProjectilePredictJitter: array[TKMProjectileType] of Single = (2, 2, 2, 3, 2, 5, 3);
+  ProjectilePredictJitter: array[TKMProjectileType] of Single = (2, 2, 2, 3, 2, 5, 3, 2);
 
 { TKMProjectiles }
 constructor TKMProjectiles.Create(aOnAddProjectileToRenderPool: TKMRenderPoolAddProjectileEvent);
@@ -183,7 +184,7 @@ begin
     if gTerrain.TileInMapCoords(Round(target.X), Round(target.Y)) then //Arrows may fly off map, UnitsHitTest doesn't like negative coordinates
     begin
       U := gTerrain.UnitsHitTest(Round(target.X), Round(target.Y));
-      if (U <> nil) and (gHands.CheckAlliance(aOwner.Owner, U.Owner) = atAlly) then
+      if (U <> nil) and (aOwner <> nil) and (gHands.CheckAlliance(aOwner.Owner, U.Owner) = atAlly) then
         target := aTarget.PositionF; //Shoot at the target's current position instead
     end;
 
@@ -204,6 +205,10 @@ var
   aim, target: TKMPointF;
 begin
   speed := ProjectileSpeeds[aProjType] + KaMRandomS2(0.05, 'TKMProjectiles.AimTarget 5');
+
+  If (aProjType = ptBallistaBolt) and gHands[aOwner.Owner].ArmyDevUnlocked(9) then
+    speed := speed * 1.15;
+
   aim := KMPointF(aTarget.GetRandomCellWithin);
   target.X := aim.X + KaMRandomS2(ProjectileJitterHouse[aProjType], 'TKMProjectiles.AimTarget 6'); //So that arrows were within house area, without attitude to tile corners
   target.Y := aim.Y + KaMRandomS2(ProjectileJitterHouse[aProjType], 'TKMProjectiles.AimTarget 7');
@@ -241,8 +246,8 @@ end;
 { Return flight time (archers like to know when they hit target before firing again) }
 function TKMProjectiles.AddItem(const aStart,aAim,aEnd: TKMPointF; aSpeed,aArc,aMaxLength: Single; aProjType: TKMProjectileType; aOwner, aTarget: TKMUnit): Word;
 const //TowerRock position is a bit different for reasons said below
-  OFFSET_X: array [TKMProjectileType] of Single = (0.5, 0.5, 0.5, -0.25, 0.5, 0.5, -0.25); //Recruit stands in entrance, Tower middleline is X-0.75
-  OFFSET_Y: array [TKMProjectileType] of Single = (0.2, 0.2, 0.2, -0.2, 0, -0.2, -0.2); //Add towers height
+  OFFSET_X: array [TKMProjectileType] of Single = (0.5, 0.5, 0.5, -0.25, 0.5, 0.5, -0.25, -0.25); //Recruit stands in entrance, Tower middleline is X-0.75
+  OFFSET_Y: array [TKMProjectileType] of Single = (0.2, 0.2, 0.2, -0.2, 0, -0.2, -0.2, -0.25); //Add towers height
 var
   I: Integer;
 begin
@@ -285,6 +290,7 @@ end;
 procedure TKMProjectiles.HitAllInRadius(aOwner, aBaseUnit: TKMUnit; aTilePos: TKMPointF; aRadius: Single; Damage, UDamage : Integer);
 begin
   gHands.HitAllInRadius(aOwner, aBaseUnit, aTilePos, aRadius, damage, UDamage, 10);
+  gparticles.AddDustParticle(aTilePos);
 end;
 
 
@@ -389,10 +395,21 @@ begin
                               else
                                 HDamage := 0;
 
+                              If gHands[fOwner.Owner].ArmyDevUnlocked(14) then
+                                damage := Max(Round(damage * 0.7), 1);
+
                               if H <> nil then
+                                If H.HouseType in WALL_HOUSES then
+                                begin
+                                  HDamage := HDamage div 2;
+                                  If gHands[fOwner.Owner].ArmyDevUnlocked(14) then
+                                    HDamage := Max(Round(HDamage * 0.7), 0);
+                                end;
+                                {
                                 if fType = ptCatapultRock then
-                                  If H.HouseType in WALL_HOUSES then
+                                  begin
                                     HDamage:= HDamage div 2;
+                                  end;}
 
                               if (H <> nil)
                               and (FRIENDLY_FIRE or (gHands.CheckAlliance(fOwner.Owner, H.Owner)= atEnemy))
@@ -400,10 +417,24 @@ begin
                                 H.AddDamage(HDamage, fOwner);
 
                             end;
+              ptWallBolt: if (U <> nil) and not U.IsDeadOrDying and U.Visible and not (U is TKMUnitAnimal) then
+                          //Can't hit units past max range because that's unintuitive/confusing to player
+                          if (KMLengthSqr(fShotFrom, U.PositionF) <= Sqr(fMaxLength)) then
+                          begin
+                            Damage := 80;
+                            UDamage := 2;
+                            Damage := Round(Damage / Math.max(U.GetProjectileDefence(false), 1)); //Max is not needed, but animals have 0 defence
+
+
+                            if (Damage >= KaMRandom(101, 'TKMProjectiles.UpdateState:Damage')) or (U.Defence = 0) then
+                              U.HitPointsDecrease(UDamage, fOwner);
+                          end;
               ptTowerRock:  begin
 
-
-                              HitAllInRadius(fOwner, U, fTarget, 1.5, 200, KamRandom(2, 'TKMProjectiles.UpdateState: TowerHit') + 1);
+                              If gHands[fOwner.Owner].ArmyDevUnlocked(22) then
+                                HitAllInRadius(fOwner, U, fTarget, 2, 300, KamRandom(3, 'TKMProjectiles.UpdateState: TowerHit') + 2)
+                              else
+                                HitAllInRadius(fOwner, U, fTarget, 1.5, 200, KamRandom(2, 'TKMProjectiles.UpdateState: TowerHit') + 1);
                               if (U <> nil) and not U.IsDeadOrDying and U.Visible
                               and not (U is TKMUnitAnimal)
                               and (FRIENDLY_FIRE or (gHands.CheckAlliance(fOwner.Owner, U.Owner)= atEnemy)) then
@@ -463,6 +494,7 @@ begin
       case fItems[I].fType of
         ptTowerBolt,
         ptBallistaBolt,
+        ptWallBolt,
         ptArrow, ptSlingRock, ptBolt:
           begin
             mixArc := sin(mixValue*pi);   // 0 >> 1 >> 0 Parabola

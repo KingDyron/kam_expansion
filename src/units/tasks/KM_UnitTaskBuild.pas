@@ -519,11 +519,17 @@ begin
          case fRoadType of
            rtNone,
            rtStone: TryToTakeWares(wtStone, 1);
-           rtWooden: TryToTakeWares(wtTimber, 1);
+           rtWooden:  If gHands[Owner].BuildDevUnlocked(26) then
+                        fSupplies := 1
+                      else
+                        TryToTakeWares(wtTimber, 1);
            rtClay: TryToTakeWares(wtTile, 1);
            rtExclusive: begin
+                          If gHands[Owner].BuildDevUnlocked(9) then
+                            fSupplies := 1
+                          else
+                            TryToTakeWares(wtTimber, 1);
                           TryToTakeWares(wtStone, 1);
-                          TryToTakeWares(wtTimber, 1);
                           TryToTakeWares(wtTile, 1);
                         end;
          end;
@@ -742,7 +748,10 @@ begin
         CancelThePlan;
 
         gTerrain.ResetDigState(fLoc); //Remove any dig over that might have been there (e.g. destroyed house)
-        TryToTakeWares(wtTimber, 1);
+        If gHands[Owner].BuildDevUnlocked(28) then
+          fDemandSet := false
+        else
+          TryToTakeWares(wtTimber, 1);
         //gHands[Owner].Deliveries.Queue.AddDemand(nil,fUnit,wtTimber, 1, dtOnce, diHigh4);
 
         SetActionLockedStay(12*4,uaWork1,False);

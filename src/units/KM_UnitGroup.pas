@@ -2082,6 +2082,8 @@ end;
 procedure TKMUnitGroup.OrderShootAtSpot(const aLoc: TKMPoint; aClearOffenders: Boolean);
 var I : Integer;
 begin
+  If not gHands[Owner].ArmyDevUnlocked(31) then
+    Exit;
   if aClearOffenders and CanTakeOrders then
     ClearOffenders;
 

@@ -35,6 +35,7 @@ type
 
     procedure MoveWareIn2Out(aWare: TKMWareType; aCnt: Integer);
     function MoveWareOut2In(aWare: TKMWareType; aCnt: Integer): Integer;
+    function WarePrice(aWare: TKMWareType) : Single;
   protected
     function GetWareOrder(aId: Byte): Integer; override;
     procedure SetWareOrder(aId: Byte; aValue: Integer); override;
@@ -152,15 +153,43 @@ begin
 end;
 
 
-function TKMHouseMarket.RatioFrom: Word;
+
+function TKMHouseMarket.WarePrice(aWare: TKMWareType) : Single;
 begin
-  Result := gRes.Wares.RatioFrom(fResFrom, fResTo);
+  Result := gRes.Wares[fResFrom].MarketPrice;
+  If (aWare = wtEgg) and gHands[Owner].EconomyDevUnlocked(2) then
+      Result := Result + 7;
+end;
+
+function TKMHouseMarket.RatioFrom: Word;
+var
+  costFrom, costTo: Single;
+begin
+  if (fResFrom <> wtNone) and (fResTo <> wtNone) then
+  begin
+    //When trading target ware is priced higher
+    costFrom := WarePrice(fResFrom);
+    costTo := WarePrice(fResTo) * MARKET_TRADEOFF_FACTOR;
+    Result := Min(Round(costTo / Min(costFrom, costTo)), High(Word));
+  end else
+    Result := 1;
+  //Result := gRes.Wares.RatioFrom(fResFrom, fResTo);
 end;
 
 
 function TKMHouseMarket.RatioTo: Word;
+var
+  costFrom, costTo: Single;
 begin
-  Result := gRes.Wares.RatioTo(fResFrom, fResTo);
+  if (fResFrom <> wtNone) and (fResTo <> wtNone) then
+  begin
+    //When trading target ware is priced higher
+    costFrom := WarePrice(fResFrom);
+    costTo := WarePrice(fResTo) * MARKET_TRADEOFF_FACTOR;
+    Result := Min(Round(costFrom / Min(costFrom, costTo)), High(Word));
+  end else
+    Result := 1;
+  //Result := gRes.Wares.RatioTo(fResFrom, fResTo);
 end;
 
 

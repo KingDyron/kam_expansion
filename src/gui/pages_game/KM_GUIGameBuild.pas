@@ -269,6 +269,26 @@ var
   house: TKMHouseType;
   houseSpec: TKMHouseSpec;
   FT : TKMLockFieldType;
+
+  procedure SetHouseCost(aHouseType : TKMHouseType);
+  var wood, stone, tile : Byte;
+  begin
+    houseSpec := gRes.Houses[aHouseType];
+    wood := houseSpec.WoodCost;
+    stone := houseSpec.StoneCost;
+    tile := houseSpec.TileCost;
+
+
+    if (aHousetype = htWoodcutters) and gMySpectator.Hand.BuildDevUnlocked(5) then
+      wood := wood - 2;
+    if (aHousetype = htPottery) and gMySpectator.Hand.BuildDevUnlocked(8) then
+      tile := 0;
+    if (aHousetype = htMill) and gMySpectator.Hand.BuildDevUnlocked(10) then
+      tile := 0;
+
+
+    SetCost(cmHouses, Byte(aHouseType), houseSpec.GUIIcon, wood, stone, tile, houseSpec.HouseName);
+  end;
 begin
   if Sender = nil then
   begin
@@ -295,9 +315,9 @@ begin
     begin
       case FT of
         lftRoadStone:         SetCost(cmRoad, 1, LOCK_FIELD_GUI[FT], 0, 1, 0, gResTexts[1992]);
-        lftRoadWooden:        SetCost(cmRoad, 2, LOCK_FIELD_GUI[FT], 1, 0, 0, gResTexts[1993]);
+        lftRoadWooden:        SetCost(cmRoad, 2, LOCK_FIELD_GUI[FT], 1 * byte(not gMySpectator.Hand.BuildDevUnlocked(26)), 0, 0, gResTexts[1993]);
         lftRoadClay:          SetCost(cmRoad, 3, LOCK_FIELD_GUI[FT], 0, 0, 1, gResTexts[1994]);
-        lftRoadExclusive:     SetCost(cmRoad, 4, LOCK_FIELD_GUI[FT], 1, 1, 1, gResTexts[1995]);
+        lftRoadExclusive:     SetCost(cmRoad, 4, LOCK_FIELD_GUI[FT], 1 * byte(not gMySpectator.Hand.BuildDevUnlocked(9)), 1, 1, gResTexts[1995]);
         lftPalisade:          SetCost(cmPalisade, 0, LOCK_FIELD_GUI[FT], 1, 0, 0, gResTexts[1633]);
         lftField:             SetCost(cmField, 0, LOCK_FIELD_GUI[FT], 0, 0, 0, gResTexts[TX_BUILD_FIELD]);
         lftGrassField:        SetCost(cmGrassLand, 0, LOCK_FIELD_GUI[FT], 0, 0, 0, gResTexts[1990]);
@@ -332,8 +352,9 @@ begin
   end else
   begin
     house := TKMHouseType(TKMButton(Sender).Tag);
-    houseSpec := gRes.Houses[house];
-    SetCost(cmHouses, Byte(house), houseSpec.GUIIcon, houseSpec.WoodCost, houseSpec.StoneCost, houseSpec.TileCost, houseSpec.HouseName);
+    SetHouseCost(house);
+    //houseSpec := gRes.Houses[house];
+    //SetCost(cmHouses, Byte(house), houseSpec.GUIIcon, houseSpec.WoodCost, houseSpec.StoneCost, houseSpec.TileCost, houseSpec.HouseName);
   end;
 end;
 
@@ -640,7 +661,7 @@ begin
       Button_Build[lastVisible].Hint := gResTexts[gDecorations[I].TextID];
       Button_Build[lastVisible].OnClickShift := Build_ButtonClick;
       Button_Build[lastVisible].Show;
-      Button_build[lastVisible].Enabled := gMySpectator.Hand.HasVWares(gDecorations[I].Cost);
+      Button_build[lastVisible].Enabled := gMySpectator.Hand.HasVWaresDec(gDecorations[I].Cost);
 
       if gMySpectator.Hand.Locks.Decoration[I] = ulBlocked then
       begin

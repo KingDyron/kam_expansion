@@ -51,6 +51,9 @@ begin
   if gGame.Params.MPMode = mmPacifist then
     fTime := Round(fTime * 0.75);
 
+  if gHands[fUnit.Owner].EconomyDevUnlocked(0) then
+    fTime := Round(fTime * 0.9);
+
   fSchool.TotalWorkingTime := fTime * 5;
 end;
 

@@ -163,6 +163,9 @@ begin
 
   if HouseType = htStables then
   begin
+    IF gHands[Owner].EconomyDevUnlocked(11) then
+      Inc(foodMulti, 0.5);
+
     if BeastAge[Result] + foodMulti + hayMulti > 4 then
     begin
       foodMulti := (BeastAge[Result] + foodMulti + hayMulti) - 4;

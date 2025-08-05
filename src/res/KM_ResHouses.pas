@@ -170,6 +170,9 @@ type
 
     procedure DebugChangeAnimation(HA : TKMHouseActionType; aAnim : TKMAnimation);
     procedure DebugChangePileOffset(aID : Integer; aX, aY : Integer);
+
+    function LevelsCount : Byte;
+    function LevelsCountFull : Byte;
   end;
 
   TKMPearlData = record
@@ -627,6 +630,24 @@ procedure TKMHouseSpec.DebugChangePileOffset(aID: Integer; aX: Integer; aY: Inte
 begin
   fBuildSupply[aID].MoveX := aX;
   fBuildSupply[aID].MoveY := aY;
+end;
+
+//some levels are blocked for development tree
+//this will return max available level
+function TKMHouseSpec.LevelsCount : Byte;
+begin
+  Result := Length(Levels);
+
+  If fHouseType in WALL_HOUSES then
+    Result := Result - 1;
+end;
+
+
+//some levels are blocked for development tree
+//this will return max possible level
+function TKMHouseSpec.LevelsCountFull: Byte;
+begin
+  Result := Length(Levels);
 end;
 
 

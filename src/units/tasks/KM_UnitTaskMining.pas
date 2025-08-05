@@ -488,7 +488,7 @@ begin
 
                                end;
            gsStoneCutter:      fDistantResAcquired := gTerrain.DecStoneDeposit(KMPoint(WorkPlan.Loc.X,WorkPlan.Loc.Y-1));
-           gsFarmerSow:         gTerrain.SowCorn(WorkPlan.Loc, WorkPlan.GrainType, gHands[fUnit.Owner].VirtualWareTake('vtManure'));
+           gsFarmerSow:         gTerrain.SowCorn(WorkPlan.Loc, WorkPlan.GrainType, gHands[fUnit.Owner].VirtualWareTake('vtManure'), gHands[Owner].EconomyDevUnlocked(5));
 
            gsFarmerCorn:       begin
                                   fGrainType := gTerrain.GetGrainType(WorkPlan.Loc);
@@ -802,6 +802,11 @@ begin
 
 
                 end;
+
+              if (Home.HouseType = htQuarry) and (KaMRandom(100, 'Double stone') < 5) and gHands[Owner].BuildDevUnlocked(11) then
+                Home.ProduceWare(wtStone, 3);
+              if (Home.HouseType = htBitinMine) and (KaMRandom(100, 'Double bitin') < 5) and gHands[Owner].EconomyDevUnlocked(17) then
+                Home.ProduceWare(wtBitinOre, 1);
 
             end;
 

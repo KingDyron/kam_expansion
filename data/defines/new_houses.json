@@ -2348,6 +2348,18 @@
 					"WorkCyclesMultiplier" : 0.00000,
 					"ReplaceAnim" : False,
 					"HideSupplies" : False
+				},
+				{
+					"StonePic" : 3003,
+					"SnowPic" : 3010,
+					"WoodCost" : 5,
+					"StoneCost" : 8,
+					"TileCost" : 3,
+					"MaxInWares" : 0,
+					"AddHealth" : 500,
+					"WorkCyclesMultiplier" : 0.00000,
+					"ReplaceAnim" : False,
+					"HideSupplies" : False
 				}
 			],
 			"WoodPileOffset" : {"X" : 15,"Y" : 25},
@@ -2418,6 +2430,18 @@
 					"StoneCost" : 8,
 					"TileCost" : 1,
 					"MaxInWares" : 0,
+					"WorkCyclesMultiplier" : 0.00000,
+					"ReplaceAnim" : False,
+					"HideSupplies" : False
+				},
+				{
+					"StonePic" : 3006,
+					"SnowPic" : 3013,
+					"WoodCost" : 6,
+					"StoneCost" : 9,
+					"TileCost" : 4,
+					"MaxInWares" : 0,
+					"AddHealth" : 650,
 					"WorkCyclesMultiplier" : 0.00000,
 					"ReplaceAnim" : False,
 					"HideSupplies" : False
@@ -2494,6 +2518,18 @@
 					"WorkCyclesMultiplier" : 0.00000,
 					"ReplaceAnim" : False,
 					"HideSupplies" : False
+				},
+				{
+					"StonePic" : 3004,
+					"SnowPic" : 3011,
+					"WoodCost" : 5,
+					"StoneCost" : 8,
+					"TileCost" : 3,
+					"MaxInWares" : 0,
+					"AddHealth" : 500,
+					"WorkCyclesMultiplier" : 0.00000,
+					"ReplaceAnim" : False,
+					"HideSupplies" : False
 				}
 			],
 			"WoodPileOffset" : {"X" : 0,"Y" : 19},
@@ -2567,6 +2603,18 @@
 					"WorkCyclesMultiplier" : 0.00000,
 					"ReplaceAnim" : False,
 					"HideSupplies" : False
+				},
+				{
+					"StonePic" : 3007,
+					"SnowPic" : 3014,
+					"WoodCost" : 6,
+					"StoneCost" : 9,
+					"TileCost" : 4,
+					"MaxInWares" : 0,
+					"AddHealth" : 650,
+					"WorkCyclesMultiplier" : 0.00000,
+					"ReplaceAnim" : False,
+					"HideSupplies" : False
 				}
 			],
 			"WoodPileOffset" : {"X" : 0,"Y" : 35},
@@ -2633,7 +2681,9 @@
 				{"GuiIcon" : 333,"StonePic" : 2485,"SnowPic" : 2487,"HideSupplies" : False},
 				{"GuiIcon" : 332,"StonePic" : 2486,"SnowPic" : 2488,"HideSupplies" : False},
 				{"GuiIcon" : 1073,"StonePic" : 2901,"SnowPic" : 2899,"HideSupplies" : False},
-				{"GuiIcon" : 1074,"StonePic" : 2900,"SnowPic" : 2898,"HideSupplies" : False}
+				{"GuiIcon" : 1074,"StonePic" : 2900,"SnowPic" : 2898,"HideSupplies" : False},
+				{"GuiIcon" : 1073,"StonePic" : 3008,"SnowPic" : 3015,"HideSupplies" : False},
+				{"GuiIcon" : 1074,"StonePic" : 3009,"SnowPic" : 3016,"HideSupplies" : False}
 			],
 			"Levels" : 
 			[
@@ -2644,6 +2694,18 @@
 					"StoneCost" : 4,
 					"TileCost" : 0,
 					"MaxInWares" : 0,
+					"WorkCyclesMultiplier" : 0.00000,
+					"ReplaceAnim" : False,
+					"HideSupplies" : False
+				},
+				{
+					"StonePic" : 3005,
+					"SnowPic" : 3012,
+					"WoodCost" : 3,
+					"StoneCost" : 6,
+					"TileCost" : 2,
+					"MaxInWares" : 0,
+					"AddHealth" : 400,
 					"WorkCyclesMultiplier" : 0.00000,
 					"ReplaceAnim" : False,
 					"HideSupplies" : False

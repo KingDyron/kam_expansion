@@ -26,6 +26,8 @@ type
     procedure DefaultPlan(aUnit: TKMUnit; aProduct : TKMWareType = wtNone);
     procedure ClearPlan;
     procedure ActSetByMultiplier(aUnit : TKMUnit; aMultiplier : Single = 0);
+
+    procedure  SpeedUpFromBonuses(aUnit : TKMUnit);
  public
     HasToWalk: Boolean;
     Loc: TKMPoint;
@@ -151,6 +153,46 @@ begin
   aUnit.Home.TotalWorkingTime := TotalWorkingTime;
 end;
 
+procedure TKMUnitWorkPlan.SpeedUpFromBonuses(aUnit: TKMUnit);
+var I : integer;
+begin
+  If gHands[aUnit.Owner].HasPearl(ptArium) then
+    ActSetByMultiplier(aUnit, 0.85);
+
+  If (aUnit.UnitType = utStonemason) and (aUnit.Home.HouseType = htQuarry) and gHands[aUnit.Owner].BuildDevUnlocked(3) then
+  begin
+    ActSetByMultiplier(aUnit, 0.9);
+    WorkCyc := Round(WorkCyc * 0.9);
+  end;
+
+  If (aUnit.UnitType = utWoodcutter) and gHands[aUnit.Owner].BuildDevUnlocked(13) then
+    WorkCyc := Round(WorkCyc * 0.7);
+
+  If (aUnit.Home.HouseType = htSawmill) and gHands[aUnit.Owner].BuildDevUnlocked(25) then
+    Prod[0].C := Prod[0].C + 1;
+
+  If (aUnit.Home.HouseType = htButchers) and gHands[aUnit.Owner].EconomyDevUnlocked(7) then
+    Prod[0].C := Prod[0].C + 1;
+
+  If (aUnit.Home.HouseType in [htIronMine,htGoldMine,htCoalMine,htBitinMine]) and gHands[aUnit.Owner].EconomyDevUnlocked(9) then
+    ActSetByMultiplier(aUnit, 0.9);
+
+
+  If aUnit.BootsAdded and gHands[aUnit.Owner].EconomyDevUnlocked(8) then
+    ActSetByMultiplier(aUnit, 0.95);
+
+  If (aUnit.Home.HouseType = htBakery) and gHands[aUnit.Owner].EconomyDevUnlocked(12) then
+    Res[1].C := 0;
+
+  If (aUnit.Home.HouseType = htFishermans) and gHands[aUnit.Owner].EconomyDevUnlocked(14) then
+    Prod[0].C := Prod[0].C + 1;
+
+  If (aUnit.Home.HouseType = htIronFoundry) and gHands[aUnit.Owner].ArmyDevUnlocked(26) then
+    for I := 0 to High(Prod) do
+      If Prod[I].W = wtBitinE then
+        Prod[0].C := Prod[0].C + 1;
+end;
+
 procedure TKMUnitWorkPlan.ResourcePlan(Res1: TKMWareType; Qty1: Byte; Res2: TKMWareType; Qty2: Byte; Prod1: TKMWareType; Prod2: TKMWareType = wtNone;Prod3: TKMWareType = wtNone);
 begin
   ClearPlan;
@@ -216,14 +258,20 @@ begin
     begin
       WArr := gRes.Wares[aProduct].OrderCost;
 
+      IF (aProduct = wtMace) and gHands[aUnit.Owner].EconomyDevUnlocked(20) then
+        SetLength(Warr, high(Warr));
+      IF (aProduct = wtPlateArmor) and gHands[aUnit.Owner].EconomyDevUnlocked(21) then
+        SetLength(Warr, high(Warr));
+
       allIsNone := false;
       for I := 0 to high(WArr) do
         if WArr[I] <> wtNone then
           allIsNone := false;
 
+
+
       if allIsNone then
         Exit;
-
       //clean array
       for K := 1 to 4 do
         NeededWare[K] := 0;
@@ -949,17 +997,21 @@ begin
                         begin
                           if srcHouse.Queue[0] <> utNone then
                           begin
+                            I := SIEGE_CYCLES;
+                            If gHands[aUnit.Owner].ArmyDevUnlocked(16) then
+                              I := I - 5;
+
                             Res := srcHouse.GetNeededWares;
                             Res.SetCount(WARES_IN_OUT_COUNT);
                             SubActAdd(haWork1,1);
                             SubActAdd(haWork4,1);
-                            SubActAdd(haWork2,SIEGE_CYCLES div 4);
+                            SubActAdd(haWork2,I div 4);
                             SubActAdd(haWork4,1);
-                            SubActAdd(haWork2,SIEGE_CYCLES div 4);
+                            SubActAdd(haWork2,I div 4);
                             SubActAdd(haWork4,1);
-                            SubActAdd(haWork2,SIEGE_CYCLES div 4);
+                            SubActAdd(haWork2,I div 4);
                             SubActAdd(haWork4,1);
-                            SubActAdd(haWork2,SIEGE_CYCLES div 4);
+                            SubActAdd(haWork2,I div 4);
                             SubActAdd(haWork5,1);
                             fIssued := True;
                           end;
@@ -1053,6 +1105,9 @@ begin
                         Res.CopyFrom(TShipYard(aUnit.Home).GetWarePlan);
                         Res.SetCount(WARES_IN_OUT_COUNT);
                         fIssued := TKMHouseShipYard(aUnit.Home).CanWork;
+
+                        If gHands[aUnit.Owner].ArmyDevUnlocked(3) then
+                          ActSetByMultiplier(aUnit, 0.3);
                       end;
     gsClayMiner:      begin
                         hardWritten := true;
@@ -1147,9 +1202,7 @@ begin
     if aHome is htProductionThatch then
         if GatheringScript in [gsStoneCutter, gsClayMiner, gsFarmerSow, gsFarmerCorn, gsFarmerWine] then
           TKMHouseProdThatch(aUnit.Home).TakePoint(Loc);}
-
-  If gHands[aUnit.Owner].HasPearl(ptArium) then
-    ActSetByMultiplier(aUnit, 0.85);
+  SpeedUpFromBonuses(aUnit);
 
   ActSetByMultiplier(aUnit);
   If aUnit.BootsAdded then

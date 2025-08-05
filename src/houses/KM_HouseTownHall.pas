@@ -21,6 +21,7 @@ type
     procedure Save(SaveStream: TKMemoryStream); override;
 
     function Equip(aUnitType: TKMUnitType; aCount: Integer): Integer;
+    function UnitCost(aUnitType: TKMUnitType) : Byte;
     function CanEquip(aUnitType: TKMUnitType): Boolean;
 
     procedure PostLoadMission; override;
@@ -63,12 +64,23 @@ begin
   SaveStream.Write(EquipTime);
 end;
 
+function TKMHouseTownHall.UnitCost(aUnitType: TKMUnitType): Byte;
+begin
+  Result := gRes.Units[aUnitType].TownhallCost;
+
+  If (aUnitType in UNITS_CITIZEN) and gHands[Owner].EconomyDevUnlocked(18) then
+    Result := Result - 5;
+
+  If (aUnitType = utWarrior) and gHands[Owner].EconomyDevUnlocked(12) then
+    Result := Result - 1;
+end;
+
 function TKMHouseTownHall.CanEquip(aUnitType: TKMUnitType): Boolean;
 begin
   Result := gHands[Owner].Locks.GetUnitBlocked(aUnitType, HouseType) = ulUnlocked;
 
 
-  Result := Result and (CheckWareIn(wtGold) >= gRes.Units[aUnitType].TownhallCost);  //Can't equip if we don't have a required resource
+  Result := Result and (CheckWareIn(wtGold) >= UnitCost(aUnitType));  //Can't equip if we don't have a required resource
 
   //Result := Result{ and (gHands[Owner].GetWorklessCount > 0)};
 end;
@@ -99,9 +111,9 @@ begin
     if not CanEquip(aUnitType) then Exit;
     //gHands[Owner].TakeWorkless;
     //Take resources
-    WareTakeFromIn(wtGold, gRes.Units[aUnitType].TownhallCost); //Do the goldtaking
+    WareTakeFromIn(wtGold, UnitCost(aUnitType)); //Do the goldtaking
 
-    gHands[Owner].Stats.WareConsumed(wtGold, gRes.Units[aUnitType].TownhallCost);
+    gHands[Owner].Stats.WareConsumed(wtGold, UnitCost(aUnitType));
       
     //Make new unit
     U := gHands[Owner].TrainUnit(aUnitType, Self);

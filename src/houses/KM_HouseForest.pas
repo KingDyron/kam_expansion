@@ -141,11 +141,23 @@ end;
 
 function TKMHouseForest.TreeWillCollide(aTreeID : Byte; aLoc : TKMPointF) : Boolean;
 var I : Integer;
+  size1, size2 : Single;
 begin
   Result := false;
   for I := 0 to fCount - 1 do
-    If KMLength(aLoc, fTrees[I].Pos) <= gGrowingTrees[fTrees[I].ID].Size + gGrowingTrees[aTreeID].Size then
+  begin
+    size1 := gGrowingTrees[fTrees[I].ID].Size;
+    size2 := gGrowingTrees[aTreeID].Size;
+    if gHands[Owner].BuildDevUnlocked(24) then
+    begin
+      size1 := size1 * 0.90;
+      size2 := size2 * 0.90;
+    end;
+
+
+    If KMLength(aLoc, fTrees[I].Pos) <=  size1 + size2  then
       Exit(true);
+  end;
 end;
 
 

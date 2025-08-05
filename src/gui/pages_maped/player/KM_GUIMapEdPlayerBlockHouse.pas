@@ -251,13 +251,13 @@ begin
     begin
       H := TKMHouseType(Button_BlockHouse[I].Tag);
       Button_BlockHouse[I].Disable;
-      if length(gRes.Houses[H].Levels) > 0 then
+      if gRes.Houses[H].LevelsCount > 0 then
       begin
         Button_BlockHouse[I].Enable;
 
         if gMySpectator.Hand.Locks.HouseMaxLvl[H] > 0 then
         begin
-          if gMySpectator.Hand.Locks.HouseMaxLvl[H] = (length(gRes.Houses[H].Levels) + 1) then
+          if gMySpectator.Hand.Locks.HouseMaxLvl[H] = (gRes.Houses[H].LevelsCount + 1) then
             Button_BlockHouse[I].Caption := 'max'
           else
             Button_BlockHouse[I].Caption := IntToStr(gMySpectator.Hand.Locks.HouseMaxLvl[H] - 1)
@@ -314,21 +314,21 @@ begin
     if ssLeft in Shift then
     begin
       J := locks.HouseMaxLvl[H];
-      IncLoop(J, 0, length(gRes.Houses[H].Levels) + 1);
+      IncLoop(J, 0, gRes.Houses[H].LevelsCount + 1);
       locks.HouseMaxLvl[H] := J;
       //locks.HouseMaxLvl[H] := EnsureRange(locks.HouseMaxLvl[H] + 1, 0, length(gRes.Houses[H].Levels) + 1)
     end else
     if ssRight in Shift then
     begin
       J := locks.HouseMaxLvl[H];
-      IncLoop(J, 0, length(gRes.Houses[H].Levels) + 1, -1);
+      IncLoop(J, 0, gRes.Houses[H].LevelsCount + 1, -1);
       locks.HouseMaxLvl[H] := J;
     end;
       //locks.HouseMaxLvl[H] := EnsureRange(locks.HouseMaxLvl[H] - 1, 0, length(gRes.Houses[H].Levels) + 1);
 
     if gMySpectator.Hand.Locks.HouseMaxLvl[H] > 0 then
     begin
-      if gMySpectator.Hand.Locks.HouseMaxLvl[H] = (length(gRes.Houses[H].Levels) + 1) then
+      if gMySpectator.Hand.Locks.HouseMaxLvl[H] = (gRes.Houses[H].LevelsCount + 1) then
         Button_BlockHouse[K].Caption := 'max'
       else
         Button_BlockHouse[K].Caption := IntToStr(gMySpectator.Hand.Locks.HouseMaxLvl[H] - 1)
@@ -407,14 +407,14 @@ begin
     begin
       if gMySpectator.Hand.Locks.HouseMaxLvl[H1] <> gMySpectator.Hand.Locks.HouseMaxLvl[H2] then
       begin
-        gMySpectator.Hand.Locks.HouseMaxLvl[H2] := Min(gMySpectator.Hand.Locks.HouseMaxLvl[H1], length(gRes.Houses[H2].Levels) + 1);
+        gMySpectator.Hand.Locks.HouseMaxLvl[H2] := Min(gMySpectator.Hand.Locks.HouseMaxLvl[H1], gRes.Houses[H2].LevelsCount + 1);
         Player_BlockHouseRefresh;
         for K := 0 to High(Button_BlockHouse) do
           if Button_BlockHouse[K] = Sender then
           begin
             if gMySpectator.Hand.Locks.HouseMaxLvl[H2] > 0 then
             begin
-              if gMySpectator.Hand.Locks.HouseMaxLvl[H2] = (length(gRes.Houses[H2].Levels) + 1) then
+              if gMySpectator.Hand.Locks.HouseMaxLvl[H2] = (gRes.Houses[H2].LevelsCount + 1) then
                 Button_BlockHouse[K].Caption := 'max'
               else
                 Button_BlockHouse[K].Caption := IntToStr(gMySpectator.Hand.Locks.HouseMaxLvl[H2] - 1)
