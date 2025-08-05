@@ -110,6 +110,7 @@ begin
   LoadStream.ReadData(fDevType);
   LoadStream.ReadData(fWarfareDelivered);
   LoadStream.ReadData(fFoodDelivered);
+  LoadStream.ReadData(fValuableDelivered);
 end;
 
 procedure TKMHouseArena.Save(SaveStream : TKMemoryStream);
@@ -119,6 +120,7 @@ begin
   SaveStream.WriteData(fDevType);
   SaveStream.WriteData(fWarfareDelivered);
   SaveStream.WriteData(fFoodDelivered);
+  SaveStream.WriteData(fValuableDelivered);
 end;
 
 
@@ -385,9 +387,9 @@ end;
 function TKMHouseArena.CanStartFestival: Boolean;
 begin
   Result := (fDevType <> dttNone)
-            and (fFoodDelivered > FoodCost)
-            and (fWarfareDelivered > WarfareCost)
-            and (fValuableDelivered > ValuableCost);
+            and (fFoodDelivered >= FoodCost)
+            and (fWarfareDelivered >= WarfareCost)
+            and (fValuableDelivered >= ValuableCost);
 end;
 
 function TKMHouseArena.FoodCost : Byte;
@@ -441,7 +443,7 @@ begin
       IF fArenaAnimStep >= FestivalDuration then
       begin
         fArenaAnimStep := 0;
-        gHands[Owner].AddDevPoint( fDevType, IfThen(fDevType = dttAll, 1, 3) );
+        gHands[Owner].AddDevPoint( fDevType, IfThen(fDevType = dttAll, 2, 3) );
         gGame.RefreshDevelopmentTree;
         fDevType := dttNone;
       end;

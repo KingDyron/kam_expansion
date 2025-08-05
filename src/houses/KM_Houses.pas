@@ -2568,7 +2568,7 @@ function TKMHouse.GetBuildStoneDelivered: Byte;
 begin
 
   case fBuildState of
-    hbsDone:  Result := gRes.Houses[fType].StoneCost;
+    hbsDone:  Result := StoneCost;
     hbsWood:  Result := fBuildStoneDelivered;
     hbsStone: Result := fBuildStoneDelivered;
     else       Result := 0;
@@ -2582,7 +2582,7 @@ function TKMHouse.GetBuildTileDelivered: Byte;
 begin
 
   case fBuildState of
-    hbsDone:  Result := gRes.Houses[fType].TileCost;
+    hbsDone:  Result := TileCost;
     hbsWood:  Result := fBuildTileDelivered;
     hbsStone: Result := fBuildTileDelivered;
     else       Result := 0;
@@ -2656,7 +2656,7 @@ begin
     if (fBuildSupplyStone = 0) and (fBuildStoneDelivered = gRes.Houses[fType].StoneCost) then
     begin
 
-      if gRes.Houses[fType].TileCost > 0 then
+      if TileCost > 0 then
         if fBuildSupplyTile > 0 then
         begin
           Dec(fBuildSupplyTile);
@@ -2955,14 +2955,14 @@ begin
 
   If (HouseType in WALL_HOUSES) and gHands[Owner].BuildDevUnlocked(16) then
   begin
-    fBuildCost.Wood := Max(fBuildCost.Tile - 1, 0);
-    fBuildCost.Stone := Max(fBuildCost.Tile - 1, 0);
+    fBuildCost.Wood := Max(fBuildCost.Wood - 1, 0);
+    fBuildCost.Stone := Max(fBuildCost.Stone - 1, 0);
     fBuildCost.Tile := Max(fBuildCost.Tile - 1, 0);
   end;
   If (HouseType = htBarracks) and gHands[Owner].BuildDevUnlocked(17) then
   begin
-    fBuildCost.Wood := Max(fBuildCost.Tile - 1, 0);
-    fBuildCost.Stone := Max(fBuildCost.Tile - 1, 0);
+    fBuildCost.Wood := Max(fBuildCost.Wood - 1, 0);
+    fBuildCost.Stone := Max(fBuildCost.Stone - 1, 0);
     fBuildCost.Tile := Max(fBuildCost.Tile - 1, 0);
   end;
 end;

@@ -156,7 +156,7 @@ end;
 
 function TKMHouseMarket.WarePrice(aWare: TKMWareType) : Single;
 begin
-  Result := gRes.Wares[fResFrom].MarketPrice;
+  Result := gRes.Wares[aWare].MarketPrice;
   If (aWare = wtEgg) and gHands[Owner].EconomyDevUnlocked(2) then
       Result := Result + 7;
 end;

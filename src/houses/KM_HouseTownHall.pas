@@ -71,7 +71,7 @@ begin
   If (aUnitType in UNITS_CITIZEN) and gHands[Owner].EconomyDevUnlocked(18) then
     Result := Result - 5;
 
-  If (aUnitType = utWarrior) and gHands[Owner].EconomyDevUnlocked(12) then
+  If (aUnitType = utWarrior) and gHands[Owner].ArmyDevUnlocked(12) then
     Result := Result - 1;
 end;
 

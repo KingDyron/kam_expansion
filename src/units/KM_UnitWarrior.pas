@@ -1637,7 +1637,6 @@ begin
       if fGroup <> nil then
         if TKMUnitGroup(fGroup).HasUnitType(utPikeMachine) then  //add attack
           Result := Result + 15;
-
   If gHands[Owner].HasPearl(ptAgros) then
     Result := Result + 20;
 

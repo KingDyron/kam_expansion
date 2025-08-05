@@ -2876,6 +2876,8 @@ end;
 
 function TKMHand.DevUnlocked(aType : TKMDevelopmentTreeType; aID : Integer) : Boolean;
 begin
+  If self = nil then
+    Exit(false);
   Result := fLocks.DevelopmentLock[aType, aID] = dlUnlocked;
 end;
 

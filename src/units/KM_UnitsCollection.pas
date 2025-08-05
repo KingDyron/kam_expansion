@@ -175,6 +175,7 @@ begin
     fUnits.Add(Result);
 
     If gGame.Params.Tick > 0 then
+      If Result.Owner >= 0 then
       if gHands[Result.Owner].EconomyDevUnlocked(10) then
         Result.ConditionPace := Result.ConditionPace + 1;
 
