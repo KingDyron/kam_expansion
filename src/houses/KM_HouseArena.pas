@@ -45,6 +45,7 @@ type
 
 const
   FESTIVAL_DURATION = 1200;
+  FESTIVAL_DURATION_ALL = 2000;
 
 implementation
 uses
@@ -290,10 +291,13 @@ end;
 
 function TKMHouseArena.FestivalDuration : Word;
 begin
-  Result := FESTIVAL_DURATION;
+  If fDevType = dttAll then
+    Result := FESTIVAL_DURATION_ALL
+  else
+    Result := FESTIVAL_DURATION;
 
   if gHands[Owner].EconomyDevUnlocked(4) then
-    Result := 900;
+    Result := Result - 300;
 end;
 
 procedure TKMHouseArena.UpdateDemands;
