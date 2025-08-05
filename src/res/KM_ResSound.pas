@@ -161,8 +161,8 @@ const
     'lanceman', 'pikeman', 'cavalry', 'knights', 'barbarian',
     'rebel', 'rogue', 'warrior', 'vagabond', 'machines', 'machines', 'machines', '', '', 'paladin',
     'bowman', 'pikeman', 'wolf', 'machines', 'machines', 'machines',
-    'swordman', 'bowman', 'crossbowman', 'vagabond', 'lanceman', 'machines', 'machines',//club man, maceF, flailF, shield bearer, fighter, spiked trap, wooden wall,
-    'knights', 'bowman', '', '', 'knights', 'axeman', 'machines');//destroyer, medic, battle ship, boat, pyro, lekter, mobile wall
+    'swordman', 'bowman', 'crossbowman', 'vagabond', 'fighter', 'machines', 'machines',//club man, maceF, flailF, shield bearer, fighter, spiked trap, wooden wall,
+    'destroyer', 'bowman', '', '', 'knights', 'axeman', 'machines');//destroyer, medic, battle ship, boat, pyro, lekter, mobile wall
 
   //TPR warriors reuse TSK voices in some languages, so if the specific ones don't exist use these
   WARRIOR_SFX_FOLDER_BACKUP: array[WARRIOR_MIN..WARRIOR_MAX] of string = (
