@@ -89,7 +89,10 @@ begin
   ToHouse := aToHouse.GetPointer; //Also will set fPointBelowToHouse
   //Check it once to begin with as the house could become complete before the task exits (in rare circumstances when the task
   // does not exit until long after the ware has been delivered due to walk interactions)
-
+  If (aWare = wtTile) and (aToHouse.HouseType in WALL_HOUSES) then
+  begin
+    aWare := wtTile;
+  end;
   if aToHouse.IsComplete then
   begin
     if aToHouse.IsUpgrading then
@@ -99,6 +102,9 @@ begin
       else
         fDeliverKind := dkToConstruction
     end else
+    if aToHouse.HouseType in WALL_HOUSES then
+      fDeliverKind := dkToWall
+    else
       fDeliverKind := dkToHouse
   end else
   if aToHouse.HouseType in WALL_HOUSES then
@@ -268,7 +274,8 @@ begin
                             Result := Result and (fPhase < 5);
                       end;
     dkToStructure: Result := Result or fToStruct.IsComplete or fToStruct.IsDestroyed;
-    dkToWall,
+    dkToWall: if not fToHouse.IsUpgrading then
+                        Result := Result or fToHouse.IsComplete;
     dkToConstruction: if not fToHouse.IsUpgrading then
                         Result := Result or fToHouse.IsComplete;
     dkToUnit:         begin
@@ -310,6 +317,9 @@ begin
         else
           fDeliverKind := dkToConstruction
       end else
+      if fToHouse.HouseType in WALL_HOUSES then
+        fDeliverKind := dkToWall
+      else
         fDeliverKind := dkToHouse
     end else
     if fToHouse.HouseType in WALL_HOUSES then
@@ -368,6 +378,9 @@ begin
         else
           fDeliverKind := dkToConstruction
       end else
+      if fToHouse.HouseType in WALL_HOUSES then
+        fDeliverKind := dkToWall
+      else
         fDeliverKind := dkToHouse
     end else
     if fToHouse.HouseType in WALL_HOUSES then

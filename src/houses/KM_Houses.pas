@@ -60,12 +60,12 @@ type
     fType: TKMHouseType; //House type
     fEntrance: TKMPoint;
     fPointBelowEntrance: TKMPoint;
-    procedure UpdateEntrancePos;
   protected
     fPosition: TKMPoint; //House position on map, kinda virtual thing cos it doesn't match with entrance
     procedure SetPosition(const aPosition: TKMPoint); virtual;
     procedure SetPointBelowEntrance(aValue : TKMPoint); virtual;
     constructor Create; overload;
+    procedure UpdateEntrancePos; virtual;
   public
     constructor Create(aUID: Integer; aHouseType: TKMHouseType; PosX, PosY: Integer; aOwner: TKMHandID); overload;
 
@@ -2653,7 +2653,7 @@ begin
 
   if (fBuildState = hbsStone) and (fBuildReserve <= 0) and ((fBuildSupplyStone > 0) or (fBuildSupplyTile > 0)) then
   begin
-    if (fBuildSupplyStone = 0) and (fBuildStoneDelivered = gRes.Houses[fType].StoneCost) then
+    if (fBuildSupplyStone = 0) and (fBuildStoneDelivered = StoneCost) then
     begin
 
       if TileCost > 0 then
@@ -3007,9 +3007,9 @@ var I, newAmount, resNeeded, plannedToRemove : Integer;
 begin
   if gGameParams.Mode = gmMapEd then
   begin
-    fBuildSupplyWood := EnsureRange(aWood, 0, WoodCost);
-    fBuildSupplyStone := EnsureRange(aStone, 0, StoneCost);
-    fBuildSupplyTile := EnsureRange(aTile, 0, TileCost);
+    fBuildSupplyWood := EnsureRange(aWood, 0, HSpec.WoodCost);
+    fBuildSupplyStone := EnsureRange(aStone, 0, HSpec.StoneCost);
+    fBuildSupplyTile := EnsureRange(aTile, 0, HSpec.TileCost);
     if fBuildSupplyWood < HSpec.WoodCost then //not enough wood, so max progress is BuildSuppyWood / HSpec.TotalBuildSupply;
       progress := BuildSupplyWood / HSpec.TotalBuildSupply
     else
@@ -3018,7 +3018,7 @@ begin
   end else
   begin
 
-    newAmount := EnsureRange(aWood, -BuildSupplyWood, gRes.Houses[HouseType].WoodCost - GetBuildWoodDelivered);
+    newAmount := EnsureRange(aWood, -BuildSupplyWood, WoodCost - GetBuildWoodDelivered);
     if newAmount > 0 then
     begin
       resNeeded := gHands[Owner].Deliveries.Queue.TryRemoveDemand(self, wtTimber, newAmount, plannedToRemove);
@@ -3031,7 +3031,7 @@ begin
       gHands[Owner].Deliveries.Queue.AddDemand(self, nil, wtTimber, -newAmount, dtOnce, diHigh4);
     end;
 
-    newAmount := EnsureRange(aStone, -BuildSupplyStone, gRes.Houses[HouseType].StoneCost - GetBuildStoneDelivered);
+    newAmount := EnsureRange(aStone, -BuildSupplyStone, StoneCost - GetBuildStoneDelivered);
     if newAmount > 0 then
     begin
       resNeeded := gHands[Owner].Deliveries.Queue.TryRemoveDemand(self, wtStone, newAmount, plannedToRemove);
@@ -4829,7 +4829,7 @@ begin
     hbsStone :  begin
                   progress := EnsureRange(fBuildingProgress / H.MaxWoodHealth, 0, 1);//wood progress
                   stoneProgress := EnsureRange((fBuildingProgress - H.MaxWoodHealth) / H.MaxStoneHealth, 0, 1);
-                  if (gRes.Houses[fType].StoneCost = 0) and (TileCost = 0) then
+                  if (StoneCost = 0) and (TileCost = 0) then
                   begin
                     progress := progress * 2;
                     if progress > 1 then

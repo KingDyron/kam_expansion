@@ -404,7 +404,9 @@ begin
                                  and gMySpectator.IsSelectedMyObj; // Allow to dismiss only our units
   If Button_SerfCarry.Visible then
     If TKMUnitSerf(aUnit).Carry <> wtNone then
-      Button_SerfCarry.TexID := gRes.Wares[TKMUnitSerf(aUnit).Carry].GUIIcon;
+      Button_SerfCarry.TexID := gRes.Wares[TKMUnitSerf(aUnit).Carry].GUIIcon
+    else
+      Button_SerfCarry.TexID := 0;
 
   Image_HPBar.Hide;
   if aUnit.IsDismissing

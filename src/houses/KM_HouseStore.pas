@@ -111,11 +111,11 @@ function TKMHouseStore.GetMaxCount: Integer;
 begin
   Result := fMaxCount;
 
-  If gHands[Owner].BuildDevUnlocked(24) then
+  If gHands[Owner].EconomyDevUnlocked(24) then
     Result := Result + 1500;
-  If gHands[Owner].BuildDevUnlocked(25) then
+  If gHands[Owner].EconomyDevUnlocked(25) then
     Result := Result + 2000;
-  If gHands[Owner].BuildDevUnlocked(27) then
+  If gHands[Owner].EconomyDevUnlocked(27) then
     Result := high(Integer);
 end;
 

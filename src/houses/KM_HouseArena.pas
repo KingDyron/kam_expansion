@@ -18,6 +18,7 @@ type
   protected
     procedure AddDemandsOnActivate(aWasBuilt: Boolean); override;
     function GetWareDistribution(aID: Byte): Byte;override; //Will use GetRatio from mission settings to find distribution amount
+    procedure UpdateEntrancePos; override;
   public
     function HasMoreEntrances : Boolean; override;
     function GetClosestEntrance(aLoc: TKMPoint): TKMPointDir; override;
@@ -351,6 +352,12 @@ begin
       WareDemandsClosing[I] := WareDemandsClosing[I] + plannedToRemove;
     end;
   end;
+end;
+
+procedure TKMHouseArena.UpdateEntrancePos;
+begin
+  Inherited;
+  UpdatePointBelowEntrance;
 end;
 
 procedure TKMHouseArena.UpdatePointBelowEntrance;
