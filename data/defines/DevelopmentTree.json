@@ -6,6 +6,7 @@
 		"GuiIcon" : 1082,
 		"X" : 2,
 		"Cost" : 1,
+		"IsSpecial" : False,
 		"Next" : 
 		[
 			{
@@ -14,6 +15,7 @@
 				"GuiIcon" : 1083,
 				"X" : 4,
 				"Cost" : 1,
+				"IsSpecial" : False,
 				"Next" : 
 				[
 					{
@@ -22,6 +24,7 @@
 						"GuiIcon" : 1087,
 						"X" : 4,
 						"Cost" : 1,
+						"IsSpecial" : False,
 						"Next" : 
 						[
 							{
@@ -30,6 +33,7 @@
 								"GuiIcon" : 1090,
 								"X" : 4,
 								"Cost" : 2,
+								"IsSpecial" : False,
 								"Next" : 
 								[
 									{
@@ -38,6 +42,7 @@
 										"GuiIcon" : 1092,
 										"X" : 4,
 										"Cost" : 1,
+										"IsSpecial" : False,
 										"Next" : 
 										[
 											{
@@ -46,6 +51,7 @@
 												"GuiIcon" : 1098,
 												"X" : 4,
 												"Cost" : 1,
+												"IsSpecial" : False,
 												"Next" : 
 												[
 													{
@@ -54,6 +60,7 @@
 														"GuiIcon" : 1102,
 														"X" : 4,
 														"Cost" : 1,
+														"IsSpecial" : False,
 														"Next" : 
 														[
 															{
@@ -62,6 +69,7 @@
 																"GuiIcon" : 1103,
 																"X" : 4,
 																"Cost" : 3,
+																"IsSpecial" : False,
 																"Next" : 
 																[
 																	{
@@ -69,7 +77,8 @@
 																		"HintID" : 29,
 																		"GuiIcon" : 1173,
 																		"X" : 4,
-																		"Cost" : 1
+																		"Cost" : 3,
+																		"IsSpecial" : True
 																	}
 																]
 															}
@@ -83,6 +92,7 @@
 												"GuiIcon" : 1099,
 												"X" : 3,
 												"Cost" : 1,
+												"IsSpecial" : False,
 												"Next" : 
 												[
 													{
@@ -91,6 +101,7 @@
 														"GuiIcon" : 1100,
 														"X" : 3,
 														"Cost" : 1,
+														"IsSpecial" : False,
 														"Next" : 
 														[
 															{
@@ -99,6 +110,7 @@
 																"GuiIcon" : 1101,
 																"X" : 3,
 																"Cost" : 1,
+																"IsSpecial" : False,
 																"Next" : 
 																[
 																	{
@@ -106,7 +118,8 @@
 																		"HintID" : 27,
 																		"GuiIcon" : 1109,
 																		"X" : 3,
-																		"Cost" : 4
+																		"Cost" : 4,
+																		"IsSpecial" : True
 																	}
 																]
 															}
@@ -128,6 +141,7 @@
 				"GuiIcon" : 1084,
 				"X" : 0,
 				"Cost" : 1,
+				"IsSpecial" : False,
 				"Next" : 
 				[
 					{
@@ -136,6 +150,7 @@
 						"GuiIcon" : 1086,
 						"X" : 0,
 						"Cost" : 1,
+						"IsSpecial" : False,
 						"Next" : 
 						[
 							{
@@ -144,6 +159,7 @@
 								"GuiIcon" : 1095,
 								"X" : 0,
 								"Cost" : 2,
+								"IsSpecial" : False,
 								"Next" : 
 								[
 									{
@@ -152,6 +168,7 @@
 										"GuiIcon" : 1096,
 										"X" : 0,
 										"Cost" : 2,
+										"IsSpecial" : False,
 										"Next" : 
 										[
 											{
@@ -160,6 +177,7 @@
 												"GuiIcon" : 1097,
 												"X" : 0,
 												"Cost" : 1,
+												"IsSpecial" : False,
 												"Next" : 
 												[
 													{
@@ -167,7 +185,8 @@
 														"HintID" : 23,
 														"GuiIcon" : 1105,
 														"X" : 0,
-														"Cost" : 1
+														"Cost" : 1,
+														"IsSpecial" : False
 													}
 												]
 											}
@@ -185,6 +204,7 @@
 				"GuiIcon" : 1085,
 				"X" : 2,
 				"Cost" : 1,
+				"IsSpecial" : False,
 				"Next" : 
 				[
 					{
@@ -193,6 +213,7 @@
 						"GuiIcon" : 1088,
 						"X" : 2,
 						"Cost" : 1,
+						"IsSpecial" : False,
 						"Next" : 
 						[
 							{
@@ -201,6 +222,7 @@
 								"GuiIcon" : 1089,
 								"X" : 2,
 								"Cost" : 2,
+								"IsSpecial" : False,
 								"Next" : 
 								[
 									{
@@ -209,6 +231,7 @@
 										"GuiIcon" : 1093,
 										"X" : 2,
 										"Cost" : 1,
+										"IsSpecial" : False,
 										"Next" : 
 										[
 											{
@@ -217,6 +240,7 @@
 												"GuiIcon" : 1106,
 												"X" : 2,
 												"Cost" : 1,
+												"IsSpecial" : False,
 												"Next" : 
 												[
 													{
@@ -225,6 +249,7 @@
 														"GuiIcon" : 1107,
 														"X" : 2,
 														"Cost" : 1,
+														"IsSpecial" : False,
 														"Next" : 
 														[
 															{
@@ -232,7 +257,8 @@
 																"HintID" : 28,
 																"GuiIcon" : 1110,
 																"X" : 2,
-																"Cost" : 2
+																"Cost" : 2,
+																"IsSpecial" : True
 															}
 														]
 													}
@@ -248,6 +274,7 @@
 								"GuiIcon" : 1091,
 								"X" : 1,
 								"Cost" : 1,
+								"IsSpecial" : False,
 								"Next" : 
 								[
 									{
@@ -256,6 +283,7 @@
 										"GuiIcon" : 1094,
 										"X" : 1,
 										"Cost" : 1,
+										"IsSpecial" : False,
 										"Next" : 
 										[
 											{
@@ -264,6 +292,7 @@
 												"GuiIcon" : 1104,
 												"X" : 1,
 												"Cost" : 2,
+												"IsSpecial" : False,
 												"Next" : 
 												[
 													{
@@ -271,7 +300,8 @@
 														"HintID" : 26,
 														"GuiIcon" : 1108,
 														"X" : 1,
-														"Cost" : 3
+														"Cost" : 3,
+														"IsSpecial" : True
 													}
 												]
 											}
@@ -292,6 +322,7 @@
 		"GuiIcon" : 1112,
 		"X" : 2,
 		"Cost" : 4,
+		"IsSpecial" : False,
 		"Next" : 
 		[
 			{
@@ -299,7 +330,8 @@
 				"HintID" : 31,
 				"GuiIcon" : 1113,
 				"X" : 0,
-				"Cost" : 1
+				"Cost" : 1,
+				"IsSpecial" : False
 			},
 			{
 				"ID" : 2,
@@ -307,6 +339,7 @@
 				"GuiIcon" : 1114,
 				"X" : 4,
 				"Cost" : 1,
+				"IsSpecial" : False,
 				"Next" : 
 				[
 					{
@@ -314,7 +347,8 @@
 						"HintID" : 33,
 						"GuiIcon" : 1115,
 						"X" : 4,
-						"Cost" : 1
+						"Cost" : 1,
+						"IsSpecial" : False
 					}
 				]
 			},
@@ -324,6 +358,7 @@
 				"GuiIcon" : 1116,
 				"X" : 2,
 				"Cost" : 1,
+				"IsSpecial" : False,
 				"Next" : 
 				[
 					{
@@ -331,7 +366,8 @@
 						"HintID" : 35,
 						"GuiIcon" : 1117,
 						"X" : 1,
-						"Cost" : 2
+						"Cost" : 2,
+						"IsSpecial" : False
 					},
 					{
 						"ID" : 6,
@@ -339,6 +375,7 @@
 						"GuiIcon" : 1028,
 						"X" : 2,
 						"Cost" : 1,
+						"IsSpecial" : False,
 						"Next" : 
 						[
 							{
@@ -347,6 +384,7 @@
 								"GuiIcon" : 1118,
 								"X" : 3,
 								"Cost" : 1,
+								"IsSpecial" : False,
 								"Next" : 
 								[
 									{
@@ -354,7 +392,8 @@
 										"HintID" : 58,
 										"GuiIcon" : 1138,
 										"X" : 3,
-										"Cost" : 2
+										"Cost" : 2,
+										"IsSpecial" : False
 									}
 								]
 							},
@@ -364,6 +403,7 @@
 								"GuiIcon" : 1020,
 								"X" : 2,
 								"Cost" : 1,
+								"IsSpecial" : False,
 								"Next" : 
 								[
 									{
@@ -372,6 +412,7 @@
 										"GuiIcon" : 1119,
 										"X" : 1,
 										"Cost" : 1,
+										"IsSpecial" : False,
 										"Next" : 
 										[
 											{
@@ -379,7 +420,8 @@
 												"HintID" : 41,
 												"GuiIcon" : 1121,
 												"X" : 0,
-												"Cost" : 3
+												"Cost" : 3,
+												"IsSpecial" : False
 											},
 											{
 												"ID" : 12,
@@ -387,6 +429,7 @@
 												"GuiIcon" : 1122,
 												"X" : 1,
 												"Cost" : 1,
+												"IsSpecial" : False,
 												"Next" : 
 												[
 													{
@@ -395,6 +438,7 @@
 														"GuiIcon" : 1123,
 														"X" : 1,
 														"Cost" : 1,
+														"IsSpecial" : False,
 														"Next" : 
 														[
 															{
@@ -403,6 +447,7 @@
 																"GuiIcon" : 1124,
 																"X" : 1,
 																"Cost" : 2,
+																"IsSpecial" : False,
 																"Next" : 
 																[
 																	{
@@ -411,6 +456,7 @@
 																		"GuiIcon" : 1125,
 																		"X" : 0,
 																		"Cost" : 2,
+																		"IsSpecial" : False,
 																		"Next" : 
 																		[
 																			{
@@ -418,7 +464,8 @@
 																				"HintID" : 48,
 																				"GuiIcon" : 1128,
 																				"X" : 0,
-																				"Cost" : 2
+																				"Cost" : 2,
+																				"IsSpecial" : False
 																			}
 																		]
 																	},
@@ -428,6 +475,7 @@
 																		"GuiIcon" : 1126,
 																		"X" : 1,
 																		"Cost" : 1,
+																		"IsSpecial" : False,
 																		"Next" : 
 																		[
 																			{
@@ -436,6 +484,7 @@
 																				"GuiIcon" : 1127,
 																				"X" : 1,
 																				"Cost" : 1,
+																				"IsSpecial" : False,
 																				"Next" : 
 																				[
 																					{
@@ -443,7 +492,8 @@
 																						"HintID" : 49,
 																						"GuiIcon" : 1129,
 																						"X" : 1,
-																						"Cost" : 3
+																						"Cost" : 3,
+																						"IsSpecial" : True
 																					}
 																				]
 																			}
@@ -463,6 +513,7 @@
 										"GuiIcon" : 1120,
 										"X" : 2,
 										"Cost" : 1,
+										"IsSpecial" : False,
 										"Next" : 
 										[
 											{
@@ -471,6 +522,7 @@
 												"GuiIcon" : 1130,
 												"X" : 2,
 												"Cost" : 3,
+												"IsSpecial" : False,
 												"Next" : 
 												[
 													{
@@ -479,6 +531,7 @@
 														"GuiIcon" : 1131,
 														"X" : 2,
 														"Cost" : 3,
+														"IsSpecial" : False,
 														"Next" : 
 														[
 															{
@@ -487,6 +540,7 @@
 																"GuiIcon" : 1132,
 																"X" : 2,
 																"Cost" : 1,
+																"IsSpecial" : False,
 																"Next" : 
 																[
 																	{
@@ -494,7 +548,8 @@
 																		"HintID" : 53,
 																		"GuiIcon" : 1133,
 																		"X" : 2,
-																		"Cost" : 1
+																		"Cost" : 1,
+																		"IsSpecial" : False
 																	},
 																	{
 																		"ID" : 24,
@@ -502,6 +557,7 @@
 																		"GuiIcon" : 1134,
 																		"X" : 3,
 																		"Cost" : 1,
+																		"IsSpecial" : False,
 																		"Next" : 
 																		[
 																			{
@@ -510,6 +566,7 @@
 																				"GuiIcon" : 1135,
 																				"X" : 4,
 																				"Cost" : 1,
+																				"IsSpecial" : False,
 																				"Next" : 
 																				[
 																					{
@@ -517,7 +574,8 @@
 																						"HintID" : 57,
 																						"GuiIcon" : 1137,
 																						"X" : 4,
-																						"Cost" : 3
+																						"Cost" : 3,
+																						"IsSpecial" : True
 																					}
 																				]
 																			},
@@ -526,7 +584,8 @@
 																				"HintID" : 56,
 																				"GuiIcon" : 1136,
 																				"X" : 3,
-																				"Cost" : 1
+																				"Cost" : 1,
+																				"IsSpecial" : True
 																			}
 																		]
 																	}
@@ -553,6 +612,7 @@
 		"GuiIcon" : 1139,
 		"X" : 2,
 		"Cost" : 2,
+		"IsSpecial" : False,
 		"Next" : 
 		[
 			{
@@ -561,6 +621,7 @@
 				"GuiIcon" : 1140,
 				"X" : 2,
 				"Cost" : 2,
+				"IsSpecial" : False,
 				"Next" : 
 				[
 					{
@@ -569,6 +630,7 @@
 						"GuiIcon" : 1141,
 						"X" : 2,
 						"Cost" : 1,
+						"IsSpecial" : False,
 						"Next" : 
 						[
 							{
@@ -576,7 +638,8 @@
 								"HintID" : 62,
 								"GuiIcon" : 1142,
 								"X" : 1,
-								"Cost" : 2
+								"Cost" : 2,
+								"IsSpecial" : False
 							},
 							{
 								"ID" : 4,
@@ -584,6 +647,7 @@
 								"GuiIcon" : 1143,
 								"X" : 3,
 								"Cost" : 2,
+								"IsSpecial" : False,
 								"Next" : 
 								[
 									{
@@ -591,7 +655,8 @@
 										"HintID" : 64,
 										"GuiIcon" : 1144,
 										"X" : 3,
-										"Cost" : 2
+										"Cost" : 2,
+										"IsSpecial" : False
 									}
 								]
 							},
@@ -601,6 +666,7 @@
 								"GuiIcon" : 1145,
 								"X" : 2,
 								"Cost" : 2,
+								"IsSpecial" : False,
 								"Next" : 
 								[
 									{
@@ -609,6 +675,7 @@
 										"GuiIcon" : 1146,
 										"X" : 2,
 										"Cost" : 1,
+										"IsSpecial" : False,
 										"Next" : 
 										[
 											{
@@ -617,6 +684,7 @@
 												"GuiIcon" : 1147,
 												"X" : 2,
 												"Cost" : 1,
+												"IsSpecial" : False,
 												"Next" : 
 												[
 													{
@@ -625,6 +693,7 @@
 														"GuiIcon" : 1148,
 														"X" : 3,
 														"Cost" : 2,
+														"IsSpecial" : False,
 														"Next" : 
 														[
 															{
@@ -633,6 +702,7 @@
 																"GuiIcon" : 1150,
 																"X" : 4,
 																"Cost" : 1,
+																"IsSpecial" : False,
 																"Next" : 
 																[
 																	{
@@ -640,7 +710,8 @@
 																		"HintID" : 71,
 																		"GuiIcon" : 1151,
 																		"X" : 4,
-																		"Cost" : 3
+																		"Cost" : 3,
+																		"IsSpecial" : False
 																	}
 																]
 															}
@@ -652,6 +723,7 @@
 														"GuiIcon" : 1149,
 														"X" : 2,
 														"Cost" : 2,
+														"IsSpecial" : False,
 														"Next" : 
 														[
 															{
@@ -660,6 +732,7 @@
 																"GuiIcon" : 1152,
 																"X" : 2,
 																"Cost" : 1,
+																"IsSpecial" : False,
 																"Next" : 
 																[
 																	{
@@ -668,6 +741,7 @@
 																		"GuiIcon" : 1153,
 																		"X" : 0,
 																		"Cost" : 2,
+																		"IsSpecial" : False,
 																		"Next" : 
 																		[
 																			{
@@ -676,6 +750,7 @@
 																				"GuiIcon" : 1154,
 																				"X" : 0,
 																				"Cost" : 2,
+																				"IsSpecial" : False,
 																				"Next" : 
 																				[
 																					{
@@ -684,6 +759,7 @@
 																						"GuiIcon" : 1156,
 																						"X" : 0,
 																						"Cost" : 1,
+																						"IsSpecial" : False,
 																						"Next" : 
 																						[
 																							{
@@ -691,7 +767,8 @@
 																								"HintID" : 81,
 																								"GuiIcon" : 1161,
 																								"X" : 0,
-																								"Cost" : 1
+																								"Cost" : 1,
+																								"IsSpecial" : False
 																							}
 																						]
 																					},
@@ -700,7 +777,8 @@
 																						"HintID" : 77,
 																						"GuiIcon" : 1157,
 																						"X" : 1,
-																						"Cost" : 3
+																						"Cost" : 3,
+																						"IsSpecial" : False
 																					}
 																				]
 																			}
@@ -712,6 +790,7 @@
 																		"GuiIcon" : 1155,
 																		"X" : 2,
 																		"Cost" : 2,
+																		"IsSpecial" : False,
 																		"Next" : 
 																		[
 																			{
@@ -720,6 +799,7 @@
 																				"GuiIcon" : 1158,
 																				"X" : 2,
 																				"Cost" : 1,
+																				"IsSpecial" : False,
 																				"Next" : 
 																				[
 																					{
@@ -728,6 +808,7 @@
 																						"GuiIcon" : 1159,
 																						"X" : 3,
 																						"Cost" : 2,
+																						"IsSpecial" : False,
 																						"Next" : 
 																						[
 																							{
@@ -735,7 +816,8 @@
 																								"HintID" : 80,
 																								"GuiIcon" : 1160,
 																								"X" : 3,
-																								"Cost" : 3
+																								"Cost" : 3,
+																								"IsSpecial" : False
 																							}
 																						]
 																					},
@@ -745,6 +827,7 @@
 																						"GuiIcon" : 1162,
 																						"X" : 2,
 																						"Cost" : 1,
+																						"IsSpecial" : False,
 																						"Next" : 
 																						[
 																							{
@@ -753,6 +836,7 @@
 																								"GuiIcon" : 1163,
 																								"X" : 2,
 																								"Cost" : 2,
+																								"IsSpecial" : False,
 																								"Next" : 
 																								[
 																									{
@@ -761,6 +845,7 @@
 																										"GuiIcon" : 1165,
 																										"X" : 1,
 																										"Cost" : 2,
+																										"IsSpecial" : False,
 																										"Next" : 
 																										[
 																											{
@@ -769,6 +854,7 @@
 																												"GuiIcon" : 1164,
 																												"X" : 1,
 																												"Cost" : 2,
+																												"IsSpecial" : False,
 																												"Next" : 
 																												[
 																													{
@@ -777,6 +863,7 @@
 																														"GuiIcon" : 1166,
 																														"X" : 1,
 																														"Cost" : 2,
+																														"IsSpecial" : False,
 																														"Next" : 
 																														[
 																															{
@@ -784,7 +871,8 @@
 																																"HintID" : 92,
 																																"GuiIcon" : 1172,
 																																"X" : 1,
-																																"Cost" : 4
+																																"Cost" : 4,
+																																"IsSpecial" : True
 																															}
 																														]
 																													}
@@ -795,7 +883,8 @@
 																												"HintID" : 87,
 																												"GuiIcon" : 1167,
 																												"X" : 0,
-																												"Cost" : 1
+																												"Cost" : 1,
+																												"IsSpecial" : False
 																											}
 																										]
 																									},
@@ -805,6 +894,7 @@
 																										"GuiIcon" : 1168,
 																										"X" : 3,
 																										"Cost" : 3,
+																										"IsSpecial" : False,
 																										"Next" : 
 																										[
 																											{
@@ -813,6 +903,7 @@
 																												"GuiIcon" : 1169,
 																												"X" : 3,
 																												"Cost" : 1,
+																												"IsSpecial" : False,
 																												"Next" : 
 																												[
 																													{
@@ -820,14 +911,16 @@
 																														"HintID" : 90,
 																														"GuiIcon" : 1170,
 																														"X" : 2,
-																														"Cost" : 2
+																														"Cost" : 2,
+																														"IsSpecial" : True
 																													},
 																													{
 																														"ID" : 32,
 																														"HintID" : 91,
 																														"GuiIcon" : 1171,
 																														"X" : 4,
-																														"Cost" : 3
+																														"Cost" : 3,
+																														"IsSpecial" : True
 																													}
 																												]
 																											}

@@ -111,8 +111,8 @@ var dtt : TKMDevelopmentTreeType;
     for I := 0 to High(aToButton.Next) do
     If aToButton.Next[I].Button_Tree.DownColor <> UNLOCKED_COLOR_DOWN then
     begin
-      If not aToButton.Next[I].Button_Tree.Enabled then
-        aToButton.Next[I].Button_Tree.DownColor := BLOCKED_COLOR//path is blocked
+      IF aToButton.Next[I].Dev.IsSpecial then
+        aToButton.Next[I].Button_Tree.BackBevelColor := $A700D9FF
       else
         SetButtonColor(aToButton.Next[I].Button_Tree, DEFAULT_COLOR, 2, DEFAULT_COLOR and $22FFFFFF, 1)
       //begin
@@ -174,6 +174,8 @@ var dtt : TKMDevelopmentTreeType;
 
 
     end;
+    IF aToButton.Dev.IsSpecial then
+      B.BackBevelColor := $A700D9FF;
   end;
 
   procedure CheckToUnlock(aType : TKMDevelopmentTreeType; var aToButton : TKMDevButton);
@@ -181,6 +183,9 @@ var dtt : TKMDevelopmentTreeType;
   begin
     If aToButton.Button_Tree.DownColor = DEFAULT_COLOR then
     begin
+      IF aToButton.Dev.IsSpecial then
+        aToButton.Button_Tree.BackBevelColor := $A700D9FF
+      else
       IF gMySpectator.Hand.DevPoints(aType) >= aToButton.Dev.Cost then
         aToButton.Button_Tree.BackBevelColor := DEFAULT_COLOR and $22FFFFFF
       else

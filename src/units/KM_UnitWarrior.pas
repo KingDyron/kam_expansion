@@ -873,8 +873,8 @@ begin
   If (gGame.Params.Tick > 1) and gHands[Owner].ArmyDevUnlocked(19) then
     case gRes.Units[UnitType].AmmoType of
       uatNone: ;
-      uatArrow: Inc(fBoltCount, 20);
-      uatRogueStone: Inc(fBoltCount, 20);
+      uatArrow: Inc(fBoltCount, 30);
+      uatRogueStone: Inc(fBoltCount, 30);
       uatStoneBolt: Inc(fBoltCount, 5);
       uatBolt: Inc(fBoltCount, 7);
     end;
@@ -882,8 +882,8 @@ begin
   If (gGame.Params.Tick > 1) and gHands[Owner].ArmyDevUnlocked(20) then
     case gRes.Units[UnitType].AmmoType of
       uatNone: ;
-      uatArrow: Inc(fBoltCount, 30);
-      uatRogueStone: Inc(fBoltCount, 30);
+      uatArrow: Inc(fBoltCount, 50);
+      uatRogueStone: Inc(fBoltCount, 50);
       uatStoneBolt: Inc(fBoltCount, 7);
       uatBolt: Inc(fBoltCount, 10);
     end;

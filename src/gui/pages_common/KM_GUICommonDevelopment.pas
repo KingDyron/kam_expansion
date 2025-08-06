@@ -292,16 +292,16 @@ procedure TKMGUICommonDevelopment.Paint;
     //then green
 
     for I := 0 to high(aTo.Next) do
-      IF aTo.Button_Tree.DownColor = TO_UNLOCK_COLOR then
+      IF aTo.Next[I].Button_Tree.DownColor = TO_UNLOCK_COLOR then
         MakeLine(cent, aTo.Next[I]);
     for I := 0 to high(aTo.Next) do
-      IF aTo.Button_Tree.DownColor = BLOCKED_COLOR then
+      IF aTo.Next[I].Button_Tree.DownColor = BLOCKED_COLOR then
         MakeLine(cent, aTo.Next[I]);
     for I := 0 to high(aTo.Next) do
-      IF aTo.Button_Tree.DownColor = DEFAULT_COLOR then
+      IF aTo.Next[I].Button_Tree.DownColor = DEFAULT_COLOR then
         MakeLine(cent, aTo.Next[I]);
     for I := 0 to high(aTo.Next) do
-      IF aTo.Button_Tree.DownColor = UNLOCKED_COLOR_DOWN then
+      IF aTo.Next[I].Button_Tree.DownColor = UNLOCKED_COLOR_DOWN then
         MakeLine(cent, aTo.Next[I]);
   end;
 var I : integer;

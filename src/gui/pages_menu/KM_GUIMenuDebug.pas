@@ -111,6 +111,7 @@ type
             Position_X : TKMNumericEdit;
             Cost : TKMNumericEdit;
             HintID : TKMNumericEdit;
+            Dev_Special : TKMCheckBox;
             Button_AddDev : TKMButton;
             Button_DelDev : TKMButton;
             Button_SavDev : TKMButton;
@@ -306,11 +307,14 @@ begin
       HintID.OnChange := TreeDevelopmentChange;
       HintID.Width := 80;
       HintID.Hint := 'Hint';
-      Button_AddDev := TKMButton.Create(P, 30, 130, 75, 25, 'Add', bsGame);
+
+      Dev_Special := TKMCheckBox.Create(P, 30, 130, 120, 20, 'Special', fntGame);
+      Dev_Special.OnClick := TreeDevelopmentChange;
+      Button_AddDev := TKMButton.Create(P, 30, 160, 75, 25, 'Add', bsGame);
       Button_AddDev.OnClick := TreeDevelopmentChange;
-      Button_DelDev := TKMButton.Create(P, 30, 155, 75, 25, 'Del', bsGame);
+      Button_DelDev := TKMButton.Create(P, 30, 185, 75, 25, 'Del', bsGame);
       Button_DelDev.OnClick := TreeDevelopmentChange;
-      Button_SavDev := TKMButton.Create(P, 30, 180, 75, 25, 'Save', bsGame);
+      Button_SavDev := TKMButton.Create(P, 30, 210, 75, 25, 'Save', bsGame);
       Button_SavDev.OnClick := TreeDevelopmentChange;
 
   Switch_Type.Selected := 0;
@@ -558,6 +562,7 @@ begin
     1 : Label_Type.Caption := 'Supply Pile Offset';
     2 : Label_Type.Caption := 'Development tree';
   end;
+  Button_SaveRes.Visible := Switch_Type.Selected <> 2;
   for I := 0 to High(Panel_Type) do
     Panel_Type[I].Visible := Switch_Type.Selected = I;
   House_Viewer.ViewAsConstruction := Switch_Type.Selected = 1;
@@ -601,6 +606,7 @@ begin
   Dev_GuiIcon.Value := dev.GuiIcon;
   Cost.Value := dev.Cost;
   HintID.Value := dev.HintID;
+  Dev_Special.Checked := dev.IsSpecial;
 end;
 
 procedure TKMMenuDebug.TreeDevelopmentChange(Sender : TObject);
@@ -687,7 +693,11 @@ begin
   If dev = nil then
     Exit;
   devParent := dev.Parent;
-
+  If Sender = Dev_Special then
+  begin
+    dev.IsSpecial := Dev_Special.Checked;
+    Tree.RefreshButton(dev);
+  end else
   If Sender = HintID then
   begin
     dev.HintID := HintID.Value;

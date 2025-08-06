@@ -24,6 +24,7 @@ type
     GuiIcon, ID : Word;
     Parent : PKMDevelopment;
     Cost : Byte;
+    IsSpecial : Boolean;
     Next : array of TKMDevelopment;
     function IndexOf(aDev : PKMDevelopment) : Integer;
     function AddNext(aId : Word; aX : Byte): PKMDevelopment;
@@ -131,6 +132,7 @@ procedure TKMDevelopmentTree.LoadFromJson(JSON: TKMJson);
       HintID := aJson.I['HintID'];
       Cost := aJson.I['Cost'];
       Cost := max(Cost, 1);
+      IsSpecial := aJson.B['IsSpecial'];
 
       X := aJson.I['X'];
       //Y := aJson.I['Y'];
@@ -274,6 +276,8 @@ var nRoot : TKMJsonSaver;
     nRoot.Write('GuiIcon', aDev.GuiIcon);
     nRoot.Write('X', aDev.X);
     nRoot.Write('Cost', aDev.Cost);
+    nRoot.Write('IsSpecial', aDev.IsSpecial);
+
     If length(aDev.Next) > 0 then
     begin
       nRoot.WriteArray('Next');
