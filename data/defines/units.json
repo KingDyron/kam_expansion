@@ -4877,7 +4877,7 @@
 			"MaxRange" : 0.00000,
 			"StrikeSteps" : [5],
 			"ProducesWares" : ["wtTile"],
-			"TownhallCost" : 20,
+			"TownhallCost" : 15,
 			"FullUnitAnimations" : 
 			[	
 				{"ActionType" : "uaWalk", "StartStep" : 16977, "StepsCount" : 8}

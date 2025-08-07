@@ -859,9 +859,9 @@
 		"ConnectionRot" : 	[0, 2, 3, 3,       			0, 0, 0, 0,          	1, 2, 1, 3,          		1, 2, 1, 0]
 	},    
 	
-	{"TileID": 617, "IsFirstLayer": false,  "RenderFirst": true,"Visible": true, "ViewInGame": false, "Ware" : 0, "WareCount" : 255, "Function" : 3, "CanTree" : true, "Hint" : 1710},    
-	{"TileID": 626, "IsFirstLayer": true, "Visible": false, "ViewInGame": false, "Ware" : 39, "WareCount" : 200, "Function" : 3, "CanTree" : true, "Hint" : 1711},    
-	{"TileID": 627, "IsFirstLayer": true, "Visible": true, "ViewInGame": false, "Ware" : 6, "WareCount" : 200, "Function" : 3, "CanTree" : true, "Hint" : 1712}, 
+	{"TileID": 617, "IsFirstLayer": false,  "RenderFirst": true,"Visible": true, "ViewInGame": false, "Ware" : 0, "WareCount" : 0, "Function" : 3, "CanTree" : true, "Hint" : 1710},    
+	{"TileID": 626, "IsFirstLayer": false, "Visible": false, "ViewInGame": false, "Ware" : 39, "WareCount" : 200, "Function" : 3, "CanTree" : true, "Hint" : 1711},    
+	{"TileID": 627, "IsFirstLayer": false,  "RenderFirst": true, "ViewAs" : 602, "Visible": true, "ViewInGame": false, "Ware" : 6, "WareCount" : 200, "Function" : 3, "CanTree" : true, "Hint" : 1712}, 
 	
 	{"TileID": 679, "IsFirstLayer": false, "Visible": true, "ViewInGame": false, "Ware" : 0, "WareCount" : 0, "Function" : 4, "CanTree" : true, "Hint" : 1395},    
 	{"TileID": 680, "IsFirstLayer": false, "Visible": true, "ViewInGame": false, "Ware" : 0, "WareCount" : 0, "Function" : 5, "CanTree" : true, "Hint" : 1394},    

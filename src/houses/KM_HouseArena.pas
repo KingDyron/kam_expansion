@@ -450,7 +450,7 @@ begin
       IF fArenaAnimStep >= FestivalDuration then
       begin
         fArenaAnimStep := 0;
-        gHands[Owner].AddDevPoint( fDevType, IfThen(fDevType = dttAll, 2, 3) );
+        gHands[Owner].AddDevPoint( fDevType, IfThen(fDevType = dttAll, 1, 3) );
         gGame.RefreshDevelopmentTree;
         fDevType := dttNone;
       end;

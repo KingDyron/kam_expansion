@@ -169,6 +169,8 @@ const
   UNDERGROUND_IRON_ID = 35;
   UNDERGROUND_BITIN_ID = 36;
   UNDERGROUND_COAL_ID = 37;
+  COAL_OVERLAY_MIN = 6;
+  COAL_OVERLAY_MAX = 10;
 
 var
   GuiOverlayOrder : array of Word;

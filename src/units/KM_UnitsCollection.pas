@@ -382,7 +382,8 @@ begin
       utSerf:                   U := TKMUnitSerf.Load(LoadStream);
       utHouseBuilder,
       utBuilder:                U := TKMUnitWorker.Load(LoadStream);
-      utWoodCutter..utFisher,
+      utWoodCutter:             U := TKMUnitWoodcutter.Load(LoadStream);
+      utMiner..utFisher,
       {utWorker,}
       utClayPicker,
       utStonemason..utMetallurgist:

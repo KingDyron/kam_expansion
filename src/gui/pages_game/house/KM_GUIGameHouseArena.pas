@@ -58,7 +58,7 @@ begin
     I := byte(dtt) - 1;
     Button_FestivalType[dtt] := TKMButtonFlat.Create(self, I * 39 + 10 + 5, top + 20, 37, 35, TREE_TYPE_ICON[dtt]);
     case dtt of
-      dttAll : Button_FestivalType[dtt].Hint := gResTexts[2300]+ ' ' + gResTexts[TREE_TYPE_HINT[dtt]] + ' x2';
+      dttAll : Button_FestivalType[dtt].Hint := gResTexts[2300]+ ' ' + gResTexts[TREE_TYPE_HINT[dtt]] + ' x1';
       else Button_FestivalType[dtt].Hint := gResTexts[2300]+ ' ' + gResTexts[TREE_TYPE_HINT[dtt]] + ' x3';
     end;
     Button_FestivalType[dtt].Tag := I + 1;

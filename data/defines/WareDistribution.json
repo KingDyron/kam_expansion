@@ -1,6 +1,24 @@
 {
   "Wares": [
     {
+		"Ware": "wtApple",
+		"Houses" : 	[
+						{
+							"HouseName" : "htCottage",
+							"Qty" : 10
+						},
+						{
+							"HouseName" : "htHouse",
+							"Qty" : 10
+						},
+						{
+							"HouseName" : "htInn",
+							"Qty" : 2
+						}
+		
+					]
+	},
+    {
 		"Ware": "wtTrunk",
 		"Houses" : 	[
 						{
@@ -195,6 +213,24 @@
 						{
 							"HouseName" : "htArmorSmithy",
 							"Qty" : 5
+						}
+		
+					]
+	},
+    {
+		"Ware": "wtGold",
+		"Houses" : 	[
+						{
+							"HouseName" : "htSchool",
+							"Qty" : 5
+						},
+						{
+							"HouseName" : "htPalace",
+							"Qty" : 5
+						},
+						{
+							"HouseName" : "htStall",
+							"Qty" : 2
 						}
 		
 					]

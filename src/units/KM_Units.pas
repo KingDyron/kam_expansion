@@ -924,6 +924,7 @@ begin
         If self is TKMUnitCitizen then
          TKMUnitCitizen(self).TaskGetWater;
 
+
       if fTask = nil then //We didn't find any job to do - rest at home
         SetActionStay(Max(gRes.Houses[fHome.HouseType].WorkerRest,1)*10, uaWalk); //By default it's 0, don't scan that often
     end;
@@ -2691,6 +2692,8 @@ procedure TKMUnit.HitPointsDecrease(aAmount: Byte; aAttacker: TKMUnit);
 begin
   Assert(aAmount > 0, '0 damage should be handled outside so not to reset HPCounter');
 
+  If IsDeadOrDying then
+    Exit;
   if Immortal then
     Exit;
   //When we are first hit reset the counter

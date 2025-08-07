@@ -4448,6 +4448,7 @@ begin
                         aPoints[1].Add(KMPoint(K, I));
           3 : aPoints[2].Add(KMPoint(K, I));
           4 : aPoints[3].Add(KMPoint(K, I));
+          5 : aPoints[4].Add(KMPoint(K, I));
           else aPoints[0].Add(KMPoint(K, I));
         end;
       end;
@@ -4525,14 +4526,14 @@ begin
         // Always mine the most richest ore
         aPoints[4].Add(KMPoint(K, I));
 
-      if isOnMineShaft then
-        if (Land^[I, K].Ware.C2 > 0)
-        and ( ((aWare = wtGoldOre) and (Land^[I, K].TileOverlay2 = UNDERGROUND_GOLD_ID))
-              or ((aWare = wtIronOre) and (Land^[I, K].TileOverlay2 = UNDERGROUND_IRON_ID))
-              or ((aWare = wtBitinOre) and (Land^[I, K].TileOverlay2 = UNDERGROUND_BITIN_ID))
-              )
-        then
-          aPoints[0].Add(KMPoint(K, I));
+      //if isOnMineShaft then
+      if (Land^[I, K].Ware.C2 > 0)
+      and ( ((aWare = wtGoldOre) and (Land^[I, K].TileOverlay2 = UNDERGROUND_GOLD_ID))
+            or ((aWare = wtIronOre) and (Land^[I, K].TileOverlay2 = UNDERGROUND_IRON_ID))
+            or ((aWare = wtBitinOre) and (Land^[I, K].TileOverlay2 = UNDERGROUND_BITIN_ID))
+            or ((aWare = wtCoal) and (Land^[I, K].TileOverlay2 = UNDERGROUND_COAL_ID))
+            ) then
+        aPoints[4].Add(KMPoint(K, I));
 
 
     end;
@@ -6280,8 +6281,8 @@ begin
     Result := true;
     Exit;
   end;
-  if TileIsMineShaft(aLoc) then
-    Exit;
+  //if TileIsMineShaft(aLoc) then
+  //  Exit;
 
   if ArrayContains(Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain, [325, 326, 327,  343, 344, 345,  334, 335, 336,  328, 329, 330, 337, 338, 339]) then
   begin
@@ -6318,10 +6319,15 @@ begin
       if Land^[aLoc.Y,aLoc.X].TileOverlay2.Params.W = wtCoal then
       begin
         isOverlayCoal := true;
+        Land^[aLoc.Y,aLoc.X].TileOverlay2 := Land^[aLoc.Y,aLoc.X].TileOverlay2 - 1;
+
+        If Land^[aLoc.Y,aLoc.X].TileOverlay2 = COAL_OVERLAY_MIN then
+          Land^[aLoc.Y,aLoc.X].TileOverlay2 := OVERLAY_NONE;
+
         Result := true;
       end;
 
-     { case Land^[aLoc.Y,aLoc.X].TileOverlay2 of
+      {case Land^[aLoc.Y,aLoc.X].TileOverlay2 of
 
         toCoal1 : Land^[aLoc.Y,aLoc.X].TileOverlay2 := toNone;
         toCoal2 : Land^[aLoc.Y,aLoc.X].TileOverlay2 := toCoal1;
@@ -6366,8 +6372,8 @@ begin
         614: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 613;
         615: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 614;
         616: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 615;
-      else
-        Result := False;
+        else
+          Result := False;
       end;
     if not Result and (aWare in [wtGoldOre, wtIronOre, wtBitinOre, wtCoal]) then
       if Land^[aLoc.Y,aLoc.X].Ware.C2 > 0 then

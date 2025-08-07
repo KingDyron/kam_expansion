@@ -837,9 +837,16 @@ begin
 
   if aMember.HitPointsInvulnerable then
     Exit;
-
   I := fMembers.IndexOf(aMember);
-  Assert(I <> -1, 'No such member');
+  gLog.AddTime(Format('Group:%d , Member died: %d', [self.UID, aMember.UID]));
+  //If I = -1 then
+  //  Exit;
+  If I = -1 then
+  begin
+    //gLog.AddTime();
+    raise Exception.Create('No such member: ' + aMember.UID.ToString + ' / ' + gRes.Units[aMember.UnitType].GUIName);
+  end;
+  //Assert(I <> -1, 'No such member: ' + aMember.UID.ToString + ' / ' + gRes.Units[aMember.UnitType].GUIName);
 
   if (aMember = fSelected) then
     SelectNearestMember;

@@ -892,7 +892,7 @@ begin
   to2 := gTerrain.Land^[pY, pX].TileOverlay2.Params;
   if gTerrain.Land^[pY, pX].TileOverlay2 <> OVERLAY_NONE then
     If (gGameParams.IsMapEditor or to2.ViewInGame) and to2.RenderFirst then
-      RenderTile(to2.TileID, pX, pY, IfThen(to2.Rotate, gTerrain.Land^[pY,pX].BaseLayer.Rotation, 0), DoHighlight, HighlightColor);
+      RenderTile(IfThen(not gGameParams.IsMapEditor and (to2.ViewAs > 0), to2.ViewAs, to2.TileID), pX, pY, IfThen(to2.Rotate, gTerrain.Land^[pY,pX].BaseLayer.Rotation, 0), DoHighlight, HighlightColor);
 
   //coal is rendered under the road
   {if gTerrain.Land^[pY, pX].TileOverlay2 in (COAL_LIKE_OVERLAYS - [toInfinityCoal, toInfinityClay]) then
@@ -953,7 +953,7 @@ begin
       //RenderTile(762 + rot, pX, pY, 0, DoHighlight, HighlightColor);
     end else
     If (gGameParams.IsMapEditor or to2.ViewInGame) and not to2.RenderFirst then
-      RenderTile(to2.TileID, pX, pY,  IfThen(to2.Rotate, gTerrain.Land^[pY,pX].BaseLayer.Rotation, 0), DoHighlight, HighlightColor);
+      RenderTile(IfThen(not gGameParams.IsMapEditor and (to2.ViewAs > 0), to2.ViewAs, to2.TileID), pX, pY,  IfThen(to2.Rotate, gTerrain.Land^[pY,pX].BaseLayer.Rotation, 0), DoHighlight, HighlightColor);
   end;
 
   if gTerrain.Land^[pY, pX].TileSelected then

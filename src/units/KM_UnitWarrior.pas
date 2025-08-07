@@ -409,7 +409,7 @@ uses
   KM_UnitActionStormAttack, KM_Resource, KM_ResUnits, KM_UnitGroup,
   KM_UnitTaskCollectWares, KM_UnitTaskDismiss,
   KM_Game, KM_MapTypes,
-  KM_GameParams, KM_CommonUtils, KM_RenderDebug, KM_UnitVisual,
+  KM_GameParams, KM_CommonUtils, KM_RenderDebug, KM_UnitVisual, KM_RenderAux,
   KM_CommonExceptions, KM_CommonHelpers,
   KM_UnitGroupTypes,
   KM_ScriptingEvents,
@@ -1578,6 +1578,8 @@ var medicsCount : Byte;
 begin
   if UnitType in UNITS_SHIPS then   //do not increase health if it's ship
     Exit;
+  If IsDeadOrDying then
+    Exit;
   restorePace := HITPOINT_RESTORE_PACE;
   If gHands[Owner].ArmyDevUnlocked(10) then
     restorePace := restorePace - 20;
@@ -2270,7 +2272,7 @@ begin
             U := nil;
         end;
 
-        if (U <> nil) and (gHands[Owner].Alliances[U.Owner] <> atAlly) then
+        if (U <> nil) and not U.IsDeadOrDying and (gHands[Owner].Alliances[U.Owner] <> atAlly) then
         begin
           U.SetHitTime;
           U.HitPointsDecrease(4, self);
@@ -2348,6 +2350,8 @@ begin
 
       gRenderPool.RenderDebug.RenderTiledArea(Position, GetFightMinRange, GetFightMaxRange, GetLength, fillColor, lineColor);
     end;
+  //If not IsDeadOrDying and (Group <> nil) then
+    //gRenderAux.Quad(PositionF.X, PositionF.Y, IfThen(TKMUnitGroup(Group).HasMember(self), $FF00FF00, $FF0000FF));
 end;
 
 constructor TKMUnitWarriorSpy.Create(aID: Cardinal; aUnitType: TKMUnitType; const aLoc: TKMPointDir; aOwner: ShortInt; aInHouse: TKMHouse);

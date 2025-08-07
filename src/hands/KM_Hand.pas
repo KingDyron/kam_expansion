@@ -1521,6 +1521,7 @@ begin
 
   case aHouseType of
     htPearl : Result := Stats.GetHouseTotal(aHouseType) <= 0;
+    htArena,
     htForest,
     htPasture,
 
@@ -1841,9 +1842,9 @@ begin
         chance := Ch;
 
         if EconomyDevUnlocked(3) then
-          Ch := Ch + 15;
+          chance := Ch + 15;
 
-        if KamRandom(101, 'TKMHand.AddJewerly') < Ch then
+        if KamRandom(101, 'TKMHand.AddJewerly') < chance then
         begin
           ware := W;
           count := Cmin + KamRandom(CMax - CMin + 1, 'TKMHand.AddJewerly');
