@@ -6316,6 +6316,14 @@ begin
 
     if (aWare = wtCoal) then
     begin
+      if Land^[aLoc.Y,aLoc.X].Ware.C2 > 0 then
+      begin
+        isOverlayCoal := true;
+        Land^[aLoc.Y,aLoc.X].Ware.C2 := Land^[aLoc.Y,aLoc.X].Ware.C2 - 1;
+        If Land^[aLoc.Y,aLoc.X].Ware.C2 = 0 then
+          Land^[aLoc.Y,aLoc.X].TileOverlay2 := OVERLAY_NONE;
+
+      end else
       if Land^[aLoc.Y,aLoc.X].TileOverlay2.Params.W = wtCoal then
       begin
         isOverlayCoal := true;
