@@ -261,6 +261,11 @@ var fLastButtonID,
   end;
 var I : Integer;
 begin
+  If gMySpectator.Hand.InCinematic then
+  begin
+    Hide;
+    Exit;
+  end;
   fLastButtonID := -1;
   fLastLabelID := -1;
   fLastImageID := -1;
@@ -288,7 +293,7 @@ end;
 
 procedure TKMGUIGameCustomPanel.UpdateState;
 begin
-  Button_Show.Visible := gMySpectator.Hand.CustomPanelData.ControlsCount > 0;
+  Button_Show.Visible := (gMySpectator.Hand.CustomPanelData.ControlsCount > 0) and not gMySpectator.Hand.InCinematic;
   if not Button_Show.Visible then
     Hide;
   with gMySpectator.Hand.CustomPanelData do

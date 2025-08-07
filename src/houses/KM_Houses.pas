@@ -515,6 +515,7 @@ type
     constructor Create(aUID: Integer; aHouseType: TKMHouseType; PosX, PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
     constructor Load(LoadStream: TKMemoryStream); override;
     procedure Save(SaveStream: TKMemoryStream); override;
+    function GetRangeMax : Single; virtual;
     procedure Paint; override; //Render debug radius overlay
   end;
 
@@ -530,6 +531,7 @@ type
     procedure  WareAddToIn(aWare: TKMWareType; aCount: Integer = 1; aFromStaticScript: Boolean = False); override;
     function CanMakeShot : Boolean;
     procedure RemoveBolt;
+    function GetRangeMax : Single; override;
     procedure UpdateState(aTick : Cardinal); override;
     procedure Paint; override; //Render debug radius overlay
   end;
@@ -5022,6 +5024,11 @@ begin
   SaveStream.Write(ThrowingCycles);
 end;
 
+function TKMHouseTower.GetRangeMax: Single;
+begin
+  Result := RangeMax;
+end;
+
 procedure TKMHouseTower.Paint;
 var
   fillColor, lineColor: Cardinal;
@@ -5168,6 +5175,13 @@ begin
       ProduceWare(fWareInput[1], -1);
       fBoltCount := 100;
     end;
+end;
+
+function TKMHouseWallTower.GetRangeMax: Single;
+begin
+  Result := Inherited;
+  If gHands[Owner].ArmyDevUnlocked(34) then
+    Result := Result + 2;
 end;
 
 procedure TKMHouseWallTower.WareAddToIn(aWare: TKMWareType; aCount: Integer = 1; aFromStaticScript: Boolean = False);

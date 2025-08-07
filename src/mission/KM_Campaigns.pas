@@ -109,6 +109,7 @@ type
     function GetMissionBriefing(aIndex: Byte): String;
     function GetBriefingAudioFile(aIndex: Byte): String;
     function GetCampaignDataScriptFilePath: UnicodeString;
+    function GetCampaignTextFolder: UnicodeString;
     procedure UnlockAllMissions;
     function GetProgress : Byte;
     procedure UnlockNextMission(aMission : Byte);
@@ -738,6 +739,10 @@ begin
   Result := fPath + CAMPAIGN_DATA_FILENAME + EXT_FILE_SCRIPT_DOT;
 end;
 
+function TKMCampaign.GetCampaignTextFolder: UnicodeString;
+begin
+  Result := fPath + CAMPAIGN_TEXTS_FOLDER_NAME + PathDelim;
+end;
 
 procedure TKMCampaign.LoadMapsInfo;
 var

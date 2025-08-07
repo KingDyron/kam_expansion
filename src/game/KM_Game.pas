@@ -794,6 +794,9 @@ begin
                   fTextMission := TKMTextLibraryMulti.Create;
                   // Make a full scan for Libx top ID, to allow unordered Libx ID's by not carefull mapmakers
                   fTextMission.LoadLocale(ChangeFileExt(aMissionFullFilePath, '.%s.libx'), True);
+
+                  If fParams.Mode = gmCampaign then
+                    fTextMission.OverloadLocale(aCampaign.GetCampaignTextFolder + 'texts.%s.libx', True);
                 end;
       gmMapEd:  begin
                   fTextMission := TKMTextLibraryMulti.Create;

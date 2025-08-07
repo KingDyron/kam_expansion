@@ -395,9 +395,6 @@ begin
                               else
                                 HDamage := 0;
 
-                              If gHands[fOwner.Owner].ArmyDevUnlocked(14) then
-                                damage := Max(Round(damage * 0.7), 1);
-
                               if H <> nil then
                                 If H.HouseType in WALL_HOUSES then
                                 begin

@@ -12,6 +12,7 @@ const
   CAMPAIGN_DATA_FILENAME = 'campaigndata';
 
   CAMPAIGN_SCRIPTS_FOLDER_NAME = 'Scripts';
+  CAMPAIGN_TEXTS_FOLDER_NAME = 'Texts';
 
   CAMPAIGN_SOUNDS_FOLDER_NAME = 'Sounds';
 

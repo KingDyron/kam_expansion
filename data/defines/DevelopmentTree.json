@@ -331,7 +331,18 @@
 				"GuiIcon" : 1113,
 				"X" : 0,
 				"Cost" : 1,
-				"IsSpecial" : False
+				"IsSpecial" : False,
+				"Next" : 
+				[
+					{
+						"ID" : 29,
+						"HintID" : 93,
+						"GuiIcon" : 1174,
+						"X" : 0,
+						"Cost" : 4,
+						"IsSpecial" : False
+					}
+				]
 			},
 			{
 				"ID" : 2,
@@ -638,7 +649,7 @@
 								"HintID" : 62,
 								"GuiIcon" : 1142,
 								"X" : 1,
-								"Cost" : 2,
+								"Cost" : 1,
 								"IsSpecial" : False
 							},
 							{
@@ -929,6 +940,14 @@
 																								]
 																							}
 																						]
+																					},
+																					{
+																						"ID" : 34,
+																						"HintID" : 94,
+																						"GuiIcon" : 1175,
+																						"X" : 4,
+																						"Cost" : 1,
+																						"IsSpecial" : False
 																					}
 																				]
 																			}

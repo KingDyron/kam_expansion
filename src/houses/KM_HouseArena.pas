@@ -36,6 +36,7 @@ type
     function ValuableCost : Byte;
     function FestivalStarted : Boolean;
     function CanStartFestival : Boolean;
+    function PointsCount : Byte;
 
     procedure UpdateDemands; override;
     procedure UpdateState(aTick: Cardinal); override;
@@ -295,7 +296,9 @@ end;
 function TKMHouseArena.FestivalDuration : Word;
 begin
   If fDevType = dttAll then
-    Result := FESTIVAL_DURATION_ALL
+  begin
+    Result := IfThen(gHands[Owner].EconomyDevUnlocked(29), FESTIVAL_DURATION_ALL, FESTIVAL_DURATION);
+  end
   else
     Result := FESTIVAL_DURATION;
 
@@ -397,6 +400,15 @@ begin
             and (fFoodDelivered >= FoodCost)
             and (fWarfareDelivered >= WarfareCost)
             and (fValuableDelivered >= ValuableCost);
+end;
+
+function TKMHouseArena.PointsCount: Byte;
+begin
+  case fDevType of
+    dttAll : Result := IfThen(gHands[Owner].EconomyDevUnlocked(29), 2, 1);
+    else Result := 0;
+
+  end;
 end;
 
 function TKMHouseArena.FoodCost : Byte;

@@ -1130,7 +1130,7 @@ begin
 
   enemy := gTerrain.UnitsHitTestWithinRad(fPositionRound,
                                           TKMHouseTower(fHome).RangeMin,
-                                          TKMHouseTower(fHome).RangeMax,
+                                          TKMHouseTower(fHome).GetRangeMax,
                                           Owner, atEnemy, dirNA, not RANDOM_TARGETS, False);
 
   // Note: In actual game there might be two Towers nearby,

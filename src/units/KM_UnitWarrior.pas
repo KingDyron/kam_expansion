@@ -56,6 +56,8 @@ type
     fDamageHouse : Word;
     fRageTime : Word;
 
+    fRemovedFromGroup : Boolean;
+
     procedure ClearOrderTarget(aClearAttackingUnit: Boolean = True);
     procedure ClearAttackingUnit;
     procedure SetOrderTarget(aUnit: TKMUnit);
@@ -440,6 +442,8 @@ begin
   fRageTime := 0;
   If fInfinityAmmo then
     fBoltCount := 1000;
+
+  fRemovedFromGroup := false;
 end;
 
 
@@ -470,6 +474,7 @@ begin
   LoadStream.Read(fDamageHouse);
   LoadStream.Read(fRamTicker);
   LoadStream.Read(fRageTime);
+  LoadStream.Read(fRemovedFromGroup);
 
 end;
 
@@ -515,6 +520,7 @@ begin
   SaveStream.Write(fDamageHouse);
   SaveStream.Write(fRamTicker);
   SaveStream.Write(fRageTime);
+  SaveStream.Write(fRemovedFromGroup);
 end;
 
 
@@ -689,13 +695,14 @@ begin
   inherited;
 
   //After inherited so script events can still check which group the warrior is from
-  if not alreadyDeadOrDying then
+  if not alreadyDeadOrDying and not fRemovedFromGroup then
   begin
     ClearOrderTarget; //This ensures that pointer usage tracking is reset
 
     //Report to Group that we have died
     if Assigned(OnWarriorDied) then
       OnWarriorDied(Self);
+    fRemovedFromGroup := true;
   end;
 end;
 
@@ -1510,7 +1517,7 @@ end;
 { See if we can abandon other actions in favor of more important things }
 function TKMUnitWarrior.CanInterruptAction(aForced: Boolean = True): Boolean;
 begin
-  //Result := true;
+  //Result := false;
   if (Action is TKMUnitActionStay) then
     If (Task is TKMTaskAttackHouse) or (Task is TKMTaskShootAtSpot) then
       Result := True //We can abandon attack house if the action is stay

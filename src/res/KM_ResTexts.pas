@@ -56,6 +56,7 @@ type
   public
     constructor Create;
     procedure LoadLocale(const aPathTemplate: string; aFullScan: Boolean = False); // All locales for Mission strings
+    procedure OverloadLocale(const aPathTemplate: string; aFullScan: Boolean = False); // All locales for Mission strings
     procedure Clear;
     function ParseTextMarkup(const aText: UnicodeString): UnicodeString; overload;
     function ParseTextMarkup(const aText: UnicodeString; aParams: array of const): UnicodeString; overload;
@@ -186,7 +187,6 @@ begin
   end;
 end;
 
-
 function TKMTextLibrarySingle.GetTexts(aIndex: Word): UnicodeString;
 begin
   if aIndex < Length(fTexts) then
@@ -308,7 +308,7 @@ begin
 end;
 
 
-// Path template with %s
+// Path template with %s           g
 procedure TKMTextLibraryMulti.LoadLocale(const aPathTemplate: string; aFullScan: Boolean = False);
 var
   I: Integer;
@@ -318,7 +318,16 @@ begin
   for I := 0 to gResLocales.Count - 1 do
     LoadLIBXFile(Format(aPathTemplate, [gResLocales[I].Code]), fTexts[I], aFullScan);
 end;
+// Path template with %s
+procedure TKMTextLibraryMulti.OverloadLocale(const aPathTemplate: string; aFullScan: Boolean = False);
+var
+  I: Integer;
+begin
+  SetLength(fTexts, gResLocales.Count);
 
+  for I := 0 to gResLocales.Count - 1 do
+    LoadLIBXFile(Format(aPathTemplate, [gResLocales[I].Code]), fTexts[I], aFullScan);
+end;
 
 // Dynamic Scripts should not have access to the actual strings (script variables should be identical for all MP players)
 // Take the string and replace every occurence of <$tag> with corresponding text from LibX
