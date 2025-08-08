@@ -950,6 +950,7 @@ type
     procedure Save(SaveStream: TKMemoryStream); override;
     procedure Demolish(aFrom: TKMHandID; IsSilent: Boolean = False); override;
     procedure UpdateState(aTick: Cardinal); override;
+    procedure Paint;override;
   end;
 
   TKMHouseWallSingle = class(TKMHouseWall)
@@ -2799,6 +2800,8 @@ procedure TKMHouse.IncBuildingUpgradeProgress;
       else
         fWareBlocked[I] := GetMaxInWare - fWareIn[I];
 
+    FinishedLevel(fLevel.CurrentLevel);//finish before adding new demands
+
     fResetDemands := false;
     UpdateDemands;
 
@@ -2811,7 +2814,6 @@ procedure TKMHouse.IncBuildingUpgradeProgress;
     //House was damaged while under construction, so set the repair mode now it is complete
     //if (fDamage > 0) and BuildingRepair then
     //  gHands[Owner].Constructions.RepairList.AddHouse(Self);
-    FinishedLevel(fLevel.CurrentLevel);
     gScriptEvents.ProcHouseUpgraded(Self, fLevel.CurrentLevel); //At the end since it could destroy this house
   end;
 begin
@@ -3797,7 +3799,9 @@ begin
                     Result := Result or (TileCost = 0) or (fBuildSupplyTile > 0) or (fBuildReserve > 0);
               end;
     hbsDone:  if IsUpgrading then
-                Result := (fBuildSupplyWood > 0) or (fBuildSupplyStone > 0) or (fBuildSupplyTile > 0) or (fBuildReserve > 0)
+                Result := (fBuildWoodDelivered >= HSpec.Levels[CurrentLevel].WoodCost)
+                          and (fBuildStoneDelivered >= HSpec.Levels[CurrentLevel].StoneCost)
+                          and (fBuildTileDelivered >= HSpec.Levels[CurrentLevel].TileCost){ or (fBuildReserve > 0)}
               else
                 Result := False;
   else
@@ -8666,6 +8670,7 @@ end;
 procedure TKMHouseWall.FinishedLevel(aLevel : Byte);
 begin
   UpdateWallAround;
+  gHands[Owner].Deliveries.Queue.RemDemand(self);
 end;
 
 procedure TKMHouseWall.UpdateEntrancePos;
@@ -8733,6 +8738,12 @@ begin
       if fTicker mod AttackDelay = 0 then
         AttackTheEnemy;
   end;
+end;
+
+procedure TKMHouseWall.Paint;
+begin
+  Inherited;
+  gRenderAux.Quad(PointBelowEntrance.X, PointBelowEntrance.Y);
 end;
 
 function TKMHouseWallSingle.GetStonePic : Integer;

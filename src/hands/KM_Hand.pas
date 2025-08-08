@@ -1058,6 +1058,9 @@ begin
       fLocks.HouseMaxLvl[HT] := 2;
   end;
 
+  If BuildDevUnlocked(29) then
+    UnlockSpecialWalls;
+
 end;
 
 
