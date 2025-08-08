@@ -110,7 +110,8 @@ begin
   for dtt := Low(Button_FestivalType) to High(Button_FestivalType) do
   begin
     Button_FestivalType[dtt].Enabled := not Arena.FestivalStarted;
-    Button_FestivalType[dtt].BackBevelColor := IfThen(Arena.FestivalType = dtt, $A5FFAF00, $00000000)
+    Button_FestivalType[dtt].BackBevelColor := IfThen(Arena.FestivalType = dtt, $A5FFAF00, $00000000);
+    Button_FestivalType[dtt].Hint := gResTexts[2300]+ ' ' + gResTexts[TREE_TYPE_HINT[dtt]] + ' x' + Arena.PointsCount(dtt).ToString;
   end;
 
   for I := Low(WareRow_Cost) to High(WareRow_Cost) do

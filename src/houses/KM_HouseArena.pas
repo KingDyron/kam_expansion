@@ -36,7 +36,8 @@ type
     function ValuableCost : Byte;
     function FestivalStarted : Boolean;
     function CanStartFestival : Boolean;
-    function PointsCount : Byte;
+    function PointsCount : Byte; overload;
+    function PointsCount(aType : TKMDevelopmentTreeType) : Byte; overload;
 
     procedure UpdateDemands; override;
     procedure UpdateState(aTick: Cardinal); override;
@@ -47,7 +48,7 @@ type
 
 const
   FESTIVAL_DURATION = 1200;
-  FESTIVAL_DURATION_ALL = 2000;
+  FESTIVAL_DURATION_ALL = 1800;
 
 implementation
 uses
@@ -405,8 +406,19 @@ end;
 function TKMHouseArena.PointsCount: Byte;
 begin
   case fDevType of
+    dttNone : Result := 0;
     dttAll : Result := IfThen(gHands[Owner].EconomyDevUnlocked(29), 2, 1);
-    else Result := 0;
+    else Result := 3;
+
+  end;
+end;
+
+function TKMHouseArena.PointsCount(aType: TKMDevelopmentTreeType): Byte;
+begin
+  case aType of
+    dttNone : Result := 0;
+    dttAll : Result := IfThen(gHands[Owner].EconomyDevUnlocked(29), 2, 1);
+    else Result := 3;
 
   end;
 end;
@@ -462,7 +474,7 @@ begin
       IF fArenaAnimStep >= FestivalDuration then
       begin
         fArenaAnimStep := 0;
-        gHands[Owner].AddDevPoint( fDevType, IfThen(fDevType = dttAll, 1, 3) );
+        gHands[Owner].AddDevPoint( fDevType, PointsCount );
         gGame.RefreshDevelopmentTree;
         fDevType := dttNone;
       end;

@@ -207,7 +207,6 @@ type
     function CheckMaxLevel : Boolean;
     function GetHouseSpec : TKMHouseSpec;
     procedure SetStyle(aValue : Byte);
-    procedure SetLevel(aValue : Byte);
     function GetProductionCycle(aIndex : Byte) : Word;
     function PaintHouseWork : Boolean; virtual;
     procedure SetWariant(aValue : Integer);
@@ -260,6 +259,8 @@ type
     property SnowStep : Single read fSnowStep write fSnowStep;
     property IsOnSnow : Boolean read fIsOnSnow write fIsOnSnow;
     property ResetDemands : Boolean read fResetDemands write fResetDemands;
+    procedure FinishedLevel(aLevel : Byte); virtual;
+    procedure SetLevel(aValue : Byte); virtual;
 
 
   public
@@ -387,6 +388,8 @@ type
     procedure IncBuildingProgress; overload;
     procedure IncBuildingProgress(aStep : Integer); overload;
     procedure IncBuildingUpgradeProgress;
+
+
     property IsMaxLevel : Boolean read CheckMaxLevel;
     function MaxHealth: Word;
     procedure AddDamage(aAmount: Word; aAttacker: TObject; aIsEditor: Boolean = False; aFromParent : Boolean = false); virtual;
@@ -935,9 +938,13 @@ type
   TKMHouseWall = class(TKMHouse)
   private
     procedure UpdateWallAround;
+    procedure UpdatePointBelowEntrance;
   protected
     fTicker : Cardinal;
     procedure AfterCreate(aWasBuilt: Boolean); override;
+    procedure Activate(aWasBuilt: Boolean); override;
+    procedure FinishedLevel(aLevel : Byte); override;
+    procedure UpdateEntrancePos; override;
   public
     constructor Load(LoadStream: TKMemoryStream); override;
     procedure Save(SaveStream: TKMemoryStream); override;
@@ -949,6 +956,9 @@ type
     fWallStyle : Byte;
   protected
     procedure AfterCreate(aWasBuilt: Boolean); override;
+    procedure Activate(aWasBuilt: Boolean); override;
+    procedure FinishedLevel(aLevel : Byte); override;
+    procedure SetLevel(aValue : Byte); override;
   public
     function GetStonePic : Integer; override;
     function GetSnowPic : Integer; override;
@@ -2743,9 +2753,15 @@ begin
 end;
 
 
+procedure TKMHouse.FinishedLevel(aLevel: Byte);
+begin
+  //child only
+end;
+
 // Increase building progress of house. When it reaches some point Stoning replaces Wooding
 // and then it's done and house should be finalized
 // Keep track on stone/wood reserve here as well
+
 procedure TKMHouse.IncBuildingUpgradeProgress;
   procedure FinishUpgrade;
   var I : Integer;
@@ -2795,7 +2811,7 @@ procedure TKMHouse.IncBuildingUpgradeProgress;
     //House was damaged while under construction, so set the repair mode now it is complete
     //if (fDamage > 0) and BuildingRepair then
     //  gHands[Owner].Constructions.RepairList.AddHouse(Self);
-
+    FinishedLevel(fLevel.CurrentLevel);
     gScriptEvents.ProcHouseUpgraded(Self, fLevel.CurrentLevel); //At the end since it could destroy this house
   end;
 begin
@@ -3803,7 +3819,7 @@ begin
     if HSpec.Levels[CurrentLevel - 1].MaxInWares > 0 then
       Result := HSpec.Levels[CurrentLevel - 1].MaxInWares;
 
-  If (HouseType = htSmallStore) and gHands[Owner].BuildDevUnlocked(23) then
+  If (HouseType = htSmallStore) and gHands[Owner].EconomyDevUnlocked(23) then
     Result := Result + 50 * (CurrentLevel + 1);
 end;
 
@@ -8640,19 +8656,39 @@ begin
   UpdateWallAround;
 end;
 
-procedure TKMHouseWall.UpdateState(aTick: Cardinal);
-  procedure UpdatePointBelow;
-  var aCells : TKMPointDirList;
-  begin
-    aCells := TKMPointDirList.Create;
+procedure TKMHouseWall.Activate(aWasBuilt: Boolean);
+begin
+  Inherited;
+  If aWasBuilt then
+    UpdateWallAround;
+end;
 
-    GetListOfCellsAround(aCells, tpWalk);
-    IF aCells.Count > 0 then
-      fPointBelowEntrance := aCells[0].Loc
-    else
-      fPointBelowEntrance := KMPointBelow(Entrance);
-    aCells.Free;
-  end;
+procedure TKMHouseWall.FinishedLevel(aLevel : Byte);
+begin
+  UpdateWallAround;
+end;
+
+procedure TKMHouseWall.UpdateEntrancePos;
+begin
+  Inherited;
+  UpdatePointBelowEntrance;
+end;
+
+procedure TKMHouseWall.UpdatePointBelowEntrance;
+var aCells : TKMPointDirList;
+begin
+  aCells := TKMPointDirList.Create;
+
+  GetListOfCellsAround(aCells, tpWalk);
+  IF aCells.Count > 0 then
+    fPointBelowEntrance := aCells[0].Loc
+  else
+    fPointBelowEntrance := KMPointBelow(Entrance);
+  aCells.Free;
+end;
+
+procedure TKMHouseWall.UpdateState(aTick: Cardinal);
+
 
   function AttackDelay: Byte;
   begin
@@ -8684,14 +8720,14 @@ procedure TKMHouseWall.UpdateState(aTick: Cardinal);
 begin
   Inherited;
   If not IsComplete then
-    If aTick mod 10 = 0 then
-      UpdatePointBelow
-    else
-  else
+  begin
+    If aTick mod 50 = 0 then
+      UpdatePointBelowEntrance;
+  end else
   begin
     Inc(fTicker);
-    If aTick mod 100 = 0 then
-      UpdatePointBelow;
+    If aTick mod 600 = 0 then
+      UpdatePointBelowEntrance;
 
     If CurrentLevel = 2 then
       if fTicker mod AttackDelay = 0 then
@@ -8723,6 +8759,26 @@ begin
   Inherited;
 end;
 
+procedure TKMHouseWallSingle.Activate(aWasBuilt: Boolean);
+begin
+  Inherited;
+  If aWasBuilt then
+    UpdateConnection;
+end;
+
+procedure TKMHouseWallSingle.FinishedLevel(aLevel : Byte);
+begin
+  UpdateConnection;
+  Inherited;
+end;
+
+procedure TKMHouseWallSingle.SetLevel(aValue : Byte);
+begin
+  Inherited;
+  UpdateConnection;
+end;
+
+
 procedure TKMHouseWallSingle.UpdateConnection;
 var connID : Byte;
   pX, pY : Integer;
@@ -8742,8 +8798,7 @@ begin
     else newStyle := 0;
   end;
   If (newStyle > 0) and (CurrentLevel = 0) then
-    newStyle := newStyle + 2
-  else
+    newStyle := newStyle + 2;
   If (newStyle > 0) and (CurrentLevel = 2) then
     newStyle := newStyle + 4;
   fWallStyle := newStyle;
