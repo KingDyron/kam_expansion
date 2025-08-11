@@ -137,6 +137,7 @@ begin
   pointDir := KMPointDir(placeTo, aLoc.Dir);
   uid := gUIDTracker.GetNewUID;
   case aUnitType of
+    utMountedSerf:                Result := TKMUnitMountedSerf.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
     utSerf:                       Result := TKMUnitSerf.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
     utHouseBuilder,
     utBuilder:                    Result := TKMUnitWorker.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
@@ -379,6 +380,7 @@ begin
   begin
     LoadStream.Read(unitType, SizeOf(unitType));
     case unitType of
+      utMountedSerf:            U := TKMUnitMountedSerf.Load(LoadStream);
       utSerf:                   U := TKMUnitSerf.Load(LoadStream);
       utHouseBuilder,
       utBuilder:                U := TKMUnitWorker.Load(LoadStream);

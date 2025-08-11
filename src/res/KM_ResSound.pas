@@ -200,8 +200,9 @@ const
     (WarriorVoice: utBowman;        SelectID:3; DeathID:0),  //utRecruit
     (WarriorVoice: utBarbarian;     SelectID:0; DeathID:0),  //utOperator
     (WarriorVoice: utBarbarian;     SelectID:0; DeathID:0),  //ClayPicker
-    (WarriorVoice: utPikeman;     SelectID:0; DeathID:0),  //ClayPicker
-    (WarriorVoice: utKnight;     SelectID:0; DeathID:0)  //ClayPicker
+    (WarriorVoice: utPikeman;     SelectID:0; DeathID:0),  //utFeeder
+    (WarriorVoice: utKnight;     SelectID:0; DeathID:0),  //utBuilder2
+    (WarriorVoice: utAxeFighter;     SelectID:0; DeathID:0)  //utBuilder2
   );
 
   NEW_SFX_FOLDER = 'Sounds' + PathDelim;

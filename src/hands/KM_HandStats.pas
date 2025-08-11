@@ -1108,7 +1108,7 @@ begin
   for I := WARE_MIN to WARE_MAX do
     fChartWares[I, fChartCount] := Wares[I].Produced;
 
-  {for CKind := Low(TKMChartArmyKind) to High(TKMChartArmyKind) do
+  for CKind := Low(TKMChartArmyKind) to High(TKMChartArmyKind) do
     for W := WARRIOR_MIN to WARRIOR_MAX do
     begin
       armyQty := GetArmyChartValue(CKind,W);
@@ -1117,7 +1117,7 @@ begin
       armyEmptyCKind := GetArmyEmptyCKind(CKind);
       if (fArmyEmpty[armyEmptyCKind,W] and (armyQty > 0)) then
         fArmyEmpty[armyEmptyCKind,W] := False;
-    end;}
+    end;
 
   Inc(fChartCount);
 end;

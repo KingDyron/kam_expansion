@@ -266,7 +266,7 @@ type
     property  ProjectilesDefence : Single read  fProjectileDefence write fProjectileDefence;
     property  Speed : Single read fSpeed;
     property  Sight : SmallInt read GetSight write fSight;
-    function GetProjectileDefence(isBolt : Boolean) : Single;
+    function GetProjectileDefence(isBolt : Boolean) : Single; virtual;
     procedure SetSpeed(aValue : SmallInt; addTo : Boolean = false);
     procedure AssignToShip(aShip : Pointer); virtual;
     procedure UnloadFromShip(aShip : Pointer); virtual;
@@ -417,6 +417,14 @@ type
     function ObjToString(const aSeparator: String = '|'): String; override;
 
     function UpdateState: Boolean; override;
+  end;
+
+  TKMUnitMountedSerf = class(TKMUnitSerf)
+    protected
+      procedure PaintUnit(aTickLag: Single); override;
+      function GetDesiredPassability: TKMTerrainPassability; override;
+    public
+      function GetEffectiveWalkSpeed(aIsDiag: Boolean): Single; override;
   end;
   //Worker class - builds everything in game
   TKMUnitWorker = class(TKMCivilUnit)
@@ -1371,13 +1379,61 @@ begin
   fCarrySpeed := SERF_WARE_SPEED_DECREASE[Carry];
 
   case gTerrain.GetRoadType(fPositionRound) of
+    rtWooden: If gHands[Owner].BuildDevUnlocked(6) then fCarrySpeed := -1;
     rtStone : fCarrySpeed := fCarrySpeed - 2;
-    rtWooden: fCarrySpeed := fCarrySpeed;
     rtClay: fCarrySpeed := fCarrySpeed - 5;
     rtExclusive: fCarrySpeed := -5;
   end;
   Result := Result - ConvertSpeed(fCarrySpeed, aIsDiag);
 end;
+
+function TKMUnitMountedSerf.GetDesiredPassability: TKMTerrainPassability;
+begin
+  Result := Inherited;
+  //Result := tpWalk;
+end;
+
+function TKMUnitMountedSerf.GetEffectiveWalkSpeed(aIsDiag: Boolean): Single;
+var fCarrySpeed : Integer;
+begin
+  if aIsDiag then
+    Result := GetEffectiveSpeed(umtWalkDiag)
+  else
+    Result := GetEffectiveSpeed(umtWalk);
+  fCarrySpeed := 0;
+  case gTerrain.GetRoadType(fPositionRound) of
+    rtWooden: If gHands[Owner].BuildDevUnlocked(6) then fCarrySpeed := -1;
+    rtStone : fCarrySpeed := fCarrySpeed - 2;
+    rtClay: fCarrySpeed := fCarrySpeed - 5;
+    rtExclusive: fCarrySpeed := -5;
+  end;
+  Result := Result - ConvertSpeed(fCarrySpeed, aIsDiag);
+end;
+
+procedure TKMUnitMountedSerf.PaintUnit(aTickLag: Single);
+var
+  ID: Integer;
+  V: TKMUnitVisualState;
+  act: TKMUnitActionType;
+  xPaintPos, yPaintPos: Single;
+begin
+
+  V := fVisual.GetLerp(aTickLag);
+  act := V.Action;
+
+  xPaintPos := V.PositionF.X + UNIT_OFF_X + V.SlideX;
+  yPaintPos := V.PositionF.Y + UNIT_OFF_Y + V.SlideY;
+
+  ID := UID * Byte(not (act in [uaDie, uaEat]));
+  If Carry <> wtNone then
+    act := uaWork;
+
+  gRenderPool.AddUnit(UnitType, ID, act, V.Dir, V.AnimStep, V.AnimFraction, xPaintPos, yPaintPos, IfThen(FlagColor <> 0, FlagColor, gHands[Owner].GameFlagColor), True);
+
+  if fThought <> thNone then
+    gRenderPool.AddUnitThought(fType, act, V.Dir, V.AnimStep, fThought, xPaintPos, yPaintPos);
+end;
+
 
 { TKMWorker }
 function TKMUnitWorker.OnlyBuildsHouse: Boolean;
@@ -2690,7 +2746,9 @@ end;
 
 procedure TKMUnit.HitPointsDecrease(aAmount: Byte; aAttacker: TKMUnit);
 begin
-  Assert(aAmount > 0, '0 damage should be handled outside so not to reset HPCounter');
+  If aAmount = 0 then
+    Exit;
+  //Assert(aAmount > 0, '0 damage should be handled outside so not to reset HPCounter');
 
   If IsDeadOrDying then
     Exit;

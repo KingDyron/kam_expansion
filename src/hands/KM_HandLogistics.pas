@@ -479,7 +479,7 @@ var
 begin
   Result := 0;
   for I := 0 to fSerfCount - 1 do
-    if fSerfs[I].IsIdle and (fSerfs[I].UnitType = utSerf) then
+    if fSerfs[I].IsIdle then
       Inc(Result);
 end;
 

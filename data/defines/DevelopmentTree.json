@@ -597,6 +597,14 @@
 																				"X" : 3,
 																				"Cost" : 1,
 																				"IsSpecial" : True
+																			},
+																			{
+																				"ID" : 30,
+																				"HintID" : 95,
+																				"GuiIcon" : 37,
+																				"X" : 2,
+																				"Cost" : 1,
+																				"IsSpecial" : False
 																			}
 																		]
 																	}
@@ -883,6 +891,14 @@
 																																"GuiIcon" : 1172,
 																																"X" : 1,
 																																"Cost" : 4,
+																																"IsSpecial" : True
+																															},
+																															{
+																																"ID" : 35,
+																																"HintID" : 96,
+																																"GuiIcon" : 738,
+																																"X" : 0,
+																																"Cost" : 64,
 																																"IsSpecial" : True
 																															}
 																														]

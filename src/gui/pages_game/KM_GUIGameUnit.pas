@@ -375,7 +375,7 @@ begin
   begin
     Units_Ship.UnitPlan := TKMUnitWarriorShip(aUnit).GetAllUnitsInside;
   end;
-  Button_SerfCarry.Visible := aUnit.UnitType = utSerf;
+  Button_SerfCarry.Visible := aUnit is TKMUnitSerf;
 end;
 
 

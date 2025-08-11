@@ -1137,7 +1137,7 @@ begin
     Result := UID_NONE;
     //Verify all input parameters
     if InRange(aHand, 0, gHands.Count - 1) and (gHands[aHand].Enabled)
-    and (aType in [0..UNIT_TYPE_TO_ID[UNIT_MAX]])
+    and (aType < UNITS_CNT)
     and (UNIT_ID_TO_TYPE[aType] in UNITS_HUMAN)
     and gTerrain.TileInMapCoords(X,Y)
     and (TKMDirection(aDir+1) in [dirN..dirNW])
@@ -1357,8 +1357,9 @@ begin
         H.BuildingState := hbsWood;
         if aAddMaterials then
         begin
-          H.WareAddToBuild(wtTimber, gRes.Houses[H.HouseType].WoodCost);
-          H.WareAddToBuild(wtStone, gRes.Houses[H.HouseType].StoneCost);
+          H.WareAddToBuild(wtTimber, H.WoodCost);
+          H.WareAddToBuild(wtStone, H.StoneCost);
+          H.WareAddToBuild(wtTile, H.TileCost);
         end
         else
         begin

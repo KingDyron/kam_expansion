@@ -225,6 +225,7 @@ type
     function GetAttack : SmallInt; override;
     function RageDelay : Word; override;
   public
+    function GetProjectileDefence(isBolt : Boolean) : Single; override;
     constructor Create(aID: Cardinal; aUnitType: TKMUnitType; const aLoc: TKMPointDir; aOwner: TKMHandID; aInHouse: TKMHouse);
     constructor Load(LoadStream: TKMemoryStream); override;
     function UpdateState : Boolean; override;
@@ -2461,11 +2462,15 @@ end;
 function TKMUnitWarriorPaladin.GetDamageUnit: Word;
 begin
   Result := Inherited;
+  If gHands[Owner].ArmyDevUnlocked(35) then
+    Result := 10 + 10 * byte(fRageTime > 200);
   //Result := Result + 2 * Result * byte(fRageDuration > 0);
 end;
 function TKMUnitWarriorPaladin.GetDamageHouse: Word;
 begin
   Result := Inherited;
+  If gHands[Owner].ArmyDevUnlocked(35) then
+    Result := 400 + 400 * byte(fRageTime > 200);
   //Result := Result +  2 * Result * byte(fRageDuration > 0);
 end;
 
@@ -2473,12 +2478,24 @@ end;
 function TKMUnitWarriorPaladin.GetDefence: SmallInt;
 begin
   Result := Inherited;
+  If gHands[Owner].ArmyDevUnlocked(35) then
+    Result := 28 + 185 * byte(fRageTime > 200);
+
   //Result := Result + 2 * Result * byte(fRageDuration > 0);
 end;
 function TKMUnitWarriorPaladin.GetAttack: SmallInt;
 begin
   Result := Inherited;
+  If gHands[Owner].ArmyDevUnlocked(35) then
+    Result := 1638 + 1638 * byte(fRageTime > 200);
   //Result := Result +  2 * Result * byte(fRageDuration > 0);
+end;
+
+function TKMUnitWarriorPaladin.GetProjectileDefence(isBolt : Boolean) : Single;
+begin
+  Result := Inherited;
+  If gHands[Owner].ArmyDevUnlocked(35) then
+    Result := 25 + 90 * byte(fRageTime > 200);
 end;
 
 function TKMUnitWarriorPaladin.RageDelay : Word;
@@ -2493,7 +2510,12 @@ begin
   Result := Inherited;
 
   If (fRageTime = 0) and InFight then
-    SetRageTime(150);//15 secs of special damage and defense
+  begin
+    If gHands[Owner].ArmyDevUnlocked(35) then
+      SetRageTime(60000)//eternity of special attack
+    else
+      SetRageTime(150);//15 secs of special damage and defense
+  end;
 
   {if fRageDuration > 0 then
   begin

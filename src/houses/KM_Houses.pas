@@ -8743,7 +8743,6 @@ end;
 procedure TKMHouseWall.Paint;
 begin
   Inherited;
-  gRenderAux.Quad(PointBelowEntrance.X, PointBelowEntrance.Y);
 end;
 
 function TKMHouseWallSingle.GetStonePic : Integer;

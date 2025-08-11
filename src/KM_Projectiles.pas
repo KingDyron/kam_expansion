@@ -438,7 +438,7 @@ begin
                               begin
                                 U.SetHitTime;
                                 //always hit
-                                U.HitPointsDecrease(10 - Round(U.ProjectilesDefence / 3), fOwner); //Instant death
+                                U.HitPointsDecrease(Max(10 - Round(U.GetProjectileDefence(false) / 3), 0), fOwner); //Instant death
                               end
                             end;
             end;

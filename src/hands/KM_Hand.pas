@@ -818,7 +818,7 @@ procedure TKMHand.UnitTrained(aUnit: TKMUnit);
 begin
   if aUnit is TKMUnitWorker then
     fConstructions.AddWorker(TKMUnitWorker(aUnit));
-  if aUnit.UnitType = utSerf then
+  if aUnit is TKMUnitSerf then
     fDeliveries.AddSerf(aUnit);
 
   if NeverHungry and not gGameParams.IsMapEditor then

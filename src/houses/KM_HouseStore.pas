@@ -50,9 +50,9 @@ type
     property MaxCount : Integer read GetMaxCount write fMaxCount;
     procedure BlockAll(aTakeOut, aBlocked : Boolean);
 
-    {function HasMoreEntrances : Boolean; override;
+    function HasMoreEntrances : Boolean; override;
     function GetClosestEntrance(aLoc : TKMPoint) : TKMPointDir; override;
-    function Entrances : TKMPointDirArray; override;}
+    function Entrances : TKMPointDirArray; override;
   end;
 const
   MAX_STORE_CAPACITY = 4000;
@@ -369,18 +369,21 @@ begin
       NotAcceptFlag[WT] := aBlocked;
 end;
 
-{
+
 function TKMHouseStore.HasMoreEntrances: Boolean;
 begin
-  Result := true;
+  Result := gHands[Owner].EconomyDevUnlocked(30);
 end;
 
 function TKMHouseStore.Entrances: TKMPointDirArray;
 begin
-  Result := [
-              KMPointDir(Entrance.X, Entrance.Y, dirS),
-              KMPointDir(Entrance.X, Entrance.Y - 2, dirN)
-            ];
+  If not HasMoreEntrances then
+    Result := Inherited
+  else
+    Result := [
+                KMPointDir(Entrance.X, Entrance.Y, dirS),
+                KMPointDir(Entrance.X, Entrance.Y - 2, dirN)
+              ];
 end;
 
 
@@ -394,7 +397,8 @@ var I : Integer;
 begin
   Result := Inherited;
   //return random for testing;
-
+  If not HasMoreEntrances then
+    Exit;
   lastDist := 99999;
   for I := low(ENTRANCE_POS) to High(ENTRANCE_POS) do
   begin
@@ -407,6 +411,6 @@ begin
     end;
   end;
 
-end;  }
+end;
 
 end.
