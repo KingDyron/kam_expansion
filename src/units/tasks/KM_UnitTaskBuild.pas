@@ -1477,6 +1477,7 @@ begin
           SetActionLockedStay(IfThen(BootsAdded or gHands[Owner].HasPearl(ptArium), 5, 11),uaWork1,False);
           gTerrain.FlattenTerrain(fCellsToDig[fLastToDig]);
           gTerrain.ResetDigState(fCellsToDig[fLastToDig]);
+          gTerrain.SetWareOnGround(fCellsToDig[fLastToDig], wtNone, 0);
         end;
     6:  begin
           if BootsAdded or gHands[Owner].HasPearl(ptArium) then
