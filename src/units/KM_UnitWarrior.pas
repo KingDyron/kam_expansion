@@ -176,6 +176,7 @@ type
     property NextOrder : TKMWarriorOrder  read fNextOrder;
     property CurrentOrder : TKMWarriorOrder  read fOrder;
 
+    function CanIgnoreDefence(aOpponent : TKMUnit) : Boolean;
     function CanJoinToGroup(aGroup : Pointer) : Boolean;
 
     procedure SetAttackingUnit(aUnit: TKMUnit);
@@ -224,6 +225,8 @@ type
     function GetDefence : SmallInt;override;
     function GetAttack : SmallInt; override;
     function RageDelay : Word; override;
+    function GetHitPointsMax: Byte; override;
+    procedure UpdateHitPoints(UseEffect : Boolean = true); override;
   public
     function GetProjectileDefence(isBolt : Boolean) : Single; override;
     constructor Create(aID: Cardinal; aUnitType: TKMUnitType; const aLoc: TKMPointDir; aOwner: TKMHandID; aInHouse: TKMHouse);
@@ -1691,6 +1694,12 @@ begin
 
 end;
 
+function TKMUnitWarrior.CanIgnoreDefence(aOpponent : TKMUnit) : Boolean;
+begin
+  Result := ((UNIT_TO_GROUP_TYPE[UnitType] = gtWreckers) or (UnitType = utPikeMachine))
+          and not (aOpponent.UnitType in [utPaladin]);
+end;
+
 procedure TKMUnitWarrior.SetRageTime(aTime : Word);
 begin
   fRageTime := RageDelay + aTime;
@@ -2487,7 +2496,7 @@ function TKMUnitWarriorPaladin.GetAttack: SmallInt;
 begin
   Result := Inherited;
   If gHands[Owner].ArmyDevUnlocked(35) then
-    Result := 1638 + 1638 * byte(fRageTime > 200);
+    Result := Result + 9038 * byte(fRageTime > 200);
   //Result := Result +  2 * Result * byte(fRageDuration > 0);
 end;
 
@@ -2495,7 +2504,42 @@ function TKMUnitWarriorPaladin.GetProjectileDefence(isBolt : Boolean) : Single;
 begin
   Result := Inherited;
   If gHands[Owner].ArmyDevUnlocked(35) then
-    Result := 25 + 90 * byte(fRageTime > 200);
+    Result := Result + 25 + 90 * byte(fRageTime > 200);
+end;
+
+function TKMUnitWarriorPaladin.GetHitPointsMax: Byte;
+begin
+  Result := Inherited;
+  If gHands[Owner].ArmyDevUnlocked(35) then
+    Result := 200;
+end;
+
+procedure TKMUnitWarriorPaladin.UpdateHitPoints(UseEffect: Boolean = True);
+var medicsCount : Byte;
+  restorePace : Byte;
+begin
+  if UnitType in UNITS_SHIPS then   //do not increase health if it's ship
+    Exit;
+  If IsDeadOrDying then
+    Exit;
+  restorePace := HITPOINT_RESTORE_PACE;
+
+  If gHands[Owner].ArmyDevUnlocked(10) then
+    restorePace := restorePace - 20;
+
+  If gHands[Owner].ArmyDevUnlocked(35) then
+    restorePace := 50;
+
+  if restorePace = 0 then Exit; //0 pace means don't restore
+
+  if (fHitPointCounter > 200) then
+    if (fHitPointCounter mod restorePace = 0)
+      and (fHitPoints < HitPointsMax) then
+      Inc(fHitPoints);
+
+  Inc(fHitPointCounter, 1); //Increasing each tick by 1 would require 13,6 years to overflow Cardinal
+  If UseEffect and (fSpecialEffect.EffectType = uetHealing) then
+    UpdateHitPoints(false);
 end;
 
 function TKMUnitWarriorPaladin.RageDelay : Word;
@@ -2504,7 +2548,6 @@ begin
   If gHands[Owner].ArmyDevUnlocked(27) then
     Result := Result - 200;
 end;
-
 function TKMUnitWarriorPaladin.UpdateState: Boolean;
 begin
   Result := Inherited;

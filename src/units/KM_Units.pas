@@ -133,7 +133,7 @@ type
 
     //pecialEffect : array of Reco
     function GetDesiredPassability: TKMTerrainPassability; virtual;
-    function GetHitPointsMax: Byte;
+    function GetHitPointsMax: Byte; virtual;
     procedure SetDirection(aValue: TKMDirection);
     procedure SetAction(aAction: TKMUnitAction; aStep: Integer = 0);
     procedure SetPositionNext(const aLoc: TKMPoint);

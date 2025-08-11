@@ -1112,7 +1112,7 @@ begin
     for W := WARRIOR_MIN to WARRIOR_MAX do
     begin
       armyQty := GetArmyChartValue(CKind,W);
-      fChartArmy[CKind, W, fChartCount] := armyQty;
+      fChartArmy[CKind, W, fChartCount] := Max(armyQty, 0);
       // for Army empty we use special CKind, because Total equipped and Instantenious are empty simultaneously
       armyEmptyCKind := GetArmyEmptyCKind(CKind);
       if (fArmyEmpty[armyEmptyCKind,W] and (armyQty > 0)) then

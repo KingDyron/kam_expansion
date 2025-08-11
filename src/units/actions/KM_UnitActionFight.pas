@@ -355,7 +355,8 @@ function TKMUnitActionFight.ExecuteProcessMelee(Step: Byte): Boolean;
       if aUnit.UnitType <> utShieldBearer then
         damage := damage * (GetDirModifier(fUnit.Direction, aUnit.Direction) + 1); // Direction modifier
       //Defence modifier
-      If (UNIT_TO_GROUP_TYPE[fUnit.UnitType] <> gtWreckers) and (aUnit.UnitType <> utPikeMachine) then
+      //If (UNIT_TO_GROUP_TYPE[fUnit.UnitType] <> gtWreckers) and (aUnit.UnitType <> utPikeMachine) then
+      If not TKMUnitWarrior(fUnit).CanIgnoreDefence(aUnit) then
         damage := damage div Math.max(aUnit.Defence, 1); //Not needed, but animals have 0 defence
 
       isHit := (aUnit.Defence <= 0) or (damage >= KaMRandom(101, 'TKMUnitActionFight.ExecuteProcessMelee')); //Damage is a % chance to hit
