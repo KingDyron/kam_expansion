@@ -4432,7 +4432,6 @@ begin
     if (entity <> nil)
     and (entity is TKMUnitWarrior)
     and (entity.Owner = gMySpectator.HandID)
-    and not (TKMUnitWarrior(entity).IsHero)
     and not group.HasMember(TKMUnitWarrior(entity))
     and TKMUnitWarrior(entity).CanJoinToGroup(group) then
       gSystem.Cursor := kmcJoinYes
@@ -4559,7 +4558,6 @@ begin
           if (pbj <> nil)
             and (pbj is TKMUnitWarrior)
             and (TKMUnitWarrior(pbj).Owner = gMySpectator.HandID)
-            and not (TKMUnitWarrior(pbj).Ishero)
             and not group.HasMember(TKMUnitWarrior(pbj))
             and TKMUnitWarrior(pbj).CanJoinToGroup(group) then
           begin

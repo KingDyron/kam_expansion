@@ -829,8 +829,8 @@ begin
   Button_Army_ForUp.Enabled   := acceptOrders and (aGroup.Count > 1);
   Button_Army_ForDown.Enabled := acceptOrders and (aGroup.Count > 1);
   Button_Army_Split.Enabled   := acceptOrders and (aGroup.Count > 1);
-  Button_Army_Join.Enabled    := acceptOrders and not aGroup.FlagBearer.IsHero;
-  Button_Army_Join.Visible    := not aGroup.FlagBearer.IsHero;
+  Button_Army_Join.Enabled    := acceptOrders;
+  //Button_Army_Join.Visible    := not aGroup.FlagBearer.IsHero;
   Button_Army_Feed.Enabled    := acceptOrders;
   Button_AssignToShip.Enabled := acceptOrders and (gHands[aGroup.Owner].Stats.GetUnitQty(utShip) > 0);
   Button_Boat_Wares.Enabled := acceptOrders

@@ -1672,7 +1672,7 @@ begin
   if aTargetGroup = Self then Exit;
 
   if aTargetGroup.FlagBearer <> nil then
-   if (aTargetGroup.FlagBearer.IsHero) or FlagBearer.IsHero then Exit;
+    Exit;
 
   //Move our members and self to the new group
   while (fMembers.Count <> 0) do
@@ -2750,7 +2750,7 @@ begin
 
                    linkUnit := aUnit.FindLinkUnit(aUnit.Position);
 
-                   if (linkUnit <> nil) and not linkUnit.IsHero then
+                   if (linkUnit <> nil) then
                    begin
                      // Link to other group
                      Result := gHands[aUnit.Owner].UnitGroups.GetGroupByMember(linkUnit);
