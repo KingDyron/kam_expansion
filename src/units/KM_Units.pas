@@ -4251,6 +4251,9 @@ begin
 
   if SHOW_TILE_UNIT then
     gRenderAux.CircleOnTerrain(fPositionF.X - 0.5 + GetSlide(axX), fPositionF.Y - 0.5 + GetSlide(axY), 0.35, GetRandomColorWSeed(UID));
+
+  if IsHero then
+    gRenderAux.CircleOnTerrain(fPositionF.X - 0.5 + GetSlide(axX), fPositionF.Y - 0.5 + GetSlide(axY), 0.5, IfThen(FlagColor <> 0, FlagColor, gHands[Owner].GameFlagColor) and $55FFFFFF);
   if Visible and (fAction <> nil) then
     PaintUnit(aTickLag);
 
