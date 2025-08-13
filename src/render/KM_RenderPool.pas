@@ -158,6 +158,7 @@ type
     procedure AddHouseTablet(aHouse: TKMHouseType; const aLoc: TKMPoint);
     procedure AddHouseBuildSupply(aHouse: TKMHouseType; const Loc: TKMPoint; Wood, Stone, tile: Byte);
     procedure AddHouseWork(aHouse: TKMHouseType; const aLoc: TKMPoint; aActSet: TKMHouseActionSet; aAnimStep, aAnimStepPrev: Cardinal; aFlagColor: TColor4; aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
+    procedure AddHouseAnimation(const aLoc: TKMPoint; aAnimation : TKMAnimation; aAnimStep: Cardinal; aFlagColor: TColor4; aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
 
     procedure AddHousePearl(aPearlType : TKMPearlType; const aLoc: TKMPoint; const aStage : Byte; aWoodStep, aStoneStep, aSnowStep: Single; aFlagColor : Cardinal = 0;
                                aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
@@ -1589,6 +1590,28 @@ begin
   end;
 end;
 
+procedure TKMRenderPool.AddHouseAnimation(const aLoc: TKMPoint; aAnimation : TKMAnimation; aAnimStep: Cardinal; aFlagColor: TColor4; aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
+var
+  id: Cardinal;
+  rxData: TRXData;
+  cornerX, cornerY: Single;
+begin
+  If aAnimation.Count = 0 then
+    Exit;
+
+  rxData := fRXData[rxHouses];
+
+  id := aAnimation.Animation[aAnimStep];
+
+  cornerX := aLoc.X + (rxData.Pivot[id].X + aAnimation.X) / CELL_SIZE_PX - 1;
+  cornerY := aLoc.Y + (rxData.Pivot[id].Y + aAnimation.Y + rxData.Size[id].Y) / CELL_SIZE_PX - 1
+                   - gTerrain.LandExt^[aLoc.Y + 1, aLoc.X].RenderHeight / CELL_HEIGHT_DIV;
+
+  if aDoImmediateRender then
+    RenderSprite(rxHouses, id, cornerX, cornerY, aFlagColor, aDoHighlight, aHighlightColor)
+  else
+    fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, aLoc.X, aLoc.Y, aFlagColor);
+end;
 
 
 procedure TKMRenderPool.AddHouseSchoolClock(const aLoc: TKMPoint; aAnimStep: Cardinal;

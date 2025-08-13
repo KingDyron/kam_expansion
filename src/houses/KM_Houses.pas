@@ -4898,7 +4898,8 @@ begin
                       gRenderPool.AddHouseSupply(fType, fPosition, fWareIn, fWareOut, fWareOutPool);
 
                     if fType = htSmallStore then
-                      gRenderPool.AddAnimation(fPosition, gRes.Houses.Silo_Tablets, fSlotID, GetFlagColor, rxHouses);
+                      gRenderPool.AddHouseAnimation(fPosition, gRes.Houses.Silo_Tablets, fSlotID, GetFlagColor);
+                      //gRenderPool.AddAnimation(fPosition, gRes.Houses.Silo_Tablets, fSlotID, GetFlagColor, rxHouses);
 
                     if (CurrentLevel > 0) and (length(HSpec.Levels[CurrentLevel - 1].Anim) > 0) then
                     begin
@@ -4906,7 +4907,8 @@ begin
                         gRenderPool.AddHouseSupply(fType, fPosition, fWareIn, fWareOut, fWareOutPool);
 
                       for I := 0 to High(HSpec.Levels[CurrentLevel - 1].Anim) do
-                        gRenderPool.AddAnimation(fPosition, HSpec.Levels[CurrentLevel - 1].Anim[I], WorkAnimStep, GetFlagColor, rxHouses);
+                        gRenderPool.AddHouseAnimation(fPosition, HSpec.Levels[CurrentLevel - 1].Anim[I], WorkAnimStep, GetFlagColor);
+                        //gRenderPool.AddAnimation(fPosition, HSpec.Levels[CurrentLevel - 1].Anim[I], WorkAnimStep, GetFlagColor, rxHouses);
 
                       if not HSpec.Levels[CurrentLevel - 1].ReplaceAnim then
                         if PaintHouseWork then
