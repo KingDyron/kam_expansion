@@ -1717,9 +1717,12 @@ end;
 procedure TKMUnitWarrior.SetStats(aStats: TKMUnitStats);
 begin
   Inherited;
-  fDamageHouse := aStats.DamageHouse;
-  fDamageUnits := aStats.DamageUnits;
-  fBoltCount := aStats.Ammo
+  If aStats.DamageHouse > 0 then
+    fDamageHouse := aStats.DamageHouse;
+  If aStats.DamageUnits > 0 then
+    fDamageUnits := aStats.DamageUnits;
+  If aStats.Ammo > 0 then
+    fBoltCount := aStats.Ammo
 end;
 
 function TKMUnitWarrior.GetAimSoundDelay: Byte;

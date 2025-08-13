@@ -2890,14 +2890,22 @@ end;
 
 procedure TKMUnit.SetStats(aStats: TKMUnitStats);
 begin
-  fAttack := aStats.Attack;
-  fDefence := aStats.Defence;
-  fAttackHorse := aStats.AttackHorse;
-  fHitPoints := aStats.HP;
-  fHitPointsMax := aStats.MaxHP;
-  SetSpeed(aStats.Speed);
-  fSight := aStats.Sight;
-  Condition := aStats.Condition;
+  If aStats.Attack > 0 then
+    fAttack := aStats.Attack;
+  If aStats.Defence > 0 then
+    fDefence := aStats.Defence;
+  If aStats.AttackHorse > 0 then
+    fAttackHorse := aStats.AttackHorse;
+  If aStats.HP > 0 then
+    fHitPoints := aStats.HP;
+  If aStats.MaxHP > 0 then
+    fHitPointsMax := aStats.MaxHP;
+  If aStats.Speed > 0 then
+    SetSpeed(aStats.Speed);
+  If aStats.Sight > 0 then
+    fSight := aStats.Sight;
+  If aStats.Condition > 0 then
+    Condition := aStats.Condition;
 end;
 
 procedure TKMUnit.AssignToShip(aShip : Pointer);
