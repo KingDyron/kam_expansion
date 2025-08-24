@@ -1300,7 +1300,6 @@ begin
 end;
 
 procedure TKMUnitWarrior.OrderShootAtSpot(aLoc : TKMPoint);
-const ALLOW_UNITS : set of TKMUnitType = [utCatapult, utBowMan, utCrossbowman];
 begin
   If not IsRanged then
     Exit;
@@ -1450,15 +1449,15 @@ begin
     range := Max(range, gHands[Owner].AI.Setup.AutoAttackRange);
 
   if UnitType = utBattleShip then
-    testDir := DIR_TO_NEXT2[Direction];
+    testDir := dirNA;//DIR_TO_NEXT2[Direction];
   //This function should not be run too often, as it will take some time to execute (e.g. with lots of warriors in the range area to check)
   Result := gTerrain.UnitsHitTestWithinRad(Position, aMinRange, range, Owner, atEnemy, testDir, not RANDOM_TARGETS);
-  if Result = nil then
+  {if Result = nil then
     if UnitType = utBattleShip then
     begin
       testDir := DIR_TO_PREV2[Direction];
       Result := gTerrain.UnitsHitTestWithinRad(Position, aMinRange, range, Owner, atEnemy, testDir, not RANDOM_TARGETS);
-    end;
+    end;}
   //if fType in [utSpy, utAmmoCart, utRam] then
   if not gRes.Units[fType].CanAttackUnits then   
     Result := nil;
@@ -2259,7 +2258,7 @@ begin
     if fConditionPace >= 10 then
       if (fTicker mod fConditionPace = 0) then
       begin
-        if not (fType in SIEGE_MACHINES) then
+        if not (fType in SIEGE_MACHINES) and not gHands[Owner].ArmyDevUnlocked(13) then
           case fOrder of
             woWalk: If KaMRandom(100, 'TKMUnitWarrior.UpdateState:Condition1') <= 50 then dec(fCondition);
             woAttackUnit,

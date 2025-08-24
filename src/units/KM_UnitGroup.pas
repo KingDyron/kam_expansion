@@ -1671,8 +1671,6 @@ begin
   //Can't link to self for obvious reasons
   if aTargetGroup = Self then Exit;
 
-  if aTargetGroup.FlagBearer <> nil then
-    Exit;
 
   //Move our members and self to the new group
   while (fMembers.Count <> 0) do

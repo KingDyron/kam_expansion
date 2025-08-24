@@ -298,7 +298,7 @@ begin
       Position_X.Width := 80;
       Position_X.Hint := 'Position X';
 
-      Cost := TKMNumericEdit.Create(P, 30, 70, 1, 10);
+      Cost := TKMNumericEdit.Create(P, 30, 70, 1, 64);
       Cost.OnChange := TreeDevelopmentChange;
       Cost.Width := 80;
       Cost.Hint := 'Cost';

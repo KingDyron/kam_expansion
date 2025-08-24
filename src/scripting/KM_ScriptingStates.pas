@@ -158,6 +158,7 @@ type
     function KaMRandomI(aMax: Integer): Integer;
     function LocationCount: Integer;
 
+    function MapFieldType(X, Y: Integer): TKMLockFieldType;
     function MapTileHasOnlyTerrainKind(X, Y: Integer; TerKind: TKMTerrainKind): Boolean;
     function MapTileHasOnlyTerrainKinds(X, Y: Integer; TerKinds: array of TKMTerrainKind): Boolean;
     function MapTileHasTerrainKind(X, Y: Integer; TerKind: TKMTerrainKind): Boolean;
@@ -284,7 +285,7 @@ type
     function UnitIDToType(aUnitType: Integer): TKMUnitType;
 
     //new
-    function HouseStats(aHouseID: Integer): TKMHouseStats;
+    function HouseStats(aHouseID: Integer; aWithWares : Boolean): TKMHouseStats;
     function UnitStats(aUnitID: Integer): TKMUnitStats;
 
 
@@ -4551,6 +4552,24 @@ begin
   end;
 end;
 
+//* Version: 11000
+//* Check if tile at XY coordinates has only requested terrain kind. F.e. water, but no transition with shallow or stone.
+//* Result: Tile has only requested terrain kind
+function TKMScriptStates.MapFieldType(X: Integer; Y: Integer): TKMLockFieldType;
+begin
+  try
+    if gTerrain.TileInMapCoords(X, Y) then
+      Result := gTerrain.GetFieldLockType(KMPoint(X, Y))
+    else
+    begin
+      Result := lftRemove;
+      LogIntParamWarn('States.MapFieldType', [X, Y]);
+    end;
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
 
 //* Version: 11000
 //* Check if tile at XY coordinates has only requested terrain kind. F.e. water, but no transition with shallow or stone.
@@ -5338,7 +5357,7 @@ begin
 end;
 
 
-function TKMScriptStates.HouseStats(aHouseID: Integer): TKMHouseStats;
+function TKMScriptStates.HouseStats(aHouseID: Integer; aWithWares : Boolean): TKMHouseStats;
 var
   H: TKMHouse;
 begin
@@ -5349,7 +5368,7 @@ begin
       H := fIDCache.GetHouse(aHouseID);
       if H <> nil then
       begin
-        Result := H.GetStats;
+        Result := H.GetStats(aWithWares);
         Result.ID := aHouseID;
       end;
     end

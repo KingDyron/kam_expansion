@@ -1135,6 +1135,10 @@ begin
 end;
 
 procedure TKMMapEditor.AddWorkersToHouses(aAddBoots : Boolean);
+begin
+  gMySpectator.Hand.AddWorkersToHouses(aAddBoots);
+end;
+{
 var I, J, K, Count, unitsCounter : Integer;
   H : TKMHouse;
   UT : TKMUnitType;
@@ -1222,6 +1226,9 @@ begin
   end;
 
 end;
+
+}
+
 procedure TKMMapEditor.Reset;
 begin
   if Self = nil then Exit;

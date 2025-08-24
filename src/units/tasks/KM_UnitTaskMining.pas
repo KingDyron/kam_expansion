@@ -353,7 +353,7 @@ begin
           end;
           If (WorkPlan.GatheringScript in [gsCollector, gsHunter]) then
           begin
-            fUnit.Condition := fUnit.Condition - 300;
+            //fUnit.Condition := fUnit.Condition - 300;
 
             if fUnit.Condition < UNIT_MAX_CONDITION - 600 then
               if Home.CheckWareIn(wtVegetables) > 0 then

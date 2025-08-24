@@ -274,17 +274,9 @@ var
   var wood, stone, tile : Byte;
   begin
     houseSpec := gRes.Houses[aHouseType];
-    wood := houseSpec.WoodCost;
-    stone := houseSpec.StoneCost;
-    tile := houseSpec.TileCost;
-
-
-    if (aHousetype = htWoodcutters) and gMySpectator.Hand.BuildDevUnlocked(5) then
-      wood := wood - 2;
-    if (aHousetype = htPottery) and gMySpectator.Hand.BuildDevUnlocked(8) then
-      tile := 0;
-    if (aHousetype = htMill) and gMySpectator.Hand.BuildDevUnlocked(10) then
-      tile := 0;
+    wood := gMySpectator.Hand.GetHouseWoodCost(aHouseType);
+    stone := gMySpectator.Hand.GetHouseStoneCost(aHouseType);
+    tile := gMySpectator.Hand.GetHouseTileCost(aHouseType);
 
 
     SetCost(cmHouses, Byte(aHouseType), houseSpec.GUIIcon, wood, stone, tile, houseSpec.HouseName);

@@ -65,6 +65,7 @@ type
     function  GiveHouseEx(aHand: Integer; aHouseType: TKMHouseType; X,Y: Integer): Integer;
     function  GiveHouseSite(aHand, aHouseType, X, Y: Integer; aAddMaterials: Boolean): Integer;
     function  GiveHouseSiteEx(aHand: Integer; aHouseType: TKMHouseType; X, Y, aWoodAmount, aStoneAmount, aTileAmount: Integer): Integer;
+    function  GiveHouseFromStats(aHand : Integer; aStats : TKMHouseStats): Integer;
     function  GiveUnit(aHand, aType, X,Y, aDir: Integer): Integer;
     function  GiveUnitEx(aHand: Integer; aType: TKMUnitType; X,Y: Integer; aDir: TKMDirection): Integer;
     function  GiveRoad(aHand, X, Y: Integer): Boolean;
@@ -161,6 +162,7 @@ type
     function MapTileSet(X, Y, aType, aRotation: Integer): Boolean;
     function MapTilesArraySet(aTiles: array of TKMTerrainTileBrief; aRevertOnFail, aShowDetailedErrors: Boolean): Boolean;
     function MapTilesArraySetS(aTilesS: TAnsiStringArray; aRevertOnFail, aShowDetailedErrors: Boolean): Boolean;
+    procedure MapTileFieldSet(X, Y : Integer; aOwner: Integer;  aType : TKMLockFieldType);
     function MapTileHeightSet(X, Y, Height: Integer): Boolean;
     function MapTileObjectSet(X, Y, Obj: Integer): Boolean;
     function MapTileOverlaySet(X, Y: Integer; aOverlay: TKMTileOverlay; aOverwrite: Boolean): Boolean;
@@ -228,6 +230,7 @@ type
     procedure PlayerWareDistributionEx(aHand: Integer; aWareType: TKMWareType; aHouseType: TKMHouseType; aAmount: Integer);
     procedure PlayerWin(const aVictors: array of Integer; aTeamVictory: Boolean);
     procedure PlayerUpdateEntitiesSet(const aPlayer: Integer; doUpdate: Boolean);
+    procedure PlayerAddWorkers(const aPlayer: Integer; addBoots: Boolean);
 
     function PlayWAV(aHand: ShortInt; const aFileName: AnsiString; aVolume: Single): Integer;
     function PlayWAVFadeMusic(aHand: ShortInt; const aFileName: AnsiString; aVolume: Single): Integer;
@@ -573,6 +576,19 @@ begin
   end;
 end;
 
+procedure TKMScriptActions.PlayerAddWorkers(const aPlayer: Integer; addBoots: Boolean);
+var
+  I: Integer;
+begin
+  try
+    if aPlayer > -1 then
+      if gHands[aPlayer].Enabled then
+       gHands[aPlayer].AddWorkersToHouses(addBoots);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
 //* Version: 5345
 //* Sets ware distribution for the specified resource, house and player.
 //* aAmount: Distribution amount (0..5)
@@ -1438,6 +1454,43 @@ begin
     end
     else
       LogParamWarn('Actions.GiveHouseSiteEx', [aHand, GetEnumName(TypeInfo(TKMHouseType), Integer(aHouseType)), X, Y, aWoodAmount, aStoneAmount]);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
+function TKMScriptActions.GiveHouseFromStats(aHand: Integer; aStats: TKMHouseStats): Integer;
+var
+  H: TKMHouse;
+begin
+  try
+    Result := UID_NONE;
+
+    //Verify all input parameters
+    if InRange(aHand, 0, gHands.Count - 1) and (gHands[aHand].Enabled)
+      and (aStats.HouseType in HOUSES_VALID)
+      and gTerrain.TileInMapCoords(aStats.X, aStats.Y) then
+    begin
+      if gTerrain.CanPlaceHouseFromScript(aStats.HouseType, KMPoint(aStats.X - gRes.Houses[aStats.HouseType].EntranceOffsetX, aStats.Y - gRes.Houses[aStats.HouseType].EntranceOffsetY)) then
+      begin
+        H := gHands[aHand].AddHouse(aStats.HouseType, aStats.X, aStats.Y, True);
+        if H = nil then Exit;
+        Result := H.UID;
+        H.SetStats(aStats);
+        {If H is TKMHouseWFlagPoint then
+          TKMHouseWFlagPoint(H).FlagPoint := KMPoint(aStats.FlagX, aStats.FlagY);
+        If aStats.IsDestroyed then
+          H.Demolish(-1, false);
+        If aStats.Damage > 0 then
+          H.SetDamage(aStats.Damage);
+        If aStats.Level > 0 then
+          H.CurrentLevel := aStats.Level;
+        H.BuildingRepair := aStats.RepairOn;}
+      end;
+    end
+    else
+      LogParamWarn('Actions.GiveHouseFromStats', [aHand, GetEnumName(TypeInfo(TKMHouseType), Integer(aStats.HouseType)), aStats.X, aStats.Y]);
   except
     gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
     raise;
@@ -4204,6 +4257,22 @@ begin
 end;
 
 
+procedure TKMScriptActions.MapTileFieldSet(X: Integer; Y: Integer; aOwner: Integer; aType: TKMLockFieldType);
+begin
+  try
+    //Objects are vertex based not tile based
+    if gTerrain.TileInMapCoords(X, Y) then
+      gTerrain.SetFieldLockType(KMPoint(X, Y), aOwner, aType)
+    else
+    begin
+      LogIntParamWarn('Actions.MapTileFieldSet', [X, Y, aOwner, byte(aType)]);
+    end;
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
 //* Version: 6587
 //* Sets the height of the terrain at the top left corner (vertex) of the tile at the specified XY coordinates.
 //* Returns True if the change succeeded or False if it failed.
@@ -5177,7 +5246,10 @@ begin
       if U <> nil then
       begin
         if aHPMax > 0 then
+        begin
           U.HitPointsMax := aHPMax;
+          U.HitPointsChangeFromScript(aHPMax);
+        end;
         if aAttack > 0 then
           U.Attack := aAttack;
 

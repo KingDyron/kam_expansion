@@ -53,6 +53,7 @@ type
     function HasMoreEntrances : Boolean; override;
     function GetClosestEntrance(aLoc : TKMPoint) : TKMPointDir; override;
     function Entrances : TKMPointDirArray; override;
+    function GetStats(aWares : Boolean) : TKMHouseStats; override;
   end;
 const
   MAX_STORE_CAPACITY = 4000;
@@ -411,6 +412,17 @@ begin
     end;
   end;
 
+end;
+
+function TKMHouseStore.GetStats(aWares : Boolean) : TKMHouseStats;
+var W : TKMWareType;
+begin
+  Result := Inherited;
+  If aWares then
+  begin
+    for W in WARES_VALID do
+      Result.Wares.AddWare(W, CheckWareIn(W));
+  end;
 end;
 
 end.

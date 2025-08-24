@@ -383,7 +383,7 @@ type
   end;
   PRXData = ^TRXData;
 
-  TKMWarePlanSingle = record
+  TKMWarePlanSingle = packed record
       W : TKMWareType;
       C : Word;
     end;
@@ -441,7 +441,8 @@ type
     Attack, Defence, AttackHorse, HP, MaxHP, Speed, Sight,
     Condition, DamageHouse, DamageUnits, Ammo: Word;
   end;
-  TKMHouseStats = record
+
+  TKMHouseStats = packed record
     ID : Integer;
     HouseType : TKMHouseType;
     X, Y, Owner,
@@ -449,6 +450,8 @@ type
     IsDestroyed, IsComplete, RepairOn: Boolean;
     Damage, MaxHealth: Word;
     Level : Byte;
+    WareSlot : Byte;
+    Wares : TKMWarePlan;
   end;
 
 type

@@ -27,7 +27,7 @@ type
     procedure ClearPlan;
     procedure ActSetByMultiplier(aUnit : TKMUnit; aMultiplier : Single = 0);
 
-    procedure  SpeedUpFromBonuses(aUnit : TKMUnit);
+    procedure SpeedUpFromBonuses(aUnit : TKMUnit);
  public
     HasToWalk: Boolean;
     Loc: TKMPoint;

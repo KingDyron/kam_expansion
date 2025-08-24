@@ -1491,20 +1491,9 @@ begin
     Label_HouseConstructionTile.Show;
     Button_SetHouseStyle.Visible := (Length(fHouse.HSpec.Styles) > 0) and (Length(fHouse.HSpec.Levels) = 0);
     Button_SetHouseStyle.TexID := fHouse.GetStyleGuiIcon;
-    if aHouse.IsUpgrading then
-    begin
-      With gRes.Houses[aHouse.HouseType].Levels[aHouse.CurrentLevel] do
-      begin
-        Label_HouseConstructionWood.Caption := IntToStr(aHouse.GetBuildWoodDelivered) + ' / ' + IntToStr(WoodCost);
-        Label_HouseConstructionStone.Caption := IntToStr(aHouse.GetBuildStoneDelivered) + ' / ' + IntToStr(StoneCost);
-        Label_HouseConstructionTile.Caption := IntToStr(aHouse.TileDelivered) + ' / ' + IntToStr(TileCost);
-      end;
-   end else
-    begin
-      Label_HouseConstructionWood.Caption := IntToStr(aHouse.GetBuildWoodDelivered) + ' / ' + IntToStr(aHouse.WoodCost);
-      Label_HouseConstructionStone.Caption := IntToStr(aHouse.GetBuildStoneDelivered) + ' / ' + IntToStr(aHouse.StoneCost);
-      Label_HouseConstructionTile.Caption := IntToStr(aHouse.TileDelivered) + ' / ' + IntToStr(aHouse.TileCost);
-    end;
+    Label_HouseConstructionWood.Caption := IntToStr(aHouse.GetBuildWoodDelivered) + ' / ' + IntToStr(aHouse.WoodCost);
+    Label_HouseConstructionStone.Caption := IntToStr(aHouse.GetBuildStoneDelivered) + ' / ' + IntToStr(aHouse.StoneCost);
+    Label_HouseConstructionTile.Caption := IntToStr(aHouse.TileDelivered) + ' / ' + IntToStr(aHouse.TileCost);
 
     Label_House.Show;
     Image_PlayerFlag.Show;

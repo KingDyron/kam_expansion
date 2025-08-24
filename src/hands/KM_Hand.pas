@@ -321,6 +321,15 @@ type
     procedure PearlDestroyed(aType : TKMPearlType);
     function HasPearl(aType : TKMPearlType) : Boolean;
 
+    function GetHouseWoodCost(aHouseType: TKMHouseType) : Byte; overload;
+    function GetHouseStoneCost(aHouseType: TKMHouseType) : Byte; overload;
+    function GetHouseTileCost(aHouseType: TKMHouseType) : Byte; overload;
+
+    function GetHouseWoodCost(aHouseType: TKMHouseType; aLvl : Byte) : Byte; overload;
+    function GetHouseStoneCost(aHouseType: TKMHouseType; aLvl : Byte) : Byte; overload;
+    function GetHouseTileCost(aHouseType: TKMHouseType; aLvl : Byte) : Byte; overload;
+
+
     procedure AddDevPoint(aType : TKMDevelopmentTreeType; aCount : Word = 1);
     function  TakeDevPoint(aType : TKMDevelopmentTreeType; aCount : Word = 1) : Boolean;
     function  HasDevPoint(aType : TKMDevelopmentTreeType; aCount : Word = 1) : Boolean;
@@ -338,7 +347,7 @@ type
     function GetClosestBarracks(aLoc : TKMPoint; aWare: TKMWareType) : TKMHouse;
     function GetGroupsCount: TKMGroupTypeValidArray;
     function GetBestUnit: TKMUnitType;
-
+    procedure AddWorkersToHouses(aAddBoots : Boolean);
 
     function GetFieldsCount: Integer;
     procedure GetFieldPlans(aList: TKMPointTagList; const aRect: TKMRect; aIncludeFake: Boolean);
@@ -1058,7 +1067,7 @@ begin
       fLocks.HouseMaxLvl[HT] := 2;
   end;
 
-  If BuildDevUnlocked(29) then
+  If BuildDevUnlocked(30) then
     UnlockSpecialWalls;
 
 end;
@@ -2808,6 +2817,65 @@ begin
   Result := fPearlsBuilt[aType];
 end;
 
+function TKMHand.GetHouseWoodCost(aHouseType: TKMHouseType) : Byte;
+begin
+  Result := gRes.Houses[aHouseType].WoodCost;
+
+  If (aHouseType = htWoodcutters) and BuildDevUnlocked(5) then
+    Result := Max(Result - 1, 0);
+  If (aHouseType in WALL_HOUSES) and BuildDevUnlocked(16) then
+    Result := Max(Result - 1, 0);
+  If (aHouseType in WALL_HOUSES) and BuildDevUnlocked(29) then
+    Result := Max(Result - 1, 0);
+
+  If (aHouseType = htBarracks) and BuildDevUnlocked(17) then
+    Result := Max(Result - 1, 0);
+end;
+
+function TKMHand.GetHouseStoneCost(aHouseType: TKMHouseType) : Byte;
+begin
+  Result := gRes.Houses[aHouseType].StoneCost;
+  If (aHouseType = htBarracks) and BuildDevUnlocked(17) then
+    Result := Max(Result - 1, 0);
+end;
+
+function TKMHand.GetHouseTileCost(aHouseType: TKMHouseType) : Byte;
+begin
+  Result := gRes.Houses[aHouseType].TileCost;
+  If (aHouseType = htPottery) and BuildDevUnlocked(8) then
+    Result := 0;
+  If (aHouseType = htMill) and BuildDevUnlocked(10) then
+    Result := 0;
+  If (aHouseType = htBarracks) and BuildDevUnlocked(17) then
+    Result := Max(Result - 1, 0);
+end;
+
+
+function TKMHand.GetHouseWoodCost(aHouseType: TKMHouseType; aLvl : Byte) : Byte;
+begin
+  Result := gRes.Houses[aHouseType].Levels[aLvl].WoodCost;
+
+  If (aHouseType in WALL_HOUSES) and (aLvl = 0) and BuildDevUnlocked(29) then
+    Result := Max(Result - 1, 0);
+end;
+
+function TKMHand.GetHouseStoneCost(aHouseType: TKMHouseType; aLvl : Byte) : Byte;
+begin
+  Result := gRes.Houses[aHouseType].Levels[aLvl].StoneCost;
+
+  If (aHouseType in WALL_HOUSES) and (aLvl = 0) and BuildDevUnlocked(29) then
+    Result := Max(Result - 1, 0);
+end;
+
+function TKMHand.GetHouseTileCost(aHouseType: TKMHouseType; aLvl : Byte) : Byte;
+begin
+  Result := gRes.Houses[aHouseType].Levels[aLvl].TileCost;
+
+  If (aHouseType in WALL_HOUSES) and (aLvl = 0) and BuildDevUnlocked(29) then
+    Result := Max(Result - 1, 0);
+end;
+
+
 procedure TKMHand.AddDevPoint(aType : TKMDevelopmentTreeType; aCount : Word = 1);
 var dtt : TKMDevelopmentTreeType;
 begin
@@ -3018,6 +3086,96 @@ begin
       power := gRes.Units[UT].UnitPower;
       Result := UT;
     end;
+end;
+
+
+procedure TKMHand.AddWorkersToHouses(aAddBoots : Boolean);
+var I, J, K, c, unitsCounter : Integer;
+  H : TKMHouse;
+  UT : TKMUnitType;
+  U : TKMUnit;
+  P : TKMPoint;
+  unitsAdded : array[TKMUnitType] of Byte;
+  procedure AddSerfsToStore(aLoc : TKMPoint);
+  var L : Integer;
+  begin
+    for L := 0 to 8 do
+    begin
+      U := AddUnit(utSerf, P, true);
+
+      if U <> nil then
+        if aAddBoots then
+          U.BootsAdded := true;
+    end;
+  end;
+begin
+
+  c := Houses.Count;
+  for I := 0 to c - 1 do
+  begin
+    H := Houses[I];
+    if H = nil then
+      Continue;
+    if H.IsDestroyed or (H.GetHealth = 0) then
+
+    if H.HouseType in [htBarracks, htTownhall, htSchool, htInn, htMarket] then
+      Continue;
+    if H.IsClosedForWorker then
+      Continue;
+    //if H.HSpec.WorkerTypes = [] then
+    //  Continue;
+    P := KMPointBelow(H.Entrance);
+    //check first if units where added automatically
+    U := gHands.UnitsHitTest(P.X, P.Y);
+    if U <> nil then
+      if (U.Owner = self.ID) and H.CanHasWorker(U.UnitType) then
+        Continue;
+
+    if H.HouseType = htStore then
+    begin
+      if U = nil then
+        AddSerfsToStore(P);
+      Continue;
+    end;
+    FillChar(unitsAdded, sizeOf(unitsAdded), #0);
+    unitsCounter := H.HSpec.MaxWorkersCount;
+    for J := 0 to unitsCounter do
+      if unitsCounter > 0 then
+      begin
+        if length(H.HSpec.Workers) = 0 then
+        begin
+          unitsCounter := 0;
+          Continue;
+        end;
+
+        for K := 0 to High(H.HSpec.Workers) do
+        begin
+          UT := H.HSpec.Workers[K].UnitType;
+
+          if unitsCounter <= 0 then
+            Break;
+
+          if not gRes.Units[UT].IsValid then
+            Continue;
+          if unitsAdded[UT] >= H.HSpec.Workers[K].Count then
+            Continue;
+
+          //U := nil;
+          //if gTerrain.CanPlaceUnit(P, UT) then
+          Inc(unitsAdded[UT]);
+          U := AddUnit(UT, P, true);
+
+          if U <> nil then
+            if aAddBoots then
+              U.BootsAdded := true;
+
+          if U <> nil then
+            dec(unitsCounter);
+        end;
+      end;
+
+  end;
+
 end;
 
 function TKMHand.GetWorklessCount : Integer;

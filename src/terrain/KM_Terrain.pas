@@ -102,6 +102,8 @@ type
     procedure RemPalisade(const aLoc: TKMPoint);
     procedure SetInitWine(const aLoc: TKMPoint; aOwner: TKMHandID);
     function GetFieldType(const aLoc: TKMPoint): TKMFieldType;
+    function GetFieldLockType(const aLoc: TKMPoint): TKMLockFieldType;
+    procedure SetFieldLockType(const aLoc: TKMPoint; aOwner : TKMHandID; aType: TKMLockFieldType);
 //    procedure SetFieldNoUpdate(const Loc: TKMPoint; aOwner: TKMHandID; aFieldType: TKMFieldType; aStage: Byte = 0);
     procedure SetField(const aLoc: TKMPoint; aOwner: TKMHandID; aFieldType: TKMFieldType; aStage: Integer = 0; aGrainType : TKMGrainType = gftNone;
                        aRandomAge: Boolean = False; aKeepOldObject: Boolean = False; aRemoveOverlay: Boolean = True;
@@ -6460,9 +6462,10 @@ begin
     isBuildNoObj := False;
     if (
         (tpWalk in Land^[aLoc.Y,aLoc.X].Passability)
-        and(TileIsRoadable(aLoc)
+        and (TileIsRoadable(aLoc)
         and not gRes.Tileset[Land^[aLoc.Y,aLoc.X].TileOverlay2.Params.TileID].NotBuildable
-        and not Land^[aLoc.Y,aLoc.X].TileOverlay.BlocksBuilding)
+        and not Land^[aLoc.Y,aLoc.X].TileOverlay.BlocksBuilding
+        and not Land^[aLoc.Y,aLoc.X].TileOverlay2.BlocksBuilding)
         or Land^[aLoc.Y,aLoc.X].TileOverlay2.AllowsBuilding
       )
       and not TileIsCornField(aLoc) //Can't build houses on fields
@@ -6484,8 +6487,9 @@ begin
     if (
       ((tpWalk in Land^[aLoc.Y,aLoc.X].Passability)
       and TileIsRoadable(aLoc)
-      and not Land^[aLoc.Y,aLoc.X].TileOverlay.BlocksBuilding)
-        or Land^[aLoc.Y,aLoc.X].TileOverlay2.AllowsBuilding
+      and not Land^[aLoc.Y,aLoc.X].TileOverlay.BlocksBuilding
+      and not Land^[aLoc.Y,aLoc.X].TileOverlay2.BlocksBuilding)
+       or Land^[aLoc.Y,aLoc.X].TileOverlay2.AllowsBuilding
       )
       and not gMapElements[Land^[aLoc.Y,aLoc.X].Obj].AllBlocked
       and (Land^[aLoc.Y,aLoc.X].TileLock in [tlNone, tlWallEmpty])
@@ -7953,7 +7957,10 @@ function TKMTerrain.CanAddField(aX, aY: Word; aFieldType: TKMFieldType; aOwner :
 begin
   //Make sure it is within map, roads can be built on edge
 
-  Result := TileInMapCoords(aX, aY);
+  Result := TileInMapCoords(aX, aY) and
+            (Land^[aY, aX].TileOverlay2.AllowsBuilding or
+            (not Land^[aY, aX].TileOverlay.BlocksBuilding
+            and not Land^[aY, aX].TileOverlay2.BlocksBuilding) );
 
   case aFieldType of
     ftRemove : Result := (Land^[aY, aX].TileOwner = aOwner)
@@ -8909,6 +8916,55 @@ begin
   else
   if TileHasPalisade(aLoc.X, aLoc.Y) then
     Result := ftPalisade;
+
+end;
+
+function TKMTerrain.GetFieldLockType(const aLoc: TKMPoint): TKMLockFieldType;
+begin
+  Result := lftRemove;
+  if not TileInMapCoords(aLoc.X, aLoc.Y) then Exit;
+
+  if TileHasRoad(aLoc) then
+  begin
+    Result := lftRoadStone;
+    case Land^[aLoc.Y, aLoc.X].RoadType of
+      rtNone, rtStone : Result := lftRoadStone;
+      rtWooden : Result := lftRoadWooden;
+      rtClay : Result := lftRoadClay;
+      rtExclusive : Result := lftRoadExclusive;
+    end;
+  end
+  else
+  if TileIsCornField(aLoc) then
+    Result := lftField
+  else
+  if TileIsGrassField(aLoc) then
+    Result := lftGrassField
+  else
+  if TileIsVegeField(aLoc) then
+    Result := lftVegetablesField
+  else
+  if TileIsWineField(aLoc) then
+    Result := lftWineField
+  else
+  if TileHasPalisade(aLoc.X, aLoc.Y) then
+    Result := lftPalisade;
+end;
+
+procedure TKMTerrain.SetFieldLockType(const aLoc: TKMPoint; aOwner : TKMHandID; aType: TKMLockFieldType);
+begin
+  case aType of
+    lftRoadStone : SetRoad(aLoc, aOwner, rtStone);
+    lftRoadWooden : SetRoad(aLoc, aOwner, rtWooden);
+    lftRoadClay : SetRoad(aLoc, aOwner, rtClay);
+    lftRoadExclusive : SetRoad(aLoc, aOwner, rtExclusive);
+    lftPalisade: SetPalisade(aLoc, aOwner);
+    lftField: SetField(aLoc, aOwner, ftCorn);
+    lftGrassField: SetField(aLoc, aOwner, ftGrassland);
+    lftVegetablesField: SetField(aLoc, aOwner, ftVegeField);
+    lftWineField: SetField(aLoc, aOwner, ftWine);
+    //lftRemove
+  end;
 
 end;
 

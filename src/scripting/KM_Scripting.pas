@@ -380,7 +380,6 @@ begin
       'htShipYard,        htCartographers,   htPearl,         htPasture,       htForest,' +
       'htArena)'
       );
-
     Sender.AddTypeS('TKMMissionDifficulty', '(mdNone, mdEasy3, mdEasy2, mdEasy1, mdNormal, ' +
       'mdHard1, mdHard2, mdHard3)');
     Sender.AddTypeS('TKMPoint', 'record ' +
@@ -413,7 +412,7 @@ begin
       'utFarmer,       utCarpenter,    utBaker,         utButcher,' +
       'utFisher,       utBuilder,      utStonemason,    utSmith,' +
       'utMetallurgist, utRecruit,      utOperator,      utClayPicker,' +
-      'utFeeder,       utHouseBuilder,' +
+      'utFeeder,       utHouseBuilder, utMountedSerf,' +
       'utMilitia,      utAxeFighter,   utSwordFighter,  utBowman,' +
       'utCrossbowman,  utLanceCarrier, utPikeman,       utScout,' +
       'utKnight,       utBarbarian,' +
@@ -518,11 +517,18 @@ begin
         'Ammo: Word; ' +
       'end;');
 
+    Sender.AddTypeS('TKMWarePlanSingle', 'record ' +
+        'W : TKMWareType; ' +
+        'C : Word; ' +
+      'end;');
+    Sender.AddTypeS('TKMWarePlan', 'array of TKMWarePlanSingle');
+
     Sender.AddTypeS('TKMHouseStats', 'record ' +
         'ID : Integer; ' +
         'HouseType : TKMHouseType; ' +
         'X: Word; ' +
         'Y: Word; ' +
+        'Owner: Word; ' +
         'FlagX: Word; ' +
         'FlagY: Word; ' +
         'IsDestroyed: Boolean; ' +
@@ -531,6 +537,8 @@ begin
         'Damage: Word; ' +
         'MaxHealth : Word; ' +
         'Level : Byte; ' +
+        'WareSlot : Byte; ' +
+        'Wares : TKMWarePlan; ' +
       'end;');
     Sender.AddTypeS('TKMUnitThought', '(thNone, thEat, thHome, thBuild, thStone, thWood, thDeath, thQuest, thDismiss, thArmor, thSpy, thTile, thExclusive, thImportant, thBucket, thBoots, thDiamond, thBow, thTalk)');
 
@@ -673,6 +681,7 @@ begin
     RegisterMethodCheck(c, 'function  KaMRandomI(aMax: Integer): Integer');
     RegisterMethodCheck(c, 'function  LocationCount: Integer');
     RegisterMethodCheck(c, 'function  MapHeight: Integer');
+    RegisterMethodCheck(c, 'function  MapFieldType(X: Integer; Y: Integer): TKMLockFieldType');
     RegisterMethodCheck(c, 'function  MapTileHasOnlyTerrainKind(X, Y: Integer; TerKind: TKMTerrainKind): Boolean');
     RegisterMethodCheck(c, 'function  MapTileHasOnlyTerrainKinds(X, Y: Integer; TerKinds: array of TKMTerrainKind): Boolean');
     RegisterMethodCheck(c, 'function  MapTileHasTerrainKind(X, Y: Integer; TerKind: TKMTerrainKind): Boolean');
@@ -796,7 +805,7 @@ begin
     RegisterMethodCheck(c, 'function  WareTypeToID(aWareType: TKMWareType): Integer');
     RegisterMethodCheck(c, 'function  WareIdToType(aWareType: Integer): TKMWareType');
     RegisterMethodCheck(c, 'function  WarriorInFight(aUnitID: Integer; aCountCitizens: Boolean): Boolean');
-    RegisterMethodCheck(c, 'function  HouseStats(aHouseID: Integer): TKMHouseStats');
+    RegisterMethodCheck(c, 'function  HouseStats(aHouseID: Integer; aWithWares : Boolean): TKMHouseStats');
     RegisterMethodCheck(c, 'function  UnitStats(aUnitID: Integer): TKMUnitStats');
     //*States-Check*//
 
@@ -858,6 +867,7 @@ begin
     RegisterMethodCheck(c, 'function  GiveHouseSite(aHand: Integer; aHouseType: Integer; X, Y: Integer; aAddMaterials: Boolean): Integer');
     RegisterMethodCheck(c, 'function  GiveHouseSiteEx(aHand: Integer; aHouseType: TKMHouseType; X, Y: Integer; aWoodAmount: Integer; ' +
       'aStoneAmount, aTileAmount: Integer): Integer');
+    RegisterMethodCheck(c, 'function  GiveHouseFromStats(aHand: Integer; aStats: TKMHouseStats): Integer');
     RegisterMethodCheck(c, 'function  GiveRoad(aHand: Integer; X, Y: Integer): Boolean');
     RegisterMethodCheck(c, 'function  GiveUnit(aHand: Integer; aType: Integer; X, Y: Integer; aDir: Integer): Integer');
     RegisterMethodCheck(c, 'function  GiveUnitEx(aHand: Integer; aType: TKMUnitType; X, Y: Integer; aDir: TKMDirection): Integer');
@@ -939,6 +949,7 @@ begin
       'aRandomTiles: Boolean; aOverrideCustomTiles: Boolean; aBrushMask: TKMTileMaskKind; ' +
       'aBlendingLvl: Integer; aUseMagicBrush: Boolean)');
     RegisterMethodCheck(c, 'procedure MapLayerLoad(aLayerName: string)');
+    RegisterMethodCheck(c, 'procedure  MapTileFieldSet(X: Integer; Y: Integer; aOwner: Integer; aType: TKMLockFieldType)');
     RegisterMethodCheck(c, 'function  MapTileHeightSet(X, Y: Integer; Height: Integer): Boolean');
     RegisterMethodCheck(c, 'function  MapTileObjectSet(X, Y: Integer; Obj: Integer): Boolean');
     RegisterMethodCheck(c, 'function  MapTileOverlaySet(X, Y: Integer; aOverlay: TKMTileOverlay; aOverwrite: Boolean): Boolean');
@@ -1003,6 +1014,7 @@ begin
     RegisterMethodCheck(c, 'procedure PlayerWareDistributionEx(aHand: Integer; aWareType: TKMWareType; aHouseType: TKMHouseType; aAmount: Integer)');
     RegisterMethodCheck(c, 'procedure PlayerWin(aVictors: array of Integer; aTeamVictory: Boolean)');
     RegisterMethodCheck(c, 'procedure PlayerUpdateEntitiesSet(const aPlayer: Integer; doUpdate: Boolean)');
+    RegisterMethodCheck(c, 'procedure PlayerAddWorkers(const aPlayer: Integer; addBoots: Boolean)');
 
     RegisterMethodCheck(c, 'function  PlayOGG(aHand: ShortInt; aFileName: AnsiString; aVolume: Single): Integer');
     RegisterMethodCheck(c, 'function  PlayOGGAtLocation(aHand: ShortInt; aFileName: AnsiString; aVolume: Single; aRadius: Single; ' +
@@ -1503,6 +1515,7 @@ begin
       RegisterMethod(@TKMScriptStates.KaMRandomI, 'KaMRandomI');
       RegisterMethod(@TKMScriptStates.LocationCount, 'LocationCount');
       RegisterMethod(@TKMScriptStates.MapHeight, 'MapHeight');
+      RegisterMethod(@TKMScriptStates.MapFieldType, 'MapFieldType');
       RegisterMethod(@TKMScriptStates.MapTileHasOnlyTerrainKind, 'MapTileHasOnlyTerrainKind');
       RegisterMethod(@TKMScriptStates.MapTileHasOnlyTerrainKinds, 'MapTileHasOnlyTerrainKinds');
       RegisterMethod(@TKMScriptStates.MapTileHasTerrainKind, 'MapTileHasTerrainKind');
@@ -1682,6 +1695,7 @@ begin
       RegisterMethod(@TKMScriptActions.GiveHouseEx, 'GiveHouseEx');
       RegisterMethod(@TKMScriptActions.GiveHouseSite, 'GiveHouseSite');
       RegisterMethod(@TKMScriptActions.GiveHouseSiteEx, 'GiveHouseSiteEx');
+      RegisterMethod(@TKMScriptActions.GiveHouseFromStats, 'GiveHouseFromStats');
       RegisterMethod(@TKMScriptActions.GiveRoad, 'GiveRoad');
       RegisterMethod(@TKMScriptActions.GiveUnit, 'GiveUnit');
       RegisterMethod(@TKMScriptActions.GiveUnitEx, 'GiveUnitEx');
@@ -1757,6 +1771,7 @@ begin
       RegisterMethod(@TKMScriptActions.MapBrushMagicWater, 'MapBrushMagicWater');
       RegisterMethod(@TKMScriptActions.MapBrushWithMask, 'MapBrushWithMask');
       RegisterMethod(@TKMScriptActions.MapLayerLoad, 'MapLayerLoad');
+      RegisterMethod(@TKMScriptActions.MapTileFieldSet, 'MapTileFieldSet');
       RegisterMethod(@TKMScriptActions.MapTileHeightSet, 'MapTileHeightSet');
       RegisterMethod(@TKMScriptActions.MapTileObjectSet, 'MapTileObjectSet');
       RegisterMethod(@TKMScriptActions.MapTileOverlaySet, 'MapTileOverlaySet');
@@ -1821,6 +1836,7 @@ begin
       RegisterMethod(@TKMScriptActions.PlayerWareDistributionEx, 'PlayerWareDistributionEx');
       RegisterMethod(@TKMScriptActions.PlayerWin, 'PlayerWin');
       RegisterMethod(@TKMScriptActions.PlayerUpdateEntitiesSet, 'PlayerUpdateEntitiesSet');
+      RegisterMethod(@TKMScriptActions.PlayerAddWorkers, 'PlayerAddWorkers');
       RegisterMethod(@TKMScriptActions.PlayOGG, 'PlayOGG');
       RegisterMethod(@TKMScriptActions.PlayOGGAtLocation, 'PlayOGGAtLocation');
       RegisterMethod(@TKMScriptActions.PlayOGGAtLocationLooped, 'PlayOGGAtLocationLooped');

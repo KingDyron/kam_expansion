@@ -404,7 +404,7 @@ type
     procedure AddDemandBuildingMaterials;virtual;
     procedure SetOnFire;
     procedure TakeOver;
-    function GetStats : TKMHouseStats;
+    function GetStats(aWares : Boolean) : TKMHouseStats; virtual;
     procedure SetStats(aStats : TKMHouseStats);
     function GetWaresArrayIn : TIntegerArray;
     function GetWaresArrayOut : TIntegerArray;
@@ -2962,9 +2962,9 @@ end;
 
 procedure TKMHouse.SetCost;
 begin
-  fBuildCost.Wood := HSpec.WoodCost;
-  fBuildCost.Stone := HSpec.StoneCost;
-  fBuildCost.Tile := HSpec.TileCost;
+  fBuildCost.Wood := gHands[Owner].GetHouseWoodCost(fType);
+  fBuildCost.Stone := gHands[Owner].GetHouseStoneCost(fType);
+  fBuildCost.Tile := gHands[Owner].GetHouseTileCost(fType);
 
   If (HouseType = htWoodcutters) and gHands[Owner].BuildDevUnlocked(5) then
     Dec(fBuildCost.Wood, 2);
@@ -2974,11 +2974,7 @@ begin
     fBuildCost.Tile := 0;
 
   If (HouseType in WALL_HOUSES) and gHands[Owner].BuildDevUnlocked(16) then
-  begin
     fBuildCost.Wood := Max(fBuildCost.Wood - 1, 0);
-    fBuildCost.Stone := Max(fBuildCost.Stone - 1, 0);
-    fBuildCost.Tile := Max(fBuildCost.Tile - 1, 0);
-  end;
   If (HouseType = htBarracks) and gHands[Owner].BuildDevUnlocked(17) then
   begin
     fBuildCost.Wood := Max(fBuildCost.Wood - 1, 0);
@@ -3128,7 +3124,8 @@ begin
   fWasTookOver := true;
 end;
 
-function TKMHouse.GetStats: TKMHouseStats;
+function TKMHouse.GetStats(aWares : Boolean): TKMHouseStats;
+var I, J : Integer;
 begin
   Result.HouseType := HouseType;
   Result.X := Entrance.X;
@@ -3142,9 +3139,21 @@ begin
   Result.Damage := fDamage;
   Result.MaxHealth := MaxHealth;
   Result.Level := CurrentLevel;
+  Result.WareSlot := WareInputSlot;
+  Result.Wares.SetCount(0, true);
+  If aWares then
+  begin
+    for I := 1 to WARES_IN_OUT_COUNT do
+    begin
+      Result.Wares.AddWare(fWareInput[I], fWareIn[I]);
+      Result.Wares.AddWare(fWareOutput[I], fWareOut[I]);
+    end;
+  end;
+
 end;
 
 procedure TKMHouse.SetStats(aStats: TKMHouseStats);
+var I : Integer;
 begin
   If self is TKMHouseWFlagPoint then
     TKMHouseWFlagPoint(self).FlagPoint := KMPoint(aStats.FlagX, aStats.FlagY);
@@ -3152,6 +3161,12 @@ begin
   fDamage := aStats.Damage;
   If aStats.Level <> CurrentLevel then
     SetLevel(aStats.Level);
+
+  SetWareSlot(aStats.WareSlot, true);
+
+  for I := 0 to High(aStats.Wares) do
+    self.WareAddToEitherFromScript(aStats.Wares[I].W, aStats.Wares[I].C);
+
 end;
 
 function TKMHouse.GetWaresArrayIn: TIntegerArray;
@@ -3649,7 +3664,12 @@ begin
 
   if IsDamaged then
     Exit;
+
   lvl := gRes.Houses[fType].Levels[fLevel.CurrentLevel];
+
+  fBuildCost.Wood := gHands[Owner].GetHouseWoodCost(fType, CurrentLevel);
+  fBuildCost.Stone := gHands[Owner].GetHouseStoneCost(fType, CurrentLevel);
+  fBuildCost.Tile := gHands[Owner].GetHouseTileCost(fType, CurrentLevel);
 
   fResetDemands := true;
   UpdateDemands;
@@ -3674,21 +3694,28 @@ begin
 
   end;}
 
+  {If (HouseType in WALL_HOUSES) and (fLevel.CurrentLevel = 0) and gHands[Owner].BuildDevUnlocked(29) then
+  begin
+    lvl.WoodCost := Max(lvl.WoodCost - 1, 0);
+    lvl.StoneCost := Max(lvl.StoneCost - 1, 0);
+    lvl.TileCost := Max(lvl.TileCost - 1, 0);
+  end;}
 
-  C := TryToTakeWares(wtTimber, lvl.WoodCost);
-  fBuildWoodDelivered := lvl.WoodCost - C;
+
+  C := TryToTakeWares(wtTimber, fBuildCost.Wood);
+  fBuildWoodDelivered := fBuildCost.Wood - C;
   fBuildSupplyWood := fBuildWoodDelivered;
   if C > 0 then
     gHands[Owner].Deliveries.Queue.AddDemand(self, nil, wtTimber, C, dtOnce, diHigh4);
 
-  C := TryToTakeWares(wtStone, lvl.StoneCost);
-  fBuildStoneDelivered := lvl.StoneCost - C;
+  C := TryToTakeWares(wtStone, fBuildCost.Stone);
+  fBuildStoneDelivered := fBuildCost.Stone - C;
   fBuildSupplyStone := fBuildStoneDelivered;
   if C > 0 then
     gHands[Owner].Deliveries.Queue.AddDemand(self, nil, wtStone, C, dtOnce, diHigh4);
 
-  C := TryToTakeWares(wtTile, lvl.TileCost);
-  fBuildTileDelivered := lvl.TileCost - C;
+  C := TryToTakeWares(wtTile, fBuildCost.Tile);
+  fBuildTileDelivered := fBuildCost.Tile - C;
   fBuildSupplyTile := fBuildTileDelivered;
   if C > 0 then
     gHands[Owner].Deliveries.Queue.AddDemand(self, nil, wtTile, C, dtOnce, diHigh4);
@@ -3799,9 +3826,9 @@ begin
                     Result := Result or (TileCost = 0) or (fBuildSupplyTile > 0) or (fBuildReserve > 0);
               end;
     hbsDone:  if IsUpgrading then
-                Result := (fBuildWoodDelivered >= HSpec.Levels[CurrentLevel].WoodCost)
-                          and (fBuildStoneDelivered >= HSpec.Levels[CurrentLevel].StoneCost)
-                          and (fBuildTileDelivered >= HSpec.Levels[CurrentLevel].TileCost){ or (fBuildReserve > 0)}
+                Result := (fBuildWoodDelivered >= WoodCost)
+                          and (fBuildStoneDelivered >= StoneCost)
+                          and (fBuildTileDelivered >= TileCost){ or (fBuildReserve > 0)}
               else
                 Result := False;
   else
@@ -6746,7 +6773,7 @@ begin
   If (aType = utSpy) and gHands[Owner].ArmyDevUnlocked(0) then
     Result := Round(Result * 0.8);
 
-  If (aType = utSpy) and gHands[Owner].ArmyDevUnlocked(4) then
+  If gHands[Owner].ArmyDevUnlocked(4) then
     Result := Round(Result * 0.9);
 end;
 
