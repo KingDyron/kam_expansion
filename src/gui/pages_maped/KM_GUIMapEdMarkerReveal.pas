@@ -90,8 +90,15 @@ begin
   if Sender = Button_RevealDelete then
   begin
     rev.Delete(fIndex);
-    Hide;
-    fOnDone(Self);
+    If rev.Count = 0 then
+    begin
+      Hide;
+      fOnDone(Self);
+    end else
+    begin
+      fIndex := Min(fIndex, rev.Count - 1);
+      Show(fOwner, fIndex, fType);
+    end;
   end;
 
   if Sender = Button_RevealClose then

@@ -18,7 +18,7 @@
       <SavePoints Enabled="True" Frequency="9000" Limit="30"/>
       <PlayersColor Mode="1" Self="0707FF" Ally="07FFFF" Enemy="FFFF00"/>
       <WareDistribution Value="" SavedBetweenGames="True"/>
-      <Misc SpecShowBeacons="False" ShowGameTime="False" ShowGameSpeed="False" DayGamesCount="3" LastDayGamePlayed="2025.8.24 0:0:0"/>
+      <Misc SpecShowBeacons="False" ShowGameTime="False" ShowGameSpeed="False" DayGamesCount="4" LastDayGamePlayed="2025.8.24 0:0:0"/>
       <Tweaks AllowSnowHouses="True" AllowSnowObjects="True" InterpolatedRender="True" InterpolatedAnimations="False"/>
     </GameCommon>
     <Campaign CampaignLastDifficulty="4"/>
