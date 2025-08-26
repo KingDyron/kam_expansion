@@ -254,8 +254,8 @@
       <chkShowMiningRadius Checked="False"/>
       <chkShowOverlays Checked="True"/>
       <chkShowUnits Checked="True"/>
-      <chkShowHouses Checked="False"/>
-      <chkShowObjects Checked="False"/>
+      <chkShowHouses Checked="True"/>
+      <chkShowObjects Checked="True"/>
       <chkShowFlatTerrain Checked="False"/>
       <chkPaintSounds Checked="False"/>
       <chkShowRoutesSteps Checked="False"/>

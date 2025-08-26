@@ -278,9 +278,11 @@ type
     function  UnitSetInstantKill(aUnitID: Integer; isInstant: Boolean): Boolean;
     procedure UnitBlockWalking(aUnitID: Integer; aBlock : Boolean);
     //new
+    procedure GroupSetFlagColor(aGroupID : Integer; aColor : Cardinal);
     procedure HouseSetStats(aHouseID : Integer; aStats : TKMHouseStats);
     procedure MoveCamera(aPlayer, aX, aY : Integer);
     procedure ResetZoom(aPlayer: Integer);
+    procedure UnitSetFlagColor(aUnitID : Integer; aColor : Cardinal);
     procedure UnitSetRage(aUnitID, aDuration : Integer);
     procedure UnitSetStats(aUnitID : Integer; aStats : TKMUnitStats);
     procedure UnitSetThought(aUnitID : Integer; aThought : TKMUnitThought);
@@ -5544,6 +5546,27 @@ begin
   end;
 end;
 
+procedure TKMScriptActions.GroupSetFlagColor(aGroupID: Integer; aColor: Cardinal);
+var
+  G: TKMUnitGroup;
+  I : Integer;
+begin
+  try
+    if (aGroupID > 0) then
+    begin
+      G := fIDCache.GetGroup(aGroupID);
+      if G <> nil then
+        for I := 0 to G.Count - 1 do
+          G.Members[I].FlagColor := aColor or $FF000000;
+    end
+    else
+      LogIntParamWarn('Actions.GroupSetFlagColor', [aGroupID, aColor]);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
 procedure TKMScriptActions.HouseSetStats(aHouseID: Integer; aStats: TKMHouseStats);
 var
   H: TKMHouse;
@@ -5594,6 +5617,25 @@ begin
       If InRange(aPlayer, 0, gHands.Count - 1) and (gMySpectator.HandID = aPlayer) then
         gGame.ActiveInterface.Viewport.ResetZoom;
 
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
+procedure TKMScriptActions.UnitSetFlagColor(aUnitID: Integer; aColor: Cardinal);
+var
+  U: TKMUnit;
+begin
+  try
+    if (aUnitID > 0) then
+    begin
+      U := fIDCache.GetUnit(aUnitID);
+      if U <> nil then
+        U.FlagColor := aColor or $FF000000;
+    end
+    else
+      LogIntParamWarn('Actions.GroupSetFlagColor', [aUnitID, aColor]);
   except
     gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
     raise;

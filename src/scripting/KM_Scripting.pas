@@ -1062,9 +1062,11 @@ begin
     RegisterMethodCheck(c, 'function  UnitSetInstantKill(aUnitID: Integer; isInstant: Boolean): Boolean');
     RegisterMethodCheck(c, 'procedure  UnitBlockWalking(aUnitID: Integer; aBlock: Boolean)');
 
+    RegisterMethodCheck(c, 'procedure  GroupSetFlagColor(aGroupID: Integer; aColor: Cardinal)');
     RegisterMethodCheck(c, 'procedure  HouseSetStats(aHouseID: Integer; aStats: TKMHouseStats)');
     RegisterMethodCheck(c, 'procedure  MoveCamera(aPlayer, aX, aY : Integer)');
     RegisterMethodCheck(c, 'procedure  ResetZoom(aPlayer: Integer)');
+    RegisterMethodCheck(c, 'procedure  UnitSetFlagColor(aUnitID: Integer; aColor: Cardinal)');
     RegisterMethodCheck(c, 'procedure  UnitSetRage(aUnitID: Integer; aDuration: Integer)');
     RegisterMethodCheck(c, 'procedure  UnitSetStats(aUnitID: Integer; aStats: TKMUnitStats)');
     RegisterMethodCheck(c, 'procedure  UnitSetThought(aUnitID : Integer; aThought : TKMUnitThought)');
@@ -1875,9 +1877,12 @@ begin
       RegisterMethod(@TKMScriptActions.UnitOrderWalk, 'UnitOrderWalk');
       RegisterMethod(@TKMScriptActions.UnitSetInstantKill, 'UnitSetInstantKill');
       RegisterMethod(@TKMScriptActions.UnitBlockWalking, 'UnitBlockWalking');
+
+      RegisterMethod(@TKMScriptActions.GroupSetFlagColor, 'GroupSetFlagColor');
       RegisterMethod(@TKMScriptActions.HouseSetStats, 'HouseSetStats');
       RegisterMethod(@TKMScriptActions.MoveCamera, 'MoveCamera');
       RegisterMethod(@TKMScriptActions.ResetZoom, 'ResetZoom');
+      RegisterMethod(@TKMScriptActions.UnitSetFlagColor, 'UnitSetFlagColor');
       RegisterMethod(@TKMScriptActions.UnitSetRage, 'UnitSetRage');
       RegisterMethod(@TKMScriptActions.UnitSetStats, 'UnitSetStats');
       RegisterMethod(@TKMScriptActions.UnitSetThought, 'UnitSetThought');
