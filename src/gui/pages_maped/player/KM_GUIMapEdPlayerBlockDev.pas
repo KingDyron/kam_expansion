@@ -26,6 +26,7 @@ type
     constructor Create(aParent : TKMPanel);
 
     procedure ReloadTrees(aCurrentPageOnly : Boolean = true); override;
+    procedure Show; override;
   end;
 
 implementation
@@ -236,6 +237,12 @@ begin
   else
   for dtt := Low(Button_SwitchTree) to High(Button_SwitchTree) do
     ReloadType(dtt);
+end;
+
+procedure TKMMapEdPlayerBlockDevs.Show;
+begin
+  Inherited;
+  ReloadTrees;
 end;
 
 
