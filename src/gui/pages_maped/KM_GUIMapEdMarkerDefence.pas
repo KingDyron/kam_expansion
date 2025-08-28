@@ -193,8 +193,17 @@ begin
   if Sender = Button_DefenceDelete then
   begin
     gHands[fOwner].AI.General.DefencePositions.Delete(fIndex);
-    Hide;
-    fOnDone(Self);
+
+    If gHands[fOwner].AI.General.DefencePositions.Count = 0 then
+    begin
+      Hide;
+      fOnDone(Self);
+    end else
+    begin
+      fIndex := Min(fIndex, gHands[fOwner].AI.General.DefencePositions.Count - 1);
+      Show(fOwner, fIndex);
+    end;
+
   end;
 
   if Sender = Button_DefenceClose then
