@@ -342,10 +342,10 @@
 		"ProductionCountMax" : 1, 
 		"ProduceInHouses" : ["htWoodCutters"],
 		"ProduceAfterWares" : [
-			{"Ware" : "wtTrunk", "Min" : 1, "Cycles" : 20}
+			{"Ware" : "wtTrunk", "Min" : 1, "Cycles" : 8}
 		],
-		"CoinPrice" : 0.3,
-		"MaxCountInStall" : 112
+		"CoinPrice" : 0.6,
+		"MaxCountInStall" : 50
 	}
   ],
   "VirtualWaresPalaceOrder" : [

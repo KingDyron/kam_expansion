@@ -6140,6 +6140,8 @@ procedure TKMHouseAppleTree.GetListOfCellsWithin(aCells: TKMPointList);
 var I : integer;
 
 begin
+  If (self = nil) or IsDestroyed then
+    Exit;
   If ParentTree <> nil then
     ParentTree.GetListOfCellsWithin(aCells)
   else
