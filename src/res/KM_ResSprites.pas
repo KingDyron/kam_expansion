@@ -628,8 +628,8 @@ begin
   txtFileName := aFolder + StringReplace(aFilename, '.png', '.txt', [rfReplaceAll, rfIgnoreCase]);
   if FileExists(txtFileName) then
   begin
-    AssignFile(ft, txtFileName);
-    Reset(ft);
+    {AssignFile(ft, txtFileName);
+    Reset(ft);}
     TXTFile := TStringList.Create;
     TXTFile.LoadFromFile(txtFileName);
 

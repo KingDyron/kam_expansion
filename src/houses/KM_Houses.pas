@@ -2965,22 +2965,6 @@ begin
   fBuildCost.Wood := gHands[Owner].GetHouseWoodCost(fType);
   fBuildCost.Stone := gHands[Owner].GetHouseStoneCost(fType);
   fBuildCost.Tile := gHands[Owner].GetHouseTileCost(fType);
-
-  If (HouseType = htWoodcutters) and gHands[Owner].BuildDevUnlocked(5) then
-    Dec(fBuildCost.Wood, 2);
-  If (HouseType = htPottery) and gHands[Owner].BuildDevUnlocked(8) then
-    fBuildCost.Tile := 0;
-  If (HouseType = htMill) and gHands[Owner].BuildDevUnlocked(10) then
-    fBuildCost.Tile := 0;
-
-  If (HouseType in WALL_HOUSES) and gHands[Owner].BuildDevUnlocked(16) then
-    fBuildCost.Wood := Max(fBuildCost.Wood - 1, 0);
-  If (HouseType = htBarracks) and gHands[Owner].BuildDevUnlocked(17) then
-  begin
-    fBuildCost.Wood := Max(fBuildCost.Wood - 1, 0);
-    fBuildCost.Stone := Max(fBuildCost.Stone - 1, 0);
-    fBuildCost.Tile := Max(fBuildCost.Tile - 1, 0);
-  end;
 end;
 
 

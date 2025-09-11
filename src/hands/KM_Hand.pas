@@ -2822,14 +2822,14 @@ begin
   Result := gRes.Houses[aHouseType].WoodCost;
 
   If (aHouseType = htWoodcutters) and BuildDevUnlocked(5) then
-    Result := Max(Result - 1, 0);
+    Result := Max(Result - 1, 1);
   If (aHouseType in WALL_HOUSES) and BuildDevUnlocked(16) then
-    Result := Max(Result - 1, 0);
+    Result := Max(Result - 1, 1);
   If (aHouseType in WALL_HOUSES) and BuildDevUnlocked(29) then
-    Result := Max(Result - 1, 0);
+    Result := Max(Result - 1, 1);
 
   If (aHouseType = htBarracks) and BuildDevUnlocked(17) then
-    Result := Max(Result - 1, 0);
+    Result := Max(Result - 1, 1);
 end;
 
 function TKMHand.GetHouseStoneCost(aHouseType: TKMHouseType) : Byte;
@@ -2919,7 +2919,7 @@ begin
     If (aType = dttEconomy) and (aID = 1) then
       AddDevPoint(dttArmy, 3);
 
-    If (aType = dttBuilder) and (aID = 29) then
+    If (aType = dttBuilder) and (aID = 30) then
       UnlockSpecialWalls;
 
     gGame.RefreshDevelopmentTree;
@@ -2933,7 +2933,7 @@ begin
   If (aType = dttEconomy) and (aID = 1) then
     AddDevPoint(dttArmy, 3);
 
-  If (aType = dttBuilder) and (aID = 29) then
+  If (aType = dttBuilder) and (aID = 30) then
     UnlockSpecialWalls;
 end;
 

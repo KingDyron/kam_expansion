@@ -3115,9 +3115,7 @@
 			"ha_Fire8" : {"X" : 50,"Y" : -40,"Steps" : [1621,1622,1623,1624,1625,1620]},
 			"WorkAnim" : 
 			[
-				{"WorkType" : "haWork1","Cycles" : 1.00000},
-				{"WorkType" : "haWork2","Cycles" : 20.00000},
-				{"WorkType" : "haWork5","Cycles" : 1.00000}
+				{"WorkType" : "haWork2","Cycles" : 10.00000}
 			],
 			"WoodPileOffset" : {"X" : -41,"Y" : 15},
 			"StonePileOffset" : {"X" : -15,"Y" : 25},

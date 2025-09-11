@@ -168,7 +168,7 @@
       <cbApsFrameGui10 Checked="False"/>
       <cbApsFrameGui20 Checked="False"/>
     </Perf_Logs>
-    <AI Collapsed="False">
+    <AI Collapsed="True">
       <chkAIEye Checked="False"/>
       <chkBuild Checked="False"/>
       <chkCombat Checked="False"/>
@@ -186,7 +186,7 @@
       <chkShowDefencesAnimate Checked="False"/>
       <chkShowArmyVectorFieldEnemy Checked="False"/>
       <chkShowClusters Checked="False"/>
-      <chkShowAlliedGroups Checked="True"/>
+      <chkShowAlliedGroups Checked="False"/>
       <chkPathfinding Checked="False"/>
       <chkShowArmyVectorFieldAlly Checked="False"/>
       <seHighlightNavMesh Value="0"/>
