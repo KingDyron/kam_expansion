@@ -659,7 +659,7 @@ begin
       ReadLn(ft, fRXData.SizeNoShadow[aIndex].Right);
       ReadLn(ft, fRXData.SizeNoShadow[aIndex].Bottom);}
     end;
-    CloseFile(ft);
+    //CloseFile(ft);
     TXTFile.Free;
   end;
 end;

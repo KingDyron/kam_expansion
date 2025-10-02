@@ -273,7 +273,7 @@ begin
       TKMUnitWarriorSpy(fOpponent).SetAttackedTime;//Spy can only attack house
 
     //Fire the arrow
-    if fUnit.UnitType = utBattleShip then
+    {if fUnit.UnitType = utBattleShip then
     begin
       dir := DIR_TO_PREV2[fUnit.Direction];
       if W.TakeBolt then
@@ -294,7 +294,7 @@ begin
         gProjectiles.AimTarget(fUnit.PositionF, KMPointFAdd(fOpponent.PositionF, KMPointF(-2, 0)), 1, W.ProjectileType, fUnit, W.RangeMax, W.RangeMin);//aim a little bit to the left
       if W.TakeBolt then
         gProjectiles.AimTarget(fUnit.PositionF, KMPointFAdd(fOpponent.PositionF, KMPointF(2, 0)), 1, W.ProjectileType, fUnit, W.RangeMax, W.RangeMin);//aim a little bit to the right}
-    end else
+    end else}
     If (W.UnitType = utCatapult) and gHands[W.Owner].ArmyDevUnlocked(33) then
     begin
       for I := 0 to 2 do
@@ -442,9 +442,9 @@ begin
   if step = 0 then //Only change direction between strikes, otherwise it looks odd
   begin
     fUnit.Direction := KMGetDirection(fUnit.PositionF, fOpponent.PositionF);
-    if fUnit.UnitType = utBattleShip then
+    {if fUnit.UnitType = utBattleShip then
       fUnit.Direction := DIR_TO_NEXT2[KMGetDirection(fUnit.PositionF, fOpponent.PositionF)]
-    else
+    else}
       fUnit.Direction := KMGetDirection(fUnit.PositionF, fOpponent.PositionF);
   end;
 

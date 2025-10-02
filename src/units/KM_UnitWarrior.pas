@@ -265,7 +265,7 @@ type
     private
       fAnimKill,
       fStayTime : Word;
-      procedure CheckForEnemy;
+      procedure CheckTrap;
       procedure HitEnemies;
       function HitDelay : Byte;
     protected
@@ -3263,7 +3263,7 @@ begin
 
 end;
 
-procedure TKMUnitWarriorSpikedTrap.CheckForEnemy;
+procedure TKMUnitWarriorSpikedTrap.CheckTrap;
   function TryKillUnit(aUnit : TKMUnit) : Boolean;
   begin
     Result := false;
@@ -3325,7 +3325,7 @@ begin
   if fAnimKill = 0 then
   begin
     if fTicker mod 10 = 0 then
-      CheckForEnemy
+      CheckTrap
   end else
   begin
     Inc(fAnimKill);

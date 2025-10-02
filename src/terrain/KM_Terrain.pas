@@ -1639,6 +1639,7 @@ begin
     and (Land^[Y,X].TileLock = tlNone)
     and (X > 1) and (Y > 1) //Not top/left of map, but bottom/right is ok
     and not (Land^[Y,X].TileOverlay.IsRoadOrDig)
+    and not (Land^[Y,X].TileOverlay2.StopsGrowing)
     and (Land^[Y,X].TileOverlay2.AllowTree)
     and not HousesNearVertex
     and not TileHasClay(X, Y)
