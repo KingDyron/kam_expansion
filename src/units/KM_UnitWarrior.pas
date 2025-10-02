@@ -165,7 +165,7 @@ type
     function NeedsToReload(aFightAnimLength: Byte): Boolean;
     procedure SetLastShootTime;
     function FindLinkUnit(const aLoc: TKMPoint): TKMUnitWarrior;
-    function CheckForEnemy: Boolean;
+    function CheckForEnemy: Boolean; virtual;
     procedure FightEnemy(aEnemy: TKMUnit);
     function FindEnemy(const aMinRange, aMaxRange : Single): TKMUnit;
     function PathfindingShouldAvoid: Boolean; override;
@@ -346,8 +346,44 @@ type
   end;
 
   TKMUnitWarriorBShip = class(TKMUnitWarriorShipCommon)
+  private
+    const
+      ARCHERS_COUNT = 10;
+      ARCHER_MAX_RANGE = 3;
+
+      //every archer should have a vary delay
+      ARCHER_PACE = 5;
+      ARCHER_RELOAD_TIME = 30 div ARCHER_PACE;// 3 seconds
+      ARCHER_RELOAD_RANGE = 20 div ARCHER_PACE;// 2 seconds
+
+      SHOOT_OFFSET_DIR_N : array[1..ARCHERS_COUNT div 2] of TKMPoint = (
+        (X : -4; Y : -2),//^^-
+        (X : -5; Y : -1),//^--
+        (X : -5; Y : 0),//---
+        (X : -5; Y : 1),//\/--
+        (X : -4; Y : 2)//\/\/-
+        );
+      SHOOT_OFFSET_DIR_E : array[1..ARCHERS_COUNT div 2] of TKMPoint = (
+        (X : -1; Y : -5),//^^-
+        (X : -3; Y : -5),//^--
+        (X : -4; Y : -4),//---
+        (X : -5; Y : -3),//\/--
+        (X : -5; Y : -1)//\/\/-
+        );
+    var
+      fShootingDelay : array[1..ARCHERS_COUNT] of Byte; //delay before next shot
+    procedure TryToShoot;
+    procedure PaintRadius;
+  protected
+    procedure PaintUnit(aTickLag: Single); override;
   public
+    function CheckForEnemy: Boolean; override;
     procedure OrderAmmo(aForceOrder : Boolean = false); override;
+
+    constructor Load(LoadStream: TKMemoryStream); override;
+    procedure Save(SaveStream: TKMemoryStream); override;
+    function UpdateState : Boolean; override;
+
   end;
 
   TKMUnitWarriorBoat = class(TKMUnitWarriorShipCommon)
@@ -2517,8 +2553,7 @@ begin
 end;
 
 procedure TKMUnitWarriorPaladin.UpdateHitPoints(UseEffect: Boolean = True);
-var medicsCount : Byte;
-  restorePace : Byte;
+var restorePace : Byte;
 begin
   if UnitType in UNITS_SHIPS then   //do not increase health if it's ship
     Exit;
@@ -3502,6 +3537,14 @@ begin
 end;
 
 
+function TKMUnitWarriorBShip.CheckForEnemy : Boolean;
+begin
+  If gHands[Owner].IsComputer then
+    Result := Inherited
+  else
+    Result := false;
+end;
+
 procedure TKMUnitWarriorBShip.OrderAmmo(aForceOrder: Boolean = False);
 var HS : TKMHouse;//shipyard
 begin
@@ -3522,6 +3565,176 @@ begin
   HS.WareTakeFromIn(wtBolt, 1, true);
   Inc(fBoltCount, 50)
 end;
+
+constructor TKMUnitWarriorBShip.Load(LoadStream: TKMemoryStream);
+begin
+  Inherited;
+  LoadStream.ReadData(fShootingDelay);
+end;
+
+procedure TKMUnitWarriorBShip.Save(SaveStream: TKMemoryStream);
+begin
+  Inherited;
+  SaveStream.WriteData(fShootingDelay);
+end;
+
+procedure TKMUnitWarriorBShip.TryToShoot;
+  function InvertXY(P : TKMPoint) : TKMPoint;
+  begin
+    Result.X := P.Y;
+    Result.Y := P.X;
+  end;
+  function InvertX(P : TKMPoint) : TKMPoint;
+  begin
+    Result.X := -P.X;
+    Result.Y := P.Y;
+  end;
+var I : Integer;
+  pos, addPos : TKMPoint;
+  U : TKMUnit;
+begin
+
+  for I := 1 to ARCHERS_COUNT do
+  begin
+    If fShootingDelay[I] > 0 then
+      Dec(fShootingDelay[I])
+    else
+    begin
+      If BoltCount = 0 then
+        Continue;
+      //try to find enemy
+      case Direction of
+        dirN, dirS : addPos := SHOOT_OFFSET_DIR_N[(I - 1) mod 5 + 1];
+        dirE, dirW : addPos := InvertXY(SHOOT_OFFSET_DIR_N[(I - 1) mod 5 + 1]);
+
+        dirNE, dirSW : addPos := SHOOT_OFFSET_DIR_E[(I - 1) mod 5 + 1];
+        dirSE, dirNW : addPos := InvertX(SHOOT_OFFSET_DIR_E[(I - 1) mod 5 + 1]);
+        else
+          raise Exception.Create('Bad shooting direction : TKMUnitWarriorBShip.TryToShoot');
+      end;
+
+      If I > ARCHERS_COUNT div 2 then
+        pos := Position - addPos
+      else
+        pos := Position + addPos;
+
+      U := gTerrain.UnitsHitTestWithinRad(pos, 0, ARCHER_MAX_RANGE, Owner, atEnemy, dirNA, not RANDOM_TARGETS);
+      //no unit found so no need to check every archer
+      If (U = nil) or (U.IsDeadOrDying) then
+        Continue;
+      If not TakeBolt then
+        Continue;
+      gProjectiles.AimTarget(PositionF, U, ProjectileType, self, RangeMax, RangeMin);
+      fShootingDelay[I] := ARCHER_RELOAD_TIME + KaMRandom(ARCHER_RELOAD_RANGE + 1, 'TKMUnitWarriorBShip.TryToShoot');
+
+    end;
+  end;
+
+
+end;
+
+function TKMUnitWarriorBShip.UpdateState : Boolean;
+begin
+  Result := Inherited;
+  If not Result then
+    Exit;
+
+  If Task = nil then
+    If gGameParams.Tick mod ARCHER_PACE = 0 then
+      TryToShoot;
+end;
+
+procedure TKMUnitWarriorBShip.PaintRadius;
+
+  function InvertXY(P : TKMPoint) : TKMPoint;
+  begin
+    Result.X := P.Y;
+    Result.Y := P.X;
+  end;
+  function InvertX(P : TKMPoint) : TKMPoint;
+  begin
+    Result.X := -P.X;
+    Result.Y := P.Y;
+  end;
+var I : Integer;
+  pos, addPos : TKMPoint;
+  fillColor, lineColor: Cardinal;
+begin
+  fillColor := $40FFFFFF;
+  lineCOlor := icWhite;
+  if (gMySpectator.Selected = Self)
+    or ((gMySpectator.Selected is TKMUnitGroup)
+      and (TKMUnitGroup(gMySpectator.Selected).FlagBearer = Self)) then
+  begin
+    fillColor := icRed and fillColor;
+    lineColor := icCyan;
+  end;
+
+  for I := 1 to ARCHERS_COUNT do
+  begin
+    case Direction of
+      dirN, dirS : addPos := SHOOT_OFFSET_DIR_N[(I - 1) mod 5 + 1];
+      dirE, dirW : addPos := InvertXY(SHOOT_OFFSET_DIR_N[(I - 1) mod 5 + 1]);
+
+      dirNE, dirSW : addPos := SHOOT_OFFSET_DIR_E[(I - 1) mod 5 + 1];
+      dirSE, dirNW : addPos := InvertX(SHOOT_OFFSET_DIR_E[(I - 1) mod 5 + 1]);
+      else
+        raise Exception.Create('Bad shooting direction : TKMUnitWarriorBShip.TryToShoot');
+    end;
+
+    If I > ARCHERS_COUNT div 2 then
+      pos := Position - addPos
+    else
+      pos := Position + addPos;
+
+    gRenderPool.RenderDebug.RenderTiledArea(pos, 0, ARCHER_MAX_RANGE, GetLength, fillColor, lineColor);
+  end;
+
+
+end;
+
+procedure TKMUnitWarriorBShip.PaintUnit(aTickLag: Single);
+var
+  V: TKMUnitVisualState;
+  act: TKMUnitActionType;
+  unitPos: TKMPointF;
+begin
+  V := fVisual.GetLerp(aTickLag);
+
+  act := V.Action;
+  unitPos.X := V.PositionF.X + UNIT_OFF_X + V.SlideX;
+  unitPos.Y := V.PositionF.Y + UNIT_OFF_Y + V.SlideY;
+
+
+  if fRageTime > RageDelay then
+  begin
+
+    gRenderPool.AddAnimation(unitPos + KMPointF(0.3, -1.9), gRes.Units.RageAnim, fTicker,
+                            IfThen(FlagColor <> 0, FlagColor, gHands[Owner].GameFlagColor), rxUnits,
+                            false, false, 0, true);
+  end;
+
+  gRenderPool.AddUnit(fType, UID, act, V.Dir, V.AnimStep, V.AnimFraction, unitPos.X, unitPos.Y, IfThen(FlagColor <> 0, FlagColor, gHands[Owner].GameFlagColor), True);
+
+  if (fThought <> thNone) then
+    gRenderPool.AddUnitThought(fType, act, V.Dir, V.AnimStep, fThought, unitPos.X, unitPos.Y)
+  else
+  if (gGameParams.IsMapEditor and BitinAdded) then
+    gRenderPool.AddUnitThought(fType, act, V.Dir, V.AnimStep, thArmor, unitPos.X, unitPos.Y);
+
+
+
+  if SHOW_ATTACK_RADIUS or (mlUnitsAttackRadius in gGameParams.VisibleLayers) then
+    PaintRadius;
+  //If not IsDeadOrDying and (Group <> nil) then
+    //gRenderAux.Quad(PositionF.X, PositionF.Y, IfThen(TKMUnitGroup(Group).HasMember(self), $FF00FF00, $FF0000FF));
+end;
+
+
+
+
+
+
 
 constructor TKMUnitWarriorBoat.Create(aID: Cardinal; aUnitType: TKMUnitType; const aLoc: TKMPointDir; aOwner: ShortInt; aInHouse: TKMHouse);
 begin

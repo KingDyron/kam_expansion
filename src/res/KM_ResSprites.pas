@@ -529,7 +529,6 @@ var
   I,K: Integer;
   Tr, Tg, Tb, T: Byte;
   Thue, Tsat, Tbri: Single;
-  ft: TextFile;
   TXTFile : TStringList;
   maskFile: array [TKMSpriteMaskType] of string;
   maskTyp: TKMSpriteMaskType;
@@ -628,15 +627,11 @@ begin
   txtFileName := aFolder + StringReplace(aFilename, '.png', '.txt', [rfReplaceAll, rfIgnoreCase]);
   if FileExists(txtFileName) then
   begin
-    {AssignFile(ft, txtFileName);
-    Reset(ft);}
     TXTFile := TStringList.Create;
     TXTFile.LoadFromFile(txtFileName);
 
     fRXData.Pivot[aIndex].X := StrToInt(TXTFile.Strings[0]);
     fRXData.Pivot[aIndex].Y := StrToInt(TXTFile.Strings[1]);
-    //ReadLn(ft, fRXData.Pivot[aIndex].X);
-    //ReadLn(ft, fRXData.Pivot[aIndex].Y);
 
     //SizeNoShadow is used only for Units
     if fRT = rxUnits then
@@ -654,12 +649,7 @@ begin
         fRXData.SizeNoShadow[aIndex].Right := StrToInt(TXTFile.Strings[4]);
         fRXData.SizeNoShadow[aIndex].Bottom := StrToInt(TXTFile.Strings[5]);
       end;
-      {ReadLn(ft, fRXData.SizeNoShadow[aIndex].Left);
-      ReadLn(ft, fRXData.SizeNoShadow[aIndex].Top);
-      ReadLn(ft, fRXData.SizeNoShadow[aIndex].Right);
-      ReadLn(ft, fRXData.SizeNoShadow[aIndex].Bottom);}
     end;
-    //CloseFile(ft);
     TXTFile.Free;
   end;
 end;

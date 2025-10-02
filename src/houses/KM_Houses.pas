@@ -3109,7 +3109,7 @@ begin
 end;
 
 function TKMHouse.GetStats(aWares : Boolean): TKMHouseStats;
-var I, J : Integer;
+var I : Integer;
 begin
   Result.HouseType := HouseType;
   Result.X := Entrance.X;

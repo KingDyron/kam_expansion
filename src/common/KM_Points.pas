@@ -40,6 +40,7 @@ type
     class operator Equal(const A, B: TKMPoint): Boolean;
     class operator NotEqual(const A, B: TKMPoint): Boolean;
     class operator Add(const A, B: TKMPoint): TKMPoint;
+    class operator Subtract(const A, B: TKMPoint): TKMPoint;
     class function New(aX, aY: Integer): TKMPoint; static;
     function Compare(const aPoint: TKMPoint): Integer;
     function ToFloat: TKMPointF;
@@ -321,6 +322,11 @@ end;
 class operator TKMPoint.Add(const A, B: TKMPoint): TKMPoint;
 begin
   Result := KMPoint(A.X + B.X,A.Y + B.Y);
+end;
+
+class operator TKMPoint.Subtract(const A, B: TKMPoint): TKMPoint;
+begin
+  Result := KMPoint(A.X - B.X,A.Y - B.Y);
 end;
 
 

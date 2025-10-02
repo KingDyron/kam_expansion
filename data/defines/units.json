@@ -4100,7 +4100,7 @@
 			"DescriptionID" : 2166,
 			"SchoolTime" : 30,
 			"HitPoints" : 6,
-			"Attack" : 200,
+			"Attack" : 180,
 			"AttackHorse" : 0,
 			"Defence" : 5,
 			"Speed" : 20,
@@ -4115,7 +4115,7 @@
 			"FightType" : "ftRanged",
 			"AmmoType" : "uatBolt",
 			"MinRange" : 2.00000,
-			"MaxRange" : 11.00000,
+			"MaxRange" : 8.00000,
 			"StrikeSteps" : [5],
 			"ProducesWares" : ["wtAll"],
 			"Animations" : 
