@@ -51,7 +51,7 @@ uses
   KM_Game, KM_GameParams, KM_GameTypes, KM_HandsCollection,
   KM_UnitsCollection, KM_UnitWarrior,
   KM_HouseCollection, KM_HouseBarracks, KM_HouseStore,
-  KM_HousePearl,
+  KM_HousePearl, KM_HouseForest, KM_HousePasture,
   KM_AI,
   KM_Resource, KM_ResHouses, KM_ResUnits, KM_ResWares, KM_ResMapElements,
   KM_CommonClasses, KM_CommonTypes, KM_Terrain,
@@ -819,6 +819,9 @@ begin
     ctAINoBuild:        if fLastHand <> HAND_NONE then
                           gHands[fLastHand].AI.Setup.AutoBuild := False;
 
+    ctAIFeatures:       if fLastHand <> HAND_NONE then
+                          gHands[fLastHand].AI.Setup.AIFeatures := true;
+
     ctAIAutoRepair:     if fLastHand <> HAND_NONE then
                           gHands[fLastHand].AI.Setup.RepairMode := rmRepairAlways;
 
@@ -1260,6 +1263,23 @@ begin
                           end else
                             AddError('ctPlayerLockDev without prior declaration of hand');
 
+    ctForestAddTree:    if fLastHand <> HAND_NONE then
+                         begin
+                          if (fLastHouse <> nil) then
+                          begin
+                            TKMHouseForest(fLastHouse).AddMapEdTree(P[0], P[1]); //atype, acount
+                          end else
+                            AddError('ctForestAddTree without prior declaration of House');
+                         end;
+    ctPastureAddAnimal:  if fLastHand <> HAND_NONE then
+                         begin
+                          if (fLastHouse <> nil) then
+                          begin
+                            TKMHousePasture(fLastHouse).BuyAnimalScript(TKMPastureAnimalType(P[0]), P[1]); //atype, acount
+                          end else
+                            AddError('ctForestAddTree without prior declaration of House');
+                         end;
+
    end;
 end;
 
@@ -1287,6 +1307,8 @@ var
   FT : TKMLockFieldType;
   UHT: TKMUnitHouseBlock;
   dtt: TKMDevelopmentTreeType;
+  PA : TKMPastureAnimalType;
+
   procedure AddData(const aText: AnsiString);
   begin
     if commandLayerCount = -1 then //No layering
@@ -1446,6 +1468,7 @@ begin
     //is not AI so no data is lost from MapEd (human players will ignore AI script anyway)
     AddCommand(ctAIStartPosition, [gHands[I].AI.Setup.StartPosition.X-1,gHands[I].AI.Setup.StartPosition.Y-1]);
     if not gHands[I].AI.Setup.AutoBuild then AddCommand(ctAINoBuild, []);
+    if gHands[I].AI.Setup.AIFeatures then AddCommand(ctAIFeatures, []);
     if gHands[I].AI.Setup.IsRepairAlways then AddCommand(ctAIAutoRepair, []);
     if gHands[I].AI.Setup.AutoAttack then    AddCommand(ctAIAutoAttack, []);
     if gHands[I].AI.Setup.AutoDefend then    AddCommand(ctAIAutoDefend, []);
@@ -1719,6 +1742,24 @@ begin
             end;
 
           end;
+
+        If H.HouseType = htForest then
+          for J := 0 to high(gGrowingTrees) do
+          begin
+            iX := TKMHouseForest(H).TreesCount(J);
+            If iX > 0 then
+              AddCommand(ctForestAddTree, [J, iX]);
+          end;
+
+        If H.HouseType = htPasture then
+          for PA := TKMPastureAnimalType(1) to high(TKMPastureAnimalType) do
+          begin
+            iX := TKMHousePasture(H).AnimalsCount(PA);
+            If iX > 0 then
+              AddCommand(ctPastureAddAnimal, [byte(PA), iX]);
+          end;
+
+
 
       end;
     end;

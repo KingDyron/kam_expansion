@@ -24,8 +24,12 @@ type
     fCuttingAnimDir : TKMDirection;
     fCuttingPos : TKMPointF;
 
+    fAITrees : TKMByteArray;
+
     function TreeWillCollide(aTreeID : Byte; aLoc : TKMPointF) : Boolean;
     function GetRandomPosForTree(aTreeID : Byte) : TKMPointF;
+    procedure AddMapEdTreeSingle(aTreeID : Byte);
+    procedure PlantAITree;
   protected
   public
     constructor Create(aUID: Integer; aHouseType: TKMHouseType; PosX, PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
@@ -34,8 +38,12 @@ type
     function GetClosestEntrance(aLoc: TKMPoint): TKMPointDir; override;
     function Entrances : TKMPointDirArray; override;}
 
-    function AddTree(aTreeID : Byte) : Boolean; overload;
+    function AddTree(aTreeID : Byte; aScript : Boolean = false) : Boolean; overload;
     function AddTree(aTreeID : Byte; aCount : Byte) : Boolean; overload;
+
+    procedure AddMapEdTree(aTreeID : Byte; aCount : integer = 1);
+    procedure RemoveMapEdTree(aTreeID : Byte; aCount : integer = 1);
+
     procedure UpdateState(aTick: Cardinal); Override;
     procedure Paint; override;
 
@@ -43,7 +51,9 @@ type
     procedure StartCuttingTree(aID : Integer);
     procedure CutTree(aID : Integer);
     function TreeObjID(aID : Integer) : Integer;
+    function TreesCount(aTreeID : Integer) : Integer;
     property TotalCount : Byte read fCount;
+
 
     Constructor Load(LoadStream : TKMemoryStream);Override;
     procedure Save(SaveStream : TKMemoryStream);Override;
@@ -53,6 +63,7 @@ type
 implementation
 uses
   Classes, SysUtils,
+  KM_Game,
   KM_HandsCollection,
   KM_CommonUtils,
   KM_RenderPool,
@@ -64,6 +75,7 @@ constructor TKMHouseForest.Create(aUID: Integer; aHouseType: TKMHouseType; PosX:
 begin
   Inherited;
   fCount := 0;
+  fAITrees := [];
 end;
 
 Constructor TKMHouseForest.Load(LoadStream : TKMemoryStream);
@@ -78,6 +90,8 @@ begin
   SetLength(fTrees, fCount);
   for I := 0 to fCount - 1 do
     LoadStream.ReadData(fTrees[I]);
+
+  LoadStream.Read(fAITrees);
 end;
 
 procedure TKMHouseForest.Save(SaveStream : TKMemoryStream);
@@ -91,6 +105,7 @@ begin
 
   for I := 0 to fCount - 1 do
     SaveStream.WriteData(fTrees[I]);
+  SaveStream.Write(fAITrees);
 end;
 
 {
@@ -177,14 +192,14 @@ begin
     Result := KMPOINTF_INVALID_TILE;
 end;
 
-function TKMHouseForest.AddTree(aTreeID : Byte) : Boolean;
+function TKMHouseForest.AddTree(aTreeID : Byte; aScript : Boolean = false) : Boolean;
 var newLoc : TKMPointF;
 begin
   newLoc := GetRandomPosForTree(aTreeID);
   Result := true;
   If newLoc.X = -1 then//there is no place for new tree
     Exit(false);
-  If not gHands[Owner].VirtualWareTake('vtSapling') then
+  If (not aScript) and not gHands[Owner].VirtualWareTake('vtSapling') then
     Exit;
 
   inc(fCount);
@@ -205,6 +220,83 @@ begin
     If AddTree(aTreeID) then
       Result := true;
 end;
+
+
+procedure TKMHouseForest.AddMapEdTreeSingle(aTreeID : Byte);
+var I, R, M, obj, id: Integer;
+begin
+  If not AddTree(aTreeID, true) then
+    Exit;
+  id := fCount - 1;
+
+  obj := gGrowingTrees[aTreeID].ObjID;
+  M := 1;
+
+  while gMapElements[obj].NextTreeAgeObj > 0 do
+  begin
+    obj := gMapElements[obj].NextTreeAgeObj;
+    Inc(M);
+  end;
+
+  R := KaMRandom(M + 1, 'TKMHouseForest.AddMapEdTree');
+
+  If R = 0 then
+    //do nothing
+    //function AddTree handles everything
+  else
+  begin
+    obj := gGrowingTrees[aTreeID].ObjID;
+    //R = 1 : use first stage, so it needs to start looking from second stage
+    //find fitting age
+    for I := 2 to R do
+      obj := gMapElements[obj].NextTreeAgeObj;
+
+    fTrees[id].Obj := obj;
+
+    If R = 1 then
+      fTrees[id].Age := 8 * TERRAIN_PACE
+    else
+    begin
+    //(gMapElements[Obj].TreeGrowAge * TERRAIN_PACE) + (8 * TERRAIN_PACE)
+      obj := gMapElements[obj].PrevTreeAgeObj;
+      fTrees[id].Age := (8 * TERRAIN_PACE) + (gMapElements[Obj].TreeGrowAge * TERRAIN_PACE);
+    end;
+  end;
+end;
+
+procedure TKMHouseForest.AddMapEdTree(aTreeID : Byte; aCount : integer = 1);
+var I : Integer;
+begin
+  for I := 1 to aCount do
+    AddMapEdTreeSingle(aTreeID);
+  If not ArrayContains(aTreeID, fAITrees) then
+    fAITrees := fAITrees + [aTreeID];
+
+end;
+
+procedure TKMHouseForest.RemoveMapEdTree(aTreeID : Byte; aCount : integer = 1);
+var I : integer;
+begin
+  for I := fCount - 1 downto 0 do
+    If aTreeID = fTrees[I].ID then
+    begin
+      dec(aCount);
+      fTrees[I] := fTrees[fCount - 1];
+      dec(fCount);
+      If aCount = 0 then
+        Exit;
+    end;
+end;
+
+procedure TKMHouseForest.PlantAITree;
+var R : Byte;
+begin
+  If length(fAITrees) = 0 then
+    Exit;
+  R := KaMRandom(length(fAITrees), 'TKMHouseForest.PlatAITree');
+  AddTree(fAITrees[R]);
+end;
+
 
 function TKMHouseForest.HasTreeToCut: Integer;
 var I : integer;
@@ -253,13 +345,22 @@ begin
   ProduceWare(wtTrunk, gMapElements[obj].TrunksCount);
   IncProductionCycle(1);
 
-  if ProductionCycle[2] mod 5 = 0 then
+  if ProductionCycle[1] mod 5 = 0 then
     gHands[Owner].VirtualWareTake('vtSapling', -1);
 end;
 
 function TKMHouseForest.TreeObjID(aID: Integer): Integer;
 begin
   Result := fTrees[aID].Obj;
+end;
+
+function TKMHouseForest.TreesCount(aTreeID : Integer): Integer;
+var I : integer;
+begin
+  Result := 0;
+  for I := 0 to fCount - 1 do
+    If fTrees[I].ID = aTreeID then
+      Inc(Result);
 end;
 
 
@@ -271,6 +372,7 @@ begin
     Exit;
   If fCuttingAnimStep > 0 then
     Inc(fCuttingAnimStep);
+
 
   for I := 0 to fCount - 1 do
   with fTrees[I] do
@@ -288,6 +390,10 @@ begin
         Age := high(word);
     end;
   end;
+
+  If gHands[Owner].IsComputer then
+    If aTick mod TERRAIN_PACE = 0 then
+      PlantAITree;
 end;
 
 procedure TKMHouseForest.Paint;

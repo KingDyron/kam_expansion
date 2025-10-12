@@ -387,7 +387,7 @@ procedure TKMayorBalance.AppendFood;
 var SkipSausage: Boolean;
 begin
   //When making iron only don't make sausages, they're inefficient if you don't use skins
-  SkipSausage := false;//gHands[fOwner].AI.Setup.ArmyType = atIron;
+  SkipSausage := gHands[fOwner].AI.Setup.ArmyType = atIron;
   
   //Pick smallest production and increase it
   //If all 3 shares 0 we whould pick Sausages first to ensure Leather supply
@@ -486,11 +486,12 @@ begin
     wtQuiver,
     wtLeatherArmor: with fWarfare.LeatherArmor do
                       If DoBuild then
-                        case PickMin([FarmTheory, SwineTheory, TanneryTheory, TailorsTheory]) of
+                        case PickMin([FarmTheory, SwineTheory, TanneryTheory, TailorsTheory, HovelTheory]) of
                           0: Append(htFarm);
                           1: Append(htSwine);
                           2: Append(htTannery);
                           3: Append(htTailorsShop);
+                          4: Append(htHovel);
                         end;
     wtMace,
     wtAxe,
@@ -1077,13 +1078,13 @@ begin
     Consumption := 0;
 
     for UT := CITIZEN_MIN to CITIZEN_MAX do
-       Consumption := Consumption + P.Stats.GetUnitQty(UT) / 60; //On average unit needs to eat each 40min
+       Consumption := Consumption + P.Stats.GetUnitQty(UT) / 40; //On average unit needs to eat each 40min
 
     Consumption := Consumption * 2; //Otherwise not enough food is made for citizens
 
     //Warriors eat on average half as much as citizens
     for UT := WARRIOR_MIN to WARRIOR_MAX do
-       Consumption := Consumption + P.Stats.GetUnitQty(UT) / 2 / 60; //On average unit needs to eat each 40min
+       Consumption := Consumption + P.Stats.GetUnitQty(UT) / 2 / 40; //On average unit needs to eat each 40min
 
     Reserve := gHands[fOwner].Stats.GetWareBalance(wtBread) * BREAD_RESTORE +
                gHands[fOwner].Stats.GetWareBalance(wtSausage) * SAUSAGE_RESTORE +

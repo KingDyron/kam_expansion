@@ -24,6 +24,8 @@ type
     procedure Create_Woodcutters;
     procedure Create_Sign(aParent: TKMPanel);
     procedure Create_Pearl;
+    procedure Create_Forest;
+    procedure Create_Pasture;
 
     procedure HouseChange(Sender: TObject; aValue: Integer);
     procedure HouseHealthChange(Sender: TObject; Shift: TShiftState);
@@ -75,6 +77,12 @@ type
     procedure Pearl_ChangeShift(Sender : TObject; Shift: TShiftState);
     procedure Pearl_ChangeWares(Sender : TObject; X: Integer);
     procedure Pearl_Refresh;
+
+    procedure Forest_Refresh;
+    procedure Forest_Clicked(Sender : TObject; Shift: TShiftState);
+
+    procedure Pasture_Refresh;
+    procedure Pasture_Clicked(Sender : TObject; Shift: TShiftState);
   protected
     Panel_HouseAdditional: TKMPanel;
       Button_HouseForceWork : TKMButton;
@@ -159,6 +167,12 @@ type
       Bar_Stage_Progreess : TKMPercentBar;
       Button_Progress_Inc, Button_Progress_Dec : TKMButton;
 
+    Panel_HouseForest : TKMPanel;
+      Button_PlantTree : array of TKMButtonFlat;
+
+    Panel_HousePasture : TKMPanel;
+      Button_AnimalCount : array [0..ANIMALS_COUNT - 1] of TKMButtonFlat;
+
     Button_PlayerSelect: array [0..MAX_HANDS-1] of TKMFlatButtonShape;//select player in merchant's house
   public
     constructor Create(aParent: TKMPanel);
@@ -181,8 +195,8 @@ uses
   KM_HandsCollection, KM_HandTypes, KM_HandEntity,
   KM_ResTexts, KM_Resource, KM_RenderUI, KM_ResUnits,
   KM_HouseBarracks, KM_HouseTownHall, KM_HouseStore,
-  KM_HousePearl,
-  KM_ResFonts,{ KM_ResTypes,}
+  KM_HousePearl, KM_HouseForest, KM_HousePasture,
+  KM_ResFonts, KM_ResMapElements,{ KM_ResTypes,}
   KM_Cursor, KM_UtilsExt, KM_CommonUtils,
    KM_Game, KM_MainSettings;
 
@@ -202,6 +216,8 @@ begin
   Create_Woodcutters;
   Create_Sign(aParent);
   Create_Pearl;
+  Create_Forest;
+  Create_Pasture;
 end;
 
 
@@ -596,6 +612,39 @@ begin
     Button_Progress_Dec.OnClickShift := Pearl_ChangeShift;
     Button_Progress_Inc.OnClickShift := Pearl_ChangeShift;
 end;
+
+
+procedure TKMMapEdHouse.Create_Forest;
+var I : integer;
+begin
+
+  Panel_HouseForest := TKMPanel.Create(Panel_House,0,85 + 120,Panel_House.Width - 10,400);
+
+  SetLength(Button_PlantTree, length(gGrowingTrees));
+
+  for I := 0 to High(Button_PlantTree) do
+  begin
+    Button_PlantTree[I] := TKMButtonFlat.Create(Panel_HouseForest, I mod 5 * 35, I div 5 * 37, 33, 35, gGrowingTrees[I].GuiIcon);
+    Button_PlantTree[I].OnClickShift := Forest_Clicked;
+    Button_PlantTree[I].Tag := I;
+  end;
+end;
+
+procedure TKMMapEdHouse.Create_Pasture;
+var I : integer;
+begin
+
+  Panel_HousePasture := TKMPanel.Create(Panel_House,0,85 + 285,Panel_House.Width - 10,400);
+
+  for I := 0 to High(Button_AnimalCount) do
+    begin
+      Button_AnimalCount[I] := TKMButtonFlat.Create(Panel_HousePasture, I mod 5 * 40, I div 5 * 37, 30, 34, 0);
+      Button_AnimalCount[I].Tag := I;
+      Button_AnimalCount[I].OnClickShift := Pasture_Clicked;
+      Button_AnimalCount[I].TexID := PASTURE_ANIMALS_ORDER[I].Spec.GuiIcon;
+    end;
+end;
+
 
 {Barracks page}
 procedure TKMMapEdHouse.Create_Barracks;
@@ -1114,6 +1163,14 @@ begin
     htPearl:        begin
                       Panel_HousePearl.Show;
                       Pearl_Refresh;
+                    end;
+    htForest:       begin
+                      Panel_HouseForest.Show;
+                      Forest_Refresh;
+                    end;
+    htPasture:      begin
+                      Panel_HousePasture.Show;
+                      Pasture_Refresh;
                     end;
   else
     Panel_HouseWoodcutters.Hide;
@@ -1929,10 +1986,57 @@ begin
       Bar_Stage_Progreess.Caption := PL.StageProgress.ToString + ' / ' + PL.MaxProgress.ToString;
     end;
   end;
-  {Button_PearlType : TKMButtonFlat;
-  Bar_Stage_Progreess : TKMPercentBar;
-  Button_Stage_Inc, Button_Stage_Dec : TKMButton;
-  WaresRow_Stage_Delivered : TKMWareOrderRow;}
+end;
+
+
+procedure TKMMapEdHouse.Forest_Refresh;
+var HF : TKMHouseForest;
+  I : Integer;
+begin
+  HF := TKMHouseForest(fHouse);
+  for I := 0 to High(Button_PlantTree) do
+    Button_PlantTree[I].Caption := HF.TreesCount(I).ToString;
+end;
+
+procedure TKMMapEdHouse.Forest_Clicked(Sender : TObject; Shift: TShiftState);
+var HF : TKMHouseForest;
+begin
+  HF := TKMHouseForest(fHouse);
+
+  If ssRight in Shift then
+    HF.RemoveMapEdTree(TKMControl(Sender).Tag, byte(ssShift in Shift) * 4 + 1)
+  else
+    HF.AddMapEdTree(TKMControl(Sender).Tag, byte(ssShift in Shift) * 4 + 1);
+  Forest_Refresh;
+end;
+
+procedure TKMMapEdHouse.Pasture_Refresh;
+var HP : TKMHousePasture;
+  I : Integer;
+  an : TKMPastureAnimalType;
+begin
+  HP := TKMHousePasture(fHouse);
+  for I := 0 to High(Button_AnimalCount) do
+  begin
+    an := PASTURE_ANIMALS_ORDER[I];
+    Button_AnimalCount[I].Caption := HP.AnimalsCount(an).ToString;
+  end;
+
+
+end;
+
+procedure TKMMapEdHouse.Pasture_Clicked(Sender : TObject; Shift: TShiftState);
+var HP : TKMHousePasture;
+  an : TKMPastureAnimalType;
+begin
+  HP := TKMHousePasture(fHouse);
+
+  an := PASTURE_ANIMALS_ORDER[TKMControl(Sender).Tag];
+  If ssRight in Shift then
+    HP.SellAnimal(an)
+  else
+    HP.BuyAnimalScript(an, 1);
+  Pasture_Refresh;
 end;
 
 end.

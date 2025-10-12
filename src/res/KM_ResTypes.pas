@@ -456,6 +456,8 @@ type
 
 type
   TKMPastureAnimalType = (patNone, patCow, patGoose, patRabbit, patChicken, patBull, patSheep, patOstrich);
+  TKMPastureAnimalTypeSet = set of TKMPastureAnimalType;
+  TKMPastureAnimalTypeArray = array of TKMPastureAnimalType;
   TKMPastureAnimalAction = (paaWalk, paaEat, paaWatch, paaLayDown, paaLying, paaStandUp);
 
 const

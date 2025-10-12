@@ -442,6 +442,7 @@ begin
 
   for I := 0 to Count - 1 do
   if (Houses[I].HouseType in aTypes)
+  and not (Houses[I].HouseType in NO_ROAD_CONNECTION_HOUSES)
   and ((Houses[I].IsComplete and gTerrain.TileHasRoad(Houses[I].PointBelowEntrance)) or not aOnlyCompleted)
   and not Houses[I].IsClosedForWorker
   and not Houses[I].IsDestroyed then

@@ -19,6 +19,7 @@ type
     AutoAttack: Boolean;
 
     AutoBuild: Boolean; // Enable build
+    AIFeatures: Boolean; //
     AutoDefend: Boolean;
     DefendAllies: Boolean;
     UnlimitedEquip: Boolean;
@@ -65,6 +66,7 @@ begin
   Aggressiveness := 100; //No idea what the default for this is, it's barely used
   AutoAttack := False; //It did not exist in KaM, we add it, Off by default
   AutoBuild := True; //In KaM it is On by default, and most missions turn it off
+  AIFeatures := false; //In KaM it is On by default, and most missions turn it off
   AutoDefend := False; //It did not exist in KaM, we add it, Off by default
   RepairMode := rmRepairNever;
   DefendAllies := False; //It did not exist in KaM, we add it, Off by default (tested by Lewin, AI doesn't defend allies in TPR)
@@ -140,6 +142,7 @@ begin
   EquipRateLeather := 500;
   EquipRateIron := 500;
   AutoBuild := True;
+  AIFeatures := true;
   RepairMode := rmRepairAlways;
   AutoAttack := True;
   AutoDefend := True;
@@ -169,6 +172,7 @@ begin
   SaveStream.Write(Aggressiveness);
   SaveStream.Write(AutoAttack);
   SaveStream.Write(AutoBuild);
+  SaveStream.Write(AIFeatures);
   SaveStream.Write(fRepairMode, SizeOf(fRepairMode));
   SaveStream.Write(AutoDefend);
   SaveStream.Write(DefendAllies);
@@ -195,6 +199,7 @@ begin
   LoadStream.Read(Aggressiveness);
   LoadStream.Read(AutoAttack);
   LoadStream.Read(AutoBuild);
+  LoadStream.Read(AIFeatures);
   LoadStream.Read(fRepairMode, SizeOf(fRepairMode));
   LoadStream.Read(AutoDefend);
   LoadStream.Read(DefendAllies);

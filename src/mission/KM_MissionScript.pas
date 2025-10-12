@@ -123,7 +123,10 @@ type
     ctSetPearlProgress,
     ctSetPearlWares,
     ctSetPearlConfirmBuild,
-    ctPlayerLockDev
+    ctPlayerLockDev,
+    ctForestAddTree,
+    ctPastureAddAnimal,
+    ctAIFeatures
     );
 
 const
@@ -237,7 +240,10 @@ const
     'SET_PEARL_PROGRESS',
     'SET_PEARL_WARE',
     'SET_PEARL_CONFIRM_BUILD',
-    'SET_PLAYER_DEV_LOCK'
+    'SET_PLAYER_DEV_LOCK',
+    'ADD_TREE_TO_LAST',
+    'ADD_ANIMAL_TO_LAST',
+    'SET_AI_FEATURES'
     );
 type
   TKMMissionParserCommon = class

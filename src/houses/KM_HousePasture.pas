@@ -29,6 +29,8 @@ type
     fFill : array[1..WARES_IN_OUT_COUNT] of Single;
     fBestClimate : TKMTerrainClimate;
     fObjects : array[0..2] of Word;
+
+    fAIAnimals : TKMByteArray;//save it as byte array for easier saving
     function IsAnimalAt(aLoc : TKMPointF) : Boolean;
     function GetPositionForAnimal : TKMPointF;
     procedure FillWare(aWareType : TKMWareType; aAmount : Single);
@@ -36,6 +38,7 @@ type
     procedure SetNewAction(var aAnimal : TKMPastureAnimal);
     procedure UpdateAnimal(var aAnimal : TKMPastureAnimal; aID, aTick : Cardinal);
     procedure CheckClimate;
+    procedure BuyAIAnimal;
   protected
   public
     {function HasMoreEntrances : Boolean; override;
@@ -47,8 +50,12 @@ type
     procedure Paint; override;
 
     procedure BuyAnimal(aAnimal : TKMPastureAnimalType);
-    procedure SellAnimal(aIndex : Integer);
+    procedure BuyAnimalScript(aAnimal : TKMPastureAnimalType; aCount : Integer);
+
+    procedure SellAnimal(aIndex : Integer); overload;
+    procedure SellAnimal(aAnimal : TKMPastureAnimalType); overload;
     function GetAnimal(aIndex : Integer) : TKMPastureAnimal;
+    function AnimalsCount(aAnimal : TKMPastureAnimalType) : Integer;
 
     function GetPastureTileType : Word;
 
@@ -59,6 +66,7 @@ type
 implementation
 uses
   Classes,
+  KM_Game,
   KM_HandsCollection,
   KM_RenderPool, KM_RenderAux,
   KM_Resource, KM_ResUnits,
@@ -107,6 +115,7 @@ begin
   Inherited;
   CheckClimate;
   FillChar(fFoodSilos, SizeOf(fFoodSilos), #0);
+  fAIAnimals := [];
 end;
 
 Constructor TKMHousePasture.Load(LoadStream : TKMemoryStream);
@@ -117,6 +126,7 @@ begin
   LoadStream.ReadData(fBestClimate);
   LoadStream.ReadData(fObjects);
   LoadStream.ReadData(fFoodSilos);
+  LoadStream.Read(fAIAnimals);
 end;
 
 procedure TKMHousePasture.Save(SaveStream : TKMemoryStream);
@@ -127,6 +137,7 @@ begin
   SaveStream.WriteData(fBestClimate);
   SaveStream.WriteData(fObjects);
   SaveStream.WriteData(fFoodSilos);
+  SaveStream.Write(fAIAnimals);
 end;
 
 procedure TKMHousePasture.CheckClimate;
@@ -213,7 +224,7 @@ var I : Byte;
 begin
   I := 0;
   repeat
-    Result.X := KaMRandomS1(4.5, 'TKMHousePasture.GetPositionForAnimal 1');
+    Result.X := KaMRandomS1(4, 'TKMHousePasture.GetPositionForAnimal 1');
     Result.Y := KaMRandomS1(2.75, 'TKMHousePasture.GetPositionForAnimal 2');
     Inc(I);
   until (I >= 10) or not IsAnimalAt(Result);//max 10 tries
@@ -299,16 +310,16 @@ begin
     Inc(Age);
     If Age >= AnimalType.Spec.KillAge then
     begin
-      FillWare(wtPig, AnimalType.Spec.Meat * Multi3 / 2);
-      FillWare(wtSkin, AnimalType.Spec.Skin * Multi3 / 2);
+      FillWare(wtPig, AnimalType.Spec.Meat * (1 + Multi3 / 2));
+      FillWare(wtSkin, AnimalType.Spec.Skin * (1 + Multi3 / 2));
       Age := 0;
       AnimalType := patNone;
       Exit;
     end else
     If (AnimalType.Spec.Age > 0) and (Age mod AnimalType.Spec.Age = 0) then
     begin
-      FillWare(wtFeathers, AnimalType.Spec.Feathers * Multi / 2);
-      FillWare(wtEgg, AnimalType.Spec.Eggs * Multi2 / 2);
+      FillWare(wtFeathers, AnimalType.Spec.Feathers * (1 + Multi2 / 10));
+      FillWare(wtEgg, AnimalType.Spec.Eggs * (1 + Multi2 / 10));
     end;
     If (aTick + (aID + 1)) mod (MAX_ANIMALS * 200) = (MAX_ANIMALS + aID * 200)  then
     begin
@@ -316,7 +327,7 @@ begin
       begin
         If fFoodSilos[1] > 0 then
           begin Inc(Multi); Dec(fFoodSilos[1]) end;//corn increases feathers
-        If fFoodSilos[2] > 0 then
+        If (fFoodSilos[2] > 0) then
           begin Inc(Multi2); Dec(fFoodSilos[2]) end;//hey increases eggs
         If fFoodSilos[3] > 0 then
           begin Inc(Multi3); Dec(fFoodSilos[3]) end;//vegetables increases meat
@@ -371,29 +382,82 @@ begin
   for I := 0 to MAX_ANIMALS - 1 do
     If fAnimals[I].AnimalType = patNone then
     begin
-      If not gHands[Owner].VirtualWareTake('vtCoin', aAnimal.Spec.Cost) then
+      If (not gGame.Params.IsMapEditor) and not gHands[Owner].VirtualWareTake('vtCoin', aAnimal.Spec.Cost) then
         Exit;
       fAnimals[I].AnimalType := aAnimal;
       fAnimals[I].Pos := GetPositionForAnimal;
       fAnimals[I].Dir := DirN;
       fAnimals[I].Age := -KaMRandom(1000, ' TKMHousePasture.BuyAnimal : age');
       fAnimals[I].Color := KaMRandom(length(aAnimal.Spec.Colors), 'TKMHousePasture.BuyAnimal : color');
+      fAnimals[I].Multi := 0;
+      fAnimals[I].Multi2 := 0;
+      fAnimals[I].Multi3 := 0;
       SetNewAction(fAnimals[I]);
       Exit;
     end;
-
-
 end;
+
+procedure TKMHousePasture.BuyAnimalScript(aAnimal : TKMPastureAnimalType; aCount : Integer);
+var I, J : Integer;
+begin
+  //check for free space
+  for J := 1 to aCount do
+    for I := 0 to MAX_ANIMALS - 1 do
+      If fAnimals[I].AnimalType = patNone then
+      begin
+        fAnimals[I].AnimalType := aAnimal;
+        fAnimals[I].Pos := GetPositionForAnimal;
+        fAnimals[I].Dir := DirN;
+        fAnimals[I].Age := -KaMRandom(1000, ' TKMHousePasture.BuyAnimal : age');
+        fAnimals[I].Color := KaMRandom(length(aAnimal.Spec.Colors), 'TKMHousePasture.BuyAnimal : color');
+        SetNewAction(fAnimals[I]);
+        Break;
+      end;
+  If not ArrayContains(byte(aAnimal), fAIAnimals) then
+    fAIAnimals := fAIAnimals + [byte(aAnimal)];
+end;
+
 procedure TKMHousePasture.SellAnimal(aIndex : Integer);
 begin
-  gHands[Owner].VirtualWareTake('vtCoin', - fAnimals[aIndex].AnimalType.Spec.Cost div 2);
+  If not gGame.Params.IsMapEditor then
+    gHands[Owner].VirtualWareTake('vtCoin', - fAnimals[aIndex].AnimalType.Spec.Cost div 2);
   fAnimals[aIndex].AnimalType := patNone;
   fAnimals[aIndex].Age := 0;
+end;
+
+procedure TKMHousePasture.SellAnimal(aAnimal : TKMPastureAnimalType);
+var I : Integer;
+begin
+  for I := MAX_ANIMALS - 1 downto 0 do
+    If fAnimals[I].AnimalType = aAnimal then
+    begin
+      SellAnimal(I);
+      Exit;
+    end;
 end;
 
 function TKMHousePasture.GetAnimal(aIndex : Integer) : TKMPastureAnimal;
 begin
   Result := fAnimals[aIndex];
+end;
+
+function TKMHousePasture.AnimalsCount(aAnimal : TKMPastureAnimalType) : Integer;
+var I : Integer;
+begin
+  Result := 0;
+  for I := MAX_ANIMALS - 1 downto 0 do
+    If fAnimals[I].AnimalType = aAnimal then
+      Inc(Result);
+end;
+
+procedure TKMHousePasture.BuyAIAnimal;
+var R : Integer;
+begin
+  If length(fAIAnimals) = 0 then
+    Exit;
+  R := KaMRandom(length(fAIAnimals), 'TKMHousePasture.BuyAIAnimal');
+
+  BuyAnimal(TKMPastureAnimalType(fAIAnimals[R]));
 end;
 
 
@@ -430,6 +494,9 @@ begin
   for I := 0 to MAX_ANIMALS - 1 do
     UpdateAnimal(fAnimals[I], I, aTick);
 
+  If gHands[Owner].IsComputer then
+    If aTick mod 200 = 0 then
+      BuyAIAnimal;
 end;
 
 
@@ -460,7 +527,7 @@ begin
                                   fAnimals[I].AnimStep,
                                   FlagColor, rxUnits);}
         spec := fAnimals[I].AnimalType.Spec;
-        gRenderPool.AddHousePastureAnimal(KMPointF(entr.X + fAnimals[I].Pos.X - 2.75, entr.Y + fAnimals[I].Pos.Y - 4.75),
+        gRenderPool.AddHousePastureAnimal(KMPointF(entr.X + fAnimals[I].Pos.X - 2.50, entr.Y + fAnimals[I].Pos.Y - 4.75),
                                           fAnimals[I].AnimalType,
                                           fAnimals[I].Action, fAnimals[I].Dir,
                                           fAnimals[I].AnimStep,

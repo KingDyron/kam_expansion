@@ -579,8 +579,6 @@ begin
 end;
 
 procedure TKMScriptActions.PlayerAddWorkers(const aPlayer: Integer; addBoots: Boolean);
-var
-  I: Integer;
 begin
   try
     if aPlayer > -1 then

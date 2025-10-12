@@ -314,8 +314,8 @@
 		"ProduceAfterWares" : [
 			{"Ware" : "wtFeathers", "Min" : 1, "Max" : 2, "Cycles" : 20},
 			{"Ware" : "wtHorse", "Min" : 1, "Max" : 2, "Cycles" : 6},
-			{"Ware" : "wtSkin", "Min" : 1, "Max" : 2, "Cycles" : 13},
-			{"Ware" : "wtPig", "Min" : 1, "Max" : 2, "Cycles" : 13}
+			{"Ware" : "wtSkin", "Min" : 1, "Max" : 2, "Cycles" : 10},
+			{"Ware" : "wtPig", "Min" : 1, "Max" : 2, "Cycles" : 10}
 		],
 		"CoinPrice" : 0.3,
 		"MaxCountInStall" : 112

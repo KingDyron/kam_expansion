@@ -477,7 +477,7 @@
 487:Laborers
 488:Serfs per 10 houses
 489:Autorepair
-490:AI Improvements
+490:AI Auto build
 491:AI settings
 492:Houses
 493:Roadworks
@@ -2250,3 +2250,6 @@
 2304:A recruit protected on all sides by a sturdy shield.
 2305:The cheapest unit in the game. It can be recruited in many places.
 2306:Defensive walls will strengthen your city's position, but there's no such convenience on the front. A mobile wall is an excellent choice to support your warriors.
+2307:Goose
+2308:AI Features
+2309:Additional management: bloking wares|working markets|silos management|emissary's management|using pearl of architecture

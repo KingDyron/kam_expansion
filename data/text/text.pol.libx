@@ -475,7 +475,7 @@
 487:Robotnicy
 488:Pomocnicy/10 budynków
 489:Autom. naprawa
-490:Usprawnione AI
+490:Auto-budowanie AI
 491:Ustawienia AI
 492:Budynki
 493:Prace drogowe
@@ -2237,3 +2237,6 @@
 2304:Rekrut z każdej strony osłonięty wytrzymałą tarczą.
 2305:Najtańsza jednostka w grze. Może być wyrekrutowana w wielu miejscach. 
 2306:Dzięki murom obronnym wzmocnisz swoją pozycję miasta, jednak na froncie nie ma takiej wygody. Ruchoma ściana to doskonały wybór aby wesprzeć swoich wojowników
+2307:Gęś
+2308:Usprawnienia AI
+2309:Dodatkowe funkcje: blokowanie towarów|działające targowiska|dostosowanie silosów|dostosowanie emisariuszy|dostosowanie perły architektury 

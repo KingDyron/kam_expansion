@@ -15,6 +15,7 @@ type
   protected
     Panel_Script: TKMPanel;
       CheckBox_AutoBuild: TKMCheckBox;
+      CheckBox_AIFeatures: TKMCheckBox;
       CheckBox_AutoRepair: TKMCheckBox;
       Button_ClassicAIParams: TKMButton;
 
@@ -61,10 +62,14 @@ begin
   CheckBox_AutoBuild := TKMCheckBox.Create(Panel_Script, 9, 30, Panel_Script.Width - 9, 20, gResTexts[TX_MAPED_AI_AUTOBUILD], fntMetal);
   CheckBox_AutoBuild.OnClick := Town_ScriptChange;
 
-  CheckBox_AutoRepair := TKMCheckBox.Create(Panel_Script, 9, 50, Panel_Script.Width - 9, 20, gResTexts[TX_MAPED_AI_AUTOREPAIR], fntMetal);
+  CheckBox_AIFeatures := TKMCheckBox.Create(Panel_Script, 9, 50, Panel_Script.Width - 9, 20, gResTexts[2308], fntMetal);
+  CheckBox_AIFeatures.OnClick := Town_ScriptChange;
+  CheckBox_AIFeatures.Hint := gResTexts[2309];
+
+  CheckBox_AutoRepair := TKMCheckBox.Create(Panel_Script, 9, 70, Panel_Script.Width - 9, 20, gResTexts[TX_MAPED_AI_AUTOREPAIR], fntMetal);
   CheckBox_AutoRepair.OnClick := Town_ScriptChange;
 
-  Button_ClassicAIParams := TKMButton.Create(Panel_Script, 9, 75, Panel_Script.Width - 9, 40, gResTexts[TX_MAPED_AI_CLASSIC_AI_PARAMS], bsGame);
+  Button_ClassicAIParams := TKMButton.Create(Panel_Script, 9, 95, Panel_Script.Width - 9, 40, gResTexts[TX_MAPED_AI_CLASSIC_AI_PARAMS], bsGame);
   Button_ClassicAIParams.Anchors := [anLeft, anTop, anRight];
   Button_ClassicAIParams.OnClick := ClassicAIParams_Click;
 
@@ -92,36 +97,36 @@ begin
                                                     120, 30, gResTexts[TX_WORD_CLOSE], bsGame);
     Button_CloseClassicAIParams.OnClick := ClassicAIParams_Click;
 
-  CheckBox_UnlimitedEquip := TKMCheckBox.Create(Panel_Script, TB_PAD, 130, Panel_Script.Width - 9, 20, gResTexts[TX_MAPED_AI_FASTEQUIP], fntMetal);
+  CheckBox_UnlimitedEquip := TKMCheckBox.Create(Panel_Script, TB_PAD, 150, Panel_Script.Width - 9, 20, gResTexts[TX_MAPED_AI_FASTEQUIP], fntMetal);
   CheckBox_UnlimitedEquip.OnClick := Town_ScriptChange;
 
-  with TKMLabel.Create(Panel_Script, TB_PAD, 155, Panel_Script.Width - TB_PAD, 20, gResTexts[TX_MAPED_AI_DEFENSE_EQUIP_LEATHER], fntMetal, taLeft) do
+  with TKMLabel.Create(Panel_Script, TB_PAD, 175, Panel_Script.Width - TB_PAD, 20, gResTexts[TX_MAPED_AI_DEFENSE_EQUIP_LEATHER], fntMetal, taLeft) do
   begin
     Hint := gResTexts[TX_MAPED_AI_DEFENSE_EQUIP_LEATHER_HINT];
     WordWrap := True;
     TextVAlign := tvaMiddle;
   end;
 
-  NumEd_EquipRateLeather := TKMNumericEdit.Create(Panel_Script, TB_PAD, 155 + 20, 100, 3000);
+  NumEd_EquipRateLeather := TKMNumericEdit.Create(Panel_Script, TB_PAD, 175 + 20, 100, 3000);
   NumEd_EquipRateLeather.Hint := gResTexts[TX_MAPED_AI_DEFENSE_EQUIP_LEATHER_HINT];
   NumEd_EquipRateLeather.MouseWheelStep := 100;
   NumEd_EquipRateLeather.AutoFocusable := False;
   NumEd_EquipRateLeather.OnChange := Town_ScriptChange;
 
-  with TKMLabel.Create(Panel_Script, TB_PAD, 200, Panel_Script.Width - TB_PAD, 20, gResTexts[TX_MAPED_AI_DEFENSE_EQUIP_IRON], fntMetal, taLeft) do
+  with TKMLabel.Create(Panel_Script, TB_PAD, 220, Panel_Script.Width - TB_PAD, 20, gResTexts[TX_MAPED_AI_DEFENSE_EQUIP_IRON], fntMetal, taLeft) do
   begin
     Hint := gResTexts[TX_MAPED_AI_DEFENSE_EQUIP_IRON_HINT];
     WordWrap := True;
     TextVAlign := tvaMiddle;
   end;
 
-  NumEd_EquipRateIron := TKMNumericEdit.Create(Panel_Script, TB_PAD, 200 + 20, 100, 3000);
+  NumEd_EquipRateIron := TKMNumericEdit.Create(Panel_Script, TB_PAD, 200 + 40, 100, 3000);
   NumEd_EquipRateIron.Hint := gResTexts[TX_MAPED_AI_DEFENSE_EQUIP_IRON_HINT];
   NumEd_EquipRateIron.MouseWheelStep := 100;
   NumEd_EquipRateIron.AutoFocusable := False;
   NumEd_EquipRateIron.OnChange := Town_ScriptChange;
 
-  with TKMLabel.Create(Panel_Script, TB_PAD, 240, Panel_Script.Width - TB_PAD, 20, gResTexts[1629], fntMetal, taLeft) do
+  with TKMLabel.Create(Panel_Script, TB_PAD, 260, Panel_Script.Width - TB_PAD, 20, gResTexts[1629], fntMetal, taLeft) do
   begin
     Hint := gResTexts[TX_MAPED_AI_DEFENSE_EQUIP_IRON_HINT];
     WordWrap := True;
@@ -129,14 +134,14 @@ begin
   end;
 
 
-  NumEd_EquipRateTH := TKMNumericEdit.Create(Panel_Script, TB_PAD, 240 + 20, 100, 3000);
+  NumEd_EquipRateTH := TKMNumericEdit.Create(Panel_Script, TB_PAD, 240 + 40, 100, 3000);
   NumEd_EquipRateTH.Hint := gResTexts[TX_MAPED_AI_DEFENSE_EQUIP_IRON_HINT];
   NumEd_EquipRateTH.MouseWheelStep := 100;
   NumEd_EquipRateTH.AutoFocusable := False;
   NumEd_EquipRateTH.OnChange := Town_ScriptChange;
 
-  TKMLabel.Create(Panel_Script, TB_PAD, 295, gResTexts[TX_MAPED_AI_START], fntMetal, taLeft);
-  Button_AIStart         := TKMButtonFlat.Create(Panel_Script, TB_PAD, 315, 33, 33, 62, rxGuiMain);
+  TKMLabel.Create(Panel_Script, TB_PAD, 315, gResTexts[TX_MAPED_AI_START], fntMetal, taLeft);
+  Button_AIStart         := TKMButtonFlat.Create(Panel_Script, TB_PAD, 335, 33, 33, 62, rxGuiMain);
   Button_AIStart.OnClick := Town_ScriptChange;
 
   fSubMenuActionsEvents[0] := Town_ScriptChange;
@@ -156,6 +161,7 @@ end;
 procedure TKMMapEdTownScript.Town_ScriptRefresh;
 begin
   CheckBox_AutoBuild.Checked := gMySpectator.Hand.AI.Setup.AutoBuild;
+  CheckBox_AIFeatures.Checked := gMySpectator.Hand.AI.Setup.AIFeatures;
   CheckBox_AutoRepair.Checked := gMySpectator.Hand.AI.Setup.IsRepairAlways;
   TrackBar_SerfsPer10Houses.Position := Round(10*gMySpectator.Hand.AI.Setup.SerfsPerHouse);
   if gMySpectator.HandID <> -1 then
@@ -187,6 +193,7 @@ end;
 procedure TKMMapEdTownScript.Town_ScriptChange(Sender: TObject);
 begin
   gMySpectator.Hand.AI.Setup.AutoBuild := CheckBox_AutoBuild.Checked;
+  gMySpectator.Hand.AI.Setup.AIFeatures := CheckBox_AIFeatures.Checked;
   if CheckBox_AutoRepair.Checked then
     gMySpectator.Hand.AI.Setup.RepairMode := rmRepairAlways
   else

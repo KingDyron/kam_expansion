@@ -818,6 +818,7 @@ begin
   //      We could also make it not try to place houses again each update if it failed the first time, if we can't make FindPlaceForHouse quick when it fails.
   if not fCityPlanner.FindPlaceForHouse(aHouse, Loc, ignoreRoad) then Exit;
 
+  ignoreRoad := ignoreRoad or (aHouse in NO_ROAD_CONNECTION_HOUSES);
   //Place house before road, so that road is made around it
   P.AddHousePlan(aHouse, Loc);
 
@@ -1041,6 +1042,7 @@ begin
     Houses[I].Demolish(fOwner);
   end;
 end;
+
 procedure TKMayor.CheckHouseCount;
 var
   P: TKMHand;
@@ -1794,24 +1796,24 @@ begin
 
     CheckArmyDemand;
     CheckWeaponOrderCount;
-    CheckMarketTrades;
-    CheckSilos;
-    CheckMerchants;
-    CheckPearl;
+
     if fSetup.AutoBuild then
     begin
-      //CheckHouseCount;
+      CheckHouseCount;
       //Manage wares ratios and block stone to Store
-      CheckWareFlow;
-
-
-      {
-        //CheckHouseCount;
       //Build more roads if necessary
       if not Recorder.HasRecording then
         CheckRoadsCount;
-      }
 
+    end;
+
+    If fSetup.AIFeatures then
+    begin
+      CheckWareFlow;
+      CheckMarketTrades;
+      CheckSilos;
+      CheckMerchants;
+      CheckPearl;
     end;
   finally
     {$IFDEF PERFLOG}
