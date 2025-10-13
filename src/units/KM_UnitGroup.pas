@@ -205,6 +205,7 @@ type
 
     procedure UpdateState;
     procedure PaintHighlighted(aTickLag: Single; aHandColor, aFlagColor: Cardinal; aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: Cardinal = 0);
+    procedure PaintHighlightedMapEd(aTickLag: Single; aPos : TKMPointDir; aHandColor, aFlagColor: Cardinal; aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: Cardinal = 0);
     procedure Paint(aTickLag: Single);
 
     class function GetDefaultCondition: Integer;
@@ -2570,6 +2571,11 @@ begin
   If self = nil then
     Exit;
   PaintHighlighted(aTickLag, IfThen(FlagBearer.FlagColor > 0, FlagBearer.FlagColor, gHands[FlagBearer.Owner].GameFlagColor), FlagColor);
+
+  if (gGameParams.IsMapEditor) and (MapEdOrder.Order = gioSendGroup) then
+    PaintHighlightedMapEd(aTickLag, MapEdOrder.Pos, IfThen(FlagBearer.FlagColor > 0,
+                        FlagBearer.FlagColor, gHands[FlagBearer.Owner].GameFlagColor), FlagColor, true, true, $FFAAAAAA);
+  
 end;
 
 
@@ -2626,6 +2632,34 @@ begin
   if SHOW_GROUP_MEMBERS_POS and not gGameParams.IsMapEditor then
     for I := 0 to Count - 1 do
       gRenderAux.Text(fMembers[I].PositionF.X + 0.2, fMembers[I].PositionF.Y + 0.2, IntToStr(I), icCyan);
+end;
+
+
+
+procedure TKMUnitGroup.PaintHighlightedMapEd(aTickLag: Single; aPos: TKMPointDir; aHandColor: Cardinal; aFlagColor: Cardinal;
+                                            aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: Cardinal = 0);
+var
+  unitPos: TKMPointF;
+  I: Integer;
+  flagStep: Cardinal;
+  newPos: TKMPoint;
+  doesFit: Boolean;
+begin
+  if IsDead then Exit;
+
+  if not FlagBearer.Visible then Exit;
+  if FlagBearer.IsDeadOrDying then Exit;
+
+  //Paint virtual members in MapEd mode
+  for I := 0 to fMapEdCount - 1 do
+  begin
+    newPos := GetPositionInGroup2(aPos.Loc.X, aPos.Loc.Y, aPos.Dir, I, fUnitsPerRow,
+                                  gTerrain.MapX, gTerrain.MapY, doesFit, GroupType = gtShips);
+    if not doesFit then Continue; //Don't render units that are off the map in the map editor
+    unitPos.X := newPos.X + UNIT_OFF_X; //MapEd units don't have sliding
+    unitPos.Y := newPos.Y + UNIT_OFF_Y;
+    gRenderPool.AddUnit(FlagBearer.UnitType, 0, uaWalk, aPos.Dir, UNIT_STILL_FRAMES[aPos.Dir], 0.0, unitPos.X, unitPos.Y, aHandColor, True, aDoImmediateRender, aDoHighlight, aHighlightColor, -0.1);
+  end;
 end;
 
 

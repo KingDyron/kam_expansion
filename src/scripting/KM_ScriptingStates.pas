@@ -1679,7 +1679,7 @@ function TKMScriptStates.StatHouseTypeCountEx(aHand: Integer; aHouseType: TKMHou
 begin
   try
     if InRange(aHand, 0, gHands.Count - 1) and (gHands[aHand].Enabled)
-    and (aHouseType in HOUSES_VALID) then
+    {and (aHouseType in HOUSES_VALID) }then
       Result := gHands[aHand].Stats.GetHouseQty(aHouseType)
     else
     begin
