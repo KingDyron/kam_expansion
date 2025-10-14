@@ -169,6 +169,9 @@ type
 
     procedure AddHouseSchoolClock(const aLoc: TKMPoint; aAnimStep: Cardinal; aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
 
+    procedure AddHouseTowerRecruits(const aLoc: TKMPoint; aRight, aLeft : Boolean;
+                                  aAnimStep: Cardinal; aDoImmediateRender: Boolean = False);
+
     procedure AddHousePastureAnimal(const aLoc: TKMPointF; aAnimal : TKMPastureAnimalType; Action : TKMPastureAnimalAction; Dir : TKMDirection;
                                   aAnimStep: Cardinal; C1, C2: TColor4;
                                   aDoImmediateRender: Boolean = False);
@@ -1639,6 +1642,55 @@ begin
       RenderSprite(rxHouses, id, cornerX, cornerY, 0, aDoHighlight, aHighlightColor)
     else
       fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, aLoc.X, aLoc.Y, 0);
+  end;
+end;
+
+procedure TKMRenderPool.AddHouseTowerRecruits(const aLoc: TKMPoint; aRight, aLeft : Boolean;
+                              aAnimStep: Cardinal; aDoImmediateRender: Boolean = False);
+var
+  id: Cardinal;
+  A: TKMAnimation;
+  rxData: TRXData;
+  cornerX, cornerY: Single;
+begin
+
+  rxData := fRXData[rxHouses];
+
+  If aRight then
+  begin
+    A := gRes.Houses.WallTower_RecruitRight;
+    if A.Count > 0 then
+    begin
+
+      id := A.Animation[aAnimStep];
+
+      cornerX := aLoc.X + (rxData.Pivot[id].X + A.X) / CELL_SIZE_PX - 1;
+      cornerY := aLoc.Y + (rxData.Pivot[id].Y + A.Y + rxData.Size[id].Y) / CELL_SIZE_PX - 1
+                       - gTerrain.LandExt^[aLoc.Y + 1, aLoc.X].RenderHeight / CELL_HEIGHT_DIV;
+
+      if aDoImmediateRender then
+        RenderSprite(rxHouses, id, cornerX, cornerY, 0, false, 0)
+      else
+        fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, aLoc.X, aLoc.Y, 0);
+    end;
+  end;
+  If aLeft then
+  begin
+    A := gRes.Houses.WallTower_RecruitLeft;
+    if A.Count > 0 then
+    begin
+
+      id := A.Animation[aAnimStep];
+
+      cornerX := aLoc.X + (rxData.Pivot[id].X + A.X) / CELL_SIZE_PX - 1;
+      cornerY := aLoc.Y + (rxData.Pivot[id].Y + A.Y + rxData.Size[id].Y) / CELL_SIZE_PX - 1
+                       - gTerrain.LandExt^[aLoc.Y + 1, aLoc.X].RenderHeight / CELL_HEIGHT_DIV;
+
+      if aDoImmediateRender then
+        RenderSprite(rxHouses, id, cornerX, cornerY, 0, false, 0)
+      else
+        fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, aLoc.X, aLoc.Y, 0);
+    end;
   end;
 end;
 

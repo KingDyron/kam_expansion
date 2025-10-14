@@ -5276,10 +5276,12 @@ var
 begin
   inherited;
 
-  if RightRecruit then
+  {if RightRecruit then
     gRenderPool.AddAnimation(Position, gRes.Houses.WallTower_RecruitRight, gTerrain.AnimStep, gHands[Owner].FlagColor, rxHouses);
   if LeftRecruit then
     gRenderPool.AddAnimation(Position, gRes.Houses.WallTower_RecruitLeft, gTerrain.AnimStep, gHands[Owner].FlagColor, rxHouses);
+  }
+  gRenderPool.AddHouseTowerRecruits(Position, RightRecruit, LeftRecruit, gTerrain.AnimStep);
 
   if SHOW_ATTACK_RADIUS or (mlTowersAttackRadius in gGameParams.VisibleLayers) then
   begin
