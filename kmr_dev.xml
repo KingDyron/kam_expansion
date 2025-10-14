@@ -202,7 +202,7 @@
       <edDebugText Text=""/>
       <chkFindObjByUID Checked="False"/>
     </Debug_Input>
-    <Game_additional Collapsed="False">
+    <Game_additional Collapsed="True">
       <chkLoadUnsupSaves Checked="True"/>
       <RGPlayer ItemIndex="0"/>
       <seMaxImageSize Value="10200"/>
@@ -241,7 +241,7 @@
       <chkDebugLayer2 Checked="True"/>
       <chkDebugLayer3 Checked="True"/>
     </Debug_Terrain>
-    <Debug_Render Collapsed="True">
+    <Debug_Render Collapsed="False">
       <chkSelectionBuffer Checked="False"/>
       <chkShowRoutes Checked="False"/>
       <chkShowWires Checked="False"/>

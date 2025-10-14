@@ -282,6 +282,10 @@ type
     procedure HouseSetStats(aHouseID : Integer; aStats : TKMHouseStats);
     procedure MoveCamera(aPlayer, aX, aY : Integer);
     procedure ResetZoom(aPlayer: Integer);
+
+    procedure SpecialAnimAdd(aX, aY : Single; aAnim :  array of Integer; aLoopTimes : Byte);
+    procedure SpecialAnimAddFront(aX, aY : Single; aAnim :  array of Integer; aLoopTimes : Byte);
+
     procedure UnitSetFlagColor(aUnitID : Integer; aColor : Cardinal);
     procedure UnitSetRage(aUnitID, aDuration : Integer);
     procedure UnitSetStats(aUnitID : Integer; aStats : TKMUnitStats);
@@ -303,6 +307,7 @@ uses
   KM_PathFindingRoad,
   KM_Terrain,
   KM_ResTileset,
+  KM_SpecialAnim,
   KM_CommonUtils, KM_CommonClasses, KM_CommonClassesExt;
 
 const
@@ -5615,6 +5620,26 @@ begin
       If InRange(aPlayer, 0, gHands.Count - 1) and (gMySpectator.HandID = aPlayer) then
         gGame.ActiveInterface.Viewport.ResetZoom;
 
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
+procedure TKMScriptActions.SpecialAnimAdd(aX, aY : Single; aAnim : array of Integer; aLoopTimes : Byte);
+begin
+  try
+    gSpecAnim.Add(Anim(0, 0, aAnim), KMPointf(aX, aY), aLoopTimes);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
+procedure TKMScriptActions.SpecialAnimAddFront(aX, aY : Single; aAnim :  array of Integer; aLoopTimes : Byte);
+begin
+  try
+    gSpecAnim.Add(Anim(0, 0, aAnim), KMPointf(aX, aY), aLoopTimes, rxTrees, true);
   except
     gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
     raise;

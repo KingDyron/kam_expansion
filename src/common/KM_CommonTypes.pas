@@ -135,6 +135,7 @@ type
 
   PKAnimation = ^TKMAnimation;
 
+  function Anim(aX, aY : Integer; aAnimation : array of Integer; aOffset : Byte = 0) : TKMAnimation;overload;
   function Anim(aX, aY : Integer; aAnimation : TKMWordArray; aOffset : Byte = 0) : TKMAnimation;overload;
   function Anim(aX, aY, StepStart, aCount : Integer; aOffset : Byte = 0; doBackWard : Boolean = false) : TKMAnimation;overload;
   function Anim(aAnimation : TKMAnimLoop) : TKMAnimation;overload;
@@ -701,6 +702,16 @@ end;
 function Anim(aX, aY : Integer; aAnimation : TKMWordArray; aOffset : Byte = 0) : TKMAnimation;
 begin
   Result.Create(aX, aY, aAnimation, aOffset);
+end;
+
+function Anim(aX, aY : Integer; aAnimation : array of Integer; aOffset : Byte = 0) : TKMAnimation;
+var arr : TKMWordArray;
+  I : Integer;
+begin
+  SetLength(arr, length(aAnimation));
+  for I := 0 to High(arr) do
+    arr[I] := aAnimation[I];
+  Result.Create(aX, aY, arr, aOffset);
 end;
 
 function Anim(aX, aY, StepStart, aCount : Integer; aOffset : Byte = 0; doBackWard : Boolean = false) : TKMAnimation;
