@@ -710,6 +710,8 @@ begin
 
   gMySpectator.Hand.ShowMSG(mkStyle2, 'You are a cheater!!!', KMPOINT_ZERO);
 
+  gGame.Cheater := true;
+
 
 end;
 

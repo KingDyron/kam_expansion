@@ -61,6 +61,7 @@ type
     fCampaignName: TKMCampaignId;  //Is this a game part of some campaign
     fSpeedGIP: Single; //GameSpeed, recorded to GIP, could be requested by scripts
     fSpeedChangeAllowed: Boolean; //Is game speed change allowed?
+    fCheater : Boolean;
 
     //Saved to local data
     fLastReplayTickLocal: Cardinal; // stored / loaded in the .sloc file, if available
@@ -102,7 +103,6 @@ type
     fMapEdMapSaveEnded: TEvent;
     fWeather : TKMWeatherCollection;
     fTickLag : Single;
-
     procedure IssueAutosaveCommand(aAfterPT: Boolean);
     function FindHandToSpec: Integer;
     function CheckIfPieceTimeJustEnded: Boolean;
@@ -298,6 +298,7 @@ type
     property TerrainPainter: TKMTerrainPainter read fTerrainPainter;
     property TextMission: TKMTextLibraryMulti read fTextMission;
     property Weather : TKMWeatherCollection read fWeather;
+    property Cheater: Boolean read fCheater write fCheater;
     function Achievements : TKMAchievements;
 
     procedure RefreshDevelopmentTree;
@@ -471,6 +472,7 @@ begin
   end;
 
   gGameSettings.PlayersColorMode := pcmDefault;
+  fCheater := false;
 end;
 
 
@@ -2367,6 +2369,7 @@ begin
   gSpecAnim.Save(aBodyStream);
   //gParticles.Save(aBodyStream);
   fWeather.Save(aBodyStream);
+  aBodyStream.Write(fCheater);
   fScripting.Save(aBodyStream);
   gScriptSounds.Save(aBodyStream);
   aBodyStream.Write(fAIType, SizeOf(fAIType));
@@ -2785,6 +2788,7 @@ begin
     gSpecAnim.Load(bodyStream);
     //gParticles.Load(bodyStream);
     fWeather.Load(bodyStream);
+    bodyStream.Read(fCheater)
     fScripting.Load(bodyStream);
     gScriptSounds.Load(bodyStream);
     bodyStream.Read(fAIType, SizeOf(fAIType));

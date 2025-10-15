@@ -550,6 +550,10 @@ begin
   if self = nil then
     Exit;
 
+  If gGame.Cheater then
+    Exit;
+  IF gGameParams.IsMultiPlayerOrSpec then
+    Exit;
   if gGameParams.IsNormalGame then
   begin
     Find('GamesWon').IncProgress;
