@@ -6,6 +6,7 @@ uses
   KM_CommonTypes, KM_Defaults, KM_Points, KM_Houses, KM_ScriptingIdCache, KM_Units, KM_TerrainTypes,
   KM_ScriptSound, KM_MediaTypes, KM_ResTypes, KM_ResFonts, KM_HandTypes, KM_HouseWoodcutters,
   KM_UnitGroup, KM_ResHouses, KM_HouseCollection, KM_ResWares, KM_ScriptingEvents, KM_ScriptingTypes,
+  KM_WeatherTypes,
   KM_AITypes;
 
 
@@ -290,6 +291,8 @@ type
     procedure UnitSetRage(aUnitID, aDuration : Integer);
     procedure UnitSetStats(aUnitID : Integer; aStats : TKMUnitStats);
     procedure UnitSetThought(aUnitID : Integer; aThought : TKMUnitThought);
+
+    procedure WeatherSpawn(aType : TKMWeatherType; aLifeTime : Cardinal; aX, aY : Single; aSpeedX, aSpeedY : Single);
   end;
 
 
@@ -6237,5 +6240,15 @@ begin
   end;
 end;
 
+procedure TKMScriptActions.WeatherSpawn(aType : TKMWeatherType; aLifeTime : Cardinal; aX, aY : Single; aSpeedX, aSpeedY : Single);
+begin
+  try
+    gGame.Weather.AddItem(aType, KMPointF(aX, aY), KMPointF(aSpeedX, aSpeedY), aLifeTime, rxTrees);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+
+end;
 
 end.

@@ -234,7 +234,6 @@ end;
 function TKMUnitActionFight.ExecuteProcessRanged(Step: Byte): Boolean;
 var
   W: TKMUnitWarrior;
-  dir : TKMDirection;
   I : integer;
 begin
   Result := False;

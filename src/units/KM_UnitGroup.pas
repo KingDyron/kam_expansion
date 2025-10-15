@@ -2641,7 +2641,6 @@ procedure TKMUnitGroup.PaintHighlightedMapEd(aTickLag: Single; aPos: TKMPointDir
 var
   unitPos: TKMPointF;
   I: Integer;
-  flagStep: Cardinal;
   newPos: TKMPoint;
   doesFit: Boolean;
 begin

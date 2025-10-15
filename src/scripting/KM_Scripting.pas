@@ -542,6 +542,8 @@ begin
       'end;');
     Sender.AddTypeS('TKMUnitThought', '(thNone, thEat, thHome, thBuild, thStone, thWood, thDeath, thQuest, thDismiss, thArmor, thSpy, thTile, thExclusive, thImportant, thBucket, thBoots, thDiamond, thBow, thTalk)');
 
+    Sender.AddTypeS('TKMWeatherType', '(wttNone, wtCloudy1, wtCloudy2, wtRain, wtStorm, wtSnow, wtSnowyStorm, wtSandStorm1, wtSandStorm2, wtTornado)');
+
     //*Types-Reg*//
 
     // Add CampaignData type and variable only after addition of all other custom types,
@@ -1072,6 +1074,7 @@ begin
     RegisterMethodCheck(c, 'procedure  UnitSetRage(aUnitID: Integer; aDuration: Integer)');
     RegisterMethodCheck(c, 'procedure  UnitSetStats(aUnitID: Integer; aStats: TKMUnitStats)');
     RegisterMethodCheck(c, 'procedure  UnitSetThought(aUnitID : Integer; aThought : TKMUnitThought)');
+    RegisterMethodCheck(c, 'procedure  WeatherSpawn(aType : TKMWeatherType; aLifeTime : Cardinal; aX, aY : Single; aSpeedX, aSpeedY : Single)');
     //*Actions-Check*//
 
     c := Sender.AddClassN(nil, AnsiString(fUtils.ClassName));
@@ -1890,6 +1893,7 @@ begin
       RegisterMethod(@TKMScriptActions.UnitSetRage, 'UnitSetRage');
       RegisterMethod(@TKMScriptActions.UnitSetStats, 'UnitSetStats');
       RegisterMethod(@TKMScriptActions.UnitSetThought, 'UnitSetThought');
+      RegisterMethod(@TKMScriptActions.WeatherSpawn, 'WeatherSpawn');
       //*Actions-Reg*//
     end;
 

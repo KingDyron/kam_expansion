@@ -138,6 +138,7 @@ var fLastButtonID,
       Enabled := aInfo.Enabled;
       Caption := gGame.TextMission.ParseTextMarkup(UnicodeString(aInfo.Caption));
       Hint := gGame.TextMission.ParseTextMarkup(UnicodeString(aInfo.Hint));
+      FlagColor := gMySpectator.Hand.FlagColor;
     end;
 
   end;
@@ -192,6 +193,7 @@ var fLastButtonID,
       TexId := aInfo.TexID;
       Visible := aInfo.Visible;
       Enabled := aInfo.Enabled;
+      FlagColor := gMySpectator.Hand.FlagColor;
     end;
   end;
 
@@ -241,6 +243,7 @@ var fLastButtonID,
       Caption := gGame.TextMission.ParseTextMarkup(UnicodeString(aInfo.Caption));
       Hint := gGame.TextMission.ParseTextMarkup(UnicodeString(aInfo.Hint));
       CapOffsetY := -5;
+      FlagColor := gMySpectator.Hand.FlagColor;
     end;
 
   end;
