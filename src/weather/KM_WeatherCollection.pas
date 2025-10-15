@@ -80,6 +80,7 @@ begin
     wtSnowyStorm:   fList[Count - 1] := TKMWeatherSnowStorm.Create(aType, aPos, aSpeed, aLifeTime, aRX);
     wtSandStorm1:   fList[Count - 1] := TKMWeatherSandStorm1.Create(aType, aPos, aSpeed, aLifeTime, aRX);
     wtSandStorm2:   fList[Count - 1] := TKMWeatherSandStorm2.Create(aType, aPos, aSpeed, aLifeTime, aRX);
+    wtTornado:      fList[Count - 1] := TKMWeatherTornado.Create(aType, aPos, aSpeed, aLifeTime, aRX);
   end;
 end;
 
@@ -130,6 +131,7 @@ begin
       wtSnowyStorm:   tmp := TKMWeatherSnowStorm.Load(tmpType, LoadStream);
       wtSandStorm1:   tmp := TKMWeatherSandStorm1.Load(tmpType, LoadStream);
       wtSandStorm2:   tmp := TKMWeatherSandStorm2.Load(tmpType, LoadStream);
+      wtTornado:      tmp := TKMWeatherTornado.Load(tmpType, LoadStream);
     end;
     if tmp <> nil then
       if not tmp.Deleted then
@@ -174,7 +176,7 @@ begin
     case gTerrain.FindBestClimatType(P) of
       tcWarm1     : wt := wtRain;
       tcWet1      : wt := wtStorm;
-      tcWet2      : wt := wtStorm;
+      tcWet2      : If KaMRandom(100, 'Tornado') < 100 then wt := wtTornado else wt := wtStorm;
       tcNeutral   : wt := wtRain;
       tcCold1     : wt := wtSnow;
       tcCold2     : wt := wtSnowyStorm;

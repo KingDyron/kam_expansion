@@ -96,10 +96,18 @@ type
       constructor Create(aType : TKMWeatherType; aPos, aSpeed : TKMPointF; aLifeTime : Cardinal; aRX: TRXType);
   end;
 
+  TKMWeatherTornado = class(TKMWeather)
+    private
+      procedure UpdateCloud(aPos : TKMPointF); override;
+    public
+      constructor Create(aType : TKMWeatherType; aPos, aSpeed : TKMPointF; aLifeTime : Cardinal; aRX: TRXType);
+  end;
+
 
 implementation
 uses
       Math,
+      KM_Game,
       KM_GameParams,
       KM_RenderPool,
       KM_Particles,
@@ -579,4 +587,34 @@ begin
         end;
   end;
 end;
+
+constructor TKMWeatherTornado.Create(aType: TKMWeatherType; aPos: TKMPointF; aSpeed: TKMPointF; aLifeTime: Cardinal; aRX: TRXType);
+begin
+  aLifeTime := aLifeTime * 2;
+  aSpeed.X := aSpeed.X / 2;
+  aSpeed.Y := aSpeed.Y / 2;
+  Inherited Create(aType, aPos, aSpeed, aLifeTime, aRX);
+
+  fAnims[wsStart].Create(0, 0, 1413, 5);
+  fAnims[wsLoop].Create(0, 0, 1418, 72);
+  fAnims[wsEnd].Create(0, 0, 1413, 5, 0, true);
+  fAnims[wsStart].Extend(1);
+  fAnims[wsEnd].Extend(1);
+  fMaxStyles := 1;
+end;
+
+procedure TKMWeatherTornado.UpdateCloud(aPos : TKMPointF);
+var speed : TKMPointF;
+begin
+  Inherited;
+
+  If fAge mod 100 = 0 then
+  begin
+    speed.X := KaMRandomS2(gGame.Weather.Settings.MaxCloudSpeed / 2, 'TKMWeatherTornado.SpawnNewWeather 1');
+    speed.Y := KaMRandomS2(gGame.Weather.Settings.MaxCloudSpeed / 2, 'TKMWeatherTornado.SpawnNewWeather 2');
+    gGame.Weather.AddItem(wtStorm, aPos + KMPointF(0, -4), speed, 100 + KaMRandom(100 + gGame.Weather.Settings.MaxLifeTime, 'TKMWeatherTornado'), rxTrees);
+  end;
+
+end;
+
 end.

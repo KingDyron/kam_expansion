@@ -2788,7 +2788,7 @@ begin
     gSpecAnim.Load(bodyStream);
     //gParticles.Load(bodyStream);
     fWeather.Load(bodyStream);
-    bodyStream.Read(fCheater)
+    bodyStream.Read(fCheater);
     fScripting.Load(bodyStream);
     gScriptSounds.Load(bodyStream);
     bodyStream.Read(fAIType, SizeOf(fAIType));
