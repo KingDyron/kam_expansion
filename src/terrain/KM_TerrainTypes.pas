@@ -191,7 +191,7 @@ type
   TKMLandExt = array [1..MAX_MAP_SIZE, 1..MAX_MAP_SIZE] of TKMTerrainTileExt;
   PKMLandExt = ^TKMLandExt;
 
-  TKMTerrainSelectionPasteType = (ptTerrain, ptHeight, ptObject, ptOverlay);
+  TKMTerrainSelectionPasteType = (ptTerrain, ptHeight, ptObject, ptOverlay, ptHouses);
 
   TKMTerrainSelectionPasteTypeSet = set of TKMTerrainSelectionPasteType;
 

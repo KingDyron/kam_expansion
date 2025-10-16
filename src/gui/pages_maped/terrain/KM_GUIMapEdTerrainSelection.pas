@@ -53,12 +53,13 @@ uses
 { TKMMapEdTerrainSelection }
 constructor TKMMapEdTerrainSelection.Create(aParent: TKMPanel);
 const
-  PAST_TYPE_RX_INDEX: array[TKMTerrainSelectionPasteType] of Integer = (383, 388, 385, 400);
+  PAST_TYPE_RX_INDEX: array[TKMTerrainSelectionPasteType] of Integer = (383, 388, 385, 400, 741);
 
   PAST_TYPE_HINT: array[TKMTerrainSelectionPasteType] of Integer = (TX_MAPED_COPY_PASTE_TERRAIN_HINT,
                                                                     TX_MAPED_COPY_PASTE_HEIGHTS_HINT,
                                                                     TX_MAPED_COPY_PASTE_OBJECTS_HINT,
-                                                                    TX_MAPED_COPY_PASTE_OVERLAYS_HINT);
+                                                                    TX_MAPED_COPY_PASTE_OVERLAYS_HINT,
+                                                                    268);
 var
   PT: TKMTerrainSelectionPasteType;
 begin
@@ -87,7 +88,7 @@ begin
 
   for PT := Low(TKMTerrainSelectionPasteType) to High(TKMTerrainSelectionPasteType) do
   begin
-    Map_PasteType[PT] := TKMButtonFlat.Create(Panel_Selection, 17 + 50 * Ord(PT), 150, 34, 34, PAST_TYPE_RX_INDEX[PT], rxGui);
+    Map_PasteType[PT] := TKMButtonFlat.Create(Panel_Selection, 9 + 40 * Ord(PT), 150, 34, 34, PAST_TYPE_RX_INDEX[PT], rxGui);
     Map_PasteType[PT].OnClick := SelectionClick;
     Map_PasteType[PT].Hint := gResTexts[PAST_TYPE_HINT[PT]];
     Map_PasteType[PT].Down := True;

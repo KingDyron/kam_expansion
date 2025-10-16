@@ -7,6 +7,7 @@ uses
   KromUtils,
   {$IFDEF MSWindows} Windows, {$ENDIF}
   KM_CommonClasses, KM_Points, KM_Terrain, KM_TerrainTypes, KM_TerrainPainter, KM_RenderPool, KM_ResTilesetTypes,
+  KM_ResTypes,
   KM_MapEdTypes, KM_Defaults;
 
 
@@ -29,6 +30,8 @@ type
                     FieldAge: Byte;
                     CornOrWine: Byte; //Indicate Corn or Wine field placed on the tile (without altering terrain)
                     CornOrWineTerrain: Word; //We use fake terrain for maped to be able delete or alter it if needed
+                    RoadType : TKMRoadType;
+                    GrainType : TKMGrainType;
                   end;
 
 
@@ -43,6 +46,10 @@ type
     fSelectionRect: TKMRect; //Tile-space selection, at least 1 tile
     fSelectionMode: TKMSelectionMode;
     fSelectionBuffer: array of array of TKMBufferData;
+    fSelectionHouses: TKMArray<TKMHouseStats>;
+    //fSelectionUnits: array of TKMUnitStats;
+
+
     fLandTemp: TKMLand;
     fLandMapEdTemp: TKMMapEdLand;
     fLandTerKindTemp: TKMLandTerKind;
@@ -101,7 +108,8 @@ implementation
 uses
   SysUtils,
   KM_Resource, KM_ResTileset,
-  KM_HandsCollection,
+  KM_HandsCollection, KM_Hand,
+  KM_Houses,
   KM_GameParams, KM_GameSettings,
   KM_Game, KM_Cursor, KM_RenderAux, KM_CommonUtils;
 
@@ -112,7 +120,7 @@ begin
   inherited Create;
 
   fTerrainPainter := aTerrainPainter;
-  fPasteTypes := [ptTerrain, ptHeight, ptObject, ptOverlay]; // All assets by default
+  fPasteTypes := [ptTerrain, ptHeight, ptObject, ptOverlay, ptHouses]; // All assets by default
 
   SetLength(fLandTerKindTemp, MAX_MAP_SIZE + 1, MAX_MAP_SIZE + 1);
 end;
@@ -276,6 +284,8 @@ begin
   aBuffer.FieldAge    := aTile.FieldAge;
   aBuffer.CornOrWine  := aMapEdTile.CornOrWine;
   aBuffer.CornOrWineTerrain := aMapEdTile.CornOrWineTerrain;
+  aBuffer.RoadType          := aTile.RoadType;
+  aBuffer.GrainType         := aTile.GrainType;
   for L := 0 to 2 do
   begin
     aBuffer.Layer[L].Terrain  := aTile.Layer[L].Terrain;
@@ -317,7 +327,9 @@ begin
     aTile.TileOwner       := aBuffer.TileOwner;
     aTile.FieldAge        := aBuffer.FieldAge;
     aMapEdTile.CornOrWine  := aBuffer.CornOrWine;
-    aMapEdTile.CornOrWineTerrain := aBuffer.CornOrWineTerrain;
+    aMapEdTile.CornOrWineTerrain  := aBuffer.CornOrWineTerrain;
+    aTile.RoadType                := aBuffer.RoadType;
+    aTile.GrainType               := aBuffer.GrainType;
   end;
 
   // Check Object last, as we also want to copy object in case of corn / wine objects
@@ -430,6 +442,7 @@ var
     BufPtr: Pointer;
   {$ENDIF}
   BufferStream: TKMemoryStream;
+  stats : TKMHouseStats;
 begin
   Sx := fSelectionRect.Right - fSelectionRect.Left + 1; // Add +1 for the last col (we save vertex Height from there)
   Sy := fSelectionRect.Bottom - fSelectionRect.Top + 1; // Add +1 for the last row (we save vertex Height from there)
@@ -449,6 +462,23 @@ begin
         begin
           TileToBuffer(gTerrain.MainLand^[I+1, K+1], gGame.MapEditor.MainLandMapEd^[I+1, K+1], fTerrainPainter.LandTerKind[I+1, K+1],
                        fSelectionBuffer[By,Bx]);
+
+          if (gTerrain.House(K, I) <> nil) and (gTerrain.House(K, I).Entrance = KMPoint(K, I)) then
+          begin
+            stats := gTerrain.House(K, I).GetStats(true);
+            If stats.FlagX > 0 then
+            begin
+              stats.FlagX := Max(Stats.FlagX - fSelectionRect.Left, 0);
+              stats.FlagY := Max(Stats.FlagY - fSelectionRect.Top, 0);
+            end;
+
+            stats.X := Bx;
+            stats.Y := BY;
+            fSelectionHouses.Add(stats);
+          end;
+
+
+
           BufferStream.Write(fSelectionBuffer[By,Bx], SizeOf(fSelectionBuffer[By,Bx]));
         end
         else
@@ -1013,6 +1043,9 @@ var
   I, K: Integer;
   Sx, Sy, Lx, Ly: Integer;
   updateRect: TKMRect;
+  H : TKMHouse;
+  stats : TKMHouseStats;
+  HT : TKMHouseType;
 begin
   Sx := fSelectionRect.Right - fSelectionRect.Left;
   Sy := fSelectionRect.Bottom - fSelectionRect.Top;
@@ -1052,6 +1085,28 @@ begin
         gTerrain.UpdateRenderHeight(Lx, Ly);
       end;
     end;
+  If aUpdateMainLand and aUpdateAll then
+    if ptHouses in fPasteTypes then
+      for I := 0 to fSelectionHouses.Count - 1 do
+      begin
+        stats := fSelectionHouses[I];
+        Lx := fSelectionRect.Left + fSelectionHouses[I].X;
+        Ly := fSelectionRect.Top + fSelectionHouses[I].Y;
+        HT := stats.HouseType;
+        If gTerrain.CanPlaceHouseFromScript(HT, KMPoint(Lx - gRes.Houses[HT].EntranceOffsetX, Ly - gRes.Houses[HT].EntranceOffsetY)) then
+          H :=  gHands[fSelectionHouses[I].Owner].AddHouse(fSelectionHouses[I].HouseType,
+                                                        Lx,
+                                                        Ly,
+                                                        true);
+        If H <> nil then
+        begin
+          stats.FlagX := fSelectionRect.Left + stats.FlagX;
+          stats.FlagY := fSelectionRect.Top + stats.FlagY;
+          H.SetStats(stats);
+        end;
+      end;
+
+
 
   if aUpdateAll then
   begin
