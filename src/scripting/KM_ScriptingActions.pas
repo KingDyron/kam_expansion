@@ -279,9 +279,12 @@ type
     function  UnitSetInstantKill(aUnitID: Integer; isInstant: Boolean): Boolean;
     procedure UnitBlockWalking(aUnitID: Integer; aBlock : Boolean);
     //new
+    procedure DebugShowGrid(aShow : Boolean);
+
     procedure GroupSetFlagColor(aGroupID : Integer; aColor : Cardinal);
     procedure HouseSetStats(aHouseID : Integer; aStats : TKMHouseStats);
     procedure MoveCamera(aPlayer, aX, aY : Integer);
+    procedure MusicPlay(aName : String; aForceOn : Boolean);
     procedure ResetZoom(aPlayer: Integer);
 
     procedure SpecialAnimAdd(aX, aY : Single; aAnim :  array of Integer; aLoopTimes : Byte);
@@ -310,7 +313,7 @@ uses
   KM_PathFindingRoad,
   KM_Terrain,
   KM_ResTileset,
-  KM_SpecialAnim,
+  KM_SpecialAnim, KM_Music,
   KM_CommonUtils, KM_CommonClasses, KM_CommonClassesExt;
 
 const
@@ -6244,6 +6247,27 @@ procedure TKMScriptActions.WeatherSpawn(aType : TKMWeatherType; aLifeTime : Card
 begin
   try
     gGame.Weather.AddItem(aType, KMPointF(aX, aY), KMPointF(aSpeedX, aSpeedY), aLifeTime, rxTrees);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+
+end;
+
+procedure TKMScriptActions.MusicPlay(aName : String; aForceOn : Boolean);
+begin
+  try
+    gMusic.PlayTrackScript(aName, aForceOn);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
+procedure TKMScriptActions.DebugShowGrid(aShow: Boolean);
+begin
+  try
+    SHOW_TERRAIN_TILES_GRID := aShow;
   except
     gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
     raise;

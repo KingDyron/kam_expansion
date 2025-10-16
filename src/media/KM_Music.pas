@@ -98,6 +98,7 @@ type
     property Muted: Boolean read GetMuted write SetMuted;
     procedure SetPlayerVolume(aValue: Single);
 
+    procedure PlayTrackScript(aName : String; aForceOn : Boolean);
     procedure PlayMenuTrack;
     procedure PlayNextTrack;
     procedure PlayPreviousTrack;
@@ -414,6 +415,35 @@ begin
     ScanTracks(path + PathDelim);
 end;
 
+procedure TKMMusicLib.PlayTrackScript(aName: string; aForceOn: Boolean);
+var I, J : Integer;
+begin
+  if not fIsInitialized then Exit;
+  if fCount = 0 then Exit; //no music files found
+  //if fFadeState <> fsNone then Exit;
+
+  fPlaylistIndex := 0;
+  fIndex := 0;
+  for I := 0 to fCount - 1 do
+  begin
+    J := fTrackOrder[I];
+    with fPlaylists[fTracks[J].Playlist] do
+      If Tracks[fTracks[J].ID].Title = aName then
+      begin
+        fIndex := I;
+        Break;
+      end;
+  end;
+
+
+  If aForceOn then
+  begin
+    SetMuted(false);
+  end;
+  PlayTrack;
+
+
+end;
 
 procedure TKMMusicLib.PlayMenuTrack;
 var
