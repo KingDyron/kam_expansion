@@ -451,7 +451,7 @@ begin
   BufferStream := TKMemoryStreamBinary.Create;
   BufferStream.Write(Sx);
   BufferStream.Write(Sy);
-
+  fSelectionHouses.Clear;
   for I := fSelectionRect.Top to fSelectionRect.Bottom do
     for K := fSelectionRect.Left to fSelectionRect.Right do
       if gTerrain.VerticeInMapCoords(K+1, I+1) then
@@ -490,6 +490,32 @@ begin
         end;
       end;
 
+  K := fSelectionHouses.Count;
+  BufferStream.Write(K);
+  for I := 0 to fSelectionHouses.Count - 1 do
+  begin
+    stats := fSelectionHouses[I];
+    with stats do
+    begin
+      BufferStream.WriteData(ID);
+      BufferStream.WriteData(HouseType);
+      BufferStream.WriteData(X);
+      BufferStream.WriteData(Y);
+      BufferStream.WriteData(Owner);
+      BufferStream.WriteData(FlagX);
+      BufferStream.WriteData(FlagY);
+      BufferStream.WriteData(IsDestroyed);
+      BufferStream.WriteData(IsComplete);
+      BufferStream.WriteData(RepairOn);
+      BufferStream.WriteData(Damage);
+      BufferStream.WriteData(MaxHealth);
+      BufferStream.WriteData(Level);
+      BufferStream.WriteData(WareSlot);
+      Wares.Save(BufferStream);
+    end;
+  end;
+
+
   // Sx and Sy has +1 sizes of selectionRect
   if (Sx - 1)*(Sy - 1) <> 0 then
   begin
@@ -512,11 +538,13 @@ procedure TKMSelection.PasteBegin;
 var
   I, K: Integer;
   Sx, Sy: Word;
+  stats : TKMHouseStats;
   {$IFDEF WDC}
   hMem: THandle;
   BufPtr: Pointer;
   {$ENDIF}
   BufferStream: TKMemoryStream;
+
 begin
   BufferStream := TKMemoryStreamBinary.Create;
   {$IFDEF WDC}
@@ -530,6 +558,7 @@ begin
   {$IFDEF FPC}
   if not Clipboard.GetFormat(CF_MAPDATA, BufferStream) then Exit;
   {$ENDIF}
+  fSelectionHouses.Clear;
   BufferStream.Position := 0;
   BufferStream.Read(Sx);
   BufferStream.Read(Sy);
@@ -538,6 +567,30 @@ begin
   for I := 0 to Sy - 1 do
     for K := 0 to Sx - 1 do
       BufferStream.Read(fSelectionBuffer[I,K], SizeOf(fSelectionBuffer[I,K]));
+
+  BufferStream.Read(K);
+  for I := 0 to K - 1 do
+  begin
+    with stats do
+    begin
+      BufferStream.ReadData(ID);
+      BufferStream.ReadData(HouseType);
+      BufferStream.ReadData(X);
+      BufferStream.ReadData(Y);
+      BufferStream.ReadData(Owner);
+      BufferStream.ReadData(FlagX);
+      BufferStream.ReadData(FlagY);
+      BufferStream.ReadData(IsDestroyed);
+      BufferStream.ReadData(IsComplete);
+      BufferStream.ReadData(RepairOn);
+      BufferStream.ReadData(Damage);
+      BufferStream.ReadData(MaxHealth);
+      BufferStream.ReadData(Level);
+      BufferStream.ReadData(WareSlot);
+      Wares.Load(BufferStream);
+    end;
+    fSelectionHouses.Add(stats);
+  end;
   BufferStream.Free;
 
   // Mapmaker could have changed selection rect, sync it with Buffer size
@@ -1093,7 +1146,7 @@ begin
         Lx := fSelectionRect.Left + fSelectionHouses[I].X;
         Ly := fSelectionRect.Top + fSelectionHouses[I].Y;
         HT := stats.HouseType;
-        If gTerrain.CanPlaceHouseFromScript(HT, KMPoint(Lx - gRes.Houses[HT].EntranceOffsetX, Ly - gRes.Houses[HT].EntranceOffsetY)) then
+        //If gTerrain.CanPlaceHouseFromScript(HT, KMPoint(Lx - gRes.Houses[HT].EntranceOffsetX, Ly - gRes.Houses[HT].EntranceOffsetY)) then
           H :=  gHands[fSelectionHouses[I].Owner].AddHouse(fSelectionHouses[I].HouseType,
                                                         Lx,
                                                         Ly,
