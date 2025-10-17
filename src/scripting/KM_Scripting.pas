@@ -1077,6 +1077,7 @@ begin
     RegisterMethodCheck(c, 'procedure  WeatherSpawn(aType : TKMWeatherType; aLifeTime : Cardinal; aX, aY : Single; aSpeedX, aSpeedY : Single)');
     RegisterMethodCheck(c, 'procedure  MusicPlay(aName : String; aForceOn : Boolean)');
     RegisterMethodCheck(c, 'procedure  DebugShowGrid(aShow: Boolean)');
+    RegisterMethodCheck(c, 'procedure  DebugShowUnitRoutes(aShow: Boolean)');
     //*Actions-Check*//
 
     c := Sender.AddClassN(nil, AnsiString(fUtils.ClassName));
@@ -1898,6 +1899,7 @@ begin
       RegisterMethod(@TKMScriptActions.WeatherSpawn, 'WeatherSpawn');
       RegisterMethod(@TKMScriptActions.MusicPlay, 'MusicPlay');
       RegisterMethod(@TKMScriptActions.DebugShowGrid, 'DebugShowGrid');
+      RegisterMethod(@TKMScriptActions.DebugShowUnitRoutes, 'DebugShowUnitRoutes');
       //*Actions-Reg*//
     end;
 

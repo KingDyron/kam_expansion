@@ -280,6 +280,7 @@ type
     procedure UnitBlockWalking(aUnitID: Integer; aBlock : Boolean);
     //new
     procedure DebugShowGrid(aShow : Boolean);
+    procedure DebugShowUnitRoutes(aShow : Boolean);
 
     procedure GroupSetFlagColor(aGroupID : Integer; aColor : Cardinal);
     procedure HouseSetStats(aHouseID : Integer; aStats : TKMHouseStats);
@@ -6268,6 +6269,17 @@ procedure TKMScriptActions.DebugShowGrid(aShow: Boolean);
 begin
   try
     SHOW_TERRAIN_TILES_GRID := aShow;
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+
+end;
+
+procedure TKMScriptActions.DebugShowUnitRoutes(aShow: Boolean);
+begin
+  try
+    SHOW_UNIT_ROUTES := aShow;
   except
     gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
     raise;

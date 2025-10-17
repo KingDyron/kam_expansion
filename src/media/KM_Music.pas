@@ -439,6 +439,7 @@ begin
   If aForceOn then
   begin
     SetMuted(false);
+    fVolume := 0.25;
   end;
   PlayTrack;
 
