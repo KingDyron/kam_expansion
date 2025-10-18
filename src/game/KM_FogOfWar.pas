@@ -270,8 +270,8 @@ begin
           RevealOld(False, aroundRadius, FOG_OF_WAR_MAX);
       end;
     end else begin
-      RevealFor(True, Radius, Amount);
-      RevealFor(False, aroundRadius, FOG_OF_WAR_MAX);
+      RevealOld(True, Radius, Amount);
+      RevealOld(false, aroundRadius, Amount);
     end;
   finally
     FreeAndNil(aPList);
