@@ -90,11 +90,8 @@ type
     procedure GroupAllowAllyToSelect(aGroupID: Integer; aAllow: Boolean);
     procedure GroupBlockOrders(aGroupID: Integer; aBlock: Boolean);
     procedure GroupDisableHungryMessage(aGroupID: Integer; aDisable: Boolean);
-    procedure GroupHungerPaceSet(aGroupID: Integer; aPace: Cardinal);
     procedure GroupHungerSet(aGroupID, aHungerLevel: Integer);
-    procedure GroupInfiniteAmmoSet(aGroupID: Integer; aInfinity: Boolean);
     procedure GroupKillAll(aGroupID: Integer; aSilent: Boolean);
-    procedure GroupMakeHero(aGroupID: Integer; makeHero: Boolean);
     procedure GroupOrderAttackHouse(aGroupID, aHouseID: Integer);
     procedure GroupOrderAttackUnit(aGroupID, aUnitID: Integer);
     procedure GroupOrderFood(aGroupID: Integer);
@@ -123,7 +120,6 @@ type
     procedure HouseBarracksGiveRecruit(aHouseID: Integer);
     procedure HouseBarracksGiveRecruits(aHouseID, aCount: Integer);
     procedure HouseBarracksRecruitBlock(aHouseID: Integer; aBlocked: Boolean);
-    procedure HouseChangeOwner(aHouseID: Integer; aToOwner: Integer);
     procedure HouseDestroy(aHouseID: Integer; aSilent: Boolean);
     procedure HouseDeliveryBlock(aHouseID: Integer; aDeliveryBlocked: Boolean);
     procedure HouseDeliveryMode(aHouseID: Integer; aDeliveryMode: TKMDeliveryMode);
@@ -158,7 +154,6 @@ type
                                aRandomTiles, aOverrideCustomTiles: Boolean;
                                aBrushMask: TKMTileMaskKind; aBlendingLvl: Integer; aUseMagicBrush: Boolean);
 
-    procedure MapLayerLoad(aLayerName : String);
 
     function MapTileSet(X, Y, aType, aRotation: Integer): Boolean;
     function MapTilesArraySet(aTiles: array of TKMTerrainTileBrief; aRevertOnFail, aShowDetailedErrors: Boolean): Boolean;
@@ -176,31 +171,8 @@ type
     procedure OverlayTextSetFormatted(aHand: Shortint; const aText: AnsiString; aParams: array of const);
     procedure OverlayTextSetFont(aHand: Shortint; aFont: TKMFont);
     procedure OverlayTextSetWordWrap(aHand: Shortint; aWordWrap: Boolean);
-    procedure OverlayTextSetAlignToCenter(aHand: Shortint; aSet: Boolean);
-    procedure OverlayTextSetAddBevel(aHand: Shortint; aSet: Boolean);
-    procedure OverlayTextSetFromBottom(aHand: Shortint; aSet: Boolean);
-    procedure OverlayTextSetMaxWidth(aHand: Shortint; aSet: Word);
     procedure OverlayTextAppend(aHand: Shortint; const aText: AnsiString);
     procedure OverlayTextAppendFormatted(aHand: Shortint; const aText: AnsiString; aParams: array of const);
-
-    function PanelControlAdd(aPlayer : Shortint; aInfo : TKMControlInfo) : Integer;//returns button ID
-    procedure PanelControlChange(aPlayer : Shortint; aButtonID : Integer; aInfo : TKMControlInfo);
-    procedure PanelControlVisible(aPlayer : Shortint; aButtonID : Integer; aVisible : Boolean);
-    procedure PanelControlTexID(aPlayer : Shortint; aButtonID : Integer; aValue : Integer);
-    procedure PanelControlCaption(aPlayer : Shortint; aButtonID : Integer; aValue : String);
-    procedure PanelControlCaptionFormatted(aPlayer : Shortint; aButtonID : Integer; aValue : String; aParams: array of const);
-    procedure PanelControlHint(aPlayer : Shortint; aButtonID : Integer; aValue : String);
-    procedure PanelControlHintFormatted(aPlayer : Shortint; aButtonID : Integer; aValue : String; aParams: array of const);
-    procedure PanelControlRect(aPlayer : Shortint; aButtonID : Integer; X, Y, Width, Height : Integer);
-    procedure PanelControlEnabled(aPlayer : Shortint; aButtonID : Integer; aValue : Boolean);
-    procedure PanelControlAlphaStep(aPlayer : Shortint; aButtonID : Integer; aValue : Single);
-    procedure PanelResize(aPlayer : Shortint; Left,Top, Width, Height : Integer);
-    procedure PanelExpand(aPlayer : Shortint; aExpanded : Boolean);
-
-    procedure CursorCustomSet(aPlayer : Shortint; aMode : TKMCursorRenderType; aTag1, aTag2 : Integer);
-    procedure MapTileSelect(X, Y : Integer; aSelected : Boolean);
-    procedure WatchTowerRangeSet(aWatchTower : Integer; aRangeMin, aRangeMax : Single);
-    procedure WatchTowerCyclesSet(aWatchTower : Integer; aCycles : Byte);
 
 
     procedure Peacetime(aPeacetime: Cardinal);
@@ -209,13 +181,12 @@ type
     function PlanAddHouse(aHand, aHouseType, X, Y: Integer): Boolean;
     function PlanAddHouseEx(aHand: Integer; aHouseType: TKMHouseType; X, Y: Integer): Boolean;
     function PlanAddRoad(aHand, X, Y: Integer): Boolean;
-    function PlanFieldAdd(aHand, X, Y: Integer; aFIeldType : TKMLockFieldType): Boolean;
+
     function PlanAddWinefield(aHand, X, Y: Integer): Boolean;
     function PlanConnectRoad(aHand, X1, Y1, X2, Y2: Integer; aCompleted: Boolean): Boolean;
     function PlanRemove(aHand, X, Y: Integer): Boolean;
 
     procedure PlayerAllowField(const aPlayer: Integer; aFieldType : Byte; aAllow : Boolean);
-    procedure PlayerAllowFieldEx(const aPlayer: Integer; aFieldType : TKMLockFieldType; aAllow : Boolean);
     procedure PlayerAllianceChange(aHand1, aHand2: Byte; aCompliment, aAllied: Boolean);
     procedure PlayerAllianceNFogChange(aHand1, aHand2: Byte; aCompliment, aAllied, aSyncAllyFog: Boolean);
     procedure PlayerAddDefaultGoals(aHand: Byte; aBuildings: Boolean);
@@ -230,8 +201,6 @@ type
     procedure PlayerWareDistribution(aHand, aWareType, aHouseType, aAmount: Byte);
     procedure PlayerWareDistributionEx(aHand: Integer; aWareType: TKMWareType; aHouseType: TKMHouseType; aAmount: Integer);
     procedure PlayerWin(const aVictors: array of Integer; aTeamVictory: Boolean);
-    procedure PlayerUpdateEntitiesSet(const aPlayer: Integer; doUpdate: Boolean);
-    procedure PlayerAddWorkers(const aPlayer: Integer; addBoots: Boolean);
 
     function PlayWAV(aHand: ShortInt; const aFileName: AnsiString; aVolume: Single): Integer;
     function PlayWAVFadeMusic(aHand: ShortInt; const aFileName: AnsiString; aVolume: Single): Integer;
@@ -263,40 +232,81 @@ type
 
     procedure UnitAllowAllyToSelect(aUnitID: Integer; aAllow: Boolean);
     procedure UnitBlock(aHand: Byte; aType: Integer; aBlock: Boolean);
-    procedure UnitBootsSet(aUnitID: Integer; aBoots: Boolean);
     function  UnitDirectionSet(aUnitID, aDirection: Integer): Boolean;
     function  UnitDirectionSetEx(aUnitID: Integer; aDirection: TKMDirection): Boolean;
     procedure UnitDismiss(aUnitID: Integer);
     procedure UnitDismissableSet(aUnitID: Integer; aDismissable: Boolean);
     procedure UnitDismissCancel(aUnitID: Integer);
-    procedure UnitChangeSpec(aUnitID, aHPMax, aAttack, aAttackHorse, aDefence, aSpeed, aSight : Integer);
     procedure UnitHPChange(aUnitID, aHP: Integer);
     procedure UnitHPSetInvulnerable(aUnitID: Integer; aInvulnerable: Boolean);
-    procedure UnitHungerPaceSet(aUnitID: Integer; aPace: Cardinal);////////////////
     procedure UnitHungerSet(aUnitID, aHungerLevel: Integer);
     procedure UnitKill(aUnitID: Integer; aSilent: Boolean);
     function  UnitOrderWalk(aUnitID: Integer; X, Y: Integer): Boolean;
-    function  UnitSetInstantKill(aUnitID: Integer; isInstant: Boolean): Boolean;
-    procedure UnitBlockWalking(aUnitID: Integer; aBlock : Boolean);
     //new
+    procedure CursorCustomSet(aPlayer : Shortint; aMode : TKMCursorRenderType; aTag1, aTag2 : Integer);
+
     procedure DebugShowGrid(aShow : Boolean);
     procedure DebugShowUnitRoutes(aShow : Boolean);
 
     procedure GroupSetFlagColor(aGroupID : Integer; aColor : Cardinal);
+    procedure GroupMakeHero(aGroupID: Integer; makeHero: Boolean);
+    procedure GroupInfiniteAmmoSet(aGroupID: Integer; aInfinity: Boolean);
+    procedure GroupHungerPaceSet(aGroupID: Integer; aPace: Cardinal);
+
     procedure HouseSetStats(aHouseID : Integer; aStats : TKMHouseStats);
+    procedure HouseChangeOwner(aHouseID: Integer; aToOwner: Integer);
+
     procedure MoveCamera(aPlayer, aX, aY : Integer);
     procedure MusicPlay(aName : String; aForceOn : Boolean);
+
+    procedure MapTileSelect(X, Y : Integer; aSelected : Boolean);
+    procedure MapLayerLoad(aLayerName : String);
+
+    procedure OverlayTextSetAlignToCenter(aHand: Shortint; aSet: Boolean);
+    procedure OverlayTextSetAddBevel(aHand: Shortint; aSet: Boolean);
+    procedure OverlayTextSetFromBottom(aHand: Shortint; aSet: Boolean);
+    procedure OverlayTextSetMaxWidth(aHand: Shortint; aSet: Word);
+
+    function PanelControlAdd(aPlayer : Shortint; aInfo : TKMControlInfo) : Integer;//returns button ID
+    procedure PanelControlChange(aPlayer : Shortint; aButtonID : Integer; aInfo : TKMControlInfo);
+    procedure PanelControlVisible(aPlayer : Shortint; aButtonID : Integer; aVisible : Boolean);
+    procedure PanelControlTexID(aPlayer : Shortint; aButtonID : Integer; aValue : Integer);
+    procedure PanelControlCaption(aPlayer : Shortint; aButtonID : Integer; aValue : String);
+    procedure PanelControlCaptionFormatted(aPlayer : Shortint; aButtonID : Integer; aValue : String; aParams: array of const);
+    procedure PanelControlHint(aPlayer : Shortint; aButtonID : Integer; aValue : String);
+    procedure PanelControlHintFormatted(aPlayer : Shortint; aButtonID : Integer; aValue : String; aParams: array of const);
+    procedure PanelControlRect(aPlayer : Shortint; aButtonID : Integer; X, Y, Width, Height : Integer);
+    procedure PanelControlEnabled(aPlayer : Shortint; aButtonID : Integer; aValue : Boolean);
+    procedure PanelControlAlphaStep(aPlayer : Shortint; aButtonID : Integer; aValue : Single);
+    procedure PanelResize(aPlayer : Shortint; Left,Top, Width, Height : Integer);
+    procedure PanelExpand(aPlayer : Shortint; aExpanded : Boolean);
+
+    procedure PlayerAddWorkers(const aPlayer: Integer; addBoots: Boolean);
+    procedure PlayerAllowFieldEx(const aPlayer: Integer; aFieldType : TKMLockFieldType; aAllow : Boolean);
+    function PlanFieldAdd(aHand, X, Y: Integer; aFIeldType : TKMLockFieldType): Boolean;
+    procedure PlayerUpdateEntitiesSet(const aPlayer: Integer; doUpdate: Boolean);
+
     procedure ResetZoom(aPlayer: Integer);
 
     procedure SpecialAnimAdd(aX, aY : Single; aAnim :  array of Integer; aLoopTimes : Byte);
     procedure SpecialAnimAddFront(aX, aY : Single; aAnim :  array of Integer; aLoopTimes : Byte);
 
+    procedure UnitBootsSet(aUnitID: Integer; aBoots: Boolean);
+    procedure UnitBlockWalking(aUnitID: Integer; aBlock : Boolean);
+    procedure UnitChangeSpec(aUnitID, aHPMax, aAttack, aAttackHorse, aDefence, aSpeed, aSight : Integer);
+    procedure UnitHungerPaceSet(aUnitID: Integer; aPace: Cardinal);////////////////
     procedure UnitSetFlagColor(aUnitID : Integer; aColor : Cardinal);
+    function  UnitSetInstantKill(aUnitID: Integer; isInstant: Boolean): Boolean;
     procedure UnitSetRage(aUnitID, aDuration : Integer);
     procedure UnitSetStats(aUnitID : Integer; aStats : TKMUnitStats);
     procedure UnitSetThought(aUnitID : Integer; aThought : TKMUnitThought);
 
+    procedure WatchTowerRangeSet(aWatchTower : Integer; aRangeMin, aRangeMax : Single);
+    procedure WatchTowerCyclesSet(aWatchTower : Integer; aCycles : Byte);
     procedure WeatherSpawn(aType : TKMWeatherType; aLifeTime : Cardinal; aX, aY : Single; aSpeedX, aSpeedY : Single);
+
+
+
   end;
 
 

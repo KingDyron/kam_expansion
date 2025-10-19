@@ -5969,7 +5969,6 @@ begin
 end;
 
 
-// Extract one unit of stone
 function TKMTerrain.DecStoneDeposit(const aLoc: TKMPoint): Boolean;
 type
   TKMStoneTransitionType = (sttNone, sttGrass, sttCoastSand, sttDirt, sttSnow, sttSnowOnDirt, sstBarrenLand);
@@ -6166,11 +6165,10 @@ var
     UpdateTransition(X+1,Y+1, aStep + 1);
     UpdateTransition(X-1,Y+1, aStep + 1);
   end;
-
 var
   transition: TKMStoneTransitionType;
 begin
-  transition := GetStoneTransitionType(aLoc.X,aLoc.Y + 1); //Check transition type by lower point (Y + 1)
+transition := GetStoneTransitionType(aLoc.X,aLoc.Y + 1); //Check transition type by lower point (Y + 1)
 
   Result := True;
 
@@ -6223,6 +6221,7 @@ begin
   end;
 
   FlattenTerrain(aLoc, True, True); //Ignore canElevate since it can prevent stonehill from being still walkable and cause a crash
+
 end;
 
 

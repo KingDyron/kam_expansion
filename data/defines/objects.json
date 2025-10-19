@@ -3740,6 +3740,14 @@
 		"CanGrow" : false,
 		"PlaceableInEditor" : true,
 		"CanBeRemoved" : true
+	  },
+	  {
+		"AddObject" : true,
+		"ObjectID" : 473,
+		"AnimSteps" : [1490],
+		"WineOrCorn" : false,
+		"PlaceableInEditor" : true,
+		"CanBeRemoved" : false
 	  }
   ],
   "Grain Types" : [

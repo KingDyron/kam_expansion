@@ -818,7 +818,11 @@
 	{"ID": 794, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
 	{"ID": 795, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
 	{"ID": 796, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
-	{"ID": 797, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]}   
+	{"ID": 797, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
+	{"ID": 798, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkIce", "tkIce", "tkGoldMount", "tkIce"]},
+	{"ID": 799, "Walkable": true, "Roadable": false, "CornersTerKinds": ["tkIce", "tkIce", "tkGoldMount", "tkGoldMount"]},
+	{"ID": 800, "Walkable": true, "Roadable": false, "CornersTerKinds": ["tkGoldMount", "tkCustom", "tkIce", "tkGoldMount"]}  ,
+	{"ID": 801, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]}   
   ],
   "Overlays" : [
 	{"TileID": 0, "IsFirstLayer": true, "Visible": true, "ViewInGame": false, "Ware" : 0, "WareCount" : 0, "Function" : 0, "CanTree" : true, "Hint" : 0},  
