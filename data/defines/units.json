@@ -2729,7 +2729,7 @@
 			"FightType" : "ftRanged",
 			"AmmoType" : "uatArrow",
 			"MinRange" : 2.00000,
-			"MaxRange" : 8.00000,
+			"MaxRange" : 10.00000,
 			"StrikeSteps" : [5],
 			"ProducesWares" : ["wtAll"],
 			"PalaceCost" : 
