@@ -86,7 +86,13 @@ begin
           //Formula for lighting is the same as in TTerrain.RebuildLighting
           x0 := Max(K-1, 1);
           y2 := Min(I+1, fMapY);
+
+
           light := Round(EnsureRange((TileHeight - (fParser.MapPreview[K,y2].TileHeight + fParser.MapPreview[x0,I].TileHeight)/2)/22, -1, 1)*64);
+
+          If gRes.Tileset[TileID].MainColor.R + gRes.Tileset[TileID].MainColor.G + gRes.Tileset[TileID].MainColor.B = 0 then
+            light := 0;
+
 
           fBase[N] := Byte(EnsureRange(gRes.Tileset[TileID].MainColor.R+light, 0, 255)) +
                       Byte(EnsureRange(gRes.Tileset[TileID].MainColor.G+light, 0, 255)) shl 8 +
