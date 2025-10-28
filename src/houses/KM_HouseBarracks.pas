@@ -56,6 +56,7 @@ type
     Function WareAllowedToTakeOut(aWare : TKMWareType) : Boolean;
     Function WareAccepted(aWare : TKMWareType) : Boolean;
     function RecruitAccepted : Boolean;
+    function GetStats(aWares : Boolean) : TKMHouseStats; override;
   end;
 
 
@@ -527,5 +528,15 @@ begin
   SaveStream.Write(EquipTimeI);
 end;
 
+function TKMHouseBarracks.GetStats(aWares : Boolean) : TKMHouseStats;
+var W : TKMWareType;
+begin
+  Result := Inherited;
+  If aWares then
+  begin
+    for W in WARES_VALID do
+      Result.Wares.AddWare(W, CheckWareIn(W));
+  end;
+end;
 
 end.
