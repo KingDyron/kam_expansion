@@ -13,6 +13,7 @@ uses
 type
   //* Delivery mode
   TKMDeliveryMode = (dmClosed, dmDelivery, dmTakeOut);
+
 const
   DELIVERY_MODE_SPRITE: array [TKMDeliveryMode] of Word = (38, 37, 664);
   FOOD_TO_ROT = 6000;
@@ -163,7 +164,8 @@ type
     fLastOrderProduced: Byte;
 //    fWareOrderDesired: array [1..4] of Single;
     fResetDemands : Boolean;
-    fIsOnSnow: Boolean;
+
+    fIsOnTerrain: TKMTerrPicType;
     fSnowStep: Single;
 
     fIsDestroyed: Boolean;
@@ -191,7 +193,7 @@ type
     fIsBurning : Byte;
     fWasTookOver : Boolean;
     fBuildCost : TKMHouseBuildCost;
-    procedure CheckOnSnow;
+    procedure CheckOnTerrain;
     function GetWareInArray: TKMByteArray;
     function GetWareOutArray: TKMByteArray;
     function GetWareOutPoolArray: TKMByteArray;
@@ -257,7 +259,7 @@ type
     procedure MakeSound; virtual; //Swine/stables make extra sounds
     property Tick : Cardinal read fTick;
     property SnowStep : Single read fSnowStep write fSnowStep;
-    property IsOnSnow : Boolean read fIsOnSnow write fIsOnSnow;
+    property OnTerrain : TKMTerrPicType read fIsOnTerrain write fIsOnTerrain;
     property ResetDemands : Boolean read fResetDemands write fResetDemands;
     procedure FinishedLevel(aLevel : Byte); virtual;
     procedure SetLevel(aValue : Byte); virtual;
@@ -1311,7 +1313,7 @@ begin
     gTerrain.SetHouse(self, Owner, hsFence); //Terrain remains neutral yet
 
   //Built houses accumulate snow slowly, pre-placed houses are already covered
-  CheckOnSnow;
+  CheckOnTerrain;
   fSnowStep := Byte(aBuildState = hbsDone);
   WorkingTime := 0;
   TotalWorkingTime := 0;
@@ -1391,7 +1393,7 @@ begin
   LoadStream.Read(fLastOrderProduced);
   LoadStream.Read(FlagAnimStep);
   LoadStream.Read(WorkAnimStep);
-  LoadStream.Read(fIsOnSnow);
+  LoadStream.ReadData(fIsOnTerrain);
   LoadStream.Read(fSnowStep);
   LoadStream.Read(fIsDestroyed);
   LoadStream.Read(fTimeSinceUnoccupiedReminder);
@@ -1656,7 +1658,8 @@ end;
 //Set house to new position
 procedure TKMHouse.UpdatePosition(const aPos: TKMPoint);
 var
-  wasOnSnow, isRallyPointSet: Boolean;
+  wasOnSnow : TKMTerrPicType;
+  isRallyPointSet: Boolean;
 begin
   Assert(gGameParams.IsMapEditor);
 
@@ -1694,9 +1697,9 @@ begin
 
 
   //Do not remove all snow if house is moved from snow to snow
-  wasOnSnow := fIsOnSnow;
-  CheckOnSnow;
-  if not wasOnSnow or not fIsOnSnow then
+  wasOnSnow := fIsOnTerrain;
+  CheckOnTerrain;
+  if not (wasOnSnow <> tptNone) or not (fIsOnTerrain <> tptNone) then
     fSnowStep := 0;
 end;
 
@@ -2740,7 +2743,7 @@ end;
 
 function TKMHouse.GetSnowPic : Integer;
 begin
-  Result := gRes.Houses[fType].SnowPic;
+  Result := gRes.Houses[fType].TerrPic[fIsOnTerrain];
 
 
   if (fStyle > 0) and (gRes.Houses[fType].Styles[fStyle - 1].SnowPic > 0)  then
@@ -3315,25 +3318,30 @@ end;
 
 
 // Check if house is placed mostly on snow
-procedure TKMHouse.CheckOnSnow;
+procedure TKMHouse.CheckOnTerrain;
 var
   I: Integer;
-  snowTiles, noSnowTiles: Integer;
+  terrTiles : array[TKMTerrPicType] of Word;
   cells: TKMPointTagList;
+  tpt : TKMTerrPicType;
 begin
   cells := TKMPointTagList.Create;
 
   GetListOfGroundVisibleCells(cells);
 
-  snowTiles := 0;
-  noSnowTiles := 0;
-  for I := 0 to cells.Count - 1 do
-    if gTerrain.TileIsSnow(cells[I].X, cells[I].Y) then
-      Inc(snowTiles, cells.Tag[I])
-    else
-      Inc(noSnowTiles, cells.Tag[I]);
+  for tpt := Low(TKMTerrPicType) to High(TKMTerrPicType) do
+    terrTiles[tpt] := 0;
 
-  fIsOnSnow := snowTiles > noSnowTiles;
+  for I := 0 to cells.Count - 1 do
+    Inc(terrTiles[gTerrain.TileHouseTerrain(cells[I].X, cells[I].Y)]);
+    {if gTerrain.TileIsSnow(cells[I].X, cells[I].Y) then
+      Inc(terrTiles, cells.Tag[I])
+    else
+      Inc(noTerrTiles, cells.Tag[I]);}
+  fIsOnTerrain := tptNone;
+  for tpt := tptSnow to High(TKMTerrPicType) do
+    If terrTiles[tpt] >  terrTiles[tptNone] then
+      fIsOnTerrain := tpt;
 
   cells.Free;
 end;
@@ -4442,7 +4450,7 @@ begin
   SaveStream.Write(fLastOrderProduced);
   SaveStream.Write(FlagAnimStep);
   SaveStream.Write(WorkAnimStep);
-  SaveStream.Write(fIsOnSnow);
+  SaveStream.WriteData(fIsOnTerrain);
   SaveStream.Write(fSnowStep);
   SaveStream.Write(fIsDestroyed);
   SaveStream.Write(fTimeSinceUnoccupiedReminder);
@@ -4506,16 +4514,16 @@ const
   //How much ticks it takes for a house to become completely covered in snow
   SNOW_TIME = 600;
 var
-  wasOnSnow: Boolean;
+  wasOnSnow: TKMTerrPicType;
 begin
   if (FlagAnimStep mod 10 = 0) and gGameParams.IsMapEditor then
   begin
-    wasOnSnow := fIsOnSnow;
-    CheckOnSnow;
-    if not wasOnSnow or not fIsOnSnow then
+    wasOnSnow := fIsOnTerrain;
+    CheckOnTerrain;
+    if not (wasOnSnow <> tptNone) or not (fIsOnTerrain <> tptNone) then
       fSnowStep := 0;
   end;
-  if fIsOnSnow and (fSnowStep < 1) then
+  if (fIsOnTerrain <> tptNone) and (fSnowStep < 1) then
     fSnowStep := Min(fSnowStep + (1 + Byte(gGameParams.IsMapEditor) * 10) / SNOW_TIME, 1);
 end;
 
@@ -4895,7 +4903,7 @@ begin
                   //Incase we need to render house at desired step in debug mode
                   if HOUSE_BUILDING_STEP = 0 then
                   begin
-                    if fIsOnSnow then
+                    if fIsOnTerrain <> tptNone then
                       gRenderPool.AddHouse(fType, fPosition, 1, 1, fSnowStep, -1, GetStonePic, GetSnowPic, false, false, 0)
                     else
                       gRenderPool.AddHouse(fType, fPosition, 1, 1, 0, -1, GetStonePic, -1, false, false, 0);

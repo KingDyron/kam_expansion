@@ -91,6 +91,7 @@ type
   TKMWareType8 = array [1..WARES_IN_OUT_COUNT] of TKMWareType;//now lets make it more wares
   TKMHouseAreaNew = array [1..MAX_HOUSE_SIZE, 1..MAX_HOUSE_SIZE] of Byte;
   THouseSupply8 = array [1..WARES_IN_OUT_COUNT, 1..5] of SmallInt;
+  TKMTerrPicType = (tptNone, tptSnow, tptSand);
 
   TKMHouseSound = record
     ID : Integer;

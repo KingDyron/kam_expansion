@@ -264,6 +264,7 @@ type
     ReloadJsonData1: TMenuItem;
     btStartRecording: TButton;
     btSaveRecording: TButton;
+    HousePics1: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -354,6 +355,7 @@ type
     procedure ReloadJsonData1Click(Sender: TObject);
     procedure btStartRecordingClick(Sender: TObject);
     procedure btSaveRecordingClick(Sender: TObject);
+    procedure HousePics1Click(Sender: TObject);
   private
     {$IFDEF MSWindows}
     fMenuItemHint: TKMVclMenuItemHint; // Custom hint over menu item
@@ -2234,6 +2236,11 @@ begin
   fResExporter.ExportSpritesFromRXAToPNG(rxTrees, ExportDone);
 end;
 
+
+procedure TFormMain.HousePics1Click(Sender: TObject);
+begin
+  fResExporter.ExportHouseMainPics(ExportDone);
+end;
 
 procedure TFormMain.Housesrxa1Click(Sender: TObject);
 begin

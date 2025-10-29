@@ -263,7 +263,7 @@ const
   //How much ticks it takes for a house to become completely covered in snow
   SNOW_TIME = 1200;
 begin
-  if IsOnSnow then
+  if OnTerrain = tptSnow then
   begin
     if (fSnowStepPearl < 1) then
       fSnowStepPearl := Min(fSnowStepPearl + (1 + Byte(gGameParams.IsMapEditor) * 10) / SNOW_TIME, 1)

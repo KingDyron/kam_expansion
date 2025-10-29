@@ -37,6 +37,7 @@ type
     procedure ExportTreeAnim(aOnDone: TProc<String>);
     procedure ExportHouseAnimHD(aOnDone: TProc<String>);
     procedure ExportHouseAnim(aOnDone: TProc<String>);
+    procedure ExportHouseMainPics(aOnDone: TProc<String>);
     procedure ExportUnitAnimHD(aUnitFrom, aUnitTo: TKMUnitType; aExportThoughts, aExportUnused: Boolean; aOnDone: TProc<String>);
     procedure ExportUnitAnim(aUnitFrom, aUnitTo: TKMUnitType; aExportUnused: Boolean; aOnDone: TProc<String>);
     procedure ExportSpritesFromRXXToPNG(aRT: TRXType; aOnDone: TProc<String>);
@@ -564,7 +565,7 @@ begin
 
           fullFolderPath := folderPath + resTexts.DefaultTexts[houses[HT].HouseNameTextID] + PathDelim + HOUSE_ACTION_STR[ACT] + PathDelim;
           ForceDirectories(fullFolderPath);
-          for K := 1 to houses[HT].Anim[ACT].Count do
+          for K := 0 to houses[HT].Anim[ACT].Count - 1 do
           begin
             origSpriteID := houses[HT].Anim[ACT].Step[K] + 1;
             if origSpriteID <> 0 then
@@ -606,6 +607,99 @@ begin
     end;
   end, aOnDone, 'Export house anim');
 end;
+
+//Export Houses graphics categorized by House and Action
+procedure TKMResExporter.ExportHouseMainPics(aOnDone: TProc<String>);
+begin
+  // Make sure we loaded all of the resources (to avoid collisions with async res loader
+  gRes.LoadGameResources(True);
+
+  // Asynchroniously export data
+  GetOrCreateExportWorker.QueueWork(procedure
+  var
+    StonePath, WoodPath, SnowPath, folderPath: string;
+    houses: TKMResHouses;
+    HT: TKMHouseType;
+    origSpriteID: Integer;
+    spritePack: TKMSpritePack;
+    sprites: TKMResSprites;
+    tpt : TKMTerrPicType;
+    I : Integer;
+    pearl : TKMPearlType;
+  begin
+    sprites := TKMResSprites.Create(nil, nil, True);
+    sprites.LoadSprites(rxHouses, true); //BMP can't show alpha shadows anyways
+    spritePack := sprites[rxHouses];
+
+    folderPath := ExeDir + 'Export' + PathDelim + 'HousePics' + PathDelim;
+    ForceDirectories(folderPath);
+    houses := gRes.Houses;
+    try
+      WoodPath := folderPath + 'WoodPics' + PathDelim;
+      ForceDirectories(WoodPath);
+      StonePath := folderPath + 'StonePics' + PathDelim;
+      ForceDirectories(StonePath);
+      SnowPath := folderPath + 'SnowPics' + PathDelim;
+      ForceDirectories(SnowPath);
+      for HT := HOUSE_MIN to HOUSE_MAX do
+      begin
+
+        //woodpic
+        origSpriteID := houses[HT].WoodPic + 1;
+        spritePack.ExportFullImageData(WoodPath, origSpriteID);
+        //stonepic
+        origSpriteID := houses[HT].StonePic + 1;
+        spritePack.ExportFullImageData(StonePath, origSpriteID);
+        //snowpics
+        for tpt := tptSnow to High(TKMTerrPicType) do
+        begin
+          origSpriteID := houses[HT].TerrPic[tpt] + 1;
+          if origSpriteID > 1000 then
+            spritePack.ExportFullImageData(SnowPath, origSpriteID);
+        end;
+
+        for I := 0 to High(houses[HT].Levels) do
+        begin
+          origSpriteID := houses[HT].Levels[I].StonePic + 1;
+          If origSpriteID > 1 then spritePack.ExportFullImageData(StonePath, origSpriteID);
+
+          origSpriteID := houses[HT].Levels[I].SnowPic + 1;
+          If origSpriteID > 1 then spritePack.ExportFullImageData(SnowPath, origSpriteID);
+        end;
+
+        for I := 0 to High(houses[HT].Styles) do
+        begin
+          origSpriteID := houses[HT].Styles[I].StonePic + 1;
+          If origSpriteID > 1 then spritePack.ExportFullImageData(StonePath, origSpriteID);
+
+          origSpriteID := houses[HT].Styles[I].SnowPic + 1;
+          If origSpriteID > 1 then spritePack.ExportFullImageData(SnowPath, origSpriteID);
+        end;
+        // Stop export if async thread is terminated by application
+        if TThread.CheckTerminated then Exit;
+      end;
+
+      for pearl := ptValtaria to High(TKMPearlType) do
+      begin
+        for I := 0 to High(houses.Pearls[pearl].StagePics) do
+        begin
+          origSpriteID := houses.Pearls[pearl].StagePics[I] + 1;
+          If origSpriteID > 1 then spritePack.ExportFullImageData(WoodPath, origSpriteID);
+        end;
+
+        origSpriteID := houses.Pearls[pearl].SnowPic;
+        If origSpriteID > 1 then spritePack.ExportFullImageData(SnowPath, origSpriteID);
+
+      end;
+
+
+    finally
+      //houses.Free;
+      sprites.Free;
+    end;
+  end, aOnDone, 'Export houses main pics');
+end;
+
 
 
 procedure TKMResExporter.ExportImageFromAtlas(aSpritePack: TKMSpritePack; aSpriteID: Integer; const aFilePath: string; const aFileMaskPath: string = '');

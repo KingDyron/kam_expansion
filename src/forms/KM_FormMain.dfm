@@ -1787,6 +1787,10 @@ object FormMain: TFormMain
           Caption = 'House Anim'
           OnClick = mnExportHouseAnimClick
         end
+        object HousePics1: TMenuItem
+          Caption = 'HousePics'
+          OnClick = HousePics1Click
+        end
         object mnExportUnitAnim: TMenuItem
           Caption = 'Unit Anim'
           object mnExportUnitAnimAll: TMenuItem

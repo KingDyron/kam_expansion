@@ -36,7 +36,7 @@ type
 
   //House fields as they are in a DAT file
   TKMHouseDat = packed record
-    StonePic, WoodPic, SnowPic: Word;
+    StonePic, WoodPic{, SnowPic}: Word;
     Anim: THouseAnim;
     EntranceOffsetX, EntranceOffsetY: ShortInt;
     EntranceOffsetXpx, EntranceOffsetYpx: ShortInt; //When entering house units go for the door, which is offset by these values
@@ -46,6 +46,7 @@ type
     NeedsPlayerOrder : Boolean;
     BuildIcon : Word;
     TabletID : Word;
+    TerrPic : array[tptSnow..high(TKMTerrPicType)] of Word;
   end;
 
   // This class wraps KaM House info
@@ -82,6 +83,7 @@ type
     function GetMaxWareOutCount : Word;
     function GetHouseDescription : UnicodeString;
     procedure AddWorker(aType : TKMUnitType; aCount : Byte);
+    function GetTerrPic(aType : TKMTerrPicType) : Word;
   public
     Sound : array[haWork1..haWork5] of TKMHouseSound;
 
@@ -113,6 +115,7 @@ type
 
     property StonePic: Word read fHouseDat.StonePic;
     property WoodPic: Word read fHouseDat.WoodPic;
+    property TerrPic[aType : TKMTerrPicType] : Word read GetTerrPic;
     property SupplyIn: THouseSupply8 read fSupplyIn;
     property SupplyOut: THouseSupply8 read fSupplyOut;
     property Anim: THouseAnim read fHouseDat.Anim;
@@ -144,7 +147,7 @@ type
     property WareOutput: TKMWareType8 read GetWareOutput;
     property TabletIcon: Word read fHouseDat.TabletID;
     property UnoccupiedMsgId: SmallInt read fUnoccupiedMsgId;
-    property SnowPic: Word read fHouseDat.SnowPic;
+    //property SnowPic: Word read fHouseDat.SnowPic;
     property HasWariants: Byte read HasStoneWariants;
     property GatheringScript : TKMGatheringScript read fGatheringScript;
     property MaxWareCount : Word read GetMaxWareCount;
@@ -485,6 +488,14 @@ begin
 
   Workers[high(Workers)].UnitType := aType;
   Workers[high(Workers)].Count := aCount;
+end;
+
+function TKMHouseSpec.GetTerrPic(aType : TKMTerrPicType) : Word;
+begin
+  If aType = tptNone then
+    Exit(0)
+  else
+    Result := fHouseDat.TerrPic[aType];
 end;
 
 function TKMHouseSpec.GetGUIWorkerType: TKMUnitType;
@@ -944,11 +955,19 @@ begin
           SetValue(Sight, nHouse.I['Sight'], nHouse.Contains('Sight'));
           SetValue(fMaxInWares, nHouse.I['MaxInWares'], nHouse.Contains('MaxInWares'));
           SetValue(fMaxOutWares, nHouse.I['MaxOutWares'], nHouse.Contains('MaxOutWares'));
-          SetValue(SnowPic, nHouse.I['SnowPic'], nHouse.Contains('SnowPic'));
+          //SetValue(SnowPic, nHouse.I['SnowPic'], nHouse.Contains('SnowPic'));
           SetValue(NeedsPlayerOrder, nHouse.B['NeedsPlayerOrder'], nHouse.Contains('NeedsPlayerOrder'));
           SetValue(BuildIcon, nHouse.I['BuildIcon'], nHouse.Contains('BuildIcon'));
           SetValue(TabletID, nHouse.I['TabletID'], nHouse.Contains('TabletID'));
         end;
+
+        nAR := nHouse.A['TerrPics'];
+
+        for K := 0 to Min(nAR.Count - 1, 1) do
+        begin
+          fHouseDat.TerrPic[TKMTerrPicType(K + 1)] := nAr.I[K];
+        end;
+
 
         SetValue(fCanForceWork, nHouse.B['CanForceWork'], nHouse.Contains('CanForceWork'));
         SetValue(fUnoccupiedMsgID, nHouse.I['UnoccupiedMsgId'], nHouse.Contains('UnoccupiedMsgId'));
@@ -1409,7 +1428,7 @@ begin
             root.Write('MaxHealth', MaxHealth);
             root.Write('WoodPic', WoodPic);
             root.Write('StonePic', StonePic);
-            root.Write('SnowPic', SnowPic);
+            //root.Write('SnowPic', SnowPic);
             root.Write('WoodCost', WoodCost);
             root.Write('StoneCost', StoneCost);
             root.Write('TileCost', fTileCost);
