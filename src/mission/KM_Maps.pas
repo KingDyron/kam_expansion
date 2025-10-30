@@ -1091,7 +1091,8 @@ begin
   Weather.SetDefault;
 end;
 
-
+//old saving
+//new is in json format
 procedure TKMMapTxtInfo.SaveTXTInfo(const aFilePath: String);
 var
   St: String;
@@ -1209,6 +1210,8 @@ begin
 end;
 
 
+//old
+//new is in json
 procedure TKMMapTxtInfo.LoadTXTInfo(const aFilePath: String);
 
   function LoadDescriptionFromLIBX(aIndex: Integer): UnicodeString;

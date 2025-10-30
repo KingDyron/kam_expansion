@@ -506,6 +506,7 @@ begin
     Weather.NightSpeed          := nWeather.Attributes['NightSpeed'].AsInteger(10);
     Weather.NightTime           := nWeather.Attributes['NightTime'].AsInteger(0);
     Weather.DynamicLight        := nWeather.Attributes['DynamicLight'].AsBoolean(true);
+    Weather.DynamicShadow        := nWeather.Attributes['DynamicShadow'].AsBoolean(true);
 
   // GameCommon
   nGameCommon := nGameSettings.AddOrFindChild('GameCommon');
@@ -739,6 +740,7 @@ begin
     nWeather.Attributes['NightSpeed']     := Weather.NightSpeed;
     nWeather.Attributes['NightTime']      := Weather.NightTime;
     nWeather.Attributes['DynamicLight']   := Weather.DynamicLight;
+    nWeather.Attributes['DynamicShadow']   := Weather.DynamicShadow;
 
   // GameCommon
   nGameCommon := nGameSettings.AddOrFindChild('GameCommon');

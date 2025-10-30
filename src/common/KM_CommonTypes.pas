@@ -214,6 +214,7 @@ type
     DecParticles, NightTime : Integer;
     NightSpeed: Byte;
     DynamicLight : Boolean;
+    DynamicShadow : Boolean;
     procedure SetDefault;
     procedure SetRealism;
     function Copy : TKMSettingsWeather;
@@ -748,6 +749,7 @@ begin
   NightSpeed := 10;
   NightTime := 7;
   DynamicLight := true;
+  DynamicShadow := true;
 end;
 
 procedure TKMSettingsWeather.SetRealism;
@@ -764,6 +766,7 @@ begin
   NightSpeed := 10;
   NightTime := 7;
   DynamicLight := true;
+  DynamicShadow := true;
 end;
 
 function TKMSettingsWeather.Copy: TKMSettingsWeather;
@@ -780,6 +783,7 @@ begin
   Result.NightSpeed := NightSpeed;
   Result.NightTime := NightTime;
   Result.DynamicLight := DynamicLight;
+  Result.DynamicShadow := DynamicShadow;
 end;
 
 end.

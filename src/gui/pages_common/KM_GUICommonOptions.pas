@@ -109,6 +109,7 @@ type
           TrackBar_DecParticles: TKMNumericEdit;
           TrackBar_NightSpeed, TrackBar_NightTime: TKMTrackBar;
           CheckBox_DynamicLight: TKMCheckBox;
+          CheckBox_DynamicShadow: TKMCheckBox;
 
 
       Panel_Sound: TKMPanel;
@@ -668,6 +669,10 @@ begin
     CheckBox_DynamicLight.OnClick := Change;
     CheckBox_DynamicLight.Hint := gResTexts[2100];
 
+    CheckBox_DynamicShadow := TKMCheckBox.Create(Panel_Weather,Panel_Weather.Width div 2 + 6,175,250,20,gResTexts[2310], fntGrey);
+    CheckBox_DynamicShadow.OnClick := Change;
+    CheckBox_DynamicShadow.Hint := gResTexts[2311];
+
   Panel_Weather.Hide;
 end;
 
@@ -765,6 +770,7 @@ begin
     TrackBar_NightSpeed.Position := gGameSettings.Weather.NightSpeed;
     TrackBar_NightTime.Position := gGameSettings.Weather.NightTime;
     CheckBox_DynamicLight.Checked  := gGameSettings.Weather.DynamicLight;
+    CheckBox_DynamicShadow.Checked  := gGameSettings.Weather.DynamicShadow;
   end
   else
   // Only in Game
@@ -893,6 +899,7 @@ begin
     gGameSettings.Weather.NightSpeed := TrackBar_NightSpeed.Position;
     gGameSettings.Weather.NightTime := TrackBar_NightTime.Position;
     gGameSettings.Weather.DynamicLight := CheckBox_DynamicLight.Checked;
+    gGameSettings.Weather.DynamicShadow := CheckBox_DynamicShadow.Checked;
 
 
     TrackBar_MaxInterval.ValueMin := TrackBar_MinInterval.Value + 1;

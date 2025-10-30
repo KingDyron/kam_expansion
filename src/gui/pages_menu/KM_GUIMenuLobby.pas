@@ -226,6 +226,7 @@ type
             TrackBar_MaxCloudSpeed: TKMNumericEdit;
             TrackBar_DecParticles: TKMNumericEdit;
             TrackBar_NightSpeed, TrackBar_NightTime: TKMTrackBar;
+            CheckBox_DynamicShadow,
             CheckBox_DynamicLight: TKMCheckBox;
 
           DropBox_MissionMode : TKMDropList;
@@ -873,6 +874,10 @@ begin
     CheckBox_DynamicLight := TKMCheckBox.Create(Panel_Weather,Panel_Weather.Width div 2 + 6,140,200,20,gResTexts[2099], fntGrey);
     CheckBox_DynamicLight.OnClick := WeatherChange;
     CheckBox_DynamicLight.Hint := gResTexts[2100];
+
+    CheckBox_DynamicShadow := TKMCheckBox.Create(Panel_Weather,Panel_Weather.Width div 2 + 6,175,250,20,gResTexts[2310], fntGrey);
+    CheckBox_DynamicShadow.OnClick := WeatherChange;
+    CheckBox_DynamicShadow.Hint := gResTexts[2311];
 
 end;
 
@@ -3381,6 +3386,7 @@ begin
   fWeather.NightSpeed := TrackBar_NightSpeed.Position;
   fWeather.NightTime := TrackBar_NightTime.Position;
   fWeather.DynamicLight := CheckBox_DynamicLight.Checked;
+  fWeather.DynamicShadow := CheckBox_DynamicShadow.Checked;
   GameOptionsChange(nil);
 end;
 
@@ -3397,6 +3403,7 @@ begin
   TrackBar_NightSpeed.Position  := fWeather.NightSpeed;
   TrackBar_NightTime.Position   := fWeather.NightTime;
   CheckBox_DynamicLight.Checked := fWeather.DynamicLight;
+  CheckBox_DynamicShadow.Checked := fWeather.DynamicShadow;
 
   RefreshWeatherControls;
 end;
