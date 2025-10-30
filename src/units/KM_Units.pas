@@ -1790,9 +1790,9 @@ var I : integer;
 begin
   for I := 0 to High(fGroupsToFeed) do
   begin
-    gHands.CleanUpGroupPointer(TKMUnitGroup(fGroupsToFeed[I].Group) );
     TKMUnitGroup(fGroupsToFeed[I].Group).FoodRequested := false;
     TKMUnitGroup(fGroupsToFeed[I].Group).OrderFood(true);
+    gHands.CleanUpGroupPointer(TKMUnitGroup(fGroupsToFeed[I].Group) );
   end;
   Inherited;
 end;

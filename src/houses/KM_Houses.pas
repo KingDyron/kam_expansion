@@ -2745,12 +2745,12 @@ function TKMHouse.GetSnowPic : Integer;
 begin
   Result := gRes.Houses[fType].TerrPic[fIsOnTerrain];
 
-
-  if (fStyle > 0) and (gRes.Houses[fType].Styles[fStyle - 1].SnowPic > 0)  then
-    Result := gRes.Houses[fType].Styles[fStyle - 1].SnowPic
-  else
-  if (fLevel.CurrentLevel > 0) and (gRes.Houses[fType].Levels[fLevel.CurrentLevel - 1].SnowPic > 0) then
-    Result := gRes.Houses[fType].Levels[fLevel.CurrentLevel - 1].SnowPic;
+  If fIsOnTerrain = tptSnow then
+    if (fStyle > 0) and (gRes.Houses[fType].Styles[fStyle - 1].SnowPic > 0)  then
+      Result := gRes.Houses[fType].Styles[fStyle - 1].SnowPic
+    else
+    if (fLevel.CurrentLevel > 0) and (gRes.Houses[fType].Levels[fLevel.CurrentLevel - 1].SnowPic > 0) then
+      Result := gRes.Houses[fType].Levels[fLevel.CurrentLevel - 1].SnowPic;
 
   if Result < 1000 then
     Result := -1;
