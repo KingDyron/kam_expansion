@@ -2954,7 +2954,7 @@ var
   rX, rY: Single;
 begin
   // Skip rendering if alphas are zero (occurs so non-started houses can still have child sprites)
-  if (aWoodProgress = 0) and (aStoneProgress = 0) then Exit;
+  if ((aWoodProgress = 0) and (aStoneProgress = 0)) or aShadow then Exit;
 
   tX := EnsureRange(Round(aX), 1, gTerrain.MapX) - 1;
   tY := EnsureRange(Round(aY), 1, gTerrain.MapY) - 1;
@@ -2982,10 +2982,10 @@ begin
     glBlendFunc(GL_ONE, GL_ZERO);
 
     // Wood progress
-    glAlphaFunc(GL_GREATER, 1 - aWoodProgress);
+    glAlphaFunc(GL_GEQUAL, 1 - aWoodProgress);
     with gGFXData[aRX,aId] do
     begin
-      glColor3f(1, 1, 1);
+      glColor4f(1, 1, 1, 1);
       TKMRender.BindTexture(Alt.TexID);
       glBegin(GL_QUADS);
         glTexCoord2f(Alt.u1,Alt.v2); glVertex2f(rX                     , rY         );
@@ -3001,10 +3001,10 @@ begin
     begin
       glStencilOp(GL_DECR, GL_DECR, GL_DECR);
 
-      glAlphaFunc(GL_GREATER, 1 - aStoneProgress);
+      glAlphaFunc(GL_GEQUAL, 1 - aStoneProgress);
         with gGFXData[aRX,aId2] do
         begin
-          glColor3f(1, 1, 1);
+          glColor4f(1, 1, 1, 1);
           TKMRender.BindTexture(Alt.TexID);
           glBegin(GL_QUADS);
             glTexCoord2f(Alt.u1,Alt.v2); glVertex2f(X2                     ,Y2         );
@@ -3149,7 +3149,7 @@ var
   rX, rY: Single;
 begin
   // Skip rendering if alphas are zero (occurs so non-started houses can still have child sprites)
-  if (aWoodProgress = 0) and (aStoneProgress = 0) then Exit;
+  if ((aWoodProgress = 0) and (aStoneProgress = 0)) or aShadow then Exit;
 
   tX := EnsureRange(Round(aX), 1, gTerrain.MapX) - 1;
   tY := EnsureRange(Round(aY), 1, gTerrain.MapY) - 1;
@@ -3177,10 +3177,10 @@ begin
     glBlendFunc(GL_ONE, GL_ZERO);
 
     // Wood progress
-    glAlphaFunc(GL_GREATER, 1 - aWoodProgress);
+    glAlphaFunc(GL_GEQUAL, 1 - aWoodProgress);
     with gGFXData[aRX,aId] do
     begin
-      glColor3f(1, 1, 1);
+          glColor3f(1, 1, 1);
       TKMRender.BindTexture(Alt.TexID);
       glBegin(GL_QUADS);
         glTexCoord2f(Alt.u1,Alt.v2); glVertex2f(rX                     , rY         );
@@ -3196,7 +3196,7 @@ begin
     begin
       glStencilOp(GL_DECR, GL_DECR, GL_DECR);
 
-      glAlphaFunc(GL_GREATER, 1 - aStoneProgress);
+      glAlphaFunc(GL_GEQUAL, 1 - aStoneProgress);
         with gGFXData[aRX,aId2] do
         begin
           glColor3f(1, 1, 1);
@@ -3225,7 +3225,7 @@ begin
   with gGFXData[aRX,aId] do
   begin
     // FOW is rendered over the top so no need to make sprites black anymore
-    glColor4f(1 * aNight, 1 * aNight, 1 * aNight, 1);
+    glColor3f(1 * aNight, 1 * aNight, 1 * aNight);
 
     TKMRender.BindTexture(Tex.TexID);
     glBegin(GL_QUADS);

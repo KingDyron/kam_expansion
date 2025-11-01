@@ -83,7 +83,7 @@
 			"MaxHealth" : 350,
 			"WoodPic" : 1,
 			"StonePic" : 0,
-			"TerrPics": [ 2050 ],
+			"TerrPics": [ 2050, 3017],
 			"WoodCost" : 4,
 			"StoneCost" : 3,
 			"TileCost" : 0,

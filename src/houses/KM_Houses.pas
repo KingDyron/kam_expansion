@@ -4881,19 +4881,20 @@ begin
 
                   end;
 
-                  gRenderPool.AddHouse(fType, fPosition, progress, stoneProgress, 0, GetWoodPic, GetStonePic, -1, false, false, 0);
+                  gRenderPool.AddHouse(fType, fPosition, progress, stoneProgress, 0, GetWoodPic, GetStonePic, -1);
                   gRenderPool.AddHouseBuildSupply(fType, fPosition, fBuildSupplyWood, fBuildSupplyStone, fBuildSupplyTile);
                 end;
     else
                 if IsUpgrading then
                 begin
-                  progress := (1 - fLevel.BuildingProgress / gRes.Houses[fType].Levels[fLevel.CurrentLevel].Progress);
+                  progress := 1 - EnsureRange(fLevel.BuildingProgress / gRes.Houses[fType].Levels[fLevel.CurrentLevel].Progress, 0, 1);
                   if fLevel.CurrentLevel > 0 then
                   begin
                     gRenderPool.AddHouse(fType, fPosition, 1, progress, 0, gRes.Houses[fType].Levels[fLevel.CurrentLevel - 1].StonePic, gRes.Houses[fType].Levels[fLevel.CurrentLevel].StonePic, -1, false, false, 0);
                     gRenderPool.AddHouseBuildSupply(fType, fPosition, fBuildSupplyWood, fBuildSupplyStone, fBuildSupplyTile);
                   end else
                   begin
+                    //gRenderPool.AddHouse(fType, fPosition, 1, 1, progress, GetStonePic, gRes.Houses[fType].Levels[fLevel.CurrentLevel].StonePic, -1, false, false, 0);
                     gRenderPool.AddHouse(fType, fPosition, 1, progress, 0, GetStonePic, gRes.Houses[fType].Levels[fLevel.CurrentLevel].StonePic, -1, false, false, 0);
                     gRenderPool.AddHouseBuildSupply(fType, fPosition, fBuildSupplyWood, fBuildSupplyStone, fBuildSupplyTile);
                   end;
