@@ -864,8 +864,8 @@ begin
   if IsMenu then
   begin
     gMainSettings.VSync        := CheckBox_VSync.Checked;
-    gGameSettings.GFX.AlphaShadows := CheckBox_ShadowQuality.Checked;
-
+    //gGameSettings.GFX.AlphaShadows := CheckBox_ShadowQuality.Checked;
+    gGameSettings.GFX.AlphaShadows := true;
     // Menu options
     SetupVSync(gMainSettings.VSync);
 

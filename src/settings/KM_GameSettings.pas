@@ -474,7 +474,7 @@ begin
     GFX.Brightness     := nGFX.Attributes['Brightness'].AsInteger(1);
     GFX.AlphaShadows   := nGFX.Attributes['AlphaShadows'].AsBoolean(True);
     GFX.LoadFullFonts  := nGFX.Attributes['LoadFullFonts'].AsBoolean(False);
-
+    GFX.AlphaShadows := true;
   // SFX
   nSFX := nGameSettings.AddOrFindChild('SFX');
     SFX.SoundFXVolume  := nSFX.Attributes['Volume'].AsFloat(0.5);
