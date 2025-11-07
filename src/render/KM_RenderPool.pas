@@ -160,7 +160,8 @@ type
     procedure AddHouseWork(aHouse: TKMHouseType; const aLoc: TKMPoint; aActSet: TKMHouseActionSet; aAnimStep, aAnimStepPrev: Cardinal; aFlagColor: TColor4; aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
     procedure AddHouseAnimation(const aLoc: TKMPoint; aAnimation : TKMAnimation; aAnimStep: Cardinal; aFlagColor: TColor4; aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
 
-    procedure AddHousePearl(aPearlType : TKMPearlType; const aLoc: TKMPoint; const aStage : Byte; aWoodStep, aStoneStep, aSnowStep: Single; aFlagColor : Cardinal = 0;
+    procedure AddHousePearl(aPearlType : TKMPearlType; const aLoc: TKMPoint; const aStage : Byte; aWoodStep, aStoneStep, aSnowStep: Single; aSnowID : Word;
+                                aFlagColor : Cardinal = 0;
                                aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
     procedure AddHousePasture(aLoc : TKMPoint; aFlagColor : Cardinal = 0;
                                aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
@@ -1068,7 +1069,7 @@ begin
 end;
 
 procedure TKMRenderPool.AddHousePearl(aPearlType: TKMPearlType; const aLoc: TKMPoint; const aStage : Byte;
-                                      aWoodStep: Single; aStoneStep: Single; aSnowStep: Single; aFlagColor : Cardinal = 0;
+                                      aWoodStep: Single; aStoneStep: Single; aSnowStep: Single;  aSnowID : Word; aFlagColor : Cardinal = 0;
                                       aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
 var
   rxData: TRXData;
@@ -1097,7 +1098,7 @@ begin
 
   picWood := P.GetStagePic(aStage - 1) + 1;
   picStone := P.GetStagePic(aStage) + 1;
-  picSnow := P.SnowPic + 1;
+  picSnow := aSnowID{P.SnowPic} + 1;
 
   // If it's fully built we can render without alpha
   if (aWoodStep = 1) and (aStoneStep = 1) then
@@ -1106,7 +1107,7 @@ begin
     // Snow only happens on fully built houses
     if gGameSettings.GFX.AllowSnowHouses
       and (aSnowStep > 0)
-      and (picSnow <> 0)and (picSnow <> 6) then
+      and (picSnow <> 0)and (picSnow > 1000) then
     begin
       // If snow is 100% we only need to render snow sprite
       if (aSnowStep = 1)then

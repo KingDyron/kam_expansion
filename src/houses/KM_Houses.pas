@@ -2745,12 +2745,12 @@ function TKMHouse.GetSnowPic : Integer;
 begin
   Result := gRes.Houses[fType].TerrPic[fIsOnTerrain];
 
-  If fIsOnTerrain = tptSnow then
-    if (fStyle > 0) and (gRes.Houses[fType].Styles[fStyle - 1].SnowPic > 0)  then
-      Result := gRes.Houses[fType].Styles[fStyle - 1].SnowPic
+  If fIsOnTerrain <> tptNone then
+    if (fStyle > 0) and (gRes.Houses[fType].Styles[fStyle - 1].SnowPic[fIsOnTerrain] > 0)  then
+      Result := gRes.Houses[fType].Styles[fStyle - 1].SnowPic[fIsOnTerrain]
     else
-    if (fLevel.CurrentLevel > 0) and (gRes.Houses[fType].Levels[fLevel.CurrentLevel - 1].SnowPic > 0) then
-      Result := gRes.Houses[fType].Levels[fLevel.CurrentLevel - 1].SnowPic;
+    if (fLevel.CurrentLevel > 0) and (gRes.Houses[fType].Levels[fLevel.CurrentLevel - 1].SnowPic[fIsOnTerrain] > 0) then
+      Result := gRes.Houses[fType].Levels[fLevel.CurrentLevel - 1].SnowPic[fIsOnTerrain];
 
   if Result < 1000 then
     Result := -1;
@@ -8782,7 +8782,7 @@ end;
 function TKMHouseWallSingle.GetSnowPic : Integer;
 begin
   If (Style = 0) and (fWallStyle > 0) then
-    Result := gRes.Houses[fType].Styles[fWallStyle - 1].SnowPic
+    Result := gRes.Houses[fType].Styles[fWallStyle - 1].SnowPic[OnTerrain]
   else
   Result := Inherited;
 

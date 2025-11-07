@@ -92,7 +92,10 @@ type
   TKMHouseAreaNew = array [1..MAX_HOUSE_SIZE, 1..MAX_HOUSE_SIZE] of Byte;
   THouseSupply8 = array [1..WARES_IN_OUT_COUNT, 1..5] of SmallInt;
   TKMTerrPicType = (tptNone, tptSnow, tptSand);
-
+  TKMHouseTerrPic = array[tptSnow..high(TKMTerrPicType)] of Word;
+const
+  TERR_PIC_COUNT = 2;
+type
   TKMHouseSound = record
     ID : Integer;
     Steps : TByteSet;

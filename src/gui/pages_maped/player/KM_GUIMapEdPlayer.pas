@@ -60,7 +60,7 @@ uses
 { TKMMapEdPlayer }
 constructor TKMMapEdPlayer.Create(aParent: TKMPanel; aOnPageChange: TNotifyEvent);
 const
-  TAB_GLYPH: array [TKMPlayerTab] of Word    = (8,         1159,     38,    327,   141,     141,   393, 754);
+  TAB_GLYPH: array [TKMPlayerTab] of Word    = (8,         1159,     38,    327,   141,     1078,   393, 754);
   TAB_RXX  : array [TKMPlayerTab] of TRXType = (rxGuiMain, rxHouses, rxGui, rxGui, rxGui,   rxGui, rxGui, rxGui);
 var
   PT: TKMPlayerTab;
@@ -223,7 +223,7 @@ const
     TX_MAPED_BLOCK_HOUSES,
     TX_MAPED_BLOCK_TRADE,
     TX_MAPED_BLOCK_UNITS,
-    TX_MAPED_BLOCK_UNITS,
+    2290,
     TX_MAPED_FOG,
     1791);
 var

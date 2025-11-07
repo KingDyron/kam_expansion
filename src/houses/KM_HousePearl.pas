@@ -234,12 +234,12 @@ begin
   IF fPearlType <> ptNone then
   begin
     If Completed then
-      gRenderPool.AddHousePearl(fPearlType, fPosition, fBuildStage, 1, 1, fSnowStepPearl, gHands[Owner].FlagColor, false)
+      gRenderPool.AddHousePearl(fPearlType, fPosition, fBuildStage, 1, 1, fSnowStepPearl, gRes.Houses.Pearls[fPearlType].SnowPic[OnTerrain], gHands[Owner].FlagColor, false)
     else
     If Confirmed then
     begin
       progress := fProgress / fMaxProgress;
-      gRenderPool.AddHousePearl(fPearlType, fPosition, fBuildStage, 1, progress, 0, gHands[Owner].FlagColor, false);
+      gRenderPool.AddHousePearl(fPearlType, fPosition, fBuildStage, 1, progress, 0, 0, gHands[Owner].FlagColor, false);
     end;
         //gRenderPool.AddSpriteWH(fPosition, KMPOINT_ZERO, 2715, rxHouses, gHands[Owner].FlagColor);
     gRenderPool.AddHouseWork(HouseType, fPosition, CurrentAction.SubAction * [haFire1..haFire8], WorkAnimStep, WorkAnimStepPrev, GetFlagColor);
@@ -261,9 +261,9 @@ end;
 procedure TKMHousePearl.IncSnowStepPearl;
 const
   //How much ticks it takes for a house to become completely covered in snow
-  SNOW_TIME = 1200;
+  SNOW_TIME = 1800;
 begin
-  if OnTerrain = tptSnow then
+  if OnTerrain <> tptNone then
   begin
     if (fSnowStepPearl < 1) then
       fSnowStepPearl := Min(fSnowStepPearl + (1 + Byte(gGameParams.IsMapEditor) * 10) / SNOW_TIME, 1)

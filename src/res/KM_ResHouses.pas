@@ -21,7 +21,7 @@ type
   private
   public
     StonePic : Word;
-    SnowPic : Word;
+    SnowPic : TKMHouseTerrPic;
     Progress : Word;
     StoneCost : Byte;
     TileCost : Byte;
@@ -46,7 +46,7 @@ type
     NeedsPlayerOrder : Boolean;
     BuildIcon : Word;
     TabletID : Word;
-    TerrPic : array[tptSnow..high(TKMTerrPicType)] of Word;
+    TerrPic : TKMHouseTerrPic;
   end;
 
   // This class wraps KaM House info
@@ -93,7 +93,7 @@ type
 
     Styles : array of record
       StonePic : Word;
-      SnowPic : Word;
+      SnowPic : TKMHouseTerrPic;
       Icon : Word;
       HideSupplies: Boolean;
     end;
@@ -182,7 +182,7 @@ type
     StageCount : Byte;
     StagePics : TKMWordArray;
     Cost : TKMWarePlan;
-    SnowPic : Word;
+    SnowPic : TKMHouseTerrPic;
     ProgressPerStage : Word;
     SnowAnimations : Byte;
 
@@ -962,11 +962,8 @@ begin
         end;
 
         nAR := nHouse.A['TerrPics'];
-
-        for K := 0 to Min(nAR.Count - 1, 1) do
-        begin
+        for K := 0 to Min(nAR.Count - 1, TERR_PIC_COUNT - 1) do
           fHouseDat.TerrPic[TKMTerrPicType(K + 1)] := nAr.I[K];
-        end;
 
 
         SetValue(fCanForceWork, nHouse.B['CanForceWork'], nHouse.Contains('CanForceWork'));
@@ -1162,7 +1159,10 @@ begin
             begin
               Icon := nAnim.I['GuiIcon'];
               StonePic := nAnim.I['StonePic'];
-              SnowPic := nAnim.I['SnowPic'];
+              //SnowPic := nAnim.I['SnowPic'];
+              nAR2 := nAnim.A['TerrPics'];
+              for J := 0 to Min(nAR2.Count - 1, TERR_PIC_COUNT - 1) do
+                SnowPic[TKMTerrPicType(J + 1)] := nAR2.I[J];
               HideSupplies := nAnim.B['HideSupplies'];
             end;
           end;
@@ -1179,7 +1179,12 @@ begin
             with Levels[high(Levels)] do
             begin
               StonePic := nAnim.I['StonePic'];
-              SnowPic := nAnim.I['SnowPic'];
+
+              //SnowPic := nAnim.I['SnowPic'];
+              nAR2 := nAnim.A['TerrPics'];
+              for J := 0 to Min(nAR2.Count - 1, TERR_PIC_COUNT - 1) do
+                SnowPic[TKMTerrPicType(J + 1)] := nAR2.I[J];
+
               WoodCost := nAnim.I['WoodCost'];
               StoneCost := nAnim.I['StoneCost'];
               TileCost := nAnim.I['TileCost'];
@@ -1292,12 +1297,15 @@ begin
       begin
         nHouse.GetArray('StagePics', StagePics);
         StageCount := length(StagePics);
-        SnowPic := nHouse.I['SnowPic'];
+        //SnowPic := nHouse.I['SnowPic'];
         ProgressPerStage := nHouse.I['ProgressPerStage'];
         SnowAnimations := nHouse.I['SnowAnimStartsFromIndex'];
 
-        nAR := nHouse.A['Animations'];
+        nAR := nHouse.A['TerrPics'];
+        for K := 0 to Min(nAR.Count - 1, TERR_PIC_COUNT - 1) do
+          SnowPic[TKMTerrPicType(K + 1)] := nAr.I[K];
 
+        nAR := nHouse.A['Animations'];
         SetLength(A, nAR.Count);
         for K := 0 to nAR.Count - 1 do
           nAR.O[K].GetAnim(A[K]);
@@ -1564,7 +1572,7 @@ begin
                 root.WriteLineObject('', K = 0);
                   root.Write('GuiIcon', Styles[K].Icon, true);
                   root.Write('StonePic', Styles[K].StonePic);
-                  root.Write('SnowPic', Styles[K].SnowPic);
+                  //root.Write('SnowPic', Styles[K].SnowPic);
                   root.Write('HideSupplies', Styles[K].HideSupplies);
                 root.EndLineObject;
               end;
@@ -1578,7 +1586,7 @@ begin
               begin
                 root.WriteObject('', K = 0);
                   root.Write('StonePic', Levels[K].StonePic, true);
-                  root.Write('SnowPic', Levels[K].SnowPic);
+                  //root.Write('SnowPic', Levels[K].SnowPic);
                   root.Write('WoodCost', Levels[K].WoodCost);
                   root.Write('StoneCost', Levels[K].StoneCost);
                   root.Write('TileCost', Levels[K].TileCost);

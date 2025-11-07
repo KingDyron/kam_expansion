@@ -663,8 +663,9 @@ begin
           origSpriteID := houses[HT].Levels[I].StonePic + 1;
           If origSpriteID > 1 then spritePack.ExportFullImageData(StonePath, origSpriteID);
 
-          origSpriteID := houses[HT].Levels[I].SnowPic + 1;
-          If origSpriteID > 1 then spritePack.ExportFullImageData(SnowPath, origSpriteID);
+
+          //origSpriteID := houses[HT].Levels[I].SnowPic + 1;
+          //If origSpriteID > 1 then spritePack.ExportFullImageData(SnowPath, origSpriteID);
         end;
 
         for I := 0 to High(houses[HT].Styles) do
@@ -672,8 +673,11 @@ begin
           origSpriteID := houses[HT].Styles[I].StonePic + 1;
           If origSpriteID > 1 then spritePack.ExportFullImageData(StonePath, origSpriteID);
 
-          origSpriteID := houses[HT].Styles[I].SnowPic + 1;
-          If origSpriteID > 1 then spritePack.ExportFullImageData(SnowPath, origSpriteID);
+          for tpt := tptSnow to High(TKMTerrPicType) do
+          begin
+            origSpriteID := houses[HT].Styles[I].SnowPic[tpt] + 1;
+            If origSpriteID > 1000 then spritePack.ExportFullImageData(SnowPath, origSpriteID);
+          end;
         end;
         // Stop export if async thread is terminated by application
         if TThread.CheckTerminated then Exit;
@@ -687,8 +691,13 @@ begin
           If origSpriteID > 1 then spritePack.ExportFullImageData(WoodPath, origSpriteID);
         end;
 
-        origSpriteID := houses.Pearls[pearl].SnowPic;
-        If origSpriteID > 1 then spritePack.ExportFullImageData(SnowPath, origSpriteID);
+        //origSpriteID := houses.Pearls[pearl].SnowPic;
+        //If origSpriteID > 1 then spritePack.ExportFullImageData(SnowPath, origSpriteID);
+        for tpt := tptSnow to High(TKMTerrPicType) do
+        begin
+          origSpriteID := houses.Pearls[pearl].SnowPic[tpt] + 1;
+          If origSpriteID > 1000 then spritePack.ExportFullImageData(SnowPath, origSpriteID);
+        end;
 
       end;
 
