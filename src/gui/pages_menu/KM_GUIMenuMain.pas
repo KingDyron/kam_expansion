@@ -54,7 +54,8 @@ begin
   //Without anchors this page is centered on resize
   Panel_MainMenu := TKMPanel.Create(aParent, 0, 0, aParent.Width, aParent.Height);
   Panel_MainMenu.AnchorsCenter;
-    TKMImage.Create(Panel_MainMenu, 300, 90, 423, 164, 4, rxGuiMain);
+    with TKMImage.Create(Panel_MainMenu, 300, 90, 423, 164, 4, rxGuiMain) do
+      ImageStretch;
 
     with TKMImage.Create(Panel_MainMenu,  50, 220, round(218*1.3), round(291*1.3), 5, rxGuiMain) do
       ImageStretch;

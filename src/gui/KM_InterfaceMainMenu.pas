@@ -134,9 +134,9 @@ begin
   Panel_Menu.AnchorsCenter;
 
   // Background is the same for all pages, except Results/Campaign, which will render ontop
-  Panel_Background := TKMImage.Create(Panel_Menu, 0, 0, 1000, 1000, 17, rxGuiMain);
-  Panel_Background.Tiled := True;
-  TKMImage.Create(Panel_Menu, -18, -18, 1071, 822, 18, rxGuiMain).AnchorsCenter;
+  Panel_Background := TKMImageBackground.Create(Panel_Menu, 0, 0, 1000, 1000{, 17, rxGuiMain});
+  //Panel_Background.Tiled := True;
+  TKMImageMain.Create(Panel_Menu, -18, -18, 1071, 822{, 18, rxGuiMain}).AnchorsCenter;
   changeLog := ChangeLogText;
   fMenuMain          := TKMMenuMain.Create(Panel_Menu, changeLog <> '', PageChange);
   fMenuSinglePlayer  := TKMMenuSinglePlayer.Create(Panel_Menu, PageChange);

@@ -925,7 +925,7 @@ begin
 
   Label_TeamName := TKMLabel.Create(Panel_Main, 0, 0, '', fntGrey, taCenter);
 
-  Sidebar_Top       := TKMImage.Create(Panel_Main, 0,    0, 224, 200, 407);
+  Sidebar_Top       := TKMImageMinimap.Create(Panel_Main, 0,    0, 224, 200{, 407});
   Sidebar_Middle    := TKMImage.Create(Panel_Main, 0,  200, 224, 168, 554);
 
   MinimapView := TKMMinimapView.Create(fMinimap, Panel_Main, 10, 10, 176, 176);
@@ -1003,9 +1003,13 @@ begin
 
   // Background image
 
-  Panel_Stats_Background := TKMImage.Create(Panel_Stats, 0, 0, 700, 800, 17, rxGuiMain);
-  Panel_Stats_Background.Tiled := True;
-  TKMImage.Create(Panel_Stats, -18, -18, 1071, 822, 18, rxGuiMain).AnchorsCenter;
+  Panel_Stats_Background := TKMImageBackGround.Create(Panel_Stats, 0, 0, 700, 800{, 17, rxGuiMain});
+  //Panel_Stats_Background.Tiled := True;
+  with TKMImageMain.Create(Panel_Stats, -30, -30, 1108, 849) do
+  begin
+    AnchorsStretch;
+    ImageStretch;
+  end;
 
   Panel_Stats.Hide;
 
@@ -1454,7 +1458,7 @@ begin
     // We need several of these to cover max of 1534x2560 (vertically oriented)
     SetLength(Sidebar_Bottom, 6);
     for I := Low(Sidebar_Bottom) to High(Sidebar_Bottom) do
-      Sidebar_Bottom[I] := TKMImage.Create(Panel_Controls, 0, 400*I, 224, 400, 404);
+      Sidebar_Bottom[I] := TKMImageSideBar.Create(Panel_Controls, 0, 400*I, 224, 400{, 404});
 
     Bevel_Middle := TKMBevel.Create(Panel_Main, 10, 200, 175, 70);
     Bevel_Middle.BackAlpha := 0.75;

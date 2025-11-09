@@ -201,6 +201,7 @@ type
     procedure SetD(aName : String; aValue : Single);
     procedure SetS(aName : String; aValue : String);
     procedure SetB(aName : String; aValue : Boolean);
+    function GetCount : Integer;
   public
     destructor Destroy; override;
     procedure LoadFromFile(aPath : String);
@@ -224,6 +225,7 @@ type
     property A[aName : String] : TKMJsonArrayNew read GetA;
 
     property Name : String read fName write fName;
+    property Count : Integer read GetCount;
 
   end;
 
@@ -251,6 +253,7 @@ type
     procedure SetD(aIndex : Word; aValue : Single);
     procedure SetS(aIndex : Word; aValue : String);
     procedure SetB(aIndex : Word; aValue : Boolean);
+    function GetCount : Integer;
   public
     destructor Destroy; override;
     procedure Add(aValue : String); overload;
@@ -272,6 +275,7 @@ type
     property A[aIndex : Word] : TKMJsonArrayNew read GetA;
 
     property Name : String read fName write fName;
+    property Count : Integer read GetCount;
   end;
 
 implementation
@@ -1939,11 +1943,12 @@ end;
 
 function TKMJsonObject.IndexOf(aName: string): Integer;
 var I : Integer;
+  n : String;
 begin
   Result := -1;
   for I := 0 to fCount - 1 do
     if aName = String(fList[I].Name) then
-      Exit;
+      Exit(I);
 end;
 
 function TKMJsonObject.GetValue(aName: string): PKMJsonValue;
@@ -2058,6 +2063,14 @@ begin
     String(V.Value) := aValue.ToString(true)
   end else
     Add(aName, aValue);
+end;
+
+
+function TKMJsonObject.GetCount: Integer;
+begin
+  If self = nil then
+    Exit(0);
+  Result := fCount;
 end;
 
 procedure TKMJsonObject.SaveToText(var aText : String; aLeft : Integer; aInOneLine : Boolean);
@@ -2235,6 +2248,13 @@ begin
     String(fList[aIndex].Value) := aValue.ToString(true);
   end else
     Add(aValue);
+end;
+
+function TKMJsonArrayNew.GetCount: Integer;
+begin
+  If self = nil then
+    Exit(0);
+  Result := fCount;
 end;
 
 destructor TKMJsonArrayNew.Destroy;

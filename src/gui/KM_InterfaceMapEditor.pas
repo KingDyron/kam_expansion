@@ -226,12 +226,12 @@ begin
 
   ResetDragObject;
   //                                   250
-  TKMImage.Create(Panel_Main, 0,    0, MAPED_TOOLBAR_WIDTH, 200, 407, rxGui, [anLeft, anTop, anRight]); //Minimap place
-  TKMImage.Create(Panel_Main, 0,  200, MAPED_TOOLBAR_WIDTH, 400, 404, rxGui, [anLeft, anTop, anRight]);
-  TKMImage.Create(Panel_Main, 0,  600, MAPED_TOOLBAR_WIDTH, 400, 404, rxGui, [anLeft, anTop, anRight]);
-  TKMImage.Create(Panel_Main, 0, 1000, MAPED_TOOLBAR_WIDTH, 400, 404, rxGui, [anLeft, anTop, anRight]); //For 1600x1200 this is needed
-  TKMImage.Create(Panel_Main, 0, 1400, MAPED_TOOLBAR_WIDTH, 400, 404, rxGui, [anLeft, anTop, anRight]);
-  TKMImage.Create(Panel_Main, 0, 1800, MAPED_TOOLBAR_WIDTH, 400, 404, rxGui, [anLeft, anTop, anRight]); //For 4K displays
+  TKMImageMinimap.Create(Panel_Main, 0,    0, MAPED_TOOLBAR_WIDTH, 200{, 407, rxGui}, [anLeft, anTop, anRight]); //Minimap place
+  TKMImageSideBar.Create(Panel_Main, 0,  200, MAPED_TOOLBAR_WIDTH, 400{, 404, rxGui}, [anLeft, anTop, anRight]);
+  TKMImageSideBar.Create(Panel_Main, 0,  600, MAPED_TOOLBAR_WIDTH, 400{, 404, rxGui}, [anLeft, anTop, anRight]);
+  TKMImageSideBar.Create(Panel_Main, 0, 1000, MAPED_TOOLBAR_WIDTH, 400{, 404, rxGui}, [anLeft, anTop, anRight]); //For 1600x1200 this is needed
+  TKMImageSideBar.Create(Panel_Main, 0, 1400, MAPED_TOOLBAR_WIDTH, 400{, 404, rxGui}, [anLeft, anTop, anRight]);
+  TKMImageSideBar.Create(Panel_Main, 0, 1800, MAPED_TOOLBAR_WIDTH, 400{, 404, rxGui}, [anLeft, anTop, anRight]); //For 4K displays
 
   MinimapView := TKMMinimapView.Create(fMinimap, Panel_Main, 10, 10, MAPED_TOOLBAR_WIDTH - 48, 176);
   MinimapView.OnChange := Minimap_OnUpdate;

@@ -27,6 +27,7 @@ type
     FullScreen: Boolean;
     Resolution: TKMScreenRes;
     VSync: Boolean;
+    GUIStyle : Byte;
 
     constructor Create(aScreenWidth, aScreenHeight: Integer);
     destructor Destroy; override;
@@ -101,6 +102,7 @@ begin
   Resolution.Height  := nGFX.Attributes['ResolutionHeight'].AsInteger(Max(MENU_DESIGN_Y, fScreenHeight));
   Resolution.RefRate := nGFX.Attributes['RefreshRate'].AsInteger(60);
   fFPSCap := EnsureRange(nGFX.Attributes['FPSCap'].AsInteger(DEF_FPS_CAP), MIN_FPS_CAP, MAX_FPS_CAP);
+  GUIStyle := nGFX.Attributes['GuiStyle'].AsInteger(0);
 
   // Window
   // For proper window positioning we need Left and Top records
@@ -150,6 +152,7 @@ begin
     nGFX.Attributes['ResolutionHeight'] := Resolution.Height;
     nGFX.Attributes['RefreshRate']      := Resolution.RefRate;
     nGFX.Attributes['FPSCap']           := fFPSCap;
+    nGFX.Attributes['GuiStyle']         := GuiStyle;
 
   // Window
   nWindow := nMainSettings.AddOrFindChild('Window');

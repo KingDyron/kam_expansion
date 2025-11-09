@@ -223,7 +223,8 @@ begin
   if aStyle = bsMenu then
   begin
     backRX := rxGuiMain;
-    backID := 9; //GuiMain-3 is a metal background used in main menu
+    backID := gRes.Cosmetics.CurrentGuiStyle.Button;
+    //backID := 9; //GuiMain-3 is a metal background used in main menu
   end else
   if aStyle = bsPaper then
   begin
@@ -288,10 +289,10 @@ begin
         insetX := chamfer / aWidth;
         insetY := chamfer / aHeight;
         glBegin(GL_QUADS);
-          glColor4f(c1,c1,c1,0.7); glkQuad(0, 0, 1,        0,        1-insetX, 0+insetY, 0+insetX, 0+insetY);
-          glColor4f(c1,c1,c1,0.6); glkQuad(0, 0, 0+insetX, 0+insetY, 0+insetX, 1-insetY, 0,        1       );
-          glColor4f(c2,c2,c2,0.5); glkQuad(1, 0, 1,        1,        1-insetX, 1-insetY, 1-insetX, 0+insetY);
-          glColor4f(c2,c2,c2,0.4); glkQuad(0, 1, 0+insetX, 1-insetY, 1-insetX, 1-insetY, 1,        1       );
+          glColor4f(c1,c1,c1,0.8); glkQuad(0, 0, 1,        0,        1-insetX, 0+insetY, 0+insetX, 0+insetY);
+          glColor4f(c1,c1,c1,0.7); glkQuad(0, 0, 0+insetX, 0+insetY, 0+insetX, 1-insetY, 0,        1       );
+          glColor4f(c2,c2,c2,0.8); glkQuad(1, 0, 1,        1,        1-insetX, 1-insetY, 1-insetX, 0+insetY);
+          glColor4f(c2,c2,c2,0.7); glkQuad(0, 1, 0+insetX, 1-insetY, 1-insetX, 1-insetY, 1,        1       );
         glEnd;
       finally
         glPopMatrix;

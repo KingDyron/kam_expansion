@@ -65,6 +65,7 @@ type
         Bevel_Options_GFX: TKMBevel;
         CheckBox_LerpRender: TKMCheckBox;
         CheckBox_LerpAnims: TKMCheckBox;
+        CheckBox_GUIStyle: TKMDropList;
         CheckBox_VSync: TKMCheckBox;
         CheckBox_ShadowQuality: TKMCheckBox;
         TrackBar_Brightness: TKMTrackBar;
@@ -304,13 +305,14 @@ end;
 procedure TKMGUICommonOptions.CreateGraphics(var aTopBlock: Integer; var aLeftBlock: Integer);
 var
   top: Integer;
+  I : Integer;
 begin
   // Graphics section
   Panel_GFX := TKMPanel.Create(Panel_Options, aLeftBlock, aTopBlock, 280, 165);
   Panel_GFX.Anchors := [anLeft];
     TKMLabel.Create(Panel_GFX,6,0,270,20,gResTexts[TX_MENU_OPTIONS_GRAPHICS],fntOutline,taLeft);
     Bevel_Options_GFX := TKMBevel.Create(Panel_GFX,0,20,280,145);
-    CheckBox_LerpRender := TKMCheckBox.Create(Panel_GFX, 10, 30, 260, 20, gResTexts[TX_MENU_OPTIONS_LERP_RENDER], fntMetal);
+    CheckBox_LerpRender := TKMCheckBox.Create(Panel_GFX, 10, 55, 260, 20, gResTexts[TX_MENU_OPTIONS_LERP_RENDER], fntMetal);
     CheckBox_LerpRender.Hint := gResTexts[TX_SETTINGS_LERP_RENDER_HINT];
     CheckBox_LerpRender.OnClick := Change;
 
@@ -321,14 +323,24 @@ begin
     CheckBox_LerpAnims.Visible := false;
     CheckBox_LerpAnims.OnClick := Change;
     top := 70;
+    CheckBox_GUIStyle := TKMDropList.Create(Panel_GFX, 10, 30, 260, 20, fntMetal, gResTexts[2312], bsMenu);
+
+    for I := 0 to gRes.Cosmetics.GuiStylesCount - 1 do
+      CheckBox_GUIStyle.Add(gResTexts[gRes.Cosmetics[I].TextID]);
+
+    CheckBox_GUIStyle.ItemIndex := 0;
+    CheckBox_GUIStyle.Hint := gResTexts[2312];
+    CheckBox_GUIStyle.OnChange := Change;
+    //CheckBox_GUIStyle.Hide;
 
     if IsMenu then
     begin
-      CheckBox_VSync := TKMCheckBox.Create(Panel_GFX, 10, 70, 260, 20, gResTexts[TX_MENU_OPTIONS_VSYNC], fntMetal);
+      CheckBox_VSync := TKMCheckBox.Create(Panel_GFX, 10, 75, 260, 20, gResTexts[TX_MENU_OPTIONS_VSYNC], fntMetal);
       CheckBox_VSync.OnClick := Change;
 
       CheckBox_ShadowQuality := TKMCheckBox.Create(Panel_GFX, 10, 90, 260, 20, gResTexts[TX_MENU_OPTIONS_SHADOW_QUALITY], fntMetal);
       CheckBox_ShadowQuality.OnClick := Change;
+      CheckBox_ShadowQuality.Hide;
       Inc(top, 40);
     end;
 
@@ -740,13 +752,16 @@ begin
   CheckBox_VideoStartup.Checked  := gGameSettings.Video.PlayOnStartup;
   CheckBox_VideoStartup.Enabled  := gGameSettings.Video.Enabled;
 
+  CheckBox_GUIStyle.Visible := true;
+  CheckBox_GUIStyle.ItemIndex := gMainSettings.GUIStyle;
   // Only in Menu
   if IsMenu then
   begin
     CheckBox_VSync.Checked         := gMainSettings.VSync;
     CheckBox_FullFonts.Enabled     := not gResLocales.LocaleByCode(gGameSettings.Locale).NeedsFullFonts;
     CheckBox_FullFonts.Checked     := gGameSettings.GFX.LoadFullFonts or not CheckBox_FullFonts.Enabled;
-    CheckBox_ShadowQuality.Checked := gGameSettings.GFX.AlphaShadows;
+    //CheckBox_ShadowQuality.Checked := gGameSettings.GFX.AlphaShadows;
+
 
     Button_VideoTest.Enabled       := gGameSettings.Video.Enabled;
     TrackBar_VideoVolume.Position  := Round(gGameSettings.Video.VideoVolume * TrackBar_VideoVolume.MaxValue);
@@ -859,6 +874,8 @@ begin
       Button_VideoTest.Enabled := CheckBox_VideoEnable.Checked;
     end;
   end;
+
+  gMainSettings.GuiStyle := CheckBox_GUIStyle.ItemIndex;
 
   // Only in Menu
   if IsMenu then

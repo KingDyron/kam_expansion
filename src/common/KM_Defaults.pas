@@ -1318,10 +1318,11 @@ const
     2, 2, 2, 2, 10, 10,
     10
   );
-
+{
+type
+  TKMGUIStyle = (gsStandard, gsBricks);
 const
-  GITHUB_CRC_LINK = 'https://gist.githubusercontent.com/KingDyron/a4546ae43e2055eb640e8fd59d932197/raw';
-
+  GUI_STYLE_TEXT : array[TKMGUIStyle] of Word = (2313, 2314);}
 
 implementation
 

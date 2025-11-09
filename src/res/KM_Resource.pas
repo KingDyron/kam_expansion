@@ -21,7 +21,8 @@ uses
   KM_JsonData,
   KM_TerrainTypes,
   KM_ResPatterns,
-  KM_ResDevelopment;
+  KM_ResDevelopment,
+  KM_ResCosmetics;
 
 
 type
@@ -44,6 +45,7 @@ type
     fStructures : TKMResStructures;
     fPatterns : TKMResPatterns;
     fDevelopment : TKMDevelopmentTreeCollection;
+    fCosmetics : TKMResCosmetics;
 
   public
     OnLoadingStep: TEvent;
@@ -77,6 +79,7 @@ type
     property Structures: TKMResStructures read fStructures;
     property Patterns: TKMResPatterns read fPatterns;
     property Development: TKMDevelopmentTreeCollection read fDevelopment;
+    property Cosmetics: TKMResCosmetics read fCosmetics;
     procedure ReloadJSONData(UpdateCRC : Boolean; aEvent : TAnsiStringEvent);
 
 
@@ -135,6 +138,7 @@ begin
   FreeAndNil(fStructures);
   FreeAndNil(fPatterns);
   FreeAndNil(fDevelopment);
+  FreeAndNil(fCosmetics);
 
   inherited;
 end;
@@ -221,6 +225,8 @@ begin
 
   fDevelopment := TKMDevelopmentTreeCollection.Create;
   fDevelopment.LoadFromJson(ExeDir + 'data' + PathDelim + 'defines' + PathDelim + 'DevelopmentTree.Json');
+
+  fCosmetics := TKMResCosmetics.Create;
 
   gLog.AddTime('Resource loading state - Menu');
 
