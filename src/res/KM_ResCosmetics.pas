@@ -12,7 +12,10 @@ type
     MiniMap,  //rxGui
     LeftPanel,  //rxGui
     Button : Word; //rxGuiMain
-    TextID : Word;
+    LeftTex,
+    RightTex : Word;
+    TextID,
+    MainText : Word;
     procedure SetDefault;
   end;
 
@@ -22,7 +25,7 @@ type
   private
     fGuiStyles : TKMGuiStyleRecArray;
 
-    procedure AddNewGuiStyle(aTextID, aBack, aMain, aMini, aLeft, aButton : Word);
+    procedure AddNewGuiStyle(aTextID, aBack, aMain, aMini, aLeft, aButton, aLeftT, aRightT, aMainText : Word);
     function GetCurrentStyle : TKMGuiStyleRec;
     function GetGuiStyle(aIndex : Integer) : TKMGuiStyleRec;
 
@@ -47,13 +50,16 @@ begin
     LeftPanel := 404;
     Button := 9;
     TextID := 2313;
+    LeftTex := 5;
+    RightTex := 6;
+    MainText := 4;
 end;
 
 constructor TKMResCosmetics.Create;
 begin
   Inherited;
   //add default
-  AddNewGuiStyle(2313, 17, 18, 407, 404, 9);
+  AddNewGuiStyle(2313, 17, 18, 407, 404, 9, 5, 6, 4);
   //bricks
   //AddNewGuiStyle(2314, 106, 107, 1178, 1177, 109);
   LoadFromJSON;
@@ -74,7 +80,7 @@ begin
   Result := fGuiStyles[aIndex];
 end;
 
-procedure TKMResCosmetics.AddNewGuiStyle(aTextID, aBack: Word; aMain: Word; aMini: Word; aLeft: Word; aButton: Word);
+procedure TKMResCosmetics.AddNewGuiStyle(aTextID, aBack: Word; aMain: Word; aMini: Word; aLeft: Word; aButton, aLeftT, aRightT, aMainText: Word);
 var I : integer;
 begin
   I := length(fGuiStyles);
@@ -84,11 +90,16 @@ begin
   begin
     SetDefault;
     If aTextID > 0 then       TextID := aTextID;
-    If Background > 0 then    Background := aBack;
-    If MainImage > 0 then     MainImage := aMain;
-    If MiniMap > 0 then       MiniMap := aMini;
-    If LeftPanel > 0 then     LeftPanel := aLeft;
-    If Button > 0 then        Button := aButton;
+    If aBack > 0 then         Background := aBack;
+    If aMain > 0 then         MainImage := aMain;
+
+    If aMini > 0 then         MiniMap := aMini;
+    If aLeft > 0 then         LeftPanel := aLeft;
+    If aButton > 0 then       Button := aButton;
+
+    LeftTex := aLeftT;
+    RightTex := aRightT;
+    If aMainText > 0 then MainText := aMainText;
   end;
 
 end;
@@ -116,7 +127,10 @@ begin
                     jCosm.I['Main'],
                     jCosm.I['Minimap'],
                     jCosm.I['LeftPanel'],
-                    jCosm.I['Button']);
+                    jCosm.I['Button'],
+                    jCosm.I['LeftTexture'],
+                    jCosm.I['RightTexture'],
+                    jCosm.I['MainText']);
     end;
 
   root.Free;

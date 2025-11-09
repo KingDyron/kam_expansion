@@ -144,33 +144,53 @@ type
     procedure Paint; override;
   end;
 
-  TKMImageBackGround = class(TKMImage)
-  public
-    constructor Create(aParent: TKMPanel; aLeft, aTop, aWidth, aHeight: Integer;
-                       aImageAnchors: TKMAnchorsSet = [anLeft, anTop]);
-    procedure Paint; override;
+  TKMGuiImage = class(TKMImage)
+    protected
+      function GetRX : TRXType;virtual;
+      function GetTexID : Word;virtual;
+    public
+      constructor Create(aParent: TKMPanel; aLeft, aTop, aWidth, aHeight: Integer;
+                         aImageAnchors: TKMAnchorsSet = [anLeft, anTop]);
+      procedure Paint; override;
   end;
 
-  TKMImageMain = class(TKMImage)
-  public
-    constructor Create(aParent: TKMPanel; aLeft, aTop, aWidth, aHeight: Integer;
-                       aImageAnchors: TKMAnchorsSet = [anLeft, anTop]);
-    procedure Paint; override;
+  TKMImageBackGround = class(TKMGuiImage)
+    protected
+      function GetTexID : Word;override;
   end;
 
-  TKMImageSideBar = class(TKMImage)
-  public
-    constructor Create(aParent: TKMPanel; aLeft, aTop, aWidth, aHeight: Integer;
-                       aImageAnchors: TKMAnchorsSet = [anLeft, anTop]);
-    procedure Paint; override;
+  TKMImageMain = class(TKMGuiImage)
+    protected
+      function GetTexID : Word;override;
   end;
 
-  TKMImageMinimap = class(TKMImage)
-  public
-    constructor Create(aParent: TKMPanel; aLeft, aTop, aWidth, aHeight: Integer;
-                       aImageAnchors: TKMAnchorsSet = [anLeft, anTop]);
-    procedure Paint; override;
+  TKMImageSideBar = class(TKMGuiImage)
+    protected
+      function GetRX : TRXType; override;
+      function GetTexID : Word;override;
   end;
+
+  TKMImageMinimap = class(TKMGuiImage)
+    protected
+      function GetRX : TRXType;override;
+      function GetTexID : Word;override;
+  end;
+
+  TKMImageMainLeft = class(TKMGuiImage)
+    protected
+      function GetTexID : Word;override;
+  end;
+
+  TKMImageMainRight = class(TKMGuiImage)
+    protected
+      function GetTexID : Word;override;
+  end;
+
+  TKMImageMainText = class(TKMGuiImage)
+    protected
+      function GetTexID : Word;override;
+  end;
+
 
 
   // Image stack - for army formation view
@@ -744,17 +764,25 @@ begin
       TKMRenderUI.ReleaseClipY;
     end;
   end;
-
 end;
 
 
-constructor TKMImageBackGround.Create(aParent: TKMPanel; aLeft: Integer; aTop: Integer; aWidth: Integer; aHeight: Integer; aImageAnchors: TKMAnchorsSet = [anLeft,anTop]);
+constructor TKMGuiImage.Create(aParent: TKMPanel; aLeft: Integer; aTop: Integer; aWidth: Integer; aHeight: Integer; aImageAnchors: TKMAnchorsSet = [anLeft,anTop]);
 begin
   Inherited Create(aParent, aLeft, aTop, aWidth, aHeight, 0, rxGuiMain, aImageAnchors);
 end;
 
-{If image area is bigger than image - do center image in it}
-procedure TKMImageBackGround.Paint;
+function TKMGuiImage.GetRX: TRXType;
+begin
+  Result := rxGuiMain;
+end;
+
+function TKMGuiImage.GetTexID: Word;
+begin
+  Result := 0;
+end;
+
+procedure TKMGuiImage.Paint;
 var
   x, y: Integer;
   col, row: Integer;
@@ -762,51 +790,7 @@ var
   drawLeft, drawTop: Integer;
   drawWidth, drawHeight: Integer;
 begin
-  //inherited;
-  fTexID := gRes.Cosmetics.CurrentGuiStyle.Background;
-  if fTexID > 0 then
-  begin //No picture to draw
-
-    if ClipToBounds then
-    begin
-      TKMRenderUI.SetupClipX(AbsLeft, AbsLeft + Width);
-      TKMRenderUI.SetupClipY(AbsTop,  AbsTop + Height);
-    end;
-
-    paintLightness := Lightness + HighlightCoef * (Byte(HighlightOnMouseOver and (csOver in State)) + Byte(Highlight));
-    drawWidth := gGFXData[fRX, fTexID].PxWidth;
-    drawHeight := gGFXData[fRX, fTexID].PxHeight;
-    drawLeft := AbsLeft + Width div 2 - drawWidth div 2;
-    drawTop := AbsTop + Height div 2 - drawHeight div 2;
-
-    col := Width div drawWidth + 1;
-    row := Height div drawHeight + 1;
-    for x := -col div 2 to col div 2 do
-      for y := -row div 2 to row div 2 do
-        TKMRenderUI.WritePicture(drawLeft + x * drawWidth, drawTop + y * drawHeight, drawWidth, drawHeight, ImageAnchors, fRX, fTexID, Enabled, fFlagColor, paintLightness, AlphaStep);
-
-    if ClipToBounds then
-    begin
-      TKMRenderUI.ReleaseClipX;
-      TKMRenderUI.ReleaseClipY;
-    end;
-  end;
-
-end;
-
-constructor TKMImageMain.Create(aParent: TKMPanel; aLeft: Integer; aTop: Integer; aWidth: Integer; aHeight: Integer; aImageAnchors: TKMAnchorsSet = [anLeft,anTop]);
-begin
-  Inherited Create(aParent, aLeft, aTop, aWidth, aHeight, 0, rxGuiMain, aImageAnchors);
-end;
-
-{If image area is bigger than image - do center image in it}
-procedure TKMImageMain.Paint;
-var
-  paintLightness: Single;
-begin
-  //inherited;
-  fTexID := gRes.Cosmetics.CurrentGuiStyle.MainImage;
-  if fTexID > 0 then
+  if GetTexID > 0 then
   begin //No picture to draw
 
     if ClipToBounds then
@@ -817,7 +801,21 @@ begin
 
     paintLightness := Lightness + HighlightCoef * (Byte(HighlightOnMouseOver and (csOver in State)) + Byte(Highlight));
 
-    TKMRenderUI.WritePicture(AbsLeft, AbsTop, Width, Height, ImageAnchors, fRX, fTexID, Enabled, fFlagColor, paintLightness, AlphaStep);
+    if self is TKMImageBackGround then
+    begin
+      drawWidth := gGFXData[GetRX, GetTexID].PxWidth;
+      drawHeight := gGFXData[GetRX, GetTexID].PxHeight;
+      drawLeft := AbsLeft + Width div 2 - drawWidth div 2;
+      drawTop := AbsTop + Height div 2 - drawHeight div 2;
+
+      col := Width div drawWidth + 1;
+      row := Height div drawHeight + 1;
+      for x := -col div 2 to col div 2 do
+        for y := -row div 2 to row div 2 do
+          TKMRenderUI.WritePicture(drawLeft + x * drawWidth, drawTop + y * drawHeight, drawWidth, drawHeight, ImageAnchors, GetRX, GetTexID, Enabled, fFlagColor, paintLightness, AlphaStep);
+    end
+    else
+      TKMRenderUI.WritePicture(AbsLeft, AbsTop, Width, Height, ImageAnchors, GetRX, GetTexID, Enabled, fFlagColor, paintLightness, AlphaStep);
 
     if ClipToBounds then
     begin
@@ -825,76 +823,21 @@ begin
       TKMRenderUI.ReleaseClipY;
     end;
   end;
-
 end;
 
-constructor TKMImageSideBar.Create(aParent: TKMPanel; aLeft: Integer; aTop: Integer; aWidth: Integer; aHeight: Integer; aImageAnchors: TKMAnchorsSet = [anLeft,anTop]);
-begin
-  Inherited Create(aParent, aLeft, aTop, aWidth, aHeight, 0, rxGui, aImageAnchors);
-end;
+function TKMImageBackGround.GetTexID: Word; begin  Result := gRes.Cosmetics.CurrentGuiStyle.Background; end;
+function TKMImageMain.GetTexID: Word; begin  Result := gRes.Cosmetics.CurrentGuiStyle.MainImage; end;
 
-{If image area is bigger than image - do center image in it}
-procedure TKMImageSideBar.Paint;
-var
-  paintLightness: Single;
-begin
-  //inherited;
-  fTexID := gRes.Cosmetics.CurrentGuiStyle.LeftPanel;
-  if fTexID > 0 then
-  begin //No picture to draw
+function TKMImageSideBar.GetRX: TRXType; begin Result := rxGui; end;
+function TKMImageSideBar.GetTexID: Word; begin Result := gRes.Cosmetics.CurrentGuiStyle.LeftPanel; end;
 
-    if ClipToBounds then
-    begin
-      TKMRenderUI.SetupClipX(AbsLeft, AbsLeft + Width);
-      TKMRenderUI.SetupClipY(AbsTop,  AbsTop + Height);
-    end;
+function TKMImageMinimap.GetRX: TRXType; begin Result := rxGui; end;
+function TKMImageMinimap.GetTexID: Word; begin Result := gRes.Cosmetics.CurrentGuiStyle.MiniMap; end;
 
-    paintLightness := Lightness + HighlightCoef * (Byte(HighlightOnMouseOver and (csOver in State)) + Byte(Highlight));
+function TKMImageMainLeft.GetTexID: Word; begin  Result := gRes.Cosmetics.CurrentGuiStyle.LeftTex; end;
+function TKMImageMainRight.GetTexID: Word; begin  Result := gRes.Cosmetics.CurrentGuiStyle.RightTex; end;
+function TKMImageMainText.GetTexID: Word; begin  Result := gRes.Cosmetics.CurrentGuiStyle.MainText; end;
 
-    TKMRenderUI.WritePicture(AbsLeft, AbsTop, Width, Height, ImageAnchors, fRX, fTexID, Enabled, fFlagColor, paintLightness, AlphaStep);
-
-    if ClipToBounds then
-    begin
-      TKMRenderUI.ReleaseClipX;
-      TKMRenderUI.ReleaseClipY;
-    end;
-  end;
-
-end;
-
-constructor TKMImageMinimap.Create(aParent: TKMPanel; aLeft: Integer; aTop: Integer; aWidth: Integer; aHeight: Integer; aImageAnchors: TKMAnchorsSet = [anLeft,anTop]);
-begin
-  Inherited Create(aParent, aLeft, aTop, aWidth, aHeight, 0, rxGui, aImageAnchors);
-end;
-
-{If image area is bigger than image - do center image in it}
-procedure TKMImageMinimap.Paint;
-var
-  paintLightness: Single;
-begin
-  //inherited;
-  fTexID := gRes.Cosmetics.CurrentGuiStyle.MiniMap;
-  if fTexID > 0 then
-  begin //No picture to draw
-
-    if ClipToBounds then
-    begin
-      TKMRenderUI.SetupClipX(AbsLeft, AbsLeft + Width);
-      TKMRenderUI.SetupClipY(AbsTop,  AbsTop + Height);
-    end;
-
-    paintLightness := Lightness + HighlightCoef * (Byte(HighlightOnMouseOver and (csOver in State)) + Byte(Highlight));
-
-    TKMRenderUI.WritePicture(AbsLeft, AbsTop, Width, Height, ImageAnchors, fRX, fTexID, Enabled, fFlagColor, paintLightness, AlphaStep);
-
-    if ClipToBounds then
-    begin
-      TKMRenderUI.ReleaseClipX;
-      TKMRenderUI.ReleaseClipY;
-    end;
-  end;
-
-end;
 { TKMImageStack }
 constructor TKMImageStack.Create(aParent: TKMPanel; aLeft, aTop, aWidth, aHeight: Integer; aTexID1, aTexID2: Word; aRX: TRXType = rxGui);
 begin

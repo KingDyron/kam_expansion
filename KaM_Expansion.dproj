@@ -163,6 +163,7 @@
         <BT_BuildType>Debug</BT_BuildType>
         <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
         <DCC_LocalDebugSymbols>true</DCC_LocalDebugSymbols>
+        <Icon_MainIcon>KaM_Expansion_Icon.ico</Icon_MainIcon>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <BT_BuildType>Debug</BT_BuildType>

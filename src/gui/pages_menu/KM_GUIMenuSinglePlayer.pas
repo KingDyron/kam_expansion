@@ -49,10 +49,10 @@ begin
   //Without anchors this page is centered on resize
   Panel_SinglePlayer := TKMPanel.Create(aParent, 0, 0, aParent.Width, aParent.Height);
   Panel_SinglePlayer.AnchorsCenter;
-    TKMImage.Create(Panel_SinglePlayer, 300, 90, 423, 164, 4, rxGuiMain);
+    TKMImageMainText.Create(Panel_SinglePlayer, 300, 90, 423, 164{, 4, rxGuiMain});
     //TKMLabel.Create(Panel_SinglePlayer, 512, 300, 'E X P A N S I O N', fntOutline, taCenter);
-    with TKMImage.Create(Panel_SinglePlayer, 50, 220, Round(218 * 1.3), Round(291 * 1.3), 5, rxGuiMain) do ImageStretch;
-    with TKMImage.Create(Panel_SinglePlayer, 705, 220, Round(207 * 1.3), Round(295 * 1.3), 6, rxGuiMain) do ImageStretch;
+    with TKMImageMainLeft.Create(Panel_SinglePlayer, 50, 220, Round(218 * 1.3), Round(291 * 1.3){, 5, rxGuiMain}) do ImageStretch;
+    with TKMImageMainRight.Create(Panel_SinglePlayer, 705, 220, Round(207 * 1.3), Round(295 * 1.3){, 6, rxGuiMain}) do ImageStretch;
 
     Panel_SPButtons := TKMPanel.Create(Panel_SinglePlayer,337,340,350,400);
       Button_SP_Tutor  := TKMButton.Create(Panel_SPButtons,0,  0,350,30,gResTexts[1982],bsMenu);

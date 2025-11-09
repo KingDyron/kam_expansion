@@ -204,6 +204,7 @@ begin
   Panel_Guide := TKMPanel.Create(aParent, 240, 0, 500, aParent.Height - 200);
   Panel_Guide.Anchors := [anLeft, anTop, anBottom];
 
+  //Image_Background := TKMImageMain.Create(Panel_Guide, 0, 0, Panel_Guide.Width, Panel_Guide.Height{, 18, rxGuiMain});
   Image_Background := TKMImage.Create(Panel_Guide, 0, 0, Panel_Guide.Width, Panel_Guide.Height, 18, rxGuiMain);
   Image_Background.ImageStretch;
   Image_Background.AnchorsStretch;
