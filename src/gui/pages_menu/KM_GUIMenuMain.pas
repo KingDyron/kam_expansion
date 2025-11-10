@@ -54,14 +54,14 @@ begin
   //Without anchors this page is centered on resize
   Panel_MainMenu := TKMPanel.Create(aParent, 0, 0, aParent.Width, aParent.Height);
   Panel_MainMenu.AnchorsCenter;
-    TKMImageMainText.Create(Panel_MainMenu, 300, 90, 423, 164{, 4, rxGuiMain});
+    TKMImageMainText.Create(Panel_MainMenu, 0, 90, Panel_MainMenu.Width, Panel_MainMenu.Height - 90{, 4, rxGuiMain}, [anTop]);
     //with TKMImageMainText.Create(Panel_MainMenu, 300, 90, 423, 164, 4, rxGuiMain) do
     //  ImageStretch;
 
-    with TKMImageMainLeft.Create(Panel_MainMenu,  50, 220, round(218*1.3), round(291*1.3){, 5, rxGuiMain}) do
-      ImageStretch;
-    with TKMImageMainRight.Create(Panel_MainMenu, 705, 220, round(207*1.3), round(295*1.3){, 6, rxGuiMain}) do
-      ImageStretch;
+    TKMImageMainLeft.Create(Panel_MainMenu,  50, 220, round(218*1.3), round(291*1.3){, 5, rxGuiMain}, []);
+      //ImageStretch;
+    TKMImageMainRight.Create(Panel_MainMenu, 705, 220, round(207*1.3), round(295*1.3){, 6, rxGuiMain}, []);
+      //ImageStretch;
     //TKMLabel.Create(Panel_MainMenu, 512, 300, 'E X P A N S I O N', fntOutline, taCenter);
 
     Panel_MMButtons := TKMPanel.Create(Panel_MainMenu, 337, 340, 350, 400);

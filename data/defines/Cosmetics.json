@@ -1,7 +1,7 @@
 {
 	"GuiStyles" : [
 		{"TextID" : 2314, "Background" : 106, "Main" : 107, "Minimap" : 1178, "LeftPanel" : 1177, "Button" : 108, "LeftTexture" : 112, "RightTexture" : 113, "MainText" : 111},
-		{"TextID" : 2314, "Background" : 114, "Main" : 115, "Minimap" : 0, "LeftPanel" : 0, "Button" : 116, "LeftTexture" : 0, "RightTexture" : 0, "MainText" : 111},
-		{"TextID" : 2314, "Background" : 119, "Main" : 118, "Minimap" : 0, "LeftPanel" : 0, "Button" : 117, "LeftTexture" : 0, "RightTexture" : 0, "MainText" : 120}
+		{"TextID" : 2315, "Background" : 114, "Main" : 115, "Minimap" : 1182, "LeftPanel" : 1181, "Button" : 116, "LeftTexture" : 123, "RightTexture" : 122, "MainText" : 121},
+		{"TextID" : 2316, "Background" : 119, "Main" : 118, "Minimap" : 1179, "LeftPanel" : 1180, "Button" : 117, "LeftTexture" : 0, "RightTexture" : 0, "MainText" : 120}
 	]
 }

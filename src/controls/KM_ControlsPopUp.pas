@@ -186,7 +186,7 @@ type
 implementation
 uses
   Math, SysUtils,
-  KM_ResTexts, KM_ResKeys, KM_ResTypes,
+  KM_Resource, KM_ResTexts, KM_ResKeys, KM_ResTypes,
   KM_Defaults,
   KM_CommonUtils;
 
@@ -372,8 +372,10 @@ begin
 
   if aShowShadeBevel then
     BevelShade := TKMBevel.Create(Self, -2000,  -2000, 5000, 5000);
-
-  ImageBG := TKMImage.Create(Self, 0, 0, w, h, 15, rxGuiMain);
+  If fBGImageType = pbYellow then
+    ImageBG := TKMImageMain.Create(Self, 0, 0, w, h{, 15, rxGuiMain})
+  else
+    ImageBG := TKMImage.Create(Self, 0, 0, w, h, 15, rxGuiMain);
 
   if fBGImageType = pbPaper then
     with TKMBevel.Create(self, 0, 0, w, h) do
@@ -384,7 +386,7 @@ begin
 
   case fBGImageType of
     pbGray:   ImageBG.TexId := 15;
-    pbYellow: ImageBG.TexId := 18;
+    //pbYellow: ImageBG.TexId := gRes.Cosmetics.CurrentGuiStyle.MainImage;
     pbPaper: ImageBG.TexId := 102;
     pbScroll: begin
                 ImageBG.Rx := rxGui;

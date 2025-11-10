@@ -189,9 +189,9 @@ begin
   bottomLine := Panel_Options.Height - 30 - 20;
 
   if IsMenu then
-    with TKMImage.Create(Panel_Options, 705 - Panel_Options.Left, 220 - Panel_Options.Top, Round(207*1.3), Round(295*1.3),6,rxGuiMain) do
+    with TKMImageMainRight.Create(Panel_Options, 705 - Panel_Options.Left, 220 - Panel_Options.Top, Round(207*1.3), Round(295*1.3){,6,rxGuiMain}, [anTop]) do
     begin
-      ImageStretch;
+      //ImageStretch;
       Anchors := [anLeft];
     end;
 

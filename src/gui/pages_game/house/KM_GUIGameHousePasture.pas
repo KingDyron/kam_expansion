@@ -72,13 +72,13 @@ begin
   fCoinIndex := gRes.Wares.VirtualWares.WareS['vtCoin'].Index;
   for PPT := Low(TKMPasturePageType) to High(TKMPasturePageType) do
   begin
-    Button_Page[PPT] := TKMButton.Create(self, byte(PPT) * 33, 0, 30, 25, PAGE_TEX_ID[PPT], rxGui, bsGame);
+    Button_Page[PPT] := TKMButton.Create(self, byte(PPT) * 33, 0, 35, 25, PAGE_TEX_ID[PPT], rxGui, bsGame);
     Button_Page[PPT].Hint := gResTexts[PAGE_HINT[PPT]];
     Button_Page[PPT].OnClick := ChangePage_Click;
     Button_Page[PPT].Tag := byte(PPT);
   end;
 
-  Panel_Animals := TKMPanel.Create(self, 0, 30, Width, Height);
+  Panel_Animals := TKMPanel.Create(self, 0, 35, Width, Height);
     for I := 0 to High(Button_Count) do
       begin
         Button_Count[I] := TKMButtonFlat.Create(Panel_Animals, I mod 5 * 33, I div 5 * 37, 30, 34, 0);
@@ -86,7 +86,7 @@ begin
         Button_Count[I].OnClick := SellAnimal_Click;
       end;
 
-  Panel_Shop := TKMPanel.Create(self, 0, 30, Width, Height);
+  Panel_Shop := TKMPanel.Create(self, 0, 35, Width, Height);
 
     for I := low(Button_Buy) to high(Button_Buy) do
     begin

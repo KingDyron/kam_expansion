@@ -770,6 +770,7 @@ end;
 constructor TKMGuiImage.Create(aParent: TKMPanel; aLeft: Integer; aTop: Integer; aWidth: Integer; aHeight: Integer; aImageAnchors: TKMAnchorsSet = [anLeft,anTop]);
 begin
   Inherited Create(aParent, aLeft, aTop, aWidth, aHeight, 0, rxGuiMain, aImageAnchors);
+  Hitable := false;
 end;
 
 function TKMGuiImage.GetRX: TRXType;
