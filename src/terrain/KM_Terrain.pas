@@ -140,7 +140,8 @@ type
     procedure SetStructurePlan(const aLoc: TKMPoint; aIndex, aRot: Word; aBuildType : TKMHouseBuildState);
     procedure PlaceDecoration(const aLoc : TKMPoint; aIndex : Word);
     function CheckHouseBounds(aHouseType: TKMHouseType; const aLoc: TKMPoint; aInsetRect: TKMRect): Boolean;
-    function CanAddField(aX, aY: Word; aFieldType: TKMFieldType; aOwner : ShortInt = 0): Boolean;
+    function CanAddField(aX, aY: Word; aFieldType: TKMFieldType; aOwner : ShortInt = 0; aRoadType : TKMRoadType = rtNone): Boolean;
+    function CanAddRoad(aX, aY: Word; aRoadType: TKMRoadType; aOwner : ShortInt = 0): Boolean;
     function CheckHeightPass(const aLoc: TKMPoint; aPass: TKMHeightPass): Boolean;
     procedure AddHouseRemainder(const aLoc: TKMPoint; aHouseType: TKMHouseType; aBuildState: TKMHouseBuildState; Resources : array of TKMWareType);
 
@@ -7957,7 +7958,7 @@ begin
   end;
 end;
 
-function TKMTerrain.CanAddField(aX, aY: Word; aFieldType: TKMFieldType; aOwner : ShortInt = 0): Boolean;
+function TKMTerrain.CanAddField(aX, aY: Word; aFieldType: TKMFieldType; aOwner : ShortInt = 0; aRoadType : TKMRoadType = rtNone): Boolean;
   function HasWall : Boolean;
   var I : Integer;
   begin
@@ -7992,13 +7993,45 @@ begin
                             and (tpWalk in Land^[aY, aX].Passability)
                             and HasWall;
 
-    ftRoad:       Result := Result and (tpMakeRoads in Land^[aY, aX].Passability) or (gGameParams.IsMapEditor and (GetRoadType(aX, aY) <> rtNone) and (GetRoadType(aX, aY) <> gCursor.RoadType) );
+    ftRoad:       Result := Result and CanAddRoad(aX, aY, aRoadType, aOwner);
     ftGrassLand:  Result := Result and (TileGoodForGrassField(aX, aY) or TileIsGrassField(aX, aY) or TileIsCornField(aX, aY) or TileIsVegeField(aX, aY));
     ftCorn:       Result := Result and (TileGoodForCornField(aX, aY) or TileIsGrassField(aX, aY) or TileIsCornField(aX, aY) or TileIsVegeField(aX, aY));
     ftWine:       Result := Result and TileGoodForWineField(aX, aY);
     ftVegeField:  Result := Result and (TileGoodForGrassField(aX, aY) or TileIsGrassField(aX, aY) or TileIsCornField(aX, aY) or TileIsVegeField(aX, aY));
     else          Result := False;
   end;
+end;
+
+function TKMTerrain.CanAddRoad(aX: Word; aY: Word; aRoadType: TKMRoadType; aOwner: ShortInt = 0): Boolean;
+  function RoadDiff(road1, road2 : TKMRoadType) : byte;
+  begin
+    // 0 = the same road, cannot add
+    // 1 = new road is better, can add
+    // 2 = new road is worrse, cannot add
+    Result := 0;
+    If road1 = road2 then
+      Exit
+    else
+    If road1 = rtNone then
+      Exit(1)
+    else
+    begin
+      case road1 of
+        rtStone: If road2 in [rtExclusive, rtClay] then Result := 1;
+        rtWooden: If road2 in [rtExclusive, rtStone, rtClay] then Result := 1;
+        rtClay: If road2 in [rtExclusive] then Result := 1;
+        rtExclusive: Result := 2;
+        else Result := 1;
+      end;
+    end;
+
+  end;
+begin
+  Result := not (Land^[aY, aX].TileLock in [tlRoadWork]) and (
+            (tpMakeRoads in Land^[aY, aX].Passability)
+            or (RoadDiff(GetRoadType(aX, aY), aRoadType) = 1)
+            or (gGameParams.IsMapEditor and (GetRoadType(aX, aY) <> rtNone) and (GetRoadType(aX, aY) <> gCursor.RoadType))
+            );
 end;
 
 

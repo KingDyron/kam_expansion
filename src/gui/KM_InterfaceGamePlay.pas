@@ -4194,7 +4194,7 @@ procedure TKMGamePlayInterface.MouseDown(Button: TMouseButton; Shift: TShiftStat
     //Set cursor into 'Plan' mode by default,
     //even if we click where plan could not be placed we could plan it with mouse move later
     gCursor.Tag1 := Byte(cfmPlan);
-    if gMySpectator.Hand.CanAddFakeFieldPlan(P, aFieldType) then
+    if gMySpectator.Hand.CanAddFakeFieldPlan(P, aFieldType, aRoadType) then
     begin
       gGame.GameInputProcess.CmdBuild(gicBuildToggleFieldPlan, P, aFieldType, aRoadType);
       fLastDragPoint := gCursor.Cell;
@@ -4308,7 +4308,7 @@ procedure TKMGamePlayInterface.MouseMove(Shift: TShiftState; X,Y: Integer; var a
   procedure HandleFieldLMBDrag(const P: TKMPoint; aFieldType: TKMFieldType; aRoadType : TKMRoadType = rtNone);
   begin
     if not KMSamePoint(fLastDragPoint, P) then
-      if (gMySpectator.Hand.CanAddFakeFieldPlan(P, aFieldType)) and (gCursor.Tag1 = Byte(cfmPlan)) then
+      if (gMySpectator.Hand.CanAddFakeFieldPlan(P, aFieldType, aRoadType)) and (gCursor.Tag1 = Byte(cfmPlan)) then
       begin
         gGame.GameInputProcess.CmdBuild(gicBuildToggleFieldPlan, P, aFieldType, aRoadType);
         fLastDragPoint := gCursor.Cell;
@@ -4489,7 +4489,7 @@ procedure TKMGamePlayInterface.MouseUp(Button: TMouseButton; Shift: TShiftState;
     //Set cursor into 'Plan' mode by default,
     //even if we click where plan could not be placed we could plan it with mouse move later
     gCursor.Tag1 := Byte(cfmPlan);
-    if gMySpectator.Hand.CanAddFakeFieldPlan(P, aFieldType) then
+    if gMySpectator.Hand.CanAddFakeFieldPlan(P, aFieldType, aRoadType) then
     begin
       gGame.GameInputProcess.CmdBuild(gicBuildToggleFieldPlan, P, aFieldType, aRoadType);
       fLastDragPoint := gCursor.Cell;

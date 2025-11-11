@@ -3630,7 +3630,7 @@ begin
                     else
                       RenderSpriteOnTile(P, TC_BLOCK);
                   end else
-                  if (gMySpectator.Hand.CanAddFakeFieldPlan(P, ftRoad)) and (gCursor.Tag1 <> Ord(cfmErase)) then
+                  if (gMySpectator.Hand.CanAddFakeFieldPlan(P, ftRoad, gCursor.RoadType)) and (gCursor.Tag1 <> Ord(cfmErase)) then
                     RenderWireTile(P, icCyan) // Cyan quad
                   else
                     RenderSpriteOnTile(P, TC_BLOCK);       // Red X

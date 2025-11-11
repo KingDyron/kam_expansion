@@ -372,7 +372,7 @@ begin
   begin
     if fBuildID <> -1 then
     begin
-      if gTerrain.CanAddField(fLoc.X, fLoc.Y, ftRoad) then
+      if gTerrain.CanAddField(fLoc.X, fLoc.Y, ftRoad, fUnit.Owner, fRoadType) then
         //Allow other workers to take this task
         gHands[fUnit.Owner].Constructions.FieldworksList.ReOpenField(fBuildID)
       else
@@ -382,7 +382,7 @@ begin
     else
       //Autobuild AI should rebuild roads when worker dies (otherwise house is never built)
       if (gGame <> nil) and not gGame.IsExiting and gHands[fUnit.Owner].AI.Setup.AutoBuild and (fPhase < 9)
-      and gHands[fUnit.Owner].CanAddFieldPlan(fLoc, ftRoad) then
+      and gHands[fUnit.Owner].CanAddFieldPlan(fLoc, ftRoad, fRoadType) then
       begin
         gHands[fUnit.Owner].Constructions.FieldworksList.AddField(fLoc, ftRoad,fRoadType);
       end;
@@ -405,7 +405,7 @@ end;
 function TKMTaskBuildRoad.WalkShouldAbandon: Boolean;
 begin
   //Walk should abandon if other player has built something there before we arrived
-  Result := (fBuildID <> -1) and not gTerrain.CanAddField(fLoc.X, fLoc.Y, ftRoad);
+  Result := (fBuildID <> -1) and not gTerrain.CanAddField(fLoc.X, fLoc.Y, ftRoad, fUnit.Owner, fRoadType);
   Result := Result or IsStuckWhileWalking;
 end;
 
@@ -449,8 +449,13 @@ function TKMTaskBuildRoad.Execute: TKMTaskResult;
           H := gHands[fUnit.Owner].HousesHitTest(KMPointAbove(fLoc).X, KMPointAbove(fLoc).Y);
     end else
       H := nil;
-
-
+    If fRoadType = rtExclusive then
+      case gTerrain.GetRoadType(fLoc) of
+        rtNone : ;
+        rtStone : If aWare = wtStone then begin Inc(fSupplies, aCount); Exit; end;
+        rtWooden : If aWare = wtTimber then begin Inc(fSupplies, aCount); Exit; end;
+        rtClay : If aWare = wtTile then begin Inc(fSupplies, aCount); Exit; end;
+      end;
     
     if H = nil then
     begin

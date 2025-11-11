@@ -270,8 +270,8 @@ type
     function GetNextMarkerFogIndex(aIndex : Integer) : Integer;
     function GetNextMarkerDefendIndex(aIndex : Integer) : Integer;
 
-    function CanAddFieldPlan(const aLoc: TKMPoint; aFieldType: TKMFieldType): Boolean;
-    function CanAddFakeFieldPlan(const aLoc: TKMPoint; aFieldType: TKMFieldType): Boolean;
+    function CanAddFieldPlan(const aLoc: TKMPoint; aFieldType: TKMFieldType; aRoadType : TKMRoadType = rtNone): Boolean;
+    function CanAddFakeFieldPlan(const aLoc: TKMPoint; aFieldType: TKMFieldType; aRoadType : TKMRoadType = rtNone): Boolean;
     function CanRemFakeFieldPlan(const aLoc: TKMPoint; aFieldType: TKMFieldType): Boolean;
     function CanAddHousePlan(const aLoc: TKMPoint; aHouseType: TKMHouseType): Boolean;
     function CanAddHousePlanAI(aX, aY: Word; aHouseType: TKMHouseType; aCheckInfluence: Boolean): Boolean;
@@ -1494,9 +1494,9 @@ end;
 
 
 //See comment on CanAddFakeFieldPlan
-function TKMHand.CanAddFieldPlan(const aLoc: TKMPoint; aFieldType: TKMFieldType): Boolean;
+function TKMHand.CanAddFieldPlan(const aLoc: TKMPoint; aFieldType: TKMFieldType; aRoadType : TKMRoadType = rtNone): Boolean;
 begin
-  Result := gTerrain.CanAddField(aLoc.X, aLoc.Y, aFieldType, ID)
+  Result := gTerrain.CanAddField(aLoc.X, aLoc.Y, aFieldType, ID, aRoadType)
             and (fConstructions.FieldworksList.HasField(aLoc) = ftNone)
             and not fConstructions.HousePlanList.HasPlan(aLoc)
             //and not fConstructions.BridgePlanList.HasPlan(aLoc)
@@ -1508,9 +1508,9 @@ end;
 //This differs from above only in that it uses HasFakeField instead of HasField.
 //We need it because the user expects to be blocked by fake field plans, but the gameplay should not.
 //When the result effects the outcome of the game, the above function should be used instead.
-function TKMHand.CanAddFakeFieldPlan(const aLoc: TKMPoint; aFieldType: TKMFieldType): Boolean;
+function TKMHand.CanAddFakeFieldPlan(const aLoc: TKMPoint; aFieldType: TKMFieldType; aRoadType : TKMRoadType = rtNone): Boolean;
 begin
-  Result := gTerrain.CanAddField(aLoc.X, aLoc.Y, aFieldType, ID)
+  Result := gTerrain.CanAddField(aLoc.X, aLoc.Y, aFieldType, ID, aRoadType)
             and (IsComputer or not gTerrain.IsReservedForAI(aLoc))
             and (fConstructions.FieldworksList.HasFakeField(aLoc) = ftNone)
             and not fConstructions.HousePlanList.HasPlan(aLoc)
@@ -1742,7 +1742,7 @@ begin
   if aFieldType = plan then //Same plan - remove it
     RemFieldPlan(aLoc,aMakeSound)
   else
-    if CanAddFieldPlan(aLoc, aFieldType) then
+    if CanAddFieldPlan(aLoc, aFieldType, aRoadType) then
     begin
       if aMakeSound and not gGameParams.IsReplayOrSpectate
         and (ID = gMySpectator.HandID) then
@@ -1806,7 +1806,7 @@ begin
     if ID = gMySpectator.HandID then gSoundPlayer.Play(sfxClick);
   end
   else
-    if CanAddFakeFieldPlan(aLoc, aFieldType) then
+    if CanAddFakeFieldPlan(aLoc, aFieldType, aRoadType) then
     begin
       fConstructions.FieldworksList.AddFakeField(aLoc, aFieldType, aRoadType);
       if ID = gMySpectator.HandID then
