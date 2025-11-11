@@ -468,6 +468,8 @@ begin
 
   if (aUnit = nil) or (aAttacker = nil) then
     Exit;
+  If aAttacker.InShip <> nil then
+    aAttacker := TKMUnit(aAttacker.InShip);
 
   case gHands[fOwner].HandType of
     hndHuman: begin

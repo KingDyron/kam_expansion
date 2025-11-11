@@ -250,6 +250,7 @@ type
     property  Condition: Integer read fCondition write SetCondition;
     property  StartWDefaultCondition: Boolean read fStartWDefaultCondition write fStartWDefaultCondition;
     property  Visual: TKMUnitVisual read fVisual;
+    property Ticker : Cardinal read fTicker;
 
 
 
@@ -2326,6 +2327,7 @@ begin
   LoadStream.Read(HitPointsInvulnerable);
   LoadStream.Read(fInHouse, 4);
   LoadStream.Read(fHome, 4); //Substitute it with reference on SyncLoad
+  LoadStream.Read(InShip, 4); //Substitute it with reference on SyncLoad
   LoadStream.Read(fPositionF);
   LoadStream.Read(fVisible);
   LoadStream.Read(fIsDead);
@@ -2373,6 +2375,7 @@ begin
 
   fHome := gHands.GetHouseByUID(Integer(fHome));
   fInHouse := gHands.GetHouseByUID(Integer(fInHouse));
+  InShip := Pointer(gHands.GetUnitByUID(Integer(InShip)));
 
   //Create last so it can initialise with loaded (and sync-loaded) values
   fVisual := TKMUnitVisual.Create(Self);
@@ -3994,6 +3997,7 @@ begin
 
   SaveStream.Write(fInHouse.UID); //Store ID, then substitute it with reference on SyncLoad
   SaveStream.Write(fHome.UID); //Store ID, then substitute it with reference on SyncLoad
+  SaveStream.Write(TKMunit(InShip).UID);
 
   SaveStream.Write(fPositionF);
   SaveStream.Write(fVisible);

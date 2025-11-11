@@ -94,6 +94,7 @@ type
     procedure DoDismiss;override;
     function IsSelected : Boolean; override;
     function RageDelay : Word; virtual;
+
   public
     OnWarriorDismissed: TKMWarriorEvent; //Separate event from OnUnitDied to report to Group
     OnWarriorDied: TKMWarriorEvent; //Separate event from OnUnitDied to report to Group
@@ -313,6 +314,8 @@ type
     function GetMapEdUnit(aIndex : Integer) : TKMUnitMainData;
     procedure SetMapEdUnit(aIndex : Integer; aValue : TKMUnitMainData);
     function GetMapEdUnitCount : Byte;
+    function GetMaxFireDelay(aUnitType : TKMUnitType) : byte;
+    procedure CheckForEnemies;
   public
     function CanAssignWarrior(aWarrior : Pointer) : Boolean;
     function WarriorMustWait : Boolean;
@@ -432,7 +435,7 @@ type
       ARCHER_RELOAD_TIME = 20;// 2 seconds
     var
       fArcher : array[0..MAX_ARCHERS - 1] of Cardinal;
-    procedure CkeckForEnemies;
+    procedure CheckForEnemies;
   public
     constructor Load(LoadStream: TKMemoryStream); override;
     procedure Save(SaveStream: TKMemoryStream); override;
@@ -1368,6 +1371,8 @@ begin
           OrderAmmo;
   end;
 end;
+
+
 
 function TKMUnitWarrior.CheckForEnemy: Boolean;
 var
@@ -2341,6 +2346,7 @@ begin
   if fNextOrder <> woNone then
     TakeNextOrder;
 
+  If InShip = nil then
     if (fTicker mod 6 = 0) and not InFight then
       CheckForEnemy; //Split into separate procedure so it can be called from other places
 
@@ -2352,6 +2358,8 @@ begin
     Exit;
 
   SetActionStay(50, uaWalk);
+
+
 end;
 
 
@@ -3128,6 +3136,57 @@ begin
   Result := fUnitsFromMap.Count;
 end;
 
+function TKMUnitWarriorShip.GetMaxFireDelay(aUnitType : TKMUnitType) : byte;
+begin
+  Result := 10;
+    case aUnitType of
+      utBattleShip : Result := 20;
+      utArcher,
+      utBowman : Result := 20;
+
+      utCrossbowman : Result := 25;
+      utRogue : Result := 30;
+      utBallista : Result := 40;
+      utCatapult : Result := 50;
+      else raise Exception.Create('Unknown shooter');
+    end;
+  Result := Result * 2;
+end;
+
+procedure TKMUnitWarriorShip.CheckForEnemies;
+var I : integer;
+  U : TKMUnit;
+begin
+  If (fUnitsInside.Count = 0) and (fUnitsFromMap.Count = 0) then
+    Exit;
+
+  U := gTerrain.UnitsHitTestWithinRad(Position, 4, 9.99, Owner, atEnemy, dirNA, not RANDOM_TARGETS);
+  //no unit found so no need to check every archer
+  If (U = nil) or (U.IsDeadOrDying) then
+    Exit;
+
+  for I := 0 to fUnitsInside.Count - 1 do
+    if (fUnitsInside[I] is TKMUnitWarrior)
+    and (TKMUnitWarrior(fUnitsInside[I]).IsRanged)
+    and ((TKMUnitWarrior(fUnitsInside[I]).BoltCount > 0) or TKMUnitWarrior(fUnitsInside[I]).InfinityAmmo) then
+      If fUnitsInside[I].Ticker mod GetMaxFireDelay(fUnitsInside[I].UnitType) = 0 then
+      begin
+        If U = nil then
+        begin
+          U := gTerrain.UnitsHitTestWithinRad(Position, 4, 9.99, Owner, atEnemy, dirNA, not RANDOM_TARGETS);
+          //no unit found so no need to check every archer
+          If (U = nil) or (U.IsDeadOrDying) then
+            Exit;
+        end;
+        gProjectiles.AimTarget(PositionF, U, TKMUnitWarrior(fUnitsInside[I]).ProjectileType, fUnitsInside[I], 11.99, 4);
+        U := nil;
+      end;
+
+
+
+end;
+
+
 procedure TKMUnitWarriorShip.AddMapEdUnit(aUnitType: TKMUnitType; aCondition: Integer; aBoltCount: Integer;
                                           aMembersCount: Integer; aColumnsCount: Integer);
 var UD : TKMUnitMainData;
@@ -3192,6 +3251,7 @@ begin
   Result := Inherited;
   If IsDeadOrDying then
     Exit;
+  CheckForEnemies;
   if gGameParams.Tick mod 25 <> 0 then
     Exit;
 
@@ -3952,7 +4012,7 @@ begin
   SaveStream.WriteData(fArcher);
 end;
 
-procedure TKMUnitWarriorTower.CkeckForEnemies;
+procedure TKMUnitWarriorTower.CheckForEnemies;
   function HasReadyArcher : Boolean;
   var I : Integer;
   begin
@@ -3986,7 +4046,7 @@ begin
     end;
 
     gProjectiles.AimTarget(PositionF, U, ProjectileType, self, RangeMax, RangeMin);
-    fArcher[I] := gGameParams.Tick + ARCHER_RELOAD_TIME + KamRandom(10, 'TKMUnitWarriorTower.CkeckForEnemies');
+    fArcher[I] := gGameParams.Tick + ARCHER_RELOAD_TIME + KamRandom(10, 'TKMUnitWarriorTower.CheckForEnemies');
     U := nil;
   end;
 
@@ -3998,7 +4058,7 @@ begin
   If not Result then
     Exit;
   If fTicker mod 3 = 0 then
-    CkeckForEnemies;
+    CheckForEnemies;
 end;
 
 end.
