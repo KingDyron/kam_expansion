@@ -815,7 +815,7 @@ begin
 
               if Home is TKMHouseQueue then
               begin
-                TKMHouseQueue(Home).RemWareFromQueue(0);
+                TKMHouseQueue(Home).ProductionComplete;
                 TKMHouseQueue(Home).InProgress := false;
               end;
 

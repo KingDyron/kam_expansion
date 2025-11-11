@@ -18,7 +18,7 @@ type
   TKMHouseQueue = class(TKMHouse)
   private
     fQueue: array [0..QUEUE_LENGTH - 1] of TKMWareQueue;
-
+    fNotRemLastPos : Boolean;
     function GetQueue(aIndex: Integer): TKMWareQueue; //Used in UI. First item is the unit currently being trained, 1..5 are the actual queue
     procedure MoveQueue; //This should Create new unit and start training cycle
     procedure SetQueue(aIndex: Integer; aValue: TKMWareQueue);
@@ -44,6 +44,7 @@ type
     function QueueIsFull: Boolean;
     function QueueLength: Byte;
     property Queue[aIndex: Integer]: TKMWareQueue read GetQueue;
+    property NotRemLastPos : Boolean read fNotRemLastPos write fNotRemLastPos;
     procedure Save(SaveStream: TKMemoryStream); override;
     procedure UpdateState(aTick: Cardinal); override;
   end;
@@ -67,6 +68,7 @@ begin
     fQueue[I].Qt := 0;
     fQueue[I].W := wtNone;
   end;
+  fNotRemLastPos := false;
 end;
 
 
@@ -170,15 +172,17 @@ begin
   for I := 0 to High(fQueue) - 1 do
     PrivateQueue[I] := fQueue[I+1]; //Shift by one
 
-    fQueue[High(fQueue)].W := wtNone;
-    fQueue[High(fQueue)].Qt := 0;
-
+  fQueue[High(fQueue)].W := wtNone;
+  fQueue[High(fQueue)].Qt := 0;
 end;
 
 
 //Unit reports back to School that it was trained
 procedure TKMHouseQueue.ProductionComplete;
 begin
+  If fNotRemLastPos then
+    If (fQueue[1].W = wtNone) or (fQueue[1].Qt = 0) then
+    Exit;
   fQueue[0].W := wtNone; //Clear the unit in training
   fQueue[0].Qt := 0; //Clear the unit in training
   //Attempt to start training next unit in queue
@@ -259,6 +263,7 @@ begin
   LoadStream.CheckMarker('HouseSiegeWorkShop');
   LoadStream.Read(fQueue, SizeOf(fQueue));
   LoadStream.Read(InProgress);
+  LoadStream.Read(fNotRemLastPos);
 end;
 
 procedure TKMHouseQueue.Save(SaveStream: TKMemoryStream);
@@ -268,6 +273,7 @@ begin
   SaveStream.PlaceMarker('HouseSiegeWorkShop');
   SaveStream.Write(fQueue, SizeOf(fQueue));
   SaveStream.Write(InProgress);
+  SaveStream.Write(fNotRemLastPos);
 end;
 
 procedure TKMHouseQueue.UpdateState(aTick: Cardinal);

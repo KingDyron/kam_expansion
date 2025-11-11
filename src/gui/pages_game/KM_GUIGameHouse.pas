@@ -197,6 +197,7 @@ type
       Button_Queue_WarePlan: array [0..QUEUE_LENGTH - 1] of TKMButtonFlat;
       Button_Queue_Wares: array [0..3] of TKMButtonFlat;
       Button_Queue_Right,Button_Queue_Left : TKMButton;
+      CheckBox_NotRem : TKMCheckBox;
 
     Panel_HouseCottage: TKMPanel;
       Button_CottageWorkless : TKMButtonFlat;
@@ -885,6 +886,9 @@ begin
     Button_Queue_Left.OnClick  := House_Queue_ChangeWare;
     Button_Queue_Right.OnClick := House_Queue_ChangeWare;
 
+    CheckBox_NotRem := TKMCheckBox.Create(Panel_HouseQueue, 0, Button_Queue_Left.Bottom + 3, TB_WIDTH, 20, gResTexts[2318], fntMetal);
+    CheckBox_NotRem.Hint := gResTexts[2317];
+    CheckBox_NotRem.OnClickShift := House_Queue_Click;
 
 
 end;
@@ -2094,10 +2098,10 @@ begin
           Button_Queue_WarePlan[I].TexID := 0;
           Button_Queue_WarePlan[I].Caption := '';
         end;
-
+      CheckBox_NotRem.Checked := TKMHouseQueue(aHouse).NotRemLastPos;
       Panel_HouseQueue.Top := base + line * 25 + 10;
 
-      base := 50 + 34 * (QUEUE_LENGTH div 6) + demandTop;
+      base := 75 + 34 * (QUEUE_LENGTH div 6) + demandTop;
       ShowCommonOutput(aHouse, base, line, rowRes);
 
       Panel_HouseQueue.Show;
@@ -3927,11 +3931,14 @@ var H : TKMHouseQueue;
   W : TKMWareType;
   Qt, I : Integer;
 begin
-  if not (sender is TKMButtonFlat) then Exit;
   if not (gMySpectator.Selected is TKMHouseQueue) then Exit;
 
-
   H := TKMHouseQueue(gMySpectator.Selected);
+  If sender = CheckBox_NotRem then
+  begin
+    CheckBox_NotRem.Checked := H.NotRemLastPos;
+    gGame.GameInputProcess.CmdHouse(gicHouseQueueNotRem, fHouse);
+  end else
   if TKMButtonFlat(sender).Tag >= 100 then
   begin
     W := H.WareOutput[fLastWareOutput];
