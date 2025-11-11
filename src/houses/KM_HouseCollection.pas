@@ -137,6 +137,7 @@ begin
   uid := gUIDTracker.GetNewUID;
 
   case aHouseType of
+    htQuarry:        Result := TKMHouseQuarry.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
     htFarm:          Result := TKMHouseFarm.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
     htSwine,
     htStables:       Result := TKMHouseSwineStable.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
@@ -530,6 +531,7 @@ begin
   begin
     LoadStream.Read(HT, SizeOf(HT));
     case HT of
+      htQuarry:        H := TKMHouseQuarry.Load(LoadStream);
       htFarm:          H := TKMHouseFarm.Load(LoadStream);
       htSwine,
       htStables:       H := TKMHouseSwineStable.Load(LoadStream);

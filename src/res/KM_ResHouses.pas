@@ -531,13 +531,14 @@ end;
 function TKMHouseSpec.FlagPointTexId: Word;
 begin
   case fHouseType of
-    htBarracks:     Result := 249;
-    htTownHall:     Result := 249;
-    htWoodcutters:  Result := 660;
+    htBarracks:       Result := 249;
+    htTownHall:       Result := 249;
+    htWoodcutters:    Result := 660;
     htSiegeWorkshop:  Result := 727;
-    htCollectors:  Result := 728;
-    htPalace:  Result := 745;
+    htCollectors:     Result := 728;
+    htPalace:         Result := 745;
     htCartographers:  Result := 999;
+    htQuarry:         Result := 1183;
   else
     Result := 990; // Default Flag
   end;

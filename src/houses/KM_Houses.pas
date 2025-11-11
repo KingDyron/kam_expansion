@@ -511,7 +511,10 @@ type
 
     function ObjToString(const aSeparator: String = '|'): String; override;
   end;
-
+  TKMHouseQuarry = class(TKMHouseWFlagPoint)
+  protected
+    function GetMaxDistanceToPoint: Integer; override;
+  end;
 
   TKMHouseTower = class(TKMHouse)
   public
@@ -5179,6 +5182,11 @@ function TKMHouseWFlagPoint.ObjToString(const aSeparator: String = '|'): String;
 begin
   Result := inherited ObjToString(aSeparator) +
             Format('%sFlagPoint = %s', [aSeparator, fFlagPoint.ToString]);
+end;
+
+function TKMHouseQuarry.GetMaxDistanceToPoint: Integer;
+begin
+  Result := gRes.Units[utStonemason].MiningRange;
 end;
 
 

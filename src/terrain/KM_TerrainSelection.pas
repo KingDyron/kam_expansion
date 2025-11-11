@@ -1145,7 +1145,7 @@ begin
         stats := fSelectionHouses[I];
         Lx := fSelectionRect.Left + fSelectionHouses[I].X;
         Ly := fSelectionRect.Top + fSelectionHouses[I].Y;
-        HT := stats.HouseType;
+        //HT := stats.HouseType;
         //If gTerrain.CanPlaceHouseFromScript(HT, KMPoint(Lx - gRes.Houses[HT].EntranceOffsetX, Ly - gRes.Houses[HT].EntranceOffsetY)) then
           H :=  gHands[fSelectionHouses[I].Owner].AddHouse(fSelectionHouses[I].HouseType,
                                                         Lx,

@@ -1943,7 +1943,6 @@ end;
 
 function TKMJsonObject.IndexOf(aName: string): Integer;
 var I : Integer;
-  n : String;
 begin
   Result := -1;
   for I := 0 to fCount - 1 do

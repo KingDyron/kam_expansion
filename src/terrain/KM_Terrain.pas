@@ -1679,7 +1679,7 @@ begin
 end;
 
 function TKMTerrain.TileHouseTerrain(X: Word; Y: Word): TKMTerrPicType;
-var terKind : TKMTerrainKind;
+//var terKind : TKMTerrainKind;
 begin
   Result := tptNone;
   If TileHasParameter(X, Y, fTileset.TileIsSnow) then

@@ -574,7 +574,7 @@ var
   isMiner, hardWritten : Boolean;
   tmpHouse : TKMHouse;
   treeID : Word;
-
+  mRange : Word;
   function GetFarmGrainType : TKMGrainFarmSet;
   begin
     Result[0] := gftNone;
@@ -670,7 +670,18 @@ begin
     gsBitinMiner : fIssued := gTerrain.FindOre(aLoc, wtBitinOre, tmp.Loc, aUnit.Home.IsMineShaft);
     //gsClayMiner : fIssued := gTerrain.FindClay(aLoc, KMPOINT_ZERO, False, tmpHouse, tmp.Loc);
     //gsCollector : fIssued := gTerrain.FindJewerly(aLoc, KMPOINT_ZERO, False, tmp.Loc);
-    gsStoneCutter : fIssued := gTerrain.FindStone(aLoc, gRes.Units[aUnit.UnitType].MiningRange, KMPOINT_ZERO, False, tmpHouse, tmp);
+    gsStoneCutter : begin
+                      mRange := gRes.Units[aUnit.UnitType].MiningRange;
+                      if aUnit.Home is TKMHouseWFlagPoint then
+                      if TKMHouseWFlagPoint(aUnit.Home).IsFlagPointSet then
+                      begin
+                        TKMHouseWFlagPoint(aUnit.Home).ValidateFlagPoint;
+                        aLoc := TKMHouseWFlagPoint(aUnit.Home).FlagPoint;
+                        mRange := mRange div 4;
+                      end;
+
+                      fIssued := gTerrain.FindStone(aLoc, mRange, KMPOINT_ZERO, False, tmpHouse, tmp);
+                    end;
     gsFisherCatch : fIssued := gTerrain.FindFishWater(aLoc, gRes.Units[aUnit.UnitType].MiningRange, KMPOINT_ZERO, False, tmp);
     else isMiner := false;
   end;
