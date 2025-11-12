@@ -372,6 +372,8 @@ begin
 
                                 end;
                                 Damage := fOwner.Attack;
+                                If UNIT_TO_GROUP_TYPE[U.UnitType] = gtMounted then
+                                  Damage := Damage + fOwner.AttackHorse;
 
                                 if fType = ptTowerBolt then Damage := 90;
 

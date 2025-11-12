@@ -1,15 +1,6 @@
    Timestamp    Elapsed     Delta  Thread    Description
 ========================
-    Date: 2025.11.07
+    Date: 2025.11.12
 ========================
-17:09:03.466     0,005s       5ms  16928    Log is up and running. Game version: KaM Expansion: Co-op & World Update
-17:09:05.704     2,243s    2238ms  16928    GUI - 1064
-17:09:11.975     8,514s    6271ms  16928    Trimmed 0
-17:09:23.743    20,282s   11768ms  16928    Houses - 2898
-17:09:30.030    26,568s    6285ms  16928    Trimmed 0
-17:09:36.567    33,105s    6537ms  16928    Tileset - 5449
-17:10:00.068    56,607s   23502ms  16928    Trimmed 0
-17:10:03.127    59,666s    3058ms  16928    Trees - 1403
-17:10:20.006    76,545s   16879ms  16928    Trimmed 0
-17:10:33.060    89,599s   13054ms  16928    Units - 16849
-17:10:41.580    98,119s    8520ms  16928    Trimmed 0
+18:42:44.811     0,005s       5ms  26312    Log is up and running. Game version: KaM Expansion: Co-op & World Update
+18:42:47.325     2,519s    2514ms  26312    Units - 17202

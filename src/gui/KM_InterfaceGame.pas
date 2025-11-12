@@ -220,16 +220,16 @@ const
     utFighter, utMilitia, utAxeFighter, utSwordFighter, utBowman, utCrossbowman,
     utLanceCarrier, utPikeman, utMaceFighter, utFlailFighter, utScout, utKnight);
 
-  TownHall_Order: array [0..6] of TKMUnitType = (
-    utRebel, utRogue, utClubMan, utVagabond, utShieldBearer, utBarbarian, utWarrior);
+  TownHall_Order: array [0..7] of TKMUnitType = (
+    utRebel, utRogue, utClubMan, utVagabond, utSkirmisher, utShieldBearer, utBarbarian, utWarrior);
 
-  Soldiers_Order: array[0..37] of TKMUnitType = (
+  Soldiers_Order: array[0..38] of TKMUnitType = (
     utFighter, utMilitia, utAxeFighter, utSwordFighter, utBarbarian, utWarrior, utPaladin,
     utRogue, utBowman, utCrossbowMan, utArcher,
     utRebel, utLanceCarrier, utPikeman, utPikeMachine,
     utClubMan, utMaceFighter, utFlailFighter,
     utVagabond, utScout, utKnight, utTrainedWolf,
-    utCatapult, utBallista, utAmmoCart, utShieldBearer, utWoodenWall, utRam, utMobileTower,
+    utCatapult, utBallista, utAmmoCart, utSkirmisher, utShieldBearer, utWoodenWall, utRam, utMobileTower,
     utPyro, utTorchMan, utLekter, utMedic, utSpy, utSpikedTrap, utBoat, utShip, utBattleShip);
 
   // Stats get stacked by UI logic (so that on taller screens they all were
@@ -273,11 +273,11 @@ const
     (HouseType: (htStore, htSchool, htInn, htMarket, htNone);                             UnitType: (utSerf, utBuilder))
     ); }
 
-  MapEd_Order: array [0..37] of TKMUnitType = (
+  MapEd_Order: array [0..38] of TKMUnitType = (
     utFighter, utMilitia, utAxeFighter, utSwordFighter, utBowman, utCrossbowman,
     utLanceCarrier, utPikeman, utMaceFighter, utFlailFighter,
     utScout, utKnight,
-    utRebel, utRogue, utClubMan, utVagabond,utShieldBearer, utBarbarian, utWarrior,
+    utRebel, utRogue, utClubMan, utVagabond, utSkirmisher, utShieldBearer, utBarbarian, utWarrior,
     utCatapult, utBallista, utRam, utWoodenWall, utMobileTower,
     utAmmoCart, utPikeMachine,
     utTorchMan, utPyro, utLekter, utMedic, utPaladin, utArcher, utSpy, utTrainedWolf, utSpikedTrap,

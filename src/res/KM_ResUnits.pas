@@ -217,12 +217,12 @@ const
     35, 36, 47, 48, 49,
     14,15,16,17,18,19,20,21,22,23, //Warriors
     -1,-1,-1,-1, -1,-1, -1, -1, -1, -1, -1, - 1, -1, -1, -1, -1, //TPR warriors (can't be placed with SET_UNIT)
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     24,25,26,27,28,29,30,31, 37, 38, 39, 40, 41, 42, 43,
     44, 45, 46); //Animals
 
   //This is a map of the valid values for !SET_GROUP, and the corresponing unit that will be created (matches KaM behavior)
-  UNIT_ID_TO_TYPE: array[0..79] of TKMUnitType = (
+  UNIT_ID_TO_TYPE: array[0..80] of TKMUnitType = (
     utSerf,utWoodcutter,utMiner,utAnimalBreeder,utFarmer,
     utCarpenter,utBaker,utButcher,utFisher,utBuilder,
     utStonemason,utSmith,utMetallurgist,utRecruit, //Units
@@ -241,6 +241,7 @@ const
     utPyro, utLekter, utDeerMale, utDeerFemale, utFox, utBoar, utBear,
     utLandDuck, utRabbit,utWhiteBear, utSandSnake, utSpider,
     utMobileTower, utFeeder, utHouseBuilder, utMountedSerf,
+    utSkirmisher,
     utNone, utNone, utNone
     );
 
@@ -252,7 +253,7 @@ const
     24,25,26,27, 28,29,//TPR warriors
     38, 39, 40, 41, 42, 43, 44, 45, 46, 47,//My Warriors
     48, 49, 50, 52, 53, 54, 55, 57, 58, 59, 60,
-    61, 62, 73,//pyro, lekter, mobile wall
+    61, 62, 73, 77,//pyro, lekter, mobile wall, skirmisher
     30,31,32,33,34,35,36,37, //Animals
     63, 64, 65, 66, 67, 68, 69, 70, 71, 72);//deerMale .. utWarehouseMan
 
@@ -408,7 +409,7 @@ end;
 function TKMUnitSpec.GetCanOrderAmmo: Boolean;
 begin
   Result := fUnitType in [utBowMan, utCrossbowMan, utBallista, utCatapult, utRogue,
-                          utAmmoCart, utArcher, utShip, utBattleShip, utBoat];
+                          utAmmoCart, utArcher, utShip, utBattleShip, utBoat, utSkirmisher];
 end;
 
 function TKMUnitSpec.GetAmmoType: TKMUnitAmmoType;
@@ -423,6 +424,7 @@ begin
     utCatapult: Result := uatStoneBolt;
     utRogue :  Result := uatRogueStone;
     utBoat :  Result := uatAxe;
+    utSkirmisher: Result := uatAxe;
     else
       Result := uatNone;
   end;
@@ -444,6 +446,7 @@ begin
     utBowman:     Result := RANGE_BOWMAN_MIN;
     utCrossbowman: Result := RANGE_ARBALETMAN_MIN;
     utRogue:  Result := RANGE_SLINGSHOT_MIN;
+    utSkirmisher: Result := 2;
   end;
 end;
 
@@ -467,6 +470,7 @@ begin
     utCatapult:   Result := RANGE_CATAPULT_MAX;
     utCrossbowman: Result := RANGE_ARBALETMAN_MAX;
     utRogue:  Result := RANGE_SLINGSHOT_MAX;
+    utSkirmisher: Result := RANGE_BOWMAN_MAX - 1;
   end;
 end;
 
@@ -577,7 +581,8 @@ const
     [uaWalk, uaWork, uaDie, uaEat],//utBoat
     [uaWalk, uaWork, uaDie, uaEat, uaStay],//utPyro
     [uaWalk, uaWork, uaDie, uaEat, uaStay],//utLekter
-    [uaWalk, uaWork, uaDie, uaEat, uaStay],//utMobileTower
+    [uaWalk, uaWork, uaDie, uaEat],//utMobileTower
+    [uaWalk, uaWork, uaDie, uaEat],//utSkirmisher
 
     [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], //Animals
     [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk],//deermale
@@ -643,6 +648,7 @@ const
     ftMelee,
     ftMelee,
     ftMelee,
+    ftRanged,
     ftRanged
   );
 begin
@@ -775,7 +781,7 @@ const
     $80B0B0 ,$80B0B0,$80B0B0,$80B0B0,$80B0B0, $80B0B0, $80B0B0, $80B0B0, $80B0B0, $80B0B0,
     $80B0B0, $80B0B0 ,$80B0B0,$80B0B0, $80B0B0, $80B0B0 ,$80B0B0,$80B0B0,$80B0B0,$80B0B0,
     $80B0B0,$80B0B0,$80B0B0,$80B0B0,$80B0B0,$80B0B0,$80B0B0,$80B0B0,$80B0B0,$80B0B0,$80B0B0,
-    $80B0B0,$80B0B0,$80B0B0,$80B0B0); //Exact colors can be tweaked
+    $80B0B0,$80B0B0,$80B0B0,$80B0B0, $000000); //Exact colors can be tweaked
 begin
   Result := MM_COLOR[fUnitType] or $FF000000;
 end;

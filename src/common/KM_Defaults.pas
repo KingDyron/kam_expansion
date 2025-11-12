@@ -675,7 +675,7 @@ type
     utClubMan,      utMaceFighter,  utFlailFighter,  utShieldBearer,
     utFighter,      utSpikedTrap,   utWoodenWall,    utTorchMan,
     utMedic,        utBattleShip,   utBoat,          utPyro,
-    utLekter,       utMobileTower,
+    utLekter,       utMobileTower,  utSkirmisher,
 
     utWolf,         utFish,         utWatersnake,    utSeastar,
     utCrab,         utWaterflower,  utWaterleaf,     utDuck,
@@ -696,13 +696,13 @@ const
   CITIZEN_MIN = utSerf;
   CITIZEN_MAX = utMountedSerf;
   WARRIOR_MIN = utMilitia;
-  WARRIOR_MAX = utMobileTower;
+  WARRIOR_MAX = utSkirmisher;
   WARRIOR_EQUIPABLE_BARRACKS_MIN = utMilitia; //Available from barracks
   WARRIOR_EQUIPABLE_BARRACKS_MAX = utKnight;
   WARRIOR_EQUIPABLE_TH_MIN = utBarbarian; //Available from Townhall
   WARRIOR_EQUIPABLE_TH_MAX =  utWarrior;
   HUMANS_MIN = utSerf;
-  HUMANS_MAX =  utMobileTower;
+  HUMANS_MAX =  utSkirmisher;
   ANIMAL_MIN = utWolf;
   ANIMAL_MAX = utSpider;
   WARRIOR_BITIN_EQUIPABLE = [ utSwordFighter, utCrossbowman, utPikeman, utKnight, utCatapult, utShieldBearer,
@@ -794,7 +794,8 @@ const
     gtShips,
     gtWreckers,
     gtMelee,
-    gtMachines
+    gtMachines,
+    gtRanged
     );
 
 type
@@ -1316,7 +1317,8 @@ const
     1, 2.4, 6, 6,
     0.5, 10, 10,
     2, 2, 2, 2, 10, 10,
-    10
+    10,
+    4
   );
 {
 type

@@ -841,6 +841,7 @@ begin
     utRogue:  Result := fBoltCount <= 30;
     utCatapult: Result := fBoltCount <= 5;
     utBallista:  Result := fBoltCount <= 10;
+    utSkirmisher:  Result := fBoltCount <= 30;
     else Result := fBoltCount <= 10;
   end;
 end;
@@ -897,6 +898,7 @@ begin
       uatRogueStone: gHands[Owner].Deliveries.Queue.AddDemand(nil, Self, wtStoneBolt, 1, dtOnce, diHigh2);
       uatStoneBolt: gHands[Owner].Deliveries.Queue.AddDemand(nil, Self, wtStoneBolt, 2, dtOnce, diHigh2);
       uatBolt: gHands[Owner].Deliveries.Queue.AddDemand(nil, Self, wtBolt, 2, dtOnce, diHigh2);
+      uatAxe: gHands[Owner].Deliveries.Queue.AddDemand(nil, Self, wtAxe, 1, dtOnce, diHigh2);
     end;
 
     fRequestedAmmo := True;
@@ -918,6 +920,7 @@ begin
     uatRogueStone: Inc(fBoltCount, 90 + KamRandom(20, 'RTKMUnitWarrior.ReloadAmmo2'));
     uatStoneBolt: If doMax then Inc(fBoltCount, 20) else Inc(fBoltCount, 10);
     uatBolt: If doMax then Inc(fBoltCount, 30) else  Inc(fBoltCount, 15);
+    uatAxe: Inc(fBoltCount, 60);
   end;
 
   If (gGame.Params.Tick > 1) and gHands[Owner].ArmyDevUnlocked(19) then
@@ -927,6 +930,7 @@ begin
       uatRogueStone: Inc(fBoltCount, 30);
       uatStoneBolt: Inc(fBoltCount, 5);
       uatBolt: Inc(fBoltCount, 7);
+      uatAxe: Inc(fBoltCount, 5);
     end;
 
   If (gGame.Params.Tick > 1) and gHands[Owner].ArmyDevUnlocked(20) then
@@ -936,6 +940,7 @@ begin
       uatRogueStone: Inc(fBoltCount, 50);
       uatStoneBolt: Inc(fBoltCount, 7);
       uatBolt: Inc(fBoltCount, 10);
+      uatAxe: Inc(fBoltCount, 5);
     end;
 
 
@@ -1589,6 +1594,7 @@ begin
       utRogue:  Result := SLINGSHOT_FIRING_DELAY;
       utBallista:  Result := BALLISTA_FIRING_DELAY;
       utCatapult:  Result := CATAPULT_FIRING_DELAY;
+      utSkirmisher: Result := 4;
       else raise Exception.Create('Unknown shooter');
     end;
 end;
@@ -1619,6 +1625,7 @@ begin
       utRogue:  Result := SLINGSHOT_AIMING_DELAY_MIN + KaMRandom(SLINGSHOT_AIMING_DELAY_ADD, 'TKMUnitWarrior.GetAimingDelay 3');
       utBallista:  Result := BALLISTA_AIMING_DELAY_MIN + KaMRandom(BALLISTA_AIMING_DELAY_MIN, 'TKMUnitWarrior.GetAimingDelay 4');
       utCatapult:  Result := CATAPULT_AIMING_DELAY_MIN + KaMRandom(CATAPULT_AIMING_DELAY_ADD, 'TKMUnitWarrior.GetAimingDelay 5');
+      utSkirmisher: Result := 10;
       else raise Exception.Create('Unknown shooter');
     end;
 end;
@@ -1891,6 +1898,7 @@ begin
     utBallista : Result := ptBallistaBolt;
     utCatapult : Result := ptCatapultRock;
     utRogue:  Result := ptSlingRock;
+    utSkirmisher:  Result := ptBallistaBolt;
     else raise Exception.Create('Unknown shooter');
   end;
 end;
@@ -3138,7 +3146,6 @@ end;
 
 function TKMUnitWarriorShip.GetMaxFireDelay(aUnitType : TKMUnitType) : byte;
 begin
-  Result := 10;
     case aUnitType of
       utBattleShip : Result := 20;
       utArcher,

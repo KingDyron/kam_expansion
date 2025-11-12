@@ -4955,6 +4955,57 @@
 				{"ActionType" : "uaEat","Dir" : "dirW","X" : 0,"Y" : 0,"Steps" : [7449, 7449, 7449, 7449, 7450, 7451, 7452, 7453, 7454, 7455, 7456, 7457, 7458, 7449, 7449, 7448, 7447, 7448, 7449, 7448, 7447, 7448, 7449, 7448, 7447, 7448, 7449, 7448, 7447, 7448]},
 				{"ActionType" : "uaEat","Dir" : "dirNW","X" : 0,"Y" : 0,"Steps" : [3576, 3576, 3576, 3577, 3578, 3579, 3580, 3580, 3580, 3580, 3580, 3579, 3578, 3578, 3579, 3580, 3580, 3579, 3578, 3577, 3576, 3576, 3576, 3576, 3576, 3576, 3576, 3576, 3576, 3576]}
 			]
+		},
+		{
+			"UnitType" : "utSkirmisher",
+			"GameID" : 77,
+			"DescriptionID" : 2277,
+			"HitPoints" : 4,
+			"Attack" : 25,
+			"AttackHorse" : 65,
+			"Defence" : 2,
+			"Speed" : 26,
+			"Sight" : 6,
+			"HouseDamage" : 2,
+			"UnitDamage" : 1,
+			"ProjectileDefence" : 1.00000,
+			"CanOrderAmmo" : true,
+			"CanStorm" : False,
+			"CanAttackUnits" : true,
+			"CanAttackHouses" : true,
+			"FightType" : "ftRanged",
+			"AmmoType" : "uatAxe",
+			"MinRange" : 2.00000,
+			"MaxRange" : 9.999,
+			"StrikeSteps" : [3],
+			"TownhallCost" : 6,
+			"FullUnitAnimations" : 
+			[	
+				{"ActionType" : "uaWalk", "StartStep" : 17202, "StepsCount" : 8},
+				{"ActionType" : "uaWork", "StartStep" : 17266, "StepsCount" : 11}
+			],
+			"Animations" : 
+			[
+				{"ActionType" : "uaDie","Dir" : "dirN","X" : 0,"Y" : 0,"Steps" : [5950, 5935, 5936, 5937, 5938, 5939, 5940, 5941, 5942, 5943, 5944, 5945, 5946, 5947, 5948, 5949]},
+				{"ActionType" : "uaDie","Dir" : "dirNE","X" : 0,"Y" : 0,"Steps" : [5950, 5935, 5936, 5937, 5938, 5939, 5940, 5941, 5942, 5943, 5944, 5945, 5946, 5947, 5948, 5949]},
+				{"ActionType" : "uaDie","Dir" : "dirE","X" : 0,"Y" : 0,"StepStart" : 5903,"Count" : 14},
+				{"ActionType" : "uaDie","Dir" : "dirSE","X" : 0,"Y" : 0,"StepStart" : 5903,"Count" : 14},
+				{"ActionType" : "uaDie","Dir" : "dirS","X" : 0,"Y" : 0,"StepStart" : 5236,"Count" : 15},
+				{"ActionType" : "uaDie","Dir" : "dirSW","X" : 0,"Y" : 0,"StepStart" : 5236,"Count" : 15},
+				{"ActionType" : "uaDie","Dir" : "dirW","X" : 0,"Y" : 0,"StepStart" : 5917,"Count" : 18},
+				{"ActionType" : "uaDie","Dir" : "dirNW","X" : 0,"Y" : 0,"StepStart" : 5917,"Count" : 18},
+				{"ActionType" : "uaWalkArm","Dir" : "dirN","X" : 8,"Y" : -46,"Steps" : [5006, 5007, 5008, 5009, 5010, 5011, 5004, 5005]},
+				{"ActionType" : "uaWalkArm","Dir" : "dirNE","X" : 6,"Y" : -44,"Steps" : [5022, 5023, 5024, 5025, 5026, 5027, 5020, 5021]},
+				{"ActionType" : "uaWalkArm","Dir" : "dirE","X" : 6,"Y" : -44,"Steps" : [5032, 5033, 5034, 5035, 5028, 5029, 5030, 5031]},
+				{"ActionType" : "uaWalkArm","Dir" : "dirSE","X" : -6,"Y" : -48,"Steps" : [5014, 5015, 5016, 5017, 5018, 5019, 5012, 5013]},
+				{"ActionType" : "uaWalkArm","Dir" : "dirS","X" : -8,"Y" : -49,"Steps" : [5006, 5007, 5008, 5009, 5010, 5011, 5004, 5005]},
+				{"ActionType" : "uaWalkArm","Dir" : "dirSW","X" : -3,"Y" : -50,"Steps" : [5022, 5023, 5024, 5025, 5026, 5027, 5020, 5021]},
+				{"ActionType" : "uaWalkArm","Dir" : "dirW","X" : 8,"Y" : -49,"Steps" : [5032, 5033, 5034, 5035, 5028, 5029, 5030, 5031]},
+				{"ActionType" : "uaWalkArm","Dir" : "dirNW","X" : 6,"Y" : -47,"Steps" : [5014, 5015, 5016, 5017, 5018, 5019, 5012, 5013]},
+				
+				{"ActionType" : "uaWork","Dir" : "dirS","X" : 0,"Y" : 0,"StepStart" : 17320,"Count" : 11},
+				{"ActionType" : "uaWork","Dir" : "dirS","X" : 0,"Y" : 0,"StepStart" : 17320,"Count" : 11}
+			]
 		}
 	],
 	"SerfCarryAnimations" : 
