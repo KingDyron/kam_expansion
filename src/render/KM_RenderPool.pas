@@ -2041,6 +2041,7 @@ begin
     ptBallistaBolt:      A := gRes.Units[utBallista].UnitAnim[uaSpec, aDir];
     ptBolt:      A := gRes.Units[utCrossbowman].UnitAnim[uaSpec, aDir];
     ptSlingRock: A :=gRes.Units[utRogue].UnitAnim[uaSpec, aDir];
+    ptLance: A := gRes.Units[utSkirmisher].UnitAnim[uaSpec, aDir];
     ptTowerRock,
     ptCatapultRock:      A :=gRes.Units[utCatapult].UnitAnim[uaSpec, aDir];
     //ptTowerRock: A :=gRes.Units[utRecruit].UnitAnim[uaSpec, aDir];

@@ -4959,9 +4959,9 @@
 		{
 			"UnitType" : "utSkirmisher",
 			"GameID" : 77,
-			"DescriptionID" : 2277,
+			"DescriptionID" : 2321,
 			"HitPoints" : 4,
-			"Attack" : 25,
+			"Attack" : 45,
 			"AttackHorse" : 65,
 			"Defence" : 2,
 			"Speed" : 26,
@@ -4974,7 +4974,7 @@
 			"CanAttackUnits" : true,
 			"CanAttackHouses" : true,
 			"FightType" : "ftRanged",
-			"AmmoType" : "uatAxe",
+			"AmmoType" : "uatLance",
 			"MinRange" : 2.00000,
 			"MaxRange" : 9.999,
 			"StrikeSteps" : [3],
@@ -4982,7 +4982,8 @@
 			"FullUnitAnimations" : 
 			[	
 				{"ActionType" : "uaWalk", "StartStep" : 17202, "StepsCount" : 8},
-				{"ActionType" : "uaWork", "StartStep" : 17266, "StepsCount" : 11}
+				{"ActionType" : "uaWork", "StartStep" : 17266, "StepsCount" : 11},
+				{"ActionType" : "uaSpec", "StartStep" : 17354, "StepsCount" : 3}
 			],
 			"Animations" : 
 			[
@@ -5001,10 +5002,7 @@
 				{"ActionType" : "uaWalkArm","Dir" : "dirS","X" : -8,"Y" : -49,"Steps" : [5006, 5007, 5008, 5009, 5010, 5011, 5004, 5005]},
 				{"ActionType" : "uaWalkArm","Dir" : "dirSW","X" : -3,"Y" : -50,"Steps" : [5022, 5023, 5024, 5025, 5026, 5027, 5020, 5021]},
 				{"ActionType" : "uaWalkArm","Dir" : "dirW","X" : 8,"Y" : -49,"Steps" : [5032, 5033, 5034, 5035, 5028, 5029, 5030, 5031]},
-				{"ActionType" : "uaWalkArm","Dir" : "dirNW","X" : 6,"Y" : -47,"Steps" : [5014, 5015, 5016, 5017, 5018, 5019, 5012, 5013]},
-				
-				{"ActionType" : "uaWork","Dir" : "dirS","X" : 0,"Y" : 0,"StepStart" : 17320,"Count" : 11},
-				{"ActionType" : "uaWork","Dir" : "dirS","X" : 0,"Y" : 0,"StepStart" : 17320,"Count" : 11}
+				{"ActionType" : "uaWalkArm","Dir" : "dirNW","X" : 6,"Y" : -47,"Steps" : [5014, 5015, 5016, 5017, 5018, 5019, 5012, 5013]}
 			]
 		}
 	],
@@ -5703,7 +5701,7 @@
 	],
 	"School Order" : ["utSerf","utBuilder","utStonemason","utWoodcutter","utCarpenter","utClayPicker","utFisher","utFarmer","utBaker","utAnimalBreeder","utButcher","utMiner","utMetallurgist","utSmith","utOperator","utRecruit"],
 	"Barracks Order" : ["utFighter","utMilitia","utAxeFighter","utSwordFighter","utBowman","utCrossbowman","utLanceCarrier","utPikeman","utMaceFighter","utFlailFighter","utScout","utKnight"],
-	"Townhall Order" : ["utFighter","utRebel","utRogue","utClubMan","utVagabond","utShieldBearer","utBarbarian","utWarrior", "utMobileTower", "utFeeder", "utHouseBuilder", "utMountedSerf"],
+	"Townhall Order" : ["utFighter","utRebel","utRogue","utClubMan","utVagabond", "utSkirmisher","utShieldBearer","utBarbarian","utWarrior", "utMobileTower", "utFeeder", "utHouseBuilder", "utMountedSerf"],
 	"SiegeWorkshop Order" : ["utBallista","utCatapult","utRam","utWoodenWall"],
 	"Palace Order" : ["utFighter","utTorchMan","utPyro","utLekter","utMedic","utArcher","utPaladin","utSpy","utTrainedWolf","utAmmoCart","utPikeMachine","utSpikedTrap"],
 	"Shipyard Order" : ["utBoat","utShip","utBattleShip"]

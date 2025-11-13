@@ -71,14 +71,14 @@ uses
 
 
 const
-  ProjectileLaunchSounds: array[TKMProjectileType] of TSoundFX = (sfxBowShoot, sfxCrossbowShoot, sfxNone, sfxRockThrow{sfxCatapultShoot}, {sfxCatapultShoot}sfxBalistaShoot, sfxBalistaShoot, sfxCrossbowShoot, sfxBowShoot);
-  ProjectileHitSounds:   array[TKMProjectileType] of TSoundFX = (sfxArrowHit, sfxArrowHit, sfxArrowHit, sfxNone, sfxSiegeBuildingSmash, sfxSiegeBuildingSmash, sfxArrowHit, sfxArrowHit);
-  ProjectileSpeeds: array[TKMProjectileType] of Single = (0.75, 0.8, 0.6, 1.1, 0.5, 1, 1.3, 0.75);
-  ProjectileArcs: array[TKMProjectileType,1..2] of Single = ((1.6, 0.5), (1.4, 0.4), (2.5, 1), (1.2, 0.2), (0.5, 0.2), (0.5, 0.2), (1.4, 0.4), (1.4, 0.4)); //Arc curve and random fraction
-  ProjectileJitter: array[TKMProjectileType] of Single = (0.26, 0.29, 0.26, 0.2, 0.29, 0.15, 0.1, 0.1); //Fixed Jitter added every time
-  ProjectileJitterHouse: array[TKMProjectileType] of Single = (0.6, 0.6, 0.6, 0, 0.6, 0.2, 0, 0); //Fixed Jitter added every time
+  ProjectileLaunchSounds: array[TKMProjectileType] of TSoundFX = (sfxBowShoot, sfxCrossbowShoot, sfxNone, sfxRockThrow{sfxCatapultShoot}, {sfxCatapultShoot}sfxBalistaShoot, sfxBalistaShoot, sfxCrossbowShoot, sfxBowShoot, sfxBowShoot);
+  ProjectileHitSounds:   array[TKMProjectileType] of TSoundFX = (sfxArrowHit, sfxArrowHit, sfxArrowHit, sfxNone, sfxSiegeBuildingSmash, sfxSiegeBuildingSmash, sfxArrowHit, sfxArrowHit, sfxArrowHit);
+  ProjectileSpeeds: array[TKMProjectileType] of Single = (0.75, 0.8, 0.6, 1.1, 0.5, 1.6, 1.3, 0.75, 1.5);
+  ProjectileArcs: array[TKMProjectileType,1..2] of Single = ((1.6, 0.5), (1.4, 0.4), (2.5, 1), (1.2, 0.2), (0.5, 0.2), (0.5, 0.2), (1.4, 0.4), (1.4, 0.4), (0.7, 0.4)); //Arc curve and random fraction
+  ProjectileJitter: array[TKMProjectileType] of Single = (0.26, 0.29, 0.26, 0.2, 0.29, 0.15, 0.1, 0.1, 0.2); //Fixed Jitter added every time
+  ProjectileJitterHouse: array[TKMProjectileType] of Single = (0.6, 0.6, 0.6, 0, 0.6, 0.2, 0, 0, 0.3); //Fixed Jitter added every time
   // Jitter added according to target's speed (moving target harder to hit) Note: Walking = 0.1, so the added jitter is 0.1*X
-  ProjectilePredictJitter: array[TKMProjectileType] of Single = (2, 2, 2, 3, 2, 5, 3, 2);
+  ProjectilePredictJitter: array[TKMProjectileType] of Single = (2, 2, 2, 3, 2, 5, 3, 2, 2);
 
 { TKMProjectiles }
 constructor TKMProjectiles.Create(aOnAddProjectileToRenderPool: TKMRenderPoolAddProjectileEvent);
@@ -246,8 +246,8 @@ end;
 { Return flight time (archers like to know when they hit target before firing again) }
 function TKMProjectiles.AddItem(const aStart,aAim,aEnd: TKMPointF; aSpeed,aArc,aMaxLength: Single; aProjType: TKMProjectileType; aOwner, aTarget: TKMUnit): Word;
 const //TowerRock position is a bit different for reasons said below
-  OFFSET_X: array [TKMProjectileType] of Single = (0.5, 0.5, 0.5, -0.25, 0.5, 0.5, -0.25, -0.25); //Recruit stands in entrance, Tower middleline is X-0.75
-  OFFSET_Y: array [TKMProjectileType] of Single = (0.2, 0.2, 0.2, -0.2, 0, -0.2, -0.2, -0.25); //Add towers height
+  OFFSET_X: array [TKMProjectileType] of Single = (0.5, 0.5, 0.5, -0.25, 0.5, 0.5, -0.25, -0.25, 0.5); //Recruit stands in entrance, Tower middleline is X-0.75
+  OFFSET_Y: array [TKMProjectileType] of Single = (0.2, 0.2, 0.2, -0.2, 0, 0.5, -0.2, -0.25, 0.2); //Add towers height
 var
   I: Integer;
 begin
@@ -341,7 +341,8 @@ begin
               ptBallistaBolt,
               ptCatapultRock,
               ptTowerBolt,
-              ptBolt:      if (U <> nil) and not U.IsDeadOrDying and U.Visible and not (U is TKMUnitAnimal)
+              ptBolt,
+              ptLance:      if (U <> nil) and not U.IsDeadOrDying and U.Visible and not (U is TKMUnitAnimal)
                             //Can't hit units past max range because that's unintuitive/confusing to player
                             and (KMLengthSqr(fShotFrom, U.PositionF) <= Sqr(fMaxLength)) then
                             begin
@@ -491,6 +492,7 @@ begin
       P := KMLerp(fItems[I].fScreenStart, fItems[I].fScreenEnd, mixValue);
       pTileBased := KMLerp(fItems[I].fShotFrom, fItems[I].fTarget, mixValue);
       case fItems[I].fType of
+        ptLance,
         ptTowerBolt,
         ptBallistaBolt,
         ptWallBolt,

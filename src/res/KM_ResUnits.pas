@@ -424,7 +424,7 @@ begin
     utCatapult: Result := uatStoneBolt;
     utRogue :  Result := uatRogueStone;
     utBoat :  Result := uatAxe;
-    utSkirmisher: Result := uatAxe;
+    utSkirmisher: Result := uatLance;
     else
       Result := uatNone;
   end;
@@ -714,6 +714,7 @@ begin
     utMobileTower: Result := 1038;
     utFeeder: Result := 1069;
     utHouseBuilder: Result := 1071;
+    utSkirmisher: Result := 1185;
   else
     if IsCitizen then
       Result := 141 + UNIT_TYPE_TO_ID[fUnitType]
@@ -764,6 +765,7 @@ begin
       utMobileTower: Result := 1037;
       utFeeder: Result := 1070;
       utHouseBuilder: Result := 1072;
+      utSkirmisher: Result := 1184;
     end;
   end;
 end;
@@ -899,6 +901,7 @@ begin
     utMobileTower:       Result := 2276;
     utFeeder:            Result := 2291;
     utHouseBuilder:      Result := 2294;
+    utSkirmisher:         Result := 2320;
   else
     Result := TX_UNITS_NAMES__29 + UNIT_TYPE_TO_ID[fUnitType];
   end;

@@ -899,6 +899,7 @@ begin
       uatStoneBolt: gHands[Owner].Deliveries.Queue.AddDemand(nil, Self, wtStoneBolt, 2, dtOnce, diHigh2);
       uatBolt: gHands[Owner].Deliveries.Queue.AddDemand(nil, Self, wtBolt, 2, dtOnce, diHigh2);
       uatAxe: gHands[Owner].Deliveries.Queue.AddDemand(nil, Self, wtAxe, 1, dtOnce, diHigh2);
+      uatLance: gHands[Owner].Deliveries.Queue.AddDemand(nil, Self, wtLance, 1, dtOnce, diHigh2);
     end;
 
     fRequestedAmmo := True;
@@ -921,6 +922,7 @@ begin
     uatStoneBolt: If doMax then Inc(fBoltCount, 20) else Inc(fBoltCount, 10);
     uatBolt: If doMax then Inc(fBoltCount, 30) else  Inc(fBoltCount, 15);
     uatAxe: Inc(fBoltCount, 60);
+    uatLance: Inc(fBoltCount, 60);
   end;
 
   If (gGame.Params.Tick > 1) and gHands[Owner].ArmyDevUnlocked(19) then
@@ -931,6 +933,7 @@ begin
       uatStoneBolt: Inc(fBoltCount, 5);
       uatBolt: Inc(fBoltCount, 7);
       uatAxe: Inc(fBoltCount, 5);
+      uatLance: Inc(fBoltCount, 10);
     end;
 
   If (gGame.Params.Tick > 1) and gHands[Owner].ArmyDevUnlocked(20) then
@@ -941,6 +944,7 @@ begin
       uatStoneBolt: Inc(fBoltCount, 7);
       uatBolt: Inc(fBoltCount, 10);
       uatAxe: Inc(fBoltCount, 5);
+      uatLance: Inc(fBoltCount, 10);
     end;
 
 
@@ -1898,7 +1902,7 @@ begin
     utBallista : Result := ptBallistaBolt;
     utCatapult : Result := ptCatapultRock;
     utRogue:  Result := ptSlingRock;
-    utSkirmisher:  Result := ptBallistaBolt;
+    utSkirmisher:  Result := ptLance;
     else raise Exception.Create('Unknown shooter');
   end;
 end;
