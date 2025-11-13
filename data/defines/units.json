@@ -4911,7 +4911,7 @@
 		{
 			"UnitType" : "utMountedSerf",
 			"GameID" : 76,
-			"DescriptionID" : 2293,
+			"DescriptionID" : 2323,
 			"SchoolTime" : 20,
 			"HitPoints" : 4,
 			"Attack" : 0,
@@ -4930,7 +4930,7 @@
 			"AmmoType" : "uatNone",
 			"MinRange" : 0.00000,
 			"MaxRange" : 0.00000,
-			"TownhallCost" : 15,
+			"TownhallCost" : 12,
 			"FullUnitAnimations" : 
 			[	
 				{"ActionType" : "uaWalk", "StartStep" : 17074, "StepsCount" : 8},

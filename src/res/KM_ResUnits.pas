@@ -715,6 +715,7 @@ begin
     utFeeder: Result := 1069;
     utHouseBuilder: Result := 1071;
     utSkirmisher: Result := 1185;
+    utMountedSerf: Result := 1187;
   else
     if IsCitizen then
       Result := 141 + UNIT_TYPE_TO_ID[fUnitType]
@@ -766,6 +767,7 @@ begin
       utFeeder: Result := 1070;
       utHouseBuilder: Result := 1072;
       utSkirmisher: Result := 1184;
+      utMountedSerf: Result := 1186;
     end;
   end;
 end;
@@ -901,6 +903,7 @@ begin
     utMobileTower:       Result := 2276;
     utFeeder:            Result := 2291;
     utHouseBuilder:      Result := 2294;
+    utMountedSerf:      Result := 2322;
     utSkirmisher:         Result := 2320;
   else
     Result := TX_UNITS_NAMES__29 + UNIT_TYPE_TO_ID[fUnitType];
