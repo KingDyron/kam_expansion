@@ -218,11 +218,12 @@ const
     14,15,16,17,18,19,20,21,22,23, //Warriors
     -1,-1,-1,-1, -1,-1, -1, -1, -1, -1, -1, - 1, -1, -1, -1, -1, //TPR warriors (can't be placed with SET_UNIT)
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1,
     24,25,26,27,28,29,30,31, 37, 38, 39, 40, 41, 42, 43,
     44, 45, 46); //Animals
 
   //This is a map of the valid values for !SET_GROUP, and the corresponing unit that will be created (matches KaM behavior)
-  UNIT_ID_TO_TYPE: array[0..80] of TKMUnitType = (
+  UNIT_ID_TO_TYPE: array[0..81] of TKMUnitType = (
     utSerf,utWoodcutter,utMiner,utAnimalBreeder,utFarmer,
     utCarpenter,utBaker,utButcher,utFisher,utBuilder,
     utStonemason,utSmith,utMetallurgist,utRecruit, //Units
@@ -241,7 +242,7 @@ const
     utPyro, utLekter, utDeerMale, utDeerFemale, utFox, utBoar, utBear,
     utLandDuck, utRabbit,utWhiteBear, utSandSnake, utSpider,
     utMobileTower, utFeeder, utHouseBuilder, utMountedSerf,
-    utSkirmisher,
+    utSkirmisher, utBerserker,
     utNone, utNone, utNone
     );
 
@@ -253,7 +254,7 @@ const
     24,25,26,27, 28,29,//TPR warriors
     38, 39, 40, 41, 42, 43, 44, 45, 46, 47,//My Warriors
     48, 49, 50, 52, 53, 54, 55, 57, 58, 59, 60,
-    61, 62, 73, 77,//pyro, lekter, mobile wall, skirmisher
+    61, 62, 73, 77, 78,//pyro, lekter, mobile wall, skirmisher
     30,31,32,33,34,35,36,37, //Animals
     63, 64, 65, 66, 67, 68, 69, 70, 71, 72);//deerMale .. utWarehouseMan
 
@@ -582,7 +583,8 @@ const
     [uaWalk, uaWork, uaDie, uaEat, uaStay],//utPyro
     [uaWalk, uaWork, uaDie, uaEat, uaStay],//utLekter
     [uaWalk, uaWork, uaDie, uaEat],//utMobileTower
-    [uaWalk, uaWork, uaDie, uaEat],//utSkirmisher
+    [uaWalk, uaWork, uaDie, uaEat, uaSpec],//utSkirmisher
+    [uaWalk, uaWork, uaDie, uaEat, uaSpec],//utSkirmisher
 
     [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], //Animals
     [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk],//deermale
@@ -615,7 +617,7 @@ end;
 // Where unit would like to be
 function TKMUnitSpec.GetDesiredPassability: TKMTerrainPassability;
 begin
-  if fUnitType in [CITIZEN_MIN..CITIZEN_MAX] - [utBuilder, utFeeder, utHouseBuilder] then
+  if fUnitType in [CITIZEN_MIN..CITIZEN_MAX] - [utBuilder, utFeeder, utHouseBuilder, utMountedSerf] then
     Result := tpWalkRoad //Citizens except Worker
   else
     Result := GetAllowedPassability; //Workers, warriors, animals
@@ -649,7 +651,8 @@ const
     ftMelee,
     ftMelee,
     ftRanged,
-    ftRanged
+    ftRanged,
+    ftMelee
   );
 begin
   If fUnitType in UNITS_WARRIORS then
@@ -785,7 +788,7 @@ const
     $80B0B0 ,$80B0B0,$80B0B0,$80B0B0,$80B0B0, $80B0B0, $80B0B0, $80B0B0, $80B0B0, $80B0B0,
     $80B0B0, $80B0B0 ,$80B0B0,$80B0B0, $80B0B0, $80B0B0 ,$80B0B0,$80B0B0,$80B0B0,$80B0B0,
     $80B0B0,$80B0B0,$80B0B0,$80B0B0,$80B0B0,$80B0B0,$80B0B0,$80B0B0,$80B0B0,$80B0B0,$80B0B0,
-    $80B0B0,$80B0B0,$80B0B0,$80B0B0, $000000); //Exact colors can be tweaked
+    $80B0B0,$80B0B0,$80B0B0,$80B0B0, $000000, $000000); //Exact colors can be tweaked
 begin
   Result := MM_COLOR[fUnitType] or $FF000000;
 end;
@@ -905,6 +908,7 @@ begin
     utHouseBuilder:      Result := 2294;
     utMountedSerf:      Result := 2322;
     utSkirmisher:         Result := 2320;
+    utBerserker:         Result := 2324;
   else
     Result := TX_UNITS_NAMES__29 + UNIT_TYPE_TO_ID[fUnitType];
   end;

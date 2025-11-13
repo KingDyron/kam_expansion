@@ -5004,6 +5004,55 @@
 				{"ActionType" : "uaWalkArm","Dir" : "dirW","X" : 8,"Y" : -49,"Steps" : [5032, 5033, 5034, 5035, 5028, 5029, 5030, 5031]},
 				{"ActionType" : "uaWalkArm","Dir" : "dirNW","X" : 6,"Y" : -47,"Steps" : [5014, 5015, 5016, 5017, 5018, 5019, 5012, 5013]}
 			]
+		},
+		{
+			"UnitType" : "utBerserker",
+			"GameID" : 78,
+			"DescriptionID" : 2325,
+			"HitPoints" : 4,
+			"Attack" : 40,
+			"AttackHorse" : 0,
+			"Defence" : 1,
+			"Speed" : 26,
+			"Sight" : 7,
+			"HouseDamage" : 2,
+			"UnitDamage" : 1,
+			"ProjectileDefence" : 0.00000,
+			"CanOrderAmmo" : False,
+			"CanStorm" : true,
+			"CanAttackUnits" : true,
+			"CanAttackHouses" : true,
+			"FightType" : "ftMelee",
+			"AmmoType" : "uatNone",
+			"MinRange" : 0.00000,
+			"MaxRange" : 1.999,
+			"StrikeSteps" : [2, 4, 11, 13],
+			"TownhallCost" : 8,
+			"FullUnitAnimations" : 
+			[	
+				{"ActionType" : "uaWalk", "StartStep" : 17378, "StepsCount" : 8},
+				{"ActionType" : "uaWork", "StartStep" : 17442, "StepsCount" : 16},
+				{"ActionType" : "uaSpec", "StartStep" : 17570, "StepsCount" : 8}
+			],
+			"Animations" : 
+			[
+				{"ActionType" : "uaDie","Dir" : "dirN","X" : 0,"Y" : 0,"Steps" : [5950, 5935, 5936, 5937, 5938, 5939, 5940, 5941, 5942, 5943, 5944, 5945, 5946, 5947, 5948, 5949]},
+				{"ActionType" : "uaDie","Dir" : "dirNE","X" : 0,"Y" : 0,"Steps" : [5950, 5935, 5936, 5937, 5938, 5939, 5940, 5941, 5942, 5943, 5944, 5945, 5946, 5947, 5948, 5949]},
+				{"ActionType" : "uaDie","Dir" : "dirE","X" : 0,"Y" : 0,"StepStart" : 5903,"Count" : 14},
+				{"ActionType" : "uaDie","Dir" : "dirSE","X" : 0,"Y" : 0,"StepStart" : 5903,"Count" : 14},
+				{"ActionType" : "uaDie","Dir" : "dirS","X" : 0,"Y" : 0,"StepStart" : 5236,"Count" : 15},
+				{"ActionType" : "uaDie","Dir" : "dirSW","X" : 0,"Y" : 0,"StepStart" : 5236,"Count" : 15},
+				{"ActionType" : "uaDie","Dir" : "dirW","X" : 0,"Y" : 0,"StepStart" : 5917,"Count" : 18},
+				{"ActionType" : "uaDie","Dir" : "dirNW","X" : 0,"Y" : 0,"StepStart" : 5917,"Count" : 18},
+				{"ActionType" : "uaWalkArm","Dir" : "dirN","X" : 10,"Y" : -42,"StepStart" : 4962,"Count" : 8},
+				{"ActionType" : "uaWalkArm","Dir" : "dirNE","X" : -1,"Y" : -40,"StepStart" : 4978,"Count" : 8},
+				{"ActionType" : "uaWalkArm","Dir" : "dirE","X" : 2,"Y" : -40,"Steps" : [4988, 4999, 5000, 5001, 5002, 5003, 4986, 4987]},
+				{"ActionType" : "uaWalkArm","Dir" : "dirSE","X" : 1,"Y" : -44,"StepStart" : 4970,"Count" : 8},
+				{"ActionType" : "uaWalkArm","Dir" : "dirS","X" : -6,"Y" : -45,"StepStart" : 4962,"Count" : 8},
+				{"ActionType" : "uaWalkArm","Dir" : "dirSW","X" : -10,"Y" : -46,"StepStart" : 4978,"Count" : 8},
+				{"ActionType" : "uaWalkArm","Dir" : "dirW","X" : 4,"Y" : -45,"Steps" : [4988, 4999, 5000, 5001, 5002, 5003, 4986, 4987]},
+				{"ActionType" : "uaWalkArm","Dir" : "dirNW","X" : 13,"Y" : -43,"StepStart" : 4970,"Count" : 8}
+			]
 		}
 	],
 	"SerfCarryAnimations" : 
@@ -5701,7 +5750,7 @@
 	],
 	"School Order" : ["utSerf","utBuilder","utStonemason","utWoodcutter","utCarpenter","utClayPicker","utFisher","utFarmer","utBaker","utAnimalBreeder","utButcher","utMiner","utMetallurgist","utSmith","utOperator","utRecruit"],
 	"Barracks Order" : ["utFighter","utMilitia","utAxeFighter","utSwordFighter","utBowman","utCrossbowman","utLanceCarrier","utPikeman","utMaceFighter","utFlailFighter","utScout","utKnight"],
-	"Townhall Order" : ["utFighter","utRebel","utRogue","utClubMan","utVagabond", "utSkirmisher","utShieldBearer","utBarbarian","utWarrior", "utMobileTower", "utFeeder", "utHouseBuilder", "utMountedSerf"],
+	"Townhall Order" : ["utFighter","utRebel","utRogue","utClubMan","utVagabond", "utSkirmisher", "utBerserker","utShieldBearer","utBarbarian","utWarrior", "utMobileTower", "utFeeder", "utHouseBuilder", "utMountedSerf"],
 	"SiegeWorkshop Order" : ["utBallista","utCatapult","utRam","utWoodenWall"],
 	"Palace Order" : ["utFighter","utTorchMan","utPyro","utLekter","utMedic","utArcher","utPaladin","utSpy","utTrainedWolf","utAmmoCart","utPikeMachine","utSpikedTrap"],
 	"Shipyard Order" : ["utBoat","utShip","utBattleShip"]
