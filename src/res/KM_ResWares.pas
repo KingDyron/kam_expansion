@@ -128,6 +128,7 @@ type
     Procedure ReloadJSONData(UpdateCRC: Boolean);
   end;
 
+  function ValidWareTypePair(oWT, dWT: TKMWareType): Boolean;
 
 const
   MARKET_TRADEOFF_FACTOR = 2.2; //X resources buys 1 resource of equal value
@@ -1101,4 +1102,12 @@ begin
 
 end;
 
+function ValidWareTypePair(oWT, dWT: TKMWareType): Boolean;
+begin
+  Result := (dWT = oWT)
+            or (dWT = wtAll)
+            or ((dWT = wtWarfare) and (oWT in WARES_WARFARE))
+            or ((dWT = wtFood) and (oWT in WARES_FOOD))
+            or ((dWT = wtValuable) and (oWT in WARES_VALUABLE));
+end;
 end.

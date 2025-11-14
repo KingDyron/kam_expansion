@@ -193,6 +193,7 @@ type
     fIsBurning : Byte;
     fWasTookOver : Boolean;
     fBuildCost : TKMHouseBuildCost;
+    fHouseToDeliver : TKMHouse;
     procedure CheckOnTerrain;
     function GetWareInArray: TKMByteArray;
     function GetWareOutArray: TKMByteArray;
@@ -263,6 +264,7 @@ type
     property ResetDemands : Boolean read fResetDemands write fResetDemands;
     procedure FinishedLevel(aLevel : Byte); virtual;
     procedure SetLevel(aValue : Byte); virtual;
+    procedure SetHouseToDeliver(aValue : TKMHouse);
 
 
   public
@@ -371,6 +373,7 @@ type
     procedure DoNotAcceptWorker(aIndex: Integer);
     function GetWorkersIcons : TKMWordArray;
 
+
     function GetHealth: Word;
     function GetBuildWoodDelivered: Byte;
     function GetBuildStoneDelivered: Byte;
@@ -411,6 +414,7 @@ type
     function GetWaresArrayIn : TIntegerArray;
     function GetWaresArrayOut : TIntegerArray;
     function GetWaresArrayTotal : TIntegerArray;
+    property HouseToDeliver : TKMHouse read fHouseToDeliver write SetHouseToDeliver;
 
     procedure SetBuildingProgress(aProgress, aWood, aStone, aTile : Word);
 
@@ -1366,6 +1370,7 @@ begin
   LoadStream.Read(fBuildingProgress, SizeOf(fBuildingProgress));
   LoadStream.Read(fDamage, SizeOf(fDamage));
   LoadStream.Read(fWorker, 4); //subst on syncload
+  LoadStream.Read(fHouseToDeliver, 4); //subst on syncload
   LoadStream.Read(fBuildingRepair);
   LoadStream.Read(Byte(fDeliveryMode));
   LoadStream.Read(Byte(fNewDeliveryMode));
@@ -1455,6 +1460,7 @@ procedure TKMHouse.SyncLoad;
 var I : Integer;
 begin
   fWorker := TKMUnit(gHands.GetUnitByUID(Integer(fWorker)));
+  fHouseToDeliver := TKMHouse(gHands.GetHouseByUID(Integer(fHouseToDeliver)));
 
   for I := 0 to High(fWorkers) do
     fWorkers[I] := TKMUnit(gHands.GetUnitByUID(Integer(fWorkers[I])));
@@ -3612,6 +3618,41 @@ begin
   
 end;
 
+procedure TKMHouse.SetHouseToDeliver(aValue: TKMHouse);
+var I, K : Integer;
+  hasWareConnection : Boolean;
+begin
+  If not aValue.IsValid then
+    Exit;
+  //to remove delivery, simply set it to self or the same house
+  If (aValue = self) or (aValue = fHouseToDeliver) then
+  begin
+    gHands.CleanUpHousePointer(fHouseToDeliver);
+    //fHouseToDeliver := nil;
+    Exit;
+  end;
+  hasWareConnection := false;
+  //we must check if we can deliver any ware to another house
+  for I := 1 to WARES_IN_OUT_COUNT do //check the output of this house
+    for K := 1 to WARES_IN_OUT_COUNT do //check the input of another house
+      IF (WareOutput[I] <> wtNone) and (aValue.WareInput[K] <> wtNone) then
+        If ValidWareTypePair(WareOutput[I], aValue.WareInput[K]) or ValidWareTypePair(aValue.WareInput[K], WareOutput[I]) then
+        begin
+          hasWareConnection := true;
+          Break;
+          Break;
+        end;
+
+  If not hasWareConnection then
+    Exit;
+
+
+  If aValue <> fHouseToDeliver then
+    gHands.CleanUpHousePointer(fHouseToDeliver);
+  fHouseToDeliver := TKMHouse(aValue).GetPointer;
+
+end;
+
 function TKMHouse.CanMakeUpgrade : Boolean;
 begin
   if IsUpgrading or not IsComplete then
@@ -4430,6 +4471,7 @@ begin
   SaveStream.Write(fBuildingProgress, SizeOf(fBuildingProgress));
   SaveStream.Write(fDamage, SizeOf(fDamage));
   SaveStream.Write(TKMUnit(fWorker).UID); // Store UID
+  SaveStream.Write(fHouseToDeliver.UID); //subst on syncload
   SaveStream.Write(fBuildingRepair);
   SaveStream.Write(Byte(fDeliveryMode));
   SaveStream.Write(Byte(fNewDeliveryMode));
@@ -4907,6 +4949,7 @@ begin
                   //Incase we need to render house at desired step in debug mode
                   if HOUSE_BUILDING_STEP = 0 then
                   begin
+
                     if fIsOnTerrain <> tptNone then
                       gRenderPool.AddHouse(fType, fPosition, 1, 1, fSnowStep, -1, GetStonePic, GetSnowPic, false, false, 0)
                     else
@@ -4942,7 +4985,11 @@ begin
                     if CurrentAction <> nil then
                       if PaintHouseWork then
                       gRenderPool.AddHouseWork(fType, fPosition, CurrentAction.SubAction, WorkAnimStep, WorkAnimStepPrev, GetFlagColor);
-                    
+
+                    If HouseToDeliver.IsValid then
+                      gRenderAux.LineOnTerrain(KMPointF(Entrance.X - 0.5, Entrance.Y),
+                                                KMPointF(HouseToDeliver.Entrance.X - 0.5, HouseToDeliver.Entrance.Y),
+                                                $FF0000FF, $00FF);
                   end
                   else
                     gRenderPool.AddHouse(fType, fPosition,

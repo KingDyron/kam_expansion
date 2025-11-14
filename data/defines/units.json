@@ -4978,7 +4978,7 @@
 			"MinRange" : 2.00000,
 			"MaxRange" : 9.999,
 			"StrikeSteps" : [3],
-			"TownhallCost" : 6,
+			"TownhallCost" : 7,
 			"FullUnitAnimations" : 
 			[	
 				{"ActionType" : "uaWalk", "StartStep" : 17202, "StepsCount" : 8},
@@ -5010,7 +5010,7 @@
 			"GameID" : 78,
 			"DescriptionID" : 2325,
 			"HitPoints" : 4,
-			"Attack" : 40,
+			"Attack" : 35,
 			"AttackHorse" : 0,
 			"Defence" : 1,
 			"Speed" : 26,

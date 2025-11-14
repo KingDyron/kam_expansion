@@ -109,9 +109,11 @@ type
   public
     Caption : UnicodeString;
     MaxInRow : Byte;
+    GreenToIndex, YellowIndex, RedIndex : Byte;
     constructor Create(aParent: TKMPanel; aLeft, aTop, aWidth, aHeight: Integer; aMaxCount: Byte = 4);
     procedure MouseOver(X,Y: Integer; Shift: TShiftState); override;
     procedure Paint; override;
+
     const MARGIN = 5;
 
     property WarePlan : TKMWarePlan read fWarePlan write SetWareplan;
@@ -296,7 +298,7 @@ begin
     TKMRenderUI.WritePicture(AbsLeft + Width - 18 + TxtOffset, AbsTop, 14, Height, [], RX, TexID);
   end else
     for I := Min(WareCount - 1, MaxWares) downto 0 do
-      TKMRenderUI.WritePicture(AbsLeft + Width - 18 - I * Spacing + TxtOffset, AbsTop, 14, 14,
+      TKMRenderUI.WritePicture(AbsLeft + Width - 18 - I * Spacing + TxtOffset, AbsTop, 14, Height,
                                 [], RX, TexID, Enabled, $FFFF00FF, 0.25 * (I mod 2));
 end;
 
@@ -987,7 +989,16 @@ begin
   for I := 0 to J - 1 do
   begin
 
-    TKMRenderUI.WriteBevel(fItems[I].X, fItems[I].Y, fItems[I].Wdt, fItemHeight, 1, 0.35); //render bevel for each ware
+    if I = YellowIndex - 1 then
+      TKMRenderUI.WriteBevel(fItems[I].X, fItems[I].Y, fItems[I].Wdt, fItemHeight, TKMColor3f.New(1, 1, 0)) //render bevel for each ware
+    else
+    if I = RedIndex - 1 then
+      TKMRenderUI.WriteBevel(fItems[I].X, fItems[I].Y, fItems[I].Wdt, fItemHeight, TKMColor3f.New(1, 0, 0)) //render bevel for each ware
+    else
+    if I < GreenToIndex then
+      TKMRenderUI.WriteBevel(fItems[I].X, fItems[I].Y, fItems[I].Wdt, fItemHeight, TKMColor3f.New(0, 1, 0)) //render bevel for each ware
+    else
+      TKMRenderUI.WriteBevel(fItems[I].X, fItems[I].Y, fItems[I].Wdt, fItemHeight, 1, 0.35); //render bevel for each ware
 
     id := gRes.Wares[WarePlan[I].W].GUIIcon;
     TKMRenderUI.WritePicture(fItems[I].X, fItems[I].Y - 1, 30, fItemHeight,

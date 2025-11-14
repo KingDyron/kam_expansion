@@ -719,6 +719,7 @@ begin
     utHouseBuilder: Result := 1071;
     utSkirmisher: Result := 1185;
     utMountedSerf: Result := 1187;
+    utBerserker: Result := 1188;
   else
     if IsCitizen then
       Result := 141 + UNIT_TYPE_TO_ID[fUnitType]
@@ -771,6 +772,7 @@ begin
       utHouseBuilder: Result := 1072;
       utSkirmisher: Result := 1184;
       utMountedSerf: Result := 1186;
+      utBerserker: Result := 1189;
     end;
   end;
 end;

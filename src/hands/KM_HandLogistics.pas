@@ -376,7 +376,7 @@ uses
   KM_Hand, KM_HandsCollection,
   KM_HouseBarracks, KM_HouseStore, KM_HouseMarket,
   KM_UnitWarrior,
-  KM_Resource, KM_ResUnits,
+  KM_Resource, KM_ResUnits, KM_ResWares,
   KM_Log, KM_Utils, KM_CommonUtils, KM_DevPerfLog, KM_DevPerfLogTypes;
 
 
@@ -1318,11 +1318,7 @@ end;
 
 function TKMDeliveries.ValidWareTypePair(oWT, dWT: TKMWareType): Boolean;
 begin
-  Result := (dWT = oWT)
-            or (dWT = wtAll)
-            or ((dWT = wtWarfare) and (oWT in WARES_WARFARE))
-            or ((dWT = wtFood) and (oWT in WARES_FOOD))
-            or ((dWT = wtValuable) and (oWT in WARES_VALUABLE));
+  Result := KM_ResWares.ValidWareTypePair(oWT, dWT);
 end;
 
 
@@ -1415,6 +1411,9 @@ begin
 
   //Do not allow delivery from 1 house to same house (f.e. store)
   Result := Result and (demand.Loc_House <> offer.Loc_House);
+
+  If demand.Loc_House.IsValid and offer.Loc_House.IsValid then
+    Result := Result and ((offer.Loc_House.HouseToDeliver = nil) or (offer.Loc_House.HouseToDeliver = demand.Loc_House));
 
   //do not allow delivery from store to silo or from silo to silo
   if (demand.Loc_House <> nil) and (offer.Loc_House <> nil) then

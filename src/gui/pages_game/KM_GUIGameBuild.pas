@@ -83,7 +83,7 @@ begin
 
   for I := 0 to High(Button_BuildTypes) do
   begin
-    Button_BuildTypes[I] := TKMButton.Create(Panel_Build, 7 + 33 * I, 0, 33, 30, 0, rxGui, bsPaper);
+    Button_BuildTypes[I] := TKMButton.Create(Panel_Build, 34 + 7 + 33 * I, 0, 33, 30, 0, rxGui, bsPaper);
     Button_BuildTypes[I].OnClick := BuildType_Click;
 
     if I = 0 then
@@ -143,7 +143,7 @@ begin
 
   for I := 0 to high(Label_BuildTypes) do
   begin
-    Label_BuildTypes[I] := TKMLabel.Create(Panel_Build, 0, 0, Panel_Build.Width, 17, '', fntOutLine, taCenter);
+    Label_BuildTypes[I] := TKMLabel.Create(Panel_Build, 0, 0, Panel_Build.Width - 9, 17, '', fntOutLine, taCenter);
     Label_BuildTypes[I].Caption := gResTexts[HOUSE_GUI_TAB_ORDER[I].TextID];
   end;
 

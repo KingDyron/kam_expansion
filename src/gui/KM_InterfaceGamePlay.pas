@@ -4614,9 +4614,19 @@ begin
                 // Don't allow selecting during a cinematic
                 if not gMySpectator.Hand.InCinematic then
                 begin
-                  gMySpectator.UpdateSelect;
-                  if gMain <> nil then
-                    gMain.FormMain.SetEntitySelected(gMySpectator.Selected.UID, gMySpectator.Selected.AsGroup.SelectedUnit.UID);
+                  //select house delivery to
+                  If (gMySpectator.Selected is TKMHouse)
+                  and (ssShift in Shift) then
+                  begin
+                    H := gHands.HousesHitTest(gCursor.Cell.X, gCursor.Cell.Y);
+                    If H <> nil then
+                      TKMHouse(gMySpectator.Selected).HouseToDeliver := H;
+                  end else
+                  begin
+                    gMySpectator.UpdateSelect;
+                    if gMain <> nil then
+                      gMain.FormMain.SetEntitySelected(gMySpectator.Selected.UID, gMySpectator.Selected.AsGroup.SelectedUnit.UID);
+                  end;
                 end;
                 // In a replay we want in-game statistics (and other things) to be shown for the owner of the last select object
                 if fUIMode in [umReplay, umSpectate] then

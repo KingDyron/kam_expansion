@@ -266,6 +266,15 @@ begin
     Button_ConfirmBuild.Enabled := H.PearlType <> ptNone;
     DeliveredRow.Visible := H.Confirmed;
 
+    DeliveredRow.GreenToIndex := H.BuildStage;
+    DeliveredRow.RedIndex := H.BuildStage + 1;
+    DeliveredRow.RedIndex := 0;
+    DeliveredRow.YellowIndex := 0;
+    If H.Delivered[H.BuildStage].C = H.BuildCost[H.BuildStage].C then
+      DeliveredRow.YellowIndex := H.BuildStage + 1
+    else
+      DeliveredRow.RedIndex := H.BuildStage + 1;
+
     for PT := low(Button_SelectType) to High(Button_SelectType) do
     begin
       Button_SelectType[PT].Visible := not H.Confirmed;

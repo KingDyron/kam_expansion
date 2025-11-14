@@ -1253,12 +1253,21 @@ begin
     obj := gMySpectator.HitTestCursor(True);
     if obj <> nil then
     begin
-      UpdateSelection;
-      fDragObject := obj;
-      if obj is TKMHouse then
-        fDragHouseOffset := KMPointSubtract(TKMHouse(obj).Entrance, gCursor.Cell); //Save drag point adjustement to house position
-      fDragObjectReady := True;
-      fDragObjMousePosStart := KMPoint(X,Y);
+      //special case to set house to deliver
+      If (gMySpectator.Selected is TKMHouse) and (obj is TKMHouse)
+      and (ssShift in Shift) then
+      begin
+        TKMHouse(gMySpectator.Selected).HouseToDeliver := TKMHouse(obj);
+      end else
+      begin
+
+        UpdateSelection;
+        fDragObject := obj;
+        if obj is TKMHouse then
+          fDragHouseOffset := KMPointSubtract(TKMHouse(obj).Entrance, gCursor.Cell); //Save drag point adjustement to house position
+        fDragObjectReady := True;
+        fDragObjMousePosStart := KMPoint(X,Y);
+      end;
     end;
   end;
 
@@ -1736,20 +1745,27 @@ begin
   case Button of
     mbLeft:   if gCursor.Mode = cmNone then
               begin
-                //If there are some additional layers we first HitTest them
-                //since they are rendered ontop of Houses/Objects
-                marker := gGame.MapEditor.HitTest(gCursor.Cell.X, gCursor.Cell.Y);
+                If (gMySpectator.Selected is TKMHouse)
+                and (ssShift in Shift) then
+                begin
+                  //don't update selection here
+                end else
+                begin
+                  //If there are some additional layers we first HitTest them
+                  //since they are rendered ontop of Houses/Objects
+                  marker := gGame.MapEditor.HitTest(gCursor.Cell.X, gCursor.Cell.Y);
 
-                if marker.MarkerType <> mmtNone then
-                begin
-                  ShowMarkerInfo(marker);
-                  gMySpectator.Selected := nil; //We might have had a unit/group/house selected
-                end
-                else
-                begin
-                  UpdateSelection;
-                  if gMySpectator.Selected <> nil then
-                    gGame.MapEditor.ActiveMarker.MarkerType := mmtNone;
+                  if marker.MarkerType <> mmtNone then
+                  begin
+                    ShowMarkerInfo(marker);
+                    gMySpectator.Selected := nil; //We might have had a unit/group/house selected
+                  end
+                  else
+                  begin
+                    UpdateSelection;
+                    if gMySpectator.Selected <> nil then
+                      gGame.MapEditor.ActiveMarker.MarkerType := mmtNone;
+                  end;
                 end;
               end;
     mbRight:  begin

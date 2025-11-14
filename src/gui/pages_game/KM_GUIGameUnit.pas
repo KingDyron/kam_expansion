@@ -192,7 +192,7 @@ begin
     Button_Unit_DismissYes.OnClick := Unit_Dismiss;
     Button_Unit_DismissNo.OnClick  := Unit_Dismiss;
 
-    Panel_Army := TKMPanel.Create(Panel_Unit, 0, 200, TB_WIDTH, 182);
+    Panel_Army := TKMPanel.Create(Panel_Unit, 0, 205, TB_WIDTH, 182);
     // Military buttons start at 8.170 and are 52x38/30 (60x46)
     Button_Army_GoTo   := TKMButton.Create(Panel_Army,  0,  0, 56, 40, 27, rxGui, bsGame);
     Button_Army_Stop   := TKMButton.Create(Panel_Army, 62,  0, 56, 40, 26, rxGui, bsGame);
@@ -219,9 +219,9 @@ begin
     Image_HPBar := TKMImage.Create(Panel_Unit, 65, 80, 115, 27, 797, rxGui);
     Image_HPBar.HighlightOnMouseOver := true;
 
-    Row_Attack :=  TKMWaresRow.Create(Panel_Army, 0, -22, Panel_Army.Width div 3 - 4);
-    Row_Defence :=  TKMWaresRow.Create(Panel_Army, Row_Attack.Right + 2, -22, Panel_Army.Width div 3 - 4);
-    Row_Ammo :=  TKMWaresRow.Create(Panel_Army, Row_Defence.Right + 2, -22, Panel_Army.Width div 3 - 4);
+    Row_Attack :=  TKMWaresRow.Create(Panel_Army, Button_Army_GoTo.Left, -26, Panel_Army.Width div 3 - 4);
+    Row_Defence :=  TKMWaresRow.Create(Panel_Army, Button_Army_Stop.Left, -26, Panel_Army.Width div 3 - 4);
+    Row_Ammo :=  TKMWaresRow.Create(Panel_Army, Button_Army_Attack.Left, -26, Panel_Army.Width div 3 - 4);
     Row_Defence.TexID := gRes.Wares[wtIronShield].GUIIcon;
 
     Row_Attack.TxtOffset := -35;
@@ -349,7 +349,7 @@ begin
   else
     Label_UnitName.Left := Max(TB_WIDTH - hLabelWidth, 0);
 
-  Panel_Army.Top := 203;
+  Panel_Army.Top := 208;
 
   if aUnit.UnitType = utAmmoCart then
   begin
