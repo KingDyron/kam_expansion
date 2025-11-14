@@ -227,6 +227,13 @@ begin
 end;
 
 procedure TKMHousePearl.Paint;
+  function GetPearlSnowPic : Word;
+  begin
+    If OnTerrain = tptNone then
+      Exit(0)
+    else
+      Result := gRes.Houses.Pearls[fPearlType].SnowPic[OnTerrain];
+  end;
 var progress : Single;
 begin
   Inherited;
@@ -234,7 +241,7 @@ begin
   IF fPearlType <> ptNone then
   begin
     If Completed then
-      gRenderPool.AddHousePearl(fPearlType, fPosition, fBuildStage, 1, 1, fSnowStepPearl, gRes.Houses.Pearls[fPearlType].SnowPic[OnTerrain], gHands[Owner].FlagColor, false)
+      gRenderPool.AddHousePearl(fPearlType, fPosition, fBuildStage, 1, 1, fSnowStepPearl, GetPearlSnowPic, gHands[Owner].FlagColor, false)
     else
     If Confirmed then
     begin
