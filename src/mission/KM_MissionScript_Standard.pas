@@ -16,6 +16,13 @@ type
     Dir: TKMDirection;
   end;
 
+  TKMMissionScriptHouseToDeliver = record
+    House: TKMHouse;
+    X: Integer;
+    Y: Integer;
+  end;
+
+
   TKMMissionParserStandard = class(TKMMissionParserCommon)
   private
     fParsingMode: TKMMissionParsingMode; //Data gets sent to Game differently depending on Game/Editor mode
@@ -26,8 +33,10 @@ type
     fAIAttack: TKMAIAttack;
     fLastDP : TAIDefencePosition;
     fGroupOrders: TList<TKMMissionScriptGroupOrder>;
+    fHousesToDeliver: TList<TKMMissionScriptHouseToDeliver>;
     fDefaultLocation: ShortInt;
     procedure HandleGroupOrders;
+    procedure HandleHouseToDeliver;
     procedure Init(aMode: TKMMissionParsingMode);
   protected
     procedure ProcessCommand(CommandType: TKMCommandType; P: array of Integer; const TextParam: AnsiString = ''); override;
@@ -110,6 +119,7 @@ end;
 procedure TKMMissionParserStandard.Init(aMode: TKMMissionParsingMode);
 begin
   fGroupOrders := TList<TKMMissionScriptGroupOrder>.Create;
+  fHousesToDeliver := TList<TKMMissionScriptHouseToDeliver>.Create;
   fParsingMode := aMode;
   fDefaultLocation := 0;
 end;
@@ -118,6 +128,7 @@ end;
 destructor TKMMissionParserStandard.Destroy;
 begin
   fGroupOrders.Free;
+  fHousesToDeliver.Free;
 
   inherited;
 end;
@@ -151,6 +162,7 @@ procedure TKMMissionParserStandard.PostLoadMission;
 begin
   //Post-processing of ctAttack_Position commands which must be done after mission has been loaded
   HandleGroupOrders;
+  HandleHouseToDeliver;
   gHands.PostLoadMission;
 end;
 
@@ -196,6 +208,16 @@ begin
     end;
 end;
 
+//Determine what we are attacking: House, Unit or just walking to some place
+procedure TKMMissionParserStandard.HandleHouseToDeliver;
+var I : Integer;
+begin
+  //Assert((fParsingMode <> mpmEditor) or (fGroupOrders.Count = 0), 'AttackPositions should be handled by MapEd');
+  for I := 0 to fHousesToDeliver.Count - 1 do
+    with fHousesToDeliver[I] do
+      house.HouseToDeliver := gHands.HousesHitTest(X, Y);
+end;
+
 
 procedure TKMMissionParserStandard.ProcessCommand(CommandType: TKMCommandType; P: array of Integer; const TextParam: AnsiString = '');
 
@@ -215,6 +237,7 @@ var
   iPlayerAI: TKMHandAI;
   chooseLoc: TKMChooseLoc;
   groupOrder: TKMMissionScriptGroupOrder;
+  HToDeliver : TKMMissionScriptHouseToDeliver;
   HA: TKMHouseAreaNew;
 begin
   case CommandType of
@@ -1277,7 +1300,19 @@ begin
                           begin
                             TKMHousePasture(fLastHouse).BuyAnimalScript(TKMPastureAnimalType(P[0]), P[1]); //atype, acount
                           end else
-                            AddError('ctForestAddTree without prior declaration of House');
+                            AddError('ctPastureAddAnimal without prior declaration of House');
+                         end;
+    ctHouseToDeliverSet: if fLastHand <> HAND_NONE then
+                         begin
+                          if (fLastHouse <> nil) then
+                          begin
+                            HToDeliver.House := fLastHouse;
+                            HToDeliver.X := P[0];
+                            HToDeliver.Y := P[1];
+                            fHousesToDeliver.Add(HToDeliver);
+                            //fLastHouse.HouseToDeliver := gHands.HousesHitTest(P[0], P[1]);
+                          end else
+                            AddError('ctHouseToDeliverSet without prior declaration of House');
                          end;
 
    end;
@@ -1758,7 +1793,8 @@ begin
             If iX > 0 then
               AddCommand(ctPastureAddAnimal, [byte(PA), iX]);
           end;
-
+        If H.HouseToDeliver <> nil then
+          AddCommand(ctHouseToDeliverSet, [H.HouseToDeliver.Entrance.X, H.HouseToDeliver.Entrance.Y]);
 
 
       end;

@@ -126,7 +126,8 @@ type
     ctPlayerLockDev,
     ctForestAddTree,
     ctPastureAddAnimal,
-    ctAIFeatures
+    ctAIFeatures,
+    ctHouseToDeliverSet
     );
 
 const
@@ -243,7 +244,8 @@ const
     'SET_PLAYER_DEV_LOCK',
     'ADD_TREE_TO_LAST',
     'ADD_ANIMAL_TO_LAST',
-    'SET_AI_FEATURES'
+    'SET_AI_FEATURES',
+    'SET_HOUSE_TO_DELIVER_TO_LAST'
     );
 type
   TKMMissionParserCommon = class

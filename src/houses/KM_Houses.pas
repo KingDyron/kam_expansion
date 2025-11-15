@@ -193,7 +193,6 @@ type
     fIsBurning : Byte;
     fWasTookOver : Boolean;
     fBuildCost : TKMHouseBuildCost;
-    fHouseToDeliver : TKMHouse;
     procedure CheckOnTerrain;
     function GetWareInArray: TKMByteArray;
     function GetWareOutArray: TKMByteArray;
@@ -215,6 +214,8 @@ type
     procedure SetWariant(aValue : Integer);
   protected
     fWorkers: TPointerArray;
+    fHouseToDeliver : TKMHouse;
+    fDeliveryFromHouses: TPointerArray;
     fProductionCycles: array [1..WARES_IN_OUT_COUNT] of Word; //If HousePlaceOrders=True then here are production orders
     fBuildState: TKMHouseBuildState; // = (hbsGlyph, hbsNoGlyph, hbsWood, hbsStone, hbsDone);
     FlagAnimStep: Cardinal; //Used for Flags and Burning animation
@@ -415,6 +416,8 @@ type
     function GetWaresArrayOut : TIntegerArray;
     function GetWaresArrayTotal : TIntegerArray;
     property HouseToDeliver : TKMHouse read fHouseToDeliver write SetHouseToDeliver;
+    procedure AddHouseDeliveryFrom(aHouse : TKMHouse);
+    procedure RemHouseDeliveryFrom(aHouse : TKMHouse);
 
     procedure SetBuildingProgress(aProgress, aWood, aStone, aTile : Word);
 
@@ -1230,6 +1233,7 @@ begin
 
   fWorker           := nil;
   SetLength(fWorkers, 0);//no workers at the start
+  SetLength(fDeliveryFromHouses, 0);//no workers at the start
   SetLength(fNotAcceptWorkers, 0);//no workers at the start
   //Initially repair is [off]. But for AI it's controlled by a command in DAT script
   fBuildingRepair   := False; //Don't set it yet because we don't always know who are AIs yet (in multiplayer) It is set in first UpdateState
@@ -1447,6 +1451,11 @@ begin
     LoadStream.Read(fWorkers[I], 4);
 
   LoadStream.Read(newCount);
+  Setlength(fDeliveryFromHouses, newCount);
+  for I := 0 to newCount - 1 do
+    LoadStream.Read(fDeliveryFromHouses[I], 4);
+
+  LoadStream.Read(newCount);
   Setlength(fNotAcceptWorkers, newCount);
   for I := 0 to newCount - 1 do
     LoadStream.Read(fNotAcceptWorkers[I], 4);
@@ -1465,6 +1474,9 @@ begin
   for I := 0 to High(fWorkers) do
     fWorkers[I] := TKMUnit(gHands.GetUnitByUID(Integer(fWorkers[I])));
 
+  for I := 0 to High(fDeliveryFromHouses) do
+    fDeliveryFromHouses[I] := TKMHouse(gHands.GetHouseByUID(Integer(fDeliveryFromHouses[I])));
+
   for I := 0 to High(fNotAcceptWorkers) do
     fNotAcceptWorkers[I] := TKMUnit(gHands.GetUnitByUID(Integer(fNotAcceptWorkers[I])));
 
@@ -1480,6 +1492,12 @@ begin
 
   for I := 0 to High(fWorkers) do
     gHands.CleanUpUnitPointer(TKMUnit(fWorkers[I]));
+
+  for I := 0 to High(fDeliveryFromHouses) do
+    gHands.CleanUpHousePointer(TKMHouse(fDeliveryFromHouses[I]));
+
+  for I := 0 to High(fNotAcceptWorkers) do
+    gHands.CleanUpUnitPointer(TKMUnit(fNotAcceptWorkers[I]));
 
   inherited;
 end;
@@ -1608,6 +1626,9 @@ begin
 
   //If anyone still has a pointer to the house he should check for IsDestroyed flag
   fIsDestroyed := True;
+  HouseToDeliver.RemHouseDeliveryFrom(self);
+  for I := High(fDeliveryFromHouses) downto 0 do
+    TKMHouse(fDeliveryFromHouses[I]).HouseToDeliver := nil;
 
   //Play sound
   if (fBuildState > hbsNoGlyph) and not IsSilent
@@ -3615,22 +3636,33 @@ begin
     Inc(fLevel.Progress, HSpec.Levels[I - 1].Progress);
   end;
 
-  
+
 end;
 
 procedure TKMHouse.SetHouseToDeliver(aValue: TKMHouse);
 var I, K : Integer;
   hasWareConnection : Boolean;
 begin
-  If not aValue.IsValid then
-    Exit;
-  //to remove delivery, simply set it to self or the same house
-  If (aValue = self) or (aValue = fHouseToDeliver) then
+  If (aValue = nil) and (fHouseToDeliver <> nil) then
   begin
+    fHouseToDeliver.RemHouseDeliveryFrom(self);
     gHands.CleanUpHousePointer(fHouseToDeliver);
-    //fHouseToDeliver := nil;
+    fHouseToDeliver := nil;
     Exit;
   end;
+  If not aValue.IsValid then
+    Exit;
+  If aValue.Owner <> Owner then
+    Exit;
+  //to remove delivery, simply set it to self or the same house
+  If fHouseToDeliver <> nil then
+    If (aValue = self) or (aValue = fHouseToDeliver) then
+    begin
+      fHouseToDeliver.RemHouseDeliveryFrom(self);
+      gHands.CleanUpHousePointer(fHouseToDeliver);
+      //fHouseToDeliver := nil;
+      Exit;
+    end;
   hasWareConnection := false;
   //we must check if we can deliver any ware to another house
   for I := 1 to WARES_IN_OUT_COUNT do //check the output of this house
@@ -3646,11 +3678,43 @@ begin
   If not hasWareConnection then
     Exit;
 
-
   If aValue <> fHouseToDeliver then
-    gHands.CleanUpHousePointer(fHouseToDeliver);
-  fHouseToDeliver := TKMHouse(aValue).GetPointer;
+  begin
+    if fHouseToDeliver <> nil then
+      fHouseToDeliver.RemHouseDeliveryFrom(self);
 
+    gHands.CleanUpHousePointer(fHouseToDeliver);
+    fHouseToDeliver := aValue.GetPointer;
+    aValue.AddHouseDeliveryFrom(self);
+  end;
+end;
+
+procedure TKMHouse.AddHouseDeliveryFrom(aHouse : TKMHouse);
+var I : Integer;
+begin
+  If not aHouse.IsValid then
+    Exit;
+
+  I := length(fDeliveryFromHouses);
+  SetLength(fDeliveryFromHouses, I + 1);
+  fDeliveryFromHouses[I] := aHouse.GetPointer;
+end;
+
+procedure TKMHouse.RemHouseDeliveryFrom(aHouse : TKMHouse);
+var I, index : integer;
+begin
+  index := -1;
+  for I := 0 to High(fDeliveryFromHouses) do
+    If fDeliveryFromHouses[I] = aHouse then
+    begin
+      index := I;
+      break;
+    end;
+  Assert(index <> -1,'TKMHouse.RemHouseDeliveryFrom(aHouse : TKMHouse)');
+
+  gHands.CleanUpHousePointer(aHouse);
+  fDeliveryFromHouses[index] := fDeliveryFromHouses[high(fDeliveryFromHouses)];
+  SetLength(fDeliveryFromHouses, high(fDeliveryFromHouses));
 end;
 
 function TKMHouse.CanMakeUpgrade : Boolean;
@@ -4537,6 +4601,11 @@ begin
   for I := 0 to newCount - 1 do
     SaveStream.Write(TKMUnit(fWorkers[I]).UID);
 
+  newCount := length(fDeliveryFromHouses);
+  SaveStream.Write(newCount);
+  for I := 0 to newCount - 1 do
+    SaveStream.Write(TKMHouse(fDeliveryFromHouses[I]).UID);
+
   newCount := length(fNotAcceptWorkers);
   SaveStream.Write(newCount);
 
@@ -4881,6 +4950,7 @@ var
   H: TKMHouseSpec;
   progress, stoneProgress: Single;
   I : Integer;
+  H2 : TKMHouse;
 begin
   H := gRes.Houses[fType];
   case fBuildState of
@@ -4986,10 +5056,23 @@ begin
                       if PaintHouseWork then
                       gRenderPool.AddHouseWork(fType, fPosition, CurrentAction.SubAction, WorkAnimStep, WorkAnimStepPrev, GetFlagColor);
 
-                    If HouseToDeliver.IsValid then
-                      gRenderAux.LineOnTerrain(KMPointF(Entrance.X - 0.5, Entrance.Y),
-                                                KMPointF(HouseToDeliver.Entrance.X - 0.5, HouseToDeliver.Entrance.Y),
-                                                $FF0000FF, $00FF);
+                    If (gMySpectator.Selected = self) then
+                    begin
+                      for I := 0 to high(fDeliveryFromHouses) do
+                        If fDeliveryFromHouses[I] <> nil then
+                        begin
+                          H2 := TKMHouse(fDeliveryFromHouses[I]);
+                          gRenderAux.LineOnTerrain(KMPointF(Entrance.X - 0.5, Entrance.Y - 0.5),
+                                                    KMPointF(H2.Entrance.X - 0.5, H2.Entrance.Y - 0.5),
+                                                    $FFFF5500, $00FF);
+
+                        end;
+
+                      If (HouseToDeliver <> nil) then
+                        gRenderAux.LineOnTerrain(KMPointF(Entrance.X - 0.5, Entrance.Y),
+                                                  KMPointF(HouseToDeliver.Entrance.X - 0.5, HouseToDeliver.Entrance.Y),
+                                                  $FF0000FF, $00FF);
+                    end;
                   end
                   else
                     gRenderPool.AddHouse(fType, fPosition,

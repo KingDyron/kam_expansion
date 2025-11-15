@@ -4620,7 +4620,7 @@ begin
                   begin
                     H := gHands.HousesHitTest(gCursor.Cell.X, gCursor.Cell.Y);
                     If H <> nil then
-                      TKMHouse(gMySpectator.Selected).HouseToDeliver := H;
+                      gGame.GameInputProcess.CmdHouse(gicHouseDeliveryTo, TKMHouse(gMySpectator.Selected), H.UID);
                   end else
                   begin
                     gMySpectator.UpdateSelect;
