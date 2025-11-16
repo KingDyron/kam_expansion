@@ -3703,6 +3703,9 @@ end;
 procedure TKMHouse.RemHouseDeliveryFrom(aHouse : TKMHouse);
 var I, index : integer;
 begin
+  If self = nil then
+    Exit;
+
   index := -1;
   for I := 0 to High(fDeliveryFromHouses) do
     If fDeliveryFromHouses[I] = aHouse then

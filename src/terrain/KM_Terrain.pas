@@ -8029,7 +8029,7 @@ function TKMTerrain.CanAddRoad(aX: Word; aY: Word; aRoadType: TKMRoadType; aOwne
 begin
   Result := not (Land^[aY, aX].TileLock in [tlRoadWork]) and (
             (tpMakeRoads in Land^[aY, aX].Passability)
-            or (RoadDiff(GetRoadType(aX, aY), aRoadType) = 1)
+            or ((RoadDiff(GetRoadType(aX, aY), aRoadType) = 1) and (tpWalkRoad in Land^[aY, aX].Passability))
             or (gGameParams.IsMapEditor and (GetRoadType(aX, aY) <> rtNone) and (GetRoadType(aX, aY) <> gCursor.RoadType))
             );
 end;
