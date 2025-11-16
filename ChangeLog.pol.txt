@@ -1,5 +1,5 @@
 ﻿
-[$0000FF]KaM Expansion v1.2 KamStar United
+[$0000FF]KaM Expansion v1.2 Explore the Cultures
 	
 [$55FF55]Budynki
 	- dodano budynek: Dom kartografa. Dzięki niemu można zdobyć ważne 
@@ -11,13 +11,31 @@
 	- studnia nie potrzebuje drogi do jej budowy.
 	- pojedynczy mur postawiony obok innego muru ustawi automatycznie swój wygląd.
 	- poprawiono ośnieżanie budynków.
-	
+	- poprawiono donoszenie towarów do murów
+	- p$9io& .$@1 dla m*=o+
+	- pomocnicy muszą przynieść wszystkie surowce wymagane do ulepszenia budynku
+		aby rozpocząć budowę
+	- poprawiono animację rekrutów w wieży strzelniczej
+	- dodano piaszczysty wygląd budynków na piaszczystych terenach
+	- dodano punkt wydobywania do kamieniołomu
+	- dodano automatyczną produkcję do warsztatu płatnerskiego 
+	- dodano wymuszenie dostarczania do konkretnego budynku 
+		(keidy masz zaznaczony budynek, wciśnij LPM + Shift na inny budynek)
 	
 
 [$55FF55]Jednostki
 	- dodano nową jednostkę: Kapitan budowy. Do kupienia w ratuszu za 20 złota.
 		Buduje tylko budynki lub struktury, ale robi to znacznie szybciej.
 	- dodano nową jednostkę: Jadłopodawca. Może szybko nakarmić całe oddziały.
+	- dodano nową jednostkę: Pomocny jeździec. Szybko dostarcza towary.
+	- dodano nową jednostkę: Harcownik. Strzelec przeciwko jeździe.
+	- dodano nową jednostkę: Berserker. Dwa topry = 2 razy szybszy atak
+	- poprawiono: tarczownik nie posiadał dźwięków
+	- poprawiono opisy jednostek
+	- niszczyciel i bojownik otrzymali nowe dźwięki (tylko PL)
+	- ulepszono strzelanie statku bojowego
+	- zwiększono zasięg strzelania o 2 dla konnego strzelca
+	- jednostki strzeleckie mogą strzelać ze statku transporowego
 
 [$55FF55]Surowce
 	-produkt uboczny "sadzonka" ma zastosowanie w szkółce leśnej
@@ -25,13 +43,46 @@
 [$55FF55]Interfejs
 	- dodano Gospodę do okna podziału towarów
 
-[$55FF55]Inne
+[$55FF55]Edytor map
 	- dodano nowe płytki dekoracyjne : murki, płotki oraz płytki funkcyjne.
+	- dodano wybór rozmiaru pędzla w zakładce płytek
+	- poprawiono nie działające maski terenu (do malowania) na krawędziach mapy
+	- usuwanie pozycji obronnej lub znacznika odkrycia mgły 
+		przeniesie do kolejnej pozycji/znacznika bez wyłączenia interfejsu
+	- drzewo owocowe po zniszczeniu przez właściciela nie niszczy 
+		wszystkich dołączonych drzew owocowych
+	- dodano wyświetlanie dokąd idzie dany oddział jeśli ma nadany rozkaz
+	- dodano kopiowanie budynków podczas kopiowania terenu
 	
+
+	
+[$55FF55]Rozgrywka:
+	- dodano nowe budynki do dystrybucji towarów
+	- efekt nocy jest wyłączony w trakcie misji taktycznej
+	- dodano drzewko rozwoju, które pozwala na zwiększanie wydajności budynków i jednostek
+	- optymalizacja gry. Dodano nowe opcję w ustawieniach, które wyłącza częściowo efekt nocy
+		przez co gra jest 4 razy bardziej wydajna
+	- poprawiono wydobywanie podziemnych złóż węgla
+	- możliwość budowy lepszej drogi na już istniejącej drodze
+	
+[$55FF55]AI:
+	- oddziały piechoty atakujące nie będą atakowały statków
+	- dodano/rozwinięto automatyczne budowanie
+	
+[$55FF55]Inne
+	- dodano nowe funkcje skryptowe (pełna lista w pliku NewScripts.txt)
+	- budowniczy czyści całkowicie teren podczas rozkopywania planu budynku
+	- po aktywacji jakiegokolwiek kodu (cheat) rozgrywka nie będzie wliczała się w osiągnięcia
+	- dodano nowy rodzaj pogody: tornado
+	- dodano nowe płytki przejściowe złoto-lód
+	- dodano nowe płytki przejściowe z brukiem
+	- dodano style interfejsu (do wyboru w ustawieniach)
+
 [$55FF55]Mapy
 	- dodane SP : 
 			
 	- dodane MP
+	
 
 
 
