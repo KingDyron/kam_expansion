@@ -70,7 +70,7 @@ type
     htAppleTree,       htSmallStore,      htCollectors,    htTailorsShop,   htCottage,
     htHouse,           htPalace,          htStall,         htProductionThatch,
     htShipYard,        htCartographers,   htPearl,         htPasture,       htForest,
-    htArena
+    htArena,           htSiegeTower
   );
 
   //* House type set

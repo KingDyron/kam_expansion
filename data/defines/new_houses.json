@@ -31,7 +31,7 @@
 			[
 				"htNone","htBarracks","htTownHall","htPalace","htSiegeWorkshop","htShipYard",
 				"htNone","htWall","htWall2","htWall3","htWall4","htWall5",
-				"htNone","htWallTower","htWatchTower", "htPearl", "htArena"
+				"htNone","htWallTower","htWatchTower", "htPearl", "htArena", "htSiegeTower"
 			]
 		}
 	],
@@ -4514,6 +4514,63 @@
 				[2,2,2,2,2],
 				[2,1,1,1,2],
 				[2,2,2,2,2],
+				[0,0,0,0,0]
+			]
+		},
+		{
+			"Name" : "htSiegeTower",
+			"GameID" : 61,
+			"TextID" : 2326,
+			"DescriptionID" : 2327,
+			"MaxHealth" : 700,
+			"WoodPic" : 3097,
+			"StonePic" : 3096,
+			"TerrPics": [ 2950, 3088],
+			"WoodCost" : 1,
+			"StoneCost" : 11,
+			"TileCost" : 6,
+			"EntranceOffsetX" : 0,
+			"EntranceOffsetY" : 0,
+			"EntranceOffsetXpx" : 20,
+			"EntranceOffsetYpx" : 10,
+			"WorkerRest" : 5,
+			"Sight" : 7,
+			"NeedsPlayerOrder" : False,
+			"BuildIcon" : 1075,
+			"TabletID" : 1076,
+			"MaxInWares" : 3,
+			"UnoccupiedMsgId" : -1,
+			"UnlockAfter" : ["htWall2", "htWall4"],
+			"WareInput" : [ "wtApple", "wtSausage", "wtQuiver", "wtStoneBolt", "wtBolt", "wtLance"],
+			
+			"ha_Fire1" : {"X" : -68,"Y" : -37,"Steps" : [1623,1624,1625,1620,1621,1622]},
+			"ha_Fire2" : {"X" : 40,"Y" : 0,"Steps" : [1637,1632,1633,1634,1635,1636]},
+			"ha_Fire3" : {"X" : -55,"Y" : -20,"Steps" : [1620,1621,1622,1623,1624,1625]},
+			"ha_Fire4" : {"X" : 43,"Y" : 82,"Steps" : [1617,1618,1619,1614,1615,1616]},
+			"ha_Fire5" : {"X" : -10,"Y" : 61,"Steps" : [1632,1633,1634,1635,1636,1637]},
+			"ha_Fire6" : {"X" : 25,"Y" : -24,"Steps" : [1629,1630,1631,1626,1627,1628]},
+			"ha_Fire7" : {"X" : 107,"Y" : 50,"Steps" : [1635,1636,1637,1632,1633,1634]},
+			"ha_Fire8" : {"X" : 10,"Y" : 20,"Steps" : [1621,1622,1623,1624,1625,1620]},
+			"ha_Flag1" : {"X" : -15,"Y" : 18,"Steps" : [1160,1161,1162,1158,1159]},
+			"ha_Flag2" : {"X" : 66,"Y" : 18,"Steps" : [1160,1161,1162,1158,1159]},
+			
+			"WoodPileOffset" : {"X" : -21,"Y" : 25},
+			"StonePileOffset" : {"X" : 8,"Y" : 28},
+			"TilePileOffset" : {"X" : 30,"Y" : 25},
+			"Build_Area" : 
+			[
+				[0,0,0,0,0],
+				[0,1,1,1,0],
+				[0,1,1,1,0],
+				[0,1,2,1,0],
+				[0,0,0,0,0]
+			],
+			"Ground_Area" : 
+			[
+				[0,0,0,0,0],
+				[0,2,4,2,0],
+				[0,4,4,4,0],
+				[0,2,4,2,0],
 				[0,0,0,0,0]
 			]
 		}
