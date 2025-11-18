@@ -2292,6 +2292,8 @@ begin
       uttForestCutter:    fTask := TKMTaskForestCutting.Load(LoadStream);
       uttFeedGroup:       fTask := TKMTaskFeeder.Load(LoadStream);
       uttShootAtSpot:     fTask := TKMTaskShootAtSpot.Load(LoadStream);
+      uttShootFromSiege:     fTask := TKMTaskShootFromSiegeTower.Load(LoadStream);
+      uttEnterSiegeTower     fTask := TKMTaskEnterSiegeTower.Load(LoadStream);
     else
       raise Exception.Create('TaskName can''t be handled');
     end;
