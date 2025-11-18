@@ -181,12 +181,14 @@ type
     procedure OrderNone;
     function OrderSplit(aNewLeaderUnitType: TKMUnitType; aNewCnt: Integer; aMixed: Boolean): TKMUnitGroup; overload;
     function OrderSplit(aSplitSingle: Boolean = False): TKMUnitGroup; overload;
-    function OrderSplitUnit(aUnit: TKMUnitWarrior; aClearOffenders: Boolean): TKMUnitGroup;
+    function OrderSplitUnit(aUnit: TKMUnitWarrior; aClearOffenders: Boolean): TKMUnitGroup; overload;
+    function OrderSplitUnit(aIndex: Integer; aClearOffenders: Boolean; aDoHalt : Boolean = true): TKMUnitGroup;overload;
     procedure OrderSplitLinkTo(aGroup: TKMUnitGroup; aCount: Word; aClearOffenders: Boolean);
     procedure OrderStorm(aClearOffenders: Boolean);
     procedure OrderWalk(const aLoc: TKMPoint; aClearOffenders: Boolean; aOrderWalkKind: TKMOrderWalkKind;
                         aDir: TKMDirection = dirNA; aForced: Boolean = True);
     procedure OrderShootAtSpot(const aLoc: TKMPoint; aClearOffenders: Boolean);
+    procedure OrderEnterSiegeTower(aTower : TKMHouseSiegeTower);
     procedure Dismiss;
     function IsDismissCancelAvailable : Boolean;
     procedure DismissCancel;
@@ -1993,6 +1995,61 @@ begin
   gScriptEvents.ProcGroupOrderSplit(Self, newGroup);
 end;
 
+//Split ONE certain unit from the group
+function TKMUnitGroup.OrderSplitUnit(aIndex: Integer; aClearOffenders: Boolean; aDoHalt: Boolean = True): TKMUnitGroup;
+var
+  newGroup: TKMUnitGroup;
+  newLeader: TKMUnitWarrior;
+begin
+  Result := nil;
+  if IsDead then Exit;
+  if Count < 2 then Exit;
+
+  if aClearOffenders and CanTakeOrders then
+    ClearOffenders;
+
+  //Delete from group
+  newLeader := TKMUnitWarrior(fMembers[aIndex]);
+  fMembers.Remove(newLeader);
+  newLeader.ReleasePointer;
+
+  //Give new group
+  newGroup := gHands[Owner].UnitGroups.AddGroup(newLeader);
+  newGroup.OnGroupDied := OnGroupDied;
+  newGroup.fSelected := newLeader;
+  newGroup.fTimeSinceHungryReminder := fTimeSinceHungryReminder;
+  newGroup.fTimeSinceRequestFood := fTimeSinceRequestFood;
+  newGroup.fOrderLoc := KMPointDir(newLeader.Position, fOrderLoc.Dir);
+
+  //Set units per row
+  UnitsPerRow := fUnitsPerRow;
+  newGroup.UnitsPerRow := 1;
+
+  //Save unit selection
+  if newGroup.HasMember(fSelected) then
+  begin
+    newGroup.fSelected := fSelected;
+
+    if (gGame.ControlledHandIndex = newGroup.Owner) //Only select unit for player that issued order (group owner)
+      and (gGame.ControlledHandIndex <> -1)
+      and (gMySpectator.Selected = Self) then //Selection is still on that group (in MP game there could be a delay, when player could select other target already)
+      gMySpectator.Selected := newGroup;
+  end;
+
+  //Halt both groups
+  If aDoHalt then
+  begin
+    OrderHalt(False);
+    newGroup.OrderHalt(False);
+  end;
+
+  //Return NewGroup as result
+  Result := newGroup;
+
+  //Script may have additional event processors
+  gScriptEvents.ProcGroupOrderSplit(Self, newGroup);
+end;
+
 
 //Splits X number of men from the group and adds them to the new commander
 procedure TKMUnitGroup.OrderSplitLinkTo(aGroup: TKMUnitGroup; aCount: Word; aClearOffenders: Boolean);
@@ -2096,6 +2153,29 @@ begin
   for I := 0 to Count - 1 do
     fMembers[I].OrderShootAtSpot(aLoc);
 
+end;
+
+procedure TKMUnitGroup.OrderEnterSiegeTower(aTower: TKMHouseSiegeTower);
+var I : Integer;
+  w : TKMUnitWarrior;
+  currWeight : Byte;
+begin
+  If not aTower.IsValid then
+    Exit;
+  If not aTower.CanEnter then
+    Exit;
+  currWeight := aTower.GetTotalWeight;
+
+  for I := Count - 1 downto 0 do
+  begin
+    w := fMembers[I];
+    If currWeight + aTower.GetUnitWeight(W.UnitType) <= aTower.MAX_UNITS_INSIDE then
+    begin
+      Inc(currWeight, aTower.GetUnitWeight(W.UnitType));
+      OrderSplitUnit(I, true, false);
+      W.OrderEnterSiegeTower(aTower);
+    end;
+  end;
 end;
 
 procedure TKMUnitGroup.Dismiss;

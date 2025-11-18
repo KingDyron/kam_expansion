@@ -4913,6 +4913,12 @@ begin
           begin
             // Try to Attack unit
             pbj := gMySpectator.HitTestCursor;
+
+            //try to enter siege tower, ranged units only
+            If group.IsRanged and (pbj is TKMHouseSiegeTower) and (TKMHouse(pbj).Owner = group.Owner) then
+            begin
+              group.OrderEnterSiegeTower(TKMHouseSiegeTower(pbj));
+            end else
             if (pbj is TKMUnit) and (gMySpectator.Hand.Alliances[TKMUnit(pbj).Owner] = atEnemy) then
             begin
               gGame.GameInputProcess.CmdArmy(gicArmyAttackUnit, group, TKMUnit(pbj));

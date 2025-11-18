@@ -14,7 +14,7 @@ type
 
 implementation
 uses
-  KM_CommonUtils;
+  KM_CommonUtils, KM_UnitWarrior;
 
 
 { TTaskGoOutShowHungry }
@@ -39,8 +39,15 @@ begin
          SetActionStay(20, uaWalk);
        end;
     1: begin
-         SetActionGoIn(uaWalk,gdGoOutside, fUnit.Home);
-         Home.SetState(hstEmpty);
+         If fUnit is TKMUnitWarrior then
+         begin
+            TKMUnitWarrior(fUnit).LeaveHome;
+            Result := trTaskDone
+         end else
+         begin
+           SetActionGoIn(uaWalk,gdGoOutside, fUnit.Home);
+           Home.SetState(hstEmpty);
+         end;
        end;
     2: SetActionLockedStay(4,uaWalk);
     3: SetActionWalkToSpot(fUnit.Home.PointBelowEntrance);

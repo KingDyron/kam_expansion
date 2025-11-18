@@ -1511,7 +1511,7 @@ begin
 
   Image_House_Worker.Hide;
   if not (aHouse.HouseType in [htBarracks, htSchool, htCottage, htHouse]) then
-    Button_House_Worker.Visible := gRes.Houses[aHouse.HouseType].CanHasWorker
+    Button_House_Worker.Visible := gRes.Houses[aHouse.HouseType].CanHasWorker or (aHouse.HouseType in [htSiegeTower])
   else
     Button_House_Worker.Visible := false;
   Button_Bell.Hide;

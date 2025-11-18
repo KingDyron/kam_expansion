@@ -28,7 +28,8 @@ type
     woBoatCollectWares,
     woAssignToShip,
     woTakeOverHouse,
-    woShootAtSpot
+    woShootAtSpot,
+    woEnterSiegeTower
   );
 
   TKMUnitWarrior = class(TKMUnit)
@@ -94,6 +95,7 @@ type
     procedure DoDismiss;override;
     function IsSelected : Boolean; override;
     function RageDelay : Word; virtual;
+    function GetMaxFireDelay(aUnitType : TKMUnitType) : byte;virtual;
 
   public
     OnWarriorDismissed: TKMWarriorEvent; //Separate event from OnUnitDied to report to Group
@@ -135,6 +137,7 @@ type
     procedure AssignToShip(aShip : Pointer); override;
     procedure UnloadFromShip(aShip : Pointer); override;
     procedure OrderShootAtSpot(aLoc : TKMPoint);
+    procedure OrderEnterSiegeTower(aTower : TKMHouseSiegeTower);
 
     //Ranged units properties
     property AimingDelay: Byte read GetAimingDelay;
@@ -167,6 +170,9 @@ type
     procedure SetLastShootTime;
     function FindLinkUnit(const aLoc: TKMPoint): TKMUnitWarrior;
     function CheckForEnemy: Boolean; virtual;
+    procedure ProceedClosedTower;
+    procedure LeaveHome;
+    procedure CheckForTowerEnemy; virtual;
     procedure FightEnemy(aEnemy: TKMUnit);
     function FindEnemy(const aMinRange, aMaxRange : Single): TKMUnit;
     function PathfindingShouldAvoid: Boolean; override;
@@ -314,7 +320,6 @@ type
     function GetMapEdUnit(aIndex : Integer) : TKMUnitMainData;
     procedure SetMapEdUnit(aIndex : Integer; aValue : TKMUnitMainData);
     function GetMapEdUnitCount : Byte;
-    function GetMaxFireDelay(aUnitType : TKMUnitType) : byte;
     procedure CheckForEnemies;
   public
     function CanAssignWarrior(aWarrior : Pointer) : Boolean;
@@ -452,7 +457,8 @@ uses
   KM_Hand, KM_HandLogistics, KM_HandTypes, KM_HandEntity,
   KM_UnitActionFight, KM_UnitActionGoInOut, KM_UnitActionWalkTo, KM_UnitActionStay,
   KM_UnitActionStormAttack, KM_Resource, KM_ResUnits, KM_UnitGroup,
-  KM_UnitTaskCollectWares, KM_UnitTaskDismiss,
+  KM_UnitTaskCollectWares, KM_UnitTaskDismiss, KM_UnitTaskGoHome,
+  KM_UnitTaskThrowRock, KM_UnitTaskGoForBoots, KM_UnitTaskGoOutShowHungry,
   KM_Game, KM_MapTypes,
   KM_GameParams, KM_CommonUtils, KM_RenderDebug, KM_UnitVisual, KM_RenderAux,
   KM_CommonExceptions, KM_CommonHelpers,
@@ -1316,6 +1322,7 @@ begin
     woBoatCollectWares: Result := IsIdle;
     woTakeOverHouse: Result := IsIdle;
     woShootAtSpot: Result := true;
+    woEnterSiegeTower: Result := true;
   end;
 end;
 
@@ -1355,6 +1362,16 @@ begin
   fNextOrderForced := fNextOrder = woShootAtSpot;
   fNextOrder := woShootAtSpot;
   fOrderLoc := aLoc;
+end;
+
+procedure TKMUnitWarrior.OrderEnterSiegeTower(aTower: TKMHouseSiegeTower);
+begin
+  If not IsRanged then
+    Exit;
+  ClearOrderTarget;
+  fNextOrderForced := fNextOrder = woEnterSiegeTower;
+  fNextOrder := woEnterSiegeTower;
+  SetOrderHouseTarget(aTower);
 end;
 
 function TKMUnitWarrior.PathfindingShouldAvoid: Boolean;
@@ -1515,6 +1532,41 @@ begin
   //Only stop attacking a house if it's a warrior
   if (fTask <> nil) and (fTask is TKMTaskAttackHouse) and (Action is TKMUnitActionStay) and not (Result is TKMUnitWarrior) then
     Result := nil;
+end;
+
+procedure TKMUnitWarrior.CheckForTowerEnemy;
+var U : TKMUnit;
+  from : TKMPoint;
+begin
+  If (BoltCount = 0) and not InfinityAmmo then
+    Exit;
+  //from := GetRandomCellWithin;
+  from := fHome.Entrance + KMPoint(0, -4);
+  U := gTerrain.UnitsHitTestWithinRad(from, RangeMin, RangeMax, Owner, atEnemy, dirNA, not RANDOM_TARGETS);
+  //no unit found so no need to check every archer
+  If (U = nil) or (U.IsDeadOrDying) then
+    Exit;
+  fTask := TKMTaskShootFromSiegeTower.Create(self, U);
+end;
+
+procedure TKMUnitWarrior.LeaveHome;
+begin
+  SetActionGoIn(uaWalk, gdGoOutside, fHome); //Walk outside the house
+  fHome.RemoveWorker(self);
+  gHands.CleanUpHousePointer(fHome);
+end;
+
+procedure TKMUnitWarrior.ProceedClosedTower;
+begin
+  if (fHome <> nil)
+    and not fHome.IsDestroyed
+    and fHome.IsClosedForWorker
+    and not (fTask is TKMTaskShootFromSiegeTower) then
+    begin
+
+      FreeAndNil(fTask);
+      LeaveHome
+    end;
 end;
 
 
@@ -1833,6 +1885,23 @@ begin
   Result := RAGE_TIME_DELAY;
 end;
 
+function TKMUnitWarrior.GetMaxFireDelay(aUnitType : TKMUnitType) : byte;
+begin
+    case aUnitType of
+      utBattleShip : Result := 20;
+      utArcher,
+      utBowman : Result := 20;
+
+      utCrossbowman : Result := 25;
+      utRogue : Result := 30;
+      utBallista : Result := 40;
+      utCatapult : Result := 50;
+      utSkirmisher: Result := 20;
+      else raise Exception.Create('Unknown shooter');
+    end;
+  Result := Result * 2;
+end;
+
 function TKMUnitWarrior.IsSelected: Boolean;
 begin
   Result := (gMySpectator.Selected = fGroup) and (self = TKMUnitGroup(Group).SelectedUnit);
@@ -1863,6 +1932,9 @@ begin
       if UNIT_TO_GROUP_TYPE[UnitType] = gtRanged then
         if TKMUnitGroup(fGroup).HasUnitType(utArcher) then //
           Result := 2;
+
+  If fInHouse is TKMHouseSiegeTower then
+    Result := Result + 3;
 end;
 
 
@@ -1886,6 +1958,9 @@ begin
     Result := Result + 2;
   If (UnitType = utCatapult) and gHands[Owner].ArmyDevUnlocked(32) then
     Result := Result + 1;
+
+  If fInHouse is TKMHouseSiegeTower then
+    Result := Result + 3;
 end;
 
 
@@ -2159,6 +2234,30 @@ begin
                           end;
                         end;
                       end;
+
+    woEnterSiegeTower:begin
+                        //No need to update order  if we are going to take over same house
+                        If Home = nil then
+                          if (fOrder <> woEnterSiegeTower)
+                              or (Task = nil)
+                              or not (Task is TKMTaskEnterSiegeTower) then
+                          begin
+                            //Abandon walk so we can take over house
+                            if (Action is TKMUnitActionWalkTo)
+                              and not TKMUnitActionWalkTo(Action).DoingExchange
+                              and not TKMUnitActionWalkTo(Action).WasPushed then
+                              AbandonWalk;
+
+                            //Take order
+                            if CanInterruptAction(fNextOrderForced) then
+                            begin
+                              FreeAndNil(fTask); //e.g. TaskAttackHouse
+                              fTask := TKMTaskEnterSiegeTower.Create(Self, fOrderTargetHouse);
+                              fOrder := woEnterSiegeTower;
+                              fNextOrder := woNone;
+                            end;
+                          end;
+                      end;
   end;
 end;
 
@@ -2361,6 +2460,24 @@ begin
   If InShip = nil then
     if (fTicker mod 6 = 0) and not InFight then
       CheckForEnemy; //Split into separate procedure so it can be called from other places
+
+
+  If Home is TKMHouseSiegeTower then
+  begin
+    ProceedClosedTower;
+    //check if unit is hungry, if so leave the tower.
+    if IsHungry
+      and not (fTask is TKMTaskGoOutShowHungry)
+      and not fVisible then
+    begin
+      if fTask <> nil then
+        FreeAndNil(fTask);
+      fTask := TKMTaskGoOutShowHungry.Create(Self);
+    end;
+
+    If IsRanged and IsIdle then
+      CheckForTowerEnemy;
+  end;
 
   Result := True; //Required for override compatibility
   if inherited UpdateState then Exit;
@@ -3146,22 +3263,6 @@ end;
 function TKMUnitWarriorShip.GetMapEdUnitCount: Byte;
 begin
   Result := fUnitsFromMap.Count;
-end;
-
-function TKMUnitWarriorShip.GetMaxFireDelay(aUnitType : TKMUnitType) : byte;
-begin
-    case aUnitType of
-      utBattleShip : Result := 20;
-      utArcher,
-      utBowman : Result := 20;
-
-      utCrossbowman : Result := 25;
-      utRogue : Result := 30;
-      utBallista : Result := 40;
-      utCatapult : Result := 50;
-      else raise Exception.Create('Unknown shooter');
-    end;
-  Result := Result * 2;
 end;
 
 procedure TKMUnitWarriorShip.CheckForEnemies;

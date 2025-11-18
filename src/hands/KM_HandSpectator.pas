@@ -443,8 +443,15 @@ begin
     fHighlight.Reset;
   //Units should be deselected when they go inside a house
   if Selected is TKMUnit then
+  begin
     if not TKMUnit(Selected).Visible then
       Selected := nil;
+  end else
+  if Selected is TKMUnitGroup then
+  begin
+    if not TKMUnitGroup(Selected).SelectedUnit.Visible then
+      Selected := nil;
+  end else
 end;
 
 

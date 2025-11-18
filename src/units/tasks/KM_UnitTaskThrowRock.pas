@@ -21,6 +21,18 @@ type
     procedure Save(SaveStream: TKMemoryStream); override;
   end;
 
+  TKMTaskShootFromSiegeTower = class(TKMUnitTask)
+  private
+    fTarget: TKMUnit;
+  public
+    constructor Create(aUnit, aTarget: TKMUnit);
+    destructor Destroy; override;
+    constructor Load(LoadStream: TKMemoryStream); override;
+    procedure SyncLoad; override;
+    function Execute: TKMTaskResult; override;
+    procedure Save(SaveStream: TKMemoryStream); override;
+  end;
+
 
 implementation
 uses
@@ -28,6 +40,8 @@ uses
   KM_Entity,
   KM_HandsCollection, KM_Hand, KM_HandTypes, KM_HandEntity, KM_Houses,
   KM_Projectiles, KM_Points, KM_CommonUtils,
+  KM_Resource,
+  KM_UnitWarrior,
   KM_CommonGameTypes, KM_ResTypes;
 
 
@@ -142,6 +156,85 @@ begin
   else
     SaveStream.Write(Integer(0));
   SaveStream.Write(fFlightTime);
+end;
+
+
+{ TKMTaskShootFromSiegeTower }
+constructor TKMTaskShootFromSiegeTower.Create(aUnit, aTarget: TKMUnit);
+begin
+  inherited Create(aUnit);
+  fType := uttShootFromSiege;
+  fTarget := aTarget.GetPointer;
+end;
+
+
+destructor TKMTaskShootFromSiegeTower.Destroy;
+begin
+  gHands.CleanUpUnitPointer(fTarget);
+  inherited;
+end;
+
+
+constructor TKMTaskShootFromSiegeTower.Load(LoadStream: TKMemoryStream);
+begin
+  inherited;
+  LoadStream.CheckMarker('TaskShootFromSiegeTower');
+  LoadStream.Read(fTarget, 4);
+end;
+
+
+procedure TKMTaskShootFromSiegeTower.SyncLoad;
+begin
+  inherited;
+  fTarget := gHands.GetUnitByUID(Integer(fTarget));
+end;
+
+
+function TKMTaskShootFromSiegeTower.Execute: TKMTaskResult;
+begin
+  Result := trTaskContinues;
+
+  //Target could have been killed by another Tower or in a fight
+  if fUnit.InHouse.IsDestroyed or ((fTarget<>nil) and fTarget.IsDeadOrDying) then
+  begin
+    Result := trTaskDone;
+    Exit;
+  end;
+
+  with fUnit do
+    case fPhase of
+      0:  begin
+            SetActionLockedStay(TKMUnitWarrior(fUnit).AimingDelay + gRes.Units[UnitType].UnitAnim[uaWork, dirN].Count, uaWalk);
+          end;
+      1:  begin
+            If TKMUnitWarrior(fUnit).TakeBolt then
+              gProjectiles.AimTarget(KMPointF(Home.Entrance.X, Home.Entrance.Y - 4.5),
+                                      fTarget, TKMUnitWarrior(fUnit).ProjectileType,
+                                      fUnit, TKMUnitWarrior(fUnit).RangeMax + 6,
+                                      TKMUnitWarrior(fUnit).RangeMin);
+
+            gHands.CleanUpUnitPointer(fTarget); //We don't need it anymore
+            SetActionLockedStay(1, uaWalk);
+          end;
+      2:  SetActionLockedStay(2, uaWalk); //Pretend to look how it goes
+      3:  begin
+            SetActionStay(3, uaWalk); //Idle before throwing another rock
+
+          end;
+      else Result := trTaskDone;
+    end;
+  Inc(fPhase);
+end;
+
+
+procedure TKMTaskShootFromSiegeTower.Save(SaveStream: TKMemoryStream);
+begin
+  inherited;
+  SaveStream.PlaceMarker('TaskThrowRock');
+  if fTarget <> nil then
+    SaveStream.Write(fTarget.UID) //Store ID, then substitute it with reference on SyncLoad
+  else
+    SaveStream.Write(Integer(0));
 end;
 
 

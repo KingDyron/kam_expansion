@@ -950,13 +950,13 @@ type
   TKMHouseWall = class(TKMHouse)
   private
     procedure UpdateWallAround;
-    procedure UpdatePointBelowEntrance;
   protected
     fTicker : Cardinal;
     procedure AfterCreate(aWasBuilt: Boolean); override;
     procedure Activate(aWasBuilt: Boolean); override;
     procedure FinishedLevel(aLevel : Byte); override;
     procedure UpdateEntrancePos; override;
+    procedure UpdatePointBelowEntrance; virtual;
   public
     constructor Load(LoadStream: TKMemoryStream); override;
     procedure Save(SaveStream: TKMemoryStream); override;
@@ -966,6 +966,7 @@ type
   end;
 
   TKMHouseWallSingle = class(TKMHouseWall)
+  private
     fWallStyle : Byte;
   protected
     procedure AfterCreate(aWasBuilt: Boolean); override;
@@ -978,6 +979,16 @@ type
     constructor Load(LoadStream: TKMemoryStream); override;
     procedure Save(SaveStream: TKMemoryStream); override;
     procedure UpdateConnection;
+  end;
+
+  TKMHouseSiegeTower = class (TKMHouseWFlagPoint)
+  private
+  public
+    const
+      MAX_UNITS_INSIDE = 10;
+    function GetUnitWeight(aUnitType : TKMUnitType) : Byte;
+    function GetTotalWeight : Byte;
+    function CanEnter(aUnitType : TKMUnitType = utAny) : Boolean;
   end;
 
   TAppleTree = TKMHouseAppleTree;
@@ -2487,6 +2498,8 @@ begin
   SetLength(fWorkers, J + 1);
   fWorkers[J] := TKMUnit(aWorker).GetPointer;
 
+  If length(HSpec.Workers) = 0 then
+    Exit;
   tmp2 := fWorkers;
   SetLength(tmp, length(fWorkers));
   L := 0;
@@ -8991,6 +9004,41 @@ procedure TKMHouseWallSingle.Save(SaveStream: TKMemoryStream);
 begin
   Inherited;
   SaveStream.Write(fWallStyle);
+end;
+
+function TKMHouseSiegeTower.GetUnitWeight(aUnitType: TKMUnitType): Byte;
+begin
+  case aUnitType of
+    //ships cannot be asigned
+    utGolem,
+    utShip, utBoat,
+    utBattleShip : Result := 255;
+
+    utAny,
+    utArcher,
+    utBowman,
+    utCrossbowman,
+    utRogue,
+    utSkirmisher: Result := 1;
+
+    utBallista:  Result := 6;
+    utCatapult:  Result := 8;
+    utMobileTower:  Result := 8;
+    else raise Exception.Create('Unknown shooter');
+  end;
+end;
+
+function TKMHouseSiegeTower.GetTotalWeight: Byte;
+var I : Integer;
+begin
+  Result := 0;
+  for I := 0 to high(fWorkers) do
+    inc(Result, GetUnitWeight(TKMUnit(fWorkers[I]).UnitType));
+end;
+
+function TKMHouseSiegeTower.CanEnter(aUnitType : TKMUnitType = utAny): Boolean;
+begin
+  Result := GetTotalWeight + GetUnitWeight(aUnitType) <= MAX_UNITS_INSIDE;
 end;
 
 

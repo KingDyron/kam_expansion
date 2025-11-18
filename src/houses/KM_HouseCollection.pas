@@ -181,6 +181,7 @@ begin
     htWall..htWall4:    Result := TKMHouseWall.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
     htWall5:            Result := TKMHouseWallSingle.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
     htArena:            Result := TKMHouseArena.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
+    htSiegeTower:       Result := TKMHouseSiegeTower.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
     else             Result := TKMHouse.Create(uid, aHouseType,aPosX,aPosY, aOwner, aHBS);
   end;
 
@@ -572,6 +573,7 @@ begin
       htWall..htWall4:    H := TKMHouseWall.Load(LoadStream);
       htWall5:            H := TKMHouseWallSingle.Load(LoadStream);
       htArena:            H := TKMHouseArena.Load(LoadStream);
+      htSiegeTower:       H := TKMHouseSiegeTower.Load(LoadStream);
 
       else                H := TKMHouse.Load(LoadStream);
     end;

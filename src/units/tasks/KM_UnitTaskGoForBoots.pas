@@ -21,10 +21,23 @@ type
     procedure Save(SaveStream: TKMemoryStream); override;
   end;
 
+  TKMTaskEnterSiegeTower = class(TKMUnitTask)
+  private
+    fHouse : TKMHouse;
+  public
+    constructor Create(aUnit: TKMUnit; aHouse : TKMHouse);
+    constructor Load(LoadStream: TKMemoryStream); override;
+
+    function Execute: TKMTaskResult; override;
+    function CouldBeCancelled: Boolean; override;
+    function WalkShouldAbandon : Boolean; override;
+    procedure SyncLoad; override;
+    procedure Save(SaveStream: TKMemoryStream); override;
+  end;
 
 implementation
 Uses  KM_HandsCollection,
-      KM_Entity,
+      KM_Entity, KM_UnitWarrior, KM_UnitGroup,
       KM_ResTypes, Math;
 
 { TTaskGoHome }
@@ -106,5 +119,79 @@ begin
   Inherited;
   fHouse := gHands.GetHouseByUID(Integer(fHouse));
 end;
+
+
+
+
+{ TTaskGoHome }
+constructor TKMTaskEnterSiegeTower.Create(aUnit: TKMUnit; aHouse : TKMHouse);
+begin
+  inherited Create(aUnit);
+
+  fType := uttEnterSiegeTower;
+  aUnit.Thought := thHome;
+  fHouse := aHouse;
+end;
+
+function TKMTaskEnterSiegeTower.CouldBeCancelled: Boolean;
+begin
+  Result := (fPhase - 1) //phase was increased at the end of execution
+                   <= 0; //Allow cancel task only at walking phases
+end;
+
+function TKMTaskEnterSiegeTower.WalkShouldAbandon: Boolean;
+begin
+  Result := (fHouse = nil) or (fHouse.IsDestroyed) or fHouse.IsClosedForWorker or not TKMHOuseSiegeTower(fHouse).CanEnter(fUnit.UnitType);
+  Result := Result and (fPhase <= 1);
+end;
+
+function TKMTaskEnterSiegeTower.Execute: TKMTaskResult;
+//var U : TKMUnit;
+begin
+  Result := trTaskContinues;
+
+  if (fHouse = nil) or fHouse.IsDestroyed or WalkShouldAbandon then
+  begin
+    Result := trTaskDone;
+    Exit;
+  end;
+
+  with fUnit do
+    case fPhase of
+      0:  begin
+            Thought := thHome;
+            SetActionWalkToSpot(fHouse.PointBelowEntrance);
+          end;
+      1:  SetActionGoIn(uaWalk, gdGoInside, fHouse);
+      2:  begin
+            SetActionLockedStay(15, uaWalk);
+            Home := fHouse;
+            Home.AssignWorker(fUnit);
+            Thought := thNone; //Only stop thinking once we are right inside
+          end;
+      else Result := trTaskDone;
+    end;
+
+  Inc(fPhase);
+end;
+
+constructor TKMTaskEnterSiegeTower.Load(LoadStream: TKMemoryStream);
+begin
+  Inherited;
+  LoadStream.Read(fHouse, 4);
+end;
+
+procedure TKMTaskEnterSiegeTower.Save(SaveStream: TKMemoryStream);
+begin
+  Inherited;
+  SaveStream.Write(fHouse.UID);
+end;
+
+procedure TKMTaskEnterSiegeTower.SyncLoad;
+begin
+  Inherited;
+  fHouse := gHands.GetHouseByUID(Integer(fHouse));
+end;
+
 
 end.
