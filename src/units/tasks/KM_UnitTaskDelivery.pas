@@ -731,7 +731,9 @@ begin
 
               wtBolt,
               wtStoneBolt,
-              wtQuiver : TKMUnitWarrior(fToUnit).ReloadAmmo(Carry);
+              wtQuiver,
+              wtLance,
+              wtAxe : TKMUnitWarrior(fToUnit).ReloadAmmo(Carry);
             end;
             case Carry of
               wtFood,

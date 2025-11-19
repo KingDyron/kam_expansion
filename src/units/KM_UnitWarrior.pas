@@ -2965,6 +2965,11 @@ begin
                       gHands[Owner].Deliveries.Queue.AddDemand(nil, Self, wtBolt, I, dtOnce, diHigh2);
                       fAmmoRequested[AT] := true;
                     end;
+          uatLance:  begin
+                      I := (GetAmmoMaxCount(AT) - fAmmo[AT]) div 15;
+                      gHands[Owner].Deliveries.Queue.AddDemand(nil, Self, wtLance, I, dtOnce, diHigh2);
+                      fAmmoRequested[AT] := true;
+                    end;
         end;
 
 end;

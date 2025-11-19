@@ -72,7 +72,7 @@ const
   BTN_TKIND_S_SP_Y = 40;
   SURF_ROW_LEN = 5;
 
-  SURFACES: array [0..5, 0..SURF_ROW_LEN-1] of record
+  SURFACES: array [0..6, 0..SURF_ROW_LEN-1] of record
     Terrain: TKMTerrainKind;
     Hint: Integer;
   end = (
@@ -110,7 +110,12 @@ const
      (Terrain: tkGold;        Hint: TX_MAPED_TERRAIN_GOLD;),
      (Terrain: tkIron;        Hint: TX_MAPED_TERRAIN_IRON;),
      (Terrain: tkLava;        Hint: TX_MAPED_TERRAIN_LAVA;),
-     (Terrain: tkAbyss;       Hint: TX_MAPED_TERRAIN_ABYSS;))
+     (Terrain: tkAbyss;       Hint: TX_MAPED_TERRAIN_ABYSS;)),
+    ((Terrain: tkShallowWater1;   Hint: TX_MAPED_TERRAIN_ABYSS;),
+     (Terrain: tkShallowWater2;   Hint: TX_MAPED_TERRAIN_ABYSS;),
+     (Terrain: tkDeepWater;       Hint: TX_MAPED_TERRAIN_ABYSS;),
+     (Terrain: tkCustom;          Hint: TX_MAPED_TERRAIN_ABYSS;),
+     (Terrain: tkCustom;          Hint: TX_MAPED_TERRAIN_ABYSS;))
   );
 
 type
@@ -142,7 +147,7 @@ var
                                                            + ( (Ord(aMK) mod SURF_ROW_LEN)
                                                                + Min((Ord(aMK) div SURF_ROW_LEN), 1) // + 1 for the 2nd and further lines
                                                              ) * BTN_TKIND_S_SP_X,
-                                                           295 + (Ord(aMK) div SURF_ROW_LEN)*BTN_TKIND_S_SP_Y,
+                                                           330 + (Ord(aMK) div SURF_ROW_LEN)*BTN_TKIND_S_SP_Y,
                                                            BTN_TKIND_S, BTN_TKIND_S,
                                             TILE_MASK_KINDS_PREVIEW[aMK] + 1, rxTiles);
     BrushMasks[aMK].Anchors := [anTop];

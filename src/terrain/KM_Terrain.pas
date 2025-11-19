@@ -4799,7 +4799,10 @@ const
     tcNone,           //    tkIron,
     tcWet2,           //    tkWater,
     tcWet2,           //    tkFastWater,
-    tcNone            //    tkLava);
+    tcNone,            //    tkLava);,
+    tcNone,
+    tcNone,
+    tcNone
   );
 var
   I, K: Integer;
@@ -4857,7 +4860,10 @@ const
     tcNone,           //    tkIron,
     tcNone,           //    tkWater,
     tcNone,           //    tkFastWater,
-    tcNone            //    tkLava);
+    tcNone,            //    tkLava);
+    tcNone,           //    tkWater1,
+    tcNone,           //    tkWater2,
+    tcNone           //    tkdeepWater,
   );
 var
   I, K: Integer;

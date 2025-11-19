@@ -210,14 +210,19 @@ begin
 
   with fUnit do
     case fPhase of
-      0:  begin
+      0: If fUnit.InHouse <> nil then
+        begin
+          SetActionGoIn(uaWalk, gdGoOutside, fUnit.InHouse);
+        end else
+          SetActionLockedStay(1, uaWalk);
+      1:  begin
             SetActionWalkToSpot(fPearl.GetClosestEntrance(Position).DirFaceLoc);
             SetSpeed(10, true);
             Thought := thImportant
           end;
-      1:  SetActionGoIn(uaWalk, gdGoInside, fPearl);//enter the well
-      2:  SetActionLockedStay(30, uaWalk); //prepare before attacking
-      3:  begin
+      2:  SetActionGoIn(uaWalk, gdGoInside, fPearl);//enter the well
+      3:  SetActionLockedStay(30, uaWalk); //prepare before attacking
+      4:  begin
             If fPearl.DoRally then
             begin
               target := gTerrain.UnitsHitTestWithinRad(fPearl.Entrance,
@@ -227,14 +232,14 @@ begin
               If (target = nil) or target.IsDeadOrDying then
               else
                 gProjectiles.AimTarget(fPearl.RalenderGetClosestTower(target.PositionF), target, ptTowerBolt, fUnit, 15.99, 0);
-              fPhase := 1;
+              fPhase := 2;
               SetActionLockedStay(30, uaWalk);
             end else
               SetActionLockedStay(0, uaWalk);
           end;
 
       //go back to your duties
-      4:begin
+      5:begin
           SetActionGoIn(uaWalk, gdGoOutside, fPearl);
           SetSpeed(-10, true);
           Thought := thNone;
