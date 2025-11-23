@@ -1403,7 +1403,7 @@ begin
   DoTilesLayers(aFOW);
   DoOverlays(aFOW);
   DoLighting(aFOW);
-//  DoAnimations(aAnimStep, aFOW);
+  //DoAnimations(aAnimStep, aFOW);
   DoShadows(aFOW);
 
   {$IFDEF PERFLOG}
