@@ -741,10 +741,10 @@ begin
                               P[4],
                               P[5]
                               );
-
-                            for I := 0 to fLastTroop.Count - 1 do
-                              if gRes.Units[fLastTroop.Members[I].UnitType].CanOrderAmmo then
-                                fLastTroop.Members[I].ReloadAmmo(wtNone, true);
+                            If fLastTroop <> nil then
+                              for I := 0 to fLastTroop.Count - 1 do
+                                if gRes.Units[fLastTroop.Members[I].UnitType].CanOrderAmmo then
+                                  fLastTroop.Members[I].ReloadAmmo(wtNone, true);
                           except
                             //Group could not be placed because there's already another flagholder there
                             //flagholders need to be placed on exact spots, no autoplacing is used

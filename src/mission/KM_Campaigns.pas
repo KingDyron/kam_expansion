@@ -234,8 +234,8 @@ end;
 
 procedure TKMCampaignsCollection.SortCampaigns;
 
-const MAIN_ORDER : array[0..6] of String = (
-    'HKS', 'KSU', 'KSN', 'KSO', 'TUA', 'TSK', 'TPR');
+const MAIN_ORDER : array[0..7] of String = (
+    'HKS', 'KSU', 'KSN', 'KSO', 'TUA', 'TMR', 'TSK', 'TPR');
 
   //Return True if items should be exchanged
   function Compare(A, B: TKMCampaign): Boolean;
