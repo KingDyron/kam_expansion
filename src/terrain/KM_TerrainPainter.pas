@@ -67,6 +67,7 @@ type
 
     procedure DoApplyBrush;
     procedure DoApplyTileBrush(const X, Y: Integer);
+    procedure DoApplyTileOverlayBrush(const X, Y: Integer);
     procedure EditTile(const aLoc: TKMPoint; aTile: Word; aRotation: Byte; aIsCustom: Boolean = True);
     procedure GenerateAddnData;
     procedure InitSize(X,Y: Word);
@@ -114,6 +115,7 @@ type
     procedure ApplyConstHeight;
     procedure ApplyElevateKind(aTerKind: TKMTerrainKind);
     procedure ApplyTileBrush;
+    procedure ApplyTileOverlayBrush;
 
     procedure RebuildMap; overload;
     procedure RebuildMap(const aRect: TKMRect; aRandomTiles: Boolean = False); overload;
@@ -1578,12 +1580,32 @@ begin
   gTerrain.UpdateLighting(rect); //Also update lighting because of water
 end;
 
+procedure TKMTerrainPainter.ApplyTileOverlayBrush;
+var
+  X, Y: Integer;
+begin
+  X := fMapXc;
+  Y := fMapYc;
+
+  IterateOverArea(KMPoint(X, Y), fSize, fShape = hsSquare, DoApplyTileOverlayBrush);
+end;
+
 procedure TKMTerrainPainter.DoApplyTileBrush(const X, Y: Integer);
 begin
   if gCursor.MapEdDir in [0..3] then //Defined direction
     EditTile(KMPoint(X, Y), gCursor.Tag1, gCursor.MapEdDir)
   else //Random direction
     EditTile(KMPoint(X, Y), gCursor.Tag1, KaMRandom(4, 'TKMTerrainPainter.UpdateStateIdle'));
+end;
+
+procedure TKMTerrainPainter.DoApplyTileOverlayBrush(const X, Y: Integer);
+begin
+  If gCursor.MapEdApplyOverlayOnRoad then
+    If gTerrain.TileHasRoad(X, Y) then
+      gTerrain.SetOverlay(KMPoint(X, Y), TKMTileOverlay(gCursor.Tag1), false) //Holding shift allows overwrite roads
+    else
+  else
+    gTerrain.SetOverlay(KMPoint(X, Y), TKMTileOverlay(gCursor.Tag1), ssShift in gCursor.SState); //Holding shift allows overwrite roads
 end;
 
 
@@ -2421,12 +2443,8 @@ begin
 
     cmOverlays:     if (ssLeft in gCursor.SState) then
                     begin
-                      If gCursor.MapEdApplyOverlayOnRoad then
-                        If gTerrain.TileHasRoad(gCursor.Cell) then
-                          gTerrain.SetOverlay(gCursor.Cell, TKMTileOverlay(gCursor.Tag1), false) //Holding shift allows overwrite roads
-                        else
-                      else
-                        gTerrain.SetOverlay(gCursor.Cell, TKMTileOverlay(gCursor.Tag1), ssShift in gCursor.SState); //Holding shift allows overwrite roads
+                      SetMapEdParams; //Set mapEd params from gGameCursor
+                      ApplyTileOverlayBrush;
                     end;
   end;
 end;

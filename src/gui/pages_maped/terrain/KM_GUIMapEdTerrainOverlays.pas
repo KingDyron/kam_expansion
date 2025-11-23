@@ -4,7 +4,7 @@ interface
 uses
    Math, SysUtils,
    KM_InterfaceDefaults,
-   KM_Controls, KM_ControlsBase, KM_ControlsSwitch,
+   KM_Controls, KM_ControlsBase, KM_ControlsSwitch, KM_ControlsTrackBar,
    KM_Defaults, KM_Pics, KM_TerrainTypes;
 
 type
@@ -21,6 +21,10 @@ type
     CheckBox_ApplyOnRoad : TKMCheckBox;
     OverlaysTable: array of TKMButtonFlat;
 
+    BrushSize: TKMTrackBar;
+    BrushCircle: TKMButtonFlat;
+    BrushSquare: TKMButtonFlat;
+
   public
     constructor Create(aParent: TKMPanel);
 
@@ -35,7 +39,8 @@ implementation
 uses
   TypInfo,
   KM_ResFonts, KM_ResTexts, KM_ResTypes, KM_ResTileset, KM_Resource,
-  KM_Cursor, KM_RenderUI, KM_InterfaceGame;
+  KM_Cursor, KM_RenderUI, KM_InterfaceGame,
+  KM_Utils;
 
 
 constructor TKMMapEdTerrainOverlays.Create(aParent: TKMPanel);
@@ -83,6 +88,28 @@ begin
   CheckBox_ApplyOnRoad := TKMCheckBox.Create(Panel_Overlays, 9, 50, Panel_Overlays.Width, 15, gResTexts[2295], fntMetal);
   CheckBox_ApplyOnRoad.OnClick := OverlayChange;
   CheckBox_ApplyOnRoad.UnCheck;
+  top := CheckBox_ApplyOnRoad.Bottom;
+  BrushSize   := TKMTrackBar.Create(Panel_Overlays, 9, top, (Panel_Overlays.Width - (24 * 2) - 18) - 18, 1, 7);
+  BrushSize.Anchors := [anLeft, anTop, anRight];
+  BrushSize.Hint := GetHintWHotkey(TX_MAPED_TERRAIN_HEIGHTS_SIZE_HINT, gResTexts[TX_KEY_CTRL_MOUSEWHEEL]);
+  BrushSize.Position := 1;
+  BrushSize.OnChange := OverlayChange;
+
+  BrushCircle := TKMButtonFlat.Create(Panel_Overlays, Panel_Overlays.Width - (24 * 2) - 18,
+                                                     top, 24, 24, 592);
+  BrushCircle.Anchors := [anTop, anRight];
+  BrushCircle.OnClick := OverlayChange;
+  BrushCircle.TexOffsetX := 1;
+  BrushCircle.TexOffsetY := 1;
+
+  BrushSquare := TKMButtonFlat.Create(Panel_Overlays, Panel_Overlays.Width - 24 - 9, top, 24, 24, 593);
+  BrushSquare.Anchors := [anTop, anRight];
+  BrushSquare.OnClick := OverlayChange;
+  BrushSquare.TexOffsetX := 1;
+  BrushSquare.TexOffsetY := 1;
+
+  top := BrushSize.Bottom + 5;
+
   {for TTO := Low(OverlaysTable) to High(OverlaysTable) do
   begin
     OverlaysTable[TTO] := TKMButtonFlat.Create(Panel_Overlays, 9 + (Byte(TTO) mod BTNS_PER_ROW) * BTN_SIZE,
@@ -99,7 +126,7 @@ begin
     OverlaysTable[TTO].Hint := gResTexts[OVERLAY_HINTS_TX[TTO]];
     OverlaysTable[TTO].OnClick := OverlayChange;
   end;}
-  top := BTN_SIZE + 40;
+  //top := BTN_SIZE + 40;
   J := 0;
   C := 0;
   for I := 0 to High(GuiOverlayOrder) do
@@ -143,6 +170,15 @@ var
 begin
   gCursor.MapEdOverrideCustomTiles := CheckBox_Override.Checked;
   gCursor.MapEdApplyOverlayOnRoad := CheckBox_ApplyOnRoad.Checked;
+
+  gCursor.MapEdSize := BrushSize.Position;
+  If BrushSquare.Down then
+    gCursor.MapEdShape := hsSquare
+  else
+    gCursor.MapEdShape := hsCircle;
+  BrushCircle.Down := gCursor.MapEdShape = hsCircle;
+  BrushSquare.Down := gCursor.MapEdShape = hsSquare;
+
   for I := Low(OverlaysTable) to High(OverlaysTable) do
     if Sender = OverlaysTable[I] then
     begin
@@ -150,6 +186,7 @@ begin
       gCursor.Tag1 := OverlaysTable[I].Tag;
       gCursor.MapEdOverlayOnRoad := OverlaysTable[I].Tag;
     end;
+
 end;
 
 
@@ -180,6 +217,7 @@ procedure TKMMapEdTerrainOverlays.Show;
 begin
   OverlaySet(fLastOverlay);
   gCursor.MapEdDir := 0;
+  gCursor.MapEdSize :=  BrushSize.Position;
   Panel_Overlays.Show;
 end;
 

@@ -82,6 +82,7 @@ type
     procedure RenderBackgroundUI(const aRect: TKMRect);
     // Terrain overlay cursors rendering (incl. sprites highlighting)
     procedure RenderForegroundUI;
+    procedure RenderForegroundUI_Overlays;
     procedure RenderForegroundUI_Tiles;
     procedure RenderForegroundUI_Brush;
     procedure RenderForegroundUI_BigErase;
@@ -123,6 +124,7 @@ type
     procedure RenderWireTileIntObjBr(const X,Y: Integer);
     procedure RenderTileInt(const X, Y: Integer);
     procedure RenderTileBrushInt(const X, Y: Integer);
+    procedure RenderTileOverlayInt(const X, Y: Integer);
 
     procedure RenderBigEraseTileInt(const X,Y: Integer);
     procedure RenderAssignToShip;
@@ -3475,6 +3477,13 @@ begin
     RenderTile(gCursor.Tag1,X,Y, (gTerrain.AnimStep div 5) mod 4);
 end;
 
+procedure TKMRenderPool.RenderTileOverlayInt(const X: Integer; const Y: Integer);
+begin
+  RenderWireTile(KMPoint(X, Y), icCyan);
+  if gCursor.Tag1 > 0 then
+    RenderTile(gRes.Tileset.Overlay[gCursor.Tag1].TileID, X, Y, 0);
+end;
+
 
 procedure TKMRenderPool.RenderForegroundUI_BigErase;
 begin
@@ -3540,6 +3549,18 @@ begin
   size := gCursor.MapEdSize;
   isSquare := gCursor.MapEdShape = hsSquare;
   IterateOverArea(P, size, isSquare, RenderTileBrushInt);
+end;
+
+procedure TKMRenderPool.RenderForegroundUI_Overlays;
+var
+  P: TKMPoint;
+  size: Integer;
+  isSquare: Boolean;
+begin
+  P := gCursor.Cell;
+  size := gCursor.MapEdSize;
+  isSquare := gCursor.MapEdShape = hsSquare;
+  IterateOverArea(P, size, isSquare, RenderTileOverlayInt);
 end;
 
 //Render tile owner layer
@@ -3664,9 +3685,9 @@ begin
                   else
                     RenderTile(gCursor.Tag1, P.X, P.Y, (gTerrain.AnimStep div 5) mod 4);} // Spin it slowly so player remembers it is on randomized
     cmOverlays:   begin
-                    RenderWireTile(P, icCyan);
-                    if gCursor.Tag1 > 0 then
-                      RenderTile(gRes.Tileset.Overlay[gCursor.Tag1].TileID, P.X, P.Y, 0);
+                    //RenderWireTile(P, icCyan);
+                    RenderForegroundUI_Overlays;
+                      //RenderTile(gRes.Tileset.Overlay[gCursor.Tag1].TileID, P.X, P.Y, 0);
                     end;
     cmObjects:    begin
                     // If there's object below - paint it in Red
