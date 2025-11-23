@@ -588,7 +588,7 @@ end;
 
 procedure TKMRenderTerrain.DoTiles(aFOW: TKMFogOfWarCommon);
 var
-  I, K: Integer;
+  I, K, tile: Integer;
   texC: TKMUVRect;
   sizeX, sizeY: Word;
   tX, tY: Word;
@@ -639,15 +639,28 @@ begin
 
           if TileHasToBeRendered(I*K = 0, tX, tY, aFow) then // Do not render tiles fully covered by FOW
           begin
+            tile := Land^[tY,tX].BaseLayer.Terrain;
+
             with Land^[tY,tX] do
             begin
               TKMRender.BindTexture(gGFXData[rxTiles, BaseLayer.Terrain+1].Tex.TexID);
               glBegin(GL_TRIANGLE_FAN);
               texC := fTileUVLookup[BaseLayer.Terrain, BaseLayer.Rotation mod 4];
             end;
-
             RenderQuadTexture(texC, tX, tY);
             glEnd;
+
+            {If gRes.Tileset[tile].HasWater then
+            begin
+              glColor4f(1 * night,1 * night,1 * night, LandExt[tY, tX].RenderLight);
+
+              TKMRender.BindTexture(gGFXData[rxTiles, 32].Tex.TexID);
+              glBegin(GL_TRIANGLE_FAN);
+              texC := fTileUVLookup[32, Land^[tY,tX].BaseLayer.Rotation mod 4];
+              RenderQuadTexture(texC, tX, tY);
+              glEnd;
+            end;}
+
           end;
         end;
   end;
@@ -1045,7 +1058,7 @@ end;
 
 procedure TKMRenderTerrain.DoLighting(aFOW: TKMFogOfWarCommon);
 var
-  I, K: Integer;
+  I, K, tile: Integer;
   sizeX, sizeY: Word;
   tX, tY: Word;
   night : Single;
@@ -1088,12 +1101,14 @@ begin
         begin
           tX := K + fClipRect.Left;
           tY := I + fClipRect.Top;
+          tile := gTerrain.Land^[tY,tX].BaseLayer.Terrain;
           night := gTerrain.GetNightAtTile(tX, tY);
-          glColor4f(1 * night,1 * night,1 * night,1);
+          glColor4f(1 * night,1 * night, 0.6 * night,1);
           if TileHasToBeRendered(I*K = 0,tX,tY,aFow) then // Do not render tiles fully covered by FOW
           begin
             if RENDER_3D then
             begin
+              //glColor4f(1 * night,1 * night,1 * night,1);
               glBegin(GL_TRIANGLE_FAN);
                 glTexCoord1f(LandExt[  tY,   tX].RenderLight); glVertex3f(tX-1, tY-1, -LandExt^[  tY,   tX].RenderHeight / CELL_HEIGHT_DIV);
                 glTexCoord1f(LandExt[tY+1,   tX].RenderLight); glVertex3f(tX-1,   tY, -LandExt^[tY+1,   tX].RenderHeight / CELL_HEIGHT_DIV);
@@ -1101,6 +1116,18 @@ begin
                 glTexCoord1f(LandExt[  tY, tX+1].RenderLight); glVertex3f(  tX, tY-1, -LandExt^[  tY, tX+1].RenderHeight / CELL_HEIGHT_DIV);
               glEnd;
             end else begin
+              //render yellowish texture
+              {If gRes.TileSet[tile].Water then
+              begin
+                glColor4f(1 * night,1 * night,0, 1);
+                glBegin(GL_TRIANGLE_FAN);
+                  glTexCoord1f(LandExt[  tY,   tX].RenderLight / 2); glVertex3f(tX-1, tY-1 - LandExt^[  tY,   tX].RenderHeight / CELL_HEIGHT_DIV, tY-1);
+                  glTexCoord1f(LandExt[tY+1,   tX].RenderLight / 2); glVertex3f(tX-1,   tY - LandExt^[tY+1,   tX].RenderHeight / CELL_HEIGHT_DIV, tY-1);
+                  glTexCoord1f(LandExt[tY+1, tX+1].RenderLight / 2); glVertex3f(  tX,   tY - LandExt^[tY+1, tX+1].RenderHeight / CELL_HEIGHT_DIV, tY-1);
+                  glTexCoord1f(LandExt[  tY, tX+1].RenderLight / 2); glVertex3f(  tX, tY-1 - LandExt^[  tY, tX+1].RenderHeight / CELL_HEIGHT_DIV, tY-1);
+                glEnd;
+              end;}
+              //glColor4f(1 * night,1 * night,0.4 * night,1);
               glBegin(GL_TRIANGLE_FAN);
                 glTexCoord1f(LandExt[  tY,   tX].RenderLight); glVertex3f(tX-1, tY-1 - LandExt^[  tY,   tX].RenderHeight / CELL_HEIGHT_DIV, tY-1);
                 glTexCoord1f(LandExt[tY+1,   tX].RenderLight); glVertex3f(tX-1,   tY - LandExt^[tY+1,   tX].RenderHeight / CELL_HEIGHT_DIV, tY-1);
@@ -1131,7 +1158,7 @@ begin
   {$ENDIF}
 
   //glColor4f(1 * TERRAIN_DARK, 1 * TERRAIN_DARK, 1 * TERRAIN_DARK, 1);
-  glColor4f(1, 1, 1, 1);
+  glColor4f(1, 1, 0.85, 1);
   glBlendFunc(GL_ZERO, GL_ONE_MINUS_SRC_COLOR);
   TKMRender.BindTexture(fTextG);
 
@@ -1398,12 +1425,12 @@ begin
   //It was 'unlit water goes above lit sand'
   //But there is no big difference there, that is why, to make possible transitions with water,
   //Animations was put before DoLighting
-  DoAnimations(aAnimStep, aFOW);
+  //DoAnimations(aAnimStep, aFOW);
   //TileLayers after water, as water with animation is always base layer
   DoTilesLayers(aFOW);
   DoOverlays(aFOW);
   DoLighting(aFOW);
-  //DoAnimations(aAnimStep, aFOW);
+  DoAnimations(aAnimStep, aFOW);
   DoShadows(aFOW);
 
   {$IFDEF PERFLOG}
