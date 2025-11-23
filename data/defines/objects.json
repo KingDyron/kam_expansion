@@ -3765,7 +3765,31 @@
 		"AnimSteps" : [1521, 1522, 1523, 1524, 1525, 1526, 1527, 1528, 1529, 1530],
 		"PlaceableInEditor" : false,
 		"CanBeRemoved" : true
-	  }
+	  },
+	  {
+		"AddGrowableTree" : true,
+		"AxeHitTimes" : 4, "TrunksCount" : 1, "TreeGrowAge" : 5, "FallTreeAnimObj" : 0, "Stump" : 255, "IsFruit" : 0, "MatureTree" : 8,
+		"Stages": [
+					{"SnowPic" : 255, "AnimSteps" : [1531]},
+					{"SnowPic" : 255, "AnimSteps" : [1532]},
+					{"SnowPic" : 255, "AnimSteps" : [1533]},
+					{"SnowPic" : 255, "AnimSteps" : [1534]},
+					{"SnowPic" : 255, "AnimSteps" : [1535]},
+					{"SnowPic" : 255, "AnimSteps" : [1536]},
+					{"SnowPic" : 255, "AnimSteps" : [1537]},
+					{"SnowPic" : 255, "AnimSteps" : [1538]},
+					{"SnowPic" : 255, "AnimSteps" : [1539]}
+		]
+	  },
+	  {"ObjectID" : 640, "RandomPos" : true },
+	  {"ObjectID" : 641, "RandomPos" : true },
+	  {"ObjectID" : 642, "RandomPos" : true },
+	  {"ObjectID" : 643, "RandomPos" : true },
+	  {"ObjectID" : 644, "RandomPos" : true },
+	  {"ObjectID" : 645, "RandomPos" : true },
+	  {"ObjectID" : 646, "RandomPos" : true },
+	  {"ObjectID" : 647, "RandomPos" : true },
+	  {"ObjectID" : 648, "RandomPos" : true }
   ],
   "Grain Types" : [
 	{
@@ -4498,10 +4522,10 @@
 	}
   ],
   "GrowingTrees" : [
-	{"ObjectID" : 92, "Size" : 0.25, "GuiIcon" : 1046},
+	{"ObjectID" : 92, "Size" : 0.3, "GuiIcon" : 1046},
 	{"ObjectID" : 102, "Size" : 0.4, "GuiIcon" : 1047},
-	{"ObjectID" : 116, "Size" : 0.25, "GuiIcon" : 1048},
-	{"ObjectID" : 121, "Size" : 0.25, "GuiIcon" : 1049},
+	{"ObjectID" : 116, "Size" : 0.3, "GuiIcon" : 1048},
+	{"ObjectID" : 121, "Size" : 0.3, "GuiIcon" : 1049},
 	{"ObjectID" : 157, "Size" : 0.35, "GuiIcon" : 1050},
 	{"ObjectID" : 167, "Size" : 0.4, "GuiIcon" : 1051},
 	{"ObjectID" : 368, "Size" : 0.6, "GuiIcon" : 1052},
