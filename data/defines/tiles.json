@@ -958,7 +958,44 @@
     {"ID": 931, "Walkable": false, "Roadable": false, "HasWater": true, "CornersTerKinds": ["tkStone", "tkStone", "tkStone", "tkDeepWater"], "AnimLayers": [{"Frames": 1, "Anims": [5222, 5223, 5224, 5225, 5226, 5227, 5228, 5229]}]},	
     {"ID": 932, "Walkable": false, "Roadable": false, "HasWater": true, "CornersTerKinds": ["tkWater", "tkDeepWater", "tkWater", "tkWater"], "AnimLayers": [{"Frames": 1, "Anims": [5230, 5231, 5232, 5233, 5234, 5235, 5236, 5237]}]},
     {"ID": 933, "Walkable": false, "Roadable": false, "HasWater": true, "CornersTerKinds": ["tkWater", "tkWater", "tkDeepWater", "tkDeepWater"], "AnimLayers": [{"Frames": 1, "Anims": [5230, 5231, 5232, 5233, 5234, 5235, 5236, 5237]}]},
-    {"ID": 934, "Walkable": false, "Roadable": false, "HasWater": true, "CornersTerKinds": ["tkDeepWater", "tkDeepWater", "tkWater", "tkDeepWater"], "AnimLayers": [{"Frames": 1, "Anims": [5230, 5231, 5232, 5233, 5234, 5235, 5236, 5237]}]}
+    {"ID": 934, "Walkable": false, "Roadable": false, "HasWater": true, "CornersTerKinds": ["tkDeepWater", "tkDeepWater", "tkWater", "tkDeepWater"], "AnimLayers": [{"Frames": 1, "Anims": [5230, 5231, 5232, 5233, 5234, 5235, 5236, 5237]}]},
+    
+	{"ID": 935, "Walkable": false, "Roadable": false, "HasWater": true, "CornersTerKinds": ["tkWater", "tkSnowOnDirt", "tkWater", "tkWater"], "AnimLayers": [{"Frames": 1, "Anims": [5078, 5079, 5080, 5081, 5082, 5083, 5084, 5085]}]},
+    {"ID": 936, "Walkable": true, "Roadable": false, "HasWater": true, "CornersTerKinds": ["tkSnowOnDirt", "tkSnowOnDirt", "tkWater", "tkWater"], "AnimLayers": [{"Frames": 1, "Anims": [5086, 5087, 5088, 5089, 5090, 5091, 5092, 5093]}]},
+    {"ID": 937, "Walkable": true, "Roadable": false, "HasWater": true, "CornersTerKinds": ["tkSnowOnDirt", "tkSnowOnDirt", "tkSnowOnDirt", "tkWater"], "AnimLayers": [{"Frames": 1, "Anims": [5094, 5095, 5096, 5097, 5098, 5099, 5100, 5101]}]},
+    {"ID": 938, "Walkable": true, "Roadable": false, "HasWater": true, "CornersTerKinds": ["tkSnowOnGrass", "tkWater", "tkSnowOnGrass", "tkSnowOnGrass"], "AnimLayers": [{"Frames": 1, "Anims": [5174, 5175, 5176, 5177, 5178, 5179, 5180, 5181]}]},
+    {"ID": 939, "Walkable": true, "Roadable": false, "HasWater": true, "CornersTerKinds": ["tkSnowOnGrass", "tkSnowOnGrass", "tkWater", "tkWater"], "AnimLayers": [{"Frames": 1, "Anims": [5182, 5183, 5184, 5185, 5186, 5187, 5188, 5189]}]},
+	{"ID": 940, "Walkable": false, "Roadable": false, "HasWater": true, "CornersTerKinds": ["tkWater", "tkGrassDirt", "tkWater", "tkWater"], "AnimLayers": [{"Frames": 1, "Anims": [5078, 5079, 5080, 5081, 5082, 5083, 5084, 5085]}]},
+    {"ID": 941, "Walkable": true, "Roadable": false, "HasWater": true, "CornersTerKinds": ["tkGrassDirt", "tkGrassDirt", "tkWater", "tkWater"], "AnimLayers": [{"Frames": 1, "Anims": [5086, 5087, 5088, 5089, 5090, 5091, 5092, 5093]}]},
+    {"ID": 942, "Walkable": true, "Roadable": false, "HasWater": true, "CornersTerKinds": ["tkGrassDirt", "tkGrassDirt", "tkGrassDirt", "tkWater"], "AnimLayers": [{"Frames": 1, "Anims": [5094, 5095, 5096, 5097, 5098, 5099, 5100, 5101]}]},
+	{"ID": 943, "Walkable": false, "Roadable": false, "HasWater": true, "CornersTerKinds": ["tkWater", "tkGrassSand1", "tkWater", "tkWater"], "AnimLayers": [{"Frames": 1, "Anims": [5078, 5079, 5080, 5081, 5082, 5083, 5084, 5085]}]},
+    {"ID": 944, "Walkable": true, "Roadable": false, "HasWater": true, "CornersTerKinds": ["tkGrassSand1", "tkGrassSand1", "tkWater", "tkWater"], "AnimLayers": [{"Frames": 1, "Anims": [5086, 5087, 5088, 5089, 5090, 5091, 5092, 5093]}]},
+    {"ID": 945, "Walkable": true, "Roadable": false, "HasWater": true, "CornersTerKinds": ["tkGrassSand1", "tkGrassSand1", "tkGrassSand1", "tkWater"], "AnimLayers": [{"Frames": 1, "Anims": [5094, 5095, 5096, 5097, 5098, 5099, 5100, 5101]}]},
+    {"ID": 946, "Walkable": true, "Roadable": false, "HasWater": true, "Sand": true, "CornersTerKinds": ["tkGrassSand3", "tkWater", "tkGrassSand3", "tkGrassSand3"], "AnimLayers": [{"Frames": 1, "Anims": [5118, 5119, 5120, 5121, 5122, 5123, 5124, 5125]}]},
+    {"ID": 947, "Walkable": true, "Roadable": false, "HasWater": true, "Sand": true, "CornersTerKinds": ["tkGrassSand3", "tkGrassSand3", "tkWater", "tkWater"], "AnimLayers": [{"Frames": 1, "Anims": [5126, 5127, 5128, 5129, 5130, 5131, 5132, 5133]}]},
+    {"ID": 948, "Walkable": false, "Roadable": false, "HasWater": true, "CornersTerKinds": ["tkWater", "tkWater", "tkWater", "tkGrassSand3"], "AnimLayers": [{"Frames": 1, "Anims": [5134, 5135, 5136, 5137, 5138, 5139, 5140, 5141]}]},
+    {"ID": 949, "Walkable": false, "Roadable": false, "HasWater": true, "CornersTerKinds": ["tkWater", "tkPaleGrass", "tkWater", "tkWater"], "AnimLayers": [{"Frames": 1, "Anims": [5410, 5411, 5412, 5413, 5414, 5415, 5416, 5417]}]},
+    {"ID": 950, "Walkable": true, "Roadable": false, "HasWater": true, "CornersTerKinds": ["tkPaleGrass", "tkPaleGrass", "tkWater", "tkWater"], "AnimLayers": [{"Frames": 1, "Anims": [5418, 5419, 5420, 5421, 5422, 5423, 5424, 5425]}]},
+    {"ID": 951, "Walkable": true, "Roadable": false, "HasWater": true, "CornersTerKinds": ["tkPaleGrass", "tkPaleGrass", "tkPaleGrass", "tkWater"], "AnimLayers": [{"Frames": 1, "Anims": [5426, 5427, 5428, 5429, 5430, 5431, 5432, 5433]}]},
+    {"ID": 952, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkFlowingLava", "tkFlowingLava", "tkFlowingLava", "tkFlowingLava"], "AnimLayers": [{"Frames": 1, "Anims": [4000, 4001, 4002, 4003, 4004, 4005, 4006, 4007, 4008, 4009, 4010, 4011, 4012, 4013, 4014, 4015, 4016, 4017, 4018, 4019, 4020, 4021, 4022, 4023, 4024, 4025, 4026, 4027, 4028, 4029, 4030, 4031, 4032, 4033, 4034, 4035, 4036, 4037, 4038]}]},
+    {"ID": 953, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkStationaryLava", "tkStationaryLava", "tkStationaryLava", "tkStationaryLava"], "AnimLayers": [{"Frames": 1, "Anims": [4039, 4040, 4041, 4042, 4043, 4044, 4045, 4046, 4047, 4048, 4049, 4050, 4051, 4052, 4053, 4054, 4055, 4056, 4057, 4058, 4059, 4060, 4061, 4062, 4063, 4064, 4065, 4066, 4067, 4068, 4069, 4070, 4071, 4072, 4073, 4074, 4075, 4076, 4077, 4078]}]},
+	
+	
+    {"ID": 954, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkFlowingLava", "tkGoldMount", "tkFlowingLava", "tkFlowingLava"], "AnimLayers": [{"Frames": 1, "Start": 4079, "Count" : 39}]},
+    {"ID": 955, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkFlowingLava", "tkFlowingLava", "tkFlowingLava", "tkGoldMount"], "AnimLayers": [{"Frames": 1, "Start": 4118, "Count" : 39}]},
+
+    {"ID": 956, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkFlowingLava", "tkIronMount", "tkFlowingLava", "tkFlowingLava"], "AnimLayers": [{"Frames": 1, "Start": 4079, "Count" : 39}]},
+    {"ID": 957, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkFlowingLava", "tkFlowingLava", "tkFlowingLava", "tkIronMount"], "AnimLayers": [{"Frames": 1, "Start": 4118, "Count" : 39}]},
+	
+    {"ID": 958, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkFlowingLava", "tkStone", "tkFlowingLava", "tkFlowingLava"], "AnimLayers": [{"Frames": 1, "Start": 4079, "Count" : 39}]},
+    {"ID": 959, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkFlowingLava", "tkFlowingLava", "tkFlowingLava", "tkStone"], "AnimLayers": [{"Frames": 1, "Start": 4118, "Count" : 39}]},
+	
+    {"ID": 960, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkStationaryLava", "tkGoldMount", "tkStationaryLava", "tkStationaryLava"], "AnimLayers": [{"Frames": 1, "Start": 4157, "Count" : 40}]},
+    {"ID": 961, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkStationaryLava", "tkIronMount", "tkStationaryLava", "tkStationaryLava"], "AnimLayers": [{"Frames": 1, "Start": 4157, "Count" : 40}]},
+    {"ID": 962, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkStationaryLava", "tkStone", "tkStationaryLava", "tkStationaryLava"], "AnimLayers": [{"Frames": 1, "Start": 4157, "Count" : 40}]},
+    {"ID": 963, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkGoldMount", "tkGoldMount", "tkGoldMount", "tkGoldMount"]},
+    {"ID": 963, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkIronMount", "tkIronMount", "tkIronMount", "tkIronMount"]},
+    {"ID": 963, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkStone", "tkStone", "tkStone", "tkStone"]}
 
   ],
   "Overlays" : [

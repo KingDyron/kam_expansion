@@ -1943,9 +1943,9 @@ end;
 function TKMTerrain.TileHasParameter(X,Y: Word; aCheckTileFunc: TBooleanWordFunc; aAllow2CornerTiles: Boolean = False;
                                      aStrictCheck: Boolean = False): Boolean;
 const
-  PROHIBIT_TERKINDS: array[0..1] of TKMTerrainKind = (tkLava, tkAbyss);
+  PROHIBIT_TERKINDS: array[0..3] of TKMTerrainKind = (tkLava, tkAbyss, tkFlowingLava, tkStationaryLava);
   //Strict check (for roadable)
-  STRICT_TERKINDS: array[0..4] of TKMTerrainKind = (tkGrassyWater, tkSwamp, tkIce, tkWater, tkFastWater);
+  STRICT_TERKINDS: array[0..7] of TKMTerrainKind = (tkGrassyWater, tkSwamp, tkIce, tkWater, tkFastWater, tkShallowWater1, tkShallowWater2, tkDeepWater);
 var
   I, K, Cnt: Integer;
   corners: TKMTerrainKindCorners;
@@ -4802,6 +4802,8 @@ const
     tcNone,            //    tkLava);,
     tcNone,
     tcNone,
+    tcNone,
+    tcNone,
     tcNone
   );
 var
@@ -4863,7 +4865,9 @@ const
     tcNone,            //    tkLava);
     tcNone,           //    tkWater1,
     tcNone,           //    tkWater2,
-    tcNone           //    tkdeepWater,
+    tcNone,           //    tkdeepWater,
+    tcNone,
+    tcNone
   );
 var
   I, K: Integer;

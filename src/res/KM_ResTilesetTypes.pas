@@ -86,7 +86,9 @@ type
     tkLava,
     tkShallowWater1,
     tkShallowWater2,
-    tkDeepWater);      //30
+    tkDeepWater,
+    tkFlowingLava,
+    tkStationaryLava);      //30
 
 
   TKMTerrainKindsArray = array of TKMTerrainKind;
@@ -133,7 +135,7 @@ const
 
   BASE_TERRAIN: array[TKMTerrainKind] of Word = //tkCustom..tkLava] of Word =
     (0, 0, 8, 17, 32, 26, 27, 28, 29, 34, 35, 698, 215, 48, 40, 44, 315, 47, 46, 45, 132, 159, 164, 245, 20, 155, 147, 151, 192, 209, 7,
-    816, 817, 818);
+    816, 817, 818, 953, 952);
 
 //  TILE_MASKS: array[mt_2Straight..mt_4Square] of Word =
 //      (279, 278, 280, 281, 282, 277);

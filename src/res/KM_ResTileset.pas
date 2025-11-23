@@ -838,7 +838,7 @@ end;
 
 function TKMResTileset.LoadFromJson : Cardinal;
 var
-  I, J, K: Integer;
+  I, J, K, S: Integer;
   jsonPath: string;
   nTile, nRoot, nAnimLayer: TJsonObject;
   nTiles, nTerKinds, nAnimLayers, nAnims: TJsonArray;
@@ -915,11 +915,20 @@ begin
 
         fTiles[I].Animation.Layers[J].Frames := nAnimLayer.I['Frames'];
 
-        nAnims := nAnimLayer.A['Anims'];
-        SetLength(fTiles[I].Animation.Layers[J].Anims, nAnims.Count);
-        for K := 0 to nAnims.Count - 1 do
+        If nAnimLayer.Contains('Start') and nAnimLayer.Contains('Count') then
         begin
-          fTiles[I].Animation.Layers[J].Anims[K] := nAnims[K];
+          SetLength(fTiles[I].Animation.Layers[J].Anims, nAnimLayer.I['Count']);
+          S := nAnimLayer.I['Start'];
+          for K := 0 to nAnimLayer.I['Count'] - 1 do
+            fTiles[I].Animation.Layers[J].Anims[K] := S + K;
+        end else
+        begin
+          nAnims := nAnimLayer.A['Anims'];
+          SetLength(fTiles[I].Animation.Layers[J].Anims, nAnims.Count);
+          for K := 0 to nAnims.Count - 1 do
+          begin
+            fTiles[I].Animation.Layers[J].Anims[K] := nAnims[K];
+          end;
         end;
       end;
     end;

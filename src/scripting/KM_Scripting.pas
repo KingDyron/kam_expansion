@@ -387,10 +387,10 @@ begin
       'end;');
     Sender.AddTypeS('TKMTerrainKind', '(tkCustom, tkGrass, tkMoss, tkPaleGrass, tkCoastSand, ' +
       'tkGrassSand1, tkGrassSand2, tkGrassSand3, tkSand, tkGrassDirt, ' +
-      'tkDirt, tkCobbleStone, tkGrassyWater, tkSwamp, tkIce, ' +
+      'tkDirt, tkBarrenLand, tkCobbleStone, tkGrassyWater, tkSwamp, tkIce, ' +
       'tkSnowOnGrass, tkSnowOnDirt, tkSnow, tkDeepSnow, tkStone, ' +
       'tkGoldMount, tkIronMount, tkAbyss, tkGravel, tkCoal, ' +
-      'tkGold, tkIron, tkWater, tkFastWater, tkLava)');
+      'tkGold, tkIron, tkWater, tkFastWater, tkLava, tkShallowWater1, tkShallowWater2, tkDeepWater, tkFlowingLava, tkStationaryLava)');
     Sender.AddTypeS('TKMTerrainPassability', '(tpNone, tpWalk, tpWalkRoad, tpBuildNoObj, tpBuild, ' +
       'tpMakeRoads, tpCutTree, tpFish, tpCrab, tpWolf, ' +
       'tpElevate, tpWorker, tpOwn, tpFactor)');

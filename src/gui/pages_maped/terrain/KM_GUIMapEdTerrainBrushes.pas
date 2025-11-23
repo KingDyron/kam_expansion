@@ -111,11 +111,11 @@ const
      (Terrain: tkIron;        Hint: TX_MAPED_TERRAIN_IRON;),
      (Terrain: tkLava;        Hint: TX_MAPED_TERRAIN_LAVA;),
      (Terrain: tkAbyss;       Hint: TX_MAPED_TERRAIN_ABYSS;)),
-    ((Terrain: tkShallowWater1;   Hint: TX_MAPED_TERRAIN_ABYSS;),
-     (Terrain: tkShallowWater2;   Hint: TX_MAPED_TERRAIN_ABYSS;),
-     (Terrain: tkDeepWater;       Hint: TX_MAPED_TERRAIN_ABYSS;),
-     (Terrain: tkCustom;          Hint: TX_MAPED_TERRAIN_ABYSS;),
-     (Terrain: tkCustom;          Hint: TX_MAPED_TERRAIN_ABYSS;))
+    ((Terrain: tkShallowWater1;   Hint: 2328;),
+     (Terrain: tkShallowWater2;   Hint: 2329;),
+     (Terrain: tkDeepWater;       Hint: 2330;),
+     (Terrain: tkFlowingLava;          Hint: 2331;),
+     (Terrain: tkStationaryLava;       Hint: 2332;))
   );
 
 type
@@ -217,7 +217,7 @@ begin
     CreateBrushMaskBtn(MK);
 
 
-  MagicBrush := TKMButtonFlat.Create(Panel_BrushExpand, SURFACES_TAB + High(SURFACES[I])*BTN_TKIND_S_SP_X, 305 + BTN_TKIND_S_SP_Y, 34, 34, 673, rxGui);
+  MagicBrush := TKMButtonFlat.Create(Panel_BrushExpand, SURFACES_TAB + High(SURFACES[I])*BTN_TKIND_S_SP_X, 330 + BTN_TKIND_S_SP_Y, 34, 34, 673, rxGui);
   MagicBrush.Anchors := [anTop];
   MagicBrush.Hint := gResTexts[TX_MAPED_TERRAIN_MAGIC_BRUSH_HINT];
   MagicBrush.OnClick := BrushChange;
