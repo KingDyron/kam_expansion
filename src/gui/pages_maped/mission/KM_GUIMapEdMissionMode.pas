@@ -70,6 +70,8 @@ type
             TrackBar_MaxCloudSpeed: TKMNumericEdit;
             TrackBar_DecParticles: TKMNumericEdit;
             TrackBar_NightSpeed, TrackBar_NightTime: TKMTrackBar;
+            CheckBox_DynamicLight: TKMCheckBox;
+            CheckBox_DynamicShadow: TKMCheckBox;
 
           Button_Texts : TKMButton;
           PopUp_Texts : TKMPanel;
@@ -446,6 +448,18 @@ begin
     TrackBar_NightTime.Hint := gResTexts[2073];
     TrackBar_NightTime.MobilHint := true;
 
+    TKMBevel.Create(Panel_Weather,Panel_Weather.Width div 2 + 2,145,Panel_Weather.Width div 2 - 5, 90);
+
+    CheckBox_DynamicLight := TKMCheckBox.Create(Panel_Weather,Panel_Weather.Width div 2 + 6,150,200,20,gResTexts[2099], fntGrey);
+    CheckBox_DynamicLight.OnClick := WeatherChange;
+    CheckBox_DynamicLight.Hint := gResTexts[2100];
+
+    CheckBox_DynamicShadow := TKMCheckBox.Create(Panel_Weather,Panel_Weather.Width div 2 + 6,175,250,20,gResTexts[2310], fntGrey);
+    CheckBox_DynamicShadow.OnClick := WeatherChange;
+    CheckBox_DynamicShadow.Hint := gResTexts[2311];
+
+
+
   Panel_Weather.Hide;
 
   CreateMessages;
@@ -577,6 +591,9 @@ begin
   TrackBar_MaxInterval.Value := TrackBar_MaxInterval.Value;
   TrackBar_NightSpeed.Enabled := CheckBox_Overwrite.Checked;
   TrackBar_NightTime.Enabled := CheckBox_Overwrite.Checked;
+
+  CheckBox_DynamicLight.Checked := gGame.MapTxtInfo.Weather.DynamicLight;
+  CheckBox_DynamicShadow.Checked := gGame.MapTxtInfo.Weather.DynamicShadow;
 end;
 
 
@@ -710,6 +727,8 @@ begin
   gGame.MapTxtInfo.Weather.DecParticles := TrackBar_DecParticles.Value - 1;
   gGame.MapTxtInfo.Weather.NightSpeed := TrackBar_NightSpeed.Position;
   gGame.MapTxtInfo.Weather.NightTime := TrackBar_NightTime.Position;
+  gGame.MapTxtInfo.Weather.DynamicLight := CheckBox_DynamicLight.Checked;
+  gGame.MapTxtInfo.Weather.DynamicShadow := CheckBox_DynamicShadow.Checked;
 
 
   for MD := MISSION_DIFFICULTY_MIN to MISSION_DIFFICULTY_MAX do

@@ -955,6 +955,8 @@ begin
                   else
                     Houses[I].SetAcceptWareIn(wtGold, IfThen(gHands[fOwner].Stats.Wares[wtGold].ActualCnt < 30, 120, 120 - 15) );
 
+      htWoodcutters,
+      htSwine,
       htFarm : Houses[I].ForceWorking := true;
       htBarracks: begin
                     B := TKMHouseBarracks(Houses[I]);

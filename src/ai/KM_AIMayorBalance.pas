@@ -215,7 +215,7 @@ end;
 function TKMayorBalance.HouseUnlocked(aHouses: TKMHouseTypeArray): Boolean;
 var HT : TKMHouseType;
 begin
-  Result := false;
+  Result := true;
   for HT in aHouses do
     Result := Result or HouseUnlocked(HT);
 end;
@@ -223,7 +223,7 @@ end;
 function TKMayorBalance.AllHouseUnlocked(aHouses: TKMHouseTypeArray): Boolean;
 var HT : TKMHouseType;
 begin
-  Result := false;
+  Result := true;
   for HT in aHouses do
     Result := Result and HouseUnlocked(HT);
 end;
@@ -791,7 +791,7 @@ begin
       //Wood
       //All 3 produced at the same speed
       WorkshopTheory := HouseCount(htWeaponWorkshop) * PRODUCTION_RATE[wtLance];
-      DoBuild := AllHouseUnlocked([htBarracks, htWeaponWorkshop]);
+       DoBuild := AllHouseUnlocked([htBarracks, htWeaponWorkshop]);
 
       fWarfare.Warfare[wtAxe].Production := Min(TrunkTheory, WoodTheory, WorkshopTheory) * OrderRatio[wtAxe];
       fWarfare.Warfare[wtLance].Production := Min(TrunkTheory, WoodTheory, WorkshopTheory) * OrderRatio[wtLance];
@@ -807,9 +807,9 @@ begin
       SwineTheory := HouseCount(htSwine) * PRODUCTION_RATE[wtSkin] * 2;
       TanneryTheory := HouseCount(htTannery) * PRODUCTION_RATE[wtLeather];
 
-      ArmoryTheory := HouseCount(htArmorWorkshop) * PRODUCTION_RATE[wtWoodenShield];
+      ArmoryTheory := (HouseCount(htArmorWorkshop) * 2) * PRODUCTION_RATE[wtWoodenShield];
       HovelTheory  := HouseCount(htHovel) * PRODUCTION_RATE[wtFeathers]; //feathers needed for quivers
-      TailorsTheory := HouseCount(htTailorsShop) * PRODUCTION_RATE[wtLeatherArmor];
+      TailorsTheory := HouseCount(htTailorsShop) * PRODUCTION_RATE[wtLeatherArmor] / 2;
 
       DoBuild := HouseUnlocked(htBarracks) and HouseUnlocked([htArmorWorkshop, htTailorsShop]);
 
