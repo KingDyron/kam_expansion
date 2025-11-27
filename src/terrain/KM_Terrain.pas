@@ -721,6 +721,9 @@ begin
         if Land^[I,J].TileOverlay2 in [UNDERGROUND_COAL_ID] then
           Land^[I,J].Ware.C2 := 10//coal has always 10 ores in it
         else
+        if Land^[I,J].TileOverlay2 in [COAL_OVERLAY_MIN..COAL_OVERLAY_MAX] then
+          Land^[I,J].Ware.C2 := Land^[I,J].TileOverlay2.Params.resCount//coal has always 10 ores in it
+        else
           Land^[I,J].Ware.C2 := 0;
 
         for L := 0 to tileBasic.LayersCnt - 1 do
@@ -6342,21 +6345,16 @@ begin
 
     if (aWare = wtCoal) then
     begin
-      if Land^[aLoc.Y,aLoc.X].Ware.C2 > 0 then
+      if (Land^[aLoc.Y,aLoc.X].Ware.C2 > 0) and (Land^[aLoc.Y,aLoc.X].TileOverlay2.Params.W = wtCoal) then
       begin
         isOverlayCoal := true;
         Land^[aLoc.Y,aLoc.X].Ware.C2 := Land^[aLoc.Y,aLoc.X].Ware.C2 - 1;
+
         If Land^[aLoc.Y,aLoc.X].Ware.C2 = 0 then
-          Land^[aLoc.Y,aLoc.X].TileOverlay2 := OVERLAY_NONE;
-
-      end else
-      if Land^[aLoc.Y,aLoc.X].TileOverlay2.Params.W = wtCoal then
-      begin
-        isOverlayCoal := true;
-        Land^[aLoc.Y,aLoc.X].TileOverlay2 := Land^[aLoc.Y,aLoc.X].TileOverlay2 - 1;
-
-        If Land^[aLoc.Y,aLoc.X].TileOverlay2 = COAL_OVERLAY_MIN then
-          Land^[aLoc.Y,aLoc.X].TileOverlay2 := OVERLAY_NONE;
+          Land^[aLoc.Y,aLoc.X].TileOverlay2 := OVERLAY_NONE
+        else
+        If Land^[aLoc.Y,aLoc.X].Ware.C2 < 5 then
+          Land^[aLoc.Y,aLoc.X].TileOverlay2 := Land^[aLoc.Y,aLoc.X].TileOverlay2 - 1;
 
         Result := true;
       end;
