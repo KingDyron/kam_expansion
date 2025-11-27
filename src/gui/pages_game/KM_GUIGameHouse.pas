@@ -263,6 +263,8 @@ type
     Ship_ShipType, Ship_DoWork : TKMButton;
     WaresOut_ShipYard : TKMWaresButtonsMulti;
 
+    Button_ATBoltCount : TKMButtonFlat;
+
     Pottery_ClayCount : TKMLabel;
     Pottery_ClayTitle : TKMLabel;
 
@@ -546,11 +548,15 @@ begin
   Pottery_ClayTitle := TKMLabel.Create(Panel_House_Common, 0, 0, Panel_House_Common.Width, 15, gResTexts[2184], fntMetal, taLeft);
   Pottery_ClayCount := TKMLabel.Create(Panel_House_Common, 0, 0, Panel_House_Common.Width, 20, gResTexts[2184], fntGrey, taRight);
 
+  Button_ATBoltCount := TKMButtonFlat.Create(Panel_House_Common, 0, 0, 34, 38, gRes.Wares[wtQuiver].GUIIcon);
+  Button_ATBoltCount.Hitable := false;
+
   Panel_Cartographers := TKMGuiGameCartographer.Create(Panel_House);
   Panel_Pearl := TKMGuiGamePearl.Create(Panel_House);
   Panel_Pasture := TKMGuiGamePasture.Create(Panel_House);
   Panel_Forest := TKMGuiGameForest.Create(Panel_House);
   Panel_Arena := TKMGuiGameArena.Create(Panel_House);
+
 
   Create_HouseMarket;
   Create_HouseStore;
@@ -1479,7 +1485,6 @@ begin
     Panel_House.Show;
     Exit;
   end;
-
   if not aHouse.IsComplete  or aHouse.IsUpgrading then
   begin
     for I := 0 to Panel_House.ChildPanel.ChildCount - 1 do
@@ -1521,6 +1526,7 @@ begin
   Button_HouseDeliveryMode.Enabled := aHouse.AllowDeliveryModeChange;
   Button_HouseDeliveryMode.Show;
   Button_HouseRepair.Show;
+
 
   Button_HouseRepair.TexID := IfThen(aHouse.BuildingRepair, 39, 40);
 
@@ -1681,7 +1687,7 @@ begin
     htTownhall      : CheckLastSelected(fLastTHUnit, TH_GAME_ORDER);
     htPalace        : CheckLastSelected(fLastPalaceUnit, PALACE_UNITS_ORDER);
   end;
-
+  Button_ATBoltCount.Visible := aHouse.HouseType = htWallTower;
   case aHouse.HouseType of
     htMarket:         begin
                         House_MarketFill(TKMHouseMarket(aHouse));
@@ -2219,10 +2225,16 @@ begin
                         Pottery_ClayTitle.Show;
                         Pottery_ClayCount.Show;
                       end;
-          htCartographers : Panel_Cartographers.Show(fHouse, base + line * 25 + 20 + 50);
-          htPasture : Panel_Pasture.Show(fHouse, base + line * 25 + 20 + 50);
-          htForest : Panel_Forest.Show(fHouse, base + line * 25 + 20 + 55);
-          htArena : Panel_Arena.Show(fHouse, base + line * 25 + 20 + 55);
+
+          htWallTower : begin
+                         Button_ATBoltCount.Show;
+                          Button_ATBoltCount.Top := base + line * 25;
+                          Button_ATBoltCount.Caption := TKMHouseWallTower(fHouse).Bolts.ToString;
+                        end;
+          htCartographers : Panel_Cartographers.Show(fHouse, base + line * 25 + 76);
+          htPasture : Panel_Pasture.Show(fHouse, base + line * 25 + 76);
+          htForest : Panel_Forest.Show(fHouse, base + line * 25 + 76);
+          htArena : Panel_Arena.Show(fHouse, base + 76);
       end;
 
 

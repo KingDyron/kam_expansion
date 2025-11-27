@@ -15,12 +15,13 @@ type
       procedure Refresh(Arena : TKMHouseArena);
 
       procedure SelectType_Click(Sender: TObject);
-      procedure Start_Click(Sender : TObject);
+      //procedure Start_Click(Sender : TObject);
     protected
       Button_Points : array[DEVELOPMENT_MIN..DEVELOPMENT_MAX] of TKMButtonFlat;
+        WareRow_FestivalPoints: array[TKMFestivalPointType] of TKMWaresRow;
         Button_FestivalType : array[DEVELOPMENT_MIN..DEVELOPMENT_MAX_ALL] of TKMButtonFlat;
         WareRow_Cost : array[0..2] of TKMWaresRow;
-        Button_StartFestival : TKMButton;
+        //Button_StartFestival : TKMButton;
     public
       constructor Create(aParent: TKMPanel);
       procedure Show(aHouse : TKMHouse; aTop : Integer); Reintroduce;
@@ -38,14 +39,24 @@ constructor TKMGuiGameArena.Create(aParent: TKMPanel);
 var dtt: TKMDevelopmentTreeType;
   I, top : Integer;
   WT : TKMWareType;
+  FPT : TKMFestivalPointType;
 begin
   Inherited Create(aParent, 0, 100, aParent.Width - 8, 600);
 
-  TKMLabel.Create(self, 0, 5, Width, 20, gResTexts[2302], fntMetal, taCenter);
+
+  for FPT := Low(TKMFestivalPointType) to High(TKMFestivalPointType) do
+  begin
+    WareRow_FestivalPoints[FPT] := TKMWaresRow.Create(self, 0, 28 * byte(FPT), Width);
+    WareRow_FestivalPoints[FPT].WareCntAsNumber := true;
+    WareRow_FestivalPoints[FPT].TexID := FESTIVAL_GUI_ICON[FPT];
+    WareRow_FestivalPoints[FPT].Hint := gResTexts[FESTIVAL_TEXT_ID[FPT]];
+  end;
+  top := WareRow_FestivalPoints[high(FPT)].Bottom + 5;
+  TKMLabel.Create(self, 0, top, Width, 20, gResTexts[2302], fntMetal, taCenter);
   for dtt := Low(Button_Points) to High(Button_Points) do
   begin
     I := byte(dtt);
-    Button_Points[dtt] := TKMButtonFlat.Create(self, I * 39 - 5, 30, 37, 35, TREE_TYPE_ICON[dtt]);
+    Button_Points[dtt] := TKMButtonFlat.Create(self, I * 39 - 5, top + 30, 37, 35, TREE_TYPE_ICON[dtt]);
     Button_Points[dtt].Caption := '';
     Button_Points[dtt].Hint := gResTexts[2300]+ ' ' + gResTexts[TREE_TYPE_HINT[dtt]];
     Button_Points[dtt].Tag := I;
@@ -85,8 +96,8 @@ begin
 
   top := WareRow_Cost[high(WareRow_Cost)].Bottom + 5;
 
-  Button_StartFestival := TKMButton.Create(self, 0, top, Width, 25, gResTexts[2301], bsGame);
-  Button_StartFestival.OnClick := Start_Click;
+  //Button_StartFestival := TKMButton.Create(self, 0, top, Width, 25, gResTexts[2301], bsGame);
+  //Button_StartFestival.OnClick := Start_Click;
 
 end;
 
@@ -99,9 +110,14 @@ end;
 
 procedure TKMGuiGameArena.Refresh(Arena: TKMHouseArena);
 var dtt: TKMDevelopmentTreeType;
+  FPT : TKMFestivalPointType;
   I : integer;
 begin
 
+  for FPT := Low(TKMFestivalPointType) to High(TKMFestivalPointType) do
+  begin
+    WareRow_FestivalPoints[FPT].WareCount := gHands[Arena.Owner].FestivalPoints[FPT];
+  end;
   for dtt := Low(Button_Points) to High(Button_Points) do
   begin
     Button_Points[dtt].Caption := gMySpectator.Hand.DevPoints(dtt).ToString;
@@ -109,17 +125,18 @@ begin
 
   for dtt := Low(Button_FestivalType) to High(Button_FestivalType) do
   begin
-    Button_FestivalType[dtt].Enabled := not Arena.FestivalStarted;
+    //Button_FestivalType[dtt].Enabled := not Arena.FestivalStarted;
     Button_FestivalType[dtt].BackBevelColor := IfThen(Arena.FestivalType = dtt, $A5FFAF00, $00000000);
     Button_FestivalType[dtt].Hint := gResTexts[2300]+ ' ' + gResTexts[TREE_TYPE_HINT[dtt]] + ' x' + Arena.PointsCount(dtt).ToString;
   end;
 
   for I := Low(WareRow_Cost) to High(WareRow_Cost) do
     WareRow_Cost[I].Enabled := not Arena.FestivalStarted;
-  WareRow_Cost[0].WareCount := Arena.FoodCost;
+
+  WareRow_Cost[0].WareCount := Arena.BuildingCost;
   WareRow_Cost[1].WareCount := Arena.WarfareCost;
   WareRow_Cost[2].WareCount := Arena.ValuableCost;
-  Button_StartFestival.Enabled := not Arena.FestivalStarted and Arena.CanStartFestival;
+  //Button_StartFestival.Enabled := not Arena.FestivalStarted and Arena.CanStartFestival;
 end;
 
 procedure TKMGuiGameArena.SelectType_Click(Sender: TObject);
@@ -130,7 +147,7 @@ begin
   //H.FestivalType := TKMDevelopmentTreeType(TKMControl(Sender).Tag);
   Refresh(H);
 end;
-
+{
 procedure TKMGuiGameArena.Start_Click(Sender: TObject);
 var H : TKMHouseArena;
 begin
@@ -138,7 +155,7 @@ begin
   //H.StartFestival;
   gGame.GameInputProcess.CmdHouse(gicArenaStartFestival, H);
   Refresh(H);
-end;
+end;}
 
 
 

@@ -140,6 +140,7 @@ begin
           if fSchool.CheckWareIn(wtBoots) > 0 then
             if fUnit.GiveBoots then
               fSchool.WareTakeFromIn(wtBoots);
+          gHands[Owner].AddFestivalPoints(fptEconomy, 1);
          end;
       else Result := trTaskDone;
     end;

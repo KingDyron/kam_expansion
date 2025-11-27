@@ -10,28 +10,30 @@ uses
 type
   TKMHouseArena = class(TKMHouse)
   private
+    fCurrentDevType,
     fDevType : TKMDevelopmentTreeType;
+    fArenaWaitTillNext : Byte;
     fArenaAnimStep : Cardinal;
-    fWarfareDelivered, fFoodDelivered, fValuableDelivered : Byte;
     procedure UpdatePointBelowEntrance;
     function FestivalDuration : Word;
+    procedure SetDevType(aValue : TKMDevelopmentTreeType);
   protected
-    procedure AddDemandsOnActivate(aWasBuilt: Boolean); override;
-    function GetWareDistribution(aID: Byte): Byte;override; //Will use GetRatio from mission settings to find distribution amount
+    //procedure AddDemandsOnActivate(aWasBuilt: Boolean); override;
+    //function GetWareDistribution(aID: Byte): Byte;override; //Will use GetRatio from mission settings to find distribution amount
     procedure UpdateEntrancePos; override;
   public
     function HasMoreEntrances : Boolean; override;
     function GetClosestEntrance(aLoc: TKMPoint): TKMPointDir; override;
     function Entrances : TKMPointDirArray;  override;
-    function ShouldAbandonDeliveryTo(aWareType: TKMWareType): Boolean; override;
-    procedure WareAddToIn(aWare: TKMWareType; aCount: Integer = 1; aFromStaticScript: Boolean = False); override;
-    function CheckWareIn(aWare: TKMWareType): Word; override;
+    //function ShouldAbandonDeliveryTo(aWareType: TKMWareType): Boolean; override;
+    //procedure WareAddToIn(aWare: TKMWareType; aCount: Integer = 1; aFromStaticScript: Boolean = False); override;
+    //function CheckWareIn(aWare: TKMWareType): Word; override;
 
     constructor Create(aUID: Integer; aHouseType: TKMHouseType; PosX, PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
 
-    property FestivalType : TKMDevelopmentTreeType read fDevType write fDevType;
+    property FestivalType : TKMDevelopmentTreeType read fDevType write SetDevType;
     procedure StartFestival;
-    function FoodCost : Byte;
+    function BuildingCost : Byte;
     function WarfareCost : Byte;
     function ValuableCost : Byte;
     function FestivalStarted : Boolean;
@@ -39,7 +41,7 @@ type
     function PointsCount : Byte; overload;
     function PointsCount(aType : TKMDevelopmentTreeType) : Byte; overload;
 
-    procedure UpdateDemands; override;
+    //procedure UpdateDemands; override;
     procedure UpdateState(aTick: Cardinal); override;
     procedure Paint; override;
     Constructor Load(LoadStream : TKMemoryStream);Override;
@@ -47,8 +49,8 @@ type
   end;
 
 const
-  FESTIVAL_DURATION = 1200;
-  FESTIVAL_DURATION_ALL = 1800;
+  FESTIVAL_DURATION = 2400;
+  FESTIVAL_DURATION_ALL = 3600;
 
 implementation
 uses
@@ -101,38 +103,32 @@ constructor TKMHouseArena.Create(aUID: Integer; aHouseType: TKMHouseType; PosX: 
 begin
   Inherited;
   fArenaAnimStep := 0;
+  fArenaWaitTillNext := 120;
   fDevType := dttNone;
-  fWarfareDelivered := 0;
-  fFoodDelivered := 0;
 end;
 
 Constructor TKMHouseArena.Load(LoadStream : TKMemoryStream);
 begin
   Inherited;
+  LoadStream.ReadData(fArenaWaitTillNext);
   LoadStream.ReadData(fArenaAnimStep);
+  LoadStream.ReadData(fCurrentDevType);
   LoadStream.ReadData(fDevType);
-  LoadStream.ReadData(fWarfareDelivered);
-  LoadStream.ReadData(fFoodDelivered);
-  LoadStream.ReadData(fValuableDelivered);
 end;
 
 procedure TKMHouseArena.Save(SaveStream : TKMemoryStream);
 begin
   Inherited;
+  SaveStream.WriteData(fArenaWaitTillNext);
   SaveStream.WriteData(fArenaAnimStep);
+  SaveStream.WriteData(fCurrentDevType);
   SaveStream.WriteData(fDevType);
-  SaveStream.WriteData(fWarfareDelivered);
-  SaveStream.WriteData(fFoodDelivered);
-  SaveStream.WriteData(fValuableDelivered);
 end;
 
-
+{
 function TKMHouseArena.ShouldAbandonDeliveryTo(aWareType: TKMWareType): Boolean;
 begin
-  Result := Inherited
-             or ((fWarfareDelivered > 10) and (aWareType in WARES_WARFARE))
-             or ((fFoodDelivered > 10) and (aWareType in WARES_HOUSE_FOOD))
-             or ((fValuableDelivered > 15) and (aWareType in WARES_VALUABLE));
+  Result := true;
 end;
 
 procedure TKMHouseArena.WareAddToIn(aWare: TKMWareType; aCount: Integer = 1; aFromStaticScript: Boolean = False);
@@ -292,7 +288,7 @@ begin
     if HSpec.Levels[CurrentLevel - 1].MaxInWares > 0 then
       Result := HSpec.Levels[CurrentLevel - 1].MaxInWares;
 
-end;
+end;}
 
 function TKMHouseArena.FestivalDuration : Word;
 begin
@@ -306,7 +302,7 @@ begin
   if gHands[Owner].EconomyDevUnlocked(4) then
     Result := Result - 300;
 end;
-
+{
 procedure TKMHouseArena.UpdateDemands;
 Const MAX_ORDERS = 10;
   function MaxOrders : Word;
@@ -357,6 +353,7 @@ begin
     end;
   end;
 end;
+}
 
 procedure TKMHouseArena.UpdateEntrancePos;
 begin
@@ -381,13 +378,22 @@ begin
   end;
 end;
 
+procedure TKMHouseArena.SetDevType(aValue: TKMDevelopmentTreeType);
+begin
+  fDevType := aValue;
+  If not FestivalStarted then
+    fArenaWaitTillNext := 100;
+end;
+
 procedure TKMHouseArena.StartFestival;
 begin
   If not CanStartFestival then
     Exit;
-  Dec(fFoodDelivered, FoodCost);
-  Dec(fWarfareDelivered, WarfareCost);
   fArenaAnimStep := 1;
+  gHands[Owner].TakeFestivalPoints(fptBuilding, BuildingCost);
+  gHands[Owner].TakeFestivalPoints(fptEconomy, WarfareCost);
+  gHands[Owner].TakeFestivalPoints(fptWarfare, ValuableCost);
+  fCurrentDevType := fDevType;
 end;
 
 function TKMHouseArena.FestivalStarted: Boolean;
@@ -398,9 +404,9 @@ end;
 function TKMHouseArena.CanStartFestival: Boolean;
 begin
   Result := (fDevType <> dttNone)
-            and (fFoodDelivered >= FoodCost)
-            and (fWarfareDelivered >= WarfareCost)
-            and (fValuableDelivered >= ValuableCost);
+            and (gHands[Owner].FestivalPoints[fptBuilding] >= BuildingCost)
+            and (gHands[Owner].FestivalPoints[fptEconomy] >= WarfareCost)
+            and (gHands[Owner].FestivalPoints[fptWarfare] >= ValuableCost);
 end;
 
 function TKMHouseArena.PointsCount: Byte;
@@ -423,14 +429,14 @@ begin
   end;
 end;
 
-function TKMHouseArena.FoodCost : Byte;
+function TKMHouseArena.BuildingCost : Byte;
 begin
   Result := 0;
   case fDevType of
-    dttBuilder : Result := 9;
-    dttEconomy : Result := 8;
-    dttArmy : Result := 5;
-    dttAll : Result := 6;
+    dttBuilder : Result := 3;
+    dttEconomy : Result := 1;
+    dttArmy : Result := 0;
+    dttAll : Result := 2;
   end;
 end;
 
@@ -440,8 +446,8 @@ begin
   case fDevType of
     dttBuilder : Result := 0;
     dttEconomy : Result := 0;
-    dttArmy : Result := 7;
-    dttAll : Result := 4;
+    dttArmy : Result := 8;
+    dttAll : Result := 6;
   end;
 end;
 
@@ -449,10 +455,10 @@ function TKMHouseArena.ValuableCost : Byte;
 begin
   Result := 0;
   case fDevType of
-    dttBuilder : Result := 5;
-    dttEconomy : Result := 9;
-    dttArmy : Result := 6;
-    dttAll : Result := 8;
+    dttBuilder : Result := 60;
+    dttEconomy : Result := 90;
+    dttArmy : Result := 60;
+    dttAll : Result := 50;
   end;
 end;
 
@@ -466,19 +472,28 @@ begin
     else
   else
   begin
-    //If aTick mod 600 = 0 then
-    //  UpdatePointBelowEntrance;
-    If (fDevType <> dttNone) and (fArenaAnimStep > 0) then
+    If fArenaWaitTillNext > 0 then
+      Dec(fArenaWaitTillNext)
+    else
     begin
-      Inc(fArenaAnimStep);
-      IF fArenaAnimStep >= FestivalDuration then
+      //If aTick mod 600 = 0 then
+      //  UpdatePointBelowEntrance;
+      If (fDevType <> dttNone) and (fArenaAnimStep > 0) then
       begin
-        fArenaAnimStep := 0;
-        gHands[Owner].AddDevPoint( fDevType, PointsCount );
-        gGame.RefreshDevelopmentTree;
-        fDevType := dttNone;
-      end;
+        Inc(fArenaAnimStep);
+        IF fArenaAnimStep = FestivalDuration then
+        begin
+          gHands[Owner].AddDevPoint( fCurrentDevType, PointsCount );
+          gGame.RefreshDevelopmentTree;
+          fArenaAnimStep := 0;
+          fArenaWaitTillNext := 150;
+          //fDevType := dttNone;
+        end;
+      end else
+      If (fArenaAnimStep = 0) then
+        StartFestival;
     end;
+
 
   end;
 end;
@@ -491,7 +506,7 @@ begin
     Exit;
   //gRenderAux.Quad(PointBelowEntrance.X, PointBelowEntrance.Y);
   If fArenaAnimStep > 0 then
-    gRenderPool.AddHouseArena(fDevType, Position, fArenaAnimStep, [gHands[Owner].FlagColor, $FF00FF55]);
+    gRenderPool.AddHouseArena(fCurrentDevType, Position, fArenaAnimStep, [gHands[Owner].FlagColor, $FF00FF55]);
 end;
 
 end.

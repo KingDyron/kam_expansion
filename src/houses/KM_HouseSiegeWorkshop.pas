@@ -449,6 +449,10 @@ procedure TKMHouseSiegeWorkshop.TryEquipMachines;
 
     if aMachine.UT in SIEGE_MACHINES then
       TKMUnitWarrior(U).AddBitin(aMachine.BitinAdded);
+
+    ProduceFestivalPoints(fptWarfare, 30);
+    If aMachine.BitinAdded > 0 then
+      ProduceFestivalPoints(fptWarfare, 10 * aMachine.BitinAdded);
   end;
 var I, operatorsTaken, aIndex : Integer;
   U : TKMUnit;

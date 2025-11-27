@@ -2620,6 +2620,19 @@ begin
   begin
     VirtualWareTake('vtLeatherSheet', -1);
     VirtualWareTake('vtCoin', -1);
+
+    If UnitType in SPECIAL_UNITS then
+      AddFestivalPoints(fptWarfare, 15)
+    else
+    If UnitType in SIEGE_MACHINES then
+      AddFestivalPoints(fptWarfare, 9)
+    else
+    If UnitType in WARRIORS_IRON then
+      AddFestivalPoints(fptWarfare, 3)
+    else
+    If UnitType in WARRIORS_LEATHER then
+      AddFestivalPoints(fptWarfare, 2)
+    else AddFestivalPoints(fptWarfare, 1);
   end;
 
   if Assigned(OnUnitDied) then

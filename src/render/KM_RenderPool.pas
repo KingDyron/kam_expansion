@@ -173,7 +173,7 @@ type
     procedure AddHouseSchoolClock(const aLoc: TKMPoint; aAnimStep: Cardinal; aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
 
     procedure AddHouseTowerRecruits(const aLoc: TKMPoint; aRight, aLeft : Boolean;
-                                  aAnimStep: Cardinal; aDoImmediateRender: Boolean = False);
+                                  aAnimStep: Cardinal; aFlagColor : Cardinal; aDoImmediateRender: Boolean = False);
 
     procedure AddHousePastureAnimal(const aLoc: TKMPointF; aAnimal : TKMPastureAnimalType; Action : TKMPastureAnimalAction; Dir : TKMDirection;
                                   aAnimStep: Cardinal; C1, C2: TColor4;
@@ -1659,7 +1659,7 @@ begin
 end;
 
 procedure TKMRenderPool.AddHouseTowerRecruits(const aLoc: TKMPoint; aRight, aLeft : Boolean;
-                              aAnimStep: Cardinal; aDoImmediateRender: Boolean = False);
+                              aAnimStep: Cardinal; aFlagColor : Cardinal; aDoImmediateRender: Boolean = False);
 var
   id: Cardinal;
   A: TKMAnimation;
@@ -1682,9 +1682,9 @@ begin
                        - gTerrain.LandExt^[aLoc.Y + 1, aLoc.X].RenderHeight / CELL_HEIGHT_DIV;
 
       if aDoImmediateRender then
-        RenderSprite(rxHouses, id, cornerX, cornerY, 0, false, 0)
+        RenderSprite(rxHouses, id, cornerX, cornerY, aFlagColor, false, 0)
       else
-        fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, aLoc.X, aLoc.Y, 0);
+        fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, aLoc.X, aLoc.Y, aFlagColor);
     end;
   end;
   If aLeft then
@@ -1700,9 +1700,9 @@ begin
                        - gTerrain.LandExt^[aLoc.Y + 1, aLoc.X].RenderHeight / CELL_HEIGHT_DIV;
 
       if aDoImmediateRender then
-        RenderSprite(rxHouses, id, cornerX, cornerY, 0, false, 0)
+        RenderSprite(rxHouses, id, cornerX, cornerY, aFlagColor, false, 0)
       else
-        fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, aLoc.X, aLoc.Y, 0);
+        fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, aLoc.X, aLoc.Y, aFlagColor);
     end;
   end;
 end;

@@ -168,7 +168,7 @@ const
   WARRIOR_SFX_FOLDER_BACKUP: array[WARRIOR_MIN..WARRIOR_MAX] of string = (
     'militia', 'axeman', 'swordman', 'bowman', 'crossbowman',
     'lanceman', 'pikeman', 'cavalry', 'knights', 'barbarian',
-    'bowman', 'lanceman', 'barbarian', 'cavalry', 'machines', 'machines', 'machines', '', '', 'paladin',
+    'bowman', 'lanceman', 'barbarian', 'cavalry', 'machines', 'machines', 'machines', '', '', 'bowman',
     'bowman', 'lanceman', 'wolf', 'machines', 'machines', 'machines',
     'swordman', 'bowman', 'crossbowman', 'cavalry', 'lanceman', 'machines', 'machines',
     'knights', 'bowman', '', '', 'crossbowman', 'axeman', 'machines', 'militia', 'crossbowman');

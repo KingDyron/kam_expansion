@@ -103,7 +103,9 @@ type
     fCustomPanelData : TKMCustomPanelInfo;
     fPearlsBuilt : array[TKMPearlType] of Boolean;
     fDevPoints : array[DEVELOPMENT_MIN..DEVELOPMENT_MAX] of Word;
-
+    fFestivalPoints: TKMFestivalPoints;
+    const
+      MAX_FESTIVAL_POINTS = 1000000;
     function IsDisabled: Boolean;
     function GetColorIndex: Byte;
 
@@ -373,6 +375,11 @@ type
     function GroupAddToFeeder(aGroup : TKMUnitGroup) : Boolean;
 
     procedure BuildBridge(aLoc : TKMPoint; aIndex, aRot : Word);
+
+    procedure AddFestivalPoints(aType : TKMFestivalPointType; aAmount : Integer);
+    procedure TakeFestivalPoints(aType : TKMFestivalPointType; aAmount : Integer);
+    property FestivalPoints : TKMFestivalPoints read fFestivalPoints;
+
     //function HasBridgeBuiltAt(aLoc : TKMPoint) : Boolean;
     //property BridgesBuilt : TKMStructureBasicArray read fBridgesBuilt;
     procedure Save(SaveStream: TKMemoryStream); override;
@@ -626,6 +633,8 @@ begin
     ControlsCount := 0;
     SetLength(ControlsData, 0);
   end;
+
+  FillChar(fFestivalPoints, sizeOf(fFestivalPoints), #0);
 end;
 
 
@@ -3371,6 +3380,7 @@ begin
 
   SaveStream.WriteData(fPearlsBuilt);
   SaveStream.WriteData(fDevPoints);
+  SaveStream.WriteData(fFestivalPoints);
   //fBridgesBuilt.SaveToStream(SaveStream);
 end;
 
@@ -3474,6 +3484,7 @@ begin
 
   LoadStream.ReadData(fPearlsBuilt);
   LoadStream.ReadData(fDevPoints);
+  LoadStream.ReadData(fFestivalPoints);
 
   //fBridgesBuilt.LoadFromStream(LoadStream);
 
@@ -4086,6 +4097,17 @@ begin
   end;
 
 end;
+
+procedure TKMHand.AddFestivalPoints(aType : TKMFestivalPointType; aAmount : Integer);
+begin
+  fFestivalPoints[aType] := EnsureRange(fFestivalPoints[aType] + aAmount, 0, MAX_FESTIVAL_POINTS);
+end;
+
+procedure TKMHand.TakeFestivalPoints(aType : TKMFestivalPointType; aAmount : Integer);
+begin
+  AddFestivalPoints(aType, -aAmount);
+end;
+
 
 {function TKMHand.HasBridgeBuiltAt(aLoc: TKMPoint): Boolean;
 var I, J, aRot : Integer;

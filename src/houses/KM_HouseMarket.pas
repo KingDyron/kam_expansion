@@ -278,6 +278,8 @@ begin
     WareToTrade[fResFrom] := WareToTrade[fResFrom] - tradeCount * RatioFrom;
     gHands[Owner].Stats.WareConsumed(fResFrom, tradeCount * RatioFrom);
     Dec(fTradeAmount, tradeCount);
+    ProduceFestivalPoints(fptEconomy, 1);
+
     SetWareOutCnt(fResTo, fMarketWareOut[fResTo] + tradeCount * RatioTo);
     gHands[Owner].Stats.WareProduced(fResTo, tradeCount * RatioTo);
     gHands[Owner].Deliveries.Queue.AddOffer(Self, fResTo, tradeCount * RatioTo);

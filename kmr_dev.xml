@@ -241,7 +241,7 @@
       <chkDebugLayer2 Checked="True"/>
       <chkDebugLayer3 Checked="True"/>
     </Debug_Terrain>
-    <Debug_Render Collapsed="False">
+    <Debug_Render Collapsed="True">
       <chkSelectionBuffer Checked="False"/>
       <chkShowRoutes Checked="False"/>
       <chkShowWires Checked="False"/>

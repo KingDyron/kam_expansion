@@ -51,7 +51,6 @@ type
       cctSaveRecord
     );
 
-
 const CONSOLE_COMMANDS_NAME : array[TKMConsolCommandType] of String = (
       '',
       'start_recording',

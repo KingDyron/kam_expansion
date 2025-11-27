@@ -219,6 +219,8 @@ type
     fProductionCycles: array [1..WARES_IN_OUT_COUNT] of Word; //If HousePlaceOrders=True then here are production orders
     fBuildState: TKMHouseBuildState; // = (hbsGlyph, hbsNoGlyph, hbsWood, hbsStone, hbsDone);
     FlagAnimStep: Cardinal; //Used for Flags and Burning animation
+    const
+      COINS_GET_PACE = 6000;// 20 minutes to get coins
     //WorkAnimStep: Cardinal; //Used for Work and etc.. which is not in sync with Flags
     procedure SetCost;
     procedure Activate(aWasBuilt: Boolean); virtual;
@@ -494,6 +496,8 @@ type
     function ObjToString(const aSeparator: String = '|'): String; override;
     procedure IncSnowStep;virtual;
     procedure IncAnimStep;virtual;
+    procedure ProduceFestivalPoints(aType : TKMFestivalPointType; aAmount : Integer);
+    procedure ProduceCoins;virtual;
     procedure UpdateState(aTick: Cardinal); virtual;
     procedure Paint; virtual;
   end;
@@ -547,6 +551,7 @@ type
     function CanMakeShot : Boolean;
     procedure RemoveBolt;
     function GetRangeMax : Single; override;
+    property Bolts : SmallInt read fBoltCount;
     procedure UpdateState(aTick : Cardinal); override;
     procedure Paint; override; //Render debug radius overlay
   end;
@@ -1685,6 +1690,20 @@ begin
         gTerrain.Land^[Entrance.Y, Entrance.X].TileOverlay := OVERLAY_DIG_3; //Remove road and leave dug earth behind
     end;
   end;
+  If aFrom <> -1 then
+    If aFrom <> Owner then
+    begin
+      If HouseType in FEST_BEST_HOUSES then
+        gHands[aFrom].AddFestivalPoints(fptBuilding, 20)
+      else
+      If HouseType in FEST_BETTER_HOUSES then
+        gHands[aFrom].AddFestivalPoints(fptBuilding, 10)
+      else
+      If HouseType in FEST_GOOD_HOUSES then
+        gHands[aFrom].AddFestivalPoints(fptBuilding, 6)
+      else
+        gHands[aFrom].AddFestivalPoints(fptBuilding, 3);
+    end;
 
   FreeAndNil(CurrentAction);
 
@@ -2700,6 +2719,17 @@ procedure TKMHouse.IncBuildingProgress;
 
     gScriptEvents.ProcHouseBuilt(Self); //At the end since it could destroy this house
     gTerrain.SetHouse(self, Owner, hsBuilt);
+
+    IF HouseType in FEST_BEST_HOUSES then
+      ProduceFestivalPoints(fptBuilding, 10)
+    else
+    IF HouseType in FEST_BETTER_HOUSES then
+      ProduceFestivalPoints(fptBuilding, 6)
+    else
+    IF HouseType in FEST_GOOD_HOUSES then
+      ProduceFestivalPoints(fptBuilding, 3)
+    else
+      ProduceFestivalPoints(fptBuilding, 1);
   end;
 begin
   if IsComplete then Exit;
@@ -2860,6 +2890,9 @@ procedure TKMHouse.IncBuildingUpgradeProgress;
     //House was damaged while under construction, so set the repair mode now it is complete
     //if (fDamage > 0) and BuildingRepair then
     //  gHands[Owner].Constructions.RepairList.AddHouse(Self);
+
+    ProduceFestivalPoints(fptBuilding, 3);
+
     gScriptEvents.ProcHouseUpgraded(Self, fLevel.CurrentLevel); //At the end since it could destroy this house
   end;
 begin
@@ -3894,6 +3927,42 @@ begin
   begin
     WareAddToOut(aWare, aCount);
     gHands[Owner].Stats.WareProduced(aWare, aCount);
+
+    case aWare of
+      wtSawDust,
+      wtTile,
+      wtIron,
+      wtGold,
+      wtFlour,
+      wtWine,
+      wtSausage,
+      wtBread : ProduceFestivalPoints(fptEconomy, 1);
+
+      wtStoneBolt,
+      wtFish,
+      wtPig,
+      wtSkin,
+      wtLeather : ProduceFestivalPoints(fptEconomy, 2);
+
+      wtAxe, wtLog, wtWheel, wtMace,
+      wtLeatherArmor, wtLance, wtBow, wtQuiver, wtBoots,
+      wtFeathers, wtPlateArmor,
+      wtWoodenShield : ProduceFestivalPoints(fptEconomy, 3);
+
+      wtSword, wtPike, wtCrossbow,
+      wtIronArmor, wtSteelE, wtBolt, wtFlail,
+      wtIronShield : ProduceFestivalPoints(fptEconomy, 4);
+
+      wtBitinE,
+      wtHorse  : ProduceFestivalPoints(fptEconomy, 5);
+
+      wtBitinArmor,
+      wtEgg,
+      wtBitin : ProduceFestivalPoints(fptEconomy, 6);
+      wtJewerly : ProduceFestivalPoints(fptEconomy, 50);
+    end;
+
+
     gScriptEvents.ProcWareProduced(self, aWare, aCount);
 
   end else
@@ -4679,6 +4748,16 @@ begin
   end;
 end;
 
+procedure TKMHouse.ProduceFestivalPoints(aType : TKMFestivalPointType; aAmount : Integer);
+begin
+  gHands[Owner].AddFestivalPoints(aType, aAmount);
+end;
+
+procedure TKMHouse.ProduceCoins;
+begin
+  gHands[Owner].VirtualWareTake('vtCoin', -1);
+end;
+
 function TKMHouse.GetVWareModulo(W: Integer; aWare : TKMWareType): Byte;
 begin
   Result := gRes.Wares.VirtualWares[W].GetModulo(HouseType, aWare);
@@ -4894,7 +4973,6 @@ begin
 
 
   fTick := aTick;
-
   if CurrentAction.State = hstWork then
     Inc(WorkingTime)
   else
@@ -4958,6 +5036,9 @@ begin
 
 
   IncAnimStep;
+
+  If (fTick + UID) mod COINS_GET_PACE = 0 then
+    ProduceCoins;
 end;
 
 
@@ -5444,7 +5525,7 @@ begin
   if LeftRecruit then
     gRenderPool.AddAnimation(Position, gRes.Houses.WallTower_RecruitLeft, gTerrain.AnimStep, gHands[Owner].FlagColor, rxHouses);
   }
-  gRenderPool.AddHouseTowerRecruits(Position, RightRecruit, LeftRecruit, gTerrain.AnimStep);
+  gRenderPool.AddHouseTowerRecruits(Position, RightRecruit, LeftRecruit, gTerrain.AnimStep, gHands[Owner].GameFlagColor);
 
   if SHOW_ATTACK_RADIUS or (mlTowersAttackRadius in gGameParams.VisibleLayers) then
   begin
@@ -7211,6 +7292,7 @@ begin
 
         if fPhase[I] = GetPhaseCount(I) then
         begin
+          ProduceFestivalPoints(fptWarfare, 10 * fPhase[fTrainingID]);
           fTrainingID := high(byte);
           gSoundPlayer.Play(sfxnPalace, fPosition);
           U := gHands[Owner].TrainUnit(PALACE_UNITS_ORDER[I], Self);

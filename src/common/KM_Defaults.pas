@@ -713,8 +713,10 @@ const
   UNITS_WARRIORS = [WARRIOR_MIN..WARRIOR_MAX];
   UNITS_HUMAN = [HUMANS_MIN..HUMANS_MAX];
   {UNITS_NEW = [utOperator, utFeeder, utClayPicker, utHouseBuilder, utRam .. HUMANS_MAX];}
+  WARRIORS_LEATHER = [utRebel, utRogue, utVagabond, utClubMan, utMaceFighter, utSkirmisher, utBerserker,
+                      utMilitia, utAxeFighter, utBowman, utLanceCarrier, utScout, utBarbarian];
   WARRIORS_IRON = [utSwordFighter, utCrossbowman, utPikeman, utKnight, utWarrior, utFlailFighter, utShieldBearer];
-  SPECIAL_UNITS = [utPaladin, utTrainedWolf, utArcher, utSpy, utAmmoCart, utShip, utBoat, utBattleShip, utPyro, utLekter];
+  SPECIAL_UNITS = [utPaladin, utTrainedWolf, utArcher, utSpy, utAmmoCart, utShip, utBoat, utBattleShip, utPyro, utLekter, utTorchMan, utMedic];
 
   CITIZENS_CNT = Integer(CITIZEN_MAX) - Integer(CITIZEN_MIN) + 1;
   WARRIORS_CNT = Integer(WARRIOR_MAX) - Integer(WARRIOR_MIN) + 1;

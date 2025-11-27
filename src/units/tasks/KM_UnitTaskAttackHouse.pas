@@ -216,6 +216,7 @@ begin
                 utGolem,
                 utCatapult:  gSoundPlayer.Play(sfxBowDraw,      PositionF); //Aiming
                 utBallista:  gSoundPlayer.Play(sfxCrossbowDraw, PositionF); //Aiming
+                utSkirmisher:  ; //Aiming
                 else           raise Exception.Create('Unknown shooter');
               end;
 

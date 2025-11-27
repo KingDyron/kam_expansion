@@ -407,6 +407,10 @@ begin
   fIsCompleted := true;
   gHands[Owner].PearlBuilt(fPearlType);
 
+  ProduceFestivalPoints(fptBuilding, 100);
+  ProduceFestivalPoints(fptEconomy, 200);
+  ProduceFestivalPoints(fptWarfare, 100);
+
   //bonus on activate
   case fPearlType of
     ptValtaria : gHands[Owner].FogOfWar.RevealCircle(Entrance, 50, FOG_OF_WAR_MAX, frtHouse) ;
@@ -587,6 +591,7 @@ begin
     begin
       WareTakeFromIn(fResFrom);
       WareAddToOut(fResTo, ValtariaRatioTo);
+      ProduceFestivalPoints(fptEconomy, 3);
     end else
       Exit;
   end;
@@ -626,7 +631,10 @@ begin
   begin
     C := AriumRatioFrom;
     If gHands[Owner].VirtualWareTake('vtCoin', C) then
-      gHands[Owner].VirtualWareTake(fVResTo, -1)
+    begin
+      gHands[Owner].VirtualWareTake(fVResTo, -1);
+      ProduceFestivalPoints(fptEconomy, 2);
+    end
     else
       Exit;
   end;
@@ -698,7 +706,8 @@ begin
       if Assigned(W.OnUnitTrained) then
         W.OnUnitTrained(W);
 
-      gHands[Owner].SetVirtualWareCnt('vtCertificate', 3);
+      gHands[Owner].SetVirtualWareCnt('vtCertificate', 4);
+      ProduceFestivalPoints(fptWarfare, 10);
       Exit;
     end;
 end;
@@ -739,6 +748,7 @@ begin
     begin
       WareTakeFromIn(wtEgg);
       WareAddToOut(fRResTo, RalenderRatioTo);
+      ProduceFestivalPoints(fptEconomy, 10);
     end else
       Exit;
   end;

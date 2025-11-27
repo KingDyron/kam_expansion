@@ -346,6 +346,14 @@ const
   IGNORE_HOUSE_BLOCK : TKMHouseTypeSet = [htWall..htWall5, htAppleTree];
   NO_ROAD_CONNECTION_HOUSES : TKMHouseTypeSet = [ htWall, htWall2, htWall3, htWall4, htWall5, htWell];
 
+  FEST_BEST_HOUSES = [htPearl, htPalace, htArena, htProductionThatch, htForest, htPasture, htSiegeTower, htCartographers,
+                      htTownHall, htSiegeWorkshop, htInn, htMerchant, htShipyard];
+  FEST_BETTER_HOUSES = [htWall..htWall5, htBarracks, htStore, htSchool, htMarket, htWatchTower, htWallTower, htButchers, htTannery,
+                      htIronFoundry, htHouse];
+  FEST_GOOD_HOUSES = [htIronSmithy, htWeaponSmithy, htBakery, htArmorSmithy, htStables, htMetallurgists, htSwine,
+                      htWeaponWorkshop, htArmorWorkshop, htMill, htVineyard, htHovel, htBitinMine, htStoneWorkshop,
+                      htPottery, htWoodBurner, htSmallStore, htCollectors, htTailorsShop, htCottage, htStall];
+
   PEARL_ICONS: array[TKMPearlType] of Word = (0, 1006, 1007, 1008, 1009);
 Var
   HOUSE_GUI_TAB_ORDER : array of record
