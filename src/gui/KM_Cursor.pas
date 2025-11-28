@@ -111,6 +111,7 @@ type
 
 
     property Mode: TKMCursorMode read fMode write SetMode;
+
   end;
 
 

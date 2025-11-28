@@ -51,6 +51,15 @@ type
     fMouseDownSubsList: TList<TKMMouseUpDownEvent>;
     fMouseUpSubsList: TList<TKMMouseUpDownEvent>;
 
+    {$IFDEF DEBUG_CONTROLS}
+    fCtrlPos,
+    fCtrlSize,
+    fCtrlAbsSize,
+    fDownPos : TKMPoint;
+    function IsDownPosSet : Boolean;
+    procedure SetDownPos(aX, aY : Integer);
+    {$ENDIF DEBUG_CONTROLS}
+
     function IsCtrlCovered(aCtrl: TKMControl): Boolean;
     procedure SetCtrlDown(aCtrl: TKMControl);
     procedure SetCtrlFocus(aCtrl: TKMControl);
@@ -2074,6 +2083,30 @@ begin
   Result := fControlIDCounter;
 end;
 
+{$IFDEF DEBUG_CONTROLS}
+
+function TKMMasterControl.IsDownPosSet: Boolean;
+begin
+  Result := (fDownPos <> KMPOINT_INVALID_TILE) and (fCtrlDown <> nil);
+end;
+
+procedure TKMMasterControl.SetDownPos(aX, aY : Integer);
+begin
+  fDownPos := KMPoint(aX, aY);
+
+  IF fCtrlDown <> nil then
+  begin
+    fCtrlPos.X := fCtrlDown.Left;
+    fCtrlPos.Y := fCtrlDown.Top;
+    fCtrlSize.X := fCtrlDown.Width;
+    fCtrlSize.Y := fCtrlDown.Height;
+    fCtrlAbsSize.X := fCtrlDown.AbsRight;
+    fCtrlAbsSize.Y := fCtrlDown.AbsBottom;
+  end;
+
+end;
+{$ENDIF DEBUG_CONTROLS}
+
 
 //Update focused control
 procedure TKMMasterControl.UpdateFocus(aSender: TKMControl);
@@ -2261,12 +2294,23 @@ begin
 
   if CtrlDown <> nil then
     CtrlDown.MouseDown(X, Y, Shift, Button);
+
+  {$IFDEF DEBUG_CONTROLS}
+  If (CtrlDown <> nil) and (ssAlt in Shift) then
+    SetDownPos(X, Y)
+  else
+    SetDownPos(-1, -1);
+  {$ENDIF}
+
 end;
 
 
 procedure TKMMasterControl.MouseMove(X,Y: Integer; Shift: TShiftState);
 var
   I: Integer;
+  {$IFDEF DEBUG_CONTROLS}
+  dX, dY : Integer;
+  {$ENDIF}
 begin
   if Self = nil then Exit;
 
@@ -2299,6 +2343,35 @@ begin
       if gSystem.Cursor in [kmcEdit, kmcDragUp] then
         gSystem.Cursor := kmcDefault; //Reset the cursor from these two special cursors
   end;
+
+  {$IFDEF DEBUG_CONTROLS}
+    If IsDownPosSet then
+    begin
+      dX := (X - fDownPos.X);
+      dY := (Y - fDownPos.Y);
+      If ssShift in Shift then
+      begin
+        dX := dX div 2;
+        dY := dY div 2;
+      end;
+
+      If (fDownPos.X > fCtrlAbsSize.X - 3) and (fDownPos.Y > fCtrlAbsSize.Y - 3) then
+      begin
+        fCtrlDown.Width := fCtrlSize.X + dX;
+        fCtrlDown.Height := fCtrlSize.Y + dY;
+      end else
+      If (fDownPos.X > fCtrlAbsSize.X - 3) then
+        fCtrlDown.Width := fCtrlSize.X + dX
+      else
+      If (fDownPos.Y > fCtrlAbsSize.Y - 3) then
+        fCtrlDown.Height := fCtrlSize.Y + dY
+      else
+      begin
+        fCtrlDown.Left := fCtrlPos.X + dX;
+        fCtrlDown.Top := fCtrlPos.Y + dY;
+      end;
+    end;
+  {$ENDIF}
 end;
 
 
@@ -2326,6 +2399,15 @@ begin
 
 //  fMasterPanel.ControlMouseUp(CtrlUp, X, Y, Shift, Button); // Must be invoked before CtrlUp.MouseUp to avoid problems on game Exit
 
+  {$IFDEF DEBUG_CONTROLS}
+    If fDownPos <> KMPOINT_INVALID_TILE then
+    begin
+      CtrlDown := nil;
+      CtrlUp := nil;
+      SetDownPos(-1, -1);
+      Exit;
+    end;
+  {$ENDIF}
   if CtrlUp <> nil then
     CtrlUp.MouseUp(X, Y, Shift, Button);
 
@@ -2367,7 +2449,20 @@ begin
 
     TKMRenderUI.WriteText(CtrlOver.AbsLeft, CtrlOver.AbsTop - 14, 0, str, fntGrey, taLeft);
   end;
+
+  {$IFDEF DEBUG_CONTROLS}
+  if IsDownPosSet then
+  begin
+    TKMRenderUI.WriteOutline(CtrlDown.AbsLeft, CtrlDown.AbsTop, CtrlDown.Width, CtrlDown.Height, 3, $FF00FFFF);
+    TKMRenderUI.WriteText(CtrlDown.AbsLeft - 10, CtrlDown.AbsTop - 14, 0,
+                          Format('%d, %d', [CtrlDown.Left - fCtrlPos.X, CtrlDown.Top - fCtrlPos.Y]),
+                          fntMini, taLeft);
+
+  end;
+
+  {$ENDIF}
   TKMRenderUI.SetupScale(1);
+
 end;
 
 

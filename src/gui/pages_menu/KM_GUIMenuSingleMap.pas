@@ -235,6 +235,7 @@ begin
       DropBox_Loc := TKMDropList.Create(Panel_Desc, descL, 350, 150, 20, fntMetal, gResTexts[TX_MENU_MAP_LOCATION], bsMenu);
       DropBox_Loc.Anchors := [anLeft, anBottom];
       DropBox_Loc.OnChange := OptionsChange;
+      DropBox_Loc.Focusable := false;
 
       L := TKMLabel.Create(Panel_Desc, half - 80, 330, 80, 20, gResTexts[TX_LOBBY_HEADER_FLAGCOLOR], fntMetal, taLeft);
       L.Anchors := [anLeft, anBottom];
@@ -245,6 +246,7 @@ begin
       DropBox_Color.FadeImageWhenDisabled := False;
       DropBox_Color.Add(MakeListRow([''], [$FFFFFFFF], [MakePic(rxGuiMain, 31)], 0));
       DropBox_Color.OnChange := OptionsChange;
+      DropBox_Color.Focusable := false;
       fLastColIndex := 0;
 
       Label_Difficulty := TKMLabel.Create(Panel_Desc, descL, 385, gResTexts[TX_MISSION_DIFFICULTY], fntMetal, taLeft);
@@ -346,6 +348,10 @@ begin
                                      buttonW, 30, gResTexts[TX_MENU_SINGLE_START_MAP], bsMenu);
     Button_Start.Anchors := [anLeft, anBottom];
     Button_Start.OnClick := StartClick;
+
+    for I := 0 to Panel_Desc.ChildCount - 1 do
+      If Panel_Desc.Childs[I] is TKMDropList then
+        TKMDropList(Panel_Desc.Childs[I]).Focusable := false;
 end;
 
 
