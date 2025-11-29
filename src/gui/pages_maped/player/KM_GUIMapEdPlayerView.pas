@@ -6,7 +6,8 @@ uses
    KM_Controls, KM_ControlsBase, KM_ControlsSwitch, KM_ControlsTrackBar,
    KM_ControlsEdit, KM_ControlsPopUp, KM_ControlsList, KM_ControlsDrop,
    KM_Defaults, KM_ControlsWaresRow, KM_ControlsScroll,
-   KM_Points;
+   KM_Points,
+   KM_GUIMapEdPlayerCheck;
 
 type
   TKMMapEdPlayerView = class
@@ -43,6 +44,8 @@ type
     Number_Workless: TKMNumericEdit;
 
     Button_ShowMessagePopUp : TKMButton;
+    Button_CheckPlayerShow : TKMButton;
+    Panel_PlayerCheck : TKMMapEdPlayerCheck;
 
     PopUp_MessageEditor: TKMPopUpPanel;
       ColumnBox_MessageQueue: TKMColumnBox;
@@ -74,7 +77,7 @@ type
 implementation
 uses
   KM_HandsCollection, KM_ResTexts, KM_Game, KM_GameTypes,
-  KM_Cursor, KM_RenderUI, KM_ResFonts, KM_Resource,
+  KM_Cursor, KM_RenderUI, KM_ResFonts, KM_Resource, KM_ResTypes,
   KM_InterfaceGame, SysUtils, Math,
   KM_Campaigns, KM_ResLocales;
 
@@ -209,6 +212,10 @@ begin
   Button_ShowMessagePopUp := TKMButton.Create(Panel_PlayerAdd, 9, 80, Panel_PlayerAdd.Width - 18 - 25, 25, gResTexts[1843], bsGame);
   Button_ShowMessagePopUp.OnClick := Player_ButtonClick;
 
+  Button_CheckPlayerShow := TKMButton.Create(Panel_PlayerAdd, Panel_PlayerAdd.Width - 18 - 25 - 20, 25, 25, 25, 794, rxGui, bsGame);
+  Button_CheckPlayerShow.OnClick := Player_ButtonClick;
+  Button_CheckPlayerShow.Hint := gResTexts[2336];
+
   PopUp_MessageEditor := TKMPopUpPanel.Create(aParent.MasterPanel, 600, 500, gResTexts[1844]);
   //TKMBevel.Create(PopUp_MessageEditor, -2000, -2000, 5000, 5000);
   //TKMImage.Create(PopUp_MessageEditor, 0, 0, PopUp_MessageEditor.Width, PopUp_MessageEditor.Height, 409);
@@ -286,7 +293,7 @@ begin
     VirtualWares_Row[I].WareRow.HideHighlight := false;
   end;
 
-
+  Panel_PlayerCheck := TKMMapEdPlayerCheck.Create(aParent);
 end;
 
 procedure TKMMapEdPlayerAdditional.Hide;
@@ -350,6 +357,10 @@ procedure TKMMapEdPlayerAdditional.Player_ButtonClick(Sender: TObject);
 var I : Integer;
   S : TStringList;
 begin
+
+  If sender = Button_CheckPlayerShow then
+    Panel_PlayerCheck.Show
+  else
   if sender = Button_SaveToLibx then
   begin
     if gCursor.CampaignData.Path <> '' then
