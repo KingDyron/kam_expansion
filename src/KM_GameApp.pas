@@ -1067,6 +1067,7 @@ var
   repeatColor: Cardinal;
   repeatDifficulty: TKMMissionDifficulty;
   repeatAIType: TKMAIType;
+  lastLoc : Byte;
 begin
   if gGame = nil then Exit;
 
@@ -1080,14 +1081,15 @@ begin
   repeatCampName        := gGame.CampaignName;
   repeatCampMap         := gGame.CampaignMap;
   repeatLocation        := gGame.PlayerLoc;
+  lastLoc               := gGame.PlayerLoc(true);
   repeatColor           := gGame.PlayerColor;
   repeatDifficulty      := gGame.Params.MissionDifficulty;
   repeatAIType          := gGame.AIType;
-
   StopGame(grSilent);
 
   gGameApp.NewRestartLast(repeatGameName, repeatMissionFileRel, repeatSave, gameMode, repeatCampName, repeatCampMap,
                           repeatLocation, repeatColor, repeatDifficulty, repeatAIType);
+  gGame.SetToPlayer(lastLoc);
 end;
 
 

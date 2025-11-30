@@ -152,7 +152,7 @@ begin
   fRepeatSave := gGame.SaveFile;
   fRepeatCampName := gGame.CampaignName;
   fRepeatCampMap := gGame.CampaignMap;
-  fRepeatLocation := gGame.PlayerLoc;
+  fRepeatLocation := gGame.PlayerLoc(true);
   fRepeatColor := gGame.PlayerColor;
   fRepeatDifficulty := gGameParams.MissionDifficulty;
   fRepeatBuiltInDifficulty := gGameParams.MBD;

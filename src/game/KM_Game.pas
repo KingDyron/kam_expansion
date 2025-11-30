@@ -249,8 +249,9 @@ type
     property TickDuration: Single read GetTickDuration;
     property SavePoints: TKMSavePointCollection read fSavePoints write fSavePoints;
 
-    function PlayerLoc: Byte; //Can used in SP game/replay only
-    function PlayerColor: Cardinal; //Can used in SP game/replay only
+    function PlayerLoc(includeAI : Boolean = false): Byte; //Can used in SP game/replay only
+    function PlayerColor(includeAI : Boolean = false): Cardinal; //Can used in SP game/replay only
+    procedure SetToPlayer(aIndex : Byte);
 
     property ControlledHandIndex: TKMHandID read GetControlledHandIndex;
 
@@ -1340,22 +1341,40 @@ begin
 end;
 
 
-function TKMGame.PlayerLoc: Byte;
+function TKMGame.PlayerLoc(includeAI : Boolean = false): Byte;
 var I : Integer;
 begin
   Result := gMySpectator.HandID;
 
-  If gMySpectator.Hand.IsComputer then
-    for I := 0 to gHands.Count - 1 do
-      If gHands[I].Enabled and gHands[I].IsHuman then
-        Result := I;
+  If not includeAI then
+    If gMySpectator.Hand.IsComputer then
+      for I := 0 to gHands.Count - 1 do
+        If gHands[I].Enabled and gHands[I].IsHuman then
+          Exit(I);
 end;
 
 
 //Wrap for GameApp to access player color (needed for restart mission)
-function TKMGame.PlayerColor: Cardinal;
+function TKMGame.PlayerColor(includeAI : Boolean = false): Cardinal;
+var I : Integer;
 begin
   Result := gMySpectator.Hand.FlagColor;
+
+  If not includeAI then
+    If gMySpectator.Hand.IsComputer then
+      for I := 0 to gHands.Count - 1 do
+        If gHands[I].Enabled and gHands[I].IsHuman then
+          Exit(gHands[I].FlagColor);
+end;
+
+procedure TKMGame.SetToPlayer(aIndex: Byte);
+begin
+  if (self = nil)
+  or self.Params.IsMapEditor
+  or self.Params.IsMultiPlayerOrSpec then
+    Exit;
+  if (gHands <> nil) and (aIndex < gHands.Count) then
+    gMySpectator.HandID := aIndex;
 end;
 
 

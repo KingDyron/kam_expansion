@@ -1120,6 +1120,7 @@ end;
 procedure TFormMain.btnGameRestartClick(Sender: TObject);
 begin
   gGameApp.NewRestartLastSPGame;
+  SetMySpecHandIndex(gGame.PlayerLoc(true));
 end;
 
 
