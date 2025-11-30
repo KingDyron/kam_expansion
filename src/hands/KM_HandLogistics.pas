@@ -1842,7 +1842,7 @@ begin
 
     if oWT = wtWater then
       aBidCost.IncAddition(100000);//water is the lowest possible priority, because citizen can go to well by themselfs
-    
+
     //Delivering weapons from store to barracks, make it lowest priority when there are >50 of that weapon in the barracks.
     //In some missions the storehouse has vast amounts of weapons, and we don't want the serfs to spend the whole game moving these.
     //In KaM, if the barracks has >200 weapons the serfs will stop delivering from the storehouse. I think our solution is better.

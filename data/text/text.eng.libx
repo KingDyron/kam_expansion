@@ -2280,4 +2280,6 @@
 2334:Economy points
 2335:Warfare points
 2336:Check player
-2337:Check missing houses
+2337:Missing houses to unlock other house
+2338:Missing warfare houses (depends on army type)
+2339:Missing wells close to buildings
