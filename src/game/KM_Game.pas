@@ -1341,8 +1341,14 @@ end;
 
 
 function TKMGame.PlayerLoc: Byte;
+var I : Integer;
 begin
   Result := gMySpectator.HandID;
+
+  If gMySpectator.Hand.IsComputer then
+    for I := 0 to gHands.Count - 1 do
+      If gHands[I].Enabled and gHands[I].IsHuman then
+        Result := I;
 end;
 
 
