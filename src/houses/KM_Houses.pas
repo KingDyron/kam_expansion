@@ -2737,7 +2737,7 @@ begin
   if (fBuildState = hbsWood) and (fBuildReserve <= 0) and (fBuildSupplyWood > 0) then
   begin
     Dec(fBuildSupplyWood);
-    Inc(fBuildReserve, HealthSupplyStep);
+    Inc(fBuildReserve, HealthSupplyStep + 5);
   end;
 
   if (fBuildState = hbsStone) and (fBuildReserve <= 0) and ((fBuildSupplyStone > 0) or (fBuildSupplyTile > 0)) then

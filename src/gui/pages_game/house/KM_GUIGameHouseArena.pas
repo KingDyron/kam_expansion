@@ -82,9 +82,9 @@ begin
   for I := Low(WareRow_Cost) to High(WareRow_Cost) do
   begin
     If I = 0 then
-      WT := wtFood
+      WT := wtTile
     else
-    If I = 2 then
+    If I = 1 then
       WT := wtValuable
     else
       WT := wtWarfare;
@@ -134,8 +134,8 @@ begin
     WareRow_Cost[I].Enabled := not Arena.FestivalStarted;
 
   WareRow_Cost[0].WareCount := Arena.BuildingCost;
-  WareRow_Cost[1].WareCount := Arena.WarfareCost;
-  WareRow_Cost[2].WareCount := Arena.ValuableCost;
+  WareRow_Cost[1].WareCount := Arena.ValuableCost;
+  WareRow_Cost[2].WareCount := Arena.WarfareCost;
   //Button_StartFestival.Enabled := not Arena.FestivalStarted and Arena.CanStartFestival;
 end;
 

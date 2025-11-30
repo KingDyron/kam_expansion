@@ -125,6 +125,7 @@ begin
   Button_SwitchToDecorations.Hint := gResTexts[2036];
 
   top := Button_SwitchToLvl.Bottom + 3;
+  //top := top + 3 + 33;
   J := 0;
   Panel_BlockHouse.MasterControl.AddMouseMoveCtrlSub(Player_BlockHouseOver);
   Panel_BlockHouse.MasterControl.AddMouseMoveCtrlSub(Player_BlockFieldOver);
@@ -156,6 +157,7 @@ begin
       top := Button_BlockHouse[J - 1].Bottom + 3;
 
     Label_BlockHouse[I] := TKMLabel.Create(Panel_Houses, 0, top - 3, Panel_Houses.Width, 20, gResTexts[HOUSE_GUI_TAB_ORDER[I].TextID], fntOutline, taCenter);
+    Label_BlockHouse[I].Hitable := false;
     Inc(Top, 15);
     LastID := 0;
     for K := 0 to High(HOUSE_GUI_TAB_ORDER[I].H) do
@@ -201,6 +203,10 @@ begin
     Button_BlockDec[I].OnMouseOver:= Player_BlockDecOver;
     Button_BlockDec[I].OnMouseDown:= Player_BlockDecClick;
   end;
+  Panel_BlockHouse.ChildSendToFront(Button_SwitchToHouses, true);
+  Panel_BlockHouse.ChildSendToFront(Button_SwitchToLvl, true);
+  Panel_BlockHouse.ChildSendToFront(Button_SwitchToStructures, true);
+  Panel_BlockHouse.ChildSendToFront(Button_SwitchToDecorations, true);
 
   SwitchPage(0);
 end;

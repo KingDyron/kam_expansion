@@ -391,8 +391,8 @@ begin
     Exit;
   fArenaAnimStep := 1;
   gHands[Owner].TakeFestivalPoints(fptBuilding, BuildingCost);
-  gHands[Owner].TakeFestivalPoints(fptEconomy, WarfareCost);
-  gHands[Owner].TakeFestivalPoints(fptWarfare, ValuableCost);
+  gHands[Owner].TakeFestivalPoints(fptEconomy, ValuableCost);
+  gHands[Owner].TakeFestivalPoints(fptWarfare, WarfareCost);
   fCurrentDevType := fDevType;
 end;
 
@@ -405,8 +405,8 @@ function TKMHouseArena.CanStartFestival: Boolean;
 begin
   Result := (fDevType <> dttNone)
             and (gHands[Owner].FestivalPoints[fptBuilding] >= BuildingCost)
-            and (gHands[Owner].FestivalPoints[fptEconomy] >= WarfareCost)
-            and (gHands[Owner].FestivalPoints[fptWarfare] >= ValuableCost);
+            and (gHands[Owner].FestivalPoints[fptEconomy] >= ValuableCost)
+            and (gHands[Owner].FestivalPoints[fptWarfare] >= WarfareCost);
 end;
 
 function TKMHouseArena.PointsCount: Byte;
@@ -433,9 +433,9 @@ function TKMHouseArena.BuildingCost : Byte;
 begin
   Result := 0;
   case fDevType of
-    dttBuilder : Result := 3;
-    dttEconomy : Result := 1;
-    dttArmy : Result := 0;
+    dttBuilder : Result := 8;
+    dttEconomy : Result := 3;
+    dttArmy : Result := 1;
     dttAll : Result := 2;
   end;
 end;
@@ -446,8 +446,8 @@ begin
   case fDevType of
     dttBuilder : Result := 0;
     dttEconomy : Result := 0;
-    dttArmy : Result := 8;
-    dttAll : Result := 6;
+    dttArmy : Result := 16;
+    dttAll : Result := 12;
   end;
 end;
 
@@ -455,10 +455,10 @@ function TKMHouseArena.ValuableCost : Byte;
 begin
   Result := 0;
   case fDevType of
-    dttBuilder : Result := 60;
-    dttEconomy : Result := 90;
-    dttArmy : Result := 60;
-    dttAll : Result := 50;
+    dttBuilder : Result := 120;
+    dttEconomy : Result := 180;
+    dttArmy : Result := 135;
+    dttAll : Result := 115;
   end;
 end;
 

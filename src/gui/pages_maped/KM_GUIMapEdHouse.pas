@@ -493,7 +493,7 @@ begin
   Button_PasteWares.Hint := 'Paste wares';
   Button_PasteWares.OnClickShift := StoreChange;
 
-  Panel_HouseStore := TKMScrollPanel.Create(Panel_House,5,Bevel_Store.Bottom + 3,Panel_House.Width,Panel_House.Height - Bevel_Store.Bottom - 3 - 40, [saVertical], bsGame, ssCommon);
+  Panel_HouseStore := TKMScrollPanel.Create(Panel_House,5,Bevel_Store.Bottom + 3,Panel_House.Width - 5,Panel_House.Height - Bevel_Store.Bottom - 3 - 40, [saVertical], bsGame, ssCommon);
   top := 0;
   J := 0;
   C := 0;

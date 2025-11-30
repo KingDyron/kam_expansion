@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Root>
-  <DebugForm State="0">
+  <DebugForm State="2">
     <Misc Collapsed="True">
       <chkBevel Checked="True"/>
       <rgDebugFont ItemIndex="7"/>
@@ -27,7 +27,7 @@
       <tbWaterLight Position="130"/>
       <chkInterpolatedAnims Checked="False"/>
     </Graphic_tweaks>
-    <User_Interface Collapsed="True">
+    <User_Interface Collapsed="False">
       <chkUIControlsBounds Checked="False"/>
       <chkUIControlsID Checked="False"/>
       <chkUITextBounds Checked="False"/>
@@ -168,7 +168,7 @@
       <cbApsFrameGui10 Checked="False"/>
       <cbApsFrameGui20 Checked="False"/>
     </Perf_Logs>
-    <AI Collapsed="False">
+    <AI Collapsed="True">
       <chkAIEye Checked="False"/>
       <chkBuild Checked="False"/>
       <chkCombat Checked="False"/>

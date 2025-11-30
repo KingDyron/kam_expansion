@@ -1686,7 +1686,7 @@ function TKMTerrain.TileHouseTerrain(X: Word; Y: Word): TKMTerrPicType;
 //var terKind : TKMTerrainKind;
 begin
   Result := tptNone;
-  If TileHasParameter(X, Y, fTileset.TileIsSnow) then
+  If TileHasParameter(X, Y, fTileset.TileIsSnow) or ((X*Y > 0) and Land[Y, X].TileOverlay2.IsSnow) then
     Result := tptSnow
   else
   If TileHasParameter(X, Y, fTileset.TileIsSand) then

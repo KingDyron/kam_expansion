@@ -501,6 +501,16 @@ begin
     for I := 0 to K - 1 do
       SaveStream.WriteData(fDevLock[dtt, I]);
   end;
+
+  K := length(fStructureLock);
+  SaveStream.Write(K);
+  for I := 0 to K - 1 do
+    SaveStream.WriteData(fStructureLock[I]);
+
+  K := length(fDecorationLock);
+  SaveStream.Read(K);
+  for I := 0 to K - 1 do
+    SaveStream.WriteData(fDecorationLock[I]);
 end;
 
 
@@ -527,6 +537,15 @@ begin
     for I := 0 to K - 1 do
       LoadStream.ReadData(fDevLock[dtt, I]);
   end;
+
+  LoadStream.Read(K);
+  for I := 0 to K - 1 do
+    LoadStream.ReadData(fStructureLock[I]);
+
+  LoadStream.Read(K);
+  for I := 0 to K - 1 do
+    LoadStream.ReadData(fDecorationLock[I]);
+
 end;
 
 
