@@ -4062,8 +4062,8 @@ begin
   with gDecorations[gCursor.Tag1] do
   case DType of
     dtObject: RenderMapElement(ID, gTerrain.AnimStep, P.X, P.Y, true);
-    dtTile,
-    dtTileOverlay: RenderTile(ID, P.X, P.Y, 0);
+    dtTile: RenderTile(ID, P.X, P.Y, 0);
+    dtTileOverlay: RenderTile(gRes.Tileset.Overlay[ID].TileID, P.X, P.Y, 0);
   end;
 end;
 

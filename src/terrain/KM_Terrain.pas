@@ -5462,7 +5462,7 @@ begin
 
   if aOverlay.IsSecondLayer then
   begin
-    if not gCursor.MapEdOverrideCustomTiles then
+    if not gCursor.MapEdOverrideCustomTiles and gGame.Params.IsMapEditor then
       If Land^[aLoc.Y, aLoc.X].TileOverlay2 <> OVERLAY_NONE then
         Exit;
 

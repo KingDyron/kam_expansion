@@ -321,7 +321,7 @@ begin
 
   //Information about character below
   offset := ScrollBar1.Position;
-  id := offset + (Y div fCellY) * fCols + X div fCellX;
+  id := EnsureRange(offset + (Y div fCellY) * fCols + X div fCellX, 0, High(Word));
   Let := fFontSpec.Letters[id];
   StatusBar1.Panels.Items[1].Text := 'Character: ' + IntToStr(id) + ' (' + IntToHex(id, 2) + 'h)';
   StatusBar1.Panels.Items[2].Text := Format('Width %d, Height %d, %d . %d',

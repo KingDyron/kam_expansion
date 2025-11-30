@@ -251,7 +251,6 @@ begin
     S.Seek(2, soFromCurrent); //Unknown field
 
     maxHeight := Math.max(maxHeight, Letters[I].Height);
-
     if Letters[I].Width * Letters[I].Height = 0 then
       raise Exception.Create('Font data Width * Height = 0'); //Font01.fnt seems to be damaged..
 
@@ -344,6 +343,7 @@ begin
       SetLength(fAtlases[I].TexData, fTexSizeX * fTexSizeY);
       decompressionStream.Read(fAtlases[I].TexData[0], fTexSizeX * fTexSizeY * 4);
     end;
+
   finally
     decompressionStream.Free;
     inputStream.Free;

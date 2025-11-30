@@ -648,8 +648,18 @@ begin
         dtObject : Button_Build[I].RX := rxGui;
         else Button_Build[lastVisible].RX := rxTiles;
       end;
+      case gDecorations[I].DType of
+        dtObject : Button_Build[lastVisible].TexID := gDecorations[I].GuiIcon;
+        dtTile : Button_Build[lastVisible].TexID := gDecorations[I].ID + 1;
+        dtTileOverlay : Button_Build[lastVisible].TexID := gRes.Tileset.Overlay[gDecorations[I].ID].TileID + 1;
+      end;
+      case gDecorations[I].DType of
+        dtObject : Button_Build[lastVisible].Hint := gResTexts[gDecorations[I].TextID];
+        dtTile : Button_Build[lastVisible].Hint := '';
+        dtTileOverlay : Button_Build[lastVisible].Hint := gResTexts[gRes.Tileset.Overlay[gDecorations[I].ID].Hint];
+      end;
 
-      Button_Build[lastVisible].TexID := gDecorations[I].GuiIcon;
+
       Button_Build[lastVisible].Hint := gResTexts[gDecorations[I].TextID];
       Button_Build[lastVisible].OnClickShift := Build_ButtonClick;
       Button_Build[lastVisible].Show;

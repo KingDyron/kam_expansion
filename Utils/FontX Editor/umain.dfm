@@ -95,8 +95,6 @@ object frmMain: TfrmMain
         Text = 'Font Hex Code'
         Width = 50
       end>
-    ExplicitTop = 669
-    ExplicitWidth = 709
   end
   object Edit1: TEdit
     Left = 176
@@ -107,7 +105,6 @@ object frmMain: TfrmMain
     TabOrder = 3
     Text = 'Sample phrase'
     OnChange = Edit1Change
-    ExplicitTop = 547
   end
   object CheckCells: TCheckBox
     Left = 168
@@ -149,8 +146,6 @@ object frmMain: TfrmMain
     PageSize = 0
     TabOrder = 7
     OnChange = ScrollBar1Change
-    ExplicitLeft = 676
-    ExplicitHeight = 512
   end
   object GroupBox1: TGroupBox
     Left = 8

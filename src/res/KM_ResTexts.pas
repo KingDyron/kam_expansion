@@ -78,6 +78,7 @@ type
     procedure Load(LoadStream: TKMemoryStream);
 
     procedure SaveToFile(aMissionPath : String);
+    //procedure SaveToKamStarLanguage(aPath : String);
   end;
 
 
@@ -526,5 +527,59 @@ begin
   list.Free;
 end;
 
+{
+procedure TKMTextLibraryMulti.SaveToKamStarLanguage(aPath : String);
+const
+  A_INDEX = word('A');
+  FIRST_INDEX = word('1');
 
+  procedure ConvertChar(var aChar : Char);
+  var C : Char;
+  begin
+    C := UpperCase(aChar)[1];
+
+    If C = #32 then
+      aChar := #1316
+    else
+    If C = '0' then
+      aChar := #1315
+    else
+    If SysUtils.CharInSet(C, ['1'..'9']) then
+      aChar := Char( word(C) - FIRST_INDEX + 1306)
+    else
+    If SysUtils.CharInSet(C, ['A'..'Z']) then
+    begin
+      aChar := Char( word(C) - A_INDEX + 1280);
+    end;
+    aChar := #1280
+  end;
+
+var I, K, J : Integer;
+  //list : TStringList;
+  S : String;
+begin
+  //list := TStringList.Create;
+
+  I := gResLocales.IndexByCode(gResLocales.DefaultLocale);
+ // list.Clear;
+  if length(fTexts[I]) = 0 then //no texts to save, skip it
+    Exit;
+  K := 284;
+  //for K := 2330 to High(fTexts[I]) do//texts
+  begin
+    for J := 1 to length(fTexts[I, K]) do
+      ConvertChar(fTexts[I, K, J]);
+
+    if fTexts[I, K] = '' then //make next line when there is no text
+      S := ''
+    else
+      S := IntToStr(K) + ':' + fTexts[I, K];
+
+    //list.Add(S);
+  end;
+  //list.SaveToFile(aPath);
+
+  //list.Free;
+end;
+}
 end.

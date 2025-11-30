@@ -248,7 +248,7 @@ begin
 
   gResTexts := TKMTextLibraryMulti.Create;
   gResTexts.LoadLocale(ExeDir + 'data' + PathDelim + 'text' + PathDelim + 'text.%s.libx');
-
+  //gResTexts.SaveToKamStarLanguage(ExeDir + 'data' + PathDelim + 'text' + PathDelim + 'text.kam.libx');
   fSounds := TKMResSounds.Create(gResLocales.UserLocale, gResLocales.FallbackLocale, gResLocales.DefaultLocale);
 end;
 

@@ -107,6 +107,17 @@
         <DCCReference Include="..\..\src\json\KM_JsonData.pas"/>
         <DCCReference Include="..\..\src\json\KM_JsonHelpers.pas"/>
         <DCCReference Include="..\..\src\json\KM_JSONUtils.pas"/>
+        <DCCReference Include="..\..\src\structures\KM_Structure.pas"/>
+        <DCCReference Include="..\..\src\structures\KM_StructuresCollection.pas"/>
+        <DCCReference Include="..\..\src\weather\KM_Particles.pas"/>
+        <DCCReference Include="..\..\src\weather\KM_Weather.pas"/>
+        <DCCReference Include="..\..\src\weather\KM_WeatherCollection.pas"/>
+        <DCCReference Include="..\..\src\weather\KM_WeatherTypes.pas"/>
+        <DCCReference Include="..\..\src\gui\pages_game\house\KM_GUIGameHouseArena.pas"/>
+        <DCCReference Include="..\..\src\gui\pages_game\house\KM_GUIGameHouseCartographer.pas"/>
+        <DCCReference Include="..\..\src\gui\pages_game\house\KM_GUIGameHouseForest.pas"/>
+        <DCCReference Include="..\..\src\gui\pages_game\house\KM_GUIGameHousePasture.pas"/>
+        <DCCReference Include="..\..\src\gui\pages_game\house\KM_GUIGameHousePearl.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

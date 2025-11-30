@@ -180,6 +180,8 @@ begin
 
   If (demands[gtMachines] > 0) or (demands[gtMachinesMelee] > 0) then
     houses := houses + [htSiegeWorkshop, htIronFoundry, htStoneWorkshop];
+  If (demands[gtRanged] > 0) then
+    houses := houses + [htHovel];
 
 
   for HT in houses do
