@@ -45,6 +45,7 @@ type
 
     function GetCount: Integer;
     function GetMember(aIndex: Integer): TKMUnitWarrior;
+    function GetIndexOf(aUnit : Integer): Integer;
     function GetFlagBearer: TKMUnitWarrior;
     function GetNearestMember(aUnit: TKMUnitWarrior): Integer; overload;
     function GetNearestMember(const aLoc: TKMPoint): TKMUnitWarrior; overload;
@@ -180,7 +181,7 @@ type
     function GetUnitTypeForDP: TKMUnitType;
     procedure OrderNone;
     function OrderSplit(aNewLeaderUnitType: TKMUnitType; aNewCnt: Integer; aMixed: Boolean): TKMUnitGroup; overload;
-    function OrderSplit(aSplitSingle: Boolean = False): TKMUnitGroup; overload;
+    function OrderSplit(aSplitSingle: Boolean = False; aUID : Integer = -1): TKMUnitGroup; overload;
     function OrderSplitUnit(aUnit: TKMUnitWarrior; aClearOffenders: Boolean): TKMUnitGroup; overload;
     function OrderSplitUnit(aIndex: Integer; aClearOffenders: Boolean; aDoHalt : Boolean = true): TKMUnitGroup;overload;
     procedure OrderSplitLinkTo(aGroup: TKMUnitGroup; aCount: Word; aClearOffenders: Boolean);
@@ -518,6 +519,15 @@ end;
 function TKMUnitGroup.GetMember(aIndex: Integer): TKMUnitWarrior;
 begin
   Result := fMembers[aIndex];
+end;
+
+function TKMUnitGroup.GetIndexOf(aUnit: Integer): Integer;
+var I : Integer;
+begin
+  Result := -1;
+  for I := 0 to Count - 1 do
+    If fMembers[I].UID = aUnit then
+      Exit(I);
 end;
 
 
@@ -1870,7 +1880,7 @@ end;
 
 //Split group in half
 //or split different unit types apart
-function TKMUnitGroup.OrderSplit(aSplitSingle: Boolean = False): TKMUnitGroup;
+function TKMUnitGroup.OrderSplit(aSplitSingle: Boolean = False; aUID : Integer = -1): TKMUnitGroup;
 var
   I: Integer;
   newLeader: TKMUnitWarrior;
@@ -1878,6 +1888,7 @@ var
   newLeaderUnitType: TKMUnitType;
   oldCnt, newCnt: Integer;
   mixed: Boolean;
+  newIndex : Integer;
 begin
   Result := nil;
   if IsDead then Exit;
@@ -1893,7 +1904,16 @@ begin
 
   //Choose the new leader
   if aSplitSingle then
-    newLeader := fMembers[Count - 1]
+  begin
+    If aUID = 0 then
+    begin
+      newIndex := Count - 1;
+    end else
+      newIndex := GetIndexOf(aUID);
+    If newIndex = -1 then
+      Exit;
+    newLeader := fMembers[newIndex]
+  end
   else
   begin
     newLeader := fMembers[(Count div 2) + (Min(fUnitsPerRow, Count div 2) div 2)];
@@ -1930,7 +1950,10 @@ begin
   // Ask script if it ant to change some split parameters
   gScriptEvents.ProcGroupBeforeOrderSplit(Self, newLeaderUnitType, newCnt, mixed);
   // Apply split with parameters, which came from Script
-  Result := OrderSplit(newLeaderUnitType, newCnt, mixed);
+  If aSplitSingle then
+    Result := OrderSplitUnit(newLeader, true)
+  else
+    Result := OrderSplit(newLeaderUnitType, newCnt, mixed);
 
   // Select single splitted unit
   if aSplitSingle

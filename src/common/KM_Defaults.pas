@@ -43,7 +43,7 @@ var
   TERRAIN_DARK: Single;
 const
   GAME_VERSION_CUSTOM_POSTFIX = ''; // Custom postfix for the test builds
-  GAME_VERSION_PREFIX   = 'KaM Expansion: KamStar United'; //Game version string displayed in menu corner
+  GAME_VERSION_PREFIX   = 'KaM Expansion: Explore the Cultures'; //Game version string displayed in menu corner
   VERSION_NAME = '';
 var
   //Game revision is set in initialisation block
@@ -51,7 +51,7 @@ var
   GAME_VERSION: AnsiString;
   NET_PROTOCOL_REVISON: AnsiString; //Clients of this version may connect to the dedicated server
 const
-  GAME_TITLE            = 'Knights and Merchants Remake';
+  GAME_TITLE            = 'Knights and Merchants Expansion mod';
   SETTINGS_FILE         = 'KaM Remake Settings KingDyronMod.xml';
   SERVER_SETTINGS_FILE  = 'KaM Remake Server Settings.ini';
   DEFAULT_LOCALE: AnsiString = 'eng';

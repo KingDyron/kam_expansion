@@ -335,7 +335,7 @@ const
     //I.      Army commands, only warriors (TKMUnitWarrior, OrderInfo)
     gicpt_Int2,     // gicArmyFeed
     gicpt_Int1,     // gicArmySplit
-    gicpt_Int1,     // gicArmySplitSingle
+    gicpt_Int2,     // gicArmySplitSingle
     gicpt_Int2,     // gicArmyLink
     gicpt_Int2,     // gicArmyAttackUnit
     gicpt_Int2,     // gicArmyAttackHouse
@@ -602,6 +602,7 @@ type
 
     procedure CmdArmy(aCommandType: TKMGameInputCommandType; aGroup: TKMUnitGroup); overload;
     procedure CmdArmy(aCommandType: TKMGameInputCommandType; aGroup: TKMUnitGroup; aUnit: TKMUnit); overload;
+    procedure CmdArmy(aCommandType: TKMGameInputCommandType; aGroup: TKMUnitGroup; aUnit: Integer); overload;
     procedure CmdArmy(aCommandType: TKMGameInputCommandType; aGroup1, aGroup2: TKMUnitGroup); overload;
     procedure CmdArmy(aCommandType: TKMGameInputCommandType; aGroup: TKMUnitGroup; aHouse: TKMHouse); overload;
     procedure CmdArmy(aCommandType: TKMGameInputCommandType; aGroup: TKMUnitGroup; aTurnAmount, aLineAmount: ShortInt); overload;
@@ -1217,7 +1218,7 @@ begin
     case CommandType of
       gicArmyFeed:         srcGroup.OrderFood(True, false, IntParams[1] = 1);
       gicArmySplit:        srcGroup.OrderSplit;
-      gicArmySplitSingle:  srcGroup.OrderSplit(True);
+      gicArmySplitSingle:  srcGroup.OrderSplit(True, IntParams[1]);
       gicArmyStorm:        srcGroup.OrderStorm(True);
       gicArmyAmmo:         srcGroup.OrderAmmo;
       gicArmyLink:         srcGroup.OrderLinkTo(TgtGroup, True);
@@ -1494,7 +1495,7 @@ end;
 
 procedure TKMGameInputProcess.CmdArmy(aCommandType: TKMGameInputCommandType; aGroup: TKMUnitGroup);
 begin
-  Assert(aCommandType in [gicArmyFeed, gicArmySplit, gicArmySplitSingle, gicArmyStorm, gicArmyHalt,
+  Assert(aCommandType in [gicArmyFeed, gicArmySplit{, gicArmySplitSingle}, gicArmyStorm, gicArmyHalt,
                           gicArmyAmmo, gicGroupDismiss, gicGroupDismissCancel]);
   if aCommandType = gicArmyFeed then
     TakeCommand(MakeCommand(aCommandType, aGroup.UID, 0))
@@ -1507,6 +1508,12 @@ procedure TKMGameInputProcess.CmdArmy(aCommandType: TKMGameInputCommandType; aGr
 begin
   Assert(aCommandType in [gicArmyAttackUnit]);
   TakeCommand(MakeCommand(aCommandType, aGroup.UID, aUnit.UID));
+end;
+
+procedure TKMGameInputProcess.CmdArmy(aCommandType: TKMGameInputCommandType; aGroup: TKMUnitGroup; aUnit: Integer);
+begin
+  Assert(aCommandType in [gicArmySplitSingle]);
+  TakeCommand(MakeCommand(aCommandType, aGroup.UID, aUnit));
 end;
 
 

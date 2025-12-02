@@ -1642,6 +1642,8 @@ begin
 
   //If anyone still has a pointer to the house he should check for IsDestroyed flag
   fIsDestroyed := True;
+  IF HouseType = htBarracks then
+  fIsDestroyed := True;
   HouseToDeliver.RemHouseDeliveryFrom(self);
   for I := High(fDeliveryFromHouses) downto 0 do
     TKMHouse(fDeliveryFromHouses[I]).HouseToDeliver := nil;

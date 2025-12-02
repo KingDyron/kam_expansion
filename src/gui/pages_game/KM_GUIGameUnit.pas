@@ -776,8 +776,11 @@ begin
 
   if Sender = Button_Army_Split   then
   begin
+    if ssShift in Shift then
+      gGame.GameInputProcess.CmdArmy(gicArmySplitSingle, group, group.SelectedUnit.UID)
+    else
     if ssCtrl in Shift then
-      gGame.GameInputProcess.CmdArmy(gicArmySplitSingle, group)
+      gGame.GameInputProcess.CmdArmy(gicArmySplitSingle, group, 0)
     else
       gGame.GameInputProcess.CmdArmy(gicArmySplit, group);
     gSoundPlayer.PlayWarrior(group.UnitType, spSplit);

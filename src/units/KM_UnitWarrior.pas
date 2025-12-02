@@ -524,6 +524,7 @@ begin
   LoadStream.Read(fRamTicker);
   LoadStream.Read(fRageTime);
   LoadStream.Read(fRemovedFromGroup);
+  LoadStream.Read(InShip, 4);
 
 end;
 
@@ -537,6 +538,7 @@ begin
   fAttackingUnit := TKMUnitWarrior(gHands.GetUnitByUID(Integer(fAttackingUnit)));
   fOrderTargetShip := TKMUnitWarrior(gHands.GetUnitByUID(Integer(fOrderTargetShip)));
   fOrderTargetHouse := gHands.GetHouseByUID(Integer(fOrderTargetHouse));
+  InShip := gHands.GetUnitByUID(Integer(InShip));
 
   if Action is TKMUnitActionGoInOut then
     TKMUnitActionGoInOut(Action).OnWalkedOut := WalkedOut;
@@ -570,6 +572,7 @@ begin
   SaveStream.Write(fRamTicker);
   SaveStream.Write(fRageTime);
   SaveStream.Write(fRemovedFromGroup);
+  SaveStream.Write(InShip.ToUnit.UID);
 end;
 
 

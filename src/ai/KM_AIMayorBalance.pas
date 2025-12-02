@@ -296,7 +296,7 @@ begin
     2:  if gHands[fOwner].Locks.HouseCanBuild(htHouse) then
           Append(htHouse)
         else
-          Append(htCottage, 2);
+          Append(htCottage);
     3: Append(htSchool);
     4: Append(htInn);
     5: Append(htBarracks);
@@ -935,7 +935,7 @@ begin
     TowerBalance    := HouseCount(htWallTower) + HouseCount(htWatchTower)  - 1 * gHands[fOwner].Stats.GetHouseQty(htBarracks);
 
     //If there are more schools then we need more cottage
-    CottageBalance  := (HouseCount(htCottage) + HouseCount(htHouse) * 2) - 2 - (HouseCount(htSchool));
+    CottageBalance  := (HouseCount(htCottage) + HouseCount(htHouse) * 3) - 2 - (HouseCount(htSchool));
 
     MarketBalance  := HouseCount(htMarket) - HouseCount(htAny) / 85;
     TownhallBalance := HouseCount(htTownhall) - Min(1, HouseCount(htMetallurgists) / 2);

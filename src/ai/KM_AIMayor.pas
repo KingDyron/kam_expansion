@@ -248,7 +248,7 @@ var
         for I := 0 to P.Houses.Barracks.Count - 1 do
         begin
           H := TKMHouseBarracks(P.Houses.Barracks[I]);
-          if (H <> nil) and not H.IsDestroyed then
+          if H.IsValid(htBarracks, false, true) then
             Inc(Result, fSetup.RecruitCount - H.RecruitsCount);
         end;
 
