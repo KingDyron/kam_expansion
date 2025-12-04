@@ -257,11 +257,11 @@ type
 
     function TrainUnit(aUnitType: TKMUnitType; aInHouse: TKMHouse): TKMUnit;
 
-    function GetNextHouseWSameType(aHouseType: TKMHouseType; aStartFromUID: Integer): TKMHouse; overload;
-    function GetNextHouseWSameType(aHouseType: TKMHouseType; aStartFromUID: Integer;
+    function GetNextHouseWSameType(aHouseType: TKMHouseType; aStartFromUID: Integer; aSimilar : Boolean = false): TKMHouse; overload;
+    function GetNextHouseWSameType(aHouseType: TKMHouseType; aStartFromUID: Integer; aSimilar : Boolean;
                                    out aHouseSketch: TKMHouseSketchEdit;
                                    aSketchTypesSet: TKMHouseSketchTypeSet = [hstHouse]): TKMHouse; overload;
-    function GetNextHouseWSameType(aHouseType: TKMHouseType; aStartFromUID: Integer;
+    function GetNextHouseWSameType(aHouseType: TKMHouseType; aStartFromUID: Integer; aSimilar : Boolean;
                                    out aHouseSketch: TKMHouseSketchEdit;
                                    aSketchTypesSet: TKMHouseSketchTypeSet;
                                    aVerifySketch: TAnonHouseSketchBoolFn;
@@ -1082,21 +1082,21 @@ begin
 end;
 
 
-function TKMHand.GetNextHouseWSameType(aHouseType: TKMHouseType; aStartFromUID: Integer): TKMHouse;
+function TKMHand.GetNextHouseWSameType(aHouseType: TKMHouseType; aStartFromUID: Integer; aSimilar : Boolean = false): TKMHouse;
 begin
-  Result := GetNextHouseWSameType(aHouseType, aStartFromUID, TKMHouseSketchEdit.DummyHouseSketch);
+  Result := GetNextHouseWSameType(aHouseType, aStartFromUID, aSimilar, TKMHouseSketchEdit.DummyHouseSketch);
 end;
 
 
-function TKMHand.GetNextHouseWSameType(aHouseType: TKMHouseType; aStartFromUID: Integer;
+function TKMHand.GetNextHouseWSameType(aHouseType: TKMHouseType; aStartFromUID: Integer; aSimilar : Boolean;
                                        out aHouseSketch: TKMHouseSketchEdit;
                                        aSketchTypesSet: TKMHouseSketchTypeSet = [hstHouse]): TKMHouse;
 begin
-  Result := GetNextHouseWSameType(aHouseType, aStartFromUID, aHouseSketch, aSketchTypesSet, nil, False);
+  Result := GetNextHouseWSameType(aHouseType, aStartFromUID, aSimilar, aHouseSketch, aSketchTypesSet, nil, False);
 end;
 
 
-function TKMHand.GetNextHouseWSameType(aHouseType: TKMHouseType; aStartFromUID: Integer;
+function TKMHand.GetNextHouseWSameType(aHouseType: TKMHouseType; aStartFromUID: Integer; aSimilar : Boolean;
                                        out aHouseSketch: TKMHouseSketchEdit;
                                        aSketchTypesSet: TKMHouseSketchTypeSet;
                                        aVerifySketch: TAnonHouseSketchBoolFn;
@@ -1104,11 +1104,12 @@ function TKMHand.GetNextHouseWSameType(aHouseType: TKMHouseType; aStartFromUID: 
 
 var
   resultSet: Boolean;
+  similarTypes : TKMHouseTypeSet;
 
   procedure FillHSketchByHouse(out aHouseSketchTmp: TKMHouseSketchEdit; aHouse: TKMHouse);
   begin
     if not aHouse.IsDestroyed // not destroyed
-      and (aHouse.HouseType = aHouseType)
+      and (aHouse.HouseType in similarTypes)
       {and (not aConsiderHousePlan or aHouse.IsComplete)} then
     begin
       aHouseSketchTmp.SetHouseUID(aHouse.UID);
@@ -1120,7 +1121,7 @@ var
   procedure FillHSketchByHPlan(out aHouseSketchTmp: TKMHouseSketchEdit; aHousePlan: TKMHousePlan);
   begin
     if not aHousePlan.IsEmpty
-      and (aHousePlan.HouseType = aHouseType) then
+      and (aHousePlan.HouseType in similarTypes) then
     begin
       aHouseSketchTmp.SetHouseUID(aHousePlan.UID);
       aHouseSketchTmp.SetHouseType(aHousePlan.HouseType);
@@ -1179,6 +1180,10 @@ begin
   fHSketch.Clear;
   fFirstHSketch.Clear;
   fFoundHSketch.Clear;
+  If aSimilar then
+    similarTypes := gRes.Houses[aHouseType].SimilarTo
+  else
+    similarTypes := [aHouseType];
 
   while I < cnt do
   begin

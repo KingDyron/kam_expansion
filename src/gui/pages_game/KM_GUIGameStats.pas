@@ -366,7 +366,7 @@ begin
 
   HT := TKMHouseType(TKMHouseStatIcon(Sender).Tag);
 
-  gMySpectator.Hand.GetNextHouseWSameType(HT, fLastHouseUIDs[HT], fHouseSketch, [hstHouse, hstHousePlan]);
+  gMySpectator.Hand.GetNextHouseWSameType(HT, fLastHouseUIDs[HT], false, fHouseSketch, [hstHouse, hstHousePlan]);
   if not fHouseSketch.IsEmpty then
   begin
     gMySpectator.Highlight := fHouseSketch;

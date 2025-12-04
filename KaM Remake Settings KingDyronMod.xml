@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Root>
   <Main>
-    <GFX FullScreen="False" VSync="True" ResolutionWidth="1920" ResolutionHeight="1080" RefreshRate="60" FPSCap="60"/>
+    <GFX FullScreen="False" VSync="True" ResolutionWidth="1920" ResolutionHeight="1080" RefreshRate="60" FPSCap="60" GuiStyle="0"/>
     <Window Left="50" Top="33" Width="1024" Height="1000" State="2"/>
     <Misc NoRenderMaxTime="1000"/>
   </Main>
@@ -10,7 +10,7 @@
     <SFX Volume="0.4500"/>
     <Music Enabled="False" Volume="0.2000" Shuffle="False" Playlist="2"/>
     <Video Enabled="False" Stretch="True" Startup="True" Volume="0.5000"/>
-    <Weather Enabled="True" MaxCount="10" MaxSpawnCount="4" MinInterval="200" MaxInterval="3000" MaxLifeTime="1200" MaxCloudSpeed="0.1000" DecParticles="0" NightSpeed="10" NightTime="3" DynamicLight="True"/>
+    <Weather Enabled="True" MaxCount="10" MaxSpawnCount="4" MinInterval="200" MaxInterval="3000" MaxLifeTime="1200" MaxCloudSpeed="0.1000" DecParticles="0" NightSpeed="10" NightTime="3" DynamicLight="True" DynamicShadow="True"/>
     <GameCommon Locale="pol">
       <UI DefaultZoom="1.0000" ZoomBehaviour="1"/>
       <Speed Medium="3.0000" Fast="6.0000" VeryFast="10.0000" Pace="100" ScrollSpeed="20.0000"/>

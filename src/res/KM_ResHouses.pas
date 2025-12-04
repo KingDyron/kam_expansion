@@ -170,6 +170,8 @@ type
     function GetWareProdCt(aWare : TKMWareType) : byte;
     function GetRandomStonePic : Word;
 
+    function SimilarTo : TKMHouseTypeSet;
+
 
     procedure DebugChangeAnimation(HA : TKMHouseActionType; aAnim : TKMAnimation);
     procedure DebugChangePileOffset(aID : Integer; aX, aY : Integer);
@@ -640,6 +642,30 @@ begin
 
   end else
     Result := StonePic;
+end;
+
+function TKMHouseSpec.SimilarTo : TKMHouseTypeSet;
+begin
+
+  case fHouseType of
+    htArmorSmithy, htWeaponSmithy : Result := [htArmorSmithy, htWeaponSmithy];
+    htArmorWorkshop, htWeaponWorkshop, htTailorsShop : Result := [htArmorWorkshop, htWeaponWorkshop, htTailorsShop];
+    htBarracks, htSiegeWorkshop, htTownHall, htPalace, htShipYard, htPearl : Result := [htBarracks, htSiegeWorkshop, htTownHall, htPalace, htShipYard, htPearl];
+    htButchers, htTannery : Result := [htButchers, htTannery];
+    htCoalMine, htGoldMine, htIronMine, htBitinMine : Result := [htCoalMine, htGoldMine, htIronMine, htBitinMine];
+    htFarm, htVineyard, htAppleTree : Result := [htFarm, htVineyard, htAppleTree];
+    htMill, htBakery : Result := [htMill, htBakery];
+    htInn, htMarket, htSchool, htStore, htMerchant, htSmallStore, htStall, htCartographers, htArena : Result := [htInn, htMarket, htSchool, htStore, htMerchant, htSmallStore, htStall, htCartographers, htArena];
+    htMetallurgists, htIronSmithy,  htIronFoundry, htWoodBurner : Result := [htMetallurgists, htIronSmithy,  htIronFoundry, htWoodBurner];
+    htSawmill, htWoodcutters, htForest : Result := [htSawmill, htWoodcutters, htForest];
+    htQuarry, htStoneWorkshop, htPottery, htCollectors : Result := [htQuarry, htStoneWorkshop, htPottery, htCollectors];
+    htStables, htSwine, htHovel, htPasture : Result := [htStables, htSwine, htHovel, htPasture];
+    htWatchTower, htWallTower, htSiegeTower : Result := [htWatchTower, htWallTower, htSiegeTower];
+    htWall, htWall2, htWall3, htWall4, htWall5 : Result := [htWall, htWall2, htWall3, htWall4, htWall5];
+    htCottage, htHouse : Result := [htCottage, htHouse];
+    else Result := [];
+  end;
+  Result := Result + [fHouseType];//always include current house type
 end;
 
 procedure TKMHouseSpec.DebugChangeAnimation(HA: TKMHouseActionType; aAnim: TKMAnimation);

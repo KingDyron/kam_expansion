@@ -317,7 +317,7 @@ begin
   //MainFunction - Left MB, Right MB
   //LMB - show only damaged houses or all houses
   //RMB - show all houses
-  gHands[aHandIndex].GetNextHouseWSameType(HT, fLastHouseUIDs[HT], fHouseSketch, [hstHouse, hstHousePlan],
+  gHands[aHandIndex].GetNextHouseWSameType(HT, fLastHouseUIDs[HT], false, fHouseSketch, [hstHouse, hstHousePlan],
                                            GetVerifyHouseSketchFn(), hasDamagedHouses and aMainFunction);
   if not fHouseSketch.IsEmpty then
   begin

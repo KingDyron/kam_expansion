@@ -87,7 +87,7 @@ type
     function GetStructureByUID(aUID: Integer): TKMStructure;
     function GetObjectByUID(aUID: Integer): TKMHandEntity;
 
-    function GetNextHouseWSameType(aHouse: TKMHouse): TKMHouse;
+    function GetNextHouseWSameType(aHouse: TKMHouse; aSimilar : Boolean = false): TKMHouse;
     function GetNextUnitWSameType(aUnit: TKMUnit): TKMUnit;
     function GetNextGroupWSameType(aUnitGroup: TKMUnitGroup): TKMUnitGroup;
 
@@ -818,12 +818,12 @@ Result
     house: next house in unit list
     nil: if NO other house found
 }
-function TKMHandsCollection.GetNextHouseWSameType(aHouse: TKMHouse): TKMHouse;
+function TKMHandsCollection.GetNextHouseWSameType(aHouse: TKMHouse; aSimilar : Boolean = false): TKMHouse;
 begin
   Result := nil;
   if (aHouse = nil) or aHouse.IsDestroyed then Exit;
 
-  Result := fHandsList[aHouse.Owner].GetNextHouseWSameType(aHouse.HouseType, aHouse.UID);
+  Result := fHandsList[aHouse.Owner].GetNextHouseWSameType(aHouse.HouseType, aHouse.UID, aSimilar);
 end;
 
 
