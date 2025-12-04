@@ -2187,6 +2187,7 @@ begin
     Exit;
   If not aTower.CanEnter then
     Exit;
+
   currWeight := aTower.GetTotalWeight;
 
   for I := Count - 1 downto 0 do

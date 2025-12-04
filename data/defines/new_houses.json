@@ -31,7 +31,7 @@
 			[
 				"htNone","htBarracks","htTownHall","htPalace","htSiegeWorkshop","htShipYard",
 				"htNone","htWall","htWall2","htWall3","htWall4","htWall5",
-				"htNone","htWallTower","htWatchTower", "htPearl", "htArena", "htSiegeTower"
+				"htNone","htWallTower","htWatchTower", "htSiegeTower", "htArena", "htPearl"
 			]
 		}
 	],

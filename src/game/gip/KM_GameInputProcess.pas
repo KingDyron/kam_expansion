@@ -163,6 +163,7 @@ type
     gicUnlockDevelopment,
     gicHouseQueueNotRem,
     gicHouseDeliveryTo,
+    gicArmyEnterSiegeTower,
 
     //V.     Delivery ratios changes (and other game-global settings)
     gicWareDistributionChange,   //Change of distribution for 1 ware
@@ -220,7 +221,8 @@ type
 const
   BLOCKED_BY_PEACETIME: set of TKMGameInputCommandType = [gicArmySplit, gicArmySplitSingle,
     gicArmyLink, gicArmyAttackUnit, gicArmyAttackHouse, gicArmyHalt,
-    gicArmyFormation,  gicArmyWalk, gicArmyStorm, gicHouseBarracksEquip, gicHouseTownHallEquip, gicArmyAmmo];
+    gicArmyFormation,  gicArmyWalk, gicArmyStorm, gicHouseBarracksEquip, gicHouseTownHallEquip, gicArmyAmmo,
+    gicArmyEnterSiegeTower];
 
   ALLOWED_AFTER_DEFEAT: set of TKMGameInputCommandType =
     [gicGameAlertBeacon, gicGameSpeed, gicGameAutoSave, gicGameAutoSaveAfterPT, gicGameSaveReturnLobby, gicGameLoadSave,
@@ -326,7 +328,8 @@ const
     gicArenaSelectFestival,
     gicArenaStartFestival,
     gicHouseQueueNotRem,
-    gicHouseDeliveryTo
+    gicHouseDeliveryTo,
+    gicArmyEnterSiegeTower
     ];
 
 
@@ -450,6 +453,7 @@ const
     gicpt_Int2,//gicUnlockDevelopment
     gicpt_Int1,//gicHouseQueueNotRem
     gicpt_Int2,//gicHouseDeliveryTo
+    gicpt_Int2,//gicArmyEnterSiegeTower,
     //V.     Delivery ratios changes (and other game-global settings)
     gicpt_Int3,     // gicWareDistributionChange
     gicpt_AnsiStr1, // gicWareDistributions
@@ -1132,7 +1136,7 @@ begin
     if CommandType in [gicArmyFeed, gicArmySplit, gicArmySplitSingle, gicArmyLink,
                        gicArmyAttackUnit, gicArmyAttackHouse, gicArmyHalt,
                        gicArmyFormation, gicArmyWalk, gicArmyStorm, gicArmyAmmo, gicGroupDismiss,gicGroupDismissCancel,
-                       gicArmyShootAtSpot]
+                       gicArmyShootAtSpot, gicArmyEnterSiegeTower]
     then
     begin
       srcGroup := gHands.GetGroupByUID(IntParams[0]);
@@ -1181,7 +1185,7 @@ begin
       or (srcStructure.Owner <> aCommand.HandIndex) then
         Exit;
     end;
-    if CommandType in [gicArmyAttackHouse] then
+    if CommandType in [gicArmyAttackHouse, gicArmyEnterSiegeTower] then
     begin
       tgtHouse := gHands.GetHouseByUID(IntParams[1]);
       if (tgtHouse = nil) or tgtHouse.IsDestroyed then Exit; //House has been destroyed before command could be executed
@@ -1230,6 +1234,7 @@ begin
       gicArmyFormation:    srcGroup.OrderFormation(IntParams[1],IntParams[2], True);
       gicArmyWalk:         srcGroup.OrderWalk(KMPoint(SmallIntParams[0], SmallIntParams[1]), True, wtokPlayerOrder, TKMDirection(SmallIntParams[2]));
       gicArmyShootAtSpot:  srcGroup.OrderShootAtSpot(KMPoint(IntParams[1], IntParams[2]), True);
+      gicArmyEnterSiegeTower: srcGroup.OrderEnterSiegeTower(TKMHouseSiegeTower(tgtHouse));
 
       gicUnitDismiss:        srcUnit.Dismiss;
       gicUnitDismissCancel:  srcUnit.DismissCancel;
@@ -1526,7 +1531,7 @@ end;
 
 procedure TKMGameInputProcess.CmdArmy(aCommandType: TKMGameInputCommandType; aGroup: TKMUnitGroup; aHouse: TKMHouse);
 begin
-  Assert(aCommandType = gicArmyAttackHouse);
+  Assert(aCommandType in [gicArmyAttackHouse, gicArmyEnterSiegeTower]);
   TakeCommand(MakeCommand(aCommandType, aGroup.UID, aHouse.UID));
 end;
 

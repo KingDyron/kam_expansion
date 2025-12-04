@@ -9122,7 +9122,8 @@ end;
 
 function TKMHouseSiegeTower.CanEnter(aUnitType : TKMUnitType = utAny): Boolean;
 begin
-  Result := GetTotalWeight + GetUnitWeight(aUnitType) <= MAX_UNITS_INSIDE;
+  Result := not IsClosedForWorker;
+  Result := Result and (GetTotalWeight + GetUnitWeight(aUnitType) <= MAX_UNITS_INSIDE);
 end;
 
 

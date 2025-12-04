@@ -1412,6 +1412,11 @@ begin
   Image_House_Worker.Hint    := gRes.Units[utSerf].GUIName;
   Image_House_Worker.FlagColor := gHands[aHouse.Owner].FlagColor;
 
+  if aHouse.HouseType = htSiegeTower then
+  begin
+    Button_House_Worker.TexID  := 665;
+    Button_House_Worker.Hint := Format(gResTexts[TX_HOUSES_CLOSED_FOR_WORKER_HINT], [gResTexts[471]]);
+  end else
   if aHouse.HSpec.GUIWorkerType = utAny then
   begin
     Button_House_Worker.TexID  := 810;
@@ -2726,7 +2731,7 @@ end;
 
 procedure TKMGUIGameHouse.HandleHouseClosedForWorker(aHouse: TKMHouse);
 begin
-  if aHouse.IsClosedForWorker then
+  if aHouse.IsClosedForWorker and (aHouse.HSpec.CanHasWorker or (aHouse.HouseType in [htSiegeTower])) then
   begin
     Button_House_Worker.ShowImageEnabled := False;
     Image_House_Worker_Closed.Show;

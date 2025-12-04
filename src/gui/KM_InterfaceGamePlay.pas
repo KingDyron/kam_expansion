@@ -4917,7 +4917,9 @@ begin
             //try to enter siege tower, ranged units only
             If group.IsRanged and (pbj is TKMHouseSiegeTower) and (TKMHouse(pbj).Owner = group.Owner) then
             begin
-              group.OrderEnterSiegeTower(TKMHouseSiegeTower(pbj));
+              gGame.GameInputProcess.CmdArmy(gicArmyEnterSiegeTower, group, TKMHouse(pbj));
+              gSoundPlayer.PlayWarrior(group.UnitType, spMove);
+              //group.OrderEnterSiegeTower(TKMHouseSiegeTower(pbj));
             end else
             if (pbj is TKMUnit) and (gMySpectator.Hand.Alliances[TKMUnit(pbj).Owner] = atEnemy) then
             begin
