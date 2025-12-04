@@ -64,7 +64,7 @@ type
     property Texts[aIndex: Word]: UnicodeString read GetTexts; default;
     procedure SetText(aLocale, aIndex: Word; aText : UnicodeString);
     function GetText(aLocale, aIndex: Word) : UnicodeString;
-    function TextPointer(aIndex : Word) : Pointer;
+    function GetFirstEmpty: Integer;
     // Unfortunally Lazarus could not compile constructions like:
     // - 2 properties with the same name
     // - 2 default properties
@@ -285,36 +285,6 @@ begin
     Result := '~~~String ' + IntToStr(aIndex) + ' out of range!~~~';
 end;
 
-function TKMTextLibraryMulti.TextPointer(aIndex : Word) : Pointer;
-var
-  found: Boolean;
-begin
-  found := False;
-  Result := nil;
-  if (fPref[0] <> -1) and (aIndex < Length(fTexts[fPref[0]])) and (fTexts[fPref[0], aIndex] <> '') then
-  begin
-    Result := @fTexts[fPref[0], aIndex];
-    found := True;
-  end
-  else
-  if (fPref[1] <> -1) and (aIndex < Length(fTexts[fPref[1]])) and (fTexts[fPref[1], aIndex] <> '') then
-  begin
-    Result := @fTexts[fPref[1], aIndex];
-    found := True;
-  end;
-
-  if (not found or fForceDefaultLocale) then
-  begin
-    if (fPref[2] <> -1) and (aIndex < Length(fTexts[fPref[2]])) and (fTexts[fPref[2], aIndex] <> '') then
-    begin
-      Result := @fTexts[fPref[2], aIndex];
-      found := True;
-    end;
-  end;
-
-end;
-
-
 {$IFDEF WDC}
 function TKMTextLibraryMulti.GetTextsArgs(aIndex: Word; aArgs: array of const): string;
 begin
@@ -482,6 +452,17 @@ begin
     Result := fTexts[aLocale, aIndex]
   else
     Result := 'No text with index: ' + aIndex.ToString
+end;
+
+function TKMTextLibraryMulti.GetFirstEmpty: Integer;
+var UID : Integer;
+begin
+  UID := gResLocales.UserLocaleIndex;
+  Result := 0;
+  while (length(fTexts[UID]) > Result) and (fTexts[UID, Result] <> '') do
+  begin
+    Inc(Result);
+  end;
 end;
 
 procedure TKMTextLibraryMulti.SetText(aLocale, aIndex: Word; aText : UnicodeString);

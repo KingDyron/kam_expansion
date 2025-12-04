@@ -2283,3 +2283,4 @@
 2337:Missing houses to unlock other house
 2338:Missing warfare houses (depends on army type)
 2339:Missing wells close to buildings
+2340:Add message to .libx file|It will generate new message ID

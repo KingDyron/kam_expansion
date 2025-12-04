@@ -449,7 +449,7 @@ begin
   end else
   if Selected is TKMUnitGroup then
   begin
-    if not TKMUnitGroup(Selected).SelectedUnit.Visible then
+    if not TKMUnitGroup(Selected).SelectedUnit.Visible and not (TKMUnitGroup(Selected).SelectedUnit.UnitType in [utLekter]) then
       Selected := nil;
   end else
 end;

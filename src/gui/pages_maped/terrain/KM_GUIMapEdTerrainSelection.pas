@@ -27,6 +27,7 @@ type
       Map_PasteType: array [TKMTerrainSelectionPasteType] of  TKMButtonFlat;
       Button_RMGRND: TKMButton;
       Button_SelectSetCoal: TKMButton;
+      Button_SelectDebug: TKMButton;
   public
     constructor Create(aParent: TKMPanel);
     destructor Destroy; override;
@@ -117,6 +118,11 @@ begin
   Button_AddPatternObj.Anchors := [anLeft, anTop, anRight];
   Button_AddPatternObj.OnClick := SelectionClick;
 
+  Button_SelectDebug := TKMButton.Create(Panel_Selection, 9, 420, Panel_Selection.Width - 9, 20, 'D-remove trees', bsGame);
+  Button_SelectDebug.Anchors := [anLeft, anTop, anRight];
+  Button_SelectDebug.OnClick := SelectionClick;
+  Button_SelectDebug.Hide;
+
   fSubMenuActionsEvents[0] := SelectionClick;
   fSubMenuActionsEvents[1] := SelectionClick;
   fSubMenuActionsEvents[2] := SelectionClick;
@@ -165,7 +171,9 @@ begin
 
       Break;
     end;
-
+  If sender = Button_SelectDebug then
+    gGame.MapEditor.Selection.DoDebug
+  else
   if (Sender = Button_AddPatternObj) then
   begin
 

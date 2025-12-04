@@ -158,6 +158,7 @@ type
       Bevel_HouseSign : TKMBevel;
       Bevel_HouseSignBehind : TKMBevel;
       Image_HouseSignClose: TKMImage;
+      Button_AddToNew: TKMButton;
 
     Panel_HousePearl : TKMPanel;
       Button_PearlType : TKMButtonFlat;
@@ -197,8 +198,9 @@ uses
   KM_HouseBarracks, KM_HouseTownHall, KM_HouseStore,
   KM_HousePearl, KM_HouseForest, KM_HousePasture,
   KM_ResFonts, KM_ResMapElements,{ KM_ResTypes,}
+  KM_ResLocales,
   KM_Cursor, KM_UtilsExt, KM_CommonUtils,
-   KM_Game, KM_MainSettings;
+  KM_Game, KM_MainSettings;
 
 
 { TKMMapEdHouse }
@@ -441,9 +443,12 @@ begin
   Edit_HouseSign.Value := -1;
   Edit_HouseSign.OnChange := HouseSignChange;
 
-  Edit_SignMessage := TKMEdit.Create(Panel_HouseSign, LABEL_DEC_SIZE, LABEL_DEC_SIZE + 53, Label_HouseSignTop.Width, 25, fntOutline, true);
+  Edit_SignMessage := TKMEdit.Create(Panel_HouseSign, LABEL_DEC_SIZE, LABEL_DEC_SIZE + 53, Label_HouseSignTop.Width - 25, 25, fntOutline, true);
   Edit_SignMessage.OnChange := HouseSignChange;
 
+  Button_AddToNew := TKMButton.Create(Panel_HouseSign, Edit_SignMessage.Right, Edit_SignMessage.Top, 25, 25, 386, rxGui, bsGame);
+  Button_AddToNew.OnClick := HouseSignChange;
+  Button_AddToNew.Hint := gResTexts[2340];
 
   Image_HouseSignClose := TKMImage.Create(Panel_HouseSign, Panel_HouseSign.Width - 50, 7, 32, 32, 52);
   Image_HouseSignClose.Hint := gResTexts[TX_MSG_CLOSE_HINT];
@@ -856,10 +861,23 @@ end;
 
 
 procedure TKMMapEdHouse.HouseSignChange(Sender : TObject);
+var newID : Integer;
 begin
 
   Edit_SignMessage.Visible := Edit_HouseSign.Value = -1;
+  if Sender = Button_AddToNew then
+  begin
+    If  Edit_HouseSign.Value <> -1 then
+      Exit;
 
+    newID := gGame.TextMission.GetFirstEmpty;
+    gGame.TextMission.SetText(gResLocales.UserLocaleIndex, newID, Edit_SignMessage.Text);
+    Edit_HouseSign.Value := newID;
+    Edit_SignMessage.Text := '';
+    fHouse.Text := '<$' + IntToStr(newID) + '>';
+    SignRefresh;
+
+  end else
   if Edit_HouseSign.Value > -1 then
     fHouse.Text := '<$' + IntToStr(Edit_HouseSign.Value) + '>'
   else
@@ -869,6 +887,7 @@ begin
     Label_SignMessage.Caption := fHouse.Text
   else
     Label_SignMessage.Caption := gGame.TextMission.ParseTextMarkup(UnicodeString(fHouse.Text));
+  Button_AddToNew.Enabled := (Edit_HouseSign.Value = -1) and (Edit_SignMessage.Text <> '');
 end;
 
 procedure TKMMapEdHouse.HouseCheckBoxClick(Sender: TObject);
@@ -1151,7 +1170,7 @@ begin
     htSign:         begin
                       Label_SingCLickCTRL.Show;
 
-                      if ssCtrl in gCursor.SState then
+                      if (ssCtrl in gCursor.SState) or (Panel_HouseSign.Visible) then
                       begin
                         Panel_HouseSign.Show;
                         SignRefresh;
@@ -1341,6 +1360,7 @@ begin
   Edit_HouseSign.Value := GetNumber(fHouse.Text);
   if Edit_HouseSign.Value = -1 then
     Edit_SignMessage.Text := fHouse.Text;
+
   HouseSignChange(nil);
 end;
 

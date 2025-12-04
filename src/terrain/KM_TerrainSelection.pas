@@ -89,7 +89,8 @@ type
     procedure IncludePasteType(aPasteType: TKMTerrainSelectionPasteType);
     procedure ExcludePasteType(aPasteType: TKMTerrainSelectionPasteType);
 
-    procedure SetNiceCoal; //Do the actual paste from buffer to terrain
+    procedure SetNiceCoal;//smoot coal
+    procedure DoDebug;
 
     procedure AddPattern;
     procedure SetFromPattern(aColID, aPatternID : Integer; ReplaceObjects, aDeselect : Boolean);
@@ -1090,6 +1091,15 @@ begin
   end;}
 end;
 
+
+procedure TKMSelection.DoDebug;
+var X, Y : Integer;
+begin
+  for X := 1 to gTerrain.MapX - 1 do
+  for Y := 1 to gTerrain.MapY - 1 do
+    If InRange(gTerrain.Land^[Y,X].Obj, 88, 172) then
+      gTerrain.SetObject(KMPoint(X, Y), OBJ_None);
+end;
 
 procedure TKMSelection.CopyBufferToTempLand(aUpdateMainLand: Boolean = False; aUpdateAll: Boolean = True);
 var
