@@ -694,7 +694,7 @@ begin
   PaintSelection;
 
   //Characters that do not fit are trimmed
-  TKMRenderUI.WriteText(AbsLeft+4, AbsTop+3, Width-8, rText, fFont, taLeft, col, not ShowColors, True, DrawEolSymbol);
+  TKMRenderUI.WriteText(AbsLeft+4, AbsTop+3, Width-8, rText, fFont, taLeft, col, not ShowColors, True, DrawEolSymbol, DrawEolSymbol);
 
   //Render text cursor
   if (csFocus in State) and ((TimeGet div 500) mod 2 = 0) then

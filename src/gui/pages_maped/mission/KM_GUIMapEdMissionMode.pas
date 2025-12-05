@@ -49,6 +49,7 @@ type
           Memo_MapName: TKMMemo;
           Radio_SmallDescType: TKMRadioGroup;
           Edit_SmallDesc: TKMEdit;
+          Button_SmallDescAddToLibx: TKMButton;//
           NumEdit_SmallDesc: TKMNumericEdit;
           Panel_CheckBoxes: TKMPanel;
             CheckBox_Coop, CheckBox_Special, CheckBox_RMG, CheckBox_PlayableAsSP,
@@ -84,6 +85,7 @@ type
 
           Radio_BigDescType: TKMRadioGroup;
           Edit_BigDesc: TKMEdit;
+          Button_BigDescAddToLibx: TKMButton;//
           NumEdit_BigDesc: TKMNumericEdit;
           Memo_BigDesc: TKMMemo;
           Label_BigDesc: TKMLabel;
@@ -108,7 +110,7 @@ uses
   Math,
   KM_ResTexts, KM_Game, KM_GameParams,
   KM_ControlsTypes,
-  KM_RenderUI, KM_ResFonts,
+  KM_RenderUI, KM_ResFonts, KM_ResTypes,
   KM_ResLocales,
   KM_InterfaceGame, KM_HandsCollection, KM_Hand,
   SysUtils;
@@ -209,9 +211,14 @@ begin
   Radio_SmallDescType.Add(gResTexts[TX_MAPED_MISSION_LIBX_TEXT_ID]);
   Radio_SmallDescType.OnChange := RadioMissionDesc_Changed;
 
-  Edit_SmallDesc := TKMEdit.Create(Panel_MissionParams, RADIO_W + 20, Top, Panel_MissionParams.Width - RADIO_W - 25, 20, fntGame);
+  Edit_SmallDesc := TKMEdit.Create(Panel_MissionParams, RADIO_W + 20, Top, Panel_MissionParams.Width - RADIO_W - 25 - 25, 25, fntGame);
   Edit_SmallDesc.ShowColors := True;
   NumEdit_SmallDesc := TKMNumericEdit.Create(Panel_MissionParams, RADIO_W + 20, Top, -1, 999, fntGrey);
+
+  Button_SmallDescAddToLibx := TKMButton.Create(Panel_MissionParams, Edit_SmallDesc.Right, Edit_SmallDesc.Top, 25, 25, 386, rxGui, bsGame);
+  Button_SmallDescAddToLibx.OnClick := RadioMissionDesc_Changed;
+  Button_SmallDescAddToLibx.Hint := gResTexts[2340];
+
 
   Inc(Top, 55);
   TKMLabel.Create(Panel_MissionParams, 0, Top, gResTexts[TX_MAPED_MISSION_PARAMETERS_TITLE], fntMetal, taLeft);
@@ -289,11 +296,15 @@ begin
   Radio_BigDescType.Add(gResTexts[TX_MAPED_MISSION_LIBX_TEXT_ID]);
   Radio_BigDescType.OnChange := RadioMissionDesc_Changed;
 
-  Edit_BigDesc := TKMEdit.Create(Panel_MissionParams, RADIO_W + 20, Top, Panel_MissionParams.Width - RADIO_W - 25, 20, fntGame);
+  Edit_BigDesc := TKMEdit.Create(Panel_MissionParams, RADIO_W + 20, Top, Panel_MissionParams.Width - RADIO_W - 25 - 25, 25, fntGame);
   Edit_BigDesc.MaxLen := 4096;
   Edit_BigDesc.AllowedChars := acAll;
   Edit_BigDesc.ShowColors := True;
   NumEdit_BigDesc := TKMNumericEdit.Create(Panel_MissionParams, RADIO_W + 20, Top, -1, 999, fntGrey);
+
+  Button_BigDescAddToLibx := TKMButton.Create(Panel_MissionParams, Edit_BigDesc.Right, Edit_BigDesc.Top, 25, 25, 386, rxGui, bsGame);
+  Button_BigDescAddToLibx.OnClick := RadioMissionDesc_Changed;
+  Button_BigDescAddToLibx.Hint := gResTexts[2340];
 
   Inc(Top, 55);
 
@@ -501,6 +512,8 @@ begin
   Edit_Text := TKMEdit.Create(PopUp_Texts, 10, 40, PopUp_Texts.Width - 20, 20, fntGrey);
   Edit_Text.OnChange := MessagesChange;
   Edit_Text.MaxLen := high(word);
+  Edit_Text.AllowedChars := acAll;
+
   Memo_Text := TKMMemo.Create(PopUp_Texts, 10, Edit_Text.Bottom + 20,
                               PopUp_Texts.Width - 20, 175,
                               fntGrey, bsMenu, false);
@@ -642,13 +655,44 @@ end;
 
 
 procedure TKMMapEdMissionMode.RadioMissionDesc_Changed(Sender: TObject);
+var newID : Integer;
 begin
+
+  If Sender = Button_SmallDescAddToLibx then
+  begin
+    If  NumEdit_SmallDesc.Value <> -1 then
+      Exit;
+
+    newID := gGame.TextMission.GetFirstEmpty;
+    gGame.TextMission.SetText(gResLocales.UserLocaleIndex, newID, Edit_SmallDesc.Text);
+    NumEdit_SmallDesc.Value := newID;
+    Edit_SmallDesc.Text := '';
+    Radio_SmallDescType.ItemIndex := 1;
+  end else
+  If Sender = Button_BigDescAddToLibx then
+  begin
+    If  NumEdit_BigDesc.Value <> -1 then
+      Exit;
+
+    newID := gGame.TextMission.GetFirstEmpty;
+    gGame.TextMission.SetText(gResLocales.UserLocaleIndex, newID, Edit_BigDesc.Text);
+    NumEdit_BigDesc.Value := newID;
+    Edit_BigDesc.Text := '';
+    Radio_BigDescType.ItemIndex := 1;
+  end;
+
   Edit_SmallDesc.Visible := Radio_SmallDescType.ItemIndex = 0;
+  Button_SmallDescAddToLibx.Visible := Radio_SmallDescType.ItemIndex = 0;
   NumEdit_SmallDesc.Visible := Radio_SmallDescType.ItemIndex = 1;
 
   Edit_BigDesc.Visible := Radio_BigDescType.ItemIndex = 0;
+  Button_BigDescAddToLibx.Visible := Radio_BigDescType.ItemIndex = 0;
   //Memo_BigDesc.Enabled := Radio_BigDescType.ItemIndex = 0;
   NumEdit_BigDesc.Visible := Radio_BigDescType.ItemIndex = 1;
+
+
+  Button_SmallDescAddToLibx.Enabled := (NumEdit_SmallDesc.Value = -1) and (Edit_SmallDesc.Text <> '');
+  Button_BigDescAddToLibx.Enabled := (NumEdit_BigDesc.Value = -1) and (Edit_BigDesc.Text <> '');
 
   UpdateMapTxtInfo(nil);
 end;

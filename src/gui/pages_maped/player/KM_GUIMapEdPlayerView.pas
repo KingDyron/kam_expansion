@@ -58,6 +58,7 @@ type
       Button_SaveToLibx,
       Button_ClosePopUp : TKMButton;
       Edit_MessageText : TKMEdit;
+      Button_AddToLibx: TKMButton;
       Bevel_MessageText : TKMBevel;
       Label_MessageText : TKMLabel;
 
@@ -77,6 +78,7 @@ type
 implementation
 uses
   KM_HandsCollection, KM_ResTexts, KM_Game, KM_GameTypes,
+  KM_ControlsTypes,
   KM_Cursor, KM_RenderUI, KM_ResFonts, KM_Resource, KM_ResTypes,
   KM_InterfaceGame, SysUtils, Math,
   KM_Campaigns, KM_ResLocales;
@@ -242,9 +244,14 @@ begin
   Button_MessageDel := TKMButton.Create(PopUp_MessageEditor, 250, 315, 160, 25, gResTexts[1850], bsGame);
   Button_MessageDel.OnClick := Player_PopUpClick;
 
-  Edit_MessageText := TKMEdit.Create(PopUp_MessageEditor, 50, ColumnBox_MessageQueue.Bottom + 10, 565, 25, fntMetal);
+  Edit_MessageText := TKMEdit.Create(PopUp_MessageEditor, 50, ColumnBox_MessageQueue.Bottom + 10, 575 - 25, 25, fntMetal);
   Edit_MessageText.OnChange := Player_MessageChange;
+  Edit_MessageText.AllowedChars := acAll;
   Edit_MessageText.SetTextSilently(gResTexts[1851]);
+
+  Button_AddToLibx  := TKMButton.Create(PopUp_MessageEditor, Edit_MessageText.Right, Edit_MessageText.Top, 25, 25, 386, rxGui, bsGame);
+  Button_AddToLibx.OnClick := Player_MessageChange;
+  Button_AddToLibx.Hint := gResTexts[2340];
 
   Bevel_MessageText := TKMBevel.Create(PopUp_MessageEditor, 50, Edit_MessageText.Bottom + 5, 575, 180);
 
@@ -457,10 +464,20 @@ begin
 end;
 
 procedure TKMMapEdPlayerAdditional.Player_MessageChange(Sender : TOBject);
-var I : Integer;
+var I, newID : Integer;
 begin
   I := ColumnBox_MessageQueue.ItemIndex;
 
+  If Sender = Button_AddToLibx then
+  begin
+    If  Number_TextID.Value <> -1 then
+      Exit;
+
+    newID := gGame.TextMission.GetFirstEmpty;
+    gGame.TextMission.SetText(gResLocales.UserLocaleIndex, newID, Edit_MessageText.Text);
+    Number_TextID.Value := newID;
+    Edit_MessageText.Text := '';
+  end else
   if ColumnBox_MessageQueue.IsSelected then
   begin
     gMySpectator.Hand.ShowMessage[I].ID := Number_TextID.Value;
@@ -474,6 +491,8 @@ begin
     end;
 
   end;
+
+  Button_AddToLibx.Enabled := (Number_TextID.Value = -1) and (Edit_MessageText.Text <> '');
 
   RefreshMessage;
   if not (Sender is TKMNumericEdit) then
