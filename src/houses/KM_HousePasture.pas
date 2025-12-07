@@ -484,19 +484,21 @@ begin
   Inherited;
   If not IsComplete then
     Exit;
-  for I := 1 to WARES_IN_OUT_COUNT do
-    If (fFoodSilos[I] = 0) and (ResIn[I] > 0) then //check if it can fill sth
-    begin
-      WareTakeFromIn(WareInput[I], 1, true);
-      fFoodSilos[I] := 10;//max is 10
-    end;
+  If HasWorkerInside then
+    for I := 1 to WARES_IN_OUT_COUNT do
+      If (fFoodSilos[I] = 0) and (ResIn[I] > 0) then //check if it can fill sth
+      begin
+        WareTakeFromIn(WareInput[I], 1, true);
+        fFoodSilos[I] := 10;//max is 10
+      end;
 
   for I := 0 to MAX_ANIMALS - 1 do
     UpdateAnimal(fAnimals[I], I, aTick);
 
-  If gHands[Owner].IsComputer then
-    If aTick mod 200 = 0 then
-      BuyAIAnimal;
+  If HasWorkerInside then
+    If gHands[Owner].IsComputer then
+      If aTick mod 200 = 0 then
+        BuyAIAnimal;
 end;
 
 

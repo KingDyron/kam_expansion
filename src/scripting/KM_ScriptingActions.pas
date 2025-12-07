@@ -290,6 +290,7 @@ type
 
     procedure SpecialAnimAdd(aX, aY : Single; aAnim :  array of Integer; aLoopTimes : Byte);
     procedure SpecialAnimAddFront(aX, aY : Single; aAnim :  array of Integer; aLoopTimes : Byte);
+    procedure StructureUnlock(aHand, aStructure: Integer; aUnlocked : Boolean);
 
     procedure UnitBootsSet(aUnitID: Integer; aBoots: Boolean);
     procedure UnitBlockWalking(aUnitID: Integer; aBlock : Boolean);
@@ -5657,6 +5658,35 @@ procedure TKMScriptActions.SpecialAnimAddFront(aX, aY : Single; aAnim :  array o
 begin
   try
     gSpecAnim.Add(Anim(0, 0, aAnim), KMPointf(aX, aY), aLoopTimes, rxTrees, true);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
+procedure TKMScriptActions.StructureUnlock(aHand, aStructure: Integer; aUnlocked : Boolean);
+var I : Integer;
+begin
+  try
+    If (aStructure < gRes.Structures.Count - 1) then
+    begin
+      If aHand = -1 then
+      begin
+        for I := 0 to gHands.Count - 1 do
+          If gHands[aHand].Enabled then
+            If aUnlocked then
+              gHands[aHand].Locks.Structures[aStructure] := ulUnlocked
+            else
+              gHands[aHand].Locks.Structures[aStructure] := ulNotVisible;
+      end else
+        If InRange(aHand, 0, gHands.Count - 1) and gHands[aHand].Enabled then
+          If aUnlocked then
+            gHands[aHand].Locks.Structures[aStructure] := ulUnlocked
+          else
+            gHands[aHand].Locks.Structures[aStructure] := ulNotVisible;
+
+    end else
+      LogIntParamWarn('Actions.StructureUnlock', [aHand, aStructure]);
   except
     gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
     raise;

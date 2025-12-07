@@ -4619,28 +4619,28 @@
 		"Type" : "dtObject",
 		"ID": 506,
 		"GuiIcon": 1193,
-		"TextID": 2088,
+		"TextID": 0,
 		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
 	},
 	{
 		"Type" : "dtObject",
 		"ID": 507,
 		"GuiIcon": 1193,
-		"TextID": 2088,
+		"TextID": 2036,
 		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
 	},
 	{
 		"Type" : "dtObject",
 		"ID": 508,
 		"GuiIcon": 1193,
-		"TextID": 2088,
+		"TextID": 2036,
 		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
 	},
 	{
 		"Type" : "dtObject",
 		"ID": 537,
 		"GuiIcon": 1193,
-		"TextID": 2088,
+		"TextID": 2036,
 		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
 	},
 	
@@ -4648,21 +4648,21 @@
 		"Type" : "dtTileOverlay",
 		"ID": 16,
 		"GuiIcon": 935,
-		"TextID": 2088,
+		"TextID": 2036,
 		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
 	},
 	{
 		"Type" : "dtTileOverlay",
 		"ID": 17,
 		"GuiIcon": 935,
-		"TextID": 2088,
+		"TextID": 2036,
 		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
 	},
 	{
 		"Type" : "dtTileOverlay",
 		"ID": 21,
 		"GuiIcon": 935,
-		"TextID": 2088,
+		"TextID": 2036,
 		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
 	}
   ],

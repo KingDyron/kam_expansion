@@ -1071,6 +1071,7 @@ begin
     RegisterMethodCheck(c, 'procedure  UnitSetFlagColor(aUnitID: Integer; aColor: Cardinal)');
     RegisterMethodCheck(c, 'procedure  SpecialAnimAdd(aX, aY : Single; aAnim : array of Integer; aLoopTimes : Byte)');
     RegisterMethodCheck(c, 'procedure  SpecialAnimAddFront(aX, aY : Single; aAnim : array of Integer; aLoopTimes : Byte)');
+    RegisterMethodCheck(c, 'procedure  StructureUnlock(aHand, aStructure: Integer; aUnlocked : Boolean)');
     RegisterMethodCheck(c, 'procedure  UnitSetRage(aUnitID: Integer; aDuration: Integer)');
     RegisterMethodCheck(c, 'procedure  UnitSetStats(aUnitID: Integer; aStats: TKMUnitStats)');
     RegisterMethodCheck(c, 'procedure  UnitSetThought(aUnitID : Integer; aThought : TKMUnitThought)');
@@ -1893,6 +1894,7 @@ begin
       RegisterMethod(@TKMScriptActions.UnitSetFlagColor, 'UnitSetFlagColor');
       RegisterMethod(@TKMScriptActions.SpecialAnimAdd, 'SpecialAnimAdd');
       RegisterMethod(@TKMScriptActions.SpecialAnimAddFront, 'SpecialAnimAddFront');
+      RegisterMethod(@TKMScriptActions.StructureUnlock, 'StructureUnlock');
       RegisterMethod(@TKMScriptActions.UnitSetRage, 'UnitSetRage');
       RegisterMethod(@TKMScriptActions.UnitSetStats, 'UnitSetStats');
       RegisterMethod(@TKMScriptActions.UnitSetThought, 'UnitSetThought');
