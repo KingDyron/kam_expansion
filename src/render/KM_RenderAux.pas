@@ -139,6 +139,7 @@ var
   I: Integer;
 begin
   TKMRender.BindTexture(0); // We have to reset texture to default (0), because it could be bind to any other texture (atlas)
+
   glPushMatrix;
     glTranslatef(X, Y, 0);
     glColor4ubv(@Fill);
@@ -150,6 +151,7 @@ begin
       for I := -SEC_COUNT to SEC_COUNT do
         glVertex2f(Cos(I/SEC_COUNT*pi)*Rad/3, Sin(I/SEC_COUNT*pi)*Rad/3);//-1..1
     glEnd;
+
     glColor4ubv(@Line);
     glBegin(GL_LINE_STRIP);
       for I := -SEC_COUNT to SEC_COUNT do

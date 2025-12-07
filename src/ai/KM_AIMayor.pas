@@ -70,6 +70,9 @@ type
     function BalanceText: UnicodeString;
     property ArmyDemand : TAIArmyDemandF read fArmyDemand;
 
+    //function MostNeededWare : TKMWareType; overload;
+    //function MostNeededWare(aWares : array of TKMWareType) : TKMWareType; overload;
+
     procedure UpdateState(aTick: Cardinal);
     procedure Save(SaveStream: TKMemoryStream);
     procedure Load(LoadStream: TKMemoryStream);

@@ -40,6 +40,8 @@ type
 
     procedure RSetResTo(aType : TKMWareType);
     procedure UseSpecial;
+
+    procedure DoAI;
   protected
     procedure ActivatePearl;
     procedure SetFlagPoint(aFlagPoint: TKMPoint); override;
@@ -223,6 +225,9 @@ begin
         If fWorkingTime = 0 then
           fDoRally := false;
       end;
+
+      If gHands[Owner].IsComputer then
+        DoAI;
     end;
 end;
 
@@ -808,6 +813,22 @@ begin
     else fWorkingTime := 0;
   end;
 
+end;
+
+procedure TKMHousePearl.DoAI;
+begin
+  case fPearlType of
+    //ptValtaria: fMaxReloadTime := 1800;
+    //ptArium: fMaxReloadTime := 1200;
+    //ptAgros: fMaxReloadTime := 6000;
+    ptRalender: begin
+                  RResTo := wtIronArmor;
+                  if CheckWareOut(RResTo) + RalenderRatioTo <= 50 then
+
+                  RalenderDoExchange(1);
+                end;
+    else ;
+  end;
 end;
 
 function TKMHousePearl.PearlName: UnicodeString;

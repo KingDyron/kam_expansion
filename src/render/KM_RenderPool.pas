@@ -2874,7 +2874,7 @@ begin
   with gGFXData[aRX, aId] do
   begin
     // FOW is rendered over the top so no need to make sprites black anymore
-    glColor4ub(255, 255, 255, 255);
+    glColor4f(1, 1, 1, 0 - aAlphaStep);
 
     TKMRender.BindTexture(Tex.TexID);
     if DoHighlight then
@@ -2890,7 +2890,11 @@ begin
   if gGFXData[aRX, aId].Alt.TexID <> 0 then
     with gGFXData[aRX, aId] do
     begin
-      glColor4ubv(@Col);
+      //glColor4ubv(@Col);
+      glColor4f((Col AND $FF / 255),
+                (Col SHR 8 AND $FF / 255),
+                (Col SHR 16 AND $FF / 255),
+                 0 - aAlphaStep);
       TKMRender.BindTexture(Alt.TexID);
       glBegin(GL_QUADS);
         glTexCoord2f(Alt.u1, Alt.v2); glVertex2f(rX                     , rY                      );
@@ -2920,7 +2924,7 @@ begin
   with gGFXData[aRX, aId] do
   begin
     // FOW is rendered over the top so no need to make sprites black anymore
-    glColor4ub(255, 255, 255, 255);
+    glColor4f(1, 1, 1, 0 - aAlphaStep);
 
     TKMRender.BindTexture(Tex.TexID);
     if DoHighlight then
@@ -2936,7 +2940,11 @@ begin
   if gGFXData[aRX, aId].Alt.TexID <> 0 then
     with gGFXData[aRX, aId] do
     begin
-      glColor4ubv(@Col);
+     // glColor4ubv(@Col);
+      glColor4f((Col AND $FF / 255),
+                (Col SHR 8 AND $FF / 255),
+                (Col SHR 16 AND $FF / 255),
+                 0 - aAlphaStep);
       TKMRender.BindTexture(Alt.TexID);
       glBegin(GL_QUADS);
         glTexCoord2f(Alt.u1, Alt.v2); glVertex2f(rX                     , rY                      );
@@ -3069,7 +3077,7 @@ begin
   begin
     // FOW is rendered over the top so no need to make sprites black anymore
     //glColor4ub(255, 255, 255, 255);
-    glColor4f(1 * aNight, 1 * aNight, 1 * aNight, 1);
+    glColor4f(1 * aNight, 1 * aNight, 1 * aNight, 0 - aAlphaStep);
 
     TKMRender.BindTexture(Tex.TexID);
     if DoHighlight then
@@ -3085,7 +3093,11 @@ begin
   if gGFXData[aRX, aId].Alt.TexID <> 0 then
     with gGFXData[aRX, aId] do
     begin
-      glColor4ubv(@Col);
+      //glColor4ubv(@Col);
+      glColor4f((Col AND $FF / 255) * aNight,
+                (Col SHR 8 AND $FF / 255) * aNight,
+                (Col SHR 16 AND $FF / 255) * aNight,
+                 0 - aAlphaStep);
       TKMRender.BindTexture(Alt.TexID);
       glBegin(GL_QUADS);
         glTexCoord2f(Alt.u1, Alt.v2); glVertex2f(rX                     , rY                      );
@@ -3116,7 +3128,7 @@ begin
   begin
     // FOW is rendered over the top so no need to make sprites black anymore
     //glColor4ub(255, 255, 255, 255);
-    glColor4f(1 * aNight, 1 * aNight, 1 * aNight, 1);
+    glColor4f(1 * aNight, 1 * aNight, 1 * aNight, 0 - aAlphaStep);
     TKMRender.BindTexture(Tex.TexID);
     if DoHighlight then
       glColor3ub(HighlightColor AND $FF, HighlightColor SHR 8 AND $FF, HighlightColor SHR 16 AND $FF);
@@ -3131,7 +3143,12 @@ begin
   if gGFXData[aRX, aId].Alt.TexID <> 0 then
     with gGFXData[aRX, aId] do
     begin
-      glColor4ubv(@Col);
+      //glColor4ubv(@Col);
+      glColor4ub( Round(Col AND $FF * (0.7 + aNight / 4)),
+                  Round(Col SHR 8 AND $FF * (0.7 + aNight / 4)),
+                  Round(Col SHR 16 AND $FF * (0.7 + aNight / 4)),
+                  Round(Col SHR 24 and $FF * (0.7 + aNight / 4) * Abs(aAlphaStep) )
+                  );
       TKMRender.BindTexture(Alt.TexID);
       glBegin(GL_QUADS);
         glTexCoord2f(Alt.u1, Alt.v2); glVertex2f(rX                     , rY                      );
