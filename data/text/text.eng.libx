@@ -37,7 +37,7 @@
 36:Iron
 37:Gold
 38:Wine barrels
-39:Corn
+39:Straw
 40:Loaves
 41:Flour
 42:Leather
@@ -89,10 +89,10 @@
 88:The serf supplies your buildings with the necessary raw materials.||Note that a connecting road must exist between the buildings.
 89:To produce tree trunks for the sawmill, you need the woodcutter.||The woodcutter carries out reforesting independently.
 90:The miner mines ore from the coal, iron and gold mines.
-91:The animal breeder uses corn to raise pigs in the swine farm and horses in the stables.
-92:The farmer plants and harvests corn on the farm.||He also produces wine in the vineyard.
+91:The animal breeder uses straw to raise pigs in the swine farm and horses in the stables.
+92:The farmer plants and harvests grain on the farm.||He also produces wine in the vineyard.
 93:The carpenter works in the sawmill, the weapons workshop and in the armory workshop.||He also builds catapults and ballistae in the siege workshop.
-94:The baker grinds corn into flour in the mill.||He also bakes bread in the bakery.
+94:The baker grinds straw into flour in the mill.||He also bakes bread in the bakery.
 95:The butcher makes sausages in the butchery and leather in the tannery.
 96:The fisherman catches fish in nearby water bodies.
 97:The laborer constructs buildings and roads. Simply highlight your preferred location and he will carry out your commands automatically.||He also repairs damaged buildings.
@@ -195,8 +195,8 @@
 196:Moving
 197:Idle
 198:Mining stone
-199:Sowing corn
-200:Harvesting corn
+199:Sowing grain
+200:Harvesting grain
 201:Harvesting grapes
 202:Fishing
 203:Cutting tree
@@ -1364,7 +1364,7 @@
 1417:Move %s %s
 1418:Change owner: %s %s
 1419:road
-1420:corn field
+1420:grain field
 1421:wine field
 1422:overlay
 1423:object
@@ -1676,7 +1676,7 @@
 1730:The Iron Foundry processes iron into parts needed to build siege machines. It also produces bitin plates used to strengthen machines and units in the barracks.
 1731:With the emissary, you can transfer selected goods to your allies.|Can ship goods to distant parts of the map as long as a shipyard is built.
 1732:Roof tiles required for the expansion of the city are produced in the pottery.
-1733:This is the only building that can produce coal from the renewable raw material - wood. It needs kindling in the form of corn and fuel, i.e. sawdust or coal.
+1733:This is the only building that can produce coal from the renewable raw material - wood. It needs kindling in the form of straw and fuel, i.e. sawdust or coal.
 1734:The tree grows a lot of fruit. People in the houses need them for food. It is a modular building, so you can create a huge orchard.
 1735:In this building, a collector extracts valuable materials from stones, rocks and ruins. They can be used to make a jewellery, which is valuable when exchanged at the marketplace. It is also required in the training of elite units in the palace.
 1736:A tailor sews boots thanks to his skills. Any citizen who works in constant motion can get them in school. He can also produce leather armor and quivers.
@@ -2052,7 +2052,7 @@
 2106:Realism
 2107:Built in difficulty level
 2108:Achievements
-2109:Have to pay with something|Produce 100 gold chests||Chests full of gold|Produce 1000 gold chests||Gold, gold everywhere|Produce 10 000 gold chests||Don't forget aboud food|Produce 1000 food||Jedzenie to zdrowie|Produce 10 000 food||Chow time!|Produce 100 000 food||Units for village|Train 500 units||Units for city|Train 1000 units||Units for kingdome|Train 5000 units||First Victory|Win any game||The battle is starting|Win 10 games||To thy weapons|Win 100 games||Play for every time, always.|Win 1000 games||Help of the specialists 1|Recruit in palace trained wolf||Help of the specialists 2|Recruit paladin in palace||Help of the specialists 3|Recruit spy in palace||Real life|Win a game in Realism mode||The crops are dying!|Win a game in Realism mode 15 times||Food rottens and animals dies?|Win a game in Realism mode 34 times||Hell on earth and people in graves|Win a game in Realism mode 666 times
+2109:Have to pay with something|Produce 100 gold chests||Chests full of gold|Produce 1000 gold chests||Gold, gold everywhere|Produce 10 000 gold chests||Don't forget aboud food|Produce 1000 food||Jedzenie to zdrowie|Produce 10 000 food||Chow time!|Produce 100 000 food||Units for village|Train 500 units||Units for city|Train 1000 units||Units for kingdome|Train 5000 units||First Victory|Win any game||The battle is starting|Win 10 games||To thy weapons|Win 100 games||Play for every time, always.|Win 1000 games||Help of the specialists 1|Recruit in palace trained wolf||Help of the specialists 2|Recruit paladin in palace||Help of the specialists 3|Recruit spy in palace||Real life|Win a game in Realism mode||The crops are dying!|Win a game in Realism mode 15 times||Food rottens and animals dies?|Win a game in Realism mode 34 times||Hell on earth and people in graves|Win a game in Realism mode 666 times||A gift from Kato|Collect 5 jewelry||Cronwwell's Wealth|Collect 20 jewelry||Jewelry's Collector|Collect 100 jewelry||Royal wealth|Collect 300 jewelry||2 132 767 straw is not enough|Collect 664 jewelry||Learn the Basics|Complete the town tutorials: Basics||Consider Combat|Complete the town tutorials: Army + Siege machines||Explore the range of possibilities|Complete the town tutorials: Trading + Elite + Alternatives||Knowledge is power|Complete all town tutorials||Army in hand!|Complete the battle tutorials: Basics||Discover hidden secrets!|Complete the battle tutorials: Special units + Elite||Forbidden Knowledge|Complete the battle tutorials: Siege machines + Ships||I'm not in danger! I AM the danger!|Complete all battle tutorials||The Written Legend|Build a pearl of architecture: Obelisc||A divine place of peace|Build a pearl of architecture: Icy Gardens||A sign of existence|Build a pearl of architecture: Pristine Fountain||In honor of the fallen|Build a pearl of architecture: Statue of the Founder
 2110:Disables aging plants on tile
 2111:Changes resource amount in house under the cursor
 2112:Random amount
