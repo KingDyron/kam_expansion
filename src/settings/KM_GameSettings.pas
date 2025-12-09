@@ -55,6 +55,9 @@ type
     property VideoVolume: Single read fVideoVolume write SetVideoVolume;
   end;
 
+  TKMGameTownTutorialsWon = array[0..TOWN_TUTORIAlS_COUNT - 1] of Boolean;
+  TKMGameBattleTutorialsWon = array[0..BATTLE_TUTORIAlS_COUNT - 1] of Boolean;
+
 
   // Gameplay settings, those that affect the game
   TKMGameSettings = class(TKMGameAppSettingsPart)
@@ -114,9 +117,9 @@ type
 
     //Misc
     fAsyncGameResLoader: Boolean;
-    fBeastPanelExpanded: Boolean;
-    fHousesPanelExpanded,
-    fWaresPanelExpanded: array[0..10] of Boolean;
+    //fBeastPanelExpanded: Boolean;
+    //fHousesPanelExpanded,
+    //fWaresPanelExpanded: array[0..10] of Boolean;
 
     //Menu
     fMenu_FavouriteMapsStr: UnicodeString;
@@ -168,17 +171,21 @@ type
     procedure SetSpeedPace(const aValue: Word);
     function GetFavouriteMaps: TKMMapsCRCList;
     function GetAsyncGameResLoader: Boolean;
-    procedure StrToWaresArr(S : String);
+    function StrToBoolArr(S : String) : TBooleanArray;
+    {procedure StrToWaresArr(S : String);
     procedure StrToHouesArr(S : String);
     function GetHousesPanelExpanded(aIndex : Integer) : Boolean;
     function GetWaresPanelExpanded(aIndex : Integer) : Boolean;
     procedure SetHousesPanelExpanded(aIndex : Integer; aValue : Boolean);
-    procedure SetWaresPanelExpanded(aIndex : Integer; aValue : Boolean);
+    procedure SetWaresPanelExpanded(aIndex : Integer; aValue : Boolean);}
   public
     GFX: TKMSettingsGFX;
     SFX: TKMSettingsSFX;
     Video: TKMSettingsVideo;
     Weather: TKMSettingsWeather;
+
+    BattleTutorials : TKMGameBattleTutorialsWon;
+    TownTutorials   : TKMGameTownTutorialsWon;
 
     constructor Create;
     destructor Destroy; override;
@@ -241,11 +248,11 @@ type
 
     //Misc
     property AsyncGameResLoader: Boolean read GetAsyncGameResLoader;
-
+    {
     property HousePanelExpanded[aIndex : integer] : Boolean read GetHousesPanelExpanded write SetHousesPanelExpanded;
     property WaresPanelExpanded[aIndex : integer] : Boolean read GetWaresPanelExpanded write SetWaresPanelExpanded;
     property BeastsPanelExpanded : Boolean read fBeastPanelExpanded write fBeastPanelExpanded;
-
+    }
     // Menu
     property MenuMapSPType: Byte read fMenu_MapSPType write fMenu_MapSPType;
     property MenuReplaysType: Byte read fMenu_ReplaysType write fMenu_ReplaysType;
@@ -354,7 +361,7 @@ begin
 
   Result := fFavouriteMaps;
 end;
-
+{
 function TKMGameSettings.GetHousesPanelExpanded(aIndex : Integer) : Boolean;
 begin
   Result := false;
@@ -432,6 +439,33 @@ begin
   for J := 0 to Min(high(B), high(fHousesPanelExpanded)) do
     fHousesPanelExpanded[J] := B[J];
 end;
+}
+
+function TKMGameSettings.StrToBoolArr(S : String) : TBooleanArray;
+var B : array of Boolean;
+  aID, J : Integer;
+  Text : String;
+begin
+  aID := 1;
+
+  while aID < length(S) do
+  begin
+    Text := '';
+    repeat
+      Text := Text + S[aID];
+      inc(aID);
+    until (aID >= length(S)) or (S[aID] = #32);
+
+    J := length(B);
+    SetLength(B, J + 1);
+    B[J] := StrToBool(Text);
+
+    Inc(aID);
+  end;
+  Setlength(Result, length(B));
+  for J := 0 to high(B) do
+    Result[J] := B[J];
+end;
 
 procedure TKMGameSettings.LoadFromXML;
 
@@ -460,9 +494,12 @@ var
     nMenuReplay,
     nMenuMapEd,
   nMisc,
-  nDebug: TKMXmlNode;
+  nDebug,
+  nTutorials: TKMXmlNode;
   tempCard: Int64;
   S : String;
+  I : Integer;
+  arr : TBooleanArray;
 begin
   if Self = nil then Exit;
   inherited;
@@ -606,12 +643,12 @@ begin
   // Misc
   nMisc := nGameSettings.AddOrFindChild('Misc');
     fAsyncGameResLoader := nMisc.Attributes['AsyncGameResLoader'].AsBoolean(True);
-    fBeastPanelExpanded := nMisc.Attributes['BeastPanelExpanded'].AsBoolean(false);
+    //fBeastPanelExpanded := nMisc.Attributes['BeastPanelExpanded'].AsBoolean(false);
 
-    S := nMisc.Attributes['WaresPanelExpanded'].AsString;
+    {S := nMisc.Attributes['WaresPanelExpanded'].AsString;
     StrToWaresArr(S);
     S := nMisc.Attributes['HousesPanelExpanded'].AsString;
-    StrToHouesArr(S);
+    StrToHouesArr(S);}
 
 
   // Menu
@@ -649,6 +686,20 @@ begin
       fMenu_MapEdDLMapCRC     := StrToInt64(nMenuMapEd.Attributes['DLMapCRC'].AsString('0'));
 
   // Debug
+    FillChar(BattleTutorials, sizeOf(BattleTutorials), #0);
+    FillChar(TownTutorials, sizeOf(BattleTutorials), #0);
+  nTutorials := nGameSettings.AddOrFindChild('Tutorials');
+      S := nTutorials.Attributes['Battle'].AsString('');
+      arr := StrToBoolArr(S);
+      for I := 0 to Min(High(BattleTutorials), high(arr)) do
+        BattleTutorials[I] := arr[I];
+
+      S := nTutorials.Attributes['Town'].AsString('');
+      arr := StrToBoolArr(S);
+      for I := 0 to Min(High(TownTutorials), high(arr)) do
+        TownTutorials[I] := arr[I];
+
+
   nDebug := nGameSettings.AddOrFindChild('Debug');
   if SAVE_RANDOM_CHECKS then
     fDebug_SaveRandomChecks := nDebug.Attributes['SaveRandomChecks'].AsBoolean(True);
@@ -691,6 +742,7 @@ var
     nMenuMapEd,
   nMisc,
   nDebug: TKMXmlNode;
+  nTutorials: TKMXmlNode;
 var I : Integer;
   S : String;
 begin
@@ -826,8 +878,8 @@ begin
   // Misc
   nMisc := nGameSettings.AddOrFindChild('Misc');
     nMisc.Attributes['AsyncGameResLoader'] := fAsyncGameResLoader;
-    nMisc.Attributes['BeastPanelExpanded'] := fBeastPanelExpanded;
-    S := '';
+    //nMisc.Attributes['BeastPanelExpanded'] := fBeastPanelExpanded;
+    {S := '';
     for I := 0 to High(fWaresPanelExpanded) do
       S := S + boolToStr(fWaresPanelExpanded[I], true) + ' ';
 
@@ -837,7 +889,7 @@ begin
     for I := 0 to High(fHousesPanelExpanded) do
       S := S + boolToStr(fHousesPanelExpanded[I], true) + ' ';
 
-    nMisc.Attributes['HousesPanelExpanded'] := S;
+    nMisc.Attributes['HousesPanelExpanded'] := S;}
 
 
     {fBeastPanelExpanded: Boolean;
@@ -874,6 +926,20 @@ begin
       nMenuMapEd.Attributes['MPMapCRC']   := IntToStr(fMenu_MapEdMPMapCRC);
       nMenuMapEd.Attributes['MPMapName']  := fMenu_MapEdMPMapName;
       nMenuMapEd.Attributes['DLMapCRC']   := IntToStr(fMenu_MapEdDLMapCRC);
+
+  {BattleTutorials : TKMGameTownTutorialsWon;
+  TownTutorials   : TKMGameBattleTutorialsWon;}
+  //tutorials
+  nTutorials := nGameSettings.AddOrFindChild('Tutorials');
+    S := '';
+    for I := 0 to High(BattleTutorials) do
+      S := S + boolToStr(BattleTutorials[I], true) + ' ';
+      nTutorials.Attributes['Battle'] := S;
+
+    S := '';
+    for I := 0 to High(TownTutorials) do
+      S := S + boolToStr(TownTutorials[I], true) + ' ';
+      nTutorials.Attributes['Town'] := S;
 
   // Debug
   nDebug := nGameSettings.AddOrFindChild('Debug');

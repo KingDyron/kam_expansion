@@ -94,7 +94,7 @@ begin
     WareRow_Cost[I].Hint := gResTexts[1907] + ': ' + gRes.Wares[WT].Title;
   end;
 
-  top := WareRow_Cost[high(WareRow_Cost)].Bottom + 5;
+  //top := WareRow_Cost[high(WareRow_Cost)].Bottom + 5;
 
   //Button_StartFestival := TKMButton.Create(self, 0, top, Width, 25, gResTexts[2301], bsGame);
   //Button_StartFestival.OnClick := Start_Click;

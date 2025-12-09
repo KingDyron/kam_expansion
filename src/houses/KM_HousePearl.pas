@@ -737,7 +737,7 @@ function TKMHousePearl.AgrosDoExchangeToUnit(aUnitType : TKMUnitType): Boolean;
         Exit(true);
   end;
 
-var I, C : Integer;
+var I : Integer;
   U : TKMUnitRecruit;
   W : TKMUnitWarrior;
 

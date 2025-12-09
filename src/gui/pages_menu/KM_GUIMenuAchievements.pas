@@ -78,6 +78,9 @@ begin
 
     Panel_List := TKMScrollPanel.Create(Panel_Main, Bevel_Back.Left + 2, Bevel_Back.Top + 2, Bevel_Back.Width - 4, Bevel_Back.Height - 4,
                                         [saVertical], bsMenu, ssCommon);
+
+    Panel_List.ScrollV.WheelStep := 115 div 2;
+
     SetLength(Ach_List, gAchievements.SortedCount);
     for I := 0 to gAchievements.SortedCount - 1 do
     begin

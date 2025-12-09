@@ -336,7 +336,6 @@ function TKMUnitActionFight.ExecuteProcessMelee(Step: Byte): Boolean;
       Exit;
 
     gScriptEvents.ProcUnitHit(aUnit, fUnit);
-    isHit := false;
     aUnit.SetHitTime;//set hittime no matter if it does damage or not. He is in fight.
 
     if aUnit is TKMUnitWarriorSpy then

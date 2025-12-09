@@ -1287,8 +1287,39 @@ end;
 
 procedure TKMGame.PlayerVictory(aHandIndex: TKMHandID);
 var C : TKMCampaign;
+  mapName : String;
+  doSave : Boolean;
 begin
-  Achievements.GameWon;
+
+  If fParams.IsSingleplayerGame then
+  begin
+    doSave := true;
+    mapName := fParams.Name;
+    If mapName = '1.Basics' then gGameSettings.TownTutorials[0] := true else
+    If mapName = '2.Economy' then gGameSettings.TownTutorials[1] := true else
+    If mapName = '3.Army' then gGameSettings.TownTutorials[2] := true else
+    If mapName = '4.Defense' then gGameSettings.TownTutorials[3] := true else
+    If mapName = '5.Siege machines' then gGameSettings.TownTutorials[4] := true else
+    If mapName = '6.Trading' then gGameSettings.TownTutorials[5] := true else
+    If mapName = '7.Elite' then gGameSettings.TownTutorials[6] := true else
+    If mapName = '8.Alternatives' then gGameSettings.TownTutorials[7] := true else
+    If mapName = '9.Statki' then gGameSettings.TownTutorials[8] := true else
+
+    If mapName = '1.Podstawy' then gGameSettings.BattleTutorials[0] := true else
+    If mapName = '2.Miasto' then gGameSettings.BattleTutorials[1] := true else
+    If mapName = '3.Machiny' then gGameSettings.BattleTutorials[2] := true else
+    If mapName = '4.Wzmocnienie' then gGameSettings.BattleTutorials[3] := true else
+    If mapName = '5.Specjalni' then gGameSettings.BattleTutorials[4] := true else
+    If mapName = '6.Elitarni' then gGameSettings.BattleTutorials[5] := true else
+    If mapName = '7.Obrona Miasta' then gGameSettings.BattleTutorials[6] := true else
+    If mapName = '8.Okręty' then gGameSettings.BattleTutorials[7] := true else
+      doSave := false;
+    If doSave then
+      gGameSettings.SaveToXML;
+  end;
+
+  Achievements.GameWon(aHandIndex);
+
   if fParams.IsMultiPlayerOrSpec then
   begin
     if gNetworking.NetPlayers.PlayerIndexToLocal(aHandIndex) = -1 then

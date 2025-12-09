@@ -1108,7 +1108,6 @@ var
   updateRect: TKMRect;
   H : TKMHouse;
   stats : TKMHouseStats;
-  HT : TKMHouseType;
 begin
   Sx := fSelectionRect.Right - fSelectionRect.Left;
   Sy := fSelectionRect.Bottom - fSelectionRect.Top;

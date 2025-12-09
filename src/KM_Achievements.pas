@@ -24,6 +24,7 @@ type
     Next : TKMAchievement;//after completing achievement you unlock next level
 
     procedure IncProgress(aCount : Integer = 1);
+    procedure SetProgress(aValue : Integer);
     function CurrentProgress : Single;
     property Completed : Boolean read GetIsCompleted write SetIsCompleted;
     property AbsToShow : Boolean read GetAbsToShow;
@@ -57,6 +58,7 @@ type
       procedure GoldProduced(aCount : Integer);
       procedure FoodProduced(aCount : Integer);
       procedure UnitTrained(aUnitType: TKMUnitType; aCount : Integer);
+      procedure CheckTutorials;
     public
       constructor Create;
       destructor Destroy; override;
@@ -65,7 +67,7 @@ type
       property Sorted[aIndex : Integer] : TKMAchievement read GetSortedAchievement;
 
       procedure WareProduced(aWareType : TKMWareType; aCount : Integer);
-      procedure GameWon;
+      procedure GameWon(aHandIndex : Integer = 0);
 
       procedure SaveProgress;
       procedure LoadProgress;
@@ -84,6 +86,7 @@ implementation
 uses SysUtils, Math,
     KM_CommonHelpers,
     KM_Game, KM_GameParams, KM_HandsCollection, KM_Hand,
+    KM_GameSettings,
     KM_ResTexts;
 
 constructor TKMAchievement.Create(aID : String; aText: Word; aMaxProgress : Cardinal; aCopy: Boolean = true);
@@ -105,6 +108,23 @@ end;
 function TKMAchievement.CurrentProgress: Single;
 begin
   Result := Progress / MaxProgress;
+end;
+
+procedure TKMAchievement.SetProgress(aValue: Integer);
+var wasCompleted : Boolean;
+begin
+  If self = nil then
+    Exit;
+  If Completed then
+    Exit;
+  wasCompleted := Completed;
+  Progress := EnsureRange(aValue, 0, MaxProgress);
+  If Progress >= MaxProgress then
+  begin
+    Completed := true;
+    If Completed and not wasCompleted then
+      ToShow := true;
+  end;
 end;
 
 procedure TKMAchievement.IncProgress(aCount: Integer = 1);
@@ -144,8 +164,7 @@ end;
 
 function TKMAchievement.GetIsCompleted : Boolean;
 begin
-  //Result := Progress = MaxProgress;
-  Result := true;
+  Result := Progress = MaxProgress;
 end;
 
 procedure TKMAchievement.SetIsCompleted(aValue : Boolean);
@@ -247,15 +266,15 @@ begin
     AddToLast( AddToList('', NextText, 300) );
     AddToLast( AddToList('', NextText, 664) );
 
-  AddNew( AddToList('TutorialCity', NextText, 3, false) );
+  AddNew( AddToList('TutorialCity', NextText, 1, false) );
+    AddToLast( AddToList('', NextText, 2, false) );
     AddToLast( AddToList('', NextText, 3, false) );
-    AddToLast( AddToList('', NextText, 3, false) );
-    AddToLast( AddToList('', NextText, 3, false) );
+    AddToLast( AddToList('', NextText, TOWN_TUTORIAlS_COUNT, false) );
 
-  AddNew( AddToList('TutorialBattle', NextText, 3, false) );
-    AddToLast( AddToList('', NextText, 3, false) );
-    AddToLast( AddToList('', NextText, 3, false) );
-    AddToLast( AddToList('', NextText, 3, false) );
+  AddNew( AddToList('TutorialBattle', NextText, 1, false) );
+    AddToLast( AddToList('', NextText, 2, false) );
+    AddToLast( AddToList('', NextText, 2, false) );
+    AddToLast( AddToList('', NextText, BATTLE_TUTORIAlS_COUNT, false) );
 
   AddNew( AddToList('Pearls', NextText, 1, false) );
     AddToLast( AddToList('', NextText, 1, false) );
@@ -467,7 +486,7 @@ begin
     FreeAndNil(S);
   end;
 
-
+  CheckTutorials;
 end;
 
 procedure TKMAchievements.Visit;
@@ -506,13 +525,11 @@ end;
 procedure TKMAchievements.GoldProduced(aCount: Integer);
 begin
   Find('Gold').IncProgress(aCount);
-  MakeSave;
 end;
 
 procedure TKMAchievements.FoodProduced(aCount: Integer);
 begin
   Find('Food').IncProgress(aCount);
-  MakeSave;
 end;
 
 procedure TKMAchievements.WareProduced(aWareType : TKMWareType; aCount : Integer);
@@ -521,7 +538,11 @@ begin
     FoodProduced(aCount)
   else
   if aWareType = wtGold then
-    GoldProduced(aCount);
+    GoldProduced(aCount)
+  else
+  if aWareType = wtJewerly then
+    Find('Jewelry').IncProgress(aCount);
+  MakeSave;
 end;
 
 procedure TKMAchievements.UnitTrained(aUnitType: TKMUnitType; aCount: Integer);
@@ -542,7 +563,39 @@ begin
     Find('Palace2').IncProgress(aCount);
 end;
 
-procedure TKMAchievements.GameWon;
+procedure TKMAchievements.CheckTutorials;
+var I, C : Integer;
+begin
+  Find('TutorialCity').SetProgress(byte(gGameSettings.TownTutorials[0]));
+  Find('TutorialCity0').SetProgress(byte(gGameSettings.TownTutorials[2]) + byte(gGameSettings.TownTutorials[4]));
+  Find('TutorialCity1').SetProgress(byte(gGameSettings.TownTutorials[5]) + byte(gGameSettings.TownTutorials[6]) + byte(gGameSettings.TownTutorials[7]));
+  C := 0;
+  for I := 0 to TOWN_TUTORIAlS_COUNT - 1 do
+    If gGameSettings.TownTutorials[I] then
+      Inc(C);
+  Find('TutorialCity2').SetProgress(C);
+
+  Find('TutorialBattle').SetProgress(byte(gGameSettings.BattleTutorials[0]) );
+  Find('TutorialBattle0').SetProgress(byte(gGameSettings.BattleTutorials[4]) + byte(gGameSettings.BattleTutorials[5]) );
+  Find('TutorialBattle1').SetProgress(byte(gGameSettings.BattleTutorials[2]) + byte(gGameSettings.BattleTutorials[7]) );
+  C := 0;
+  for I := 0 to BATTLE_TUTORIAlS_COUNT - 1 do
+    If gGameSettings.BattleTutorials[I] then
+      Inc(C);
+  Find('TutorialBattle2').SetProgress(C);
+
+
+  {
+
+  AddNew( AddToList('TutorialCity', NextText, 1, false) );
+    AddToLast( AddToList('', NextText, 1, false) );
+    AddToLast( AddToList('', NextText, 1, false) );
+    AddToLast( AddToList('', NextText, TOWN_TUTORIAlS_COUNT, false) );
+
+  AddNew( AddToList('TutorialBattle', NextText, 1, false) );}
+end;
+
+procedure TKMAchievements.GameWon(aHandIndex : Integer = 0);
 var WT : TKMWareType;
   UT : TKMUnitType;
   H : TKMHand;
@@ -554,6 +607,14 @@ begin
     Exit;
   IF gGameParams.IsMultiPlayerOrSpec then
     Exit;
+
+
+  H := gMySpectator.Hand;
+  If H.IsComputer then
+    Exit;
+  If H.ID <> aHandIndex then
+    Exit;
+
   if gGameParams.IsNormalGame then
   begin
     Find('GamesWon').IncProgress;
@@ -561,14 +622,17 @@ begin
       Find('Realism').IncProgress;
   end;
 
-
-  H := gMySpectator.Hand;
   for WT := WARE_MIN to WARE_MAX do
     WareProduced(WT, H.Stats.GetWaresProduced(WT));
 
   for UT := HUMANS_MIN to HUMANS_MAX do
     UnitTrained(UT, H.Stats.GetUnitTrainedQty(UT));
+  CheckTutorials;
 
+  Find('Pearls').SetProgress(byte(H.HasPearl(ptValtaria)));
+  Find('Pearls0').SetProgress(byte(H.HasPearl(ptArium)));
+  Find('Pearls1').SetProgress(byte(H.HasPearl(ptAgros)));
+  Find('Pearls2').SetProgress(byte(H.HasPearl(ptRalender)));
 
 end;
 

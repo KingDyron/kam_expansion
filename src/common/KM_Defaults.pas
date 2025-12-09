@@ -1323,11 +1323,15 @@ const
     10,
     4, 5
   );
+
+  TOWN_TUTORIAlS_COUNT = 9;
+  BATTLE_TUTORIAlS_COUNT = 8;
 {
 type
   TKMGUIStyle = (gsStandard, gsBricks);
 const
   GUI_STYLE_TEXT : array[TKMGUIStyle] of Word = (2313, 2314);}
+
 
 implementation
 
