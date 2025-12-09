@@ -18,6 +18,9 @@ const
 type
   TKMSoundPlayer = class
   private
+    const
+      MAX_DISTANCE = 32; // After this distance sounds are completely mute
+    var
     fALDevice: PALCdevice;
 
     fListener: record
@@ -56,7 +59,7 @@ type
     function IsSoundPlaying(aIndex: Integer): Boolean;
 
     function PlayWave(const aFile: UnicodeString; const aLoc: TKMPointF; aSoundType: TKMSoundType; aAttenuated: Boolean = True;
-                      aVolume: Single = 1; aFadeMusic: Boolean = False; aLoop: Boolean = False): Integer;
+                      aVolume: Single = 1; aFadeMusic: Boolean = False; aLoop: Boolean = False; aMaxRadius : Word = MAX_DISTANCE): Integer;
     function PlaySound(aSoundID: TSoundFX; const aFile: UnicodeString; const Loc: TKMPointF; aSoundType: TKMSoundType;
                        aAttenuated: Boolean; aVolume: Single; aRadius: Single; aFadeMusic, aLooped: Boolean; aFromScript: Boolean = False): Integer;
     function CanAddLoopSound: Boolean;
@@ -103,7 +106,7 @@ type
 
 
     procedure Play(aSoundID: TSoundFXNew; aVolume: Single = 1; aFadeMusic: Boolean = False); overload;
-    procedure Play(aSoundID: TSoundFXNew; aLoc: TKMPoint; aAttenuated: Boolean = True; aVolume: Single = 1; aFadeMusic: Boolean = False); overload;
+    procedure Play(aSoundID: TSoundFXNew; aLoc: TKMPoint; aAttenuated: Boolean = True; aVolume: Single = 1; aFadeMusic: Boolean = False; aMaxRadius : Word = MAX_DISTANCE); overload;
 
     procedure PlayHouse(aSoundID: Integer; aLoc: TKMPoint; aVolume: Single = 1);
 
@@ -139,7 +142,6 @@ const
 
   MAX_BUFFERS = 16;  // 16/24/32 looks like the limit, depends on hardware
   MAX_SOURCES = 32;  // Depends on hardware as well
-  MAX_DISTANCE = 32; // After this distance sounds are completely mute
   MAX_PRIORITY_DISTANCE_FACTOR = (1/2); // Sounds past this distance will not play if there are few slots left (gives close sounds priority)
   MAX_DURATION_FROM_LAST_SND_MESSAGE_NOTICE = 100; // Maximum time in ms from last message notice. To avoid 'echo' effect for multiple messages at one time
 
@@ -443,11 +445,11 @@ begin
 end;
 
 
-procedure TKMSoundPlayer.Play(aSoundID: TSoundFXNew; aLoc: TKMPoint; aAttenuated: Boolean = True; aVolume: Single = 1; aFadeMusic: Boolean = False);
+procedure TKMSoundPlayer.Play(aSoundID: TSoundFXNew; aLoc: TKMPoint; aAttenuated: Boolean = True; aVolume: Single = 1; aFadeMusic: Boolean = False; aMaxRadius : Word = MAX_DISTANCE);
 begin
   if SKIP_SOUND or not fIsSoundInitialized then Exit;
   HalfVolume(aVolume);
-  PlayWave(gRes.Sounds.FileOfNewSFX(aSoundID), KMPointF(aLoc), gRes.Sounds.GetSoundType(aSoundID), aAttenuated, aVolume, aFadeMusic);
+  PlayWave(gRes.Sounds.FileOfNewSFX(aSoundID), KMPointF(aLoc), gRes.Sounds.GetSoundType(aSoundID), aAttenuated, aVolume, aFadeMusic, false, aMaxRadius);
 end;
 
 
@@ -481,12 +483,12 @@ end;
 
 {Wrapper WAV files}
 function TKMSoundPlayer.PlayWave(const aFile: UnicodeString; const aLoc: TKMPointF; aSoundType: TKMSoundType; aAttenuated: Boolean = True;
-                                 aVolume: Single = 1; aFadeMusic: Boolean = False; aLoop: Boolean = False): Integer;
+                                 aVolume: Single = 1; aFadeMusic: Boolean = False; aLoop: Boolean = False; aMaxRadius : Word = MAX_DISTANCE): Integer;
 begin
   Result := -1;
   if not fIsSoundInitialized then Exit;
   HalfVolume(aVolume);
-  Result := PlaySound(sfxNone, aFile, aLoc, aSoundType, aAttenuated, aVolume, MAX_DISTANCE, aFadeMusic, aLoop); //Redirect
+  Result := PlaySound(sfxNone, aFile, aLoc, aSoundType, aAttenuated, aVolume, aMaxRadius, aFadeMusic, aLoop); //Redirect
 end;
 
 

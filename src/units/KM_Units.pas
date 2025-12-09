@@ -256,6 +256,7 @@ type
 
     function GiveBoots(aFromScript : Boolean = false) : Boolean;
     procedure OwnerUpdate(aOwner: TKMHandID; aMoveToNewOwner: Boolean = False);
+    procedure DoHitFrom(aAttacker : TKMUnit);
     procedure HitPointsChangeFromScript(aAmount: Integer);
     procedure HitPointsDecrease(aAmount: Byte; aAttacker: TKMUnit); overload;
     procedure HitPointsDecrease(aAttack, aDamage : Integer; aAttacker : TKMUnit;aInstantKill : Boolean = false); overload;
@@ -2814,6 +2815,87 @@ begin
   if (fHitPoints = 0)
   and (not IsDeadOrDying) then
     Kill(HAND_NONE, True, False);
+end;
+
+procedure TKMUnit.DoHitFrom(aAttacker: TKMUnit);
+
+procedure MakeSound(IsHit: Boolean);
+var
+  //Battlecry is the most noticable random sound, we would like to repeat it exactly the same in each replay (?)
+  makeBattleCry: Boolean;
+begin
+  //Randomly make a battle cry. KaMRandom must always happen regardless of tile revelation
+  makeBattleCry := KaMRandom(20, 'TKMUnitActionFight.MakeSound') = 0;
+
+  //Do not play sounds if unit is invisible to gMySpectator
+  //We should not use KaMRandom below this line because sound playback depends on FOW and is individual for each player
+  if gMySpectator.FogOfWar.CheckTileRevelation(aAttacker.Position.X, aAttacker.Position.Y) < 255 then Exit;
+
+  if makeBattleCry then
+    gSoundPlayer.PlayWarrior(aAttacker.UnitType, spBattleCry, aAttacker.PositionF);
+
+  case aAttacker.UnitType of
+    utGolem,
+    utBallista,
+    utCatapult,
+    utCrossbowman: gSoundPlayer.Play(sfxCrossbowDraw, aAttacker.PositionF); // Aiming
+    utArcher,
+    utBowman:     gSoundPlayer.Play(sfxBowDraw,      aAttacker.PositionF); // Aiming
+    utRogue:  gSoundPlayer.Play(sfxSlingerShoot, aAttacker.PositionF);
+    else           begin
+                     if IsHit then
+                       gSoundPlayer.Play(MeleeSoundsHit[Random(Length(MeleeSoundsHit))], aAttacker.PositionF)
+                     else
+                       gSoundPlayer.Play(MeleeSoundsMiss[Random(Length(MeleeSoundsMiss))], aAttacker.PositionF);
+                   end;
+  end;
+end;
+var
+  isHit: Boolean;
+  damage: Word;
+begin
+  if aAttacker = nil then
+    Exit;
+  if aAttacker.IsDeadOrDying then
+    Exit;
+  if aAttacker.Owner = self.Owner then
+    Exit;
+
+  //gScriptEvents.ProcUnitHit(self, aAttacker);
+  self.SetHitTime;//set hittime no matter if it does damage or not. He is in fight.
+
+  if self is TKMUnitWarriorSpy then
+    TKMUnitWarriorSpy(self).SetAttackedTime;//Spy can only attack house
+
+  if aAttacker.InstantKill then
+  begin
+    isHit := true;
+    self.HitPointsDecrease(self.HitPointsMax, aAttacker);
+  end else
+  if (aAttacker.Attack > 300) or (aAttacker.UnitType = utTrainedWolf) then
+  begin
+    isHit := true;
+    self.HitPointsDecrease(TKMUnitWarrior(aAttacker).DamageUnits, aAttacker);
+  end else
+  begin
+    //Base damage is the unit attack strength + AttackHorse if the enemy is mounted
+    damage := aAttacker.Attack;
+    if (self.UnitType in [low(UNIT_TO_GROUP_TYPE) .. high(UNIT_TO_GROUP_TYPE)]) and (UNIT_TO_GROUP_TYPE[self.UnitType] = gtMounted) then
+      damage := damage + aAttacker.AttackHorse;
+    if self.UnitType <> utShieldBearer then
+      damage := damage * (GetDirModifier(aAttacker.Direction, self.Direction) + 1); // Direction modifier
+    //Defence modifier
+    //If (UNIT_TO_GROUP_TYPE[aAttacker.UnitType] <> gtWreckers) and (aUnit.UnitType <> utPikeMachine) then
+    If not TKMUnitWarrior(aAttacker).CanIgnoreDefence(self) then
+      damage := damage div Math.max(self.Defence, 1); //Not needed, but animals have 0 defence
+
+    isHit := (self.Defence <= 0) or (damage >= KaMRandom(101, 'TKMUnitActionFight.ExecuteProcessMelee')); //Damage is a % chance to hit
+    if isHit then
+      if TKMUnitWarrior(aAttacker).DamageUnits > 0 then
+        self.HitPointsDecrease(TKMUnitWarrior(aAttacker).DamageUnits, aAttacker);
+  end;
+  MakeSound(isHit); //Different sounds for hit and for miss
+
 end;
 
 

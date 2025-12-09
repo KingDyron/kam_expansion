@@ -2,7 +2,8 @@ unit KM_UnitActionFight;
 {$I KaM_Remake.inc}
 interface
 uses
-  Classes, KM_CommonClasses, KM_Defaults, KM_CommonUtils, KromUtils, Math, SysUtils, KM_Units, KM_Points;
+  Classes, KM_CommonClasses, KM_Defaults, KM_CommonUtils, KromUtils, Math, SysUtils, KM_Units, KM_Points,
+  KM_ResSound;
 
 
 //Fight until we die or the opponent dies
@@ -35,19 +36,7 @@ type
     procedure Save(SaveStream: TKMemoryStream); override;
   end;
 
-
-implementation
-uses
-  KM_Entity,
-  KM_HandsCollection, KM_HandTypes, KM_HandEntity,
-  KM_ResSound, KM_Sound, KM_UnitWarrior, KM_Resource, KM_Projectiles, KM_ResTypes, KM_HandLogistics,
-  KM_Terrain,
-  KM_ResUnits, KM_Hand, KM_ScriptingEvents;
-
-
 const
-  STRIKE_STEP = 5; //Melee units place hit on step 5
-
   MeleeSoundsHit: array [0..14] of TSoundFX = (
     sfxMelee34, sfxMelee35, sfxMelee36, sfxMelee41, sfxMelee42,
     sfxMelee44, sfxMelee45, sfxMelee46, sfxMelee47, sfxMelee48,
@@ -57,6 +46,19 @@ const
     sfxMelee37, sfxMelee38, sfxMelee39,
     sfxMelee40, sfxMelee43, sfxMelee51,
     sfxMelee52, sfxMelee53, sfxMelee54);
+
+implementation
+uses
+  KM_Entity,
+  KM_HandsCollection, KM_HandTypes, KM_HandEntity,
+  KM_Sound, KM_UnitWarrior, KM_Resource, KM_Projectiles, KM_ResTypes, KM_HandLogistics,
+  KM_Terrain,
+  KM_ResUnits, KM_Hand, KM_ScriptingEvents;
+
+
+const
+  STRIKE_STEP = 5; //Melee units place hit on step 5
+
 
 
 { TUnitActionFight }
@@ -341,11 +343,15 @@ function TKMUnitActionFight.ExecuteProcessMelee(Step: Byte): Boolean;
       TKMUnitWarriorSpy(aUnit).SetAttackedTime;//Spy can only attack house
 
     if fUnit.InstantKill then
-      aUnit.HitPointsDecrease(aUnit.HitPointsMax, fUnit)
-    else
+    begin
+      isHit := true;
+      aUnit.HitPointsDecrease(aUnit.HitPointsMax, fUnit);
+    end else
     if (fUnit.Attack > 300) then
-      aUnit.HitPointsDecrease(TKMUnitWarrior(fUnit).DamageUnits, fUnit)
-    else
+    begin
+      isHit := true;
+      aUnit.HitPointsDecrease(TKMUnitWarrior(fUnit).DamageUnits, fUnit);
+    end else
     begin
       //Base damage is the unit attack strength + AttackHorse if the enemy is mounted
       damage := fUnit.Attack;

@@ -71,7 +71,7 @@ type
     property ArmyDemand : TAIArmyDemandF read fArmyDemand;
 
     //function MostNeededWare : TKMWareType; overload;
-    //function MostNeededWare(aWares : array of TKMWareType) : TKMWareType; overload;
+    function MostNeededWare(aWares : array of TKMWareType) : TKMWareType;
 
     procedure UpdateState(aTick: Cardinal);
     procedure Save(SaveStream: TKMemoryStream);
@@ -952,7 +952,7 @@ begin
     If Houses[I].IsComplete
     and not Houses[I].IsDestroyed then
     case Houses[I].HouseType of
-
+      htMetallurgists: Houses[I].WareOrder[2] := MAX_WARES_ORDER;
       htTownhall: if Houses[I].GetAcceptWareIn(wtGold) < 120 then
                     Houses[I].SetAcceptWareIn(wtGold, IfThen(gHands[fOwner].Stats.Wares[wtGold].ActualCnt < 15, 120, 120 - 15) )
                   else
@@ -1371,11 +1371,11 @@ begin
     wtCoal,
     wtGoldOre,
     wtIronOre : Result := 200;
-    wtJewerly : Result := IfThen(HasHouses([htPalace]), 1, 0);
     wtBitinE : Result := 30;
     wtBitin : Result := 20;
     wtSteelE : Result := 100;
-    wtEgg : Result := 0;
+    wtEgg,
+    wtJewerly : Result := 0;
 
     else Result := 30;
   end;
@@ -1394,7 +1394,7 @@ begin
     wtFish : Result := 50;
     wtApple : Result := 20;
 
-    WARFARE_MIN..WARFARE_MAX : Result := 5;
+    WARFARE_MIN..WARFARE_MAX : Result := 20;
     wtWater : Result := 1;
 
     wtGold : Result := IfThen(HasHouses([htMetallurgists]), 20, 50);
@@ -1467,38 +1467,38 @@ begin
 
     wtWoodenShield: Result := ((fArmyDemand[gtMelee] > 0) or (fArmyDemand[gtMounted] > 0))
                               and gHands[fOwner].Locks.UnitsUnlocked([utAxeFighter, utScout])
-                        and HasHouses([htBarracks]);
+                        and HasHouses([htBarracks]) and not HasWare(aWare, WareToMaxCount(aWare));
     wtIronShield: Result := ((fArmyDemand[gtMelee] > 0) or (fArmyDemand[gtMounted] > 0))
                               and gHands[fOwner].Locks.UnitsUnlocked([utSwordFighter, utKnight])
-                        and HasHouses([htBarracks]);
+                        and HasHouses([htBarracks]) and not HasWare(aWare, WareToMaxCount(aWare));
     wtLeatherArmor: Result := ((fArmyDemand[gtMelee] > 0) or (fArmyDemand[gtMounted] > 0)or (fArmyDemand[gtRanged] > 0)or (fArmyDemand[gtAntiHorse] > 0))
                               and gHands[fOwner].Locks.UnitsUnlocked([utAxeFighter, utScout, utLanceCarrier, utBowMan])
-                        and HasHouses([htBarracks]);
+                        and HasHouses([htBarracks]) and not HasWare(aWare, WareToMaxCount(aWare));
     wtIronArmor: Result := ((fArmyDemand[gtMelee] > 0) or (fArmyDemand[gtMounted] > 0)or (fArmyDemand[gtRanged] > 0)or (fArmyDemand[gtAntiHorse] > 0))
                               and gHands[fOwner].Locks.UnitsUnlocked([utSwordFighter, utKnight, utPikeman, utCrossBowMan])
-                        and HasHouses([htBarracks]);
+                        and HasHouses([htBarracks]) and not HasWare(aWare, WareToMaxCount(aWare));
     wtAxe: Result := ((fArmyDemand[gtMelee] > 0) or (fArmyDemand[gtMounted] > 0))
                               and gHands[fOwner].Locks.UnitsUnlocked([utAxeFighter, utScout])
-                        and HasHouses([htBarracks]);
+                        and HasHouses([htBarracks]) and not HasWare(aWare, WareToMaxCount(aWare));
     wtSword: Result := ((fArmyDemand[gtMelee] > 0) or (fArmyDemand[gtMounted] > 0))
                               and gHands[fOwner].Locks.UnitsUnlocked([utSwordFighter, utKnight])
-                        and HasHouses([htBarracks]);
+                        and HasHouses([htBarracks]) and not HasWare(aWare, WareToMaxCount(aWare));
     wtLance: Result := ((fArmyDemand[gtAntiHorse] > 0) or (fArmyDemand[gtMounted] > 0))
                               and gHands[fOwner].Locks.UnitsUnlocked([utLanceCarrier])
-                        and HasHouses([htBarracks]);
+                        and HasHouses([htBarracks]) and not HasWare(aWare, WareToMaxCount(aWare));
     wtPike: Result := (fArmyDemand[gtAntiHorse] > 0)
                               and gHands[fOwner].Locks.UnitsUnlocked([utPikeman])
-                        and HasHouses([htBarracks]);
+                        and HasHouses([htBarracks]) and not HasWare(aWare, WareToMaxCount(aWare));
     wtBow: Result := (fArmyDemand[gtRanged] > 0)
                               and gHands[fOwner].Locks.UnitsUnlocked([utBowMan])
-                        and HasHouses([htBarracks]);
+                        and HasHouses([htBarracks]) and not HasWare(aWare, WareToMaxCount(aWare));
     wtCrossbow: Result := (fArmyDemand[gtRanged] > 0)
                               and gHands[fOwner].Locks.UnitsUnlocked([utCrossBowMan])
-                        and HasHouses([htBarracks]);
+                        and HasHouses([htBarracks]) and not HasWare(aWare, WareToMaxCount(aWare));
     wtHorse: Result := (fArmyDemand[gtMounted] > 0)
                         and gHands[fOwner].Locks.UnitsUnlocked([utScout, utKnight])
-                        and HasHouses([htBarracks]);
-    wtBitin: Result := HasHouses([htIronFoundry]);
+                        and HasHouses([htBarracks]) and not HasWare(aWare, WareToMaxCount(aWare));
+    wtBitin: Result := HasHouses([htIronFoundry]) and not HasWare(aWare, WareToMaxCount(aWare));
     wtVegetables: Result := HasHouses([htSwine, htStables, htHovel]);
     //wtBitinOre: Result := gHands[fOwner].Stats.GetHouseQty([htIronSmithy]) > 0;  //don't trade bitin ore
     wtStoneBolt: Result := HasUnits([utRogue, utCatapult]) or HasHouses([htWatchTower]);
@@ -1528,13 +1528,28 @@ begin
     wtTile: Result := fSetup.AutoBuild;
     wtSeed: Result := HasHouses([htHovel, htMill]);
     wtSawDust: Result := HasHouses([htWoodBurner]);
-    wtApple: Result := HasHouses([htCottage, htHouse, htPalace]);
-    wtBoots: Result := HasHouses([htSchool, htPalace]);
+    wtApple: Result := HasHouses([htCottage, htHouse, htPalace]) and not HasWare(aWare, 50);
+    wtBoots: Result := HasHouses([htSchool, htPalace]) and not HasWare(aWare, 20);
     else
       Result := false;
   end;
 end;
 
+function TKMayor.MostNeededWare(aWares : array of TKMWareType) : TKMWareType;
+var WT : TKMWareType;
+  I, K : Integer;
+begin
+  Result := wtNone;
+  for I := 0 to High(WARE_MARKET_IMPORTANCE) do
+  begin
+    WT := WARE_MARKET_IMPORTANCE[I];
+    for K := low(aWares) to high(aWares) do
+      If WT = aWares[K] then
+        If NeedsWare(WT) then
+          Exit(WT);
+  end;
+
+end;
 
 procedure TKMayor.CheckMarketTrades;
   function WarePortions(aWare : TKMWareType) : Word;
@@ -1552,6 +1567,15 @@ procedure TKMayor.CheckMarketTrades;
       wtCoal: Result := 5;
       else Result := 1;
     end;
+  end;
+  function WarePrice(aWare : TKMWareType) : Single;
+  begin
+    Result :=  gRes.Wares[aWare].MarketPrice;
+    If aWare = wtEgg then
+      Result := Result * 10
+    else
+    If aWare = wtJewerly then
+      Result := Result * 1000;
   end;
 var I, J : Integer;
   HM : TKMHouseMarket;
@@ -1631,7 +1655,7 @@ begin
           if (gRes.Wares.RatioFrom(WT, toW) <= 20) {and (gRes.Wares.RatioTo(WT, toW) < 200)} then
             if HM.CheckWareOut(WT) = 0 then
               if (Wares[WT] > WareFromMinCount(WT)) then //take only resources that has min count
-                if (W = wtNone) or ((W <> wtNone) and ((Wares[WT] * gRes.Wares[WT].MarketPrice) > (Wares[W] * gRes.Wares[W].MarketPrice) )) then
+                if (W = wtNone) or ((W <> wtNone) and ((Wares[WT] * WarePrice(WT)) > (Wares[W] * WarePrice(W)) )) then
                   W := WT;
 
       if W = wtNone then

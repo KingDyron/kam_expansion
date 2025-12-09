@@ -158,7 +158,7 @@ begin
     //Check for units nearby to fight
     Locked := False; //Unlock during this check only so CheckForEnemy can abandon our action
     if (fUnit is TKMUnitWarrior) then
-      if TKMUnitWarrior(fUnit).CheckForEnemy then
+      if TKMUnitWarrior(fUnit).CheckforEnemyWhileStorming then
       begin
         //If we've picked a fight it means this action no longer exists,
         //so we must exit out (don't set ActDone as that will now apply to fight action)

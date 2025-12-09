@@ -48,6 +48,8 @@ type
     procedure WarriorEquipped(aWarrior: TKMUnitWarrior);
     procedure WarriorDied(aWarrior: TKMUnitWarrior);
 
+    function RequestedGroups : TKMGroupTypeArray;
+
     procedure UpdateState(aTick: Cardinal);
     procedure Save(SaveStream: TKMemoryStream);
     procedure Load(LoadStream: TKMemoryStream);
@@ -191,6 +193,20 @@ begin
 
   for uid in fUnitsEquipOrdered.Keys do
     fUnitsEquipOrdered[uid] := TKMUnitWarrior(gHands.GetUnitByUID(Integer(uid)));
+end;
+
+function TKMGeneral.RequestedGroups : TKMGroupTypeArray;
+var I : Integer;
+begin
+  FillChar(Result, Sizeof(Result), #0);
+
+  //Create a list of troops that need to be trained based on defence position requirements
+  for I := 0 to fDefencePositions.Count - 1 do
+    with fDefencePositions[I] do
+    if CurrentGroup = nil then
+      Inc(Result[GroupType], fDefencePositions.TroopFormations[GroupType].NumUnits)
+    else
+      Inc(Result[GroupType], Max(fDefencePositions.TroopFormations[GroupType].NumUnits - CurrentGroup.Count, 0));
 end;
 
 procedure TKMGeneral.CheckArmyCount;
@@ -409,13 +425,14 @@ begin
   //if not CanEquipIron and not CanEquipLeather and not CanEquipTH  then Exit;
 
   //Create a list of troops that need to be trained based on defence position requirements
-  FillChar(GroupReq, SizeOf(GroupReq), #0); //Clear up
+  GroupReq := RequestedGroups;
+  {FillChar(GroupReq, SizeOf(GroupReq), #0); //Clear up
   for I := 0 to fDefencePositions.Count - 1 do
     with fDefencePositions[I] do
     if CurrentGroup = nil then
       Inc(GroupReq[GroupType], fDefencePositions.TroopFormations[GroupType].NumUnits)
     else
-      Inc(GroupReq[GroupType], Max(fDefencePositions.TroopFormations[GroupType].NumUnits - CurrentGroup.Count, 0));
+      Inc(GroupReq[GroupType], Max(fDefencePositions.TroopFormations[GroupType].NumUnits - CurrentGroup.Count, 0));}
 
   //If we don't need anyone - Exit
   I := 0;

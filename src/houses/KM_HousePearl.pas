@@ -12,12 +12,16 @@ type
 
   TKMHousePearl = class(TKMHouseWFlagPoint)
   private
+    const
+      ANIM_DURATION = 30;
+    var
     //basic
     fPearlType : TKMPearlType;
     fProgress, fMaxProgress : Word;
     fConfirmed : Boolean;
     fBuildCost, fDelivered : TKMWarePlan;
     fBuildStage : Byte;
+    fCompletedTick : Cardinal;
     fIsCompleted : Boolean;
     //special abilities
     fReloadTime, fMaxReloadTime : Word;
@@ -42,6 +46,10 @@ type
     procedure UseSpecial;
 
     procedure DoAI;
+    procedure PaintGlow;
+
+    function AgrosGetRandomUnit: TKMUnitType;
+    function AgrosDoExchangeToUnit(aUnitType : TKMUnitType): Boolean;
   protected
     procedure ActivatePearl;
     procedure SetFlagPoint(aFlagPoint: TKMPoint); override;
@@ -126,6 +134,7 @@ uses
   KM_HouseCollection,
   KM_Units, KM_UnitWarrior, KM_UnitsCollection,
   KM_Projectiles, KM_CommonGameTypes,
+  KM_Sound, KM_ResSound,
   KM_Resource, KM_ResUnits, KM_ResHouses, KM_ResTexts,
   KM_RenderPool,
   KM_Terrain;
@@ -149,6 +158,7 @@ begin
   fRResTo := wtNone;
   fVResTo := 0;
   fIsCompleted := false;
+  fCompletedTick := 0;
 end;
 
 constructor TKMHousePearl.Load(LoadStream: TKMemoryStream);
@@ -171,6 +181,7 @@ begin
   LoadStream.ReadData(fMaxReloadTime);
   LoadStream.ReadData(fWorkingTime);
   LoadStream.ReadData(fSnowStepPearl);
+  LoadStream.ReadData(fCompletedTick);
 end;
 
 procedure TKMHousePearl.Save(SaveStream: TKMemoryStream);
@@ -193,6 +204,8 @@ begin
   SaveStream.Write(fMaxReloadTime);
   SaveStream.Write(fWorkingTime);
   SaveStream.Write(fSnowStepPearl);
+  SaveStream.Write(fCompletedTick
+  );
 end;
 
 destructor TKMHousePearl.Destroy;
@@ -226,9 +239,33 @@ begin
           fDoRally := false;
       end;
 
-      If gHands[Owner].IsComputer then
-        DoAI;
+      If aTick mod 300 = 0 then
+        If gHands[Owner].IsComputer then
+          DoAI;
+      //glow animation tick reset
+      If gGame.Params.Tick - fCompletedTick >= ANIM_DURATION then
+        fCompletedTick := 0;
     end;
+end;
+
+procedure TKMHousePearl.PaintGlow;
+const
+  MAX_RAD = 20;
+
+var rad, step : Single;
+  alpha : Cardinal;
+begin
+  step := (gGame.Params.Tick - fCompletedTick + gGame.Params.TickFrac) / ANIM_DURATION;
+  step := 1 - (sqr(1 - step));
+
+
+
+  rad := (step * MAX_RAD);
+  alpha := 255 - round(255 * step);
+  gRenderPool.RenderCircle(PearlCenter.ToFloat + KMPointF(-0.5, -0.5), rad,
+                            icYellow and $00FFFFFF or ((alpha div 2) SHL 24),
+                            icYellow and $00FFFFFF or (alpha SHL 24), Round(2 + 8 * step) );
+
 end;
 
 procedure TKMHousePearl.Paint;
@@ -246,7 +283,11 @@ begin
   IF fPearlType <> ptNone then
   begin
     If Completed then
-      gRenderPool.AddHousePearl(fPearlType, fPosition, fBuildStage, 1, 1, fSnowStepPearl, GetPearlSnowPic, gHands[Owner].FlagColor, false)
+    begin
+      If fCompletedTick > 0 then
+        PaintGlow;
+      gRenderPool.AddHousePearl(fPearlType, fPosition, fBuildStage, 1, 1, fSnowStepPearl, GetPearlSnowPic, gHands[Owner].FlagColor, false);
+    end
     else
     If Confirmed then
     begin
@@ -255,6 +296,8 @@ begin
     end;
         //gRenderPool.AddSpriteWH(fPosition, KMPOINT_ZERO, 2715, rxHouses, gHands[Owner].FlagColor);
     gRenderPool.AddHouseWork(HouseType, fPosition, CurrentAction.SubAction * [haFire1..haFire8], WorkAnimStep, WorkAnimStepPrev, GetFlagColor);
+
+
   end;
 
 end;
@@ -416,6 +459,7 @@ begin
   ProduceFestivalPoints(fptEconomy, 200);
   ProduceFestivalPoints(fptWarfare, 100);
 
+
   //bonus on activate
   case fPearlType of
     ptValtaria : gHands[Owner].FogOfWar.RevealCircle(Entrance, 50, FOG_OF_WAR_MAX, frtHouse) ;
@@ -452,7 +496,11 @@ begin
   begin
     Inc(fBuildStage);
     If fBuildStage = gRes.Houses.Pearls[fPearlType].StageCount then
-      ActivatePearl
+    begin
+      ActivatePearl;
+      fCompletedTick := gGame.Params.Tick;
+      gSoundPlayer.Play(sfxnPearlChoir, PearlCenter, true, 1, false, high(Word));
+    end
     else
     begin
       fProgress := 0;
@@ -657,7 +705,29 @@ begin
       houses[I].BuildingRepair := true;
 end;
 
-procedure TKMHousePearl.AgrosDoExchange;
+function TKMHousePearl.AgrosGetRandomUnit: TKMUnitType;
+var C : Integer;
+begin
+  C := KamRandom(318 + 200 + 1, 'TKMHousePearl.AgrosDoExchange') + 1;
+  case C of
+    //1..100    : UT := utFighter;
+    101..125  : Result := utPyro;
+    126..150  : Result := utTorchMan;
+    151..175  : Result := utLekter;
+    176..200  : Result := utMedic;
+    201..220  : Result := utArcher;
+    221..225  : Result := utPaladin;
+    226..235  : Result := utSpy;
+    236..265  : Result := utTrainedWolf;
+    266..285  : Result := utAmmoCart;
+    286..295  : Result := utPikeMachine;
+    296..315  : Result := utSpikedTrap;
+    316..318  : Result := utPaladin;
+    else Result := utFighter;
+  end;
+end;
+
+function TKMHousePearl.AgrosDoExchangeToUnit(aUnitType : TKMUnitType): Boolean;
   function IsBarracksUnit(aType : TKMUnitType) : Boolean;
   var UT : TKMUnitType;
   begin
@@ -670,40 +740,23 @@ procedure TKMHousePearl.AgrosDoExchange;
 var I, C : Integer;
   U : TKMUnitRecruit;
   W : TKMUnitWarrior;
-  UT : TKMUnitType;
 
 begin
+  Result := false;
   If WorkersCount(utRecruit) > 0 then
   for I := 0 to High(fWorkers) do
     If (TKMUnit(fWorkers[I]).UnitType = utRecruit) and (TKMUnit(fWorkers[I]).InHouse = self) then
     begin
-      C := KamRandom(318 + 200 + 1, 'TKMHousePearl.AgrosDoExchange') + 1;
-      case C of
-        //1..100    : UT := utFighter;
-        101..125  : UT := utPyro;
-        126..150  : UT := utTorchMan;
-        151..175  : UT := utLekter;
-        176..200  : UT := utMedic;
-        201..220  : UT := utArcher;
-        221..225  : UT := utPaladin;
-        226..235  : UT := utSpy;
-        236..265  : UT := utTrainedWolf;
-        266..285  : UT := utAmmoCart;
-        286..295  : UT := utPikeMachine;
-        296..315  : UT := utSpikedTrap;
-        316..318  : UT := utPaladin;
-        else UT := utFighter;
-      end;
-      If UT = utNone then
+      If aUnitType = utNone then
         Exit;
 
       U := TKMUnitRecruit(fWorkers[I]);
       self.SetState(hstEmpty);
       U.KillInHouse;
-      If not IsBarracksUnit(UT) then
+      If not IsBarracksUnit(aUnitType) then
         gHands[Owner].Stats.RecruitKilledInPearl;
 
-      W := TKMUnitWarrior(gHands[Owner].TrainUnit(UT, Self));
+      W := TKMUnitWarrior(gHands[Owner].TrainUnit(aUnitType, Self));
       W.Visible := False; //Make him invisible as he is inside the barracks
       W.Condition := UNIT_MAX_CONDITION;
 
@@ -713,8 +766,22 @@ begin
 
       gHands[Owner].SetVirtualWareCnt('vtCertificate', 4);
       ProduceFestivalPoints(fptWarfare, 10);
-      Exit;
+      Result := true;
     end;
+end;
+
+procedure TKMHousePearl.AgrosDoExchange;
+var UT : TKMUnitType;
+
+begin
+  If WorkersCount(utRecruit) > 0 then
+  begin
+    UT := AgrosGetRandomUnit;
+    If UT = utNone then
+      Exit;
+    if AgrosDoExchangeToUnit(UT) then
+      Exit;
+  end;
 end;
 
 
@@ -816,14 +883,54 @@ begin
 end;
 
 procedure TKMHousePearl.DoAI;
+var I : Integer;
+  UT : TKMUnitType;
+  GroupReq: TKMGroupTypeArray;
 begin
   case fPearlType of
-    //ptValtaria: fMaxReloadTime := 1800;
-    //ptArium: fMaxReloadTime := 1200;
-    //ptAgros: fMaxReloadTime := 6000;
+    ptValtaria: begin
+
+                  fResFrom := wtNone;
+                  for I := 1 to WARES_IN_OUT_COUNT do
+                    If CheckWareIn(WareInput[I]) > 0 then
+                      fResFrom := WareInput[I];
+                  If fResFrom = wtNone then
+                    Exit;
+                  fResTo := gHands[Owner].AI.Mayor.MostNeededWare(WareOutput);
+                  If fResTo = wtNone then
+                    Exit;
+                  if (CheckWareOut(fResTo) = 0) or (CheckWareOut(fResTo) + ValtariaRatioTo <= 50) then
+
+                  ValtariaDoExchange(1);
+                end;
+    ptArium:  begin
+                fVResTo := 0;
+                for I := 1 to 4 do
+                  If gHands[Owner].VWaresCount[I] < 8 - I then
+                    fVResTo := I;
+
+                AriumDoExchange(1);
+              end;
+
+    ptAgros:  begin
+                UT := AgrosGetRandomUnit;
+                If UT in [utNone, utFighter, utSpy, utLekter] then
+                  Exit;
+                If not gHands[Owner].Locks.UnitsUnlocked(UT) then
+                  Exit;
+                GroupReq := gHands[Owner].AI.General.RequestedGroups;
+                If UNIT_TO_GROUP_TYPE[UT] in [gtNone] then
+                  Exit;
+                If GroupReq[UNIT_TO_GROUP_TYPE[UT]] = 0 then
+                  Exit;
+                AgrosDoExchangeToUnit(UT);
+              end;
+
     ptRalender: begin
-                  RResTo := wtIronArmor;
-                  if CheckWareOut(RResTo) + RalenderRatioTo <= 50 then
+                  RResTo := gHands[Owner].AI.Mayor.MostNeededWare(WareOutput);
+                  If RResTo = wtNone then
+                    Exit;
+                  if (CheckWareOut(RResTo) = 0) or (CheckWareOut(RResTo) + RalenderRatioTo <= 50) then
 
                   RalenderDoExchange(1);
                 end;

@@ -169,7 +169,8 @@ type
     function NeedsToReload(aFightAnimLength: Byte): Boolean;
     procedure SetLastShootTime;
     function FindLinkUnit(const aLoc: TKMPoint): TKMUnitWarrior;
-    function CheckForEnemy: Boolean; virtual;
+    function CheckforEnemyWhileStorming : Boolean;
+    function CheckForEnemy(IsStorming : Boolean = false): Boolean; virtual;
     procedure ProceedClosedTower;
     procedure LeaveHome;
     procedure CheckForTowerEnemy; virtual;
@@ -385,7 +386,7 @@ type
   protected
     procedure PaintUnit(aTickLag: Single); override;
   public
-    function CheckForEnemy: Boolean; override;
+    function CheckForEnemy(IsStorming : Boolean = false): Boolean; override;
     procedure OrderAmmo(aForceOrder : Boolean = false); override;
 
     constructor Load(LoadStream: TKMemoryStream); override;
@@ -1402,8 +1403,31 @@ begin
 end;
 
 
+function TKMUnitWarrior.CheckforEnemyWhileStorming: Boolean;
+var
+  newEnemy: TKMUnit;
+begin
+  Result := False; //Didn't find anyone to fight
 
-function TKMUnitWarrior.CheckForEnemy: Boolean;
+  newEnemy := gTerrain.GetUnit(KMPointDir(Position, Direction).DirFaceLoc);
+  If (newEnemy = nil) or (newEnemy.IsDeadOrDying) or (newEnemy.Owner = self.Owner) then
+    Exit;
+  if newEnemy <> nil then
+  begin
+    OnPickedFight(Self, newEnemy);
+    //If the target is close enough attack it now, otherwise OnPickedFight will handle it through Group.OffendersList
+    //Remember that AI's AutoAttackRange feature means a melee warrior can pick a fight with someone out of range
+
+    if WithinFightRange(newEnemy.Position) then
+      FightEnemy(newEnemy);
+
+    newEnemy.DoHitFrom(self);
+
+    Result := True; //Found someone
+  end;
+end;
+
+function TKMUnitWarrior.CheckForEnemy(IsStorming : Boolean = false): Boolean;
 var
   newEnemy: TKMUnit;
 begin
@@ -1460,6 +1484,8 @@ begin
 
     if WithinFightRange(newEnemy.Position) then
       FightEnemy(newEnemy);
+    If IsStorming then
+      newEnemy.DoHitFrom(self);
 
     Result := True; //Found someone
   end;
@@ -3717,7 +3743,7 @@ begin
 end;
 
 
-function TKMUnitWarriorBShip.CheckForEnemy : Boolean;
+function TKMUnitWarriorBShip.CheckForEnemy(IsStorming : Boolean = false) : Boolean;
 begin
   If gHands[Owner].IsComputer then
     Result := Inherited

@@ -174,7 +174,7 @@ begin
   fMenuMultiplayer.OnNetworkInit      := aOnNetworkInit;
 
   //Show version info on every page
-  Label_Version := TKMLabel.Create(Panel_Main, 8, 8, 0, 0, '', fntAntiqua, taLeft);
+  Label_Version := TKMLabel.Create(Panel_Main, 8, 8, 0, 0, '', fntOutline, taLeft);
 
   if OVERLAY_RESOLUTIONS then
   begin

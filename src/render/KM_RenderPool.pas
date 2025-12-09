@@ -227,6 +227,7 @@ type
     procedure RenderSpriteOnTerrain(const aLoc: TKMPointF; aId: Integer; aFlagColor: TColor4 = $FFFFFFFF; aForced: Boolean = False; aRX : TRXType = rxGui);
     procedure RenderTile(aTerrainId: Word; pX,pY,Rot: Integer);
     procedure RenderWireTile(const P: TKMPoint; aCol: TColor4; aInset: Single = 0.0; aLineWidth: Single = -1);
+    procedure RenderCircle(P: TKMPointF; aRad : Single; aFill, aLine : TColor4; aLineWidth : Integer = -1);
 
     property RenderDebug: TKMRenderDebug read fRenderDebug;
     property ViewPort : TKMViewport read fViewport;
@@ -3280,6 +3281,43 @@ begin
 
   if aLineWidth > 0 then
     SetDefaultRenderParams;
+end;
+
+procedure TKMRenderPool.RenderCircle(P: TKMPointF; aRad : Single; aFill, aLine : TColor4; aLineWidth : Integer = -1);
+var
+  I, lineWidth, secCount: Integer;
+begin
+  TKMRender.BindTexture(0); // We have to reset texture to default (0), because it could be bind to any other texture (atlas)
+  secCount := 20 + Round(aRad /2);
+
+  If aLineWidth > 0 then
+  begin
+    glGetIntegerv(GL_LINE_WIDTH_RANGE, @lineWidth);
+    glLineWidth(aLineWidth);
+  end;
+  P.Y := P.Y + gTerrain.RenderHeightAt(P.X, P.Y);
+  glPushMatrix;
+    glTranslatef(P.X, P.Y, 0);
+    glColor4ubv(@aFill);
+    glBegin(GL_POLYGON);
+      for I := -secCount to secCount do
+        glVertex2f(Cos(I/secCount*pi)*aRad, Sin(I/secCount*pi)*aRad);//-1..1
+    glEnd;
+
+    glColor4ubv(@aLine);
+    glBegin(GL_LINE_STRIP);
+      for I := -secCount to secCount do
+        glVertex2f(Cos(I/secCount*pi)*aRad, Sin(I/secCount*pi)*aRad);//-1..1
+    glEnd;
+    //aLine := aLine and $AAFFFFFF;
+    glColor4ubv(@aLine);
+    glBegin(GL_LINE_STRIP);
+      for I := -secCount to secCount do
+        glVertex2f(Cos(I/secCount*pi)*aRad * 0.97, Sin(I/secCount*pi)*aRad * 0.97);//-1..1
+    glEnd;
+  glPopMatrix;
+
+  glLineWidth(lineWidth);
 end;
 
 

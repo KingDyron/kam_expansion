@@ -1029,7 +1029,7 @@ begin
   HealthBar_House.Caption := IntToStr(Round(fHouse.GetHealth)) + '/' + IntToStr(fHouse.MaxHealth);
   HealthBar_House.Position := fHouse.GetHealth / fHouse.MaxHealth;
 
-  if not (fHouse.HouseType in [htSign]) then
+  if not (fHouse.HouseType in [htSign, htPearl]) then
     ShowCommonResources
   else
     HideAllCommonResources;
