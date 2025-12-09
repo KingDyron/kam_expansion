@@ -1420,6 +1420,8 @@ begin
 
     if WithinFightRange(newEnemy.Position) then
       FightEnemy(newEnemy);
+    if Action is TKMUnitActionFight then
+      AnimStep := gRes.Units[UnitType].StrikeSteps[0];
 
     newEnemy.DoHitFrom(self);
 
