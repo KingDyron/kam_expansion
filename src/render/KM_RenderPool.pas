@@ -494,6 +494,10 @@ procedure TKMRenderPool.RenderBackgroundUI(const aRect: TKMRect);
     gRenderAux.CircleOnTerrain(U.PositionF.X - 0.5 + U.GetSlide(axX),
                                U.PositionF.Y - 0.5 + U.GetSlide(axY),
                                0.4, aCol, icCyan);
+
+    gRenderAux.CircleOnTerrain(U.PositionF.X - 0.5 + U.GetSlide(axX),
+                               U.PositionF.Y - 0.5 + U.GetSlide(axY),
+                               0.8, aCol and $55FFFFFF, icCyan and $55FFFFFF);
   end;
 
   procedure HighlightEntity(aEntityH: TKMHighlightEntity);

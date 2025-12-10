@@ -2238,7 +2238,7 @@ begin
   Result := False;
   for I := 0 to fMembers.Count - 1 do
     if not fMembers[I].IsDeadOrDying
-      and (fMembers[I].UnitType = aUnitType) then
+      and (aUnitType in [fMembers[I].UnitType, utAny]) then
       Exit(True);
 end;
 

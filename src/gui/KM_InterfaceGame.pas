@@ -234,6 +234,8 @@ const
 
   // Stats get stacked by UI logic (so that on taller screens they all were
   // in nice pairs, and would stack up only on short screens)
+  // the serf, laborer, mounted serf and laborers captain are not here,
+  // they are added manually in GUIGameStats
   StatUnitOrder : array[0..13] of TKMUnitType =
   (
     utRecruit,

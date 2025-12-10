@@ -11,6 +11,7 @@ uses
 type
   TKMHouseStatIcon = class(TKMControl)
     public
+      HighlightOnMouseOver : Boolean;
       TexID : Word;
       ColorQT, ColorWip : Cardinal;
       SQt, SWip : String;
@@ -19,6 +20,7 @@ type
   end;
   TKMUnitStatIcon = class(TKMControl)
     public
+      HighlightOnMouseOver : Boolean;
       TexID : Word;
       FlagColor : Cardinal;
       ColorQT, ColorWip : Cardinal;
@@ -31,10 +33,12 @@ type
   private
     fOnShowStats: TNotifyEvent;
     fHouseSketch: TKMHouseSketchEdit;
+    fLastGroupUID: Cardinal;
+    fLastUnitUIDs: array [CITIZEN_MIN..CITIZEN_MAX] of Cardinal;
     fLastHouseUIDs: array [HOUSE_MIN..HOUSE_MAX] of Cardinal;
     fSetViewportEvent: TPointFEvent;
     procedure House_Stat_Clicked(Sender: TObject);
-    procedure ResetUIDs;
+    procedure Unit_Stat_Clicked(Sender: TObject);
   protected
     Panel_Stats: TKMScrollPanel;
       Panel_StatBlock: array [0..STATS_LINES_CNT-1] of TKMPanel;
@@ -51,6 +55,7 @@ type
     procedure Resize;
     procedure UpdateState;
     function Visible: Boolean;
+    procedure ResetUIDs;
   end;
 
 
@@ -59,6 +64,7 @@ uses
   KM_Entity,
   KM_RenderUI, KM_HandsCollection, KM_ResTexts, KM_Resource, KM_ResFonts, KM_ResUnits,
   KM_Hand, KM_Pics, KM_Points,
+  KM_Units, KM_UnitGroup,
   KM_ResTypes;
 
 
@@ -82,9 +88,13 @@ begin
 end;
 
 procedure TKMHouseStatIcon.Paint;
+var light : Single;
 begin
   Inherited;
-  TKMRenderUI.WritePicture(AbsLeft, AbsTop, Width, Height, [], rxGui, TexID, Enabled);
+  light := 0;
+  If HighlightOnMouseOver and (csOver in State) then
+    light := 0.25;
+  TKMRenderUI.WritePicture(AbsLeft, AbsTop, Width, Height, [], rxGui, TexID, Enabled, $FFFFFFFF, light);
   TKMRenderUI.WriteText(AbsLeft - 2, AbsTop, Width, SWip, fntGrey, taRight, ColorWip);
   TKMRenderUI.WriteText(AbsLeft, AbsTop + 16, Width, SQt, fntGrey, taRight, ColorQT);
 end;
@@ -107,9 +117,13 @@ begin
 end;
 
 procedure TKMUnitStatIcon.Paint;
+var light : Single;
 begin
   Inherited;
-  TKMRenderUI.WritePicture(AbsLeft, AbsTop, Width, Height, [], rxGui, TexID, Enabled, FlagColor);
+  light := 0;
+  If HighlightOnMouseOver and (csOver in State) then
+    light := 0.25;
+  TKMRenderUI.WritePicture(AbsLeft, AbsTop, Width, Height, [], rxGui, TexID, Enabled, FlagColor, light);
   TKMRenderUI.WriteText(AbsLeft - 2, AbsTop, Width, SWip, fntGrey, taRight, ColorWip);
   TKMRenderUI.WriteText(AbsLeft, AbsTop + 16, Width, SQt, fntGrey, taRight, ColorQT);
 end;
@@ -137,13 +151,17 @@ begin
   Panel_Stats.AnchorsStretch;
   //Panel_Stats.Anchors := [anLeft, anTop, anBottom];
 
-  TKMBevel.Create(Panel_Stats, 5, (HOUSE_W+2), TB_WIDTH - 5, HOUSE_W * 3 );
+  TKMBevel.Create(Panel_Stats, 5, (HOUSE_W+2), TB_WIDTH - 5, HOUSE_W * 3 + 3 );
 
   Stat_Units[utSerf] := TKMUnitStatIcon.Create(Panel_Stats, 5, HOUSE_W, gRes.Units[utSerf].GUIIcon, byte(utSerf));
   Stat_Units[utBuilder] := TKMUnitStatIcon.Create(Panel_Stats, 5 + UNIT_W, HOUSE_W, gRes.Units[utBuilder].GUIIcon, byte(utBuilder));
+  Stat_Units[utHouseBuilder] := TKMUnitStatIcon.Create(Panel_Stats, 5, HOUSE_W * 2, gRes.Units[utHouseBuilder].GUIIcon, byte(utHouseBuilder));
+  Stat_Units[utMountedSerf] := TKMUnitStatIcon.Create(Panel_Stats, 5 + UNIT_W, HOUSE_W*2, gRes.Units[utMountedSerf].GUIIcon, byte(utMountedSerf));
+  Stat_Units[utFeeder] := TKMUnitStatIcon.Create(Panel_Stats, 5, HOUSE_W*3, gRes.Units[utFeeder].GUIIcon, byte(utFeeder));
 
-  Stat_Army := TKMUnitStatIcon.Create(Panel_Stats, 5 + (UNIT_W div 2), HOUSE_W*2 + 2, 665, 0);
+  Stat_Army := TKMUnitStatIcon.Create(Panel_Stats, 5 + UNIT_W, HOUSE_W*3 + 2, 665, 0);
   Stat_Army.Hint := gResTexts[266];
+  Stat_Army.Tag := -1;
 
   SetLength(Stat_Houses[utSerf], length(StatNonWorkerHouse));
   for I := 0 to High(StatNonWorkerHouse) do
@@ -172,6 +190,8 @@ begin
       Stat_Houses[UT][K] := TKMHouseStatIcon.Create(Panel_Stats, 10 + HOUSE_W * (K mod 4 + 1), offX*(HOUSE_W+2) + (K div 4) * HOUSE_W, gRes.Houses[ aHouses[K] ].GUIIcon, byte(aHouses[K])  );
 
   end;
+  for UT := CITIZEN_MIN to CITIZEN_MAX do
+    Stat_Units[UT].Tag := byte(UT);
 
     Button_ShowStats  := TKMButtonFlat.Create(Panel_Stats, TB_WIDTH - 30, 0, 30, 30, 669, rxGui);
     Button_ShowStats.OnClick := fOnShowStats;
@@ -237,7 +257,7 @@ end;
 
 procedure TKMGUIGameStats.UpdateState;
 var
-  I, K: Integer;
+  K: Integer;
   HT: TKMHouseType;
   UT: TKMUnitType;
   uqty, qty, uwipQty, wipQty, hTotalConstrOpenedQty: Integer;
@@ -245,7 +265,19 @@ var
 begin
 
   //Serfs and builder are together so they need to be counted seperately
-  Stat_Units[utSerf].FlagColor := gMySpectator.Hand.FlagColor;
+  qty := gMySpectator.Hand.Stats.GetArmyCount;
+  Stat_Army.SQT := qty.ToString;
+  Stat_Army.FlagColor := gMySpectator.Hand.FlagColor;
+  IF qty > 0 then
+  begin
+    Stat_Army.OnClick := Unit_Stat_Clicked;
+    Stat_Army.HighlightOnMouseOver := true;
+  end else
+  begin
+    Stat_Army.OnClick := nil;
+    Stat_Army.HighlightOnMouseOver := false;
+  end;
+  {Stat_Units[utSerf].FlagColor := gMySpectator.Hand.FlagColor;
   Stat_Units[utBuilder].FlagColor := gMySpectator.Hand.FlagColor;
   uqty := gMySpectator.Hand.Stats.GetUnitQty(utSerf);
   uwipQty := gMySpectator.Hand.Stats.GetUnitTraining(utSerf) - gMySpectator.Hand.Stats.GetUnitDismissing(utSerf);
@@ -258,8 +290,8 @@ begin
   Stat_Units[utBuilder].SQt := IfThen(uqty > 0, IntToStr(uqty), '-');
   Stat_Units[utBuilder].SWip := IfThen(uwipQty > 0, '+' + IntToStr(uwipQty), '');
 
-  Stat_Army.SQT := IntToStr(gMySpectator.Hand.Stats.GetArmyCount);
-  Stat_Army.FlagColor := gMySpectator.Hand.FlagColor;
+
+
 
   for K := 0 to High(Stat_Houses[utSerf]) do
   begin
@@ -279,7 +311,86 @@ begin
       Stat_Houses[utSerf][K].OnClick := nil;
       //Stat_Houses[utSerf][K].SPic.HighlightOnMouseOver := false;
     end;
-  end;
+  end;}
+
+
+  for UT := CITIZEN_MIN to CITIZEN_MAX do
+    If Stat_Units[UT] <> nil then
+    begin
+      uqty := gMySpectator.Hand.Stats.GetUnitQty(UT);
+      uwipQty := gMySpectator.Hand.Stats.GetUnitTraining(UT) - gMySpectator.Hand.Stats.GetUnitDismissing(UT);
+      Stat_Units[UT].SQt := IfThen(uqty > 0, IntToStr(uqty), '-');
+      Stat_Units[UT].SWip := IfThen(uwipQty > 0, '+' + IntToStr(uwipQty), '');
+      Stat_Units[UT].FlagColor := gMySpectator.Hand.FlagColor;
+
+      Stat_Units[UT].OnClick := nil;
+      Stat_Units[UT].HighlightOnMouseOver := false;
+      If uqty > 0 then
+      begin
+        Stat_Units[UT].OnClick := Unit_Stat_Clicked;
+        Stat_Units[UT].HighlightOnMouseOver := true;
+      end;
+
+      hTotalConstrOpenedQty := 0;
+
+      for K := 0 to High(Stat_Houses[UT]) do
+      begin
+        HT := TKMHouseType(Stat_Houses[UT][K].Tag);
+        qty := gMySpectator.Hand.Stats.GetHouseQty(HT);
+
+        if HT <> htBarracks then
+          hTotalConstrOpenedQty := hTotalConstrOpenedQty + gMySpectator.Hand.Stats.GetHouseOpenedQty(HT);
+
+        if HT = htWallTower then
+          hTotalConstrOpenedQty := hTotalConstrOpenedQty + gMySpectator.Hand.Stats.GetHouseOpenedQty(HT);
+
+        Stat_Houses[UT][K].TexID := gRes.Houses[HT].GUIIcon;
+        wipQty := gMySpectator.Hand.Stats.GetHouseWip(HT);
+        Stat_Houses[UT][K].SQt := IfThen(qty > 0, IntToStr(qty), '-');
+        Stat_Houses[UT][K].SWip := IfThen(wipQty > 0, '+' +IntToStr(wipQty), '');
+
+        if qty > 0 then
+        begin
+          Stat_Houses[UT][K].OnClick := House_Stat_Clicked;
+          Stat_Houses[UT][K].HighlightOnMouseOver := true;
+        end
+        else
+        begin
+          Stat_Houses[UT][K].OnClick := nil;
+          Stat_Houses[UT][K].HighlightOnMouseOver := false;
+        end;
+      end;
+      IF UT in [utSerf, utFeeder, utMountedSerf, utBuilder, utHouseBuilder] then
+        doHighlight := false
+      else
+        doHighlight := hTotalConstrOpenedQty > uqty + uwipQty;
+
+      if doHighlight then
+        Stat_Units[UT].ColorWip := clStatsUnitMissingHL
+      else
+        Stat_Units[UT].ColorWip := clStatsUnitDefault;
+
+      if doHighlight then
+        Stat_Units[UT].ColorQT := clStatsUnitMissingHL
+      else
+        Stat_Units[UT].ColorQT := clStatsUnitDefault;
+
+      Stat_Units[UT].SQt := IfThen(not doHighlight and (uQty  = 0), '-', IntToStr(uQty));
+
+      IF not (UT in [utSerf, utFeeder, utMountedSerf, utBuilder, utHouseBuilder]) then
+        if  uqty + uwipQty > hTotalConstrOpenedQty then
+          Stat_Units[UT].SQt := IntToStr(uQty) + '^';
+
+      if uwipQty > 0 then
+        Stat_Units[UT].SWip := '+' + IntToStr(uwipQty)
+      else
+      if uwipQty < 0 then
+        Stat_Units[UT].SWip := IntToStr(uwipQty)
+      else
+        Stat_Units[UT].SWip := '';
+    end;
+
+  {
   //now update for the rest of the units
   for I := 0 to high(StatUnitOrder) do
   begin
@@ -344,16 +455,20 @@ begin
       Stat_Units[UT].SWip := '';
       
   end;
-
+  }
 end;
 
 
 procedure TKMGUIGameStats.ResetUIDs;
 var
   HT: TKMHouseType;
+  UT : TKMUnitType;
 begin
   for HT := Low(fLastHouseUIDs) to High(fLastHouseUIDs) do
     fLastHouseUIDs[HT] := 0;
+  for UT := Low(fLastUnitUIDs) to High(fLastUnitUIDs) do
+    fLastUnitUIDs[UT] := 0;
+  fLastGroupUID := 0;
 end;
 
 
@@ -372,6 +487,38 @@ begin
     gMySpectator.Highlight := fHouseSketch;
     fSetViewportEvent(KMPointF(fHouseSketch.Entrance)); //center viewport on that house
     fLastHouseUIDs[HT] := fHouseSketch.UID;
+  end;
+end;
+
+procedure TKMGUIGameStats.Unit_Stat_Clicked(Sender: TObject);
+var
+  UT: TKMUnitType;
+  U : TKMUnit;
+  G : TKMUnitGroup;
+begin
+  Assert(Sender is TKMUnitStatIcon);
+  if not Assigned(fSetViewportEvent) then Exit;
+
+  If sender = Stat_Army then
+  begin
+    G := gMySpectator.Hand.GetNextGroupWSameType(utAny, fLastGroupUID);
+    If (G <> nil) and not G.IsDead then
+    begin
+      gMySpectator.Highlight := G;
+      fSetViewportEvent(G.FlagBearer.PositionF); //center viewport on that house
+      fLastGroupUID := G.UID;
+    end;
+    Exit;
+  end;
+  UT := TKMUnitType(TKMUnitStatIcon(Sender).Tag);
+
+  U := gMySpectator.Hand.GetNextUnitWSameType(UT, fLastUnitUIDs[UT]);
+
+  if (U <> nil) and not U.IsDeadOrDying then
+  begin
+    gMySpectator.Highlight := U;
+    fSetViewportEvent(U.PositionF); //center viewport on that house
+    fLastUnitUIDs[UT] := U.UID;
   end;
 end;
 

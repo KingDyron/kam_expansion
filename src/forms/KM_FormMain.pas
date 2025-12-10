@@ -1052,6 +1052,7 @@ begin
 
   if (gHands <> nil) and (RGPlayer.ItemIndex < gHands.Count) then
     gMySpectator.HandID := RGPlayer.ItemIndex;
+  gGameApp.Game.GamePlayInterface.UpdateUI;
 end;
 
 

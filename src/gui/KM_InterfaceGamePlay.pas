@@ -2871,7 +2871,9 @@ begin
 
     UpdateReplayBar;
     gMySpectator.HandID := Dropbox_ReplayFOW.GetTag(Dropbox_ReplayFOW.ItemIndex); //Update HandIndex
-  end;
+  end else
+  IF fUIMode = umSP then
+    fGuiGameStats.ResetUIDs;
 end;
 
 
