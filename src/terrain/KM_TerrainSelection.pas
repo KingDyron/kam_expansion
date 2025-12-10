@@ -1095,10 +1095,15 @@ end;
 procedure TKMSelection.DoDebug;
 var X, Y : Integer;
 begin
-  for X := 1 to gTerrain.MapX - 1 do
-  for Y := 1 to gTerrain.MapY - 1 do
-    If InRange(gTerrain.Land^[Y,X].Obj, 88, 172) then
-      gTerrain.SetObject(KMPoint(X, Y), OBJ_None);
+  for X := fSelectionRect.Left+1 to fSelectionRect.Right do
+    for Y := fSelectionRect.Top+1 to fSelectionRect.Bottom do
+    case gTerrain.Land^[Y, X].BaseLayer.Terrain of
+      7:gTerrain.Land^[Y, X].BaseLayer.Terrain := 953;
+      15: begin
+            gTerrain.Land^[Y, X].BaseLayer.Terrain := 960;
+            gTerrain.Land^[Y, X].BaseLayer.Rotation := (gTerrain.Land^[Y, X].BaseLayer.Rotation + 3) mod 4;
+          end;
+    end;
 end;
 
 procedure TKMSelection.CopyBufferToTempLand(aUpdateMainLand: Boolean = False; aUpdateAll: Boolean = True);
