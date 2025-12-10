@@ -100,7 +100,7 @@ begin
     end;
 
   Panel_Spy := TKMPanel.Create(self, 0, 45, Width, Height - 45);
-    TKMBevel.Create(Panel_Spy, 0, 0, 189, 63);
+    TKMBevel.Create(Panel_Spy, 0, 0, 189, 84);
     for I := 0 to High(Button_SelectPlayer) do
     begin
       Button_SelectPlayer[I] := TKMFlatButtonShape.Create(Panel_Spy, (I mod 9) * 21, (I div 9) * 21, 21, 21, IntToStr(I + 1), fntGrey, 0);
@@ -111,10 +111,10 @@ begin
     Button_SpyPlayer.OnClick := SelectPlayer;
     Button_SpyPlayer.Hint := gResTexts[2198];
 
-    top := Button_SelectPlayer[high(Button_SelectPlayer)].Bottom + 7;
+    top := 90;
     Panel_Stats := TKMPanel.Create(Panel_Spy, 0, top, Width, Panel_Spy.Height - top);
       top := 0;
-      TKMBevel.Create(Panel_Stats, 0, top, 189, 135);
+      TKMBevel.Create(Panel_Stats, 0, top, 189, 140);
 
       Button_ArmyCount := TKMButtonFlat.Create(Panel_Stats, 10, top + 3, 70, 35, 665);
       Button_ArmyCount.Hint := gResTexts[2204];
@@ -202,7 +202,7 @@ begin
           TKMFlatButtonShape(Button_SelectPlayer[I]).ShapeColor := gHands[I].FlagColor;
 
       end;
-      SortControls(0, 0, 189, 63, 10, Button_SelectPlayer);
+      SortControls(0, 0, 164, 84, 5, Button_SelectPlayer);
     end;
     for I := 0 to High(Button_SelectPlayer) do
       TKMFlatButtonShape(Button_SelectPlayer[I]).Down := H.PlayerToSpy = I;

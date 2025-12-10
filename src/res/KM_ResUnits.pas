@@ -1775,14 +1775,20 @@ begin
       Speed := nAnim.I['Speed'] / 240;
       with nAnim.A['Colors'] do
       begin
-        SetLength(Colors, Count + 1);
+        SetLength(Colors, Count{ + 1});
+        //Colors[0, 0] := $FFFFFFFF;
+        //Colors[0, 1] := $FFFFFFFF;
+        for K := 0 to Count - 1 do
+        begin
+          Colors[K, 0] := A[K].L[0];
+          Colors[K, 1] := A[K].L[1];
+        end;
+      end;
+      If length(Colors) = 0 then
+      begin
+        SetLength(Colors, 1);
         Colors[0, 0] := $FFFFFFFF;
         Colors[0, 1] := $FFFFFFFF;
-        for K := 1 to Count do
-        begin
-          Colors[K, 0] := A[K - 1].L[0];
-          Colors[K, 1] := A[K - 1].L[1];
-        end;
       end;
 
       Age := nAnim.I['Age'];

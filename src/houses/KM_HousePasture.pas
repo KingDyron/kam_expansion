@@ -533,7 +533,8 @@ begin
                                           fAnimals[I].AnimalType,
                                           fAnimals[I].Action, fAnimals[I].Dir,
                                           fAnimals[I].AnimStep,
-                                          Spec.Colors[fAnimals[I].Color, 1], Spec.Colors[fAnimals[I].Color, 0]);
+                                          Spec.Colors[fAnimals[I].Color, 1], Spec.Colors[fAnimals[I].Color, 0],
+                                          Entrance);
 
       end;
       for I := 0 to High(fObjects) do

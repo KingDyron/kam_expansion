@@ -176,7 +176,7 @@ type
                                   aAnimStep: Cardinal; aFlagColor : Cardinal; aDoImmediateRender: Boolean = False);
 
     procedure AddHousePastureAnimal(const aLoc: TKMPointF; aAnimal : TKMPastureAnimalType; Action : TKMPastureAnimalAction; Dir : TKMDirection;
-                                  aAnimStep: Cardinal; C1, C2: TColor4;
+                                  aAnimStep: Cardinal; C1, C2: TColor4; aNightLoc : TKMPoint;
                                   aDoImmediateRender: Boolean = False);
     procedure AddAnimation(const aLoc: TKMPoint; aAnim : TKMAnimLoop; aAnimStep: Cardinal; aFlagColor: TColor4; aRX : TRXType;
                           aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0; aFront : Boolean = false; aAlphaStep : Single = -1);Overload;
@@ -1222,7 +1222,7 @@ begin
 end;
 
 procedure TKMRenderPool.AddHousePastureAnimal(const aLoc: TKMPointF; aAnimal : TKMPastureAnimalType; Action : TKMPastureAnimalAction; Dir : TKMDirection;
-                                  aAnimStep: Cardinal; C1, C2: TColor4;
+                                  aAnimStep: Cardinal; C1, C2: TColor4; aNightLoc : TKMPoint;
                                   aDoImmediateRender: Boolean = False);
 var
   id: Cardinal;
@@ -1256,7 +1256,7 @@ begin
   if aDoImmediateRender then
     RenderSprite(rxUnits, id, cornerX, cornerY, C1, true, C2)
   else
-    fRenderList.AddSpriteG(rxUnits, id, 0, cornerX, cornerY, gX, gY, aLoc.RX, aLoc.RY, C1, -1, C2);
+    fRenderList.AddSpriteG(rxUnits, id, 0, cornerX, cornerY, gX, gY, aNightLoc.X, aNightLoc.Y, C1, -1, C2);
 end;
 
 
@@ -2539,6 +2539,13 @@ begin
 
     TKMRender.BindTexture(Tex.TexID);
     if DoHighlight then
+      IF (aID >= 15359) and (aID <= 16849) then
+      glColor4ub( Round(HighlightColor AND $FF * aNight),
+                  Round(HighlightColor SHR 8 AND $FF * aNight),
+                  Round(HighlightColor SHR 16 AND $FF * aNight),
+                  Round(HighlightColor SHR 24 and $FF * aNight)
+                  )
+      else
       glColor4f((HighlightColor AND $FF / 255) * night,
                 (HighlightColor SHR 8 AND $FF / 255) * night,
                 (HighlightColor SHR 16 AND $FF / 255) * night,
@@ -2557,6 +2564,13 @@ begin
     with gGFXData[aRX, aId] do
     begin
       //glColor4ubv(@Col);
+      IF (aID > 15359) and (aID < 16849) then
+      glColor4ub( Round(Col AND $FF * night),
+                  Round(Col SHR 8 AND $FF * night),
+                  Round(Col SHR 16 AND $FF * night),
+                  Round(Col SHR 24 and $FF * night * Abs(aAlphaStep) )
+                  )
+      else
       glColor4ub( Round(Col AND $FF * (0.7 + night / 4)),
                   Round(Col SHR 8 AND $FF * (0.7 + night / 4)),
                   Round(Col SHR 16 AND $FF * (0.7 + night / 4)),
@@ -2942,6 +2956,10 @@ begin
     with gGFXData[aRX, aId] do
     begin
      // glColor4ubv(@Col);
+      //glColor4ubv(@Col);
+      IF (aID >= 15359) and (aID <= 16849) then
+        glColor4ubv(@Col)
+      else
       glColor4f((Col AND $FF / 255),
                 (Col SHR 8 AND $FF / 255),
                 (Col SHR 16 AND $FF / 255),
@@ -3132,7 +3150,14 @@ begin
     glColor4f(1 * aNight, 1 * aNight, 1 * aNight, 0 - aAlphaStep);
     TKMRender.BindTexture(Tex.TexID);
     if DoHighlight then
-      glColor3ub(HighlightColor AND $FF, HighlightColor SHR 8 AND $FF, HighlightColor SHR 16 AND $FF);
+      IF (aID >= 15359) and (aID <= 16849) then
+      glColor4f( HighlightColor AND $FF * aNight / 255,
+                  HighlightColor SHR 8 AND $FF * aNight / 255,
+                  HighlightColor SHR 16 AND $FF * aNight / 255,
+                  1
+                  )
+      else
+        glColor3ub(HighlightColor AND $FF, HighlightColor SHR 8 AND $FF, HighlightColor SHR 16 AND $FF);
     glBegin(GL_QUADS);
       glTexCoord2f(Tex.u1, Tex.v2); glVertex2f(rX                     , rY                      );
       glTexCoord2f(Tex.u2, Tex.v2); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY                      );
@@ -3145,6 +3170,13 @@ begin
     with gGFXData[aRX, aId] do
     begin
       //glColor4ubv(@Col);
+      IF (aID >= 15359) and (aID <= 16849) then
+      glColor4f( Col AND $FF * aNight / 255,
+                  Col SHR 8 AND $FF * aNight / 255,
+                  Col SHR 16 AND $FF * aNight / 255,
+                  1
+                  )
+      else
       glColor4ub( Round(Col AND $FF * (0.7 + aNight / 4)),
                   Round(Col SHR 8 AND $FF * (0.7 + aNight / 4)),
                   Round(Col SHR 16 AND $FF * (0.7 + aNight / 4)),
@@ -4364,7 +4396,8 @@ end;
 
 
 // New items must provide their ground level
-procedure TKMRenderList.AddSpriteG(aRX: TRXType; aID: Integer; aUID: Integer; pX: Single; pY: Single; gX: Single; gY: Single; nX: Integer; nY: Integer; aTeam: Cardinal = 0; aAlphaStep: Single = -1; aHighlight: Cardinal = $0);
+procedure TKMRenderList.AddSpriteG(aRX: TRXType; aID: Integer; aUID: Integer; pX: Single; pY: Single; gX: Single; gY: Single;
+                                  nX: Integer; nY: Integer; aTeam: Cardinal = 0; aAlphaStep: Single = -1; aHighlight: Cardinal = $0);
 const
   MAX_SEL_RECT_HEIGHT = 60; //Restrict too long images selection rect
 var

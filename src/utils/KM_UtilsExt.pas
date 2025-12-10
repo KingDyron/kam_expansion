@@ -326,7 +326,7 @@ begin
     ctrlHeight := Max(ctrlHeight, aControls[I].Height);
   end;
 
-  top := (aHeight div 2) - (ctrlHeight * length(rows)) div 2;
+  top := (aHeight div 2) - (ctrlHeight * length(rows) + (aMargin * (length(rows) - 1))) div 2;
   //centerize controls
   for I := 0 to High(rows) do
   begin
@@ -335,7 +335,7 @@ begin
     begin
       rows[I].Ctrl[K].Left := left;
       inc(left, rows[I].Ctrl[K].Width + aMargin);
-      rows[I].Ctrl[K].Top := top + I * ctrlHeight;
+      rows[I].Ctrl[K].Top := top + I * (ctrlHeight + aMargin);
     end;
   end;
 
