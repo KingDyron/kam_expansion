@@ -32,7 +32,7 @@ type
     fTeams: TKMByteSetArray;
     fTeamsDirty: Boolean; //Need to recalc teams
 
-    fUnitMessages : TKMUnitMessageArray;
+    fPearlsAnimations : TKMArray<TKMPearlActivatedAnim>;
 
     function GetTeams: TKMByteSetArray;
     function GetTeamsLazy: TKMByteSetArray;
@@ -117,6 +117,7 @@ type
     function DoCheckGoals: Boolean;
     procedure PostLoadMission;
 
+    procedure AddPearlActivationAnim(aLoc : TKMPoint);
 
     function CanHaveAI: Boolean;
     function CanHaveAdvancedAI: Boolean;
@@ -135,8 +136,8 @@ type
 
     procedure UpdateState(aTick: Cardinal);
     procedure UpdateVisualState;
+    procedure PaintPearlAnims;
     procedure Paint(const aRect: TKMRect; aTickLag: Single);
-    procedure PaintUnitMessages;
     function ObjToString: String;
 
 
@@ -169,8 +170,7 @@ begin
   fTeamsDirty := True;
 
   fPlayerAnimals := TKMHandAnimals.Create(HAND_ANIMAL); //Always create Animals
-  Setlength(fUnitMessages, 1);
-  fUnitMessages[0].Msg := 'Hello World';
+  fPearlsAnimations.Clear;
 end;
 
 
@@ -812,6 +812,16 @@ begin
 end;
 
 
+procedure TKMHandsCollection.AddPearlActivationAnim(aLoc : TKMPoint);
+var paa: TKMPearlActivatedAnim;
+begin
+  paa.X := aLoc.X;
+  paa.Y := aLoc.Y;
+  paa.Tick := gGame.Params.Tick;
+  fPearlsAnimations.Add(paa);
+end;
+
+
 {
 Get next house in house list with the same type for the same owner
 Result
@@ -1377,6 +1387,8 @@ begin
   for I := 0 to fCount - 1 do
     fHandsList[I].Save(SaveStream);
   PlayerAnimals.Save(SaveStream);
+
+  fPearlsAnimations.SaveToStream(SaveStream);
 end;
 
 
@@ -1400,6 +1412,7 @@ begin
   end;
   PlayerAnimals.Load(LoadStream);
 
+  fPearlsAnimations.LoadFromStream(LoadStream);
   fTeamsDirty := True; //Always reload teams after load
 end;
 
@@ -1441,6 +1454,10 @@ begin
       Exit;
 
     PlayerAnimals.UpdateState(aTick); //Animals don't have any AI yet
+
+    for I := fPearlsAnimations.Count - 1 downto 0 do
+      If gGame.Params.Tick >= fPearlsAnimations[I].Tick + PEARL_GLOW_ANIM_DURATION then
+        fPearlsAnimations.Remove(I);
   finally
     {$IFDEF PERFLOG}
     gPerfLogs.SectionLeave(psHands);
@@ -1555,6 +1572,35 @@ begin
 end;
 
 
+
+procedure TKMHandsCollection.PaintPearlAnims;
+const
+  MAX_RAD = 25;
+
+var I : integer;
+  step, rad : Single;
+  alpha : Byte;
+  pos : TKMPointF;
+begin
+
+  for I := fPearlsAnimations.Count - 1 downto 0 do
+  begin
+    step := (gGame.Params.Tick - fPearlsAnimations[I].Tick + gGame.Params.TickFrac) / PEARL_GLOW_ANIM_DURATION;
+    step := 1 - (sqr(1 - step));
+
+    rad := (step * MAX_RAD);
+    alpha := 255 - round(255 * step);
+    pos.X := fPearlsAnimations[I].X - 0.5;
+    pos.Y := fPearlsAnimations[I].Y - 2.5;
+    pos.Y := pos.Y + gTerrain.RenderHeightAt(Pos.X, Pos.Y);
+    gRenderPool.RenderCircle(pos, rad,
+                              icYellow and $00FFFFFF or ((alpha div 2) SHL 24),
+                              icYellow and $00FFFFFF or (alpha SHL 24), Round(2 + 8 * step) );
+  end;
+
+
+end;
+
 procedure TKMHandsCollection.Paint(const aRect: TKMRect; aTickLag: Single);
 var
   I: Integer;
@@ -1563,18 +1609,8 @@ begin
     fHandsList[I].Paint(aRect, aTickLag);
 
   PlayerAnimals.Paint(aRect, aTickLag);
+  //PaintPearlAnims;
 
-end;
-
-procedure TKMHandsCollection.PaintUnitMessages;
-{var
-  I: Integer;
-  P : TKMPointF;}
-begin
-  {for I := 0 to High(fUnitMessages) do
-  begin
-    //gRenderAux.Text(10, 10, fUnitMessages[I].Msg, $FFFFFFFF);
-  end;}
 end;
 
 

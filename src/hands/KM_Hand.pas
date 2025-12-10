@@ -104,6 +104,7 @@ type
     fPearlsBuilt : array[TKMPearlType] of Boolean;
     fDevPoints : array[DEVELOPMENT_MIN..DEVELOPMENT_MAX] of Word;
     fFestivalPoints: TKMFestivalPoints;
+
     const
       MAX_FESTIVAL_POINTS = 1000000;
     function IsDisabled: Boolean;
@@ -319,6 +320,7 @@ type
     procedure GetStructureMarks(const aLoc: TKMPoint; aIndex, aRot: Word; aList : TKMPointTagList; aIgnoreFOW: Boolean = false);
     procedure TakeOverHouse(aHouse : TKMHouse);
     procedure TakeOverAppleTree(aHouse : TKMHouse);
+
     procedure PearlBuilt(aType : TKMPearlType);
     procedure PearlDestroyed(aType : TKMPearlType);
     function HasPearl(aType : TKMPearlType) : Boolean;
@@ -3795,6 +3797,7 @@ begin
   MessageStack[J].Loc := aLoc;
   MessageStack[J].Kind := aKind;
 end;
+
 
 procedure TKMHand.Paint(const aRect: TKMRect; aTickLag: Single);
 begin

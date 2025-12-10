@@ -142,6 +142,7 @@ type
                                     aId2: Integer = 0; aStoneProgress: Single = 0; X2: Single = 0; Y2: Single = 0); virtual;
   public
     IntScale : Single;
+
     constructor Create(aViewport: TKMViewport; aRender: TKMRender);
     destructor Destroy; override;
 
@@ -479,7 +480,6 @@ begin
     PaintFlagPoints(False);
     if gGame.GamePlayInterface <> nil then
       gGame.GamePlayInterface.Alerts.Paint(1);
-    gHands.PaintUnitMessages;
     // Cursor overlays (including blue-wire plans), go on top of everything
     RenderForegroundUI;
 
@@ -3331,7 +3331,6 @@ begin
     glGetIntegerv(GL_LINE_WIDTH_RANGE, @lineWidth);
     glLineWidth(aLineWidth);
   end;
-  P.Y := P.Y + gTerrain.RenderHeightAt(P.X, P.Y);
   glPushMatrix;
     glTranslatef(P.X, P.Y, 0);
     glColor4ubv(@aFill);

@@ -50,6 +50,10 @@ type
       cctResetRecordings,
       cctSaveRecord
     );
+  TKMPearlActivatedAnim = record
+    X, Y : Integer;
+    Tick : Cardinal;
+  end;
 
 const CONSOLE_COMMANDS_NAME : array[TKMConsolCommandType] of String = (
       '',
@@ -58,6 +62,7 @@ const CONSOLE_COMMANDS_NAME : array[TKMConsolCommandType] of String = (
       'reset_recordings',
       'save_recording'
       );
+      PEARL_GLOW_ANIM_DURATION = 50;
 
 function GetAIConsolCommand(aName : String) : TKMConsolCommandType;
 function UHTtoHouseType(aType : TKMUnitHouseBlock) : TKMHouseType;

@@ -780,7 +780,7 @@ begin
               for I := 0 to high(WorkPlan.Prod) do
                 if WorkPlan.Prod[I].W <> wtNone then
                 begin
-                  tmp := home.CheckWareIn(WorkPlan.Prod[I].W);
+                  //tmp := home.CheckWareIn(WorkPlan.Prod[I].W);
                   if (not Home.ForceWorking)
                     or (Home.CheckWareOut(WorkPlan.Prod[I].W) < Home.GetMaxOutWare)
                     or gRes.Houses[Home.HouseType].CanOverFill then

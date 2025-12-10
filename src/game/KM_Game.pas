@@ -1732,7 +1732,7 @@ begin
 
     if DoRenderGame then
       gRenderPool.Render(fTickLag);
-
+    gHands.PaintPearlAnims;
     aRender.SetRenderMode(rm2D);
 
     {testPos := gGame.ActiveInterface.MapCoordToScreenPos(50, 50);

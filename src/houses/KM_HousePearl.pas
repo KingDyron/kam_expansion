@@ -498,7 +498,8 @@ begin
     If fBuildStage = gRes.Houses.Pearls[fPearlType].StageCount then
     begin
       ActivatePearl;
-      fCompletedTick := gGame.Params.Tick;
+      gHands.AddPearlActivationAnim(PearlCenter);
+      //fCompletedTick := gGame.Params.Tick;
       gSoundPlayer.Play(sfxnPearlChoir, PearlCenter, true, 1, false, high(Word));
     end
     else
