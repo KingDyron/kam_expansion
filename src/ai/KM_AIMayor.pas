@@ -29,6 +29,7 @@ type
     WarfareRatios: TWarfareDemands;
     fArmyDemand : TAIArmyDemandF;
     fPearlChecked : Boolean;
+    fRoadTypeToBuild : TKMRoadType;
     procedure SetArmyDemand(aDemand : TAIArmyDemand);
 
     function GetMaxPlans: Byte;
@@ -183,6 +184,7 @@ end;
 
 
 procedure TKMayor.AfterMissionInit;
+var H : TKMHouse;
 begin
   fCityPlanner.AfterMissionInit;
   CheckArmyDemand;
@@ -190,6 +192,11 @@ begin
   fBalance.StoneNeed := GetMaxPlans * 2.5;
   if gHands[fOwner].IsComputer then
     fRecorder.AfterMissionStart;
+  H := gHands[fOwner].GetNextHouseWSameType(htStore, 0);
+  fRoadTypeToBuild := rtStone;
+  If H.IsValid then
+    fRoadTypeToBuild := gTerrain.GetRoadType(H.PointBelowEntrance);
+
 end;
 
 
@@ -663,7 +670,7 @@ begin
     for I := 0 to NodeList.Count - 1 do
       //We must check if we can add the plan ontop of plans placed earlier in this turn
       if P.CanAddFieldPlan(NodeList[I], ftRoad) then
-         P.Constructions.FieldworksList.AddField(NodeList[I], ftRoad, rtStone);
+         P.Constructions.FieldworksList.AddField(NodeList[I], ftRoad, fRoadTypeToBuild);
     Result := True;
   finally
     NodeList.Free;
@@ -842,7 +849,7 @@ begin
   If not ignoreRoad then
   begin
    P.Constructions.FieldworksList.RemFieldPlan(KMPointBelow(Loc)); //Make sure our entrance to the house has no plan (vine/corn) in front of it
-   P.Constructions.FieldworksList.AddField(KMPointBelow(Loc), ftRoad, rtStone); //Place a road below house entrance to make sure it is connected to our city!
+   P.Constructions.FieldworksList.AddField(KMPointBelow(Loc), ftRoad, fRoadTypeToBuild); //Place a road below house entrance to make sure it is connected to our city!
   end;
   //Build fields for Farm
   if aHouse = htFarm then
@@ -912,7 +919,7 @@ begin
     for I := Max(Loc.Y - 3, 1) to Min(Loc.Y + 2, gTerrain.MapY - 1) do
     for K := Max(Loc.X - 2, 1) to Min(Loc.X + 2, gTerrain.MapY - 1) do
     if P.CanAddFieldPlan(KMPoint(K, I), ftRoad) then
-      P.Constructions.FieldworksList.AddField(KMPoint(K, I), ftRoad, rtStone);
+      P.Constructions.FieldworksList.AddField(KMPoint(K, I), ftRoad, fRoadTypeToBuild);
 
   Result := True;
 end;
@@ -1137,7 +1144,7 @@ begin
     for I := Max(StoreLoc.Y - 3, 1) to Min(StoreLoc.Y + 2, gTerrain.MapY - 1) do
     for K := StoreLoc.X - 2 to StoreLoc.X + 2 do
     if P.CanAddFieldPlan(KMPoint(K, I), ftRoad) then
-      P.Constructions.FieldworksList.AddField(KMPoint(K, I), ftRoad, rtStone);
+      P.Constructions.FieldworksList.AddField(KMPoint(K, I), ftRoad, fRoadTypeToBuild);
   end;
 
   //Check if we need to connect separate branches of road network
@@ -1172,7 +1179,7 @@ begin
             for K := 0 to NodeList.Count - 1 do
               //We must check if we can add the plan ontop of plans placed earlier in this turn
               if P.CanAddFieldPlan(NodeList[K], ftRoad) then
-                P.Constructions.FieldworksList.AddField(NodeList[K], ftRoad, rtStone);
+                P.Constructions.FieldworksList.AddField(NodeList[K], ftRoad, fRoadTypeToBuild);
           end;
         end;
     end;

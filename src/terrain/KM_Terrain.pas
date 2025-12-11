@@ -3940,7 +3940,7 @@ begin
   P := aOrePoint.DirFaceLoc;
   I := Land^[P.Y, P.X].Obj;
 
-  if I = 255 then
+  if (I = 255){ or ((length(gMapElements[I].VWares) = 0) and not ObjectIsWare(I)) }then
     Result[0].W := wtNone;
   if Result[0].W <> wtNone then
   begin
@@ -3957,8 +3957,8 @@ begin
 
   if Result[0].W = wtNone then
   begin
-    Result[0].W := GetWareOnGround(aOrePoint.DirFaceLoc);
-    Result[0].C := Min(5, GetWareOnGroundCount(aOrePoint.DirFaceLoc));
+    Result[0].W := GetWareOnGround(P);
+    Result[0].C := Min(5, GetWareOnGroundCount(P));
   end;
 
   if Result[0].W = wtNone then
@@ -4117,16 +4117,16 @@ begin
               weight := 10;
 
             if GetWareOnGround(KMPoint(K, I)) <> wtNone then
-              Weight := 250;
+              Weight := 100000;
 
-            weight := weight / (KMLengthDiag(aLoc, KMPoint(K, I)) * 100);
+            weight := weight / (Max(KMLengthDiag(aLoc, KMPoint(K, I)), 0.1) * 10);
             If K - 1 > 0 then
               If RouteCanBeMade(aLoc, KMPoint(K - 1, I), tpWalk) then //left
-                aJewerlyLocs.AddW(KMPointDir(K - 1, I, dirW), weight);
+                aJewerlyLocs.AddW(KMPointDir(K - 1, I, dirE), weight);
 
             If K + 1 < fMapX then
               If RouteCanBeMade(aLoc, KMPoint(K + 1, I), tpWalk) then //right
-                aJewerlyLocs.AddW(KMPointDir(K + 1, I, dirE), weight);
+                aJewerlyLocs.AddW(KMPointDir(K + 1, I, dirW), weight);
 
             If I - 1 > 0 then
               If RouteCanBeMade(aLoc, KMPoint(K, I - 1), tpWalk) then //Top

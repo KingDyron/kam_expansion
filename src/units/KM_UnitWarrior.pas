@@ -1441,7 +1441,7 @@ begin
 
 
   //this warrior can shoot from far and attack nearby
-  if CanShootAndFight then
+  {if CanShootAndFight then
   begin
     //first check for nearby enemies to fight with hands
     newEnemy := FindEnemy(0.5, 1.42);
@@ -1474,7 +1474,7 @@ begin
     end;
 
     Exit;
-  end;
+  end;}
 
   
   newEnemy := FindEnemy(GetFightMinRange, GetFightMaxRange(true));
