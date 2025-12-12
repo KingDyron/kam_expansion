@@ -846,6 +846,7 @@ type
       function CanUseStoredClay : Boolean;
       function CanStoreClay : Boolean;
       procedure UseStoredClay;
+      function MiningRange(aUnit : TKMUnitType) : Integer;override;
       function MiningRect(aWare : TKMWareType) : TKMRect;override;
 
       property GrainType : TKMGrainType read fGrainType;
@@ -7931,6 +7932,13 @@ begin
   end;
 end;
 
+function TKMHouseProdThatch.MiningRange(aUnit: TKMUnitType): Integer;
+begin
+  Result := Inherited;
+  If IsFlagPointSet then
+    Result := Result div Round(sqrt(Result));
+
+end;
 function TKMHouseProdThatch.MiningRect(aWare : TKMWareType) : TKMRect;
 begin
   //the OG rect
@@ -7946,10 +7954,10 @@ begin
   Result := Inherited;
   If IsFlagPointSet then
   begin
-    Dec(Result.Left, 2);
-    Dec(Result.Top, 2);
-    Dec(Result.Right, 2);
-    Dec(Result.Bottom, 2);
+    Result.Left :=  Result.Left div Round(sqrt(Result.Left));
+    Result.Top :=  Result.Top div Round(sqrt(Result.Top));
+    Result.Right := Result.Right div  Round(sqrt(Result.Right));
+    Result.Bottom := Result.Bottom div Round(sqrt(Result.Bottom));
   end;
 end;
 

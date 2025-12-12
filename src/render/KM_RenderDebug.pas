@@ -477,6 +477,41 @@ begin
                                                    housePts);
                         wineyardPts.AddList(housePts);
                       end;
+        htProductionThatch: begin
+                              case H.WareInputSlot of
+                                0, 1, 2:  If not IsAreaInClip(Loc, H.MiningRange(utFarmer)) then Continue;
+                                3:  If not IsAreaInClip(Loc, H.MiningRange(utStoneMason)) then Continue;
+                                else
+                                  Continue;
+                              end;
+
+                              case H.WareInputSlot of
+                                0, 2: begin
+
+                                        gTerrain.FindCornFieldLocs(Loc,
+                                                         H.MiningRange(utFarmer),
+                                                         housePts);
+                                        farmPts.AddList(housePts);
+                                      end;
+                                1:  begin
+                                      gTerrain.FindWineFieldLocs(Loc,
+                                                                 H.MiningRange(utFarmer),
+                                                                 housePts);
+                                      wineyardPts.AddList(housePts);
+                                    end;
+                                3:  begin
+
+                                      gTerrain.FindStoneLocs(Loc,
+                                                             H.MiningRange(utStoneMason),
+                                                             KMPOINT_ZERO, True, nil, housePts);
+                                      quarryPts.AddList(housePts);
+                                      gTerrain.FindOrePointsByDistance(Loc, H.MiningRect(wtTile), wtTile, oreP);
+                                      AddOrePoints(oreP, clayOreP);
+                                    end;
+                                else
+                                  Exit
+                              end;
+                            end;
         else Continue;
       end;
 
@@ -704,6 +739,42 @@ begin
                                                Points);
                     PaintMiningPoints(Points, WINEYARD_COLOR);
                   end;
+    htProductionThatch: begin
+                          case H.WareInputSlot of
+                            0, 1, 2:  If not IsAreaInClip(Loc, H.MiningRange(utFarmer)) then Exit;
+                            3:  If not IsAreaInClip(Loc, H.MiningRange(utStoneMason)) then Exit;
+                            else
+                              Exit;
+                          end;
+
+                          case H.WareInputSlot of
+                            0, 2: begin
+
+                                    gTerrain.FindCornFieldLocs(Loc,
+                                                     H.MiningRange(utFarmer),
+                                                     Points);
+                                    PaintMiningPoints(Points, FARM_COLOR);
+                                  end;
+                            1:  begin
+                                  gTerrain.FindWineFieldLocs(Loc,
+                                                             H.MiningRange(utFarmer),
+                                                             Points);
+                                  PaintMiningPoints(Points, WINEYARD_COLOR);
+                                end;
+                            3:  begin
+
+                                  gTerrain.FindStoneLocs(Loc,
+                                                         H.MiningRange(utStoneMason),
+                                                         KMPOINT_ZERO, True, nil, Points);
+                                  PaintMiningPoints(Points, QUARRY_COLOR);
+                                  Points.Clear;
+                                  gTerrain.FindOrePointsByDistance(Loc, H.MiningRect(wtTile), wtTile, Ores);
+                                  PaintOrePoints(Ores, CLAY_ORE_COLOR);
+                                end;
+                            else
+                              Exit
+                          end;
+                        end;
   end;
 
   for I := 0 to High(Ores) do

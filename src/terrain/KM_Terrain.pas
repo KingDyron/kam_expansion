@@ -4007,18 +4007,8 @@ begin
       begin
         If aWare = wtTile then
         begin
-          //Poorest ore gets mined in range - 4
-          if InRange(I - aLoc.Y, - miningRect.Top + 4, miningRect.Bottom - 4)
-            and InRange(K - aLoc.X, - miningRect.Left + 4, miningRect.Right - 4) then
-              aPoints[0].Add(KMPoint(K, I))
-          //Second poorest ore gets mined in range - 1
-          else
-          if InRange(I - aLoc.Y, - miningRect.Top + 1, miningRect.Bottom - 1)
-            and InRange(K - aLoc.X, - miningRect.Left + 1, miningRect.Right - 1) then
-              aPoints[1].Add(KMPoint(K, I))
-          else
-            //Always mine second richest ore
-            aPoints[2].Add(KMPoint(K, I));
+          //Always mine second richest ore
+          aPoints[2].Add(KMPoint(K, I));
 
         end else
         begin
@@ -4061,11 +4051,11 @@ begin
           C := TileIsClay(K, I);
           case C of
             0 : ;//do nothing
-            1 : if InRange(I - aLoc.Y, - miningRect.Top + 4, miningRect.Bottom - 4)
-                        and InRange(K - aLoc.X, - miningRect.Left + 4, miningRect.Right - 4) then
+            1 : {if InRange(I - aLoc.Y, - miningRect.Top + 4, miningRect.Bottom - 4)
+                        and InRange(K - aLoc.X, - miningRect.Left + 4, miningRect.Right - 4) then}
                           aClayLocs[0].Add(KMPoint(K, I));
-            2 : if InRange(I - aLoc.Y, - miningRect.Top + 1, miningRect.Bottom - 1)
-                        and InRange(K - aLoc.X, - miningRect.Left + 1, miningRect.Right - 1) then
+            2 : {if InRange(I - aLoc.Y, - miningRect.Top + 1, miningRect.Bottom - 1)
+                        and InRange(K - aLoc.X, - miningRect.Left + 1, miningRect.Right - 1) then}
                           aClayLocs[1].Add(KMPoint(K, I));
             3: aClayLocs[2].Add(KMPoint(K, I));
             4: aClayLocs[3].Add(KMPoint(K, I));
@@ -4438,13 +4428,8 @@ begin
         begin
           If Land^[I, K].TileOverlay2.IsWare(wtTile) then
             case Land^[I, K].TileOverlay2.ResCount of
-              1 :
-                        if InRange(I - aLoc.Y, - miningRect.Top + 2, miningRect.Bottom - 2)
-                          and InRange(K - aLoc.X, - miningRect.Left + 2, miningRect.Right - 2) then
-                            aPoints[0].Add(KMPoint(K, I));
-              2 : if InRange(I - aLoc.Y, - miningRect.Top + 1, miningRect.Bottom - 1)
-                          and InRange(K - aLoc.X, - miningRect.Left + 1, miningRect.Right - 1) then
-                            aPoints[1].Add(KMPoint(K, I));
+              1 : aPoints[0].Add(KMPoint(K, I));
+              2 : aPoints[1].Add(KMPoint(K, I));
               3 : aPoints[2].Add(KMPoint(K, I));
               4 : aPoints[3].Add(KMPoint(K, I));
               else aPoints[4].Add(KMPoint(K, I));
