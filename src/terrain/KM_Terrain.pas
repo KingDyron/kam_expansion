@@ -40,7 +40,6 @@ type
     function TileHasParameter(X, Y: Word; aCheckTileFunc: TBooleanWordFunc; aAllow2CornerTiles: Boolean = False;
                               aStrictCheck: Boolean = False): Boolean;
 
-    function GetMiningRect(aWare: TKMWareType): TKMRect;
 
     function ChooseCuttingDirection(const aLoc, aTree: TKMPoint; out aCuttingPoint: TKMPointDir): Boolean;
     procedure DoFlattenTerrain(const aLoc: TKMPoint; var aDepth: Byte; aUpdateWalkConnects: Boolean; aIgnoreCanElevate: Boolean; aFactor : Single = 0.5);
@@ -161,21 +160,21 @@ type
     procedure FindStoneLocs(const aLoc: TKMPoint; aRadius: Byte; const aAvoidLoc: TKMPoint; aIgnoreWorkingUnits: Boolean; aProdThatch : Pointer;
                             aStoneLocs: TKMPointList);
 
-    function FindClay(const aLoc: TKMPoint; const aAvoidLoc: TKMPoint; aIgnoreWorkingUnits: Boolean; aProdThatch : Pointer;
+    function FindClay(const aLoc: TKMPoint; aMiningRect : TKMRect; const aAvoidLoc: TKMPoint; aIgnoreWorkingUnits: Boolean; aProdThatch : Pointer;
                        out aOrePoint: TKMPoint): Boolean;
 
-    procedure FindClayPoints(const aLoc: TKMPoint;const aAvoidLoc: TKMPoint; aIgnoreWorkingUnits: Boolean; aProdThatch : Pointer;
+    procedure FindClayPoints(const aLoc: TKMPoint; aMiningRect : TKMRect;const aAvoidLoc: TKMPoint; aIgnoreWorkingUnits: Boolean; aProdThatch : Pointer;
                             aClayLocs: TKMPointListArray);
 
-    function FindCollectors(const aLoc: TKMPoint; const aAvoidLoc: TKMPoint; aIgnoreWorkingUnits: Boolean;
+    function FindCollectors(const aLoc: TKMPoint; aMiningRect : TKMRect; const aAvoidLoc: TKMPoint; aIgnoreWorkingUnits: Boolean;
                        out aOrePoint: TKMPointDir): TKMWarePlan;
 
-    procedure FindCollectorsPoints(const aLoc: TKMPoint; const aAvoidLoc: TKMPoint; aIgnoreWorkingUnits: Boolean;
+    procedure FindCollectorsPoints(const aLoc: TKMPoint; aMiningRect : TKMRect; const aAvoidLoc: TKMPoint; aIgnoreWorkingUnits: Boolean;
                             aJewerlyLocs: TKMPointDirCenteredList);
     function DecCollectorsOre(aLoc: TKMPointDir; aCount : Byte) : Boolean;
 
-    function FindHunter(const aLoc: TKMPoint; const aAvoidLoc: TKMPoint; aIgnoreWorkingUnits: Boolean; out aOrePoint: TKMPointDir) : Boolean;
-    procedure FindHunterPoints(const aLoc: TKMPoint; const aAvoidLoc: TKMPoint; aIgnoreWorkingUnits: Boolean; aPoints : TKMWeightedPointList);
+    function FindHunter(const aLoc: TKMPoint; aMiningRect : TKMRect; const aAvoidLoc: TKMPoint; aIgnoreWorkingUnits: Boolean; out aOrePoint: TKMPointDir) : Boolean;
+    procedure FindHunterPoints(const aLoc: TKMPoint;aMiningRect : TKMRect; const aAvoidLoc: TKMPoint; aIgnoreWorkingUnits: Boolean; aPoints : TKMWeightedPointList);
     function SetHunterTraps(const aLoc: TKMPoint; aMode : Integer) : Word;
     function HasMeat(P : TKMPoint) : Boolean;
     function CanSetTrap(P : TKMPoint) : Boolean;
@@ -184,9 +183,11 @@ type
     function FindVWareForBoat(const aLoc: TKMPoint; const aRadius : Byte): Word;
     function DecWareOnGorund(const aLoc: TKMPoint; aCount : Byte = 1) : Boolean;
 
-    function FindOre(const aLoc: TKMPoint; aWare: TKMWareType; out aOrePoint: TKMPoint; isOnMineShaft : Boolean = false): Boolean;
-    procedure FindOrePoints(const aLoc: TKMPoint; aWare: TKMWareType; var aPoints: TKMPointListArray; isOnMineShaft : Boolean = false);
-    procedure FindOrePointsByDistance(const aLoc: TKMPoint; aWare: TKMWareType; var aPoints: TKMPointListArray);
+    function GetMiningRect(aWare: TKMWareType): TKMRect;
+
+    function FindOre(const aLoc: TKMPoint; aMiningRect : TKMRect; aWare: TKMWareType; out aOrePoint: TKMPoint; isOnMineShaft : Boolean = false): Boolean;
+    procedure FindOrePoints(const aLoc: TKMPoint; aMiningRect : TKMRect; aWare: TKMWareType; var aPoints: TKMPointListArray; isOnMineShaft : Boolean = false);
+    procedure FindOrePointsByDistance(const aLoc: TKMPoint; aMiningRect : TKMRect; aWare: TKMWareType; var aPoints: TKMPointListArray);
     function CanFindTree(const aLoc: TKMPoint; aRadius: Word; aOnlyAgeFull: Boolean = False):Boolean;
     procedure FindTree(const aLoc: TKMPoint; aRadius: Word; const aAvoidLoc: TKMPoint; aPlantAct: TKMPlantAct;
                        aTrees: TKMPointDirCenteredList; aBestToPlant,aSecondBestToPlant: TKMPointCenteredList);
@@ -3860,7 +3861,7 @@ begin
   end;
 end;
 
-function TKMTerrain.FindOre(const aLoc: TKMPoint; aWare: TKMWareType; out aOrePoint: TKMPoint; isOnMineShaft : Boolean = false): Boolean;
+function TKMTerrain.FindOre(const aLoc: TKMPoint; aMiningRect : TKMRect; aWare: TKMWareType; out aOrePoint: TKMPoint; isOnMineShaft : Boolean = false): Boolean;
 var
   I: Integer;
   L: TKMPointListArray;
@@ -3869,7 +3870,7 @@ begin
   //Create separate list for each density, to be able to pick best one
   for I := 0 to Length(L) - 1 do
     L[I] := TKMPointList.Create;
-    FindOrePoints(aLoc, aWare, L, isOnMineShaft);
+    FindOrePoints(aLoc, aMiningRect, aWare, L, isOnMineShaft);
 
   //Equation elements will be evalueated one by one until True is found
   Result := False;
@@ -3883,7 +3884,7 @@ begin
     L[I].Free;
 end;
 
-function TKMTerrain.FindClay(const aLoc: TKMPoint; const aAvoidLoc: TKMPoint; aIgnoreWorkingUnits: Boolean; aProdThatch : Pointer;
+function TKMTerrain.FindClay(const aLoc: TKMPoint; aMiningRect : TKMRect; const aAvoidLoc: TKMPoint; aIgnoreWorkingUnits: Boolean; aProdThatch : Pointer;
                               out aOrePoint: TKMPoint): Boolean;
 var
   L: TKMPointListArray;
@@ -3893,7 +3894,7 @@ begin
   for I := 0 to High(L) do
     L[I] := TKMPointList.Create;
 
-  FindClayPoints(aLoc, aAvoidLoc, aIgnoreWorkingUnits, aProdThatch, L);
+  FindClayPoints(aLoc, aMiningRect, aAvoidLoc, aIgnoreWorkingUnits, aProdThatch, L);
   Result := false;
 
   for I := High(L) downto 0 do
@@ -3908,7 +3909,7 @@ begin
     L[I].Free;
 end;
 
-function TKMTerrain.FindCollectors(const aLoc: TKMPoint; const aAvoidLoc: TKMPoint; aIgnoreWorkingUnits: Boolean;
+function TKMTerrain.FindCollectors(const aLoc: TKMPoint; aMiningRect : TKMRect; const aAvoidLoc: TKMPoint; aIgnoreWorkingUnits: Boolean;
                               out aOrePoint: TKMPointDir): TKMWarePlan;
 var
   L: TKMPointDirCenteredList;
@@ -3918,7 +3919,7 @@ begin
   L := TKMPointDirCenteredList.Create(aLoc);
   Result.SetCount(WARES_IN_OUT_COUNT, true);
   Result[0].C := 1;
-  FindCollectorsPoints(aLoc, aAvoidLoc, aIgnoreWorkingUnits, L);
+  FindCollectorsPoints(aLoc, aMiningRect, aAvoidLoc, aIgnoreWorkingUnits, L);
   if L.Count > 0 then
     Result[0].W := wtAll
   else
@@ -3983,7 +3984,7 @@ begin
 end;
 
 
-procedure TKMTerrain.FindOrePointsByDistance(const aLoc: TKMPoint; aWare: TKMWareType; var aPoints: TKMPointListArray);
+procedure TKMTerrain.FindOrePointsByDistance(const aLoc: TKMPoint; aMiningRect : TKMRect; aWare: TKMWareType; var aPoints: TKMPointListArray);
 var
   I,K: Integer;
   miningRect: TKMRect;
@@ -3993,7 +3994,7 @@ begin
   if not (aWare in [wtIronOre, wtGoldOre, wtCoal, wtBitinOre, wtTile]) then
     raise ELocError.Create('Wrong resource as Ore', aLoc);
 
-  miningRect := GetMiningRect(aWare);
+  miningRect := aMiningRect{GetMiningRect(aWare)};
 
   for I := Max(aLoc.Y - miningRect.Top, 1) to Min(aLoc.Y + miningRect.Bottom, fMapY - 1) do
     for K := Max(aLoc.X - miningRect.Left, 1) to Min(aLoc.X + miningRect.Right, fMapX - 1) do
@@ -4038,7 +4039,7 @@ begin
     end;
 end;
 
-procedure TKMTerrain.FindClayPoints(const aLoc: TKMPoint; const aAvoidLoc: TKMPoint; aIgnoreWorkingUnits: Boolean; aProdThatch : Pointer;
+procedure TKMTerrain.FindClayPoints(const aLoc: TKMPoint; aMiningRect : TKMRect; const aAvoidLoc: TKMPoint; aIgnoreWorkingUnits: Boolean; aProdThatch : Pointer;
                             aClayLocs: TKMPointListArray);
 var
   I,K, C: Integer;
@@ -4046,7 +4047,7 @@ var
 begin
   //Assert(Length(aClayLocs) = ORE_DENSITY_MAX_TYPES, 'Wrong length of Points array: ' + IntToStr(Length(aClayLocs)));
 
-  miningRect := GetMiningRect(wtTile);
+  miningRect := aMiningRect{GetMiningRect(wtTile)};
 
   //Try to find Clay
   for I := Max(aLoc.Y - miningRect.Top, 1) to Min(aLoc.Y + miningRect.Bottom, fMapY - 1) do
@@ -4091,7 +4092,7 @@ begin
 
 end;
 
-procedure TKMTerrain.FindCollectorsPoints(const aLoc: TKMPoint; const aAvoidLoc: TKMPoint; aIgnoreWorkingUnits: Boolean;
+procedure TKMTerrain.FindCollectorsPoints(const aLoc: TKMPoint; aMiningRect : TKMRect; const aAvoidLoc: TKMPoint; aIgnoreWorkingUnits: Boolean;
                             aJewerlyLocs: TKMPointDirCenteredList);
 
 var
@@ -4099,7 +4100,7 @@ var
   miningRect: TKMRect;
   weight : Single;
 begin
-  miningRect := GetMiningRect(wtJewerly);
+  miningRect := aMiningRect{GetMiningRect(wtJewerly)};
 
   //Try to find Clay
   for I := Max(aLoc.Y - miningRect.Top, 2) to Min(aLoc.Y + miningRect.Bottom, fMapY - 1) do
@@ -4188,25 +4189,25 @@ begin
 end;
 
 
-function TKMTerrain.FindHunter(const aLoc: TKMPoint; const aAvoidLoc: TKMPoint; aIgnoreWorkingUnits: Boolean; out aOrePoint: TKMPointDir): Boolean;
+function TKMTerrain.FindHunter(const aLoc: TKMPoint; aMiningRect : TKMRect; const aAvoidLoc: TKMPoint; aIgnoreWorkingUnits: Boolean; out aOrePoint: TKMPointDir): Boolean;
 var aList : TKMWeightedPointList;
 begin
   aList := TKMWeightedPointList.Create;
 
-  FindHunterPoints(aLoc, aAvoidLoc, aIgnoreWorkingUnits,aList);
+  FindHunterPoints(aLoc, aMiningRect, aAvoidLoc, aIgnoreWorkingUnits,aList);
   Result := aList.GetWeightedRandom(aOrePoint.Loc);
   aOrePoint.Dir := KaMRandomDir('TKMTerrain.FindHunter');
   aList.Free;
 end;
 
-procedure TKMTerrain.FindHunterPoints(const aLoc: TKMPoint; const aAvoidLoc: TKMPoint; aIgnoreWorkingUnits: Boolean; aPoints: TKMWeightedPointList);
+procedure TKMTerrain.FindHunterPoints(const aLoc: TKMPoint; aMiningRect : TKMRect; const aAvoidLoc: TKMPoint; aIgnoreWorkingUnits: Boolean; aPoints: TKMWeightedPointList);
 
 var
   I,K: Integer;
   miningRect: TKMRect;
   weight : Single;
 begin
-  miningRect := GetMiningRect(wtJewerly);
+  miningRect := aMiningRect{GetMiningRect(wtJewerly)};
 
   //Try to find Clay
   for I := Max(aLoc.Y - miningRect.Top, 2) to Min(aLoc.Y + miningRect.Bottom, fMapY - 2) do
@@ -4407,7 +4408,7 @@ end;
 
 
 //Given aLoc the function return location of richest ore within predefined bounds
-procedure TKMTerrain.FindOrePoints(const aLoc: TKMPoint; aWare: TKMWareType; var aPoints: TKMPointListArray; isOnMineShaft : Boolean = false);
+procedure TKMTerrain.FindOrePoints(const aLoc: TKMPoint; aMiningRect : TKMRect; aWare: TKMWareType; var aPoints: TKMPointListArray; isOnMineShaft : Boolean = false);
 var
   I,K: Integer;
   miningRect: TKMRect;
@@ -4419,7 +4420,7 @@ begin
 
   Assert(Length(aPoints) = ORE_DENSITY_MAX_TYPES, 'Wrong length of Points array: ' + IntToStr(Length(aPoints)));
 
-  miningRect := GetMiningRect(aWare);
+  miningRect := aMiningRect{GetMiningRect(aWare)};
   If isOnMineShaft then
   begin
     Dec(miningRect.Top, 2);

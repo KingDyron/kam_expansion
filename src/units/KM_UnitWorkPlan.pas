@@ -434,11 +434,11 @@ begin
   NewLoc.Dir := DirN;
   with gTerrain do
   case GatheringScript of
-    gsClayMiner:       Found := FindClay(aLoc, aAvoidLoc, False, nil, NewLoc.Loc);
-    gsStoneCutter:     Found := FindStone(aLoc, gRes.Units[aUnit.UnitType].MiningRange, aAvoidLoc, False, nil, NewLoc);
-    gsFarmerSow:       Found := FindCornField(aLoc, gRes.Units[aUnit.UnitType].MiningRange, aAvoidLoc, taPlant, aUnit.Home, PlantAct, NewLoc, GrainType);
+    gsClayMiner:       Found := FindClay(aLoc, aUnit.Home.MiningRect(wtTile), aAvoidLoc, False, nil, NewLoc.Loc);
+    gsStoneCutter:     Found := FindStone(aLoc, aUnit.Home.MiningRange(aUnit.UnitType), aAvoidLoc, False, nil, NewLoc);
+    gsFarmerSow:       Found := FindCornField(aLoc, aUnit.Home.MiningRange(aUnit.UnitType), aAvoidLoc, taPlant, aUnit.Home, PlantAct, NewLoc, GrainType);
     gsFarmerCorn:      begin
-                          Found := FindCornField(aLoc, gRes.Units[aUnit.UnitType].MiningRange, aAvoidLoc, taAny, aUnit.Home, PlantAct, NewLoc, GrainType);
+                          Found := FindCornField(aLoc, aUnit.Home.MiningRange(aUnit.UnitType), aAvoidLoc, taAny, aUnit.Home, PlantAct, NewLoc, GrainType);
                           if PlantAct = taPlant then
                           begin
                             GatheringScript := gsFarmerSow; //Switch to sowing corn rather than cutting
@@ -452,12 +452,12 @@ begin
                           end;
                         end;
     gsFarmerWine:      begin
-                          Found := FindWineField(aLoc, gRes.Units[aUnit.UnitType].MiningRange, aAvoidLoc, nil, NewLoc);
+                          Found := FindWineField(aLoc, aUnit.Home.MiningRange(aUnit.UnitType), aAvoidLoc, nil, NewLoc);
                           NewLoc.Dir := dirN; //The animation for picking grapes is only defined for facing north
                         end;
-    gsFisherCatch:     Found := FindFishWater(aLoc, gRes.Units[aUnit.UnitType].MiningRange, aAvoidLoc, False, NewLoc);
-    gsWoodCutterCut:   Found := ChooseTree(aLoc, KMGetVertexTile(aAvoidLoc, WorkDir), gRes.Units[aUnit.UnitType].MiningRange, taCut, aUnit, NewLoc, PlantAct);
-    gsWoodCutterPlant: Found := ChooseTree(aLoc, aAvoidLoc, gRes.Units[aUnit.UnitType].MiningRange, taPlant, aUnit, NewLoc, PlantAct);
+    gsFisherCatch:     Found := FindFishWater(aLoc, aUnit.Home.MiningRange(aUnit.UnitType), aAvoidLoc, False, NewLoc);
+    gsWoodCutterCut:   Found := ChooseTree(aLoc, KMGetVertexTile(aAvoidLoc, WorkDir), aUnit.Home.MiningRange(aUnit.UnitType), taCut, aUnit, NewLoc, PlantAct);
+    gsWoodCutterPlant: Found := ChooseTree(aLoc, aAvoidLoc, aUnit.Home.MiningRange(aUnit.UnitType), taPlant, aUnit, NewLoc, PlantAct);
     else                Found := False; //Can find a new resource for an unknown gathering script, so return with False
   end;
 
@@ -575,6 +575,7 @@ var
   tmpHouse : TKMHouse;
   treeID : Word;
   mRange : Word;
+
   function GetFarmGrainType : TKMGrainFarmSet;
   begin
     Result[0] := gftNone;
@@ -597,6 +598,17 @@ var
     if aUnit.Home is TKMHouseProdThatch then
       Result := TKMHouseProdThatch(aUnit.Home).CutGrainTypes;
   end;
+  //for units
+  function MiningRange : Integer;
+  begin
+    Result := aUnit.Home.MiningRange(aUnit.UnitType);
+  end;
+  //for ware
+  function MiningRect(aWare : TKMWareType) : TKMRect;
+  begin
+    Result := aUnit.Home.MiningRect(aWare);
+  end;
+
 begin
   Clear;
   fIssued := false;
@@ -606,6 +618,10 @@ begin
   //set gatrhering scripts for some houses
 
   GatheringScript := gRes.Houses[aHome].GatheringScript;
+
+  If aUnit.Home is TKMHouseWFlagPoint then
+    aLoc := TKMHouseWFlagPoint( aUnit.Home ).FlagPoint;
+
   //overwrite script
   if aUnit.UnitType = utCarpenter then
     if aProduct in [wtTimber, wtLog, wtWheel, wtWoodenShield, wtLance, wtAxe, wtBow, wtQuiver] then
@@ -646,6 +662,7 @@ begin
       htShipyard :  GatheringScript := gsShipyard;
       htProductionThatch: begin
                             tmpHouse := aUnit.Home;
+                            //aLoc := TKMHouseProdThatch(tmpHouse).FlagPoint;
                             case aProduct of
                               wtStone: GatheringScript := gsStoneCutter;
                               wtTile: GatheringScript := gsClayMiner;
@@ -664,25 +681,26 @@ begin
   isMiner := true;
   tmp.Dir := dirN;
   case GatheringScript of
-    gsCoalMiner : fIssued := gTerrain.FindOre(aLoc, wtCoal, tmp.Loc);
-    gsGoldMiner : fIssued := gTerrain.FindOre(aLoc, wtGoldOre, tmp.Loc, aUnit.Home.IsMineShaft);
-    gsIronMiner : fIssued := gTerrain.FindOre(aLoc, wtIronOre, tmp.Loc, aUnit.Home.IsMineShaft);
-    gsBitinMiner : fIssued := gTerrain.FindOre(aLoc, wtBitinOre, tmp.Loc, aUnit.Home.IsMineShaft);
+    gsCoalMiner : fIssued := gTerrain.FindOre(aLoc, MiningRect(wtCoal), wtCoal, tmp.Loc);
+    gsGoldMiner : fIssued := gTerrain.FindOre(aLoc, MiningRect(wtGoldOre), wtGoldOre, tmp.Loc, aUnit.Home.IsMineShaft);
+    gsIronMiner : fIssued := gTerrain.FindOre(aLoc, MiningRect(wtIronOre), wtIronOre, tmp.Loc, aUnit.Home.IsMineShaft);
+    gsBitinMiner : fIssued := gTerrain.FindOre(aLoc, MiningRect(wtBitinOre), wtBitinOre, tmp.Loc, aUnit.Home.IsMineShaft);
     //gsClayMiner : fIssued := gTerrain.FindClay(aLoc, KMPOINT_ZERO, False, tmpHouse, tmp.Loc);
     //gsCollector : fIssued := gTerrain.FindJewerly(aLoc, KMPOINT_ZERO, False, tmp.Loc);
     gsStoneCutter : begin
-                      mRange := gRes.Units[aUnit.UnitType].MiningRange;
-                      if aUnit.Home is TKMHouseWFlagPoint then
-                      if TKMHouseWFlagPoint(aUnit.Home).IsFlagPointSet then
-                      begin
-                        TKMHouseWFlagPoint(aUnit.Home).ValidateFlagPoint;
-                        aLoc := TKMHouseWFlagPoint(aUnit.Home).FlagPoint;
-                        mRange := mRange div 4;
-                      end;
+                      {mRange := gRes.Units[aUnit.UnitType].MiningRange;
 
-                      fIssued := gTerrain.FindStone(aLoc, mRange, KMPOINT_ZERO, False, tmpHouse, tmp);
+                      if aUnit.Home is TKMHouseWFlagPoint then
+                        if TKMHouseWFlagPoint(aUnit.Home).IsFlagPointSet then
+                        begin
+                          TKMHouseWFlagPoint(aUnit.Home).ValidateFlagPoint;
+                          aLoc := TKMHouseWFlagPoint(aUnit.Home).FlagPoint;
+                          mRange := mRange div 4;
+                        end;}
+
+                      fIssued := gTerrain.FindStone(aLoc, MiningRange, KMPOINT_ZERO, False, tmpHouse, tmp);
                     end;
-    gsFisherCatch : fIssued := gTerrain.FindFishWater(aLoc, gRes.Units[aUnit.UnitType].MiningRange, KMPOINT_ZERO, False, tmp);
+    gsFisherCatch : fIssued := gTerrain.FindFishWater(aLoc, MiningRange, KMPOINT_ZERO, False, tmp);
     else isMiner := false;
   end;
 
@@ -715,10 +733,10 @@ begin
       //try to find any ores
       ResourceDepleted := true;
       case GatheringScript of
-        gsClayMiner : ResourceDepleted := not gTerrain.FindClay(aLoc, KMPOINT_ZERO, True, tmpHouse, tmp.loc);
+        gsClayMiner : ResourceDepleted := not gTerrain.FindClay(aLoc, aUnit.Home.MiningRect(wtTile), KMPOINT_ZERO, True, tmpHouse, tmp.loc);
         //gsCollector : ResourceDepleted := not gTerrain.FindJewerly(aLoc, KMPOINT_ZERO, True, tmp.loc);
-        gsStoneCutter : ResourceDepleted := not gTerrain.FindStone(aLoc, gRes.Units[aUnit.UnitType].MiningRange, KMPOINT_ZERO, True, tmpHouse, tmp);
-        gsFisherCatch : ResourceDepleted := not gTerrain.FindFishWater(aLoc, gRes.Units[aUnit.UnitType].MiningRange, KMPOINT_ZERO, True, tmp);
+        gsStoneCutter : ResourceDepleted := not gTerrain.FindStone(aLoc, MiningRange, KMPOINT_ZERO, True, tmpHouse, tmp);
+        gsFisherCatch : ResourceDepleted := not gTerrain.FindFishWater(aLoc, MiningRange, KMPOINT_ZERO, True, tmp);
       end;
 
 
@@ -754,7 +772,7 @@ begin
                         if HW.IsFlagPointSet then
                           aLoc := HW.FlagPoint;
 
-                        fIssued := ChooseTree(aLoc, KMPOINT_ZERO, gRes.Units[aUnit.UnitType].MiningRange, aPlantAct, aUnit, tmp, plantAct);
+                        fIssued := ChooseTree(aLoc, KMPOINT_ZERO, MiningRange, aPlantAct, aUnit, tmp, plantAct);
                         if fIssued then
                         begin
                           case plantAct of
@@ -774,7 +792,7 @@ begin
                         end
                         else
                           case plantAct of
-                            taCut:    if not gTerrain.CanFindTree(aLoc, gRes.Units[aUnit.UnitType].MiningRange) then
+                            taCut:    if not gTerrain.CanFindTree(aLoc, MiningRange) then
                                         ResourceDepleted := True; //No more trees to cut
                             taPlant:  if HW.WoodcutterMode = wmPlant then
                                         ResourceDepleted := True;   //No place for trees to plant
@@ -786,7 +804,7 @@ begin
                         if TKMHouseCollectors(aUnit.Home).IsFlagPointSet then
                           aLoc := TKMHouseCollectors(aUnit.Home).FlagPoint;
 
-                        Prod := gTerrain.FindCollectors(aLoc, KMPOINT_ZERO, False, tmp);
+                        Prod := gTerrain.FindCollectors(aLoc, MiningRect(wtJewerly), KMPOINT_ZERO, False, tmp);
                         fIssued := not (Prod[0].W in [wtNone, wtAll]) and (aUnit.Home.CheckWareIn(Prod[0].W) < 5);
                         if fIssued then
                         begin
@@ -801,7 +819,7 @@ begin
                           end else
                             WalkStyle(tmp, uaWalk,uaWork,Prod[0].C,0,uaSpec,gsCollector);
                         end else
-                          ResourceDepleted := gTerrain.FindCollectors(aLoc, tmp.Loc, True, tmp)[0].W = wtNone;
+                          ResourceDepleted := gTerrain.FindCollectors(aLoc, MiningRect(wtJewerly), tmp.Loc, True, tmp)[0].W = wtNone;
 
                       end;
     gsHunter:         begin
@@ -810,7 +828,7 @@ begin
                         if TKMHouseCollectors(aUnit.Home).IsFlagPointSet then
                           aLoc := TKMHouseCollectors(aUnit.Home).FlagPoint;
 
-                        fIssued := gTerrain.FindHunter(aLoc, KMPOINT_ZERO, false, tmp);
+                        fIssued := gTerrain.FindHunter(aLoc, MiningRect(wtJewerly), KMPOINT_ZERO, false, tmp);
                         if fIssued then
                         begin
                           Loc := tmp.Loc;
@@ -912,7 +930,7 @@ begin
                       begin
                         hardWritten := true;
                         GrainType := GetFarmGrainType;
-                        fIssued := gTerrain.FindCornField(aLoc, gRes.Units[aUnit.UnitType].MiningRange,
+                        fIssued := gTerrain.FindCornField(aLoc, MiningRange,
                                                           KMPOINT_ZERO, aPlantAct, tmpHouse, plantAct, tmp,
                                                           GetFarmCutGrainType);
 
@@ -962,7 +980,7 @@ begin
 
     gsFarmerWine:     begin
                         hardWritten := true;
-                        fIssued := gTerrain.FindWineField(aLoc, gRes.Units[aUnit.UnitType].MiningRange, KMPOINT_ZERO, tmpHouse, tmp);
+                        fIssued := gTerrain.FindWineField(aLoc, MiningRange, KMPOINT_ZERO, tmpHouse, tmp);
                         if aUnit.Home is TKMHouseVineyard then
                         begin
                           if TKMHouseVineyard(aUnit.Home).CanMakeWine(false) then
@@ -1143,7 +1161,7 @@ begin
                           end else
                           If TKMHousePottery(aUnit.Home).CanStoreClay then //TMPInt = 2, goes to dig clay from deposits
                           begin
-                            fIssued := gTerrain.FindClay(aLoc, KMPOINT_ZERO, False, tmpHouse, tmp.Loc);
+                            fIssued := gTerrain.FindClay(aLoc, MiningRect(wtTile), KMPOINT_ZERO, False, tmpHouse, tmp.Loc);
                             TMPInt := 2;
                             if fIssued then
                             begin
@@ -1151,7 +1169,7 @@ begin
                               SubActAdd(haWork2,3);
                             end
                             else
-                              ResourceDepleted := not gTerrain.FindClay(aLoc, KMPOINT_ZERO, False, tmpHouse, tmp.Loc) and not TKMHousePottery(aUnit.Home).HasTileOrClay;
+                              ResourceDepleted := not gTerrain.FindClay(aLoc, MiningRect(wtTile), KMPOINT_ZERO, False, tmpHouse, tmp.Loc) and not TKMHousePottery(aUnit.Home).HasTileOrClay;
                           end;
                         end else
                         If (aUnit.Home.HouseType = htProductionThatch) then
@@ -1173,7 +1191,7 @@ begin
                           end else
                           If TKMHouseProdThatch(aUnit.Home).CanStoreClay then
                           begin
-                            fIssued := gTerrain.FindClay(aLoc, KMPOINT_ZERO, False, tmpHouse, tmp.Loc);
+                            fIssued := gTerrain.FindClay(aLoc, MiningRect(wtTile), KMPOINT_ZERO, False, tmpHouse, tmp.Loc);
                             TMPInt := 2;
                             if fIssued then
                             begin
@@ -1181,7 +1199,7 @@ begin
                               SubActAdd(haWork2,3);
                             end
                             else
-                              ResourceDepleted := not gTerrain.FindClay(aLoc, KMPOINT_ZERO, False, tmpHouse, tmp.Loc) and not TKMHouseProdThatch(aUnit.Home).HasTileOrClay;
+                              ResourceDepleted := not gTerrain.FindClay(aLoc, MiningRect(wtTile), KMPOINT_ZERO, False, tmpHouse, tmp.Loc) and not TKMHouseProdThatch(aUnit.Home).HasTileOrClay;
                           end;
                         end;
 

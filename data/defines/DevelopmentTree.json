@@ -139,6 +139,14 @@
 												]
 											}
 										]
+									},
+									{
+										"ID" : 31,
+										"HintID" : 98,
+										"GuiIcon" : 1196,
+										"X" : 3,
+										"Cost" : 5,
+										"IsSpecial" : False
 									}
 								]
 							}

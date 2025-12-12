@@ -25,12 +25,13 @@
     <Replay Autopause="False" ShowBeacons="False" Savepoint="True" SavepointFrequency="3000"/>
     <MapEd HistoryDepth="250" MaxTerrainHeight="150"/>
     <Multiplayer Name="NoName2asd" LastIP="194.87.226.195" LastPort="56789" LastRoom="1" LastPassword="" FlashOnMessage="True"/>
-    <Misc AsyncGameResLoader="True" BeastPanelExpanded="False" WaresPanelExpanded="False False False False False False False False False False False " HousesPanelExpanded="False False False False False False False False False False False "/>
+    <Misc AsyncGameResLoader="True"/>
     <Menu FavouriteMaps="" CampaignName="HKS" LobbyMapType="4" CampaignID="0" CampaignMapID="53">
       <Singleplayer Type="0" ScenarioMapCRC="3386445547" MissionMapCRC="3221235012" TacticMapCRC="3221235012" SpecialMapCRC="3221235012" SaveFileName="autosave"/>
       <Replay Type="1" SPSaveName="Nowa Misja 2" MPSaveName="paused"/>
       <MapEd MapType="0" NewMapX="256" NewMapY="256" SPMapCRC="3259981973" MPMapCRC="905377529" MPMapName="Nowa Misja02" DLMapCRC="0"/>
     </Menu>
+    <Tutorials Battle="False False False False False False False False " Town="False False False False False False False False False "/>
     <Debug SaveRandomChecks="True" SaveGameAsText="False"/>
   </Game>
   <Hotkeys>

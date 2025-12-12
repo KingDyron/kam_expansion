@@ -488,6 +488,10 @@ type
     function IsValid(aHouseType : TKMHouseTypeSet; aBuiltOnly : Boolean = true) : Boolean; overload;
     function PlaceRoad : Boolean; virtual;
 
+    function MiningRange(aUnitType : TKMUnitType) : Integer;overload; virtual;
+    function MiningRange(aWare : TKMWareType) : Integer;overload; virtual;
+    function MiningRect(aUnitType : TKMUnitType) : TKMRect;overload; virtual;
+    function MiningRect(aWare : TKMWareType) : TKMRect;overload; virtual;
 
     property HSpec : TKMHouseSpec read GetHouseSpec;
 
@@ -525,6 +529,8 @@ type
   TKMHouseQuarry = class(TKMHouseWFlagPoint)
   protected
     function GetMaxDistanceToPoint: Integer; override;
+  public
+    function MiningRange(aUnitType : TKMUnitType) : Integer;override;
   end;
 
   TKMHouseTower = class(TKMHouse)
@@ -671,16 +677,19 @@ type
 
   end;
 
-  TKMHousePottery = class(TKMHouse)
+  TKMHousePottery = class(TKMHouseWFlagPoint)
     private
       fTiles : array[1..4] of Cardinal;//Time when clay was brought to the pottery
       fStoredClay : Byte;
+    protected
+      function GetMaxDistanceToPoint: Integer; override;
     public
       const MAX_CLAY_TO_STORE = 30;
       constructor Create(aUID: Integer; aHouseType: TKMHouseType; PosX, PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
       constructor Load(LoadStream: TKMemoryStream); override;
       procedure Save(SaveStream: TKMemoryStream); override;
       function ObjToString(const aSeparator: String = '|'): String; override;
+      function MiningRect(aWare : TKMWareType) : TKMRect;override;
       procedure BringTile;
       function TakeTile : Byte;
       function CanTakeTile : Boolean;
@@ -693,6 +702,7 @@ type
       procedure UseStoredClay;
       function FilledClay : Single;
       property StoredClay : Byte read fStoredClay;
+
 
       procedure Paint; Override;
   end;
@@ -797,7 +807,7 @@ type
   end;
 
 
-  TKMHouseProdThatch = class(TKMHouse)
+  TKMHouseProdThatch = class(TKMHouseWFlagPoint)
     private
       fAnims : array[TKMProdThatchAnimType] of TKMPTAnim;
       fWorkPointsTaken : TKMArray<TKMPoint>;
@@ -819,6 +829,7 @@ type
       const MAX_CLAY_TO_STORE = 50;
     protected
       procedure MakeSound; Override; //Swine/stables make extra sounds
+      function GetMaxDistanceToPoint: Integer; override;
     public
       function IsPointTaken(P : TKMPoint): Boolean;
       procedure TakePoint(P : TKMPoint);
@@ -835,6 +846,7 @@ type
       function CanUseStoredClay : Boolean;
       function CanStoreClay : Boolean;
       procedure UseStoredClay;
+      function MiningRect(aWare : TKMWareType) : TKMRect;override;
 
       property GrainType : TKMGrainType read fGrainType;
       property GrassType : TKMGrainType read fGrassType;
@@ -3653,6 +3665,28 @@ begin
   Result := not (HouseType in NO_ROAD_CONNECTION_HOUSES);
 end;
 
+function TKMHouse.MiningRange(aUnitType : TKMUnitType) : Integer;
+begin
+  Result := gRes.Units[aUnitType].MiningRange;
+end;
+
+function TKMHouse.MiningRange(aWare : TKMWareType) : Integer;
+begin
+  Result := 5;
+end;
+
+function TKMHouse.MiningRect(aUnitType : TKMUnitType) : TKMRect;
+begin
+  Result := KMRect(gRes.Units[aUnitType].MiningRange, gRes.Units[aUnitType].MiningRange,
+                    gRes.Units[aUnitType].MiningRange, gRes.Units[aUnitType].MiningRange);
+end;
+
+function TKMHouse.MiningRect(aWare : TKMWareType) : TKMRect;
+begin
+  Result := gTerrain.GetMiningRect(aWare);
+end;
+
+
 procedure TKMHouse.SetStyle(aValue : Byte);
 begin
   fStyle := EnsureRange(aValue, 0, Length(HSpec.Styles));
@@ -5418,6 +5452,13 @@ begin
   Result := gRes.Units[utStonemason].MiningRange;
 end;
 
+function TKMHouseQuarry.MiningRange(aUnitType: TKMUnitType): Integer;
+begin
+  Result := Inherited;
+  If IsFlagPointSet then
+    Result := Result div 4;
+end;
+
 
 
 constructor TKMHouseWallTower.Load(LoadStream: TKMemoryStream);
@@ -6706,6 +6747,14 @@ begin
   SaveStream.Write(fStoredClay);
 end;
 
+function TKMHousePottery.GetMaxDistanceToPoint: Integer;
+begin
+  If gHands[Owner].BuildDevUnlocked(31) then
+    Result := 10
+  else
+    Result := 0;
+end;
+
 function TKMHousePottery.TakeTile : Byte;
 var I : Integer;
 begin
@@ -6717,6 +6766,15 @@ begin
       fTiles[I] := 0;
       Exit(I);
     end;
+end;
+
+function TKMHousePottery.MiningRect(aWare : TKMWareType) : TKMRect;
+begin
+  //the OG rect
+  //wtTile:     Result := KMRect(9,  7, 10, 9);
+  Result := Inherited;
+  If IsFlagPointSet then
+    Result := KMRect(3, 3, 3, 3);
 end;
 
 procedure TKMHousePottery.BringTile;
@@ -7751,6 +7809,15 @@ begin
   SaveStream.Write(fStoredClay);
 end;
 
+function TKMHouseProdThatch.GetMaxDistanceToPoint: Integer;
+begin
+  If gHands[Owner].BuildDevUnlocked(31) then
+    Result := 10
+  else
+    Result := 0;
+end;
+
+
 function TKMHouseProdThatch.IsPointTaken(P: TKMPoint): Boolean;
 var I : Integer;
 begin
@@ -7861,6 +7928,28 @@ begin
   begin
     Dec(fStoredClay);
     BringTile;
+  end;
+end;
+
+function TKMHouseProdThatch.MiningRect(aWare : TKMWareType) : TKMRect;
+begin
+  //the OG rect
+  {case aWare of
+    wtGoldOre:  Result := KMRect(7, 11, 6, 2);
+    wtIronOre:  Result := KMRect(7, 11, 5, 2);
+    wtCoal:     Result := KMRect(4,  5, 5, 2);
+    wtBitinOre: Result := KMRect(9, 13, 8, 3);
+    wtTile:     Result := KMRect(9,  7, 10, 9);
+    wtJewerly:     Result := KMRect(7,  8, 8, 6);
+  else}
+
+  Result := Inherited;
+  If IsFlagPointSet then
+  begin
+    Dec(Result.Left, 2);
+    Dec(Result.Top, 2);
+    Dec(Result.Right, 2);
+    Dec(Result.Bottom, 2);
   end;
 end;
 

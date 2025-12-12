@@ -350,6 +350,7 @@ var
   woodcutterPts, quarryPts, fisherHutPts, farmPts, wineyardPts: TKMPointList;
   houseDirPts: TKMPointDirList;
   housePts, selectedPts: TKMPointList;
+  Loc : TKMPoint;
 begin
   if gGame = nil then Exit;
 
@@ -390,85 +391,89 @@ begin
       housePts.Clear;
       houseDirPts.Clear;
       H := gHands[I].Houses[J];
+      Loc := H.PointBelowEntrance;
+      If H is TKMHouseWFlagPoint then
+        Loc := TKMHouseWFlagPoint(H).FlagPoint;
+
       case H.HouseType of
         htIronMine:   begin
-                        if not IsAreaInClip(H.PointBelowEntrance, 11) then
+                        if not IsAreaInClip(Loc, 11) then
                           Continue;
 
-                        gTerrain.FindOrePointsByDistance(H.PointBelowEntrance, wtIronOre, oreP);
+                        gTerrain.FindOrePointsByDistance(Loc, H.MiningRect(wtIronOre), wtIronOre, oreP);
                         AddOrePoints(oreP, ironOreP);
                       end;
         htBitinMine:   begin
-                        if not IsAreaInClip(H.PointBelowEntrance, 11) then
+                        if not IsAreaInClip(Loc, 11) then
                           Continue;
 
-                        gTerrain.FindOrePointsByDistance(H.PointBelowEntrance, wtBitinOre, oreP);
+                        gTerrain.FindOrePointsByDistance(H.PointBelowEntrance, H.MiningRect(wtBitinOre), wtBitinOre, oreP);
                         AddOrePoints(oreP, ironOreP);
                       end;
         htPottery:    begin
-                        if not IsAreaInClip(H.PointBelowEntrance, 11) then
+                        if not IsAreaInClip(Loc, 11) then
                           Continue;
 
-                        gTerrain.FindOrePointsByDistance(H.PointBelowEntrance, wtTile, oreP);
+                        gTerrain.FindOrePointsByDistance(Loc, H.MiningRect(wtTile), wtTile, oreP);
                         AddOrePoints(oreP, clayOreP);
                       end;
         htGoldMine:   begin
-                        if not IsAreaInClip(H.PointBelowEntrance, 11) then
+                        if not IsAreaInClip(Loc, 11) then
                           Continue;
 
-                        gTerrain.FindOrePointsByDistance(H.PointBelowEntrance, wtGoldOre, oreP);
+                        gTerrain.FindOrePointsByDistance(Loc, H.MiningRect(wtGoldOre), wtGoldOre, oreP);
                         AddOrePoints(oreP, goldOreP);
                       end;
         htCoalMine:   begin
-                        if not IsAreaInClip(H.PointBelowEntrance, 5) then
+                        if not IsAreaInClip(Loc, 5) then
                           Continue;
 
-                        gTerrain.FindOrePointsByDistance(H.PointBelowEntrance, wtCoal, oreP);
+                        gTerrain.FindOrePointsByDistance(Loc, H.MiningRect(wtCoal), wtCoal, oreP);
                         AddOrePoints(oreP, coalOreP);
                       end;
         htWoodcutters:begin
-                        if not IsAreaInClip(TKMHouseWoodcutters(H).FlagPoint, gRes.Units[utWoodcutter].MiningRange) then
+                        if not IsAreaInClip(Loc, H.MiningRange(utWoodcutter)) then
                           Continue;
 
-                        gTerrain.FindPossibleTreePoints(TKMHouseWoodcutters(H).FlagPoint,
-                                                        gRes.Units[utWoodcutter].MiningRange,
+                        gTerrain.FindPossibleTreePoints(Loc,
+                                                        H.MiningRange(utWoodcutter),
                                                         housePts);
                         woodcutterPts.AddList(housePts);
                       end;
         htQuarry:      begin
-                        if not IsAreaInClip(H.PointBelowEntrance, gRes.Units[utStonemason].MiningRange) then
+                        if not IsAreaInClip(Loc, H.MiningRange(utStoneMason)) then
                           Continue;
 
-                        gTerrain.FindStoneLocs(H.PointBelowEntrance,
-                                               gRes.Units[utStonemason].MiningRange,
+                        gTerrain.FindStoneLocs(Loc,
+                                               H.MiningRange(utStoneMason),
                                                KMPOINT_ZERO, True, nil, housePts);
                         quarryPts.AddList(housePts);
                       end;
         htFishermans:  begin
-                        if not IsAreaInClip(H.PointBelowEntrance, gRes.Units[utFisher].MiningRange) then
+                        if not IsAreaInClip(Loc, H.MiningRange(utFisher)) then
                           Continue;
 
-                        gTerrain.FindFishWaterLocs(H.PointBelowEntrance,
-                                                   gRes.Units[utFisher].MiningRange,
+                        gTerrain.FindFishWaterLocs(Loc,
+                                                   H.MiningRange(utFisher),
                                                    KMPOINT_ZERO, True, houseDirPts);
                         houseDirPts.ToPointList(housePts, True);
                         fisherHutPts.AddList(housePts);
                       end;
         htFarm:       begin
-                        if not IsAreaInClip(H.PointBelowEntrance, gRes.Units[utFarmer].MiningRange) then
+                        if not IsAreaInClip(Loc, H.MiningRange(utFarmer)) then
                           Continue;
 
-                        gTerrain.FindCornFieldLocs(H.PointBelowEntrance,
-                                                   gRes.Units[utFarmer].MiningRange,
+                        gTerrain.FindCornFieldLocs(Loc,
+                                                   H.MiningRange(utFarmer),
                                                    housePts);
                         farmPts.AddList(housePts);
                       end;
         htVineyard:   begin
-                        if not IsAreaInClip(H.PointBelowEntrance, gRes.Units[utFarmer].MiningRange) then
+                        if not IsAreaInClip(Loc, H.MiningRange(utFarmer)) then
                           Continue;
 
-                        gTerrain.FindWineFieldLocs(H.PointBelowEntrance,
-                                                   gRes.Units[utFarmer].MiningRange,
+                        gTerrain.FindWineFieldLocs(Loc,
+                                                   H.MiningRange(utFarmer),
                                                    housePts);
                         wineyardPts.AddList(housePts);
                       end;
@@ -623,6 +628,8 @@ var H : TKMHouse;
   Ores: TKMPointListArray;
   Points: TKMPointList;
   DirPoints: TKMPointDirList;
+  Loc : TKMPoint;
+
 begin
   SetLength(Ores, 3);
   for I := 0 to High(Ores) do
@@ -632,65 +639,68 @@ begin
   DirPoints := TKMPointDirList.Create;
 
   H := TKMHouse(aHouse);
+  Loc := H.PointBelowEntrance;
+  If H is TKMHouseWFlagPoint then
+    Loc := TKMHouseWFlagPoint(H).FlagPoint;
   case H.HouseType of
-    htIronMine:   if IsAreaInClip(H.PointBelowEntrance, 11) then
+    htIronMine:   if IsAreaInClip(Loc, 11) then
                   begin
-                    gTerrain.FindOrePointsByDistance(H.PointBelowEntrance, wtIronOre, Ores);
+                    gTerrain.FindOrePointsByDistance(Loc, H.MiningRect(wtIronOre), wtIronOre, Ores);
                     PaintOrePoints(Ores, IRON_ORE_COLOR);
                   end;
-    htBitinMine:  if IsAreaInClip(H.PointBelowEntrance, 11) then
+    htBitinMine:  if IsAreaInClip(Loc, 11) then
                   begin
-                    gTerrain.FindOrePointsByDistance(H.PointBelowEntrance, wtBitinOre, Ores);
+                    gTerrain.FindOrePointsByDistance(Loc, H.MiningRect(wtBitinOre), wtBitinOre, Ores);
                     PaintOrePoints(Ores, IRON_ORE_COLOR);
                   end;
-    htPottery:    if IsAreaInClip(H.PointBelowEntrance, 11) then
+    htPottery:    if IsAreaInClip(Loc, 11) then
                   begin
-                    gTerrain.FindOrePointsByDistance(H.PointBelowEntrance, wtTile, Ores);
+                    gTerrain.FindOrePointsByDistance(Loc, H.MiningRect(wtTile), wtTile, Ores);
                     PaintOrePoints(Ores, CLAY_ORE_COLOR);
                   end;
-    htGoldMine:   if IsAreaInClip(H.PointBelowEntrance, 11) then
+    htGoldMine:   if IsAreaInClip(Loc, 11) then
                   begin
-                    gTerrain.FindOrePointsByDistance(H.PointBelowEntrance, wtGoldOre, Ores);
+                    gTerrain.FindOrePointsByDistance(Loc, H.MiningRect(wtGoldOre), wtGoldOre, Ores);
                     PaintOrePoints(Ores, GOLD_ORE_COLOR);
                   end;
-    htCoalMine:   if IsAreaInClip(H.PointBelowEntrance, 5) then
+    htCoalMine:   if IsAreaInClip(Loc, 5) then
                   begin
-                    gTerrain.FindOrePointsByDistance(H.PointBelowEntrance, wtCoal, Ores);
+                    gTerrain.FindOrePointsByDistance(Loc, H.MiningRect(wtCoal), wtCoal, Ores);
                     PaintOrePoints(Ores, COAL_ORE_COLOR);
                   end;
-    htWoodcutters:if IsAreaInClip(H.PointBelowEntrance, gRes.Units[utWoodcutter].MiningRange) then
+    htWoodcutters:if IsAreaInClip(Loc, H.MiningRange(utWoodcutter)) then
                   begin
-                    gTerrain.FindPossibleTreePoints(TKMHouseWoodcutters(H).FlagPoint,
-                                                    gRes.Units[utWoodcutter].MiningRange,
+                    gTerrain.FindPossibleTreePoints(Loc,
+                                                    H.MiningRange(utWoodcutter),
                                                     Points);
                     PaintMiningPoints(Points, WOODCUTTER_COLOR, False, True);
                   end;
-    htQuarry:     if IsAreaInClip(H.PointBelowEntrance, gRes.Units[utStonemason].MiningRange) then
+    htQuarry:     if IsAreaInClip(Loc, H.MiningRange(utStoneMason)) then
                   begin
-                    gTerrain.FindStoneLocs(H.PointBelowEntrance,
-                                           gRes.Units[utStonemason].MiningRange,
+                    gTerrain.FindStoneLocs(Loc,
+                                           H.MiningRange(utStoneMason),
                                            KMPOINT_ZERO, True, nil, Points);
                     PaintMiningPoints(Points, QUARRY_COLOR);
                   end;
-    htFishermans: if IsAreaInClip(H.PointBelowEntrance, gRes.Units[utFisher].MiningRange) then
+    htFishermans: if IsAreaInClip(Loc, H.MiningRange(utFisher)) then
                   begin
-                    gTerrain.FindFishWaterLocs(H.PointBelowEntrance,
-                                               gRes.Units[utFisher].MiningRange,
+                    gTerrain.FindFishWaterLocs(Loc,
+                                               H.MiningRange(utFisher),
                                                KMPOINT_ZERO, True, DirPoints);
                     DirPoints.ToPointList(Points, true);
                     PaintMiningPoints(Points, FISHERHUT_COLOR);
                   end;
-    htFarm:       if IsAreaInClip(H.PointBelowEntrance, gRes.Units[utFarmer].MiningRange) then
+    htFarm:       if IsAreaInClip(Loc, H.MiningRange(utFarmer)) then
                   begin
-                    gTerrain.FindCornFieldLocs(H.PointBelowEntrance,
-                                               gRes.Units[utFarmer].MiningRange,
+                    gTerrain.FindCornFieldLocs(Loc,
+                                               H.MiningRange(utFarmer),
                                                Points);
                     PaintMiningPoints(Points, FARM_COLOR);
                   end;
-    htVineyard:   if IsAreaInClip(H.PointBelowEntrance, gRes.Units[utFarmer].MiningRange) then
+    htVineyard:   if IsAreaInClip(Loc, H.MiningRange(utFarmer)) then
                   begin
-                    gTerrain.FindWineFieldLocs(H.PointBelowEntrance,
-                                               gRes.Units[utFarmer].MiningRange,
+                    gTerrain.FindWineFieldLocs(Loc,
+                                               H.MiningRange(utFarmer),
                                                Points);
                     PaintMiningPoints(Points, WINEYARD_COLOR);
                   end;

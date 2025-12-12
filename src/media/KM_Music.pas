@@ -377,7 +377,7 @@ begin
   fPlaylists[I].Tracks[J].Dir := aPath;
   L := 0;
   for K := 1 to length(ext) do
-    If not (ext[K] in [' ', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-']) then
+    If not SysUtils.CharInSet(ext[K], [' ', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-']) then
     begin
       L := K;
       Break;

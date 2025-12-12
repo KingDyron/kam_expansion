@@ -446,7 +446,7 @@ begin
 
   //Make sure stonemason actually can reach some stone (avoid build-destroy loop)
   if Result then
-    if not gTerrain.FindClay(aLoc, KMPOINT_ZERO, True, nil, tmp) then
+    if not gTerrain.FindClay(aLoc, gTerrain.GetMiningRect(wtTile) , KMPOINT_ZERO, True, nil, tmp) then
       Result := False;
 end;
 
@@ -501,7 +501,7 @@ begin
 
   //Make sure stonemason actually can reach some stone (avoid build-destroy loop)
   if Result then
-    if not gTerrain.FindClay(aLoc, KMPOINT_ZERO, True, nil, tmp) then
+    if not gTerrain.FindClay(aLoc, gTerrain.GetMiningRect(wtTile), KMPOINT_ZERO, True, nil, tmp) then
       Result := False;
 end;
 
