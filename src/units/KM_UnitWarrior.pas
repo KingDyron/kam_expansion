@@ -170,7 +170,7 @@ type
     procedure SetLastShootTime;
     function FindLinkUnit(const aLoc: TKMPoint): TKMUnitWarrior;
     function CheckforEnemyWhileStorming : Boolean;
-    function CheckForEnemy(IsStorming : Boolean = false): Boolean; virtual;
+    function CheckForEnemy: Boolean; virtual;
     procedure ProceedClosedTower;
     procedure LeaveHome;
     procedure CheckForTowerEnemy; virtual;
@@ -386,7 +386,7 @@ type
   protected
     procedure PaintUnit(aTickLag: Single); override;
   public
-    function CheckForEnemy(IsStorming : Boolean = false): Boolean; override;
+    function CheckForEnemy: Boolean; override;
     procedure OrderAmmo(aForceOrder : Boolean = false); override;
 
     constructor Load(LoadStream: TKMemoryStream); override;
@@ -1429,7 +1429,7 @@ begin
   end;
 end;
 
-function TKMUnitWarrior.CheckForEnemy(IsStorming : Boolean = false): Boolean;
+function TKMUnitWarrior.CheckForEnemy: Boolean;
 var
   newEnemy: TKMUnit;
 begin
@@ -1478,6 +1478,7 @@ begin
 
   
   newEnemy := FindEnemy(GetFightMinRange, GetFightMaxRange(true));
+
   if newEnemy <> nil then
   begin
     OnPickedFight(Self, newEnemy);
@@ -1486,8 +1487,6 @@ begin
 
     if WithinFightRange(newEnemy.Position) then
       FightEnemy(newEnemy);
-    If IsStorming then
-      newEnemy.DoHitFrom(self);
 
     Result := True; //Found someone
   end;
@@ -3745,7 +3744,7 @@ begin
 end;
 
 
-function TKMUnitWarriorBShip.CheckForEnemy(IsStorming : Boolean = false) : Boolean;
+function TKMUnitWarriorBShip.CheckForEnemy : Boolean;
 begin
   If gHands[Owner].IsComputer then
     Result := Inherited

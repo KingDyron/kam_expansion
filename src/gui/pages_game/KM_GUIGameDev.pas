@@ -149,6 +149,7 @@ var dtt : TKMDevelopmentTreeType;
       SetButtonColor(aToButton.Button_Tree, UNLOCKED_COLOR_DOWN, 3, UNLOCKED_COLOR_DOWN and $77FFFFFF, 1);
       B.Enabled := true;
       B.Visible := true;
+      TKMButtonFlatDevGame(B).Cost := 0;
     end else
     If aState = dlUnlocked then
       unlockedList.Add(@aToButton)

@@ -294,7 +294,7 @@ begin
 
     If firstVisibleTop in [255, 0] then
       Continue;
-    RepositionNext(dtt, Tree[dtt].Button_Tree, 0);
+    RepositionNext(dtt, Tree[dtt].Button_Tree, 1);
   end;
 
 end;
@@ -324,9 +324,11 @@ procedure TKMGUICommonDevelopment.Paint;
     begin
       for I := 0 to high(aTo.Next) do
         MakeLine(aFrom, aTo.Next[I]);
+
       Exit;
     end;
     cent := aTo.Button_Tree.AbsCenter;
+    //render a little dot behind first item
     TKMRenderUI.WriteLine(aFrom.X, aFrom.Y, aFrom.X, (DISTANCE_BETWEEN_ROWS div 2) + aFrom.Y,
                           aTo.Button_Tree.DownColor, 65535, aTo.Button_Tree.LineWidth);//  \/
     TKMRenderUI.WriteLine(aFrom.X, (DISTANCE_BETWEEN_ROWS div 2) + aFrom.Y,
