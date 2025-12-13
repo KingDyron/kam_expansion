@@ -550,6 +550,9 @@ begin
     htPalace:         Result := 745;
     htCartographers:  Result := 999;
     htQuarry:         Result := 1183;
+    htPottery:         Result := 1197;
+    htProductionThatch:Result := 1183;
+    htPearl:         Result := 1198;
   else
     Result := 990; // Default Flag
   end;

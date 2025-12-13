@@ -108,6 +108,7 @@ type
     procedure AddMod(aMod : TKMMapEdModification);
     procedure RemMod(aMod : TKMMapEdModification);
     function SwitchMod(aMod : TKMMapEdModification) : Boolean;
+    function ShiftPressed : Boolean;
 
 
     property Mode: TKMCursorMode read fMode write SetMode;
@@ -120,6 +121,7 @@ var
 
 
 implementation
+uses  Windows;
 
 
 { TKMCursor }
@@ -159,6 +161,17 @@ begin
     Result := true;
   end;
   
+end;
+
+function TKMCursor.ShiftPressed: Boolean;
+{begin
+  Result := GetKeyState(VK_SHIFT) < 0;
+end;}
+var state : TKeyboardState;
+begin
+  Windows.GetKeyboardState(State);
+  Result := ((State[vk_Shift] and 128) <> 0);
+
 end;
 
 procedure TKMCursor.Reset;

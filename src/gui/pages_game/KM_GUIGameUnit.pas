@@ -17,7 +17,7 @@ type
     fAskDismiss: Boolean;
     fJoiningGroups: Boolean;
     fSetViewportEvent: TPointFEvent;
-    fSelectNextUnit : TEvent;
+    fSelectNextUnit : TBooleanEvent;
     procedure Unit_Dismiss(Sender: TObject);
     procedure Dismiss_Click(Sender: TObject);
     procedure Army_ActivateControls(aGroup: TKMUnitGroup);
@@ -82,7 +82,7 @@ type
     OnUnitDismiss: TEvent;
     OnSelectingTroopDirection: TBooleanFunc;
     OnArmyCanTakeOrder: TBooleanFunc;
-    constructor Create(aParent: TKMPanel; aSetViewportEvent: TPointFEvent; aSelectNextEvent: TEvent);
+    constructor Create(aParent: TKMPanel; aSetViewportEvent: TPointFEvent; aSelectNextEvent: TBooleanEvent);
     property AskDismiss: Boolean read fAskDismiss write fAskDismiss;
     property JoiningGroups: Boolean read fJoiningGroups write fJoiningGroups;
 
@@ -119,7 +119,7 @@ const
 
 { TKMGUIGameUnit }
 
-constructor TKMGUIGameUnit.Create(aParent: TKMPanel; aSetViewportEvent: TPointFEvent; aSelectNextEvent: TEvent);
+constructor TKMGUIGameUnit.Create(aParent: TKMPanel; aSetViewportEvent: TPointFEvent; aSelectNextEvent: TBooleanEvent);
 var AT : TKMUnitAmmoType;
   I : Integer;
 begin
@@ -875,7 +875,7 @@ end;
 procedure TKMGUIGameUnit.Unit_FlagClicked(Sender: TObject);
 begin
   if Assigned(fSelectNextUnit) then
-    fSelectNextUnit;
+    fSelectNextUnit(gCursor.ShiftPressed);
 end;
 
 procedure TKMGUIGameUnit.Boat_Clicked(Sender: TObject);

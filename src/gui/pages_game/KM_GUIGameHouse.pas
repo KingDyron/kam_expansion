@@ -24,7 +24,7 @@ type
     fLastPalaceUnit: Byte;
 
     fSetViewportEvent: TPointFEvent;
-    fSelectNextHouse : TEvent;
+    fSelectNextHouse : TBooleanEvent;
     fStoreWareOrder : array of array of TKMWareType;
     function HasAnyUnit(unitArr : array of TKMUnitType) : Boolean; overload;
     function HasAnyUnit(unitArr : array of TKMUnitType; OnlyVisible : Boolean) : Boolean;overload;
@@ -278,7 +278,7 @@ type
     AskDemolish: Boolean;
     OnHouseDemolish: TNotifyEventShift;
 
-    constructor Create(aParent: TKMPanel; aSetViewportEvent: TPointFEvent; aSelectNextEvent : TEvent);
+    constructor Create(aParent: TKMPanel; aSetViewportEvent: TPointFEvent; aSelectNextEvent : TBooleanEvent);
 
     procedure Show(aHouse: TKMHouse); overload;
     procedure Show(aHouse: TKMHouse; aAskDemolish: Boolean); overload;
@@ -322,7 +322,7 @@ const
   SCHOOL_CH_ORDER_TO_1_SHIFT = ssCtrl;  // Shift state to change Unit order in queue to 1 in School
 
 
-constructor TKMGUIGameHouse.Create(aParent: TKMPanel; aSetViewportEvent: TPointFEvent; aSelectNextEvent : TEvent);
+constructor TKMGUIGameHouse.Create(aParent: TKMPanel; aSetViewportEvent: TPointFEvent; aSelectNextEvent : TBooleanEvent);
 var
   I: Integer;
 begin
@@ -4328,7 +4328,7 @@ end;
 procedure TKMGUIGameHouse.House_FlagClicked(Sender: TObject);
 begin
   if Assigned(fSelectNextHouse) then
-    fSelectNextHouse;
+    fSelectNextHouse(gCursor.ShiftPressed);
 end;
 
 procedure TKMGUIGameHouse.Store_BellClick(Sender: TObject);

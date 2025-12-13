@@ -1410,7 +1410,7 @@ begin
   Result := False; //Didn't find anyone to fight
 
   newEnemy := gTerrain.GetUnit(KMPointDir(Position, Direction).DirFaceLoc);
-  If (newEnemy = nil) or (newEnemy.IsDeadOrDying) or (newEnemy.Owner = self.Owner) then
+  If (newEnemy = nil) or (newEnemy.IsDeadOrDying) or (newEnemy.Owner = self.Owner) or (newEnemy.IsAnimal) then
     Exit;
   if newEnemy <> nil then
   begin
@@ -3848,6 +3848,7 @@ begin
     Exit;
 
   If Task = nil then
+    If not IsDeadOrDying then
     If gGameParams.Tick mod ARCHER_PACE = 0 then
       TryToShoot;
 end;

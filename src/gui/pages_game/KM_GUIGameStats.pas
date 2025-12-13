@@ -130,10 +130,10 @@ end;
 
 constructor TKMGUIGameStats.Create(aParent: TKMPanel; aOnShowStats: TNotifyEvent; aSetViewportEvent: TPointFEvent);
 const
-  HOUSE_W = 30;
+  HOUSE_W = 32;
   UNIT_W = 26;
 var
-  I, K, Row: Integer;
+  I, K, Row, C, gapX: Integer;
   UT: TKMUnitType;
   offX: Integer;
   aHouses : TKMHouseTypeArray;
@@ -177,17 +177,23 @@ begin
     UT := StatUnitOrder[I];
     offX := I + Row;
     aHouses := gRes.Units[UT].WorkerOfHouses;
+    case Length(aHouses) of
+      1, 2, 3, 4 : C := Length(aHouses);
+      5, 6, 9 : C := 3;
+      else C := 4;
+    end;
 
-    TKMBevel.Create(Panel_Stats, 5, offX*(HOUSE_W+2), TB_WIDTH - 5, (high(aHouses) div 4 + 1) * 30 );
+    TKMBevel.Create(Panel_Stats, 5, offX*(HOUSE_W+2), TB_WIDTH - 5, (high(aHouses) div C + 1) * HOUSE_W );
 
-    Stat_Units[UT] := TKMUnitStatIcon.Create(Panel_Stats, 5, offX*(HOUSE_W+2) + (high(aHouses) div 4) * 15, gRes.Units[UT].GUIIcon, byte(UT));
+    Stat_Units[UT] := TKMUnitStatIcon.Create(Panel_Stats, 5, offX*(HOUSE_W+2) + (high(aHouses) div C) * 16, gRes.Units[UT].GUIIcon, byte(UT));
 
     SetLength(Stat_Houses[UT], length(aHouses));
-    if high(aHouses) >= 4 then
-      Inc(Row, high(aHouses) div 4);
+    if high(aHouses) >= C then
+      Inc(Row, high(aHouses) div C);
 
+    gapX := ((4 * HOUSE_W) - (C * HOUSE_W)) div 2;
     for K := 0 to High(aHouses) do
-      Stat_Houses[UT][K] := TKMHouseStatIcon.Create(Panel_Stats, 10 + HOUSE_W * (K mod 4 + 1), offX*(HOUSE_W+2) + (K div 4) * HOUSE_W, gRes.Houses[ aHouses[K] ].GUIIcon, byte(aHouses[K])  );
+      Stat_Houses[UT][K] := TKMHouseStatIcon.Create(Panel_Stats, gapX + 10 + HOUSE_W * (K mod C + 1), offX*(HOUSE_W+2) + (K div C) * HOUSE_W, gRes.Houses[ aHouses[K] ].GUIIcon, byte(aHouses[K])  );
 
   end;
   for UT := CITIZEN_MIN to CITIZEN_MAX do

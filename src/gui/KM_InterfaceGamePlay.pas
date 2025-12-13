@@ -148,7 +148,7 @@ type
     procedure Selection_Select(aId: Word);
     procedure SelectUnit(aUnit: TKMUnit);
     procedure SelectUnitGroup(aGroup: TKMUnitGroup);
-    procedure SelectNextGameObjWSameType;
+    procedure SelectNextGameObjWSameType(isShift : Boolean);
     procedure SwitchPage(Sender: TObject);
     procedure OpenMenuPage(aPage: TKMTabButtons);
     procedure ShowStats(Sender: TObject);
@@ -3394,7 +3394,7 @@ begin
 end;
 
 // Select next building/unit/unit group with the same type for same owner
-procedure TKMGamePlayInterface.SelectNextGameObjWSameType;
+procedure TKMGamePlayInterface.SelectNextGameObjWSameType(isShift : Boolean);
 var
   nextHouse: TKMHouse;
   nextUnit: TKMUnit;
@@ -3414,7 +3414,7 @@ begin
 
   end else if gMySpectator.Selected is TKMHouse then
   begin
-    nextHouse := gHands.GetNextHouseWSameType(TKMHouse(gMySpectator.Selected));
+    nextHouse := gHands.GetNextHouseWSameType(TKMHouse(gMySpectator.Selected), isShift);
     if nextHouse <> nil then
     begin
       gMySpectator.Selected := nextHouse;
@@ -3990,7 +3990,7 @@ begin
   if (Key = gResKeys[kfNextEntitySameType])
     and (gMySpectator.Selected <> nil) then
   begin
-    SelectNextGameObjWSameType;
+    SelectNextGameObjWSameType(gCursor.ShiftPressed);
   end;
 
   if (Key = gResKeys[kfPlayerColorMode]) then
