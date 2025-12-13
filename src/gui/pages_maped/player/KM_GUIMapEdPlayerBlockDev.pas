@@ -53,6 +53,7 @@ begin
     dlBlocked : id := 32;
     dlUnlocked : id := 33;
     dlNotVisible : id := 91;
+    dlUnlockedSingle : id := 88;
     else id := 0;
   end;
 
@@ -93,6 +94,9 @@ begin
   If ssRight in Shift then
     IncLoop(I, byte(low(TKMHandDevLock)), byte(high(TKMHandDevLock)), -1)
   else
+  If (ssShift in Shift) and (ssCtrl in Shift) then
+    I := byte(dlUnlockedSingle)
+  else
   If ssShift in Shift then
     I := byte(dlUnlocked)
   else
@@ -105,7 +109,7 @@ begin
     IncLoop(I, byte(low(TKMHandDevLock)), byte(high(TKMHandDevLock)), 1);
 
 
-  If ssShift in Shift then
+  If TKMHandDevLock(I) = dlUnlocked then
   begin
     locks.ForceUnlockDevMapEd(fLastPage, B.Tag);
   end else
@@ -165,7 +169,7 @@ var dtt : TKMDevelopmentTreeType;
   procedure CheckNext(aType : TKMDevelopmentTreeType; var aToButton : TKMDevButton; aTop : Byte; aState : TKMHandDevLock);
   var I: integer;
     B : TKMButtonFlat;
-    nextState : TKMHandDevLock;
+    nextState, currState : TKMHandDevLock;
   begin
     with Tree[aType] do
       B := aToButton.Button_Tree;
@@ -180,6 +184,13 @@ var dtt : TKMDevelopmentTreeType;
     //B.Visible := aState <> dlNotVisible;
     B.Tag2 := 0;
     TKMButtonFlatBlock(B).DevBlock := aState;
+    currState := locks.DevelopmentLock[aType, aToButton.Dev.ID];
+    If (aState = dlUnlockedSingle) or ((currState = dlUnlockedSingle){ and (aState <> dlNotVisible)}) then
+    begin
+      TKMButtonFlatBlock(B).DevBlock := dlUnlockedSingle;
+      SetButtonColor(aToButton.Button_Tree, UNLOCKED_COLOR_DOWN, 2, UNLOCKED_COLOR_DOWN and $77FFFFFF, 1)
+    end
+    else
     If aState = dlUnlocked then
       unlockedList.Add(@aToButton)
     else
@@ -192,7 +203,6 @@ var dtt : TKMDevelopmentTreeType;
     for I := 0 to High(aToButton.Dev.Next) do
     begin
       nextState := locks.DevelopmentLock[aType, aToButton.Dev.Next[I].ID];
-
       If (aState = dlBlocked) and (nextState <> dlNotVisible) then
         nextState := dlBlocked
       else
@@ -202,7 +212,7 @@ var dtt : TKMDevelopmentTreeType;
       CheckNext(aType, aToButton.Next[I], aTop + 1, nextState);
 
       If aToButton.Next[I].Button_Tree.DownColor <> UNLOCKED_COLOR_DOWN then
-        if (aState = dlUnlocked) and (nextState = dlNone) then
+        if (aState in [dlUnlocked, dlUnlockedSingle]) and (nextState = dlNone) then
           SetButtonColor(aToButton.Next[I].Button_Tree, DEFAULT_COLOR, 2, DEFAULT_COLOR and $44FFFFFF, 1)
         else
         If (aState = dlNone) and (nextState = dlNone) then

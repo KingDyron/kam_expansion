@@ -129,12 +129,12 @@ var dtt : TKMDevelopmentTreeType;
   procedure CheckNext(aType : TKMDevelopmentTreeType; var aToButton : TKMDevButton; aTop : Byte; aState : TKMHandDevLock);
   var I: integer;
     B : TKMButtonFlat;
-    nextState : TKMHandDevLock;
+    nextState, currState : TKMHandDevLock;
   begin
     with Tree[aType] do
       B := aToButton.Button_Tree;
 
-    B.Enabled := aState in [dlNone, dlUnlocked];
+    B.Enabled := aState in [dlNone, dlUnlocked, dlUnlockedSingle];
     //set default
     B.Down := false;
     B.BackBevelColor := 0;
@@ -143,6 +143,13 @@ var dtt : TKMDevelopmentTreeType;
 
     B.Visible := aState <> dlNotVisible;
     B.Tag2 := 0;
+    currState := locks.DevelopmentLock[aType, aToButton.Dev.ID];
+    If (aState = dlUnlockedSingle) or ((currState = dlUnlockedSingle){ and (aState <> dlNotVisible)}) then
+    begin
+      SetButtonColor(aToButton.Button_Tree, UNLOCKED_COLOR_DOWN, 3, UNLOCKED_COLOR_DOWN and $77FFFFFF, 1);
+      B.Enabled := true;
+      B.Visible := true;
+    end else
     If aState = dlUnlocked then
       unlockedList.Add(@aToButton)
     else
@@ -163,7 +170,7 @@ var dtt : TKMDevelopmentTreeType;
       CheckNext(aType, aToButton.Next[I], aTop + 1, nextState);
 
       If aToButton.Next[I].Button_Tree.DownColor <> UNLOCKED_COLOR_DOWN then
-        if (aState = dlUnlocked) and (nextState = dlNone) then
+        if (aState in [dlUnlocked, dlUnlockedSingle]) and (nextState = dlNone) then
           SetButtonColor(aToButton.Next[I].Button_Tree, DEFAULT_COLOR, 3, DEFAULT_COLOR and $44FFFFFF, 1)
         else
         If (aState = dlNone) and (nextState = dlNone) then
@@ -206,6 +213,8 @@ var dtt : TKMDevelopmentTreeType;
     CheckToUnlock(aType, Tree[aType].Button_Tree);
   end;
 
+
+
 begin
   If gMySpectator = nil then
     Exit;
@@ -220,6 +229,7 @@ begin
   else
   for dtt := Low(Button_SwitchTree) to High(Button_SwitchTree) do
     ReloadType(dtt);
+  RepositionVisible;
 end;
 
 procedure TKMGUIGameDevelopment.DevClicked(Sender: TObject; Shift : TShiftState);

@@ -305,11 +305,16 @@ var dtt : TKMDevelopmentTreeType;
   end;
 
   procedure CheckDev(aType : TKMDevelopmentTreeType; aDev : PKMDevelopment; aState : TKMHandDevLock; aForceState : Boolean = false);
-  var nextState : TKMHandDevLock;
+  var nextState, oldS : TKMHandDevLock;
     I : integer;
+
   begin
+    oldS := fDevLock[dtt, aDev.ID];
     fDevLock[dtt, aDev.ID] := aState;
 
+    If (aState = dlUnlockedSingle) or ((oldS = dlUnlockedSingle){ and (aState <> dlNotVisible)}) then
+      fDevLock[dtt, aDev.ID] := dlUnlockedSingle
+    else
     If aState = dlUnlocked then
       If aDev.Parent <> nil then
         UnlockPrevious(aType, aDev.Parent);
@@ -367,11 +372,15 @@ var dtt : TKMDevelopmentTreeType;
   end;
 
   procedure CheckDev(aType : TKMDevelopmentTreeType; aDev : PKMDevelopment; aState : TKMHandDevLock);
-  var nextState : TKMHandDevLock;
+  var nextState, oldS : TKMHandDevLock;
     I : integer;
   begin
-    fDevLock[aType, aDev.ID] := aState;
+    oldS := fDevLock[dtt, aDev.ID];
+    fDevLock[dtt, aDev.ID] := aState;
 
+    If (aState = dlUnlockedSingle) or ((oldS = dlUnlockedSingle){ and (aState <> dlNotVisible)}) then
+      fDevLock[dtt, aDev.ID] := dlUnlockedSingle
+    else
     If aState = dlUnlocked then
       If aDev.Parent <> nil then
         UnlockPrevious(aType, aDev.Parent);

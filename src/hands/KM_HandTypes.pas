@@ -23,8 +23,9 @@ type
   TKMHandDevLock = (
     dlNone,
     dlBlocked, // Never allowed
-    dlUnlocked, // Always allowed
-    dlNotVisible// Don't show in gui
+    dlUnlocked, // Always allowed, unlocks previous
+    dlNotVisible,
+    dlUnlockedSingle// allowed single development
   );
   //* House lock state
   TKMHandUnitLock = (

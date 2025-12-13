@@ -41,6 +41,7 @@ type
     procedure Paint; override;
 
     procedure ReloadTrees(aCurrentPageOnly : Boolean = true); virtual;
+    procedure RepositionVisible;
     procedure RefreshButton(aTag : Pointer);
     property CurrentPage : TKMDevelopmentTreeType read fLastPage;
   end;
@@ -254,6 +255,50 @@ begin
   end;
 end;
 
+procedure TKMGUICommonDevelopment.RepositionVisible;
+var firstVisibleTop : Byte;
+
+  procedure CheckFirst(aType: TKMDevelopmentTreeType; aDev : TKMDevButton; aTop : Byte);
+  var I : integer;
+  begin
+    If aDev.Button_Tree.Visible then
+      firstVisibleTop := Min(firstVisibleTop, aTop);
+    {begin
+      aDev.Button_Tree.Top := aTop * DISTANCE_BETWEEN_ROWS;
+      Inc(aTop)
+    end;}
+    for I := 0 to High(aDev.Next) do
+      CheckFirst(aType, aDev.Next[I], aTop + 1);
+  end;
+
+  procedure RepositionNext(aType: TKMDevelopmentTreeType; aDev : TKMDevButton; aTop : Byte);
+  var I : integer;
+  begin
+    //If aDev.Button_Tree.Visible then
+      aDev.Button_Tree.Top :=(aTop - firstVisibleTop) * DISTANCE_BETWEEN_ROWS;
+    //else
+    //  aDev.Button_Tree.Top := 0;
+
+    for I := 0 to High(aDev.Next) do
+      RepositionNext(aType, aDev.Next[I], aTop + 1);
+  end;
+
+
+var dtt : TKMDevelopmentTreeType;
+begin
+  for dtt := Low(Button_SwitchTree) to High(Button_SwitchTree) do
+  begin
+
+    firstVisibleTop := 255;
+    CheckFirst(dtt, Tree[dtt].Button_Tree, 0);
+
+    If firstVisibleTop in [255, 0] then
+      Continue;
+    RepositionNext(dtt, Tree[dtt].Button_Tree, 0);
+  end;
+
+end;
+
 procedure TKMGUICommonDevelopment.RefreshButton(aTag: Pointer);
 var I : Integer;
   dev : PKMDevelopment;
@@ -276,15 +321,19 @@ procedure TKMGUICommonDevelopment.Paint;
     cent : TKMPoint;
   begin
     If not aTo.Button_Tree.Visible then
+    begin
+      for I := 0 to high(aTo.Next) do
+        MakeLine(aFrom, aTo.Next[I]);
       Exit;
+    end;
     cent := aTo.Button_Tree.AbsCenter;
     TKMRenderUI.WriteLine(aFrom.X, aFrom.Y, aFrom.X, (DISTANCE_BETWEEN_ROWS div 2) + aFrom.Y,
                           aTo.Button_Tree.DownColor, 65535, aTo.Button_Tree.LineWidth);//  \/
     TKMRenderUI.WriteLine(aFrom.X, (DISTANCE_BETWEEN_ROWS div 2) + aFrom.Y,
-                          cent.X, cent.Y - (DISTANCE_BETWEEN_ROWS div 2),
+                          cent.X, {cent.Y - (DISTANCE_BETWEEN_ROWS div 2)}(DISTANCE_BETWEEN_ROWS div 2) + aFrom.Y,
                           aTo.Button_Tree.DownColor, 65535, aTo.Button_Tree.LineWidth);//  <>
 
-    TKMRenderUI.WriteLine(cent.X, cent.Y, cent.X, cent.Y - (DISTANCE_BETWEEN_ROWS div 2),
+    TKMRenderUI.WriteLine(cent.X, cent.Y, cent.X, {cent.Y - (DISTANCE_BETWEEN_ROWS div 2)}(DISTANCE_BETWEEN_ROWS div 2) + aFrom.Y,
                           aTo.Button_Tree.DownColor, 65535, aTo.Button_Tree.LineWidth);//  /\
     //first render grey color
     //then red
