@@ -1,6 +1,7 @@
    Timestamp    Elapsed     Delta  Thread    Description
 ========================
-    Date: 2025.12.10
+    Date: 2025.12.15
 ========================
-05:55:28.212     0,001s       1ms  21996    Log is up and running. Game version: KaM Expansion: Co-op & World Update
-05:55:33.576     5,364s    5363ms  21996    Units - 17634
+08:23:48.649     0,000s       0ms  14220    Log is up and running. Game version: KaM Expansion: Explore the Cultures
+08:23:54.421     5,773s    5773ms  14220    GUI - 1191
+08:24:16.019    27,371s   21598ms  14220    Trimmed 0

@@ -213,8 +213,8 @@ object fmRXXEditor: TfmRXXEditor
     OnClick = chbImageStretchClick
   end
   object chbOverload: TCheckBox
-    Left = 196
-    Top = 20
+    Left = 191
+    Top = 8
     Width = 123
     Height = 18
     Cursor = crHandPoint
@@ -222,6 +222,16 @@ object fmRXXEditor: TfmRXXEditor
     Checked = True
     State = cbChecked
     TabOrder = 13
+    OnClick = chbImageStretchClick
+  end
+  object chbOnlyFolder: TCheckBox
+    Left = 191
+    Top = 24
+    Width = 123
+    Height = 18
+    Cursor = crHandPoint
+    Caption = 'Only from folder'
+    TabOrder = 14
     OnClick = chbImageStretchClick
   end
   object OpenDialog1: TOpenDialog

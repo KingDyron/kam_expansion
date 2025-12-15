@@ -33,6 +33,7 @@ type
     chbImageStretch: TCheckBox;
     Label4: TLabel;
     chbOverload: TCheckBox;
+    chbOnlyFolder: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure OpenDialog1Show(Sender: TObject);
     procedure SaveDialog1Show(Sender: TObject);
@@ -197,14 +198,20 @@ begin
 
   Label1.Caption := ExtractFileName(OpenDialog1.FileName);
 
-  if SameText(ExtractFileExt(OpenDialog1.FileName), '.rx') then
-    fSprites.LoadFromRXFile(OpenDialog1.FileName)
-  else
-  if SameText(ExtractFileExt(OpenDialog1.FileName), '.rxx') then
-    fSprites.LoadFromRXXFile(OpenDialog1.FileName);
+  if not chbOverload.Checked or (chbOverload.Checked and not chbOnlyFolder.Checked) then
+  begin
+    if SameText(ExtractFileExt(OpenDialog1.FileName), '.rx') then
+      fSprites.LoadFromRXFile(OpenDialog1.FileName)
+    else
+    if SameText(ExtractFileExt(OpenDialog1.FileName), '.rxx') then
+      fSprites.LoadFromRXXFile(OpenDialog1.FileName);
+  end;
 
   if chbOverload.Checked then
+  begin
     fSprites.OverloadGeneratedFromFolder(not (RT in [rxTiles, rxGuiMain]), ExeDir + 'Modding graphics' + PathDelim, false);
+    fSprites.OverloadRXXFilesFromFolder(ExeDir + 'Modding graphics' + PathDelim);
+  end;
 
   btnSaveRXX.Enabled := fSprites.IsLoaded;
   btnAdd.Enabled := fSprites.IsLoaded;
@@ -321,6 +328,7 @@ begin
 
   imgMask.Stretch := chbImageStretch.Checked;
   imgMask.Center := not chbImageStretch.Checked;
+  chbOnlyFolder.Enabled := chbOverload.Checked;
 end;
 
 

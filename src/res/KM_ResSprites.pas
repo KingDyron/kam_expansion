@@ -86,6 +86,7 @@ type
                                           aOnCheckTerminated: TBooleanFuncSimple = nil);
 
     procedure LoadFromRXXFile(const aFileName: string; aStartingIndex: Integer = 1);
+    procedure OverloadRXXFilesFromFolder(const aFolder: string);
     procedure OverloadRXDataFromFolder(const aFolder: string; aSoftenShadows: Boolean = True);
 
     function GetSoftenShadowType(aID: Integer): TKMSpriteSoftening;
@@ -745,6 +746,63 @@ begin
   end;
 end;
 
+
+procedure TKMSpritePack.OverloadRXXFilesFromFolder(const aFolder: string);
+var
+  I: Integer;
+  rxxCount: Integer;
+  inputStream: TFileStream;
+  decompressionStream: TDecompressionStream;
+  rxxFormat: TKMRXXFormat;
+  filePath : String;
+begin
+  filePath := aFolder + 'GUI_a.rxx';
+  if not FileExists(filePath) then Exit;
+
+  inputStream := TFileStream.Create(filePath, fmOpenRead or fmShareDenyNone);
+  try
+    ReadRXZHeader(inputStream, rxxFormat);
+
+    // Not sure what to do yet, silently "fail" for now
+    if rxxFormat = rxxUnknown then
+      Exit;
+
+    decompressionStream := TDecompressionStream.Create(inputStream);
+    try
+      decompressionStream.Read(rxxCount, 4);
+
+      gLog.AddTime(RX_INFO[fRT].FileName + ' -', rxxCount);
+
+      if rxxCount = 0 then
+        Exit;
+
+      Allocate(1 + rxxCount - 1);
+
+      decompressionStream.Read(fRXData.Flag[1], rxxCount);
+
+      for I := 1 to 1 + rxxCount - 1 do
+        if fRXData.Flag[I] = 1 then
+        begin
+          decompressionStream.Read(fRXData.Size[I].X, SizeOf(fRXData.Size[I]));
+          decompressionStream.Read(fRXData.Pivot[I].X, SizeOf(fRXData.Pivot[I]));
+          //SizeNoShadow is used only for Units
+          if fRT = rxUnits then
+            decompressionStream.Read(fRXData.SizeNoShadow[I].Left, SizeOf(fRXData.SizeNoShadow[I]));
+          //Data part of each sprite is 32BPP RGBA in Remake RXX files
+          SetLength(fRXData.RGBA[I], fRXData.Size[I].X * fRXData.Size[I].Y);
+          SetLength(fRXData.Mask[I], fRXData.Size[I].X * fRXData.Size[I].Y);
+          decompressionStream.Read(fRXData.RGBA[I, 0], 4 * fRXData.Size[I].X * fRXData.Size[I].Y);
+          decompressionStream.Read(fRXData.HasMask[I], 1);
+          if fRXData.HasMask[I] then
+            decompressionStream.Read(fRXData.Mask[I, 0], fRXData.Size[I].X * fRXData.Size[I].Y);
+        end;
+    finally
+      decompressionStream.Free;
+    end;
+  finally
+    inputStream.Free;
+  end;
+end;
 
 procedure TKMSpritePack.LoadFromRXAFile(const aFileName: string);
 var
@@ -2014,7 +2072,8 @@ begin
     fSprites[aRT].OverloadRXDataFromFolder(gRes.Paths[dtModding] + PathDelim)
   else}
     fSprites[aRT].OverloadRXDataFromFolder(ExeDir + 'Modding graphics' + PathDelim);
-
+    If aRT = rxGui then
+      fSprites[aRT].OverloadRXXFilesFromFolder(ExeDir + 'Modding graphics' + PathDelim);
 
   gLog.AddTime('Load Sprites Done');
 
