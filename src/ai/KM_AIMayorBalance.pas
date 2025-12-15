@@ -34,7 +34,7 @@ type
     TileBalance: Single;
 
     FruitsBalance : Single;
-    WaterBalance : Single;
+    //WaterBalance : Single;
 
     Balance: Single; //Resulting balance
   end;
@@ -311,7 +311,7 @@ end;
 
 procedure TKMayorBalance.AppendMaterials;
 var
-  List: array [0..6] of Single;
+  List: array [0..5] of Single;
 begin
   List[0] := 0;
   List[1] := fMaterials.StoneBalance;
@@ -319,7 +319,7 @@ begin
   List[3] := fMaterials.SawmillTheory - WoodNeed;
   List[4] := fMaterials.TileBalance - TileNeed;
   List[5] := fMaterials.FruitsBalance;
-  List[6] := fMaterials.WaterBalance;
+  //List[6] := fMaterials.WaterBalance;
 
   repeat
     //Do not build extra houses if we are low on building materials
@@ -351,10 +351,10 @@ begin
             Append(htAppleTree);
             List[5] := List[5] + PRODUCTION_RATE[wtApple];
           end;
-      6:  begin
+      {6:  begin
             Append(htWell);
             List[6] := List[6] + PRODUCTION_RATE[wtWater];
-          end;
+          end;}
     end;
 
 {  if (fPlayers[fOwner].Stats.GetHouseQty(htQuary) = 0)
@@ -991,14 +991,14 @@ begin
                       + gHands[fOwner].Stats.Wares[wtApple].ActualCnt//actual fruits count
                       - 2//reserve
                       - HouseCount(htCottage) * 3 - HouseCount(htHouse) * 6;//required
-
+    {
     WaterBalance := HouseCount(htWell)//actual count
                       + gHands[fOwner].Stats.Wares[wtWater].ActualCnt//reserve
                       - HouseCount(htAppleTree) * 0.25 - HouseCount([htSwine, htBakery, htStables, htHovel]);//required
-
-    Balance := Min([StoneBalance, WoodBalance, TileBalance, FruitsBalance, WaterBalance]);
-    fMaterialsText := Format('%.2f Materials: (Stone %.1f-%.1f, Wood (%.1f:%.1f)-%.1f), Tiles (%.1f-%.1f), Fruits : %.1f, Water : %.1f',
-                             [Balance, StoneProduction, StoneNeed, WoodcutTheory, SawmillTheory, WoodNeed, TilesProduction, TileNeed, FruitsBalance, WaterBalance]);
+    }
+    Balance := Min([StoneBalance, WoodBalance, TileBalance, FruitsBalance{, WaterBalance}]);
+    fMaterialsText := Format('%.2f Materials: (Stone %.1f-%.1f, Wood (%.1f:%.1f)-%.1f), Tiles (%.1f-%.1f), Fruits : %.1f',
+                             [Balance, StoneProduction, StoneNeed, WoodcutTheory, SawmillTheory, WoodNeed, TilesProduction, TileNeed, FruitsBalance{, WaterBalance}]);
   end;
 end;
 

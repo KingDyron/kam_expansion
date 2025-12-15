@@ -72,7 +72,8 @@ type
     function GetClosestUnit(const aLoc: TKMPoint; aIndex: TKMHandID; aAlliance: TKMAllianceType): TKMUnit;
     function GetClosestUnitForAttack(const aGroup: Pointer; aIndex: TKMHandID; aAlliance: TKMAllianceType): TKMUnit;
     function GetClosestHouse(const aLoc: TKMPoint; aIndex: TKMHandID; aAlliance: TKMAllianceType; aTypes: TKMHouseTypeSet = HOUSES_VALID; aOnlyCompleted: Boolean = True): TKMHouse;overload;
-    function GetClosestHouse(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aWareSet : TKMWareTypeSet = [wtAll]; aMaxDistance : Single = 999): TKMHouse;overload;
+    function GetClosestHouse(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aWareSet : TKMWareTypeSet = [wtAll]; aMaxDistance : Single = 999; aOnlyCompleted: Boolean = True): TKMHouse;overload;
+    function HasHousePlanNearby(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aMaxDistance : Single = 999): Integer;
     function GetHousesInRadius(const aLoc: TKMPoint; aSqrRadius: Single; aIndex: TKMHandID; aAlliance: TKMAllianceType; aTypes: TKMHouseTypeSet = HOUSES_VALID; aOnlyCompleted: Boolean = True): TKMHouseArray; overload;
     function GetHousesInRadius(const aLoc: TKMPoint; aSqrRadius: Single; aTypes: TKMHouseTypeSet = HOUSES_VALID; aOnlyCompleted: Boolean = True): TKMHouseArray; overload;
     function DistanceToEnemyTowers(const aLoc: TKMPoint; aIndex: TKMHandID): Single;
@@ -638,19 +639,39 @@ begin
 end;
 
 function TKMHandsCollection.GetClosestHouse(aLoc: TKMPoint; aHouseTypeSet: TKMHouseTypeSet;
-                                            aWareSet: TKMWareTypeSet = [wtAll]; aMaxDistance: Single = 999): TKMHouse;
+                                            aWareSet: TKMWareTypeSet = [wtAll]; aMaxDistance: Single = 999; aOnlyCompleted: Boolean = True): TKMHouse;
 var I : Integer;
   H : TKMHouse;
 begin
   Result := nil;
   for I := 0 to fCount - 1 do
   begin
-    H := fHandsList[I].GetClosestHouse(aLoc, aHouseTypeSet, aWareSet, aMaxDistance);
+    H := fHandsList[I].GetClosestHouse(aLoc, aHouseTypeSet, aWareSet, aMaxDistance, aOnlyCompleted);
     if H <> nil then
       if (Result = nil) or (KMLengthDiag(H.Position, aLoc) < KMLengthDiag(Result.Position, aLoc)) then
         Result := H;
+  end;
+end;
 
-
+function TKMHandsCollection.HasHousePlanNearby(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aMaxDistance : Single = 999): Integer;
+var I, J : Integer;
+  P : TKMPoint;
+  LastDist, Dist : Single;
+begin
+  Result := -1;
+  LastDist := 9999;
+  for I := 0 to fCount - 1 do
+  begin
+    J := fHandsList[I].HasHousePlanNearby(aLoc, aHouseTypeSet, aMaxDistance);
+    If J = -1 then
+      Continue;
+    P := fHandsList[I].Constructions.HousePlanList.Plans[J].Loc;
+    Dist := KMLengthDiag(P, aLoc);
+    if Dist < LastDist then
+    begin
+      LastDist := Dist;
+      Result := I;
+    end;
   end;
 end;
 

@@ -168,7 +168,7 @@
       <cbApsFrameGui10 Checked="False"/>
       <cbApsFrameGui20 Checked="False"/>
     </Perf_Logs>
-    <AI Collapsed="True">
+    <AI Collapsed="False">
       <chkAIEye Checked="False"/>
       <chkBuild Checked="False"/>
       <chkCombat Checked="False"/>
@@ -204,7 +204,7 @@
     </Debug_Input>
     <Game_additional Collapsed="False">
       <chkLoadUnsupSaves Checked="True"/>
-      <RGPlayer ItemIndex="1"/>
+      <RGPlayer ItemIndex="0"/>
       <seMaxImageSize Value="10200"/>
       <rgImageType ItemIndex="0"/>
     </Game_additional>

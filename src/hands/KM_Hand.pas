@@ -307,8 +307,8 @@ type
     procedure RemFieldPlan(const Position: TKMPoint; aMakeSound:Boolean);
     procedure RemFakeFieldPlan(const Position: TKMPoint);
     function FindInn(Loc: TKMPoint; aUnit: TKMUnit; UnitIsAtHome: Boolean = False): TKMHouseInn;
-    function FindHouse(aType: TKMHouseType; const aPosition: TKMPoint; Index: Byte = 1): TKMHouse; overload;
-    function FindHouse(aType: TKMHouseType; Index: Byte=1): TKMHouse; overload;
+    function FindHouse(aType: TKMHouseType; const aPosition: TKMPoint; Index: Byte = 1; aCompletedOnly : Boolean = true): TKMHouse; overload;
+    function FindHouse(aType: TKMHouseType; Index: Byte=1; aCompletedOnly : Boolean = true): TKMHouse; overload;
     function FindHousesInRadius(const aLoc: TKMPoint; aSqrRadius: Single; aTypes: TKMHouseTypeSet = HOUSES_VALID; aOnlyCompleted: Boolean = True): TKMHouseArray;
     function FindCityCenter: TKMPoint;
     function HitTest(X,Y: Integer): TObject;
@@ -346,7 +346,9 @@ type
     function ArmyDevUnlocked(aID : Integer) : Boolean;
     procedure UnlockSpecialWalls;
 
-    function GetClosestHouse(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aWareSet : TKMWareTypeSet = [wtAll];  aMaxDistance : Single = 999) : TKMHouse;
+    function GetClosestHouse(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aWareSet : TKMWareTypeSet = [wtAll];
+                            aMaxDistance : Single = 999; aCompletedOnly : Boolean = true) : TKMHouse;
+    function HasHousePlanNearby(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aMaxDistance : Single = 999): Integer;
     function GetClosestStore(aLoc : TKMPoint; aWare: TKMWareType) : TKMHouse;
     function GetClosestBarracks(aLoc : TKMPoint; aWare: TKMWareType) : TKMHouse;
     function GetGroupsCount: TKMGroupTypeValidArray;
@@ -2098,9 +2100,9 @@ begin
 end;
 
 
-function TKMHand.FindHouse(aType: TKMHouseType; const aPosition: TKMPoint; Index: Byte=1): TKMHouse;
+function TKMHand.FindHouse(aType: TKMHouseType; const aPosition: TKMPoint; Index: Byte=1; aCompletedOnly : Boolean = true): TKMHouse;
 begin
-  Result := fHouses.FindHouse(aType, aPosition.X, aPosition.Y, Index);
+  Result := fHouses.FindHouse(aType, aPosition.X, aPosition.Y, Index, aCompletedOnly);
 end;
 
 
@@ -2130,9 +2132,9 @@ begin
 end;
 
 
-function TKMHand.FindHouse(aType: TKMHouseType; Index: Byte=1): TKMHouse;
+function TKMHand.FindHouse(aType: TKMHouseType; Index: Byte=1; aCompletedOnly : Boolean = true): TKMHouse;
 begin
-  Result := fHouses.FindHouse(aType, 0, 0, Index);
+  Result := fHouses.FindHouse(aType, 0, 0, Index, aCompletedOnly);
 end;
 
 
@@ -2985,7 +2987,8 @@ begin
 end;
 
 
-function TKMHand.GetClosestHouse(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aWareSet : TKMWareTypeSet = [wtAll]; aMaxDistance : Single = 999) : TKMHouse;
+function TKMHand.GetClosestHouse(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet;
+                                aWareSet : TKMWareTypeSet = [wtAll]; aMaxDistance : Single = 999; aCompletedOnly : Boolean = true) : TKMHouse;
 var I : Integer;
   lastDistance : Single;
   H : TKMHouse;
@@ -3000,7 +3003,7 @@ begin
   begin
     I := 1;
     repeat
-      H := FindHouse(HT, I);
+      H := FindHouse(HT, I, aCompletedOnly);
 
       if (H <> nil)
       and (not H.IsDestroyed)
@@ -3030,6 +3033,24 @@ begin
     until (H = nil);
   end;
 
+end;
+
+function TKMHand.HasHousePlanNearby(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aMaxDistance : Single = 999): Integer;
+var lastDist, dist : Single;
+  I, J : Integer;
+begin
+  Result := -1;
+  lastDist := 99999;
+  for I := 0 to fConstructions.HousePlanList.Count - 1 do
+  If (htAny in aHouseTypeSet) or (fConstructions.HousePlanList.Plans[I].HouseType in aHouseTypeSet) then
+  begin
+    dist := KMLengthDiag(aLoc, fConstructions.HousePlanList.Plans[I].Loc);
+    If (dist <= aMaxDistance) and (dist < lastDist) then
+    begin
+      lastDist := dist;
+      Result := I;
+    end;
+  end;
 end;
 
 function TKMHand.GetClosestStore(aLoc : TKMPoint; aWare: TKMWareType) : TKMHouse;

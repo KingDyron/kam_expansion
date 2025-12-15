@@ -40,11 +40,13 @@ type
     procedure CheckHouseCount;
     function TryConnectToRoad(const aLoc: TKMPoint): Boolean;
     function TryBuildHouse(aHouse: TKMHouseType): Boolean;
+    function TryBuildHouseCloseTo(aHouse: TKMHouseType; aLoc : TKMPoint): Boolean;
     procedure CheckHousePlans;
     procedure CheckRoadsCount;
     procedure CheckExhaustedMines;
     procedure PlanDefenceTowers;
     procedure TryBuildDefenceTower;
+    procedure CheckNeededWells;
 
 
     procedure CheckWeaponOrderCount;
@@ -697,7 +699,7 @@ begin
     Exit;
   fDefenceTowersPlanned := True;
   P := gHands[fOwner];
-  if not P.Locks.HouseCanBuild(htWatchTower) then
+  if not P.Locks.HouseCanBuild(htWatchTower) and not P.Locks.HouseCanBuild(htWallTower) then
     Exit;
   pom := not gAIFields.NavMesh.Defences.FindDefenceLines(fOwner, DefLines) OR (DefLines.Count < 1);
   if pom then
@@ -791,7 +793,7 @@ begin
     //If length of road is short enough, build the tower
     if RoadExists and (NodeList.Count <= MAX_ROAD_DISTANCE) then
     begin
-      if P.Locks.HouseCanBuild(htWallTower) and CheckRandom(30) then
+      if not P.Locks.HouseCanBuild(htWatchTower) or (P.Locks.HouseCanBuild(htWallTower) and CheckRandom(30)) then
         gHands[fOwner].AddHousePlan(htWallTower, BestLoc)
       else
         gHands[fOwner].AddHousePlan(htWatchTower, BestLoc);
@@ -801,6 +803,29 @@ begin
     NodeList.Free;
   end;
 end;
+
+procedure TKMayor.CheckNeededWells;
+var I : Integer;
+  H : TKMHouse;
+begin
+  for I := 0 to gHands[fOwner].Houses.Count - 1 do
+  begin
+    H := gHands[fOwner].Houses[I];
+    If not H.IsComplete or H.IsDestroyed or H.IsClosedForWorker then
+      Continue;
+    If H.GetWareInIndex(wtWater) = 0 then
+      Continue;
+    If gHands.GetClosestHouse(H.Entrance, [htWell], [], 12, false) <> nil then
+      Continue;
+
+    If gHands.HasHousePlanNearby(H.Entrance, [htWell], 12) >= 0 then
+      Continue;
+
+    TryBuildHouseCloseTo(htWell, H.PointBelowEntrance);
+  end;
+
+end;
+
 //Try to place a building plan for requested house
 //Report back if failed to do so (that will allow requester to choose different action)
 function TKMayor.TryBuildHouse(aHouse: TKMHouseType): Boolean;
@@ -923,6 +948,132 @@ begin
 
   Result := True;
 end;
+
+
+//Try to place a building plan for requested house
+//Report back if failed to do so (that will allow requester to choose different action)
+function TKMayor.TryBuildHouseCloseTo(aHouse: TKMHouseType; aLoc: TKMPoint): Boolean;
+var
+  I, K: Integer;
+  Loc: TKMPoint;
+  P: TKMHand;
+  NodeTagList: TKMPointTagList;
+  Weight: Cardinal;
+  ignoreRoad : Boolean;
+begin
+  Result := False;
+  P := gHands[fOwner];
+  //Skip disabled houses
+  if not P.Locks.HouseCanBuild(aHouse) then Exit;
+
+  //Number of simultaneous WIP houses is limited
+  if (P.Stats.GetHouseWip(htAny) > GetMaxPlans) then Exit;
+
+  //Maybe we get more lucky next tick
+  //todo: That only works if FindPlaceForHouse is quick, right now it takes ~11ms for iron/gold/coal mines (to decide that they can't be placed).
+  //      If there's no place for the house we try again and again and again every update, so it's very inefficient
+  //      I think the best solution would be to make FindPlaceForHouse only take a long time if we succeed in finding a place for the house, if we
+  //      fail it should be quick. Doing a flood fill with radius=40 should really be avoided anyway, 11ms is a long time for placing 1 house.
+  //      We could also make it not try to place houses again each update if it failed the first time, if we can't make FindPlaceForHouse quick when it fails.
+  ignoreRoad := true;
+  if not fCityPlanner.NextToLoc(aLoc, aHouse, Loc) then Exit;
+
+  ignoreRoad := ignoreRoad or (aHouse in NO_ROAD_CONNECTION_HOUSES);
+  //Place house before road, so that road is made around it
+  P.AddHousePlan(aHouse, Loc);
+
+  // Script could delete house plan we placed, so check if we actually added it
+  if not P.HasHousePlan(Loc) then
+    Exit(False);
+
+  //Try to connect newly planned house to road network
+  //if it is not possible - scrap the plan
+  if not ignoreRoad and not TryConnectToRoad(KMPointBelow(Loc)) then
+  begin
+    P.RemHousePlan(Loc);
+    Exit;
+  end;
+
+  //I tried to use this when the bug occured but it didn't always work because AI places multiple house/field plans at once (if P.CanAddFieldPlan(KMPointBelow(Loc), ftRoad) then)
+  //Fixes Classical AI bug related to houses never being finished/connected to road network
+  If not ignoreRoad then
+  begin
+   P.Constructions.FieldworksList.RemFieldPlan(KMPointBelow(Loc)); //Make sure our entrance to the house has no plan (vine/corn) in front of it
+   P.Constructions.FieldworksList.AddField(KMPointBelow(Loc), ftRoad, fRoadTypeToBuild); //Place a road below house entrance to make sure it is connected to our city!
+  end;
+  //Build fields for Farm
+  if aHouse = htFarm then
+  begin
+    NodeTagList := TKMPointTagList.Create;
+    try
+      for I := Min(Loc.Y - 2, gTerrain.MapY - 1) to Min(Loc.Y + 2 + AI_FIELD_HEIGHT - 1, gTerrain.MapY - 1) do
+      for K := Max(Loc.X - AI_FIELD_WIDTH, 1) to Min(Loc.X + AI_FIELD_WIDTH, gTerrain.MapX - 1) do
+        if P.CanAddFieldPlan(KMPoint(K,I), ftCorn) then
+        begin
+          //Base weight is distance from door (weight X higher so nice rectangle is formed)
+          Weight := Abs(K - Loc.X)*3 + Abs(I - 2 - Loc.Y);
+          //Prefer fields below the farm
+          if (I < Loc.Y + 2) then
+            Inc(Weight, 100);
+          //Avoid building on row with roads (so we can expand from this house)
+          if I = Loc.Y + 1 then
+            Inc(Weight, 1000);
+          //avoid building on clay deposits
+          Inc(Weight, gTerrain.TileIsClay(Loc.X, Loc.Y) * 200);
+
+          NodeTagList.Add(KMPoint(K, I), Weight);
+        end;
+
+      NodeTagList.SortByTag;
+      for I := 0 to Min(NodeTagList.Count, 16) - 1 do
+        P.Constructions.FieldworksList.AddField(NodeTagList[I], ftCorn, rtNone);
+    finally
+      NodeTagList.Free;
+    end;
+  end;
+
+  //Build fields for Wineyard
+  if aHouse = htVineyard then
+  begin
+    NodeTagList := TKMPointTagList.Create;
+    try
+      for I := Min(Loc.Y - 2, gTerrain.MapY - 1) to Min(Loc.Y + 2 + AI_FIELD_HEIGHT - 1, gTerrain.MapY - 1) do
+      for K := Max(Loc.X - AI_FIELD_WIDTH, 1) to Min(Loc.X + AI_FIELD_WIDTH, gTerrain.MapX - 1) do
+        if P.CanAddFieldPlan(KMPoint(K,I), ftWine) then
+        begin
+          //Base weight is distance from door (weight X higher so nice rectangle is formed)
+          Weight := Abs(K - Loc.X)*3 + Abs(I - 2 - Loc.Y);
+          //Prefer fields below the farm
+          if (I < Loc.Y + 2) then
+            Inc(Weight, 100);
+          //Avoid building on row with roads (so we can expand from this house)
+          if I = Loc.Y + 1 then
+            Inc(Weight, 1000);
+          NodeTagList.Add(KMPoint(K, I), Weight);
+        end;
+
+      NodeTagList.SortByTag;
+      for I := 0 to Min(NodeTagList.Count, 10) - 1 do
+        P.Constructions.FieldworksList.AddField(NodeTagList[I], ftWine, rtNone);
+    finally
+      NodeTagList.Free;
+    end;
+  end;
+
+  //Block any buildings nearby
+  if aHouse = htWoodcutters then
+    gAIFields.Influences.AddAvoidBuilding(Loc.X-1, Loc.Y, WOOD_BLOCK_RAD); //X-1 because entrance is on right
+
+  //Build more roads around 2nd Store
+  if aHouse = htStore then
+    for I := Max(Loc.Y - 3, 1) to Min(Loc.Y + 2, gTerrain.MapY - 1) do
+    for K := Max(Loc.X - 2, 1) to Min(Loc.X + 2, gTerrain.MapY - 1) do
+    if P.CanAddFieldPlan(KMPoint(K, I), ftRoad) then
+      P.Constructions.FieldworksList.AddField(KMPoint(K, I), ftRoad, fRoadTypeToBuild);
+
+  Result := True;
+end;
+
 //todo: Check if planned houses are being connected with roads
 //(worker could die while digging a road piece or elevation changed to impassable)
 procedure TKMayor.CheckHousePlans;
@@ -1081,7 +1232,7 @@ begin
   //Reject - we can't build this house (that could affect other houses in queue)
 
   //Build towers if village is done, or peacetime is nearly over
-  if P.Locks.HouseCanBuild(htWatchTower) then
+  if P.Locks.HouseCanBuild(htWatchTower) or P.Locks.HouseCanBuild(htWallTower) then
     if ((fBalance.Peek = htNone) and (P.Stats.GetHouseWip(htAny) = 0)) //Finished building
     or ((gGame.Options.Peacetime <> 0) and gGame.CheckTime(600 * Max(0, gGame.Options.Peacetime - 15))) then
       PlanDefenceTowers;
@@ -1090,6 +1241,7 @@ begin
     while (fDefenceTowers.Count > 0) and (P.Stats.GetHouseWip(htAny) < MaxPlansForTowers) do
       TryBuildDefenceTower;
 
+
   while P.Stats.GetHouseWip(htAny) < GetMaxPlans do
   begin
     H := fBalance.Peek;
@@ -1097,8 +1249,7 @@ begin
     //There are no more suggestions
     if H = htNone then
       Break;
-    If H = htPottery then
-      H := htPottery;
+
     //See if we can build that
     if TryBuildHouse(H) then
     begin
@@ -1579,10 +1730,10 @@ procedure TKMayor.CheckMarketTrades;
   begin
     Result :=  gRes.Wares[aWare].MarketPrice;
     If aWare = wtEgg then
-      Result := Result * 10
+      Result := Result * 1000
     else
     If aWare = wtJewerly then
-      Result := Result * 1000;
+      Result := Result * 100000;
   end;
 var I, J : Integer;
   HM : TKMHouseMarket;
@@ -1836,6 +1987,8 @@ begin
     if fSetup.AutoBuild then
     begin
       CheckHouseCount;
+      if gHands[fOwner].Locks.HouseCanBuild(htWell) then
+        CheckNeededWells;
       //Manage wares ratios and block stone to Store
       //Build more roads if necessary
       if not Recorder.HasRecording then
@@ -1876,7 +2029,7 @@ begin
   fPathFindingRoadShortcuts.Save(SaveStream);
   fRecorder.Save(SaveStream);
   SaveStream.Write(fPearlChecked);
-  SaveStream.Write(fRoadTypeToBuild);
+  SaveStream.WriteData(fRoadTypeToBuild);
 end;
 
 
@@ -1898,7 +2051,7 @@ begin
   fPathFindingRoadShortcuts.Load(LoadStream);
   fRecorder.Load(LoadStream);
   LoadStream.Read(fPearlChecked);
-  LoadStream.Read(fRoadTypeToBuild);
+  LoadStream.ReadData(fRoadTypeToBuild);
 end;
 
 

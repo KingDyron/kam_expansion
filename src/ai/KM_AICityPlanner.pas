@@ -53,6 +53,7 @@ type
     procedure FindNearest(const aStart: TKMPointArray; aRadius: Byte; aType: TFindNearest; aPass: TKMTerrainPassabilitySet; aMaxCount: Word; aLocs: TKMPointTagList); overload;
     procedure FindNearest(const aStart: TKMPointArray; aRadius: Byte; aHouse: TKMHouseType; aMaxCount: Word; aLocs: TKMPointTagList); overload;
     function FindPlaceForHouse(aHouse: TKMHouseType; out aLoc: TKMPoint; out aIgnoreRoad : Boolean): Boolean;
+    function NextToLoc(const aStart : TKMPoint; aHouseType : TKMHouseType; out aLoc: TKMPoint): Boolean;
     procedure OwnerUpdate(aPlayer: TKMHandID);
     procedure Save(SaveStream: TKMemoryStream);
     procedure Load(LoadStream: TKMemoryStream);
@@ -120,6 +121,7 @@ begin
     htSchool:          Result := NextToHouse(aHouse, [htStore, htBarracks], [], aLoc);
     htTannery:         Result := NextToHouse(aHouse, [htSwine], [], aLoc);
     htWeaponSmithy:    Result := NextToHouse(aHouse, [htIronSmithy, htCoalMine, htBarracks], [], aLoc);
+    htCottage, htHouse:    Result := NextToHouse(aHouse, [htStore, htAppleTree], [], aLoc) or NextToHouse(aHouse, [htAny], [], aLoc);
     htWeaponWorkshop,
     htArmorWorkshop:   Result := NextToHouse(aHouse, [htSawmill, htBarracks], [], aLoc);
     htTailorsShop:  Result := NextToHouse(aHouse, [htTannery, htBarracks], [], aLoc);
@@ -132,7 +134,7 @@ begin
 
     htQuarry:        Result := NextToStone(aHouse, aLoc);
     htWoodcutters:   Result := NextToTrees(aHouse, [htStore, htWoodcutters, htSawmill], aLoc);
-    htFarm:          Result := NextToGrass(aHouse, [htAny], aLoc);
+    htFarm:          Result := NextToGrass(aHouse, [htFarm], aLoc) or NextToGrass(aHouse, [htSwine, htMill, htStables, htHovel], aLoc) or NextToGrass(aHouse, [htAny], aLoc);
     htVineyard:      Result := NextToGrass(aHouse, [htAny], aLoc);
     htWell:           begin
                         Result := PlaceForWell(aLoc);
@@ -160,6 +162,7 @@ begin
   if not Result and not (aHouse in [htAppleTree, htCoalMine, htGoldMine, htIronMine, htBitinMine, htQuarry, htFarm, htVineyard, htFishermans, htWell, htPottery, htHovel]) then
     Result := NextToHouse(aHouse, [htAny], [], aLoc);
 end;
+
 
 
 //Receive list of desired house types
@@ -319,6 +322,36 @@ begin
   Locs := TKMPointTagList.Create;
   try
     FindNearest(SeedLocs, 32, aHouse, 12, Locs);
+
+    BestBid := MaxSingle;
+    for I := 0 to Locs.Count - 1 do
+    begin
+      Bid := Locs.Tag[I]
+             - gAIFields.Influences.Ownership[fOwner,Locs[I].Y,Locs[I].X] / 5;
+      if (Bid < BestBid) then
+      begin
+        aLoc := Locs[I];
+        BestBid := Bid;
+        Result := True;
+      end;
+    end;
+  finally
+    Locs.Free;
+  end;
+end;
+
+function TKMCityPlanner.NextToLoc(const aStart : TKMPoint; aHouseType : TKMHouseType; out aLoc: TKMPoint): Boolean;
+var
+  I: Integer;
+  Bid, BestBid: Single;
+  SeedLocs: TKMPointArray;
+  Locs: TKMPointTagList;
+begin
+  Result := False;
+
+  Locs := TKMPointTagList.Create;
+  try
+    FindNearest([aStart], 32, aHouseType, 10, Locs);
 
     BestBid := MaxSingle;
     for I := 0 to Locs.Count - 1 do

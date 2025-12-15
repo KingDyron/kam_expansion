@@ -124,6 +124,8 @@ end;
 procedure TKMGeneral.AfterMissionInit;
 begin
   fPatrolAttack := HasPatrolAttack;
+  IF gHands[fOwner].AI.Setup.AutoBuild then
+    fDefencePositions.DoAvoidBuilding;
 end;
 
 

@@ -85,6 +85,8 @@ type
     procedure MoveUp(aIndex: Integer);
     procedure MoveDown(aIndex: Integer);
 
+    procedure DoAvoidBuilding;
+
     procedure Save(SaveStream: TKMemoryStream);
     procedure Load(LoadStream: TKMemoryStream);
     procedure SyncLoad;
@@ -131,9 +133,10 @@ type
 implementation
 uses
   SysUtils, TypInfo,KM_Terrain,
-  KM_HandTypes, KM_HandEntity,
+  KM_HandTypes, KM_HandEntity, KM_AIFields,
   KM_Game, KM_GameUIDTracker, KM_GameParams, KM_HandsCollection, KM_RenderAux, KM_RenderPool, KM_Hand,
-  KM_UnitGroupTypes, KM_InterfaceGame;
+  KM_UnitGroupTypes, KM_InterfaceGame,
+  KM_CommonUtils;
 
 
 { TAIDefencePosition }
@@ -274,7 +277,7 @@ begin
   if not Result then Exit;
 
   if fUnitType <> utNone then
-    Result := Result and (aGroup.GetUnitTypeForDP in [fUnitType, utNone]);
+    Result := Result and (aGroup.FlagBearer.UnitType in [fUnitType]);
 
   if not Result then Exit;
   // Empty position accepts anything (e.g. happens at mission start)
@@ -782,6 +785,27 @@ procedure TAIDefencePositions.MoveDown(aIndex: Integer);
 begin
   if aIndex > 0 then
     fPositions.Exchange(aIndex, aIndex-1);
+end;
+
+procedure TAIDefencePositions.DoAvoidBuilding;
+var i, K : Integer;
+  GT : TKMGroupType;
+  Pos : TKMPointDir;
+  P2 : TKMPoint;
+  tmp : Boolean;
+begin
+  for I := 0 to Count - 1 do
+  begin
+    Pos := self.GetPosition(I).fPosition;
+    GT := GetPosition(I).GroupType;
+    for K := 0 to TroopFormations[GT].NumUnits - 1 do
+    begin
+      P2 := GetPositionInGroup2(Pos.X, Pos.Y, Pos.Dir, K, TroopFormations[GT].UnitsPerRow,
+                                gTerrain.MapX, gTerrain.MapY, tmp, GT = gtShips);
+      gAIFields.Influences.AvoidBuilding[P2.Y, P2.X] := 255;
+    end;
+  end;
+
 end;
 
 
