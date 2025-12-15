@@ -1876,6 +1876,7 @@ begin
   fPathFindingRoadShortcuts.Save(SaveStream);
   fRecorder.Save(SaveStream);
   SaveStream.Write(fPearlChecked);
+  SaveStream.Write(fRoadTypeToBuild);
 end;
 
 
@@ -1897,6 +1898,7 @@ begin
   fPathFindingRoadShortcuts.Load(LoadStream);
   fRecorder.Load(LoadStream);
   LoadStream.Read(fPearlChecked);
+  LoadStream.Read(fRoadTypeToBuild);
 end;
 
 

@@ -1022,7 +1022,7 @@ var
 begin
   if fRXData.Flag[aIndex] <> 1 then Exit;
 
-  if fRT = rxUnits then
+  if fRT in [rxUnits, rxGui] then
   begin
     ExportUnitSprite(aFolder + Format('%d_%.4d', [Ord(fRT)+1, aIndex]), aIndex);
   end else
@@ -1157,7 +1157,8 @@ begin
     for I := 0 to pngHeight - 1 do
       for K := 0 to pngWidth - 1 do
       begin
-        maskColor := GetGreyColor(Round(fRXData.Mask[aIndex, I * pngWidth + K] * 0.5));
+        maskColor := GetGreyColor(Round(fRXData.Mask[aIndex, I * pngWidth + K]{ * 0.5}));
+        maskColor := maskColor and $FF0000FF;
         {if fRT = rxHouses then
         begin
           maskColor := fRXData.Mask[aIndex, I * pngWidth + K];
