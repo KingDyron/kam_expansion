@@ -2968,7 +2968,7 @@ function TKMHand.DevUnlocked(aType : TKMDevelopmentTreeType; aID : Integer) : Bo
 begin
   If self = nil then
     Exit(false);
-  Result := fLocks.DevelopmentLock[aType, aID] = dlUnlocked;
+  Result := fLocks.DevelopmentLock[aType, aID] in [dlUnlocked, dlUnlockedSingle];
 end;
 
 function TKMHand.BuildDevUnlocked(aID : Integer) : Boolean;
@@ -3037,7 +3037,7 @@ end;
 
 function TKMHand.HasHousePlanNearby(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aMaxDistance : Single = 999): Integer;
 var lastDist, dist : Single;
-  I, J : Integer;
+  I : Integer;
 begin
   Result := -1;
   lastDist := 99999;

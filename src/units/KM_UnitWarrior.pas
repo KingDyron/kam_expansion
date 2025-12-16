@@ -1475,7 +1475,6 @@ begin
 
     Exit;
   end;}
-
   
   newEnemy := FindEnemy(GetFightMinRange, GetFightMaxRange(true));
 
