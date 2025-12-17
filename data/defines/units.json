@@ -3669,7 +3669,7 @@
 			"ProducesWares" : ["wtAll"],
 			"PalaceCost" : 
 			{
-				"PhaseCount" : 6,
+				"PhaseCount" : 5,
 				"PhaseDuration" : 300,
 				"VirtualWares" : 
 				[

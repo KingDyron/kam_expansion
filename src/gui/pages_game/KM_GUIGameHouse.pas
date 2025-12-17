@@ -4041,21 +4041,20 @@ var I, K, J, count, lastID, phase : Integer;
 begin
   Palace := TKMHousePalace(aHouse);
 
-  if Palace.IsTraining then
-    for I := 0 to High(PALACE_UNITS_ORDER) do
-      if Palace.FullProgress[I] > 0 then
-        fLastPalaceUnit := I;
+  if Palace.TrainingInProgress then
+    fLastPalaceUnit := Palace.TrainedUnitID;
+
   if not HasAnyUnit(PALACE_UNITS_ORDER) then
   begin
     Panel_House_Palace.Hide;
     Exit;
   end;
 
-  Button_PalaceRight.Enabled := not Palace.IsTraining and (NextUnit(fLastPalaceUnit, PALACE_UNITS_ORDER, false) <> -1);
-  Button_PalaceLeft.Enabled := not Palace.IsTraining and (PreviousUnit(fLastPalaceUnit, PALACE_UNITS_ORDER, false) <> -1);
+  Button_PalaceRight.Enabled := not Palace.TrainingInProgress and (NextUnit(fLastPalaceUnit, PALACE_UNITS_ORDER, false) <> -1);
+  Button_PalaceLeft.Enabled := not Palace.TrainingInProgress and (PreviousUnit(fLastPalaceUnit, PALACE_UNITS_ORDER, false) <> -1);
 
-  Button_Palace_NextUnit.Enabled := not Palace.IsTraining;
-  Button_Palace_PreviousUnit.Enabled := not Palace.IsTraining;
+  Button_Palace_NextUnit.Enabled := not Palace.TrainingInProgress;
+  Button_Palace_PreviousUnit.Enabled := not Palace.TrainingInProgress;
   I := NextUnit(fLastPalaceUnit, PALACE_UNITS_ORDER, false);
   Button_Palace_NextUnit.Visible := I <> -1;
   if I > -1 then
@@ -4099,14 +4098,14 @@ begin
   end;
 
   Bar_Palace_ProgressLeft.Top := Button_PalaceVWares[lastID].Bottom + 40;
-  Bar_Palace_ProgressLeft.Position := Palace.FullProgress[fLastPalaceUnit];
-  Bar_Palace_ProgressLeft.MainColor := TKMHousePalace(aHouse).BarColor[fLastPalaceUnit];
-  Bar_Palace_ProgressLeft.LinesCount := Max(TKMHousePalace(aHouse).UnitTrainPhases[fLastPalaceUnit] - 1, 0);
+  Bar_Palace_ProgressLeft.Position := Palace.FullProgress * 0.97;
+  Bar_Palace_ProgressLeft.MainColor := TKMHousePalace(aHouse).BarColor;
+  Bar_Palace_ProgressLeft.LinesCount := Max(TKMHousePalace(aHouse).UnitTrainPhases[UT] - 1, 0);
 
   Label_Palace_Unit.Top := Button_PalaceVWares[lastID].Bottom + 5;
 
   Bar_Palace_ProgressRight.Top := Button_PalaceVWares[lastID].Bottom + 40;
-  Bar_Palace_ProgressRight.Position := Palace.PhaseProgress[fLastPalaceUnit] * 0.97;
+  Bar_Palace_ProgressRight.Position := Palace.PhaseProgress * 0.97;
   Bar_Palace_ProgressRight.MainColor := icGreen;
   Bar_Palace_ProgressRight.LinesCount := 0;
   Button_Palace_UnitPlan.Top := Button_PalaceVWares[lastID].Bottom + 40;
@@ -4123,10 +4122,10 @@ begin
   Button_Palace_PreviousUnit.FlagColor := gHands[aHouse.Owner].FlagColor;
   Button_Palace_NextUnit.FlagColor := gHands[aHouse.Owner].FlagColor;
 
-  Button_Palace_UnitPlan.Caption := IfThen(Palace.IsTraining, '--','v');
-  Button_Palace_UnitPlan.CapColor := IfThen(Palace.IsTraining, $FFFF0000, $FFFFFF00);
+  Button_Palace_UnitPlan.Caption := IfThen(Palace.TrainingInProgress, '--','v');
+  Button_Palace_UnitPlan.CapColor := IfThen(Palace.TrainingInProgress, $FFFF0000, $FFFFFF00);
 
-  if Palace.IsTraining then
+  if Palace.TrainingInProgress then
   begin
     case (gGameParams.Tick div 30) mod 5  of
       0: Button_Palace_UnitPlan.Caption := '<>';
@@ -4144,10 +4143,10 @@ begin
   else
     Button_Palace_UnitPlan.Caption := '--';
 
-  if Palace.Orders[fLastPalaceUnit] > 1 then
+  if Palace.Orders[fLastPalaceUnit] > 0 then
     Button_Palace_UnitPlan.Caption := Button_Palace_UnitPlan.Caption + '||' + IntToStr(Palace.Orders[fLastPalaceUnit]);
 
-  if Palace.IsTraining then
+  if Palace.TrainingInProgress then
     Button_Palace_UnitPlan.CapColor := $FF05B5FA
   else
   if Palace.Orders[fLastPalaceUnit] > 0 then
@@ -4162,21 +4161,29 @@ begin
 
   for I := 0 to High(Button_PalaceVWaresCost) do
     Button_PalaceVWaresCost[I].Hide;
-  for I := 0 to High(Palace.VWareIDs[fLastPalaceUnit]) do
-  begin
-    K := Palace.VWareIDs[fLastPalaceUnit, I];
-    Button_PalaceVWaresCost[I].Show;
 
+  for I := 0 to High(gRes.Units[UT].PalaceCost.Wares) do
+  begin
+    K := gRes.Units[UT].PalaceCost.Wares[I].Index;
+    Button_PalaceVWaresCost[I].Show;
+    count := gRes.units[UT].PalaceCost.Wares[I].C;
     Button_PalaceVWaresCost[I].Caption := IntToStr(gRes.units[UT].PalaceCost.Wares[I].C);
     Button_PalaceVWaresCost[I].Hint := gResTexts[gRes.Wares.VirtualWares.Ware[K].TextID];
     Button_PalaceVWaresCost[I].TexID := gRes.Wares.VirtualWares.Ware[K].GUIIcon;
     Button_PalaceVWaresCost[I].Left := Button_PalaceVWares[0].Left + 12 + (I mod 5) * 32;
     Button_PalaceVWaresCost[I].Top := Button_PalaceRight.Bottom + 20 + (I div 5) * 32;
+    Button_PalaceVWaresCost[I].Down := false;
+
+    if count > gHands[Palace.Owner].VirtualWare[K] then
+    begin
+      Button_PalaceVWaresCost[I].DownColor := $FF0000FF;
+      Button_PalaceVWaresCost[I].Down := true;
+    end;
   end;
 
   Image_CancelUnit.Top := Button_Palace_UnitPlan.Bottom - 20;
   Image_CancelUnit.Left := Button_Palace_UnitPlan.Left;
-  Image_CancelUnit.Visible := Palace.IsTraining;
+  Image_CancelUnit.Visible := Palace.TrainingInProgress;
   Image_CancelUnit.TexID := 32;
 
 
@@ -4184,7 +4191,12 @@ begin
   WaresProdCt_Common[2].Caption := '';
   WaresProdCt_Common[3].Caption := '';
   WaresProdCt_Common[4].Caption := '';
-  WP := TKMHousePalace(aHouse).GetWarePlan;
+  If Palace.TrainingInProgress  then
+    WP := TKMHousePalace(aHouse).GetWarePlan
+  else
+    WP := TKMHousePalace(aHouse).GetWarePlanOf(fLastPalaceUnit);
+
+
   for I := 0 to high(WP) do
     if WP[I].C > 0 then
     begin

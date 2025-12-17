@@ -218,6 +218,7 @@ begin
   fHouses := TKMResHouses.Create;
   fStructures := TKMResStructures.Create;
   fUnits.SetUnitHousesList;
+  fUnits.SetUnitPalaceCostVWareID;
   fPatterns := TKMResPatterns.Create;
   StepRefresh;
   gLog.AddTime('ReadGFX is done');

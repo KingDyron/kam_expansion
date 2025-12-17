@@ -694,7 +694,18 @@
 										"GuiIcon" : 1144,
 										"X" : 3,
 										"Cost" : 5,
-										"IsSpecial" : False
+										"IsSpecial" : False,
+										"Next" : 
+										[
+											{
+												"ID" : 36,
+												"HintID" : 99,
+												"GuiIcon" : 1199,
+												"X" : 4,
+												"Cost" : 51,
+												"IsSpecial" : False
+											}
+										]
 									}
 								]
 							},

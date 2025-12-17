@@ -1339,7 +1339,7 @@ begin
       gicHouseStallBuyCoin         : TKMHouseStall(srcHouse).BuyCoin(IntParams[1], IntParams[2]);
       gicHouseStallBuyItem         : TKMHouseStall(srcHouse).BuyItem(IntParams[1], IntParams[2]);
       gicHousePalaceOrder          : TKMHousePalace(srcHouse).Orders[IntParams[1]] := IntParams[2];
-      gicHousePalaceCancelOrder    : TKMHousePalace(srcHouse).CancelOrder(IntParams[1]);
+      gicHousePalaceCancelOrder    : TKMHousePalace(srcHouse).CancelOrder{(IntParams[1])};
 
       gicHouseQueueAdd             : TKMHouseQueue(srcHouse).AddWareToQueue(TKMWareType(IntParams[1]), IntParams[2], 1);
       gicHouseQueueRem             : TKMHouseQueue(srcHouse).RemWareFromQueue(IntParams[1]);

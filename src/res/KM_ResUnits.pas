@@ -186,6 +186,7 @@ type
     procedure ExportCSV(const aPath: UnicodeString);
     procedure SaveToJson(const aPath: UnicodeString);
     procedure SetUnitHousesList;
+    procedure SetUnitPalaceCostVWareID;
     procedure SaveCustomData(aSaveStream: TKMemoryStream);
     procedure LoadCustomData(aLoadStream: TKMemoryStream);
     function LoadFromJson(aPath : String) : Cardinal;
@@ -1352,6 +1353,19 @@ begin
         end;
 
   //fHouses
+end;
+
+procedure TKMResUnits.SetUnitPalaceCostVWareID;
+var I : Integer;
+  U : TKMUnitType;
+begin
+  for U := UNIT_MIN to UNIT_MAX do
+    for I := 0 to High(fItems[U].PalaceCost.Wares) do
+    begin
+      fItems[U].PalaceCost.Wares[I].Index := gRes.Wares.VirtualWares.WareS[fItems[U].PalaceCost.Wares[I].W].Index;
+    end;
+
+
 end;
 
 procedure TKMResUnits.ExportCSV(const aPath: UnicodeString);

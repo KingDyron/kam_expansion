@@ -427,6 +427,8 @@ type
       C : Byte;
     end;
   end;
+  PKMVWarePlan = ^TKMVWarePlan;
+
   TKMBuildCost = record
     W : TKMWareType;
     C : Byte;

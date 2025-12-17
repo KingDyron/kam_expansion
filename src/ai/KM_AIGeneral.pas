@@ -376,18 +376,9 @@ var
             Continue;
           if not gHands[fOwner].Locks.UnitUnlocked(UT2) then
             Continue;
-          if UT2 = utSpy then
+          if UT2 in [utSpy] then
             Continue;
           if (HP.Orders[J] > 0) then
-            Continue;
-
-          if HP.FullProgress[J] > 0 then
-          begin
-            Dec(GroupReq[GT]);
-            Continue;
-          end;
-
-          if HP.IsTraining then
             Continue;
 
           if not HP.CanEquip(J) then
