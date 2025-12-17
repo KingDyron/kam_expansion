@@ -482,6 +482,7 @@ procedure TKMTextLibraryMulti.SaveToFile(aMissionPath: string);
 var I, K : Integer;
   list : TStringList;
   S : String;
+  wasEmpty : Boolean;
 begin
   If not fMapEdChanged then
     Exit;
@@ -492,15 +493,24 @@ begin
     list.Clear;
     if length(fTexts[I]) = 0 then //no texts to save, skip it
       Continue;
-
+    wasEmpty := false;
     for K := 0 to High(fTexts[I]) do//texts
     begin
       if fTexts[I, K] = '' then //make next line when there is no text
-        S := ''
-      else
+      begin
+        S := '';
+        If not wasEmpty then
+        begin
+          list.Add(S);
+          wasEmpty := true;
+        end;
+      end else
+      begin
         S := IntToStr(K) + ':' + fTexts[I, K];
+        list.Add(S);
+        wasEmpty := false;
+      end;
 
-      list.Add(S);
     end;
     list.SaveToFile(Format(ChangeFileExt(aMissionPath, '.%s.libx'), [gResLocales[I].Code]));
   end;
