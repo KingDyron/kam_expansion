@@ -1475,6 +1475,7 @@ begin
 
     Exit;
   end;}
+
   
   newEnemy := FindEnemy(GetFightMinRange, GetFightMaxRange(true));
 
@@ -1517,23 +1518,9 @@ begin
     and ((GetOrderTargetUnit = nil) or GetOrderTargetUnit.IsDeadOrDying or not WithinFightRange(GetOrderTargetUnit.Position))
     then
       Exit;
-  end else
-  if CanShootAndFight and (aMinRange >= 3) then //if warrior can shoot and fight then don't check thos if minrange is too small, min 3 tiles
-  begin
-    //We are busy with an action (e.g. in a fight)
-    if (Action <> nil) and Action.Locked then Exit;
-
-    //We are shooting at house
-    if (fTask <> nil) and (fTask is TKMTaskAttackHouse) then Exit;
-
-    //Archers should only look for opponents when they are idle or when they are finishing another fight (function is called by TUnitActionFight)
-    if (Action is TKMUnitActionWalkTo)
-    and ((GetOrderTargetUnit = nil) or GetOrderTargetUnit.IsDeadOrDying or not WithinFightRange(GetOrderTargetUnit.Position))
-    then
-      Exit;
   end;
 
-  if IsRanged or (CanShootAndFight and (aMinRange >= 3))  then
+  if IsRanged then
     testDir := Direction //Use direction for ranged attacks, if it was not already specified
   else
     testDir := dirNA;
@@ -1548,12 +1535,7 @@ begin
     testDir := dirNA;//DIR_TO_NEXT2[Direction];
   //This function should not be run too often, as it will take some time to execute (e.g. with lots of warriors in the range area to check)
   Result := gTerrain.UnitsHitTestWithinRad(Position, aMinRange, range, Owner, atEnemy, testDir, not RANDOM_TARGETS);
-  {if Result = nil then
-    if UnitType = utBattleShip then
-    begin
-      testDir := DIR_TO_PREV2[Direction];
-      Result := gTerrain.UnitsHitTestWithinRad(Position, aMinRange, range, Owner, atEnemy, testDir, not RANDOM_TARGETS);
-    end;}
+
   //if fType in [utSpy, utAmmoCart, utRam] then
   if not gRes.Units[fType].CanAttackUnits then   
     Result := nil;
