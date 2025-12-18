@@ -142,7 +142,9 @@ begin
                           Result := NextToHouse(aHouse, [htAny], [], aLoc)
                           
                       end;
-    htFishermans:     Result := NextToWater(aHouse, aLoc);
+    htFishermans:     begin
+                        Result := NextToWater(aHouse, aLoc);
+                      end;
     htAppleTree:      begin
                         Result := ModuleFruitTree(aLoc);
                         If not Result then
@@ -494,7 +496,7 @@ var
   Locs: TKMPointTagList;
   SeedLocs: TKMPointArray;
   J, M: Integer;
-  tmp: TKMPoint;
+  tmp: TKMPointDir;
 begin
   Result := False;
 
@@ -512,6 +514,7 @@ begin
     begin
       M := KaMRandom(Locs.Count, 'TKMCityPlanner.NextToStone');
       StoneLoc := Locs[M];
+      //gTerrain.SelectTile(StoneLoc.X, StoneLoc.Y, true);
       for I := Max(StoneLoc.Y - SEARCH_RAD, 1) to Min(StoneLoc.Y + SEARCH_RAD, gTerrain.MapY - 1) do
       for K := Max(StoneLoc.X - SEARCH_RAD, 1) to Min(StoneLoc.X + SEARCH_RAD, gTerrain.MapX - 1) do
       if gHands[fOwner].CanAddHousePlanAI(K, I, aHouse, True) then
@@ -534,7 +537,7 @@ begin
 
   //Make sure stonemason actually can reach some stone (avoid build-destroy loop)
   if Result then
-    if not gTerrain.FindClay(aLoc, gTerrain.GetMiningRect(wtTile), KMPOINT_ZERO, True, nil, tmp) then
+    if not gTerrain.FindFishWater(aLoc, gRes.Units[utFisher].MiningRange, KMPOINT_ZERO, True, tmp) then
       Result := False;
 end;
 
