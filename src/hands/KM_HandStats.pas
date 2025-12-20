@@ -34,7 +34,7 @@ type
   end;
 
   TKMWareStats = packed record
-    Initial: Cardinal;
+    Initial: Integer;
     Produced: Cardinal;
     Consumed: Cardinal;
     ActualCnt : Cardinal;
@@ -577,7 +577,7 @@ begin
     wtWarfare: for RT in WARES_WARFARE do
                   Inc(Result, Wares[RT].Initial + Wares[RT].Produced - Wares[RT].Consumed);
 
-    else        Result := Wares[aRT].Initial + Wares[aRT].Produced - Wares[aRT].Consumed;
+    else        Inc(Result, Integer(Wares[aRT].Initial) + Integer(Wares[aRT].Produced) - Integer(Wares[aRT].Consumed));
   end;
 end;
 

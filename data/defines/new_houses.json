@@ -4540,7 +4540,7 @@
 			"MaxInWares" : 3,
 			"UnoccupiedMsgId" : -1,
 			"UnlockAfter" : ["htWall2", "htWall4"],
-			"WareInput" : [ "wtApple", "wtSausage", "wtQuiver", "wtStoneBolt", "wtBolt", "wtLance"],
+			"WareInput" : [ "wtNone"],
 			
 			"ha_Flag1" : {"X" : -15,"Y" : 18,"Steps" : [1160,1161,1162,1158,1159]},
 			"ha_Flag2" : {"X" : 66,"Y" : 18,"Steps" : [1160,1161,1162,1158,1159]},
