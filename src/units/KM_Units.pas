@@ -4232,7 +4232,7 @@ begin
   Inc(fTicker);
 
   //Update hunger
-  if not (fNeverHungry or Immortal) then
+  if not (fNeverHungry or Immortal or gHands[Owner].NeverHungry) then
     If (UnitType in SIEGE_MACHINES) and gHands[Owner].ArmyDevUnlocked(30) then
     begin
       //do nothing

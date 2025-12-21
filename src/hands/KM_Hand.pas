@@ -773,9 +773,6 @@ begin
   //Unit failed to add, that happens
   if Result = nil then Exit;
 
-  if NeverHungry and not gGameParams.IsMapEditor then
-    Result.NeverHungry := true;
-
   if gGameParams.IsMapEditor then
   begin
     if aMakeCheckpoint then
@@ -843,9 +840,6 @@ begin
     fConstructions.AddWorker(TKMUnitWorker(aUnit));
   if aUnit is TKMUnitSerf then
     fDeliveries.AddSerf(aUnit);
-
-  if NeverHungry and not gGameParams.IsMapEditor then
-      aUnit.NeverHungry := true;
 
   //Warriors don't trigger "OnTrained" event, they trigger "WarriorEquipped" in WarriorWalkedOut below
   if not (aUnit is TKMUnitWarrior) then
@@ -920,9 +914,7 @@ begin
   else
   if aUnitType in [WARRIOR_MIN..WARRIOR_MAX] then
     Result := fUnitGroups.AddGroup(fID, aUnitType, Position.X, Position.Y, aDir, aUnitPerRow, aCount);
-  if NeverHungry and not gGameParams.IsMapEditor then
-    if Result <> nil then
-      Result.NeverHungry := true;
+
   //Group can be nil if it fails to be placed on terrain (e.g. because of terrain height passability)
   if Result <> nil then
     Result.OnGroupDied := GroupDied;
@@ -1085,6 +1077,9 @@ begin
     UnlockSpecialWalls;
   If BuildDevUnlocked(32) then
     UnlockAllBuildings;
+
+  If EconomyDevUnlocked(34) then
+    NeverHungry := true;
 
 end;
 
@@ -2946,6 +2941,9 @@ begin
     If (aType = dttBuilder) and (aID = 32) then
       UnlockAllBuildings;
 
+    If (aType = dttEconomy) and (aID = 34) then
+      NeverHungry := true;
+
     gGame.RefreshDevelopmentTree;
   end;
 end;
@@ -3572,9 +3570,6 @@ begin
   fDeliveries.SyncLoad;
   fConstructions.SyncLoad;
   fAI.SyncLoad;
-
-  if fNeverHungry then
-    NeverHungry := true;
 end;
 
 
@@ -3991,19 +3986,8 @@ begin
 end;
 
 procedure TKMHand.SetNeverHungry(aValue: Boolean);
-var I : Integer;
 begin
   fNeverHungry := aValue;
-
-  if gGameParams.IsMapEditor then
-    Exit;
-
-  for I := 0 to fUnits.Count - 1 do
-    fUnits[I].NeverHungry := aValue;
-
-  for I := 0 to fUnitGroups.Count - 1 do
-    fUnitGroups[I].NeverHungry := aValue;
-
 end;
 
 procedure TKMHand.SetWorklessCitizens(aValue: Word);

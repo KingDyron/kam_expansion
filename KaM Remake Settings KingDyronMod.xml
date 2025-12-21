@@ -2,7 +2,7 @@
 <Root>
   <Main>
     <GFX FullScreen="False" VSync="True" ResolutionWidth="1920" ResolutionHeight="1080" RefreshRate="60" FPSCap="60" GuiStyle="0"/>
-    <Window Left="50" Top="33" Width="1024" Height="1000" State="2"/>
+    <Window Left="50" Top="33" Width="1024" Height="977" State="2"/>
     <Misc NoRenderMaxTime="1000"/>
   </Main>
   <Game>
@@ -29,7 +29,7 @@
     <Menu FavouriteMaps="" CampaignName="HKS" LobbyMapType="4" CampaignID="0" CampaignMapID="39">
       <Singleplayer Type="0" ScenarioMapCRC="1925561095" MissionMapCRC="3221235012" TacticMapCRC="3221235012" SpecialMapCRC="3221235012" SaveFileName="autosave"/>
       <Replay Type="1" SPSaveName="Nowa Misja 2" MPSaveName="paused"/>
-      <MapEd MapType="0" NewMapX="256" NewMapY="256" SPMapCRC="1925561095" MPMapCRC="905377529" MPMapName="Nowa Misja02" DLMapCRC="0"/>
+      <MapEd MapType="0" NewMapX="256" NewMapY="256" SPMapCRC="3922470895" MPMapCRC="905377529" MPMapName="Nowa Misja02" DLMapCRC="0"/>
     </Menu>
     <Tutorials Battle="False False False False False False False False " Town="False False False False False False False False False "/>
     <Debug SaveRandomChecks="True" SaveGameAsText="False"/>

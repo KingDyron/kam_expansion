@@ -3698,6 +3698,13 @@ end;
 function TKMHouse.MiningRect(aWare : TKMWareType) : TKMRect;
 begin
   Result := gTerrain.GetMiningRect(aWare);
+  If (aWare = wtCoal) and (gHands[Owner].EconomyDevUnlocked(33)) then
+  begin
+    Inc(Result.Left, 1);
+    Inc(Result.Top, 1);
+    Inc(Result.Bottom, 1);
+    Inc(Result.Right, 1);
+  end;
 end;
 
 
