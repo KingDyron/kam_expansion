@@ -471,8 +471,7 @@ begin
 
   fMinimap.RevealCircle(aLoc, 50);
 
-  if aWasBuilt then
-    gTerrain.PalaceExploreDeposits(Entrance);
+  gTerrain.PalaceExploreDeposits(aLoc);
 end;
 
 procedure TKMHouseCartographers.CollectSpyData(aPlayer: Integer);
