@@ -4291,7 +4291,7 @@
 		"GrainType" : "gftCactus",
 		"GuiIcon"	: 834,
 		"TextID"	: 1,
-		"Wine"		: 0.5,
+		"Wine"		: 0.8,
 		"Dead"		: {"Object" : 329, "Terrain": 62},
 		"Stages"	: [
 						{"Object" : 469, 	"Terrain": 688, 	"NextStage" : 0, "Age" : 200, 	"GivesWares" : false, 	"CanBeCut": false,	"CanBePlant" : false},
@@ -4305,7 +4305,7 @@
 		"GrainType" : "gftIceSticks",
 		"GuiIcon"	: 834,
 		"TextID"	: 1,
-		"Wine"		: 0.5,
+		"Wine"		: 1.5,
 		"Dead"		: {"Object" : 329, "Terrain": 62},
 		"Stages"	: [
 						{"Object" : 465, 	"Terrain": 687, 	"NextStage" : 0, "Age" : 200, 	"GivesWares" : false, 	"CanBeCut": false,	"CanBePlant" : false},
