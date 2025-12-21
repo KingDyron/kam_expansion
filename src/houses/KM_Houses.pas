@@ -375,6 +375,7 @@ type
     function AcceptsWorker(aWorker: Pointer) : Boolean; virtual;
     procedure DoNotAcceptWorker(aIndex: Integer);
     function GetWorkersIcons : TKMWordArray;
+    function GetWorker(aIndex: Integer) : Pointer;
 
 
     function GetHealth: Word;
@@ -1013,6 +1014,7 @@ type
     function GetUnitWeight(aUnitType : TKMUnitType) : Byte;
     function GetTotalWeight : Byte;
     function CanEnter(aUnitType : TKMUnitType = utAny) : Boolean;
+    procedure Paint;override;
   end;
 
   TAppleTree = TKMHouseAppleTree;
@@ -2623,7 +2625,12 @@ begin
         SetLength(Result, J + 1);
         Result[J] := gRes.Units[TKMUnit(fWorkers[I]).UnitType].GUIIcon;
       end;
+end;
 
+function TKMHouse.GetWorker(aIndex : Integer) : Pointer;
+begin
+  Assert(aIndex < WorkersCount);
+  Result := fWorkers[aIndex];
 end;
 
 function TKMHouse.GetHealth:word;
@@ -9239,6 +9246,33 @@ function TKMHouseSiegeTower.CanEnter(aUnitType : TKMUnitType = utAny): Boolean;
 begin
   Result := not IsClosedForWorker;
   Result := Result and (GetTotalWeight + GetUnitWeight(aUnitType) <= MAX_UNITS_INSIDE);
+end;
+
+procedure TKMHouseSiegeTower.Paint;
+  function GetMinRadius : Single;
+  var I : Integer;
+  begin
+    Result := 20;
+    for I := 0 to WorkersCount - 1 do
+      Result := Min(fWorkers[I].ToWarrior.RangeMin, Result);
+  end;
+  function GetMaxRadius : Single;
+  var I : Integer;
+  begin
+    Result := 0;
+    for I := 0 to WorkersCount - 1 do
+      Result := Max(fWorkers[I].ToWarrior.RangeMax, Result);
+  end;
+
+begin
+  inherited;
+  if not (gMySpectator.Selected = Self) then
+    Exit;
+
+  if WorkersCount = 0 then
+    Exit;
+
+  gRenderPool.RenderDebug.RenderTiledArea(Entrance{ + KMPoint(0, -4)}, GetMinRadius, GetMaxRadius, GetLength, $40FFFFFF, icWhite);
 end;
 
 

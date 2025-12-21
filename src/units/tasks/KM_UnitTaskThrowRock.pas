@@ -191,6 +191,7 @@ end;
 
 
 function TKMTaskShootFromSiegeTower.Execute: TKMTaskResult;
+var I : Integer;
 begin
   Result := trTaskContinues;
 
@@ -201,17 +202,26 @@ begin
     Exit;
   end;
 
-  with fUnit do
+  with TKMUnitWarrior(fUnit) do
     case fPhase of
       0:  begin
-            SetActionLockedStay(TKMUnitWarrior(fUnit).AimingDelay + gRes.Units[UnitType].UnitAnim[uaWork, dirN].Count, uaWalk);
+            SetActionLockedStay(AimingDelay + gRes.Units[UnitType].UnitAnim[uaWork, dirN].Count, uaWalk);
           end;
       1:  begin
-            If TKMUnitWarrior(fUnit).TakeBolt then
+            If (UnitType = utCatapult) and gHands[Owner].ArmyDevUnlocked(33) then
+            begin
+              for I := 0 to 2 do
+                If TakeBolt then
+                  gProjectiles.AimTarget(KMPointF(Home.Entrance.X, Home.Entrance.Y - 4.5),
+                                          fTarget, ProjectileType,
+                                          fUnit, RangeMax + 8,
+                                          RangeMin);
+            end else
+            If TakeBolt then
               gProjectiles.AimTarget(KMPointF(Home.Entrance.X, Home.Entrance.Y - 4.5),
-                                      fTarget, TKMUnitWarrior(fUnit).ProjectileType,
-                                      fUnit, TKMUnitWarrior(fUnit).RangeMax + 6,
-                                      TKMUnitWarrior(fUnit).RangeMin);
+                                      fTarget, ProjectileType,
+                                      fUnit, RangeMax + 8,
+                                      RangeMin);
 
             gHands.CleanUpUnitPointer(fTarget); //We don't need it anymore
             SetActionLockedStay(1, uaWalk);
@@ -219,7 +229,6 @@ begin
       2:  SetActionLockedStay(2, uaWalk); //Pretend to look how it goes
       3:  begin
             SetActionStay(3, uaWalk); //Idle before throwing another rock
-
           end;
       else Result := trTaskDone;
     end;

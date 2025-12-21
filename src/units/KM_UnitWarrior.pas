@@ -29,7 +29,8 @@ type
     woAssignToShip,
     woTakeOverHouse,
     woShootAtSpot,
-    woEnterSiegeTower
+    woEnterSiegeTower,
+    woLeaveSiegeTower
   );
 
   TKMUnitWarrior = class(TKMUnit)
@@ -138,6 +139,7 @@ type
     procedure UnloadFromShip(aShip : Pointer); override;
     procedure OrderShootAtSpot(aLoc : TKMPoint);
     procedure OrderEnterSiegeTower(aTower : TKMHouseSiegeTower);
+    procedure OrderLeaveSiegeTower;
 
     //Ranged units properties
     property AimingDelay: Byte read GetAimingDelay;
@@ -172,11 +174,14 @@ type
     function CheckforEnemyWhileStorming : Boolean;
     function CheckForEnemy: Boolean; virtual;
     procedure ProceedClosedTower;
+    function IsShootingFromTower : Boolean;
+
     procedure LeaveHome;
     procedure CheckForTowerEnemy; virtual;
     procedure FightEnemy(aEnemy: TKMUnit);
     function FindEnemy(const aMinRange, aMaxRange : Single): TKMUnit;
     function PathfindingShouldAvoid: Boolean; override;
+    function MinAmmoCountToOrder : Word; Virtual;
     function CanOrderAmmo : Boolean; Virtual;
     procedure AddBitin(aCount : Integer = 1);
     function IsAttackingUnit(aUnit: TKMUnit): Boolean;
@@ -856,6 +861,21 @@ begin
   end;
 end;
 
+function TKMUnitWarrior.MinAmmoCountToOrder: Word;
+begin
+  case fType of
+    utGolem,
+    utArcher,
+    utCrossbowman,
+    utBowman,
+    utRogue:  Result := 30;
+    utCatapult: Result := 5;
+    utBallista:  Result := 10;
+    utSkirmisher:  Result := 30;
+    else Result := 10;
+  end;
+end;
+
 function TKMUnitWarrior.CanOrderAmmoFromCart : Boolean;
 var ammoCart : TKMUnitWarriorAmmoCart;
 begin
@@ -1378,6 +1398,15 @@ begin
   SetOrderHouseTarget(aTower);
 end;
 
+procedure TKMUnitWarrior.OrderLeaveSiegeTower;
+begin
+  If not IsRanged then
+    Exit;
+  ClearOrderTarget;
+  fNextOrderForced := fNextOrder = woLeaveSiegeTower;
+  fNextOrder := woLeaveSiegeTower;
+end;
+
 function TKMUnitWarrior.PathfindingShouldAvoid: Boolean;
 begin
   Result := Inherited PathfindingShouldAvoid;
@@ -1552,7 +1581,7 @@ begin
   If (BoltCount = 0) and not InfinityAmmo then
     Exit;
   //from := GetRandomCellWithin;
-  from := fHome.Entrance + KMPoint(0, -4);
+  from := fHome.Entrance{ + KMPoint(0, -4)};
   U := gTerrain.UnitsHitTestWithinRad(from, RangeMin, RangeMax, Owner, atEnemy, dirNA, not RANDOM_TARGETS);
   //no unit found so no need to check every archer
   If (U = nil) or (U.IsDeadOrDying) then
@@ -1571,13 +1600,18 @@ procedure TKMUnitWarrior.ProceedClosedTower;
 begin
   if (fHome <> nil)
     and not fHome.IsDestroyed
-    and fHome.IsClosedForWorker
+    and (fHome.IsClosedForWorker or (NextOrder = woLeaveSiegeTower))
     and not (fTask is TKMTaskShootFromSiegeTower) then
     begin
-
       FreeAndNil(fTask);
-      LeaveHome
+      LeaveHome;
+      OrderNone;
     end;
+end;
+
+function TKMUnitWarrior.IsShootingFromTower: Boolean;
+begin
+  Result := (fHome is TKMHouseSiegeTower) and (fTask is TKMTaskShootFromSiegeTower);
 end;
 
 
@@ -1869,6 +1903,9 @@ begin
 
   If (UnitType = utTrainedWolf) and gHands[Owner].ArmyDevUnlocked(25) then
     Result := Result * 2;
+
+  If Home is TKMHouseSiegeTower then
+    Result := Result + 1;
 end;
 
 function TKMUnitWarrior.GetDamageHouse: Word;
@@ -4154,6 +4191,7 @@ procedure TKMUnitWarriorTower.CheckForEnemies;
 
 var I : Integer;
   U : TKMUnit;
+  PosF : TKMPointF;
 begin
   If not HasReadyArcher then
     Exit;
@@ -4173,8 +4211,10 @@ begin
       If (U = nil) or (U.IsDeadOrDying) then
         Exit;
     end;
-
-    gProjectiles.AimTarget(PositionF, U, ProjectileType, self, RangeMax, RangeMin);
+    PosF := PositionF;
+    If Home is TKMHouseSiegeTower then
+      PosF := PosF + KMPointF(0, -4);
+    gProjectiles.AimTarget(PosF, U, ProjectileType, self, RangeMax, RangeMin);
     fArcher[I] := gGameParams.Tick + ARCHER_RELOAD_TIME + KamRandom(10, 'TKMUnitWarriorTower.CheckForEnemies');
     U := nil;
   end;

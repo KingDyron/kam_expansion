@@ -168,7 +168,7 @@
       <cbApsFrameGui10 Checked="False"/>
       <cbApsFrameGui20 Checked="False"/>
     </Perf_Logs>
-    <AI Collapsed="False">
+    <AI Collapsed="True">
       <chkAIEye Checked="False"/>
       <chkBuild Checked="False"/>
       <chkCombat Checked="False"/>
@@ -241,7 +241,7 @@
       <chkDebugLayer2 Checked="True"/>
       <chkDebugLayer3 Checked="True"/>
     </Debug_Terrain>
-    <Debug_Render Collapsed="True">
+    <Debug_Render Collapsed="False">
       <chkSelectionBuffer Checked="False"/>
       <chkShowRoutes Checked="False"/>
       <chkShowWires Checked="False"/>

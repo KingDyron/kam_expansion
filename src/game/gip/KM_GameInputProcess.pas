@@ -164,6 +164,7 @@ type
     gicHouseQueueNotRem,
     gicHouseDeliveryTo,
     gicArmyEnterSiegeTower,
+    gicWarriorLeaveTower,
 
     //V.     Delivery ratios changes (and other game-global settings)
     gicWareDistributionChange,   //Change of distribution for 1 ware
@@ -454,6 +455,8 @@ const
     gicpt_Int1,//gicHouseQueueNotRem
     gicpt_Int2,//gicHouseDeliveryTo
     gicpt_Int2,//gicArmyEnterSiegeTower,
+    gicpt_Int1,//gicWarriorLeaveTower,
+
     //V.     Delivery ratios changes (and other game-global settings)
     gicpt_Int3,     // gicWareDistributionChange
     gicpt_AnsiStr1, // gicWareDistributions
@@ -1192,7 +1195,7 @@ begin
     end;
 
     if CommandType in [gicUnitDismiss, gicUnitDismissCancel, gicAssignToShip, gicUnloadShip, gicAssignGroupToShip,
-                        gicBoatCollectFish, gicBoatCollectWares, gicBoatUnloadWares] then
+                        gicBoatCollectFish, gicBoatCollectWares, gicBoatUnloadWares, gicWarriorLeaveTower] then
     begin
       srcUnit := gHands.GetUnitByUID(IntParams[0]);
       if (srcUnit = nil) or srcUnit.IsDeadOrDying //Unit has died before command could be executed
@@ -1245,6 +1248,7 @@ begin
       gicUnloadShip:         TKMUnitWarriorShip(srcUnit).DoUnloadUnits;
       gicAssignToShip:        gHands.GetUnitByUID(IntParams[1]).AssignToShip(srcUnit);  //TKMUnitWarriorShip(srcUnit).AssignToShip(gHands.GetUnitByUID(IntParams[1]));
       gicAssignGroupToShip:       gHands.GetGroupByUID(IntParams[1]).OrderAssignToShip(srcUnit);
+      gicWarriorLeaveTower:       TKMUnitWarrior(srcUnit).OrderLeaveSiegeTower;
 
       gicBoatCollectFish:       TKMUnitWarriorBoat(srcunit).CanCollectFish := not TKMUnitWarriorBoat(srcunit).CanCollectFish;
       gicBoatCollectWares:       TKMUnitWarriorBoat(srcunit).CanCollectWares := not TKMUnitWarriorBoat(srcunit).CanCollectWares;
@@ -1557,7 +1561,8 @@ end;
 
 procedure TKMGameInputProcess.CmdUnit(aCommandType: TKMGameInputCommandType; aUnit: TKMUnit);
 begin
-  Assert(aCommandType in [gicUnitDismiss, gicUnitDismissCancel, gicUnloadShip, gicBoatCollectFish, gicBoatCollectWares, gicBoatUnloadWares]);
+  Assert(aCommandType in [gicUnitDismiss, gicUnitDismissCancel, gicUnloadShip, gicBoatCollectFish, gicBoatCollectWares, gicBoatUnloadWares,
+                          gicWarriorLeaveTower]);
   TakeCommand(MakeCommand(aCommandType, aUnit.UID));
 end;
 
