@@ -874,7 +874,7 @@ begin
   end;
 
   If gHands[Owner].EconomyDevUnlocked(19) then
-    fMaxReloadTime := Round(fMaxReloadTime * 0.80);
+    fMaxReloadTime := Round(fMaxReloadTime * 0.75);
 
   case fPearlType of
     ptRalender: fWorkingTime := 1200;

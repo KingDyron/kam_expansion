@@ -345,6 +345,7 @@ type
     function EconomyDevUnlocked(aID : Integer) : Boolean;
     function ArmyDevUnlocked(aID : Integer) : Boolean;
     procedure UnlockSpecialWalls;
+    procedure UnlockAllBuildings;
 
     function GetClosestHouse(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aWareSet : TKMWareTypeSet = [wtAll];
                             aMaxDistance : Single = 999; aCompletedOnly : Boolean = true) : TKMHouse;
@@ -1082,6 +1083,8 @@ begin
 
   If BuildDevUnlocked(30) then
     UnlockSpecialWalls;
+  If BuildDevUnlocked(32) then
+    UnlockAllBuildings;
 
 end;
 
@@ -2940,6 +2943,9 @@ begin
     If (aType = dttBuilder) and (aID = 30) then
       UnlockSpecialWalls;
 
+    If (aType = dttBuilder) and (aID = 32) then
+      UnlockAllBuildings;
+
     gGame.RefreshDevelopmentTree;
   end;
 end;
@@ -2948,11 +2954,14 @@ procedure TKMHand.UnlockDevelopmentScript(aType: TKMDevelopmentTreeType; aID: In
 begin
   fLocks.DevelopmentLock[aType, aID] := aLock;
 
-  If (aType = dttEconomy) and (aID = 1) then
+  {If (aType = dttEconomy) and (aID = 1) then
     AddDevPoint(dttArmy, 3);
 
   If (aType = dttBuilder) and (aID = 30) then
     UnlockSpecialWalls;
+
+  If (aType = dttBuilder) and (aID = 32) then
+    UnlockAllBuildings;}
 end;
 
 procedure TKMHand.UnlockSpecialWalls;
@@ -2962,6 +2971,17 @@ begin
   for HT := htWall to htWall5 do
     If (fLocks.HouseMaxLvl[HT] = 0) or (fLocks.HouseMaxLvl[HT] = 2) then
       fLocks.HouseMaxLvl[HT] := 3;
+end;
+
+procedure TKMHand.UnlockAllBuildings;
+var HT : TKMHouseType;
+begin
+
+  for HT := HOUSE_MIN to HOUSE_MAX do
+  begin
+    fLocks.HouseLock[HT] := hlGranted;
+    fLocks.HouseMaxLvl[HT] := 0;
+  end;
 end;
 
 function TKMHand.DevUnlocked(aType : TKMDevelopmentTreeType; aID : Integer) : Boolean;

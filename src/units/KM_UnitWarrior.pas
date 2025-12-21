@@ -1464,6 +1464,7 @@ var
 begin
   Result := False; //Didn't find anyone to fight
 
+
   //Ranged units should not check for enemy while walking or when facing the wrong way
 
   if IsRanged and ((not IsIdle) or ((FaceDir <> Direction) and (FaceDir <> dirNA))) then Exit;
@@ -1715,6 +1716,8 @@ const
   BALLISTA_AIMING_DELAY_MIN = 16; //minimum time for balista to aim
 begin
   Result := 0;
+  If gHands[Owner].ArmyDevUnlocked(37) then
+    Exit(2 + KaMRandom(3, 'TKMUnitWarrior.GetAimingDelay 6'));
   if IsRanged then
     case UnitType of
       utBattleShip : Result := 16;

@@ -145,8 +145,9 @@ begin
     TKMUnit(fUnitWip).CloseUnit(False); //Don't remove tile usage, we are inside the school
     fHideOneGold := False;
     //Add 1 gold to offer to take it out
-    if DeliveryMode = dmTakeOut then
-      gHands[Owner].Deliveries.Queue.AddOffer(Self, wtGold, 1);
+    If not gHands[Owner].EconomyDevUnlocked(31) then
+      if DeliveryMode = dmTakeOut then
+        gHands[Owner].Deliveries.Queue.AddOffer(Self, wtGold, 1);
   end;
   fUnitWip := nil;
   PrivateQueue[0] := utNone; //Removed the in training unit
@@ -238,8 +239,9 @@ procedure TKMHouseSchool.CreateUnit;
 begin
   fHideOneGold := True;
   //Remove 1 gold from offer to take it out
-  if DeliveryMode = dmTakeOut then
-    gHands[Owner].Deliveries.Queue.RemOffer(Self, wtGold, 1);
+  If not gHands[Owner].EconomyDevUnlocked(31) then
+    if DeliveryMode = dmTakeOut then
+      gHands[Owner].Deliveries.Queue.RemOffer(Self, wtGold, 1);
 
   //Create the Unit
   fUnitWip := gHands[Owner].TrainUnit(fQueue[0], Self);
@@ -257,7 +259,8 @@ begin
   if fQueue[0] <> utNone then exit; //If there's currently no unit in training
   if fQueue[1] = utNone then exit; //If there is a unit waiting to be trained
 
-  if CheckWareIn(wtGold) = 0 then exit; //There must be enough gold to perform training
+  If not gHands[Owner].EconomyDevUnlocked(31) then
+    if CheckWareIn(wtGold) = 0 then exit; //There must be enough gold to perform training
   if gHands[Owner].GetWorklessCount = 0 then Exit;
 
   for I := 0 to High(fQueue) - 1 do
@@ -276,12 +279,13 @@ begin
   fUnitWip := nil;
   PrivateQueue[0] := utNone; //Clear the unit in training
   //Script command might have taken the gold while we were training, in which case ignore it (either way, gold is consumed)
-  if CheckWareIn(wtGold) > 0 then
-  begin
-    WareTakeFromIn(wtGold); //Do the goldtaking
-    gHands[Owner].Stats.WareConsumed(wtGold);
-    gHands[Owner].TakeWorkless;
-  end;
+  If not gHands[Owner].EconomyDevUnlocked(31) then
+    if CheckWareIn(wtGold) > 0 then
+    begin
+      WareTakeFromIn(wtGold); //Do the goldtaking
+      gHands[Owner].Stats.WareConsumed(wtGold);
+      gHands[Owner].TakeWorkless;
+    end;
   fHideOneGold := False;
   fTrainProgress := 0;
 

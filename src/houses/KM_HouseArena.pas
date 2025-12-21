@@ -438,6 +438,8 @@ begin
     dttArmy : Result := 1;
     dttAll : Result := 2;
   end;
+  If gHands[Owner].EconomyDevUnlocked(32) then
+    Result := Max(Result * 4 div 5, 1);
 end;
 
 function TKMHouseArena.WarfareCost : Byte;
@@ -449,6 +451,8 @@ begin
     dttArmy : Result := 16;
     dttAll : Result := 12;
   end;
+  If gHands[Owner].EconomyDevUnlocked(32) then
+    Result := Result * 4 div 5;
 end;
 
 function TKMHouseArena.ValuableCost : Byte;
@@ -460,6 +464,8 @@ begin
     dttArmy : Result := 135;
     dttAll : Result := 115;
   end;
+  If gHands[Owner].EconomyDevUnlocked(32) then
+    Result := Result * 4 div 5;
 end;
 
 
