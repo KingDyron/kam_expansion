@@ -4524,7 +4524,7 @@
 			"MaxHealth" : 700,
 			"WoodPic" : 3097,
 			"StonePic" : 3096,
-			"TerrPics": [ 2950, 3088],
+			"TerrPics": [ 3098, 3099],
 			"WoodCost" : 1,
 			"StoneCost" : 11,
 			"TileCost" : 6,
