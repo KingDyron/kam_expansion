@@ -1669,16 +1669,16 @@
 1723:You can defend your city with walls.||Can be built without connecting to road.
 1724:In the hovel you can obtain feathers and eggs valuable in the market.
 1725:The stone sign is used to convey information to players.1726:With this building you can mine the rare mineral bityne ore.
-1726:With this building you can mine a rare mineral, which is bitinite ore.
+1726:With this building you can mine a rare mineral, which is bitin ore.
 1727:The archery tower reveals a large area of land. Recruits' accuracy is very good and they can kill an enemy with one shot.
-1728:You will find a lot of water in the well. Pigs, horses and chickens will need it in their development. The Bakery and apple tree also require it.||The worker will go to fetch water himself if a well is built close to him.
-1729:Here you can produce: stone projectiles needed for watch towers, logs and wheels for siege machines, as well as sawdust used in the burner.
-1730:The Iron Foundry processes iron into parts needed to build siege machines. It also produces bitin plates used to strengthen machines and units in the barracks.
+1728:You will find a lot of water in the well. Pigs, horses and chickens will need it in their development. The Bakery and fruit tree also require it.|The worker will go to fetch water himself if a well is built close to him.|Can be built without road.
+1729:Here you can produce: stone projectiles needed for watch towers, logs and wheels for siege machines, as well as sawdust used in the charcoal factory.
+1730:The Iron Foundry processes iron into parts needed to build siege machines. It also produces bitin plates used to strengthen machines and units in the Barracks or TownHall.
 1731:With the emissary, you can transfer selected goods to your allies.|Can ship goods to distant parts of the map as long as a shipyard is built.
 1732:Roof tiles required for the expansion of the city are produced in the pottery.
 1733:This is the only building that can produce coal from the renewable raw material - wood. It needs kindling in the form of straw and fuel, i.e. sawdust or coal.
 1734:The tree grows a lot of fruit. People in the houses need them for food. It is a modular building, so you can create a huge orchard.
-1735:In this building, a collector extracts valuable materials from stones, rocks and ruins. They can be used to make a jewellery, which is valuable when exchanged at the marketplace. It is also required in the training of elite units in the palace.
+1735:In this building, a collector extracts valuable materials from stones, rocks and ruins. They can be used to make a jewellery, which is valuable when exchanged at the marketplace. He can find and collect wares that lay on the ground.
 1736:A tailor sews boots thanks to his skills. Any citizen who works in constant motion can get them in school. He can also produce leather armor and quivers.
 1737:The silo can store various raw materials. They will not be touched until you give such an order. The building can be expanded to the third level.
 1738:A small residential building housing workless citizens ready for training.
@@ -1691,7 +1691,7 @@
 1745:All sorts of warriors are brought to the town hall. Everyone has a price for their services.
 1746:A fisherman requires a nearby reservoir to catch fish.
 1747:A place where you can exchange goods for more necessary ones.
-1748:Here, a blacksmith will produce iron weapons for new recruits.
+1748:Here, a blacksmith will produce iron armor for new recruits.
 1749:Thanks to the crafted wooden shields and plate armor, your units will be more durable in battle.
 1750:With flour and water, the baker will bake fresh bread for your people.
 1751:The butcher will prepare sausages.
@@ -2270,7 +2270,7 @@
 2324:Berserker
 2325:His fast attacks will make sure the opponent is killed quickly
 2326:Siege tower
-2327:Can contain few ranged units increasing them range radius. Thanks to it's durability units will survive much longer during the defense of the city.
+2327:Can contain few ranged units increasing them range radius. Thanks to it's durability units will survive much longer during the defense of the city.||Can be built without road.
 2328:Shallow water 1
 2329:Shallow water 2 
 2330:Deep water
@@ -2284,5 +2284,8 @@
 2338:Missing warfare houses (depends on army type)
 2339:Missing wells close to buildings
 2340:Add message to .libx file|It will generate new message ID
-2341:The festival will feature competitions and various entertainment events, earning you development points that you can use in the development tree.
-2342:The Pearl of Architecture is a special building that crowns the entire city's construction.
+2341:The festival will feature competitions and various entertainment events, earning you development points that you can use in the development tree.||This building can only be built once.
+2342:The Pearl of Architecture is a special building that crowns the entire city's construction.||This building can only be built once.
+2343:In the pasture, you can raise a variety of animals depending on your needs.||This building can only be placed once.
+2344:The forest nursery is a place where you can plant all kinds of trees using tree saplings.||This building can only be placed once.
+2345:This building will allow you to find hidden mining resources deep underground. It will also reveal important information about your opponent.

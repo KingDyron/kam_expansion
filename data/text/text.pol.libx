@@ -1659,7 +1659,7 @@
 1732:W garncarni wytwarzane są dachówki wymagane do rozbudowy miasta.
 1733:Jest to jedyny budynek, który może wyprodukować węgiel z surowca odnawialnego jakim jest drewno. Potrzebuje rozpałki w postaci słomy oraz paliwa, czyli trocin lub węgla.
 1734:Na drzewie rośnie mnóstwo owoców. Ludzie w domostwach potrzebują ich jako pokarmu. Jest to budynek modułowy, dzięki czemu można stworzyć ogromny sady.
-1735:W tym budynku kolekcjoner wydobywa z kamieni cenne materiały. Z nich można zrobić pierścień, który jest drogocenny podczas wymiany w targowisku. Również jest wymagany w szkoleniu elitarnych jednostek w pałacu.
+1735:W tym budynku kolekcjoner wydobywa z kamieni cenne materiały. Z nich można zrobić pierścień, który jest drogocenny podczas wymiany w targowisku. Również znajduje i zbiera surowce leżące na ziemi.
 1736:Krawiec, dzięki swoim zdolnościom wyszywa buty. Każdy obywatel, który pracuje w ciągłym ruchu może je ubrać w szkole. Jest w stanie produkować również pancerze i kołczany.
 1737:Silos może przechować różne surowce. Nie będą one tykane dopóki sam nie wydasz takiego rozkazu. Budynek można rozbudować do trzeciego poziomu.
 1738:Mały budynek mieszkalny, w którym mieszkają poddani gotowi do szkolenia.
@@ -2259,7 +2259,7 @@
 2324:Berserker
 2325:Dzięki jego szybkim atakom, przeciwnik nie będzie miał szans długo wytrwać.
 2326:Wieża oblężnicza
-2327:Może pomieścić kilka strzeleckich jednostek zwiększając im zasięg ataku. Wieża dzięki swej wytrzymałości będzie ich chronić dopóki przeciwnik nie zostanie pokonany.
+2327:Może pomieścić kilka strzeleckich jednostek zwiększając im zasięg ataku. Wieża dzięki swej wytrzymałości będzie ich chronić dopóki przeciwnik nie zostanie pokonany.||Może być wybudowana bez drogi
 2328:Płytka woda 1
 2329:Płytka woda 2 
 2330:Głęboka woda
@@ -2273,5 +2273,8 @@
 2338:Brakujące budynki wojskowe (zależne od rodzaju armii)
 2339:Brak studni przy budynkach
 2340:Dodaj wiadomość do pliku .libx|Utworzy nowe ID wiadomości
-2341:W festynie odbędą się zawody i różne rozrywki, dzięki którym zdobędziesz punkty rozwoju, które możesz wykorzystać w drzewku rozwoju.
-2342:Perła architektury jest specjalnym budynkiem uwieńczającym całą budowę miasta. 
+2341:W festynie odbędą się zawody i różne rozrywki, dzięki którym zdobędziesz punkty rozwoju, które możesz wykorzystać w drzewku rozwoju.||Ten budynek może być postawiony tylko raz.
+2342:Perła architektury jest specjalnym budynkiem uwieńczającym całą budowę miasta.||Ten budynek może być postawiony tylko raz.
+2343:W pastwisku wyhodujesz przeróżne zwierzęta zależne od twoich potrzeb.||Ten budynek może być postawiony tylko raz. 
+2344:Szkółka leśna to miejsce, w którym za pomocą sadzonek zasadzisz wszelakie rodzaje drzew.||Ten budynek może być postawiony tylko raz.
+2345:Dzięki temu budynkowi znajdziesz ukryte głęboko w podziemiach surowce kopalne. Pokaże ci również ważne informacje na temat przeciwnika.
