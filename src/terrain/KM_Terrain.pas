@@ -1674,7 +1674,7 @@ end;
 //Check if requested tile is sand suitable for crabs
 function TKMTerrain.TileIsSand(const aLoc: TKMPoint): Boolean;
 begin
-  Result := TileHasParameter(aLoc.X, aLoc.Y, fTileset.TileIsSand);
+  Result := TileHasParameter(aLoc.X, aLoc.Y, fTileset.TileIsSand) or ((aLoc.X*aLoc.Y > 0) and Land[aLoc.Y, aLoc.X].TileOverlay2.IsSand);
 end;
 
 
@@ -1690,7 +1690,7 @@ begin
   If TileHasParameter(X, Y, fTileset.TileIsSnow) or ((X*Y > 0) and Land[Y, X].TileOverlay2.IsSnow) then
     Result := tptSnow
   else
-  If TileHasParameter(X, Y, fTileset.TileIsSand) then
+  If TileHasParameter(X, Y, fTileset.TileIsSand) or ((X*Y > 0) and Land[Y, X].TileOverlay2.IsSand) then
     Result := tptSand;
 end;
 

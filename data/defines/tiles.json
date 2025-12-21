@@ -995,7 +995,8 @@
     {"ID": 962, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkStationaryLava", "tkStone", "tkStationaryLava", "tkStationaryLava"], "AnimLayers": [{"Frames": 1, "Start": 4157, "Count" : 40}]},
     {"ID": 963, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkGoldMount", "tkGoldMount", "tkGoldMount", "tkGoldMount"]},
     {"ID": 963, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkIronMount", "tkIronMount", "tkIronMount", "tkIronMount"]},
-    {"ID": 963, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkStone", "tkStone", "tkStone", "tkStone"]}
+    {"ID": 963, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkStone", "tkStone", "tkStone", "tkStone"]},
+    {"ID": 966, "Walkable": true, "Roadable": true, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]}
 
   ],
   "Overlays" : [
@@ -1068,7 +1069,8 @@
 	{"TileID": 782, "IsFirstLayer": false, "Visible": true, "ViewInGame": true, "Ware" : 0, "WareCount" : 0, "Function" : 0, "CanTree" : true, "Hint" : 0,
 		"Connection" : 		[782, 783, 784, 785,  		786, 787, 788, 789,  	790, 791, 792, 793,  		794, 795, 796, 797],
 		"ConnectionRot" : 	[0, 0, 0, 0,       			0, 0, 0, 0,          	0, 0, 0, 0,          		0, 0, 0, 0]
-	}
+	},
+	{"TileID": 966, "IsFirstLayer": false, "Visible": true, "ViewInGame": false, "CanTree" : true, "Function" : 10, "Hint" : 0}  
   ],
   
   "OverlayGuiOrder" : [0, 1, 2, 3, 4, 5,
@@ -1082,7 +1084,7 @@
     0,
     22, 24,33, 25, 26,
     0,
-    34, 35, 36, 37, 43, 44, 45
+    34, 35, 36, 37, 43, 44, 47, 45
 	]
   
 }
