@@ -1544,10 +1544,10 @@
 1597:Flat terrain
 1598:Tiles grid
 1599:Save file does not exist
-1600:Attack:
-1601:Defense:
+1600:Attack: 
+1601:Defense: 
 1602:Ammo:
-1603:Health:
+1603:Health: 
 1604:Instant Kill
 1605:Store filled:
 1606:Bitin Steel
@@ -1727,12 +1727,12 @@
 1781:Sling shooters shoot stones at opponents.||Require stone bolts.
 1782:The Warrior is the most powerful basic unit. Thanks to his armor, he can withstand heavy hits and is effective against buildings.
 1783:The lack of armor on the rider allows him to cover long distances in less time.
-1784:Siege engine adapted to destroy buildings from a long distance. It is not accurate against moving targets. Requires long bullet reload time.||Requires delivery of stone bullets.
+1784:Siege machine adapted to destroy buildings from a long distance. It is not accurate against moving targets. Requires long reload time.||Requires delivery of stone bolts.
 1785:Bolts fired from this machine will pierce through any armor and bring death. Not effective for destroying buildings.||Requires bolts.
 1786:The durability and tenacity of this machine is able to pass through a volley of arrows and units standing in its path, just to destroy massive walls and buildings.
 1787:GOLEM was created for the KamStar campaign. He cannot be trained.
 1788:GIGANT was created for the KamStar campaign. He cannot be trained.
-1789:The Paladin is armed with bitin steel armor. Ordinary bullets have no effect on him. His powerful sword will easily defeat any type of unit. Heavy armor slows down his speed, but it will protect him from almost any blow.||When in an melee unit, he will support the others with a defense bonus.|Has skill "Rage".
+1789:The Paladin is armed with bitin steel armor. Ordinary bullets have no effect on him. His powerful sword will easily defeat any type of unit. Heavy armor slows down his speed, but it will protect him from almost any blow.||When in a melee group, he will support the others with a defense bonus.|Has skill "Rage".
 1790:Mounted archer can escape from any risky situation.||Requires quivers.||Being in a group of ranged units will increase their shooting range and reduce the minimum range.
 1791:Additional player settings
 1792:Sub-menu 7
@@ -1856,14 +1856,14 @@
 1910:Unlocked after:
 1911:By-products
 1912:Unit cost:
-1913:Horse attack:
-1914:Speed:
-1915:Reveal range:
-1916:House attack:
+1913:Horse attack: 
+1914:Speed: 
+1915:Reveal range: 
+1916:House attack: 
 1917:Click to find house that produces this ware
 1918:Pike machine
 1919:A durable machine that strengthens the antihorse group in which it is located. Multiple spears will make short work of cavalry.||Attack three units at once
-1920:The ammunition cart can be loaded with ballistic missiles and stones. All ballistas and catapults in the group will not need to bring resorces if the cart has them.
+1920:The ammunition cart can be loaded with bolts and stone bolts. All ballistas and catapults in the group will not need to bring resorces if the cart has them.
 1921:The wolf is very dangerous and predatory. Once trained, it will serve you in the fight against your opponent. He is agile and can easily avoid arrows. He attacks quickly, but is easily injured.
 1922:Stock the group with bullets/ammo.
 1923:Bitin shield
@@ -2268,7 +2268,7 @@
 2322:Mounted Serf
 2323:By mastering horse riding, he will quickly deliver the required resources to buildings or units.
 2324:Berserker
-2325:His fast attacks will make sure the opponent is killed quickly
+2325:His fast attacks will make sure the opponent is killed quickly.
 2326:Siege tower
 2327:Can contain few ranged units increasing them range radius. Thanks to it's durability units will survive much longer during the defense of the city.||Can be built without road.
 2328:Shallow water 1
