@@ -100,6 +100,8 @@ begin
         DownColor := icRed;
       Caption := curC.ToString;
       Button_Unit[I].Enabled := true;
+      If W.NextOrder = woLeaveSiegeTower then
+      Button_Unit[I].BackBevelColor := $40FFB700;
       //Enabled := W.IsShootingFromTower;
       //Show;
     end;

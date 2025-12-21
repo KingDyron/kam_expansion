@@ -9272,7 +9272,7 @@ begin
   if WorkersCount = 0 then
     Exit;
 
-  gRenderPool.RenderDebug.RenderTiledArea(Entrance{ + KMPoint(0, -4)}, GetMinRadius, GetMaxRadius, GetLength, $40FFFFFF, icWhite);
+  gRenderPool.RenderDebug.RenderTiledArea(Entrance{ + KMPoint(0, -4)}, GetMinRadius, GetMaxRadius, GetLength, $20FFFFFF, $A0FFFFFF);
 end;
 
 
