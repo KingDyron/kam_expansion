@@ -939,6 +939,9 @@ begin
       case (Loc.X*2 + Loc.Y*2) mod 3 of
         0:   GT := gtAntiHorse;
         1:   GT := gtRanged;
+        {2:   GT := gtMounted;
+        3:   GT := gtWreckers;
+        4:   GT := gtMachines;}
         else GT := gtMelee;
       end;
       fDefencePositions.Add(DefPosArr[I].DirPoint, GT, 25, DPT);

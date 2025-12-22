@@ -438,7 +438,7 @@ end;
 
 function TKMAIRecorder.DebugStr: string;
 begin
-  if not gHands[fOwner].IsComputer then
+  //if not gHands[fOwner].IsComputer then
     Exit;
 
   if fRecording then

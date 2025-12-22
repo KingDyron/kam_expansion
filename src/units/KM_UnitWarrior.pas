@@ -1438,9 +1438,13 @@ var
 begin
   Result := False; //Didn't find anyone to fight
 
-  newEnemy := gTerrain.GetUnit(KMPointDir(Position, Direction).DirFaceLoc);
-  If (newEnemy = nil) or (newEnemy.IsDeadOrDying) or (newEnemy.Owner = self.Owner) or (newEnemy.IsAnimal) then
-    Exit;
+
+  //Ranged units should not check for enemy while walking or when facing the wrong way
+
+  if IsRanged and ((not IsIdle) or ((FaceDir <> Direction) and (FaceDir <> dirNA))) then Exit;
+
+  newEnemy := FindEnemy(GetFightMinRange, GetFightMaxRange(true));
+
   if newEnemy <> nil then
   begin
     OnPickedFight(Self, newEnemy);
@@ -1448,11 +1452,10 @@ begin
     //Remember that AI's AutoAttackRange feature means a melee warrior can pick a fight with someone out of range
 
     if WithinFightRange(newEnemy.Position) then
+    begin
       FightEnemy(newEnemy);
-    if Action is TKMUnitActionFight then
-      AnimStep := gRes.Units[UnitType].StrikeSteps[0];
-
-    newEnemy.DoHitFrom(self);
+      newEnemy.DoHitFrom(self);
+    end;
 
     Result := True; //Found someone
   end;
@@ -1463,6 +1466,7 @@ var
   newEnemy: TKMUnit;
 begin
   Result := False; //Didn't find anyone to fight
+
 
 
   //Ranged units should not check for enemy while walking or when facing the wrong way

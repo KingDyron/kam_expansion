@@ -53,7 +53,7 @@ type
     procedure FindNearest(const aStart: TKMPointArray; aRadius: Byte; aType: TFindNearest; aPass: TKMTerrainPassabilitySet; aMaxCount: Word; aLocs: TKMPointTagList); overload;
     procedure FindNearest(const aStart: TKMPointArray; aRadius: Byte; aHouse: TKMHouseType; aMaxCount: Word; aLocs: TKMPointTagList); overload;
     function FindPlaceForHouse(aHouse: TKMHouseType; out aLoc: TKMPoint; out aIgnoreRoad : Boolean): Boolean;
-    function NextToLoc(const aStart : TKMPoint; aHouseType : TKMHouseType; out aLoc: TKMPoint): Boolean;
+    function NextToLoc(const aStart : TKMPoint; aHouseType : TKMHouseType; aMaxRadius : Byte; out aLoc: TKMPoint): Boolean;
     procedure OwnerUpdate(aPlayer: TKMHandID);
     procedure Save(SaveStream: TKMemoryStream);
     procedure Load(LoadStream: TKMemoryStream);
@@ -342,7 +342,7 @@ begin
   end;
 end;
 
-function TKMCityPlanner.NextToLoc(const aStart : TKMPoint; aHouseType : TKMHouseType; out aLoc: TKMPoint): Boolean;
+function TKMCityPlanner.NextToLoc(const aStart : TKMPoint; aHouseType : TKMHouseType; aMaxRadius : Byte; out aLoc: TKMPoint): Boolean;
 var
   I: Integer;
   Bid, BestBid: Single;
@@ -353,7 +353,7 @@ begin
 
   Locs := TKMPointTagList.Create;
   try
-    FindNearest([aStart], 32, aHouseType, 10, Locs);
+    FindNearest([aStart], aMaxRadius, aHouseType, 10, Locs);
 
     BestBid := MaxSingle;
     for I := 0 to Locs.Count - 1 do
@@ -915,17 +915,17 @@ var
   I, K: Integer;
 begin
   case FindType of
-    fnHouse:  Result := gHands[fOwner].CanAddHousePlanAI(X, Y, HouseType, True);
+    fnHouse:  Result := gHands[fOwner].CanAddHousePlanAI(X, Y, HouseType, false);
 
     fnStone:  Result := (gTerrain.TileIsStone(X, Max(Y-1, 1)) > 1);
 
     fnCoal:   Result := (gTerrain.TileIsCoal(X, Y) > 1)
-                         and gHands[fOwner].CanAddHousePlanAI(X, Y, htCoalMine, False);
+                         and gHands[fOwner].CanAddHousePlanAI(X, Y, htCoalMine, false);
 
     fnClay:   Result := (gTerrain.TileIsClay(X, Y) >= 1);
 
     fnIron:   begin
-                Result := gHands[fOwner].CanAddHousePlanAI(X, Y, htIronMine, False);
+                Result := gHands[fOwner].CanAddHousePlanAI(X, Y, htIronMine, false);
                 //If we can build a mine here then search for ore
                 if Result then
                   for I:=Max(X-4, 1) to Min(X+3, gTerrain.MapX) do
@@ -936,7 +936,7 @@ begin
               end;
 
     fnGold:   begin
-                Result := gHands[fOwner].CanAddHousePlanAI(X, Y, htGoldMine, False);
+                Result := gHands[fOwner].CanAddHousePlanAI(X, Y, htGoldMine, false);
                 //If we can build a mine here then search for ore
                 if Result then
                   for I:=Max(X-4, 1) to Min(X+4, gTerrain.MapX) do
@@ -947,7 +947,7 @@ begin
               end;
 
     fnBitin:   begin
-                Result := gHands[fOwner].CanAddHousePlanAI(X, Y, htBitinMine, False);
+                Result := gHands[fOwner].CanAddHousePlanAI(X, Y, htBitinMine, false);
                 //If we can build a mine here then search for ore
                 if Result then
                   for I:=Max(X-4, 1) to Min(X+4, gTerrain.MapX) do

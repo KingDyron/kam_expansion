@@ -2888,9 +2888,8 @@ begin
               or gGameParams.IsReplay
               or (aSpeedActual <> aDefaultSpeed)
               or (doShowRecorded and (aSpeedRecorded <> aDefaultSpeed));
-
-
-  Image_Clock.Visible := doShowClock;
+  //doShowClock := false;
+  Image_Clock.Visible := doShowClock ;
   Label_Time.Visible := doShowClock or gGameSettings.ShowGameTime or SHOW_GAME_TICK;
   Label_ClockSpeedActual.Visible := doShowClock;
   Label_ClockSpeedActual.Caption := 'x' + FormatFloat('##0.##', aSpeedActual);

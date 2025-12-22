@@ -40,7 +40,7 @@ type
     procedure CheckHouseCount;
     function TryConnectToRoad(const aLoc: TKMPoint): Boolean;
     function TryBuildHouse(aHouse: TKMHouseType): Boolean;
-    function TryBuildHouseCloseTo(aHouse: TKMHouseType; aLoc : TKMPoint): Boolean;
+    function TryBuildHouseCloseTo(aHouse: TKMHouseType; aLoc : TKMPoint; aMaxRadius : Byte): Boolean;
     procedure CheckHousePlans;
     procedure CheckRoadsCount;
     procedure CheckExhaustedMines;
@@ -821,7 +821,7 @@ begin
     If gHands.HasHousePlanNearby(H.Entrance, [htWell], 12) >= 0 then
       Continue;
 
-    TryBuildHouseCloseTo(htWell, H.PointBelowEntrance);
+    TryBuildHouseCloseTo(htWell, H.PointBelowEntrance, 12);
   end;
 
 end;
@@ -952,7 +952,7 @@ end;
 
 //Try to place a building plan for requested house
 //Report back if failed to do so (that will allow requester to choose different action)
-function TKMayor.TryBuildHouseCloseTo(aHouse: TKMHouseType; aLoc: TKMPoint): Boolean;
+function TKMayor.TryBuildHouseCloseTo(aHouse: TKMHouseType; aLoc: TKMPoint; aMaxRadius : Byte): Boolean;
 var
   I, K: Integer;
   Loc: TKMPoint;
@@ -976,7 +976,7 @@ begin
   //      fail it should be quick. Doing a flood fill with radius=40 should really be avoided anyway, 11ms is a long time for placing 1 house.
   //      We could also make it not try to place houses again each update if it failed the first time, if we can't make FindPlaceForHouse quick when it fails.
   ignoreRoad := true;
-  if not fCityPlanner.NextToLoc(aLoc, aHouse, Loc) then Exit;
+  if not fCityPlanner.NextToLoc(aLoc, aHouse, aMaxRadius, Loc) then Exit;
 
   ignoreRoad := ignoreRoad or (aHouse in NO_ROAD_CONNECTION_HOUSES);
   //Place house before road, so that road is made around it

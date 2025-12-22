@@ -1567,7 +1567,7 @@ var
 begin
   Result := CanBuildHouse(aHouseType);
   if not Result then Exit;
-  Result := gTerrain.CanPlaceHouse(aLoc, aHouseType);
+  Result := gTerrain.CanPlaceHouse(aLoc, aHouseType, IsComputer);
   if not Result then Exit;
 
   HA := gRes.Houses[aHouseType].BuildArea;
@@ -1674,7 +1674,7 @@ begin
 
   //Check if we can place house on terrain, this also makes sure the house is
   //at least 1 tile away from map border (skip that below)
-  if not gTerrain.CanPlaceHouse(KMPoint(aX, aY), aHouseType) then
+  if not gTerrain.CanPlaceHouse(KMPoint(aX, aY), aHouseType, true) then
     Exit;
 
   //Perform additional cheks for AI

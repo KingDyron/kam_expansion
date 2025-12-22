@@ -130,7 +130,7 @@ type
     function CanPlaceGoldMine(X, Y: Word): Boolean;
     function CanPlaceIronMine(X, Y: Word): Boolean;
     function CanPlaceShipYard(X, Y: Word): Boolean;
-    function CanPlaceHouse(aLoc: TKMPoint; aHouseType: TKMHouseType): Boolean;
+    function CanPlaceHouse(aLoc: TKMPoint; aHouseType: TKMHouseType; forAI : Boolean = false): Boolean;
     function CanPlaceHouseFromScript(aHouseType: TKMHouseType; const aLoc: TKMPoint): Boolean;
     function TDCanPlaceHouse(aHouseType: TKMHouseType; const aLoc: TKMPoint): Boolean;
     function CanPlaceStructure(const aLoc : TKMPoint; aIndex, aRot : Word) : Boolean;
@@ -145,7 +145,7 @@ type
     procedure AddHouseRemainder(const aLoc: TKMPoint; aHouseType: TKMHouseType; aBuildState: TKMHouseBuildState; Resources : array of TKMWareType);
 
     function CanPlaceWall(const aLoc : TKMPoint; aHouseType : TKMHouseType) : Boolean;
-    function CanPlaceWell(const aLoc : TKMPoint) : Boolean;
+    function CanPlaceWell(const aLoc : TKMPoint; forAI : Boolean = false) : Boolean;
 
     procedure FindWineFieldLocs(const aLoc: TKMPoint; aRadius: Integer; aCornLocs: TKMPointList);
     function FindWineField(const aLoc: TKMPoint; aRadius: Integer; const aAvoidLoc: TKMPoint; aProdThatch : Pointer; out aFieldPoint: TKMPointDir): Boolean;
@@ -7533,7 +7533,7 @@ end;
 
 //Check that house can be placed on Terrain
 //Other checks are performed on Hands level. Of course Terrain is not aware of that
-function TKMTerrain.CanPlaceHouse(aLoc: TKMPoint; aHouseType: TKMHouseType): Boolean;
+function TKMTerrain.CanPlaceHouse(aLoc: TKMPoint; aHouseType: TKMHouseType; forAI : Boolean = false): Boolean;
 var
   I,K,X,Y: Integer;
   L, M: Integer;
@@ -7545,7 +7545,7 @@ begin
     Result := Result and CanPlaceWall(aLoc, aHouseType)
   else
   if aHouseType = htWell then
-    Result := Result and CanPlaceWell(aLoc)
+    Result := Result and CanPlaceWell(aLoc, forAI)
   else
   if aHouseType = htShipYard then
     Result := Result and CanPlaceShipYard(aLoc.X, aLoc.Y);
@@ -8252,10 +8252,10 @@ begin
 
 end;
 
-function TKMTerrain.CanPlaceWell(const aLoc: TKMPoint): Boolean;
+function TKMTerrain.CanPlaceWell(const aLoc: TKMPoint; forAI : Boolean = false): Boolean;
 begin
   Result := not (TileIsSnow(aLoc.X, aLoc.Y) or TileIsSand(aLoc) or (TileIsCoal(aLoc.X, aLoc.Y) > 0))
-    or Land[aLoc.Y, aLoc.X].TileOverlay2.AllowsBuilding;
+    or Land[aLoc.Y, aLoc.X].TileOverlay2.AllowsBuilding or forAI;
 
 end;
 

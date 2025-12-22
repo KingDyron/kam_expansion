@@ -1391,7 +1391,7 @@ end;
 function TKMTaskBuildHouseArea.WalkShouldAbandon: Boolean;
 begin
   //Walk should abandon if other player has built something there before we arrived
-  Result := (fBuildID <> -1) and not gTerrain.CanPlaceHouse(GetHouseEntranceLoc, fHouseType);
+  Result := (fBuildID <> -1) and not gTerrain.CanPlaceHouse(GetHouseEntranceLoc, fHouseType, gHands[fUnit.Owner].IsComputer);
 end;
 
 

@@ -2964,10 +2964,17 @@ begin
       IF (aID >= 15359) and (aID <= 16849) then
         glColor4ubv(@Col)
       else
+      If aAlphaStep <> -1 then
       glColor4f((Col AND $FF / 255),
                 (Col SHR 8 AND $FF / 255),
                 (Col SHR 16 AND $FF / 255),
-                 0 - aAlphaStep);
+                 0 - aAlphaStep)
+      else
+      glColor4f((Col AND $FF / 255),
+                (Col SHR 8 AND $FF / 255),
+                (Col SHR 16 AND $FF / 255),
+                 (Col SHR 24 AND $FF / 255));
+
       TKMRender.BindTexture(Alt.TexID);
       glBegin(GL_QUADS);
         glTexCoord2f(Alt.u1, Alt.v2); glVertex2f(rX                     , rY                      );
@@ -2989,10 +2996,10 @@ var
   rX, rY: Single;
 begin
   // Skip rendering if alphas are zero (occurs so non-started houses can still have child sprites)
-  if ((aWoodProgress = 0) and (aStoneProgress = 0)) or aShadow then Exit;
+  if (aWoodProgress = 0) and (aStoneProgress = 0) then Exit;
 
-  tX := EnsureRange(Round(aX), 1, gTerrain.MapX) - 1;
-  tY := EnsureRange(Round(aY), 1, gTerrain.MapY) - 1;
+  tX := EnsureRange(Round(aX), 1, gTerrain.MapX);
+  tY := EnsureRange(Round(aY), 1, gTerrain.MapY);
   if gMySpectator.FogOfWar.CheckVerticeRenderRev(tX, tY) <= FOG_OF_WAR_MIN then Exit;
 
   rX := RoundToTilePixel(aX);
@@ -3017,10 +3024,10 @@ begin
     glBlendFunc(GL_ONE, GL_ZERO);
 
     // Wood progress
-    glAlphaFunc(GL_GEQUAL, 1 - aWoodProgress);
+    glAlphaFunc(GL_GREATER, 1 - aWoodProgress);
     with gGFXData[aRX,aId] do
     begin
-      glColor4f(1, 1, 1, 1);
+      glColor3f(1, 1, 1);
       TKMRender.BindTexture(Alt.TexID);
       glBegin(GL_QUADS);
         glTexCoord2f(Alt.u1,Alt.v2); glVertex2f(rX                     , rY         );
@@ -3036,10 +3043,10 @@ begin
     begin
       glStencilOp(GL_DECR, GL_DECR, GL_DECR);
 
-      glAlphaFunc(GL_GEQUAL, 1 - aStoneProgress);
+      glAlphaFunc(GL_GREATER, 1 - aStoneProgress);
         with gGFXData[aRX,aId2] do
         begin
-          glColor4f(1, 1, 1, 1);
+          glColor3f(1, 1, 1);
           TKMRender.BindTexture(Alt.TexID);
           glBegin(GL_QUADS);
             glTexCoord2f(Alt.u1,Alt.v2); glVertex2f(X2                     ,Y2         );
@@ -3081,6 +3088,7 @@ begin
 end;
 
 
+
 procedure TKMRenderPoolNoShadows.RenderSprite(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
                                    HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1);
 var
@@ -3117,10 +3125,24 @@ begin
     with gGFXData[aRX, aId] do
     begin
       //glColor4ubv(@Col);
-      glColor4f((Col AND $FF / 255) * aNight,
+      {glColor4f((Col AND $FF / 255) * aNight,
                 (Col SHR 8 AND $FF / 255) * aNight,
                 (Col SHR 16 AND $FF / 255) * aNight,
-                 0 - aAlphaStep);
+                 0 - aAlphaStep);}
+
+      IF (aID >= 15359) and (aID <= 16849) then
+        glColor4ubv(@Col)
+      else
+      If aAlphaStep <> -1 then
+      glColor4f((Col AND $FF / 255),
+                (Col SHR 8 AND $FF / 255),
+                (Col SHR 16 AND $FF / 255),
+                 0 - aAlphaStep)
+      else
+      glColor4f((Col AND $FF / 255),
+                (Col SHR 8 AND $FF / 255),
+                (Col SHR 16 AND $FF / 255),
+                 (Col SHR 24 AND $FF / 255));
       TKMRender.BindTexture(Alt.TexID);
       glBegin(GL_QUADS);
         glTexCoord2f(Alt.u1, Alt.v2); glVertex2f(rX                     , rY                      );

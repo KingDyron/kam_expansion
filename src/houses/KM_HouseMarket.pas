@@ -207,7 +207,8 @@ begin
   //then incoming resourced should be added to Offer list immediately
   //We don't want Marketplace to act like a Store
   if not aFromScript then
-    Dec(fMarketDeliveryCount[aWare], aCount); //We must keep track of the number ordered, which is less now because this has arrived
+    fMarketDeliveryCount[aWare] := Max(fMarketDeliveryCount[aWare] - aCount, 0);
+    //Dec(fMarketDeliveryCount[aWare], aCount); //We must keep track of the number ordered, which is less now because this has arrived
 
   if (aWare = fResFrom) and TradeInProgress then
   begin
