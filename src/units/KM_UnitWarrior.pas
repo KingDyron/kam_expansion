@@ -1475,7 +1475,6 @@ begin
   Result := False; //Didn't find anyone to fight
 
 
-
   //Ranged units should not check for enemy while walking or when facing the wrong way
 
   if IsRanged and ((not IsIdle) or ((FaceDir <> Direction) and (FaceDir <> dirNA))) then Exit;
@@ -1996,7 +1995,7 @@ begin
           Result := 2;
 
   If fInHouse is TKMHouseSiegeTower then
-    Result := Result + 3;
+    Result := Result + 4;
 end;
 
 
@@ -2022,7 +2021,7 @@ begin
     Result := Result + 1;
 
   If fInHouse is TKMHouseSiegeTower then
-    Result := Result + 3;
+    Result := Result + 5;
 end;
 
 
