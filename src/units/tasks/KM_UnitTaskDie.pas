@@ -20,9 +20,11 @@ type
 implementation
 uses
   KM_ResSound, KM_Sound,
+  KM_Points,
   KM_HandsCollection, KM_HandTypes, KM_HandEntity,
   KM_Resource, KM_UnitWarrior, KM_ScriptingEvents,
-  KM_ResUnits, KM_Terrain;
+  KM_ResUnits, KM_Terrain,
+  KM_SpecialAnim;
 
 
 { TTaskDie }
@@ -35,7 +37,8 @@ begin
   if aUnit.Visible or (aUnit.InShip <> nil) then
   begin
     fPhase := 1; //Phase 0 can be skipped when the unit is visible
-    Execute;
+    //no need to execute,  when animation is seperate
+    //Execute;
   end;
 end;
 
@@ -58,7 +61,7 @@ end;
 
 function TKMTaskDie.Execute: TKMTaskResult;
 var
-  SequenceLength: SmallInt;
+  //SequenceLength: SmallInt;
   TempOwner: TKMHandID;
   TempUnitType: TKMUnitType;
   TempX, TempY: Word;
@@ -88,8 +91,9 @@ begin
               SetActionLockedStay(0, uaWalk, False)
             else
             begin
-              SequenceLength := gRes.Units[UnitType].UnitAnim[uaDie, Direction].Count;
-              SetActionLockedStay(SequenceLength, uaDie, False);
+              //SequenceLength := gRes.Units[UnitType].UnitAnim[uaDie, Direction].Count;
+              SetActionLockedStay({SequenceLength}0, uaDie, true);
+              gSpecAnim.AddUnitDeath(Spec.UnitAnim[uaDie, Direction], PositionF + KMPointF(0.5, 0.5), PositionF + KMPointF(0.5, 0.5));
               //Do not play sounds if unit is invisible to gMySpectator
               //We should not use KaMRandom below this line because sound playback depends on FOW and is individual for each player
               if gMySpectator.FogOfWar.CheckTileRevelation(fUnit.Position.X, fUnit.Position.Y) >= 255 then

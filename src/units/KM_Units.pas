@@ -2008,10 +2008,10 @@ begin
 
   Assert((fTask = nil) or (fTask is TKMTaskDie));
   if fTask is TKMTaskDie then
-  case fTask.Execute of
-    trTaskContinues:  Exit;
-    trTaskDone:       raise Exception.Create('Unexpected fUnitTask.Execute value = trTaskDone'); //TTaskDie never returns trTaskDone yet
-  end;
+    case fTask.Execute of
+      trTaskContinues:  Exit;
+      trTaskDone:       raise Exception.Create('Unexpected fUnitTask.Execute value = trTaskDone'); //TTaskDie never returns trTaskDone yet
+    end;
   //First make sure the animal isn't stuck (check passibility of our position)
   if makeKill
   or (not gTerrain.CheckPassability(fPositionRound, DesiredPassability))
@@ -2680,15 +2680,15 @@ begin
   FreeAndNil(fTask); //Should be overriden to dispose of Task-specific items
   if aShowAnimation then
   begin
-    gSpecAnim.AddUnitDeath(Spec.UnitAnim[uaDie, Direction], PositionF + KMPointF(0.5, 0.5), PositionF + KMPointF(0.5, 0.5));
-    aShowAnimation := false;
+    //gSpecAnim.AddUnitDeath(Spec.UnitAnim[uaDie, Direction], PositionF + KMPointF(0.5, 0.5), PositionF + KMPointF(0.5, 0.5));
+    {aShowAnimation := false;
     if gMySpectator.FogOfWar.CheckTileRevelation(Position.X, Position.Y) >= 255 then
     begin
       if self is TKMUnitWarrior then
         gSoundPlayer.PlayWarrior(UnitType, spDeath, PositionF)
       else
         gSoundPlayer.PlayCitizen(UnitType, spDeath, PositionF);
-    end;
+    end;}
   end;
   fTask := TKMTaskDie.Create(Self, aShowAnimation);
 end;

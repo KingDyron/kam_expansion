@@ -640,6 +640,9 @@ begin
   end;
 
   FillChar(fFestivalPoints, sizeOf(fFestivalPoints), #0);
+  {fFestivalPoints[fptBuilding] := 10000;
+  fFestivalPoints[fptEconomy] := 10000;
+  fFestivalPoints[fptWarfare] := 10000;}
 end;
 
 

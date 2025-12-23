@@ -519,7 +519,7 @@ begin
     dirS : Result := KMPoint(X, Y + 1);
     dirSW : Result := KMPoint(X - 1, Y + 1);
     dirW : Result := KMPoint(X - 1, Y);
-    dirNW : Result := KMPoint(X, Y - 1);
+    dirNW : Result := KMPoint(X - 1, Y - 1);
   end;
 end;
 

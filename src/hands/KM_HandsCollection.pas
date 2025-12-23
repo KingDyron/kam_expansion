@@ -62,7 +62,8 @@ type
     procedure RemovePlayerAssets(aIndex: TKMHandID);
 
     function HousesHitTest(X,Y: Integer): TKMHouse;
-    function UnitsHitTest(X, Y: Integer): TKMUnit;
+    function UnitsHitTest(X, Y: Integer): TKMUnit;overload;
+    function UnitsHitTest(aLoc: TKMPoint): TKMUnit;overload;
     function GroupsHitTest(X, Y: Integer): TKMUnitGroup;
     function StructuresHitTest(X, Y: Integer): TKMStructure;
 
@@ -465,6 +466,12 @@ begin
       Exit; //There can't be 2 units on one tile
   end;
 end;
+
+function TKMHandsCollection.UnitsHitTest(aLoc: TKMPoint): TKMUnit;
+begin
+  Result := UnitsHitTest(aLoc.X, aLoc.Y);
+end;
+
 
 
 function TKMHandsCollection.GroupsHitTest(X, Y: Integer): TKMUnitGroup;

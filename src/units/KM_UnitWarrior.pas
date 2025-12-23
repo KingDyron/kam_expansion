@@ -53,7 +53,6 @@ type
     fStormDelay: Word;
     fBoltCount : Word;
     fBitinAdded : Boolean;
-    fRamTicker : Cardinal;
     fDamageUnits : Word;
     fDamageHouse : Word;
     fRageTime : Word;
@@ -453,6 +452,16 @@ type
     function UpdateState : Boolean; override;
   end;
 
+  TKMUnitWarriorRam = class(TKMUnitWarrior)
+  private
+    fRamTicker : Byte;
+  public
+    constructor Load(LoadStream: TKMemoryStream); override;
+    procedure Save(SaveStream: TKMemoryStream); override;
+    function UpdateState : Boolean; override;
+
+  end;
+
 
 implementation
 uses
@@ -527,7 +536,6 @@ begin
   LoadStream.Read(fBitinAdded);
   LoadStream.Read(fDamageUnits);
   LoadStream.Read(fDamageHouse);
-  LoadStream.Read(fRamTicker);
   LoadStream.Read(fRageTime);
   LoadStream.Read(fRemovedFromGroup);
   LoadStream.Read(InShip, 4);
@@ -575,7 +583,6 @@ begin
   SaveStream.Write(fBitinAdded);
   SaveStream.Write(fDamageUnits);
   SaveStream.Write(fDamageHouse);
-  SaveStream.Write(fRamTicker);
   SaveStream.Write(fRageTime);
   SaveStream.Write(fRemovedFromGroup);
   SaveStream.Write(InShip.ToUnit.UID);
@@ -2440,7 +2447,6 @@ end;
 
 
 function TKMUnitWarrior.UpdateState: Boolean;
-var U : TKMUnit;
 begin
   if fAction = nil then
     raise ELocError.Create(gRes.Units[UnitType].GUIName+' has no action at start of TKMUnitWarrior.UpdateState', fPositionRound);
@@ -2477,37 +2483,6 @@ begin
   //Part 1 - Take orders into execution if there are any
   //Part 2 - UpdateState
   //Part 3 -
-  if (fType = utRam) and ((Action is TKMUnitActionWalkTo) or (Task is TKMTaskAttackHouse)) then
-  begin
-    if Position = PositionNext then
-    begin
-      Inc(fRamTicker);
-      if fRamTicker >= 25 then
-      begin
-        fRamTicker := 0;
-        case self.Direction of
-          dirN: U := gHands.UnitsHitTest(Position.X, Position.Y - 1);
-          dirNE: U := gHands.UnitsHitTest(Position.X + 1, Position.Y - 1);
-          dirE: U := gHands.UnitsHitTest(Position.X + 1, Position.Y);
-          dirSE: U := gHands.UnitsHitTest(Position.X + 1, Position.Y + 1);
-          dirS: U := gHands.UnitsHitTest(Position.X, Position.Y + 1);
-          dirSW: U := gHands.UnitsHitTest(Position.X - 1, Position.Y + 1);
-          dirW: U := gHands.UnitsHitTest(Position.X - 1, Position.Y);
-          dirNW: U := gHands.UnitsHitTest(Position.X - 1, Position.Y - 1);
-          else
-            U := nil;
-        end;
-
-        if (U <> nil) and not U.IsDeadOrDying and (gHands[Owner].Alliances[U.Owner] <> atAlly) then
-        begin
-          U.SetHitTime;
-          U.HitPointsDecrease(4, self);
-          gScriptEvents.ProcUnitHit(U, self);
-        end;
-      end;
-    end else
-    fRamTicker := 0;
-  end;
 
   if fNextOrder <> woNone then
     TakeNextOrder;
@@ -4235,6 +4210,41 @@ begin
     Exit;
   If fTicker mod 3 = 0 then
     CheckForEnemies;
+end;
+
+constructor TKMUnitWarriorRam.Load(LoadStream: TKMemoryStream);
+begin
+  Inherited;
+  LoadStream.Read(fRamTicker);
+end;
+
+procedure TKMUnitWarriorRam.Save(SaveStream: TKMemoryStream);
+begin
+  Inherited;
+  SaveStream.Write(fRamTicker)
+end;
+
+function TKMUnitWarriorRam.UpdateState: Boolean;
+var U : TKMUnit;
+begin
+  Result := Inherited;
+  If not Result then
+    Exit;
+  if (Action is TKMUnitActionWalkTo) or (Action is TKMUnitActionFight) or (Task is TKMTaskAttackHouse) then
+  begin
+      inc(fRamTicker);
+      if fRamTicker >= 10 then
+      begin
+        fRamTicker := 0;
+        U := gHands.UnitsHitTest(KMPointDir(Position, Direction).DirFaceLoc);
+        if not U.IsDeadOrDying and (gHands[Owner].Alliances[U.Owner] <> atAlly) then
+        begin
+          U.SetHitTime;
+          U.HitPointsDecrease(5, self);
+          gScriptEvents.ProcUnitHit(U, self);
+        end;
+      end;
+  end;
 end;
 
 end.
