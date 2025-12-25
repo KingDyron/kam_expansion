@@ -72,6 +72,7 @@ type
     procedure OwnerUpdate(aPlayer: TKMHandID);
     function BalanceText: UnicodeString;
     property ArmyDemand : TAIArmyDemandF read fArmyDemand;
+    property RoadType : TKMRoadType read fRoadTypeToBuild;
 
     //function MostNeededWare : TKMWareType; overload;
     function MostNeededWare(aWares : array of TKMWareType) : TKMWareType;
@@ -191,7 +192,6 @@ begin
   fCityPlanner.AfterMissionInit;
   CheckArmyDemand;
   CheckAutoRepair;
-  fBalance.StoneNeed := GetMaxPlans * 2.5;
   if gHands[fOwner].IsComputer then
     fRecorder.AfterMissionStart;
   H := gHands[fOwner].GetNextHouseWSameType(htStore, 0);
@@ -199,6 +199,18 @@ begin
   If H.IsValid then
     fRoadTypeToBuild := gTerrain.GetRoadType(H.PointBelowEntrance);
 
+  case fRoadTypeToBuild of
+    rtNone,
+    rtStone : fBalance.StoneNeed := 3 + GetMaxPlans * 2;
+    rtClay : fBalance.TileNeed := 0.8 + GetMaxPlans / 3;
+    rtWooden : fBalance.WoodNeed := 3 + GetMaxPlans * 2;
+    rtExclusive : begin
+                    fBalance.WoodNeed := 3 + GetMaxPlans * 2;
+                    fBalance.TileNeed := 0.8 + GetMaxPlans / 2;
+                    fBalance.StoneNeed := 3 + GetMaxPlans * 2;
+                  end;
+
+  end;
 end;
 
 
@@ -365,7 +377,8 @@ begin
         // If we are low on Gold don't hire more ppl (next school will fail this too, so we can exit)
         if not HasEnoughGoldForAux then Exit;
 
-        serfCount := Round(fSetup.SerfsPerHouse * (P.Stats.GetHouseQty(htAny) + P.Stats.GetUnitQty(utBuilder)/2));
+        serfCount := Round(fSetup.SerfsPerHouse * (P.Stats.GetHouseQty(htAny) + P.Stats.GetUnitQty(utBuilder)/2))
+                      - (P.Stats.GetUnitQty(utMountedSerf));
 
         if not TryToTrain(HS, utSerf, serfCount) then
           if not TryToTrain(HS, utBuilder, fSetup.WorkerCount) then
@@ -630,7 +643,7 @@ end;
 
 function TKMayor.GetMaxPlans: Byte;
 begin
-  Result := Ceil(fSetup.WorkerCount / 4);
+  Result := Ceil(fSetup.WorkerCount / 4) + byte(HasUnits([utHouseBuilder])) * 2;
 end;
 
 
@@ -1125,6 +1138,7 @@ begin
                     B.NotAcceptFlag[wtQuiver] := B.CheckWareIn(wtQuiver) > 10;
                     B.NotAcceptFlag[wtBoots] := B.CheckWareIn(wtBoots) > 10;
                     B.NotAcceptFlag[wtBitinArmor] := B.CheckWareIn(wtBitinArmor) > 10;
+                    B.NotAcceptFlag[wtLance] := (B.CheckWareIn(wtLance) > 15) and HasUnits([utSkirmisher]);
                   end;
       htStore : begin
                   S := TKMHouseStore(Houses[I]);
@@ -1432,7 +1446,10 @@ begin
 
   WarfareRatios[wtAxe] :=        demands[gtMelee]  * Max(GetUnitRatio(utAxeFighter), GetUnitRatio(utMilitia))
                                  + demands[gtMounted] * GetUnitRatio(utScout);
-  WarfareRatios[wtLance] :=       demands[gtAntiHorse]  * GetUnitRatio(utLanceCarrier);
+
+  WarfareRatios[wtLance] :=       demands[gtAntiHorse] * GetUnitRatio(utLanceCarrier)
+                                  + Byte(HasUnits([utSkirmisher])) / 4;
+
   WarfareRatios[wtBow] :=        demands[gtRanged]  * GetUnitRatio(utBowman);
   //Iron
   WarfareRatios[wtIronArmor] := demands[gtMelee]  * GetUnitRatio(utSwordFighter)
@@ -1669,7 +1686,7 @@ begin
     wtLog: Result := ((fArmyDemand[gtMachines] > 0) or (fArmyDemand[gtMachinesMelee] > 0) or (fArmyDemand[gtShips] > 0))
                         and gHands[fOwner].Locks.UnitsUnlocked([utBallista, utCatapult, utRam, utBattleShip])
                         and not HasWare(aWare, 20)//no need to make a lot of it
-                        and HasHouses([htSiegeWorkshop, htShipyard]);
+                        and HasHouses([htSiegeWorkshop, htShipyard, htPearl]);
 
     wtWheel: Result := ((fArmyDemand[gtMachines] > 0) or (fArmyDemand[gtMachinesMelee] > 0))
                         and gHands[fOwner].Locks.UnitsUnlocked([utBallista, utCatapult, utRam])

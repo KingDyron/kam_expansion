@@ -179,6 +179,7 @@ type
 implementation
 uses
   SysUtils, StrUtils, Math, KromUtils,
+  KM_GameParams,
   KM_Hand, KM_HandsCollection, KM_Resource, KM_ResWares;
 
 
@@ -189,7 +190,7 @@ begin
   fOwner := aPlayer;
 
   GoldNeed := 1;
-  StoneNeed := 10;
+  StoneNeed := 3.5;
   WoodNeed := 3.5;
   TileNeed := 0.8;
 end;
@@ -881,8 +882,11 @@ begin
     SiegeNeeded := gHands[fOwner].AI.Mayor.ArmyDemand[gtMachines] * gHands[fOwner].AI.Mayor.ArmyDemand[gtNone] / 20;
     SiegeMachines.SteelTheory := SiegeMachines.SteelTheory - (HouseCount(htIronFoundry) * PRODUCTION_RATE[wtSteelE]);
     SiegeMachines.CoalTheory := SiegeMachines.CoalTheory - (HouseCount(htIronFoundry) * PRODUCTION_RATE[wtSteelE]);
-    SiegeMachines.StoneWorkshopTheory := HouseCount(htStoneWorkshop) * PRODUCTION_RATE[wtLog] - SiegeNeeded;
-    SiegeMachines.FoundryTheory := HouseCount(htIronFoundry) * PRODUCTION_RATE[wtSteelE] - SiegeNeeded;
+    SiegeMachines.StoneWorkshopTheory := HouseCount(htStoneWorkshop) * PRODUCTION_RATE[wtLog] - SiegeNeeded - HouseCount(htPearl);
+
+
+    SiegeMachines.FoundryTheory := HouseCount(htIronFoundry) * PRODUCTION_RATE[wtSteelE] - SiegeNeeded - HouseCount(htPearl);
+
     SiegeMachines.SiegeTheory := HouseCount(htSiegeWorkshop) - SiegeNeeded ;
     //for every 20 machines we need 1 siege workshop
     SiegeMachines.Balance := Min([SiegeMachines.CoalTheory, SiegeMachines.SteelTheory, SiegeMachines.SiegeTheory, SiegeMachines.FoundryTheory, SiegeMachines.StoneWorkshopTheory]);
@@ -933,12 +937,15 @@ begin
     StoreBalance    := HouseCount(htStore)       - 1 - (HouseCount(htAny) * 0.01 - 1);
     //Build 2 schools if we need to equip a lot of warriors per minute
     SchoolBalance   := HouseCount(htSchool)      - 1 - Byte((gHands[fOwner].Stats.GetHouseQty(htBarracks) > 0) and (gHands[fOwner].AI.Setup.WarriorsPerMinute > 2));
-    InnBalance      := HouseCount(htInn)         - P.Stats.GetCitizensCount / 80;
+
+    InnBalance      := HouseCount(htInn) - (P.Stats.GetCitizensCount / 140) + (byte(gGameParams.Tick < 15 * 60 * 10) * 100);  //build inn after 15 minutes
+
     BarracksBalance := HouseCount(htBarracks)    - Byte(P.Stats.GetWarfareProduced > 0);
     TowerBalance    := HouseCount(htWallTower) + HouseCount(htWatchTower)  - 1 * gHands[fOwner].Stats.GetHouseQty(htBarracks);
 
     //If there are more schools then we need more cottage
-    CottageBalance  := (HouseCount(htCottage) + HouseCount(htHouse) * 3) - 2 - (HouseCount(htSchool));
+    //must be at least one cottage
+    CottageBalance  := (HouseCount(htCottage) + HouseCount(htHouse) * 2) - (HouseCount(htSchool)) - 1;
 
     MarketBalance  := HouseCount(htMarket) - HouseCount(htAny) / 85;
     TownhallBalance := HouseCount(htTownhall) - Min(1, HouseCount(htMetallurgists) / 2);

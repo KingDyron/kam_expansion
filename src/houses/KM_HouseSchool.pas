@@ -284,8 +284,8 @@ begin
     begin
       WareTakeFromIn(wtGold); //Do the goldtaking
       gHands[Owner].Stats.WareConsumed(wtGold);
-      gHands[Owner].TakeWorkless;
     end;
+  gHands[Owner].TakeWorkless;
   fHideOneGold := False;
   fTrainProgress := 0;
 
