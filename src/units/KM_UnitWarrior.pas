@@ -2466,17 +2466,13 @@ begin
   if fCondition < UNIT_MIN_CONDITION then
     fThought := thEat; //thDeath checked in parent UpdateState
 
-  if not fNeverHungry then
-    if fConditionPace >= 10 then
-      if (fTicker mod fConditionPace = 0) then
-      begin
-        if not (fType in SIEGE_MACHINES) and not gHands[Owner].ArmyDevUnlocked(13) then
-          case fOrder of
-            woWalk: If KaMRandom(100, 'TKMUnitWarrior.UpdateState:Condition1') <= 50 then dec(fCondition);
-            woAttackUnit,
-            woAttackHouse: If KaMRandom(100, 'TKMUnitWarrior.UpdateState:Condition2') <= 80 then dec(fCondition);
-            woStorm: dec(fCondition);
-          end;
+  if not fNeverHungry and not gHands[Owner].NeverHungry then
+    if not (fType in SIEGE_MACHINES) and not gHands[Owner].ArmyDevUnlocked(13) then
+      case fOrder of
+        woWalk: If fTicker mod (fConditionPace + 10) = 0 then dec(fCondition);
+        woAttackUnit,
+        woAttackHouse: If fTicker mod (fConditionPace + 5) = 0 then  dec(fCondition);
+        woStorm: If fTicker mod fConditionPace = 0 then dec(fCondition);
       end;
 
   //Part 1 - Take orders into execution if there are any
