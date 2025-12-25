@@ -69,9 +69,9 @@ begin
       Button_MM_MultiPlayer  := TKMButton.Create(Panel_MMButtons,0, 40,350,30,gResTexts[TX_MENU_MULTIPLAYER],bsMenu);
       Button_MM_MapEd        := TKMButton.Create(Panel_MMButtons,0, 80,350,30,gResTexts[TX_MENU_MAP_EDITOR],bsMenu);
       Button_MM_Replays      := TKMButton.Create(Panel_MMButtons,0,120,350,30,gResTexts[TX_MENU_REPLAYS],bsMenu);
-      Button_MM_Options      := TKMButton.Create(Panel_MMButtons,0,160,350,30,gResTexts[TX_MENU_OPTIONS],bsMenu);
-      Button_MM_Achievements := TKMButton.Create(Panel_MMButtons,0,200,350,30,gResTexts[2108],bsMenu);
-      Button_MM_Credits      := TKMButton.Create(Panel_MMButtons,0,240,350,30,gResTexts[TX_MENU_CREDITS],bsMenu);
+      Button_MM_Options      := TKMButton.Create(Panel_MMButtons,0,160 - 40,350,30,gResTexts[TX_MENU_OPTIONS],bsMenu);
+      Button_MM_Achievements := TKMButton.Create(Panel_MMButtons,0,200 - 40,350,30,gResTexts[2108],bsMenu);
+      Button_MM_Credits      := TKMButton.Create(Panel_MMButtons,0,240 - 40,350,30,gResTexts[TX_MENU_CREDITS],bsMenu);
       Button_MM_Quit         := TKMButton.Create(Panel_MMButtons,0,300,350,30,gResTexts[TX_MENU_QUIT],bsMenu);
       Button_MM_Debug        := TKMButton.Create(Panel_MMButtons,0,350,350,30,'Debug Houses',bsMenu);
 
@@ -96,6 +96,7 @@ begin
       {$IFNDEF DEBUG}
         Button_MM_Debug.Hide;
       {$ENDIF}
+      Button_MM_Replays.Hide;
       {Switch_Test := TKMSwitch.Create(Panel_MMButtons, 0, 340, 110, 30);
       Switch_Test.Offset := 35;
       Switch_Test.TexID := [383, 384, 385];}
