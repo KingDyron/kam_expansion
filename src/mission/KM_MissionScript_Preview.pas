@@ -150,12 +150,16 @@ begin
     ctSetHouse:        if InRange(P[0], Low(HOUSE_ID_TO_TYPE), High(HOUSE_ID_TO_TYPE))
                           and PointInMap(P[1]+1, P[2]+1) then
                         begin
-                          RevealCircle(P[1]+1, P[2]+1, gRes.Houses[HOUSE_ID_TO_TYPE[P[0]]].Sight);
+                          If gRes.Houses[HOUSE_ID_TO_TYPE[P[0]]].Sight > 0 then
+                            RevealCircle(P[1]+1, P[2]+1, gRes.Houses[HOUSE_ID_TO_TYPE[P[0]]].Sight);
                           HA := gRes.Houses[HOUSE_ID_TO_TYPE[P[0]]].BuildArea;
-                          for i:=1 to MAX_HOUSE_SIZE do for k:=1 to MAX_HOUSE_SIZE do
-                            if HA[i,k] <> 0 then
-                              if InRange(P[1]+1+k-3, 1, fMapX) and InRange(P[2]+1+i-4, 1, fMapY) then
-                                SetOwner(P[1]+1+k-3, P[2]+1+i-4);
+
+                          If not (HOUSE_ID_TO_TYPE[P[0]] in [htSign, htWell]) then
+                            for i:=1 to MAX_HOUSE_SIZE do for k:=1 to MAX_HOUSE_SIZE do
+                              if HA[i,k] <> 0 then
+                                if InRange(P[1]+1+k-3, 1, fMapX) and InRange(P[2]+1+i-4, 1, fMapY) then
+                                  SetOwner(P[1]+1+k-3, P[2]+1+i-4);
+
                         end;
 
     ctSetMapColor:     if InRange(fLastHand, 0, MAX_HANDS-1) then

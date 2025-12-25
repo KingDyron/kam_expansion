@@ -483,6 +483,7 @@ begin
     SaveToFile(fDir + fName + '.mi'); //Save new cache file
   end;
     //Load additional text info
+  If not fTxtInfo.LoadFromJson(fDir + fName + '.json') then
     fTxtInfo.LoadTXTInfo(fDir + fName + '.txt');
 
   fInfoAmount := iaBase;
@@ -671,7 +672,8 @@ begin
   if IsFightingMission then
     fTxtInfo.BlockPeacetime := True;
 
-  fTxtInfo.LoadTXTInfo(fDir + fName + '.txt');
+  If not fTxtInfo.LoadFromJson(fDir + fName + '.json') then
+    fTxtInfo.LoadTXTInfo(fDir + fName + '.txt');
 
   fInfoAmount := iaExtra;
 
@@ -1526,11 +1528,11 @@ begin
           Include(DifficultyLevels, diff);
       end;
 
-    If fSmallDescLibx <> -1 then
+    If fSmallDescLibx > -1 then
       SetSmallDescLibxAndTranslation(fSmallDescLibx, LoadDescriptionFromLIBX(fSmallDescLibx));
-    If fBigDescLibx <> -1 then
+    If fBigDescLibx > -1 then
       SetBigDescLibxAndTranslation(fBigDescLibx, LoadDescriptionFromLIBX(fBigDescLibx));
-    If fNameLibx <> -1 then
+    If fNameLibx > -1 then
       SetNameLibxAndTranslation(fNameLibx, LoadDescriptionFromLIBX(fNameLibx));
 
   finally

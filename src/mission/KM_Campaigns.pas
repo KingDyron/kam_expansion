@@ -759,8 +759,8 @@ begin
         fMapsInfo[I].TxtInfo := TKMMapTxtInfo.Create
       else
         fMapsInfo[I].TxtInfo.ResetInfo;
-
-      fMapsInfo[I].TxtInfo.LoadTXTInfo(GetMissionFile(I, '.txt'));
+      If not fMapsInfo[I].TxtInfo.LoadFromJson(GetMissionFile(I, '.json')) then
+        fMapsInfo[I].TxtInfo.LoadTXTInfo(GetMissionFile(I, '.txt'));
 
       fMapsInfo[I].MissionName := '';
 
