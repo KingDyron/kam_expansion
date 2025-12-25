@@ -585,7 +585,7 @@ end;
 procedure TKMMenuMultiplayer.MP_AnnouncementsUpdated(const S: UnicodeString);
 begin
   Memo_MP_Announcement.Clear;
-  Memo_MP_Announcement.Add(S);
+  Memo_MP_Announcement.Add(gResTexts[2346]);
 end;
 
 

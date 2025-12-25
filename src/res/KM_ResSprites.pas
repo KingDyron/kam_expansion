@@ -1080,7 +1080,7 @@ var
 begin
   if fRXData.Flag[aIndex] <> 1 then Exit;
 
-  if fRT in [rxUnits, rxGui] then
+  if fRT in [rxUnits{, rxGui}] then
   begin
     ExportUnitSprite(aFolder + Format('%d_%.4d', [Ord(fRT)+1, aIndex]), aIndex);
   end else

@@ -1,6 +1,17 @@
    Timestamp    Elapsed     Delta  Thread    Description
 ========================
-    Date: 2025.12.21
+    Date: 2025.12.25
 ========================
-16:51:32.173     0,005s       5ms  20096    Log is up and running. Game version: KaM Expansion: Explore the Cultures
-16:51:34.931     2,763s    2758ms  20096    GUI - 1191
+14:02:26.745     0,000s       0ms  26544    Log is up and running. Game version: KaM Expansion: Explore the Cultures
+14:02:30.010     3,264s    3264ms  26544    GUI - 1191
+14:02:35.007     8,261s    4997ms  26544    Trimmed 0
+14:02:37.417    10,671s    2410ms  26544    GUIMain - 123
+14:02:43.848    17,102s    6431ms  26544    Trimmed 0
+14:02:49.715    22,969s    5867ms  26544    Houses - 3098
+14:02:54.811    28,065s    5096ms  26544    Trimmed 0
+14:03:04.571    37,825s    9760ms  26544    Tileset - 5449
+14:03:17.514    50,768s   12943ms  26544    Trimmed 0
+14:03:20.381    53,635s    2867ms  26544    Trees - 1539
+14:03:25.334    58,588s    4953ms  26544    Trimmed 0
+14:03:47.762    81,016s   22428ms  26544    Units - 17634
+14:03:53.577    86,831s    5815ms  26544    Trimmed 0
