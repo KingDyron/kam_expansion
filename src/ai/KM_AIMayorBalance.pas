@@ -769,7 +769,7 @@ begin
     //How much gold in theory we could get
     //CoalTheory - coal calculated separately
     GoldOreTheory := HouseCount(htGoldMine) * PRODUCTION_RATE[wtGoldOre] * 2; //*2 since every Ore becomes 2 Gold
-    GoldOreTheory := GoldOreTheory + Max(0, GoldOreReserve - 30);
+    GoldOreTheory := GoldOreTheory + Max(0, GoldOreReserve - 40);
     GoldTheory := HouseCount(htMetallurgists) * PRODUCTION_RATE[wtGold];
 
     //Actual production is minimum of the above
@@ -778,7 +778,7 @@ begin
     //How much reserve do we have
     Reserve := gHands[fOwner].Stats.GetWareBalance(wtGold) / Max(1,Consumption);
 
-    Balance := Production - Consumption + Max(Reserve - 30, 0);
+    Balance := Production - Consumption + Max(Reserve - 40, 0);
 
     fGoldText := Format('%.2f Gold (%.2f - %.2f + %.2f)', [Balance, Production, Consumption, Reserve]);
   end;
@@ -879,7 +879,7 @@ begin
 
     Warfare[wtHorse].Production := Min(Horse.FarmTheory, Horse.StablesTheory);
     //stone workshop creates 2 different wares for machines
-    SiegeNeeded := gHands[fOwner].AI.Mayor.ArmyDemand[gtMachines] * gHands[fOwner].AI.Mayor.ArmyDemand[gtNone] / 20;
+    SiegeNeeded := (gHands[fOwner].AI.Mayor.ArmyDemand[gtMachines] + gHands[fOwner].AI.Mayor.ArmyDemand[gtMachinesMelee]);
     SiegeMachines.SteelTheory := SiegeMachines.SteelTheory - (HouseCount(htIronFoundry) * PRODUCTION_RATE[wtSteelE]);
     SiegeMachines.CoalTheory := SiegeMachines.CoalTheory - (HouseCount(htIronFoundry) * PRODUCTION_RATE[wtSteelE]);
     SiegeMachines.StoneWorkshopTheory := HouseCount(htStoneWorkshop) * PRODUCTION_RATE[wtLog] - SiegeNeeded - HouseCount(htPearl);
