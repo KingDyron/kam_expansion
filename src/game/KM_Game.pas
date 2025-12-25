@@ -751,7 +751,9 @@ begin
 
 
     // MapTxtInfo should be loaded before MultiplayerRig, since we use map txt params there in UpdateHandState
-    fMapTxtInfo.LoadTXTInfo(ChangeFileExt(aMissionFullFilePath, '.txt'));
+    If not fMapTxtInfo.LoadFromJson(ChangeFileExt(aMissionFullFilePath, '.json')) then
+      fMapTxtInfo.LoadTXTInfo(ChangeFileExt(aMissionFullFilePath, '.txt'));
+
     fWeather.Settings.SetDefault;
     case fParams.Mode of
       gmMulti, gmMultiSpectate: begin
@@ -1636,7 +1638,8 @@ begin
   // Create empty script file, in there is no any. It will not harm anyone
   KMCreateEmptyFile(ChangeFileExt(aPathName, EXT_FILE_SCRIPT_DOT));
 
-  fMapTxtInfo.SaveTXTInfo(ChangeFileExt(aPathName, '.txt'));
+  //fMapTxtInfo.SaveTXTInfo(ChangeFileExt(aPathName, '.txt'));//deprecated
+  fMapTxtInfo.SaveToJson(ChangeFileExt(aPathName, '.json'));
   gTerrain.SaveToFile(ChangeFileExt(aPathName, '.map'), aInsetRect);
   fTerrainPainter.SaveToFile(ChangeFileExt(aPathName, '.map'), aInsetRect);
   missionParser := TKMMissionParserStandard.Create(mpmEditor);

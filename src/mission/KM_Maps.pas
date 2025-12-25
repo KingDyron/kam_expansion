@@ -103,6 +103,9 @@ type
 
     procedure SaveTXTInfo(const aFilePath: String);
     procedure LoadTXTInfo(const aFilePath: String);
+
+    procedure SaveToJson(const aFilePath: String);
+    function LoadFromJson(const aFilePath: String) : Boolean;
     function HasDifficultyLevels: Boolean;
 
     property BlockColorSelection: Boolean read GetBlockColorSelection write fBlockColorSelection;
@@ -318,12 +321,13 @@ implementation
 uses
   SysUtils, StrUtils, TypInfo, Math,
   KromUtils,
+  KM_JsonHelpers,
   KM_GameSettings, KM_FileIO,
   KM_MissionScript_Info,
   KM_ScriptPreProcessor, KM_ScriptFilesCollection,
   KM_ResLocales, KM_ResTypes,
   KM_CommonUtils, KM_Log, KM_MapUtils, KM_Utils, KM_GameParams,
-  IOUtils;
+  IOUtils, KM_CommonClassesExt;
 
 const
   MAP_TXT_INFO_MARKER = 'MapTxtInfo';
@@ -1366,6 +1370,171 @@ begin
 
     // Normalize descriptions
     NormalizeDesc;
+  end;
+end;
+
+procedure TKMMapTxtInfo.SaveToJson(const aFilePath: String);
+var Root, weatherObj : TKMJsonObject;
+  arr : TKMJsonArrayNew;
+  S : String;
+  I : Integer;
+  diff : TKMMissionDifficulty;
+begin
+  if IsEmpty then
+  begin
+    if FileExists(aFilePath) then
+      KMDeleteFile(aFilePath);
+    Exit;
+  end;
+
+  Root := TKMJsonObject.Create;
+  try
+    Root.Add('Author', Author);
+    Root.Add('Version', Version);
+    Root.Add('SmallDescLIBX', fSmallDescLibx);
+    Root.Add('SmallDesc', SmallDesc);
+    Root.Add('BigDescLibx', fBigDescLibx);
+    Root.Add('BigDesc', fBigDesc);
+    Root.Add('NameLIBX', fNameLIBX);
+    Root.Add('IsCoop', IsCoop);
+    Root.Add('IsSpecial', IsSpecial);
+    Root.Add('IsRMG', IsRMG);
+    Root.Add('IsPlayableAsSP', IsPlayableAsSP);
+    Root.Add('BlockPeacetime', BlockPeacetime);
+    Root.Add('BlockTeamSelection', BlockTeamSelection);
+    Root.Add('BlockColorSelection', BlockColorSelection);
+    Root.Add('BlockFullMapPreview', BlockFullMapPreview);
+    If Weather.Overwrite then
+    begin
+      weatherObj := root.AddObject('Weather');
+      With Weather do
+      begin
+        weatherObj.Add('Enabled', Enabled);
+        If Enabled then
+        begin
+          weatherObj.Add('MaxCount', MaxCount);
+          weatherObj.Add('MaxSpawnCount', MaxSpawnCount);
+          weatherObj.Add('MinInterval', MinInterval);
+          weatherObj.Add('MaxInterval', MaxInterval);
+          weatherObj.Add('MaxLifeTime', MaxLifeTime);
+          weatherObj.Add('MaxCloudSpeed', MaxCloudSpeed, 5);
+          weatherObj.Add('DecParticles', DecParticles);
+        end;
+        weatherObj.Add('NightTime', NightTime);
+        weatherObj.Add('NightSpeed', NightSpeed);
+        weatherObj.Add('DynamicLight', DynamicLight);
+        weatherObj.Add('DynamicShadow', DynamicShadow);
+      end;
+    end;
+
+    if HasDifficultyLevels then
+    begin
+      arr := root.AddArray('DifficultyLevels', true);
+      for diff := MISSION_DIFFICULTY_MIN to MISSION_DIFFICULTY_MAX do
+        If diff in DifficultyLevels then
+          If TKMEnumUtils.GetName<TKMMissionDifficulty>(diff, S) then
+            arr.Add(S);
+    end;
+    {
+
+    If Root.GetArray('DifficultyLevels', arr) then
+    begin
+      for I := 0 to arr.Count - 1 do
+
+      S := arr.S[I];
+      If TKMEnumUtils.TryGetAs<TKMMissionDifficulty>(S, diff) then
+        Include(DifficultyLevels, diff);
+    end;}
+
+    Root.SaveToFile(aFilePath);
+  finally
+    Root.Free;
+  end;
+
+end;
+
+function TKMMapTxtInfo.LoadFromJson(const aFilePath: String) : Boolean;
+  function LoadDescriptionFromLIBX(aIndex: Integer): UnicodeString;
+  var
+    missionTexts: TKMTextLibrarySingle;
+  begin
+    Result := '';
+    if aIndex = -1 then Exit;
+    missionTexts := TKMTextLibrarySingle.Create;
+    missionTexts.LoadLocale(ChangeFileExt(aFilePath, '.%s.libx'));
+    Result := missionTexts.Texts[aIndex];
+    missionTexts.Free;
+  end;
+
+var Root, weatherObj : TKMJsonObject;
+  arr : TKMJsonArrayNew;
+  S : String;
+  I : Integer;
+  diff : TKMMissionDifficulty;
+begin
+  Result := false;
+  If not FileExists(aFilePath) then
+    Exit;
+  Result := true;
+  Root := TKMJsonObject.Create;
+  try
+    Root.LoadFromFile(aFilePath);
+
+    Author := Root.S['Author'];
+    Version := Root.S['Version'];
+    fSmallDescLibx := Root.I['SmallDescLIBX'];
+    SmallDesc := Root.S['SmallDesc'];
+    fBigDescLibx := Root.I['BigDescLibx'];
+    fBigDesc := Root.S['BigDesc'];
+    fNameLibx := Root.I['NameLIBX'];
+    IsCoop := Root.B['IsCoop'];
+    IsSpecial := Root.B['IsSpecial'];
+    IsRMG := Root.B['IsRMG'];
+    IsPlayableAsSP := Root.B['IsPlayableAsSP'];
+    BlockPeacetime := Root.B['BlockPeacetime'];
+    BlockTeamSelection := Root.B['BlockTeamSelection'];
+    BlockColorSelection := Root.B['BlockColorSelection'];
+    BlockFullMapPreview := Root.B['BlockFullMapPreview'];
+
+    If Root.GetObject('Weather', weatherObj) then
+      with Weather do
+      begin
+        Overwrite := true;
+        Enabled := weatherObj.B['Enabled'];
+        If Enabled then
+        begin
+          MaxCount := weatherObj.I['MaxCount'];
+          MaxSpawnCount := weatherObj.I['MaxSpawnCount'];
+          MinInterval := weatherObj.I['MinInterval'];
+          MaxInterval := weatherObj.I['MaxInterval'];
+          MaxLifeTime := weatherObj.I['MaxLifeTime'];
+          MaxCloudSpeed := weatherObj.D['MaxCloudSpeed'];
+          DecParticles := weatherObj.I['DecParticles'];
+        end;
+        NightTime := weatherObj.I['NightTime'];
+        NightSpeed := weatherObj.I['NightSpeed'];
+        DynamicLight := weatherObj.B['DynamicLight'];
+        DynamicShadow := weatherObj.B['DynamicShadow'];
+      end;
+
+    If Root.GetArray('DifficultyLevels', arr) then
+      for I := 0 to arr.Count - 1 do
+      begin
+
+        S := arr.S[I];
+        If TKMEnumUtils.TryGetAs<TKMMissionDifficulty>(S, diff) then
+          Include(DifficultyLevels, diff);
+      end;
+
+    If fSmallDescLibx <> -1 then
+      SetSmallDescLibxAndTranslation(fSmallDescLibx, LoadDescriptionFromLIBX(fSmallDescLibx));
+    If fBigDescLibx <> -1 then
+      SetBigDescLibxAndTranslation(fBigDescLibx, LoadDescriptionFromLIBX(fBigDescLibx));
+    If fNameLibx <> -1 then
+      SetNameLibxAndTranslation(fNameLibx, LoadDescriptionFromLIBX(fNameLibx));
+
+  finally
+    Root.Free;
   end;
 end;
 

@@ -212,7 +212,7 @@ type
     procedure Add(aName : String; aValue : Word); overload;
     procedure Add(aName : String; aValue : Integer); overload;
     procedure Add(aName : String; aValue : Cardinal); overload;
-    procedure Add(aName : String; aValue : Single); overload;
+    procedure Add(aName : String; aValue : Single; maxDigits : Byte = 10); overload;
     procedure Add(aName : String; aValue : Boolean); overload;
     function AddObject(aName : String; aOneLiner : Boolean = false): TKMJsonObject;
     function AddArray(aName : String; aOneLiner : Boolean = false): TKMJsonArrayNew;
@@ -223,6 +223,9 @@ type
     property B[aName : String] : Boolean read GetB write SetB;
     property O[aName : String] : TKMJsonObject read GetO;
     property A[aName : String] : TKMJsonArrayNew read GetA;
+
+    function GetObject(aName : String; out aObject : TKMJsonObject) : Boolean;
+    function GetArray(aName : String; out aArray : TKMJsonArrayNew) : Boolean;
 
     property Name : String read fName write fName;
     property Count : Integer read GetCount;
@@ -262,7 +265,7 @@ type
     procedure Add(aValue : Word); overload;
     procedure Add(aValue : Integer); overload;
     procedure Add(aValue : Cardinal); overload;
-    procedure Add(aValue : Single); overload;
+    procedure Add(aValue : Single; maxDigits : Byte = 10); overload;
     procedure Add(aValue : Boolean); overload;
     function AddObject(aOneLiner : Boolean = false): TKMJsonObject;
     function AddArray(aOneLiner : Boolean = false): TKMJsonArrayNew;
@@ -1669,11 +1672,15 @@ var newObj : TKMJsonObject;
   begin
     aCount := 0;
     startID := aID;
-    while SysUtils.CharInSet(aText[aID], ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']) and (aID < length(aText)) do
+    while SysUtils.CharInSet(aText[aID], ['-', '+', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']) and (aID < length(aText)) do
     begin
       Inc(aCount);
+
       If aText[aID] = '.' then
+      begin
         isValueSingle := true;
+        aText[aID] := ','; //we have to precorrect it
+      end;
       Inc(aID);
     end;
     vValue := Copy(aText, startID, aCount);
@@ -1782,7 +1789,7 @@ begin
         GetStringValue;
         AddNewValue(jvtString);
       end else
-      If SysUtils.CharInSet(aText[aID], ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']) then
+      If SysUtils.CharInSet(aText[aID], ['-', '+', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']) then
       begin
         isValueSingle := false;
         GetNumericValue;
@@ -1899,6 +1906,8 @@ end;
 
 procedure TKMJsonObject.AddValue(aName: string; aValue: string; aType : TKMJsonValueType);
 begin
+  If aValue = '' then
+    Exit;
   AddToList(
     aName,//fDataList[AddStringToData(aName)],
     aValue,//fDataList[AddStringToData(aValue)],
@@ -1912,8 +1921,20 @@ procedure TKMJsonObject.Add(aName : String; aValue : ShortInt);   begin AddValue
 procedure TKMJsonObject.Add(aName : String; aValue : Word);       begin AddValue(aName, aValue.ToString, jvtInteger); end;
 procedure TKMJsonObject.Add(aName : String; aValue : Integer);    begin AddValue(aName, aValue.ToString, jvtInteger); end;
 procedure TKMJsonObject.Add(aName : String; aValue : Cardinal);   begin AddValue(aName, aValue.ToString, jvtInteger); end;
-procedure TKMJsonObject.Add(aName : String; aValue : Single);     begin AddValue(aName, aValue.ToString, jvtSingle); end;
-procedure TKMJsonObject.Add(aName : String; aValue : Boolean);    begin AddValue(aName, aValue.ToString(true), jvtBoolean); end;
+
+procedure TKMJsonObject.Add(aName : String; aValue : Single; maxDigits : Byte = 10);
+var S : String;
+  I : Integer;
+begin
+  S := aValue.ToString(ffGeneral, 1, maxDigits);
+  for I := 1 to length(S) do
+    If S[I] = ',' then
+      S[I] := '.';//we have to precorrect it
+
+  AddValue(aName, S, jvtSingle);
+end;
+
+procedure TKMJsonObject.Add(aName : String; aValue : Boolean);    begin AddValue(aName, BoolToStr(aValue, true), jvtBoolean); end;
 
 function TKMJsonObject.AddObject(aName : String; aOneLiner : Boolean = false): TKMJsonObject;
 begin
@@ -2013,6 +2034,18 @@ begin
   If V <> nil then
     If TObject(V.Value) is TKMJsonArrayNew then
       Result := TKMJsonArrayNew(V.Value);
+end;
+
+function TKMJsonObject.GetObject(aName : String; out aObject : TKMJsonObject) : Boolean;
+begin
+  aObject := GetO(aName);
+  Result := aObject <> nil;
+end;
+
+function TKMJsonObject.GetArray(aName : String; out aArray : TKMJsonArrayNew) : Boolean;
+begin
+  aArray := GetA(aName);
+  Result := aArray <> nil;
 end;
 
 procedure TKMJsonObject.SetI(aName : String; aValue : Integer);
@@ -2272,7 +2305,17 @@ procedure TKMJsonArrayNew.Add(aValue : ShortInt);   begin AddToList(aValue.ToStr
 procedure TKMJsonArrayNew.Add(aValue : Word);       begin AddToList(aValue.ToString, jvtInteger); end;
 procedure TKMJsonArrayNew.Add(aValue : Integer);    begin AddToList(aValue.ToString, jvtInteger); end;
 procedure TKMJsonArrayNew.Add(aValue : Cardinal);   begin AddToList(aValue.ToString, jvtInteger); end;
-procedure TKMJsonArrayNew.Add(aValue : Single);     begin AddToList(aValue.ToString, jvtSingle); end;
+procedure TKMJsonArrayNew.Add(aValue : Single; maxDigits : Byte = 10);
+var S : String;
+  I : Integer;
+begin
+  S := aValue.ToString(ffGeneral, 1, maxDigits);
+  for I := 1 to length(S) do
+    If S[I] = ',' then
+      S[I] := '.';//we have to precorrect it
+
+  AddToList(S, jvtSingle);
+end;
 procedure TKMJsonArrayNew.Add(aValue : Boolean);    begin AddToList(aValue.ToString, jvtBoolean); end;
 
 function TKMJsonArrayNew.AddObject(aOneLiner : Boolean = false): TKMJsonObject;

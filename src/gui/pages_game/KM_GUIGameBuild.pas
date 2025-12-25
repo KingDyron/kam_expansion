@@ -573,6 +573,8 @@ begin
           Button_Build[K].Left := lastVisible mod 5 * 37;
           Button_Build[K].Top := top + lastVisible div 5 * 37;
           Button_Build[K].Show;
+          Button_Build[K].BackBevelColor := $40000000;
+          Button_Build[K].DownColor := $FFFFFFFF;
 
           if gMySpectator.Hand.Locks.HouseCanBuild(H) then
           begin
@@ -623,6 +625,9 @@ begin
       Button_Build[lastVisible].Hint := gResTexts[gRes.Structures[I].TextID];
       Button_Build[lastVisible].OnClickShift := Build_ButtonClick;
       Button_Build[lastVisible].Show;
+      Button_Build[lastVisible].BackBevelColor := $40000000;
+      Button_Build[lastVisible].DownColor := $FFFFFFFF;
+
       if gMySpectator.Hand.Locks.Structures[I] = ulBlocked then
       begin
         Button_Build[lastVisible].Hint := gResTexts[TX_HOUSE_NOT_AVAILABLE];
@@ -667,9 +672,18 @@ begin
 
 
       Button_Build[lastVisible].Hint := gResTexts[gDecorations[I].TextID];
-      Button_Build[lastVisible].OnClickShift := Build_ButtonClick;
       Button_Build[lastVisible].Show;
-      Button_build[lastVisible].Enabled := gMySpectator.Hand.HasVWaresDec(gDecorations[I].Cost);
+      Button_Build[lastVisible].OnClickShift := Build_ButtonClick;
+      If not gMySpectator.Hand.HasVWaresDec(gDecorations[I].Cost) then
+      begin
+        Button_Build[lastVisible].BackBevelColor := $400000FF;
+        Button_Build[lastVisible].DownColor := $FF0000FF;
+      end else
+      begin
+        Button_Build[lastVisible].BackBevelColor := $40000000;
+        Button_Build[lastVisible].DownColor := $FFFFFFFF;
+      end;
+      //Button_build[lastVisible].Enabled := gMySpectator.Hand.HasVWaresDec(gDecorations[I].Cost);
 
       if gMySpectator.Hand.Locks.Decoration[I] = ulBlocked then
       begin

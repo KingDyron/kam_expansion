@@ -604,6 +604,8 @@ begin
   TrackBar_MaxInterval.Value := TrackBar_MaxInterval.Value;
   TrackBar_NightSpeed.Enabled := CheckBox_Overwrite.Checked;
   TrackBar_NightTime.Enabled := CheckBox_Overwrite.Checked;
+  CheckBox_DynamicLight.Enabled := CheckBox_Overwrite.Checked;
+  CheckBox_DynamicShadow.Enabled := CheckBox_Overwrite.Checked;
 
   CheckBox_DynamicLight.Checked := gGame.MapTxtInfo.Weather.DynamicLight;
   CheckBox_DynamicShadow.Checked := gGame.MapTxtInfo.Weather.DynamicShadow;
