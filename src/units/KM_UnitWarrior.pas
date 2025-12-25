@@ -1474,7 +1474,6 @@ var
 begin
   Result := False; //Didn't find anyone to fight
 
-
   //Ranged units should not check for enemy while walking or when facing the wrong way
 
   if IsRanged and ((not IsIdle) or ((FaceDir <> Direction) and (FaceDir <> dirNA))) then Exit;

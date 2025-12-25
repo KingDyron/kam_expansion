@@ -106,6 +106,9 @@ type
 type
   TKMayorBalance = class
   private
+    const
+      FARM_THEORY_FACTOR = 2;
+    var
     fOwner: TKMHandID;
 
     fAdvice: array of TKMHouseType;
@@ -1024,20 +1027,20 @@ begin
   begin
     //Let every industry think the extra belongs to it
     CornExtra := CornProduction - CornConsumption;
-    fFood.Bread.FarmTheory := (FlourPerMin + CornExtra) * 2;
-    fFood.Sausages.FarmTheory := (PigPerMin + CornExtra) / BEAST_COST * 3;
-    fWarfare.LeatherArmor.FarmTheory := (PigPerMin + CornExtra) / BEAST_COST * 2;
-    fWarfare.Horse.FarmTheory := (HorsePerMin + CornExtra) / BEAST_COST;
+    fFood.Bread.FarmTheory := (FlourPerMin + CornExtra) * 2 * FARM_THEORY_FACTOR;
+    fFood.Sausages.FarmTheory := (PigPerMin + CornExtra) / BEAST_COST * 3 * FARM_THEORY_FACTOR;
+    fWarfare.LeatherArmor.FarmTheory := (PigPerMin + CornExtra) / BEAST_COST * 2 * FARM_THEORY_FACTOR;
+    fWarfare.Horse.FarmTheory := (HorsePerMin + CornExtra) / BEAST_COST * FARM_THEORY_FACTOR;
   end
   else
   begin
     //Sharing proportionaly doesn't work since closer houses get more.
     //Let every industry think the deficit belongs to it
     CornDeficit := CornConsumption - CornProduction;
-    fFood.Bread.FarmTheory := Max(0, (FlourPerMin - CornDeficit) * 2);
-    fFood.Sausages.FarmTheory := Max(0, (PigPerMin - CornDeficit) / BEAST_COST * 3);
-    fWarfare.LeatherArmor.FarmTheory := Max(0, (PigPerMin - CornDeficit) / BEAST_COST * 2);
-    fWarfare.Horse.FarmTheory := Max(0, (HorsePerMin - CornDeficit) / BEAST_COST);
+    fFood.Bread.FarmTheory := Max(0, (FlourPerMin - CornDeficit) * 2 * FARM_THEORY_FACTOR);
+    fFood.Sausages.FarmTheory := Max(0, (PigPerMin - CornDeficit) / BEAST_COST * 3 * FARM_THEORY_FACTOR);
+    fWarfare.LeatherArmor.FarmTheory := Max(0, (PigPerMin - CornDeficit) / BEAST_COST * 2 * FARM_THEORY_FACTOR);
+    fWarfare.Horse.FarmTheory := Max(0, (HorsePerMin - CornDeficit) / BEAST_COST * FARM_THEORY_FACTOR);
   end;
 end;
 
@@ -1078,13 +1081,13 @@ begin
     Consumption := 0;
 
     for UT := CITIZEN_MIN to CITIZEN_MAX do
-       Consumption := Consumption + P.Stats.GetUnitQty(UT) / 40; //On average unit needs to eat each 40min
+       Consumption := Consumption + P.Stats.GetUnitQty(UT) / 60; //On average unit needs to eat each 40min
 
     Consumption := Consumption * 2; //Otherwise not enough food is made for citizens
 
     //Warriors eat on average half as much as citizens
     for UT := WARRIOR_MIN to WARRIOR_MAX do
-       Consumption := Consumption + P.Stats.GetUnitQty(UT) / 2 / 40; //On average unit needs to eat each 40min
+       Consumption := Consumption + P.Stats.GetUnitQty(UT) / 2 / 60; //On average unit needs to eat each 40min
 
     Reserve := gHands[fOwner].Stats.GetWareBalance(wtBread) * BREAD_RESTORE +
                gHands[fOwner].Stats.GetWareBalance(wtSausage) * SAUSAGE_RESTORE +

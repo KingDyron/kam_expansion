@@ -248,6 +248,10 @@ type
     procedure DebugShowGrid(aShow : Boolean);
     procedure DebugShowUnitRoutes(aShow : Boolean);
 
+    procedure DevelopmentUnlockWithPrevious(aHandID : Integer; aType : Byte; aID : Integer; aUnlocked : Boolean);
+    procedure DevelopmentUnlockSingle(aHandID : Integer; aType : Byte; aID : Integer);
+    procedure DevelopmentUnlockAll(aHandID : Integer; aType : Byte);
+
     procedure GroupSetFlagColor(aGroupID : Integer; aColor : Cardinal);
     procedure GroupMakeHero(aGroupID: Integer; makeHero: Boolean);
     procedure GroupInfiniteAmmoSet(aGroupID: Integer; aInfinity: Boolean);
@@ -295,12 +299,13 @@ type
     procedure UnitBootsSet(aUnitID: Integer; aBoots: Boolean);
     procedure UnitBlockWalking(aUnitID: Integer; aBlock : Boolean);
     procedure UnitChangeSpec(aUnitID, aHPMax, aAttack, aAttackHorse, aDefence, aSpeed, aSight : Integer);
-    procedure UnitHungerPaceSet(aUnitID: Integer; aPace: Cardinal);////////////////
+    procedure UnitHungerPaceSet(aUnitID: Integer; aPace: Cardinal);
     procedure UnitSetFlagColor(aUnitID : Integer; aColor : Cardinal);
     function  UnitSetInstantKill(aUnitID: Integer; isInstant: Boolean): Boolean;
     procedure UnitSetRage(aUnitID, aDuration : Integer);
     procedure UnitSetStats(aUnitID : Integer; aStats : TKMUnitStats);
     procedure UnitSetThought(aUnitID : Integer; aThought : TKMUnitThought);
+
 
     procedure WatchTowerRangeSet(aWatchTower : Integer; aRangeMin, aRangeMax : Single);
     procedure WatchTowerCyclesSet(aWatchTower : Integer; aCycles : Byte);
@@ -324,7 +329,7 @@ uses
   KM_Resource, KM_ResUnits, KM_Hand, KM_ResMapElements,
   KM_PathFindingRoad,
   KM_Terrain,
-  KM_ResTileset,
+  KM_ResTileset, KM_ResDevelopment,
   KM_SpecialAnim, KM_Music,
   KM_CommonUtils, KM_CommonClasses, KM_CommonClassesExt;
 
@@ -6326,5 +6331,45 @@ begin
   end;
 
 end;
+procedure TKMScriptActions.DevelopmentUnlockWithPrevious(aHandID : Integer; aType : Byte; aID : Integer; aUnlocked : Boolean);
+begin
+  try
+    If aType > 0 then
+    If aHandID > -1 then
+      If gHands[aHandID].Enabled then
+        gHands[aHandID].UnlockDevScript(TKMDevelopmentTreeType(aType), aID, aUnlocked, true);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
+procedure TKMScriptActions.DevelopmentUnlockSingle(aHandID : Integer; aType : Byte; aID : Integer);
+begin
+  try
+    If aType > 0 then
+    If aHandID > -1 then
+      If gHands[aHandID].Enabled then
+        gHands[aHandID].UnlockDevScript(TKMDevelopmentTreeType(aType), aID, true, false);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
+procedure TKMScriptActions.DevelopmentUnlockAll(aHandID : Integer; aType : Byte);
+begin
+  try
+    If aType > 0 then
+    If aHandID > -1 then
+      If gHands[aHandID].Enabled then
+        gHands[aHandID].UnlockAllDevScript(TKMDevelopmentTreeType(aType), true);
+
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
 
 end.

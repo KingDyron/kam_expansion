@@ -129,10 +129,6 @@ type
     function HouseWoodcutterChopOnly(aHouseID: Integer): Boolean;
     function HouseWoodcutterMode(aHouseID: Integer): TKMWoodcutterMode;
     function HouseWorker(aHouseID: Integer): Integer;
-    function HouseArea(aHouseType: Integer): TKMHouseAreaNew;
-    function HouseEntranceOffset(aHouseType: Integer): TKMPoint;
-    function HouseTypeToID(aHouseType: TKMHouseType): Integer;
-    function HouseIDtoType(aHouseType: Integer): TKMHouseType;
 
     function IsFieldAt(aHand: ShortInt; X, Y: Integer): Boolean;
     function IsWinefieldAt(aHand: ShortInt; X, Y: Integer): Boolean;
@@ -158,7 +154,6 @@ type
     function KaMRandomI(aMax: Integer): Integer;
     function LocationCount: Integer;
 
-    function MapFieldType(X, Y: Integer): TKMLockFieldType;
     function MapTileHasOnlyTerrainKind(X, Y: Integer; TerKind: TKMTerrainKind): Boolean;
     function MapTileHasOnlyTerrainKinds(X, Y: Integer; TerKinds: array of TKMTerrainKind): Boolean;
     function MapTileHasTerrainKind(X, Y: Integer; TerKind: TKMTerrainKind): Boolean;
@@ -181,7 +176,6 @@ type
     function MapTileOwner(X, Y: Integer): Integer;
     function MapTilePassability(X, Y: Integer; aPassability: Byte): Boolean;
     function MapTilePassabilityEx(X, Y: Integer; aPassability: TKMTerrainPassability): Boolean;
-    function MapTileSelected(X, Y : Integer): Boolean;
     function MapWidth: Integer;
     function MapHeight: Integer;
 
@@ -250,9 +244,7 @@ type
     function StatUnitMultipleTypesCountEx(aHand: Integer; aTypes: TKMUnitTypeSet): Integer;
     function StatUnitTypeCount(aHand, aUnitType: Byte): Integer;
     function StatUnitTypeCountEx(aHand: Integer; aUnitType: TKMUnitType): Integer;
-    function StatResourceTotalCount(aHand: Integer; aWareType: TKMWareType): Integer;
 
-    function TDHouseCanPlace(aHouseType: byte; aX, aY : Integer): Boolean;
 
     function UnitAllowAllyToSelect(aUnitID: Integer): Boolean;
     function UnitAt(aX, aY: Integer): Integer;
@@ -281,19 +273,31 @@ type
     function UnitTypeEx(aUnitID: Integer): TKMUnitType;
     function UnitTypeName(aUnitType: Byte): AnsiString;
     function UnitTypeNameEx(aUnitType: TKMUnitType): AnsiString;
-    function UnitTypeToID(aUnitType: TKMUnitType): Integer;
-    function UnitIDToType(aUnitType: Integer): TKMUnitType;
 
     //new
+    function HouseArea(aHouseType: Integer): TKMHouseAreaNew;
+    function HouseEntranceOffset(aHouseType: Integer): TKMPoint;
+    function HouseTypeToID(aHouseType: TKMHouseType): Integer;
+    function HouseIDtoType(aHouseType: Integer): TKMHouseType;
     function HouseStats(aHouseID: Integer; aWithWares : Boolean): TKMHouseStats;
-    function UnitStats(aUnitID: Integer): TKMUnitStats;
 
+    function MapFieldType(X, Y: Integer): TKMLockFieldType;
+    function MapTileSelected(X, Y : Integer): Boolean;
+
+    function StatResourceTotalCount(aHand: Integer; aWareType: TKMWareType): Integer;
 
     function WareTypeName(aWareType: Byte): AnsiString;
     function WareTypeNameEx(aWareType: TKMWareType): AnsiString;
     function WareTypeToID(aWareType: TKMWareType): Integer;
     function WareIdToType(aWareType: Integer): TKMWareType;
     function WarriorInFight(aUnitID: Integer; aCountCitizens: Boolean): Boolean;
+
+    function UnitTypeToID(aUnitType: TKMUnitType): Integer;
+    function UnitIDToType(aUnitType: Integer): TKMUnitType;
+    function UnitStats(aUnitID: Integer): TKMUnitStats;
+
+    //tower defense
+    function TDHouseCanPlace(aHouseType: byte; aX, aY : Integer): Boolean;
   end;
 
 

@@ -1079,6 +1079,9 @@ begin
     RegisterMethodCheck(c, 'procedure  MusicPlay(aName : String; aForceOn : Boolean)');
     RegisterMethodCheck(c, 'procedure  DebugShowGrid(aShow: Boolean)');
     RegisterMethodCheck(c, 'procedure  DebugShowUnitRoutes(aShow: Boolean)');
+    RegisterMethodCheck(c, 'procedure  DevelopmentUnlockWithPrevious(aHandID : Integer; aType : Byte; aID : Integer; aUnlocked : Boolean)');
+    RegisterMethodCheck(c, 'procedure  DevelopmentUnlockSingle(aHandID : Integer; aType : Byte; aID : Integer)');
+    RegisterMethodCheck(c, 'procedure  DevelopmentUnlockAll(aHandID : Integer; aType : Byte)');
     //*Actions-Check*//
 
     c := Sender.AddClassN(nil, AnsiString(fUtils.ClassName));
@@ -1902,6 +1905,9 @@ begin
       RegisterMethod(@TKMScriptActions.MusicPlay, 'MusicPlay');
       RegisterMethod(@TKMScriptActions.DebugShowGrid, 'DebugShowGrid');
       RegisterMethod(@TKMScriptActions.DebugShowUnitRoutes, 'DebugShowUnitRoutes');
+      RegisterMethod(@TKMScriptActions.DevelopmentUnlockWithPrevious, 'DevelopmentUnlockWithPrevious');
+      RegisterMethod(@TKMScriptActions.DevelopmentUnlockSingle, 'DevelopmentUnlockSingle');
+      RegisterMethod(@TKMScriptActions.DevelopmentUnlockAll, 'DevelopmentUnlockAll');
       //*Actions-Reg*//
     end;
 
