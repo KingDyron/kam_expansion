@@ -4497,28 +4497,43 @@
 		"ID": 453,
 		"GuiIcon": 933,
 		"TextID": 2085,
-		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
+		"Cost": [
+			{"VWareName" : "vtResin", "Count" : 5},
+			{"VWareName" : "vtWoodenPlate", "Count" : 10},
+			{"VWareName" : "vtGemStone", "Count" : 10}
+			]
 	},
 	{
 		"Type" : "dtObject",
 		"ID": 455,
 		"GuiIcon": 932,
 		"TextID": 2086,
-		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
+		"Cost": [
+			{"VWareName" : "vtResin", "Count" : 5},
+			{"VWareName" : "vtWoodenPlate", "Count" : 10}
+			]
 	},
 	{
 		"Type" : "dtObject",
 		"ID": 457,
 		"GuiIcon": 934,
 		"TextID": 2087,
-		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
+		"Cost": [
+			{"VWareName" : "vtResin", "Count" : 5},
+			{"VWareName" : "vtWoodenPlate", "Count" : 5},
+			{"VWareName" : "vtIronFerrule", "Count" : 10}
+			]
 	},
 	{
 		"Type" : "dtObject",
 		"ID": 458,
 		"GuiIcon": 935,
 		"TextID": 2088,
-		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
+		"Cost": [
+			{"VWareName" : "vtResin", "Count" : 7},
+			{"VWareName" : "vtWoodenPlate", "Count" : 6},
+			{"VWareName" : "vtIronFerrule", "Count" : 13}
+			]
 	},
 	
 	{
@@ -4526,7 +4541,12 @@
 		"ID": 264,
 		"GuiIcon": 1192,
 		"TextID": 2036,
-		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
+		"Cost": [
+			{"VWareName" : "vtLeatherSheet", "Count" : 10},
+			{"VWareName" : "vtWoodenPlate", "Count" : 10},
+			{"VWareName" : "vtIronFerrule", "Count" : 10},
+			{"VWareName" : "vtNeedle", "Count" : 10}
+			]
 	},
 	
 	{
@@ -4534,7 +4554,11 @@
 		"ID": 265,
 		"GuiIcon": 1192,
 		"TextID": 2036,
-		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
+		"Cost": [
+			{"VWareName" : "vtWoodenPlate", "Count" : 5},
+			{"VWareName" : "vtIronFerrule", "Count" : 20},
+			{"VWareName" : "vtNeedle", "Count" : 5}
+			]
 	},
 	
 	{
@@ -4542,7 +4566,11 @@
 		"ID": 266,
 		"GuiIcon": 1192,
 		"TextID": 2036,
-		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
+		"Cost": [
+			{"VWareName" : "vtWoodenPlate", "Count" : 5},
+			{"VWareName" : "vtIronFerrule", "Count" : 20},
+			{"VWareName" : "vtNeedle", "Count" : 5}
+			]
 	},
 	
 	{
@@ -4550,7 +4578,12 @@
 		"ID": 267,
 		"GuiIcon": 1192,
 		"TextID": 2036,
-		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
+		"Cost": [
+			{"VWareName" : "vtLeatherSheet", "Count" : 1},
+			{"VWareName" : "vtWoodenPlate", "Count" : 5},
+			{"VWareName" : "vtIronFerrule", "Count" : 1},
+			{"VWareName" : "vtNeedle", "Count" : 1}
+			]
 	},
 	
 	{
@@ -4558,7 +4591,12 @@
 		"ID": 268,
 		"GuiIcon": 1192,
 		"TextID": 2036,
-		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
+		"Cost": [
+			{"VWareName" : "vtLeatherSheet", "Count" : 1},
+			{"VWareName" : "vtWoodenPlate", "Count" : 5},
+			{"VWareName" : "vtIronFerrule", "Count" : 2},
+			{"VWareName" : "vtNeedle", "Count" : 2}
+			]
 	},
 	
 	{
@@ -4566,7 +4604,12 @@
 		"ID": 269,
 		"GuiIcon": 1192,
 		"TextID": 2036,
-		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
+		"Cost": [
+			{"VWareName" : "vtLeatherSheet", "Count" : 15},
+			{"VWareName" : "vtWoodenPlate", "Count" : 10},
+			{"VWareName" : "vtIronFerrule", "Count" : 5},
+			{"VWareName" : "vtNeedle", "Count" : 5}
+			]
 	},
 	
 	{
@@ -4574,7 +4617,12 @@
 		"ID": 270,
 		"GuiIcon": 1192,
 		"TextID": 2036,
-		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
+		"Cost": [
+			{"VWareName" : "vtLeatherSheet", "Count" : 15},
+			{"VWareName" : "vtWoodenPlate", "Count" : 10},
+			{"VWareName" : "vtIronFerrule", "Count" : 5},
+			{"VWareName" : "vtNeedle", "Count" : 5}
+			]
 	},
 	
 	{
@@ -4582,7 +4630,12 @@
 		"ID": 271,
 		"GuiIcon": 1192,
 		"TextID": 2036,
-		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
+		"Cost": [
+			{"VWareName" : "vtLeatherSheet", "Count" : 15},
+			{"VWareName" : "vtWoodenPlate", "Count" : 10},
+			{"VWareName" : "vtIronFerrule", "Count" : 5},
+			{"VWareName" : "vtNeedle", "Count" : 5}
+			]
 	},
 	
 	{
@@ -4590,7 +4643,12 @@
 		"ID": 272,
 		"GuiIcon": 1192,
 		"TextID": 2036,
-		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
+		"Cost": [
+			{"VWareName" : "vtLeatherSheet", "Count" : 15},
+			{"VWareName" : "vtWoodenPlate", "Count" : 10},
+			{"VWareName" : "vtIronFerrule", "Count" : 5},
+			{"VWareName" : "vtNeedle", "Count" : 5}
+			]
 	},
 	
 	{
@@ -4598,7 +4656,12 @@
 		"ID": 273,
 		"GuiIcon": 1192,
 		"TextID": 2036,
-		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
+		"Cost": [
+			{"VWareName" : "vtLeatherSheet", "Count" : 15},
+			{"VWareName" : "vtWoodenPlate", "Count" : 10},
+			{"VWareName" : "vtIronFerrule", "Count" : 5},
+			{"VWareName" : "vtNeedle", "Count" : 5}
+			]
 	},
 	
 	{
@@ -4606,42 +4669,60 @@
 		"ID": 274,
 		"GuiIcon": 1192,
 		"TextID": 2036,
-		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
+		"Cost": [
+			{"VWareName" : "vtLeatherSheet", "Count" : 15},
+			{"VWareName" : "vtWoodenPlate", "Count" : 10},
+			{"VWareName" : "vtIronFerrule", "Count" : 5},
+			{"VWareName" : "vtNeedle", "Count" : 5}
+			]
 	},
 	{
 		"Type" : "dtObject",
 		"ID": 275,
 		"GuiIcon": 1192,
 		"TextID": 2036,
-		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
+		"Cost": [
+			{"VWareName" : "vtLeatherSheet", "Count" : 15},
+			{"VWareName" : "vtWoodenPlate", "Count" : 10},
+			{"VWareName" : "vtIronFerrule", "Count" : 1},
+			{"VWareName" : "vtNeedle", "Count" : 1}
+			]
 	},
 	{
 		"Type" : "dtObject",
 		"ID": 506,
 		"GuiIcon": 1193,
 		"TextID": 0,
-		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
+		"Cost": [
+			{"VWareName" : "vtWoodenPlate", "Count" : 40}
+			]
 	},
 	{
 		"Type" : "dtObject",
 		"ID": 507,
 		"GuiIcon": 1193,
 		"TextID": 2036,
-		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
+		"Cost": [
+			{"VWareName" : "vtWoodenPlate", "Count" : 40}
+			]
 	},
 	{
 		"Type" : "dtObject",
 		"ID": 508,
 		"GuiIcon": 1193,
 		"TextID": 2036,
-		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
+		"Cost": [
+			{"VWareName" : "vtWoodenPlate", "Count" : 40}
+			]
 	},
 	{
 		"Type" : "dtObject",
 		"ID": 537,
 		"GuiIcon": 1193,
 		"TextID": 2036,
-		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
+		"Cost": [
+			{"VWareName" : "vtWoodenPlate", "Count" : 40}
+			]
 	},
 	
 	{
@@ -4649,21 +4730,27 @@
 		"ID": 16,
 		"GuiIcon": 935,
 		"TextID": 2036,
-		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
+		"Cost": [
+			{"VWareName" : "vtWoodenPlate", "Count" : 20}
+			]
 	},
 	{
 		"Type" : "dtTileOverlay",
 		"ID": 17,
 		"GuiIcon": 935,
 		"TextID": 2036,
-		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
+		"Cost": [
+			{"VWareName" : "vtLeatherSheet", "Count" : 10}
+			]
 	},
 	{
 		"Type" : "dtTileOverlay",
 		"ID": 21,
 		"GuiIcon": 935,
 		"TextID": 2036,
-		"Cost": [{"VWareName" : "vtResin", "Count" : 10}]
+		"Cost": [
+			{"VWareName" : "vtGemStone", "Count" : 5}
+			]
 	}
   ],
   "GrowingTrees" : [

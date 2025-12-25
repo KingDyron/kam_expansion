@@ -35,6 +35,7 @@ type
       Button_Build: array of TKMButtonFlat;
 
       Icons_UnlockingHouses : TKMIconsRow;
+      DecorationCost : TKMVWaresButtonsMulti;
   public
     constructor Create(aParent: TKMPanel);
     procedure PlanRoad;
@@ -178,6 +179,9 @@ begin
   Icons_UnlockingHouses := TKMIconsRow.Create(Panel_Build.MasterPanel, 0, 0, 37, 37);
   Icons_UnlockingHouses.Hitable := false;
   Icons_UnlockingHouses.MaxCountInRow := 5;
+  DecorationCost := TKMVWaresButtonsMulti.Create(Panel_Build, 0, 600, Panel_Build.Width, 300);
+  DecorationCost.Hide;
+
 end;
 
 
@@ -258,7 +262,6 @@ procedure TKMGUIGameBuild.Build_ButtonClick(Sender: TObject; Shift: TShiftState)
     for I := 0 to High(aWares) do
       if aCounts[I] > 0 then
       Row_Cost.WarePlan.AddWare(aWares[I], aCounts[I]);
-
     Label_Build.Caption := aCaption;
     Image_Build_Selected.TexID := aTexId;
 
@@ -329,6 +332,7 @@ begin
   begin
     with gDecorations[TKMButtonFlat(Sender).Tag] do
       SetCost(cmDecorations, TKMButtonFlat(Sender).Tag, GUIIcon, 0, 0, 0, gResTexts[TextID]);
+    DecorationCost.WarePlan := gDecorations[TKMButtonFlat(Sender).Tag].Cost;
   end else
   if (Sender is TKMButtonFlat) and (TKMButtonFlat(Sender).Tag2 = 1) then //bridges
   begin
@@ -472,6 +476,7 @@ begin
   end;
   if not hasAny then
     Icons_UnlockingHouses.Hide;
+  DecorationCost.Hide;
 
   top := 0;
   for I := 0 to byte(high(TKMLockFieldType)) div 5 do
@@ -632,6 +637,7 @@ begin
   end else
   if fSelectedType = 2 then //decorations
   begin
+    DecorationCost.Show;
     Label_BuildType.Caption := gResTexts[2036];
     lastVisible := 0;
     for I := 0 to High(gDecorations) do
@@ -676,6 +682,7 @@ begin
 
       Inc(lastVisible);
     end;
+    DecorationCost.Top := Button_Build[lastVisible - 1].Bottom + 5;
 
   end;
 

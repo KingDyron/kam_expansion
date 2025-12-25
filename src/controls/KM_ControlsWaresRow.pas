@@ -128,6 +128,14 @@ type
     procedure Paint; override;
   end;
 
+  TKMVWaresButtonsMulti = class(TKMControl)
+  public
+    WarePlan : TKMVWarePlanCommon;
+    Caption : UnicodeString;
+    procedure MouseOver(X,Y: Integer; Shift: TShiftState); override;
+    procedure Paint; override;
+  end;
+
   TKMUnitsButtonsMulti = class(TKMControl)
   public
     UnitPlan : TKMUnitPlan;
@@ -1046,6 +1054,54 @@ begin
       TKMRenderUI.WriteBevel(AbsLeft + (J mod 5) * 37, AbsTop + (J div 5) * 37, 32, 36, 1, 0.35); //render bevel for each ware
 
       id := gRes.Wares[WarePlan[I].W].GUIIcon;
+      TKMRenderUI.WritePicture(AbsLeft + (J mod 5) * 37, AbsTop + (J div 5) * 37, 32, 32,
+                                [], rxGui, id, Enabled);
+
+      TKMRenderUI.WriteText(AbsLeft + (J mod 5) * 37, AbsTop + 22 + ((J div 5) * 37), 32,'x' + IntToStr(WarePlan[I].C), fntGame, taCenter);
+
+
+      Inc(J);
+    end;
+
+end;
+
+procedure TKMVWaresButtonsMulti.MouseOver(X: Integer; Y: Integer; Shift: TShiftState);
+var I, J, lX, lY : Integer;
+begin
+  Inherited;
+  Hint := '';
+  lX := AbsLeft;
+  lY := AbsTop;
+  J := 0;
+  for I := 0 to high(WarePlan) do
+    if (WarePlan[I].W <> '') and (WarePlan[I].C > 0) then
+    begin
+      if InRange(X, lX + (J mod 5) * 37, lX + (J mod 5) * 37 + 32)
+      and InRange(Y, lY + (J div 5) * 37, lY + (J div 5) * 37 + 36) then
+      begin
+        Hint := gRes.Wares.VirtualWares.WareS[WarePlan[I].W].Title;
+        Exit;
+      end;
+
+      Inc(J);
+    end;
+
+end;
+
+procedure TKMVWaresButtonsMulti.Paint;
+var I, J, id : Integer;
+begin
+  TKMRenderUI.WriteText(AbsLeft, AbsTop - 17, Width, Caption, fntMetal, taLeft);
+
+  TKMRenderUI.WriteBevel(AbsLeft, AbsTop, 5 * 37, 40 + (high(WarePlan) div 5) * 37, 1, 0.5); //render bevel for each ware
+  J := 0;
+  for I := 0 to high(WarePlan) do
+    if (WarePlan[I].W <> '') and (WarePlan[I].C > 0) then
+    begin
+
+      TKMRenderUI.WriteBevel(AbsLeft + (J mod 5) * 37, AbsTop + (J div 5) * 37, 32, 36, 1, 0.35); //render bevel for each ware
+
+      id := gRes.Wares.VirtualWares.WareS[WarePlan[I].W].GUIIcon;
       TKMRenderUI.WritePicture(AbsLeft + (J mod 5) * 37, AbsTop + (J div 5) * 37, 32, 32,
                                 [], rxGui, id, Enabled);
 
