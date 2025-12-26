@@ -143,6 +143,7 @@ var dtt : TKMDevelopmentTreeType;
 
     B.Visible := aState <> dlNotVisible;
     B.Tag2 := 0;
+    TKMButtonFlatDevGame(B).Cost := aToButton.Dev.Cost;
     currState := locks.DevelopmentLock[aType, aToButton.Dev.ID];
     If (aState = dlUnlockedSingle) or ((currState = dlUnlockedSingle){ and (aState <> dlNotVisible)}) then
     begin
