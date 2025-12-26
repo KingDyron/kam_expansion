@@ -1,0 +1,20 @@
+   Timestamp    Elapsed     Delta  Thread    Description
+========================
+    Date: 2025.12.26
+========================
+11:47:17.868     0,001s       1ms   7116    Log is up and running. Game version: KaM Expansion: Explore the Cultures
+11:47:17.875     0,008s       7ms   7116    Dedicated server event handler created
+11:47:17.880     0,013s       5ms   7116    Start loading 'Server settings' from 'E:\programowanie\projekty delphi\kam_expansion\Utils\DedicatedServer\KaM Remake Server Settings.ini'
+11:47:17.885     0,018s       5ms   7116    'Server settings' was successfully loaded from 'E:\programowanie\projekty delphi\kam_expansion\Utils\DedicatedServer\KaM Remake Server Settings.ini'
+11:47:17.889     0,022s       4ms   7116    Start saving 'Server settings' to 'E:\programowanie\projekty delphi\kam_expansion\Utils\DedicatedServer\KaM Remake Server Settings.ini'
+75b35d47 KERNEL32.DLL             BaseThreadInitThunk
+
+11:47:17.901     0,034s      12ms   7116    'Server settings' was successfully saved to 'E:\programowanie\projekty delphi\kam_expansion\Utils\DedicatedServer\KaM Remake Server Settings.ini'
+11:47:17.905     0,038s       4ms   7116    Start saving 'Server settings' to 'E:\programowanie\projekty delphi\kam_expansion\Utils\DedicatedServer\KaM Remake Server Settings.ini'
+75b35d47 KERNEL32.DLL             BaseThreadInitThunk
+
+11:47:17.917     0,050s      12ms   7116    'Server settings' was successfully saved to 'E:\programowanie\projekty delphi\kam_expansion\Utils\DedicatedServer\KaM Remake Server Settings.ini'
+11:47:17.921     0,054s       4ms   7116    Using protocol for clients running r15371
+11:47:17.926     0,059s       5ms   7116    Server: Listening on port 56789
+11:47:24.808     6,941s    6882ms   2500    Interrupt received, shutting down server...
+11:47:24.815     6,948s       7ms   2500    Stopped listening
