@@ -1540,6 +1540,9 @@ begin
   Result := nil; //No one to fight
   if not CanInterruptAction then exit;
 
+  if not gRes.Units[fType].CanAttackUnits then
+    Exit;
+
   if IsRanged then
   begin
     //We are busy with an action (e.g. in a fight)
@@ -1570,14 +1573,10 @@ begin
   if not IsRanged and IsIdle and gHands[Owner].IsComputer then
     range := Max(range, gHands[Owner].AI.Setup.AutoAttackRange);
 
-  if UnitType = utBattleShip then
-    testDir := dirNA;//DIR_TO_NEXT2[Direction];
   //This function should not be run too often, as it will take some time to execute (e.g. with lots of warriors in the range area to check)
   Result := gTerrain.UnitsHitTestWithinRad(Position, aMinRange, range, Owner, atEnemy, testDir, not RANDOM_TARGETS);
 
   //if fType in [utSpy, utAmmoCart, utRam] then
-  if not gRes.Units[fType].CanAttackUnits then   
-    Result := nil;
 
   //Only stop attacking a house if it's a warrior
   if (fTask <> nil) and (fTask is TKMTaskAttackHouse) and (Action is TKMUnitActionStay) and not (Result is TKMUnitWarrior) then
