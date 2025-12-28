@@ -143,6 +143,7 @@ type
     function HouseUnlocked(aHouse: TKMHouseType): Boolean;overload;
     function HouseUnlocked(aHouses: TKMHouseTypeArray): Boolean;overload;
     function AllHouseUnlocked(aHouses: TKMHouseTypeArray): Boolean;
+    function AIFeatures : Boolean;
 
     procedure DistributeCorn;
     procedure DistributeCoal;
@@ -230,6 +231,11 @@ begin
   Result := true;
   for HT in aHouses do
     Result := Result and HouseUnlocked(HT);
+end;
+
+function TKMayorBalance.AIFeatures: Boolean;
+begin
+  Result := gHands[fOwner].AI.Setup.AIFeatures;
 end;
 
 
@@ -947,12 +953,19 @@ begin
     //must be at least one cottage
     CottageBalance  := (HouseCount(htCottage) + HouseCount(htHouse) * 2) - (HouseCount(htSchool)) - 1;
 
-    MarketBalance  := HouseCount(htMarket) - HouseCount(htAny) / 85;
+    If not AIFeatures then
+      MarketBalance := 999999
+    else
+      MarketBalance  := HouseCount(htMarket) - HouseCount(htAny) / 85;
+
     TownhallBalance := HouseCount(htTownhall) - Min(1, HouseCount(htMetallurgists) / 2);
     //needs atleast 85 buildings to build a palace
     PalaceBalance := HouseCount(htPalace) * 10000 - HouseCount(htAny) / 85 + 1;
     //needs atleast 100 houses to build pearl
-    PearlBalance := HouseCount(htPearl) * 10000 - HouseCount(htAny) / 100 + 1;
+    If not AIFeatures then
+      PearlBalance := 999999
+    else
+      PearlBalance := HouseCount(htPearl) * 10000 - HouseCount(htAny) / 100 + 1;
 
     Balance := Min([StoreBalance, SchoolBalance, InnBalance, BarracksBalance, TowerBalance, CottageBalance, MarketBalance, TownhallBalance, PalaceBalance, PearlBalance]);
     fCoreText := Format

@@ -3369,7 +3369,7 @@ begin
   TrackBar_NightSpeed.Enable;
   TrackBar_NightTime.Enable;
   CheckBox_DynamicLight.Enable;
-
+  CheckBox_DynamicShadow.Enable;
   TrackBar_MaxInterval.ValueMin := TrackBar_MinInterval.Value + 1;
 end;
 
