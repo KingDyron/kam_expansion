@@ -401,12 +401,14 @@ type
     function HasAnyWares(aWares : TKMWareTypeSet) : Boolean;
     procedure SetCount(aCount : Byte; aDoClear : Boolean = false);
     procedure AddWare(aWare : TKMWareType; aCount: Integer = 1; aKeepZero : Boolean = false);
+    procedure AddWareOut(aWare : TKMWareType; aCount: Integer = 1);
     function IndexOf(aWare : TKMWareType; aMinCount : Integer = 0) : Integer;
     procedure Remove(aIndex : Integer);
     procedure CopyFrom(aWare : TKMWarePlan);
     procedure CopyTo(var aWare : TKMWarePlan);
     procedure Clear;
     procedure Reset;
+    procedure DeleteEmpty;
     procedure Save(SaveStream : TKMemoryStream);
     procedure Load(LoadStream : TKMemoryStream);
   end;
@@ -597,6 +599,35 @@ begin
   self[I].C := aCount;
 end;
 
+procedure TKMWarePlanHelper.AddWareOut(aWare: TKMWareType; aCount: Integer = 1);
+var I : Integer;
+begin
+  if (aWare = wtNone) or (aCount = 0)then
+    Exit;
+
+  //try to add to the same ware
+  for I := 0 to High(self) do
+    If self[I].W = aWare then
+    begin
+      self[I].C := self[I].C + aCount;
+      Exit;
+    end;
+
+  //try to add to the empty space
+  for I := 0 to High(self) do
+    If (self[I].W = wtNone) or (self[I].C = 0) then
+    begin
+      self[I].W := aWare;
+      self[I].C := aCount;
+      Exit;
+    end;
+  //Add new
+  I := Count;
+  SetLength(self, I + 1);
+  self[I].W := aWare;
+  self[I].C := aCount;
+end;
+
 procedure TKMWarePlanHelper.Clear;
 var I : Integer;
 begin
@@ -610,6 +641,14 @@ end;
 procedure TKMWarePlanHelper.Reset;
 begin
   SetLength(self, 0);
+end;
+
+procedure TKMWarePlanHelper.DeleteEmpty;
+var I : Integer;
+begin
+  for I := High(self) downto 0 do
+  If (self[I].W = wtNone) or (self[I].C = 0) then
+    Remove(I);
 end;
 
 procedure TKMWarePlanHelper.Remove(aIndex: Integer);

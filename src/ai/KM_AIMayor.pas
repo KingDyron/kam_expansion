@@ -14,6 +14,11 @@ type
   // Mayor is the one who manages the town
   TKMayor = class
   private
+    const
+      VEGE_FIELD_COUNT = 2;
+      GRASS_FIELD_COUNT = 4;
+      MAX_FARM_FIELDS_COUNT = 18;
+    var
     fOwner: TKMHandID;
     fSetup: TKMHandAISetup;
     fBalance: TKMayorBalance;
@@ -896,7 +901,8 @@ begin
     try
       for I := Min(Loc.Y - 2, gTerrain.MapY - 1) to Min(Loc.Y + 2 + AI_FIELD_HEIGHT - 1, gTerrain.MapY - 1) do
       for K := Max(Loc.X - AI_FIELD_WIDTH, 1) to Min(Loc.X + AI_FIELD_WIDTH, gTerrain.MapX - 1) do
-        if P.CanAddFieldPlan(KMPoint(K,I), ftCorn) then
+        if P.CanAddFieldPlan(KMPoint(K,I), ftCorn)
+        and (gTerrain.GetFieldType(KMPoint(K,I)) <> ftCorn) then
         begin
           //Base weight is distance from door (weight X higher so nice rectangle is formed)
           Weight := Abs(K - Loc.X)*3 + Abs(I - 2 - Loc.Y);
@@ -907,14 +913,23 @@ begin
           if I = Loc.Y + 1 then
             Inc(Weight, 1000);
           //avoid building on clay deposits
-          Inc(Weight, gTerrain.TileIsClay(Loc.X, Loc.Y) * 200);
+          Inc(Weight, gTerrain.TileIsClay(Loc.X, Loc.Y) * 300);
 
           NodeTagList.Add(KMPoint(K, I), Weight);
         end;
 
       NodeTagList.SortByTag;
-      for I := 0 to Min(NodeTagList.Count, 16) - 1 do
-        P.Constructions.FieldworksList.AddField(NodeTagList[I], ftCorn, rtNone);
+      for I := 0 to Min(NodeTagList.Count, MAX_FARM_FIELDS_COUNT) - 1 do
+      begin
+        IF I < VEGE_FIELD_COUNT then
+          P.Constructions.FieldworksList.AddField(NodeTagList[I], ftVegeField, rtNone)
+        else
+        IF I < VEGE_FIELD_COUNT + GRASS_FIELD_COUNT then
+          P.Constructions.FieldworksList.AddField(NodeTagList[I], ftGrassland, rtNone)
+        else
+          P.Constructions.FieldworksList.AddField(NodeTagList[I], ftCorn, rtNone);
+      end;
+
     finally
       NodeTagList.Free;
     end;
@@ -1021,7 +1036,8 @@ begin
     try
       for I := Min(Loc.Y - 2, gTerrain.MapY - 1) to Min(Loc.Y + 2 + AI_FIELD_HEIGHT - 1, gTerrain.MapY - 1) do
       for K := Max(Loc.X - AI_FIELD_WIDTH, 1) to Min(Loc.X + AI_FIELD_WIDTH, gTerrain.MapX - 1) do
-        if P.CanAddFieldPlan(KMPoint(K,I), ftCorn) then
+        if P.CanAddFieldPlan(KMPoint(K,I), ftCorn)
+        and (gTerrain.GetFieldType(KMPoint(K,I)) <> ftCorn) then
         begin
           //Base weight is distance from door (weight X higher so nice rectangle is formed)
           Weight := Abs(K - Loc.X)*3 + Abs(I - 2 - Loc.Y);
@@ -1032,14 +1048,22 @@ begin
           if I = Loc.Y + 1 then
             Inc(Weight, 1000);
           //avoid building on clay deposits
-          Inc(Weight, gTerrain.TileIsClay(Loc.X, Loc.Y) * 200);
+          Inc(Weight, gTerrain.TileIsClay(Loc.X, Loc.Y) * 400);
 
           NodeTagList.Add(KMPoint(K, I), Weight);
         end;
 
       NodeTagList.SortByTag;
-      for I := 0 to Min(NodeTagList.Count, 16) - 1 do
-        P.Constructions.FieldworksList.AddField(NodeTagList[I], ftCorn, rtNone);
+      for I := 0 to Min(NodeTagList.Count, MAX_FARM_FIELDS_COUNT) - 1 do
+      begin
+        IF I < VEGE_FIELD_COUNT then
+          P.Constructions.FieldworksList.AddField(NodeTagList[I], ftVegeField, rtNone)
+        else
+        IF I < VEGE_FIELD_COUNT + GRASS_FIELD_COUNT then
+          P.Constructions.FieldworksList.AddField(NodeTagList[I], ftGrassland, rtNone)
+        else
+          P.Constructions.FieldworksList.AddField(NodeTagList[I], ftCorn, rtNone);
+      end;
     finally
       NodeTagList.Free;
     end;
@@ -1130,8 +1154,11 @@ begin
                     Houses[I].SetAcceptWareIn(wtGold, IfThen(gHands[fOwner].Stats.Wares[wtGold].ActualCnt < 30, 120, 120 - 15) );
 
       htWoodcutters,
-      htSwine,
-      htFarm : Houses[I].ForceWorking := true;
+      htSwine: Houses[I].ForceWorking := true;
+      htFarm :  begin
+                  Houses[I].ForceWorking := true;
+                  TKMHouseFarm(Houses[I]).SetGrainTypes(gftRye, gftRandom, gftRandom);
+                end;
       htBarracks: begin
                     B := TKMHouseBarracks(Houses[I]);
 
@@ -1189,6 +1216,8 @@ begin
                   BlockWare(wtFlour, [htBakery], 0, 20000 );
                   BlockWare(wtLeather, [htArmorWorkshop, htTailorsShop], 0, 20000);
                   BlockWare(wtStoneBolt, [htWatchTower], 50, 20000);
+                  BlockWare(wtPig, [htButchers], 50, 20000);
+                  BlockWare(wtSkin, [htTannery], 50, 20000);
 
                 end;
     end;
@@ -1683,8 +1712,8 @@ begin
                         and HasHouses([htSiegeWorkshop, htBarracks, htTownhall, htShipyard]);
 
     wtSteelE,
-    wtLog: Result := ((fArmyDemand[gtMachines] > 0) or (fArmyDemand[gtMachinesMelee] > 0) or (fArmyDemand[gtShips] > 0))
-                        and gHands[fOwner].Locks.UnitsUnlocked([utBallista, utCatapult, utRam, utBattleShip])
+    wtLog: Result := ( ((fArmyDemand[gtMachines] > 0) or (fArmyDemand[gtMachinesMelee] > 0) or (fArmyDemand[gtShips] > 0))
+                        and gHands[fOwner].Locks.UnitsUnlocked([utBallista, utCatapult, utRam, utBattleShip]) or HasHouses([htPearl]))
                         and not HasWare(aWare, 20)//no need to make a lot of it
                         and HasHouses([htSiegeWorkshop, htShipyard, htPearl]);
 

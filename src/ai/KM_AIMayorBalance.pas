@@ -107,7 +107,7 @@ type
   TKMayorBalance = class
   private
     const
-      FARM_THEORY_FACTOR = 2;
+      FARM_THEORY_FACTOR = 2.2;
     var
     fOwner: TKMHandID;
 
@@ -1041,26 +1041,26 @@ begin
   HorsePerMin := HouseCount(htStables) * PRODUCTION_RATE[wtHorse] * BEAST_COST;
   CornConsumption := FlourPerMin + PigPerMin + HorsePerMin;
   CornReserve := gHands[fOwner].Stats.Wares[wtCorn].ActualCnt / Max(CornConsumption,0.001);
-  CornProduction := HouseCount(htFarm) * PRODUCTION_RATE[wtCorn] + CornReserve;
+  CornProduction := HouseCount(htFarm) * PRODUCTION_RATE[wtCorn] * FARM_THEORY_FACTOR + CornReserve;
 
   if CornProduction >= CornConsumption then
   begin
     //Let every industry think the extra belongs to it
     CornExtra := CornProduction - CornConsumption;
-    fFood.Bread.FarmTheory := (FlourPerMin + CornExtra) * 2 * FARM_THEORY_FACTOR;
-    fFood.Sausages.FarmTheory := (PigPerMin + CornExtra) / BEAST_COST * 3 * FARM_THEORY_FACTOR;
-    fWarfare.LeatherArmor.FarmTheory := (PigPerMin + CornExtra) / BEAST_COST * 2 * FARM_THEORY_FACTOR;
-    fWarfare.Horse.FarmTheory := (HorsePerMin + CornExtra) / BEAST_COST * FARM_THEORY_FACTOR;
+    fFood.Bread.FarmTheory := (FlourPerMin + CornExtra) * 2;
+    fFood.Sausages.FarmTheory := (PigPerMin + CornExtra) / BEAST_COST * 3;
+    fWarfare.LeatherArmor.FarmTheory := (PigPerMin + CornExtra) / BEAST_COST * 2;
+    fWarfare.Horse.FarmTheory := (HorsePerMin + CornExtra) / BEAST_COST;
   end
   else
   begin
     //Sharing proportionaly doesn't work since closer houses get more.
     //Let every industry think the deficit belongs to it
     CornDeficit := CornConsumption - CornProduction;
-    fFood.Bread.FarmTheory := Max(0, (FlourPerMin - CornDeficit) * 2 * FARM_THEORY_FACTOR);
-    fFood.Sausages.FarmTheory := Max(0, (PigPerMin - CornDeficit) / BEAST_COST * 3 * FARM_THEORY_FACTOR);
-    fWarfare.LeatherArmor.FarmTheory := Max(0, (PigPerMin - CornDeficit) / BEAST_COST * 2 * FARM_THEORY_FACTOR);
-    fWarfare.Horse.FarmTheory := Max(0, (HorsePerMin - CornDeficit) / BEAST_COST * FARM_THEORY_FACTOR);
+    fFood.Bread.FarmTheory := Max(0, (FlourPerMin - CornDeficit) * 2);
+    fFood.Sausages.FarmTheory := Max(0, (PigPerMin - CornDeficit) / BEAST_COST * 3);
+    fWarfare.LeatherArmor.FarmTheory := Max(0, (PigPerMin - CornDeficit) / BEAST_COST * 2);
+    fWarfare.Horse.FarmTheory := Max(0, (HorsePerMin - CornDeficit) / BEAST_COST);
   end;
 end;
 
@@ -1090,7 +1090,7 @@ begin
 
     //Wine, Fish
     WineProduction := HouseCount(htVineyard) * PRODUCTION_RATE[wtWine] * 2;
-    FishProduction := HouseCount(htFishermans) * PRODUCTION_RATE[wtFish];
+    FishProduction := HouseCount(htFishermans) * PRODUCTION_RATE[wtFish] * 10;
     //actual count - needed
     //Count in "food units per minute"
     Production := BreadProduction * BREAD_RESTORE +

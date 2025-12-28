@@ -1379,7 +1379,6 @@ procedure TKMMapTxtInfo.SaveToJson(const aFilePath: String);
 var Root, weatherObj : TKMJsonObject;
   arr : TKMJsonArrayNew;
   S : String;
-  I : Integer;
   diff : TKMMissionDifficulty;
 begin
   if IsEmpty then

@@ -6905,7 +6905,7 @@ end;
 
 procedure TKMHouseCollectors.WareAddToOut(aWare: TKMWareType; const aCount: Integer = 1);
 begin
-  fWaresOut.AddWare(aWare, aCount);
+  fWaresOut.AddWareOut(aWare, aCount);
   gHands[Owner].Deliveries.Queue.AddOffer(Self,aWare,aCount);
 end;
 
@@ -6935,7 +6935,7 @@ begin
   Assert(aCount <= fWaresOut[index].C);
 
   fWaresOut[index].C := fWaresOut[index].C - aCount;
-
+  fWaresOut.DeleteEmpty;
 end;
 
 function TKMHouseCollectors.WareOutputAvailable(aWare: TKMWareType; const aCount: Word): Boolean;
