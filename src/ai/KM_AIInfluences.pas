@@ -15,12 +15,13 @@ const
   AVOID_BUILDING_HOUSE_OUTSIDE_LOCK = 10;
   AVOID_BUILDING_HOUSE_INSIDE_LOCK = 15;
   AVOID_BUILDING_HOUSE_ENTRANCE = 20;
-  AVOID_BUILDING_COAL_TILE = 25;
+  AVOID_BUILDING_COAL_TILE = 254;
   AVOID_BUILDING_NODE_LOCK_FIELD = 30;
   AVOID_BUILDING_NODE_LOCK_ROAD = 35;
   AVOID_BUILDING_MINE_TILE = 40;
   AVOID_BUILDING_FOREST_RANGE = 200; // Value: 255 <-> AVOID_BUILDING_FOREST_VARIANCE which may forest tiles have
-  AVOID_BUILDING_FOREST_MINIMUM = 254 - AVOID_BUILDING_FOREST_RANGE; // Minimum value of forest reservation tiles
+  AVOID_BUILDING_FOREST_MAXIMUM = 254;
+  AVOID_BUILDING_FOREST_MINIMUM = AVOID_BUILDING_FOREST_MAXIMUM - AVOID_BUILDING_FOREST_RANGE; // Minimum value of forest reservation tiles
 
 
 type
@@ -274,15 +275,15 @@ begin
       if (SqrDist <= SqrMaxDist) then
       begin
         if not aOnlyUnmarkedArea then
-          AvoidBuilding[Y,X] := Min( 254, // Forest does not reach full 255
+          AvoidBuilding[Y,X] := Min( AVOID_BUILDING_FOREST_MAXIMUM, // Forest does not reach full 255
                                    Max( AVOID_BUILDING_FOREST_MINIMUM, // Forest start at this value
-                                        AvoidBuilding[Y,X] + 254 - Round(SqrDist * aDecreaseCoef)
+                                        AvoidBuilding[Y,X] + AVOID_BUILDING_FOREST_MAXIMUM - Round(SqrDist * aDecreaseCoef)
                                       )
                                  )
         else if (AvoidBuilding[Y,X] = 0) then
-          AvoidBuilding[Y,X] := Min( 254, // Forest does not reach full 255
+          AvoidBuilding[Y,X] := Min( AVOID_BUILDING_FOREST_MAXIMUM, // Forest does not reach full 255
                                    Max( AVOID_BUILDING_FOREST_MINIMUM, // Forest start at this value
-                                        254 - Round(SqrDist * aDecreaseCoef)
+                                        AVOID_BUILDING_FOREST_MAXIMUM - Round(SqrDist * aDecreaseCoef)
                                       )
                                  );
       end;

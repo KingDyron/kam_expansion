@@ -130,7 +130,7 @@ begin
     htGoldMine:      Result := NextToOre(aHouse, wtGoldOre, aLoc);
     htIronMine:      Result := NextToOre(aHouse, wtIronOre, aLoc);
     htBitinMine:     Result := NextToOre(aHouse, wtBitinOre, aLoc);
-    htPottery:     Result := NextToClay(aHouse, aLoc);
+    htPottery:        Result := NextToClay(aHouse, aLoc);
 
     htQuarry:        Result := NextToStone(aHouse, aLoc);
     htWoodcutters:   Result := NextToTrees(aHouse, [htStore, htWoodcutters, htSawmill], aLoc);
@@ -443,6 +443,7 @@ var
   SeedLocs: TKMPointArray;
   J, M: Integer;
   tmp: TKMPoint;
+  miningRect : TKMRect;
 begin
   Result := False;
 
@@ -458,7 +459,7 @@ begin
     BestBid := MaxSingle;
     for J := 0 to 2 do
     begin
-      M := KaMRandom(Locs.Count, 'TKMCityPlanner.NextToStone');
+      M := KaMRandom(Locs.Count, 'TKMCityPlanner.NextToTile');
       StoneLoc := Locs[M];
       for I := Max(StoneLoc.Y - SEARCH_RAD, 1) to Min(StoneLoc.Y + SEARCH_RAD, gTerrain.MapY - 1) do
       for K := Max(StoneLoc.X - SEARCH_RAD, 1) to Min(StoneLoc.X + SEARCH_RAD, gTerrain.MapX - 1) do
@@ -466,7 +467,7 @@ begin
       begin
         Bid := Locs.Tag[M]
                - gAIFields.Influences.Ownership[fOwner,I,K] / 10
-               + KaMRandom('TKMCityPlanner.NextToStone_2') * 3
+               + KaMRandom('TKMCityPlanner.NextToTile_2') * 3
                + KMLengthDiag(K, I, StoneLoc); //Distance to stone is important
         if (Bid < BestBid) then
         begin
@@ -481,8 +482,14 @@ begin
   end;
 
   //Make sure stonemason actually can reach some stone (avoid build-destroy loop)
+  miningRect := gTerrain.GetMiningRect(wtTile);
+  Dec(miningRect.Left);
+  Dec(miningRect.Top);
+  Dec(miningRect.Right);
+  Dec(miningRect.Bottom);
+
   if Result then
-    if not gTerrain.FindClay(aLoc, gTerrain.GetMiningRect(wtTile) , KMPOINT_ZERO, True, nil, tmp) then
+    if not gTerrain.FindClay(aLoc, gTerrain.GetMiningRect(wtTile), KMPOINT_ZERO, True, nil, tmp) then
       Result := False;
 end;
 
@@ -983,6 +990,8 @@ begin
 
     fnWater:  Result := (fPassability * gTerrain.Land^[Y,X].Passability <> [])
                         or gTerrain.TileHasWater(X, Y);
+    fnClay:  Result := (fPassability * gTerrain.Land^[Y,X].Passability <> [])
+                        or gTerrain.TileHasClay(X, Y);
 
     else      Result := (fPassability * gTerrain.Land^[Y,X].Passability <> []);
   end;

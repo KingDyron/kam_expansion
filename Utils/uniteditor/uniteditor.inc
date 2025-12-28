@@ -14,4 +14,6 @@
 {$IFDEF VER330} {$DEFINE WDC} {$ENDIF} //Define Windows Delphi 10.3 Rio compiler
 {$IFDEF VER340} {$DEFINE WDC} {$ENDIF} //Define Windows Delphi 10.4 Sydney compiler
 {$IFDEF VER350} {$DEFINE WDC} {$ENDIF} //Define Windows Delphi 11 Alexandria
+{$IFDEF VER360} {$DEFINE WDC} {$ENDIF} //Define Windows Delphi 11 Alexandria
+{$IFDEF VER370} {$DEFINE WDC} {$ENDIF} //Define Windows Delphi 11 Alexandria
 {.$DEFINE FPC} //Define Free Pascal compiler (defined automatically in Lazarus)
