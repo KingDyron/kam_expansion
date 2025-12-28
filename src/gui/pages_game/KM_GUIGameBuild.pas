@@ -332,7 +332,18 @@ begin
   begin
     with gDecorations[TKMButtonFlat(Sender).Tag] do
       SetCost(cmDecorations, TKMButtonFlat(Sender).Tag, GUIIcon, 0, 0, 0, gResTexts[TextID]);
-    DecorationCost.WarePlan := gDecorations[TKMButtonFlat(Sender).Tag].Cost;
+    with gDecorations[TKMButtonFlat(Sender).Tag] do
+    begin
+      SetLength(DecorationCost.WarePlan, length(Cost) );
+      for I := 0 to High(Cost) do
+      begin
+        DecorationCost.WarePlan[I].W := Cost[I].W;
+        DecorationCost.WarePlan[I].C := Cost[I].C;
+
+      If gMySpectator.Hand.BuildDevUnlocked(1) then
+        DecorationCost.WarePlan[I].C := Round(DecorationCost.WarePlan[I].C * 0.9);
+      end;
+    end;
   end else
   if (Sender is TKMButtonFlat) and (TKMButtonFlat(Sender).Tag2 = 1) then //bridges
   begin
