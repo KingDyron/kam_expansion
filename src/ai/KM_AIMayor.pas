@@ -18,6 +18,7 @@ type
       VEGE_FIELD_COUNT = 2;
       GRASS_FIELD_COUNT = 4;
       MAX_FARM_FIELDS_COUNT = 18;
+      MAX_WINE_FIELDS_COUNT = 14;
     var
     fOwner: TKMHandID;
     fSetup: TKMHandAISetup;
@@ -956,7 +957,7 @@ begin
         end;
 
       NodeTagList.SortByTag;
-      for I := 0 to Min(NodeTagList.Count, 10) - 1 do
+      for I := 0 to Min(NodeTagList.Count, MAX_WINE_FIELDS_COUNT) - 1 do
         P.Constructions.FieldworksList.AddField(NodeTagList[I], ftWine, rtNone);
     finally
       NodeTagList.Free;
@@ -1090,7 +1091,7 @@ begin
         end;
 
       NodeTagList.SortByTag;
-      for I := 0 to Min(NodeTagList.Count, 10) - 1 do
+      for I := 0 to Min(NodeTagList.Count, MAX_WINE_FIELDS_COUNT) - 1 do
         P.Constructions.FieldworksList.AddField(NodeTagList[I], ftWine, rtNone);
     finally
       NodeTagList.Free;

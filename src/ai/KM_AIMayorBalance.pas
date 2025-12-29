@@ -107,7 +107,7 @@ type
   TKMayorBalance = class
   private
     const
-      FARM_THEORY_FACTOR = 2.2;
+      FARM_THEORY_FACTOR = 2;
     var
     fOwner: TKMHandID;
 

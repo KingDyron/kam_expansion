@@ -109,7 +109,7 @@
 			"GatheringScript" : "gsNone",
 			"WareInput" : ["wtTrunk","wtNone","wtNone","wtNone","wtNone","wtNone"],
 			"WareOutput" : ["wtTimber","wtSawDust","wtNone","wtNone","wtNone","wtNone"],
-			"UnlockAfter" : ["htWoodcutters"],
+			"UnlockAfter" : ["htWoodcutters", "htForest"],
 			"SupplyIn1" : [10,11,12,13,14],
 			"SupplyOut1" : [15,16,17,18,19],
 			"SupplyOut2" : [2296,2295,2294,2293,2292],
@@ -974,7 +974,7 @@
 			"ha_Fire8" : {"X" : -10,"Y" : -141,"Steps" : [1624,1625,1620,1621,1622,1623]},
 			"Styles" : 
 			[
-				{"GuiIcon" : 353,"StonePic" : 2434,"SnowPic" : 2489,"HideSupplies" : False}
+				{"GuiIcon" : 353,"StonePic" : 2434,"TerrPics" : [3106, 3102],"HideSupplies" : False}
 			],
 			"WoodPileOffset" : {"X" : -50,"Y" : 20},
 			"StonePileOffset" : {"X" : -20,"Y" : 20},
@@ -1030,7 +1030,7 @@
 			"GatheringScript" : "gsNone",
 			"WareInput" : ["wtCorn","wtWater","wtHay","wtVegetables","wtNone","wtNone"],
 			"WareOutput" : ["wtHorse","wtNone","wtNone","wtNone","wtNone","wtNone"],
-			"UnlockAfter" : ["htFarm"],
+			"UnlockAfter" : ["htFarm", "htPasture"],
 			"SupplyIn1" : [328,329,330,331,332],
 			"SupplyIn2" : [2322,2323,2324,2325,2326],
 			"SupplyIn3" : [2562,2563,2564,2565,2566],
@@ -1378,7 +1378,7 @@
 			],
 			"Styles" : 
 			[
-				{"GuiIcon" : 353,"StonePic" : 2433,"SnowPic" : 2433,"HideSupplies" : False}
+				{"GuiIcon" : 353,"StonePic" : 2433,"TerrPics" : [3105, 3101],"HideSupplies" : False}
 			],
 			"WoodPileOffset" : {"X" : 0,"Y" : 30},
 			"StonePileOffset" : {"X" : 30,"Y" : 30},
@@ -1959,7 +1959,7 @@
 			"GatheringScript" : "gsNone",
 			"WareInput" : ["wtPig","wtNone","wtNone","wtNone","wtNone","wtNone"],
 			"WareOutput" : ["wtSausage","wtNone","wtNone","wtNone","wtNone","wtNone"],
-			"UnlockAfter" : ["htSwine","htCollectors"],
+			"UnlockAfter" : ["htSwine","htCollectors","htPasture"],
 			"SupplyIn1" : [1129,1130,1131,1131,1131],
 			"SupplyOut1" : [671,672,673,674,675],
 			"ha_Work1" : {"X" : 17,"Y" : 3,"Steps" : [892,892,892,892,892,892,892,892,892,892,892,892,892,892,892]},
@@ -2049,7 +2049,7 @@
 			"GatheringScript" : "gsNone",
 			"WareInput" : ["wtSkin","wtNone","wtNone","wtNone","wtNone","wtNone"],
 			"WareOutput" : ["wtLeather","wtNone","wtNone","wtNone","wtNone","wtNone"],
-			"UnlockAfter" : ["htSwine"],
+			"UnlockAfter" : ["htSwine", "htPasture"],
 			"SupplyIn1" : [676,677,678,679,680],
 			"SupplyOut1" : [681,682,683,684,685],
 			"ha_Work1" : {"X" : 14,"Y" : 8,"Steps" : [821,822,823,824,825,826,827,828,829,830,831,832,833,834,835,836,837,838,839,840,841,842,843,844,845,846,847,848,849]},
@@ -2843,7 +2843,7 @@
 			"UnlockAfter" : ["htNone"],
 			"Styles" : 
 			[
-				{"GuiIcon" : 333,"StonePic" : 2709,"SnowPic" : 2709,"HideSupplies" : False}
+				{"GuiIcon" : 333,"StonePic" : 2709,"TerrPics" : [2709, 2709],"HideSupplies" : False}
 			],
 			"WoodPileOffset" : {"X" : 0,"Y" : 20},
 			"StonePileOffset" : {"X" : 10,"Y" : 30},
@@ -3015,7 +3015,7 @@
 			"MaxHealth" : 50,
 			"WoodPic" : 2164,
 			"StonePic" : 2162,
-			"TerrPics": [ 5 , 3055],
+			"TerrPics": [ 3100 , 3055],
 			"WoodCost" : 1,
 			"StoneCost" : 1,
 			"TileCost" : 1,
@@ -3366,8 +3366,7 @@
 				[0,2,2,2,0],
 				[0,3,3,1,0],
 				[0,0,0,0,0]
-			],
-			"Wariants" : [2284, 2285, 2286]
+			]
 		},
 		{
 			"Name" : "htWoodBurner",
@@ -3403,7 +3402,7 @@
 			"GatheringScript" : "gsNone",
 			"WareInput" : ["wtTrunk","wtCorn","wtSawDust","wtCoal","wtNone","wtNone"],
 			"WareOutput" : ["wtCoal","wtNone","wtNone","wtNone","wtNone","wtNone"],
-			"UnlockAfter" : ["htPottery"],
+			"UnlockAfter" : ["htPottery", "htForest"],
 			"SupplyIn1" : [2197,2198,2199,2200,2201],
 			"SupplyIn2" : [2362,2363,2364,2365,2366],
 			"SupplyIn3" : [2357,2358,2359,2360,2361],
@@ -4105,7 +4104,7 @@
 			"MaxHealth" : 600,
 			"WoodPic" : 2532,
 			"StonePic" : 2531,
-			"TerrPics": [ 0, 3080],
+			"TerrPics": [ 3103, 3080],
 			"WoodCost" : 6,
 			"StoneCost" : 0,
 			"TileCost" : 4,
@@ -4177,7 +4176,7 @@
 			"MaxHealth" : 450,
 			"WoodPic" : 2711,
 			"StonePic" : 2710,
-			"TerrPics": [ 0, 3082],
+			"TerrPics": [ 3104, 3082],
 			"WoodCost" : 2,
 			"StoneCost" : 6,
 			"TileCost" : 4,

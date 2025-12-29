@@ -8947,7 +8947,18 @@ begin
       else
         gRenderPool.AddHouse(fType, fPosition, 1, 1, 0, -1, GetStonePic, -1, false, false, 0);}
 
+      If fIsOnTerrain <> tptNone then
+      begin
+        If fSnowStep = 1 then
+          gRenderPool.AddSpriteGSnow(fPosition, KMPOINT_ZERO, GetSnowPic + 1, 1, rxHouses, gHands[Owner].FlagColor)
+        else
+        begin
+          gRenderPool.AddSpriteG(fPosition, KMPOINT_ZERO, 2538, rxHouses, gHands[Owner].FlagColor);
+          gRenderPool.AddSpriteGSnow(fPosition, KMPOINT_ZERO, GetSnowPic + 1, fSnowStep, rxHouses, gHands[Owner].FlagColor);
+        end;
+      end else
       gRenderPool.AddSpriteG(fPosition, KMPOINT_ZERO, 2538, rxHouses, gHands[Owner].FlagColor);//house
+
       gRenderPool.AddSpriteG(fPosition, KMPOINT_ZERO, 2534, rxHouses, gHands[Owner].FlagColor);//yard
       case fWayOutID of
         1: begin

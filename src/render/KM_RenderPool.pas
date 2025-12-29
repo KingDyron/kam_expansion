@@ -202,6 +202,9 @@ type
     procedure AddSpriteG(const aLoc, aOffset: TKMPoint; aID : Word; RX : TRXType; aFlagColor : Cardinal;
                         aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: Cardinal = 0; aFront : Boolean = false; aAlphaStep : Single = -1);
 
+    procedure AddSpriteGSnow(const aLoc, aOffset: TKMPoint; aID : Word; aProgress : Single; RX : TRXType; aFlagColor : Cardinal;
+                        aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: Cardinal = 0; aFront : Boolean = false; aAlphaStep : Single = -1);
+
     procedure AddHouseSupply(aHouse: TKMHouseType; const aLoc: TKMPoint; const R1, R2, R3: array of Byte; aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
     procedure AddHouseMarketSupply(const aLoc: TKMPoint; aResType: TKMWareType; aResCount: Word; aAnimStep: Integer);
     procedure AddHouseStableBeasts(aHouse: TKMHouseType; const aLoc: TKMPoint; aBeastId,aBeastAge,aAnimStep: Integer; aRX: TRXType = rxHouses);
@@ -1497,6 +1500,29 @@ begin
     RenderSprite(RX, aID, cornerX, cornerY, aFlagColor, aDoHighlight, aHighlightColor)
   else
     fRenderList.AddSpriteG(RX, aID, 0, cornerX, cornerY, gX, gY, aLoc.X, aLoc.Y, aFlagColor);
+end;
+
+procedure TKMRenderPool.AddSpriteGSnow(const aLoc, aOffset: TKMPoint; aID : Word; aProgress : Single; RX : TRXType; aFlagColor : Cardinal;
+                    aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: Cardinal = 0; aFront : Boolean = false; aAlphaStep : Single = -1);
+var
+  rxData: TRXData;
+  cornerX, cornerY, gX, gY: Single;
+begin
+  rxData := fRXData[RX];
+
+  cornerX := aLoc.X + (rxData.Pivot[aID].X + aOffset.X) / CELL_SIZE_PX - 1;
+  cornerY := aLoc.Y + (rxData.Pivot[aID].Y + rxData.Size[aID].Y + aOffset.Y) / CELL_SIZE_PX - 1
+                   - gTerrain.LandExt^[aLoc.Y + 1, aLoc.X].RenderHeight / CELL_HEIGHT_DIV;
+
+  gX := aLoc.X + (rxData.Pivot[aID].X + rxData.Size[aID].X / 2) / CELL_SIZE_PX - 1;
+  gY := aLoc.Y + (rxData.Pivot[aID].Y + rxData.Size[aID].Y) / CELL_SIZE_PX - 1.5;
+  if aFront then
+    fRenderList.AddSpriteFront(RX, aID, cornerX, cornerY, aLoc.X, aLoc.Y, aFlagColor, aAlphaStep)
+  else
+  if aDoImmediateRender then
+    RenderSprite(RX, aID, cornerX, cornerY, aFlagColor, aDoHighlight, aHighlightColor)
+  else
+    fRenderList.AddSpriteG(RX, aID, 0, cornerX, cornerY, gX, gY, aLoc.X, aLoc.Y, aFlagColor, aProgress);
 end;
 
 // Render house in wood
