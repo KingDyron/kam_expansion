@@ -53,11 +53,6 @@ type
     fLandTemp: TKMLand;
     fLandMapEdTemp: TKMMapEdLand;
     fLandTerKindTemp: TKMLandTerKind;
-    fLastTiles : array[0..MAX_MAP_SIZE - 1,0..MAX_MAP_SIZE - 1] of Integer;
-    fLastOverlays : array[0..MAX_MAP_SIZE - 1,0..MAX_MAP_SIZE - 1] of TKMTileOverlay;
-
-    function CheckTilesAround(const aX, aY, aTile: Integer): Boolean; overload;
-    function CheckTilesAround(const aX, aY : Integer; aOVType: TKMTileOverlay): Boolean; overload;
 
     procedure TileToBuffer(const aTile: TKMTerrainTile; const aMapEdTile: TKMMapEdTerrainTile;
                            const aPaintedTile: TKMPainterTile; var aBuffer: TKMBufferData);
@@ -89,7 +84,7 @@ type
     procedure IncludePasteType(aPasteType: TKMTerrainSelectionPasteType);
     procedure ExcludePasteType(aPasteType: TKMTerrainSelectionPasteType);
 
-    procedure SetNiceCoal;//smoot coal
+    procedure SetNiceCoal;//smooth coal
     procedure DoDebug;
 
     procedure AddPattern;
@@ -349,43 +344,6 @@ begin
 end;
 
 
-function TKMSelection.CheckTilesAround(const aX, aY, aTile: Integer): Boolean;
-var
-  A,B, I, K: Integer;
-begin
-  Result := true;
-
-  for I := -1 to 1 do
-    for K := -1 to 1 do
-    begin
-      A := EnsureRange(aX+ I, fSelectionRect.Left, fSelectionRect.Right);
-      B := EnsureRange(aY+ K, fSelectionRect.Top, fSelectionRect.Bottom);
-
-      if fLastTiles[A, B] <> aTile then
-        Result := false;
-
-
-    end;
-end;
-
-
-function TKMSelection.CheckTilesAround(const aX, aY : Integer; aOVType: TKMTileOverlay): Boolean;
-var
-  A,B, I, K: Integer;
-begin
-  Result := true;
-  for I := -1 to 1 do
-    for K := -1 to 1 do
-    begin
-      A := EnsureRange(aX+ I, fSelectionRect.Left, fSelectionRect.Right);
-      B := EnsureRange(aY+ K, fSelectionRect.Top, fSelectionRect.Bottom);
-
-      if fLastOverlays[A, B] <> aOVType then
-        Result := false;
-
-
-    end;
-end;
 
 procedure TKMSelection.DuplicateLandToTemp;
 var
@@ -962,41 +920,40 @@ end;
 
 procedure TKMSelection.SetNiceCoal;
 var
+  fLastTiles : array of array of Integer;
+  fLastOverlays : array of array of TKMTileOverlay;
+
+  function CheckTilesAround(const aX, aY, aTile: Integer): Boolean; overload;
+  var
+    I, K: Integer;
+  begin
+    Result := true;
+
+    for I := Max(aX - 1, fSelectionRect.Left + 1) to Min(aX + 1, fSelectionRect.Right) do
+      for K := Max(aY - 1, fSelectionRect.Top + 1) to Min(aY + 1, fSelectionRect.Bottom) do
+        if fLastTiles[I - fSelectionRect.Left, K - fSelectionRect.Top] <> aTile then
+          Exit(false);
+  end;
+
+  function CheckTilesAround(const aX, aY : Integer; aOVType: TKMTileOverlay): Boolean; overload;
+  var
+    A,B, I, K: Integer;
+  begin
+    Result := true;
+    for I := Max(aX - 1, fSelectionRect.Left + 1) to Min(aX + 1, fSelectionRect.Right) do
+      for K := Max(aY - 1, fSelectionRect.Top + 1) to Min(aY + 1, fSelectionRect.Bottom) do
+        if fLastOverlays[I - fSelectionRect.Left, K - fSelectionRect.Top] <> aOVType then
+          Exit(false);
+  end;
+var
   I, X, Y, tileTypeTo, tileTypeFrom: Integer;
-  //aCO : TKMTileOverlay;
+  ovTo, ovFrom : TKMTileOverlay;
 begin
-  {for X := 1 to gTerrain.MapX do
-    for Y := 1 to gTerrain.MapY do
-      if gTerrain.Land^[Y, X].TileOverlay2 in CLAY_LIKE_OVERLAYS then
-      begin
-        I := byte(gTerrain.Land^[Y, X].TileOverlay2) - 11;
-
-        if (I > 5) and not (gTerrain.Land^[Y, X].TileOverlay2 = toInfinityClay) then
-          Continue;
-
-        if gTerrain.Land^[Y, X].TileOverlay2 = toInfinityClay then
-        begin
-          gTerrain.Land^[Y, X].TileOverlay2 := toInfinity;
-          gTerrain.Land^[Y, X].Obj := 284;
-        end
-        else
-        if gTerrain.Land^[Y, X].Obj = 255 then
-        begin
-          gTerrain.Land^[Y, X].Obj := 280 + I;
-          gTerrain.Land^[Y, X].TileOverlay2 := toNone;
-        end
-        else
-          gTerrain.Land^[Y, X].TileOverlay2 := toNone;
-
-      end;
-
-
-  Exit;}
-
+  SetLength(fLastTiles, fSelectionRect.Width, fSelectionRect.Height);
+  SetLength(fLastOverlays, fSelectionRect.Width, fSelectionRect.Height);
 
   tileTypeTo := 152;
   tileTypeFrom := 152;
-  //aCO := toCoal1;
   for I := 0 to 4 do
   begin
     case I of
@@ -1015,7 +972,7 @@ begin
     if I <> 0 then
       for X := fSelectionRect.Left+1 to fSelectionRect.Right do
         for Y := fSelectionRect.Top+1 to fSelectionRect.Bottom do
-          fLastTiles[X,Y] := gTerrain.Land^[Y, X].BaseLayer.Terrain;
+          fLastTiles[X - fSelectionRect.Left,Y - fSelectionRect.Top] := gTerrain.Land^[Y, X].BaseLayer.Terrain;
 
     for X := fSelectionRect.Left+1 to fSelectionRect.Right do
       for Y := fSelectionRect.Top+1 to fSelectionRect.Bottom do
@@ -1041,54 +998,40 @@ begin
   end;
 
 
-  {for I := 0 to 4 do
+  ovTo := COAL_OVERLAY_MIN;
+  ovFrom := COAL_OVERLAY_MAX;
+  for I := 0 to 4 do
   begin
     case I of
-       0: aCO := toCoal1;
+       0: ovTo := COAL_OVERLAY_MIN;
        else
-        aCO := TKMTileOverlay(byte(aCO) + 1);
+          begin
+            ovFrom := ovTo;
+            ovTo := ovTo + 1;
+          end;
     end;
 
     if I <> 0 then
       for X := fSelectionRect.Left+1 to fSelectionRect.Right do
         for Y := fSelectionRect.Top+1 to fSelectionRect.Bottom do
-          fLastOverlays[X,Y] := gTerrain.Land^[Y, X].TileOverlay2;
+          fLastOverlays[X - fSelectionRect.Left,Y - fSelectionRect.Top] := gTerrain.Land^[Y, X].TileOverlay2;
 
     for X := fSelectionRect.Left+1 to fSelectionRect.Right do
       for Y := fSelectionRect.Top+1 to fSelectionRect.Bottom do
       begin
         if I = 0 then
         begin
-          if  gTerrain.Land^[Y, X].TileOverlay2 in COAL_LIKE_OVERLAYS then
-            gTerrain.Land^[Y, X].TileOverlay2 := toCoal1;
+          if   (gTerrain.Land^[Y, X].TileOverlay2 in [COAL_OVERLAY_MIN..COAL_OVERLAY_MAX])then
+            gTerrain.Land^[Y, X].TileOverlay2 := ovTo;
         end
         else
         begin
-          
-          if CheckTilesAround(X, Y, aCO) then          
-            gTerrain.Land^[Y, X].TileOverlay2 := TKMTileOverlay(byte(aCO) + 1);
-            
+          if CheckTilesAround(X, Y, ovFrom) then
+            gTerrain.Land^[Y, X].TileOverlay2 := ovTo;
         end;
       end;
+  end;
 
-    case I of
-       0: aCO := toClay1;
-       else
-        aCO := TKMTileOverlay(byte(aCO) + 1);
-    end;
-
-    if I <> 0 then
-      for X := fSelectionRect.Left+1 to fSelectionRect.Right do
-        for Y := fSelectionRect.Top+1 to fSelectionRect.Bottom do
-          fLastOverlays[X,Y] := gTerrain.Land^[Y, X].TileOverlay2;
-
-    for X := fSelectionRect.Left+1 to fSelectionRect.Right do
-      for Y := fSelectionRect.Top+1 to fSelectionRect.Bottom do
-      begin
-        if CheckTilesAround(X, Y, aCO) then
-          gTerrain.Land^[Y, X].TileOverlay2 := TKMTileOverlay(byte(aCO) + 1);
-      end;
-  end;}
 end;
 
 
