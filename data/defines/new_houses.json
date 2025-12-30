@@ -4677,12 +4677,12 @@
 			],
 			"Build Cost":
 			[
-				{"WareType" : "wtLog", "Count" : 12},
-				{"WareType" : "wtTrunk", "Count" : 8},
-				{"WareType" : "wtTimber", "Count" : 20},
-				{"WareType" : "wtLog", "Count" : 10},
-				{"WareType" : "wtTimber", "Count" : 25},
-				{"WareType" : "wtGold", "Count" : 30}
+				{"WareType" : "wtLog", "Count" : 20},
+				{"WareType" : "wtTrunk", "Count" : 16},
+				{"WareType" : "wtTimber", "Count" : 45},
+				{"WareType" : "wtLog", "Count" : 30},
+				{"WareType" : "wtTimber", "Count" : 60},
+				{"WareType" : "wtGold", "Count" : 50}
 			]
 		},
 		{
