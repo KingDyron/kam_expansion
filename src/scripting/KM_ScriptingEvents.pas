@@ -150,6 +150,7 @@ type
     procedure ProcPearlSelected(aHouse : TKMHouse; aType : TKMPearlType);
     procedure ProcPearlCompleted(aHouse : TKMHouse; aType : TKMPearlType);
     procedure ProcPearlConfirmed(aHouse : TKMHouse; aType : TKMPearlType);
+    procedure ProcDevUnlocked(aPlayer : TKMHandID; aType, aID : Byte);
 
     procedure ProcShipLoad(aShip, aUnit : TKMUnit);
     procedure ProcShipUnload(aShip, aUnit : TKMUnit);
@@ -1509,6 +1510,11 @@ procedure TKMScriptEvents.ProcPearlConfirmed(aHouse : TKMHouse; aType : TKMPearl
 begin
   if MethodAssigned(evtPearlConfirmed) then
     CallEventHandlers(evtPearlConfirmed, [aHouse.UID, byte(aType)]);
+end;
+procedure TKMScriptEvents.ProcDevUnlocked(aPlayer : TKMHandID; aType, aID : Byte);
+begin
+  if MethodAssigned(evtDevUnlocked) then
+    CallEventHandlers(evtDevUnlocked, [aPlayer, aType, aID]);
 end;
 
 

@@ -337,6 +337,10 @@ type
     procedure AddDevPoint(aType : TKMDevelopmentTreeType; aCount : Word = 1);
     function  TakeDevPoint(aType : TKMDevelopmentTreeType; aCount : Word = 1) : Boolean;
     function  HasDevPoint(aType : TKMDevelopmentTreeType; aCount : Word = 1) : Boolean;
+    procedure AddFestivalPoints(aType : TKMFestivalPointType; aAmount : Integer);
+    procedure TakeFestivalPoints(aType : TKMFestivalPointType; aAmount : Integer);
+    property FestivalPoints : TKMFestivalPoints read fFestivalPoints;
+
     function DevPoints(aType : TKMDevelopmentTreeType) : Word;
     procedure UnlockDevelopment(aType : TKMDevelopmentTreeType; aID : Integer);
     procedure UnlockDevelopmentScript(aType : TKMDevelopmentTreeType; aID : Integer; aLock : TKMHandDevLock);
@@ -384,9 +388,6 @@ type
 
     procedure BuildBridge(aLoc : TKMPoint; aIndex, aRot : Word);
 
-    procedure AddFestivalPoints(aType : TKMFestivalPointType; aAmount : Integer);
-    procedure TakeFestivalPoints(aType : TKMFestivalPointType; aAmount : Integer);
-    property FestivalPoints : TKMFestivalPoints read fFestivalPoints;
 
     //function HasBridgeBuiltAt(aLoc : TKMPoint) : Boolean;
     //property BridgesBuilt : TKMStructureBasicArray read fBridgesBuilt;
@@ -2951,6 +2952,8 @@ begin
       NeverHungry := true;
 
     gGame.RefreshDevelopmentTree;
+
+    gScriptEvents.ProcDevUnlocked(ID, byte(aType), aID);
   end;
 end;
 

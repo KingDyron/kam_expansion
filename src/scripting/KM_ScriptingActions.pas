@@ -251,6 +251,8 @@ type
     procedure DevelopmentUnlockWithPrevious(aHandID : Integer; aType : Byte; aID : Integer; aUnlocked : Boolean);
     procedure DevelopmentUnlockSingle(aHandID : Integer; aType : Byte; aID : Integer);
     procedure DevelopmentUnlockAll(aHandID : Integer; aType : Byte);
+    procedure DevPointsAdd(aHandID : Integer; aType : Byte; aCount : Word);
+    procedure FestivalPointsAdd(aHandID : Integer; aType : Byte; aCount : Word);
 
     procedure GroupSetFlagColor(aGroupID : Integer; aColor : Cardinal);
     procedure GroupMakeHero(aGroupID: Integer; makeHero: Boolean);
@@ -6369,6 +6371,33 @@ begin
     gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
     raise;
   end;
+end;
+
+procedure TKMScriptActions.DevPointsAdd(aHandID : Integer; aType : Byte; aCount : Word);
+begin
+  try
+    If InRange(aType, 1, 3) then
+    If aHandID > -1 then
+      If gHands[aHandID].Enabled then
+        gHands[aHandID].AddDevPoint(TKMDevelopmentTreeType(aType), aCount);
+
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end
+end;
+
+procedure TKMScriptActions.FestivalPointsAdd(aHandID : Integer; aType : Byte; aCount : Word);
+begin
+  try
+    If InRange(aType, 0, 2) then
+    If aHandID > -1 then
+      If gHands[aHandID].Enabled then
+        gHands[aHandID].AddFestivalPoints(TKMFestivalPointType(aType), aCount);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end
 end;
 
 

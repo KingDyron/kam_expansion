@@ -1082,6 +1082,8 @@ begin
     RegisterMethodCheck(c, 'procedure  DevelopmentUnlockWithPrevious(aHandID : Integer; aType : Byte; aID : Integer; aUnlocked : Boolean)');
     RegisterMethodCheck(c, 'procedure  DevelopmentUnlockSingle(aHandID : Integer; aType : Byte; aID : Integer)');
     RegisterMethodCheck(c, 'procedure  DevelopmentUnlockAll(aHandID : Integer; aType : Byte)');
+    RegisterMethodCheck(c, 'procedure  FestivalPointsAdd(aHandID : Integer; aType : Byte; aCount : Word)');
+    RegisterMethodCheck(c, 'procedure  DevPointsAdd(aHandID : Integer; aType : Byte; aCount : Word)');
     //*Actions-Check*//
 
     c := Sender.AddClassN(nil, AnsiString(fUtils.ClassName));
@@ -1255,7 +1257,8 @@ const
     (ParamCount: 2; Typ: (0, btS32 , btS32 , 0,     0     ); Dir: (pmIn, pmIn, pmIn, pmIn)), // evtPearlCompleted
     (ParamCount: 4; Typ: (0, btS32 , btS32 , btS32, btS32 ); Dir: (pmIn, pmIn, pmIn, pmIn)), // evtStructureBuilt
     (ParamCount: 2; Typ: (0, btS32 , btS32 , 0,     0     ); Dir: (pmIn, pmIn, pmIn, pmIn)), // evtPearlSelected
-    (ParamCount: 2; Typ: (0, btS32 , btS32 , 0,     0     ); Dir: (pmIn, pmIn, pmIn, pmIn)) // evtPearlConfirmed
+    (ParamCount: 2; Typ: (0, btS32 , btS32 , 0,     0     ); Dir: (pmIn, pmIn, pmIn, pmIn)), // evtPearlConfirmed
+    (ParamCount: 3; Typ: (0, btS32 , btS32 , btS32, 0     ); Dir: (pmIn, pmIn, pmIn, pmIn)) // evtDevUnlocked
     //*Events-Check*//
   );
 var
@@ -1913,6 +1916,8 @@ begin
       RegisterMethod(@TKMScriptActions.DevelopmentUnlockWithPrevious, 'DevelopmentUnlockWithPrevious');
       RegisterMethod(@TKMScriptActions.DevelopmentUnlockSingle, 'DevelopmentUnlockSingle');
       RegisterMethod(@TKMScriptActions.DevelopmentUnlockAll, 'DevelopmentUnlockAll');
+      RegisterMethod(@TKMScriptActions.DevPointsAdd, 'DevPointsAdd');
+      RegisterMethod(@TKMScriptActions.FestivalPointsAdd, 'FestivalPointsAdd');
       //*Actions-Reg*//
     end;
 

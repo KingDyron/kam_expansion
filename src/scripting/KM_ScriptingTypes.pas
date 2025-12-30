@@ -74,7 +74,8 @@ type
     evtPearlCompleted,
     evtStructureBuilt,
     evtPearlSelected,
-    evtPearlConfirmed
+    evtPearlConfirmed,
+    evtDevUnlocked
 
     //*Events-Reg*//
   );

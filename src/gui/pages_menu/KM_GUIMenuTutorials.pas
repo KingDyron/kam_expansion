@@ -127,7 +127,7 @@ begin
     if K > high(Button_Tutorial) then //add new button if needed
     begin
       SetLength(Button_Tutorial, K + 1);
-      Button_Tutorial[K] := TKMButton.Create(Panel_Tutorials, 337, 200 + 40 * K, 350, 30, '', bsPaper);
+      Button_Tutorial[K] := TKMButton.Create(Panel_Tutorials, 337, 200 + 35 * K, 350, 30, '', bsPaper);
       Button_Tutorial[K].Font := fntOutline;
     end;
     Button_Tutorial[K].Caption := mapInfo.MapName;
