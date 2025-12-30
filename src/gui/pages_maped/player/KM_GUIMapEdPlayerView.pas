@@ -199,8 +199,8 @@ var kind : TKMMessageKind;
 begin
   inherited Create;
 
-  Panel_PlayerAdd := TKMScrollPanel.Create(aParent, 0, 33 + 30, aParent.Width + 25, aParent.Height - 40, [saVertical], bsMenu, ssCommon);
-  Panel_PlayerAdd.ScrollV.Left := Panel_PlayerAdd.ScrollV.Left + 20;
+  Panel_PlayerAdd := TKMScrollPanel.Create(aParent, 0, 33 + 30, aParent.Width, aParent.Height - 40, [saVertical], bsMenu, ssCommon);
+  //Panel_PlayerAdd.ScrollV.Left := Panel_PlayerAdd.ScrollV.Left;
   Panel_PlayerAdd.AnchorsStretch;
 
   with TKMLabel.Create(Panel_PlayerAdd, 0, 0, Panel_PlayerAdd.Width - 20, 0, gResTexts[1791], fntOutline, taCenter) do

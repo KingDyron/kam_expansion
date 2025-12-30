@@ -80,7 +80,7 @@ begin
   top := 20 + PAGE_TITLE_Y;
       for FT := low(TKMLockFieldType) to High(TKMLockFieldType) do
     begin
-      Button_BuildField[FT] := TKMButtonFlatStack.Create(Panel_Build, 37 * (byte(FT) mod 5), top +  37 * (byte(FT) div 5), 33, 33, [LOCK_FIELD_GUI[FT]]);
+      Button_BuildField[FT] := TKMButtonFlatStack.Create(Panel_Build, 37 * (byte(FT) mod 5), top + 37 * (byte(FT) div 5), 33, 33, [LOCK_FIELD_GUI[FT]]);
       Button_BuildField[FT].OnClickShift   := Town_FieldShiftClick;
       Button_BuildField[FT].OnMouseWheel := Town_FieldMWheel;
       Button_BuildField[FT].Tag := byte(FT);
@@ -227,7 +227,7 @@ begin
         if H = htNone then
           Continue;
         SetLength(Button_Build, J + 1);//add new elements
-        Button_Build[J] := TKMButtonFlat.Create(Panel_Build, lastID mod 5 * 37, top + (lastID div 5) * 37,33,33,gRes.Houses[H].GUIIcon);
+        Button_Build[J] := TKMButtonFlat.Create(Panel_Build, lastID mod 5 * 37 + 9, top + (lastID div 5) * 37,33,33,gRes.Houses[H].GUIIcon);
         Button_Build[J].OnClick := Town_BuildChange;
         Button_Build[J].Tag := Byte(H);
         Button_Build[J].Hint := gRes.Houses[H].HouseName;

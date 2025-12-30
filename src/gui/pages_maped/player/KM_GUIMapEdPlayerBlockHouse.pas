@@ -85,7 +85,7 @@ begin
 
   for FT := Low(TKMLockFieldType) to High(TKMLockFieldType) do
   begin
-    Button_BlockField[FT] := TKMButtonFlatBlock.Create(Panel_BlockHouse, 9 + byte(FT) mod 5 * 37, top + (byte(FT) div 5) * 37,33,33, LOCK_FIELD_GUI[FT]);
+    Button_BlockField[FT] := TKMButtonFlatBlock.Create(Panel_BlockHouse, 18 + byte(FT) mod 5 * 37, top + (byte(FT) div 5) * 37,33,33, LOCK_FIELD_GUI[FT]);
     Button_BlockField[FT].Tag := byte(FT);
     Button_BlockField[FT].Tag2 := BUTTON_BLOCK_FIELD_TAG_2;
     Button_BlockField[FT].OnMouseDown := Player_BlockHouseClick;
@@ -108,19 +108,19 @@ begin
   top := Button_BlockField[high(TKMLockFieldType)].Bottom + 3;
 
 
-  Button_SwitchToHouses := TKMButton.Create(Panel_BlockHouse, 9, top, 33, 33, 741, rxGui, bsGame);
+  Button_SwitchToHouses := TKMButton.Create(Panel_BlockHouse, 9 + 40, top, 33, 33, 741, rxGui, bsGame);
   Button_SwitchToHouses.OnClick := Player_ChangeToLvl;
   Button_SwitchToHouses.Hint := gResTexts[268];
 
-  Button_SwitchToLvl := TKMButton.Create(Panel_BlockHouse, 44, top, 33, 33, 748, rxGui, bsGame);
+  Button_SwitchToLvl := TKMButton.Create(Panel_BlockHouse, 44 + 40, top, 33, 33, 748, rxGui, bsGame);
   Button_SwitchToLvl.OnClick := Player_ChangeToLvl;
   Button_SwitchToLvl.Hint := gResTexts[1859];
 
-  Button_SwitchToStructures := TKMButton.Create(Panel_BlockHouse, 79, top, 33, 33, 39, rxGui, bsGame);
+  Button_SwitchToStructures := TKMButton.Create(Panel_BlockHouse, 79 + 40, top, 33, 33, 39, rxGui, bsGame);
   Button_SwitchToStructures.OnClick := Player_ChangePanels;
   Button_SwitchToStructures.Hint := gResTexts[2035];
 
-  Button_SwitchToDecorations := TKMButton.Create(Panel_BlockHouse, 114, top, 33, 33, 666, rxGui, bsGame);
+  Button_SwitchToDecorations := TKMButton.Create(Panel_BlockHouse, 114 + 40, top, 33, 33, 666, rxGui, bsGame);
   Button_SwitchToDecorations.OnClick := Player_ChangePanels;
   Button_SwitchToDecorations.Hint := gResTexts[2036];
 
@@ -133,24 +133,24 @@ begin
   Panel_Houses := TKMScrollPanel.Create(Panel_BlockHouse, 0, top, Panel_BlockHouse.Width + 20, Panel_BlockHouse.Height - top, [saVertical], bsMenu, ssCommon);
   Panel_Houses.ScrollV.Left := Panel_Houses.ScrollV.Left;
   Panel_Houses.Padding.SetBottom(10);
-  Panel_Houses.ScrollV_PadTop := 10;
+  Panel_Houses.ScrollV_PadTop := 0;
   Panel_Houses.ScrollV_PadBottom := 10;
   Panel_Houses.ScrollV_PadLeft := -20;
 
   Panel_Structures := TKMScrollPanel.Create(Panel_BlockHouse, 0, top, Panel_BlockHouse.Width + 20, Panel_BlockHouse.Height - top, [saVertical], bsMenu, ssCommon);
   Panel_Structures.ScrollV.Left := Panel_Structures.ScrollV.Left;
   Panel_Structures.Padding.SetBottom(10);
-  Panel_Structures.ScrollV_PadTop := 10;
+  Panel_Structures.ScrollV_PadTop := 0;
   Panel_Structures.ScrollV_PadBottom := 10;
   Panel_Structures.ScrollV_PadLeft := -20;
 
   Panel_Decorations := TKMScrollPanel.Create(Panel_BlockHouse, 0, top, Panel_BlockHouse.Width + 20, Panel_BlockHouse.Height - top, [saVertical], bsMenu, ssCommon);
   Panel_Decorations.ScrollV.Left := Panel_Decorations.ScrollV.Left;
   Panel_Decorations.Padding.SetBottom(10);
-  Panel_Decorations.ScrollV_PadTop := 10;
+  Panel_Decorations.ScrollV_PadTop := 0;
   Panel_Decorations.ScrollV_PadBottom := 10;
   Panel_Decorations.ScrollV_PadLeft := -20;
-  top := 0;
+  top := 5;
   for I := 0 to high(HOUSE_GUI_TAB_ORDER) do
   begin
     if I > 0 then
@@ -168,7 +168,7 @@ begin
         H := HOUSE_GUI_TAB_ORDER[I].H[K, L];
         SetLength(Button_BlockHouse, Length(Button_BlockHouse) + 1);//add new element
 
-        Button_BlockHouse[J] := TKMButtonFlatBlock.Create(Panel_Houses, 9 + lastID mod 5 * 37, top + (lastID div 5) * 37,33,33,gRes.Houses[H].GUIIcon);
+        Button_BlockHouse[J] := TKMButtonFlatBlock.Create(Panel_Houses, 18 + lastID mod 5 * 37, top + (lastID div 5) * 37,33,33,gRes.Houses[H].GUIIcon);
         Button_BlockHouse[J].Hint := gRes.Houses[H].HouseName;
         Button_BlockHouse[J].Tag := byte(H);
         Button_BlockHouse[J].Tag2 := BUTTON_BLOCK_HOUSE_TAG_2;
