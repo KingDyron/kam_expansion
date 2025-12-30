@@ -897,7 +897,16 @@ begin
   If s > 0 then
     cap := cap + s.ToString + 's ';
   Grain_GrowingTime.Caption := cap;
-  Grain_ReGrowingTime.Hide;
+  Grain_GrowingTime.Show;
+  Grain_ReGrowingTime.Left := Grain_GrowingTime.Right + 20;
+  If fSelectedGrain in GRAIN_WINE then
+  begin
+    Grain_GrowingTime.Hide;
+    Grain_ReGrowingTime.Left := Grain_GrowingTime.Left;
+    Grain_ReGrowingTime.Caption := cap;
+    Grain_ReGrowingTime.Show;
+  end else
+    Grain_ReGrowingTime.Hide;
   If fSelectedGrain in GRAIN_GRASS then
   begin
     regStage := GT.Stage[lastStage].NextStage;
