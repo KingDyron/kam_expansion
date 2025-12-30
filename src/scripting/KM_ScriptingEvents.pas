@@ -179,7 +179,8 @@ type
     ccTamaio,
     ccBattleInAndaro,
     ccUbelTelescope,
-    ccOverthrow
+    ccOverthrow,
+    ccDevelopment
   );
 
 
@@ -203,7 +204,8 @@ const
   'ks.general_tamaio',
   'ks.battle_in_andaro',
   'ks.ubel_telescope',
-  'ks.overthrow'
+  'ks.overthrow',
+  'ks.meryton'
   );
 
 
@@ -228,7 +230,7 @@ uses
   KM_GameParams, KM_GameTypes,
   KM_Cursor,
   KM_HandTypes, KM_HandsCollection,
-  KM_ResTexts, KM_ResUnits,
+  KM_ResTexts, KM_ResUnits, KM_ResDevelopment,
   KM_Resource,
   KM_DevPerfLog, KM_DevPerfLogTypes,
   KM_CommonUtils,
@@ -712,6 +714,11 @@ begin
     ccBattleInAndaro        : gMySpectator.Hand.AI.Victory;
     ccUbelTelescope         : gMySpectator.Hand.FogOfWar.RevealEverything;
     ccOverthrow             : gMySpectator.Hand.AI.Defeat;
+    ccDevelopment           : begin
+                                gMySpectator.Hand.AddDevPoint(dttBuilder, 20);
+                                gMySpectator.Hand.AddDevPoint(dttEconomy, 20);
+                                gMySpectator.Hand.AddDevPoint(dttArmy, 20);
+                              end;
   end;
 
   gMySpectator.Hand.ShowMSG(mkStyle2, 'You are a cheater!!!', KMPOINT_ZERO);
