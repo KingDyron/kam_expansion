@@ -453,6 +453,9 @@ end;
 procedure TKMHousePasture.BuyAIAnimal;
 var R : Integer;
 begin
+
+  If gHands[Owner].VirtualWare['vtCoin'] <= 120 then
+    Exit;
   If length(fAIAnimals) = 0 then
   begin
     R := KaMRandom(byte(high(TKMPastureAnimalType)), 'TKMHousePasture.BuyAIAnimal1') + 1;
@@ -503,7 +506,7 @@ begin
 
   If HasWorkerInside then
     If gHands[Owner].IsComputer then
-      If aTick mod 200 = 0 then
+      If aTick mod 300 = 0 then
         BuyAIAnimal;
 end;
 
