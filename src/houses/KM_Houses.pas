@@ -6630,7 +6630,7 @@ begin
         begin
           TC := gTerrain.FindBestClimatType(Entrance);
 
-          if gFruitTrees[I].ClimateMulti[TC] > gFruitTrees[K].ClimateMulti[TC] then
+          if gFruitTrees[I].ClimateMulti[TC] * gFruitTrees[I].Fruits > gFruitTrees[K].ClimateMulti[TC] * gFruitTrees[I].Fruits then
             K := I;
         end;
         fNextFruitTreeID := K;

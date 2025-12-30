@@ -318,6 +318,17 @@ var
   Bid, BestBid: Single;
   SeedLocs: TKMPointArray;
   Locs: TKMPointTagList;
+
+  function IsAlignedWithEntrance(aLoc : TKMPoint) : Boolean;
+  var I : Integer;
+  begin
+    Result := false;
+    for I := 0 to SeedLocs.Count - 1 do
+      If (aLoc.X = SeedLocs[I].X) or (aLoc.Y + 1 = SeedLocs[I].Y) then
+        Exit(true);
+
+  end;
+
 begin
   Result := False;
 
@@ -331,10 +342,13 @@ begin
     for I := 0 to Locs.Count - 1 do
     begin
       Bid := Locs.Tag[I]
+             + gAIFields.Influences.AvoidBuilding[Locs[I].Y,Locs[I].X]
              - gAIFields.Influences.Ownership[fOwner,Locs[I].Y,Locs[I].X] / 5;
 
       If not (aHouse in [htFarm, htVineyard, htAppleTree, htPasture, htForest]) then
         Bid := Bid + byte(gTerrain.TileIsSoil(Locs[I])) * 100;
+      If not IsAlignedWithEntrance(Locs[I]) then
+        Bid := Bid + 100;
 
       if (Bid < BestBid) then
       begin
