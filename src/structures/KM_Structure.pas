@@ -81,6 +81,7 @@ uses
     KM_Resource,
     KM_TerrainTypes, KM_Terrain,
     KM_HandsCollection, KM_Hand,
+    KM_ScriptingEvents,
     KM_CommonUtils;
 
 constructor TKMStructure.Create(aUID: Integer; aStructureType, aRotation: Integer; aLoc: TKMPoint; aOwner: ShortInt);
@@ -370,6 +371,7 @@ begin
   fBuildingProgress := Spec.MaxProgress;
   gTerrain.PlaceStructure(Position, Index, Rotation);
   gTerrain.SetStructurePlan(Position, Index, Rotation, hbsDone);
+  gScriptEvents.ProcStructureFinished(Owner, Position.X, Position.Y, Index);
 end;
 
 procedure TKMStructure.DestroyPlan;

@@ -134,6 +134,7 @@ uses
   KM_Units, KM_UnitWarrior, KM_UnitsCollection,
   KM_Projectiles, KM_CommonGameTypes,
   KM_Sound, KM_ResSound,
+  KM_ScriptingEvents,
   KM_Resource, KM_ResUnits, KM_ResHouses, KM_ResTexts,
   KM_RenderPool,
   KM_Terrain,
@@ -423,6 +424,7 @@ begin
     Exit;
   fPearlType := aType;
   SetBuildCost;
+  gScriptEvents.ProcPearlSelected(self, aType);
 end;
 
 procedure TKMHousePearl.ConfirmBuild;
@@ -437,6 +439,7 @@ begin
   fMaxProgress := gRes.Houses.Pearls[fPearlType].ProgressPerStage * fBuildCost[fBuildStage].C;
 
   gHands[Owner].Deliveries.Queue.AddDemand(self, nil, fBuildCost[fBuildStage].W, fBuildCost[fBuildStage].C);
+  gScriptEvents.ProcPearlConfirmed(self, fPearlType);
 end;
 
 procedure TKMHousePearl.SetFlagPoint(aFlagPoint: TKMPoint);
@@ -499,6 +502,7 @@ begin
       ActivatePearl;
       gHands.AddPearlActivationAnim(PearlCenter, 25, icYellow);
       gSoundPlayer.Play(sfxnPearlChoir, PearlCenter, true, 1, false, high(Word));
+      gScriptEvents.ProcPearlCompleted(self, fPearlType);
     end
     else
     begin

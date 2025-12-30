@@ -146,6 +146,11 @@ type
     procedure ProcHouseSelected(aPlayer : TKMHandID; aHouse: TKMHouse; aSelected : Boolean);
     procedure ProcHouseUpgraded(aHouse: TKMHouse; aLevel : Integer);
 
+    procedure ProcStructureFinished(aOwner : TKMHandID; X, Y, aIndex : Integer);
+    procedure ProcPearlSelected(aHouse : TKMHouse; aType : TKMPearlType);
+    procedure ProcPearlCompleted(aHouse : TKMHouse; aType : TKMPearlType);
+    procedure ProcPearlConfirmed(aHouse : TKMHouse; aType : TKMPearlType);
+
     procedure ProcShipLoad(aShip, aUnit : TKMUnit);
     procedure ProcShipUnload(aShip, aUnit : TKMUnit);
 
@@ -1484,6 +1489,29 @@ begin
   if MethodAssigned(evtHouseUpgraded) then
     CallEventHandlers(evtHouseUpgraded, [aHouse.UID, aLevel]);
 end;
+
+procedure TKMScriptEvents.ProcStructureFinished(aOwner : TKMHandID; X, Y, aIndex : Integer);
+begin
+  if MethodAssigned(evtStructureBuilt) then
+    CallEventHandlers(evtStructureBuilt, [aOwner, X, Y, aIndex]);
+end;
+procedure TKMScriptEvents.ProcPearlSelected(aHouse : TKMHouse; aType : TKMPearlType);
+begin
+  if MethodAssigned(evtPearlSelected) then
+    CallEventHandlers(evtPearlSelected, [aHouse.UID, byte(aType)]);
+end;
+procedure TKMScriptEvents.ProcPearlCompleted(aHouse : TKMHouse; aType : TKMPearlType);
+begin
+  if MethodAssigned(evtPearlCompleted) then
+    CallEventHandlers(evtPearlCompleted, [aHouse.UID, byte(aType)]);
+end;
+procedure TKMScriptEvents.ProcPearlConfirmed(aHouse : TKMHouse; aType : TKMPearlType);
+begin
+  if MethodAssigned(evtPearlConfirmed) then
+    CallEventHandlers(evtPearlConfirmed, [aHouse.UID, byte(aType)]);
+end;
+
+
 procedure TKMScriptEvents.ProcShipLoad(aShip, aUnit : TKMUnit);
 begin
   if MethodAssigned(evtShipLoaded) then

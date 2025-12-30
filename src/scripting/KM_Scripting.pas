@@ -1250,7 +1250,12 @@ const
     (ParamCount: 3; Typ: (0, btS32 , btS32 , btS32, 0     ); Dir: (pmIn, pmIn, pmIn, pmIn)), // OnHouseSelected
     (ParamCount: 2; Typ: (0, btS32 , btS32 , 0,     0     ); Dir: (pmIn, pmIn, pmIn, pmIn)), // OnHouseUpgraded
     (ParamCount: 2; Typ: (0, btS32 , btS32 , 0,     0     ); Dir: (pmIn, pmIn, pmIn, pmIn)), // OnShipLoaded
-    (ParamCount: 2; Typ: (0, btS32 , btS32 , 0,     0     ); Dir: (pmIn, pmIn, pmIn, pmIn)) // OnShipUnload
+    (ParamCount: 2; Typ: (0, btS32 , btS32 , 0,     0     ); Dir: (pmIn, pmIn, pmIn, pmIn)), // OnShipUnload
+
+    (ParamCount: 2; Typ: (0, btS32 , btS32 , 0,     0     ); Dir: (pmIn, pmIn, pmIn, pmIn)), // evtPearlCompleted
+    (ParamCount: 4; Typ: (0, btS32 , btS32 , btS32, btS32 ); Dir: (pmIn, pmIn, pmIn, pmIn)), // evtStructureBuilt
+    (ParamCount: 2; Typ: (0, btS32 , btS32 , 0,     0     ); Dir: (pmIn, pmIn, pmIn, pmIn)), // evtPearlSelected
+    (ParamCount: 2; Typ: (0, btS32 , btS32 , 0,     0     ); Dir: (pmIn, pmIn, pmIn, pmIn)) // evtPearlConfirmed
     //*Events-Check*//
   );
 var

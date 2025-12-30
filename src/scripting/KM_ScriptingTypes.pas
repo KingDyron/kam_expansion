@@ -69,7 +69,13 @@ type
     evtHouseSelected,
     evtHouseUpgraded,
     evtShipLoaded,
-    evtShipUnLoaded
+    evtShipUnLoaded,
+
+    evtPearlCompleted,
+    evtStructureBuilt,
+    evtPearlSelected,
+    evtPearlConfirmed
+
     //*Events-Reg*//
   );
 
