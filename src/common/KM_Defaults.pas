@@ -1324,7 +1324,7 @@ const
     4, 5
   );
 
-  TOWN_TUTORIAlS_COUNT = 9;
+  TOWN_TUTORIAlS_COUNT = 11;
   BATTLE_TUTORIAlS_COUNT = 8;
 {
 type
