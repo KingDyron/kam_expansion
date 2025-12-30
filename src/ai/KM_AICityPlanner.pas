@@ -9,7 +9,7 @@ uses
 
 
 type
-  TFindNearest = (fnHouse, fnStone, fnTrees, fnSoil, fnWater, fnCoal, fnIron, fnGold, fnBitin, fnClay);
+  TFindNearest = (fnHouse, fnStone, fnTrees, fnSoil, fnWater, fnCoal, fnIron, fnGold, fnBitin, fnClay, fnCollect);
 
   // Terrain finder optimized for CityPlanner demands of finding resources and houses
   TKMTerrainFinderCity = class(TKMTerrainFinderCommon)
@@ -130,12 +130,13 @@ begin
     htGoldMine:      Result := NextToOre(aHouse, wtGoldOre, aLoc);
     htIronMine:      Result := NextToOre(aHouse, wtIronOre, aLoc);
     htBitinMine:     Result := NextToOre(aHouse, wtBitinOre, aLoc);
+    htCollectors:     Result := NextToOre(aHouse, wtJewerly, aLoc);
     htPottery:        Result := NextToClay(aHouse, aLoc);
 
     htQuarry:        Result := NextToStone(aHouse, aLoc);
-    htWoodcutters:   Result := NextToTrees(aHouse, [htStore, htWoodcutters, htSawmill], aLoc);
+    htWoodcutters:   Result := NextToTrees(aHouse, [htStore, htWoodcutters, htSawmill], aLoc) or NextToHouse(aHouse, [htStore, htCottage, htSawmill, htWoodcutters], [], aLoc);
     htFarm:          Result := NextToGrass(aHouse, [htFarm], aLoc) or NextToGrass(aHouse, [htSwine, htMill, htStables, htHovel], aLoc) or NextToGrass(aHouse, [htAny], aLoc);
-    htVineyard:      Result := NextToGrass(aHouse, [htAny], aLoc);
+    htVineyard:      Result := NextToHouse(aHouse, [htAny], [], aLoc);
     htWell:           begin
                         Result := PlaceForWell(aLoc);
                         If not Result then
@@ -161,7 +162,7 @@ begin
   end;
 
   //If we failed to find something, try to place the house anywhere (better than ignoring it)
-  if not Result and not (aHouse in [htAppleTree, htCoalMine, htGoldMine, htIronMine, htBitinMine, htQuarry, htFarm, htVineyard, htFishermans, htWell, htPottery, htHovel]) then
+  if not Result and not (aHouse in [htCollectors, htAppleTree, htCoalMine, htGoldMine, htIronMine, htBitinMine, htQuarry, htFarm, htVineyard, htFishermans, htWell, htPottery, htHovel]) then
     Result := NextToHouse(aHouse, [htAny], [], aLoc);
 end;
 
@@ -331,6 +332,10 @@ begin
     begin
       Bid := Locs.Tag[I]
              - gAIFields.Influences.Ownership[fOwner,Locs[I].Y,Locs[I].X] / 5;
+
+      If not (aHouse in [htFarm, htVineyard, htAppleTree, htPasture, htForest]) then
+        Bid := Bid + byte(gTerrain.TileIsSoil(Locs[I])) * 100;
+
       if (Bid < BestBid) then
       begin
         aLoc := Locs[I];
@@ -793,10 +798,25 @@ begin
                     SeedLocs := GetSeeds([htStore]);
 
                   if Length(SeedLocs) = 0 then Exit;
-                    if not FindNearest(SeedLocs[KaMRandom(Length(SeedLocs), 'TKMCityPlanner.NextToOre_5')], 45, fnWater, P) then
+                    if not FindNearest(SeedLocs[KaMRandom(Length(SeedLocs), 'TKMCityPlanner.NextToOre_6')], 45, fnWater, P) then
                       if aNearAnyHouse or not NextToOre(aHouse, aOreType, P, True) then
                         Exit;
                 end;
+    wtJewerly:  begin
+                  if aNearAnyHouse then
+                    SeedLocs := GetSeeds([htAny])
+                  else
+                    if gHands[fOwner].Stats.GetHouseTotal(htCollectors) > 0 then
+                      SeedLocs := GetSeeds([htCollectors])
+                    else
+                      SeedLocs := GetSeeds([htAny]);
+
+                  if Length(SeedLocs) = 0 then Exit;
+                    if not FindNearest(SeedLocs[KaMRandom(Length(SeedLocs), 'TKMCityPlanner.NextToOre_7')], 45, fnCollect, P) then
+                      if aNearAnyHouse or not NextToOre(aHouse, aOreType, P, True) then
+                        Exit;
+                end;
+
   end;
 
   //todo: If there's no ore AI should not keep calling this over and over again
@@ -925,12 +945,13 @@ begin
   case FindType of
     fnHouse:  Result := gHands[fOwner].CanAddHousePlanAI(X, Y, HouseType, false);
 
-    fnStone:  Result := (gTerrain.TileIsStone(X, Max(Y-1, 1)) > 1);
+    fnStone:  Result := (gTerrain.TileIsStone(X, Max(Y-1, 1)) >= 1);
 
     fnCoal:   Result := (gTerrain.TileIsCoal(X, Y) > 1)
                          and gHands[fOwner].CanAddHousePlanAI(X, Y, htCoalMine, false);
 
     fnClay:   Result := (gTerrain.TileIsClay(X, Y) >= 1);
+    fnCollect:  Result := gTerrain.TileHasCollectorsGoods(X, Y);
 
     fnIron:   begin
                 Result := gHands[fOwner].CanAddHousePlanAI(X, Y, htIronMine, false);

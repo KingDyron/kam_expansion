@@ -922,10 +922,10 @@ begin
       NodeTagList.SortByTag;
       for I := 0 to Min(NodeTagList.Count, MAX_FARM_FIELDS_COUNT) - 1 do
       begin
-        IF I < VEGE_FIELD_COUNT then
+        IF (I < VEGE_FIELD_COUNT) and P.CanAddFieldPlan(NodeTagList[I], ftVegeField) then
           P.Constructions.FieldworksList.AddField(NodeTagList[I], ftVegeField, rtNone)
         else
-        IF I < VEGE_FIELD_COUNT + GRASS_FIELD_COUNT then
+        IF (I < VEGE_FIELD_COUNT + GRASS_FIELD_COUNT) and P.CanAddFieldPlan(NodeTagList[I], ftGrassland) then
           P.Constructions.FieldworksList.AddField(NodeTagList[I], ftGrassland, rtNone)
         else
           P.Constructions.FieldworksList.AddField(NodeTagList[I], ftCorn, rtNone);
@@ -1057,10 +1057,10 @@ begin
       NodeTagList.SortByTag;
       for I := 0 to Min(NodeTagList.Count, MAX_FARM_FIELDS_COUNT) - 1 do
       begin
-        IF I < VEGE_FIELD_COUNT then
+        IF (I < VEGE_FIELD_COUNT) and P.CanAddFieldPlan(NodeTagList[I], ftVegeField) then
           P.Constructions.FieldworksList.AddField(NodeTagList[I], ftVegeField, rtNone)
         else
-        IF I < VEGE_FIELD_COUNT + GRASS_FIELD_COUNT then
+        IF (I < VEGE_FIELD_COUNT + GRASS_FIELD_COUNT) and P.CanAddFieldPlan(NodeTagList[I], ftGrassland) then
           P.Constructions.FieldworksList.AddField(NodeTagList[I], ftGrassland, rtNone)
         else
           P.Constructions.FieldworksList.AddField(NodeTagList[I], ftCorn, rtNone);

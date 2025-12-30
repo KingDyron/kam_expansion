@@ -119,7 +119,7 @@ type
     function DoCheckGoals: Boolean;
     procedure PostLoadMission;
 
-    procedure AddPearlActivationAnim(aLoc : TKMPoint);
+    procedure AddPearlActivationAnim(aLoc : TKMPoint; aMaxRadius : Byte; aColor : Cardinal);
 
     function CanHaveAI: Boolean;
     function CanHaveAdvancedAI: Boolean;
@@ -840,11 +840,13 @@ begin
 end;
 
 
-procedure TKMHandsCollection.AddPearlActivationAnim(aLoc : TKMPoint);
+procedure TKMHandsCollection.AddPearlActivationAnim(aLoc : TKMPoint; aMaxRadius : Byte; aColor : Cardinal);
 var paa: TKMPearlActivatedAnim;
 begin
   paa.X := aLoc.X;
   paa.Y := aLoc.Y;
+  paa.MaxRadius := aMaxRadius;
+  paa.Color := aColor;
   paa.Tick := gGame.Params.Tick;
   fPearlsAnimations.Add(paa);
 end;
@@ -1602,8 +1604,6 @@ end;
 
 
 procedure TKMHandsCollection.PaintPearlAnims;
-const
-  MAX_RAD = 25;
 
 var I : integer;
   step, rad : Single;
@@ -1616,14 +1616,14 @@ begin
     step := (gGame.Params.Tick - fPearlsAnimations[I].Tick + gGame.Params.TickFrac) / PEARL_GLOW_ANIM_DURATION;
     step := 1 - (sqr(1 - step));
 
-    rad := (step * MAX_RAD);
+    rad := (step * fPearlsAnimations[I].MaxRadius);
     alpha := 255 - round(255 * step);
     pos.X := fPearlsAnimations[I].X - 0.5;
     pos.Y := fPearlsAnimations[I].Y - 2.5;
     pos.Y := pos.Y + gTerrain.RenderHeightAt(Pos.X, Pos.Y);
     gRenderPool.RenderCircle(pos, rad,
-                              icYellow and $00FFFFFF or ((alpha div 2) SHL 24),
-                              icYellow and $00FFFFFF or (alpha SHL 24), Round(2 + 8 * step) );
+                              fPearlsAnimations[I].Color and $00FFFFFF or ((alpha div 2) SHL 24),
+                              fPearlsAnimations[I].Color and $00FFFFFF or (alpha SHL 24), Round(2 + 8 * step) );
   end;
 
 

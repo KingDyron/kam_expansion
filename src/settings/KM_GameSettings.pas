@@ -543,7 +543,7 @@ begin
     Weather.NightSpeed          := nWeather.Attributes['NightSpeed'].AsInteger(10);
     Weather.NightTime           := nWeather.Attributes['NightTime'].AsInteger(0);
     Weather.DynamicLight        := nWeather.Attributes['DynamicLight'].AsBoolean(true);
-    Weather.DynamicShadow        := nWeather.Attributes['DynamicShadow'].AsBoolean(true);
+    Weather.DynamicShadow        := nWeather.Attributes['DynamicShadow'].AsBoolean(false);
 
   // GameCommon
   nGameCommon := nGameSettings.AddOrFindChild('GameCommon');

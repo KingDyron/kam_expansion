@@ -54,6 +54,8 @@ type
   TKMPearlActivatedAnim = record
     X, Y : Integer;
     Tick : Cardinal;
+    MaxRadius : Byte;
+    Color : Cardinal;
   end;
 
 const CONSOLE_COMMANDS_NAME : array[TKMConsolCommandType] of String = (

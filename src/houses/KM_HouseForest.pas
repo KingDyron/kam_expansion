@@ -292,9 +292,14 @@ procedure TKMHouseForest.PlantAITree;
 var R : Byte;
 begin
   If length(fAITrees) = 0 then
-    Exit;
-  R := KaMRandom(length(fAITrees), 'TKMHouseForest.PlatAITree');
-  AddTree(fAITrees[R]);
+  begin
+    R := KaMRandom(length(gGrowingTrees), 'TKMHouseForest.PlatAITree1');
+    AddTree(R);
+  end else
+  begin
+    R := KaMRandom(length(fAITrees), 'TKMHouseForest.PlatAITree2');
+    AddTree(fAITrees[R]);
+  end;
 end;
 
 

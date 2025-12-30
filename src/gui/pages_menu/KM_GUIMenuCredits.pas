@@ -66,7 +66,7 @@ begin
       gResTexts[TX_CREDITS_ADDITIONAL_MUSIC] + '|Andre Sklenar - www.juicelab.cz|Jaimy - KaM Revisited Soundtrack||' +
       gResTexts[TX_CREDITS_ADDITIONAL_SOUNDS] + '|trb1914||' +
       gResTexts[TX_CREDITS_ADDITIONAL_TRANSLATIONS] + '|' + gResLocales.TranslatorCredits + '|' +
-      gResTexts[TX_CREDITS_SPECIAL] + '|Memgor-for making this mod with me|KaM Community members',
+      gResTexts[TX_CREDITS_SPECIAL] + '|Memgor-for making this mod with me|aoron5957-for testing|KaM Community members',
       fntGrey,
       taCenter);
     Label_Credits_Remake.Anchors := [anLeft, anTop, anBottom];

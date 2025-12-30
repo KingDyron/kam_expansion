@@ -2517,7 +2517,7 @@ begin
   rX := RoundToTilePixel(aX);
   rY := RoundToTilePixel(aY);
 
-  night := aNight;//gTerrain.GetNightAtTile(tX, tY);
+  night := Min(aNight, 1);//gTerrain.GetNightAtTile(tX, tY);
 
   ///no shadow first
   glClear(GL_STENCIL_BUFFER_BIT);
@@ -2570,10 +2570,10 @@ begin
     TKMRender.BindTexture(Tex.TexID);
     if DoHighlight then
       IF (aID >= 15359) and (aID <= 16849) then
-      glColor4ub( Round(HighlightColor AND $FF * aNight),
-                  Round(HighlightColor SHR 8 AND $FF * aNight),
-                  Round(HighlightColor SHR 16 AND $FF * aNight),
-                  Round(HighlightColor SHR 24 and $FF * aNight)
+      glColor4ub( Round(HighlightColor AND $FF * night),
+                  Round(HighlightColor SHR 8 AND $FF * night),
+                  Round(HighlightColor SHR 16 AND $FF * night),
+                  Round(HighlightColor SHR 24 and $FF * night)
                   )
       else
       glColor4f((HighlightColor AND $FF / 255) * night,
@@ -2615,6 +2615,7 @@ begin
       glEnd;
       TKMRender.BindTexture(0);
     end;
+
 
   ///render shadow now
   glClear(GL_STENCIL_BUFFER_BIT);

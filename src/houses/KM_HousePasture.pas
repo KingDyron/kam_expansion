@@ -454,10 +454,16 @@ procedure TKMHousePasture.BuyAIAnimal;
 var R : Integer;
 begin
   If length(fAIAnimals) = 0 then
-    Exit;
-  R := KaMRandom(length(fAIAnimals), 'TKMHousePasture.BuyAIAnimal');
+  begin
+    R := KaMRandom(byte(high(TKMPastureAnimalType)), 'TKMHousePasture.BuyAIAnimal1') + 1;
+    BuyAnimal(TKMPastureAnimalType(R));
 
-  BuyAnimal(TKMPastureAnimalType(fAIAnimals[R]));
+  end else
+  begin
+    R := KaMRandom(length(fAIAnimals), 'TKMHousePasture.BuyAIAnimal2');
+    BuyAnimal(TKMPastureAnimalType(fAIAnimals[R]));
+  end;
+
 end;
 
 

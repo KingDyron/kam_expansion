@@ -258,12 +258,12 @@ begin
   fOnGameStart := GameStarted;
   fOnGameEnd := GameEnded;
 
-  fGithubCRC := 2958466201;
+  fGithubCRC := 2984466673;
   {$IFDEF DEBUG_CRC}
     fGithubCRC := gRes.GetDATCRC;
   {$ENDIF}
-  //if not IsFileInUse(ExeDir+'Export\CRC.csv') then
-  //  ExportCRC(ExeDir+'Export\CRC.csv');
+  if not IsFileInUse(ExeDir+'Export\CRC.csv') then
+    ExportCRC(ExeDir+'Export\CRC.csv');
 end;
 
 

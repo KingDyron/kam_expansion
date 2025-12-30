@@ -21,7 +21,6 @@ type
     fConfirmed : Boolean;
     fBuildCost, fDelivered : TKMWarePlan;
     fBuildStage : Byte;
-    fCompletedTick : Cardinal;
     fIsCompleted : Boolean;
     //special abilities
     fReloadTime, fMaxReloadTime : Word;
@@ -31,6 +30,7 @@ type
     fResFrom, fResTo, fRResTo : TKMWareType;
     fVResTo : Byte;
     fSnowStepPearl : Single;
+    function AuraDistance : Single;
     function PearlCenter : TKMPoint;
     Procedure SetBuildCost;
     procedure MakeRally;
@@ -46,7 +46,6 @@ type
     procedure UseSpecial;
 
     procedure DoAI;
-    procedure PaintGlow;
 
     function AgrosGetRandomUnit: TKMUnitType;
     function AgrosDoExchangeToUnit(aUnitType : TKMUnitType): Boolean;
@@ -127,7 +126,7 @@ type
 implementation
 uses
   Classes,
-  KM_Game, KM_GameParams,
+  KM_Game, KM_GameParams, KM_GameApp,
   KM_CommonUtils,
   KM_HandsCollection, KM_Hand, KM_HandTypes, KM_HandEntity,
   KM_HouseHelpers,
@@ -137,7 +136,8 @@ uses
   KM_Sound, KM_ResSound,
   KM_Resource, KM_ResUnits, KM_ResHouses, KM_ResTexts,
   KM_RenderPool,
-  KM_Terrain;
+  KM_Terrain,
+  KromUtils;
 
 //main
 constructor TKMHousePearl.Create(aUID: Integer; aHouseType: TKMHouseType; PosX: Integer; PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
@@ -158,7 +158,6 @@ begin
   fRResTo := wtNone;
   fVResTo := 0;
   fIsCompleted := false;
-  fCompletedTick := 0;
 end;
 
 constructor TKMHousePearl.Load(LoadStream: TKMemoryStream);
@@ -181,7 +180,6 @@ begin
   LoadStream.ReadData(fMaxReloadTime);
   LoadStream.ReadData(fWorkingTime);
   LoadStream.ReadData(fSnowStepPearl);
-  LoadStream.ReadData(fCompletedTick);
 end;
 
 procedure TKMHousePearl.Save(SaveStream: TKMemoryStream);
@@ -204,8 +202,6 @@ begin
   SaveStream.Write(fMaxReloadTime);
   SaveStream.Write(fWorkingTime);
   SaveStream.Write(fSnowStepPearl);
-  SaveStream.Write(fCompletedTick
-  );
 end;
 
 destructor TKMHousePearl.Destroy;
@@ -231,7 +227,18 @@ begin
           HitEnemyWithStone;
       end;
       If (fReloadTime < fMaxReloadTime) and (fWorkingTime = 0) then
+      begin
         Inc(fReloadTime);
+        If fReloadTime = fMaxReloadTime then
+          case fPearlType of
+            ptNone : ;
+            ptValtaria: gHands.AddPearlActivationAnim(PearlCenter, 15, icGreen);
+            ptArium: gHands.AddPearlActivationAnim(PearlCenter, 15, icPink);
+            ptAgros: gHands.AddPearlActivationAnim(PearlCenter, 15, icGreenYellow);
+            ptRalender: gHands.AddPearlActivationAnim(PearlCenter, 15, tcPurple or $FF000000);
+          end;
+
+      end;
       If fWorkingTime > 0 then
       begin
         Dec(fWorkingTime);
@@ -242,30 +249,7 @@ begin
       If aTick mod 300 = 0 then
         If gHands[Owner].IsComputer then
           DoAI;
-      //glow animation tick reset
-      If gGame.Params.Tick - fCompletedTick >= ANIM_DURATION then
-        fCompletedTick := 0;
     end;
-end;
-
-procedure TKMHousePearl.PaintGlow;
-const
-  MAX_RAD = 20;
-
-var rad, step : Single;
-  alpha : Cardinal;
-begin
-  step := (gGame.Params.Tick - fCompletedTick + gGame.Params.TickFrac) / ANIM_DURATION;
-  step := 1 - (sqr(1 - step));
-
-
-
-  rad := (step * MAX_RAD);
-  alpha := 255 - round(255 * step);
-  gRenderPool.RenderCircle(PearlCenter.ToFloat + KMPointF(-0.5, -0.5), rad,
-                            icYellow and $00FFFFFF or ((alpha div 2) SHL 24),
-                            icYellow and $00FFFFFF or (alpha SHL 24), Round(2 + 8 * step) );
-
 end;
 
 procedure TKMHousePearl.Paint;
@@ -277,6 +261,8 @@ procedure TKMHousePearl.Paint;
       Result := gRes.Houses.Pearls[fPearlType].SnowPic[OnTerrain];
   end;
 var progress : Single;
+  alpha : Byte;
+  C : Cardinal;
 begin
   Inherited;
 
@@ -284,9 +270,14 @@ begin
   begin
     If Completed then
     begin
-      If fCompletedTick > 0 then
-        PaintGlow;
       gRenderPool.AddHousePearl(fPearlType, fPosition, fBuildStage, 1, 1, fSnowStepPearl, GetPearlSnowPic, gHands[Owner].FlagColor, false);
+
+      if gMySpectator.Selected = Self then
+      begin
+        alpha := 10 + Round((1 + Sin(gGameApp.GlobalTickCount / 3)) * 30);
+        C := alpha shl 24 or $00FFFFFF;
+        gRenderPool.RenderCircle(PearlCenter.ToFloat + KMPointF(-0.5, -2), AuraDistance, C, C, 2);
+      end;
     end
     else
     If Confirmed then
@@ -361,6 +352,14 @@ end;
 function TKMHousePearl.CanBuild: Boolean;
 begin
   Result := (fProgress < fMaxProgress) and (fDelivered[fBuildStage].C = fBuildCost[fBuildStage].C);
+end;
+
+function TKMHousePearl.AuraDistance: Single;
+begin
+  Result := 10;
+
+  If gHands[Owner].BuildDevUnlocked(18) then
+    Result := 14;
 end;
 
 function TKMHousePearl.PearlCenter : TKMPoint;
@@ -498,8 +497,7 @@ begin
     If fBuildStage = gRes.Houses.Pearls[fPearlType].StageCount then
     begin
       ActivatePearl;
-      gHands.AddPearlActivationAnim(PearlCenter);
-      //fCompletedTick := gGame.Params.Tick;
+      gHands.AddPearlActivationAnim(PearlCenter, 25, icYellow);
       gSoundPlayer.Play(sfxnPearlChoir, PearlCenter, true, 1, false, high(Word));
     end
     else
@@ -581,7 +579,6 @@ end;
 procedure TKMHousePearl.MakeAuraEffect;
 var I : Integer;
   effectType : TKMUnitEffectType;
-  maxDist : Word;
 begin
   effectType := uetNone;
 
@@ -592,13 +589,9 @@ begin
     ptAgros : effectType := uetAttack;
     ptRalender : effectType := uetDefence;
   end;
-  maxDist := 10;
-
-  If gHands[Owner].BuildDevUnlocked(18) then
-    maxDist := 14;
 
   for I := 0 to gHands[Owner].Units.Count - 1 do
-    If (KMLengthDiag(gHands[Owner].Units[I].Position, PearlCenter) <= maxDist)
+    If (KMLengthDiag(gHands[Owner].Units[I].Position, PearlCenter) <= AuraDistance)
       and not gHands[Owner].Units[I].IsDeadOrDying then
       gHands[Owner].Units[I].SetEffect(effectType, 100);
 end;

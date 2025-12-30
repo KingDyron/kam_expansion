@@ -220,7 +220,7 @@ type
     fBuildState: TKMHouseBuildState; // = (hbsGlyph, hbsNoGlyph, hbsWood, hbsStone, hbsDone);
     FlagAnimStep: Cardinal; //Used for Flags and Burning animation
     const
-      COINS_GET_PACE = 6000;// 20 minutes to get coins
+      COINS_GET_PACE = 6000;// 10 minutes to get coins
     //WorkAnimStep: Cardinal; //Used for Work and etc.. which is not in sync with Flags
     procedure SetCost;
     procedure Activate(aWasBuilt: Boolean); virtual;
@@ -4811,8 +4811,24 @@ begin
 end;
 
 procedure TKMHouse.ProduceCoins;
+var C : Integer;
 begin
-  gHands[Owner].VirtualWareTake('vtCoin', -1);
+  case HouseType of
+    htCottage, htHouse,
+    htInn, htSchool,
+    htStore : C := 2;
+
+    htTownhall,
+    htBarracks : C := 3;
+    htMerchant,
+    htCartographers, htProductionThatch,
+    htForest, htPasture,
+    htPalace, htArena : C := 5;
+    htPearl : C := 20;
+    else C := 1;
+  end;
+  gHands[Owner].VirtualWareTake('vtCoin', -C);
+
 end;
 
 function TKMHouse.GetVWareModulo(W: Integer; aWare : TKMWareType): Byte;

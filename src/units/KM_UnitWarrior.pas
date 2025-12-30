@@ -2553,8 +2553,8 @@ begin
   if SHOW_ATTACK_RADIUS or (mlUnitsAttackRadius in gGameParams.VisibleLayers) then
     if IsRanged then
     begin
-      fillColor := $40FFFFFF;
-      lineCOlor := icWhite;
+      fillColor := gHands[Owner].GameFlagColor and $40FFFFFF;
+      lineCOlor := gHands[Owner].GameFlagColor;
       if (gMySpectator.Selected = Self)
         or ((gMySpectator.Selected is TKMUnitGroup)
           and (TKMUnitGroup(gMySpectator.Selected).FlagBearer = Self)) then

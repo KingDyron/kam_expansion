@@ -2970,6 +2970,9 @@ end;
 
 procedure TKMHand.UnlockDevScript(aType: TKMDevelopmentTreeType; aID: Integer; aUnlocked: Boolean; aUnlockPrevious: Boolean = False);
 begin
+  If aID >= gRes.Development[aType].Count then
+    Exit;
+
   If aUnlocked then
     fLocks.DevelopmentLock[aType, aID] := dlUnlocked
   else

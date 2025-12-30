@@ -752,7 +752,7 @@
 	{"ID": 730, "Walkable": true, "Roadable": true, "CornersTerKinds": ["tkSnowOnGrass", "tkSnowOnGrass", "tkBarrenLand", "tkBarrenLand"]},
 	{"ID": 731, "Walkable": true, "Sand" : true, "Roadable": true, "CornersTerKinds": ["tkBarrenLand", "tkBarrenLand", "tkSnowOnGrass", "tkBarrenLand"]},
 	{"ID": 732, "Walkable": true, "Sand" : true, "Roadable": true, "CornersTerKinds": ["tkBarrenLand", "tkIron", "tkBarrenLand", "tkBarrenLand"]},
-	{"ID": 733, "Walkable": true, "Roadable": true, "CornersTerKinds": ["tkIron", "tkIron", "tkBarrenLand", "tkBarrenLand"]},
+	{"ID": 733, "Walkable": true, "Roadable": false, "CornersTerKinds": ["tkIron", "tkIron", "tkBarrenLand", "tkBarrenLand"]},
 	{"ID": 734, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkIron", "tkIron", "tkBarrenLand", "tkIron"]},
 	{"ID": 735, "Walkable": true, "Sand" : true, "Roadable": true, "CornersTerKinds": ["tkBarrenLand", "tkGold", "tkBarrenLand", "tkBarrenLand"]},
 	{"ID": 736, "Walkable": true, "Roadable": true, "CornersTerKinds": ["tkGold", "tkGold", "tkBarrenLand", "tkBarrenLand"]},

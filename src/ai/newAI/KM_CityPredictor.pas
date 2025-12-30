@@ -108,7 +108,7 @@ const
     htWeaponSmithy,   htStables,       htFishermans,     htHovel, htIronSmithy, htBitinMine,
     htNone,           htNone,          htNone,           htNone,  htNone,       htNone,
     htNone,           htNone,          htPottery,        htFarm, htSawMill, htAppleTree,
-    htCollectors,     htNone,          htNone,     htNone,          htNone,     htNone,          htNone,
+    htNone,     htNone,          htNone,     htNone,          htNone,     htNone,          htNone,
     htArmorSmithy,    htHovel
   );
   // Array of wares which are consumed in specific amount to achieve specific production (because of exceptions in htWeaponWorkshop / htSwine / htStables etc.)
