@@ -178,13 +178,13 @@ const
      wtNone,
      wtWoodenShield,  wtLeatherArmor,   wtAxe,            wtLance,      wtBow,
      wtIronShield,    wtIronArmor,      wtSword,          wtPike,       wtCrossbow,
-     wtMace,          wtPlateArmor,     wtFlail,          wtHorse,
-     wtQuiver,         wtBoots,         wtBitinArmor,
+     wtMace,          wtPlateArmor,     wtFlail,          wtHorse,      wtQuiver,
+     wtBoots,         wtBitinArmor,     wtBolt,
 
 
      wtNone,//new line
-     wtWheel,         wtSteelE,         wtBitinE,        wtLog,         wtStoneBolt,
-     wtBolt
+      wtLog,          wtSteelE,          wtWheel,        wtBitinE,      wtStoneBolt
+
      );
   // Template for how resources are shown in Barracks
   BarracksResOrder: array[0..21] of TKMWareType =
