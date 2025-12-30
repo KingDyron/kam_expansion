@@ -459,10 +459,10 @@ function TKMHouseArena.ValuableCost : Byte;
 begin
   Result := 0;
   case fDevType of
-    dttBuilder : Result := 120;
-    dttEconomy : Result := 180;
-    dttArmy : Result := 135;
-    dttAll : Result := 115;
+    dttBuilder : Result := 60;
+    dttEconomy : Result := 90;
+    dttArmy : Result := 70;
+    dttAll : Result := 60;
   end;
   If gHands[Owner].EconomyDevUnlocked(32) then
     Result := Result * 4 div 5;

@@ -378,7 +378,7 @@ begin
       'htAppleTree,       htSmallStore,      htCollectors,    htTailorsShop,   htCottage, ' +
       'htHouse,           htPalace,          htStall,         htProductionThatch, ' +
       'htShipYard,        htCartographers,   htPearl,         htPasture,       htForest,' +
-      'htArena)'
+      'htArena,           htSiegeTower)'
       );
     Sender.AddTypeS('TKMMissionDifficulty', '(mdNone, mdEasy3, mdEasy2, mdEasy1, mdNormal, ' +
       'mdHard1, mdHard2, mdHard3)');
@@ -423,7 +423,7 @@ begin
       'utClubMan,      utMaceFighter,  utFlailFighter,  utShieldBearer,' +
       'utFighter,      utSpikedTrap,   utWoodenWall,    utTorchMan,' +
       'utMedic,        utBattleShip,   utBoat,          utPyro,' +
-      'utLekter,       utMobileTower,' +
+      'utLekter,       utMobileTower,  utSkirmisher,    utBerserker,' +
       'utWolf,         utFish,         utWatersnake,    utSeastar, ' +
       'utCrab,         utWaterflower,  utWaterleaf,     utDuck,' +
       'utDeerMale,     utDeerFemale,   utFox,           utBoar,' +

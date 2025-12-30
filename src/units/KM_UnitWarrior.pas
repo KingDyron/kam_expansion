@@ -1447,11 +1447,7 @@ begin
 
 
   //Ranged units should not check for enemy while walking or when facing the wrong way
-
-  if IsRanged and ((not IsIdle) or ((FaceDir <> Direction) and (FaceDir <> dirNA))) then Exit;
-
   newEnemy := FindEnemy(GetFightMinRange, GetFightMaxRange(true));
-
   if newEnemy <> nil then
   begin
     OnPickedFight(Self, newEnemy);
@@ -1478,44 +1474,6 @@ begin
 
   if IsRanged and ((not IsIdle) or ((FaceDir <> Direction) and (FaceDir <> dirNA))) then Exit;
 
-
-  //this warrior can shoot from far and attack nearby
-  {if CanShootAndFight then
-  begin
-    //first check for nearby enemies to fight with hands
-    newEnemy := FindEnemy(0.5, 1.42);
-    if newEnemy <> nil then
-    begin
-      OnPickedFight(Self, newEnemy);
-      //If the target is close enough attack it now, otherwise OnPickedFight will handle it through Group.OffendersList
-      //Remember that AI's AutoAttackRange feature means a melee warrior can pick a fight with someone out of range
-
-      if WithinFightRange(newEnemy.Position) then
-        FightEnemy(newEnemy);
-
-      Result := True; //Found someone
-    end else
-    begin //find enemy to shoot at
-
-      if ((not IsIdle) or ((FaceDir <> Direction) and (FaceDir <> dirNA))) then Exit;
-      newEnemy := FindEnemy(5, GetFightMaxRange(true));
-      if newEnemy <> nil then
-      begin
-        OnPickedFight(Self, newEnemy);
-        //If the target is close enough attack it now, otherwise OnPickedFight will handle it through Group.OffendersList
-        //Remember that AI's AutoAttackRange feature means a melee warrior can pick a fight with someone out of range
-
-        if WithinFightRange(newEnemy.Position) then
-          FightEnemy(newEnemy);
-
-        Result := True; //Found someone
-      end;
-    end;
-
-    Exit;
-  end;}
-
-  
   newEnemy := FindEnemy(GetFightMinRange, GetFightMaxRange(true));
 
   if newEnemy <> nil then

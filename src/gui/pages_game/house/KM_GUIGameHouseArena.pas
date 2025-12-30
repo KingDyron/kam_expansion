@@ -91,7 +91,7 @@ begin
     WareRow_Cost[I] := TKMWaresRow.Create(self, 0, top + 28 * I, Width);
     WareRow_Cost[I].WareCntAsNumber := true;
     WareRow_Cost[I].TexID := gRes.Wares[WT].GUIIcon;
-    WareRow_Cost[I].Hint := gResTexts[1907] + ': ' + gRes.Wares[WT].Title;
+    WareRow_Cost[I].Hint := gResTexts[FESTIVAL_TEXT_ID[TKMFestivalPointType(I)]];
   end;
 
   //top := WareRow_Cost[high(WareRow_Cost)].Bottom + 5;

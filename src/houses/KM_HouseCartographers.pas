@@ -499,7 +499,7 @@ begin
     SetLength(fPlayers, id + 1);
   end;
   fPlayers[id].ID := aPlayer;
-  fPlayers[id].Army := hand.Stats.GetArmyCount;
+  fPlayers[id].Army := Max(hand.Stats.GetArmyCount, 0);
   fPlayers[id].Groups := hand.GetGroupsCount;
 
   //statistics
