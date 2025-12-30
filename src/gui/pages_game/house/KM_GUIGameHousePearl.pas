@@ -257,6 +257,8 @@ begin
 
   If not H.Completed then
   begin
+    for I := 0 to High(Button_Bonuses) do
+      Button_Bonuses[I].Hide;
     Panel_Build.Show;
     CostRow.WarePlan := H.BuildCost;
     DeliveredRow.Top := CostRow.Bottom + 20;
@@ -371,8 +373,11 @@ begin
   Button_UseSpecial.Down := H.ReloadProgress = 1;
   If not Button_UseSpecial.Enabled then
     Button_UseSpecial.BackBevelColor := Button_UseSpecial.BackBevelColor and $33AAAAAA;
+
   Icon_Reload.AlphaStep := H.ReloadProgress;
-  ShowBonuses(H.PearlType, Button_UseSpecial.Bottom + 10);
+
+  If H.Completed then
+    ShowBonuses(H.PearlType, Button_UseSpecial.Bottom + 10);
 end;
 
 procedure TKMGuiGamePearl.ShowBonuses(aPearlType: TKMPearlType; aTop: Integer);
@@ -395,8 +400,6 @@ begin
   for I := 0 to High(Button_Bonuses) do
     Button_Bonuses[I].Top := aTop;
 
-  If aPearlType = fLastPearlType then
-    Exit;
   fLastPearlType := aPearlType;
 
   for I := 0 to High(Button_Bonuses) do
