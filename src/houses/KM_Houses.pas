@@ -5382,13 +5382,13 @@ begin
   inherited;
   if fType = htWallTower then Exit;
   
-  if SHOW_ATTACK_RADIUS or (mlTowersAttackRadius in gGameParams.VisibleLayers) then
+  if SHOW_ATTACK_RADIUS or (mlTowersAttackRadius in gGameParams.VisibleLayers) or (self = gMySpectator.Selected) then
   begin
     fillColor := $40FFFFFF;
     lineColor := icWhite;
     if gMySpectator.Selected = Self then
     begin
-      fillColor := icRed and fillColor;
+      fillColor := icOrange and fillColor;
       lineColor := icCyan;
     end;
     gRenderPool.RenderDebug.RenderTiledArea(Position, RangeMin, RangeMax, GetLength, fillColor, lineColor);
@@ -5607,13 +5607,13 @@ begin
   }
   gRenderPool.AddHouseTowerRecruits(Position, RightRecruit, LeftRecruit, gTerrain.AnimStep, gHands[Owner].GameFlagColor);
 
-  if SHOW_ATTACK_RADIUS or (mlTowersAttackRadius in gGameParams.VisibleLayers) then
+  if SHOW_ATTACK_RADIUS or (mlTowersAttackRadius in gGameParams.VisibleLayers) or (self = gMySpectator.Selected) then
   begin
     fillColor := $40FFFFFF;
     lineColor := icWhite;
     if gMySpectator.Selected = Self then
     begin
-      fillColor := icRed and fillColor;
+      fillColor := icOrange and fillColor;
       lineColor := icCyan;
     end;
     if HouseType = htWallTower then
