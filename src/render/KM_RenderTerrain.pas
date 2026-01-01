@@ -610,6 +610,7 @@ begin
     //so to get TexId we can use any of terrain tile Id (f.e. 1st)
     TKMRender.BindTexture(gGFXData[rxTiles, 1].Tex.TexID);
 
+
     //Setup vertex and UV layout and offsets
     glEnableClientState(GL_VERTEX_ARRAY);
     glVertexPointer(3, GL_FLOAT, SizeOf(TKMTileVerticeExt), Pointer(0));
