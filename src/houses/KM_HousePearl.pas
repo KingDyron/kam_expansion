@@ -277,7 +277,7 @@ begin
       begin
         alpha := 10 + Round((1 + Sin(gGameApp.GlobalTickCount / 3)) * 30);
         C := alpha shl 24 or $00FFFFFF;
-        gRenderPool.RenderCircle(PearlCenter.ToFloat + KMPointF(-0.5, -2), AuraDistance, C, C, 2);
+        gRenderPool.RenderCircle(PearlCenter.ToFloat + KMPointF(-0.5, -1.5), AuraDistance, C, C, 2);
       end;
     end
     else
@@ -458,7 +458,7 @@ begin
   gHands[Owner].PearlBuilt(fPearlType);
 
   ProduceFestivalPoints(fptBuilding, 100);
-  ProduceFestivalPoints(fptEconomy, 200);
+  ProduceFestivalPoints(fptEconomy, 400);
   ProduceFestivalPoints(fptWarfare, 100);
 
 

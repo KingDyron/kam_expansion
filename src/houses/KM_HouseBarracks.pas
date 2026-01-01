@@ -451,11 +451,6 @@ begin
         soldier.OrderAmmo;
     gHands[Owner].SetVirtualWareCnt('vtCertificate', 1);
 
-    if gHands[Owner].VirtualWareTake('vtHerbs') or gHands[Owner].VirtualWareTake('vtAppleJuice') or gHands[Owner].VirtualWareTake('vtDishes') then
-      Soldier.Condition := UNIT_MAX_CONDITION
-    else
-      Soldier.Condition := condition;
-
     Result := soldier;
   end;
 

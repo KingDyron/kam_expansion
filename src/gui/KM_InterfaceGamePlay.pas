@@ -705,7 +705,7 @@ begin
   end else
   if Sender = Button_Main[tbTree] then
   begin
-    Label_MenuTitle.Caption := 'Development tree';
+    Label_MenuTitle.Caption := gResTexts[2290];
     fGuiGameDevelopment.Show;
     fOpenedMenu := tbTree;
   end else

@@ -37,8 +37,10 @@ type
     fLastUnitUIDs: array [CITIZEN_MIN..CITIZEN_MAX] of Cardinal;
     fLastHouseUIDs: array [HOUSE_MIN..HOUSE_MAX] of Cardinal;
     fSetViewportEvent: TPointFEvent;
+    fLastTick : Cardinal;
     procedure House_Stat_Clicked(Sender: TObject);
     procedure Unit_Stat_Clicked(Sender: TObject);
+    function DoReset : Boolean;
   protected
     Panel_Stats: TKMScrollPanel;
       Panel_StatBlock: array [0..STATS_LINES_CNT-1] of TKMPanel;
@@ -65,6 +67,7 @@ uses
   KM_RenderUI, KM_HandsCollection, KM_ResTexts, KM_Resource, KM_ResFonts, KM_ResUnits,
   KM_Hand, KM_Pics, KM_Points,
   KM_Units, KM_UnitGroup,
+  KM_GameParams,
   KM_ResTypes;
 
 
@@ -478,12 +481,24 @@ begin
 end;
 
 
+function TKMGUIGameStats.DoReset: Boolean;
+begin
+  Result := gGameParams.Tick > fLastTick;
+end;
 procedure TKMGUIGameStats.House_Stat_Clicked(Sender: TObject);
 var
   HT: TKMHouseType;
 begin
   Assert(Sender is TKMHouseStatIcon);
   if not Assigned(fSetViewportEvent) then Exit;
+
+  If DoReset then
+  begin
+    FillChar(fLastGroupUID, Sizeof(fLastGroupUID), #0);
+    FillChar(fLastUnitUIDs, Sizeof(fLastUnitUIDs), #0);
+    FillChar(fLastHouseUIDs, Sizeof(fLastHouseUIDs), #0);
+    fLastTick := gGameParams.Tick;
+  end;
 
   HT := TKMHouseType(TKMHouseStatIcon(Sender).Tag);
 
@@ -504,6 +519,15 @@ var
 begin
   Assert(Sender is TKMUnitStatIcon);
   if not Assigned(fSetViewportEvent) then Exit;
+
+  If DoReset then
+  begin
+    FillChar(fLastGroupUID, Sizeof(fLastGroupUID), #0);
+    FillChar(fLastUnitUIDs, Sizeof(fLastUnitUIDs), #0);
+    FillChar(fLastHouseUIDs, Sizeof(fLastHouseUIDs), #0);
+  end;
+
+  fLastTick := gGameParams.Tick + 600;
 
   If sender = Stat_Army then
   begin

@@ -1470,6 +1470,7 @@ var
 begin
   Result := False; //Didn't find anyone to fight
 
+
   //Ranged units should not check for enemy while walking or when facing the wrong way
 
   if IsRanged and ((not IsIdle) or ((FaceDir <> Direction) and (FaceDir <> dirNA))) then Exit;
@@ -4147,7 +4148,7 @@ begin
     PosF := PositionF;
     If Home is TKMHouseSiegeTower then
       PosF := PosF + KMPointF(0, -4);
-    gProjectiles.AimTarget(PosF, U, ProjectileType, self, RangeMax, RangeMin);
+    gProjectiles.AimTarget(PosF, U, ProjectileType, self, RangeMax + 3, RangeMin);
     fArcher[I] := gGameParams.Tick + ARCHER_RELOAD_TIME + KamRandom(10, 'TKMUnitWarriorTower.CheckForEnemies');
     U := nil;
   end;
