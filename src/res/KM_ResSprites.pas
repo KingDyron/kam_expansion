@@ -635,7 +635,8 @@ begin
     fRXData.Pivot[aIndex].Y := StrToInt(TXTFile.Strings[1]);
 
     //SizeNoShadow is used only for Units
-    if fRT = rxUnits then
+    // --- not needed anymore
+    {if fRT = rxUnits then
     begin
       if aIndex > 9665 then
       begin
@@ -645,12 +646,22 @@ begin
         fRXData.SizeNoShadow[aIndex].Bottom := 40;
       end else
       begin
+        try
         fRXData.SizeNoShadow[aIndex].Left := StrToInt(TXTFile.Strings[2]);
         fRXData.SizeNoShadow[aIndex].Top := StrToInt(TXTFile.Strings[3]);
         fRXData.SizeNoShadow[aIndex].Right := StrToInt(TXTFile.Strings[4]);
         fRXData.SizeNoShadow[aIndex].Bottom := StrToInt(TXTFile.Strings[5]);
+        except
+          If FileExists(ExeDir + 'Modding graphics' + PathDelim + 'Errors.txt') then
+            TXTFile.LoadFromFile(ExeDir + 'Modding graphics' + PathDelim + 'Errors.txt')
+          else
+            TXTFile.Clear;
+          TXTFile.Add(aFileName);
+          TXTFile.SaveToFile(ExeDir + 'Modding graphics' + PathDelim + 'Errors.txt');
+        end;
       end;
     end;
+    }
     TXTFile.Free;
   end;
 end;
