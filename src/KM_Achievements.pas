@@ -441,6 +441,7 @@ begin
       S.Write(fList[I].ToShow);
     end;
 
+    ForceDirectories(ExeDir + SAVES_FOLDER_NAME);
     S.SaveToFile(ExeDir + SAVES_FOLDER_NAME + PathDelim + 'Achievements.dat');
 
   finally
