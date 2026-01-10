@@ -105,7 +105,7 @@ begin
     S.LoadFromFile(aFileName);
     S.Seek(48, soFromBeginning);
     S.Read(fData, SizeOf(fData)); // 768bytes
-    S.Free;
+    FreeAndNil(S);
   end else
     GenerateLinear;
 end;

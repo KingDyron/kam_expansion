@@ -521,9 +521,9 @@ begin
     end;
   end;
 
-  treeList.Free;
-  bestToPlant.Free;
-  secondBestToPlant.Free;
+  FreeAndNil(treeList);
+  FreeAndNil(bestToPlant);
+  FreeAndNil(secondBestToPlant);
 end;
 
 function TKMUnitWorkPlan.CanWork(aUnit : TKMUnit): Boolean;

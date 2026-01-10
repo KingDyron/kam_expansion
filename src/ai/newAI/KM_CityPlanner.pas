@@ -296,9 +296,9 @@ begin
         if (House <> nil) then
           gHands.CleanUpHousePointer(House);
 
-  fRoadPlanner.Free;
-  fRoadShortcutPlanner.Free;
-  fFieldEval.Free;
+  FreeAndNil(fRoadPlanner);
+  FreeAndNil(fRoadShortcutPlanner);
+  FreeAndNil(fFieldEval);
 
   inherited;
 end;

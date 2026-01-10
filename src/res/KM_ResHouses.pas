@@ -827,7 +827,7 @@ begin
 
     Result := Adler32CRC(S);
   finally
-    S.Free;
+    FreeAndNil(S);
   end;
 end;
 }
@@ -1367,7 +1367,7 @@ begin
 
 
   finally
-    nRoot.Free;
+    FreeAndNil(nRoot);
   end;
 
 end;
@@ -1413,7 +1413,7 @@ begin
   ForceDirectories(ExtractFilePath(aPath));
 
   SL.SaveToFile(aPath);
-  SL.Free;
+  FreeAndNil(SL);
 
   //SaveToJson(aPath);
 end;
@@ -1722,7 +1722,7 @@ begin
 
     root.SaveToFile(ChangeFileExt(aPath, '.json'));
   finally
-    root.Free;
+    FreeAndNil(root);
   end;
 end;
 

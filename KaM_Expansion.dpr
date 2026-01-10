@@ -1,6 +1,9 @@
 program KaM_Expansion;
 {$I KaM_Remake.inc}
 uses
+  {$IFDEF FastMM}
+  FastMM4 in 'src\ext\FastMM4.pas',
+  {$ENDIF }
   madLinkDisAsm,
   madListHardware,
   madListModules,

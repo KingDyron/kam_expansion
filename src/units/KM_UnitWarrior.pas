@@ -1257,7 +1257,7 @@ begin
     end;
   end;
 
-  foundUnits.Free;
+  FreeAndNil(foundUnits);
 end;
 
 

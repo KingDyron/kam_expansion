@@ -71,6 +71,7 @@ type
 
 implementation
 uses
+  SysUtils,
   KM_Entity,
   KM_GameParams, KM_Cursor,
   KM_HandsCollection, KM_HandTypes,
@@ -108,7 +109,7 @@ destructor TKMSpectator.Destroy;
 begin
   Highlight := nil;
   Selected := nil;
-  fFogOfWarOpen.Free;
+  FreeAndNil(fFogOfWarOpen);
   inherited;
 end;
 

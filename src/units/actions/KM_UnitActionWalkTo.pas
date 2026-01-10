@@ -503,7 +503,7 @@ begin
       else
         fNodeList.Clear; //Clear NodeList so we return False
     finally
-      nodeList2.Free;
+      FreeAndNil(nodeList2);
     end;
   end;
 
@@ -552,7 +552,7 @@ begin
       if not gTerrain.TileIsLocked(cellsAround[I].Loc) then
         Exit(False);
   finally
-    cellsAround.Free;
+    FreeAndNil(cellsAround);
   end;
 end;
 
@@ -950,7 +950,7 @@ begin
         else
         begin
           //NodeList has now been re-routed, so we need to re-init everything else and start walk again
-          fNodeList.Free; //Free our current node list and swap in this new one
+          FreeAndNil(fNodeList); //Free our current node list and swap in this new one
           fNodeList := newNodeList;
           newNodeList := nil; //So we don't FreeAndNil it at the end (it's now our main node list)
           SetInitValues;

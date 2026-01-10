@@ -92,7 +92,7 @@ begin
     if MS.Size - MS.Position > 0 then
       MS.Read(Result[1], MS.Size - MS.Position);
   finally
-    MS.Free;
+    FreeAndNil(MS);
   end;
 end;
 

@@ -289,7 +289,7 @@ destructor TKMAchievements.Destroy;
 var I : Integer;
 begin
   for I := 0 to fCount - 1 do
-    fList[I].Free;
+    FreeAndNil(fList[I]);
 
   Inherited;
 end;

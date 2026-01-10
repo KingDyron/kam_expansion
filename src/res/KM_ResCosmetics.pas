@@ -133,7 +133,7 @@ begin
                     jCosm.I['MainText']);
     end;
 
-  root.Free;
+  FreeAndNil(root);
 end;
 
 end.

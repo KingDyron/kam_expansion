@@ -79,7 +79,7 @@ destructor TKMJsonData.Destroy;
 var I : Integer;
 begin
   for I := 0 to High(fList) do
-    fList[I].Json.Free;
+    FreeAndNil(fList[I].Json);
   Inherited;
 
 end;
@@ -109,7 +109,7 @@ var path : String;
   I : integer;
 begin
   for I := 0 to High(fList) do
-    fList[I].Json.Free;
+    FreeAndNil(fList[I].Json);
 
   SetLength(fList, 0);
   for path in TDirectory.GetFiles(ExeDir + DEFAULT_JSON_PATH) do
@@ -165,7 +165,7 @@ begin
     end;
   end;
 
-  fileList.Free;
+  FreeAndNil(fileList);
 end;
 
 function TKMJsonData.Animation(aName: string): TKMAnimation;

@@ -94,8 +94,8 @@ end;
 destructor TKMScriptSoundsManager.Destroy;
 begin
   gSoundPlayer.AbortAllScriptSounds;
-  fSoundRemoveRequests.Free;
-  fScriptSounds.Free;
+  FreeAndNil(fSoundRemoveRequests);
+  FreeAndNil(fScriptSounds);
 
   inherited;
 end;

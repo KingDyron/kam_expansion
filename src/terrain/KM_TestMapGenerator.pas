@@ -91,7 +91,7 @@ end;
 
 destructor TKMTestMapGenerator.Destroy;
 begin
-  fRNG.Free;
+  FreeAndNil(fRNG);
   inherited;
 end;
 
@@ -236,7 +236,7 @@ begin
     // Save map MP = MAPS_MP_FOLDER_NAME, SP = MAPS_FOLDER_NAME
     gGame.SaveMapEditor(Format('%s\%s\%s\%s.dat',[ExtractFilePath(ParamStr(0)), MAPS_FOLDER_NAME, aMapName, aMapName]));
   finally
-    gGame.Free;
+    FreeAndNil(gGame);
     gGame := nil;
   end;
 end;
@@ -725,7 +725,7 @@ var
             searchBiome.QuickFlood(X,Y,1,Settings.Obstacle.WalkableTile);
         end;
     finally
-      searchBiome.Free();
+      FreeAndNil(searchBiome)();
     end;
   end;
 
@@ -767,7 +767,7 @@ begin
       RndWalk(X,Y);
     end;
   finally
-    FillObstacle.Free;
+    FreeAndNil(FillObstacle);
   end;
 
   FillGaps();

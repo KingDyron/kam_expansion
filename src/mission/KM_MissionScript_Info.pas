@@ -141,7 +141,7 @@ begin
     S.LoadFromFile(aFileName);
     LoadMapHeader(S, newX, newY);
   finally
-    S.Free;
+    FreeAndNil(S);
   end;
 
   fMapInfo.MapSizeX := newX;

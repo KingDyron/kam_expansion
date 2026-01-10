@@ -412,8 +412,8 @@ end;
 
 destructor TKMRandomMapGenerator.Destroy;
 begin
-  fRNG.Free;
-  fRes.Free;
+  FreeAndNil(fRNG);
+  FreeAndNil(fRes);
 
   inherited;
 end;
@@ -1303,8 +1303,8 @@ begin
           ShapeNum := ShapeNum - 1;
 			  end;
   finally
-    SearchSimilarBiome.Free;
-    FillBiome.Free;
+    FreeAndNil(SearchSimilarBiome);
+    FreeAndNil(FillBiome);
   end;
 end;
 
@@ -1494,7 +1494,7 @@ begin
         CountArr[I,K] := SearchResource.Count;
       end;
   finally
-    SearchResource.Free;
+    FreeAndNil(SearchResource);
   end;
 
   with RMGSettings.Locs.Resource do
@@ -1573,7 +1573,7 @@ begin
         end;
       end;
     finally
-      FillResource.Free;
+      FreeAndNil(FillResource);
     end;
 
     ProtectResourceArea(CountArr);
@@ -1868,7 +1868,7 @@ begin
       end;
     end;
   finally
-    FillObstacle.Free;
+    FreeAndNil(FillObstacle);
   end;
 
   // Fix ugly mountains edges (edges with 1 or 2 tiles - 1 tiles will be fixed by CA but still 2xN tiles are ugly)
@@ -1883,7 +1883,7 @@ begin
         if (VisitedArr[Y,X] = 0) AND (A[Y,X] >= Byte(btStone)) then
           ShapeFixer.QuickFlood( X,Y, A[Y,X], 1 );
   finally
-    ShapeFixer.Free;
+    FreeAndNil(ShapeFixer);
   end;
 end;
 
@@ -1947,7 +1947,7 @@ var
     try
       MineSearch.QuickFlood(aPosition.X,aPosition.Y,Resource);
     finally
-      MineSearch.Free;
+      FreeAndNil(MineSearch);
     end;
 
     for X := Low(Shape) to High(Shape) do
@@ -2582,8 +2582,8 @@ begin
           end;
       end;
   finally
-    FloodWalkSearch.Free;
-    FloodFill.Free;
+    FreeAndNil(FloodWalkSearch);
+    FreeAndNil(FloodFill);
   end;
 end;
 
@@ -2657,7 +2657,7 @@ begin
         if (PathArr[Y1,X1] = 0) AND WT[ TilesPartsArr.Terrain[Y1,X1] ] then
           FillObject.QuickFlood(X1, Y1, 0, 1, OBJ_BLOCK);
   finally
-    FillObject.Free;
+    FreeAndNil(FillObject);
   end;
 end;
 
@@ -3023,7 +3023,7 @@ begin
         end;
       end;
   finally
-    TileFloodSearch.Free;
+    FreeAndNil(TileFloodSearch);
   end;
 end;
 
@@ -3474,7 +3474,7 @@ begin
             end;
           end;
     finally
-      SPE.Free;
+      FreeAndNil(SPE);
     end;
 
     // Protected radius
@@ -3486,7 +3486,7 @@ begin
     end;
 
   finally
-    HFWA.Free();
+    FreeAndNil(HFWA);
   end;
 
   H1 := LinearInterpolation(Max(1, 5 - Trunc(RMGSettings.Height.Step / 2)),RMGSettings.Height.Slope);
@@ -4473,7 +4473,7 @@ begin
     try
       MineSearch.QuickFlood(Position.X,Position.Y,Resource);
     finally
-      MineSearch.Free;
+      FreeAndNil(MineSearch);
     end;
     for X := Low(Shape) to High(Shape) do
       if (Shape[X].Min <> MinLimit[X]) then
@@ -4595,7 +4595,7 @@ begin
         Count[I,K] := SearchResource.Count;
       end;
   finally
-    SearchResource.Free;
+    FreeAndNil(SearchResource);
   end;
   with RMGSettings.Locs.Resource do
   begin
@@ -4664,7 +4664,7 @@ begin
           end;
       end;
     finally
-      FillResource.Free;
+      FreeAndNil(FillResource);
     end;
   end;
   if RMGSettings.Obstacle.Active then

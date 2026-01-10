@@ -144,7 +144,7 @@ begin
   if not fBlind then
   begin
     fRenderControl.DestroyRenderContext;
-    fQuery.Free;
+    FreeAndNil(fQuery);
 
     if fFBOInited then
     begin

@@ -1598,7 +1598,7 @@ begin
     root.EndFile;
     root.SaveToFile(ChangeFileExt(aPath, '.json'));
   finally
-    root.Free;
+    FreeAndNil(root);
   end;
 end;
 

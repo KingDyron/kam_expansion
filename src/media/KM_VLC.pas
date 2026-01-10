@@ -150,6 +150,7 @@ implementation
 uses
   {$IFDEF MSWindows} Windows, {$ENDIF}
   {$IFDEF Unix} LCLIntf, LCLType, {$ENDIF}
+  SysUtils,
   Classes, Vcl.Dialogs;
 
 {$IFDEF VIDEOS}
@@ -232,7 +233,7 @@ begin
         FreeLibrary(libvlc);
       end;
     finally
-      List.Free;
+      FreeAndNil(List);
     end;
   end;
 end;

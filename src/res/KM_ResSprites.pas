@@ -375,7 +375,7 @@ begin
       end;
     end;
   finally
-    shadowConverter.Free;
+    FreeAndNil(shadowConverter);
   end;
 end;
 
@@ -392,7 +392,7 @@ begin
       if fRXData.Flag[I] <> 0 then
         shadowConverter.ConvertShadows(I, aOnlyShadows);
   finally
-    shadowConverter.Free;
+    FreeAndNil(shadowConverter);
   end;
 end;
 
@@ -408,7 +408,7 @@ begin
       if fRXData.Flag[I] <> 0 then
         shadowConverter.DetermineImageObjectSize(I);
   finally
-    shadowConverter.Free;
+    FreeAndNil(shadowConverter);
   end;
 end;
 
@@ -429,7 +429,7 @@ begin
         shadowConverter.DetermineImageObjectSize(id);
     end;
   finally
-    shadowConverter.Free;
+    FreeAndNil(shadowConverter);
   end;
 end;
 
@@ -451,7 +451,7 @@ begin
         shadowConverter.RemoveShadow(snowID, True);
     end;
   finally
-    shadowConverter.Free;
+    FreeAndNil(shadowConverter);
   end;
 end;
 
@@ -468,7 +468,7 @@ begin
     if fRXData.Flag[I] <> 0 then
       shadowConverter.RemoveShadow(I, False);
   finally
-    shadowConverter.Free;
+    FreeAndNil(shadowConverter);
   end;
 end;
 
@@ -662,7 +662,7 @@ begin
       end;
     end;
     }
-    TXTFile.Free;
+    FreeAndNil(TXTFile);
   end;
 end;
 
@@ -750,10 +750,10 @@ begin
             decompressionStream.Read(fRXData.Mask[I, 0], fRXData.Size[I].X * fRXData.Size[I].Y);
         end;
     finally
-      decompressionStream.Free;
+      FreeAndNil(decompressionStream);
     end;
   finally
-    inputStream.Free;
+    FreeAndNil(inputStream);
   end;
 end;
 
@@ -808,10 +808,10 @@ begin
             decompressionStream.Read(fRXData.Mask[I, 0], fRXData.Size[I].X * fRXData.Size[I].Y);
         end;
     finally
-      decompressionStream.Free;
+      FreeAndNil(decompressionStream);
     end;
   finally
-    inputStream.Free;
+    FreeAndNil(inputStream);
   end;
 end;
 
@@ -891,10 +891,10 @@ begin
           end;
       end;
     finally
-      decompressionStream.Free;
+      FreeAndNil(decompressionStream);
     end;
   finally
-    inputStream.Free;
+    FreeAndNil(inputStream);
   end;
   {$ENDIF}
 end;
@@ -965,7 +965,7 @@ procedure TKMSpritePack.OverloadGeneratedFromFolder(aAlphaShadows: Boolean; cons
       if fRT = rxUnits then
         DetermineImagesObjectSizeList(idList);
     finally
-      fileList.Free;
+      FreeAndNil(fileList);
     end;
   end;
 
@@ -983,7 +983,7 @@ begin
     MakeGFX(aAlphaShadows, idList, False, aOnCheckTerminated);
     {$ENDIF}
   finally
-    idList.Free;
+    FreeAndNil(idList);
   end;
   {$ENDIF}
 end;
@@ -1027,8 +1027,8 @@ procedure TKMSpritePack.OverloadRXDataFromFolder(const aFolder: string; aSoftenS
       if fRT = rxUnits then
         DetermineImagesObjectSizeList(idList);
     finally
-      idList.Free;
-      fileList.Free;
+      FreeAndNil(idList);
+      FreeAndNil(fileList);
     end;
   end;
 
@@ -1309,7 +1309,7 @@ begin
 
     MakeGFX(aAlphaShadows, idList, aFillGFXData, aOnCheckTerminated);
   finally
-    idList.Free;
+    FreeAndNil(idList);
   end;
 end;
 
@@ -1393,7 +1393,7 @@ begin
 
     MakeGFX_BinPacking(aTexType, idList, aBaseRAM, aColorRAM, aTexCount, aFillGFXData, aOnCheckTerminated);
   finally
-    idList.Free;
+    FreeAndNil(idList);
   end;
 end;
 
@@ -1657,7 +1657,7 @@ destructor TKMResSprites.Destroy;
 var
   RT: TRXType;
 begin
-  fGameRXTypes.Free;
+  FreeAndNil(fGameRXTypes);
   {$IFDEF LOAD_GAME_RES_ASYNC}
   // Stop resource loader before Freeing SpritePack, as loader use fRXData and could get an exception there on game exit
   if fGameResLoader <> nil then
@@ -1665,7 +1665,7 @@ begin
   {$ENDIF}
 
   for RT := Low(TRXType) to High(TRXType) do
-    fSprites[RT].Free;
+    FreeAndNil(fSprites[RT]);
 
   inherited;
 end;
@@ -1894,7 +1894,7 @@ begin
 
   finally
     gLog.AddTime('GeneratedMasks cnt = ' + IntToStr(generatedMasks.Count));
-    generatedMasks.Free;
+    FreeAndNil(generatedMasks);
   end;
   gLog.AddTime('GenerateTerrainTransitions Done');
 end;

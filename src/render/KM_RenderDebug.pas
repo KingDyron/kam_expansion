@@ -65,9 +65,9 @@ end;
 
 destructor TKMRenderDebug.Destroy;
 begin
-  fMarchingSquares.Free;
+  FreeAndNil(fMarchingSquares);
   fBorderPoints.Clear;
-  fBorderPoints.Free;
+  FreeAndNil(fBorderPoints);
   fAreaData := nil; //Interfaced object will be freed automatically
 
   inherited;
@@ -552,20 +552,20 @@ begin
 
   for I := 0 to Length(oreP) - 1 do
   begin
-    oreP[I].Free;
-    ironOreP[I].Free;
-    goldOreP[I].Free;
-    coalOreP[I].Free;
-    selectedOreP[I].Free;
+    FreeAndNil(oreP[I]);
+    FreeAndNil(ironOreP[I]);
+    FreeAndNil(goldOreP[I]);
+    FreeAndNil(coalOreP[I]);
+    FreeAndNil(selectedOreP[I]);
   end;
-  woodcutterPts.Free;
-  quarryPts.Free;
-  fisherHutPts.Free;
-  farmPts.Free;
-  wineyardPts.Free;
-  housePts.Free;
-  houseDirPts.Free;
-  selectedPts.Free;
+  FreeAndNil(woodcutterPts);
+  FreeAndNil(quarryPts);
+  FreeAndNil(fisherHutPts);
+  FreeAndNil(farmPts);
+  FreeAndNil(wineyardPts);
+  FreeAndNil(housePts);
+  FreeAndNil(houseDirPts);
+  FreeAndNil(selectedPts);
 end;
 
 
@@ -778,10 +778,10 @@ begin
   end;
 
   for I := 0 to High(Ores) do
-    Ores[I].Free;
+    FreeAndNil(Ores[I]);
 
-  Points.Free;
-  DirPoints.Free;
+  FreeAndNil(Points);
+  FreeAndNil(DirPoints);
 end;
 
 { TKMAreaData }

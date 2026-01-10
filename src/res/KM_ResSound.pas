@@ -285,7 +285,7 @@ begin
   //i,j,k,l,Index:word;
   BlockRead(f,Props[1],26*Head.Count);}
 
-  S.Free;
+  FreeAndNil(S);
 end;
 
 
@@ -305,7 +305,7 @@ begin
     S.Write(fWaves[I].Foot[0], Length(fWaves[I].Foot));
     S.SaveToFile(ExeDir + 'Export'+PathDelim+'SoundsDat'+PathDelim+'sound_' + int2fix(I, 3) + '_' +
                  GetEnumName(TypeInfo(TSoundFX), I) + '.wav');
-    S.Free;
+    FreeAndNil(S);
   end;
 end;
 
@@ -466,7 +466,7 @@ begin
       Result := True;
     end;
   finally
-    MS.Free;
+    FreeAndNil(MS);
   end;
   fWarriorUseBackup[utWarrior] := true;
   fWarriorUseBackup[utBarbarian] := true;
@@ -488,7 +488,7 @@ begin
     MS.Write(NotificationSoundCount, SizeOf(NotificationSoundCount));
     MS.SaveToFile(aFile);
   finally
-    MS.Free;
+    FreeAndNil(MS);
   end;
 end;
 

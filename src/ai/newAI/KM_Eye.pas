@@ -245,12 +245,12 @@ end;
 
 destructor TKMEye.Destroy();
 begin
-  fGoldLocs.Free;
-  fIronLocs.Free;
-  fStoneMiningTiles.Free;
+  FreeAndNil(fGoldLocs);
+  FreeAndNil(fIronLocs);
+  FreeAndNil(fStoneMiningTiles);
 
-  fBuildFF.Free;
-  fArmyEvaluation.Free;
+  FreeAndNil(fBuildFF);
+  FreeAndNil(fArmyEvaluation);
 
   inherited;
 end;
@@ -435,7 +435,7 @@ begin
       end;
     end;
   finally
-    StoneCheck.Free();
+    FreeAndNil(StoneCheck);
   end;
   GeneralizeArray(4,fSoil);
   GeneralizeArray(4,fFlatArea);
@@ -522,7 +522,7 @@ begin
     end;
   end;
   if (not aAllMines) then
-    Mines.Free;
+    FreeAndNil(Mines);
   SetLength(Output, Cnt);
   Result := Output;
 end;
@@ -599,7 +599,7 @@ begin
     end
     //}
   finally
-    Road.Free;
+    FreeAndNil(Road);
   end;
 
   if (PointsCnt > 0) then
@@ -608,7 +608,7 @@ begin
     try
       FFInitPlace.FillArea(PointsCnt, InitPoints);
     finally
-      FFInitPlace.Free;
+      FreeAndNil(FFInitPlace);
     end;
   end;
 
@@ -1306,7 +1306,7 @@ end;
 
 destructor TKMBuildFF.Destroy();
 begin
-  fLocs.free;
+  FreeAndNil(fLocs);
   inherited;
 end;
 
@@ -1857,7 +1857,7 @@ end;
 
 destructor TKMFFInitPlace.Destroy();
 begin
-  fQueue.Free();
+  FreeAndNil(fQueue);
   inherited;
 end;
 

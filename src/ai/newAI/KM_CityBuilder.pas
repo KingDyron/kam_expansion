@@ -138,9 +138,9 @@ destructor TKMCityBuilder.Destroy;
 var
   I: Integer;
 begin
-  fPlanner.Free;
+  FreeAndNil(fPlanner);
   for I := Low(fBuildNodes) to High(fBuildNodes) do
-    fBuildNodes[I].FieldList.Free;
+    FreeAndNil(fBuildNodes[I].FieldList);
   inherited;
 end;
 

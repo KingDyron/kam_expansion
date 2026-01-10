@@ -73,6 +73,7 @@ type
 
 implementation
 uses
+  SysUtils,
    KM_AIFields, KM_NavMesh, KM_NavMeshGenerator, KM_AIParameters
    {$IFDEF DEBUG_NavMeshPathFinding}
    ,KM_RenderAux, KM_CommonUtils
@@ -100,7 +101,7 @@ end;
 
 destructor TNavMeshPathFinding.Destroy;
 begin
-  fHeap.Free;
+  FreeAndNil(fHeap);
   inherited;
 end;
 

@@ -72,7 +72,7 @@ begin
     S.CheckMarker('Beasts');
     S.Read(fBeasts, SizeOf(fBeasts));
   finally
-    S.Free;
+    FreeAndNil(S);
   end;
 end;
 

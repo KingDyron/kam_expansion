@@ -840,10 +840,10 @@ end;
 
 destructor TKMFloodWithQueue.Destroy;
 begin
-  fFillResource.Free;
-  fTileCounter.Free;
-  fShapeFixer.Free;
-  fQueue.Free;
+  FreeAndNil(fFillResource);
+  FreeAndNil(fTileCounter);
+  FreeAndNil(fShapeFixer);
+  FreeAndNil(fQueue);
 
   inherited;
 end;
@@ -999,7 +999,7 @@ end;
 
 destructor TKMHeightFillWalkableAreas.Destroy();
 begin
-  fQueue.Free;
+  FreeAndNil(fQueue);
 
   inherited;
 end;

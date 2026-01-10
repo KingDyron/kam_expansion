@@ -123,7 +123,7 @@ begin
         end;
     Result := list.GetRandom(Point.Loc);
     Point.Dir := KMGetDirection(fUnit.PositionPrev, Point.Loc);
-    list.Free;
+    FreeAndNil(list);
   end
   else
   begin

@@ -129,7 +129,7 @@ end;
 
 destructor TKMXmlDocument.Destroy;
 begin
-  fDocument.Free;
+  FreeAndNil(fDocument);
 
   inherited;
 end;

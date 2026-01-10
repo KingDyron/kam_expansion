@@ -579,7 +579,7 @@ end;
 
 destructor TKMArmyAttackNew.Destroy;
 begin
-  fCombatGroups.Free; // Calls also Clear()
+  FreeAndNil(fCombatGroups); // Calls also Clear()
   inherited;
 end;
 

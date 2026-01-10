@@ -153,7 +153,7 @@ begin
     nFile.Add('}');//end of file
     nFile.SaveToFile(aPath, TEncoding.UTF8);
   finally
-    nFile.Free;
+    FreeAndNil(nFile);
   end;
 end;
 
@@ -191,7 +191,7 @@ destructor TKMResPatterns.Destroy;
 var I : integer;
 begin
   for I := 0 to High(fList) do
-    fList[I].Free;
+    FreeAndNil(fList[I]);
 
   Inherited;
 end;

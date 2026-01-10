@@ -498,7 +498,7 @@ end;
 
 destructor TAIDefencePositions.Destroy;
 begin
-  fPositions.Free;
+  FreeAndNil(fPositions);
 
   inherited;
 end;
@@ -944,7 +944,7 @@ end;
 procedure TAIDefendPositions.Delete(aIndex : Integer);
 var I : integer;
 begin
-  fList[aIndex].Free;
+  FreeAndNil(fList[aIndex]);
   for I := aIndex to fCount - 2 do
     fList[I] := fList[I + 1];
   dec(fCount);
@@ -1010,7 +1010,7 @@ destructor TAIDefendPositions.Destroy;
 var I : Integer;
 begin
   for I := 0 to fCount - 1 do
-    fList[I].Free;
+    FreeAndNil(fList[I]);
 
   Inherited;
 

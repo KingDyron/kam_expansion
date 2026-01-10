@@ -87,8 +87,8 @@ end;
 
 destructor TKMCityManagement.Destroy();
 begin
-  fPredictor.Free;
-  fBuilder.Free;
+  FreeAndNil(fPredictor);
+  FreeAndNil(fBuilder);
 
   inherited;
 end;

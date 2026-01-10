@@ -46,7 +46,7 @@ begin
                     jpg.Compress;
                     jpg.SaveToFile(filePath);
                   finally
-                    jpg.Free;
+                    FreeAndNil(jpg);
                   end;
                 end;
         itPng:  begin
@@ -55,7 +55,7 @@ begin
                     png.Assign(mkbmp);
                     png.SaveToFile(filePath);
                   finally
-                    png.Free;
+                    FreeAndNil(png);
                   end;
                 end;
         itBmp:  mkbmp.SaveToFile(filePath);
@@ -72,7 +72,7 @@ begin
       end;
     end;
   finally
-    mkbmp.Free;
+    FreeAndNil(mkbmp);
   end;
 {$ENDIF}
 end;

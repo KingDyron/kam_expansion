@@ -1556,7 +1556,7 @@ var
 begin
   for I := 0 to ChildCount - 1 do
     if I < length(Childs) then
-      Childs[I].Free;
+      FreeAndNil(Childs[I]);
 
   inherited;
 end;
@@ -1938,9 +1938,9 @@ end;
 
 destructor TKMMasterControl.Destroy;
 begin
-  fMouseUpSubsList.Free;
-  fMouseDownSubsList.Free;
-  fMouseMoveSubsList.Free;
+  FreeAndNil(fMouseUpSubsList);
+  FreeAndNil(fMouseDownSubsList);
+  FreeAndNil(fMouseMoveSubsList);
 
   // Free and nil to avoid problems on game Exit (MouseMove invokes ScanChilds over object, while he is going to be freed)
   // So we want to object to be nil'ed first, so we could check it in the ScanChilds

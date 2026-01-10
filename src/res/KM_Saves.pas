@@ -156,8 +156,8 @@ end;
 
 destructor TKMSaveInfo.Destroy;
 begin
-  fGameInfo.Free;
-  fGameOptions.Free;
+  FreeAndNil(fGameInfo);
+  FreeAndNil(fGameOptions);
   inherited;
 end;
 
@@ -214,8 +214,8 @@ begin
       or (ALLOW_LOAD_UNSUP_VERSION_SAVE and (fSaveError.ErrorType = sietUnsupportedVersion))) then
     fGameInfo.Title := fSaveError.ErrorString;
 
-  headerStream.Free;
-  loadStream.Free;
+  FreeAndNil(headerStream);
+  FreeAndNil(loadStream);
 end;
 
 
@@ -243,7 +243,7 @@ function TKMSaveInfo.LoadMinimap(aMinimap: TKMMinimap; aChoosenStartLoc: Integer
       try
         Result := GameLocalData.LoadFromFile(aFilePath);
       finally
-        gameLocalData.Free;
+        FreeAndNil(gameLocalData);
       end;
     except
       // Ignore any errors, because MP minimap is optional
@@ -286,10 +286,10 @@ function TKMSaveInfo.LoadMinimap(aMinimap: TKMMinimap; aChoosenStartLoc: Integer
         Result := True;
       end;  
     finally
-      headerS.Free;
-      loadStream.Free;
-      dummyGameOptions.Free;
-      dummyGameInfo.Free;
+      FreeAndNil(headerS);
+      FreeAndNil(loadStream);
+      FreeAndNil(dummyGameOptions);
+      FreeAndNil(dummyGameInfo);
     end;
   end;
 
@@ -371,7 +371,7 @@ begin
   //Release TKMMapInfo objects
   Clear;
 
-  fCriticalSection.Free;
+  FreeAndNil(fCriticalSection);
   inherited;
 end;
 
@@ -394,7 +394,7 @@ var
 begin
   Assert(not fScanning, 'Guarding from access to inconsistent data');
   for I := 0 to fCount - 1 do
-    fSaves[I].Free;
+    FreeAndNil(fSaves[I]);
   fCount := 0;
   SetLength(fSaves, 0); //We could use Low and High. Need to reset array to 0 length
 end;
@@ -452,7 +452,7 @@ begin
   try
     Assert(InRange(aIndex, 0, fCount-1));
     KMDeleteFolderToBin(fSaves[aIndex].Path);
-    fSaves[aIndex].Free;
+    FreeAndNil(fSaves[aIndex]);
     for I := aIndex to fCount - 2 do
       fSaves[I] := fSaves[I+1]; //Move them down
     Dec(fCount);
@@ -479,7 +479,7 @@ begin
     KMMoveFolder(fSaves[aIndex].Path, dest);
 
     //Remove the map from our list
-    fSaves[aIndex].Free;
+    FreeAndNil(fSaves[aIndex]);
     for I  := aIndex to fCount - 2 do
       fSaves[I] := fSaves[I + 1];
     Dec(fCount);
@@ -666,7 +666,7 @@ begin
   begin
     fScanner.Terminate;
     fScanner.WaitFor;
-    fScanner.Free;
+    FreeAndNil(fScanner);
     fScanner := nil;
     fScanning := False;
   end;

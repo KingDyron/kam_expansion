@@ -210,7 +210,7 @@ begin
     SaveToJson(True, crcStream);
     fCRC := Adler32CRC(crcStream);
   finally
-    crcStream.Free;
+    FreeAndNil(crcStream);
   end;}
 
   InitMirrorTiles;
@@ -253,10 +253,10 @@ destructor TKMResTileset.Destroy;
 var
   I: Integer;
 begin
-//  fXML.Free;
+//  FreeAndNil(fXML);
 
   for I := TILES_CNT - 1 downto 0 do
-    fTiles[I].Free;
+    FreeAndNil(fTiles[I]);
 
   inherited;
 end;
@@ -832,7 +832,7 @@ begin
     else
       nRoot.SaveToStream(aSaveStream, aCompact, TEncoding.UTF8);
   finally
-    nRoot.Free;
+    FreeAndNil(nRoot);
   end;
 end;
 
@@ -975,7 +975,7 @@ begin
       GuiOverlayOrder[I] := nTiles.I[I];
 
   finally
-    nRoot.Free;
+    FreeAndNil(nRoot);
   end;
 end;
 

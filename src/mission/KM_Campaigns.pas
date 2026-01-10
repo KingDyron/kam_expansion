@@ -224,9 +224,9 @@ begin
   TerminateScan;
 
   // Objects will be freed automatically since we use TObjectList
-  fList.Free;
+  FreeAndNil(fList);
 
-  fCriticalSection.Free;
+  FreeAndNil(fCriticalSection);
 
   inherited;
 end;
@@ -349,7 +349,7 @@ begin
       end;
     end;
   finally
-    M.Free;
+    FreeAndNil(M);
   end;
 end;
 
@@ -386,7 +386,7 @@ begin
 
     M.SaveToFile(filePath);
   finally
-    M.Free;
+    FreeAndNil(M);
   end;
 
   gLog.AddTime('Campaigns.dat saved');
@@ -543,7 +543,7 @@ begin
   begin
     fScanner.Terminate;
     fScanner.WaitFor;
-    fScanner.Free;
+    FreeAndNil(fScanner);
     fScanner := nil;
     fScanning := False;
   end;
@@ -613,7 +613,7 @@ var
   I: Integer;
 begin
   FreeAndNil(fTextLib);
-  fScriptDataStream.Free;
+  FreeAndNil(fScriptDataStream);
 
   for I := 0 to High(fMapsInfo) do
     FreeAndNil(fMapsInfo[I].TxtInfo);
@@ -684,7 +684,7 @@ begin
   for I := 0 to fMapCount - 1 do
       M.Read(Maps[I].FlagStyle);
 
-  M.Free;
+  FreeAndNil(M);
   Maps[0].IsUnlocked := true;
 end;
 
@@ -730,7 +730,7 @@ begin
       M.Write(Maps[I].FlagStyle);
 
   M.SaveToFile(aFileName);
-  M.Free;
+  FreeAndNil(M);
 end;
 
 
@@ -1024,7 +1024,7 @@ begin
   fUnlockedMap := newUnlockedMap;
 
   //fUnlockedMap := 0;// EnsureRange(aValue, fUnlockedMap, fMapCount - 1);
-  UnlockList.Free;
+  FreeAndNil(UnlockList);
 end;
 
 procedure TKMCampaign.UnlockAllMissions;

@@ -125,7 +125,7 @@ begin
         if sprites.LoadSprites(aRT, true) then
           sprites[aRT].ExportAllSpritesFromRXData(ExeDir + 'Export' + PathDelim + RX_INFO[aRT].FileName + '_a.rxx' + PathDelim);
       finally
-        sprites.Free;
+        FreeAndNil(sprites);
       end;
     end, aOnDone, 'Export from ' + RX_INFO[aRT].FileName + '.rxx');
 end;
@@ -157,7 +157,7 @@ begin
             ExportFullImageDataFromAtlas(spritePack, I, folderPath);
         end;
       finally
-        sprites.Free;
+        FreeAndNil(sprites);
       end;
     end, aOnDone, 'Export from ' + RX_INFO[aRT].FileName + '.rxa');
 end;
@@ -293,9 +293,9 @@ begin
             if TThread.CheckTerminated then Exit;
           end;
       finally
-        sprites.Free;
-        units.Free;
-        resTexts.Free;
+        FreeAndNil(sprites);
+        FreeAndNil(units);
+        FreeAndNil(resTexts);
       end;
     end, aOnDone, 'Export HD units anim');
 end;
@@ -435,9 +435,9 @@ begin
             if TThread.CheckTerminated then Exit;
           end;
       finally
-        //sprites.Free;
-        //units.Free;
-        //resTexts.Free;
+        //FreeAndNil(sprites);
+        //FreeAndNil(units);
+        //FreeAndNil(resTexts);
       end;
     end, aOnDone, 'Export units anim');
 end;
@@ -519,9 +519,9 @@ begin
             end;
         end;
       finally
-        resTexts.Free;
-        houses.Free;
-        sprites.Free;
+        FreeAndNil(resTexts);
+        FreeAndNil(houses);
+        FreeAndNil(sprites);
       end;
     end, aOnDone, 'Export HD House animation');
 end;
@@ -601,9 +601,9 @@ begin
           end;
       end;
     finally
-      resTexts.Free;
-      houses.Free;
-      sprites.Free;
+      FreeAndNil(resTexts);
+      FreeAndNil(houses);
+      FreeAndNil(sprites);
     end;
   end, aOnDone, 'Export house anim');
 end;
@@ -703,8 +703,8 @@ begin
 
 
     finally
-      //houses.Free;
-      sprites.Free;
+      //FreeAndNil(houses);
+      FreeAndNil(sprites);
     end;
   end, aOnDone, 'Export houses main pics');
 end;
@@ -827,7 +827,7 @@ begin
               end;
             end;
       finally
-        sprites.Free;
+        FreeAndNil(sprites);
       end;
     end, aOnDone, 'Export HD Tree animation');
 end;
@@ -877,7 +877,7 @@ begin
           end;
         end;
       finally
-        sprites.Free;
+        FreeAndNil(sprites);
       end;
     end, aOnDone, 'Export tree anim');
 end;

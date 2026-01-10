@@ -318,7 +318,7 @@ begin
     
   fCount := OBJECTS_CNT + 1; //254 by default
   fCRC := Adler32CRC(S);
-  S.Free;
+  FreeAndNil(S);
 
   gMapElements[63].Anim.Count := 1;
   gMapElements[63].Anim.Step[1] := 16;
@@ -568,7 +568,7 @@ begin
   S := TMemoryStream.Create;
   S.Write(gMapElements[0], fCount * SizeOf(TKMMapElement));
   S.SaveToFile(aFileName);
-  S.Free;
+  FreeAndNil(S);
 end;
 
 function TKMResMapElements.LoadFromJSON(aPath : String) : Cardinal;

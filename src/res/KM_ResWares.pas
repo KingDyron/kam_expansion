@@ -567,7 +567,7 @@ var
   I: TKMWareType;
 begin
   for I := Low(TKMWareType) to High(TKMWareType) do
-    fList[I].Free;
+    FreeAndNil(fList[I]);
 
   inherited;
 end;
@@ -656,7 +656,7 @@ begin
 
     SL.SaveToFile(aFilename);
   finally
-    SL.Free;
+    FreeAndNil(SL);
   end;
 end;
 
@@ -820,7 +820,7 @@ begin
         LoadWareFromJson(nWares.O[I]);
 
   finally
-    nRoot.Free;
+    FreeAndNil(nRoot);
   end;
 end;
 
@@ -1037,7 +1037,7 @@ begin
   try
     SL.SaveToFile(aPath);
   finally
-    SL.Free;
+    FreeAndNil(SL);
   end;
   Exit;
   root := TKMJsonSaver.Create;
@@ -1096,7 +1096,7 @@ begin
     root.EndFile;
     root.SaveToFile(ChangeFileExt(aPath, '.json'));
   finally
-    root.Free;
+    FreeAndNil(root);
   end;
 
 

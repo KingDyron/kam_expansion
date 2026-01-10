@@ -344,7 +344,7 @@ begin
     F.Position := 0;
     F.ReadBuffer(Result[1], num);
   finally
-    F.Free;
+    FreeAndNil(F);
   end;
   //FileText should now be formatted nicely with 1 space between each parameter/command
 end;

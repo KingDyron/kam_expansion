@@ -2246,7 +2246,7 @@ begin
     else
       gLog.AddNoTime(aFileName + ' has no MapEd chunk');
   finally
-    S.Free;
+    FreeAndNil(S);
   end;
 
   //We can regenerate the MapEd data if it's missing (won't be as good as the original)
@@ -2342,7 +2342,7 @@ begin
 
     S.SaveToFile(aFileName);
   finally
-    S.Free;
+    FreeAndNil(S);
   end;
 end;
 

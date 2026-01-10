@@ -489,7 +489,7 @@ begin
     Clipboard.SetFormat(CF_MAPDATA, BufferStream);
     {$ENDIF}
   end;
-  BufferStream.Free;
+  FreeAndNil(BufferStream);
 end;
 
 
@@ -550,7 +550,7 @@ begin
     end;
     fSelectionHouses.Add(stats);
   end;
-  BufferStream.Free;
+  FreeAndNil(BufferStream);
 
   // Mapmaker could have changed selection rect, sync it with Buffer size
   // SelectionRect does not contain last row / col, which we use to save height there

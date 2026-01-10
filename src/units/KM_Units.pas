@@ -3175,7 +3175,7 @@ begin
   end;
   if fAction <> aAction then
   begin
-    fAction.Free;
+    FreeAndNil(fAction);
     fAction := aAction;
   end;
 end;
@@ -3262,7 +3262,7 @@ begin
   end
   else
   begin
-    newAction.Free;
+    FreeAndNil(newAction);
     Exit(False);
   end;
 end;
@@ -3572,7 +3572,7 @@ begin
     if gTerrain.RouteCanBeMade(aFrom, cells[I], aPass, aDistance) then
       Exit(True);
   finally
-    cells.Free;
+    FreeAndNil(cells);
   end;
 end;
 

@@ -166,7 +166,7 @@ end;
 
 destructor TKMUserInterfaceCommon.Destroy;
 begin
-  fMyControls.Free;
+  FreeAndNil(fMyControls);
   inherited;
 end;
 

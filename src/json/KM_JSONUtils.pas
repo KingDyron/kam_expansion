@@ -69,7 +69,7 @@ begin
     aJSON.SaveToStream(S);
     Result := Adler32CRC(S);
   finally
-    S.Free;
+    FreeAndNil(S);
   end;
 end;
 

@@ -100,8 +100,8 @@ end;
 
 destructor TKMArmyManagement.Destroy;
 begin
-  fAttackNew.Free;
-  fDefence.Free;
+  FreeAndNil(fAttackNew);
+  FreeAndNil(fDefence);
 
   inherited;
 end;

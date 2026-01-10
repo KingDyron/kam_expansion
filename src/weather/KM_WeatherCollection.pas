@@ -38,6 +38,7 @@ uses
 
 implementation
 uses
+  SysUtils,
   KM_CommonUtils,
   KM_Terrain, KM_TerrainTypes;
 constructor TKMWeatherCollection.Create;
@@ -51,7 +52,7 @@ destructor TKMWeatherCollection.Destroy;
 var I : Integer;
 begin
   for I := 0 to High(fList) do
-    fList[I].Free;
+    FreeAndNil(fList[I]);
 
   Inherited;
 end;
@@ -202,7 +203,7 @@ end;
 procedure TKMWeatherCollection.DeleteWeather(aIndex: Integer);
 var I : Integer;
 begin
-  fList[aIndex].Free;
+  FreeAndNil(fList[aIndex]);
   for I := aIndex to High(fList) - 1 do
     fList[I] := fList[I + 1];
   SetLength(fList, high(fList));

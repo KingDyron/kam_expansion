@@ -887,9 +887,9 @@ end;
 
 destructor TKMGameInputProcess.Destroy;
 begin
-  fStoredCommands.Free;
-  fGic2StoredConverter.Free;
-  fPlannedCommands.Free;
+  FreeAndNil(fStoredCommands);
+  FreeAndNil(fGic2StoredConverter);
+  FreeAndNil(fPlannedCommands);
 
   inherited;
 end;

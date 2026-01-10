@@ -68,7 +68,7 @@ const
 
 implementation
 uses
-  Math,
+  Math, SysUtils,
   KM_HandsCollection, KM_Hand, KM_HandTypes,
   KM_AIFields, KM_AIInfluences,
   KM_Terrain,
@@ -89,8 +89,8 @@ end;
 
 destructor TKMCityPlanner.Destroy;
 begin
-  fListGold.Free;
-  fFinder.Free;
+  FreeAndNil(fListGold);
+  FreeAndNil(fFinder);
 
   inherited;
 end;
@@ -358,7 +358,7 @@ begin
       end;
     end;
   finally
-    Locs.Free;
+    FreeAndNil(Locs);
   end;
 end;
 
@@ -388,7 +388,7 @@ begin
       end;
     end;
   finally
-    Locs.Free;
+    FreeAndNil(Locs);
   end;
 end;
 
@@ -439,7 +439,7 @@ begin
       end;
     end;
   finally
-    Locs.Free;
+    FreeAndNil(Locs);
   end;
 
   //Make sure stonemason actually can reach some stone (avoid build-destroy loop)
@@ -497,7 +497,7 @@ begin
       end;
     end;
   finally
-    Locs.Free;
+    FreeAndNil(Locs);
   end;
 
   //Make sure stonemason actually can reach some stone (avoid build-destroy loop)
@@ -559,7 +559,7 @@ begin
       end;
     end;
   finally
-    Locs.Free;
+    FreeAndNil(Locs);
   end;
 
   //Make sure stonemason actually can reach some stone (avoid build-destroy loop)
@@ -694,7 +694,7 @@ begin
       end;
     end;
   finally
-    Locs.Free;
+    FreeAndNil(Locs);
   end;
   
 end;

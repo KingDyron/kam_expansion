@@ -245,7 +245,7 @@ begin
       Inc(pX, chWidth + fTexPadding);
     end;
   finally
-    bmp.Free;
+    FreeAndNil(bmp);
   end;
 end;
 
@@ -576,7 +576,7 @@ begin
 
     S.SaveToFile(aFilename);
   finally
-    S.Free;
+    FreeAndNil(S);
   end;
 end;
 
@@ -619,11 +619,11 @@ begin
       InputStream.Position := 0;
       CompressionStream.CopyFrom(InputStream, InputStream.Size);
     finally
-      CompressionStream.Free;
-      OutputStream.Free;
+      FreeAndNil(CompressionStream);
+      FreeAndNil(OutputStream);
     end;
   finally
-    InputStream.Free;
+    FreeAndNil(InputStream);
   end;
 end;
 

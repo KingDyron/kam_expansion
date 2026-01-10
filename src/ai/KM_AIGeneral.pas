@@ -59,7 +59,7 @@ type
 
 implementation
 uses
-  Classes, Math,
+  Classes, Math,  SysUtils,
   KM_Entity,
   KM_Game, KM_GameParams,
   KM_Hand, KM_HandsCollection, KM_HandTypes, KM_HandEntity,
@@ -112,10 +112,10 @@ begin
     gHands.CleanUpUnitPointer(U2);
   end;
 
-  fUnitsEquipOrdered.Free;
-  fDefencePositions.Free;
-  fDefendPositions.Free;
-  fAttacks.Free;
+  FreeAndNil(fUnitsEquipOrdered);
+  FreeAndNil(fDefencePositions);
+  FreeAndNil(fDefendPositions);
+  FreeAndNil(fAttacks);
 
   inherited;
 end;

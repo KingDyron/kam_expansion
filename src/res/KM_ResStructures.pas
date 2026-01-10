@@ -436,7 +436,7 @@ destructor TKMResStructures.Destroy;
 var I : Integer;
 begin
   for I := 0 to High(fList) do
-    fList[I].Free;
+    FreeAndNil(fList[I]);
 
   Inherited;
 end;

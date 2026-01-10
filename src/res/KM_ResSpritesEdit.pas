@@ -687,7 +687,7 @@ begin
       SetLength(fRXData.Data[I], fRXData.Size[I].X * fRXData.Size[I].Y);
       S.ReadBuffer(fRXData.Data[I,0], fRXData.Size[I].X * fRXData.Size[I].Y);
     end;
-  S.Free;
+  FreeAndNil(S);
 
   Expand; //Only KaM's rx needs expanding
 end;
@@ -779,8 +779,8 @@ begin
       end;
   end;
 
-  InputStream.Free;
-  OutputStream.Free;
+  FreeAndNil(InputStream);
+  FreeAndNil(OutputStream);
 end;
 
 
@@ -822,9 +822,9 @@ begin
   CompressionStream := TCompressionStream.Create(clMax, OutputStream);
   InputStream.Position := 0;
   CompressionStream.CopyFrom(InputStream, InputStream.Size);
-  CompressionStream.Free;
-  OutputStream.Free;
-  InputStream.Free;
+  FreeAndNil(CompressionStream);
+  FreeAndNil(OutputStream);
+  FreeAndNil(InputStream);
 end;
 
 

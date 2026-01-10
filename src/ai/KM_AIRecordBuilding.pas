@@ -487,7 +487,7 @@ begin
 
   S.LoadFromFile(path);
   fCommandsStored.LoadFromStream(S);
-  S.Free;
+  FreeAndNil(S);
 end;
 
 procedure TKMAIRecorder.SaveToFile;
@@ -500,7 +500,7 @@ begin
   fCommands.SaveToStream(S);
 
   S.SaveToFile(path);
-  S.Free;
+  FreeAndNil(S);
 
 end;
 

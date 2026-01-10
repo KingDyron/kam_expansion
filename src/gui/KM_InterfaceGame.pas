@@ -361,7 +361,7 @@ end;
 destructor TKMUserInterfaceGame.Destroy;
 begin
   gLog.RemoveOnLogEventSub(LogMessageHappened);
-  fLogStringList.Free;
+  FreeAndNil(fLogStringList);
 
   FreeAndNil(fMinimap);
   FreeAndNil(fViewport);

@@ -127,7 +127,7 @@ end;
 
 destructor TKMMemo.Destroy;
 begin
-  fItems.Free;
+  FreeAndNil(fItems);
   inherited;
 end;
 

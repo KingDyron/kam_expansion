@@ -127,8 +127,8 @@ end;
 
 destructor TKMMissionParserStandard.Destroy;
 begin
-  fGroupOrders.Free;
-  fHousesToDeliver.Free;
+  FreeAndNil(fGroupOrders);
+  FreeAndNil(fHousesToDeliver);
 
   inherited;
 end;
@@ -1969,7 +1969,7 @@ begin
     //Write uncoded file for debug
     saveStream := TFileStream.Create(aFileName+'.txt', fmCreate);
     saveStream.WriteBuffer(saveString[1], Length(saveString));
-    saveStream.Free;
+    FreeAndNil(saveStream);
 
     //Encode file
     for I := 1 to Length(saveString) do
@@ -1978,7 +1978,7 @@ begin
 
   saveStream := TFileStream.Create(aFileName, fmCreate);
   saveStream.WriteBuffer(saveString[1], Length(saveString));
-  saveStream.Free;
+  FreeAndNil(saveStream);
 end;
 
 

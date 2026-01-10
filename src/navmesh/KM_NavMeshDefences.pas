@@ -185,7 +185,7 @@ end;
 
 destructor TForwardFF.Destroy();
 begin
-  fBackwardFF.Free;
+  FreeAndNil(fBackwardFF);
   inherited Destroy;
 end;
 
@@ -402,7 +402,7 @@ end;
 
 destructor TBackwardFF.Destroy();
 begin
-  fFilterFF.Free;
+  FreeAndNil(fFilterFF);
   inherited Destroy;
 end;
 

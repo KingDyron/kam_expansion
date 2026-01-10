@@ -320,18 +320,18 @@ end;
 
 destructor TKMRenderPool.Destroy;
 begin
-  fFieldsList.Free;
-  fHousePlansList.Free;
-  fBridgePlansList.Free;
-  fTabletsList.Free;
-  fMarksList.Free;
-  fHouseOutline.Free;
+  FreeAndNil(fFieldsList);
+  FreeAndNil(fHousePlansList);
+  FreeAndNil(fBridgePlansList);
+  FreeAndNil(fTabletsList);
+  FreeAndNil(fMarksList);
+  FreeAndNil(fHouseOutline);
   // fSampleHouse.Free;
-  fRenderList.Free;
-  fRenderDebug.Free;
-  fRenderTerrain.Free;
-  gRenderGameAux.Free;
-  gRenderAux.Free;
+  FreeAndNil(fRenderList);
+  FreeAndNil(fRenderDebug);
+  FreeAndNil(fRenderTerrain);
+  FreeAndNil(gRenderGameAux);
+  FreeAndNil(gRenderAux);
 
   inherited;
 end;
@@ -4191,7 +4191,7 @@ begin
       RenderWireTile(list[I], icCyan) // Cyan rect
     else
       RenderSpriteOnTile(list[I], list.Tag[I]); // Icon
-  list.Free;
+  FreeAndNil(list);
 end;
 
 procedure TKMRenderPool.RenderForegroundUI_Decoration;

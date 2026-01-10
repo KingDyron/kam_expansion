@@ -366,7 +366,7 @@ end;
 
 destructor TKMArmyVectorField.Destroy();
 begin
-  fFindClusters.Free;
+  FreeAndNil(fFindClusters);
 
   inherited;
 end;

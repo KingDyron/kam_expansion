@@ -87,7 +87,7 @@ begin
 
   inherited Destroy;
 
-  fTaskQueue.Free; // Free task queue after Worker thread is destroyed so we don't wait for it
+  FreeAndNil(fTaskQueue); // Free task queue after Worker thread is destroyed so we don't wait for it
 end;
 
 

@@ -97,7 +97,7 @@ begin
         fMapPreview[I].Revealed := False;
       end;
   finally
-    S.Free;
+    FreeAndNil(S);
   end;
 end;
 

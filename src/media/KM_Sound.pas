@@ -628,7 +628,7 @@ begin
             FreeMem(oggBuffer, wavSize);
           end;
         finally
-          oggFileStream.Free;
+          FreeAndNil(oggFileStream);
         end;
         {$ENDIF}
       end

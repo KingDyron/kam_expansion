@@ -37,7 +37,7 @@ end;
 
 destructor TKMPathFindingNew.Destroy;
 begin
-  fList.Free;
+  FreeAndNil(fList);
   Inherited;
 end;
 

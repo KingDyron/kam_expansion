@@ -182,8 +182,8 @@ end;
 
 destructor TArmyForwardFF.Destroy();
 begin
-  fDistancePenalization.Free;
-  fBackwardFF.Free;
+  FreeAndNil(fDistancePenalization);
+  FreeAndNil(fBackwardFF);
 
   inherited;
 end;

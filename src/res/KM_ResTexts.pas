@@ -515,7 +515,7 @@ begin
     list.SaveToFile(Format(ChangeFileExt(aMissionPath, '.%s.libx'), [gResLocales[I].Code]));
   end;
 
-  list.Free;
+  FreeAndNil(list);
 end;
 
 {
@@ -570,7 +570,7 @@ begin
   end;
   //list.SaveToFile(aPath);
 
-  //list.Free;
+  FreeAndNil(//list);
 end;
 }
 end.

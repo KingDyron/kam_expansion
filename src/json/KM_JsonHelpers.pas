@@ -779,7 +779,7 @@ begin
     SaveToStream(S);
     Result := Adler32CRC(S);
   finally
-    S.Free;
+    FreeAndNil(S);
 
   end;
 end;
@@ -795,7 +795,7 @@ end;
 
 destructor TKMJsonSaver.Destroy;
 begin
-  fStringList.Free;
+  FreeAndNil(fStringList);
   Inherited;
 end;
 
@@ -1852,7 +1852,7 @@ begin
     stringList.Add(S);
     stringList.SaveToFile(aPath);
   finally
-    stringList.Free;
+    FreeAndNil(stringList);
   end;
 end;
 
@@ -1862,7 +1862,7 @@ begin
   for I := 0 to High(fList) do
     If fList[I].ValueType in [jvtObject, jvtArray] then
     begin
-      TObject(fList[I].Value).Free;
+      FreeAndNil(TObject(fList[I].Value));
     end;
   Inherited;
 end;
@@ -2295,7 +2295,7 @@ begin
   for I := 0 to High(fList) do
     If fList[I].ValueType in [jvtObject, jvtArray] then
     begin
-      TObject(fList[I].Value).Free;
+      FreeAndNil(TObject(fList[I].Value));
     end;
   Inherited;
 end;

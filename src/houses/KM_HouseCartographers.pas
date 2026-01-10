@@ -85,6 +85,7 @@ type
   end;
 implementation
 uses
+  SysUtils,
   KM_Game,
   KM_CommonUtils, KromUtils,
   KM_HandsCollection, KM_Hand, KM_Entity,
@@ -170,8 +171,8 @@ end;
 
 destructor TKMHouseCartographers.Destroy;
 begin
-  fUndergoundDeposits.Free;
-  fObjectsWithWares.Free;
+  FreeAndNil(fUndergoundDeposits);
+  FreeAndNil(fObjectsWithWares);
   Inherited;
 end;
 
@@ -440,7 +441,7 @@ begin
     If KMInRect(fObjectsWithWares[I], rect) then
       fObjectsWithWares.Delete(I);
   fObjectsWithWares.AddListUnique(list);
-  list.Free;
+  FreeAndNil(list);
 
 
   for I := 0 to gHands.PlayerAnimals.SpawnersCount - 1 do

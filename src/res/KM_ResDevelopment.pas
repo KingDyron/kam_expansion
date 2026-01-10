@@ -172,7 +172,7 @@ destructor TKMDevelopmentTreeCollection.Destroy;
 var dtt: TKMDevelopmentTreeType;
 begin
   for dtt := Low(fTree) to High(fTree) do
-    fTree[dtt].Free;
+    FreeAndNil(fTree[dtt]);
   Inherited;
 end;
 
@@ -194,7 +194,7 @@ begin
       If Root.Contains(TREE_TYPE_STRING[dtt]) then
         fTree[dtt].LoadFromJson(root.O[TREE_TYPE_STRING[dtt]]);
   finally
-    Root.Free;
+    FreeAndNil(Root);
   end;
 
 end;
@@ -308,7 +308,7 @@ begin
 
     nRoot.SaveToFile(ExeDir + 'Export' + PathDelim + 'DevelopmentTree.json')
   finally
-    nRoot.Free;
+    FreeAndNil(nRoot);
   end;
 end;
 

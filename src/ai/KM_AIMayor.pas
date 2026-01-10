@@ -91,7 +91,7 @@ type
 
 implementation
 uses
-  Classes, Math, Generics.Collections,
+  Classes, Math, Generics.Collections, SysUtils,
   KM_Game,
   KM_Hand, KM_HandsCollection, KM_HandTypes,
   KM_AIFields, KM_Terrain,
@@ -182,12 +182,12 @@ end;
 
 destructor TKMayor.Destroy;
 begin
-  fBalance.Free;
-  fCityPlanner.Free;
-  fPathFindingRoad.Free;
-  fPathFindingRoadShortcuts.Free;
-  fDefenceTowers.Free;
-  fRecorder.Free;
+  FreeAndNil(fBalance);
+  FreeAndNil(fCityPlanner);
+  FreeAndNil(fPathFindingRoad);
+  FreeAndNil(fPathFindingRoadShortcuts);
+  FreeAndNil(fDefenceTowers);
+  FreeAndNil(fRecorder);
   inherited;
 end;
 
@@ -1936,8 +1936,8 @@ begin
       end;
   end;
 
-  Silos.Free;
-  hList.Free;
+  FreeAndNil(Silos);
+  FreeAndNil(hList);
 end;
 
 procedure TKMayor.CheckMerchants;
@@ -1985,7 +1985,7 @@ begin
 
   end;
 
-  Merchants.Free;
+  FreeAndNil(Merchants);
 end;
 
 procedure TKMayor.CheckPearl;

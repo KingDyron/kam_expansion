@@ -97,7 +97,7 @@ end;
 destructor TKMGameInfo.Destroy;
 begin
   if fMapTxtInfo <> nil then
-    fMapTxtInfo.Free;
+    FreeAndNil(fMapTxtInfo);
 
   inherited;
 end;

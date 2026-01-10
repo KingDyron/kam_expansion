@@ -440,7 +440,7 @@ begin
             othersCRC := othersCRC xor Adler32CRC(scriptFiles[I].FullFilePath);
         end;
       finally
-        scriptPreProcessor.Free;
+        FreeAndNil(scriptPreProcessor);
       end;
     end;
   end;
@@ -471,7 +471,7 @@ begin
       //Fill Self properties with MissionParser
       missionParser.LoadMission(datFile, Self, pmBase);
     finally
-      missionParser.Free;
+      FreeAndNil(missionParser);
     end;
 
 
@@ -666,7 +666,7 @@ begin
     //Fill Self properties with MissionParser
     missionParser.LoadMission(datFile, Self, pmExtra);
   finally
-    missionParser.Free;
+    FreeAndNil(missionParser);
   end;
 
   if IsFightingMission then
@@ -773,7 +773,7 @@ begin
       gLog.AddTime(errorStr);
   finally
     //Other properties are not saved, they are fast to reload
-    S.Free;
+    FreeAndNil(S);
   end;
 end;
 
@@ -818,7 +818,7 @@ begin
       gLog.AddTime(errorStr);
   finally
     //Other properties from text file are not saved, they are fast to reload
-    S.Free;
+    FreeAndNil(S);
   end;
 end;
 
@@ -1229,7 +1229,7 @@ procedure TKMMapTxtInfo.LoadTXTInfo(const aFilePath: String);
     missionTexts := TKMTextLibrarySingle.Create;
     missionTexts.LoadLocale(ChangeFileExt(aFilePath, '.%s.libx'));
     Result := missionTexts.Texts[aIndex];
-    missionTexts.Free;
+    FreeAndNil(missionTexts);
   end;
 
 
@@ -1365,7 +1365,7 @@ begin
           for MD := MISSION_DIFFICULTY_MIN to MISSION_DIFFICULTY_MAX do
             if SameText(stList[I], GetEnumName(TypeInfo(TKMMissionDifficulty), Integer(MD))) then
               Include(DifficultyLevels, MD);
-        stList.Free;
+        FreeAndNil(stList);
       end;
     until(eof(ft));
     CloseFile(ft);
@@ -1449,7 +1449,7 @@ begin
 
     Root.SaveToFile(aFilePath);
   finally
-    Root.Free;
+    FreeAndNil(Root);
   end;
 
 end;
@@ -1464,7 +1464,7 @@ function TKMMapTxtInfo.LoadFromJson(const aFilePath: String) : Boolean;
     missionTexts := TKMTextLibrarySingle.Create;
     missionTexts.LoadLocale(ChangeFileExt(aFilePath, '.%s.libx'));
     Result := missionTexts.Texts[aIndex];
-    missionTexts.Free;
+    FreeAndNil(missionTexts);
   end;
 
 var Root, weatherObj : TKMJsonObject;
@@ -1535,7 +1535,7 @@ begin
       SetNameLibxAndTranslation(fNameLibx, LoadDescriptionFromLIBX(fNameLibx));
 
   finally
-    Root.Free;
+    FreeAndNil(Root);
   end;
 end;
 
@@ -1802,7 +1802,7 @@ begin
   //Release TKMMapInfo objects
   Clear;
 
-  fCriticalSection.Free;
+  FreeAndNil(fCriticalSection);
   inherited;
 end;
 
@@ -1873,7 +1873,7 @@ begin
    try
      Assert(InRange(aIndex, 0, fCount - 1));
      KMDeleteFolderToBin(fMaps[aIndex].Dir);
-     fMaps[aIndex].Free;
+     FreeAndNil(fMaps[aIndex]);
      for I  := aIndex to fCount - 2 do
        fMaps[I] := fMaps[I + 1];
      Dec(fCount);
@@ -1906,7 +1906,7 @@ begin
     KMMoveFolder(fMaps[aIndex].Dir, dest);
 
     //Remove the map from our list
-    fMaps[aIndex].Free;
+    FreeAndNil(fMaps[aIndex]);
     for I  := aIndex to fCount - 2 do
       fMaps[I] := fMaps[I + 1];
     Dec(fCount);
@@ -2024,7 +2024,7 @@ begin
   begin
     fScanner.Terminate;
     fScanner.WaitFor;
-    fScanner.Free;
+    FreeAndNil(fScanner);
     fScanner := nil;
     fScanning := False;
   end;
@@ -2196,7 +2196,7 @@ begin
       end;
     end;
   finally
-    pathToMaps.Free;
+    FreeAndNil(pathToMaps);
   end;
 end;
 
@@ -2352,7 +2352,7 @@ begin
   if not fIsStopped then
   begin
     map := TKMMapInfo.Create(aPath, False, aKind);
-    map.Free;
+    FreeAndNil(map);
   end;
 end;
 

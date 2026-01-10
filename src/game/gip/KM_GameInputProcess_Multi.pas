@@ -197,7 +197,7 @@ var
 begin
   for I := 0 to MAX_SCHEDULE - 1 do
     for K := 1 to MAX_LOBBY_SLOTS do
-      fSchedule[I, K].Free;
+      FreeAndNil(fSchedule[I, K]);
   inherited;
 end;
 

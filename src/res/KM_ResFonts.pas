@@ -257,7 +257,7 @@ begin
     SetLength(fRawData[I], Letters[I].Width * Letters[I].Height);
     S.Read(fRawData[I,0], Letters[I].Width * Letters[I].Height);
   end;
-  S.Free;
+  FreeAndNil(S);
 
   //Compile texture
   pX := PAD;
@@ -345,8 +345,8 @@ begin
     end;
 
   finally
-    decompressionStream.Free;
-    inputStream.Free;
+    FreeAndNil(decompressionStream);
+    FreeAndNil(inputStream);
   end;
 end;
 
@@ -476,7 +476,7 @@ begin
     ForceDirectories(ExtractFilePath(aPath));
     exportBmp.SaveToFile(aPath);
   finally
-    exportBmp.Free;
+    FreeAndNil(exportBmp);
   end;
 end;
 
@@ -518,7 +518,7 @@ var
   F: TKMFont;
 begin
   for F := Low(TKMFont) to High(TKMFont) do
-    fFontData[F].Free;
+    FreeAndNil(fFontData[F]);
 
   inherited;
 end;

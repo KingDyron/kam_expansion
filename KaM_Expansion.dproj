@@ -242,6 +242,7 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
+        <DCCReference Include="src\ext\FastMM4.pas"/>
         <DCCReference Include="src\forms\KM_FormMain.pas">
             <Form>FormMain</Form>
         </DCCReference>

@@ -1,0 +1,68 @@
+
+--------------------------------2026/1/10 17:33:44--------------------------------
+FastMM has detected an error during a FreeMem operation. The block footer has been corrupted. 
+
+The block size is: 56
+
+This block was allocated by thread 0x631C, and the stack trace (return addresses) at the time was:
+687112 
+68A737 
+68AE3A 
+D5A50F [KM_AIDefensePos.pas][KM_AIDefensePos][KM_AIDefensePos.TAIDefencePosition.Create][144]
+D5BAB4 [KM_AIDefensePos.pas][KM_AIDefensePos][KM_AIDefensePos.TAIDefencePositions.CreateDefPosition][548]
+D5BBE5 [KM_AIDefensePos.pas][KM_AIDefensePos][KM_AIDefensePos.TAIDefencePositions.Add][556]
+10BD8C8 [KM_MissionScript_Standard.pas][KM_MissionScript_Standard][KM_MissionScript_Standard.TKMMissionParserStandard.ProcessCommand][969]
+9AC639 [KM_MissionScript.pas][KM_MissionScript][KM_MissionScript.TKMMissionParserCommon.TokenizeScript][424]
+10B441B [KM_MissionScript_Standard.pas][KM_MissionScript_Standard][KM_MissionScript_Standard.TKMMissionParserStandard.LoadMission][157]
+10D3796 [KM_Game.pas][KM_Game][KM_Game.TKMGame.Start][677]
+F092BA [KM_GameApp.pas][KM_GameApp][KM_GameApp.TKMGameApp.LoadGameFromScript][830]
+
+The block was previously used for an object of class: TXmlAttributeList
+
+The block is currently used for an object of class: TAIDefencePosition
+
+The allocation number is: 1565790
+
+The block was previously freed by thread 0x631C, and the stack trace (return addresses) at the time was:
+68712E 
+68A755 
+73BA6C [madExcept][madExcept][madExcept.InterceptClassDestroy]
+A5061D [System.Generics.Defaults.pas][Xml][Xml.VerySimple.{System.Generics.Collections}TObjectList<Xml.VerySimple.TXmlAttribute>.Destroy][47]
+68A84B 
+A4C9BB [Xml.VerySimple.pas][Xml][Xml.VerySimple.TXmlNode.Destroy][1003]
+68A84B 
+A51914 [System.Generics.Collections.pas][Xml][Xml.VerySimple.{System.Generics.Collections}TObjectList<Xml.VerySimple.TXmlNode>.Notify][5339]
+A50954 [System.Generics.Defaults.pas][Xml][Xml.VerySimple.{System.Generics.Collections}TList<Xml.VerySimple.TXmlNode>.InternalNotify][47]
+7F0582 [System.Generics.Collections][System.Generics][System.Generics.Collections.TListHelper.InternalDeleteRange4]
+776FF553 [Unknown function at RtlAnsiStringToUnicodeString]
+
+The current thread ID is 0x631C, and the stack trace (return addresses) leading to this error is:
+68712E 
+68A755 
+73BA6C [madExcept][madExcept][madExcept.InterceptClassDestroy]
+D5A71F [KM_AIDefensePos.pas][KM_AIDefensePos][KM_AIDefensePos.TAIDefencePosition.Destroy][164]
+68A84B 
+969C88 [KM_CommonClasses.pas][KM_CommonClasses][KM_CommonClasses.TKMList.Notify][557]
+7B5EA9 [System.Classes][System][System.Classes.TList.SetCount]
+7B5980 [System.Classes][System][System.Classes.TList.Clear]
+7B5926 [System.Classes][System][System.Classes.TList.Destroy]
+68A84B 
+D5B88D [KM_AIDefensePos.pas][KM_AIDefensePos][KM_AIDefensePos.TAIDefencePositions.Destroy][501]
+
+Current memory dump of 256 bytes starting at pointer address FCBEDBD0:
+48 91 D5 00 D4 6B 08 00 00 00 00 00 00 00 02 00 1F 00 00 00 57 00 00 00 05 FD FF FF FF FD FF FF
+FF 05 00 00 24 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 A4 16 7D 80 80 80 80
+80 80 80 80 80 80 80 80 00 00 00 00 80 6D BE FC 00 00 00 00 00 00 00 00 BC D8 69 00 00 00 00 00
+05 7B 54 00 88 71 68 00 F3 02 69 00 5A 04 69 00 E9 3C 14 01 4B 51 D6 00 11 59 D6 00 46 73 D6 00
+95 7A D6 00 FF 7D D6 00 5F C9 0D 01 87 CE 0D 01 1C 63 00 00 1C 63 00 00 2E 71 68 00 B4 05 69 00
+5E ED 68 00 AB 05 69 00 CC E8 68 00 91 03 69 00 19 A9 68 00 4E A7 68 00 6C BA 73 00 3E A8 68 00
+4B A8 68 00 3C 00 00 00 00 00 00 00 D3 0B A4 0A 01 00 00 00 1A 00 00 00 BE 03 BE 03 BF 03 BF 03
+C0 03 C0 03 C1 03 C1 03 C2 03 C2 03 C3 03 C3 03 C4 03 C4 03 C5 03 C5 03 C6 03 C6 03 C7 03 C7 03
+H  ‘  Õ  .  Ô  k  .  .  .  .  .  .  .  .  .  .  .  .  .  .  W  .  .  .  .  ý  ÿ  ÿ  ÿ  ý  ÿ  ÿ
+ÿ  .  .  .  $  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  ¤  .  }  €  €  €  €
+€  €  €  €  €  €  €  €  .  .  .  .  €  m  ¾  ü  .  .  .  .  .  .  .  .  ¼  Ø  i  .  .  .  .  .
+.  {  T  .  ˆ  q  h  .  ó  .  i  .  Z  .  i  .  é  <  .  .  K  Q  Ö  .  .  Y  Ö  .  F  s  Ö  .
+•  z  Ö  .  ÿ  }  Ö  .  _  É  .  .  ‡  Î  .  .  .  c  .  .  .  c  .  .  .  q  h  .  ´  .  i  .
+^  í  h  .  «  .  i  .  Ì  è  h  .  ‘  .  i  .  .  ©  h  .  N  §  h  .  l  º  s  .  >  ¨  h  .
+K  ¨  h  .  <  .  .  .  .  .  .  .  Ó  .  ¤  .  .  .  .  .  .  .  .  .  ¾  .  ¾  .  ¿  .  ¿  .
+À  .  À  .  Á  .  Á  .  Â  .  Â  .  Ã  .  Ã  .  Ä  .  Ä  .  Å  .  Å  .  Æ  .  Æ  .  Ç  .  Ç  .

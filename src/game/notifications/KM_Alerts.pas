@@ -70,6 +70,7 @@ type
 
 implementation
 uses
+  SysUtils,
   KM_HandsCollection, KM_Hand,
   KM_RenderPool,
   KM_Sound,
@@ -279,9 +280,9 @@ var
   I: Integer;
 begin
   for I := 0 to fList.Count - 1 do
-    fList[I].Free;
+    FreeAndNil(fList[I]);
 
-  fList.Free;
+  FreeAndNil(fList);
   inherited;
 end;
 

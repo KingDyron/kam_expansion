@@ -101,10 +101,10 @@ end;
 
 destructor TKMNavMesh.Destroy();
 begin
-  fDefences.Free;
-  fPathfinding.Free;
-  fPositioning.Free;
-  fNavMeshGenerator.Free;
+  FreeAndNil(fDefences);
+  FreeAndNil(fPathfinding);
+  FreeAndNil(fPositioning);
+  FreeAndNil(fNavMeshGenerator);
   inherited;
 end;
 

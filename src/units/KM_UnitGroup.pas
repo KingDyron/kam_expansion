@@ -435,11 +435,11 @@ destructor TKMUnitGroup.Destroy;
 begin
   //We don't release unit pointers from fMembers, because the group is only destroyed when fMembers.Count = 0
   //or when the game is canceled (then it doesn't matter)
-  fMembers.Free;
+  FreeAndNil(fMembers);
 
   //We need to release offenders pointers
   ClearOffenders;
-  fOffenders.Free;
+  FreeAndNil(fOffenders);
 
   ClearOrderTarget; //Free pointers
 
@@ -1822,7 +1822,7 @@ begin
     else //We did't find leader unit type
       Exit;
   finally
-    memberUTypes.Free;
+    FreeAndNil(memberUTypes);
   end;
 
   uPerRow := fUnitsPerRow; //Save formation for later
@@ -2455,11 +2455,11 @@ begin
     for I := 1 to fMembers.Count - 1 do
       newMembers.Add(fMembers[newOrder[I - 1] + 1]);
 
-    fMembers.Free;
+    FreeAndNil(fMembers);
     fMembers := newMembers;
 
-    agents.Free;
-    tasks.Free;
+    FreeAndNil(agents);
+    FreeAndNil(tasks);
   finally
     {$IFDEF PERFLOG}
     gPerfLogs.SectionLeave(psHungarian);
@@ -2783,7 +2783,7 @@ end;
 
 destructor TKMUnitGroups.Destroy;
 begin
-  fGroups.Free;
+  FreeAndNil(fGroups);
 
   inherited;
 end;

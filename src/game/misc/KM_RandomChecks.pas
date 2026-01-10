@@ -321,7 +321,7 @@ begin
 
 //    fSaveStream.CopyFrom(LoadStream, LoadStream.Size - LoadStream.Position);
   finally
-    loadStream.Free;
+    FreeAndNil(loadStream);
   end;
 end;
 
@@ -353,7 +353,7 @@ begin
     loadStream.LoadFromFileCompressed(aPath, 'RNGCompressed');
     LoadFromStreamAndParseToDict(loadStream);
   finally
-    loadStream.Free;
+    FreeAndNil(loadStream);
   end;
 end;
 
@@ -460,7 +460,7 @@ begin
     saveStream.CopyFrom(tickStream, 0);
   end;
 
-  enumerator.Free;
+  FreeAndNil(enumerator);
 
   saveStream.TrimToPosition;
 
@@ -511,7 +511,7 @@ begin
       for callerId in callersIdList do
         SL.Add(Format('%d - %s', [callerId, fCallers[callerId]]));
     finally
-      callersIdList.Free;
+      FreeAndNil(callersIdList);
     end;
 
     logTicksList := TList<Cardinal>.Create(fRngLog.Keys);
@@ -543,7 +543,7 @@ begin
 
       end;
     finally
-      logTicksList.Free;
+      FreeAndNil(logTicksList);
     end;
     SL.Add('Total randomchecks count = ' + IntToStr(cnt));
     if K = 0 then
@@ -551,7 +551,7 @@ begin
     else
       SL.SaveToFile(aPath + IntToStr(K));
   finally
-    SL.Free;
+    FreeAndNil(SL);
   end;
 end;
 
@@ -581,7 +581,7 @@ begin
   fTickStreamQueue.TrimExcess;
 
   for list in fRngLog.Values do
-    list.Free;
+    FreeAndNil(list);
 
 //  fRngLog.Clear; // It seems no need to clear, FastMM says there is memory leak because of it
   fRngLog.TrimExcess;

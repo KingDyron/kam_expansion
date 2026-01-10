@@ -155,9 +155,9 @@ begin
       libvlc_media_player_stop(FMediaPlayer); //Stop VLC
 
     VLCUnloadLibrary;
-    FVideoList.Free;
-    FTrackList.Free;
-    FCriticalSection.Free;
+    FreeAndNil(FVideoList);
+    FreeAndNil(FTrackList);
+    FreeAndNil(FCriticalSection);
     {$ENDIF}
   end;
 
@@ -671,7 +671,7 @@ begin
       end;
     end;
   finally
-    localePostfixes.Free;
+    FreeAndNil(localePostfixes);
   end;
 end;
 

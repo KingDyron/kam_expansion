@@ -164,7 +164,7 @@ end;
 
 destructor TKMSupervisor.Destroy();
 begin
-  fArmyVector.Free;
+  FreeAndNil(fArmyVector);
   inherited;
 end;
 

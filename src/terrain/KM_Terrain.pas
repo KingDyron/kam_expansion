@@ -750,7 +750,7 @@ begin
         //Everything else is default
       end;
   finally
-    S.Free;
+    FreeAndNil(S);
   end;
 
   fFinder := TKMTerrainFinder.Create;
@@ -934,7 +934,7 @@ begin
 
     S.SaveToFile(aFile);
   finally
-    S.Free;
+    FreeAndNil(S);
   end;
 end;
 
@@ -1026,11 +1026,11 @@ begin
   if (aType <> -1) // We could have aType = -1 if only specify rotation
     and not gRes.Tileset.TileIsAllowedToSet(aType) then
     Exit(False);
- 
+
   loc := KMPoint(X, Y);
   locRect := KMRect(loc);
   aPassRect := locRect;
-  
+
   //First see if this change is allowed
   //Will this change make a unit stuck?
   if UnitWillGetStuck
@@ -1053,7 +1053,7 @@ begin
     Land^[Y, X].BaseLayer.Terrain := aType;
   if aRot <> -1 then // Do not update rotation, if -1 is passed as an aRot parameter
     Land^[Y, X].BaseLayer.Rotation := aRot;
- 
+
 
   if doRemField then
     UpdateFences(loc); // after update Terrain
@@ -1178,7 +1178,7 @@ function TKMTerrain.ScriptTrySetTilesArray(var aTiles: array of TKMTerrainTileBr
   begin
     if KMSameRect(aRect, KMRECT_INVALID_TILES) then
       aRect := aRect2
-    else 
+    else
       KMRectIncludeRect(aRect, aRect2);
   end;
 
@@ -1205,7 +1205,7 @@ function TKMTerrain.ScriptTrySetTilesArray(var aTiles: array of TKMTerrainTileBr
     end;
   end;
 
-var 
+var
   I, J, terr, rot: Integer;
   T: TKMTerrainTileBrief;
   rect, terrRect, heightRect: TKMRect;
@@ -1246,7 +1246,7 @@ begin
       terr := -1;
       if T.UpdateTerrain then
         terr := T.Terrain;
-        
+
       rot := -1;
       if T.UpdateRotation and InRange(T.Rotation, 0, 3) then
         rot := T.Rotation;
@@ -2125,7 +2125,7 @@ begin
     else
       SetObject(List[I], 505 + List.Tag[I]);
 
-  list.Free;
+  FreeAndNil(list);
 end;
 
 procedure TKMTerrain.FindDeposits(const aLoc: TKMPoint; aRadius : Byte; aDeposits : TKMPointTagList; OverlapRadius : Byte = 0);
@@ -2476,7 +2476,7 @@ begin
     Exit;
   // Is map editor OK with this?
   Result := (tpWalkRoad in Land^[aLoc.Y,aLoc.X].Passability);
-end;   
+end;
 
 
 function TKMTerrain.VerticeIsFactorable(const aLoc: TKMPoint): Boolean;
@@ -2599,7 +2599,7 @@ var
   L: Integer;
 begin
   Assert(InRange(aCorner, 0, 3));
-  
+
   Result := tkCustom;
   with gTerrain.Land^[aY,aX] do
   begin
@@ -2986,7 +2986,7 @@ begin
 
     Inc(I);
   end;
-  aList.Free;
+  FreeAndNil(aList);
 end;
 
 function TKMTerrain.FindWalkableSpot(aLoc: TKMPoint): TKMPoint;
@@ -3016,7 +3016,7 @@ begin
 
     Inc(I);
   end;
-  aList.Free;
+  FreeAndNil(aList);
 end;
 
 function TKMTerrain.IsTileNearWater(aLoc: TKMPoint): Boolean;
@@ -3294,12 +3294,12 @@ begin
       Land^[aLoc.Y,aLoc.X].Obj := OBJ_NONE; //Remove corn/wine
       aDiagObjectChanged := True;
     end;
-    
+
   Land^[aLoc.Y,aLoc.X].FieldAge := 0;
 
   if aDoUpdateFences then
     UpdateFences(aLoc);
-    
+
   aUpdatePassRect := KMRectGrow(KMRect(aLoc),1);
 
   if aDoUpdatePass then
@@ -3616,9 +3616,9 @@ begin
   if not Result then
     Result := farTiles.GetRandom(aFieldPoint);
 
-  nearTiles.Free;
-  farTiles.Free;
-  validTiles.Free;
+  FreeAndNil(nearTiles);
+  FreeAndNil(farTiles);
+  FreeAndNil(validTiles);
 end;
 
 
@@ -3639,7 +3639,7 @@ begin
         aCornLocs.Add(P);
     end;
   finally
-    validTiles.Free;
+    FreeAndNil(validTiles);
   end;
 end;
 
@@ -3661,7 +3661,7 @@ begin
         aCornLocs.Add(P);
     end;
   finally
-    validTiles.Free;
+    FreeAndNil(validTiles);
   end;
 end;
 
@@ -3780,9 +3780,9 @@ begin
   //  Result := farTiles.GetClosest(P);
 
   aFieldPoint := KMPointDir(P, dirNA);
-  nearTiles.Free;
-  farTiles.Free;
-  validTiles.Free;
+  FreeAndNil(nearTiles);
+  FreeAndNil(farTiles);
+  FreeAndNil(validTiles);
   if not Result then
     aPlantActOut := taAny
   else
@@ -3836,7 +3836,7 @@ begin
         aStoneLocs.Add(P);
     end;
   finally
-    validTiles.Free;
+    FreeAndNil(validTiles);
   end;
 end;
 
@@ -3857,7 +3857,7 @@ begin
     Result := chosenTiles.GetRandom(P);
     aStonePoint := KMPointDir(P, dirN);
   finally
-    chosenTiles.Free;
+    FreeAndNil(chosenTiles);
   end;
 end;
 
@@ -3881,7 +3881,7 @@ begin
       Break;
 
   for I := 0 to Length(L) - 1 do
-    L[I].Free;
+    FreeAndNil(L[I]);
 end;
 
 function TKMTerrain.FindClay(const aLoc: TKMPoint; aMiningRect : TKMRect; const aAvoidLoc: TKMPoint; aIgnoreWorkingUnits: Boolean; aProdThatch : Pointer;
@@ -3903,10 +3903,10 @@ begin
       Result := L[I].GetRandom(aOrePoint);
       Break;
     end;
-    
+
 
   for I := 0 to High(L) do
-    L[I].Free;
+    FreeAndNil(L[I]);
 end;
 
 function TKMTerrain.FindCollectors(const aLoc: TKMPoint; aMiningRect : TKMRect; const aAvoidLoc: TKMPoint; aIgnoreWorkingUnits: Boolean;
@@ -3928,13 +3928,13 @@ begin
 
   If not L.GetWeightedRandom(aOrePoint) then
   begin
-    L.Free;
+    FreeAndNil(L);
     Exit;
   end;
 
   if not TileInMapCoords(aOrePoint.DirFaceLoc) then
   begin
-    L.Free;
+    FreeAndNil(L);
     Exit;
   end;
 
@@ -3966,7 +3966,7 @@ begin
     if L.Count > 0 then
       Result[0].W := wtAll;
 
-  L.Free;
+  FreeAndNil(L);
 end;
 
 function TKMTerrain.GetMiningRect(aWare: TKMWareType): TKMRect;
@@ -4146,7 +4146,7 @@ begin
     Result := DecWareOnGorund(aLoc.Loc, aCount);
     Exit;
   end;
-  
+
   I := Land^[aLoc.Loc.Y, aLoc.Loc.X].Obj;
   if I = 255 then
     Exit(false);
@@ -4187,7 +4187,7 @@ begin
   FindHunterPoints(aLoc, aMiningRect, aAvoidLoc, aIgnoreWorkingUnits,aList);
   Result := aList.GetWeightedRandom(aOrePoint.Loc);
   aOrePoint.Dir := KaMRandomDir('TKMTerrain.FindHunter');
-  aList.Free;
+  FreeAndNil(aList);
 end;
 
 procedure TKMTerrain.FindHunterPoints(const aLoc: TKMPoint; aMiningRect : TKMRect; const aAvoidLoc: TKMPoint; aIgnoreWorkingUnits: Boolean; aPoints: TKMWeightedPointList);
@@ -4604,7 +4604,7 @@ begin
       Break;
     end;
   end;
-  validTiles.Free;
+  FreeAndNil(validTiles);
 end;
 
 
@@ -4658,7 +4658,7 @@ begin
       end;
     end;
   end;
-  validTiles.Free;
+  FreeAndNil(validTiles);
 end;
 
 
@@ -4685,7 +4685,7 @@ begin
         aTiles.Add(T);
     end;
   finally
-    validTiles.Free;
+    FreeAndNil(validTiles);
   end;
 end;
 
@@ -4718,7 +4718,7 @@ begin
               aChosenTiles.Add(KMPointDir(P, KMGetDirection(J, K)));
     end;
   finally
-    validTiles.Free;
+    FreeAndNil(validTiles);
   end;
 end;
 
@@ -4736,7 +4736,7 @@ begin
 
     Result := chosenTiles.GetRandom(aFishPoint);
   finally
-    chosenTiles.Free;
+    FreeAndNil(chosenTiles);
   end;
 end;
 
@@ -5272,7 +5272,7 @@ begin
             MarkPoint(P, TC_BLOCK);
         end;
     end;
-    
+
 
 
   {with gRes.Bridges[aIndex] do
@@ -5387,9 +5387,9 @@ begin
       end;
     end;
 
-  
+
   {case aID of
-    // Special cases for corn fields 
+    // Special cases for corn fields
     58: if TileIsCornField(aLoc) and (GetCornStage(aLoc) <> 4) then
         begin
           SetField(aLoc, Land^[aLoc.Y,aLoc.X].TileOwner, ftCorn, 4, False);
@@ -5566,7 +5566,7 @@ begin
         Exit(True);
       end;
   end;}
-    
+
 end;
 
 procedure TKMTerrain.AddFallingTree(aLoc: TKMPointF; aObjID: Word);
@@ -5597,7 +5597,7 @@ begin
   //   S      stamp
   removeStamp := False;
   H := gHands.HousesHitTest(loc.X - 1, loc.Y - 1);
-  if (H <> nil) 
+  if (H <> nil)
     and (H.Entrance.X = loc.X - 1)
     and (H.Entrance.Y + 1 = loc.Y) then
     removeStamp := True;
@@ -5607,7 +5607,7 @@ begin
     //  E       entrance
     //  S       stamp
     H := gHands.HousesHitTest(loc.X, loc.Y - 1);
-    if (H <> nil) 
+    if (H <> nil)
       and (H.Entrance.X = loc.X)
       and (H.Entrance.Y + 1 = loc.Y) then
       removeStamp := True;
@@ -6576,7 +6576,7 @@ begin
     and not (Land^[aLoc.Y,aLoc.X].TileLock in [tlHouse, tlWall]) then
     AddPassability(tpWorker);
 
-  //Check all 4 corners ter kinds around vertice 
+  //Check all 4 corners ter kinds around vertice
   if VerticeIsFactorable(aLoc) then
     AddPassability(tpFactor);
 
@@ -6812,8 +6812,8 @@ begin
       if aOnlyTakeBest or not listAll.GetRandom(aSidePoint) then
         Result := False; // No side step positions available
   finally
-    listAll.Free;
-    listBest.Free;
+    FreeAndNil(listAll);
+    FreeAndNil(listBest);
   end;
 end;
 
@@ -7433,7 +7433,7 @@ begin
   if toFlatten <> nil then
   begin
     FlattenTerrain(toFlatten);
-    toFlatten.Free;
+    FreeAndNil(toFlatten);
   end;
 
   //Recalculate Passability for tiles around the house so that they can't be built on too
@@ -7574,7 +7574,7 @@ begin
                             Result := Result and (tpBuildNoObj in Land^[Y,X].Passability)
                           else
                             Result := Result and (tpBuild in Land^[Y,X].Passability);
-                          
+
                         end else
                           Result := Result and (tpBuild in Land^[Y,X].Passability);}
                         Result := (tpBuildNoObj in Land^[Y,X].Passability);
@@ -8715,7 +8715,7 @@ function TKMTerrain.GetRoadType(aLoc: TKMPoint): TKMRoadType;
 begin
   if not TileInMapCoords(aLoc) then
     Exit(rtNone);
-  
+
   Result := Land^[aLoc.Y, aLoc.X].RoadType;
 end;
 
@@ -8923,7 +8923,7 @@ begin
   for I := 0 to gFieldGrains[GT].StagesCount - 1 do
     if Land^[aLoc.Y, aLoc.X].FieldAge = gFieldGrains[GT].Stage[I].Age then
       Exit(I);
-    
+
 
   {case Land^[aLoc.Y, aLoc.X].Obj of
     54:   Result := 0;
@@ -9024,7 +9024,7 @@ begin
   if aExt = '.overlays' then aID := 3 else
   if aExt = '.terrain' then aID := 4;
   if aID = -1 then Exit(false);
-  
+
   Result := true;
   fPath := TKMapsCollection.GetMapPath(Trim(gGameParams.Name)) + 'Layers' + PathDelim + aFileName;
   if not FileExists(fPath) then Exit(false);
@@ -9104,7 +9104,7 @@ begin
 
 
   finally
-    S.Free;
+    FreeAndNil(S);
   end;
 
 end;
@@ -9189,7 +9189,7 @@ begin
 
 
   finally
-    S.Free;
+    FreeAndNil(S);
   end;
     //gGameParams.Name
 end;
@@ -9220,7 +9220,7 @@ begin
   for I := 0 to alights.Count - 1 do
     AddLight(alights[I], alights.Tag[I], alights.Tag2[I]);
 
-  alights.Free;
+  FreeAndNil(alights);
 end;
 
 procedure TKMTerrain.UpdateLight(aLoc: TKMPoint; aRadius: Byte; aPower: Byte);
@@ -9244,7 +9244,7 @@ begin
     if night < Land[P.Y, P.X].NightAffection then
       Land[P.Y, P.X].NightAffection := night;
   end;
-  validTiles.Free;
+  FreeAndNil(validTiles);
 end;
 
 procedure TKMTerrain.AddLight(aLoc : TKMPoint; aRadius, aPower : Byte);
@@ -9495,7 +9495,7 @@ begin
           if (gMapElements[Land^[I,K].Obj].NextTreeAgeObj = 0) and (gMapElements[Land^[I,K].Obj].CuttableTree) then
             Land^[I,K].TreeAge := CORN_AGE_MAX;
           UpdatePassability(KMPoint(K, I));
-          
+
 
         end;
       end;
@@ -9511,4 +9511,5 @@ end;
 
 
 end.
+
 

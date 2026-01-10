@@ -91,7 +91,7 @@ const
 
 implementation
 uses
-  Math,
+  Math, SysUtils,
   KM_Entity,
   KM_GameParams, KM_HandsCollection, KM_Hand, KM_RenderAux,
   KM_AIFields, KM_NavMesh,
@@ -213,7 +213,7 @@ end;
 
 destructor TKMArmyDefence.Destroy;
 begin
-  fPositions.Free;
+  FreeAndNil(fPositions);
 
   inherited;
 end;
