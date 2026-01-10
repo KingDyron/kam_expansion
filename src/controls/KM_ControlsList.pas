@@ -122,6 +122,7 @@ type
     function SeparatorsCount: Integer;
 
     function GetVisibleRows: Integer; override;
+    procedure MakeAllVisible;
 
     property Item[aIndex: Integer]: UnicodeString read GetItem; default;
     property ItemHeight: Byte read fItemHeight write SetItemHeight; //Accessed by DropBox
@@ -661,8 +662,8 @@ end;
 
 destructor TKMListBox.Destroy;
 begin
-  fSeparatorTexts.Free;
-  fItems.Free;
+  FreeAndNil(fSeparatorTexts);
+  FreeAndNil(fItems);
   inherited;
 end;
 
@@ -870,6 +871,13 @@ begin
   Result := (Height - fSeparatorHeight*SeparatorsCount) div fItemHeight;
 end;
 
+procedure TKMListBox.MakeAllVisible;
+var I : Integer;
+begin
+  SetLength(ItemsVisibility, Count);
+  for I := 0 to Count - 1 do
+    ItemsVisibility[I] := true;
+end;
 
 function TKMListBox.GetHint: UnicodeString;
 var

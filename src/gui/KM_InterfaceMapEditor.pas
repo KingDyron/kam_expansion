@@ -383,7 +383,7 @@ begin
   PopUp_History.OnClose := History_Close;
   PopUp_History.Anchors := [anTop, anRight];
 
-    ListBox_History := TKMListBox.Create(PopUp_History.ItemsPanel, 10, 10, PopUp_History.ItemsPanel.Width - 20, PopUp_History.ItemsPanel.Height - 50, fntMetal, bsGame);
+    ListBox_History := TKMListBox.Create(PopUp_History.ItemsPanel, 10, 10, PopUp_History.ItemsPanel.Width - 20, PopUp_History.ItemsPanel.Height - 50, fntGame, bsGame);
     ListBox_History.AutoHideScrollBar := True;
     ListBox_History.ShowHintWhenShort := True;
     ListBox_History.HintBackColor := TKMColor4f.New(87, 72, 37);
@@ -1489,6 +1489,7 @@ begin
 
   gGame.MapEditor.History.GetCheckpoints(ListBox_History.Items);
   ListBox_History.UpdateScrollBar;
+  ListBox_History.MakeAllVisible;
 
   ListBox_History.SetTopIndex(gGame.MapEditor.History.Position, True);
   History_ListChange(nil);
