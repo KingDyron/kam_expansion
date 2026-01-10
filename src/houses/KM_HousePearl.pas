@@ -467,7 +467,8 @@ begin
     ptValtaria : gHands[Owner].FogOfWar.RevealCircle(Entrance, 50, FOG_OF_WAR_MAX, frtHouse) ;
     ptArium:  begin
                 for I := 0 to gRes.Wares.VirtualWares.Count - 1 do
-                  gHands[Owner].VirtualWareTake(I, -100);
+                  If not InRange(I, 2, 5) then
+                    gHands[Owner].VirtualWareTake(I, -100);
                 gHands[Owner].Workless := gHands[Owner].Workless + 100;
               end;
 
