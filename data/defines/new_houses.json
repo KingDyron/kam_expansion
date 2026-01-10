@@ -4263,7 +4263,7 @@
 			"BuildIcon" : 1000,
 			"TabletID" : 1001,
 			"MaxInWares" : 5,
-			"MaxOutWares" : 50,
+			"MaxOutWares" : 75,
 			"CanForceWork" : False,
 			"UnoccupiedMsgId" : -1,
 			"CanOverfill" : False,
