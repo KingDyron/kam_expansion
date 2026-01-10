@@ -1650,14 +1650,14 @@
 1723:Murami możesz zabezpieczyć swoje miasto.||Można je rozbudować do drugiego poziomu.
 1724:W kurniku chodowane są kury. Pozyskasz w nim prióra, które są potrzebne do produkcji kołczanów i butów. Karmiąc kury warzywami, utuczysz je i otrzymasz z nich szybciej mięso.
 1725:Kamienna tabliczka służy do przekazywania informacji graczom.
-1726:Dzięki temu budynkowi możesz wykopać rzadki minerał, którym jest ruda bitynu.
+1726:Dzięki temu budynkowi możesz wykopać rzadki minerał, którym jest ruda bitynu.||Można postawić pod górą żelaza oraz złota.
 1727:Wieża strzelnicza odkrywa duży obszar terenu. Celność rekrutów jest bardzo dobra i mogą zabić przeciwnika jednym strzałem.
 1728:W studni znajdziesz dużo wody. Świnie, konie oraz kury będą potrzebowały jej w rozwoju. Piekarnia oraz Jabłoń również jej wymagają.||Pracownik pójdzie sam po wodę jeśli studnia jest wybudowana blisko niego.
-1729:Tutaj możesz wyprodukować: kamienne pociski potrzebne w wieżach obronnych, belki i koła do machin oblężniczych, a także trociny wykorzystywane w wypalarce.
-1730:Odlewnia przetwarza żelazo na części potzebne do produkcji machin oblężniczych. Produkuje również płyty bitynowe używane do wzmocnienia machin oraz jednostek w warowni.
+1729:Tutaj możesz wyprodukować: kamienne pociski potrzebne w wieżach obronnych, belki i koła do machin oblężniczych, a także wióry wykorzystywane w przepalarni.
+1730:Odlewnia przetwarza żelazo na części potrzebne do produkcji machin oblężniczych. Produkuje również płyty bitynowe używane do wzmocnienia machin oraz jednostek w warowni.
 1731:Dzięki emisariuszowi możesz przekazywać wybrane towary swoim sojusznikom.|Może wysyłać towary na odległe części mapy jeśli tylko wybudowana jest stocznia.
 1732:W garncarni wytwarzane są dachówki wymagane do rozbudowy miasta.
-1733:Jest to jedyny budynek, który może wyprodukować węgiel z surowca odnawialnego jakim jest drewno. Potrzebuje rozpałki w postaci słomy oraz paliwa, czyli trocin lub węgla.
+1733:Jest to jedyny budynek, który może wyprodukować węgiel z surowca odnawialnego jakim jest drewno. Potrzebuje rozpałki w postaci słomy oraz paliwa, czyli wiór lub węgla.
 1734:Na drzewie rośnie mnóstwo owoców. Ludzie w domostwach potrzebują ich jako pokarmu. Jest to budynek modułowy, dzięki czemu można stworzyć ogromny sady.
 1735:W tym budynku kolekcjoner wydobywa z kamieni cenne materiały. Z nich można zrobić pierścień, który jest drogocenny podczas wymiany w targowisku. Również znajduje i zbiera surowce leżące na ziemi.
 1736:Krawiec, dzięki swoim zdolnościom wyszywa buty. Każdy obywatel, który pracuje w ciągłym ruchu może je ubrać w szkole. Jest w stanie produkować również pancerze i kołczany.
@@ -1683,9 +1683,9 @@
 1756:Dzięki warsztatowi wojennemu wybudujesz potężne machiny oblężnicze. Każda machina posiada własny schemat konstrukcji. 
 1757:Skrzynie złota trafiają do szkoły, aby zapłacić za wyszkolenie nowych poddanych.
 1758:Młyn przetwarza zebrane wcześniej przez chłopów ziarno na czystą mąkę. 
-1759:Tartak to jeden z najważniejszych budynków. Wytwarza deski do budowy oraz produkcji broni. Jako produkt uboczny tworzą się trociny, wykorzystasz je w wypalarce drewna.
+1759:Tartak to jeden z najważniejszych budynków. Wytwarza deski do budowy oraz produkcji broni. Jako produkt uboczny tworzą się wióry, wykorzystasz je w przepalarni drewna.
 1760:Konie hodowane w stajni są wymagane do rekrutacji jeźdców. Można przyspieszyć ich hodowlę używając zróżnicowanej diety. Konie na pewno zadowolą się sianem.
-1761:Wyhodowane świnie są przeznaczone produkcji kiełbas i skóry. Można je utuczyć używając zróżnicowanej diety. Świnie na pewno zadowolą się warzywami.
+1761:Wyhodowane świnie są przeznaczone do produkcji kiełbas i skóry. Można je utuczyć używając zróżnicowanej diety. Świnie na pewno zadowolą się warzywami.
 1762:Garbarz przetworzy płaty skór na rulony potrzebne do produkcji pancerzy oraz butów.
 1763:Wino jest najłatwiejszym do zdobycia pokarmem. W dużej ilości mogą zastąpić chleb albo ryby. Chłop pracujący w winnicy potrzebuje co najmniej 9 pól winogron. 
 1764:Drwal ścina pobliskie drzewa i przechowuje pniaki w swojej chacie. Pniaki są stosowane do produkcji wielu materiałów.
@@ -2101,7 +2101,7 @@
 2166:Statek uzbrojony po brzeki alkaratami (wielkimi kuszami) oraz posiadający wytrzymałą strukturę kadłuba, idealnie sprawdzi się podczas walk. 
 2167:Po rozłożeniu kolczasta pułapka jest niemalże niewidzialna. Niech tylko wróg zbliży się do niej, a poznasz jej możliwości.
 2168:Jako jedyny jest jednostką jednorazową. Gdy uderzy w budynek, uszkodzi jego strukturę, a nawet zniszczy w całości.
-2169:Ten budynek może być postawiony tylko raz, jednakże może się w nim zmieścić do pięciu pracowników, którzy będą pracowali w pocie czoła aby zebrać jak najszybciej wymagane surowce/.
+2169:Ten budynek może być postawiony tylko raz, jednakże może się w nim zmieścić do pięciu pracowników, którzy będą pracowali w pocie czoła aby zebrać jak najszybciej wymagane surowce.
 2170:W stoczni wybudujesz łodzie, które będą mogły przemieżyć wody aby zebrać surowce, transportować jednostki lub atakować wroga.
 2171:Dzięki sklepikarzowi będziesz mógł wykupić produkty uboczne za monety.
 2172:Ilość flag
@@ -2257,7 +2257,7 @@
 2322:Pomocny jeździec
 2323:Dzięki opanowaniu jazdy na koniu, szybko dostarczy wymagane surowce do budynków czy poddanych.
 2324:Berserker
-2325:Dzięki jego szybkim atakom, przeciwnik nie będzie miał szans długo wytrwać.
+2325:Dzięki jego szybkim atakom, przeciwnik nie będzie miał szans długo wytrwać.||Jednostka ta posiada umiejętność "szturm", która daje tymczasowe, niekontrolowane przyśpieszenie.
 2326:Wieża oblężnicza
 2327:Może pomieścić kilka strzeleckich jednostek zwiększając im zasięg ataku. Wieża dzięki swej wytrzymałości będzie ich chronić dopóki przeciwnik nie zostanie pokonany.||Może być wybudowana bez drogi
 2328:Płytka woda 1
