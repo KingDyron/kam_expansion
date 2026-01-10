@@ -851,7 +851,7 @@ begin
   if aMember.HitPointsInvulnerable then
     Exit;
   I := fMembers.IndexOf(aMember);
-  gLog.AddTime(Format('Group:%d , Member died: %d; Index: %d', [self.UID, aMember.UID, I]));
+  //gLog.AddTime(Format('Group:%d , Member died: %d; Index: %d', [self.UID, aMember.UID, I]));
   //If I = -1 then
   //  Exit;
   {If I = -1 then
