@@ -9,7 +9,7 @@ uses
   KM_ResTypes;
 
 Const
-  MAX_MACHINES_WAITING = 5;
+  MAX_MACHINES_WAITING = 4;
 type
   TKMSiegeMachine = record
     UT : TKMUnitType;
@@ -54,6 +54,7 @@ type
 
     property MachineWaiting[aIndex : Integer] : TKMSiegeMachine read GetMachineWating;
     function GetMWGuiIcons : TKMWord2Array;
+    function GetOperatorsInsideCnt : Byte;
 
     property PhasesCount : Byte read GetPhasesCount;
     function GetNeededWares : TKMWarePlan;
@@ -388,6 +389,14 @@ begin
       Result[high(Result)] := [gRes.Units[fMachinesWaiting[I].UT].GUIIcon];
     end;
 
+end;
+function TKMHouseSiegeWorkshop.GetOperatorsInsideCnt: Byte;
+var I : Integer;
+begin
+  Result := 0;
+  for I := 0 to high(fWorkers) do
+    If (TKMUnit(fWorkers[I]).UnitType = utOperator) and (TKMUnit(fWorkers[I]).InHouse = self) then
+      Inc(Result);
 end;
 
 

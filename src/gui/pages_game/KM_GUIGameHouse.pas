@@ -178,6 +178,7 @@ type
       Label_Siege_Unit: TKMLabel;
       Image_Siege_Right,Image_Siege_Train,Image_Siege_Left: TKMImage;
       Button_Siege_Right,Button_Siege_Train,Button_Siege_Left: TKMButton;
+      Button_OperatorsCount : TKMButtonFlat;
       
     Panel_House_Palace: TKMPanel;
       Button_PalaceLeft, Button_PalaceRight : TKMButton;
@@ -452,6 +453,26 @@ begin
     Icons_Workers.Width := 5 * Icons_Workers.HSpacing;
     Icons_Workers.Height := 1 * Icons_Workers.VSpacing;
 
+
+
+  Create_HouseMarket;
+  Create_HouseStore;
+  Create_HouseSchool;
+  Create_HouseSiege;
+  Create_HouseBarracks;
+  Create_HouseTownhall;
+  Create_HouseWoodcutter;
+  Create_HouseSign(aParent);
+  Create_HouseMerchant;
+  Create_HouseWoodBurner;
+  Create_HouseCottage;
+  Create_HousePalace;
+  Create_HouseStall;
+
+
+  //Panel_House_Common must be created after because of the siege workshop (machines icons must be above the Button_OperatorsCount button)
+
+
     Panel_House_Common := TKMPanel.Create(Panel_House,0,76,200,Panel_House.Height - 80);
     Panel_House_Common.Hitable := false;
       Label_Common_Demand := TKMLabel.Create(Panel_House_Common,0,2,TB_WIDTH,0,gResTexts[TX_HOUSE_NEEDS],fntGrey,taCenter);
@@ -532,8 +553,6 @@ begin
   Progress_BigWare2.StopAnim := true;
   Progress_BigWare2.AddBevel := false;
 
-  Progress_Beasts := TKMIconProgressBar.Create(Panel_House_Common, 0, 0, TB_WIDTH, 30, false, [[490, 569, 403], [490, 569, 403], [490, 569, 403], [490, 569, 403], [490, 569, 403]]);
-  Progress_Beasts.RX := rxHouses;
 
   CostsRow_Common := TKMCostsRowMulti.Create(Panel_House_Common, 0, 0, TB_WIDTH, 21);
   CostsRow_Common.MobilHint := true;
@@ -559,20 +578,8 @@ begin
   Panel_Arena := TKMGuiGameArena.Create(Panel_House);
   Panel_SiegeTower := TKMGuiGameSiegeTower.Create(Panel_House);
 
-
-  Create_HouseMarket;
-  Create_HouseStore;
-  Create_HouseSchool;
-  Create_HouseSiege;
-  Create_HouseBarracks;
-  Create_HouseTownhall;
-  Create_HouseWoodcutter;
-  Create_HouseSign(aParent);
-  Create_HouseMerchant;
-  Create_HouseWoodBurner;
-  Create_HouseCottage;    
-  Create_HousePalace;
-  Create_HouseStall;
+  Progress_Beasts := TKMIconProgressBar.Create(Panel_House_Common, 0, 0, TB_WIDTH, 30, false, [[490, 569, 403], [490, 569, 403], [490, 569, 403], [490, 569, 403], [490, 569, 403]]);
+  Progress_Beasts.RX := rxHouses;
 end;
 
 
@@ -849,7 +856,9 @@ begin
     Button_Siege_Train.OnClickShift := House_SchoolUnitChange;
     Button_Siege_Right.OnClickShift := House_SchoolUnitChange;
 
-
+    Button_OperatorsCount := TKMButtonFlat.Create(Panel_House_Siege, 0, Button_Siege_Left.Bottom + 5, TB_WIDTH, 36, gRes.Units[utOperator].GUIIcon);
+    Button_OperatorsCount.TexOffsetX := -TB_WIDTH div 2 + 15;
+    Button_OperatorsCount.CapOffsetX := -TB_WIDTH div 2 + 15;
 
   Panel_HouseQueue := TKMPanel.Create(Panel_House, 0, 0, TB_WIDTH, 266);
   Panel_HouseQueue.Hitable := false;
@@ -1675,6 +1684,8 @@ begin
     Icons_Workers.Top := Button_House_Worker.Center.Y - (Icons_Workers.Height div 2);
   end;
   Progress_Beasts.ColumnCount := 5;
+  Progress_Beasts.Left := 0;
+  Progress_Beasts.Width := TB_WIDTH;
   Progress_Beasts.Hide;
   Progress_BigWare.Hide;
   ProgressBar_BigWare.Hide;
@@ -1798,6 +1809,7 @@ begin
                         Panel_House_Common.Show;
 
                         Button_Siege_UnitWIP.FlagColor := gHands[aHouse.Owner].FlagColor;
+                        Button_OperatorsCount.FlagColor := gHands[aHouse.Owner].FlagColor;
 
                         WaresProdCt_Common[1].Caption := '';
                         WaresProdCt_Common[2].Caption := '';
@@ -1830,10 +1842,18 @@ begin
                         Progress_Beasts.Top :=  Button_Siege_Left.Bottom + 90 + demandTop{ + Panel_House_Siege.Top};
                         Progress_Beasts.RX := rxGui;
                         Progress_Beasts.TexID := TKMHouseSiegeWorkshop(aHouse).GetMWGuiIcons;
-
+                        Progress_Beasts.Width := TB_WIDTH - 36;
+                        Progress_Beasts.Left := 36;
                         SetLength(Progress_Beasts.Progress, length(Progress_Beasts.TexID));
-                        for I := 0 to High(Progress_Beasts.Progress) do
-                          Progress_Beasts.Progress[I] := 1;
+                        If length(Progress_Beasts.Progress) > 0 then
+                        begin
+                          for I := 0 to High(Progress_Beasts.Progress) do
+                            Progress_Beasts.Progress[I] := 0;
+
+                          Progress_Beasts.Progress[0] := TKMHouseSiegeWorkshop(aHouse).GetOperatorsInsideCnt / 4;
+                        end;
+                        Button_OperatorsCount.Caption := TKMHouseSiegeWorkshop(aHouse).GetOperatorsInsideCnt.ToString;
+
                         Progress_Beasts.Colors := [icLightGreen];
                         Progress_Beasts.Show;
 
@@ -3308,7 +3328,6 @@ begin
     Button_Siege_UnitWIPBar.Position := siege.GetTrainingProgress;
 
     Button_Siege_UnitWIPBar.LinesCount := Max(siege.PhasesCount - 1, 0);
-
 
 
     for I := 1 to 5 do
