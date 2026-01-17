@@ -1242,9 +1242,13 @@ begin
         Importance := diHigh1;
 
       //Food to Inn
-      if (aWare in [wtBread, wtSausage, wtWine, wtFish, wtVegetables, wtApple])
+      if (aWare in [wtBread, wtSausage, wtWine, wtFish{, wtVegetables, wtApple}]) //apples and vegetables are not important here
         and (Loc_House <> nil) and (Loc_House.HouseType = htInn) then
         Importance := diHigh3;
+      //Apples to cottage and house
+      if Loc_House.IsValid([htCottage, htHouse])
+        and (Loc_House.CheckWareIn(wtApple) < 5) then
+        Importance := diHigh1;
 
       //Stone to towers
       if (Loc_House <> nil) and (Loc_House.HouseType = htWatchTower)
