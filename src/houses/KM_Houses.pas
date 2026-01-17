@@ -488,6 +488,7 @@ type
     function IsValid(aHouseType : TKMHouseType = htAny; aDifferent : Boolean = false; aBuilt : Boolean = false) : Boolean; overload;
     function IsValid(aHouseType : TKMHouseTypeSet; aBuiltOnly : Boolean = true) : Boolean; overload;
     function PlaceRoad : Boolean; virtual;
+    function CanDeliverToAnyPoint(aWare : TKMWareType) : Boolean; virtual;
 
     function MiningRange(aUnitType : TKMUnitType) : Integer;overload; virtual;
     function MiningRange(aWare : TKMWareType) : Integer;overload; virtual;
@@ -666,6 +667,7 @@ type
       procedure SetAnimation(aChildID : Integer = -1);
       procedure GetListOfCellsAround(aCells: TKMPointDirList; aPassability: TKMTerrainPassability); override;
       procedure GetListOfCellsWithin(aCells: TKMPointList); override;
+      function CanDeliverToAnyPoint(aWare : TKMWareType) : Boolean; override;
 
       constructor Create(aUID: Integer; aHouseType: TKMHouseType; PosX, PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
       constructor Load(LoadStream: TKMemoryStream); override;
@@ -3679,6 +3681,11 @@ begin
   Result := not (HouseType in NO_ROAD_CONNECTION_HOUSES);
 end;
 
+function TKMHouse.CanDeliverToAnyPoint(aWare : TKMWareType) : Boolean;
+begin
+  Result := HouseType in NO_ROAD_CONNECTION_HOUSES;
+end;
+
 function TKMHouse.MiningRange(aUnitType : TKMUnitType) : Integer;
 begin
   Result := gRes.Units[aUnitType].MiningRange;
@@ -6462,6 +6469,11 @@ begin
       GetCellsFromTree(I);//child trees
   end;
 
+end;
+
+function TKMHouseAppleTree.CanDeliverToAnyPoint(aWare : TKMWareType) : Boolean;
+begin
+  Result := aWare in [wtTimber, wtStone, wtTile, wtAll];
 end;
 
 procedure TKMHouseAppleTree.SetAnimation(aChildID : Integer = -1);

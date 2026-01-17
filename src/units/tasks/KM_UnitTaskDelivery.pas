@@ -564,10 +564,19 @@ begin
   case fPhase of
     0..4:;
     5:  begin
-          SetActionWalkToSpot(fToHouse.GetClosestEntrance(Position).DirFaceloc{fToHouse.PointBelowEntrance});
+          If fToHouse.CanDeliverToAnyPoint(Carry) then
+            SetActionWalkToHouse(fToHouse, 1)
+          else
+            SetActionWalkToSpot(fToHouse.GetClosestEntrance(Position).DirFaceloc{fToHouse.PointBelowEntrance});
         end;
-    6:  SetActionGoIn(uaWalk, gdGoInside, fToHouse);
-    7:  SetActionLockedStay(5, uaWalk); //wait a bit inside
+    6:  If not fToHouse.CanDeliverToAnyPoint(Carry) then
+          SetActionGoIn(uaWalk, gdGoInside, fToHouse)
+        else
+          SetActionLockedStay(1, uaWalk);
+    7:  If not fToHouse.CanDeliverToAnyPoint(Carry) then
+          SetActionLockedStay(5, uaWalk) //wait a bit inside
+        else
+          SetActionStay(5, uaWalk);
     8:  begin
           fToHouse.WareAddToIn(Carry);
           CarryTake;
@@ -593,8 +602,11 @@ begin
             Exit //Exit immidiately, since we created new task here and old task is destroyed!
                  //Changing any task fields here (f.e. Phase) could affect new task!
           else
+          If not fToHouse.CanDeliverToAnyPoint(wtAll) then
             //No delivery found then just step outside
-            SetActionGoIn(uaWalk, gdGoOutside, fToHouse);
+            SetActionGoIn(uaWalk, gdGoOutside, fToHouse)
+          else
+            SetActionStay(1, uaWalk);
         end;
     else Result := trTaskDone;
   end;
@@ -605,8 +617,13 @@ begin
   case fPhase of
     0..4:;
         // First come close to point below house entrance
-    5:  SetActionWalkToSpot(fToHouse.PointBelowEntrance, uaWalk, 1.42);
-    6:  begin
+    5:If fToHouse.CanDeliverToAnyPoint(Carry) then
+        SetActionWalkToHouse(fToHouse, 1)
+      else
+        SetActionWalkToSpot(fToHouse.PointBelowEntrance, uaWalk, 1.42);
+    6:  If not fToHouse.CanDeliverToAnyPoint(Carry) then
+        begin
+
           // Then check if there is a worker hitting house just from the entrance
           Worker := gHands[fUnit.Owner].UnitsHitTest(fToHouse.PointBelowEntrance, utBuilder);
           if (Worker <> nil) and (Worker.Task <> nil)
@@ -620,7 +637,9 @@ begin
             SetActionWalkToSpot(fToHouse.PointBelowEntrance);
 
           end;
-        end;
+        end else
+          SetActionLockedStay(1, uaWalk);
+
     7:  begin
           Direction := KMGetDirection(PositionNext, fToHouse.Entrance);
           fToHouse.WareAddToBuild(Carry);
@@ -639,7 +658,7 @@ begin
   case fPhase of
     0..4:;
         // First come close to point below house entrance
-    5:  SetActionWalkToHouse(fToHouse, 1.42, uaWalk);
+    5:  SetActionWalkToHouse(fToHouse, 1, uaWalk);
     {6:  begin
           SetActionStay(5, uaWalk);
           // Then check if there is a worker hitting house just from the entrance
