@@ -48,7 +48,6 @@ type
 
     LightRadius, LightPower : Byte;
     ObjectPrice : Single;
-
   end;
 
   TKMResMapElements = class
@@ -63,6 +62,7 @@ type
 
     procedure LoadFromFile(const aFileName: string);
     function LoadFromJSON(aPath : String) : Cardinal;
+    procedure SaveToJson(aPath : String);
     procedure SaveToFile(const aFileName: string);
     procedure ExportToText(const aFileName: string);
     Procedure ReloadJSONData(UpdateCRC: Boolean);
@@ -203,7 +203,8 @@ const
 
 implementation
 uses JsonDataObjects, KM_CommonUtils, KM_CommonClassesExt, Math, KM_JSONUtils,
-  TypInfo, KM_Resource;
+  TypInfo, KM_Resource,
+  KM_JsonHelpers;
 const
   // We use Byte instead of TKMKillByRoad to have a shorter table
   OBJ_KILL_BY_ROAD: array [Byte] of Byte {TKMKillByRoad} = (
@@ -979,10 +980,6 @@ begin
     gGrowingTrees[I].ObjID := nObject.I['ObjectID'];
     gGrowingTrees[I].Size := nObject.D['Size'];
     gGrowingTrees[I].GuiIcon := nObject.I['GuiIcon'];
-    K := gGrowingTrees[I].ObjID;
-
-    while gMapElements[K].NextTreeAgeObj > 0 do
-      K := gMapElements[K].NextTreeAgeObj;
   end;
     
 
@@ -990,6 +987,203 @@ begin
 
   //gFieldGrains
     {Anim: TKMAnimLoop;}
+  //SaveToJson(ExeDir + 'Export\Objects.json');
+end;
+
+
+procedure TKMResMapElements.SaveToJson(aPath: string);
+var root, obj, obj2 : TKMJsonObject;
+  arr, arr2 : TKMJsonArrayNew;
+  I, K : integer;
+  GT : TKMGrainType;
+  clim : TKMTerrainClimate;
+  S : String;
+
+begin
+  root := TKMJsonObject.Create;
+  try
+    arr := root.AddArray('Objects');
+    //save objects data
+    for I := 0 to high(gMapElements) do
+    begin
+      obj := arr.AddObject(false);
+      with gMapElements[I] do
+      begin
+        obj.Add('ObjectID', I);
+        If Anim.Count > 0 then
+        begin
+          arr2 := Obj.AddArray('AnimSteps', true);
+          for K := 1 to Anim.Count do
+            arr2.Add(Anim.Step[K])
+        end;
+
+        obj.Add('CuttableTree', CuttableTree, false);
+        obj.Add('DiagonalBlocked', DiagonalBlocked, false);
+        obj.Add('AllBlocked', AllBlocked, false);
+        obj.Add('WineOrCorn', WineOrCorn, false);
+        obj.Add('CanGrow', CanGrow, false);
+        obj.Add('DontPlantNear', DontPlantNear, false);
+        If Stump = -1 then
+          obj.Add('PlaceableInEditor', true);
+        obj.Add('CanBeRemoved', CanBeRemoved, false);
+        //obj.Add('KillByRoad', KillByRoad, false);//skip it
+        obj.Add('SnowPic', SnowPic, I);
+        obj.Add('RandomPos', RandomPos, false);
+        obj.Add('RenderAsTileOverlay', RenderAsTileOverlay, false);
+        obj.Add('RotateToTile', RotateToTile, false);
+        obj.Add('Clay', Clay, 0);
+        obj.Add('Iron', Iron, 0);
+        obj.Add('Gold', Gold, 0);
+        obj.Add('Coal', Coal, 0);
+        obj.Add('Stone', Stone, 0);
+        obj.Add('Bitin', Bitin, 0);
+        obj.Add('VWareChance', VWareChance, 0);
+        If length(VWares) > 0 then
+        begin
+          arr2 := Obj.AddArray('VirtualWares');
+          for K := 0 to High(VWares) do
+          begin
+            obj2 := arr2.AddObject(true);
+            obj2.Add('Type', VWares[K].W);
+            obj2.Add('Min', VWares[K].Cmin);
+            obj2.Add('Max', VWares[K].Cmax);
+            obj2.Add('Chance', VWares[K].Ch);
+          end;
+        end;
+
+        obj.Add('AxeHitTimes', AxeHitTimes, 0);
+        obj.Add('TrunksCount', TrunksCount, 0);
+        obj.Add('Stump', LandStump, 0);
+        obj.Add('IsFruit', IsFruit, 0);
+        obj.Add('IsVege', IsVege, 0);
+        obj.Add('IsCorn', IsCorn, 0);
+        obj.Add('IsWine', IsWine, 0);
+        obj.Add('RenderAsTwo', RenderAsTwo, false);
+        obj.Add('TreeGrowAge', TreeGrowAge, 0);
+        //obj.Add('PrevTreeAgeObj', PrevTreeAgeObj, 0);//no need to save it
+        obj.Add('NextTreeAgeObj', NextTreeAgeObj, 0);
+        obj.Add('FallTreeAnimObj', FallTreeAnimObj, 0);
+        obj.Add('LightRadius', LightRadius, 0);
+        obj.Add('LightPower', LightPower, 0);
+        obj.Add('ObjectPrice', ObjectPrice, 0);
+      end;
+    end;
+    //save grains data
+    arr := root.AddArray('Grain Types');
+    for GT := GRAIN_MIN to GRAIN_MAX do
+    begin
+      obj := arr.AddObject;
+      if not TKMEnumUtils.GetName<TKMGrainType>(GT, S) then
+        raise Exception.Create('Error saving grains data');
+
+      obj.Add('GrainType', S);
+      with gFieldGrains[GT] do
+      begin
+        obj.Add('GuiIcon', GuiIcon, 0);
+        obj.Add('TextID', TextID, 0);
+        obj.Add('Wine', Wine, 0, 2);
+        obj.Add('Straw', Straw, 0, 2);
+        obj.Add('Seeds', Seeds, 0, 2);
+        obj.Add('Hay', Hay, 0, 2);
+        obj.Add('Vege', Vege, 0, 2);
+
+        obj2 := obj.AddObject('Dead', true);
+        obj2.Add('Object', Dead.Obj, 0);
+        obj2.Add('Terrain', Dead.Terr, 0);
+
+        arr2 := obj.AddArray('Stages');
+        for K := 0 to high(Stage) do
+        begin
+          obj2 := arr2.AddObject(true);
+          obj2.Add('Object', Stage[K].Obj, 0);
+          obj2.Add('Terrain', Stage[K].Terr, 0);
+          obj2.Add('NextStage', Stage[K].NextStage, 0);
+          obj2.Add('Age', Integer(Stage[K].Age * TERRAIN_PACE), 0);
+          obj2.Add('GivesWares', Stage[K].GivesWares, false);
+          obj2.Add('CanBeCut', Stage[K].CanBeCut, false);
+          obj2.Add('CanBePlant', Stage[K].CanBePlant, false);
+        end;
+          
+      end;
+    end;
+
+    //save fruit trees data
+    arr := root.AddArray('Fruit Trees');
+    for I := 0 to High(gFruitTrees) do
+    begin
+      obj := arr.AddObject;
+      with gFruitTrees[I] do
+      begin
+        obj.Add('GuiIcon', GuiIcon, 0);
+        obj.Add('HintID', HintID, 0);
+        obj.Add('Fruits', Fruits, 0);
+        obj.Add('ProgressPerStage', ProgressPerStage, 0);
+        obj.Add('MatureTreeStage', MatureTreeStage, 0);
+
+        arr2 := obj.AddArray('Stages', true);
+        for K := 0 to High(Stage) do
+          arr2.Add(Stage[K]);
+
+        for clim := TKMTerrainClimate(1) to High(TKMTerrainClimate) do
+        begin
+          if not TKMEnumUtils.GetName<TKMTerrainClimate>(clim, S) then
+            raise Exception.Create('Error saving fruits data');
+          obj.Add(S, ClimateMulti[clim], 0, 2);
+        end;
+      end;
+    end;
+
+    //save trees on climate
+    for clim := TKMTerrainClimate(1) to High(TKMTerrainClimate) do
+    begin
+      if not TKMEnumUtils.GetName<TKMTerrainClimate>(clim, S) then
+        raise Exception.Create('Error saving fruits data');
+      arr := Root.AddArray(S, true);
+      for I := 0 to high(gTreeTypeID[clim]) do
+        arr.Add(gTreeTypeID[clim, I]);
+    end;
+
+    //save decorations
+    arr := root.AddArray('Decorations');
+    for I := 0 to high(gDecorations) do
+    with gDecorations[I] do
+    begin
+      obj := arr.AddObject;
+      if not TKMEnumUtils.GetName<TKMDecorationType>(DType, S) then
+        raise Exception.Create('Error saving decoration data');
+
+      obj.Add('Type', S);
+      obj.Add('ID', ID, 0);
+      obj.Add('GuiIcon', GuiIcon, 0);
+      obj.Add('TextID', TextID, 0);
+
+      arr2 := obj.AddArray('Cost');
+
+      for K := 0 to High(Cost) do
+      begin
+        obj2 := arr2.AddObject(true);
+        obj2.Add('VWareName', Cost[K].W);
+        obj2.Add('Count', Cost[K].C);
+      end;
+
+    end;
+
+    //save growing trees
+    arr := root.AddArray('GrowingTrees');
+    for I := 0 to High(gGrowingTrees) do
+    with gGrowingTrees[I] do
+    begin
+      obj := arr.AddObject(true);
+
+      obj.Add('ObjectID', ObjID, 0);
+      obj.Add('GuiIcon', GuiIcon, 0);
+      obj.Add('Size', Size, 0, 2);
+    end;
+    root.SaveToFile(aPath);
+  finally
+    FreeAndNil(root);
+  end;
+
 end;
 
 Procedure TKMResMapElements.ReloadJSONData(UpdateCRC: Boolean);
