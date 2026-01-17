@@ -9486,7 +9486,10 @@ begin
         Inc(Land^[I,K].TreeAge);
         if (Land^[I,K].Obj = 390) and (Land^[I,K].TreeAge = TREE_AGE_SAPLING) then
         begin
-          Land^[I,K].Obj := ChooseTreeToPlace(KMPoint(K,I), caAge1, true);
+          If gHands.IsHousePlanAt(KMPoint(K, I)) then
+            Land^[I,K].Obj := OBJ_NONE
+          else
+            Land^[I,K].Obj := ChooseTreeToPlace(KMPoint(K,I), caAge1, true);
           UpdatePassability(KMPoint(K, I));
         end else
         if Land^[I,K].TreeAge = gMapElements[Land^[I,K].Obj].TreeGrowAge + TREE_AGE_SAPLING then

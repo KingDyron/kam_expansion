@@ -75,6 +75,7 @@ type
     function GetClosestHouse(const aLoc: TKMPoint; aIndex: TKMHandID; aAlliance: TKMAllianceType; aTypes: TKMHouseTypeSet = HOUSES_VALID; aOnlyCompleted: Boolean = True): TKMHouse;overload;
     function GetClosestHouse(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aWareSet : TKMWareTypeSet = [wtAll]; aMaxDistance : Single = 999; aOnlyCompleted: Boolean = True): TKMHouse;overload;
     function HasHousePlanNearby(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aMaxDistance : Single = 999): Integer;
+    function IsHousePlanAt(aLoc : TKMPoint) : Boolean;
     function GetHousesInRadius(const aLoc: TKMPoint; aSqrRadius: Single; aIndex: TKMHandID; aAlliance: TKMAllianceType; aTypes: TKMHouseTypeSet = HOUSES_VALID; aOnlyCompleted: Boolean = True): TKMHouseArray; overload;
     function GetHousesInRadius(const aLoc: TKMPoint; aSqrRadius: Single; aTypes: TKMHouseTypeSet = HOUSES_VALID; aOnlyCompleted: Boolean = True): TKMHouseArray; overload;
     function DistanceToEnemyTowers(const aLoc: TKMPoint; aIndex: TKMHandID): Single;
@@ -668,18 +669,29 @@ begin
   Result := -1;
   LastDist := 9999;
   for I := 0 to fCount - 1 do
-  begin
-    J := fHandsList[I].HasHousePlanNearby(aLoc, aHouseTypeSet, aMaxDistance);
-    If J = -1 then
-      Continue;
-    P := fHandsList[I].Constructions.HousePlanList.Plans[J].Loc;
-    Dist := KMLengthDiag(P, aLoc);
-    if Dist < LastDist then
+    if fHandsList[I].Enabled then
     begin
-      LastDist := Dist;
-      Result := I;
+      J := fHandsList[I].HasHousePlanNearby(aLoc, aHouseTypeSet, aMaxDistance);
+      If J = -1 then
+        Continue;
+      P := fHandsList[I].Constructions.HousePlanList.Plans[J].Loc;
+      Dist := KMLengthDiag(P, aLoc);
+      if Dist < LastDist then
+      begin
+        LastDist := Dist;
+        Result := I;
+      end;
     end;
-  end;
+end;
+
+function TKMHandsCollection.IsHousePlanAt(aLoc : TKMPoint) : Boolean;
+var I : integer;
+begin
+  Result := false;
+  for I := 0 to fCount - 1 do
+    if fHandsList[I].Enabled then
+      If fHandsList[I].Constructions.HousePlanList.HasPlan(aLoc) then
+        Exit(true);
 end;
 
 
