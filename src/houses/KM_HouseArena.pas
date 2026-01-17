@@ -14,6 +14,7 @@ type
     fDevType : TKMDevelopmentTreeType;
     fArenaWaitTillNext : Byte;
     fArenaAnimStep : Cardinal;
+    fAnimColors : TKMCardinalArray;
     procedure UpdatePointBelowEntrance;
     function FestivalDuration : Word;
     procedure SetDevType(aValue : TKMDevelopmentTreeType);
@@ -108,21 +109,35 @@ begin
 end;
 
 Constructor TKMHouseArena.Load(LoadStream : TKMemoryStream);
+var I, N : Integer;
 begin
   Inherited;
   LoadStream.ReadData(fArenaWaitTillNext);
   LoadStream.ReadData(fArenaAnimStep);
   LoadStream.ReadData(fCurrentDevType);
   LoadStream.ReadData(fDevType);
+  LoadStream.ReadData(N);
+  SetLength(fAnimColors, N);
+  for I := 0 to N - 1 do
+    LoadStream.ReadData(fAnimColors[I]);
+
+
+
 end;
 
 procedure TKMHouseArena.Save(SaveStream : TKMemoryStream);
+var I, N : Integer;
 begin
   Inherited;
   SaveStream.WriteData(fArenaWaitTillNext);
   SaveStream.WriteData(fArenaAnimStep);
   SaveStream.WriteData(fCurrentDevType);
   SaveStream.WriteData(fDevType);
+
+  N := length(fAnimColors);
+  SaveStream.WriteData(N);
+  for I := 0 to N - 1 do
+    SaveStream.WriteData(fAnimColors[I]);
 end;
 
 {
@@ -390,6 +405,8 @@ begin
 end;
 
 procedure TKMHouseArena.StartFestival;
+var I, R : Integer;
+  tmp : Cardinal;
 begin
   If not CanStartFestival then
     Exit;
@@ -398,6 +415,26 @@ begin
   gHands[Owner].TakeFestivalPoints(fptEconomy, ValuableCost);
   gHands[Owner].TakeFestivalPoints(fptWarfare, WarfareCost);
   fCurrentDevType := fDevType;
+
+  //set flag colors of the animation
+  SetLength(fAnimColors, 1);
+  fAnimColors[0] := gHands[Owner].FlagColor; //always add owner's color
+  //add allies
+  for I := 1 to gHands.Count - 1 do
+    If gHands[I].Enabled and (gHands[I].Alliances[Owner] = atAlly) then
+    begin
+      SetLength(fAnimColors, Length(fAnimColors) + 1);
+      fAnimColors[high(fAnimColors)] := gHands[I].FlagColor;
+    end;
+  //shuffle
+  for I := High(fAnimColors) downto 0 do
+  begin
+    R := KaMRandom(I, 'TKMHouseArena.StartFestival');
+    tmp := fAnimColors[I];
+    fAnimColors[I] := fAnimColors[R];
+    fAnimColors[R] := tmp;
+  end;
+
 end;
 
 function TKMHouseArena.FestivalStarted: Boolean;
@@ -516,7 +553,7 @@ begin
     Exit;
   //gRenderAux.Quad(PointBelowEntrance.X, PointBelowEntrance.Y);
   If fArenaAnimStep > 0 then
-    gRenderPool.AddHouseArena(fCurrentDevType, Position, fArenaAnimStep, [gHands[Owner].FlagColor, $FF00FF55]);
+    gRenderPool.AddHouseArena(fCurrentDevType, Position, fArenaAnimStep, fAnimColors);
 end;
 
 end.
