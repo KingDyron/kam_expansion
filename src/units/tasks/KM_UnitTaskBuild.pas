@@ -16,7 +16,7 @@ type
     fLastPoint : TKMPoint;
   protected
     fTicker, fStuckTicker : Word;
-    function WaitedTooLong : Boolean;
+    function WaitedTooLong : Boolean; virtual;
     function IsStuckWhileWalking : Boolean;
   public
     constructor Create(aWorker: TKMUnitWorker);
@@ -37,6 +37,7 @@ type
     fTileLockSet: Boolean;
     fRoadType: TKMRoadType;
     fSupplies : Byte;
+    fWaitedTooLong : Boolean;
     procedure ReOpenPlan;
   public
     constructor Create(aWorker: TKMUnitWorker; const aLoc: TKMPoint; aID: Integer;  aRoadType : TKMRoadType);
@@ -57,6 +58,10 @@ type
     fBuildID: Integer;
     fDemandSet: Boolean;
     fTileLockSet: Boolean;
+    fWaitedTooLong : Boolean;
+    procedure ReOpenPlan;
+  protected
+    function WaitedTooLong : Boolean; override;
   public
     constructor Create(aWorker: TKMUnitWorker; const aLoc: TKMPoint; aID: Integer);
     constructor Load(LoadStream: TKMemoryStream); override;
@@ -362,6 +367,7 @@ begin
   LoadStream.Read(fRoadType, SizeOf(fRoadType));
   LoadStream.Read(fSupplies);
   LoadStream.Read(fTicker);
+  LoadStream.Read(fWaitedTooLong);
 end;
 
 
@@ -381,7 +387,7 @@ begin
     end
     else
       //Autobuild AI should rebuild roads when worker dies (otherwise house is never built)
-      if (gGame <> nil) and not gGame.IsExiting and gHands[fUnit.Owner].AI.Setup.AutoBuild and (fPhase < 9)
+      if (gGame <> nil) and not gGame.IsExiting and (gHands[fUnit.Owner].AI.Setup.AutoBuild or fWaitedTooLong) and (fPhase < 9)
       and gHands[fUnit.Owner].CanAddFieldPlan(fLoc, ftRoad, fRoadType) then
       begin
         gHands[fUnit.Owner].Constructions.FieldworksList.AddField(fLoc, ftRoad,fRoadType);
@@ -393,11 +399,13 @@ destructor TKMTaskBuildRoad.Destroy;
 begin
   if (fUnit <> nil) and fDemandSet then
     gHands[fUnit.Owner].Deliveries.Queue.RemDemand(fUnit);
+  If not fWaitedTooLong then
+  begin
+    if fTileLockSet then
+      gTerrain.UnlockTile(fLoc);
 
-  if fTileLockSet then
-    gTerrain.UnlockTile(fLoc);
-
-  ReOpenPlan;
+    ReOpenPlan;
+  end;
 
   inherited;
 end;
@@ -491,8 +499,14 @@ begin
   end;
   if WaitedTooLong then
   begin
-    ReOpenPlan;
     Result := trTaskDone;
+    fWaitedTooLong := true;
+
+    if fTileLockSet then
+      gTerrain.UnlockTile(fLoc);
+    fTileLockSet := false;
+    ReOpenPlan;
+
     Exit;
   end;
 
@@ -637,6 +651,7 @@ begin
   SaveStream.Write(fRoadType, SizeOf(fRoadType));
   SaveStream.Write(fSupplies);
   SaveStream.Write(fTicker);
+  SaveStream.Write(fWaitedTooLong);
 end;
 
 
@@ -661,28 +676,55 @@ begin
   LoadStream.Read(fBuildID);
   LoadStream.Read(fDemandSet);
   LoadStream.Read(fTileLockSet);
+  LoadStream.Read(fWaitedTooLong);
 end;
 
 
 destructor TKMTaskBuildWine.Destroy;
 begin
-  //Yet unstarted
+
+  if fDemandSet then
+    gHands[fUnit.Owner].Deliveries.Queue.RemDemand(fUnit);
+
+  If not fWaitedTooLong then
+  begin
+    if fTileLockSet then
+      gTerrain.UnlockTile(fLoc);
+
+    ReOpenPlan;
+  end;
+
+  inherited;
+end;
+
+
+procedure TKMTaskBuildWine.ReOpenPlan;
+begin
+   //Yet unstarted
   if fBuildID <> -1 then
+  begin
     if gTerrain.CanAddField(fLoc.X, fLoc.Y, ftWine) then
       //Allow other workers to take this task
       gHands[fUnit.Owner].Constructions.FieldworksList.ReOpenField(fBuildID)
     else
       //This plan is not valid anymore
       gHands[fUnit.Owner].Constructions.FieldworksList.CloseField(fBuildID);
+  end
+  else
+    //Autobuild AI should rebuild roads when worker dies (otherwise house is never built)
+    if (gGame <> nil) and not gGame.IsExiting and (gHands[fUnit.Owner].AI.Setup.AutoBuild or fWaitedTooLong) and (fPhase < 9)
+    and gHands[fUnit.Owner].CanAddFieldPlan(fLoc, ftWine) then
+    begin
+      gHands[fUnit.Owner].Constructions.FieldworksList.AddField(fLoc, ftWine);
+    end;
 
-  if fDemandSet then
-    gHands[fUnit.Owner].Deliveries.Queue.RemDemand(fUnit);
-
-  if fTileLockSet then
-    gTerrain.UnlockTile(fLoc);
-  inherited;
 end;
 
+function TKMTaskBuildWine.WaitedTooLong: Boolean;
+begin
+  Result := (fPhase <= 5) and fUnit.IsHungry and (gHands[fUnit.Owner].Stats.GetHouseQty(htInn) > 0);
+  Result := Result or (fTicker > 6000);//builder waited 10 minutes for wares to be delivered
+end;
 
 function TKMTaskBuildWine.WalkShouldAbandon: Boolean;
 begin
@@ -738,6 +780,18 @@ begin
     Result := trTaskDone;
     Exit;
   end;
+  if WaitedTooLong then
+  begin
+    Result := trTaskDone;
+    fWaitedTooLong := true;
+
+    if fTileLockSet then
+      gTerrain.UnlockTile(fLoc);
+    fTileLockSet := false;
+    ReOpenPlan;
+
+    Exit;
+  end;
 
   with fUnit do
   case fPhase of
@@ -773,8 +827,6 @@ begin
         SetActionLockedStay(24,uaWork1,False);
       end;
    4: begin
-        gTerrain.ResetDigState(fLoc);
-        gTerrain.SetInitWine(fLoc, Owner); //Replace the terrain, but don't seed grapes yet
          if BootsAdded or gHands[Owner].HasPearl(ptArium) then
           SetActionLockedStay(0,uaWork1,False) //skip this step
          else
@@ -798,6 +850,8 @@ begin
       end;
    6: begin
         fDemandSet := False;
+        gTerrain.ResetDigState(fLoc);
+        gTerrain.SetInitWine(fLoc, Owner); //Replace the terrain, but don't seed grapes yet
         SetActionLockedStay(IfThen(BootsAdded or gHands[Owner].HasPearl(ptArium), 11*6, 11*8), uaWork2, False);
         Thought := thNone;
       end;
@@ -823,6 +877,7 @@ begin
   SaveStream.Write(fBuildID);
   SaveStream.Write(fDemandSet);
   SaveStream.Write(fTileLockSet);
+  SaveStream.Write(fWaitedTooLong);
 end;
 
 
