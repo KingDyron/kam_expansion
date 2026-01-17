@@ -81,6 +81,7 @@ type
     procedure ShowCommonDemand(aHouse: TKMHouse; Base: Integer; var Line: Integer; var RowRes: Integer);
     procedure ShowCommonOutput(aHouse: TKMHouse; Base: Integer; var Line: Integer; var RowRes: Integer);
     procedure ShowCommonOrders(aHouse: TKMHouse; Base: Integer; var Line: Integer; var RowRes: Integer);
+    procedure ShowCommonCost(aHouse: TKMHouse; Base: Integer; var Line: Integer; var RowRes: Integer);
     procedure ShowCommonDemandSingle(aHouse: TKMHouse; aID : TByteSet; Base: Integer; var Line, RowRes: Integer);
     procedure ShowTownHall(aHouse: TKMHouse);
     function GetEquipAmount(Shift: TShiftState): Integer;
@@ -2136,6 +2137,7 @@ begin
 
       base := 75 + 34 * (QUEUE_LENGTH div 6) + demandTop;
       ShowCommonOutput(aHouse, base, line, rowRes);
+      ShowCommonCost(aHouse, base, line, rowRes);
 
       Panel_HouseQueue.Show;
       Panel_House_Common.Show;
@@ -2452,9 +2454,8 @@ end;
 
 procedure TKMGUIGameHouse.ShowCommonOrders(aHouse: TKMHouse; Base: Integer; var Line, RowRes: Integer);
 var
-  I, m1, m2, lastLine: Integer;
+  I: Integer;
   W: TKMWareType;
-  Warr : TKMWareTypeArray;
 begin
   //Show Orders
   if gRes.Houses[aHouse.HouseType].DoesOrders then
@@ -2492,56 +2493,67 @@ begin
         Inc(Line);
       end;
     end;
-    Label_Common_Costs.Hide;
-    Label_Common_Costs.Top := Base + Line * LINE_HEIGHT + 2;
-    Inc(Line);
-    lastLine := Line;
-    for I := 1 to WARES_IN_OUT_COUNT do //Costs
-    begin
-      W := aHouse.WareOutput[I];
-      if gRes.Wares[W].IsValid then
-      begin
-        if W = wtSawDust then
-          if not (aHouse.HouseType in [htStoneWorkshop, htProductionThatch]) then
-          begin
-            CostsRow_Costs[I].Visible := false;
-            Continue;
-          end
-          else
-            CostsRow_Costs[I].Visible := true;
-
-        m1 := gRes.Wares[W].MinProduction(aHouse.HouseType);
-        m2 := gRes.Wares[W].MaxProduction(aHouse.HouseType);
-
-        CostsRow_Costs[I].Caption := gRes.Wares[W].Title;
-        if m1 = m2 then
-          CostsRow_Costs[I].Caption := CostsRow_Costs[I].Caption + ' x' + IntToStr(m1)
-        else
-          CostsRow_Costs[I].Caption := CostsRow_Costs[I].Caption + ' x' + IntToStr(m1) + '-' + IntToStr(m2);
-
-
-        CostsRow_Costs[I].RX := rxGui;
-        //Hide the icons when they are not used
-
-        Warr := gRes.Wares[W].OrderCost;
-        if Warr[0] in [wtAll, wtNone, wtWarfare] then
-        begin
-          CostsRow_Costs[I].Hide;
-          Continue;
-        end;
-        IF (W = wtMace) and gHands[aHouse.Owner].EconomyDevUnlocked(20) then
-          SetLength(Warr, high(Warr));
-        IF (W = wtPlateArmor) and gHands[aHouse.Owner].EconomyDevUnlocked(21) then
-          SetLength(Warr, high(Warr));
-        Label_Common_Costs.Show;
-        CostsRow_Costs[I].TexArr := gRes.Wares.WaresArrToIconArr(Warr);
-
-        CostsRow_Costs[I].Show;
-        CostsRow_Costs[I].Top := Base + lastLine * LINE_HEIGHT + (Line - LastLine) * 42{ + (I - 1) * 42}; //Pack them closer so they fit on 1024x576
-        Inc(Line);
-      end;
-    end;
+    ShowCommonCost(aHouse, Base, Line, RowRes)
   end;
+end;
+
+procedure TKMGUIGameHouse.ShowCommonCost(aHouse: TKMHouse; Base: Integer; var Line, RowRes: Integer);
+var
+  I, m1, m2, lastLine: Integer;
+  W: TKMWareType;
+  Warr : TKMWareTypeArray;
+begin
+  Label_Common_Costs.Hide;
+  Label_Common_Costs.Top := Base + Line * LINE_HEIGHT + 2;
+  Inc(Line);
+  lastLine := Line;
+  for I := 1 to WARES_IN_OUT_COUNT do //Costs
+  begin
+    W := aHouse.WareOutput[I];
+    if gRes.Wares[W].IsValid then
+    begin
+      if W = wtSawDust then
+        if not (aHouse.HouseType in [htStoneWorkshop, htProductionThatch]) then
+        begin
+          CostsRow_Costs[I].Visible := false;
+          Continue;
+        end
+        else
+          CostsRow_Costs[I].Visible := true;
+
+      m1 := gRes.Wares[W].MinProduction(aHouse.HouseType);
+      m2 := gRes.Wares[W].MaxProduction(aHouse.HouseType);
+
+      CostsRow_Costs[I].Caption := gRes.Wares[W].Title;
+      if m1 = m2 then
+        CostsRow_Costs[I].Caption := CostsRow_Costs[I].Caption + ' x' + IntToStr(m1)
+      else
+        CostsRow_Costs[I].Caption := CostsRow_Costs[I].Caption + ' x' + IntToStr(m1) + '-' + IntToStr(m2);
+
+
+      CostsRow_Costs[I].RX := rxGui;
+      //Hide the icons when they are not used
+
+      Warr := gRes.Wares[W].OrderCost;
+      if Warr[0] in [wtAll, wtNone, wtWarfare] then
+      begin
+        CostsRow_Costs[I].Hide;
+        Continue;
+      end;
+      IF (W = wtMace) and gHands[aHouse.Owner].EconomyDevUnlocked(20) then
+        SetLength(Warr, high(Warr));
+      IF (W = wtPlateArmor) and gHands[aHouse.Owner].EconomyDevUnlocked(21) then
+        SetLength(Warr, high(Warr));
+      Label_Common_Costs.Show;
+      CostsRow_Costs[I].TexArr := gRes.Wares.WaresArrToIconArr(Warr);
+
+      CostsRow_Costs[I].Show;
+      CostsRow_Costs[I].Top := Base + lastLine * LINE_HEIGHT + (Line - LastLine) * 42{ + (I - 1) * 42}; //Pack them closer so they fit on 1024x576
+      Inc(Line);
+    end;
+
+  end;
+
 end;
 
 
