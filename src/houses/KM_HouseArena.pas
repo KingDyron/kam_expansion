@@ -437,10 +437,10 @@ function TKMHouseArena.BuildingCost : Byte;
 begin
   Result := 0;
   case fDevType of
-    dttBuilder : Result := 8;
-    dttEconomy : Result := 3;
-    dttArmy : Result := 1;
-    dttAll : Result := 2;
+    dttBuilder : Result := 12;
+    dttEconomy : Result := 6;
+    dttArmy : Result := 3;
+    dttAll : Result := 5;
   end;
   If gHands[Owner].EconomyDevUnlocked(32) then
     Result := Max(Result * 4 div 5, 1);
