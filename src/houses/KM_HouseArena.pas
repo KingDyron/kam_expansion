@@ -380,7 +380,11 @@ end;
 
 procedure TKMHouseArena.SetDevType(aValue: TKMDevelopmentTreeType);
 begin
-  fDevType := aValue;
+  If fDevType = aValue then
+    fDevType := dttNone
+  else
+    fDevType := aValue;
+
   If not FestivalStarted then
     fArenaWaitTillNext := 100;
 end;
@@ -484,12 +488,12 @@ begin
     begin
       //If aTick mod 600 = 0 then
       //  UpdatePointBelowEntrance;
-      If (fDevType <> dttNone) and (fArenaAnimStep > 0) then
+      If (fCurrentDevType <> dttNone) and (fArenaAnimStep > 0) then
       begin
         Inc(fArenaAnimStep);
-        IF fArenaAnimStep = FestivalDuration then
+        IF fArenaAnimStep >= FestivalDuration then
         begin
-          gHands[Owner].AddDevPoint( fCurrentDevType, PointsCount );
+          gHands[Owner].AddDevPoint( fCurrentDevType, PointsCount(fCurrentDevType) );
           gGame.RefreshDevelopmentTree;
           fArenaAnimStep := 0;
           fArenaWaitTillNext := 150;
