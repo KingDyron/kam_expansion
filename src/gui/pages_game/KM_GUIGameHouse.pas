@@ -996,7 +996,7 @@ begin
     Label_TH_Unit := TKMLabel.Create(Panel_HouseTownhall, 0, dy, TB_WIDTH, 0, '', fntOutline, taCenter);
     Inc(dy, 20);
 
-    Image_TH_Left  := TKMImage.Create(Panel_HouseTownhall,  0 + 10,dy + 5,54 - 10,106 - 20,535);
+    Image_TH_Left  := TKMImage.Create(Panel_HouseTownhall,  0 + 10,dy + 10,54 - 10,106 - 20,535);
     Image_TH_Left.Disable;
     Image_TH_Left.ImageStretch;
     Image_TH_Train := TKMImage.Create(Panel_HouseTownhall, 62,dy,54,106,536);

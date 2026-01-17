@@ -131,10 +131,13 @@ begin
     ProduceFestivalPoints(fptWarfare, (UnitCost(aUnitType) div 3) + 1);
 
 
-    if gHands[Owner].IsComputer then
+    if aUnitType in UNITS_WARRIORS then
+      if gRes.Units[U.UnitType].CanOrderAmmo then
+          TKMUnitWarrior(U).ReloadAmmo(wtNone);
+    {if gHands[Owner].IsComputer then
       if aUnitType in UNITS_WARRIORS then
         if gRes.Units[U.UnitType].CanOrderAmmo then
-          TKMUnitWarrior(U).OrderAmmo;
+          TKMUnitWarrior(U).OrderAmmo;}
 
     if Assigned(U.OnUnitTrained) then
       U.OnUnitTrained(U);
