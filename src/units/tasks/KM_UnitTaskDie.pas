@@ -37,8 +37,7 @@ begin
   if aUnit.Visible or (aUnit.InShip <> nil) then
   begin
     fPhase := 1; //Phase 0 can be skipped when the unit is visible
-    //no need to execute,  when animation is seperate
-    //Execute;
+    Execute;
   end;
 end;
 
