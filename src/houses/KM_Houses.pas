@@ -651,6 +651,7 @@ type
       Function NeedWater(aChildID : Integer = 0): Boolean;
       property GrowPhase : Byte read fGrowPhase write SetGrowPhase;
       property FruitType : Integer read fFruitTreeID write SetFruitTreeID;
+      property NextFruitType : Integer read fNextFruitTreeID;
       procedure MakeFruits(aChildID : Integer = 0);
       function CanAddChildTree(aLoc : TKMPoint) : Boolean; overload;
       function CanAddChildTree(X, Y : Integer) : Boolean; overload;
@@ -6237,6 +6238,8 @@ begin
     if fPhase > 0 then
     begin
       fGrowPhase := gFruitTrees[fFruitTreeID].MatureTreeStage; //tree can have more fruits
+
+
       Dec(fPhase);
     end
     else
@@ -6260,7 +6263,15 @@ begin
 
     Result := true;
   end else
+  begin
     Inc(fGrowPhase);
+
+    if (fGrowPhase <= 2) and (fNextFruitTreeID <> fFruitTreeID) then
+    begin
+      FruitType := fNextFruitTreeID;
+      fGrowPhase := 0;
+    end;
+  end;
 
 
 
@@ -6587,6 +6598,14 @@ begin
   fLastDamageID := 0;
   inherited;
   CheckForParentTree;
+
+  If (fFruitTreeID = 0) and (ParentTree <> nil) then
+  begin
+    fNextFruitTreeID := TKMHouseAppleTree(ParentTree).NextFruitType;
+    if gGameParams.IsMapEditor then
+      fFruitTreeID := fNextFruitTreeID;
+  end;
+
   fTmpObject := gTerrain.Land[Entrance.Y, Entrance.X].Obj;
   fRechecking := false;
 end;
@@ -6630,8 +6649,13 @@ begin
   end;
   if not gGameParams.IsMapEditor then
     gTerrain.RemoveObject(Entrance);
-
-  fNextFruitTreeID := fFruitTreeID;
+  If (fFruitTreeID = 0) and (ParentTree <> nil) then
+  begin
+    fNextFruitTreeID := TKMHouseAppleTree(ParentTree).NextFruitType;
+    if gGameParams.IsMapEditor then
+      fFruitTreeID := fNextFruitTreeID;
+  end else
+    fNextFruitTreeID := fFruitTreeID;
 
   if gHands[Owner].IsComputer then
     if aWasBuilt then
