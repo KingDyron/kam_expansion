@@ -707,8 +707,10 @@ begin
 
       Inc(lastVisible);
     end;
-    DecorationCost.Top := Button_Build[lastVisible - 1].Bottom + 5;
-
+    If lastVisible > 0 then
+      DecorationCost.Top := Button_Build[lastVisible - 1].Bottom + 5
+    else
+      DecorationCost.Hide;
   end;
 
 
