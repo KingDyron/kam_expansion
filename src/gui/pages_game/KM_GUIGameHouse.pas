@@ -996,10 +996,13 @@ begin
     Label_TH_Unit := TKMLabel.Create(Panel_HouseTownhall, 0, dy, TB_WIDTH, 0, '', fntOutline, taCenter);
     Inc(dy, 20);
 
-    Image_TH_Left  := TKMImage.Create(Panel_HouseTownhall,  0,dy,54,80,535);
+    Image_TH_Left  := TKMImage.Create(Panel_HouseTownhall,  0 + 10,dy + 5,54 - 10,106 - 20,535);
     Image_TH_Left.Disable;
-    Image_TH_Train := TKMImage.Create(Panel_HouseTownhall, 62,dy,54,80,536);
-    Image_TH_Right := TKMImage.Create(Panel_HouseTownhall,124,dy,54,80,537);
+    Image_TH_Left.ImageStretch;
+    Image_TH_Train := TKMImage.Create(Panel_HouseTownhall, 62,dy,54,106,536);
+    Image_TH_Train.ImageCenter;
+    Image_TH_Right := TKMImage.Create(Panel_HouseTownhall,124 + 5,dy + 10,54 - 10,106 - 20,537);
+    Image_TH_Right.ImageStretch;
     Image_TH_Right.Disable;
     Inc(dy, 106);
 
@@ -1014,12 +1017,12 @@ begin
     Inc(dy, 46);
     Label_TH_Costs  := TKMLabel.Create(Panel_HouseTownhall,0,dy,TB_WIDTH,0,gResTexts[TX_HOUSE_WARE_COSTS],fntGrey,taCenter);
     Inc(dy, 20);
-    CostsRow_TH_Cost := TKMCostsRow.Create(Panel_HouseTownhall, 0, dy, TB_WIDTH, 21, 8);
+    CostsRow_TH_Cost := TKMCostsRow.Create(Panel_HouseTownhall, 0, dy, TB_WIDTH, 40, 8);
     CostsRow_TH_Cost.RX := rxGui;
     CostsRow_TH_Cost.Visible := True;
     CostsRow_TH_Cost.Caption := gRes.Wares[wtGold].Title;
     CostsRow_TH_Cost.TexID1 := gRes.Wares[wtGold].GUIIcon;
-
+    CostsRow_TH_Cost.AsNumber := true;
 end;
 
 
@@ -1101,10 +1104,12 @@ begin
     top := Button_Barracks[rightIconStart - 1].Bottom - 96;
     Label_Barracks_Unit := TKMLabel.Create(Panel_HouseBarracks, 0, top + 96, TB_WIDTH, 0, '', fntOutline, taCenter);
 
-    Image_Barracks_Left  := TKMImage.Create(Panel_HouseBarracks,  0,top + 116,54,80,535);
+    Image_Barracks_Left  := TKMImage.Create(Panel_HouseBarracks,  0 + 5,top + 116 + 10,54 - 10,106 - 20,535);
+    Image_Barracks_Left.ImageStretch;
     Image_Barracks_Left.Disable;
-    Image_Barracks_Train := TKMImage.Create(Panel_HouseBarracks, 62,top + 116,54,80,536);
-    Image_Barracks_Right := TKMImage.Create(Panel_HouseBarracks,124,top + 116,54,80,537);
+    Image_Barracks_Train := TKMImage.Create(Panel_HouseBarracks, 62,top + 116,54,106,536);
+    Image_Barracks_Right := TKMImage.Create(Panel_HouseBarracks,124 + 5,top + 116 + 10,54 - 10,106 - 20,537);
+    Image_Barracks_Right.ImageStretch;
     Image_Barracks_Right.Disable;
 
     Button_Barracks_Left  := TKMButton.Create(Panel_HouseBarracks,  0,top + 222,54,40,35, rxGui, bsGame);

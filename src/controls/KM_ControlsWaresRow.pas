@@ -83,6 +83,7 @@ type
     Caption: UnicodeString;
     MaxCount: Byte;
     AddBevel : Boolean;
+    AsNumber : Boolean;
     constructor Create(aParent: TKMPanel; aLeft, aTop, aWidth, aHeight: Integer; aMaxCount: Byte = 6);
     procedure Paint; override;
   end;
@@ -523,6 +524,7 @@ begin
   MaxCount := aMaxCount;
   TexArr := [];
   AddBevel := true;
+  AsNumber := false;
 end;
 
 
@@ -536,9 +538,21 @@ begin
   if AddBevel then
   begin
     TKMRenderUI.WriteBevel(AbsLeft, AbsTop, Width, 40, 1, 0.35);
-    TKMRenderUI.WriteText(AbsLeft + 3, AbsTop + 2, Width - 6, Caption, fntGrey, taCenter, $FFFFFFFF);
+    If not AsNumber then
+      TKMRenderUI.WriteText(AbsLeft + 3, AbsTop + 2, Width - 6, Caption, fntGrey, taCenter, $FFFFFFFF);
   end;
 
+  If AsNumber then
+  begin
+    if TexID1 > 0 then
+    begin
+      baseLeft := AbsLeft + Width div 2;
+      TKMRenderUI.WritePicture(baseLeft -20, AbsTop, 20, Height, [], RX, TexID1,
+                                true, $FFFF00FF, 0);
+      TKMRenderUI.WriteText(baseLeft, AbsTop + 10, 40, 'x' + Count.ToString, fntGrey, taLeft, $FFFFFFFF);
+    end;
+
+  end else
   if Count > 0 then
   begin
     if Count <= MaxCount then
