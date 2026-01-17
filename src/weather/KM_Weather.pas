@@ -44,7 +44,7 @@ type
       procedure Save(SaveStream : TKMemoryStream);
       procedure UpdateState; virtual;
       procedure Paint(aLag : Single; aClipRect : TKMRect);
-      procedure PaintClouds;virtual;
+      procedure PaintClouds(aLag : Single);virtual;
 
   end;
 
@@ -286,17 +286,21 @@ end;
 procedure TKMWeather.Paint(aLag : Single; aClipRect : TKMRect);
 begin
   if not fDeleted then
-      PaintClouds;
+    If KMInRect(fPos, aClipRect) then
+      PaintClouds(aLag);
 end;
 
-procedure TKMWeather.PaintClouds;
+procedure TKMWeather.PaintClouds(aLag : Single);
 var I : Integer;
+  addSpeed : TKMPointF;
 begin
+  addSpeed.X := fSpeed.X * aLag;
+  addSpeed.Y := fSpeed.Y * aLag;
   for I := 1 to length(fClouds) do
     if fState = wsLoop then
-      gRenderPool.AddAnimation(fPos + fClouds[I - 1], fAnims[fState], fAge div (I + 1), 0, fRX, false, false, 0, true)
+      gRenderPool.AddAnimation(fPos + fClouds[I - 1] + addSpeed, fAnims[fState], fAge div (I + 1), 0, fRX, false, false, 0, true)
     else
-      gRenderPool.AddAnimation(fPos + fClouds[I - 1], fAnims[fState], fAge, 0, fRX, false, false, 0, true);
+      gRenderPool.AddAnimation(fPos + fClouds[I - 1] + addSpeed, fAnims[fState], fAge, 0, fRX, false, false, 0, true);
 
   gRenderPool.AddAnimation(fPos, fAnims[fState], fAge, 0, fRX, false, false, 0, true);
 end;
