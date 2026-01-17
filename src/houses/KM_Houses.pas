@@ -8690,7 +8690,7 @@ begin
   Inherited;
   fShipType := SHIPYARD_ORDER[0];
   for I := 0 to High(SHIPYARD_ORDER) do
-    if gHands[I].Locks.UnitUnlocked(SHIPYARD_ORDER[I], HouseType) then
+    if gHands[Owner].Locks.UnitUnlocked(SHIPYARD_ORDER[I], HouseType) then
     begin
       fShipType := SHIPYARD_ORDER[I];
       Break;
