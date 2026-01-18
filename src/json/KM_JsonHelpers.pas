@@ -200,11 +200,13 @@ type
     function GetD(aName : String) : Single;  overload;
     function GetS(aName : String) : String;  overload;
     function GetB(aName : String) : Boolean; overload;
+    function GetC(aName : String) : Cardinal; overload;
     //with default value
     function GetI(aName : String; aDefault : Integer) : Integer; overload;
     function GetD(aName : String; aDefault : Single) : Single; overload;
     function GetS(aName : String; aDefault : String) : String; overload;
     function GetB(aName : String; aDefault : Boolean) : Boolean; overload;
+    function GetC(aName : String; aDefault : Cardinal) : Cardinal; overload;
 
     function GetO(aName : String) : TKMJsonObject;
     function GetA(aName : String) : TKMJsonArrayNew;
@@ -213,6 +215,7 @@ type
     procedure SetD(aName : String; aValue : Single);
     procedure SetS(aName : String; aValue : String);
     procedure SetB(aName : String; aValue : Boolean);
+    procedure SetC(aName : String; aValue : Cardinal);
 
     procedure Add(aName, aValue : String); overload;
     procedure Add(aName : String; aValue : Byte); overload;
@@ -237,6 +240,7 @@ type
     function AddArray(aName : String; aOneLiner : Boolean = false): TKMJsonArrayNew;
 
     property I[aName : String] : Integer read GetI write SetI;
+    property C[aName : String] : Cardinal read GetC write SetC;
     property D[aName : String] : Single read GetD write SetD;
     property S[aName : String] : String read GetS write SetS;
     property B[aName : String] : Boolean read GetB write SetB;
@@ -272,11 +276,13 @@ type
     function GetD(aIndex : Word) : Single; overload;
     function GetS(aIndex : Word) : String; overload;
     function GetB(aIndex : Word) : Boolean; overload;
+    function GetC(aIndex : Word) : Cardinal; overload;
     //with default value
     function GetI(aIndex : Word; aDefault : Integer) : Integer; overload;
     function GetD(aIndex : Word; aDefault : Single) : Single; overload;
     function GetS(aIndex : Word; aDefault : String) : String; overload;
     function GetB(aIndex : Word; aDefault : Boolean) : Boolean; overload;
+    function GetC(aIndex : Word; aDefault : Cardinal) : Cardinal; overload;
     function GetO(aIndex : Word) : TKMJsonObject;
     function GetA(aIndex : Word) : TKMJsonArrayNew;
 
@@ -284,6 +290,7 @@ type
     procedure SetD(aIndex : Word; aValue : Single);
     procedure SetS(aIndex : Word; aValue : String);
     procedure SetB(aIndex : Word; aValue : Boolean);
+    procedure SetC(aIndex : Word; aValue : Cardinal);
     //basic
     procedure Add(aValue : String); overload;
     procedure Add(aValue : Byte); overload;
@@ -307,6 +314,7 @@ type
     function AddArray(aOneLiner : Boolean = false): TKMJsonArrayNew;
 
     property I[aIndex : Word] : Integer read GetI write SetI;
+    property C[aIndex : Word] : Cardinal read GetC write SetC;
     property D[aIndex : Word] : Single read GetD write SetD;
     property S[aIndex : Word] : String read GetS write SetS;
     property B[aIndex : Word] : Boolean read GetB write SetB;
@@ -2045,6 +2053,14 @@ begin
   If V <> nil then
     Result := String(V.Value) = 'true';
 end;
+function TKMJsonObject.GetC(aName : String) : Cardinal;
+var V : PKMJsonValue;
+begin
+  Result := 0;
+  V := GetValue(aName);
+  If V <> nil then
+    Assert(TryStrToUInt(String(V.Value), Result), 'Value:' + String(V.Value) + '; is not integer');
+end;
 
 function TKMJsonObject.GetI(aName : String; aDefault : Integer) : Integer;
 var V : PKMJsonValue;
@@ -2079,6 +2095,14 @@ begin
   V := GetValue(aName);
   If V <> nil then
     Result := String(V.Value) = 'true';
+end;
+function TKMJsonObject.GetC(aName : String; aDefault : Cardinal) : Cardinal;
+var V : PKMJsonValue;
+begin
+  Result := aDefault;
+  V := GetValue(aName);
+  If V <> nil then
+    Assert(TryStrToUInt(String(V.Value), Result), 'Value:' + String(V.Value) + '; is not integer');
 end;
 
 
@@ -2289,6 +2313,12 @@ begin
   If aIndex < fCount then
     Result := String(fList[aIndex].Value) = 'true';
 end;
+function TKMJsonArrayNew.GetC(aIndex : Word) : Cardinal;
+begin
+  Result := 0;
+  If aIndex < fCount then
+    Assert(TryStrToUInt(String(fList[aIndex].Value), Result), 'Value:' + String(fList[aIndex].Value) + '; is not integer');
+end;
 //with default value
 function TKMJsonArrayNew.GetI(aIndex : Word; aDefault : Integer) : Integer;
 begin
@@ -2314,6 +2344,12 @@ begin
   Result := aDefault;
   If aIndex < fCount then
     Result := String(fList[aIndex].Value) = 'true';
+end;
+function TKMJsonArrayNew.GetC(aIndex : Word; aDefault : Cardinal) : Cardinal;
+begin
+  Result := aDefault;
+  If aIndex < fCount then
+    Assert(TryStrToUInt(String(fList[aIndex].Value), Result), 'Value:' + String(fList[aIndex].Value) + '; is not integer');
 end;
 
 function TKMJsonArrayNew.GetO(aIndex : Word) : TKMJsonObject;
@@ -2371,6 +2407,15 @@ begin
   begin
     fList[aIndex].ValueType := jvtBoolean;
     String(fList[aIndex].Value) := aValue.ToString(true);
+  end else
+    Add(aValue);
+end;
+procedure TKMJsonArrayNew.SetC(aIndex : Word; aValue : Cardinal);
+begin
+  If aIndex < fCount then
+  begin
+    fList[aIndex].ValueType := jvtInteger;
+    String(fList[aIndex].Value) := aValue.ToString;
   end else
     Add(aValue);
 end;
