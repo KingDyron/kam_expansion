@@ -124,6 +124,12 @@ type
     procedure LoadToStream(aStream: TKMemoryStream; const aMarker: string);
     procedure LoadToStreams(aStream1, aStream2: TKMemoryStream; const aMarker1, aMarker2: string);
 
+    function ToBase64: String;
+    procedure LoadFromBase64(aBase64: string);
+
+    function ToBase64Compressed: String;
+    procedure LoadFromBase64Compressed(aBase64: string);
+
     {$IFDEF WDC OR FPC_FULLVERSION >= 30200}
     class procedure AsyncSaveToFileAndFree(var aStream: TKMemoryStream; const aFileName: string; aWorkerThread: TKMWorkerThread);
     class procedure AsyncSaveToFileCompressedAndFree(var aStream: TKMemoryStream; const aFileName: string; const aMarker: string; aWorkerThread: TKMWorkerThread); 
@@ -506,6 +512,7 @@ type
 implementation
 uses
   Math,
+  System.NetEncoding,
   {$IFDEF FPC} zstream, {$ENDIF}
   {$IFDEF WDC} ZLib, {$ENDIF}
   KM_CommonUtils, KM_Defaults;
@@ -776,6 +783,77 @@ procedure TKMemoryStream.LoadToStreams(aStream1, aStream2: TKMemoryStream; const
 begin
   LoadToStream(aStream1, aMarker1);
   LoadToStream(aStream2, aMarker2);
+end;
+
+
+function TKMemoryStream.ToBase64: String;
+var
+  Encoding: TBase64Encoding;
+begin
+  Result := '';
+  {$IFDEF WDC}
+  Encoding := TBase64Encoding.Create(0);
+  try
+    Result := Encoding.EncodeBytesToString(Memory, Size);
+  finally
+    Encoding.Free;
+  end;
+  {$ENDIF}
+  {$IFDEF FPC}
+  // Not supported yet (no support was needed yet)
+  {$ENDIF}
+end;
+
+
+function TKMemoryStream.ToBase64Compressed: String;
+var
+  compStream: TKMemoryStream;
+begin
+  compStream := TKMemoryStreamBinary.Create;
+  try
+    SaveToStreamCompressed(compStream);
+    Result := compStream.ToBase64;
+  finally
+    compStream.Free;
+  end;
+end;
+
+
+
+procedure TKMemoryStream.LoadFromBase64(aBase64: string);
+{$IFDEF WDC}
+var
+  Bytes: TBytes;
+  Encoding: TBase64Encoding;
+{$ENDIF}
+begin
+  {$IFDEF WDC}
+  Encoding := TBase64Encoding.Create(0);
+  try
+    Bytes := Encoding.DecodeStringToBytes(aBase64);
+    WriteData(Bytes, Length(Bytes));
+    Position := 0;
+  finally
+    Encoding.Free;
+  end;
+  {$ENDIF}
+  {$IFDEF FPC}
+  // Not supported yet (no support was needed yet)
+  {$ENDIF}
+end;
+
+
+procedure TKMemoryStream.LoadFromBase64Compressed(aBase64: string);
+var
+  compStream: TKMemoryStream;
+begin
+  compStream := TKMemoryStreamBinary.Create;
+  try
+    compStream.LoadFromBase64(aBase64);
+    LoadFromStreamCompressed(compStream);
+  finally
+    compStream.Free;
+  end;
 end;
 
 
