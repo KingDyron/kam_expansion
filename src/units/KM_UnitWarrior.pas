@@ -4185,7 +4185,7 @@ begin
   if (Action is TKMUnitActionWalkTo) or (Action is TKMUnitActionFight) or (Task is TKMTaskAttackHouse) then
   begin
       inc(fRamTicker);
-      if fRamTicker >= 10 then
+      if fRamTicker >= 25 then
       begin
         fRamTicker := 0;
         U := gHands.UnitsHitTest(KMPointDir(Position, Direction).DirFaceLoc);

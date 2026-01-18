@@ -363,6 +363,7 @@ var
   U : TKMUnit;
   condition : Integer;
   hadBoots : Boolean;
+  wareCost : Integer;
 begin
   Result := nil;
   //Make sure we have enough resources to equip a unit
@@ -371,15 +372,20 @@ begin
   hadBoots := TKMUnitRecruit(fRecruitsList.Items[0]).BootsAdded;
   condition := TKMUnitRecruit(fRecruitsList.Items[0]).Condition;
   //Take resources
+  wareCost := 0;
   for I := 0 to high(gRes.Units[aUnitType].BarracksCost) do
     if gRes.Units[aUnitType].BarracksCost[I].W <> wtNone then
     begin
       troopWareType := gRes.Units[aUnitType].BarracksCost[I].W;
       SetWareCnt(troopWareType, fResourceCount[troopWareType] - gRes.Units[aUnitType].BarracksCost[I].C);
+      Inc(wareCost);
+      If gRes.Units[aUnitType].BarracksCost[I].W in [wtIronShield, wtIronArmor, wtSword, wtCrossbow, wtPike] then
+        Inc(wareCost);
 
       gHands[Owner].Stats.WareConsumed(troopWareType, gRes.Units[aUnitType].BarracksCost[I].C);
       gHands[Owner].Deliveries.Queue.RemOffer(Self, troopWareType, gRes.Units[aUnitType].BarracksCost[I].C);
     end;
+  ProduceFestivalPoints(fptWarfare, wareCost);
   //don't use old one
   {for I := 1 to 4 do
   if TROOP_COST[aUnitType, I] <> wtNone then
@@ -437,6 +443,7 @@ begin
     if (CheckWareIn(wtBoots) > 0) and not (UNIT_TO_GROUP_TYPE[soldier.UnitType] in [gtMounted, gtMachines, gtMachinesMelee]) then
     if soldier.GiveBoots(false) then
         WareTakeFromOut(wtBoots, 1);
+
 
 
 
