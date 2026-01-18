@@ -2034,7 +2034,7 @@ begin
   Result := 0;
   V := GetValue(aName);
   If V <> nil then
-    Assert(TryStrToFloat(String(V.Value), Result), 'Value:' + String(V.Value) + '; is not single');
+    Assert(TryStrToFloat(String(V.Value), Result, TFormatSettings.Invariant), 'Value:' + String(V.Value) + '; is not single');
 end;
 
 function TKMJsonObject.GetS(aName : String) : String;
@@ -2077,7 +2077,7 @@ begin
   Result := aDefault;
   V := GetValue(aName);
   If V <> nil then
-    Assert(TryStrToFloat(String(V.Value), Result), 'Value:' + String(V.Value) + '; is not single');
+    Assert(TryStrToFloat(String(V.Value), Result, TFormatSettings.Invariant), 'Value:' + String(V.Value) + '; is not single');
 end;
 
 function TKMJsonObject.GetS(aName : String; aDefault : String) : String;
@@ -2310,7 +2310,7 @@ function TKMJsonArrayNew.GetD(aIndex : Word) : Single;
 begin
   Result := 0;
   If aIndex < fCount then
-    Assert(TryStrToFloat(String(fList[aIndex].Value), Result), 'Value:' + String(fList[aIndex].Value) + '; is not Single');
+    Assert(TryStrToFloat(String(fList[aIndex].Value), Result, TFormatSettings.Invariant), 'Value:' + String(fList[aIndex].Value) + '; is not Single');
 end;
 function TKMJsonArrayNew.GetS(aIndex : Word) : String;
 begin
@@ -2342,7 +2342,7 @@ function TKMJsonArrayNew.GetD(aIndex : Word; aDefault : Single) : Single;
 begin
   Result := aDefault;
   If aIndex < fCount then
-    Assert(TryStrToFloat(String(fList[aIndex].Value), Result), 'Value:' + String(fList[aIndex].Value) + '; is not Single');
+    Assert(TryStrToFloat(String(fList[aIndex].Value), Result, TFormatSettings.Invariant), 'Value:' + String(fList[aIndex].Value) + '; is not Single');
 end;
 function TKMJsonArrayNew.GetS(aIndex : Word; aDefault : String) : String;
 begin

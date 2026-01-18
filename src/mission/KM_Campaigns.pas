@@ -81,11 +81,14 @@ type
       FlagColor : Cardinal;
       FlagStyle: Byte;
     end;}
+    MapsUnlockableByScriptOnly : Boolean;
     constructor Create;
     destructor Destroy; override;
 
     procedure LoadFromFile(const aFileName: UnicodeString);
     procedure SaveToFile(const aFileName: UnicodeString);
+    procedure SaveToJSON(const aFileName: UnicodeString);
+    function LoadFromJSON(const aFileName: UnicodeString) : Boolean;
 
     property Path: UnicodeString read fPath;
     property BackGroundPic: TKMPic read fBackGroundPic write fBackGroundPic;
@@ -190,8 +193,9 @@ const
 
 implementation
 uses
-  SysUtils, Math, KromUtils,
+  SysUtils, Math, KromUtils, IOUtils,
   KM_GameParams,
+  KM_JsonHelpers,
   KM_Resource, KM_ResLocales, KM_ResSprites, KM_ResTypes,
   KM_Log, KM_Defaults, KM_CommonUtils, KM_FileIO, KM_Utils;
 
@@ -432,7 +436,8 @@ begin
   if ActiveCampaign <> nil then
   begin
     ActiveCampaign.MapsProgressData[fActiveCampaignMap].Completed := True;
-    ActiveCampaign.UnlockedMap := fActiveCampaignMap + 1;
+    If not ActiveCampaign.MapsUnlockableByScriptOnly then
+      ActiveCampaign.UnlockedMap := fActiveCampaignMap + 1;
     //Update BestDifficulty if we won harder game
     if Byte(ActiveCampaign.MapsProgressData[fActiveCampaignMap].BestCompleteDifficulty) < Byte(gGameParams.MissionDifficulty)  then
       ActiveCampaign.MapsProgressData[fActiveCampaignMap].BestCompleteDifficulty := gGameParams.MissionDifficulty;
@@ -604,6 +609,7 @@ begin
   //1st map is always unlocked to allow to start campaign
   fViewed := False;
   fUnlockedMap := 0;
+  MapsUnlockableByScriptOnly := false;
   fScriptDataStream := TKMemoryStreamBinary.Create;
 end;
 
@@ -639,6 +645,8 @@ var
   I, K: Integer;
   cmp: TBytes;
 begin
+  If LoadFromJSON(ChangeFileExt(aFileName, '.json')) then
+    Exit;
   if not FileExists(aFileName) then Exit;
 
   M := TKMemoryStreamBinary.Create;
@@ -685,7 +693,8 @@ begin
       M.Read(Maps[I].FlagStyle);
 
   FreeAndNil(M);
-  Maps[0].IsUnlocked := true;
+  If fMapCount > 0 then
+    Maps[0].IsUnlocked := true;
 end;
 
 
@@ -696,6 +705,9 @@ var
   cmp: TBytes;
 begin
   Assert(aFileName <> '');
+
+  SaveToJson(aFileName);
+  Exit;
 
   M := TKMemoryStreamBinary.Create;
   SetLength(cmp, 3);
@@ -731,6 +743,109 @@ begin
 
   M.SaveToFile(aFileName);
   FreeAndNil(M);
+end;
+
+procedure TKMCampaign.SaveToJSON(const aFileName: UnicodeString);
+var root, map : TKMJsonObject;
+  arr, nodes, unlock : TKMJsonArrayNew;
+  K, J : Integer;
+begin
+  root := TKMJsonObject.Create;
+  arr := root.AddArray('ID', true);
+  arr.Add(WideChar(fCampaignId[0]));
+  arr.Add(WideChar(fCampaignId[1]));
+  arr.Add(WideChar(fCampaignId[2]));
+  root.Add('MapsUnlockableByScriptOnly', MapsUnlockableByScriptOnly);
+
+  arr := Root.AddArray('Maps');
+
+  for K := 0 to fMapCount - 1 do
+  begin
+    map := arr.AddObject;
+    map.Add('MapID', K);
+    With map.AddObject('Flag', true) do
+    begin
+      Add('X', Maps[K].Flag.X);
+      Add('Y', Maps[K].Flag.Y);
+    end;
+    map.Add('FlagStyle', Maps[K].FlagStyle);
+    map.Add('FlagColor', Maps[K].FlagColor);
+    map.Add('TextPos', Byte(Maps[K].TextPos));
+
+    If Maps[K].UnlockAfter[0] > 0 then
+    begin
+      unlock := map.AddArray('UnlockAfter', true);
+      for J := 0 to High(Maps[K].UnlockAfter) do
+        unlock.Add(Maps[K].UnlockAfter[J]);
+    end;
+
+
+    nodes := map.AddArray('Nodes', true);
+
+    for J := 0 to Maps[K].NodeCount - 1 do
+      with nodes.AddObject do
+      begin
+        Add('X', Maps[K].Nodes[J].X);
+        Add('Y', Maps[K].Nodes[J].Y);
+      end;
+
+  end;
+  If fMapCount > 0 then
+    Maps[0].IsUnlocked := true;
+
+  root.SaveToFile(ChangeFileExt(aFileName, '.json'));
+  FreeAndNil(root);
+end;
+
+function TKMCampaign.LoadFromJSON(const aFileName: UnicodeString) : Boolean;
+var Root, map : TKMJsonObject;
+  arr1, arr2 : TKMJsonArrayNew;
+  I, K : Integer;
+begin
+  Result := true;
+  If not FileExists(aFileName) then
+    Exit(false);
+  Root := TKMJsonObject.Create;
+  try
+    Root.LoadFromFile(aFileName);
+    //load campaign ID
+    arr1 := Root.A['ID'];
+    for I := 0 to 2 do
+      fCampaignId[I] := Byte(UpperCase(arr1.S[I])[1]);
+    UpdateShortName;
+    MapsUnlockableByScriptOnly := root.B['MapsUnlockableByScriptOnly'];
+    //load maps
+    arr1 := Root.A['Maps'];
+    fMapCount := arr1.Count;
+    SetMapCount(fMapCount); //Update array's sizes
+    SetLength(Maps, arr1.Count);
+    for I := 0 to arr1.Count - 1 do
+    begin
+      map := arr1.O[I];
+      Maps[I].Flag.X := Map.O['Flag'].I['X'];
+      Maps[I].Flag.Y := Map.O['Flag'].I['Y'];
+      Maps[I].FlagStyle := map.I['FlagStyle'];
+      Maps[I].FlagColor := map.C['FlagColor'];
+      Maps[I].TextPos := TKMBriefingCorner(map.I['TextPos']);
+
+      arr2 := map.A['UnlockAfter'];
+      for K := 0 to Min(arr2.Count - 1, 4) do
+        Maps[I].UnlockAfter[K] := arr2.I[K];
+
+      arr2 := map.A['Nodes'];
+      Maps[I].NodeCount := arr2.Count;
+      for K := 0 to arr2.Count - 1 do
+      begin
+        Maps[I].Nodes[K].X := arr2.O[K].I['X'];
+        Maps[I].Nodes[K].Y := arr2.O[K].I['Y'];
+      end;
+
+    end;
+
+  finally
+    FreeAndNil(Root);
+  end;
+
 end;
 
 

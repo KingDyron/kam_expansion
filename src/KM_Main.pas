@@ -112,6 +112,7 @@ const
   // Generated for versions r13651+
   // We can allow to have beta and r6720 versions to be opened at the same time
   KAM_MUTEX = 'AAF80942-EC97-4D02-9339-07AB8FEFA187';
+  SHOW_LOADING = FALSE;
 
 
 {$OVERFLOWCHECKS OFF}
@@ -217,9 +218,12 @@ begin
   Randomize;
 
   //fFormLoading.Label5.Caption := UnicodeString(GAME_VERSION + ': King Dyron mod');
-  fFormLoading.Show; //This is our splash screen
-  //fFormLoading.Hide; //This is our splash screen
-  fFormLoading.Refresh;
+  If SHOW_LOADING then
+  begin
+    fFormLoading.Show; //This is our splash screen
+    fFormLoading.Refresh;
+  end else
+    fFormLoading.Hide; //This is our splash screen
 
   {$IFDEF MSWindows}
   TimeBeginPeriod(1); //initialize timer precision
@@ -882,7 +886,10 @@ begin
   fFormLoading.Position := poScreenCenter;
   fFormLoading.Bar1.Position := 0;
   fFormLoading.Label1.Caption := '';
-  fFormLoading.Show;
+  If SHOW_LOADING then
+    fFormLoading.Show
+  else
+    fFormLoading.Hide;
 end;
 
 
