@@ -2186,6 +2186,17 @@ begin
   end else
     Add(aName, aValue);
 end;
+procedure TKMJsonObject.SetC(aName : String; aValue : Cardinal);
+var V : PKMJsonValue;
+begin
+  V := GetValue(aName);
+  If V <> nil then
+  begin
+    V.ValueType := jvtBoolean;
+    String(V.Value) := aValue.ToString
+  end else
+    Add(aName, aValue);
+end;
 
 
 function TKMJsonObject.GetCount: Integer;
