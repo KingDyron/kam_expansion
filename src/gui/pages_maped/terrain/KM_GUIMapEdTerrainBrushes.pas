@@ -316,10 +316,10 @@ begin
   gCursor.MapEdRandomizeTiling := RandomElements.Checked;
   gCursor.MapEdOverrideCustomTiles := OverrideCustomTiles.Checked;
   gCursor.MapEdBlendingLvl := BrushBlending.Position;
+  gCursor.MapEdUseTerrainObjects:= UseTerrainObjects.Checked;
 
   if Sender = UseTerrainObjects then
   begin
-    gCursor.MapEdUseTerrainObjects:= UseTerrainObjects.Checked;
     if gCursor.MapEdObjectsDensity = 0 then
     begin
       gCursor.MapEdObjectsType[otTrees] := True;
