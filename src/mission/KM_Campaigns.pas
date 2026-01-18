@@ -15,7 +15,7 @@ type
   TKMBriefingCorner = (bcBottomRight, bcBottomLeft);
 
   TKMCampaignMapProgressData = record
-    Completed, Unlocked: Boolean;
+    Completed: Boolean;
     BestCompleteDifficulty: TKMMissionDifficulty;
   end;
 
@@ -70,6 +70,7 @@ type
 
     procedure SetCampaignId(aCampaignId: TKMCampaignId);
     procedure UpdateShortName;
+    function GetCampaignProgressFilePath : String;
   public
     Maps: TKMCampaignMapsInfo;{record
       Flag: TKMPointW;
@@ -92,6 +93,8 @@ type
     procedure SaveToJSON(const aFileName: UnicodeString);
     function LoadFromJSON(const aFileName: UnicodeString) : Boolean;
     //save progress into json file
+    procedure SaveProgress;
+    procedure LoadProgress;
 
 
     property Path: UnicodeString read fPath;
@@ -134,10 +137,10 @@ type
   private
     fOnAdd: TKMCampaignEvent;
     fOnAddDone: TNotifyEvent;
-    fOnLoadProgress: TNotifyEvent;
+    //fOnLoadProgress: TNotifyEvent;
     fOnComplete: TNotifyEvent;
   public
-    constructor Create(aOnAdd: TKMCampaignEvent; aOnAddDone, aOnLoadProgress, aOnTerminate, aOnComplete: TNotifyEvent);
+    constructor Create(aOnAdd: TKMCampaignEvent; aOnAddDone, {aOnLoadProgress,} aOnTerminate, aOnComplete: TNotifyEvent);
     procedure Execute; override;
   end;
 
@@ -161,18 +164,19 @@ type
 
     procedure CampaignAdd(aCampaign: TKMCampaign);
     procedure CampaignAddDone(Sender: TObject);
-    procedure LoadProgress(Sender: TObject);
+    //procedure LoadProgress(Sender: TObject);
     procedure ScanTerminate(Sender: TObject);
     procedure ScanComplete(Sender: TObject);
 
     procedure Clear;
-    procedure LoadProgressFromFile(const aFileName: UnicodeString);
+    //procedure LoadProgressFromFile(const aFileName: UnicodeString);
   public
     constructor Create;
     destructor Destroy; override;
 
     //Initialization
-    procedure SaveProgress(aForceSave: Boolean = false);
+    //procedure SaveProgress(aForceSave: Boolean = false);
+    procedure SaveProgress;
 
     procedure Lock;
     procedure Unlock;
@@ -306,7 +310,7 @@ begin
 end;
 
 
-//Read progress from file trying to find matching campaigns
+{//Read progress from file trying to find matching campaigns
 procedure TKMCampaignsCollection.LoadProgressFromFile(const aFileName: UnicodeString);
 var
   M: TKMemoryStream;
@@ -363,8 +367,8 @@ begin
     FreeAndNil(M);
   end;
 end;
-
-
+}
+{
 procedure TKMCampaignsCollection.SaveProgress(aForceSave: Boolean = false);
 var
   I, J: Integer;
@@ -401,6 +405,18 @@ begin
   end;
 
   gLog.AddTime('Campaigns.dat saved');
+end;
+}
+
+procedure TKMCampaignsCollection.SaveProgress;
+var I : Integer;
+begin
+  ForceDirectories(ExeDir + SAVES_CMP_FOLDER_NAME);
+  for I := 0 to Count -1 do
+    Campaigns[I].SaveProgress;
+
+  gLog.AddTime('Campaigns progress saved');
+
 end;
 
 
@@ -511,7 +527,7 @@ begin
   fUpdateNeeded := True; //Next time the GUI thread calls UpdateState we will run fOnRefresh
 end;
 
-
+{
 procedure TKMCampaignsCollection.LoadProgress(Sender: TObject);
 begin
   Lock;
@@ -521,7 +537,7 @@ begin
     Unlock;
   end;
 end;
-
+}
 
 //Scan was terminated
 //No need to resort since that was done in last MapAdd event
@@ -595,7 +611,7 @@ begin
 
   //Scan will launch upon create automatically
   fScanning := True;
-  fScanner := TKMCampaignsScanner.Create(CampaignAdd, CampaignAddDone, LoadProgress, ScanTerminate, ScanComplete);
+  fScanner := TKMCampaignsScanner.Create(CampaignAdd, CampaignAddDone{, LoadProgress}, ScanTerminate, ScanComplete);
 end;
 
 
@@ -645,6 +661,11 @@ end;
 procedure TKMCampaign.UpdateShortName;
 begin
   fShortName := WideChar(fCampaignId[0]) + WideChar(fCampaignId[1]) + WideChar(fCampaignId[2]);
+end;
+
+function TKMCampaign.GetCampaignProgressFilePath : String;
+begin
+  Result := ExeDir + SAVES_CMP_FOLDER_NAME + PathDelim + fShortName + '.json';
 end;
 
 
@@ -856,6 +877,124 @@ begin
   finally
     FreeAndNil(Root);
   end;
+
+end;
+
+procedure TKMCampaign.SaveProgress;
+var nRoot, map : TKMJsonObject;
+  arr : TKMJsonArrayNew;
+  I: Integer;
+  path : String;
+begin
+  path := GetCampaignProgressFilePath;
+  If not fViewed then
+    Exit;
+
+  nRoot := TKMJsonObject.Create;
+  try
+    nRoot.Add('CampaignID', fShortName);
+    nRoot.Add('Title', GetCampaignTitle);
+    nRoot.Add('WasOpened', fViewed, false);
+    nRoot.Add('UnlockedMission', fUnlockedMap);
+    arr := nRoot.AddArray('Missions');
+    for I := 0 to fMapCount - 1 do
+    begin
+      map := arr.AddObject(true);
+      map.Add('MapID', I + 1);
+      map.Add('Completed', fMapsProgressData[I].Completed);
+      map.Add('Unlocked', Maps[I].IsUnlocked);
+      map.Add('BestCompleteDifficulty', byte(fMapsProgressData[I].BestCompleteDifficulty));
+    end;
+
+    nRoot.Add('ScriptData', fScriptDataStream.ToBase64Compressed);
+
+    nRoot.SaveToFile(path);
+  finally
+    FreeAndNil(nRoot);
+  end;
+end;
+
+procedure TKMCampaign.LoadProgress;
+var nRoot, map : TKMJsonObject;
+  arr : TKMJsonArrayNew;
+  I: Integer;
+  path : String;
+  ID : UnicodeString;
+begin
+  //always have first map unlocked
+  //unless something blocks it
+  Maps[0].IsUnlocked := true;
+  fUnlockedMap := 0;
+
+  path := GetCampaignProgressFilePath;
+  If not fileExists(path) then
+    Exit;
+
+  nRoot := TKMJsonObject.Create;
+  nRoot.LoadFromFile(path);
+  try
+    ID := nRoot.S['CampaignID'];
+    If ID <> fShortName then
+      Exit;
+    arr := nRoot.A['Missions'];
+    If Arr.Count <> fMapCount then
+      Exit;
+
+    fViewed := nRoot.B['WasOpened'];
+    fUnlockedMap := nRoot.I['UnlockedMission'];
+
+    for I := 0 to fMapCount - 1 do
+    begin
+      map := arr.O[I];
+      If map.I['MapID'] - 1 <> I then
+        Continue;
+      fMapsProgressData[I].Completed := map.B['Completed'];
+      Maps[I].IsUnlocked := map.B['Unlocked'];
+      fMapsProgressData[I].BestCompleteDifficulty := TKMMissionDifficulty(map.B['BestCompleteDifficulty']);
+    end;
+    var bData := nRoot.S['ScriptData'];
+    fScriptDataStream.Clear;
+    try
+      fScriptDataStream.LoadFromBase64Compressed(bData);
+    except
+      on E: Exception do
+      begin
+        // Just log an exception
+        gLog.AddTime('Error loading script data from base64 string: "' + E.Message + '" base64string:');
+        gLog.AddNoTime(bData);
+      end;
+    end;
+  finally
+    FreeAndNil(nRoot);
+  end;
+  If fUnlockedMap > 0 then
+    Exit;
+  fUnlockedMap := 255;
+  //get first unlocked and not completed mission
+  for I := 0 to fMapCount - 1 do
+    If Maps[I].IsUnlocked and not fMapsProgressData[I].Completed then
+    begin
+      fUnlockedMap := I;
+      break;
+    end;
+  If fUnlockedMap = 255 then
+  for I := 0 to fMapCount - 1 do
+    If Maps[I].IsUnlocked then
+    begin
+      fUnlockedMap := I;
+      Break;
+    end;
+
+  If fUnlockedMap = 255 then
+  for I := 0 to fMapCount - 1 do
+    If fMapsProgressData[I].Completed then
+    begin
+      fUnlockedMap := I;
+      Break;
+    end;
+
+  If fUnlockedMap = 255 then
+    fUnlockedMap := 0;
 
 end;
 
@@ -1170,7 +1309,7 @@ var I : Integer;
 begin
   Result := 0;
   for I := 0 to MapCount - 1 do
-    if Maps[I].IsUnlocked and MapsProgressData[I].Completed then
+    if {Maps[I].IsUnlocked and }MapsProgressData[I].Completed then
       Result := Result + 1;
 end;
 
@@ -1211,7 +1350,7 @@ end;
 //aOnAddDone - signal that campaign has been added
 //aOnTerminate - scan was terminated (but could be not complete yet)
 //aOnComplete - scan is complete
-constructor TKMCampaignsScanner.Create(aOnAdd: TKMCampaignEvent; aOnAddDone, aOnLoadProgress, aOnTerminate, aOnComplete: TNotifyEvent);
+constructor TKMCampaignsScanner.Create(aOnAdd: TKMCampaignEvent; aOnAddDone, {aOnLoadProgress,} aOnTerminate, aOnComplete: TNotifyEvent);
 begin
   //Thread isn't started until all constructors have run to completion
   //so Create(False) may be put in front as well
@@ -1225,7 +1364,7 @@ begin
 
   fOnAdd := aOnAdd;
   fOnAddDone := aOnAddDone;
-  fOnLoadProgress := aOnLoadProgress;
+  //fOnLoadProgress := aOnLoadProgress;
   fOnComplete := aOnComplete;
   OnTerminate := aOnTerminate;
   FreeOnTerminate := False;
@@ -1258,11 +1397,12 @@ begin
 
               camp := TKMCampaign.Create;
               camp.LoadFromPath(aPath + searchRec.Name + PathDelim);
+              camp.LoadProgress;
               camp.fIsMP := false;
               fOnAdd(camp);
               // Load progress after each loaded campaign to collect info about unlocked maps before showing the campaign in the list
               // Its an overkill, but not a huge one, since everything is done in async thread anyway
-              fOnLoadProgress(Self);
+              //fOnLoadProgress(Self);
               fOnAddDone(Self);
             end;
           until (FindNext(searchRec) <> 0);
@@ -1298,11 +1438,12 @@ begin
 
               camp := TKMCampaign.Create;
               camp.LoadFromPath(aPath + searchRec.Name + PathDelim);
+              camp.LoadProgress;
               camp.fIsMP := true;
               fOnAdd(camp);
               // Load progress after each loaded campaign to collect info about unlocked maps before showing the campaign in the list
               // Its an overkill, but not a huge one, since everything is done in async thread anyway
-              fOnLoadProgress(Self);
+              //fOnLoadProgress(Self);
               fOnAddDone(Self);
             end;
           until (FindNext(searchRec) <> 0);
