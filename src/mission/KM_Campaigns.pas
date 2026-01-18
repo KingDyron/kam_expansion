@@ -15,7 +15,7 @@ type
   TKMBriefingCorner = (bcBottomRight, bcBottomLeft);
 
   TKMCampaignMapProgressData = record
-    Completed: Boolean;
+    Completed, Unlocked: Boolean;
     BestCompleteDifficulty: TKMMissionDifficulty;
   end;
 
@@ -85,10 +85,14 @@ type
     constructor Create;
     destructor Destroy; override;
 
+    //deprecated
     procedure LoadFromFile(const aFileName: UnicodeString);
     procedure SaveToFile(const aFileName: UnicodeString);
+    //new in json
     procedure SaveToJSON(const aFileName: UnicodeString);
     function LoadFromJSON(const aFileName: UnicodeString) : Boolean;
+    //save progress into json file
+
 
     property Path: UnicodeString read fPath;
     property BackGroundPic: TKMPic read fBackGroundPic write fBackGroundPic;
@@ -118,6 +122,8 @@ type
     procedure UnlockNextMission(aMission : Byte);
     function GetFinishText : String;
     function IsFinished : Boolean;
+
+    procedure UnlockMapWithScript(aMapID : Word; aUnlocked : Boolean);
 
   end;
 
@@ -181,6 +187,7 @@ type
     procedure SetActive(aCampaign: TKMCampaign; aMap: Byte);
     procedure UnlockNextMap;
     procedure UnlockAllCampaignsMissions;
+    procedure UnlockMapWithScript(aMapID : Word; aUnlocked : Boolean);
     procedure SortCampaigns;
     function GetByPath(aPath : String) : TKMCampaign;
 
@@ -436,8 +443,7 @@ begin
   if ActiveCampaign <> nil then
   begin
     ActiveCampaign.MapsProgressData[fActiveCampaignMap].Completed := True;
-    If not ActiveCampaign.MapsUnlockableByScriptOnly then
-      ActiveCampaign.UnlockedMap := fActiveCampaignMap + 1;
+    ActiveCampaign.UnlockedMap := fActiveCampaignMap + 1;
     //Update BestDifficulty if we won harder game
     if Byte(ActiveCampaign.MapsProgressData[fActiveCampaignMap].BestCompleteDifficulty) < Byte(gGameParams.MissionDifficulty)  then
       ActiveCampaign.MapsProgressData[fActiveCampaignMap].BestCompleteDifficulty := gGameParams.MissionDifficulty;
@@ -451,6 +457,11 @@ var
 begin
   for I := 0 to Count - 1 do
     Campaigns[I].UnlockAllMissions;
+end;
+procedure TKMCampaignsCollection.UnlockMapWithScript(aMapID : Word; aUnlocked : Boolean);
+begin
+  If ActiveCampaign <> nil then
+    ActiveCampaign.UnlockMapWithScript(aMapID, aUnlocked);
 end;
 
 
@@ -1078,6 +1089,8 @@ var I, K, J, newUnlockedMap: Integer;
   standardUnlock, canUnlock : Boolean;
   UnlockList : TList<Integer>;
 begin
+  If MapsUnlockableByScriptOnly then
+    Exit;
   UnlockList := TList<Integer>.Create;
   for I := 0 to MapCount - 1 do
   begin
@@ -1168,6 +1181,14 @@ begin
   //Update BestDifficulty if we won harder game
   if Byte(MapsProgressData[aMission].BestCompleteDifficulty) < Byte(gGameParams.MissionDifficulty)  then
     MapsProgressData[aMission].BestCompleteDifficulty := gGameParams.MissionDifficulty;
+end;
+
+procedure TKMCampaign.UnlockMapWithScript(aMapID : Word; aUnlocked : Boolean);
+begin
+  Assert(MapsUnlockableByScriptOnly and (aMapID < fMapCount), 'TKMCampaign.UnlockMapWithScript');
+  Maps[aMapID].IsUnlocked := aUnlocked;
+  If aUnlocked then
+    fUnlockedMap := aMapID;
 end;
 
 function TKMCampaign.IsFinished: Boolean;

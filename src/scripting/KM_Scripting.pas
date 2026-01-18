@@ -986,6 +986,7 @@ begin
     RegisterMethodCheck(c, 'procedure PanelExpand(aPlayer: ShortInt; aExpanded: Boolean)');
 
     RegisterMethodCheck(c, 'procedure CursorCustomSet(aPlayer : Shortint; aMode : TKMCursorRenderType; aTag1, aTag2 : Integer)');
+    RegisterMethodCheck(c, 'procedure CampaignUnlockMission(aMission: Byte; aUnlocked: Boolean)');
     RegisterMethodCheck(c, 'procedure MapTileSelect(X: Integer; Y: Integer; aSelected: Boolean)');
     RegisterMethodCheck(c, 'procedure WatchTowerRangeSet(aWatchTower : Integer; aRangeMin, aRangeMax : Single)');
     RegisterMethodCheck(c, 'procedure WatchTowerCyclesSet(aWatchTower : Integer; aCycles : Byte)');
@@ -1828,6 +1829,7 @@ begin
       RegisterMethod(@TKMScriptActions.PanelResize, 'PanelResize');
       RegisterMethod(@TKMScriptActions.PanelExpand, 'PanelExpand');
       RegisterMethod(@TKMScriptActions.CursorCustomSet, 'CursorCustomSet');
+      RegisterMethod(@TKMScriptActions.CampaignUnlockMission, 'CampaignUnlockMission');
       RegisterMethod(@TKMScriptActions.MapTileSelect, 'MapTileSelect');
       RegisterMethod(@TKMScriptActions.WatchTowerRangeSet, 'WatchTowerRangeSet');
       RegisterMethod(@TKMScriptActions.WatchTowerCyclesSet, 'WatchTowerCyclesSet');

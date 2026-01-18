@@ -206,7 +206,7 @@ begin
     Label_CampaignFlags[I].Hide;
     if I < fCampaign.MapCount then
     begin
-      if fCampaign.MapsProgressData[I].Completed then
+      if fCampaign.MapsProgressData[I].Completed and fCampaign.Maps[I].IsUnlocked then
         Image_CampaignFlags[I].TexID   := 11
       else
       if fCampaign.Maps[I].IsUnlocked then

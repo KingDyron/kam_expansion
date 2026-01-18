@@ -244,6 +244,7 @@ type
     function  UnitOrderWalk(aUnitID: Integer; X, Y: Integer): Boolean;
     //new
     procedure CursorCustomSet(aPlayer : Shortint; aMode : TKMCursorRenderType; aTag1, aTag2 : Integer);
+    procedure CampaignUnlockMission(aMission : Byte; aUnlocked : Boolean);
 
     procedure DebugShowGrid(aShow : Boolean);
     procedure DebugShowUnitRoutes(aShow : Boolean);
@@ -323,7 +324,7 @@ uses
   TypInfo,
   KM_Entity,
   KM_AI, KM_AIDefensePos,
-  KM_Game, KM_GameParams, KM_GameTypes, KM_FogOfWar, KM_Cursor,
+  KM_Game, KM_GameParams, KM_GameTypes, KM_FogOfWar, KM_Cursor, KM_GameApp,
   KM_HandsCollection, KM_HandLogistics, KM_HandConstructions, KM_HandEntity,
   KM_HouseBarracks, KM_HouseSchool, KM_HouseStore, KM_HouseMarket, KM_HouseTownHall,
   KM_UnitWarrior,
@@ -4826,15 +4827,23 @@ begin
       gCursor.Custom.Tag2 := aTag2;
       gCursor.Custom.RenderType := aMode;
     end;
-
-
-
   except
     gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
     raise;
   end;
+end;
 
-
+procedure TKMScriptActions.CampaignUnlockMission(aMission: Byte; aUnlocked: Boolean);
+begin
+  try
+    If gGameApp.Campaigns.ActiveCampaign <> nil then
+      gGameApp.Campaigns.UnlockMapWithScript(aMission, aUnlocked)
+    else
+      LogWarning('TKMScriptActions.CampaignUnlockMission', 'Script called in non-campaign mission')
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
 end;
 
 procedure TKMScriptActions.MapTileSelect(X: Integer; Y: Integer; aSelected: Boolean);
@@ -4845,9 +4854,8 @@ begin
     gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
     raise;
   end;
-
-
 end;
+
 procedure TKMScriptActions.WatchTowerRangeSet(aWatchTower : Integer; aRangeMin, aRangeMax : Single);
 var H : TKMHouse;
 begin
