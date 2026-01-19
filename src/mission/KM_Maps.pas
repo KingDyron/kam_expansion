@@ -108,6 +108,7 @@ type
     function LoadFromJson(const aFilePath: String) : Boolean;
     function HasDifficultyLevels: Boolean;
 
+
     property BlockColorSelection: Boolean read GetBlockColorSelection write fBlockColorSelection;
   end;
 
@@ -227,6 +228,10 @@ type
     property CanBeOnlyAICount: Byte read GetCanBeOnlyAICount;
     property CanBeHumanAndAICount: Byte read GetCanBeHumanAndAICount;
     function HasDifferentAITypes(aExceptLoc: TKMHandID = -1): Boolean;
+    function HasModdedData : Boolean;
+    function ModdedDataPath : String;
+    function ModdedDataDefinesPath : String;
+    function ModdedDataSpritesPath : String;
 
     property CampaignID : TKMCampaignId read fCampaignID write fCampaignID;
     property CampaignMission : Byte read fCampaignMission write fCampaignMission;
@@ -1040,6 +1045,29 @@ begin
   end;
 end;
 
+function TKMMapInfo.HasModdedData: Boolean;
+begin
+  Result := ModdedDataPath <> '';
+end;
+
+function TKMMapInfo.ModdedDataPath: string;
+begin
+  Result := fDir + MODS_FOLDER_NAME;//default modded data path
+
+  If not DirectoryExists(Result) then //check if folder exists, if not, there is no mod
+    Exit('');
+  Result := Result + PathDelim;
+end;
+
+function TKMMapInfo.ModdedDataDefinesPath: string;
+begin
+  Result := ModdedDataPath + DEFINES_FOLDER_NAME + PathDelim;
+end;
+
+function TKMMapInfo.ModdedDataSpritesPath: string;
+begin
+  Result := ModdedDataPath + SPRITES_FOLDER_NAME + PathDelim;
+end;
 
 function TKMMapInfo.GetBigDesc: UnicodeString;
 var

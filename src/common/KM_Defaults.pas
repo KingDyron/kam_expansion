@@ -588,6 +588,9 @@ const
   SAVES_FOLDER_NAME = 'Saves';
   SAVES_MP_FOLDER_NAME = 'SavesMP';
   SAVES_CMP_FOLDER_NAME = 'SavesCMP';
+  MODS_FOLDER_NAME = 'Mods';
+  DEFINES_FOLDER_NAME = 'Defines';
+  SPRITES_FOLDER_NAME = 'Modding Graphics';
 
 
 { Terrain }
