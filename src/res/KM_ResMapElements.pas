@@ -278,12 +278,13 @@ var
   //stage : TKMChopableAge;
 begin
   if not FileExists(aFileName) then Exit;
-  OBJECTS_CNT := 284;
+  OBJECTS_CNT := 648;
+  fCount := OBJECTS_CNT + 1;
   SetLength(gMapElements, OBJECTS_CNT + 1);
   SetLength(gFruitTrees, 0);
   SetLength(gDecorations, 0);
 
-  S := TMemoryStream.Create;
+  {S := TMemoryStream.Create;
   S.LoadFromFile(aFileName);
   for I := Low(gMapElements) to 255 do
   begin
@@ -555,8 +556,8 @@ begin
 
   gMapElements[22].SnowPic := 270;
   gMapElements[23].SnowPic := 271;
-  gMapElements[24].SnowPic := 272;
-  fCRC := fCRC xor LoadFromJSON(ExeDir + 'data' + PathDelim + 'defines' + PathDelim + 'objects.json');
+  gMapElements[24].SnowPic := 272;}
+  fCRC := {fCRC xor }LoadFromJSON(ExeDir + 'data' + PathDelim + 'defines' + PathDelim + 'objects.json');
 
 end;
 
@@ -767,7 +768,15 @@ begin
     begin
       aID := -1;
       ChangeIfDifferent(aID, nObject.I['ObjectID'], 0);
-      if (aID = -1) or (aID > OBJECTS_CNT) then
+
+      If aID >= OBJECTS_CNT then
+      begin
+        OBJECTS_CNT := aID;
+        fCount := OBJECTS_CNT + 1;
+        SetLength(gMapElements, fCount);
+      end;
+
+      if (aID = -1){ or (aID > OBJECTS_CNT) }then
         Continue;
       with gMapElements[aID] do
       begin
@@ -777,7 +786,7 @@ begin
           nArr2 := nObject.A['AnimSteps'];
           SetLength(arr, nArr2.Count);
           for K := 0 to nArr2.Count - 1 do
-            arr[K] := nArr.I[K];
+            arr[K] := nArr2.I[K];
           Anim.Create(arr, nObject.I['SlowAnim']);
         end;
         PrevTreeAgeObj := 0;
@@ -836,7 +845,6 @@ begin
             VWares[K].Ch := nArr2[K].I['Chance'];
           end;
         end;
-
 
 
         if nObject.Contains('PlaceableInEditor') then
@@ -1065,7 +1073,7 @@ begin
         obj.Add('FallTreeAnimObj', FallTreeAnimObj, 0);
         obj.Add('LightRadius', LightRadius, 0);
         obj.Add('LightPower', LightPower, 0);
-        obj.Add('ObjectPrice', ObjectPrice, 0);
+        //obj.Add('ObjectPrice', ObjectPrice, 0);
       end;
     end;
     //save grains data
