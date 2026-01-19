@@ -2049,7 +2049,7 @@
 			"GatheringScript" : "gsNone",
 			"WareInput" : ["wtSkin","wtNone","wtNone","wtNone","wtNone","wtNone"],
 			"WareOutput" : ["wtLeather","wtNone","wtNone","wtNone","wtNone","wtNone"],
-			"UnlockAfter" : ["htSwine", "htPasture"],
+			"UnlockAfter" : ["htSwine", "htPasture", "htCollectors"],
 			"SupplyIn1" : [676,677,678,679,680],
 			"SupplyOut1" : [681,682,683,684,685],
 			"ha_Work1" : {"X" : 14,"Y" : 8,"Steps" : [821,822,823,824,825,826,827,828,829,830,831,832,833,834,835,836,837,838,839,840,841,842,843,844,845,846,847,848,849]},
