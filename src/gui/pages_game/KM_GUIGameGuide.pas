@@ -1332,8 +1332,8 @@ procedure TKMGrainViewer.UpdateState(aTickCount: Cardinal);
 begin
   Inherited;
   Inc(AnimStep);
-
-  fStage := (AnimStep div 15) mod (gFieldGrains[fGrainType].StagesCount);
+  If fGrainType <> gftNone then
+    fStage := (AnimStep div 15) mod (gFieldGrains[fGrainType].StagesCount);
 end;
 
 procedure TKMGrainViewer.Paint;
