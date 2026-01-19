@@ -29,6 +29,7 @@ uses
   procedure IterateOverArea(const aStartCell: TKMPoint; aSize: Integer; aIsSquare: Boolean; aOnCell: TPointEventSimple; aAroundArea: Boolean = False); overload;
   procedure IterateOverArea(const aStartCell: TKMPoint; aSize: Integer; aIsSquare: Boolean; aOnCell: TKMPointEventSimple; aAroundArea: Boolean = False); overload;
 
+  function GetFilePath(aPath: string; aExt: AnsiString): string;
   function GetLocalizedFilePath(aPath: string; aLocale, aFallbackLocale, aExt: AnsiString): string;
 
   function CompareTextLogical(A, B: UnicodeString): Integer;
@@ -411,6 +412,13 @@ begin
   Result := GetHintWHotkey(aTextId, gResKeys.GetKeyNameById(aKeyFunc));
 end;
 
+
+function GetFilePath(aPath: string; aExt: AnsiString): string;
+begin
+  Result := aPath + aExt;
+  If not FileExists(Result) then
+    Result := '';
+end;
 
 // Try to find path to file with local suffixes, f.e. TSK01.waterfall.eng.wav
 function GetLocalizedFilePath(aPath: string; aLocale, aFallbackLocale, aExt: AnsiString): string;
