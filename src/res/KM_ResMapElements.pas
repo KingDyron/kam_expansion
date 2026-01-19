@@ -54,7 +54,7 @@ type
   private
     fCount: Integer;
     fCRC: Cardinal;
-    procedure DuplicateFormPrevObj(aAnimSteps :array of TKMWordArray);
+    procedure DuplicateFromPrevObj(aAnimSteps :array of TKMWordArray);
   public
     HighestPrice : Single;
     property Count: Integer read fCount;
@@ -226,7 +226,7 @@ const
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 { TKMResMapElements }
-procedure TKMResMapElements.DuplicateFormPrevObj(aAnimSteps: array of TKMWordArray);
+procedure TKMResMapElements.DuplicateFromPrevObj(aAnimSteps: array of TKMWordArray);
 var firstID : Integer;
   id, I : Integer;
 begin
@@ -612,7 +612,7 @@ begin
           animSteps[K][J] := animSteps[K][J] - 1;
       end;
 
-      DuplicateFormPrevObj(animSteps);
+      DuplicateFromPrevObj(animSteps);
 
     end else
     if nObject.B['AddGrowableTree'] then
