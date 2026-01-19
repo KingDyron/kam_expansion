@@ -35,7 +35,7 @@ type
     function GetObjPaletteTableWidth: Integer;
 
     procedure UpdatePaletteButton(aBtnID: Integer);
-    function UpdateObjAttributesAndDesc(aBtn: TKMButtonFlat; aObjID: Integer): TKMTerrainObjectAttributeSet;
+    function UpdateObjAttributesAndDesc(aBtn: TKMButtonFlatFit; aObjID: Integer): TKMTerrainObjectAttributeSet;
     procedure CompactMapElements;
     procedure ObjectsUpdate(aObjIndex: Integer);
     procedure UpdateObjectsScrollPosToIndex(aObjIndex: Integer);
@@ -48,6 +48,7 @@ type
     procedure ObjPalette_UpdateControlsPosition;
     procedure ObjectsPalette_OnShow(Sender: TObject; aVisible: Boolean);
     procedure ObjPalette_ClickShift(Sender: TObject; Shift: TShiftState);
+
 
     procedure ObjectsPaletteButton_Click(Sender: TObject);
     procedure ObjectsPaletteClose_Click(Sender: TObject);
@@ -68,7 +69,7 @@ type
       ObjectErase: TKMButtonFlat;
       ObjectBlock: TKMButtonFlat;
       ObjectsPalette_Button: TKMButtonFlat;
-      ObjectsTable: array [0..8] of TKMButtonFlat;
+      ObjectsTable: array [0..8] of TKMButtonFlatFit;
       ObjectsScroll: TKMScrollBar;
       Objects_Override: TKMCheckBox;
 
@@ -87,7 +88,7 @@ type
       Button_ObjPaletteErase: TKMButtonFlat;
       Button_ObjPaletteBlock: TKMButtonFlat;
       Panel_ObjectsTable: TKMScrollPanel;
-        ObjectsPaletteTable: array of TKMButtonFlat;
+        ObjectsPaletteTable: array of TKMButtonFlatFit;
       Image_ObjectAttributes: array[0..2] of array of TKMImage;
       DropBox_SortType: TKMDropList;
 
@@ -306,7 +307,7 @@ begin
   for I := 0 to 2 do
     for J := 0 to 2 do
     begin
-      ObjectsTable[I*3+J] := TKMButtonFlat.Create(Panel_Objects, 9 + I*(OBJ_CELL_W + 1), 40 + J*(OBJ_CELL_H + 1),
+      ObjectsTable[I*3+J] := TKMButtonFlatFit.Create(Panel_Objects, 9 + I*(OBJ_CELL_W + 1), 40 + J*(OBJ_CELL_H + 1),
                                                   OBJ_CELL_W, OBJ_CELL_H, 1, rxTrees); //RXid=1  // 1 2
       ObjectsTable[I*3+J].CapOffsetY := 15;
       ObjectsTable[I*3+J].Tag := I*3+J; //Store ID
@@ -339,7 +340,6 @@ begin
     Bevel_ObjectsPalette.BackAlpha := 0.7;
     Bevel_ObjectsPalette.EdgeAlpha := 0.9;
     Bevel_ObjectsPalette.OnClickShift := ObjPalette_ClickShift;
-
     Image_ObjectsPalette := TKMImage.Create(PopUp_ObjectsPalette, 0, 0, PopUp_ObjectsPalette.Width, PopUp_ObjectsPalette.Height, 18, rxGuiMain);
     Image_ObjectsPalette.ImageStretch;
     Image_ObjectsPalette.OnClickShift := ObjPalette_ClickShift;
@@ -353,16 +353,16 @@ begin
     Image_ObjectsPalette.OnMouseWheel := Scroll_ObjectsPalette.MouseWheel;
     Bevel_ObjectsPalette.OnMouseWheel := Scroll_ObjectsPalette.MouseWheel;
 
+
     Panel_ObjectsTable := TKMScrollPanel.Create(PopUp_ObjectsPalette, PopUp_ObjectsPalette.Width div 2 - 600, 0, 1200, PopUp_ObjectsPalette.Height - 125, [saVertical], bsMenu, ssCommon);
     Panel_ObjectsTable.AnchorsStretch;
-    Panel_ObjectsTable.ChildPanel.AnchorsStretch;
     Panel_ObjectsTable.ScrollV.WheelStep := 100;
     Panel_ObjectsTable.MouseWheelStep := 100;
 
     SetLength(ObjectsPaletteTable, fCountCompact);
     for I := 0 to fCountCompact - 1 do
     begin
-      ObjectsPaletteTable[I] := TKMButtonFlat.Create(Panel_ObjectsTable, 0, 0, OBJ_CELL_PALETTE_W, OBJ_CELL_PALETTE_H, 1, rxTrees); // Left and Top will update later
+      ObjectsPaletteTable[I] := TKMButtonFlatFit.Create(Panel_ObjectsTable, 0, 0, OBJ_CELL_PALETTE_W, OBJ_CELL_PALETTE_H, 1, rxTrees); // Left and Top will update later
       ObjectsPaletteTable[I].Tag := I; //Store ID
       ObjectsPaletteTable[I].CapOffsetY := 15;
 //      ObjectsPaletteTable[I].TexOffsetY := 0;
@@ -643,7 +643,7 @@ begin
 end;
 
 
-function TKMMapEdTerrainObjects.UpdateObjAttributesAndDesc(aBtn: TKMButtonFlat; aObjID: Integer): TKMTerrainObjectAttributeSet;
+function TKMMapEdTerrainObjects.UpdateObjAttributesAndDesc(aBtn: TKMButtonFlatFit; aObjID: Integer): TKMTerrainObjectAttributeSet;
 begin
   Result := [];
 
@@ -698,12 +698,11 @@ var
   I, J, K, leftAdj, {topAdj,} L, obj: Integer;
 begin
   leftAdj := (PopUp_ObjectsPalette.Width - fObjPaletteTableSize.X*(OBJ_CELL_W + 1) - 25*Byte(Scroll_ObjectsPalette.Visible)) div 2;
-  //topAdj := Image_ObjectsPalette.Top + 60;
 
   // Make invisible all palette buttons at the end of the list, after shown buttons 'page'
   for I := 0 to fCountCompact - 1 do
   begin
-    //ObjectsPaletteTable[I].Visible := False;
+    ObjectsPaletteTable[I].Visible := False;
     for J := Low(Image_ObjectAttributes) to High(Image_ObjectAttributes) do
       Image_ObjectAttributes[J, I].Hide;
   end;
@@ -759,7 +758,7 @@ begin
       begin
         ObjectsPaletteTable[K].Left := (L mod fObjPaletteTableSize.X) * (OBJ_CELL_PALETTE_W + 1){ + leftAdj};
         ObjectsPaletteTable[K].Top := 25 + (L div fObjPaletteTableSize.X) *(OBJ_CELL_PALETTE_H + 1){  + topAdj};
-        ObjectsPaletteTable[K].TexID := gMapElements[obj].Anim.Step[1] + 1;
+        ObjectsPaletteTable[K].SetNewTexID(gMapElements[obj].Anim.Step[1] + 1);
         ObjectsPaletteTable[K].Caption := IntToStr(obj);
 
         UpdatePaletteButton(K);
@@ -918,10 +917,10 @@ var
 begin
   if ssRight in Shift then
     PopUp_ObjectsPalette.Hide
-  else if (ssLeft in Shift) and (Sender is TKMButtonFlat) then
+  else if (ssLeft in Shift) and (Sender is TKMButtonFlatCommon) then
   begin
     PopUp_ObjectsPalette.Hide;
-    objIndex := TKMButtonFlat(Sender).Tag;
+    objIndex := TKMButtonFlatCommon(Sender).Tag;
     ObjectsUpdate(objIndex);
 
     if (Sender <> Button_ObjPaletteErase)
@@ -1066,7 +1065,7 @@ begin
     objIndex := ObjectsScroll.Position * 3 + I;
     if objIndex < fCountCompact then
     begin
-      ObjectsTable[I].TexID := gMapElements[fCompactToMapElem[objIndex]].Anim.Step[1] + 1;
+      ObjectsTable[I].SetNewTexID(gMapElements[fCompactToMapElem[objIndex]].Anim.Step[1] + 1);
       ObjectsTable[I].Caption := IntToStr(fCompactToMapElem[objIndex]);
 
       UpdateObjAttributesAndDesc(ObjectsTable[I], fCompactToMapElem[objIndex]);

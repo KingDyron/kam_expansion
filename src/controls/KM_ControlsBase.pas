@@ -300,6 +300,22 @@ type
     procedure Paint; override;
   end;
 
+  // FlatButtonFitImage
+  TKMButtonFlatFit = class(TKMButtonFlatCommon)
+  private
+    fImgWidth, fImgHeight : Integer;
+  public
+    Down: Boolean;
+    LineWidth : Byte;
+    DownColor : TColor4;
+    DoFitImage : Boolean;
+    ImgAnchors : TKMAnchorsSet;
+    constructor Create(aParent: TKMPanel; aLeft, aTop, aWidth, aHeight, aTexID: Integer; aRX: TRXType = rxGui); override;
+    procedure SetNewTexID(aID : Word);
+
+    procedure Paint; override;
+  end;
+
   // FlatButton
   TKMButtonFlatBlock = class(TKMButtonFlat)
   private
@@ -1105,6 +1121,71 @@ begin
   {if not fEnabled then
     TKMRenderUI.WriteShape(Left, Top, Width, Height, $80000000);}
 end;
+
+//Simple version of button, with a caption and image
+{TKMButtonFlatFit}
+constructor TKMButtonFlatFit.Create(aParent: TKMPanel; aLeft: Integer; aTop: Integer; aWidth: Integer; aHeight: Integer; aTexID: Integer; aRX: TRXType = rxGui);
+begin
+  Inherited;
+
+  LineWidth := 1;
+  DownColor :=$FFFFFFFF;
+  DoFitImage := true;
+  SetNewTexID(aTexID);
+end;
+
+procedure TKMButtonFlatFit.SetNewTexID(aID: Word);
+var
+  texSizeX, texSizeY : Word;
+  scale : Single;
+begin
+  TexID := aID;
+  texSizeX := gRes.Sprites[RX].RXData.Size[TexID].X;
+  texSizeY := gRes.Sprites[RX].RXData.Size[TexID].Y;
+  ImgAnchors := [];
+  fImgWidth := Width;
+  fImgHeight := Height;
+  //scale image down
+  If (texSizeX > fImgWidth) or (texSizeY > fImgHeight) then
+  begin
+    ImgAnchors := [anLeft, anRight, anTop, anBottom];
+
+    If texSizeX - fImgWidth >= texSizeY - fImgHeight then
+      scale := fImgWidth / texSizeX
+    else
+      scale := fImgHeight / texSizeY;
+
+    fImgWidth := Round(texSizeX * scale);
+    fImgHeight := Round(texSizeY * scale);
+    TexOffsetX := (Width - fImgWidth) div 2;
+    TexOffsetY := (Height - fImgHeight) div 2;
+  end;
+end;
+
+procedure TKMButtonFlatFit.Paint;
+var
+  textCol: TColor4;
+begin
+  inherited;
+
+  if TexID <> 0 then
+  begin
+    TKMRenderUI.WritePicture(AbsLeft + TexOffsetX,
+                             AbsTop + TexOffsetY - 6 * Byte(Caption <> ''),
+                             fImgWidth, fImgHeight, ImgAnchors, RX, TexID, Enabled or fEnabledVisually, FlagColor, 0, -1);
+  end;
+
+  textCol := IfThen(Enabled or fEnabledVisually, CapColor, $FF888888);
+
+
+  TKMRenderUI.WriteText(AbsLeft + CapOffsetX, AbsTop + (Height div 2) + 4 + CapOffsetY, Width, Caption, Font, taCenter, textCol, false, false, not Enabled);
+
+  if Down then
+    TKMRenderUI.WriteOutline(AbsLeft, AbsTop, Width, Height, LineWidth, DownColor);
+  {if not fEnabled then
+    TKMRenderUI.WriteShape(Left, Top, Width, Height, $80000000);}
+end;
+
 
 constructor TKMButtonFlatStack.Create(aParent: TKMPanel; aLeft: Integer; aTop: Integer; aWidth: Integer; aHeight: Integer;
                                       aTexIDs: TKMWordArray; aRX: TRXType = rxGui);
