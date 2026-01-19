@@ -274,9 +274,9 @@ begin
 
   SetLength(fValidTiles, MAX_TILE_TO_SHOW);
 
-  for J := 0 to High(MapEdTileRemap) do
+  {for J := 0 to High(MapEdTileRemap) do
     If MapEdTileRemap[J] > 0 then
-      fValidTiles[MapEdTileRemap[J] - 1] := true;
+      fValidTiles[MapEdTileRemap[J] - 1] := true;}
 
 
 end;
@@ -350,7 +350,7 @@ begin
   begin
     value := TKMNumericEdit(Sender).Value;
 
-    newV := value + 1;
+    {newV := value + 1;
     IF newV > fLastTile then
     begin
       while (newV < MAX_TILE_TO_SHOW - 1) and not fValidTiles[newV - 1] do
@@ -365,7 +365,7 @@ begin
       value := newV - 1;
 
     IF not fValidTiles[value] then
-      value := fLastTile - 1;
+      value := fLastTile - 1;}
 
     NumEdit_SetTileNumber.Value := value;
     NumEdit_SetTilePaletteNumber.Value := value;
