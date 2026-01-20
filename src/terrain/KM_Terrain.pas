@@ -6444,10 +6444,11 @@ begin
 }
 
   //For all passability types other than CanAll, houses and fenced houses are excluded
-  if Land^[aLoc.Y,aLoc.X].TileLock in [tlNone, tlFenced, tlFieldWork, tlRoadWork, tlWallEmpty, tlStructure] then
+  if Land^[aLoc.Y,aLoc.X].TileLock in [tlNone, tlDigged, tlFenced, tlFieldWork, tlRoadWork, tlWallEmpty, tlStructure] then
   begin
     if (TileIsWalkable(aLoc)
         or Land^[aLoc.Y,aLoc.X].TileOverlay2.AllowsBuilding)
+      and (Land^[aLoc.Y,aLoc.X].TileLock <> tlDigged)
       and gRes.Tileset[gRes.Tileset.Overlay[Land^[aLoc.Y,aLoc.X].TileOverlay2].TileID].Walkable
       and not Land^[aLoc.Y,aLoc.X].TileOverlay.BlocksWalking
       and not gMapElements[Land^[aLoc.Y,aLoc.X].Obj].AllBlocked
