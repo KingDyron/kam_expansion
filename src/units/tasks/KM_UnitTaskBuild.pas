@@ -2317,7 +2317,12 @@ begin
 
   with TKMUnitWorker(fUnit) do
     case fPhase of
-    0:  If {PickNextSpot(fCells, fBuildFrom, fStructure.LastCellID)} PickRandomSpot(fCells, fBuildFrom) then
+    0:  If ((Structure.Spec.Size[0].X = 1) or (Structure.Spec.Size[0].Y = 1)) and PickClosestSpot(fCells, fBuildFrom) then
+        begin
+          Thought := thBuild;
+          SetActionWalkToSpot(fBuildFrom.Loc, uaWalk, 1.42);
+        end else
+        If PickRandomSpot(fCells, fBuildFrom) then
         begin
           Thought := thBuild;
           SetActionWalkToSpot(fBuildFrom.Loc, uaWalk, 1.42);
@@ -2329,7 +2334,13 @@ begin
           Thought := thBuild;
           SetActionWalkToSpot(fBuildFrom.Loc);//walk directly to this place
         end else
-        if {PickNextSpot(fCells, fBuildFrom, fStructure.LastCellID)} PickRandomSpot(fCells, fBuildFrom) then
+        {If ((Structure.Spec.Size[0].X = 1) or (Structure.Spec.Size[0].Y = 1)) and PickClosestSpot(fCells, fBuildFrom) then
+        begin
+          Thought := thBuild;
+          SetActionWalkToSpot(fBuildFrom.Loc, uaWalk, 1.42);//try to use different location
+          fPhase := 0;
+        end else}
+        if PickRandomSpot(fCells, fBuildFrom) then
         begin
           Thought := thBuild;
           SetActionWalkToSpot(fBuildFrom.Loc, uaWalk, 1.42);//try to use different location

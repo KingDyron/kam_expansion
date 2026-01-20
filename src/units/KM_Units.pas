@@ -441,6 +441,7 @@ type
     procedure BuildField(aField: TKMFieldType; aLoc: TKMPoint; aIndex: Integer; aRoadType : TKMRoadType);
     procedure BuildHouseArea(aHouseType: TKMHouseType; aLoc: TKMPoint; aIndex: Integer);
     function PickRandomSpot(aList: TKMPointDirList; out Loc: TKMPointDir): Boolean;
+    function PickClosestSpot(aList: TKMPointDirList; out Loc: TKMPointDir): Boolean;
     function PickNextSpot(aList: TKMPointDirList; out Loc: TKMPointDir; var aLastCellID : Byte): Boolean;
 
     function OnlyBuildsHouse : Boolean;
@@ -1523,6 +1524,40 @@ begin
   Result := (myCount > 0);
   if Result then
     Loc := aList[spots[KaMRandom(myCount, 'TKMUnitWorker.PickRandomSpot')]];
+end;
+
+//Given a list check the locations in it and pick those that can be walked to
+//excluding current location. We assume that caller already made the list
+//with only walkable valid tiles
+function TKMUnitWorker.PickClosestSpot(aList: TKMPointDirList; out Loc: TKMPointDir): Boolean;
+var
+  I, myCount: Integer;
+  spots: array of Word;
+  lastBid, newBid : Single;
+begin
+  SetLength(spots, aList.Count);
+
+  //Scan the list and pick suitable locations
+  myCount := 0;
+  for I := 0 to aList.Count - 1 do
+  if CanWalkTo(aList[I].Loc, 0) then
+  begin
+    spots[myCount] := I;
+    Inc(myCount);
+  end;
+
+  Result := (myCount > 0);
+  LastBid := 2000000000;
+  for I := 0 to myCount - 1 do
+  begin
+    newBid := KMLengthDiag(Position, aList[Spots[I]].Loc);
+    If newBid < LastBid then
+    begin
+      Loc := aList[Spots[I]];
+      lastBid := newBid;
+    end;
+  end;
+
 end;
 
 function TKMUnitWorker.PickNextSpot(aList: TKMPointDirList; out Loc: TKMPointDir; var aLastCellID : Byte): Boolean;
