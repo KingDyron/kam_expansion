@@ -446,7 +446,7 @@ var
 begin
   if gMainSettings <> nil then //gMainSettings could be nil on Game Exit ?? Just check if its not nil
   begin
-    Inc(fOldFrameTimes, latestFrameTime);
+    fOldFrameTimes := EnsureRange(fOldFrameTimes + latestFrameTime, 0, high(Cardinal) );
     Inc(fFrameCount);
     if fOldFrameTimes >= FPS_INTERVAL then
     begin

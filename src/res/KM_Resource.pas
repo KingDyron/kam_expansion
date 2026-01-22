@@ -82,6 +82,8 @@ type
     property Cosmetics: TKMResCosmetics read fCosmetics;
     procedure ReloadJSONData(UpdateCRC : Boolean; aEvent : TAnsiStringEvent);
 
+    procedure OverloadDataFromFolder(aDefinesPath : String);
+
 
     procedure UpdateStateIdle;
 
@@ -211,7 +213,7 @@ begin
     fTileset.SetTileColors(tileColors);
   end;
   fMapElements := TKMResMapElements.Create;
-  fMapElements.LoadFromFile(ExeDir + 'data' + PathDelim + 'defines' + PathDelim + 'mapelem.dat');
+  fMapElements.LoadFromFile;
 
   fSprites.ClearTemp;
   fWares := TKMResWares.Create;
@@ -308,29 +310,51 @@ begin
 end;
 
 procedure TKMResource.ReloadJSONData(UpdateCRC: Boolean; aEvent : TAnsiStringEvent);
+var tileColors: TKMColor3bArray;
 begin
 
   fJson.Reload;
-  //fSprites.Free;
-  //fSprites := TKMResSprites.Create(nil, nil);
-  //fSprites.LoadMenuResources;
-  if Assigned(aEvent) then aEvent('Reloading Data|Sprites');
-    fSprites.LoadGameResources(true, true);
 
-  if Assigned(aEvent) then aEvent('Reloading Data|Sprites|Houses');
-  fHouses.ReloadJSONData(UpdateCRC);
-  if Assigned(aEvent) then aEvent('Reloading Data|Sprites|Houses|Bridges');
-  fStructures.ReloadJSONData(UpdateCRC);
-  if Assigned(aEvent) then aEvent('Reloading Data|Sprites|Houses|Bridges|Units');
-  fUnits.ReloadJSONData(UpdateCRC);
-  if Assigned(aEvent) then aEvent('Reloading Data|Sprites|Houses|Bridges|Units|Objects');
-  fMapElements.ReloadJSONData(UpdateCRC);
-  if Assigned(aEvent) then aEvent('Reloading Data|Sprites|Houses|Bridges|Units|Objects|Wares');
-  fWares.ReloadJSONData(UpdateCRC);
-  if Assigned(aEvent) then aEvent('Reloading Data|Sprites|Houses|Bridges|Units|Objects|Wares||DONE');
+  {fSprites.LoadMenuResources;
+  if Assigned(aEvent) then aEvent('Reloading Data : Sprites');
+    fSprites.LoadGameResources(true, true);}
+  if Assigned(aEvent) then aEvent('Reloading Data : Tiles');
+    fTileset.ReloadJSONData(true);
+    if not SKIP_RENDER then
+    begin
+      tileColors := fSprites.Sprites[rxTiles].GetAverageSpriteColors(TILES_CNT);
+      fTileset.SetTileColors(tileColors);
+    end;
+  if Assigned(aEvent) then aEvent('Reloading Data : Houses');
+    fHouses.ReloadJSONData(UpdateCRC);
+  if Assigned(aEvent) then aEvent('Reloading Data : Structures');
+    fStructures.ReloadJSONData(UpdateCRC);
+  if Assigned(aEvent) then aEvent('Reloading Data : Units');
+    fUnits.ReloadJSONData(UpdateCRC);
+  if Assigned(aEvent) then aEvent('Reloading Data : Objects');
+    fMapElements.ReloadJSONData(UpdateCRC);
+  if Assigned(aEvent) then aEvent('Reloading Data : Wares');
+    fWares.ReloadJSONData(UpdateCRC);
+  if Assigned(aEvent) then aEvent('Reloading Data DONE');
 
   fMapElements.AfterResourceLoad;
 
+end;
+
+procedure TKMResource.OverloadDataFromFolder(aDefinesPath : String);
+  var tileColors: TKMColor3bArray;
+begin
+  if (fTileset.LoadFromJSON(aDefinesPath + 'Tiles.json') > 0) and not SKIP_RENDER then
+  begin
+    tileColors := fSprites.Sprites[rxTiles].GetAverageSpriteColors(TILES_CNT);
+    fTileset.SetTileColors(tileColors);
+  end;
+  fHouses.LoadFromJSON(aDefinesPath + 'Houses.json');
+  fStructures.LoadFromJSON(aDefinesPath + 'Structures.json');
+  fUnits.LoadFromJSON(aDefinesPath + 'Units.json');
+  fMapElements.LoadFromJSON(aDefinesPath + 'Objects.json');
+  fWares.LoadFromJSON(aDefinesPath + 'Wares.json');
+  fMapElements.AfterResourceLoad;
 end;
 
 

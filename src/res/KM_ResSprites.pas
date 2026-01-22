@@ -87,7 +87,7 @@ type
 
     procedure LoadFromRXXFile(const aFileName: string; aStartingIndex: Integer = 1);
     procedure OverloadRXXFilesFromFolder(const aFolder: string);
-    procedure OverloadRXDataFromFolder(const aFolder: string; aSoftenShadows: Boolean = True);
+    procedure OverloadRXDataFromFolder(const aFolder: string; aSoftenShadows: Boolean = false);
 
     function GetSoftenShadowType(aID: Integer): TKMSpriteSoftening;
 
@@ -173,6 +173,7 @@ type
     procedure LoadMenuResources;
     procedure LoadGameResources(aAlphaShadows: Boolean; aForceReload: Boolean = False);
     procedure ClearTemp;
+    procedure OverloadAllFromFolder(aPath : String);
 
     class function AllTilesOnOneAtlas: Boolean;
 
@@ -189,7 +190,7 @@ type
     {$ENDIF}
 
     //Used externally to access raw RGBA data (e.g. by ExportAnim)
-    function LoadSprites(aRT: TRXType; aAlphaShadows: Boolean): Boolean;
+    function LoadSprites(aRT: TRXType; aAlphaShadows: Boolean; aModsPath : String = ''): Boolean;
     function LoadRXASprites(aRT: TRXType): Boolean;
     function LoadRXASpritesAndGenTextures(aRT: TRXType): Boolean;
     procedure ExportToPNG(aRT: TRXType);
@@ -214,6 +215,7 @@ type
     LoadStepDone: LongBool;  // flag to show, when another RXX / RXA load is completed
     LastLoadedRXA: LongBool; // flag to show, what type of RX we were loading: RXA or RXX
     LoadStage: TKMAsyncLoadStage;
+    OnlyOverload : Boolean;
     constructor Create(aResSprites: TKMResSprites; aAlphaShadows: Boolean; aRxType: TRXType);
     destructor Destroy; override;
 
@@ -766,10 +768,18 @@ var
   decompressionStream: TDecompressionStream;
   rxxFormat: TKMRXXFormat;
   filePath : String;
+  bArray : array of Byte;
+  idList : TList<Integer>;
 begin
-  filePath := aFolder + 'GUI_a.rxx';
-  if not FileExists(filePath) then Exit;
+  filePath := aFolder + RX_INFO[fRT].FileName + '.rxx';
+  if not FileExists(filePath) then
+  begin
+    filePath:= aFolder + RX_INFO[fRT].FileName + '_a.rxx';//check for _a file
+    If not FileExists(filePath) then
+      Exit;
+  end;
 
+  idList := TList<Integer>.Create;
   inputStream := TFileStream.Create(filePath, fmOpenRead or fmShareDenyNone);
   try
     ReadRXZHeader(inputStream, rxxFormat);
@@ -787,13 +797,17 @@ begin
       if rxxCount = 0 then
         Exit;
 
-      Allocate(1 + rxxCount - 1);
+      If rxxCount >= length(fRXData.Flag) then
+        AllocateTemp(1 + rxxCount - 1);
 
-      decompressionStream.Read(fRXData.Flag[1], rxxCount);
+      SetLength(bArray, rxxCount + 1);
+
+      decompressionStream.Read(bArray[1], rxxCount);
 
       for I := 1 to 1 + rxxCount - 1 do
-        if fRXData.Flag[I] = 1 then
+        if bArray[I] = 1 then
         begin
+          idList.ADd(I);
           decompressionStream.Read(fRXData.Size[I].X, SizeOf(fRXData.Size[I]));
           decompressionStream.Read(fRXData.Pivot[I].X, SizeOf(fRXData.Pivot[I]));
           //SizeNoShadow is used only for Units
@@ -813,6 +827,11 @@ begin
   finally
     FreeAndNil(inputStream);
   end;
+  If idList.Count = 0 then
+    Exit;
+  {$IFNDEF NO_OGL}
+  MakeGFX(true, idList, False, nil);
+  {$ENDIF}
 end;
 
 procedure TKMSpritePack.LoadFromRXAFile(const aFileName: string);
@@ -992,7 +1011,7 @@ end;
 // Parse all valid files in Sprites folder:
 // - append or replace original sprites with new ones
 // - exclude original sprites if necessary as well
-procedure TKMSpritePack.OverloadRXDataFromFolder(const aFolder: string; aSoftenShadows: Boolean = True);
+procedure TKMSpritePack.OverloadRXDataFromFolder(const aFolder: string; aSoftenShadows: Boolean = false);
   {$IFDEF WDC}
   // Append all PNGs including the subfolders
   // Pattern is X_nnnn.png, where nnnn is dynamic (1..n chars) for modders convenience
@@ -2051,15 +2070,37 @@ begin
   end
   else
     LoadAllResources;
-    
+
   {$ELSE}
   LoadAllResources;
   {$ENDIF}
 end;
 
+procedure TKMResSprites.OverloadAllFromFolder(aPath: string);
+var RT : TRXType;
+begin
+  for RT in [rxTrees, rxHouses, rxUnits, rxGui, rxTiles] do
+  begin
+
+    LoadSprites(RT, true, aPath);
+    {$IFNDEF NO_OGL}
+    fSprites[RT].MakeGFX(fAlphaShadows, 1, False, nil);
+    {$ENDIF}
+
+    //AtomicExchange(Integer(false), Integer(False));
+    //Log('DONE Load RXX ''' + RX_INFO[RT].FileName + '.rxx''');
+
+    //fSprites[RT].OverloadGeneratedFromFolder(true, aPath, false);
+    //fSprites[RT].OverloadRXXFilesFromFolder(aPath);
+
+  end;
+
+
+end;
+
 
 //Try to load RXX first, then RX, then use Folder
-function TKMResSprites.LoadSprites(aRT: TRXType; aAlphaShadows: Boolean): Boolean;
+function TKMResSprites.LoadSprites(aRT: TRXType; aAlphaShadows: Boolean; aModsPath : String = ''): Boolean;
 begin
   gLog.AddTime('Load Sprites started');
   Result := False;
@@ -2082,9 +2123,10 @@ begin
   {if gRes.Paths.GetSelectedPathID(dtModding) > 0 then
     fSprites[aRT].OverloadRXDataFromFolder(gRes.Paths[dtModding] + PathDelim)
   else}
-    fSprites[aRT].OverloadRXDataFromFolder(ExeDir + 'Modding graphics' + PathDelim);
-    If aRT = rxGui then
-      fSprites[aRT].OverloadRXXFilesFromFolder(ExeDir + 'Modding graphics' + PathDelim);
+  If aModsPath = '' then
+    aModsPath := ExeDir + 'Modding graphics' + PathDelim;
+    fSprites[aRT].OverloadRXDataFromFolder(aModsPath);
+    fSprites[aRT].OverloadRXXFilesFromFolder(aModsPath);
 
   gLog.AddTime('Load Sprites Done');
 

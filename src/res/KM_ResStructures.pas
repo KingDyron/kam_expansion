@@ -110,12 +110,12 @@ type
     fCRC : Cardinal;
     fList: array of TKMStructureSpec;
     function GetBridge(aIndex : Integer) : TKMStructureSpec;
-    function LoadFromJSON : Cardinal;
     function GetCount : Word;
   public
     property CRC: Cardinal read fCRC;
     property Bridge[aIndex : Integer] : TKMStructureSpec read GetBridge; default;
     property Count : Word read GetCount;
+    function LoadFromJSON(aPath : String) : Cardinal;
     Procedure ReloadJSONData(UpdateCRC: Boolean);
     constructor Create;
     destructor Destroy; override;
@@ -429,7 +429,7 @@ constructor TKMResStructures.Create;
 begin
   Inherited;
 
-  fCRC := LoadFromJSON;
+  fCRC := LoadFromJSON(ExeDir + 'data' + PathDelim + 'defines' + PathDelim + 'Structures.json');
 end;
 
 destructor TKMResStructures.Destroy;
@@ -441,14 +441,16 @@ begin
   Inherited;
 end;
 
-function TKMResStructures.LoadFromJSON : Cardinal;
+function TKMResStructures.LoadFromJSON(aPath : String) : Cardinal;
 var jsonPath : String;
   I : Integer;
   nRoot : TJSONObject;
   nBridges : TJSONArray;
 begin
 
-  jsonPath := ExeDir + 'data' + PathDelim + 'defines' + PathDelim + 'Bridges.json';
+  jsonPath := aPath;
+  If not FileExists(aPath) then
+    Exit(0);
   nRoot := TJSONObject.ParseFromFile(jsonPath) as TJSONObject;
 
   nBridges := nRoot.A['Bridges'];
@@ -479,7 +481,7 @@ var oldCRC : Cardinal;
 begin
   oldCRC := fCRC;
 
-  fCRC := LoadFromJSON;
+  fCRC := LoadFromJSON(ExeDir + 'data' + PathDelim + 'defines' + PathDelim + 'Structures.json');
   if not UpdateCRC then
     fCRC := oldCRC;
 end;

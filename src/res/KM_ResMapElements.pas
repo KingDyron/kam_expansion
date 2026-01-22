@@ -60,7 +60,7 @@ type
     property Count: Integer read fCount;
     property CRC: Cardinal read fCRC;
 
-    procedure LoadFromFile(const aFileName: string);
+    procedure LoadFromFile;
     function LoadFromJSON(aPath : String) : Cardinal;
     procedure SaveToJson(aPath : String);
     procedure SaveToFile(const aFileName: string);
@@ -246,7 +246,7 @@ begin
 end;
 
 // Reading map elements properties and animation data
-procedure TKMResMapElements.LoadFromFile(const aFileName: string);
+procedure TKMResMapElements.LoadFromFile;
 const
   ELEMENT_SIZE = 99; // Old size of TKMMapElement (before we have added our fields to it)
 
@@ -272,12 +272,12 @@ const
     end;
   end;
 
-var
-  S: TMemoryStream;
-  I: Integer;
+//var
+  //S: TMemoryStream;
+  //I: Integer;
   //stage : TKMChopableAge;
 begin
-  if not FileExists(aFileName) then Exit;
+  //if not FileExists(aFileName) then Exit;
   OBJECTS_CNT := 648;
   fCount := OBJECTS_CNT + 1;
   SetLength(gMapElements, OBJECTS_CNT + 1);
@@ -557,7 +557,7 @@ begin
   gMapElements[22].SnowPic := 270;
   gMapElements[23].SnowPic := 271;
   gMapElements[24].SnowPic := 272;}
-  fCRC := {fCRC xor }LoadFromJSON(ExeDir + 'data' + PathDelim + 'defines' + PathDelim + 'objects.json');
+  fCRC := {fCRC xor }LoadFromJSON(ExeDir + 'data' + PathDelim + 'defines' + PathDelim + 'Objects.json');
 
 end;
 
@@ -767,7 +767,7 @@ begin
     end else
     begin
       aID := -1;
-      ChangeIfDifferent(aID, nObject.I['ObjectID'], 0);
+      ChangeIfDifferent(aID, nObject.I['ObjectID'], -1);
 
       If aID >= OBJECTS_CNT then
       begin
@@ -1199,7 +1199,7 @@ Procedure TKMResMapElements.ReloadJSONData(UpdateCRC: Boolean);
 begin
   OBJECTS_CNT := 0;
   SetLength(gMapElements, 0);
-  LoadFromFile(ExeDir + 'data' + PathDelim + 'defines' + PathDelim + 'mapelem.dat');
+  LoadFromFile;
 end;
 
 procedure TKMResMapElements.AfterResourceLoad;

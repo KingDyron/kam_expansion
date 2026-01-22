@@ -45,10 +45,10 @@ const
   //default paths for files
   DEFAULT_JSON_PATH = 'data' + PathDelim + 'defines' +PathDelim ;
   SAVED_PATHS_FILE = 'paths.txt';
-  OLD_HOUSES_FILE = 'old_houses';
-  NEW_HOUSES_FILE = 'new_houses';
-  WARES_FILE = 'wares';
-  UNITS_FILE = 'units';
+  OLD_HOUSES_FILE = 'Houses';
+  NEW_HOUSES_FILE = 'Houses';
+  WARES_FILE = 'Wares';
+  UNITS_FILE = 'Units';
   MODDING_GRAPHICS = 'Modding graphics';
 
 const FILE_NAMES : array[TKMDirType] of String =

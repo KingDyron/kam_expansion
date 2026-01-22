@@ -126,6 +126,7 @@ type
     function LoadWaresFromJson(aPath : String) : Cardinal;
     function LoadWareDistribution(aPath : String) : Cardinal;
     Procedure ReloadJSONData(UpdateCRC: Boolean);
+    Procedure LoadFromJson(aPath : String);
   end;
 
   function ValidWareTypePair(oWT, dWT: TKMWareType): Boolean;
@@ -832,6 +833,11 @@ begin
   fCRC := fCRC xor LoadWareDistribution(ExeDir + 'data' + PathDelim + 'defines' + PathDelim + 'WareDistribution.json');
   if not UpdateCRC then
     fCRC := oldCRC;
+end;
+
+procedure TKMResWares.LoadFromJson(aPath: string);
+begin
+  LoadWaresFromJson(aPath);
 end;
 
 procedure TKMResWares.LoadWareFromJson(aJSONFile : TJsonObject);

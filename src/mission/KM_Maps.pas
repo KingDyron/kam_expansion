@@ -228,10 +228,10 @@ type
     property CanBeOnlyAICount: Byte read GetCanBeOnlyAICount;
     property CanBeHumanAndAICount: Byte read GetCanBeHumanAndAICount;
     function HasDifferentAITypes(aExceptLoc: TKMHandID = -1): Boolean;
-    function HasModdedData : Boolean;
-    function ModdedDataPath : String;
-    function ModdedDataDefinesPath : String;
-    function ModdedDataSpritesPath : String;
+    class function HasModdedData(aMapPath : String) : Boolean;
+    class function ModdedDataPath(aMapPath : String) : String;
+    class function ModdedDataDefinesPath(aMapPath : String) : String;
+    class function ModdedDataSpritesPath(aMapPath : String) : String;
 
     property CampaignID : TKMCampaignId read fCampaignID write fCampaignID;
     property CampaignMission : Byte read fCampaignMission write fCampaignMission;
@@ -1045,28 +1045,28 @@ begin
   end;
 end;
 
-function TKMMapInfo.HasModdedData: Boolean;
+class function TKMMapInfo.HasModdedData(aMapPath : String): Boolean;
 begin
-  Result := ModdedDataPath <> '';
+  Result := ModdedDataPath(aMapPath + PathDelim) <> '';
 end;
 
-function TKMMapInfo.ModdedDataPath: string;
+class function TKMMapInfo.ModdedDataPath(aMapPath : String): string;
 begin
-  Result := fDir + MODS_FOLDER_NAME;//default modded data path
+  Result := aMapPath + MODS_FOLDER_NAME;//default modded data path
 
   If not DirectoryExists(Result) then //check if folder exists, if not, there is no mod
     Exit('');
   Result := Result + PathDelim;
 end;
 
-function TKMMapInfo.ModdedDataDefinesPath: string;
+class function TKMMapInfo.ModdedDataDefinesPath(aMapPath : String): string;
 begin
-  Result := ModdedDataPath + DEFINES_FOLDER_NAME + PathDelim;
+  Result := ModdedDataPath(aMapPath) + DEFINES_FOLDER_NAME + PathDelim;
 end;
 
-function TKMMapInfo.ModdedDataSpritesPath: string;
+class function TKMMapInfo.ModdedDataSpritesPath(aMapPath : String): string;
 begin
-  Result := ModdedDataPath + SPRITES_FOLDER_NAME + PathDelim;
+  Result := ModdedDataPath(aMapPath) + SPRITES_FOLDER_NAME + PathDelim;
 end;
 
 function TKMMapInfo.GetBigDesc: UnicodeString;

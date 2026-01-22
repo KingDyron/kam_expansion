@@ -94,6 +94,7 @@ type
     procedure ExportCRC(aPath : String);
     procedure StartRecording;
     procedure SaveRecording;
+    procedure OnDataReload(const aData : AnsiString);
 
     function RenderVersion: UnicodeString;
     procedure PrintScreen(const aFilename: UnicodeString = ''; aImageType: TKMImageType = itJpeg);
@@ -725,11 +726,25 @@ begin
                       fMainMenuInterface.PageChange(gpError, aTextMsg);
                     end;
     grSilent:      ;//Used when loading new savegame from gameplay UI
-    grMapEdEnd:    fMainMenuInterface.PageChange(gpMapEditor);
+    grMapEdEnd:     begin
+                      fMainMenuInterface.PageChange(gpMapEditor);
+                    end;
+  end;
+
+  If gGame.Params.HasModdedData then
+  begin
+    gLog.AddTime('Reloading game data start');
+    try
+      gRes.ReloadJSONData(true, OnDataReload);
+    except
+      On E : Exception do
+        raise Exception.Create('Error reloading game data : ' + E.Message);
+    end;
   end;
 
   FreeThenNil(gGame);
   gLog.AddTime('Gameplay ended - ' + GetEnumName(TypeInfo(TKMGameResultMsg), Integer(aMsg)) + ' /' + aTextMsg);
+
 end;
 
 
@@ -1490,6 +1505,11 @@ end;
 procedure TKMGameApp.SaveRecording;
 begin
   gMySpectator.Hand.AI.Mayor.Recorder.SaveToFile;
+end;
+
+procedure TKMGameApp.OnDataReload(const aData : AnsiString);
+begin
+  gLog.AddTime(UnicodeString(aData) );
 end;
 
 

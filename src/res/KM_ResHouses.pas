@@ -1286,83 +1286,90 @@ begin
     end;
     /////////////////////////////////////////////////Beast Anim
     nHouses := nRoot.A['BeastAnim'];
+    If nHouses.Count > 0 then
     for I := 1 to 2 do
       for K := 1 to 5 do
         for J := 1 to 3 do
           nHouses.A[I - 1].A[K-1].O[J-1].GetAnim(fBeastAnim[I, K, J]);
 
     nHouses := nRoot.A['MarketBeastAnim'];
-    for I := 1 to Min(nHouses.Count, 3) do
-      nHouses.O[I - 1].GetAnim(fMarketBeastAnim[I]);
+    If nHouses.Count > 0 then
+      for I := 1 to Min(nHouses.Count, 3) do
+        nHouses.O[I - 1].GetAnim(fMarketBeastAnim[I]);
 
     nHouses := nRoot.A['HovelBeastAnim'];
-    for I := 1 to Min(nHouses.Count, 3) do
-      nHouses.O[I - 1].GetAnim(fHovelBeastAnim[I]);
+    If nHouses.Count > 0 then
+      for I := 1 to Min(nHouses.Count, 3) do
+        nHouses.O[I - 1].GetAnim(fHovelBeastAnim[I]);
     ///////////////////////////////////////////////////Additional animations
     nHouses := nRoot.A['Palace_Flags'];
-    for I := 1 to Min(nHouses.Count, High(Palace_Flags)) do
-      nHouses.O[I - 1].GetAnim(Palace_Flags[I]);
+    If nHouses.Count > 0 then
+      for I := 1 to Min(nHouses.Count, High(Palace_Flags)) do
+        nHouses.O[I - 1].GetAnim(Palace_Flags[I]);
 
     nRoot.GetAnim('Silo_Tablets', Silo_Tablets);
     nRoot.GetAnim('Merchant_Tablets', Merchant_Tablets);
 
     nHouse := nRoot.O['ProductionThatch_Anims'];
-    for PTA := Low(TKMProdThatchAnimType) to High(TKMProdThatchAnimType) do
-    begin
-      If TKMEnumUtils.GetName<TKMProdThatchAnimType>(PTA, S) then
-        nHouse.GetAnim(S, ProdThatch_Anims[PTA]);
-    end;
+    If nHouse.Count > 0 then
+      for PTA := Low(TKMProdThatchAnimType) to High(TKMProdThatchAnimType) do
+      begin
+        If TKMEnumUtils.GetName<TKMProdThatchAnimType>(PTA, S) then
+          nHouse.GetAnim(S, ProdThatch_Anims[PTA]);
+      end;
 
     nHouse := nRoot.O['ArenaAnim'];
-    for DDT := Low(TKMDevelopmentTreeType) to High(TKMDevelopmentTreeType) do
-    begin
-      If TKMEnumUtils.GetName<TKMDevelopmentTreeType>(DDT, S) then
-        nHouse.GetAnimPack(S, ArenaAnim[DDT]);
-    end;
+    If nHouse.Count > 0 then
+      for DDT := Low(TKMDevelopmentTreeType) to High(TKMDevelopmentTreeType) do
+      begin
+        If TKMEnumUtils.GetName<TKMDevelopmentTreeType>(DDT, S) then
+          nHouse.GetAnimPack(S, ArenaAnim[DDT]);
+      end;
 
     nRoot.GetAnim('WallTower_RecruitLeft', WallTower_RecruitLeft);
     nRoot.GetAnim('WallTower_RecruitRight', WallTower_RecruitRight);
     nRoot.GetAnim('School_Clock', School_Clock);
 
     nHouses := nRoot.A['Pearls of Architecture'];
-    for I := 0 to nHouses.Count - 1 do
-    begin
-      nHouse := nHouses.O[I];
-
-      If not TKMEnumUtils.TryGetAs<TKMPearlType>(nHouse.S['PearlType'], PT) then
-        Continue;
-
-      with Pearls[PT] do
+    If nHouse.Count > 0 then
+      for I := 0 to nHouses.Count - 1 do
       begin
-        nHouse.GetArray('StagePics', StagePics);
-        StageCount := length(StagePics);
-        //SnowPic := nHouse.I['SnowPic'];
-        ProgressPerStage := nHouse.I['ProgressPerStage'];
-        SnowAnimations := nHouse.I['SnowAnimStartsFromIndex'];
+        nHouse := nHouses.O[I];
 
-        nAR := nHouse.A['TerrPics'];
-        for K := 0 to Min(nAR.Count - 1, TERR_PIC_COUNT - 1) do
-          SnowPic[TKMTerrPicType(K + 1)] := nAr.I[K];
+        If not TKMEnumUtils.TryGetAs<TKMPearlType>(nHouse.S['PearlType'], PT) then
+          Continue;
 
-        nAR := nHouse.A['Animations'];
-        SetLength(A, nAR.Count);
-        for K := 0 to nAR.Count - 1 do
-          nAR.O[K].GetAnim(A[K]);
-
-        nAR := nHouse.A['Build Cost'];
-        Assert(nAr.Count = StageCount, 'Build cost must have the same count as stages');
-        Cost.SetCount(StageCount);
-        for K := 0 to nAR.Count - 1 do
+        with Pearls[PT] do
         begin
-          If not TKMEnumUtils.TryGetAs<TKMWareType>(nAR.O[K].S['WareType'], Cost[K].W) then
-            raise Exception.Create('Wrong ware type');
-          Cost[K].C := nAR.O[K].I['Count'];
+          nHouse.GetArray('StagePics', StagePics);
+          StageCount := length(StagePics);
+          //SnowPic := nHouse.I['SnowPic'];
+          ProgressPerStage := nHouse.I['ProgressPerStage'];
+          SnowAnimations := nHouse.I['SnowAnimStartsFromIndex'];
+
+          nAR := nHouse.A['TerrPics'];
+          for K := 0 to Min(nAR.Count - 1, TERR_PIC_COUNT - 1) do
+            SnowPic[TKMTerrPicType(K + 1)] := nAr.I[K];
+
+          nAR := nHouse.A['Animations'];
+          SetLength(A, nAR.Count);
+          for K := 0 to nAR.Count - 1 do
+            nAR.O[K].GetAnim(A[K]);
+
+          nAR := nHouse.A['Build Cost'];
+          Assert(nAr.Count = StageCount, 'Build cost must have the same count as stages');
+          Cost.SetCount(StageCount);
+          for K := 0 to nAR.Count - 1 do
+          begin
+            If not TKMEnumUtils.TryGetAs<TKMWareType>(nAR.O[K].S['WareType'], Cost[K].W) then
+              raise Exception.Create('Wrong ware type');
+            Cost[K].C := nAR.O[K].I['Count'];
+          end;
+
+
         end;
 
-
       end;
-
-    end;
 
 
 

@@ -29,6 +29,7 @@ type
     fDynamicFOW: Boolean;
 
     fBlockPointerOperations: Boolean;
+    fHasModdedData : Boolean;
 
     fOnRecalcMapCRC: TEvent;
     fOnSetVisibleLayers: TEvent;
@@ -61,6 +62,7 @@ type
     property Tick: Cardinal read fTick;
     property TickFrac: Single read fTickFrac;
     property VisibleLayers: TKMMapVisibleLayerSet read fVisibleLayers write SetVisibleLayers;
+    property HasModdedData: Boolean read fHasModdedData write fHasModdedData;
 
     property Name: UnicodeString read fName write fName;
     property MapSimpleCRC: Cardinal read GetMapSimpleCRC write fMapSimpleCRC;
@@ -140,6 +142,7 @@ begin
   aSetGameModeEvent := SetMode;
   aSetMissionFileSP := SetMissionFileSP;
   aSetBlockPointer  := SetBlockPointer;
+  HasModdedData := false;
 
   fBlockPointerOperations := False;
 

@@ -335,7 +335,7 @@ uses
   Classes, SysUtils, Math, TypInfo,
   Vcl.Dialogs,
   {$IFDEF WDC} UITypes, {$ENDIF}
-  KromUtils,
+  KromUtils, IOUtils,
   KM_Sound, KM_ScriptSound,
   KM_PathFindingAStarOld, KM_PathFindingAStarNew, KM_PathFindingJPS,
   KM_Projectiles, KM_SpecialAnim, KM_AIFields, KM_NetworkTypes,
@@ -569,16 +569,16 @@ var
   mapInfo: TKMMapInfo;
   campDataStream: TKMemoryStream;
   campaignDataFilePath: UnicodeString;
+  folderPath : String;
 begin
   gLog.AddTime('GameStart');
   Assert(fParams.Mode in [gmMulti, gmMultiSpectate, gmMapEd, gmSingle, gmCampaign]);
 
   gRes.Wares.ResetToDefaults;
-  //gRes.OverloadJSONData(aMissionFullFilePath);
   fParams.Name := aName;
 
   fParams.MissionFullFilePath := aMissionFullFilePath;
-
+  folderPath := TPath.GetDirectoryName(aMissionFullFilePath);
   fParams.MapSimpleCRC := aSimpleCRC;
   fParams.MapFullCRC := aFullCRC;
   gCursor.Mode:= cmNone;
@@ -670,6 +670,21 @@ begin
     fMapEditor.OnEyedropper := fMapEditorInterface.GuiTerrain.GuiTiles.TilesTableSetTileTexId;
     fMapEditor.DetectAttachedFiles(aMissionFullFilePath);
   end;
+
+  If fParams.Mode in [gmSingle, gmCampaign, gmMapEd] then
+    try
+      //before we parse a mission, check for map mods just to make sure everything loaded properly.
+      //mods only work in Single player maps
+      If TKMMapInfo.HasModdedData(folderPath) then
+      begin
+        fParams.HasModdedData := true;
+        gRes.Sprites.OverloadAllFromFolder(TKMMapInfo.ModdedDataSpritesPath(folderPath + PathDelim));
+        gRes.OverloadDataFromFolder(TKMMapInfo.ModdedDataDefinesPath(folderPath + PathDelim));
+      end;
+    Except
+      On E : Exception do
+      raise Exception.Create('Error loading mission mods: ' + E.Message);
+    end;
 
   parser := TKMMissionParserStandard.Create(parseMode, playerEnabled);
   try

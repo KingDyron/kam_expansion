@@ -122,7 +122,7 @@ type
 //    procedure SaveToXML;
 
     procedure SaveToJson(aCompact: Boolean = False; aSaveStream: TKMemoryStream = nil);
-    function LoadFromJson : Cardinal;
+    function LoadFromJson(aPath : String) : Cardinal;
     Procedure ReloadJSONData(UpdateCRC: Boolean);
 
     class function TileIsAllowedToSet(aTile: Word): Boolean;
@@ -203,7 +203,7 @@ constructor TKMResTileset.Create;
 begin
   inherited;
 
-  fCRC := LoadFromJson;
+  fCRC := LoadFromJson(GetTilesJsonPath);
 
   {crcStream := TKMemoryStreamBinary.Create;
   try
@@ -837,7 +837,7 @@ begin
 end;
 
 
-function TKMResTileset.LoadFromJson : Cardinal;
+function TKMResTileset.LoadFromJson(aPath : String) : Cardinal;
 var
   I, J, K, S: Integer;
   jsonPath: string;
@@ -845,7 +845,9 @@ var
   nTiles, nTerKinds, nAnimLayers, nAnims: TJsonArray;
   terKind: TKMTerrainKind;
 begin
-  jsonPath := GetTilesJsonPath;
+  jsonPath := aPath;
+  If not FileExists(aPath) then
+    Exit(0);
   nRoot := TJsonObject.ParseFromFile(jsonPath) as TJsonObject;
   Result := GetJSONCRC(nRoot);
   try
@@ -983,7 +985,7 @@ procedure TKMResTileset.ReloadJSONData(UpdateCRC: Boolean);
 var oldCRC : Cardinal;
 begin
   oldCRC := fCRC;
-  fCRC := fCRC xor LoadFromJSON;
+  fCRC := fCRC xor LoadFromJSON(GetTilesJsonPath);
   if not UpdateCRC then
     fCRC := oldCRC;
   InitMirrorTiles;
