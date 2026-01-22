@@ -4836,7 +4836,7 @@ const
     tcNone,          //    tkCobbleStone,
     tcNone,             //    tkGrassyWater,//12
     tcNone,             //    tkSwamp,      //13
-    tcCold2,            //    tkIce,        //14
+    tcNone,            //    tkIce,        //14
     tcCold1,            //    tkSnowOnGrass,
     tcCold1,            //    tkSnowOnDirt,
     tcCold2,            //    tkSnow,
