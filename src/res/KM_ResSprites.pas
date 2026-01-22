@@ -2086,16 +2086,7 @@ begin
     {$IFNDEF NO_OGL}
     fSprites[RT].MakeGFX(fAlphaShadows, 1, False, nil);
     {$ENDIF}
-
-    //AtomicExchange(Integer(false), Integer(False));
-    //Log('DONE Load RXX ''' + RX_INFO[RT].FileName + '.rxx''');
-
-    //fSprites[RT].OverloadGeneratedFromFolder(true, aPath, false);
-    //fSprites[RT].OverloadRXXFilesFromFolder(aPath);
-
   end;
-
-
 end;
 
 

@@ -678,7 +678,7 @@ begin
       If TKMMapInfo.HasModdedData(folderPath) then
       begin
         fParams.HasModdedData := true;
-        gRes.Sprites.OverloadAllFromFolder(TKMMapInfo.ModdedDataSpritesPath(folderPath + PathDelim));
+        //gRes.Sprites.OverloadAllFromFolder(TKMMapInfo.ModdedDataSpritesPath(folderPath + PathDelim));
         gRes.OverloadDataFromFolder(TKMMapInfo.ModdedDataDefinesPath(folderPath + PathDelim));
       end;
     Except
