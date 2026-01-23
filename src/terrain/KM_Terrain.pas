@@ -1654,6 +1654,7 @@ begin
     and not Is_NW_SE_OnlyVertex
     //Woodcutter will dig out other object in favour of his tree
     and ((Land[Y,X].Obj = OBJ_NONE) or (gMapElements[Land^[Y,X].Obj].CanBeRemoved))
+    and not (gMapElements[Land^[Y,X].Obj].DontPlantNear)
     and CheckHeightPass(KMPoint(X,Y), hpWalking)
     and (FindBestTreeClimatType(KMPoint(X,Y)) <> tcNone); // We could plant some tree type
 end;

@@ -202,7 +202,7 @@
       <edDebugText Text=""/>
       <chkFindObjByUID Checked="False"/>
     </Debug_Input>
-    <Game_additional Collapsed="True">
+    <Game_additional Collapsed="False">
       <chkLoadUnsupSaves Checked="True"/>
       <RGPlayer ItemIndex="0"/>
       <seMaxImageSize Value="10200"/>

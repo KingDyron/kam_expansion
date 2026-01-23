@@ -1025,7 +1025,7 @@ begin
             arr2.Add(Anim.Step[K])
         end;
 
-        obj.Add('CuttableTree', CuttableTree, false);
+        obj.Add('IsCuttableTree', CuttableTree, false);
         obj.Add('DiagonalBlocked', DiagonalBlocked, false);
         obj.Add('AllBlocked', AllBlocked, false);
         obj.Add('WineOrCorn', WineOrCorn, false);

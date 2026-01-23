@@ -994,7 +994,7 @@
 		{
 			"ObjectID" : 90, 
 			"AnimSteps":[131, 131, 132, 132, 133, 133, 132, 132], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"DontPlantNear" : true, 
 			"PlaceableInEditor" : true, 
@@ -1056,7 +1056,7 @@
 		{
 			"ObjectID" : 95, 
 			"AnimSteps":[90, 90, 91, 91, 92, 92, 91, 91], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"DontPlantNear" : true, 
 			"PlaceableInEditor" : true, 
@@ -1118,7 +1118,7 @@
 		{
 			"ObjectID" : 100, 
 			"AnimSteps":[27, 27, 28, 28, 29, 29, 28, 28], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"DontPlantNear" : true, 
 			"PlaceableInEditor" : true, 
@@ -1180,7 +1180,7 @@
 		{
 			"ObjectID" : 105, 
 			"AnimSteps":[30, 30, 31, 31, 32, 32, 31, 31], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"DontPlantNear" : true, 
 			"PlaceableInEditor" : true, 
@@ -1245,7 +1245,7 @@
 		{
 			"ObjectID" : 110, 
 			"AnimSteps":[66, 66, 67, 67, 68, 68, 67, 67], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"DontPlantNear" : true, 
 			"PlaceableInEditor" : true, 
@@ -1297,7 +1297,7 @@
 		{
 			"ObjectID" : 114, 
 			"AnimSteps":[81, 81, 81, 82, 82, 82, 83, 83, 83, 82, 82, 82], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"DontPlantNear" : true, 
 			"PlaceableInEditor" : true, 
@@ -1359,7 +1359,7 @@
 		{
 			"ObjectID" : 119, 
 			"AnimSteps":[74, 74, 74, 75, 75, 75, 76, 76, 76, 75, 75, 75], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"DontPlantNear" : true, 
 			"PlaceableInEditor" : true, 
@@ -1421,7 +1421,7 @@
 		{
 			"ObjectID" : 124, 
 			"AnimSteps":[93, 93, 94, 94, 95, 95, 94, 94], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"DontPlantNear" : true, 
 			"PlaceableInEditor" : true, 
@@ -1655,7 +1655,7 @@
 		{
 			"ObjectID" : 151, 
 			"AnimSteps":[221, 221, 222, 222, 223, 223, 222, 222], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"DontPlantNear" : true, 
 			"PlaceableInEditor" : true, 
@@ -1703,7 +1703,7 @@
 		{
 			"ObjectID" : 155, 
 			"AnimSteps":[111, 111, 112, 112, 113, 113, 112, 112], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"DontPlantNear" : true, 
 			"PlaceableInEditor" : true, 
@@ -1764,7 +1764,7 @@
 		{
 			"ObjectID" : 160, 
 			"AnimSteps":[105, 105, 106, 106, 107, 107, 106, 106], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"DontPlantNear" : true, 
 			"PlaceableInEditor" : true, 
@@ -1825,7 +1825,7 @@
 		{
 			"ObjectID" : 165, 
 			"AnimSteps":[87, 87, 88, 88, 89, 89, 88, 88], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"DontPlantNear" : true, 
 			"PlaceableInEditor" : true, 
@@ -1886,7 +1886,7 @@
 		{
 			"ObjectID" : 170, 
 			"AnimSteps":[96, 96, 97, 97, 98, 98, 97, 97], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"DontPlantNear" : true, 
 			"PlaceableInEditor" : true, 
@@ -1908,7 +1908,7 @@
 		{
 			"ObjectID" : 172, 
 			"AnimSteps":[108, 108, 109, 109, 110, 110, 109, 109], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"DontPlantNear" : true, 
 			"PlaceableInEditor" : true, 
@@ -2182,7 +2182,7 @@
 		{
 			"ObjectID" : 200, 
 			"AnimSteps":[166, 166, 166, 167, 167, 167, 168, 168, 168, 169, 169, 169], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"DontPlantNear" : true, 
 			"PlaceableInEditor" : true, 
@@ -2194,7 +2194,7 @@
 		{
 			"ObjectID" : 201, 
 			"AnimSteps":[137, 137, 137, 138, 138, 138, 139, 139, 139, 140, 140, 140], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"DontPlantNear" : true, 
 			"PlaceableInEditor" : true, 
@@ -2208,7 +2208,7 @@
 		{
 			"ObjectID" : 202, 
 			"AnimSteps":[145, 145, 145, 146, 146, 146, 147, 147, 147, 148, 148, 148], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"DontPlantNear" : true, 
 			"PlaceableInEditor" : true, 
@@ -2220,7 +2220,7 @@
 		{
 			"ObjectID" : 203, 
 			"AnimSteps":[158, 158, 158, 159, 159, 159, 160, 160, 160, 161, 161, 161], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"DontPlantNear" : true, 
 			"PlaceableInEditor" : true, 
@@ -2232,7 +2232,7 @@
 		{
 			"ObjectID" : 204, 
 			"AnimSteps":[162, 162, 162, 163, 163, 163, 164, 164, 164, 165, 165, 165], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"DontPlantNear" : true, 
 			"PlaceableInEditor" : true, 
@@ -2244,7 +2244,7 @@
 		{
 			"ObjectID" : 205, 
 			"AnimSteps":[77, 77, 77, 78, 78, 78, 79, 79, 79, 80, 80, 80], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"DontPlantNear" : true, 
 			"PlaceableInEditor" : true, 
@@ -2256,7 +2256,7 @@
 		{
 			"ObjectID" : 206, 
 			"AnimSteps":[154, 154, 154, 155, 155, 155, 156, 156, 156, 157, 157, 157], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"DontPlantNear" : true, 
 			"PlaceableInEditor" : true, 
@@ -3639,7 +3639,7 @@
 		{
 			"ObjectID" : 363, 
 			"AnimSteps":[521, 521, 522, 522, 523, 523, 522, 522], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -3649,7 +3649,7 @@
 		{
 			"ObjectID" : 364, 
 			"AnimSteps":[524, 524, 525, 525, 526, 526, 525, 525], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -3659,7 +3659,7 @@
 		{
 			"ObjectID" : 365, 
 			"AnimSteps":[527, 527], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -3674,7 +3674,7 @@
 		{
 			"ObjectID" : 366, 
 			"AnimSteps":[528, 528], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -3689,7 +3689,7 @@
 		{
 			"ObjectID" : 367, 
 			"AnimSteps":[529, 529], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -3725,7 +3725,7 @@
 		{
 			"ObjectID" : 370, 
 			"AnimSteps":[530, 530, 531, 531, 532, 532, 531, 531], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -3761,7 +3761,7 @@
 		{
 			"ObjectID" : 373, 
 			"AnimSteps":[539, 539, 540, 540, 541, 541, 540, 540], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -3808,7 +3808,7 @@
 		{
 			"ObjectID" : 377, 
 			"AnimSteps":[548, 548, 549, 549, 550, 550, 549, 549], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -3855,7 +3855,7 @@
 		{
 			"ObjectID" : 381, 
 			"AnimSteps":[560, 560, 561, 561, 562, 562, 561, 561], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -3905,7 +3905,7 @@
 		{
 			"ObjectID" : 385, 
 			"AnimSteps":[583, 583, 582, 582, 581, 581, 582, 582], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -3921,7 +3921,7 @@
 		{
 			"ObjectID" : 386, 
 			"AnimSteps":[580, 580, 579, 579, 578, 578, 579, 579], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -3937,7 +3937,7 @@
 		{
 			"ObjectID" : 387, 
 			"AnimSteps":[577, 577, 576, 576, 575, 575, 576, 576], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -3953,7 +3953,7 @@
 		{
 			"ObjectID" : 388, 
 			"AnimSteps":[574, 574, 573, 573, 572, 572, 573, 573], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -3969,7 +3969,7 @@
 		{
 			"ObjectID" : 389, 
 			"AnimSteps":[593, 593, 594, 594, 595, 595, 594, 594], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -4029,7 +4029,7 @@
 		{
 			"ObjectID" : 394, 
 			"AnimSteps":[606, 606, 607, 607, 608, 608, 607, 607], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -4042,7 +4042,7 @@
 		{
 			"ObjectID" : 395, 
 			"AnimSteps":[609, 609, 610, 610, 611, 611, 610, 610], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -4059,7 +4059,7 @@
 		{
 			"ObjectID" : 396, 
 			"AnimSteps":[612, 612, 613, 613, 614, 614, 613, 613], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -4076,7 +4076,7 @@
 		{
 			"ObjectID" : 397, 
 			"AnimSteps":[615, 615, 616, 616, 617, 617, 616, 616], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -4093,7 +4093,7 @@
 		{
 			"ObjectID" : 398, 
 			"AnimSteps":[618, 618, 619, 619, 620, 620, 619, 619], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -4385,7 +4385,7 @@
 		{
 			"ObjectID" : 426, 
 			"AnimSteps":[630, 630, 631, 631, 632, 632, 631, 631], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -4451,7 +4451,7 @@
 		{
 			"ObjectID" : 431, 
 			"AnimSteps":[669, 669, 670, 670, 671, 671, 670, 670], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -4468,7 +4468,7 @@
 		{
 			"ObjectID" : 432, 
 			"AnimSteps":[672, 672, 673, 673, 674, 674, 673, 673], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -4485,7 +4485,7 @@
 		{
 			"ObjectID" : 433, 
 			"AnimSteps":[675, 675, 676, 676, 677, 677, 676, 676], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -4553,7 +4553,7 @@
 		{
 			"ObjectID" : 438, 
 			"AnimSteps":[690, 690, 691, 691, 692, 692, 691, 691], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -4570,7 +4570,7 @@
 		{
 			"ObjectID" : 439, 
 			"AnimSteps":[693, 693, 694, 694, 695, 695, 694, 694], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -4587,7 +4587,7 @@
 		{
 			"ObjectID" : 440, 
 			"AnimSteps":[696, 696, 697, 697, 698, 698, 697, 697], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -5616,7 +5616,7 @@
 		{
 			"ObjectID" : 559, 
 			"AnimSteps":[1245, 1245, 1246, 1246, 1247, 1247, 1246, 1246], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -5633,7 +5633,7 @@
 		{
 			"ObjectID" : 560, 
 			"AnimSteps":[1248, 1248, 1249, 1249, 1250, 1250, 1249, 1249], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -5650,7 +5650,7 @@
 		{
 			"ObjectID" : 561, 
 			"AnimSteps":[1251, 1251, 1252, 1252, 1253, 1253, 1252, 1252], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -5720,7 +5720,7 @@
 		{
 			"ObjectID" : 567, 
 			"AnimSteps":[1264, 1264], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -5734,7 +5734,7 @@
 		{
 			"ObjectID" : 568, 
 			"AnimSteps":[1265, 1265], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -5748,7 +5748,7 @@
 		{
 			"ObjectID" : 569, 
 			"AnimSteps":[1266, 1266], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -5762,7 +5762,7 @@
 		{
 			"ObjectID" : 570, 
 			"AnimSteps":[1267, 1267], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -5776,7 +5776,7 @@
 		{
 			"ObjectID" : 571, 
 			"AnimSteps":[1268, 1268], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -5790,7 +5790,7 @@
 		{
 			"ObjectID" : 572, 
 			"AnimSteps":[1269, 1269], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -5804,7 +5804,7 @@
 		{
 			"ObjectID" : 573, 
 			"AnimSteps":[1270, 1270], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -5818,7 +5818,7 @@
 		{
 			"ObjectID" : 574, 
 			"AnimSteps":[1271, 1271], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -5832,7 +5832,7 @@
 		{
 			"ObjectID" : 575, 
 			"AnimSteps":[1272, 1272], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -5846,7 +5846,7 @@
 		{
 			"ObjectID" : 576, 
 			"AnimSteps":[1273, 1273], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -5860,7 +5860,7 @@
 		{
 			"ObjectID" : 577, 
 			"AnimSteps":[1274, 1274], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -5874,7 +5874,7 @@
 		{
 			"ObjectID" : 578, 
 			"AnimSteps":[1275, 1275], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -5888,7 +5888,7 @@
 		{
 			"ObjectID" : 579, 
 			"AnimSteps":[1276, 1276], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -5902,7 +5902,7 @@
 		{
 			"ObjectID" : 580, 
 			"AnimSteps":[1277, 1277], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -5967,7 +5967,7 @@
 		{
 			"ObjectID" : 585, 
 			"AnimSteps":[1290, 1290, 1291, 1291, 1292, 1292, 1291, 1291], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -5983,7 +5983,7 @@
 		{
 			"ObjectID" : 586, 
 			"AnimSteps":[1293, 1293, 1294, 1294, 1295, 1295, 1294, 1294], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -5999,7 +5999,7 @@
 		{
 			"ObjectID" : 587, 
 			"AnimSteps":[1296, 1296, 1297, 1297, 1298, 1298, 1297, 1297], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -6015,7 +6015,7 @@
 		{
 			"ObjectID" : 588, 
 			"AnimSteps":[1299, 1299, 1300, 1300, 1301, 1301, 1300, 1300], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -6101,7 +6101,7 @@
 		{
 			"ObjectID" : 595, 
 			"AnimSteps":[1323, 1323, 1324, 1324, 1325, 1325, 1324, 1324], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -6118,7 +6118,7 @@
 		{
 			"ObjectID" : 596, 
 			"AnimSteps":[1326, 1326, 1327, 1327, 1328, 1328, 1327, 1327], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -6135,7 +6135,7 @@
 		{
 			"ObjectID" : 597, 
 			"AnimSteps":[1329, 1329, 1330, 1330, 1331, 1331, 1330, 1330], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -6248,7 +6248,7 @@
 		{
 			"ObjectID" : 606, 
 			"AnimSteps":[1357, 1357, 1358, 1358, 1359, 1359, 1359, 1359], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -6263,7 +6263,7 @@
 		{
 			"ObjectID" : 607, 
 			"AnimSteps":[1360, 1360, 1361, 1361, 1362, 1362, 1361, 1361], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -6278,7 +6278,7 @@
 		{
 			"ObjectID" : 608, 
 			"AnimSteps":[1363, 1363, 1364, 1364, 1365, 1365, 1364, 1364], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -6293,7 +6293,7 @@
 		{
 			"ObjectID" : 609, 
 			"AnimSteps":[1366, 1366, 1367, 1367, 1368, 1368, 1367, 1367], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -6308,7 +6308,7 @@
 		{
 			"ObjectID" : 610, 
 			"AnimSteps":[1369, 1369, 1370, 1370, 1371, 1371, 1370, 1370], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -6323,7 +6323,7 @@
 		{
 			"ObjectID" : 611, 
 			"AnimSteps":[1372, 1372, 1373, 1373, 1374, 1374, 1373, 1373], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -6577,7 +6577,7 @@
 		{
 			"ObjectID" : 638, 
 			"AnimSteps":[1517, 1517, 1518, 1518, 1519, 1519, 1518, 1518], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
@@ -6702,7 +6702,7 @@
 		{
 			"ObjectID" : 648, 
 			"AnimSteps":[1538, 1538], 
-			"CuttableTree" : true, 
+			"IsCuttableTree" : true, 
 			"DiagonalBlocked" : true, 
 			"CanGrow" : true, 
 			"DontPlantNear" : true, 
