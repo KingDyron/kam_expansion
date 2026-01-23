@@ -166,6 +166,8 @@
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
         <BT_BuildType>Debug</BT_BuildType>
         <DCC_LocalDebugSymbols>true</DCC_LocalDebugSymbols>
+        <DCC_DcuOutput>E:\programowanie\projekty delphi\kam_expansion\dcu\</DCC_DcuOutput>
+        <Icon_MainIcon>$(ProjectName).Artwork\Windows\AppIcon.ico</Icon_MainIcon>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <BT_BuildType>Debug</BT_BuildType>
