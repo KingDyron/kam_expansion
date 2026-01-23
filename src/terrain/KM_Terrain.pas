@@ -198,6 +198,7 @@ type
                            Boolean; out aFishPoint: TKMPointDir): Boolean;
     function FindBestClimatType(const aLoc: TKMPoint): TKMTerrainClimate;
     function FindBestTreeClimatType(const aLoc: TKMPoint): TKMTerrainClimate;
+    function FindBestFruitTreeClimatType(const aLoc: TKMPoint): TKMTerrainClimate;
     function CanFindFishingWater(const aLoc: TKMPoint; aRadius: Integer): Boolean;
 
     function CanReachTileInDistance(const aLoc1, aLoc2: TKMPoint; aPassability : TKMTerrainPassability; aMaxDistance : Integer = 10) : Boolean;
@@ -4877,6 +4878,102 @@ begin
     end;
 end;
 
+
+function TKMTerrain.FindBestFruitTreeClimatType(const aLoc: TKMPoint): TKMTerrainClimate;
+const
+  // Dependancy found empirically
+  TERKIND_TO_TREE_TYPE: array[TKMTerrainKind] of TKMTerrainClimate = (
+    tcNone,             //    tkCustom,
+    tcWarm1,            //    tkGrass,
+    tcWarm1,            //    tkMoss,
+    tcWet1,            //    tkPaleGrass,
+    tcDry2,             //    tkCoastSand,
+    tcWarm2,            //    tkGrassSand1,
+    tcDry1,             //    tkGrassSand2,
+    tcDry1,             //    tkGrassSand3,
+    tcDry2,             //    tkSand,       //8
+    tcWet2,             //    tkGrassDirt,
+    tcNeutral,          //    tkDirt,       //10
+    tcNone,          //    tkBarrenLand,
+    tcNone,          //    tkCobbleStone,
+    tcNone,             //    tkGrassyWater,//12
+    tcNone,             //    tkSwamp,      //13
+    tcNone,            //    tkIce,        //14
+    tcCold1,            //    tkSnowOnGrass,
+    tcCold1,            //    tkSnowOnDirt,
+    tcCold2,            //    tkSnow,
+    tcCold2,            //    tkDeepSnow,
+    tcNone,           //    tkStone,
+    tcNone,           //    tkGoldMount,
+    tcNone,           //    tkIronMount,  //21
+    tcNone,           //    tkAbyss,
+    tcNeutral,         //    tkGravel,
+    tcNone,           //    tkCoal,
+    tcNone,           //    tkGold,
+    tcNone,           //    tkIron,
+    tcNone,           //    tkWater,
+    tcNone,           //    tkFastWater,
+    tcNone,            //    tkLava);
+    tcNone,           //    tkWater1,
+    tcNone,           //    tkWater2,
+    tcNone,           //    tkdeepWater,
+    tcNone,
+    tcNone
+  );
+var
+  I, K, J, L: Integer;
+  treeType: TKMTerrainClimate;
+  verticeCornerTKinds: TKMTerrainKindCorners;
+  climates: array of record
+    cl : TKMTerrainClimate;
+    C : Integer;
+    end;
+  P : TKMPoint;
+
+  procedure AddClimate(aType : TKMTerrainClimate);
+  var S : Integer;
+  begin
+    for S := 0 to High(climates) do
+    IF aType = climates[S].cl then
+    begin
+      Inc(climates[S].C);
+      Exit;
+    end;
+
+    S := length(climates);
+    SetLength(climates, S + 1);
+    climates[S].cl := aType;
+    climates[S].C := 1;
+  end;
+var best : Integer;
+begin
+  // Find tree type to plant by vertice corner terrain kinds
+  Result := tcNone;
+  SetLength(climates, 0);
+  for J := -1 to 0 do
+  for L := -1 to 0 do
+  begin
+    P.X := aLoc.X + J;
+    P.Y := aLoc.Y + J;
+    GetTileCornersTerKinds(P.X, P.Y, verticeCornerTKinds);
+    // Compare corner terKinds and find if there are at least 2 of the same tree type
+    for I := 0 to 3 do
+      for K := I + 1 to 3 do
+      begin
+        treeType := TERKIND_TO_TREE_TYPE[verticeCornerTKinds[I]];
+        If treeType <> tcNone then
+          AddClimate(treeType);
+      end;
+    end;
+  best := 0;
+  for I := 0 to High(climates) do
+    If (climates[I].cl <> tcNone) and (climates[I].C > best) then
+    begin
+      best := climates[I].C;
+      Result := climates[I].cl;
+    end;
+
+end;
 
 
 function TKMTerrain.ChooseTreeToPlant(const aLoc: TKMPoint): Integer;

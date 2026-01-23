@@ -5,7 +5,7 @@ uses
   KM_ResHouses, KM_ResWares,
   KM_CommonClasses, KM_CommonTypes, KM_Defaults, KM_Points,
   KM_HandEntity,
-  KM_GameTypes, KM_ResTypes;
+  KM_GameTypes, KM_ResTypes, KM_TerrainTypes;
 
 // Houses are ruled by units, hence they don't know about  TKMUnits
 
@@ -621,6 +621,9 @@ type
       fTmpObject : Word;
       fRechecking: Boolean;
       fLastDamageID : Byte;
+
+      fBestClimate : TKMTerrainClimate;
+      procedure SetBestClimate;
       procedure SetProgress(aIgnoreWater : Boolean = false);
       procedure SetGrowPhase(aValue : Byte);
       procedure SetFruitTreeID(aValue : Integer);
@@ -1041,7 +1044,7 @@ uses
   KM_Resource, KM_ResSound, KM_ResTexts, KM_ResUnits, KM_ResMapElements,
   KM_Log, KM_ScriptingEvents, KM_CommonUtils, KM_MapEdTypes,
   KM_RenderDebug,
-  KM_TerrainTypes,
+  {KM_TerrainTypes,}
   KM_CommonExceptions, KM_JSONUtils,
   KM_UnitTaskThrowRock,
   KM_ResTileset,
@@ -6326,8 +6329,14 @@ begin
   Result := fNextFruitTreeID;
 end;
 
+procedure TKMHouseAppleTree.SetBestClimate;
+begin
+  fBestClimate := gTerrain.FindBestFruitTreeClimatType(Entrance);
+  If fBestClimate = tcNone then
+    fBestClimate := tcNeutral;
+end;
+
 procedure TKMHouseAppleTree.SetProgress(aIgnoreWater : Boolean = false);
-var tc : TKMTerrainClimate;
 begin
   if fGrowPhase = gFruitTrees[fFruitTreeID].StagesCount - 1 then //max
     fProgress := 0
@@ -6339,8 +6348,7 @@ begin
         FruitType := fNextFruitTreeID;
 
     fProgress := gFruitTrees[fFruitTreeID].ProgressPerStage + KamRandom(100, 'TKMHouseAppleTree.SetProgress');
-    tc := gTerrain.FindBestClimatType(Entrance);
-    fProgress := Round(fProgress / gFruitTrees[fFruitTreeID].ClimateMulti[tc]);
+    fProgress := Round(fProgress / gFruitTrees[fFruitTreeID].ClimateMulti[fBestClimate]);
   end
   else
     fProgress := 0;
@@ -6613,12 +6621,12 @@ end;
 procedure TKMHouseAppleTree.Activate(aWasBuilt: Boolean);
 var obj : Word;
     I, K : Integer;
-    TC : TKMTerrainClimate;
 begin
   fProgress := 0;
   fGrowPhase := 0;
   fFillFruits := 0;
   FruitType := 0;
+  SetBestClimate;
 
   fPhase := 2 + KamRandom(3, 'TKMHouseAppleTree.SetProgress');
   if fTmpObject <> 0 then
@@ -6664,9 +6672,8 @@ begin
         K := 0;
         for I := 0 to High(gFruitTrees) do
         begin
-          TC := gTerrain.FindBestClimatType(Entrance);
 
-          if gFruitTrees[I].ClimateMulti[TC] * gFruitTrees[I].Fruits > gFruitTrees[K].ClimateMulti[TC] * gFruitTrees[I].Fruits then
+          if gFruitTrees[I].ClimateMulti[fBestClimate] * gFruitTrees[I].Fruits > gFruitTrees[K].ClimateMulti[fBestClimate] * gFruitTrees[I].Fruits then
             K := I;
         end;
         fNextFruitTreeID := K;
@@ -6691,6 +6698,7 @@ begin
   LoadStream.Read(fStartAnim);
   LoadStream.Read(fWorkingAtChild);
   LoadStream.Read(fTmpObject);
+  LoadStream.ReadData(fBestClimate);
   LoadStream.Read(fParentTree, 4);
 
   LoadStream.Read(newCount);
@@ -6717,6 +6725,7 @@ begin
   SaveStream.Write(fStartAnim);
   SaveStream.Write(fWorkingAtChild);
   SaveStream.Write(fTmpObject);
+  SaveStream.WriteData(fBestClimate);
   SaveStream.Write(TKMHouse(fParentTree).UID);
 
   newCount := ChildCount;
@@ -6781,11 +6790,11 @@ begin
                             WorkAnimStep, WorkAnimStepPrev, gHands[Owner].GameFlagColor);
     If ParentTree = nil then
     begin
+
+      gRenderPool.AddSpriteWH(fPosition, KMPOINT_ZERO, 2208, rxHouses, gHands[Owner].GameFlagColor);//log
       gRenderPool.AddHouseWork(HouseType, fPosition,
                               CurrentAction.SubAction - [haWork1, haWork2],
                               WorkAnimStep, WorkAnimStepPrev, gHands[Owner].GameFlagColor);
-
-      gRenderPool.AddSpriteWH(fPosition, KMPOINT_ZERO, 2208, rxHouses, gHands[Owner].GameFlagColor);//log
     end;
   end;
 
