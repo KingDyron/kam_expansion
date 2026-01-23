@@ -382,7 +382,7 @@ begin
   if aFood.HasWares([wtSeed]) then
   begin
     Inc(BeastAge[fLast], 0.4);
-    Inc(fFillEggs, 0.1);
+    Inc(fFillEggs, 0.05);
   end;
 
   if aFood.HasWares([wtVegetables]) then
@@ -482,9 +482,9 @@ begin
   for I := Low(BeastAge) to High(BeastAge) do
     if BeastAge[I] > 0 then
     begin
-      Inc(fFillFeather, 0.1);
+      Inc(fFillFeather, 0.035);
 
-      Inc(fFillFeather, CornBreeded[I] * 0.05);
+      Inc(fFillFeather, CornBreeded[I] * 0.017);
     end;
 
   fFillFeather := fFillFeather + (0.1) * ChickenCount;
