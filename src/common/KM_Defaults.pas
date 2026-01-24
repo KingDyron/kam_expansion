@@ -725,7 +725,7 @@ const
   CITIZENS_CNT = Integer(CITIZEN_MAX) - Integer(CITIZEN_MIN) + 1;
   WARRIORS_CNT = Integer(WARRIOR_MAX) - Integer(WARRIOR_MIN) + 1;
   UNITS_CNT = Integer(UNIT_MAX) - Integer(UNIT_MIN) + 1;
-  SIEGE_MACHINES = [utBallista, utCatapult, utRam, utAmmoCart, utWoodenWall, utSpikedTrap, utPikeMachine];
+  SIEGE_MACHINES = [utBallista, utCatapult, utRam, utAmmoCart, utWoodenWall, utSpikedTrap, utPikeMachine, utMobileTower];
   UNITS_SHIPS = [utBoat, utShip, utBattleShip];
 
   OPERATORS_PER_MACHINE = 4;
