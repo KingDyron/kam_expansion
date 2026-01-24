@@ -398,6 +398,13 @@ begin
       HitUnit(gTerrain.GetUnit(aLoc.DirFaceLoc));
       aLoc.Dir := DIR_TO_PREV2[aLoc.Dir];
       HitUnit(gTerrain.GetUnit(aLoc.DirFaceLoc));
+    end else
+    if fUnit.UnitType = utFlailFighter then
+    begin
+      aLoc := KMPointDir(fUnit.Position, fUnit.Direction);
+      aLoc.Loc := aLoc.DirFaceLoc;
+      aLoc.Loc := aLoc.DirFaceLoc;
+      HitUnit(gTerrain.GetUnit(aLoc.Loc));
     end;
   end;
 
