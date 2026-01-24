@@ -1,211 +1,369 @@
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <SEMethodDict>
   <Definition Type="function" Name="AbsI" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aValue" Type="Integer"></Parameter>
+      <Parameter Name="aValue" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="AbsS" ResultType="Single">
     <ParameterList>
-      <Parameter Name="aValue" Type="Single"></Parameter>
+      <Parameter Name="aValue" Type="Single"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="ArrayElementCount" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aElement" Type="AnsiString"></Parameter>
-      <Parameter Name="aArray" Type="array of AnsiString"></Parameter>
+      <Parameter Name="aElement" Type="AnsiString"/>
+      <Parameter Name="aArray" Type="array of UnicodeString"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="ArrayElementCountB" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aElement" Type="Boolean"></Parameter>
-      <Parameter Name="aArray" Type="array of Boolean"></Parameter>
+      <Parameter Name="aElement" Type="Boolean"/>
+      <Parameter Name="aArray" Type="array of Boolean"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="ArrayElementCountI" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aElement" Type="Integer"></Parameter>
-      <Parameter Name="aArray" Type="array of Integer"></Parameter>
+      <Parameter Name="aElement" Type="Integer"/>
+      <Parameter Name="aArray" Type="array of LongInt"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="ArrayElementCountS" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aElement" Type="Single"></Parameter>
-      <Parameter Name="aArray" Type="array of Single"></Parameter>
+      <Parameter Name="aElement" Type="Single"/>
+      <Parameter Name="aArray" Type="array of Single"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="ArrayHasElement" ResultType="Boolean">
     <ParameterList>
-      <Parameter Name="aElement" Type="AnsiString"></Parameter>
-      <Parameter Name="aArray" Type="array of AnsiString"></Parameter>
+      <Parameter Name="aElement" Type="AnsiString"/>
+      <Parameter Name="aArray" Type="array of UnicodeString"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="ArrayHasElementB" ResultType="Boolean">
     <ParameterList>
-      <Parameter Name="aElement" Type="Boolean"></Parameter>
-      <Parameter Name="aArray" Type="array of Boolean"></Parameter>
+      <Parameter Name="aElement" Type="Boolean"/>
+      <Parameter Name="aArray" Type="array of Boolean"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="ArrayHasElementI" ResultType="Boolean">
     <ParameterList>
-      <Parameter Name="aElement" Type="Integer"></Parameter>
-      <Parameter Name="aArray" Type="array of Integer"></Parameter>
+      <Parameter Name="aElement" Type="Integer"/>
+      <Parameter Name="aArray" Type="array of LongInt"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="ArrayHasElementS" ResultType="Boolean">
     <ParameterList>
-      <Parameter Name="aElement" Type="Single"></Parameter>
-      <Parameter Name="aArray" Type="array of Single"></Parameter>
+      <Parameter Name="aElement" Type="Single"/>
+      <Parameter Name="aArray" Type="array of Single"/>
     </ParameterList>
   </Definition>
-  <Definition Type="function" Name="EnsureRangeS" ResultType="Single">
+  <Definition Type="function" Name="ArrayRemoveIndexI" ResultType="TIntegerArray">
     <ParameterList>
-      <Parameter Name="aValue" Type="Single"></Parameter>
-      <Parameter Name="aMin" Type="Single"></Parameter>
-      <Parameter Name="aMax" Type="Single"></Parameter>
+      <Parameter Name="aIndex" Type="Integer"/>
+      <Parameter Name="aArray" Type="TIntegerArray"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="ArrayRemoveIndexS" ResultType="TAnsiStringArray">
+    <ParameterList>
+      <Parameter Name="aIndex" Type="Integer"/>
+      <Parameter Name="aArray" Type="TAnsiStringArray"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="BoolToStr" ResultType="AnsiString">
+    <ParameterList>
+      <Parameter Name="aBool" Type="Boolean"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="CeilTo" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aValue" Type="Single"/>
+      <Parameter Name="aBase" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="ColorBrightness" ResultType="Single">
+    <ParameterList>
+      <Parameter Name="aHexColor" Type="string"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="CompareString" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="Str1" Type="string"/>
+      <Parameter Name="Str2" Type="string"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="CompareText" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="Str1" Type="string"/>
+      <Parameter Name="Str2" Type="string"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="CopyString" ResultType="string">
+    <ParameterList>
+      <Parameter Name="Str" Type="string"/>
+      <Parameter Name="Index" Type="Integer"/>
+      <Parameter Name="Count" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="procedure" Name="DeleteString">
+    <ParameterList>
+      <Parameter Name="Str" Type="string"/>
+      <Parameter Name="Index" Type="Integer"/>
+      <Parameter Name="Count" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="EnsureRangeI" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aValue" Type="Integer"></Parameter>
-      <Parameter Name="aMin" Type="Integer"></Parameter>
-      <Parameter Name="aMax" Type="Integer"></Parameter>
+      <Parameter Name="aValue" Type="Integer"/>
+      <Parameter Name="aMin" Type="Integer"/>
+      <Parameter Name="aMax" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="EnsureRangeS" ResultType="Single">
+    <ParameterList>
+      <Parameter Name="aValue" Type="Single"/>
+      <Parameter Name="aMin" Type="Single"/>
+      <Parameter Name="aMax" Type="Single"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="FloorTo" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aValue" Type="Single"/>
+      <Parameter Name="aBase" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="Format" ResultType="string">
     <ParameterList>
-      <Parameter Name="aFormatting" Type="string"></Parameter>
-      <Parameter Name="aData" Type="array of const"></Parameter>
+      <Parameter Name="aFormatting" Type="string"/>
+      <Parameter Name="aData" Type="array of const"/>
     </ParameterList>
   </Definition>
-  <Definition Type="function" Name="HexToInt" ResultType="Integer">
+  <Definition Type="function" Name="FormatFloat" ResultType="string">
     <ParameterList>
-      <Parameter Name="aHexString" Type="string"></Parameter>
+      <Parameter Name="aFormat" Type="string"/>
+      <Parameter Name="aValue" Type="Single"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="IfThen" ResultType="AnsiString">
     <ParameterList>
-      <Parameter Name="aBool" Type="Boolean"></Parameter>
-      <Parameter Name="aTrue" Type="AnsiString"></Parameter>
-      <Parameter Name="aFalse" Type="AnsiString"></Parameter>
+      <Parameter Name="aBool" Type="Boolean"/>
+      <Parameter Name="aTrue" Type="AnsiString"/>
+      <Parameter Name="aFalse" Type="AnsiString"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="IfThenI" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aBool" Type="Boolean"></Parameter>
-      <Parameter Name="aTrue" Type="Integer"></Parameter>
-      <Parameter Name="aFalse" Type="Integer"></Parameter>
+      <Parameter Name="aBool" Type="Boolean"/>
+      <Parameter Name="aTrue" Type="Integer"/>
+      <Parameter Name="aFalse" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="IfThenS" ResultType="Single">
     <ParameterList>
-      <Parameter Name="aBool" Type="Boolean"></Parameter>
-      <Parameter Name="aTrue" Type="Single"></Parameter>
-      <Parameter Name="aFalse" Type="Single"></Parameter>
+      <Parameter Name="aBool" Type="Boolean"/>
+      <Parameter Name="aTrue" Type="Single"/>
+      <Parameter Name="aFalse" Type="Single"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="InAreaI" ResultType="Boolean">
     <ParameterList>
-      <Parameter Name="aX" Type="Integer"></Parameter>
-      <Parameter Name="aY" Type="Integer"></Parameter>
-      <Parameter Name="aXMin" Type="Integer"></Parameter>
-      <Parameter Name="aYMin" Type="Integer"></Parameter>
-      <Parameter Name="aXMax" Type="Integer"></Parameter>
-      <Parameter Name="aYMax" Type="Integer"></Parameter>
+      <Parameter Name="aX" Type="Integer"/>
+      <Parameter Name="aY" Type="Integer"/>
+      <Parameter Name="aXMin" Type="Integer"/>
+      <Parameter Name="aYMin" Type="Integer"/>
+      <Parameter Name="aXMax" Type="Integer"/>
+      <Parameter Name="aYMax" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="InAreaS" ResultType="Boolean">
     <ParameterList>
-      <Parameter Name="aX" Type="Single"></Parameter>
-      <Parameter Name="aY" Type="Single"></Parameter>
-      <Parameter Name="aXMin" Type="Single"></Parameter>
-      <Parameter Name="aYMin" Type="Single"></Parameter>
-      <Parameter Name="aXMax" Type="Single"></Parameter>
-      <Parameter Name="aYMax" Type="Single"></Parameter>
+      <Parameter Name="aX" Type="Single"/>
+      <Parameter Name="aY" Type="Single"/>
+      <Parameter Name="aXMin" Type="Single"/>
+      <Parameter Name="aYMin" Type="Single"/>
+      <Parameter Name="aXMax" Type="Single"/>
+      <Parameter Name="aYMax" Type="Single"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="InRangeI" ResultType="Boolean">
     <ParameterList>
-      <Parameter Name="aValue" Type="Integer"></Parameter>
-      <Parameter Name="aMin" Type="Integer"></Parameter>
-      <Parameter Name="aMax" Type="Integer"></Parameter>
+      <Parameter Name="aValue" Type="Integer"/>
+      <Parameter Name="aMin" Type="Integer"/>
+      <Parameter Name="aMax" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="InRangeS" ResultType="Boolean">
     <ParameterList>
-      <Parameter Name="aValue" Type="Single"></Parameter>
-      <Parameter Name="aMin" Type="Single"></Parameter>
-      <Parameter Name="aMax" Type="Single"></Parameter>
+      <Parameter Name="aValue" Type="Single"/>
+      <Parameter Name="aMin" Type="Single"/>
+      <Parameter Name="aMax" Type="Single"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="procedure" Name="InsertString">
+    <ParameterList>
+      <Parameter Name="Source" Type="string"/>
+      <Parameter Name="Target" Type="string"/>
+      <Parameter Name="Index" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="KMPoint" ResultType="TKMPoint">
+    <ParameterList>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="LowerCase" ResultType="string">
+    <ParameterList>
+      <Parameter Name="Str" Type="string"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="MaxI" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="A" Type="Integer"></Parameter>
-      <Parameter Name="B" Type="Integer"></Parameter>
-    </ParameterList>
-  </Definition>
-  <Definition Type="function" Name="MaxS" ResultType="Single">
-    <ParameterList>
-      <Parameter Name="A" Type="Single"></Parameter>
-      <Parameter Name="B" Type="Single"></Parameter>
+      <Parameter Name="A" Type="Integer"/>
+      <Parameter Name="B" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="MaxInArrayI" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aArray" Type="array of Integer"></Parameter>
+      <Parameter Name="aArray" Type="array of LongInt"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="MaxInArrayS" ResultType="Single">
     <ParameterList>
-      <Parameter Name="aArray" Type="array of Single"></Parameter>
+      <Parameter Name="aArray" Type="array of Single"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MaxS" ResultType="Single">
+    <ParameterList>
+      <Parameter Name="A" Type="Single"/>
+      <Parameter Name="B" Type="Single"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="MinI" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="A" Type="Integer"></Parameter>
-      <Parameter Name="B" Type="Integer"></Parameter>
-    </ParameterList>
-  </Definition>
-  <Definition Type="function" Name="MinS" ResultType="Single">
-    <ParameterList>
-      <Parameter Name="A" Type="Single"></Parameter>
-      <Parameter Name="B" Type="Single"></Parameter>
+      <Parameter Name="A" Type="Integer"/>
+      <Parameter Name="B" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="MinInArrayI" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aArray" Type="array of Integer"></Parameter>
+      <Parameter Name="aArray" Type="array of LongInt"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="MinInArrayS" ResultType="Single">
     <ParameterList>
-      <Parameter Name="aArray" Type="array of Single"></Parameter>
+      <Parameter Name="aArray" Type="array of Single"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MinS" ResultType="Single">
+    <ParameterList>
+      <Parameter Name="A" Type="Single"/>
+      <Parameter Name="B" Type="Single"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="procedure" Name="MoveString">
+    <ParameterList>
+      <Parameter Name="Source" Type="string"/>
+      <Parameter Name="Destination" Type="string"/>
+      <Parameter Name="Count" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="Pos" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="SubStr" Type="string"/>
+      <Parameter Name="Str" Type="string"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="Power" ResultType="Extended">
     <ParameterList>
-      <Parameter Name="Base" Type="Extended"></Parameter>
-      <Parameter Name="Exponent" Type="Extended"></Parameter>
+      <Parameter Name="aBase" Type="Extended"/>
+      <Parameter Name="aExp" Type="Extended"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="RandomRangeI" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aFrom" Type="Integer"/>
+      <Parameter Name="aTo" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="RGBDecToBGRHex" ResultType="AnsiString">
+    <ParameterList>
+      <Parameter Name="aR" Type="Byte"/>
+      <Parameter Name="aG" Type="Byte"/>
+      <Parameter Name="aB" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="RGBToBGRHex" ResultType="AnsiString">
+    <ParameterList>
+      <Parameter Name="aHexColor" Type="string"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="RoundTo" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aValue" Type="Single"/>
+      <Parameter Name="aBase" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="Sqr" ResultType="Extended">
     <ParameterList>
-      <Parameter Name="A" Type="Extended"></Parameter>
+      <Parameter Name="A" Type="Extended"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="StringReplace" ResultType="string">
+    <ParameterList>
+      <Parameter Name="Str" Type="string"/>
+      <Parameter Name="OldPattern" Type="string"/>
+      <Parameter Name="NewPattern" Type="string"/>
+      <Parameter Name="aReplaceAll" Type="Boolean"/>
+      <Parameter Name="aIgnoreCase" Type="Boolean"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="SumI" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aArray" Type="array of Integer"></Parameter>
+      <Parameter Name="aArray" Type="array of LongInt"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="SumS" ResultType="Single">
     <ParameterList>
-      <Parameter Name="aArray" Type="array of Single"></Parameter>
+      <Parameter Name="aArray" Type="array of Single"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="TimeToString" ResultType="AnsiString">
     <ParameterList>
-      <Parameter Name="aTicks" Type="Integer"></Parameter>
+      <Parameter Name="aTicks" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="TimeToTick" ResultType="Cardinal">
+    <ParameterList>
+      <Parameter Name="aHours" Type="Integer"/>
+      <Parameter Name="aMinutes" Type="Integer"/>
+      <Parameter Name="aSeconds" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="Trim" ResultType="string">
+    <ParameterList>
+      <Parameter Name="Str" Type="string"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="TrimLeft" ResultType="string">
+    <ParameterList>
+      <Parameter Name="Str" Type="string"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="TrimRight" ResultType="string">
+    <ParameterList>
+      <Parameter Name="Str" Type="string"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="TruncTo" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aValue" Type="Single"/>
+      <Parameter Name="aBase" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="UpperCase" ResultType="string">
+    <ParameterList>
+      <Parameter Name="Str" Type="string"/>
     </ParameterList>
   </Definition>
 </SEMethodDict>

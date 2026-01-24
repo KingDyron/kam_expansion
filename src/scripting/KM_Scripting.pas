@@ -78,6 +78,8 @@ type
     procedure LoadFromFile(const aFileName, aCampaignDataFilePath: UnicodeString; aCampaignData: TKMemoryStream);
     procedure ExportDataToText;
     procedure ExportScriptCode;
+    procedure ExportToXML(aC : TPSCompileTimeClass);
+    procedure ExportEventsToXML;
 
     procedure Save(SaveStream: TKMemoryStream);
     procedure Load(LoadStream: TKMemoryStream);
@@ -123,6 +125,7 @@ uses
   {$IFDEF FPC} Hash, {$ENDIF}
   {$IFDEF WDC} System.Hash, {$ENDIF}
   KromUtils, KM_GameParams, KM_Resource, KM_ResUnits, KM_Log, KM_CommonUtils,
+  KM_IoXML,
   KM_ScriptingConsoleCommands, KM_ScriptPreProcessorGame,
   KM_ResTypes, KM_CampaignTypes;
 
@@ -360,6 +363,7 @@ function TKMScripting.ScriptOnUses(Sender: TPSPascalCompiler; const Name: AnsiSt
     list : TStringList;
     funcID : TKMArray<Integer>;
   begin
+    ExportToXML(aC);
     If not EXPORT_SCRIPTING_CLASSES then
       Exit;
     path := ExeDir + 'Export' + PathDelim + aC.aType.OriginalName + '.txt';
@@ -2150,6 +2154,7 @@ begin
 
   //Link events into the script
   gScriptEvents.LinkEventsAndCommands;
+  ExportEventsToXML;
 end;
 
 
@@ -2188,6 +2193,198 @@ begin
   end;
 end;
 
+procedure TKMScripting.ExportToXML(aC: TPSCompileTimeClass);
+
+  procedure ValidateParamType(var S : String);
+  begin
+    If S = 'array of ___Pointer' then
+      S := 'array of const'
+    else
+    If S = 'LongInt' then
+      S := 'Integer'
+    else
+    If S = 'LongWord' then
+      S := 'Cardinal';
+  end;
+
+  function GetParamName(aParam : TPSType) : String;
+  begin
+    Result := aParam.OriginalName;
+    If Result[1] = '!' then
+      Result := aParam.Decl;
+    ValidateParamType(Result);
+  end;
+
+var I, K : Integer;
+  path, S, tyName : String;
+
+  XML: TKMXmlDocument;
+  root, Def, parList, param : TKMXmlNode;
+
+  funcID : TKMArray<Integer>;
+  item : TPSDelphiClassItem;
+begin
+  If not EXPORT_SCRIPTING_CLASSES then
+    Exit;
+  path := ExeDir + 'Export' + PathDelim + aC.aType.OriginalName + '.xml';
+
+  XML := TKMXmlDocument.Create('SEMethodDict');
+  root := XML.Root;
+
+  for I := 0 to aC.Count - 1 do
+  begin
+    Def := root.AddChild('Definition');
+
+    item := aC.Items[I];
+    If item.Decl.Result <> nil then
+      Def.Attributes['Type'] := 'function'
+    else
+      Def.Attributes['Type'] := 'procedure';
+
+    Def.Attributes['Name'] := item.OrgName;
+
+    If item.Decl.Result <> nil then
+      Def.Attributes['ResultType'] := GetParamName(item.Decl.Result);
+
+    parList := Def.AddChild('ParameterList');
+    for K := 0 to item.Decl.ParamCount - 1 do
+    begin
+      param := parList.AddChild('Parameter');
+      param.Attributes['Name'] := item.Decl.Params[K].OrgName;
+      param.Attributes['Type'] := GetParamName(item.Decl.Params[K].aType);
+
+      case item.Decl.Params[K].Mode of
+        pmIn: ;
+        pmOut: param.Attributes['Flag'] := 'out';
+        pmInOut: param.Attributes['Flag'] := 'var';
+      end;
+    end;
+  end;
+  XML.SaveToFile(path);
+  FreeAndNil(XML);
+end;
+
+
+procedure TKMScripting.ExportEventsToXML;
+type
+  TKMEventRec = record
+    fName : String;
+    paramTypes : TKMStringArray;
+    paramNames : TKMStringArray;
+  end;
+var EvtList : array[TKMScriptEventType] of TKMEventRec;
+
+  procedure SetEvent(aType : TKMScriptEventType; paramNames, paramTypes : TKMStringArray);
+  begin
+    EvtList[aType].fName := StringReplace(GetEnumName(TypeInfo(TKMScriptEventType), Integer(aType)), 'evt', 'On', []);
+    EvtList[aType].paramTypes := paramTypes;
+    EvtList[aType].paramNames := paramNames;
+  end;
+
+
+var I : Integer;
+  path : String;
+
+  XML: TKMXmlDocument;
+  root, Def, parList, param : TKMXmlNode;
+  EVT: TKMScriptEventType;
+begin
+  If not EXPORT_SCRIPTING_CLASSES then
+    Exit;
+
+    SetEvent(evtBeacon,                ['aPlayer', 'aX', 'aY'], ['Integer', 'Integer', 'Integer']);
+    SetEvent(evtFieldBuilt,            ['aPlayer', 'aX', 'aY'], ['Integer', 'Integer', 'Integer']);
+    SetEvent(evtGameSpeedChanged,      ['aSpeed'], ['Single']);
+    SetEvent(evtGroupBeforeOrderSplit, ['aGroup', 'var NewType', 'var aNewCnt', 'var aMixed'], ['Integer', 'TKMUnitType', 'Integer', 'Boolean']);
+    SetEvent(evtGroupHungry,           ['aGroup'], ['Integer']);
+    SetEvent(evtGroupOrderAttackHouse, ['aGroup', 'aHouse'], ['Integer', 'Integer']);
+    SetEvent(evtGroupOrderAttackUnit,  ['aGroup', 'aUnit'], ['Integer', 'Integer']);
+    SetEvent(evtGroupOrderLink,        ['aGroup1', 'aGroup2'], ['Integer', 'Integer']);
+    SetEvent(evtGroupOrderMove,        ['aGroup1', 'aX', 'aY', 'aDir'], ['Integer', 'Integer', 'Integer', 'TKMDirection']);
+    SetEvent(evtGroupOrderSplit,       ['aGroup', 'aNewGroup'], ['Integer', 'Integer']);
+    SetEvent(evtHouseAfterDestroyed,   ['aHouseType', 'aOwner', 'aX', 'aY'], ['Integer', 'Integer', 'Integer', 'Integer']);
+    SetEvent(evtHouseAfterDestroyedEx, ['aHouseType', 'aOwner', 'aX', 'aY'], ['TKMHouseType', 'Integer', 'Integer', 'Integer']);
+    SetEvent(evtHouseBuilt,            ['aHouse'], ['Integer']);
+    SetEvent(evtHouseDamaged,          ['aHouse', 'aAttacker'], ['Integer', 'Integer']);
+    SetEvent(evtHouseDestroyed,        ['aHouse', 'aDestroyerIndex'], ['Integer', 'Integer']);
+    SetEvent(evtHousePlanDigged,       ['aHouse'], ['Integer']);
+    SetEvent(evtHousePlanPlaced,       ['aPlayer', 'aX', 'aY', 'aHouseType'], ['Integer', 'Integer', 'Integer', 'Integer']);
+    SetEvent(evtHousePlanPlacedEx,     ['aPlayer', 'aX', 'aY', 'aHouseType'], ['Integer', 'Integer', 'Integer', 'TKMHouseType']);
+    SetEvent(evtHousePlanRemoved,      ['aPlayer', 'aX', 'aY', 'aHouseType'], ['Integer', 'Integer', 'Integer', 'Integer']);
+    SetEvent(evtHousePlanRemovedEx,    ['aPlayer', 'aX', 'aY', 'aHouseType'], ['Integer', 'Integer', 'Integer', 'TKMHouseType']);
+    SetEvent(evtHouseRepaired,         ['aHouse', 'aRepairAmount', 'aDamage'], ['Integer', 'Integer', 'Integer']);
+    SetEvent(evtHouseWareCountChanged, ['aHouse', 'aWare', 'aCnt', 'aChangeCnt'], ['Integer', 'TKMWareType', 'Integer', 'Integer']);
+    SetEvent(evtMarketTrade,   ['aMarket', 'aFrom', 'aTo'], ['Integer', 'Integer', 'Integer']);
+    SetEvent(evtMarketTradeEx, ['aMarket', 'aFrom', 'aTo'], ['Integer', 'TKMWareType', 'TKMWareType']);
+    SetEvent(evtMerchantTrade, ['aMerchant', 'aHandID', 'aWare', 'aCount'], ['Integer', 'Integer', 'Integer', 'Integer']);
+    SetEvent(evtMissionStart,  [], []);
+    SetEvent(evtPeacetimeEnd,  [], []);
+
+    SetEvent(evtFieldPlanPlaced, ['aPlayer', 'aX', 'aY', 'aFieldType'], ['Integer', 'Integer', 'Integer', 'TKMLockFieldType']);
+    SetEvent(evtFieldPlanRemoved, ['aPlayer', 'aX', 'aY', 'aFieldType'], ['Integer', 'Integer', 'Integer', 'TKMLockFieldType']);
+    SetEvent(evtFieldPlanDigged, ['aPlayer', 'aX', 'aY', 'aFieldType'], ['Integer', 'Integer', 'Integer', 'TKMLockFieldType']);
+    SetEvent(evtFieldPlanBuilt, ['aPlayer', 'aX', 'aY', 'aFieldType'], ['Integer', 'Integer', 'Integer', 'TKMLockFieldType']);
+
+    SetEvent(evtPlanFieldPlaced, ['aPlayer', 'aX', 'aY'], ['Integer', 'Integer', 'Integer']);
+    SetEvent(evtPlanFieldRemoved, ['aPlayer', 'aX', 'aY'], ['Integer', 'Integer', 'Integer']);
+    SetEvent(evtPlanRoadDigged, ['aPlayer', 'aX', 'aY'], ['Integer', 'Integer', 'Integer']);
+    SetEvent(evtPlanRoadPlaced, ['aPlayer', 'aX', 'aY'], ['Integer', 'Integer', 'Integer']);
+    SetEvent(evtPlanRoadRemoved, ['aPlayer', 'aX', 'aY'], ['Integer', 'Integer', 'Integer']);
+    SetEvent(evtPlanWinefieldDigged, ['aPlayer', 'aX', 'aY'], ['Integer', 'Integer', 'Integer']);
+    SetEvent(evtPlanWinefieldPlaced, ['aPlayer', 'aX', 'aY'], ['Integer', 'Integer', 'Integer']);
+    SetEvent(evtPlanWinefieldRemoved, ['aPlayer', 'aX', 'aY'], ['Integer', 'Integer', 'Integer']);
+    SetEvent(evtPlayerDefeated, ['aPlayer'], ['aInteger']);
+    SetEvent(evtPlayerVictory, ['aPlayer'], ['aInteger']);
+    SetEvent(evtRoadBuilt, ['aPlayer', 'aX', 'aY'], ['Integer', 'Integer', 'Integer']);
+    SetEvent(evtTick, [], []);
+    SetEvent(evtUnitAfterDied,  ['aUnitType', 'aOwner', 'aX', 'aY'], ['Integer', 'Integer', 'Integer', 'Integer']);
+    SetEvent(evtUnitAfterDiedEx,  ['aUnitType', 'aOwner', 'aX', 'aY'], ['TKMUnitType', 'Integer', 'Integer', 'Integer']);
+    SetEvent(evtUnitAttacked, ['aUnit', 'aAttacker'], ['Integer', 'Integer']);
+    SetEvent(evtUnitDied, ['aUnit', 'aKillerOwner'], ['Integer', 'Integer']);
+    SetEvent(evtUnitTrained, ['aUnit'], ['Integer']);
+    SetEvent(evtUnitWounded, ['aUnit', 'aAttacker'], ['Integer', 'Integer']);
+    SetEvent(evtWareProduced, ['aHouse', 'aWareType', 'aCount'], ['Integer', 'TKMWareType', 'Integer']);
+    SetEvent(evtWarriorEquipped, ['aUnit', 'aGroup'], ['Integer', 'Integer']);
+    SetEvent(evtWarriorWalked, ['aUnit', 'aX', 'aY'], ['Integer', 'Integer', 'Integer']);
+    SetEvent(evtWinefieldBuilt, ['aPlayer', 'aX', 'aY'], ['Integer', 'Integer', 'Integer']);
+
+    SetEvent(evtCustomPanelButtonPressed, ['aPlayer', 'aID', 'aTag'], ['Integer', 'Integer', 'Integer']);
+    SetEvent(evtCustomCursorClick, ['aPlayer', 'X', 'Y', 'Tag'], ['Integer', 'Integer', 'Integer', 'Integer']);
+    SetEvent(evtUnitHit, ['aUnit', 'aAttacker'], ['Integer', 'Integer']);
+    SetEvent(evtUnitSelected, ['aPlayer', 'aUnit', 'aSelected'], ['Integer', 'Integer', 'Boolean']);
+    SetEvent(evtHouseSelected, ['aPlayer', 'aHouse', 'aSelected'], ['Integer', 'Integer', 'Boolean']);
+    SetEvent(evtHouseUpgraded, ['aHouse', 'aLevel'], ['Integer', 'Integer']);
+    SetEvent(evtShipLoaded, ['aShip', 'aUnit'], ['Integer', 'Integer']);
+    SetEvent(evtShipUnLoaded, ['aShip', 'aUnit'], ['Integer', 'Integer']);
+
+    SetEvent(evtPearlCompleted, ['aHouse', 'aType'], ['Integer', 'Integer']);
+    SetEvent(evtStructureBuilt, ['aHouse', 'aType'], ['Integer', 'Integer']);
+    SetEvent(evtPearlSelected, ['aHouse', 'aType'], ['Integer', 'Integer']);
+    SetEvent(evtPearlConfirmed, ['aOwner', 'aX', 'aY', 'aIndex'], ['Integer', 'Integer', 'Integer', 'Integer']);
+    SetEvent(evtDevUnlocked, ['aOwner', 'aType', 'aID'], ['Integer', 'Integer', 'Integer']);
+
+  XML := TKMXmlDocument.Create('SEMethodDict');
+
+  for EVT := Low(TKMScriptEventType) to High(TKMScriptEventType) do
+  begin
+    Def := XML.Root.AddChild('Definition');
+    Def.Attributes['Type'] := 'procedure';
+    Def.Attributes['Name'] := StringReplace(GetEnumName(TypeInfo(TKMScriptEventType), Integer(EVT)), 'evt', 'On', []);
+    Def.Attributes['ResultType'] := '';
+    parList := Def.AddChild('ParameterList');
+
+    for I := 0 to high(EvtList[EVT].paramNames) do
+    begin
+      param := parList.AddChild('Parameter');
+      param.Attributes['Name'] := EvtList[EVT].paramNames[I];
+      param.Attributes['Type'] := EvtList[EVT].paramTypes[I];
+    end;
+    //Sender.Type
+  end;
+  path := ExeDir + 'Export' + PathDelim + 'Events' + '.xml';
+  XML.SaveToFile(path);
+  FreeAndNil(XML);
+end;
 
 procedure TKMScripting.LoadVar(LoadStream: TKMemoryStream; Src: Pointer; aType: TPSTypeRec);
 var

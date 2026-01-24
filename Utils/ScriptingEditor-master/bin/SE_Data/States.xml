@@ -1,344 +1,1353 @@
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <SEMethodDict>
-  <Definition Type="function" Name="FogRevealed" ResultType="Boolean">
+  <Definition Type="function" Name="AAIAttackHouseTypesGet" ResultType="TKMHouseTypeSet">
     <ParameterList>
-      <Parameter Name="aPlayer" Type="Integer"></Parameter>
-      <Parameter Name="aX" Type="Word"></Parameter>
-      <Parameter Name="aY" Type="Word"></Parameter>
+      <Parameter Name="aHand" Type="Byte"/>
     </ParameterList>
   </Definition>
+  <Definition Type="function" Name="AIArmyType" ResultType="TKMArmyType">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="AIAutoAttack" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="AIAutoAttackRange" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="AIAutoBuild" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="AIAutoDefence" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="AIAutoRepair" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="procedure" Name="AIDefencePositionGet">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
+      <Parameter Name="aID" Type="Byte"/>
+      <Parameter Name="aX" Type="Integer"/>
+      <Parameter Name="aY" Type="Integer"/>
+      <Parameter Name="aGroupType" Type="Byte"/>
+      <Parameter Name="aRadius" Type="Integer"/>
+      <Parameter Name="aDefType" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="AIDefencePositionGetByIndex" ResultType="TKMDefencePositionInfo">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="aIndex" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="AIDefendAllies" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="AIEquipRate" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
+      <Parameter Name="aType" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="procedure" Name="AIGroupsFormationGet">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
+      <Parameter Name="aType" Type="Byte"/>
+      <Parameter Name="aCount" Type="Integer"/>
+      <Parameter Name="aColumns" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="procedure" Name="AIGroupsFormationGetEx">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="aGroupType" Type="TKMGroupType"/>
+      <Parameter Name="aCount" Type="Integer"/>
+      <Parameter Name="aColumns" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="AIRecruitDelay" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="AIRecruitLimit" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="AIRepairMode" ResultType="TKMAIRepairMode">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="AISerfsPerHouse" ResultType="Single">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="AISoldiersLimit" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="AIStartPosition" ResultType="TKMPoint">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="AIUnlimitedEquip" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="AIWorkerLimit" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="CampaignMissionID" ResultType="Integer">
+    <ParameterList/>
+  </Definition>
+  <Definition Type="function" Name="CampaignMissionsCount" ResultType="Integer">
+    <ParameterList/>
+  </Definition>
+  <Definition Type="function" Name="ClosestGroup" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+      <Parameter Name="aGroupType" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="ClosestGroupEx" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+      <Parameter Name="aGroupType" Type="TKMGroupType"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="ClosestGroupMultipleTypes" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+      <Parameter Name="aGroupTypes" Type="TByteSet"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="ClosestGroupMultipleTypesEx" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+      <Parameter Name="aGroupTypes" Type="TKMGroupTypeSet"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="ClosestHouse" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+      <Parameter Name="aHouseType" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="ClosestHouseEx" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+      <Parameter Name="aHouseType" Type="TKMHouseType"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="ClosestHouseMultipleTypes" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+      <Parameter Name="aHouseTypes" Type="TByteSet"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="ClosestHouseMultipleTypesEx" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+      <Parameter Name="aHouseTypes" Type="TKMHouseTypeSet"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="ClosestUnit" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+      <Parameter Name="aUnitType" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="ClosestUnitEx" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+      <Parameter Name="aUnitType" Type="TKMUnitType"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="ClosestUnitMultipleTypes" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+      <Parameter Name="aUnitTypes" Type="TByteSet"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="ClosestUnitMultipleTypesEx" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+      <Parameter Name="aUnitTypes" Type="TKMUnitTypeSet"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="ConnectedByRoad" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="X1" Type="Integer"/>
+      <Parameter Name="Y1" Type="Integer"/>
+      <Parameter Name="X2" Type="Integer"/>
+      <Parameter Name="Y2" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="ConnectedByWalking" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="X1" Type="Integer"/>
+      <Parameter Name="Y1" Type="Integer"/>
+      <Parameter Name="X2" Type="Integer"/>
+      <Parameter Name="Y2" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="CursorPos" ResultType="TKMPoint">
+    <ParameterList>
+      <Parameter Name="aPlayer" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="FogRevealed" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
+      <Parameter Name="aX" Type="Integer"/>
+      <Parameter Name="aY" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="GameSpeed" ResultType="Single">
+    <ParameterList/>
+  </Definition>
+  <Definition Type="function" Name="GameSpeedChangeAllowed" ResultType="Boolean">
+    <ParameterList/>
+  </Definition>
   <Definition Type="function" Name="GameTime" ResultType="Cardinal">
-    <ParameterList></ParameterList>
+    <ParameterList/>
+  </Definition>
+  <Definition Type="function" Name="GroupAllowAllyToSelect" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aGroupID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="GroupAssignedToDefencePosition" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aGroupID" Type="Integer"/>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+    </ParameterList>
   </Definition>
   <Definition Type="function" Name="GroupAt" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aX" Type="Word"></Parameter>
-      <Parameter Name="aY" Type="Word"></Parameter>
+      <Parameter Name="aX" Type="Integer"/>
+      <Parameter Name="aY" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="GroupColumnCount" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aGroupID" Type="Integer"></Parameter>
+      <Parameter Name="aGroupID" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="GroupDead" ResultType="Boolean">
     <ParameterList>
-      <Parameter Name="aGroupID" Type="Integer"></Parameter>
+      <Parameter Name="aGroupID" Type="Integer"/>
     </ParameterList>
   </Definition>
-  <Definition Type="function" Name="GroupIsIdle" ResultType="Boolean">
+  <Definition Type="function" Name="GroupIdle" ResultType="Boolean">
     <ParameterList>
-      <Parameter Name="aGroupID" Type="Integer"></Parameter>
+      <Parameter Name="aGroupID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="GroupInFight" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aGroupID" Type="Integer"/>
+      <Parameter Name="aCountCitizens" Type="Boolean"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="GroupManualFormation" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aGroupID" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="GroupMember" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aGroupID" Type="Integer"></Parameter>
-      <Parameter Name="aMemberIndex" Type="Integer"></Parameter>
+      <Parameter Name="aGroupID" Type="Integer"/>
+      <Parameter Name="aMemberIndex" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="GroupMemberCount" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aGroupID" Type="Integer"></Parameter>
+      <Parameter Name="aGroupID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="GroupOrder" ResultType="TKMGroupOrder">
+    <ParameterList>
+      <Parameter Name="aGroupID" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="GroupOwner" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aGroupID" Type="Integer"></Parameter>
+      <Parameter Name="aGroupID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="GroupType" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aGroupID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="GroupTypeEx" ResultType="TKMGroupType">
+    <ParameterList>
+      <Parameter Name="aGroupID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseAllowAllyToSelect" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aHouseID" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="HouseAt" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aX" Type="Word"></Parameter>
-      <Parameter Name="aY" Type="Word"></Parameter>
+      <Parameter Name="aX" Type="Integer"/>
+      <Parameter Name="aY" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseBarracksRallyPointX" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aBarracks" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseBarracksRallyPointY" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aBarracks" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseBarracksRecruitBlock" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aHouseID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseBarracksRecruitsCount" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aBarracks" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseBuildingProgress" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHouseID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseCanPlace" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aHouseType" Type="Byte"/>
+      <Parameter Name="aX" Type="Integer"/>
+      <Parameter Name="aY" Type="Integer"/>
+      <Parameter Name="aIgnoreObjects" Type="Boolean"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseCanReachResources" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aHouseID" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="HouseDamage" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aHouseID" Type="Integer"></Parameter>
+      <Parameter Name="aHouseID" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="HouseDeliveryBlocked" ResultType="Boolean">
     <ParameterList>
-      <Parameter Name="aHouseID" Type="Integer"></Parameter>
-      <Parameter Name="aWareType" Type="TKMWareType"></Parameter>
+      <Parameter Name="aHouseID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseDeliveryMode" ResultType="TKMDeliveryMode">
+    <ParameterList>
+      <Parameter Name="aHouseID" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="HouseDestroyed" ResultType="Boolean">
     <ParameterList>
-      <Parameter Name="aHouseID" Type="Integer"></Parameter>
+      <Parameter Name="aHouseID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseFlagPoint" ResultType="TKMPoint">
+    <ParameterList>
+      <Parameter Name="aHouseID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseGetAllUnitsIn" ResultType="TIntegerArray">
+    <ParameterList>
+      <Parameter Name="aHouseID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseHasOccupant" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aHouseID" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="HouseHasWorker" ResultType="Boolean">
     <ParameterList>
-      <Parameter Name="aHouseID" Type="Integer"></Parameter>
+      <Parameter Name="aHouseID" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="HouseIsComplete" ResultType="Boolean">
     <ParameterList>
-      <Parameter Name="aHouseID" Type="Integer"></Parameter>
+      <Parameter Name="aHouseID" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="HouseOwner" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aHouseID" Type="Integer"></Parameter>
+      <Parameter Name="aHouseID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HousePosition" ResultType="TKMPoint">
+    <ParameterList>
+      <Parameter Name="aHouseID" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="HousePositionX" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aHouseID" Type="Integer"></Parameter>
+      <Parameter Name="aHouseID" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="HousePositionY" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aHouseID" Type="Integer"></Parameter>
+      <Parameter Name="aHouseID" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="HouseRepair" ResultType="Boolean">
     <ParameterList>
-      <Parameter Name="aHouseID" Type="Integer"></Parameter>
+      <Parameter Name="aHouseID" Type="Integer"/>
     </ParameterList>
   </Definition>
-  <Definition Type="function" Name="HouseTrainQueuePeek" ResultType="TKMUnitType">
+  <Definition Type="function" Name="HouseResourceAmount" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aHouseID" Type="Integer"></Parameter>
-      <Parameter Name="QueueIndex" Type="Integer"></Parameter>
+      <Parameter Name="aHouseID" Type="Integer"/>
+      <Parameter Name="aResource" Type="Integer"/>
     </ParameterList>
   </Definition>
-  <Definition Type="function" Name="HouseType" ResultType="TKMHouseType">
+  <Definition Type="function" Name="HouseSchoolQueue" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aHouseID" Type="Integer"></Parameter>
+      <Parameter Name="aHouseID" Type="Integer"/>
+      <Parameter Name="QueueIndex" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseSiteIsDigged" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aHouseID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseTownHallMaxGold" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHouseID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseType" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHouseID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseTypeEx" ResultType="TKMHouseType">
+    <ParameterList>
+      <Parameter Name="aHouseID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseTypeMaxHealth" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHouseType" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseTypeMaxHealthEx" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHouseType" Type="TKMHouseType"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseTypeName" ResultType="AnsiString">
+    <ParameterList>
+      <Parameter Name="aHouseType" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseTypeNameEx" ResultType="AnsiString">
+    <ParameterList>
+      <Parameter Name="aHouseType" Type="TKMHouseType"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseTypeToOccupantType" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHouseType" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseTypeToWorkerType" ResultType="TKMUnitType">
+    <ParameterList>
+      <Parameter Name="aHouseType" Type="TKMHouseType"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseUnlocked" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="aHouseType" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseWareAmount" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHouseID" Type="Integer"/>
+      <Parameter Name="aWare" Type="TKMWareType"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="HouseWareBlocked" ResultType="Boolean">
     <ParameterList>
-      <Parameter Name="aHouseID" Type="Integer"></Parameter>
-      <Parameter Name="aWareType" Type="TKMWareType"></Parameter>
+      <Parameter Name="aHouseID" Type="Integer"/>
+      <Parameter Name="aWareType" Type="Integer"/>
     </ParameterList>
   </Definition>
-  <Definition Type="function" Name="HouseWareInside" ResultType="Integer">
+  <Definition Type="function" Name="HouseWareBlockedEx" ResultType="Boolean">
     <ParameterList>
-      <Parameter Name="aHouseID" Type="Integer"></Parameter>
-      <Parameter Name="aWareType" Type="TKMWareType"></Parameter>
+      <Parameter Name="aHouseID" Type="Integer"/>
+      <Parameter Name="aWareType" Type="TKMWareType"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseWareBlockedTakeOut" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aHouseID" Type="Integer"/>
+      <Parameter Name="aWareType" Type="TKMWareType"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="HouseWeaponsOrdered" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aHouseID" Type="Integer"></Parameter>
-      <Parameter Name="aWareType" Type="TKMWareType"></Parameter>
+      <Parameter Name="aHouseID" Type="Integer"/>
+      <Parameter Name="aWareType" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseWeaponsOrderedEx" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHouseID" Type="Integer"/>
+      <Parameter Name="aWareType" Type="TKMWareType"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="HouseWoodcutterChopOnly" ResultType="Boolean">
     <ParameterList>
-      <Parameter Name="aHouseID" Type="Integer"></Parameter>
+      <Parameter Name="aHouseID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseWoodcutterMode" ResultType="TKMWoodcutterMode">
+    <ParameterList>
+      <Parameter Name="aHouseID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseWorker" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHouseID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseArea" ResultType="TKMHouseArea">
+    <ParameterList>
+      <Parameter Name="aHouseType" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseEntranceOffset" ResultType="TKMPoint">
+    <ParameterList>
+      <Parameter Name="aHouseType" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseTypeToID" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHouseType" Type="TKMHouseType"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseIDtoType" ResultType="TKMHouseType">
+    <ParameterList>
+      <Parameter Name="aHouseType" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="IsFieldAt" ResultType="Boolean">
     <ParameterList>
-      <Parameter Name="aPlayer" Type="Integer"></Parameter>
-      <Parameter Name="aX" Type="Word"></Parameter>
-      <Parameter Name="aY" Type="Word"></Parameter>
+      <Parameter Name="aHand" Type="ShortInt"/>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
     </ParameterList>
   </Definition>
-  <Definition Type="function" Name="IsOrchardAt" ResultType="Boolean">
+  <Definition Type="function" Name="IsFieldPlanAt" ResultType="Boolean">
     <ParameterList>
-      <Parameter Name="aPlayer" Type="Integer"></Parameter>
-      <Parameter Name="aX" Type="Word"></Parameter>
-      <Parameter Name="aY" Type="Word"></Parameter>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="IsHousePlanAt" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="aHouseType" Type="TKMHouseType"/>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="IsMissionBlockColorSelection" ResultType="Boolean">
+    <ParameterList/>
+  </Definition>
+  <Definition Type="function" Name="IsMissionBlockFullMapPreview" ResultType="Boolean">
+    <ParameterList/>
+  </Definition>
+  <Definition Type="function" Name="IsMissionBlockPeacetime" ResultType="Boolean">
+    <ParameterList/>
+  </Definition>
+  <Definition Type="function" Name="IsMissionBlockTeamSelection" ResultType="Boolean">
+    <ParameterList/>
+  </Definition>
+  <Definition Type="function" Name="IsMissionBuildType" ResultType="Boolean">
+    <ParameterList/>
+  </Definition>
+  <Definition Type="function" Name="IsMissionCoopType" ResultType="Boolean">
+    <ParameterList/>
+  </Definition>
+  <Definition Type="function" Name="IsMissionFightType" ResultType="Boolean">
+    <ParameterList/>
+  </Definition>
+  <Definition Type="function" Name="IsMissionPlayableAsSP" ResultType="Boolean">
+    <ParameterList/>
+  </Definition>
+  <Definition Type="function" Name="IsMissionSpecialType" ResultType="Boolean">
+    <ParameterList/>
+  </Definition>
+  <Definition Type="function" Name="IsPlanAt" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="aFieldType" Type="TKMFieldType"/>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="IsRoadAt" ResultType="Boolean">
     <ParameterList>
-      <Parameter Name="aPlayer" Type="Integer"></Parameter>
-      <Parameter Name="aX" Type="Word"></Parameter>
-      <Parameter Name="aY" Type="Word"></Parameter>
+      <Parameter Name="aHand" Type="ShortInt"/>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
     </ParameterList>
   </Definition>
-  <Definition Type="function" Name="PeaceTime" ResultType="Integer">
-    <ParameterList></ParameterList>
+  <Definition Type="function" Name="IsRoadPlanAt" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="IsWinefieldAt" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aHand" Type="ShortInt"/>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="IsWinefieldPlanAt" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="KaMRandom" ResultType="Single">
+    <ParameterList/>
+  </Definition>
+  <Definition Type="function" Name="KaMRandomI" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aMax" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="LocationCount" ResultType="Integer">
+    <ParameterList/>
+  </Definition>
+  <Definition Type="function" Name="MapHeight" ResultType="Integer">
+    <ParameterList/>
+  </Definition>
+  <Definition Type="function" Name="MapFieldType" ResultType="TKMLockFieldType">
+    <ParameterList>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MapTileHasOnlyTerrainKind" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+      <Parameter Name="TerKind" Type="TKMTerrainKind"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MapTileHasOnlyTerrainKinds" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+      <Parameter Name="TerKinds" Type="array of TKMTerrainKind"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MapTileHasTerrainKind" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+      <Parameter Name="TerKind" Type="TKMTerrainKind"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MapTileHeight" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MapTileIsCoal" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MapTileIsGold" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MapTileIsIce" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MapTileIsInMapCoords" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MapTileIsIron" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MapTileIsSand" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MapTileIsSnow" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MapTileIsSoil" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MapTileIsStone" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MapTileIsWater" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+      <Parameter Name="FullTilesOnly" Type="Boolean"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MapTileObject" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MapTileOverlay" ResultType="TKMTileOverlay">
+    <ParameterList>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MapTileOwner" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MapTilePassability" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+      <Parameter Name="aPassability" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MapTilePassabilityEx" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+      <Parameter Name="aPassability" Type="TKMTerrainPassability"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MapTileSelected" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MapTileRotation" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MapTileType" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="X" Type="Integer"/>
+      <Parameter Name="Y" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MapWidth" ResultType="Integer">
+    <ParameterList/>
+  </Definition>
+  <Definition Type="function" Name="MarketFromWare" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aMarketID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MarketFromWareEx" ResultType="TKMWareType">
+    <ParameterList>
+      <Parameter Name="aMarketID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MarketLossFactor" ResultType="Single">
+    <ParameterList/>
+  </Definition>
+  <Definition Type="function" Name="MarketOrderAmount" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aMarketID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MarketToWare" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aMarketID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MarketToWareEx" ResultType="TKMWareType">
+    <ParameterList>
+      <Parameter Name="aMarketID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MarketValue" ResultType="Single">
+    <ParameterList>
+      <Parameter Name="aRes" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MarketValueEx" ResultType="Single">
+    <ParameterList>
+      <Parameter Name="aWareType" Type="TKMWareType"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="MissionAuthor" ResultType="UnicodeString">
+    <ParameterList/>
+  </Definition>
+  <Definition Type="function" Name="MissionDifficulty" ResultType="TKMMissionDifficulty">
+    <ParameterList/>
+  </Definition>
+  <Definition Type="function" Name="MissionDifficultyLevels" ResultType="TKMMissionDifficultySet">
+    <ParameterList/>
+  </Definition>
+  <Definition Type="function" Name="MissionVersion" ResultType="UnicodeString">
+    <ParameterList/>
+  </Definition>
+  <Definition Type="function" Name="PeaceTime" ResultType="Cardinal">
+    <ParameterList/>
   </Definition>
   <Definition Type="function" Name="PlayerAllianceCheck" ResultType="Boolean">
     <ParameterList>
-      <Parameter Name="aPlayer1" Type="Integer"></Parameter>
-      <Parameter Name="aPlayer2" Type="Integer"></Parameter>
+      <Parameter Name="aHand1" Type="Byte"/>
+      <Parameter Name="aHand2" Type="Byte"/>
     </ParameterList>
   </Definition>
-  <Definition Type="function" Name="PlayerColorText" ResultType="UnicodeString">
+  <Definition Type="function" Name="PlayerColorFlag" ResultType="AnsiString">
     <ParameterList>
-      <Parameter Name="aPlayer" Type="Integer"></Parameter>
+      <Parameter Name="aHand" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="PlayerColorText" ResultType="AnsiString">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="PlayerDefeated" ResultType="Boolean">
     <ParameterList>
-      <Parameter Name="aPlayer" Type="Integer"></Parameter>
+      <Parameter Name="aHand" Type="Byte"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="PlayerEnabled" ResultType="Boolean">
     <ParameterList>
-      <Parameter Name="aPlayer" Type="Integer"></Parameter>
+      <Parameter Name="aHand" Type="Byte"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="PlayerGetAllGroups" ResultType="TIntegerArray">
     <ParameterList>
-      <Parameter Name="aPlayer" Type="Integer"></Parameter>
+      <Parameter Name="aHand" Type="Byte"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="PlayerGetAllHouses" ResultType="TIntegerArray">
     <ParameterList>
-      <Parameter Name="aPlayer" Type="Integer"></Parameter>
+      <Parameter Name="aHand" Type="Byte"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="PlayerGetAllUnits" ResultType="TIntegerArray">
     <ParameterList>
-      <Parameter Name="aPlayer" Type="Integer"></Parameter>
+      <Parameter Name="aHand" Type="Byte"/>
     </ParameterList>
   </Definition>
-  <Definition Type="function" Name="PlayerHouseCanBuild" ResultType="Boolean">
+  <Definition Type="function" Name="PlayerHouseTypeCanBuild" ResultType="Boolean">
     <ParameterList>
-      <Parameter Name="aPlayer" Type="Integer"></Parameter>
-      <Parameter Name="aHouseType" Type="TKMHouseType"></Parameter>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="aHouseType" Type="TKMHouseType"/>
     </ParameterList>
   </Definition>
-  <Definition Type="function" Name="PlayerName" ResultType="UnicodeString">
+  <Definition Type="function" Name="PlayerHouseTypeLock" ResultType="TKMHandHouseLock">
     <ParameterList>
-      <Parameter Name="aPlayer" Type="Integer"></Parameter>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="aHouseType" Type="TKMHouseType"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="PlayerIsAdvancedAI" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="PlayerIsAI" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="PlayerIsClassicAI" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="PlayerName" ResultType="AnsiString">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="PlayerUnitTypeCanTrain" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="aUnitType" Type="TKMUnitType"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="PlayerVictorious" ResultType="Boolean">
     <ParameterList>
-      <Parameter Name="aPlayer" Type="Integer"></Parameter>
+      <Parameter Name="aHand" Type="Byte"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="PlayerWareDistribution" ResultType="Byte">
     <ParameterList>
-      <Parameter Name="aPlayer" Type="Integer"></Parameter>
-      <Parameter Name="aWareType" Type="TKMWareType"></Parameter>
-      <Parameter Name="aHouseType" Type="TKMHouseType"></Parameter>
+      <Parameter Name="aHand" Type="Byte"/>
+      <Parameter Name="aWareType" Type="Byte"/>
+      <Parameter Name="aHouseType" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="PlayerWareDistributionEx" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="aWareType" Type="TKMWareType"/>
+      <Parameter Name="aHouseType" Type="TKMHouseType"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="StatAIDefencePositionsCount" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="StatArmyCount" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aPlayer" Type="Integer"></Parameter>
+      <Parameter Name="aHand" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="StatArmyPower" ResultType="Single">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="StatCitizenCount" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aPlayer" Type="Integer"></Parameter>
+      <Parameter Name="aHand" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="StatHouseCount" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="StatHouseMultipleTypesCount" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
+      <Parameter Name="aTypes" Type="TByteSet"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="StatHouseMultipleTypesCountEx" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="aTypes" Type="TKMHouseTypeSet"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="StatHouseTypeCount" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aPlayer" Type="Integer"></Parameter>
-      <Parameter Name="aHouseType" Type="TKMHouseType"></Parameter>
+      <Parameter Name="aHand" Type="Byte"/>
+      <Parameter Name="aHouseType" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="StatHouseTypeCountEx" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="aHouseType" Type="TKMHouseType"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="StatHouseTypePlansCount" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
+      <Parameter Name="aHouseType" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="StatHouseTypePlansCountEx" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="aHouseType" Type="TKMHouseType"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="StatPlayerCount" ResultType="Integer">
-    <ParameterList></ParameterList>
+    <ParameterList/>
+  </Definition>
+  <Definition Type="function" Name="StatResourceProducedCount" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
+      <Parameter Name="aResType" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="StatResourceProducedCountEx" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="aWareType" Type="TKMWareType"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="StatResourceProducedMultipleTypesCount" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
+      <Parameter Name="aTypes" Type="TByteSet"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="StatResourceProducedMultipleTypesCountEx" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="aTypes" Type="TKMWareTypeSet"/>
+    </ParameterList>
   </Definition>
   <Definition Type="function" Name="StatUnitCount" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aPlayer" Type="Integer"></Parameter>
+      <Parameter Name="aHand" Type="Byte"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="StatUnitKilledCount" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aPlayer" Type="Integer"></Parameter>
-      <Parameter Name="aUnitType" Type="TKMUnitType"></Parameter>
+      <Parameter Name="aHand" Type="Byte"/>
+      <Parameter Name="aUnitType" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="StatUnitKilledCountEx" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="aUnitType" Type="TKMUnitType"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="StatUnitKilledMultipleTypesCount" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
+      <Parameter Name="aTypes" Type="TByteSet"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="StatUnitKilledMultipleTypesCountEx" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="aTypes" Type="TKMUnitTypeSet"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="StatUnitLostCount" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aPlayer" Type="Integer"></Parameter>
-      <Parameter Name="aUnitType" Type="TKMUnitType"></Parameter>
+      <Parameter Name="aHand" Type="Byte"/>
+      <Parameter Name="aUnitType" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="StatUnitLostCountEx" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="aUnitType" Type="TKMUnitType"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="StatUnitLostMultipleTypesCount" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
+      <Parameter Name="aTypes" Type="TByteSet"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="StatUnitLostMultipleTypesCountEx" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
+      <Parameter Name="aTypes" Type="TKMUnitTypeSet"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="StatUnitMultipleTypesCount" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Byte"/>
+      <Parameter Name="aTypes" Type="TByteSet"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="StatUnitMultipleTypesCountEx" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="aTypes" Type="TKMUnitTypeSet"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="StatUnitTypeCount" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aPlayer" Type="Integer"></Parameter>
-      <Parameter Name="aUnitType" Type="TKMUnitType"></Parameter>
+      <Parameter Name="aHand" Type="Byte"/>
+      <Parameter Name="aUnitType" Type="Byte"/>
     </ParameterList>
   </Definition>
-  <Definition Type="function" Name="StatWaresBalance" ResultType="Integer">
+  <Definition Type="function" Name="StatUnitTypeCountEx" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aPlayer" Type="Integer"></Parameter>
-      <Parameter Name="aWareType" Type="TKMWareType"></Parameter>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="aUnitType" Type="TKMUnitType"/>
     </ParameterList>
   </Definition>
-  <Definition Type="function" Name="StatWaresProduced" ResultType="Integer">
+  <Definition Type="function" Name="StatResourceTotalCount" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aPlayer" Type="Integer"></Parameter>
-      <Parameter Name="aWareType" Type="TKMWareType"></Parameter>
+      <Parameter Name="aHand" Type="Integer"/>
+      <Parameter Name="aWareType" Type="TKMWareType"/>
     </ParameterList>
   </Definition>
-  <Definition Type="function" Name="SysRandom" ResultType="Single">
-    <ParameterList></ParameterList>
-  </Definition>
-  <Definition Type="function" Name="SysRandomI" ResultType="Integer">
+  <Definition Type="function" Name="TDHouseCanPlace" ResultType="Boolean">
     <ParameterList>
-      <Parameter Name="aMax" Type="Integer"></Parameter>
+      <Parameter Name="aHouseType" Type="Byte"/>
+      <Parameter Name="aX" Type="Integer"/>
+      <Parameter Name="aY" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="UnitAllowAllyToSelect" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aUnitID" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="UnitAt" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aX" Type="Word"></Parameter>
-      <Parameter Name="aY" Type="Word"></Parameter>
+      <Parameter Name="aX" Type="Integer"/>
+      <Parameter Name="aY" Type="Integer"/>
     </ParameterList>
   </Definition>
-  <Definition Type="function" Name="UnitCarryCount" ResultType="Integer">
+  <Definition Type="function" Name="UnitCarrying" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aUnitID" Type="Integer"></Parameter>
-      <Parameter Name="aWareType" Type="TKMWareType"></Parameter>
+      <Parameter Name="aUnitID" Type="Integer"/>
     </ParameterList>
   </Definition>
-  <Definition Type="function" Name="UnitCarryType" ResultType="TKMWareType">
+  <Definition Type="function" Name="UnitCarryingEx" ResultType="TKMWareType">
     <ParameterList>
-      <Parameter Name="aUnitID" Type="Integer"></Parameter>
+      <Parameter Name="aUnitID" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="UnitDead" ResultType="Boolean">
     <ParameterList>
-      <Parameter Name="aUnitID" Type="Integer"></Parameter>
+      <Parameter Name="aUnitID" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="UnitDirection" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aUnitID" Type="Integer"></Parameter>
+      <Parameter Name="aUnitID" Type="Integer"/>
     </ParameterList>
   </Definition>
-  <Definition Type="function" Name="UnitGroup" ResultType="Integer">
+  <Definition Type="function" Name="UnitDirectionEx" ResultType="TKMDirection">
     <ParameterList>
-      <Parameter Name="aUnitID" Type="Integer"></Parameter>
+      <Parameter Name="aUnitID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="UnitDismissable" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aUnitID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="UnitHasBitin" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aUnitID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="UnitHasBitin" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aUnitID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="UnitHome" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aUnitID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="UnitHPCurrent" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aUnitID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="UnitHPInvulnerable" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aUnitID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="UnitHPMax" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aUnitID" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="UnitHunger" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aUnitID" Type="Integer"></Parameter>
+      <Parameter Name="aUnitID" Type="Integer"/>
     </ParameterList>
   </Definition>
-  <Definition Type="function" Name="UnitHungerLow" ResultType="Integer">
-    <ParameterList></ParameterList>
+  <Definition Type="function" Name="UnitIdle" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aUnitID" Type="Integer"/>
+    </ParameterList>
   </Definition>
-  <Definition Type="function" Name="UnitHungerMax" ResultType="Integer">
-    <ParameterList></ParameterList>
+  <Definition Type="function" Name="UnitInHouse" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aUnitID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="UnitLowHunger" ResultType="Integer">
+    <ParameterList/>
+  </Definition>
+  <Definition Type="function" Name="UnitMaxHunger" ResultType="Integer">
+    <ParameterList/>
   </Definition>
   <Definition Type="function" Name="UnitOwner" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aUnitID" Type="Integer"></Parameter>
+      <Parameter Name="aUnitID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="UnitPosition" ResultType="TKMPoint">
+    <ParameterList>
+      <Parameter Name="aUnitID" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="UnitPositionX" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aUnitID" Type="Integer"></Parameter>
+      <Parameter Name="aUnitID" Type="Integer"/>
     </ParameterList>
   </Definition>
   <Definition Type="function" Name="UnitPositionY" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aUnitID" Type="Integer"></Parameter>
+      <Parameter Name="aUnitID" Type="Integer"/>
     </ParameterList>
   </Definition>
-  <Definition Type="function" Name="UnitType" ResultType="TKMUnitType">
+  <Definition Type="function" Name="UnitsGroup" ResultType="Integer">
     <ParameterList>
-      <Parameter Name="aUnitID" Type="Integer"></Parameter>
+      <Parameter Name="aUnitID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="UnitType" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aUnitID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="UnitTypeEx" ResultType="TKMUnitType">
+    <ParameterList>
+      <Parameter Name="aUnitID" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="UnitTypeName" ResultType="AnsiString">
+    <ParameterList>
+      <Parameter Name="aUnitType" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="UnitTypeNameEx" ResultType="AnsiString">
+    <ParameterList>
+      <Parameter Name="aUnitType" Type="TKMUnitType"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="UnitTypeToID" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aUnitType" Type="TKMUnitType"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="UnitIDToType" ResultType="TKMUnitType">
+    <ParameterList>
+      <Parameter Name="aUnitType" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="WareTypeName" ResultType="AnsiString">
+    <ParameterList>
+      <Parameter Name="aWareType" Type="Byte"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="WareTypeNameEx" ResultType="AnsiString">
+    <ParameterList>
+      <Parameter Name="aWareType" Type="TKMWareType"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="WareTypeToID" ResultType="Integer">
+    <ParameterList>
+      <Parameter Name="aWareType" Type="TKMWareType"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="WareIdToType" ResultType="TKMWareType">
+    <ParameterList>
+      <Parameter Name="aWareType" Type="Integer"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="WarriorInFight" ResultType="Boolean">
+    <ParameterList>
+      <Parameter Name="aUnitID" Type="Integer"/>
+      <Parameter Name="aCountCitizens" Type="Boolean"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="HouseStats" ResultType="TKMHouseStats">
+    <ParameterList>
+      <Parameter Name="aHouseID" Type="Integer"/>
+      <Parameter Name="aWithWares" Type="Boolean"/>
+    </ParameterList>
+  </Definition>
+  <Definition Type="function" Name="UnitStats" ResultType="TKMUnitStats">
+    <ParameterList>
+      <Parameter Name="aUnitID" Type="Integer"/>
     </ParameterList>
   </Definition>
 </SEMethodDict>
