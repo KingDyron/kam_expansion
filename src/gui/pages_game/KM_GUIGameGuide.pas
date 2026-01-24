@@ -715,7 +715,10 @@ begin
                 for I := 1 to 4 do
                   if warePlan[I - 1].W <> wtNone then
                   begin
-                    fullCount := warePlan[I - 1].C + (gRes.Units[UT].PalaceCost.PhaseCount - 1);
+                    If warePlan[I - 1].C = 0 then
+                      fullCount := 0
+                    else
+                      fullCount := warePlan[I - 1].C + (gRes.Units[UT].PalaceCost.PhaseCount - 1);
 
                     ShowWareCost(I, fullCount, warePlan[I - 1].W);
                   end;

@@ -7223,10 +7223,15 @@ begin
   //  Exit;
   fOrderCount[aIndex] := EnsureRange(aValue, 0, high(fOrderCount[aIndex]));}
   If aIndex <> fTrainingID then
+  begin
+    CancelOrder;
     fTrainingID := aIndex;
+  end;
   fOrderCount := EnsureRange(aValue, 0, high(fOrderCount));
-  If fOrderCount = 0 then
+  {If fOrderCount = 0 then
+  begin
     fTrainingID := NO_TRRAINING_ID;
+  end;}
 end;
 
 function  TKMHousePalace.GetMaxProgress : Integer;
@@ -7310,14 +7315,21 @@ begin
     Exit;
   //if (fProgress = 0) and (fPhase = 0) then
   //  Exit;
-
+  If fProgress > 0 then
+  begin
+    Result.SetCount(0, true);
+    Exit;
+  end;
   WP := gRes.Units[PALACE_UNITS_ORDER[fTrainingID]].PalaceCost.Plan;
   Result.SetCount(WP.Count, true);
   for I := Low(wp) to High(wp) do
     if (wp[I].W <> wtNone) then
     begin
       Result[I].W := wp[I].W;
-      Result[I].C := wp[I].C;
+      If fPhase > 0 then
+        Result[I].C := 1
+      else
+        Result[I].C := wp[I].C;
     end;
 end;
 

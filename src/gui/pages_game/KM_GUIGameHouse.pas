@@ -182,13 +182,13 @@ type
       Button_OperatorsCount : TKMButtonFlat;
       
     Panel_House_Palace: TKMPanel;
-      Button_PalaceLeft, Button_PalaceRight : TKMButton;
+      Button_PalaceLeft, Button_PalaceRight, Button_PalaceTrain : TKMButton;
       Button_PalaceVWaresCost,
       Button_PalaceVWares: array of TKMButtonFlat;
       Button_Palace_PreviousUnit,
       Button_Palace_NextUnit,
       Button_Palace_UnitPlan: TKMButtonFlat;
-      Image_CancelUnit: TKMButtonFlat;
+      Image_CancelUnit, Image_OrderCount: TKMButtonFlat;
       Bar_Palace_ProgressLeft,
       Bar_Palace_ProgressRight : TKMPercentBar;
       Image_Ornament : TKMimage;
@@ -1262,12 +1262,17 @@ begin
   Button_Palace_UnitPlan.Font := fntGrey;
   Button_Palace_UnitPlan.CapColor := $FFFF0000;
 
-  Label_Palace_Unit := TKMLabel.Create(Panel_House_Palace, Button_Palace_UnitPlan.Left - 30, Button_Palace_UnitPlan.Top - 20, Button_Palace_UnitPlan.Width + 60, 20, '', fntOutLine, taCenter);
+  Label_Palace_Unit := TKMLabel.Create(Panel_House_Palace, 9, Button_Palace_UnitPlan.Top - 20, TB_WIDTH, 20, '', fntOutLine, taCenter);
   Label_Palace_Unit.Hitable := false;
 
   Image_CancelUnit := TKMButtonFlat.Create(Panel_House_Palace, Button_Palace_UnitPlan.Left + 35 - 5, Button_Palace_UnitPlan.Top, 20, 20, 0, rxGuiMain);
   Image_CancelUnit.OnClickShift := House_Palace_Click;
   Image_CancelUnit.HighLightColor := $FF0000FF;
+
+  Image_OrderCount := TKMButtonFlat.Create(Panel_House_Palace, Button_Palace_UnitPlan.Right - 20, Button_Palace_UnitPlan.Top, 20, 20, 0, rxGuiMain);
+  Image_OrderCount.Hitable := false;
+  Image_OrderCount.CapOffsetY := -12;
+  Image_OrderCount.Font := fntGrey;
 
   Bar_Palace_ProgressLeft := TKMPercentBar.Create(Panel_House_Palace, Button_Palace_UnitPlan.Left - 40, 15, 15, 120);
   Bar_Palace_ProgressLeft.MainColor := icGoldenYellow;
@@ -1279,12 +1284,14 @@ begin
   Bar_Palace_ProgressRight.Hitable := false;
   Bar_Palace_ProgressRight.Orientation := pboUp;
 
-  Button_PalaceLeft := TKMButton.Create(Panel_House_Palace, TB_WIDTH div 2 - 50, 180, 40, 30, 35, rxGui, bsGame);
+  Button_PalaceLeft := TKMButton.Create(Panel_House_Palace, TB_WIDTH div 2 - 55, 180, 25, 30, 2, rxGui, bsGame);
   Button_PalaceLeft.OnClickShift := House_Palace_Click;
   Button_PalaceLeft.CanChangeEnable := false;
 
-  Button_PalaceRight := TKMButton.Create(Panel_House_Palace, TB_WIDTH div 2 + 10, 180, 40, 30, 36, rxGui, bsGame);
+  Button_PalaceRight := TKMButton.Create(Panel_House_Palace, TB_WIDTH div 2 + 30, 180, 25, 30, 3, rxGui, bsGame);
   Button_PalaceRight.OnClickShift := House_Palace_Click;
+  Button_PalaceTrain := TKMButton.Create(Panel_House_Palace, TB_WIDTH div 2 - 25, 177, 50, 36, 42, rxGui, bsGame);
+  Button_PalaceTrain.OnClickShift := House_Palace_Click;
 
   Button_Palace_PreviousUnit := TKMButtonFlat.Create(Panel_House_Palace, Button_PalaceLeft.Left - 30, 0, 25, 30, 0);
   Button_Palace_PreviousUnit.Hitable := false;
@@ -4051,8 +4058,8 @@ begin
 
 
 
-  end else
-  if Sender = Button_Palace_UnitPlan then
+  end;
+  if (Sender = Button_Palace_UnitPlan) or (Sender = Button_PalaceTrain) then
   begin
     amt := 1;
     if ssShift in Shift then  amt := amt * 5;
@@ -4072,6 +4079,13 @@ begin
 end;
 
 procedure TKMGUIGameHouse.House_PalaceRefresh(aHouse : TKMHouse);
+
+  procedure ShowWaresProdCt(aIndex, aCount : Integer);
+  begin
+    WaresProdCt_Common[aIndex].Caption := 'x' + aCount.ToString;
+    WaresProdCt_Common[aIndex].Show;
+  end;
+
 var I, K, J, count, lastID, phase : Integer;
   Palace : TKMHousePalace;
   UT : TKMUnitType;
@@ -4155,6 +4169,7 @@ begin
 
   Button_PalaceLeft.Top := Button_Palace_UnitPlan.Bottom + 15;
   Button_PalaceRight.Top := Button_Palace_UnitPlan.Bottom + 15;
+  Button_PalaceTrain.Top := Button_Palace_UnitPlan.Bottom + 12;
   Button_Palace_PreviousUnit.Top := Button_Palace_UnitPlan.Bottom + 15;
   Button_Palace_NextUnit.Top := Button_Palace_UnitPlan.Bottom + 15;
 
@@ -4224,7 +4239,9 @@ begin
   Image_CancelUnit.Left := Button_Palace_UnitPlan.Left;
   Image_CancelUnit.Visible := Palace.TrainingInProgress;
   Image_CancelUnit.TexID := 32;
-
+  Image_OrderCount.Top := Button_Palace_UnitPlan.Bottom - 20;
+  Image_OrderCount.Left := Button_Palace_UnitPlan.Right - 20;
+  Image_OrderCount.Caption := IntToStr(Palace.Orders[fLastPalaceUnit]);
 
   WaresProdCt_Common[1].Caption := '';
   WaresProdCt_Common[2].Caption := '';
@@ -4240,12 +4257,11 @@ begin
     if WP[I].C > 0 then
     begin
       case WP[I].W of
-        wtPig: WaresProdCt_Common[1].Caption := 'x' + IntToStr(WP[I].C);
-        wtGold: WaresProdCt_Common[2].Caption := 'x' + IntToStr(WP[I].C);
-        wtApple: WaresProdCt_Common[3].Caption := 'x' + IntToStr(WP[I].C);
-        wtBoots: WaresProdCt_Common[4].Caption := 'x' + IntToStr(WP[I].C);
+        wtPig: ShowWaresProdCt(1, WP[I].C);
+        wtGold: ShowWaresProdCt(2, WP[I].C);
+        wtApple: ShowWaresProdCt(3, WP[I].C);
+        wtBoots: ShowWaresProdCt(4, WP[I].C);
       end;
-      WaresProdCt_Common[I + 1].Show;
     end;
   Panel_House_Palace.Show;
 end;
