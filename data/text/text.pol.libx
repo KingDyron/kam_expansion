@@ -1901,7 +1901,7 @@
 
 1964:Wandal
 1965:Osiłek
-1966:Burzyciel
+1966:Dewastator
 1967:Operator
 1968:Statek Transportowy
 1969:Tarczownik
@@ -2097,9 +2097,9 @@
 2155:Maks. ilość zwierząt
 2156:Czas spawnowania
 2157:Progress budowy
-2158:Dzięki swej maczudze Wandal rozprawi się szybko z budynkami wroga, a także powstrzyma każde uzbrojenie przeciwnika.
-2159:Osiłek uzbrojony w maczugę oraz zbroję płytkową jest idealny do rozprawienia się z budynkami wroga, kiedy to inni walczą z żołnierzami przeciwnika.
-2160:Po jednym ataku swego kiścienia potrafi zniszczyć każde fundamenty. Żelazne uzbrojenie nie jest dla niego przeszkodą w pokonaniu wroga.
+2158:Dzięki swej maczudze Wandal rozprawi się szybko z budynkami wroga, a także powstrzyma każde uzbrojenie przeciwnika.||Ignoruje defensywę przeciwnika
+2159:Osiłek uzbrojony w maczugę oraz zbroję płytkową jest idealny do rozprawienia się z budynkami wroga, kiedy to inni walczą z żołnierzami przeciwnika.||Ignoruje defensywę przeciwnika
+2160:Po jednym ataku swego kiścienia potrafi zniszczyć każde fundamenty. Żelazne uzbrojenie nie jest dla niego przeszkodą w pokonaniu wroga.||Ignoruje defensywę przeciwnika||Kiedy walczy z przeciwnikiem, może uderzyć drugiego wroga, który jest za nim.
 2161:Gdy tylko Piroman zbliży swoją pochodnię do budynku, ten będzie się palił dopóki nie pozostaną z niego tylko zgliszcza.
 2162:Lekter przejmie każdy wrogi budynek, który potem będzie należał do ciebie.
 2163:Dzięki medykowi zyskasz możliwość leczenia jednostek podczas walki. Im więcej ich posiadasz w oddziale tym efekt ich jest bardziej widoczny.

@@ -2101,9 +2101,9 @@
 2155:Max. amount of animals
 2156:Spawner pace
 2157:Building progress
-2158:With his club, the Clubman will quickly deal with enemy buildings and will also destroy opponents armor.
-2159:Armed with a club and wooden armor, this Mace fighter is perfect for taking down enemy buildings while others fight enemy soldiers.
-2160:With a single attack of his flail he can destroy any foundation. Iron armor is no obstacle for him in defeating the enemy.
+2158:With his club, the Clubman will quickly deal with enemy buildings and will also destroy opponents armor.||Ignores opponent's defence
+2159:Armed with a club and wooden armor, this Mace fighter is perfect for taking down enemy buildings while others fight enemy soldiers.||Ignores opponent's defence
+2160:With a single attack of his flail he can destroy any foundation. Iron armor is no obstacle for him in defeating the enemy.||Ignores opponent's defence||Can attack another enemy that is behind the fighting opponent
 2161:As soon as a Pyro brings his torch near a building, it will burn until only ashes remain.
 2162:The Lecter will take over any enemy building, which will then belong to you.
 2163:With a medic, you gain the ability to heal units during combat. The more of them you have in your group, the more visible their effect is.
