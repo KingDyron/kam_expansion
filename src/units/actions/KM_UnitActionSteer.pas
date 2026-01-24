@@ -136,7 +136,7 @@ end;
 
 function TKMUnitActionSteer.Execute: TKMActionResult;
 const
-  STUCK_MAX_TIME = 200;
+  STUCK_MAX_TIME = 100;
 var
   dx, dy: Shortint;
   walkX, walkY, distance: Single;
