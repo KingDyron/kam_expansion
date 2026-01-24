@@ -364,8 +364,7 @@ function TKMScripting.ScriptOnUses(Sender: TPSPascalCompiler; const Name: AnsiSt
     funcID : TKMArray<Integer>;
   begin
     ExportToXML(aC);
-    If not EXPORT_SCRIPTING_CLASSES then
-      Exit;
+    Exit;
     path := ExeDir + 'Export' + PathDelim + aC.aType.OriginalName + '.txt';
     list := TStringList.Create;
     funcID.Clear;
@@ -2216,12 +2215,11 @@ procedure TKMScripting.ExportToXML(aC: TPSCompileTimeClass);
   end;
 
 var I, K : Integer;
-  path, S, tyName : String;
+  path: String;
 
   XML: TKMXmlDocument;
   root, Def, parList, param : TKMXmlNode;
 
-  funcID : TKMArray<Integer>;
   item : TPSDelphiClassItem;
 begin
   If not EXPORT_SCRIPTING_CLASSES then
@@ -2286,7 +2284,7 @@ var I : Integer;
   path : String;
 
   XML: TKMXmlDocument;
-  root, Def, parList, param : TKMXmlNode;
+  Def, parList, param : TKMXmlNode;
   EVT: TKMScriptEventType;
 begin
   If not EXPORT_SCRIPTING_CLASSES then
