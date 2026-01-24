@@ -299,6 +299,11 @@ type
     procedure SpecialAnimAddFront(aX, aY : Single; aAnim :  array of Integer; aLoopTimes : Byte);
     procedure StructureUnlock(aHand, aStructure: Integer; aUnlocked : Boolean);
 
+    procedure ShowMsgScroll(aHand: Shortint; const aText: AnsiString; aScrollType : Byte);
+    procedure ShowMsgScrollFormatted(aHand: Shortint; const aText: AnsiString; aScrollType : Byte; Params: array of const);
+    procedure ShowMsgScrollGoto(aHand: Shortint; aX, aY: Integer; const aText: AnsiString; aScrollType : Byte);
+    procedure ShowMsgScrollGotoFormatted(aHand: Shortint; aX, aY: Integer; const aText: AnsiString; aScrollType : Byte; Params: array of const);
+
     procedure UnitBootsSet(aUnitID: Integer; aBoots: Boolean);
     procedure UnitBlockWalking(aUnitID: Integer; aBlock : Boolean);
     procedure UnitChangeSpec(aUnitID, aHPMax, aAttack, aAttackHorse, aDefence, aSpeed, aSight : Integer);
@@ -2652,6 +2657,91 @@ begin
   end;
 end;
 
+
+//* Displays a message to a player.
+//* If the player index is -1 the message will be shown to all players.
+//Input text is ANSI with libx codes to substitute
+procedure TKMScriptActions.ShowMsgScroll(aHand: Shortint; const aText: AnsiString; aScrollType : Byte);
+begin
+  try
+        aScrollType := EnsureRange(aScrollType, 0, byte(high(TKMMessageKind)));
+    if (aHand = gMySpectator.HandID) or (aHand = HAND_NONE) then
+      gMySpectator.Hand.ShowMSG(TKMMessageKind(aScrollType), UnicodeString(aText), KMPOINT_ZERO);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
+
+//* Displays a message to a player with formatted arguments (same as Format function).
+//* If the player index is -1 the message will be shown to all players.
+//* Params: Array of arguments
+//Input text is ANSI with libx codes to substitute
+procedure TKMScriptActions.ShowMsgScrollFormatted(aHand: Shortint; const aText: AnsiString; aScrollType : Byte; Params: array of const);
+begin
+  try
+    try
+        aScrollType := EnsureRange(aScrollType, 0, byte(high(TKMMessageKind)));
+      if (aHand = gMySpectator.HandID) or (aHand = HAND_NONE) then
+        gMySpectator.Hand.ShowMSG(TKMMessageKind(aScrollType), gGame.TextMission.ParseTextMarkup(UnicodeString(aText), Params), KMPOINT_ZERO);
+    except
+      //Format may throw an exception
+      on E: EConvertError do LogIntParamWarn('Actions.ShowMsgFormatted: '+E.Message, []);
+    end;
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
+
+//* Displays a message to a player with a goto button that takes the player to the specified location.
+//* If the player index is -1 the message will be shown to all players.
+//Input text is ANSI with libx codes to substitute
+procedure TKMScriptActions.ShowMsgScrollGoto(aHand: Shortint; aX, aY: Integer; const aText: AnsiString; aScrollType : Byte);
+begin
+  try
+    if gTerrain.TileInMapCoords(aX, aY) then
+    begin
+      aScrollType := EnsureRange(aScrollType, 0, byte(high(TKMMessageKind)));
+      if (aHand = gMySpectator.HandID) or (aHand = HAND_NONE) then
+        gMySpectator.Hand.ShowMSG(TKMMessageKind(aScrollType), UnicodeString(aText), KMPoint(aX,aY));
+    end
+    else
+      LogIntParamWarn('Actions.ShowMsgGoto', [aHand, aX, aY]);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
+//* Displays a message to a player with formatted arguments (same as Format function)
+//* and a goto button that takes the player to the specified location.
+//* If the player index is -1 the message will be shown to all players.
+//* Params: Array of arguments
+//Input text is ANSI with libx codes to substitute
+procedure TKMScriptActions.ShowMsgScrollGotoFormatted(aHand: Shortint; aX, aY: Integer; const aText: AnsiString; aScrollType : Byte; Params: array of const);
+begin
+  try
+    try
+      if gTerrain.TileInMapCoords(aX, aY) then
+      begin
+        aScrollType := EnsureRange(aScrollType, 0, byte(high(TKMMessageKind)));
+        if (aHand = gMySpectator.HandID) or (aHand = HAND_NONE) then
+          gMySpectator.Hand.ShowMSG(TKMMessageKind(aScrollType), gGame.TextMission.ParseTextMarkup(UnicodeString(aText), Params), KMPoint(aX,aY));
+      end
+      else
+        LogIntParamWarn('Actions.ShowMsgGotoFormatted', [aHand, aX, aY]);
+    except
+      //Format may throw an exception
+      on E: EConvertError do LogIntParamWarn('Actions.ShowMsgGotoFormatted: '+E.Message, []);
+    end;
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
 
 //* Version: 5057
 //* Allows player to build the specified house even if they don't have the house built that normally unlocks it

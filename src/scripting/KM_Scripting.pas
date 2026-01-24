@@ -1085,6 +1085,11 @@ begin
     RegisterMethodCheck(c, 'procedure  DevelopmentUnlockAll(aHandID : Integer; aType : Byte)');
     RegisterMethodCheck(c, 'procedure  FestivalPointsAdd(aHandID : Integer; aType : Byte; aCount : Word)');
     RegisterMethodCheck(c, 'procedure  DevPointsAdd(aHandID : Integer; aType : Byte; aCount : Word)');
+
+    RegisterMethodCheck(c, 'procedure ShowMsgScroll(aHand: ShortInt; aText: AnsiString; aScrollType : Byte)');
+    RegisterMethodCheck(c, 'procedure ShowMsgScrollFormatted(aHand: ShortInt; aText: AnsiString; aScrollType : Byte; Params: array of const)');
+    RegisterMethodCheck(c, 'procedure ShowMsgScrollGoto(aHand: ShortInt; aX, aY: Integer; aText: AnsiString; aScrollType : Byte)');
+    RegisterMethodCheck(c, 'procedure ShowMsgScrollGotoFormatted(aHand: ShortInt; aX, aY: Integer; aText: AnsiString; aScrollType : Byte; Params: array of const)');
     //*Actions-Check*//
 
     c := Sender.AddClassN(nil, AnsiString(fUtils.ClassName));
@@ -1920,6 +1925,10 @@ begin
       RegisterMethod(@TKMScriptActions.DevelopmentUnlockAll, 'DevelopmentUnlockAll');
       RegisterMethod(@TKMScriptActions.DevPointsAdd, 'DevPointsAdd');
       RegisterMethod(@TKMScriptActions.FestivalPointsAdd, 'FestivalPointsAdd');
+      RegisterMethod(@TKMScriptActions.ShowMsgScroll, 'ShowMsgScroll');
+      RegisterMethod(@TKMScriptActions.ShowMsgScrollFormatted, 'ShowMsgScrollFormatted');
+      RegisterMethod(@TKMScriptActions.ShowMsgScrollGoto, 'ShowMsgScrollGoto');
+      RegisterMethod(@TKMScriptActions.ShowMsgScrollGotoFormatted, 'ShowMsgScrollGotoFormatted');
       //*Actions-Reg*//
     end;
 
