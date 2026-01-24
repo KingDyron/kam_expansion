@@ -398,6 +398,7 @@ function TKMScripting.ScriptOnUses(Sender: TPSPascalCompiler; const Name: AnsiSt
 
         list.Add(S);
       end;
+      list.Sort;
       list.SaveToFile(path);
     finally
       FreeAndNil(list);
