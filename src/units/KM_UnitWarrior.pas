@@ -1246,7 +1246,8 @@ begin
     if (U is TKMUnitWarrior)
     and (U <> Self)
     and (UNIT_TO_GROUP_TYPE[U.UnitType] = UNIT_TO_GROUP_TYPE[fType]) // They must be the same group type
-    and TKMUnitWarrior(U).InAGroup then // Check if warrior belongs to some Group
+    and TKMUnitWarrior(U).InAGroup
+    and (TKMUnitWarrior(U).InHouse = nil) then // Check if warrior belongs to some Group
     begin
       L := KMLength(aLoc, U.Position);
       if (L < best) then
