@@ -1383,9 +1383,14 @@ begin
                          or not demand.Loc_House.ShouldAbandonDeliveryTo(oWT));
 
   //If Offer should not be abandoned
-  Result := Result and (aIgnoreOffer or not offer.Loc_House.ShouldAbandonDeliveryFrom(oWT))
-                   //Check store to store evacuation
-                   and not offer.Loc_House.ShouldAbandonDeliveryFromTo(demand.Loc_House, oWT, False);
+  If (offer.Loc_House.HouseType = htBarracks) and (demand.Loc_Unit <> nil) then
+    Result := Result and (aIgnoreOffer or not offer.Loc_House.ShouldAbandonDeliveryFrom(oWT))
+                     //Check store to store evacuation
+                     and TKMHouseBarracks(offer.Loc_House).NotAllowTakeOutFlag[oWT]
+  else
+    Result := Result and (aIgnoreOffer or not offer.Loc_House.ShouldAbandonDeliveryFrom(oWT))
+                     //Check store to store evacuation
+                     and not offer.Loc_House.ShouldAbandonDeliveryFromTo(demand.Loc_House, oWT, False);
 
 
 
@@ -1396,7 +1401,7 @@ begin
   begin
 
     //Permit delivery of warfares to Store only if player has no Barracks or they all have blocked ware
-    if demand.Loc_House.HouseType in [htStore] then
+    if (demand.Loc_House.HouseType in [htStore]) and not (offer.Loc_House.HouseType in [htBarracks]) then
     begin
       //Scan through players Barracks, if none accepts - allow deliver to Store
       I := 1;
@@ -1482,7 +1487,8 @@ begin
   Result := Result and ((demand.Loc_House = nil)
                         or not (demand.Loc_House.HouseType  in [htStore] )
                         or (offer.Loc_House.HouseType <> htBarracks)
-                        or (offer.Loc_House.DeliveryMode = dmTakeOut));
+                        or (offer.Loc_House.DeliveryMode = dmTakeOut){
+                        or (TKMHouseBarracks(offer.Loc_House).NotAllowTakeOutFlag[oWT])});
 
 
   //check structure

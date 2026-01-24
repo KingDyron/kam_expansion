@@ -67,6 +67,7 @@ uses
   Math, TypInfo,
   KM_Entity,
   KM_HandsCollection, KM_Hand, KM_HandTypes, KM_HandEntity,
+  KM_HouseBarracks,
   KM_UnitWarrior, KM_HouseInn, KM_ResHouses,
   KM_UnitTaskBuild, KM_Log, KM_RenderAux,
   KM_Terrain,
@@ -255,10 +256,16 @@ begin
 
   //After step 2 we don't care if From is destroyed or doesn't have the ware
   if fPhase <= 2 then
-    Result := Result
-                or fFrom.IsDestroyed
-                or fFrom.ShouldAbandonDeliveryFrom(fWareType)
-                or fFrom.ShouldAbandonDeliveryFromTo(fToHouse, fWareType, fPhase = 2); //Make immidiate check only on Phase 2 (inside house)
+    If (fFrom.HouseType = htBarracks) and (fToUnit <> nil) then
+      Result := Result
+                  or fFrom.IsDestroyed
+                  or fFrom.ShouldAbandonDeliveryFrom(fWareType)
+                  or not TKMHouseBarracks(fFrom).NotAllowTakeOutFlag[fWareType]
+    else
+      Result := Result
+                  or fFrom.IsDestroyed
+                  or fFrom.ShouldAbandonDeliveryFrom(fWareType)
+                  or fFrom.ShouldAbandonDeliveryFromTo(fToHouse, fWareType, fPhase = 2); //Make immidiate check only on Phase 2 (inside house)
 
   Result := Result or CanRestartAction(fLastActionResult);
   
@@ -520,8 +527,10 @@ begin
           //Serf is inside house now.
           //Barracks can consume the resource (by equipping) before we arrive
           //All houses can have resources taken away by script at any moment
-          if fFrom.ShouldAbandonDeliveryFrom(fWareType)
-             or fFrom.ShouldAbandonDeliveryFromTo(fToHouse, fWareType, True) then //For store evacuation
+          if (fFrom.ShouldAbandonDeliveryFrom(fWareType)
+             or fFrom.ShouldAbandonDeliveryFromTo(fToHouse, fWareType, True))
+             and not ((fFrom.HouseType = htBarracks) and TKMHouseBarracks(fFrom).NotAllowTakeOutFlag[fWareType])
+             then //For store evacuation
           begin
             SetActionLockedStay(5, uaWalk); //Wait a moment inside
             fPhase := 120; //Will get out of Barracks onthat Phase
