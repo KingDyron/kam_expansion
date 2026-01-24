@@ -298,11 +298,11 @@ begin
   addSpeed.Y := fSpeed.Y * aLag;
   for I := 1 to length(fClouds) do
     if fState = wsLoop then
-      gRenderPool.AddAnimation(fPos + fClouds[I - 1] + addSpeed, fAnims[fState], fAge div (I + 1), 0, fRX, false, false, 0, true)
+      gRenderPool.AddAnimation(fPos + fClouds[I - 1]{ + addSpeed}, fAnims[fState], fAge div (I + 1), 0, fRX, false, false, 0, true)
     else
-      gRenderPool.AddAnimation(fPos + fClouds[I - 1] + addSpeed, fAnims[fState], fAge, 0, fRX, false, false, 0, true);
+      gRenderPool.AddAnimation(fPos + fClouds[I - 1]{ + addSpeed}, fAnims[fState], fAge, 0, fRX, false, false, 0, true);
 
-  gRenderPool.AddAnimation(fPos, fAnims[fState], fAge, 0, fRX, false, false, 0, true);
+  gRenderPool.AddAnimation(fPos{ + addSpeed}, fAnims[fState], fAge, 0, fRX, false, false, 0, true);
 end;
 
 constructor TKMWeatherCloudy.Create(aType: TKMWeatherType; aPos: TKMPointF; aSpeed: TKMPointF; aLifeTime: Cardinal; aRX: TRXType);
