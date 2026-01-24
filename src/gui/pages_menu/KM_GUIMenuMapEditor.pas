@@ -592,6 +592,10 @@ begin
     mapEdSizeY := NumEdit_MapSizeY.Value;
     if Assigned(OnNewMapEditor) then
       OnNewMapEditor('', mapEdSizeX, mapEdSizeY);
+
+    gCursor.CampaignData.Path := '';
+    gCursor.CampaignData.ShortName := '';
+    gCursor.CampaignData.MissionID := 0;
   end;
 end;
 
