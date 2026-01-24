@@ -1865,7 +1865,7 @@ begin
 
                           Progress_Beasts.Progress[0] := TKMHouseSiegeWorkshop(aHouse).GetOperatorsInsideCnt / 4;
                         end;
-                        Button_OperatorsCount.Caption := TKMHouseSiegeWorkshop(aHouse).GetOperatorsInsideCnt.ToString;
+                        Button_OperatorsCount.Caption := TKMHouseSiegeWorkshop(aHouse).GetOperatorsInsideCnt.ToString + '/4';
 
                         Progress_Beasts.Colors := [icLightGreen];
                         Progress_Beasts.Show;
