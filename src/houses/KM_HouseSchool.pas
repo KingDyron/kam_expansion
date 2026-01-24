@@ -211,6 +211,7 @@ begin
 
   if (aNewPosition = 0) then
     CreateUnit;
+  WorkingTime := 0;
 end;
 
 
@@ -398,7 +399,7 @@ begin
   if (WorkingTime = 0) or (TotalWorkingTime = 0)  then
     step := 0
   else
-    step := Trunc(gRes.Houses.School_Clock.Count * (WorkingTime / TotalWorkingTime));
+    step := Trunc(gRes.Houses.School_Clock.Count * (GetTrainingProgress));
   gRenderPool.AddHouseSchoolClock(Position, step);
 end;
 
