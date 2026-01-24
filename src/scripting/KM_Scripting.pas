@@ -129,6 +129,9 @@ uses
 var
   gScripting: TKMScripting;
 
+const
+  EXPORT_SCRIPTING_CLASSES = false;
+
 
 // PS needs regular procedures and functions as handlers
 // Hence we have to wrap TKMScripting methods like so
@@ -340,6 +343,67 @@ function TKMScripting.ScriptOnUses(Sender: TPSPascalCompiler; const Name: AnsiSt
       end;
   end;
 
+  procedure ValidateParamType(var S : String);
+  begin
+    If S = 'array of ___Pointer' then
+      S := 'array of const'
+  end;
+  procedure ExportClass(prefix : String; aC : TPSCompileTimeClass);
+  var I, K : Integer;
+    path, S, tyName : String;
+    list : TStringList;
+  begin
+    If not EXPORT_SCRIPTING_CLASSES then
+      Exit;
+    path := ExeDir + 'Export' + PathDelim + aC.aType.OriginalName + '.txt';
+    list := TStringList.Create;
+    try
+      for I := 0 to aC.Count - 1 do
+      begin
+        S := prefix + '.' + aC.Items[I].OrgName;
+        If aC.Items[I].Decl.ParamCount > 0 then
+        begin
+          S := S + '(';
+          case aC.Items[I].Decl.Params[0].Mode of
+            pmIn : ;
+            pmOut : S := S + 'out ';
+            pmInOut : S := S + 'var ';
+          end;
+          S := S + aC.Items[I].Decl.Params[0].OrgName + ' : ';
+          tyName := aC.Items[I].Decl.Params[0].aType.OriginalName;
+          If tyName[1] = '!' then
+            tyName := aC.Items[I].Decl.Params[0].aType.Decl;
+            ValidateParamType(tyName);
+          S := S + tyName;
+
+          //aC.Items[I].Decl.Params[0].aType.OriginalName;
+          for K := 1 to aC.Items[I].Decl.ParamCount - 1 do
+          begin
+            S := S + '; ';
+            case aC.Items[I].Decl.Params[0].Mode of
+              pmIn : ;
+              pmOut : S := S + 'out ';
+              pmInOut : S := S + 'var ';
+            end;
+            S := S + aC.Items[I].Decl.Params[K].OrgName + ' : ';
+            tyName := aC.Items[I].Decl.Params[K].aType.OriginalName;
+            If tyName[1] = '!' then
+              tyName := aC.Items[I].Decl.Params[K].aType.Decl;
+            ValidateParamType(tyName);
+            S := S + tyName;
+          end;
+          S := S + ')';
+        end;
+        S := S + ';';
+
+        list.Add(S);
+      end;
+      list.SaveToFile(path);
+    finally
+      FreeAndNil(list);
+    end;
+  end;
+
 var
   c: TPSCompileTimeClass;
 begin
@@ -406,7 +470,6 @@ begin
       'mkGradient)');
     Sender.AddTypeS('TKMTileOverlay', '(toNone, toDig1, toDig2, toDig3, toDig4, ' +
       'toRoad)');
-
     Sender.AddTypeS('TKMUnitType', '(utNone, utAny,' +
       'utSerf,         utWoodcutter,   utMiner,         utAnimalBreeder,' +
       'utFarmer,       utCarpenter,    utBaker,         utButcher,' +
@@ -810,7 +873,7 @@ begin
     RegisterMethodCheck(c, 'function  HouseStats(aHouseID: Integer; aWithWares : Boolean): TKMHouseStats');
     RegisterMethodCheck(c, 'function  UnitStats(aUnitID: Integer): TKMUnitStats');
     //*States-Check*//
-
+    ExportClass('States', c);
     c := Sender.AddClassN(nil, AnsiString(fActions.ClassName));
     //*Actions-Check*//
     RegisterMethodCheck(c, 'procedure AAIAttackHouseTypesSet(aHand: Byte; aHouses: TKMHouseTypeSet)');
@@ -1091,6 +1154,7 @@ begin
     RegisterMethodCheck(c, 'procedure ShowMsgScrollGoto(aHand: ShortInt; aX, aY: Integer; aText: AnsiString; aScrollType : Byte)');
     RegisterMethodCheck(c, 'procedure ShowMsgScrollGotoFormatted(aHand: ShortInt; aX, aY: Integer; aText: AnsiString; aScrollType : Byte; Params: array of const)');
     //*Actions-Check*//
+    ExportClass('Actions', c);
 
     c := Sender.AddClassN(nil, AnsiString(fUtils.ClassName));
     //*Utils-Check*//
@@ -1155,6 +1219,7 @@ begin
     RegisterMethodCheck(c, 'function  TrimRight(Str: string): String');
     RegisterMethodCheck(c, 'function  TruncTo(aValue: Single; aBase: Integer): Integer');
     RegisterMethodCheck(c, 'function  UpperCase(Str: string): String');
+    ExportClass('Utils', c);
     //*Utils-Check*//
 
     // Register objects

@@ -193,6 +193,7 @@ type
     FOriginalName: tbtString;
     FAttributes: TPSAttributes;
     FFinalTypeNo: cardinal;
+    FDecl : tbtString;
     procedure SetName(const Value: tbtString);
   public
 
@@ -207,6 +208,7 @@ type
 
 
     property OriginalName: tbtString read FOriginalName write FOriginalName;
+    property Decl: tbtString read FDecl write FDecl;
 
     property Name: tbtString read FName write SetName;
 
@@ -2194,8 +2196,8 @@ begin
               btWideChar: VCType := FindAndAddType(Owner, '!OPENARRAYOFWIDECHAR', 'array of WideChar');
             {$ENDIF}
               btClass: VCType := FindAndAddType(Owner, '!OPENARRAYOFTOBJECT', 'array of TObject');
-              btRecord: VCType := FindAndAddType(Owner, '!OPENARRAYOFRECORD_'+FastUpperCase(Parser.OriginalToken), 'array of ' +FastUpperCase(Parser.OriginalToken));
-              btEnum: VCType := FindAndAddType(Owner, '!OPENARRAYOFENUM_' + FastUpperCase(Parser.OriginalToken), 'array of ' + FastUpperCase(Parser.OriginalToken));
+              btRecord: VCType := FindAndAddType(Owner, '!OPENARRAYOFRECORD_'+FastUpperCase(Parser.OriginalToken), 'array of ' +{FastUpperCase}(Parser.OriginalToken));
+              btEnum: VCType := FindAndAddType(Owner, '!OPENARRAYOFENUM_' + FastUpperCase(Parser.OriginalToken), 'array of ' + {FastUpperCase}(Parser.OriginalToken));
             else
               begin
                 if Parser <> CustomParser then
@@ -13618,6 +13620,7 @@ begin
   begin
     Result.ExportName := True;
     Result.DeclarePos:=InvalidVal;
+    Result.Decl := Decl;
     {$IFDEF PS_USESSUPPORT}
     Result.DeclareUnit:=fModule;
     {$ENDIF}
