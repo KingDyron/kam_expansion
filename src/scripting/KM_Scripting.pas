@@ -347,20 +347,38 @@ function TKMScripting.ScriptOnUses(Sender: TPSPascalCompiler; const Name: AnsiSt
   begin
     If S = 'array of ___Pointer' then
       S := 'array of const'
+    else
+    If S = 'LongInt' then
+      S := 'Integer'
+    else
+    If S = 'LongWord' then
+      S := 'Cardinal';
   end;
   procedure ExportClass(prefix : String; aC : TPSCompileTimeClass);
   var I, K : Integer;
     path, S, tyName : String;
     list : TStringList;
+    funcID : TKMArray<Integer>;
   begin
     If not EXPORT_SCRIPTING_CLASSES then
       Exit;
     path := ExeDir + 'Export' + PathDelim + aC.aType.OriginalName + '.txt';
     list := TStringList.Create;
+    funcID.Clear;
     try
       for I := 0 to aC.Count - 1 do
       begin
-        S := prefix + '.' + aC.Items[I].OrgName;
+        S := '';
+        If aC.Items[I].Decl.Result <> nil then
+          funcID.Add(0)
+        else
+          funcID.Add(1);
+        {
+          S := 'function '
+        else
+          S := 'procedure ';
+        }
+        S := S + prefix + '.' + aC.Items[I].OrgName;
         If aC.Items[I].Decl.ParamCount > 0 then
         begin
           S := S + '(';
@@ -394,11 +412,29 @@ function TKMScripting.ScriptOnUses(Sender: TPSPascalCompiler; const Name: AnsiSt
           end;
           S := S + ')';
         end;
+
+        If aC.Items[I].Decl.Result <> nil then
+        begin
+          tyName := aC.Items[I].Decl.Result.OriginalName;
+          If tyName[1] = '!' then
+            tyName := aC.Items[I].Decl.Result.Decl;
+          ValidateParamType(tyName);
+          S := S + ' : ' + tyName;
+        end;
         S := S + ';';
 
         list.Add(S);
       end;
       list.Sort;
+      for I := 0 to funcID.Count - 1 do
+      begin
+        IF funcID[I] = 0 then
+          S := 'function ' + list[I]
+        else
+          S := 'procedure ' + list[I];
+        list[I] := S;
+      end;
+
       list.SaveToFile(path);
     finally
       FreeAndNil(list);
