@@ -2932,6 +2932,15 @@ begin
 end;
 
 procedure TKMHand.UnlockDevelopment(aType: TKMDevelopmentTreeType; aID: Integer);
+
+  procedure FeedAllSiegeUnits;
+  var I : Integer;
+  begin
+    for I := 0 to Units.Count - 1 do
+      If (Units[I] <> nil) and (Units[I].UnitType in SIEGE_MACHINES) then
+        Units[I].Condition := UNIT_MAX_CONDITION;
+  end;
+
 var dev : PKMDevelopment;
 begin
   dev := gRes.Development.Tree[aType].GetItem(aID);
@@ -2945,11 +2954,14 @@ begin
     If (aType = dttBuilder) and (aID = 30) then
       UnlockSpecialWalls;
 
+    If (aType = dttEconomy) and (aID = 34) then
+      NeverHungry := true;
+
     If (aType = dttBuilder) and (aID = 32) then
       UnlockAllBuildings;
 
-    If (aType = dttEconomy) and (aID = 34) then
-      NeverHungry := true;
+    If (aType = dttArmy) and (aID = 30) then
+      FeedAllSiegeUnits;
 
     gGame.RefreshDevelopmentTree;
 
