@@ -185,7 +185,7 @@ begin
   I := 0;
   repeat
     Result.X := KaMRandomS1(4, 'TKMHousePasture.GetPositionForAnimal 1');
-    Result.Y := KaMRandomS1(2.75, 'TKMHousePasture.GetPositionForAnimal 2');
+    Result.Y := KaMRandomS1(2.5, 'TKMHousePasture.GetPositionForAnimal 2');
     Inc(I);
   until (I >= 10) or not IsAnimalAt(Result);//max 10 tries
 end;
