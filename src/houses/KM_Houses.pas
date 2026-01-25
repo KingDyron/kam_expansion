@@ -7467,7 +7467,7 @@ begin
         gSoundPlayer.Play(sfxnPalace, fPosition);
         U := gHands[Owner].TrainUnit(TrainedUnitType, Self);
         U.Visible := False; //Make him invisible as he is inside the barracks
-        U.Condition := Round(TROOPS_TRAINED_CONDITION * UNIT_MAX_CONDITION); //All soldiers start with 3/4, so groups get hungry at the same time
+        U.Condition := UNIT_MAX_CONDITION; //All soldiers start with 3/4, so groups get hungry at the same time
         //Soldier.OrderLoc := KMPointBelow(Entrance); //Position in front of the barracks facing north
         U.SetActionGoIn(uaWalk, gdGoOutside, Self, true);
         if Assigned(U.OnUnitTrained) then
@@ -8836,7 +8836,7 @@ procedure TKMHouseShipyard.IncSketchPhase(aWares : TKMWarePlan);
       U.HitPointsMax := U.HitPointsMax + (fShipBuiltOf.HasWare(wtSteelE) div 2);
 
     U.HitPointsChangeFromScript(U.HitPointsMax);
-
+    U.Condition := UNIT_MAX_CONDITION;
     //fShipType := utNone;
     fShipPhase := 0;
     //fShipSketchPosition.Loc := KMPOINT_INVALID_TILE;
