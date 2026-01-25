@@ -279,7 +279,6 @@ var
 begin
   Result := 0;
   if aCount <= 0 then Exit;
-  //if not (aUnit in SIEGE_MACHINES) then Exit;
 
   for K := 1 to Min(aCount, Length(fQueue)) do
     for I := 1 to High(fQueue) do
@@ -428,7 +427,6 @@ begin
 
   PrivateQueue[0] := utNone; //Clear the unit in training
   AddWaitingMachine(fUnitType, fBitinAdded);
-  //EquipWarrior(fUnitType);
   fUnitType := utNone;
   fBitinAdded := 0;
   fPhase := 0;
@@ -445,8 +443,7 @@ procedure TKMHouseSiegeWorkshop.TryEquipMachines;
     //Make new unit
     U := gHands[Owner].TrainUnit(aMachine.UT, Self);
     U.Visible := False; //Make him invisible as he is inside the barracks
-    U.Condition := UNIT_MAX_CONDITION; //All soldiers start with 3/4, so groups get hungry at the same time
-    //Soldier.OrderLoc := KMPointBelow(Entrance); //Position in front of the barracks facing north
+    U.Condition := UNIT_MAX_CONDITION; //All machines start with full
     U.SetActionGoIn(uaWalk, gdGoOutside, Self, true);
     if Assigned(U.OnUnitTrained) then
       U.OnUnitTrained(U);

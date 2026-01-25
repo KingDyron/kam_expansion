@@ -279,7 +279,6 @@ end;
 procedure TKMHouseQueue.UpdateState(aTick: Cardinal);
 begin
   Inherited;
-  //MoveQueue;
 end;
 
 

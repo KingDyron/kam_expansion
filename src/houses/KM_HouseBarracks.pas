@@ -386,17 +386,6 @@ begin
       gHands[Owner].Deliveries.Queue.RemOffer(Self, troopWareType, gRes.Units[aUnitType].BarracksCost[I].C);
     end;
   ProduceFestivalPoints(fptWarfare, wareCost);
-  //don't use old one
-  {for I := 1 to 4 do
-  if TROOP_COST[aUnitType, I] <> wtNone then
-  begin
-    troopWareType := TROOP_COST[aUnitType, I];
-    SetWareCnt(troopWareType, fResourceCount[troopWareType] - 1);
-
-    gHands[Owner].Stats.WareConsumed(TROOP_COST[aUnitType, I]);
-    gHands[Owner].Deliveries.Queue.RemOffer(Self, TROOP_COST[aUnitType, I], 1);
-
-  end;}
 
   //Special way to kill the Recruit because it is in a house
   TKMUnitRecruit(fRecruitsList.Items[0]).KillInHouse;
@@ -412,7 +401,7 @@ begin
       U.OnUnitTrained(U);
     Result := U;
     U.Condition := condition;
-    if gHands[Owner].VirtualWareTake('vtHerbs') or gHands[Owner].VirtualWareTake('vtAppleJuice') or gHands[Owner].VirtualWareTake('vtDishes') then
+    if gHands[Owner].VirtualWareTake('vtHerbs', 3) or gHands[Owner].VirtualWareTake('vtAppleJuice') or gHands[Owner].VirtualWareTake('vtDishes') then
       U.Condition := UNIT_MAX_CONDITION;
 
     if hadBoots then
@@ -424,11 +413,9 @@ begin
     //Make new unit
     soldier := TKMUnitWarrior(gHands[Owner].TrainUnit(aUnitType, Self));
     soldier.Visible := False; //Make him invisible as he is inside the barracks
-    //soldier.Condition := condition{Round(TROOPS_TRAINED_CONDITION * UNIT_MAX_CONDITION)}; //All soldiers start with 3/4, so groups get hungry at the same time
-    //Soldier.OrderLoc := KMPointBelow(Entrance); //Position in front of the barracks facing north
 
 
-    if gHands[Owner].VirtualWareTake('vtHerbs') or gHands[Owner].VirtualWareTake('vtAppleJuice') or gHands[Owner].VirtualWareTake('vtDishes') then
+    if gHands[Owner].VirtualWareTake('vtHerbs', 3) or gHands[Owner].VirtualWareTake('vtAppleJuice') or gHands[Owner].VirtualWareTake('vtDishes') then
       Soldier.Condition := UNIT_MAX_CONDITION
     else
       Soldier.Condition := condition;

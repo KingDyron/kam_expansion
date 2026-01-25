@@ -137,30 +137,6 @@ begin
       inc(hayMulti, 0.45);
   end;
 
-
-
-  {if (aFood.HasWare(wtCorn) > 0) and (aFood.HasWare(wtHay) = 0) then //has corn but not hay
-    Inc(foodMulti, 1)
-  else
-  if (aFood.HasWare(wtCorn) = 0) and (aFood.HasWare(wtHay) > 0) then //has hay but not corn
-    Inc(foodMulti, 1)
-  else begin
-    //has both hay and corn
-    if aFood.HasWare(wtCorn ) > 0 then
-      Inc(foodMulti, 1); //2
-
-    if aFood.HasWare(wtHay) > 0 then
-      Inc(hayMulti, 0.75); //2
-
-
-  end;
-
-  if aFood.HasWare(wtVegetables) > 0 then
-    Inc(hayMulti, 0.5); //vegetables can increase only hay
-
-  if aFood.HasWares([wtCorn, wtHay, wtVegetables]) then  //if they get all types of food, add extra
-    Inc(hayMulti, 0.25);}
-
   if HouseType = htStables then
   begin
     IF gHands[Owner].EconomyDevUnlocked(11) then
@@ -208,8 +184,6 @@ begin
       Inc(fPigsProgress, (HayBreeded[I]) - trunc(HayBreeded[I]) );
       HayBreeded[I] := 0;
     end;
-  //if (aID<>0) and (BeastAge[aID]>3) then
-  //  BeastAge[aID] := 0;
 
 
 end;
@@ -221,8 +195,6 @@ begin
   for I := Low(BeastAge) to High(BeastAge) do
     if (BeastAge[I]>3) then
     begin
-      //fPigsProgress := fPigsProgress + 3;
-      //Inc(Result, 1);
       Inc(Result, trunc(HayBreeded[I]));
     end;
   if Result > 0 then
@@ -362,17 +334,6 @@ var I : Integer;
 begin
   Result := 0;
 
-  //find empty space
-  {J := 0;
-  for I := 1 to 3 do
-    if BeastAge[I] = 0 then
-    begin
-      J := I;
-      Break;
-    end;}
-
-
-  //fLast := fLast mod 3 + 1;
   fLast :=  KaMRandom(3, 'TKMHouseHovel.FeedChicken:Hovel random anim1') + 1;//it's full so feed random chicken
   if BeastAge[fLast] = 0 then
     BeastAnim[fLast] := KaMRandom(3, 'TKMHouseHovel.FeedChicken:Hovel random anim2');
@@ -415,7 +376,6 @@ begin
   fSausage := false;
   if BeastAge[fLast] >= HOVEL_MAX_AGE then
   begin
-    //BeastAge[fLast] := 0;
     Result := fLast;
     fSausage := true;
   end;
@@ -491,16 +451,6 @@ begin
 
   ProduceWareFromFill(wtFeathers, fFillFeather);
   ProduceWareFromFill(wtEgg, fFillEggs);
-
- { count := Trunc(fFillFeather);
-
-  if count > 0 then
-  begin
-    ProduceWare(wtFeathers, count);
-    IncProductionCycle(wtFeathers, count);
-  end;
-
-  fFillFeather := fFillFeather - count;}
 
 end;
 

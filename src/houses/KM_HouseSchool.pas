@@ -308,15 +308,7 @@ begin
   if fUnitWip = nil then
     Result := 0
   else
-    Result := WorkingTime / TotalWorkingTime
-
-    {Result := (
-              Byte(haWork2 in CurrentAction.SubAction) * 30 +
-              Byte(haWork3 in CurrentAction.SubAction) * 60 +
-              Byte(haWork4 in CurrentAction.SubAction) * 90 +
-              Byte(haWork5 in CurrentAction.SubAction) * 120 +
-              Byte(CurrentAction.State = hstWork) * WorkAnimStep
-              ) / 150;}
+    Result := WorkingTime / TotalWorkingTime;
 end;
 
 

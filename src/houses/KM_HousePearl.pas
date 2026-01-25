@@ -286,7 +286,6 @@ begin
       progress := fProgress / fMaxProgress;
       gRenderPool.AddHousePearl(fPearlType, fPosition, fBuildStage, 1, progress, 0, 0, gHands[Owner].FlagColor, false);
     end;
-        //gRenderPool.AddSpriteWH(fPosition, KMPOINT_ZERO, 2715, rxHouses, gHands[Owner].FlagColor);
     gRenderPool.AddHouseWork(HouseType, fPosition, CurrentAction.SubAction * [haFire1..haFire8], WorkAnimStep, WorkAnimStepPrev, GetFlagColor);
 
 
@@ -373,39 +372,6 @@ procedure TKMHousePearl.SetBuildCost;
 var I : integer;
 begin
   fBuildCost.Reset;
-  {case fPearlType of
-    ptNone,
-    ptValtaria: begin
-                  fBuildCost.AddWare(wtTimber, 1);
-                  fBuildCost.AddWare(wtStone, 1);
-                  fBuildCost.AddWare(wtTrunk, 1);
-                  fBuildCost.AddWare(wtTile, 1);
-                  fBuildCost.AddWare(wtIron, 1);
-                  fBuildCost.AddWare(wtGold, 1);
-                end;
-    ptArium: begin
-                  fBuildCost.AddWare(wtTimber, 1);
-                  fBuildCost.AddWare(wtStone, 1);
-                  fBuildCost.AddWare(wtTrunk, 1);
-                  fBuildCost.AddWare(wtTile, 1);
-                  fBuildCost.AddWare(wtIron, 1);
-                  fBuildCost.AddWare(wtSteelE, 1);
-                  fBuildCost.AddWare(wtBitinE, 1);
-                end;
-    ptAgros: begin
-                  fBuildCost.AddWare(wtTimber, 1);
-                  fBuildCost.AddWare(wtStone, 1);
-                  fBuildCost.AddWare(wtTrunk, 1);
-                  fBuildCost.AddWare(wtTile, 1);
-                end;
-    ptRalender: begin
-                  fBuildCost.AddWare(wtTimber, 1);
-                  fBuildCost.AddWare(wtStone, 1);
-                  fBuildCost.AddWare(wtTrunk, 1);
-                  fBuildCost.AddWare(wtTile, 1);
-                  fBuildCost.AddWare(wtIron, 1);
-                end;
-  end;}
   fBuildCost.SetCount(gRes.Houses.Pearls[fPearlType].StageCount);
   fDelivered.SetCount(fBuildCost.Count);
   for I := 0 to High(fBuildCost) do
@@ -533,7 +499,7 @@ end;
 
 function TKMHousePearl.Completed: Boolean;
 begin
-  Result := fIsCompleted{(fProgress >= fMaxProgress) and (fPearlType <> ptNone) and fConfirmed};
+  Result := fIsCompleted;
 end;
 
 function TKMHousePearl.Progress: Single;
@@ -709,7 +675,6 @@ var C : Integer;
 begin
   C := KamRandom(318 + 200 + 1, 'TKMHousePearl.AgrosDoExchange') + 1;
   case C of
-    //1..100    : UT := utFighter;
     101..125  : Result := utPyro;
     126..150  : Result := utTorchMan;
     151..175  : Result := utLekter;
@@ -972,10 +937,6 @@ var I : Integer;
   lastDist, tmp : Single;
 begin
   Result := Inherited;
-  //return random for testing;
-  {I := KaMRandom(4, 'TKMHousePearl.GetClosestEntrance') + 1;
-  Result.Loc := Entrance + ENTRANCE_POS[I];
-  Result.Dir := ENTRANCE_DIR[I];}
 
   lastDist := 99999;
   for I := low(ENTRANCE_POS) to High(ENTRANCE_POS) do

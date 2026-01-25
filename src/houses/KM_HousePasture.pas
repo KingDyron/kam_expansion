@@ -41,9 +41,6 @@ type
     procedure BuyAIAnimal;
   protected
   public
-    {function HasMoreEntrances : Boolean; override;
-    function GetClosestEntrance(aLoc: TKMPoint): TKMPointDir; override;
-    function Entrances : TKMPointDirArray;  override;}
     constructor Create(aUID: Integer; aHouseType: TKMHouseType; PosX, PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
 
     procedure UpdateState(aTick: Cardinal); override;
@@ -72,43 +69,6 @@ uses
   KM_Resource, KM_ResUnits,
   KM_Terrain,
   KM_CommonUtils;
-{
-function TKMHousePasture.HasMoreEntrances: Boolean;
-begin
-  Result := true;
-end;
-
-function TKMHousePasture.Entrances: TKMPointDirArray;
-begin
-  Result := [
-              KMPointDir(Entrance.X, Entrance.Y, dirS),
-              KMPointDir(Entrance.X - 1, Entrance.Y - 3, dirN)
-            ];
-end;
-
-function TKMHousePasture.GetClosestEntrance(aLoc: TKMPoint): TKMPointDir;
-const  ENTRANCE_POS : array[1..2] of TKMPoint = ( (X : 0; Y : 0),
-                                                (X : -1; Y : -3));
-const  ENTRANCE_DIR : array[1..2] of TKMDirection = (dirS, dirN);
-
-var I : Integer;
-  lastDist, tmp : Single;
-begin
-  Result := Inherited;
-
-  lastDist := 99999;
-  for I := low(ENTRANCE_POS) to High(ENTRANCE_POS) do
-  begin
-    tmp := KMLength(aLoc, Entrance + ENTRANCE_POS[I]);
-    If tmp < lastDist then
-    begin
-      lastDist := tmp;
-      Result.Loc := Entrance + ENTRANCE_POS[I];
-      Result.Dir := ENTRANCE_DIR[I];
-    end;
-  end;
-end;
-}
 
 constructor TKMHousePasture.Create(aUID: Integer; aHouseType: TKMHouseType; PosX: Integer; PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
 begin
@@ -263,7 +223,6 @@ procedure TKMHousePasture.SetNewAction(var aAnimal: TKMPastureAnimal);
 
   function GetAnimCycles : Word;
   begin
-    //Result := gRes.Units.PastureAnimals[aAnimal.AnimalType].Anim[aAnimal.Action, dirN].Count;
     Result := aAnimal.AnimalType.Spec.Anim[aAnimal.Action, dirN].Count;
   end;
 var oldAct : TKMPastureAnimalAction;
@@ -286,7 +245,6 @@ begin
       end;
     end;
     until oldAct <> Action;
-    //Action := TKMPastureAnimalAction(KaMRandom(ANIMAL_ACTION_COUNT, 'TKMHousePasture.UpdateAnimal 1'));
     case Action of
       paaWalk:  SetAnimalActionWalk(aAnimal);
       paaLying,
@@ -532,11 +490,6 @@ begin
     for I := 0 to MAX_ANIMALS - 1 do
       If fAnimals[I].AnimalType <> patNone then
       begin
-        {gRenderPool.AddAnimationG(KMPointF(Entrance.X + fAnimals[I].Pos.X - 1.5, Entrance.Y + fAnimals[I].Pos.Y - 3.5),
-                                  gRes.Units.PastureAnimals[fAnimals[I].AnimalType].Anim[fAnimals[I].Action, fAnimals[I].Dir],
-                                  //gRes.Units[utLandDuck].UnitAnim[uaWalk,fAnimals[I].Dir],
-                                  fAnimals[I].AnimStep,
-                                  FlagColor, rxUnits);}
         spec := fAnimals[I].AnimalType.Spec;
         gRenderPool.AddHousePastureAnimal(KMPointF(entr.X + fAnimals[I].Pos.X - 2.50, entr.Y + fAnimals[I].Pos.Y - 4.75),
                                           fAnimals[I].AnimalType,

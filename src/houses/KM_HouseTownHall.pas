@@ -25,7 +25,6 @@ type
     function CanEquip(aUnitType: TKMUnitType): Boolean;
 
     procedure PostLoadMission; override;
-    //procedure UpdateDemands; override;
   end;
 
 
@@ -81,8 +80,6 @@ begin
 
 
   Result := Result and (CheckWareIn(wtGold) >= UnitCost(aUnitType));  //Can't equip if we don't have a required resource
-
-  //Result := Result{ and (gHands[Owner].GetWorklessCount > 0)};
 end;
 
 
@@ -109,7 +106,6 @@ begin
   begin
     //Make sure we have enough resources to equip a unit
     if not CanEquip(aUnitType) then Exit;
-    //gHands[Owner].TakeWorkless;
     //Take resources
     WareTakeFromIn(wtGold, UnitCost(aUnitType)); //Do the goldtaking
 
@@ -134,10 +130,6 @@ begin
     if aUnitType in UNITS_WARRIORS then
       if gRes.Units[U.UnitType].CanOrderAmmo then
           TKMUnitWarrior(U).ReloadAmmo(wtNone);
-    {if gHands[Owner].IsComputer then
-      if aUnitType in UNITS_WARRIORS then
-        if gRes.Units[U.UnitType].CanOrderAmmo then
-          TKMUnitWarrior(U).OrderAmmo;}
 
     if Assigned(U.OnUnitTrained) then
       U.OnUnitTrained(U);

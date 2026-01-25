@@ -250,7 +250,6 @@ procedure TKMHouseCartographers.Paint;
       factor := factor shl 24;
       factor := factor or $00FFFFFF;
       C := C and factor;
-      //gRenderAux.Quad(fUndergoundDeposits[I].X, fUndergoundDeposits[I].Y, C);
       gRenderAux.CircleOnTerrain(fUndergoundDeposits[I].X - 0.5, fUndergoundDeposits[I].Y - 0.5, 0.2, C, 0);
       gRenderPool.RenderTerrain.RenderTile(tile, fUndergoundDeposits[I].X, fUndergoundDeposits[I].Y, 0);
     end;

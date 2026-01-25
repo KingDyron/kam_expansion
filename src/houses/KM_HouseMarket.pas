@@ -173,7 +173,6 @@ begin
     Result := Min(Round(costTo / Min(costFrom, costTo)), High(Word));
   end else
     Result := 1;
-  //Result := gRes.Wares.RatioFrom(fResFrom, fResTo);
 end;
 
 
@@ -189,7 +188,6 @@ begin
     Result := Min(Round(costFrom / Min(costFrom, costTo)), High(Word));
   end else
     Result := 1;
-  //Result := gRes.Wares.RatioTo(fResFrom, fResTo);
 end;
 
 
@@ -207,8 +205,7 @@ begin
   //then incoming resourced should be added to Offer list immediately
   //We don't want Marketplace to act like a Store
   if not aFromScript then
-    fMarketDeliveryCount[aWare] := Max(fMarketDeliveryCount[aWare] - aCount, 0);
-    //Dec(fMarketDeliveryCount[aWare], aCount); //We must keep track of the number ordered, which is less now because this has arrived
+    fMarketDeliveryCount[aWare] := Max(fMarketDeliveryCount[aWare] - aCount, 0); //We must keep track of the number ordered, which is less now because this has arrived
 
   if (aWare = fResFrom) and TradeInProgress then
   begin
@@ -231,7 +228,6 @@ begin
   else
   begin
     SetWareOutCnt(aWare, fMarketWareOut[aWare] + aCount); //Place the new resource in the OUT list
-    //gHands[Owner].Deliveries.Queue.AddOffer(Self, aWare, aCount);
     gHands[Owner].Deliveries.Queue.AddOffer(Self, aWare, aCount);
   end;
 end;
@@ -266,13 +262,6 @@ begin
 
   if TradeInProgress and (WareToTrade[fResFrom] >= RatioFrom) then
   begin
-    {H := gHands[1].FindHouse(htStore, 1);
-    if H <> nil then
-    begin
-      H.WareAddToIn(fResFrom, RatioFrom);
-      gHands[1].Stats.WareProduced(fResFrom, RatioFrom);
-
-    end; }
     //How much can we trade
     tradeCount := Min((WareToTrade[fResFrom] div RatioFrom), fTradeAmount);
 

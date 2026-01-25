@@ -34,10 +34,6 @@ type
   public
     constructor Create(aUID: Integer; aHouseType: TKMHouseType; PosX, PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
 
-    {function HasMoreEntrances : Boolean; override;
-    function GetClosestEntrance(aLoc: TKMPoint): TKMPointDir; override;
-    function Entrances : TKMPointDirArray; override;}
-
     function AddTree(aTreeID : Byte; aScript : Boolean = false) : Boolean; overload;
     function AddTree(aTreeID : Byte; aCount : Byte) : Boolean; overload;
 
@@ -107,52 +103,6 @@ begin
     SaveStream.WriteData(fTrees[I]);
   SaveStream.Write(fAITrees);
 end;
-
-{
-function TKMHouseForest.HasMoreEntrances: Boolean;
-begin
-  Result := true;
-end;
-
-function TKMHouseForest.Entrances: TKMPointDirArray;
-begin
-  Result := Inherited;
-
-  Result := [
-              KMPointDir(Entrance.X, Entrance.Y, dirS),
-              KMPointDir(Entrance.X - 2, Entrance.Y - 2, dirW),
-              KMPointDir(Entrance.X, Entrance.Y - 4, dirN),
-              KMPointDir(Entrance.X + 2, Entrance.Y - 2, dirE)
-            ];
-
-end;
-
-function TKMHouseForest.GetClosestEntrance(aLoc: TKMPoint): TKMPointDir;
-const  ENTRANCE_POS : array[1..4] of TKMPoint = ( (X : 0; Y : 0),
-                                                (X : -2; Y : -2),
-                                                (X : 0; Y : -4),
-                                                (X : 2; Y : -2));
-const  ENTRANCE_DIR : array[1..4] of TKMDirection = (dirS, dirW, dirN, dirE);
-
-var I : Integer;
-  lastDist, tmp : Single;
-begin
-  Result := Inherited;
-
-  lastDist := 99999;
-  for I := low(ENTRANCE_POS) to High(ENTRANCE_POS) do
-  begin
-    tmp := KMLength(aLoc, Entrance + ENTRANCE_POS[I]);
-    If tmp < lastDist then
-    begin
-      lastDist := tmp;
-      Result.Loc := Entrance + ENTRANCE_POS[I];
-      Result.Dir := ENTRANCE_DIR[I];
-    end;
-  end;
-
-end;
-}
 
 function TKMHouseForest.TreeWillCollide(aTreeID : Byte; aLoc : TKMPointF) : Boolean;
 var I : Integer;
@@ -257,7 +207,6 @@ begin
       fTrees[id].Age := 8 * TERRAIN_PACE
     else
     begin
-    //(gMapElements[Obj].TreeGrowAge * TERRAIN_PACE) + (8 * TERRAIN_PACE)
       obj := gMapElements[obj].PrevTreeAgeObj;
       fTrees[id].Age := (8 * TERRAIN_PACE) + (gMapElements[Obj].TreeGrowAge * TERRAIN_PACE);
     end;
@@ -345,7 +294,6 @@ begin
   gTerrain.AddFallingTree(KMPointF(fTrees[aID].Pos.X + Entrance.X - 1.75, fTrees[aID].Pos.Y + Entrance.Y - 3.75), fTrees[aID].Obj);
   obj := fTrees[aID].Obj;
   fTrees[aID] := fTrees[fCount - 1];
-  //fTrees[fCount - 1].ID := 0;
   dec(fCount);
   ProduceWare(wtTrunk, gMapElements[obj].TrunksCount);
   IncProductionCycle(1);

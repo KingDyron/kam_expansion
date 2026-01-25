@@ -159,10 +159,6 @@ end;
 function TKMHouseStore.CanHaveWareType(aWare: TKMWareType): Boolean;
 begin
   Result := (aWare in WARES_VALID);
-
- // if HouseType = htSmallStore then
-  //    Result := aWare = wtTrunk;
-
 end;
 
 constructor TKMHouseStore.Load(LoadStream: TKMemoryStream);
@@ -202,11 +198,6 @@ end;
 function TKMHouseStore.WareCanAddToIn(aWare: TKMWareType): Boolean;
 begin
   Result := (aWare in WARES_VALID);
-
-  //if HouseType = htSmallStore then
-  //  Result := aWare = wtTrunk;
-
-  //Result := aWare = wtTrunk;
 end;
 
 
