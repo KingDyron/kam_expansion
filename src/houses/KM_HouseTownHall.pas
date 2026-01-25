@@ -118,9 +118,7 @@ begin
     U.SetActionGoIn(uaWalk, gdGoOutside, Self, true);
 
     if gHands[Owner].VirtualWareTake('vtHerbs', 3) or gHands[Owner].VirtualWareTake('vtAppleJuice') or gHands[Owner].VirtualWareTake('vtDishes') then
-      U.Condition := UNIT_MAX_CONDITION
-    else
-      U.Condition := condition;
+      U.Condition := UNIT_MAX_CONDITION;
 
     Index := gRes.Wares.VirtualWares.WareS['vtCertificate'].Index;
     if Index <> high(Word) then
