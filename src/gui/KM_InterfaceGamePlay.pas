@@ -1110,12 +1110,6 @@ begin
   Panel_Controls.Top := Sidebar_Top.Height - 10 + (10+Bevel_Middle.Height) * Byte(showSwords);
   Panel_Controls.Height := Panel_Main.Height - Panel_Controls.Top;
 
-  if fGuiGameStats.Visible then
-    fGuiGameStats.Resize;
-
-  //if fGuiGameSpectator.Visible then
-  //  fGuiGameSpectator.Resize;
-
   UpdateReplayBar;
 
   fViewport.Resize(Round(X * gRender.InterfaceScale), Round(Y * gRender.InterfaceScale));
@@ -5140,7 +5134,9 @@ begin
   if fGuiGameRatios.Visible and (fUIMode in [umReplay, umSpectate]) then
     fGuiGameRatios.UpdateState;
   if fGuiGameStats.Visible then
-    fGuiGameStats.UpdateState;
+    If gGameApp.GlobalTickCount mod 5 = 0 then //upadte twice every second.
+      fGuiGameStats.UpdateState;
+
   if Panel_Menu.Visible then
     Menu_Update;
 

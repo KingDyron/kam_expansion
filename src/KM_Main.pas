@@ -112,7 +112,7 @@ const
   // Generated for versions r13651+
   // We can allow to have beta and r6720 versions to be opened at the same time
   KAM_MUTEX = 'AAF80942-EC97-4D02-9339-07AB8FEFA187';
-  SHOW_LOADING = FALSE;
+  SHOW_LOADING = true;
 
 
 {$OVERFLOWCHECKS OFF}

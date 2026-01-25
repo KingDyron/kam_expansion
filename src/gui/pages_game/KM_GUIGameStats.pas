@@ -54,7 +54,6 @@ type
 
     procedure Show;
     procedure Hide;
-    procedure Resize;
     procedure UpdateState;
     function Visible: Boolean;
     procedure ResetUIDs;
@@ -68,7 +67,8 @@ uses
   KM_Hand, KM_Pics, KM_Points,
   KM_Units, KM_UnitGroup,
   KM_GameParams,
-  KM_ResTypes;
+  KM_ResTypes,
+  KM_UtilsExt;
 
 
 { TKMGUIGameStats }
@@ -215,55 +215,6 @@ begin
 end;
 
 
-//Resize stats page in a way to display data in more readable form
-//Try to keep items in corresponding pairs and stack them when dont fit otherwise
-procedure TKMGUIGameStats.Resize;
-{const
-  PAD_X = 4;
-  PAD_Y = 4;
-var
-  I, K: Integer;
-  rows: Integer;
-  offX, nextWidth, lineHeight: Integer;
-  needToCompact: Boolean;}
-begin
-  {lineHeight := Panel_StatBlock[0].Height + PAD_Y;
-  //How many rows could fit
-  rows := Panel_Stats.Height div (lineHeight);
-
-  //Reposition ShowStats button
-  if rows >= 12 then
-    Button_ShowStats.Top := 0
-  else if rows = 11 then
-    Button_ShowStats.Top := lineHeight
-  else
-    Button_ShowStats.Top := 2 * lineHeight;
-
-  //Adjoin rows till they fit
-  K := 0;
-  offX := 0;
-  for I := 0 to High(StatPlan) do
-  begin
-    Panel_StatBlock[I].Left := offX;
-    Panel_StatBlock[I].Top := K * lineHeight;
-
-    Inc(offX, PAD_X + Panel_StatBlock[I].Width);
-
-    //Return caret
-    if I <> High(StatPlan) then
-    begin
-      needToCompact := (Length(StatPlan) - I) > (rows - K);
-      nextWidth := Panel_StatBlock[I].Width + PAD_X;
-      if not needToCompact or (offX + nextWidth > TB_WIDTH) then
-      begin
-        offX := 0;
-        Inc(K);
-      end;
-    end;
-  end; }
-end;
-
-
 procedure TKMGUIGameStats.UpdateState;
 var
   K: Integer;
@@ -271,6 +222,10 @@ var
   UT: TKMUnitType;
   uqty, qty, uwipQty, wipQty, hTotalConstrOpenedQty: Integer;
   doHighlight: Boolean;
+  citizensNeeded : array[CITIZEN_MIN..CITIZEN_MAX] of Word;
+  P : TKMHand;
+  house : TKMHouse;
+  I : Integer;
 begin
 
   //Serfs and builder are together so they need to be counted seperately
@@ -286,49 +241,32 @@ begin
     Stat_Army.OnClick := nil;
     Stat_Army.HighlightOnMouseOver := false;
   end;
-  {Stat_Units[utSerf].FlagColor := gMySpectator.Hand.FlagColor;
-  Stat_Units[utBuilder].FlagColor := gMySpectator.Hand.FlagColor;
-  uqty := gMySpectator.Hand.Stats.GetUnitQty(utSerf);
-  uwipQty := gMySpectator.Hand.Stats.GetUnitTraining(utSerf) - gMySpectator.Hand.Stats.GetUnitDismissing(utSerf);
-  Stat_Units[utSerf].SQt := IfThen(uqty > 0, IntToStr(uqty), '-');
 
-  Stat_Units[utSerf].SWip := IfThen(uwipQty > 0, '+' + IntToStr(uwipQty), '');
+  FillChar(citizensNeeded, SizeOf(citizensNeeded), 0);
+  P := gMySpectator.Hand;
 
-  uqty := gMySpectator.Hand.Stats.GetUnitQty(utBuilder);
-  uwipQty := gMySpectator.Hand.Stats.GetUnitTraining(utBuilder) - gMySpectator.Hand.Stats.GetUnitDismissing(utBuilder);
-  Stat_Units[utBuilder].SQt := IfThen(uqty > 0, IntToStr(uqty), '-');
-  Stat_Units[utBuilder].SWip := IfThen(uwipQty > 0, '+' + IntToStr(uwipQty), '');
-
-
-
-
-  for K := 0 to High(Stat_Houses[utSerf]) do
+  //Citizens
+  //Count overall unit requirement (excluding Barracks and ownerless houses)
+  for I := 0 to P.Houses.Count - 1 do
   begin
-    HT := TKMHouseType(Stat_Houses[utSerf][K].Tag);
-    qty := gMySpectator.Hand.Stats.GetHouseQty(HT);
-    wipQty := gMySpectator.Hand.Stats.GetHouseWip(HT);
-    Stat_Houses[utSerf][K].SQt := IfThen(qty > 0, IntToStr(qty), '-');
-    Stat_Houses[utSerf][K].SWip := IfThen(wipQty > 0, '+' +IntToStr(wipQty), '');
-
-    if qty > 0 then
-    begin
-      Stat_Houses[utSerf][K].OnClick := House_Stat_Clicked;
-      //Stat_Houses[utSerf][K].HighlightOnMouseOver := true;
-    end
-    else
-    begin
-      Stat_Houses[utSerf][K].OnClick := nil;
-      //Stat_Houses[utSerf][K].SPic.HighlightOnMouseOver := false;
-    end;
-  end;}
-
+    house := P.Houses[I];
+    if house.IsValid(htAny, false, true) then
+    if not house.IsClosedForWorker then
+    if not (house.HouseType in [htBarracks, htStore, htInn, htMarket]) then
+    if gRes.Houses[house.HouseType].CanHasWorker then
+      for K := 0 to high(house.HSpec.Workers) do
+        begin
+          UT := house.HSpec.Workers[K].UnitType;
+          Inc(citizensNeeded[UT], 1);
+        end;
+  end;
 
   for UT := CITIZEN_MIN to CITIZEN_MAX do
     If Stat_Units[UT] <> nil then
     begin
       uqty := gMySpectator.Hand.Stats.GetUnitQty(UT);
       uwipQty := gMySpectator.Hand.Stats.GetUnitTraining(UT) - gMySpectator.Hand.Stats.GetUnitDismissing(UT);
-      Stat_Units[UT].SQt := IfThen(uqty > 0, IntToStr(uqty), '-');
+      Stat_Units[UT].SQt := IfThen(uqty > 0, IntToKStr(uqty, 1000), '-');
       Stat_Units[UT].SWip := IfThen(uwipQty > 0, '+' + IntToStr(uwipQty), '');
       Stat_Units[UT].FlagColor := gMySpectator.Hand.FlagColor;
 
@@ -340,18 +278,18 @@ begin
         Stat_Units[UT].HighlightOnMouseOver := true;
       end;
 
-      hTotalConstrOpenedQty := 0;
+      hTotalConstrOpenedQty := citizensNeeded[UT];
 
       for K := 0 to High(Stat_Houses[UT]) do
       begin
         HT := TKMHouseType(Stat_Houses[UT][K].Tag);
         qty := gMySpectator.Hand.Stats.GetHouseQty(HT);
 
-        if HT <> htBarracks then
+        {if HT <> htBarracks then
           hTotalConstrOpenedQty := hTotalConstrOpenedQty + gMySpectator.Hand.Stats.GetHouseOpenedQty(HT);
 
         if HT = htWallTower then
-          hTotalConstrOpenedQty := hTotalConstrOpenedQty + gMySpectator.Hand.Stats.GetHouseOpenedQty(HT);
+          hTotalConstrOpenedQty := hTotalConstrOpenedQty + gMySpectator.Hand.Stats.GetHouseOpenedQty(HT);}
 
         Stat_Houses[UT][K].TexID := gRes.Houses[HT].GUIIcon;
         wipQty := gMySpectator.Hand.Stats.GetHouseWip(HT);
@@ -384,11 +322,11 @@ begin
       else
         Stat_Units[UT].ColorQT := clStatsUnitDefault;
 
-      Stat_Units[UT].SQt := IfThen(not doHighlight and (uQty  = 0), '-', IntToStr(uQty));
+      Stat_Units[UT].SQt := IfThen(not doHighlight and (uQty  = 0), '-', IntToKStr(uqty, 1000));
 
       IF not (UT in [utSerf, utFeeder, utMountedSerf, utBuilder, utHouseBuilder]) then
         if  uqty + uwipQty > hTotalConstrOpenedQty then
-          Stat_Units[UT].SQt := IntToStr(uQty) + '^';
+          Stat_Units[UT].SQt := IntToKStr(uQty, 1000) + '^';
 
       if uwipQty > 0 then
         Stat_Units[UT].SWip := '+' + IntToStr(uwipQty)
@@ -398,73 +336,6 @@ begin
       else
         Stat_Units[UT].SWip := '';
     end;
-
-  {
-  //now update for the rest of the units
-  for I := 0 to high(StatUnitOrder) do
-  begin
-    hTotalConstrOpenedQty := 0;
-
-    UT := StatUnitOrder[I];
-    uqty := gMySpectator.Hand.Stats.GetUnitQty(UT);
-    uwipQty := gMySpectator.Hand.Stats.GetUnitTraining(UT) - gMySpectator.Hand.Stats.GetUnitDismissing(UT);
-
-    Stat_Units[UT].FlagColor := gMySpectator.Hand.FlagColor;
-
-    for K := 0 to High(Stat_Houses[UT]) do
-    begin
-      HT := TKMHouseType(Stat_Houses[UT][K].Tag);
-      qty := gMySpectator.Hand.Stats.GetHouseQty(HT);
-
-      if HT <> htBarracks then
-        hTotalConstrOpenedQty := hTotalConstrOpenedQty + gMySpectator.Hand.Stats.GetHouseOpenedQty(HT);
-
-      if HT = htWallTower then
-        hTotalConstrOpenedQty := hTotalConstrOpenedQty + gMySpectator.Hand.Stats.GetHouseOpenedQty(HT);
-
-      Stat_Houses[UT][K].TexID := gRes.Houses[HT].GUIIcon;
-      wipQty := gMySpectator.Hand.Stats.GetHouseWip(HT);
-      Stat_Houses[UT][K].SQt := IfThen(qty > 0, IntToStr(qty), '-');
-      Stat_Houses[UT][K].SWip := IfThen(wipQty > 0, '+' +IntToStr(wipQty), '');
-
-      if qty > 0 then
-      begin
-        Stat_Houses[UT][K].OnClick := House_Stat_Clicked;
-        //Stat_Houses[UT][K].HighlightOnMouseOver := true;
-      end
-      else
-      begin
-        Stat_Houses[UT][K].OnClick := nil;
-        //Stat_Houses[UT][K].HighlightOnMouseOver := false;
-      end;
-    end;
-    doHighlight := hTotalConstrOpenedQty > uqty + uwipQty;
-
-    if doHighlight then
-      Stat_Units[UT].ColorWip := clStatsUnitMissingHL
-    else
-      Stat_Units[UT].ColorWip := clStatsUnitDefault;
-
-    if doHighlight then
-      Stat_Units[UT].ColorQT := clStatsUnitMissingHL
-    else
-      Stat_Units[UT].ColorQT := clStatsUnitDefault;
-
-    Stat_Units[UT].SQt := IfThen(not doHighlight and (uQty  = 0), '-', IntToStr(uQty));
-
-    if  uqty + uwipQty > hTotalConstrOpenedQty then
-      Stat_Units[UT].SQt := IntToStr(uQty) + '^';
-
-    if uwipQty > 0 then
-      Stat_Units[UT].SWip := '+' + IntToStr(uwipQty)
-    else
-    if uwipQty < 0 then
-      Stat_Units[UT].SWip := IntToStr(uwipQty)
-    else
-      Stat_Units[UT].SWip := '';
-      
-  end;
-  }
 end;
 
 
@@ -497,8 +368,8 @@ begin
     FillChar(fLastGroupUID, Sizeof(fLastGroupUID), #0);
     FillChar(fLastUnitUIDs, Sizeof(fLastUnitUIDs), #0);
     FillChar(fLastHouseUIDs, Sizeof(fLastHouseUIDs), #0);
-    fLastTick := gGameParams.Tick;
   end;
+  fLastTick := gGameParams.Tick + 600;
 
   HT := TKMHouseType(TKMHouseStatIcon(Sender).Tag);
 
@@ -556,7 +427,6 @@ end;
 procedure TKMGUIGameStats.Show;
 begin
   UpdateState;
-  Resize;
   Panel_Stats.Show;
 end;
 
