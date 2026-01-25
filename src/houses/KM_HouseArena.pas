@@ -201,10 +201,24 @@ begin
 
 end;
 
+function TKMHouseArena.FestivalDuration : Word;
+begin
+  If fDevType = dttAll then
+  begin
+    Result := IfThen(gHands[Owner].EconomyDevUnlocked(29), FESTIVAL_DURATION_ALL, FESTIVAL_DURATION);
+  end
+  else
+    Result := FESTIVAL_DURATION;
+
+  if gHands[Owner].EconomyDevUnlocked(4) then
+    Result := Result - 300;
+end;
+
 function TKMHouseArena.FestivalStarted: Boolean;
 begin
   Result := (fArenaAnimStep > 0);
 end;
+
 
 function TKMHouseArena.CanStartFestival: Boolean;
 begin

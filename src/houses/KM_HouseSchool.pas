@@ -291,7 +291,7 @@ begin
   fTrainProgress := 0;
 
   if gHands[Owner].VirtualWareTake('vtHerbs', 3) or gHands[Owner].VirtualWareTake('vtAppleJuice') or gHands[Owner].VirtualWareTake('vtDishes') then
-    TKMUnit(U).Condition := UNIT_MAX_CONDITION;
+    TKMUnit(aUnit).Condition := UNIT_MAX_CONDITION;
 
   //Attempt to start training next unit in queue
   StartTrainingUnit;
