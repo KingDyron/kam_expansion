@@ -1,5 +1,82 @@
 ﻿
-[$0000FF]KaM Expansion v1.2 Explore the Cultures
+[$5555FF]KaM Expansion patch v1.2.1 
+
+[$55FF55]Budynki
+	- Perła architektury Lodowe Ogrody. 
+		Po jej wybudowaniu otrzymywaliśmy po 100 każdego surowca ubocznego.
+		Teraz daje wszystkie oprócz diamentów, bursztynów, miedzi oraz srebra.
+	- dodano ikonkę z ilością operatorów w Warsztacie wojennym
+	- poprawiono błąd w stoczni (wszystkie statki zablokowane)
+	- usprawniono dostarczanie surowców budowlanych do Drzewa owocowego
+	- dodano koszt towarów w Zakładzie kaletniczym
+	- poprawiono wygląd panelu Ratusza oraz Warowni
+	- zwiększono priorytet dostarczania Owoców do Domów mieszkalnych
+	- dodano możliwość wyłączenia produkcji punktów rozwoju w Festynie
+	- zwiększono odrobinę koszt produkcji punktów rozwoju
+	- animacje w Festynie, będą miały inny kolor w zależności od graczy
+	- Drzewo owocowe po wybudowaniu wybiera ten sam rodzaj owoców co główne drzewo
+	- przesunięto animację flagi w Zakładzie kaletniczym
+	- punkty wojenne do produkcji punktów rozwoju otrzymać można z rekrutacji wojsk
+	- Rzeźnia odblokoje się po Pastwisku, Chlewie oraz Chacie Zbieracza
+	- Strzecha produkcyjna odblokuje się po większej ilości typów budynku
+	- zmniejszono koszt zwierząt w pastwisku
+	- Drzewo owocowe będzie brało pod uwagę cały teren (2x2 kratki) 
+		przy wyborze najlepszego rodzaju drzewa
+	- zmniejszono ilość produkcji jajek oraz piór w kurniku
+	- naprawiono błąd animacji w szkole podczas użycia skrótu klawiszowego Shift+LMB
+	- pomocnicy będą donosić kołczany z Warowni jeśli będą one oznaczone pomarańczowym trójkątem	
+
+[$55FF55]Jednostki
+	- poprawiono: budowniczy nie pozostawiał po sobie planu drogi/pola 
+		kiedy musiał przerwać swoją pracę
+	- jednostki rekrutowane w ratuszu otrzymają amunicję, jeśli będą jej potrzebować
+	- poprawiono duplikowanie się animacji śmierci jednostek
+	- budowniczy wyjdzie z drzewa owocowego, jeśli zostanie zablokowany
+	- poprawiono: Drwal mógł sadzić drzewa na lodzie
+	- zwiększono atak wszystkim jednostom rodzaju Burzycieli
+	- poprawiono: Rekrutowane wojsko mogło łączyć się 
+		z jednostkami w środku wieży oblężniczej
+	- zmniejszono koszt Berserkera do 7 sztuk złota
+	- poprawiono flagi jednostek
+	- jednostki będą miały pełny pasek wytrzymałości jeśli gracz będzie miał 
+		produkty uboczne (zioła x3 lub sok owocowy lub naczynia)
+
+[$55FF55]Interfejs
+	- poprawiono znalezione błędy w tłumaczeniach (opisy jednostek/budynków)
+	- naprawiono błąd w panelu budowania w zakładce dekoracji. 
+		Kiedy wszystkie dekoracje były zablokowane pojawiał się błąd
+	- poprawiono wyświetlanie ilości jednostek w panelu statystyk
+	
+[$55FF55]Edytor map
+	- poprawiono: historia zmian w edytorze map nie wyświetlała się
+	- poprawiono wyświetlanie się obiektów w panelu obiektów (skalowanie)
+	- wyłączono sprawdzanie wadliwych płytek w palecie płytek (aby był do nich dostęp)
+	- poprawiono: tworzenie nowej mapy nadpisywało mapę kampanii, która ostatnio była edytowana
+	
+[$55FF55]Rozgrywka
+	- sadzonki drzew znikają jeśli będzie postawiony na nie plan budynku
+	- odblokowanie nasycenia machin (drzewko rozwoju) spowoduje ich 
+		natychmiastowe nakarmienie
+	
+[$55FF55]Inne
+	- poprawiono: zapisywanie progresu osiągnięc pokazywało błąd, jeśli nie istniał folder "Saves"
+	- naprawiono błąd z wyciekiem pamięci RAM
+	- dane kampanii są zapisywane w pliku .Json, do łatwego odczytu
+	- zapis postępu kampanii jest zapisywany w pliku .Json, do łatwego odczytu
+	- usprawniono budowanie małych struktur
+	- dodano możliwość modufikacji danych gry (obiekty, jednostki, budynki) dla pojedynczych map
+		(Planowane jest dodanie tej funkcji dla kampanii oraz zapisów gry)
+	- utknięte zwierzęta znikają dwa razy szybciej
+	- dodano nowe skrypty:
+		A.ShowMsgScroll
+		A.ShowMsgScrollFormatted
+		A.ShowMsgScrollGoto
+		A.ShowMsgScrollGotoFormatted
+		A.CampaignUnlockMission
+	
+
+
+[$5555FF]KaM Expansion v1.2 Eksploracja Kultur
 	
 [$55FF55]Budynki
 	- dodano budynek: Dom kartografa. Dzięki niemu można zdobyć ważne 
@@ -7,12 +84,13 @@
 	- dodano budynek: Perła architektury. Specjalny budynek na specjalne okazje.
 	- dodano budynek: Szkółka leśna. Leśniczy sadzi w nim drzewa.
 	- dodano budynek: Pastwisko. Można w nim chodować różnego rodzaju zwierzynę.
-	- dodano budynek: Arena. Używany do tworzenia punktów rozwoju
+	- dodano budynek: Arena. Używany do tworzenia punktów rozwoju.
+	- dodano budynek: Wieża oblężnicza. Wytrzymała wieża, która może przechować w sobie jednostki.
 	- studnia nie potrzebuje drogi do jej budowy.
 	- pojedynczy mur postawiony obok innego muru ustawi automatycznie swój wygląd.
 	- poprawiono ośnieżanie budynków.
 	- poprawiono donoszenie towarów do murów
-	- p$9io& .$@1 dla m*=o+
+	- #0044#0072#0075#0067#0069;#0070#006F#007A#0069#006F#006D;#006D#0075#0072#00F3#0077
 	- pomocnicy muszą przynieść wszystkie surowce wymagane do ulepszenia budynku
 		aby rozpocząć budowę
 	- poprawiono animację rekrutów w wieży strzelniczej
@@ -20,28 +98,37 @@
 	- dodano punkt wydobywania do kamieniołomu
 	- dodano automatyczną produkcję do warsztatu płatnerskiego 
 	- dodano wymuszenie dostarczania do konkretnego budynku 
-		(keidy masz zaznaczony budynek, wciśnij LPM + Shift na inny budynek)
+		(kiedy masz zaznaczony budynek, wciśnij LPM + Shift na inny budynek)
+	- dodano kilka dekoracji
+	- poprawiono działanie pałacu
+	- poprawiono opisy budynków
 	
 
 [$55FF55]Jednostki
-	- dodano nową jednostkę: Kapitan budowy. Do kupienia w ratuszu za 20 złota.
+	- dodano nową jednostkę: Kapitan budowy. Do kupienia w ratuszu za 15 złota.
 		Buduje tylko budynki lub struktury, ale robi to znacznie szybciej.
 	- dodano nową jednostkę: Jadłopodawca. Może szybko nakarmić całe oddziały.
 	- dodano nową jednostkę: Pomocny jeździec. Szybko dostarcza towary.
 	- dodano nową jednostkę: Harcownik. Strzelec przeciwko jeździe.
-	- dodano nową jednostkę: Berserker. Dwa topry = 2 razy szybszy atak
+	- dodano nową jednostkę: Berserker. Dwa topory = 2 razy szybszy atak
 	- poprawiono: tarczownik nie posiadał dźwięków
 	- poprawiono opisy jednostek
 	- niszczyciel i bojownik otrzymali nowe dźwięki (tylko PL)
 	- ulepszono strzelanie statku bojowego
 	- zwiększono zasięg strzelania o 2 dla konnego strzelca
 	- jednostki strzeleckie mogą strzelać ze statku transporowego
+	- jednostki podczas szturmu zadają dodatkowe obrażenia
+	- Taran został lekko zmodyfikowany
 
 [$55FF55]Surowce
-	-produkt uboczny "sadzonka" ma zastosowanie w szkółce leśnej
+	- produkt uboczny "sadzonka" ma zastosowanie w szkółce leśnej
+	- kaktusy i fremony dają więcej wina
 
 [$55FF55]Interfejs
 	- dodano Gospodę do okna podziału towarów
+	- dodano przeskakiwanie między jednostkami po kliknięciu na jednostkę 
+		w panelu statystyk
+	- zablokowano podgląd powtórek (nie działały poprawnie)
 
 [$55FF55]Edytor map
 	- dodano nowe płytki dekoracyjne : murki, płotki oraz płytki funkcyjne.
@@ -51,8 +138,10 @@
 		przeniesie do kolejnej pozycji/znacznika bez wyłączenia interfejsu
 	- drzewo owocowe po zniszczeniu przez właściciela nie niszczy 
 		wszystkich dołączonych drzew owocowych
-	- dodano wyświetlanie dokąd idzie dany oddział jeśli ma nadany rozkaz
+	- dodano wyświetlanie dokąd idzie dany oddział jeśli ma nadany rozkaz w edytorze map
 	- dodano kopiowanie budynków podczas kopiowania terenu
+	- dodano automatyczne dodawanie tekstów do pliku libx (z pomocą przycisku)
+	- dodano przeskakiwanie ekranu między podobnymi budynkami (SHIFT + TAB)
 	
 
 	
@@ -64,10 +153,12 @@
 		przez co gra jest 4 razy bardziej wydajna
 	- poprawiono wydobywanie podziemnych złóż węgla
 	- możliwość budowy lepszej drogi na już istniejącej drodze
+	- dodano przeskakiwanie ekranu między podobnymi budynkami (SHIFT + TAB)
 	
 [$55FF55]AI:
 	- oddziały piechoty atakujące nie będą atakowały statków
 	- dodano/rozwinięto automatyczne budowanie
+	- AI używa rodzaju drogi, który jest pod głównym spichlerzem
 	
 [$55FF55]Inne
 	- dodano nowe funkcje skryptowe (pełna lista w pliku NewScripts.txt)
@@ -77,17 +168,15 @@
 	- dodano nowe płytki przejściowe złoto-lód
 	- dodano nowe płytki przejściowe z brukiem
 	- dodano style interfejsu (do wyboru w ustawieniach)
-
-[$55FF55]Mapy
-	- dodane SP : 
-			
-	- dodane MP
-	
-
+	- nowa ikona gry (Siegfried)
+	- dodano nowe osiągnięcia
+	- poprawiono kilka tekstów w polskiej i angielskiej wersji
+	- zapisywanie plików .libx podczas edycji mapy nie zostawi dużo pustych miejsc
+	- dodano nowy rodzaj lawy oraz wody
 
 
 
-[$0000FF]KaM Expansion patch v1.13
+[$5555FF]KaM Expansion patch v1.13
 [$55FF55]Ostateczny Autorytet
 	- misja 5, dodano hutnika
 	- misja 8, zablokowano kolczugę bitynową w targowisku
@@ -154,9 +243,9 @@
 		A New Dawn
 		Eruption 8p
 		Horizon 10P
+		
 
-
-[$0000FF]KaM Expansion patch v1.12
+[$5555FF]KaM Expansion v1.12
 [$55FF55]Budynki
 	- dodano listę pracowników, którzy mogą pracować w danym budynku (przewodnik w grze)
 	- dodano flagi dla strzechy produkcyjnej
@@ -169,8 +258,7 @@
 	- zwiększono życie i defensywę Ruchomej Ściany
 	- zmniejszono atak bojownika do 5 oraz jego obronę do 0  
 	- poprawiono animację pustynnego węża
-	- jednostki strzeleckie będą miały większy zasięg, 
-		jeśli bityn został użyty do ich szkolenia/produkcji
+	- jednostki strzeleckie będą miały większy zasięg, jeśli bityn został użyty do ich szkolenia/produkcji
 	- dodano animację obrotu jednostek by zapobiec łatwego unikania pocisków przez konne jednostki
 
 [$55FF55]Inne
@@ -195,8 +283,7 @@
 	- "Godzina" pod minimapą pokazuje AM oraz PM jeśli gracz ma angielski jako język systemowy
 	- dodano brakujące jednostki w przewodniku
 	- dodano skrót klawiszowy aby szybko otworzyć przewodnik z wybranym typem jednostki/budynku
-		(w panelu budynku LPM + Shift na iconie budynku, 
-		w panelu jednostki LPM + Shift na zwoju jednostki)
+		(w panelu budynku LPM + Shift na iconie budynku, w panelu jednostki LPM + Shift na zwoju jednostki)
 	- dodano przycisk w menu głównym aby wyświetlić listę zmian 
 	- porawiono nazwy podzakładek w edytorze map
 	- dodano brakujące teksty w weersji angielskiej (1886, 1887)
@@ -205,7 +292,7 @@
 	- icona budynku w panelu budowania jest wyłączona, jeśli budynek nie może być postawiony
 		(tyczy się głównie Strzechy Produkcyjnej, którą można postawić tylko raz)
 
-[$0000FF]KaM Expansion patch v1.11
+[$5555FF]KaM Expansion v1.11
 [$55FF55]TSK:
 	- odblokowano rybaka
 	- misja 2, gracz miał odkrytę całą mapę, dodano wiadomość o ataku przeciwnika, 
@@ -255,7 +342,7 @@
 	- ikona warsztatu pancerzy została zmieniona
 
 
-[$0000FF]KaM Expansion Version 1.1 Co-op and World update
+[$5555FF]KaM Expansion Version 1.1 Co-op and World update
 [$55FF55]Interfejs:
 	+ dodano suwaki do większości panelów
 	+ dodano nazwę mapy z pliku libx. Nazwa misji jest zależna od języka gry

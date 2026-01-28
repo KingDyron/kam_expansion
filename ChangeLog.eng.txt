@@ -1,8 +1,177 @@
-﻿[$0000FF] WARNING : The English version may not be written well. The original language is Polish
+﻿[$5555FF] WARNING : The English version may not be written well. The original language is Polish
 
-[$0000FF]KaM Expansion patch v1.13
+[$5555FF]KaM Expansion patch v1.2.1 
+
+[$55FF55]Buildings
+	- The Icy Gardens (pearl of architecture).
+		After building it, we received 100 of each by-products.
+		Now it provides all except diamonds, amber, copper, and silver.
+	- Added an icon with the number of operators in the War Workshop
+	- Fixed an error in the Shipyard (all ships blocked)
+	- Improved the delivery of building resources to the Fruit Tree
+	- Added the cost of goods in the Leatherworks
+	- Improved the appearance of the Town Hall and Keep panels
+	- increased delivery priority for the Cottage and the Residential House
+	- production of the development points in the Festival can now be disabled
+	- slightly increased the cost of producing development points
+	- animations in the Festival will have a different color depending on the existing players
+	- The fruit tree, when built, chooses the same type of fruit as the main tree
+	- The flag animation in the Leatherworks has been moved.
+	- Warfare points for the production of development points can be obtained from troop recruitment.
+	- The Butcher's will unlock after the Pasture, Swine farm, and Collector's Hut.
+	- The Production Thatch will unlock after more building types.
+	- Reduced the cost of animals in the Pasture.
+	- Fruit trees will now take into account the entire terrain (2x2 tiles)
+		when choosing the best type of tree
+	- Reduced egg and feather production in the Hovel
+	- Fixed an animation bug in the school when using the Shift+LMB keyboard shortcut
+	- Helpers will now bring quivers from the Barracks if they are marked with an orange triangle
+
+[$55FF55]Units
+	- Fixed: Builder was not leaving behind a road/field map when he had to stop working
+	- units recruited at the town hall will receive ammunition if they need it
+	- Fixed: unit death animations sometimes duplicate
+	- the builder will come out of the fruit tree if he is blocked
+	- Fixed: Woodcutter could plant trees on ice
+	- increased attack for all Wrecker units
+	- Fixed: Recruited troops could connect with units inside the siege tower
+	- Berserker cost reduced to 7 gold
+	- flags improved for some units
+	- units will have a full condition bar if the player has by-products 
+		(herbs x3 or fruit juice or vessels)
+
+[$55FF55]Interface
+	- Corrected translation errors (unit/building descriptions)
+	- Fixed a bug in the building panel's decorations tab. 
+		An error occurred when all decorations were locked.
+	- Improved the display of unit counts in the statistics panel.
+	
+[$55FF55]Map Editor
+	- Fixed: Change history in the map editor was not displayed.
+	- Improved object display in the object panel (scaling).
+	- Disabled checking for invalid tiles in the tiles palette (so they are accessible).
+	- Fixed: Creating a new map overwrote the campaign map that was last edited.
+	
+[$55FF55]Gameplay
+	- Tree saplings disappear if a building plan is placed on them.
+	- Unlocking the saturation of machines (development tree) will immediately feed them.
+	
+[$55FF55]Other
+	- Fixed: Saving achievement progress would show an error if the "Saves" folder didn't exist.
+	- Fixed a RAM leak issue.
+	- Campaign data is saved in a .Json file for easy reading.
+	- Campaign progress is saved in a .Json file for easy reading.
+	- improved building of small structures 
+	- added the ability to modify game data (objects, units, buildings) for individual maps
+		(This feature is planned to be added to campaigns and save games)
+	- Stuck animals disappear twice as fast
+	- New scripts added:
+		A.ShowMsgScroll
+		A.ShowMsgScrollFormatted
+		A.ShowMsgScrollGoto
+		A.ShowMsgScrollGotoFormatted
+		A.CampaignUnlockMission
+		
+[$5555FF]KaM Expansion v1.2 Explore the Cultures
+
+[$55FF55]Buildings
+	- added building: Cartographer's House. It allows you to obtain important 
+		information about the terrain and the enemy.
+	- added building: Pearl of Architecture. A special building for special occasions.
+	- added building: Forest Nursery. The woodcutter plants trees in it.
+	- added building: Pasture. Various animals can be raised there.
+	- added building: Arena. Used to create development points.
+	- added building: Siege tower. Durable tower that can contain ranged units.
+	- a well does not require a road to build it.
+	- a single wall placed next to another wall will automatically set its appearance.
+	- improved snow formation on buildings. 
+	- Improved delivery of goods to the walls
+	- #0053#0065#0063#006F#006E#0064;#006C#0065#0076#0065#006C;
+		#0066#006F#0072;#0077#0061#006C#006C#0073
+	- serfs must bring all the resources required to upgrade a house
+		to start building
+	- improved the animation of recruits in the archery tower
+	- added a sandy appearance to buildings in sandy areas
+	- added a mining point to the quarry
+	- added automatic production to the armorer's workshop
+	- added forced delivery to a specific building
+		(When you have a building selected, press LMB + Shift on another building)
+	- added new decorations
+	- improved training units in Palace
+	- fixed houses descriptions
+	
+
+[$55FF55]Units
+	- Aadded a new unit: Construction Captain. Purchased from the Town Hall for 15 gold.
+		Builds only buildings or structures, but does it much faster.
+	- added a new unit: Feeder. Can quickly feed entire troops.
+	- added a new unit: Mounted Serf. Delivers wares quickly.
+	- added a new unit: Skirmisher. Anti-cavalry ranged unit.
+	- added a new unit: Berserker. Two axes = 2x faster attack.
+	- fixed: Shieldbearer had no sounds.
+	- improved unit descriptions.
+	- destroyer and Fighter have new sounds (PL only).
+	- improved Battle ship firing
+	- increased the firing range of the Archer by 2.
+	- ranged units can now fire from the Transport Ship.
+	- after storm units deal more damage
+	- Ram is improved a little
+	
+[$55FF55]Wares
+	- the by-product "sapling" is used in the forest nursery.
+	- cacti and fremon give more wine
+
+[$55FF55]Interface
+	- added the Inn to the wares distribution tab.
+	- added jumping between units when clicking 
+		on unit's icon in the statistics panel
+	- replays disabled, they didn't work wll
+	
+[$55FF55]Map Editor
+	- added new decorative tiles: walls, fences, and functional tiles.
+	- added brush size selection in the tiles tab
+	- added brush size selection in the tile overlays tab
+	- fixed terrain masks (for painting), didn't work on the map edges
+	- deleting a defensive position or fog reveal marker will move you to the 
+		next position/marker without closing the interface
+	- a fruit tree, when destroyed by its owner, no longer destroys all attached fruit trees
+	- added a display of where a given unit is going if it has an order in map editor
+	- added copying buildings when copying terrain
+	- added buttons to automatically add text to libx file
+	- switching between similar houses (SHIFT + TAB)
+	
+[$55FF55]Gameplay:
+	- added new buildings for wares distribution
+	- night effect is disabled during tactical missions
+	- added a development tree that allows you to increase the efficiency of buildings and units
+	- game optimization. A new option has been added to the settings 
+		that partially disables the Night effect, making the game four times more efficient
+	- fixed underground coal mining
+	- ability to build a better road on an existing road
+	- switching between similar houses (SHIFT + TAB)
+
+[$55FF55]AI:
+	- attacking melee units will no longer attack ships
+	- added/expanded auto-building
+	- AI uses road that is placed below main storehouse
+
+[$55FF55]Other
+	- added new script functions (full list in the NewScripts.txt file)
+	- builder completely clears the area when digging up a building plan
+	- activating any cheat will not count towards achievements
+	- added a new weather type: tornado
+	- added new gold-ice transition tiles
+	- added new cobblestone transition tiles
+	- added interface styles (selectable in settings)
+	- new game icon
+	- added new achievements
+	- fixed some texts/descriptions
+	- saving .libx files in map editor won't leave so much free space
+	- added new lava and water terrain
+
+[$5555FF]KaM Expansion patch v1.13
 [$55FF55]TUA
-	- mission 5, add mettalurgist 
+	- mission 5, added mettalurgist 
 	- mission 8, block bitin armor in the market 
 	- mission 10, add clay pickers and remove stonemasons; Deleted stone object is on the enemy road 
 	
@@ -67,8 +236,9 @@
 		A New Dawn
 		Eruption 8p
 		Horizon 10P
-
-[$0000FF]KaM Expansion patch v1.12
+		
+		
+[$5555FF]KaM Expansion v1.12
 [$55FF55]Houses
 	- added list of what kind of workers can work in house(in-game guide).     
 	- added flags to production thatch   
@@ -113,7 +283,7 @@
 	- house icon in build panel is disabled if you can't build it
 		(There can be only one Production Thatch)  
 
-[$0000FF]KaM Expansion patch v1.11
+[$5555FF]KaM Expansion v1.11
 [$55FF55]TSK:
 	- unlocked fisherman
 	- mission 2, players had revealed full map, no message and attack from player 2, 
@@ -163,7 +333,7 @@
 	- icon of armory workshop was changed to plate armor with shield
 
 
-[$0000FF]KaM Expansion Version 1.1 Co-op and World update
+[$5555FF]KaM Expansion Version 1.1 Co-op and World update
 [$55FF55]Interface:
 	+added scroll bar to almost every panel. In small resolutions not everything was visible
 	+added Libx Name for missions. Mission name can be different depending on Language
