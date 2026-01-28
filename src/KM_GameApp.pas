@@ -259,7 +259,7 @@ begin
   fOnGameStart := GameStarted;
   fOnGameEnd := GameEnded;
 
-  fGithubCRC := 2980823072;
+  fGithubCRC := 2159216246;
   {$IFDEF DEBUG_CRC}
     fGithubCRC := gRes.GetDATCRC;
   {$ENDIF}
