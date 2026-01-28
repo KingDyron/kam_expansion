@@ -4067,9 +4067,7 @@
 			],
 			"WareSlots" : 
 			[
-				{"GuiIcon" : 360,"WareInput" : ["wtNone","wtNone","wtNone","wtNone","wtNone","wtNone"],"WareOutput" : ["wtCorn","wtSeed","wtNone","wtNone","wtNone","wtNone"]},
-				{"GuiIcon" : 359,"WareInput" : ["wtNone","wtNone","wtNone","wtNone","wtNone","wtNone"],"WareOutput" : ["wtWine","wtNone","wtNone","wtNone","wtNone","wtNone"]},
-				{"GuiIcon" : 837,"WareInput" : ["wtNone","wtNone","wtNone","wtNone","wtNone","wtNone"],"WareOutput" : ["wtHay","wtVegetables","wtNone","wtNone","wtNone","wtNone"]},
+				{"GuiIcon" : 360,"WareInput" : ["wtNone","wtNone","wtNone","wtNone","wtNone","wtNone"],"WareOutput" : ["wtCorn","wtSeed","wtWine","wtHay","wtVegetables","wtNone"]},
 				{"GuiIcon" : 352,"WareInput" : ["wtStone","wtNone","wtNone","wtNone","wtNone","wtNone"],"WareOutput" : ["wtTile","wtStone","wtStoneBolt","wtNone","wtNone","wtNone"]},
 				{"GuiIcon" : 351,"WareInput" : ["wtTrunk","wtNone","wtNone","wtNone","wtNone","wtNone"],"WareOutput" : ["wtTimber","wtWheel","wtLog","wtSawDust","wtNone","wtNone"]},
 				{"GuiIcon" : 355,"WareInput" : ["wtGoldOre","wtIronOre","wtBitinOre","wtCoal","wtNone","wtNone"],"WareOutput" : ["wtGold","wtIron","wtBitin","wtNone","wtNone","wtNone"]},
