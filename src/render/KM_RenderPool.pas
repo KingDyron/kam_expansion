@@ -3023,7 +3023,7 @@ var
   rX, rY: Single;
 begin
   // Skip rendering if alphas are zero (occurs so non-started houses can still have child sprites)
-  if (aWoodProgress = 0) and (aStoneProgress = 0) then Exit;
+  if ((aWoodProgress = 0) and (aStoneProgress = 0)) or aShadow then Exit;
 
   tX := EnsureRange(Round(aX), 1, gTerrain.MapX);
   tY := EnsureRange(Round(aY), 1, gTerrain.MapY);
