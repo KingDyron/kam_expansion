@@ -585,7 +585,7 @@ begin
     7:  If not fToHouse.CanDeliverToAnyPoint(Carry) then
           SetActionLockedStay(5, uaWalk) //wait a bit inside
         else
-          SetActionStay(5, uaWalk);
+          SetActionLockedStay(5, uaWalk);
     8:  begin
           fToHouse.WareAddToIn(Carry);
           CarryTake;
@@ -595,7 +595,8 @@ begin
           fDeliverID := DELIVERY_NO_ID; //So that it can't be abandoned if unit dies while trying to GoOut
 
           //If serf bring smth into the Inn and he is hungry - let him eat immidiately
-          if fUnit.IsHungry
+          If fUnit.IsHungry
+            and not fToHouse.CanDeliverToAnyPoint(wtAll)
             and (fToHouse.HouseType = htInn)
             and TKMHouseInn(fToHouse).HasFood
             and TKMHouseInn(fToHouse).HasSpace
@@ -607,6 +608,8 @@ begin
           //But only if we are not hungry!
           //Otherwise there is a possiblity when he will go between houses until death
           if not fUnit.IsHungry
+            and not fToHouse.CanDeliverToAnyPoint(wtAll)
+            and (fToHouse = InHouse)
             and TKMUnitSerf(fUnit).TryDeliverFrom(fToHouse) then
             Exit //Exit immidiately, since we created new task here and old task is destroyed!
                  //Changing any task fields here (f.e. Phase) could affect new task!
