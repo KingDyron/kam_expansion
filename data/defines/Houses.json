@@ -3552,10 +3552,10 @@
 				{"GuiIcon" : 359,"WareInput" : ["wtWine","wtApple","wtNone","wtNone","wtNone","wtNone"],"WareOutput" : ["wtWine","wtApple","wtNone","wtNone","wtNone","wtNone"]},
 				{"GuiIcon" : 360,"WareInput" : ["wtCorn","wtSeed","wtFlour","wtVegetables","wtHay","wtNone"],"WareOutput" : ["wtCorn","wtSeed","wtFlour","wtVegetables","wtHay","wtNone"]},
 				{"GuiIcon" : 681,"WareInput" : ["wtWater","wtFeathers","wtNone","wtNone","wtNone","wtNone"],"WareOutput" : ["wtWater","wtFeathers","wtNone","wtNone","wtNone","wtNone"]},
-				{"GuiIcon" : 366,"WareInput" : ["wtSkin","wtLeather","wtNone","wtNone","wtNone","wtNone"],"WareOutput" : ["wtSkin","wtLeather","wtNone","wtNone","wtNone","wtNone"]},
+				{"GuiIcon" : 366,"WareInput" : ["wtSkin","wtLeather","wtPig","wtNone","wtNone","wtNone"],"WareOutput" : ["wtSkin","wtLeather","wtPig","wtNone","wtNone","wtNone"]},
 				{"GuiIcon" : 355,"WareInput" : ["wtCoal","wtGoldOre","wtNone","wtNone","wtNone","wtNone"],"WareOutput" : ["wtCoal","wtGoldOre","wtNone","wtNone","wtNone","wtNone"]},
 				{"GuiIcon" : 354,"WareInput" : ["wtIronOre","wtBitinOre","wtNone","wtNone","wtNone","wtNone"],"WareOutput" : ["wtIronOre","wtBitinOre","wtNone","wtNone","wtNone","wtNone"]},
-				{"GuiIcon" : 695,"WareInput" : ["wtBolt","wtStoneBolt","wtNone","wtNone","wtNone","wtNone"],"WareOutput" : ["wtBolt","wtStoneBolt","wtNone","wtNone","wtNone","wtNone"]}
+				{"GuiIcon" : 695,"WareInput" : ["wtBolt","wtStoneBolt","wtQuiver","wtLance","wtNone","wtNone"],"WareOutput" : ["wtBolt","wtStoneBolt","wtQuiver","wtLance","wtNone","wtNone"]}
 			],
 			"Levels" : 
 			[
