@@ -97,11 +97,12 @@
 		"IconID" : 773, 
 		"ProductionCountMin" : 1, 
 		"ProductionCountMax" : 2, 
-		"ProduceInHouses" : ["htIronSmithy", "htIronFoundry"],
+		"ProduceInHouses" : ["htIronSmithy", "htIronFoundry", "htArmorSmithy"],
 		"ShowInHouses" : ["htPalace"],
 		"ProduceAfterWares" : [
 			{"Ware" : "wtBitin", "Min" : 1, "Max" : 1, "Chance" : 100, "Cycles" : 1},
-			{"Ware" : "wtBitinE", "Min" : 10, "Max" : 2, "Chance" : 80, "Cycles" : 10}
+			{"Ware" : "wtBitinE", "Min" : 10, "Max" : 2, "Chance" : 80, "Cycles" : 10},
+			{"Ware" : "wtBitinArmor", "Min" : 10, "Max" : 2, "Chance" : 80, "Cycles" : 1}
 		],
 		"CoinPrice" : 10,
 		"MaxCountInStall" : 6,
@@ -128,7 +129,7 @@
 		"IconID" : 775, 
 		"ProductionCountMin" : 1, 
 		"ProductionCountMax" : 1, 
-		"ProduceInHouses" : ["htTannery", "htTailorsShop", "htArmorWorkshop"],
+		"ProduceInHouses" : ["htTannery", "htTailorsShop"],
 		"ShowInHouses" : ["htPalace"],
 		"ProduceAfterWares" : [
 			{"Ware" : "wtLeatherArmor", "Min" : 7, "Max" : 3, "Chance" : 30, "Cycles" : 10},
@@ -198,8 +199,8 @@
 		"ProduceInHouses" : ["htQuarry", "htStoneWorkshop"],
 		"ShowInHouses" : ["htPalace"],
 		"ProduceAfterWares" : [
-			{"Ware" : "wtStone", "Min" : 2, "Max" : 1, "Chance" : 40, "Cycles" : 5},
-			{"Ware" : "wtStoneBolt", "Min" : 6, "Max" : 10, "Chance" : 20, "Cycles" : 5}
+			{"Ware" : "wtStone", "Min" : 2, "Max" : 2, "Chance" : 40, "Cycles" : 5},
+			{"Ware" : "wtStoneBolt", "Min" : 6, "Max" : 10, "Chance" : 20, "Cycles" : 4}
 		],
 		"CoinPrice" : 4,
 		"MaxCountInStall" : 51,
@@ -287,18 +288,18 @@
 		"IconID" : 795, 
 		"ProductionCountMin" : 1, 
 		"ProductionCountMax" : 1, 
-		"ProduceInHouses" : ["htSwine", "htVineyard", "htFarm", "htHovel", "htStables"],
+		"ProduceInHouses" : ["htSwine", "htVineyard", "htFarm", "htHovel", "htStables", "htPasture"],
 		"ShowInHouses" : ["htPalace"],
 		"ProduceAfterWares" : [
-			{"Ware" : "wtWine", "Min" : 2, "Max" : 1, "Chance" : 40, "Cycles" : 5},
-			{"Ware" : "wtSeed", "Min" : 3, "Max" : 2, "Chance" : 20, "Cycles" : 10},
-			{"Ware" : "wtCorn", "Min" : 3, "Max" : 2, "Chance" : 20, "Cycles" : 10},
-			{"Ware" : "wtApple", "Min" : 2, "Max" : 2, "Chance" : 40, "Cycles" : 5},
-			{"Ware" : "wtSausage", "Min" : 2, "Max" : 2, "Chance" : 10, "Cycles" : 15},
-			{"Ware" : "wtVegetables", "Min" : 3, "Max" : 2, "Chance" : 20, "Cycles" : 8},
-			{"Ware" : "wtHorse", "Min" : 3, "Max" : 2, "Chance" : 20, "Cycles" : 8},
-			{"Ware" : "wtSkin", "Min" : 3, "Max" : 2, "Chance" : 20, "Cycles" : 8},
-			{"Ware" : "wtPig", "Min" : 3, "Max" : 2, "Chance" : 20, "Cycles" : 8}
+			{"Ware" : "wtWine", "Min" : 2, "Max" : 1, "Chance" : 40, "Cycles" : 3},
+			{"Ware" : "wtSeed", "Min" : 3, "Max" : 2, "Chance" : 20, "Cycles" : 6},
+			{"Ware" : "wtCorn", "Min" : 3, "Max" : 2, "Chance" : 20, "Cycles" : 6},
+			{"Ware" : "wtApple", "Min" : 2, "Max" : 2, "Chance" : 40, "Cycles" : 3},
+			{"Ware" : "wtSausage", "Min" : 2, "Max" : 2, "Chance" : 10, "Cycles" : 8},
+			{"Ware" : "wtVegetables", "Min" : 3, "Max" : 2, "Chance" : 20, "Cycles" : 5},
+			{"Ware" : "wtHorse", "Min" : 3, "Max" : 2, "Chance" : 20, "Cycles" : 5},
+			{"Ware" : "wtSkin", "Min" : 3, "Max" : 2, "Chance" : 20, "Cycles" : 5},
+			{"Ware" : "wtPig", "Min" : 3, "Max" : 2, "Chance" : 20, "Cycles" : 5}
 		],
 		"CoinPrice" : 0.3,
 		"MaxCountInStall" : 112
