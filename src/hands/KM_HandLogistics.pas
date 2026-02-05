@@ -1879,6 +1879,7 @@ begin
     if (fDemand[dWT,iD].Loc_Unit <> nil) and (dWT = wtFood) then
     begin
 
+      aBidCost.IncAddition(Sqr(fDemand[dWT,iD].Loc_Unit.Condition div 200));
       if fOffer[oWT,iO].Count = 0 then
         aBidCost.IncAddition(KaMRandom(5 + 150, 'TKMDeliveries.TryCalculateBidBasic 4'))
       else
