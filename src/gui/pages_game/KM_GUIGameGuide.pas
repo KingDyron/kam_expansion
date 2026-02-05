@@ -558,6 +558,7 @@ begin
   vCount := 0;
   for I := 0 to High(gMapElements) do
   If (length(gMapElements[I].VWares) > 0) or KM_ResMapElements.ObjectIsWare(I) then
+  If not ((I >= 280) and (I <= 284)) then
   begin
     Button_Obj[C] := TKMButtonFlat.Create(Panel_SelectObj, C mod 3 * 76, 5 + C div 3 * 76, 73, 73, 0, rxTrees);
     Button_Obj[C].TexID := gMapElements[I].Anim.Step[1] + 1;
