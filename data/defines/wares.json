@@ -347,11 +347,23 @@
 		],
 		"CoinPrice" : 0.6,
 		"MaxCountInStall" : 50
+	},  
+	{
+		"Name":"vtDinner",
+		"TextID" : 2347, 
+		"IconID" : 1064, 
+		"ProductionCountMin" : 1, 
+		"ProductionCountMax" : 1, 
+		"ShowInHouses" : ["htInn"],
+		"CoinPrice" : 27,
+		"MaxCountInStall" : 3
 	}
   ],
   "VirtualWaresPalaceOrder" : [
-								"vtHoney", "vtGemStone", "vtResin", "vtCoin", "vtNeedle", "vtHerbs",
-								"vtLeatherSheet","vtWoodenPlate", "vtPearl", "vtIronFerrule", "vtBitinFrag", "vtCertificate"
+								"vtPearl", "vtCertificate", "vtCoin", 
+								"vtResin", "vtHoney", "vtHerbs",
+								"vtGemStone", "vtLeatherSheet","vtWoodenPlate",
+								"vtNeedle","vtIronFerrule", "vtBitinFrag"
 							],
   
   "Wares DATA": [    
