@@ -1175,7 +1175,7 @@
 				{"UnitType" : "utStonemason","MaxCount" : 1}
 			],
 			"MaxWorkersCount" : 1,
-			"CanOverfill" : False,
+			"CanOverfill" : true,
 			"GatheringScript" : "gsNone",
 			"WareInput" : ["wtNone","wtNone","wtNone","wtNone","wtNone","wtNone"],
 			"WareOutput" : ["wtStone","wtNone","wtNone","wtNone","wtNone","wtNone"],
@@ -1955,7 +1955,7 @@
 				{"UnitType" : "utButcher","MaxCount" : 1}
 			],
 			"MaxWorkersCount" : 1,
-			"CanOverfill" : False,
+			"CanOverfill" : true,
 			"GatheringScript" : "gsNone",
 			"WareInput" : ["wtPig","wtNone","wtNone","wtNone","wtNone","wtNone"],
 			"WareOutput" : ["wtSausage","wtNone","wtNone","wtNone","wtNone","wtNone"],
