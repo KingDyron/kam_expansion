@@ -163,6 +163,7 @@ type
     fItems : array of record
       X, Y, Wdt : Integer;
       TexID : Word;
+      DownColor : Cardinal;
       Cap1, Cap2, Hint : UnicodeString;
     end;
     fItemHeight : Byte;
@@ -183,6 +184,7 @@ type
     procedure Add(aTexID : Word; aCaption1, aCaption2, aHint : UnicodeString; doRefresh : Boolean = false);
     procedure SetItem(aIndex : Integer; aTexID : Word; aCaption1, aCaption2, aHint : UnicodeString);overload;
     procedure SetItem(aIndex : Integer; aCaption1, aCaption2, aHint : UnicodeString);overload;
+    procedure SetItemColor(aIndex : Integer; aColor : Cardinal);overload;
   end;
 
   TKMIconsRow = class(TKMControl)
@@ -1261,6 +1263,7 @@ begin
   fItems[fCount - 1].Cap1 := aCaption1;
   fItems[fCount - 1].Cap2 := aCaption2;
   fItems[fCount - 1].Hint := aHint;
+  fItems[fCount - 1].DownColor := 0;
   If doRefresh then
     RefreshItems;
 end;
@@ -1273,6 +1276,7 @@ begin
   fItems[aIndex].Cap1 := aCaption1;
   fItems[aIndex].Cap2 := aCaption2;
   fItems[aIndex].Hint := aHint;
+  fItems[aIndex].DownColor := 0;
 end;
 
 procedure TKMWaresFlatRow.SetItem(aIndex: Integer; aCaption1, aCaption2: UnicodeString; aHint: UnicodeString);
@@ -1282,6 +1286,14 @@ begin
   fItems[aIndex].Cap1 := aCaption1;
   fItems[aIndex].Cap2 := aCaption2;
   fItems[aIndex].Hint := aHint;
+  fItems[aIndex].DownColor := 0;
+end;
+
+procedure TKMWaresFlatRow.SetItemColor(aIndex: Integer; aColor: Cardinal);
+begin
+  If aIndex >= fCount then
+    Exit;
+  fItems[aIndex].DownColor := aColor;
 end;
 
 
@@ -1296,19 +1308,18 @@ begin
   begin
   end else
   begin
-
     for I := 0 to J - 1 do
       if InRange(X, fItems[I].X, fItems[I].X + fItems[I].Wdt) and InRange(Y, fItems[I].Y, fItems[I].Y + fItemHeight) then
       begin
         Hint := fItems[I].Hint;
         Exit;
       end;
-
   end;
 end;
 
 procedure TKMWaresFlatRow.Paint;
 var I, J, id : Integer;
+  C1, C2 : Cardinal;
 begin
 
   TKMRenderUI.WriteText(AbsLeft, AbsTop - 17, Width, Caption, fntGrey, taCenter);
@@ -1320,19 +1331,32 @@ begin
     Exit;
   end;
 
+  If Enabled then
+  begin
+    C1 := icWhite;
+    C2 := icBarColorBlue;
+  end
+  else
+  begin
+    C1 := icGray;
+    C2 := icGray;
+  end;
 
   for I := 0 to J - 1 do
   begin
 
     TKMRenderUI.WriteBevel(fItems[I].X, fItems[I].Y, fItems[I].Wdt, fItemHeight, 1, 0.65); //render bevel for each ware
 
-    TKMRenderUI.WriteText(fItems[I].X + 20, fItems[I].Y + 3, fItems[I].Wdt - 25, fItems[I].Cap1, fntGame, taCenter);
-    TKMRenderUI.WriteLine(fItems[I].X + 20, fItems[I].Y + 15, fItems[I].X + 20 + fItems[I].Wdt - 25, fItems[I].Y + 15, icWhite);
-    TKMRenderUI.WriteText(fItems[I].X + 20, fItems[I].Y + 16, fItems[I].Wdt - 25, fItems[I].Cap2, fntGame, taCenter);
+    TKMRenderUI.WriteText(fItems[I].X + 20, fItems[I].Y + 3, fItems[I].Wdt - 25, fItems[I].Cap1, fntGame, taCenter, C1);
+    TKMRenderUI.WriteLine(fItems[I].X + 20, fItems[I].Y + 15, fItems[I].X + 20 + fItems[I].Wdt - 25, fItems[I].Y + 15, C1);
+    TKMRenderUI.WriteText(fItems[I].X + 20, fItems[I].Y + 16, fItems[I].Wdt - 25, fItems[I].Cap2, fntGame, taCenter, C2);
 
     id := fItems[I].TexID;
     TKMRenderUI.WritePicture(fItems[I].X, fItems[I].Y - 1, 23, fItemHeight,
                               [], rxGui, id, Enabled, icWhite, 0.15);
+
+    if fItems[I].DownColor > 0 then
+      TKMRenderUI.WriteOutline(fItems[I].X, fItems[I].Y, fItems[I].Wdt, fItemHeight, 2, fItems[I].DownColor);
   end;
 
 end;

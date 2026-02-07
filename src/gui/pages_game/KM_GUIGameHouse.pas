@@ -1237,7 +1237,7 @@ begin
   WaresRow_CostOnce := TKMWaresFlatRow.Create(Panel_House_Palace, 0, 0, TB_WIDTH, 80, 3);
   WaresRow_CostOnce.ItemHeight :=30;
   WaresRow_CostOnce.Clear;
-  WaresRow_CostOnce.Caption := 'Cost ';
+  WaresRow_CostOnce.Caption := gResTexts[2349];
   J := 2;
   for I := 0 to J do
   begin
@@ -1248,7 +1248,7 @@ begin
   WaresRow_CostPhase := TKMWaresFlatRow.Create(Panel_House_Palace, 0, WaresRow_CostOnce.Bottom + 20, TB_WIDTH, 80, 3);
   WaresRow_CostPhase.ItemHeight :=30;
   WaresRow_CostPhase.Clear;
-  WaresRow_CostPhase.Caption := 'Cost per phase';
+  WaresRow_CostPhase.Caption := gResTexts[2350];
   J := high(gRes.Wares.VirtualWares.PALACE_WARES);
   for I := 3 to J do
   begin
@@ -4064,7 +4064,6 @@ begin
 end;
 
 procedure TKMGUIGameHouse.House_Palace_Click(Sender: TObject; Shift: TShiftState);
-const MAX_ORDER_COUNT_PALACE = 20;
 var H : TKMHousePalace;
   amt: Word;
 begin
@@ -4093,11 +4092,11 @@ begin
     if ssAlt in Shift then  amt := amt * 5;
 
     if ssLeft in Shift then
-      gGame.GameInputProcess.CmdHouse(gicHousePalaceOrder, fHouse, fLastPalaceUnit, Min(H.Orders[fLastPalaceUnit] + amt, MAX_ORDER_COUNT_PALACE));
+      gGame.GameInputProcess.CmdHouse(gicHousePalaceOrder, fHouse, fLastPalaceUnit, amt);
       //H.Orders[fLastPalaceUnit] := 1;
 
     if ssRight in Shift then
-      gGame.GameInputProcess.CmdHouse(gicHousePalaceOrder, fHouse, fLastPalaceUnit, Max(H.Orders[fLastPalaceUnit] - amt, 0));
+      gGame.GameInputProcess.CmdHouse(gicHousePalaceOrder, fHouse, fLastPalaceUnit, -amt);
       //H.Orders[fLastPalaceUnit] := 0;
 
   end;
@@ -4108,6 +4107,8 @@ procedure TKMGUIGameHouse.House_PalaceRefresh(aHouse : TKMHouse);
 
   procedure ShowWaresProdCt(aIndex, aCount : Integer);
   begin
+    If aCount = 0 then
+      Exit;
     WaresProdCt_Common[aIndex].Caption := 'x' + aCount.ToString;
     WaresProdCt_Common[aIndex].Show;
   end;
@@ -4125,21 +4126,34 @@ begin
 
   //set important wares
   J := 2;
+  WaresRow_CostOnce.Enabled := not Palace.TrainingInProgress;
   for I := 0 to J do
   begin
     K := gRes.Wares.VirtualWares.PALACE_WARES[I];
-    count := gHands[Palace.Owner].VirtualWare[K];
+    count := gHands[Palace.Owner].VirtualWare[K];//current count
     count2 := 0;
-
-    UT := PALACE_UNITS_ORDER[fLastPalaceUnit];
-    for L := 0 to High(gRes.Units[UT].PalaceCost.Wares) do
-    If gRes.Units[UT].PalaceCost.Wares[L].W = gRes.Wares.VirtualWares[K].Name then
+    If not Palace.TrainingInProgress then
     begin
-      count2 := gRes.Units[UT].PalaceCost.Wares[L].C;
-      Break;
-    end;
+      UT := PALACE_UNITS_ORDER[fLastPalaceUnit];
+      for L := 0 to High(gRes.Units[UT].PalaceCost.Wares) do
+      If gRes.Units[UT].PalaceCost.Wares[L].W = gRes.Wares.VirtualWares[K].Name then
+      begin
+        count2 := gRes.Units[UT].PalaceCost.Wares[L].C;
+        Break;
+      end;
+      If count2 > 0 then
+        count2 := count2 * Max(Palace.Orders[fLastPalaceUnit], 1);
 
+    end;
     WaresRow_CostOnce.SetItem(I, IntToKStr(count, 1000), count2.ToString, '');
+
+    If WaresRow_CostOnce.Enabled and (count2 > 0) then
+      If count2 > count then
+        WaresRow_CostOnce.SetItemColor(I, $FF0000FF)
+      else
+      If count >= count2 then
+        WaresRow_CostOnce.SetItemColor(I, $FF00FF00);
+
   end;
 
   J := high(gRes.Wares.VirtualWares.PALACE_WARES) - 3;
@@ -4156,8 +4170,15 @@ begin
       count2 := gRes.Units[UT].PalaceCost.Wares[L].C;
       Break;
     end;
-
+    If count2 > 0 then
+      count2 := count2 * Max(Palace.Orders[fLastPalaceUnit], 1);
     WaresRow_CostPhase.SetItem(I, IntToKStr(count, 1000), count2.ToString, '');
+    If count2 > 0 then
+      If count2 > count then
+        WaresRow_CostPhase.SetItemColor(I, $FF0000FF)
+      else
+      If count >= count2 then
+        WaresRow_CostPhase.SetItemColor(I, $FF00FF00);
   end;
 
 
@@ -4211,6 +4232,7 @@ begin
   Image_OrderCount.Caption := IntToStr(Palace.Orders[fLastPalaceUnit]);
 
   Panel_House_Palace.Show;
+  ShowWaresProdCt(1, Palace.GetCardCost);
 end;
 
 procedure TKMGUIGameHouse.House_UpgradeClick(Sender: TObject);

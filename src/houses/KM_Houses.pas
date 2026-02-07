@@ -742,12 +742,18 @@ type
   private
     const
       NO_TRRAINING_ID = high(byte);
+      MAX_ORDER_COUNT_PALACE = 10;
     var
     fTrainingID : Byte;
     fProgress, fPhase, fWait, fOrderCount : Word;
 
-    function HasWares(aIndex : Integer) : Boolean;
-    Procedure TakeWares;
+    function HasMainVWares(aIndex : Integer; aOrderCount : Byte = 1) : Boolean;
+    function HasPhaseVWares(aIndex : Integer; aOrderCount : Byte = 1) : Boolean;
+    function HasCard : Boolean;
+    Procedure TakeMainVWares;
+    procedure TakePhaseVWares;
+    procedure TakeCard;
+
     function  GetOrderCount(aIndex : Integer) : Word;
     procedure SetOrderCount(aIndex : Integer; aValue : Word);
     function  GetMaxProgress : Integer;
@@ -761,7 +767,6 @@ type
     function GetMaxDistanceToPoint: Integer; override;
     procedure Activate(aWasBuilt: Boolean); override;
   public
-    //VWareIDs :array of array of Integer;
     function IsTraining : Boolean;
     property Orders[aIndex : Integer] : Word read GetOrderCount write SetOrderCount;
     property FullProgress : Single read GetFullProgress;
@@ -770,13 +775,15 @@ type
     property UnitTrainPhases[aType : TKMUnitType] : Byte read GetPhaseCount;
     property CurrentPhase : Byte read GetCurrentPhase;
     procedure CancelOrder;
-    function GetWarePlan{(aIndex : Integer = -1)} : TKMWarePlan;
-    function GetWarePlanOf(aIndex : Integer) : TKMWarePlan;
-    //function GetFullCost{(aIndex : Integer = -1)} : TKMWarePlan;
+    function GetCardCost : Byte;
     function CanEquip(aIndex : Integer) : Boolean;
     function TrainedUnitType : TKMUnitType;
     function TrainedUnitID : Byte;
     function TrainingInProgress : Boolean;
+    procedure IncOrder(aIndex, aCount : Integer);
+    function CanStartTraining : Boolean;
+    procedure StartTraining;
+    procedure FinishTraining;
 
     constructor Create(aUID: Integer; aHouseType: TKMHouseType; PosX, PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
     constructor Load(LoadStream: TKMemoryStream); override;
@@ -7088,12 +7095,6 @@ end;
 constructor TKMHousePalace.Create(aUID: Integer; aHouseType: TKMHouseType; PosX: Integer; PosY: Integer; aOwner: ShortInt; aBuildState: TKMHouseBuildState);
 begin
   Inherited;
-
-  {SetLength(fProgress, length(PALACE_UNITS_ORDER));
-  SetLength(fPhase, length(PALACE_UNITS_ORDER));
-  SetLength(fWait, length(PALACE_UNITS_ORDER));
-  SetLength(fOrderCount, length(PALACE_UNITS_ORDER));}
-  //SetLength(VWareIDs, length(PALACE_UNITS_ORDER));
   fTrainingID := NO_TRRAINING_ID;
 end;
 
@@ -7105,15 +7106,11 @@ end;
 procedure TKMHousePalace.Activate(aWasBuilt : Boolean);
 begin
   Inherited;
-
-  //if aWasBuilt then
-  //  gTerrain.PalaceExploreDeposits(Entrance);
-
 end;
 
 function TKMHousePalace.UnitProgress(aType: TKMUnitType): Word;
 begin
-  Result := Max(gRes.Units[aType].PalaceCost.PhaseDuration, 50);
+  Result := Max(gRes.Units[aType].PalaceCost.PhaseDuration, 50) * fOrderCount;
   If gHands[Owner].HasPearl(ptValtaria) then
     Result := Round(Result * 0.9);
 
@@ -7140,71 +7137,31 @@ begin
 end;
 
 constructor TKMHousePalace.Load(LoadStream: TKMemoryStream);
-//var I, newCount : Integer;
-//  tmp : Word;
 begin
   Inherited;
-
-
- { SetLength(fProgress, length(PALACE_UNITS_ORDER));
-  SetLength(fPhase, length(PALACE_UNITS_ORDER));
-  SetLength(fWait, length(PALACE_UNITS_ORDER));
-  SetLength(fOrderCount, length(PALACE_UNITS_ORDER));
-  SetLength(VWareIDs, length(PALACE_UNITS_ORDER));}
-
   LoadStream.CheckMarker('HousePalace');
   LoadStream.Read(fTrainingID);
   LoadStream.Read(fProgress);
   LoadStream.Read(fPhase);
   LoadStream.Read(fWait);
   LoadStream.Read(fOrderCount);
-  {LoadStream.Read(newCount);
-
-  for I := 0 to newCount - 1 do
-  begin
-    if I > high(fProgress) then
-    begin
-      LoadStream.Read(tmp);
-      LoadStream.Read(tmp);
-      LoadStream.Read(tmp);
-      LoadStream.Read(tmp);
-    end else
-    begin
-      LoadStream.Read(fProgress[I]);
-      LoadStream.Read(fPhase[I]);
-      LoadStream.Read(fWait[I]);
-      LoadStream.Read(fOrderCount[I]);
-    end;
-  end;}
 end;
 
 procedure TKMHousePalace.Save(SaveStream: TKMemoryStream);
-//var I, newCount : Integer;
 begin
   Inherited;
   SaveStream.PlaceMarker('HousePalace');
 
-  //newCount := length(fProgress);
   SaveStream.Write(fTrainingID);
   SaveStream.Write(fProgress);
   SaveStream.Write(fPhase);
   SaveStream.Write(fWait);
   SaveStream.Write(fOrderCount);
-  {SaveStream.Write(newCount);
-
-  for I := 0 to newCount - 1 do
-  begin
-    SaveStream.Write(fProgress[I]);
-    SaveStream.Write(fPhase[I]);
-    SaveStream.Write(fWait[I]);
-    SaveStream.Write(fOrderCount[I]);
-  end;}
 
 end;
 
 function  TKMHousePalace.GetOrderCount(aIndex : Integer) : Word;
 begin
-  //Assert(aIndex < length(fOrderCount), 'Wrong Index');
   If aIndex = fTrainingID then
     Result := fOrderCount
   else
@@ -7213,31 +7170,25 @@ end;
 
 procedure TKMHousePalace.SetOrderCount(aIndex : Integer; aValue : Word);
 begin
-  //Assert(aIndex < length(fOrderCount), 'Wrong Index');
-
-  {for I := 0 to High(fOrderCount) do
-    if  I <> aIndex then
-      fOrderCount[I] := 0;
-
-  //if FullProgress[aIndex] > 0 then
-  //  Exit;
-  fOrderCount[aIndex] := EnsureRange(aValue, 0, high(fOrderCount[aIndex]));}
+  If TrainingInProgress then
+    Exit;
   If aIndex <> fTrainingID then
   begin
     CancelOrder;
     fTrainingID := aIndex;
   end;
-  fOrderCount := EnsureRange(aValue, 0, high(fOrderCount));
-  {If fOrderCount = 0 then
-  begin
-    fTrainingID := NO_TRRAINING_ID;
-  end;}
+  fOrderCount := EnsureRange(aValue, 0, IfThen( TrainedUnitType = utFighter, MAX_ORDER_COUNT_PALACE * 2, MAX_ORDER_COUNT_PALACE));
+  fWait := 20;
+end;
+
+procedure TKMHousePalace.IncOrder(aIndex, aCount : Integer);
+begin
+  Orders[aIndex] := Max(Orders[aIndex] + aCount, 0);
 end;
 
 function  TKMHousePalace.GetMaxProgress : Integer;
 var UT : TKMUnitType;
 begin
-  //Assert(aIndex < length(fProgress), 'Wrong Index');
   Result := 0;
   If  fTrainingID = NO_TRRAINING_ID then
     Exit;
@@ -7250,7 +7201,6 @@ function  TKMHousePalace.GetFullProgress : Single;
 var currProg, phaseProg : Integer;
     UT : TKMUnitType;
 begin
-  //Assert(aIndex < length(fProgress), 'Wrong Index');
   Result := 0;
 
 
@@ -7270,9 +7220,8 @@ begin
 
 end;
 
-function  TKMHousePalace.GetPhaseProgress{(aIndex: Integer)}: Single;
+function  TKMHousePalace.GetPhaseProgress: Single;
 begin
-  //Assert(aIndex < length(fProgress), 'Wrong Index');
   Result := 0;
   if ((fProgress = 0) and (fPhase  = 0)) or (fWait > 0) then
     Exit(0);
@@ -7298,8 +7247,6 @@ end;
 
 procedure TKMHousePalace.CancelOrder;
 begin
-  //Assert(aIndex < length(fProgress), 'Wrong Index');
-
   fProgress := 0;
   fPhase := 0;
   fWait := 0;
@@ -7307,79 +7254,22 @@ begin
   fTrainingID := NO_TRRAINING_ID;
 end;
 
-function TKMHousePalace.GetWarePlan: TKMWarePlan;
-var I : Integer;
-  WP : TKMWarePlan;
+function TKMHousePalace.GetCardCost: Byte;
 begin
-  if fTrainingID = NO_TRRAINING_ID then
-    Exit;
-  //if (fProgress = 0) and (fPhase = 0) then
-  //  Exit;
-  If fProgress > 0 then
-  begin
-    Result.SetCount(0, true);
-    Exit;
-  end;
-  WP := gRes.Units[PALACE_UNITS_ORDER[fTrainingID]].PalaceCost.Plan;
-  Result.SetCount(WP.Count, true);
-  for I := Low(wp) to High(wp) do
-    if (wp[I].W <> wtNone) then
-    begin
-      Result[I].W := wp[I].W;
-      If fPhase > 0 then
-        Result[I].C := 1
-      else
-        Result[I].C := wp[I].C;
-    end;
+  if (fTrainingID = NO_TRRAINING_ID) or TrainingInProgress then
+    Exit(0);
+  Result := 1;
+
 end;
 
-function TKMHousePalace.GetWarePlanOf(aIndex : Integer): TKMWarePlan;
-var I : Integer;
-  WP : TKMWarePlan;
+function TKMHousePalace.HasCard: Boolean;
 begin
-  if aIndex = NO_TRRAINING_ID then
-    Exit;
-  if fProgress > 0 then
-    Exit;
-
-  WP := gRes.Units[PALACE_UNITS_ORDER[aIndex]].PalaceCost.Plan;
-  Result.SetCount(WP.Count, true);
-  for I := Low(wp) to High(wp) do
-    if (wp[I].W <> wtNone) then
-    begin
-      Result[I].W := wp[I].W;
-      Result[I].C := wp[I].C;
-    end;
+  Result := CheckWareIn(wtCard) > 0;
 end;
-
-{
-function TKMHousePalace.GetFullCost(aIndex : Integer = -1): TKMWarePlan;
-var I : Integer;
-  WP : TKMWarePlan;
-begin
-  if aIndex = -1 then
-    for I := 0 to High(fProgress) do
-      if (fProgress[I] > 0) or (fPhase[I] > 0) or (fOrderCount[I] > 0) then
-      begin
-        aIndex := I;
-        break;
-      end;
-
-  wp := gRes.Units[PALACE_UNITS_ORDER[aIndex]].PalaceCost.Plan;
-
-  Result.SetCount(wp.Count, true);
-  for I := Low(wp) to High(wp) do
-    if (wp[I].W <> wtNone) then
-    begin
-      Result[I].W := wp[I].W;
-      Result[I].C := wp[I].C + 1 * (gRes.Units[PALACE_UNITS_ORDER[aIndex]].PalaceCost.PhaseCount - 1);
-    end;
-end;
-}
-function TKMHousePalace.HasWares(aIndex: Integer): Boolean;
+//v-wares that are taken only once
+function TKMHousePalace.HasMainVWares(aIndex: Integer; aOrderCount : Byte = 1): Boolean;
 var K : Integer;
     UT : TKMUnitType;
-    WP : TKMWarePlan;
 begin
   If aIndex = NO_TRRAINING_ID then
     Exit(false);
@@ -7388,47 +7278,69 @@ begin
   if GetPhaseCount(UT) = 0 then
     Exit;
 
-  if fPhase = 0 then
-    for K := 0 to High(gRes.Units[UT].PalaceCost.Wares) do
-      with gRes.Units[UT].PalaceCost.Wares[K] do
-        if gHands[Owner].VirtualWare[Index] < C then
-          Exit(false);
+  for K := 0 to High(gRes.Units[UT].PalaceCost.Wares) do
+    with gRes.Units[UT].PalaceCost.Wares[K] do
+      if gHands[Owner].VirtualWare[Index] < C * aOrderCount then
+        Exit(false);
+end;
+ //v-wares that are taken every time
+function TKMHousePalace.HasPhaseVWares(aIndex: Integer; aOrderCount : Byte = 1): Boolean;
+var K : Integer;
+    UT : TKMUnitType;
+begin
+  If aIndex = NO_TRRAINING_ID then
+    Exit(false);
+  UT := PALACE_UNITS_ORDER[aIndex];
+  Result := True;
+  if GetPhaseCount(UT) = 0 then
+    Exit;
 
-  WP := GetWarePlan;
-
-  for K := 0 to WP.Count - 1 do
-    with WP[K] do
-      if (W <> wtNone) and (C > 0) then
-        if CheckWareIn(W) < IfThen(fPhase = 0, C, 1) then
-          Exit(false);
+  for K := 0 to High(gRes.Units[UT].PalaceCost.Wares) do
+    with gRes.Units[UT].PalaceCost.Wares[K] do
+      if gHands[Owner].VirtualWare[Index] < C * aOrderCount then
+        Exit(false);
 end;
 
-procedure TKMHousePalace.TakeWares;
+procedure TKMHousePalace.TakeMainVWares;
 var K : Integer;
   UT : TKMUnitType;
-  WP : TKMWarePlan;
 begin
   UT := PALACE_UNITS_ORDER[fTrainingID];
   if GetPhaseCount(UT) = 0 then
     Exit;
 
   if fPhase = 0 then
+  begin
     for K := 0 to High(gRes.Units[UT].PalaceCost.Wares) do
       with gRes.Units[UT].PalaceCost.Wares[K] do
-        gHands[Owner].VirtualWareTake(W, C);
+        gHands[Owner].VirtualWareTake(W, C * fOrderCount );
+  end;
 
-  WP := GetWarePlan;
-  for K := 0 to 3 do
-    with WP[K] do
-      if (W <> wtNone) and (C > 0) then
-        WareTakeFromIn(W,IfThen(fPhase = 0, C, 1));
+end;
 
+procedure TKMHousePalace.TakePhaseVWares;
+var K : Integer;
+  UT : TKMUnitType;
+begin
+  UT := PALACE_UNITS_ORDER[fTrainingID];
+  if GetPhaseCount(UT) = 0 then
+    Exit;
+
+  for K := 0 to High(gRes.Units[UT].PalaceCost.Wares) do
+    with gRes.Units[UT].PalaceCost.Wares[K] do
+      gHands[Owner].VirtualWareTake(W, C * fOrderCount );
+end;
+
+procedure TKMHousePalace.TakeCard;
+begin
+  WareTakeFromIn(wtCard, 1, true);
 end;
 
 function TKMHousePalace.CanEquip(aIndex: Integer): Boolean;
 begin
-  Result := HasWares(aIndex);
+  Result := HasCard and HasMainVWares(aIndex) and HasPhaseVWares(aIndex);
 end;
+
 function TKMHousePalace.TrainedUnitType : TKMUnitType;
 begin
   if IsTraining then
@@ -7436,14 +7348,59 @@ begin
   else
     Result := utNone;
 end;
+
 function TKMHousePalace.TrainedUnitID : Byte;
 begin
   Result := fTrainingID
 end;
 
-procedure TKMHousePalace.UpdateState(aTick: Cardinal);
+function TKMHousePalace.CanStartTraining: Boolean;
+begin
+  Result := (fTrainingID <> NO_TRRAINING_ID)
+    and (fOrderCount > 0)
+    and HasCard
+    and (gHands[Owner].GetWorklessCount >= fOrderCount)
+    and HasMainVWares(fTrainingID, fOrderCount)
+    and HasPhaseVWares(fTrainingID, fOrderCount);
+end;
+
+procedure TKMHousePalace.StartTraining;
+var I : integer;
+begin
+  TakeMainVWares;
+  TakePhaseVWares;
+  TakeCard;
+  for I := 1 to fOrderCount do
+    gHands[Owner].TakeWorkless;
+  fProgress := UnitProgress(PALACE_UNITS_ORDER[fTrainingID]);
+end;
+
+procedure TKMHousePalace.FinishTraining;
 var U : TKMUnit;
-  doProgress : Boolean;
+  I : Integer;
+begin
+  gSoundPlayer.Play(sfxnPalace, fPosition);
+  for I := 1 to fOrderCount do
+  begin
+    ProduceFestivalPoints(fptWarfare, 10 * fPhase);
+    U := gHands[Owner].TrainUnit(TrainedUnitType, Self);
+    U.Visible := False; //Make him invisible as he is inside the barracks
+    U.Condition := UNIT_MAX_CONDITION; //All soldiers start with 3/4, so groups get hungry at the same time
+    //Soldier.OrderLoc := KMPointBelow(Entrance); //Position in front of the barracks facing north
+    U.SetActionGoIn(uaWalk, gdGoOutside, Self, true);
+    if Assigned(U.OnUnitTrained) then
+      U.OnUnitTrained(U);
+    If U is TKMUnitWarrior then
+      if gHands[Owner].IsComputer then
+        if gRes.Units[U.UnitType].CanOrderAmmo then
+          TKMUnitWarrior(U).OrderAmmo;
+  end;
+
+  fPhase := 0;
+  fTrainingID := NO_TRRAINING_ID;
+end;
+
+procedure TKMHousePalace.UpdateState(aTick: Cardinal);
 begin
   Inherited;
 
@@ -7462,26 +7419,7 @@ begin
       Inc(fPhase);
 
       if fPhase = GetPhaseCount(TrainedUnitType) then
-      begin
-        ProduceFestivalPoints(fptWarfare, 10 * fPhase);
-        gSoundPlayer.Play(sfxnPalace, fPosition);
-        U := gHands[Owner].TrainUnit(TrainedUnitType, Self);
-        U.Visible := False; //Make him invisible as he is inside the barracks
-        U.Condition := UNIT_MAX_CONDITION; //All soldiers start with 3/4, so groups get hungry at the same time
-        //Soldier.OrderLoc := KMPointBelow(Entrance); //Position in front of the barracks facing north
-        U.SetActionGoIn(uaWalk, gdGoOutside, Self, true);
-        if Assigned(U.OnUnitTrained) then
-          U.OnUnitTrained(U);
-        If U is TKMUnitWarrior then
-          if gHands[Owner].IsComputer then
-            if gRes.Units[U.UnitType].CanOrderAmmo then
-              TKMUnitWarrior(U).OrderAmmo;
-
-        fPhase := 0;
-        If fOrderCount = 0 then
-          fTrainingID := NO_TRRAINING_ID;
-      end;
-
+        FinishTraining;
     end;
 
   end else
@@ -7489,22 +7427,18 @@ begin
 
     if fPhase > 0 then
     begin
-      if HasWares(fTrainingID) then
+      if HasPhaseVWares(fTrainingID, fOrderCount) then
       begin
-        TakeWares;
+        TakePhaseVWares;
         fProgress := UnitProgress(PALACE_UNITS_ORDER[fTrainingID])
-      end;
+      end else
+        fWait := 100;
     end
     else
-    if fOrderCount > 0 then
-      if gHands[Owner].GetWorklessCount > 0 then
-        if HasWares(fTrainingID) then
-        begin
-          TakeWares;
-          gHands[Owner].TakeWorkless;
-          Dec(fOrderCount);
-          fProgress := UnitProgress(PALACE_UNITS_ORDER[fTrainingID]);
-        end;
+    If CanStartTraining then
+      StartTraining
+    else
+      fWait := 100;
 
   end;
 end;

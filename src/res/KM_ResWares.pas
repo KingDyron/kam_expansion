@@ -145,7 +145,7 @@ const
 
     0, 0, 0, 0 //rtAll, rtWarfare, rtFood
     );
-  RES_COUNT = 52;
+  RES_COUNT = 53;
   WARE_ID_TO_TYPE: array [0..RES_COUNT-1] of TKMWareType = (
     wtTrunk, wtStone, wtTimber, wtIronOre, wtGoldOre,//4
     wtCoal, wtIron, wtGold, wtWine, wtCorn,//9
@@ -157,7 +157,7 @@ const
     wtWheel,    wtBolt,          wtQuiver, wtWater, wtTile,//39
     wtSeed, wtSawDust, wtApple, wtJewerly, wtBoots, wtHay,
     wtMace, wtFlail, wtFeathers, wtPlateArmor, wtBitinArmor,
-    wtEgg
+    wtEgg, wtCard
     );
 
   ORE_DENSITY_MAX_TYPES = 5; // How many different ore densities there are
