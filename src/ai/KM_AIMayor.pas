@@ -144,7 +144,8 @@ const // Sample list made by AntonP
     wtFish,
     wtHay,
     wtBitinArmor,
-    wtEgg
+    wtEgg,
+    wtCard
   );
 
   //Vital (Store, School, Inn)

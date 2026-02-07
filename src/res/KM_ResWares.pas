@@ -141,7 +141,7 @@ const
     28, 29, 30, 31, 32, 33, 34,
     35, 36, 37, 38, 39, 40,
     41, 42, 43, 44, 45, 46,
-    47, 48, 49, 50, 51,
+    47, 48, 49, 50, 51, 52,
 
     0, 0, 0, 0 //rtAll, rtWarfare, rtFood
     );
@@ -171,7 +171,7 @@ const
     2, 1, 2, 2, 2, //wtSteelE..wtQuiver
     1, 2, 1, 2, 3, 1,//wtWater
     2, 1, 1, 1, 1, 1,//wtBoots, wtHay..wtPlateArmor
-    1, 1,//wtBitinArmor, wtEgg
+    1, 1, 1,//wtBitinArmor, wtEgg
     0, 0, 0, 0//wtFood,wtAny, wtWarfare, wtValuable
 
   );
@@ -189,7 +189,7 @@ const
     168/120,  167/120,  160/120,  345/120,  102/120,
     192/120, 219/120, 216/120,     1/400,     55/120,
     195/120, 195/120, 195/120, 225/120, 195/120,
-    195/120, 22/120
+    195/120, 22/120, 120/120
     );
 
 implementation
@@ -355,7 +355,7 @@ const
     $101080, $0080FF, $FFBF00, $FFBF00, $FFBF00,//wtTIle
     $FFBF00, $FFBF00, $00BFFF, $00BFFF, $00BFFF,
     $FFBF00, $FFBF00, $00BFFF, $00BFFF, $00BFFF,
-    $00BFFF, $FFBF00,
+    $00BFFF, $FFBF00, $FFBF00,
     $004080,$004080,$004080,$004080 //wtAll, wtFood, wtWarfare, wtValuable
     );
 begin
@@ -481,6 +481,7 @@ begin
     wtPlateArmor      : Result := 865;
     wtBitinArmor      : Result := 866;
     wtEgg             : Result := 936;
+    wtCard             : Result := 1204;
   else
     Result := 0; // "Question mark"
   end;
@@ -520,6 +521,7 @@ begin
     wtPlateArmor: Result := 1980;
     wtBitinArmor: Result := 1981;
     wtEgg: Result := 2101;
+    wtCard: Result := 2348;
   else
     Result := -1;
   end;

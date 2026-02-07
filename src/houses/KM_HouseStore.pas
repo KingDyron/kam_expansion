@@ -70,7 +70,7 @@ const
     3, 2, 1, 2, 3,//wtWheel .. wtTile
     1, 1, 1, 1, 1,
     1, 6, 6, 1, 6,
-    6, 2
+    6, 2, 1
   );
 
 implementation

@@ -22,7 +22,7 @@ type
     wtWheel,    wtBolt,          wtQuiver,     wtWater,        wtTile,
     wtSeed,     wtSawDust,       wtApple,      wtJewerly,      wtBoots,
     wtHay,      wtMace,          wtFlail,      wtFeathers,     wtPlateArmor,
-    wtBitinArmor, wtEgg,
+    wtBitinArmor, wtEgg,         wtCard,
     // Special ware types
     wtAll, wtWarfare, wtFood, wtValuable
   );
@@ -33,7 +33,7 @@ type
 
 const
   WARE_MIN = wtTrunk;
-  WARE_MAX = wtEgg;
+  WARE_MAX = wtCard;
   WARE_MAX_ALL = wtValuable;
   WARFARE_MIN = wtWoodenShield;
   WEAPON_MIN = wtWoodenShield;
@@ -45,7 +45,7 @@ const
   WARES_WARFARE = [WARFARE_MIN..WARFARE_MAX, wtMace, wtFlail, wtPlateArmor, wtBitinArmor, wtBoots, wtQuiver];
   WARES_FOOD = [wtBread, wtSausage, wtFish, wtWine];
   WARES_HOUSE_FOOD = [wtBread, wtSausage, wtFish, wtWine, wtApple, wtVegetables];
-  WARES_VALUABLE = [wtEgg, wtJewerly, wtBitin, wtGold, wtIron, wtFeathers];
+  WARES_VALUABLE = [wtEgg, wtJewerly, wtBitin, wtGold, wtIron, wtFeathers, wtCard];
 
   WARE_CNT = Integer(WARE_MAX) - Integer(WARE_MIN) + 1;
   WARFARE_CNT = Integer(WARFARE_MAX) - Integer(WEAPON_MIN) + 1;

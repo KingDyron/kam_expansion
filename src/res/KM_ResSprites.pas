@@ -635,7 +635,7 @@ begin
 
     fRXData.Pivot[aIndex].X := StrToInt(TXTFile.Strings[0]);
     fRXData.Pivot[aIndex].Y := StrToInt(TXTFile.Strings[1]);
-    fRXData.SizeNoShadow[aIndex].Left := 0;
+    {fRXData.SizeNoShadow[aIndex].Left := 0;
     fRXData.SizeNoShadow[aIndex].Top := 0;
     fRXData.SizeNoShadow[aIndex].Right := 0;
     fRXData.SizeNoShadow[aIndex].Bottom := 0;

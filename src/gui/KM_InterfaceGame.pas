@@ -136,7 +136,7 @@ const
   //GUIHouseOrderPageHint: array[0..6] of Integer = (1649, 1650, 1651, 1652, 1653, 1654, 1655);
 
   // Layout of resources in Store
-  STORE_RES_COUNT = 59;
+  STORE_RES_COUNT = 60;
 
 
   {StoreResType: array [1..STORE_RES_COUNT] of TKMWareType =
@@ -179,7 +179,7 @@ const
      wtWoodenShield,  wtLeatherArmor,   wtAxe,            wtLance,      wtBow,
      wtIronShield,    wtIronArmor,      wtSword,          wtPike,       wtCrossbow,
      wtMace,          wtPlateArmor,     wtFlail,          wtHorse,      wtQuiver,
-     wtBoots,         wtBitinArmor,     wtBolt,
+     wtBoots,         wtBitinArmor,     wtBolt,           wtCard,
 
 
      wtNone,//new line

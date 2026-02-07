@@ -300,6 +300,7 @@ const
       (TexStart: MARKET_WARES_TEX_START+305; Count: 19;), //wtBoots
       (TexStart: MARKET_WARES_TEX_START+305; Count: 19;), //wtBitinArmor
       (TexStart: MARKET_WARES_TEX_START+305; Count: 19;), //wtEgg
+      (TexStart: MARKET_WARES_TEX_START+305; Count: 19;), //wtCard
 
       (TexStart: 0; Count: 0;), //rtAll
       (TexStart: 0; Count: 0;), //rtWarfare
