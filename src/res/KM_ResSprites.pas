@@ -87,7 +87,7 @@ type
 
     procedure LoadFromRXXFile(const aFileName: string; aStartingIndex: Integer = 1);
     procedure OverloadRXXFilesFromFolder(const aFolder: string);
-    procedure OverloadRXDataFromFolder(const aFolder: string; aSoftenShadows: Boolean = false);
+    procedure OverloadRXDataFromFolder(const aFolder: string; aSoftenShadows: Boolean = true);
 
     function GetSoftenShadowType(aID: Integer): TKMSpriteSoftening;
 
@@ -635,6 +635,10 @@ begin
 
     fRXData.Pivot[aIndex].X := StrToInt(TXTFile.Strings[0]);
     fRXData.Pivot[aIndex].Y := StrToInt(TXTFile.Strings[1]);
+    fRXData.SizeNoShadow[aIndex].Left := 0;
+    fRXData.SizeNoShadow[aIndex].Top := 0;
+    fRXData.SizeNoShadow[aIndex].Right := 0;
+    fRXData.SizeNoShadow[aIndex].Bottom := 0;
 
     //SizeNoShadow is used only for Units
     // --- not needed anymore
@@ -1011,7 +1015,7 @@ end;
 // Parse all valid files in Sprites folder:
 // - append or replace original sprites with new ones
 // - exclude original sprites if necessary as well
-procedure TKMSpritePack.OverloadRXDataFromFolder(const aFolder: string; aSoftenShadows: Boolean = false);
+procedure TKMSpritePack.OverloadRXDataFromFolder(const aFolder: string; aSoftenShadows: Boolean = true);
   {$IFDEF WDC}
   // Append all PNGs including the subfolders
   // Pattern is X_nnnn.png, where nnnn is dynamic (1..n chars) for modders convenience
@@ -2116,8 +2120,8 @@ begin
   else}
   If aModsPath = '' then
     aModsPath := ExeDir + 'Modding graphics' + PathDelim;
-    fSprites[aRT].OverloadRXDataFromFolder(aModsPath);
-    fSprites[aRT].OverloadRXXFilesFromFolder(aModsPath);
+  fSprites[aRT].OverloadRXDataFromFolder(aModsPath);
+  fSprites[aRT].OverloadRXXFilesFromFolder(aModsPath);
 
   gLog.AddTime('Load Sprites Done');
 
