@@ -7110,7 +7110,8 @@ end;
 
 function TKMHousePalace.UnitProgress(aType: TKMUnitType): Word;
 begin
-  Result := Max(gRes.Units[aType].PalaceCost.PhaseDuration, 50) * fOrderCount;
+  Result := Max(gRes.Units[aType].PalaceCost.PhaseDuration, 50);
+  Result := Result + (Result * fOrderCount) div 2;
   If gHands[Owner].HasPearl(ptValtaria) then
     Result := Round(Result * 0.9);
 
