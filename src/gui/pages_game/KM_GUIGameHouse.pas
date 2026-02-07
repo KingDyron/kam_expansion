@@ -183,6 +183,9 @@ type
       
     Panel_House_Palace: TKMPanel;
       Button_PalaceLeft, Button_PalaceRight, Button_PalaceTrain : TKMButton;
+
+      WaresRow_CostOnce, WaresRow_CostPhase  : TKMWaresFlatRow;
+
       Button_PalaceVWaresCost,
       Button_PalaceVWares: array of TKMButtonFlat;
       Button_Palace_PreviousUnit,
@@ -1225,12 +1228,34 @@ end;
 
 Procedure TKMGUIGameHouse.Create_HousePalace;
 const MAX_ROW_COUNT = 2;
-var I, K : Integer;
+var I, K, J : Integer;
 begin
 
   Panel_House_Palace :=  TKMPanel.Create(Panel_House, 0, 76 + 135, TB_WIDTH, 500);
 
-  SetLength(Button_PalaceVWares, length(gRes.Wares.VirtualWares.PALACE_WARES));
+
+  WaresRow_CostOnce := TKMWaresFlatRow.Create(Panel_House_Palace, 0, 0, TB_WIDTH, 80, 3);
+  WaresRow_CostOnce.ItemHeight :=30;
+  WaresRow_CostOnce.Clear;
+  WaresRow_CostOnce.Caption := 'Cost ';
+  J := 2;
+  for I := 0 to J do
+  begin
+    K := gRes.Wares.VirtualWares.PALACE_WARES[I];
+    WaresRow_CostOnce.Add(gRes.Wares.VirtualWares[K].GUIIcon, '153', '151', 'jo³ ho³', I = J);
+  end;
+
+  WaresRow_CostPhase := TKMWaresFlatRow.Create(Panel_House_Palace, 0, WaresRow_CostOnce.Bottom + 20, TB_WIDTH, 80, 3);
+  WaresRow_CostPhase.ItemHeight :=30;
+  WaresRow_CostPhase.Clear;
+  WaresRow_CostPhase.Caption := 'Cost per phase';
+  J := high(gRes.Wares.VirtualWares.PALACE_WARES);
+  for I := 3 to J do
+  begin
+    K := gRes.Wares.VirtualWares.PALACE_WARES[I];
+    WaresRow_CostPhase.Add(gRes.Wares.VirtualWares[K].GUIIcon, '153', '151', 'jo³ ho³', I = J);
+  end;
+  {SetLength(Button_PalaceVWares, length(gRes.Wares.VirtualWares.PALACE_WARES));
   SetLength(Button_PalaceVWaresCost, length(gRes.Wares.VirtualWares.PALACE_WARES));
 
   for I := 0 to High(Button_PalaceVWares) do
@@ -1252,9 +1277,9 @@ begin
     Button_PalaceVWaresCost[I].Hitable := true;
     Button_PalaceVWaresCost[I].Clickable := false;
   end;
+  }
 
-
-  Button_Palace_UnitPlan := TKMButtonFlat.Create(Panel_House_Palace, TB_WIDTH div 2 - 35, 140, 70, 120, 0);
+  Button_Palace_UnitPlan := TKMButtonFlat.Create(Panel_House_Palace, TB_WIDTH div 2 - 35, WaresRow_CostPhase.Bottom + 20 + 17, 70, 120, 0);
   Button_Palace_UnitPlan.Caption := '';
   Button_Palace_UnitPlan.CapOffsetY := 40;
   Button_Palace_UnitPlan.BackAlpha := 0.50;
@@ -1262,44 +1287,45 @@ begin
   Button_Palace_UnitPlan.Font := fntGrey;
   Button_Palace_UnitPlan.CapColor := $FFFF0000;
 
-  Label_Palace_Unit := TKMLabel.Create(Panel_House_Palace, 9, Button_Palace_UnitPlan.Top - 20, TB_WIDTH, 20, '', fntOutLine, taCenter);
+  Label_Palace_Unit := TKMLabel.Create(Panel_House_Palace, 0, Button_Palace_UnitPlan.Top - 15 - 20, TB_WIDTH, 20, '', fntOutLine, taCenter);
   Label_Palace_Unit.Hitable := false;
 
-  Image_CancelUnit := TKMButtonFlat.Create(Panel_House_Palace, Button_Palace_UnitPlan.Left + 35 - 5, Button_Palace_UnitPlan.Top, 20, 20, 0, rxGuiMain);
+  Image_CancelUnit := TKMButtonFlat.Create(Panel_House_Palace, Button_Palace_UnitPlan.Left, Button_Palace_UnitPlan.Bottom - 20, 20, 20, 0, rxGuiMain);
   Image_CancelUnit.OnClickShift := House_Palace_Click;
   Image_CancelUnit.HighLightColor := $FF0000FF;
 
-  Image_OrderCount := TKMButtonFlat.Create(Panel_House_Palace, Button_Palace_UnitPlan.Right - 20, Button_Palace_UnitPlan.Top, 20, 20, 0, rxGuiMain);
+  Image_OrderCount := TKMButtonFlat.Create(Panel_House_Palace, Button_Palace_UnitPlan.Right - 20, Button_Palace_UnitPlan.Bottom - 20, 20, 20, 0, rxGuiMain);
   Image_OrderCount.Hitable := false;
   Image_OrderCount.CapOffsetY := -12;
   Image_OrderCount.Font := fntGrey;
 
-  Bar_Palace_ProgressLeft := TKMPercentBar.Create(Panel_House_Palace, Button_Palace_UnitPlan.Left - 40, 15, 15, 120);
+  Bar_Palace_ProgressLeft := TKMPercentBar.Create(Panel_House_Palace, Button_Palace_UnitPlan.Left - 40, Button_Palace_UnitPlan.Top, 15, 120);
   Bar_Palace_ProgressLeft.MainColor := icGoldenYellow;
   Bar_Palace_ProgressLeft.Hitable := false;
   Bar_Palace_ProgressLeft.Orientation := pboUp;
 
-  Bar_Palace_ProgressRight := TKMPercentBar.Create(Panel_House_Palace, Button_Palace_UnitPlan.Right + 25, 15, 15, 120);
+  Bar_Palace_ProgressRight := TKMPercentBar.Create(Panel_House_Palace, Button_Palace_UnitPlan.Right + 25, Button_Palace_UnitPlan.Top, 15, 120);
   Bar_Palace_ProgressRight.MainColor := icGoldenYellow;
   Bar_Palace_ProgressRight.Hitable := false;
   Bar_Palace_ProgressRight.Orientation := pboUp;
 
-  Button_PalaceLeft := TKMButton.Create(Panel_House_Palace, TB_WIDTH div 2 - 55, 180, 25, 30, 2, rxGui, bsGame);
+  Button_PalaceLeft := TKMButton.Create(Panel_House_Palace, TB_WIDTH div 2 - 55, Button_Palace_UnitPlan.Bottom + 13, 25, 30, 2, rxGui, bsGame);
   Button_PalaceLeft.OnClickShift := House_Palace_Click;
   Button_PalaceLeft.CanChangeEnable := false;
 
-  Button_PalaceRight := TKMButton.Create(Panel_House_Palace, TB_WIDTH div 2 + 30, 180, 25, 30, 3, rxGui, bsGame);
+  Button_PalaceRight := TKMButton.Create(Panel_House_Palace, TB_WIDTH div 2 + 30, Button_Palace_UnitPlan.Bottom + 13, 25, 30, 3, rxGui, bsGame);
   Button_PalaceRight.OnClickShift := House_Palace_Click;
-  Button_PalaceTrain := TKMButton.Create(Panel_House_Palace, TB_WIDTH div 2 - 25, 177, 50, 36, 42, rxGui, bsGame);
+  Button_PalaceTrain := TKMButton.Create(Panel_House_Palace, TB_WIDTH div 2 - 25, Button_Palace_UnitPlan.Bottom + 10, 50, 36, 42, rxGui, bsGame);
   Button_PalaceTrain.OnClickShift := House_Palace_Click;
 
-  Button_Palace_PreviousUnit := TKMButtonFlat.Create(Panel_House_Palace, Button_PalaceLeft.Left - 30, 0, 25, 30, 0);
+  Button_Palace_PreviousUnit := TKMButtonFlat.Create(Panel_House_Palace, Button_PalaceLeft.Left - 30, Button_PalaceLeft.Top, 25, 30, 0);
   Button_Palace_PreviousUnit.Hitable := false;
 
-  Button_Palace_NextUnit := TKMButtonFlat.Create(Panel_House_Palace, Button_PalaceRight.Right + 5, 0, 25, 30, 0);
+  Button_Palace_NextUnit := TKMButtonFlat.Create(Panel_House_Palace, Button_PalaceRight.Right + 5, Button_PalaceRight.Top, 25, 30, 0);
   Button_Palace_NextUnit.Hitable := false;
 
-  Image_Ornament := TKMImage.Create(Panel_House_Palace, Bar_Palace_ProgressLeft.Left - 9, Bar_Palace_ProgressLeft.Top - 17, 167, 149, 782, rxGui);
+
+  Image_Ornament := TKMImage.Create(Panel_House_Palace, (TB_WIDTH - 167) div 2, Button_Palace_UnitPlan.Top - 18, 167, 149, 782, rxGui);
   Image_Ornament.Hitable := false;
 
 end;
@@ -1958,8 +1984,8 @@ begin
                         base := 0 + demandTop;
 
                         ShowCommonDemand(aHouse, base, line, rowRes);
+                        Panel_House_Palace.Top := base + line * 25 + 76 + 17;
                         House_PalaceRefresh(aHouse);
-                        //Panel_House_Palace.Show;
 
                       end;
                       
@@ -4086,13 +4112,54 @@ procedure TKMGUIGameHouse.House_PalaceRefresh(aHouse : TKMHouse);
     WaresProdCt_Common[aIndex].Show;
   end;
 
-var I, K, J, count, lastID, phase : Integer;
+var I, K, J, L, count, count2, lastID, phase : Integer;
   Palace : TKMHousePalace;
   UT : TKMUnitType;
   trainingUnit : Byte;
   WP : TKMWarePlan;
 begin
   Palace := TKMHousePalace(aHouse);
+
+  WaresRow_CostOnce.RefreshItems;
+  WaresRow_CostPhase.RefreshItems;
+
+  //set important wares
+  J := 2;
+  for I := 0 to J do
+  begin
+    K := gRes.Wares.VirtualWares.PALACE_WARES[I];
+    count := gHands[Palace.Owner].VirtualWare[K];
+    count2 := 0;
+
+    UT := PALACE_UNITS_ORDER[fLastPalaceUnit];
+    for L := 0 to High(gRes.Units[UT].PalaceCost.Wares) do
+    If gRes.Units[UT].PalaceCost.Wares[L].W = gRes.Wares.VirtualWares[K].Name then
+    begin
+      count2 := gRes.Units[UT].PalaceCost.Wares[L].C;
+      Break;
+    end;
+
+    WaresRow_CostOnce.SetItem(I, IntToKStr(count, 1000), count2.ToString, '');
+  end;
+
+  J := high(gRes.Wares.VirtualWares.PALACE_WARES) - 3;
+  for I := 0 to J do
+  begin
+    K := gRes.Wares.VirtualWares.PALACE_WARES[I + 3];
+    count := gHands[Palace.Owner].VirtualWare[K];
+    count2 := 0;
+
+    UT := PALACE_UNITS_ORDER[fLastPalaceUnit];
+    for L := 0 to High(gRes.Units[UT].PalaceCost.Wares) do
+    If gRes.Units[UT].PalaceCost.Wares[L].W = gRes.Wares.VirtualWares[K].Name then
+    begin
+      count2 := gRes.Units[UT].PalaceCost.Wares[L].C;
+      Break;
+    end;
+
+    WaresRow_CostPhase.SetItem(I, IntToKStr(count, 1000), count2.ToString, '');
+  end;
+
 
   if Palace.TrainingInProgress then
     fLastPalaceUnit := Palace.TrainedUnitID;
@@ -4120,149 +4187,29 @@ begin
 
   UT := PALACE_UNITS_ORDER[fLastPalaceUnit];
   LastID := 0;
-  for I := 0 to High(Button_PalaceVWares) do
-  begin
-    //K := Palace.VWareIDs[fLastPalaceUnit, I];
-    K := gRes.Wares.VirtualWares.PALACE_WARES[I];
 
-    if gHands[Palace.Owner].VirtualWare[K] = 0 then
-      Button_PalaceVWares[I].Caption := '--'
-    else
-      Button_PalaceVWares[I].Caption := IntToKStr(gHands[Palace.Owner].VirtualWare[K], 1000);
-
-    Button_PalaceVWares[I].Show;
-    count := 0;
-
-    for J := 0 to high(gRes.Units[UT].PalaceCost.Wares) do
-      if gRes.Units[UT].PalaceCost.Wares[J].Index = K then
-      begin
-        count := gRes.Units[UT].PalaceCost.Wares[J].C;
-        Break;
-      end;
-
-    Button_PalaceVWares[I].Down := count > 0;
-
-    if count <= gHands[Palace.Owner].VirtualWare[K] then
-      Button_PalaceVWares[I].DownColor := $FFFFFFFF
-    else
-      Button_PalaceVWares[I].DownColor := $FF0000FF;
-
-    LastID := I
-  end;
-
-  Bar_Palace_ProgressLeft.Top := Button_PalaceVWares[lastID].Bottom + 40;
   Bar_Palace_ProgressLeft.Position := Palace.FullProgress * 0.97;
   Bar_Palace_ProgressLeft.MainColor := TKMHousePalace(aHouse).BarColor;
   Bar_Palace_ProgressLeft.LinesCount := Max(TKMHousePalace(aHouse).UnitTrainPhases[UT] - 1, 0);
 
-  Label_Palace_Unit.Top := Button_PalaceVWares[lastID].Bottom + 5;
-
-  Bar_Palace_ProgressRight.Top := Button_PalaceVWares[lastID].Bottom + 40;
   Bar_Palace_ProgressRight.Position := Palace.PhaseProgress * 0.97;
   Bar_Palace_ProgressRight.MainColor := icGreen;
   Bar_Palace_ProgressRight.LinesCount := 0;
-  Button_Palace_UnitPlan.Top := Button_PalaceVWares[lastID].Bottom + 40;
+
   Button_Palace_UnitPlan.TexID := gRes.Units[UT].GUIScroll;
   Button_Palace_UnitPlan.FlagColor := gHands[aHouse.Owner].FlagColor;
 
   Label_Palace_Unit.Caption := gRes.Units[UT].GUIName;
-
-  Button_PalaceLeft.Top := Button_Palace_UnitPlan.Bottom + 15;
-  Button_PalaceRight.Top := Button_Palace_UnitPlan.Bottom + 15;
-  Button_PalaceTrain.Top := Button_Palace_UnitPlan.Bottom + 12;
-  Button_Palace_PreviousUnit.Top := Button_Palace_UnitPlan.Bottom + 15;
-  Button_Palace_NextUnit.Top := Button_Palace_UnitPlan.Bottom + 15;
-
   Button_Palace_PreviousUnit.FlagColor := gHands[aHouse.Owner].FlagColor;
   Button_Palace_NextUnit.FlagColor := gHands[aHouse.Owner].FlagColor;
 
-  Button_Palace_UnitPlan.Caption := IfThen(Palace.TrainingInProgress, '--','v');
-  Button_Palace_UnitPlan.CapColor := IfThen(Palace.TrainingInProgress, $FFFF0000, $FFFFFF00);
 
-  if Palace.TrainingInProgress then
-  begin
-    case (gGameParams.Tick div 30) mod 5  of
-      0: Button_Palace_UnitPlan.Caption := '<>';
-      1: Button_Palace_UnitPlan.Caption := '<->';
-      2: Button_Palace_UnitPlan.Caption := '<-->';
-      3: Button_Palace_UnitPlan.Caption := '<--->';
-      4: Button_Palace_UnitPlan.Caption := '<---->';
-
-    end;
-    //Button_Palace_UnitPlan.Caption := '<-->'
-  end
-  else
-  if Palace.Orders[fLastPalaceUnit] > 0 then
-    Button_Palace_UnitPlan.Caption := 'v'
-  else
-    Button_Palace_UnitPlan.Caption := '--';
-
-  if Palace.Orders[fLastPalaceUnit] > 0 then
-    Button_Palace_UnitPlan.Caption := Button_Palace_UnitPlan.Caption + '||' + IntToStr(Palace.Orders[fLastPalaceUnit]);
-
-  if Palace.TrainingInProgress then
-    Button_Palace_UnitPlan.CapColor := $FF05B5FA
-  else
-  if Palace.Orders[fLastPalaceUnit] > 0 then
-    Button_Palace_UnitPlan.CapColor := $FFFFD900
-  else
-    Button_Palace_UnitPlan.CapColor := $FFFFFFFF;
-
-
-  Image_Ornament.Top := Bar_Palace_ProgressLeft.Top - 17;
-  Image_Ornament.Left := Bar_Palace_ProgressLeft.Left - 9;
   Image_Ornament.FlagColor := gHands[aHouse.Owner].GameFlagColor;
 
-  for I := 0 to High(Button_PalaceVWaresCost) do
-    Button_PalaceVWaresCost[I].Hide;
-
-  for I := 0 to High(gRes.Units[UT].PalaceCost.Wares) do
-  begin
-    K := gRes.Units[UT].PalaceCost.Wares[I].Index;
-    Button_PalaceVWaresCost[I].Show;
-    count := gRes.units[UT].PalaceCost.Wares[I].C;
-    Button_PalaceVWaresCost[I].Caption := IntToStr(gRes.units[UT].PalaceCost.Wares[I].C);
-    Button_PalaceVWaresCost[I].Hint := gResTexts[gRes.Wares.VirtualWares.Ware[K].TextID];
-    Button_PalaceVWaresCost[I].TexID := gRes.Wares.VirtualWares.Ware[K].GUIIcon;
-    Button_PalaceVWaresCost[I].Left := Button_PalaceVWares[0].Left + 12 + (I mod 5) * 32;
-    Button_PalaceVWaresCost[I].Top := Button_PalaceRight.Bottom + 20 + (I div 5) * 32;
-    Button_PalaceVWaresCost[I].Down := false;
-
-    if count > gHands[Palace.Owner].VirtualWare[K] then
-    begin
-      Button_PalaceVWaresCost[I].DownColor := $FF0000FF;
-      Button_PalaceVWaresCost[I].Down := true;
-    end;
-  end;
-
-  Image_CancelUnit.Top := Button_Palace_UnitPlan.Bottom - 20;
-  Image_CancelUnit.Left := Button_Palace_UnitPlan.Left;
   Image_CancelUnit.Visible := Palace.TrainingInProgress;
   Image_CancelUnit.TexID := 32;
-  Image_OrderCount.Top := Button_Palace_UnitPlan.Bottom - 20;
-  Image_OrderCount.Left := Button_Palace_UnitPlan.Right - 20;
   Image_OrderCount.Caption := IntToStr(Palace.Orders[fLastPalaceUnit]);
 
-  WaresProdCt_Common[1].Caption := '';
-  WaresProdCt_Common[2].Caption := '';
-  WaresProdCt_Common[3].Caption := '';
-  WaresProdCt_Common[4].Caption := '';
-  If Palace.TrainingInProgress  then
-    WP := TKMHousePalace(aHouse).GetWarePlan
-  else
-    WP := TKMHousePalace(aHouse).GetWarePlanOf(fLastPalaceUnit);
-
-
-  for I := 0 to high(WP) do
-    if WP[I].C > 0 then
-    begin
-      case WP[I].W of
-        wtPig: ShowWaresProdCt(1, WP[I].C);
-        wtGold: ShowWaresProdCt(2, WP[I].C);
-        wtApple: ShowWaresProdCt(3, WP[I].C);
-        wtBoots: ShowWaresProdCt(4, WP[I].C);
-      end;
-    end;
   Panel_House_Palace.Show;
 end;
 

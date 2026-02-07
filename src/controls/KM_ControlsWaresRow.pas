@@ -158,6 +158,33 @@ type
 
   end;
 
+  TKMWaresFlatRow = class(TKMControl)
+  private
+    fItems : array of record
+      X, Y, Wdt : Integer;
+      TexID : Word;
+      Cap1, Cap2, Hint : UnicodeString;
+    end;
+    fItemHeight : Byte;
+    fCount : Byte;
+    procedure SetItemHeight(aHeight : Byte);
+  public
+    Caption : UnicodeString;
+    MaxInRow : Byte;
+    constructor Create(aParent: TKMPanel; aLeft, aTop, aWidth, aHeight: Integer; aMaxCount: Byte = 4);
+    procedure MouseOver(X,Y: Integer; Shift: TShiftState); override;
+    procedure Paint; override;
+
+    const MARGIN = 2;
+
+    property ItemHeight : Byte read fItemHeight write SetItemHeight;
+    procedure Clear;
+    procedure RefreshItems;
+    procedure Add(aTexID : Word; aCaption1, aCaption2, aHint : UnicodeString; doRefresh : Boolean = false);
+    procedure SetItem(aIndex : Integer; aTexID : Word; aCaption1, aCaption2, aHint : UnicodeString);overload;
+    procedure SetItem(aIndex : Integer; aCaption1, aCaption2, aHint : UnicodeString);overload;
+  end;
+
   TKMIconsRow = class(TKMControl)
     private
 
@@ -1171,5 +1198,146 @@ begin
     end;
 
 end;
+
+
+
+constructor TKMWaresFlatRow.Create(aParent: TKMPanel; aLeft: Integer; aTop: Integer; aWidth: Integer; aHeight: Integer; aMaxCount: Byte = 4);
+begin
+  Inherited Create(aParent, aLeft, aTop, aWidth, aHeight);
+  MaxInRow := aMaxCount;
+  fItemHeight := 20;
+end;
+
+
+procedure TKMWaresFlatRow.RefreshItems;
+var I, J, K, lTop, wareWidth, inRowCnt, rowsCnt : Integer;
+begin
+  J := fCount;
+
+  If J = 0 then
+    Exit;
+
+  rowsCnt := 0;
+  K := 0;
+  lTop := AbsTop - fItemHeight;
+  wareWidth := Width;
+  for I := 0 to J - 1 do
+  begin
+    If K = 0 then
+    begin
+      inRowCnt := Min(MaxInRow, J - I);
+      wareWidth := ((Width) div inRowCnt) - MARGIN;
+
+      Inc(lTop, fItemHeight + MARGIN);
+      Inc(rowsCnt);
+    end;
+    fItems[I].X := AbsLeft + (wareWidth + MARGIN) * K;
+    fItems[I].Y := lTop;
+    fItems[I].Wdt := wareWidth;
+    inc(K);
+    If K >= MaxInRow then
+      K := 0;
+  end;
+  Height := rowsCnt * (fItemHeight + MARGIN);
+end;
+
+procedure TKMWaresFlatRow.SetItemHeight(aHeight : Byte);
+begin
+  fItemheight := aHeight;
+  RefreshItems;
+end;
+
+procedure TKMWaresFlatRow.Clear;
+begin
+  fCount := 0;
+end;
+
+procedure TKMWaresFlatRow.Add(aTexID: Word; aCaption1, aCaption2: UnicodeString; aHint: UnicodeString; doRefresh : Boolean = false);
+begin
+  Inc(fCount);
+  If fCount >= length(fItems) then
+    SetLength(fItems, fCount + 4);
+  fItems[fCount - 1].TexID := aTexID;
+  fItems[fCount - 1].Cap1 := aCaption1;
+  fItems[fCount - 1].Cap2 := aCaption2;
+  fItems[fCount - 1].Hint := aHint;
+  If doRefresh then
+    RefreshItems;
+end;
+
+procedure TKMWaresFlatRow.SetItem(aIndex: Integer; aTexID: Word; aCaption1, aCaption2: UnicodeString; aHint: UnicodeString);
+begin
+  If aIndex >= fCount then
+    Exit;
+  fItems[aIndex].TexID := aTexID;
+  fItems[aIndex].Cap1 := aCaption1;
+  fItems[aIndex].Cap2 := aCaption2;
+  fItems[aIndex].Hint := aHint;
+end;
+
+procedure TKMWaresFlatRow.SetItem(aIndex: Integer; aCaption1, aCaption2: UnicodeString; aHint: UnicodeString);
+begin
+  If aIndex >= fCount then
+    Exit;
+  fItems[aIndex].Cap1 := aCaption1;
+  fItems[aIndex].Cap2 := aCaption2;
+  fItems[aIndex].Hint := aHint;
+end;
+
+
+procedure TKMWaresFlatRow.MouseOver(X: Integer; Y: Integer; Shift: TShiftState);
+var I, J : Integer;
+begin
+  Inherited;
+  J := fCount;
+
+  Hint := '';
+  if J = 0 then
+  begin
+  end else
+  begin
+
+    for I := 0 to J - 1 do
+      if InRange(X, fItems[I].X, fItems[I].X + fItems[I].Wdt) and InRange(Y, fItems[I].Y, fItems[I].Y + fItemHeight) then
+      begin
+        Hint := fItems[I].Hint;
+        Exit;
+      end;
+
+  end;
+end;
+
+procedure TKMWaresFlatRow.Paint;
+var I, J, id : Integer;
+begin
+
+  TKMRenderUI.WriteText(AbsLeft, AbsTop - 17, Width, Caption, fntGrey, taCenter);
+
+  J := fCount;
+  if J = 0 then
+  begin
+    TKMRenderUI.WriteBevel(AbsLeft, AbsTop, Width, Height, 1, 0.35); //render only bevel
+    Exit;
+  end;
+
+
+  for I := 0 to J - 1 do
+  begin
+
+    TKMRenderUI.WriteBevel(fItems[I].X, fItems[I].Y, fItems[I].Wdt, fItemHeight, 1, 0.65); //render bevel for each ware
+
+    TKMRenderUI.WriteText(fItems[I].X + 20, fItems[I].Y + 3, fItems[I].Wdt - 25, fItems[I].Cap1, fntGame, taCenter);
+    TKMRenderUI.WriteLine(fItems[I].X + 20, fItems[I].Y + 15, fItems[I].X + 20 + fItems[I].Wdt - 25, fItems[I].Y + 15, icWhite);
+    TKMRenderUI.WriteText(fItems[I].X + 20, fItems[I].Y + 16, fItems[I].Wdt - 25, fItems[I].Cap2, fntGame, taCenter);
+
+    id := fItems[I].TexID;
+    TKMRenderUI.WritePicture(fItems[I].X, fItems[I].Y - 1, 23, fItemHeight,
+                              [], rxGui, id, Enabled, icWhite, 0.15);
+  end;
+
+end;
+
+
+
 end.
 

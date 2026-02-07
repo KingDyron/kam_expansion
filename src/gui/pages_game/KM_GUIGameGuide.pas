@@ -314,14 +314,14 @@ begin
     TKMLabel.Create(Panel_House, 30, 190, 300, 20, gResTexts[1910], fntMetal, taLeft);
     for I := 0 to High(Button_ReleasedBy) do
     begin
-      Button_ReleasedBy[I] := TKMButtonFlat.Create(Panel_House, 40 + I * 34, 205, 30, 30, 0);
+      Button_ReleasedBy[I] := TKMButtonFlat.Create(Panel_House, 40 + I * 34, 210, 30, 30, 0);
       Button_ReleasedBy[I].OnClick := ReleasedByClick;
     end;
 
-    TKMLabel.Create(Panel_House, 30, 255, 300, 20, gResTexts[1911], fntMetal, taLeft);
+    TKMLabel.Create(Panel_House, 30, 245, 300, 20, gResTexts[1911], fntMetal, taLeft);
     for I := 0 to High(Button_VWares) do
     begin
-      Button_VWares[I] := TKMButtonFlat.Create(Panel_House, 40 + I * 34, 270, 27, 27, 0);
+      Button_VWares[I] := TKMButtonFlat.Create(Panel_House, 40 + I * 34, 265, 27, 27, 0);
       Button_VWares[I].Tag2 := 1;
       Button_VWares[I].OnClick := WaresRowClick;
     end;

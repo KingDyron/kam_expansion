@@ -3913,7 +3913,7 @@
 			"MaxWorkersCount" : 1,
 			"CanOverfill" : False,
 			"GatheringScript" : "gsNone",
-			"WareInput" : ["wtPig","wtGold","wtApple","wtBoots","wtNone","wtNone"],
+			"WareInput" : ["wtPig","wtNone","wtNone","wtNone","wtNone","wtNone"],
 			"WareOutput" : ["wtNone","wtNone","wtNone","wtNone","wtNone","wtNone"],
 			"UnlockAfter" : ["htPottery"],
 			"ha_Flag1" : {"X" : 31,"Y" : -232,"Steps" : [1183,1184,1185,1186,1187,1188,1189,1190,1191,1192]},
