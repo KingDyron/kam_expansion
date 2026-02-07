@@ -1701,7 +1701,6 @@ end;
 function TKMTerrain.TileIsStone(X,Y: Word): Word;
 begin
   Result := IfThen(Land[Y, X].HasNoLayers, fTileset[Land^[Y, X].BaseLayer.Terrain].Stone, 0);
-  //Result := Result + gMapElements[Land[Y,X].Obj].Stone;
 end;
 
 
@@ -1717,16 +1716,14 @@ begin
   else
   If gRes.Tileset.Overlay[aTo].W = wtCoal then
     Result := Result + gRes.Tileset.Overlay[aTo].resCount;
-
-  //Result := Result + gMapElements[Land[Y,X].Obj].Coal;
 end;
 
 function TKMTerrain.TileIsClay(X,Y: Word): Word;
-//var aTO : TKMTileOverlay;
 begin
-  //aTO := Land[Y, X].TileOverlay2;
-  //Result := IfThen(aTO in CLAY_LIKE_OVERLAYS, fTileset[TILE_OVERLAY_IDS[aTO]].Clay, 0);
-  Result := gMapElements[Land[Y,X].Obj].Clay;
+  If gMapElements[Land[Y,X].Obj].Ware = wtTile then
+    Result := gMapElements[Land[Y,X].Obj].WareCount
+  else
+    Result := 0;
 end;
 
 
@@ -1735,7 +1732,6 @@ begin
   Result := IfThen(Land[Y, X].HasNoLayers, fTileset[Land^[Y, X].BaseLayer.Terrain].Iron, 0);
   if Land[Y, X].TileOverlay2 = UNDERGROUND_IRON_ID then
     Result := Result + Land[Y, X].Ware.C2;
-  //Result := Result + gMapElements[Land[Y,X].Obj].Iron;
 end;
 
 
@@ -1744,7 +1740,6 @@ begin
   Result := IfThen(Land[Y, X].HasNoLayers, fTileset[Land^[Y, X].BaseLayer.Terrain].Bitin, 0);
   if Land[Y, X].TileOverlay2 = UNDERGROUND_BITIN_ID then
     Result := Result + Land[Y, X].Ware.C2;
-  //Result := Result + gMapElements[Land[Y,X].Obj].Bitin;
 end;
 
 
@@ -1753,7 +1748,6 @@ begin
   Result := IfThen(Land[Y, X].HasNoLayers, fTileset[Land^[Y, X].BaseLayer.Terrain].Gold, 0);
   if Land[Y, X].TileOverlay2 = UNDERGROUND_GOLD_ID then
     Result := Result + Land[Y, X].Ware.C2;
-  //Result := Result + gMapElements[Land[Y,X].Obj].Gold;
 end;
 
 
@@ -2538,10 +2532,7 @@ end;
 function TKMTerrain.TileHasCollectorsGoods(const X: Integer; const Y: Integer): Boolean;
 begin
 
-  Result := (gMapElements[Land^[Y, X].Obj].Iron > 0)
-            or (gMapElements[Land^[Y, X].Obj].Stone > 0)
-            or (gMapElements[Land^[Y, X].Obj].Coal > 0)
-            or (gMapElements[Land^[Y, X].Obj].Gold > 0)
+  Result := not (ObjectGetWare(Land^[Y, X].Obj) in [wtNone, wtTile])
             or ((Land^[Y, X].Ware.W > 0) and (Land^[Y, X].Ware.C > 0))
             or (length(gMapElements[Land^[Y, X].Obj].VWares) > 0)
             or HasMeat(KMPoint(X, Y));
@@ -6285,20 +6276,6 @@ transition := GetStoneTransitionType(aLoc.X,aLoc.Y + 1); //Check transition type
 
   if Land^[aLoc.Y,aLoc.X].TileOverlay2.IsInfinite then
     Exit;
-
-  if gMapElements[Land^[aLoc.Y,aLoc.X].Obj].Stone > 0 then
-  begin
-    if gMapElements[Land^[aLoc.Y,aLoc.X].Obj].Stone = 1 then
-    SetObject(aLoc, 255)
-    else
-    if gMapElements[Land^[aLoc.Y,aLoc.X].Obj - 1].Stone > 0 then
-      SetObject(aLoc, Land^[aLoc.Y,aLoc.X].Obj - 1)
-    else
-    SetObject(aLoc, 255);
-
-    Exit;
-  end;
-
   // Replace with smaller ore deposit tile (there are 2 sets of tiles, we can choose random)
   case Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain of
     132, 137: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 131 + KaMRandom(2, 'TKMTerrain.DecStoneDeposit')*5;
@@ -6340,6 +6317,7 @@ end;
 // It may fail cos of two miners mining the same last piece of ore
 function TKMTerrain.DecOreDeposit(const aLoc: TKMPoint; aWare: TKMWareType): Boolean;
 var isCorner, isOverlayCoal : Boolean;
+  obj : Word;
 begin
   if not (aWare in [wtIronOre,wtGoldOre,wtCoal, wtBitinOre, wtTile, wtJewerly]) then
     raise ELocError.Create('Wrong ore decrease', aLoc);
@@ -6358,7 +6336,7 @@ begin
     Exit;
   end;
 
-  if (aWare = wtTile) then
+  {if (aWare = wtTile) then
   begin
     if gMapElements[Land^[aLoc.Y,aLoc.X].Obj].Clay > 0 then
     begin
@@ -6370,32 +6348,22 @@ begin
       Result := true;
     end;
     Exit;
-  end;
+  end;}
   //check if object has resource
-  if ((aWare = wtCoal) and (gMapElements[Land^[aLoc.Y,aLoc.X].Obj].Coal > 0))
-    or ((aWare = wtBitinOre) and (gMapElements[Land^[aLoc.Y,aLoc.X].Obj].Bitin > 0))
-    or ((aWare = wtGoldOre) and (gMapElements[Land^[aLoc.Y,aLoc.X].Obj].Gold > 0))
-    or ((aWare = wtIronOre) and (gMapElements[Land^[aLoc.Y,aLoc.X].Obj].Iron > 0))then
+  obj := Land^[aLoc.Y,aLoc.X].Obj;
+  If ObjectGetWare(obj) = aWare then
   begin
-    if ((aWare = wtCoal) and (gMapElements[Land^[aLoc.Y,aLoc.X].Obj].Coal = 1))
-    or ((aWare = wtBitinOre) and (gMapElements[Land^[aLoc.Y,aLoc.X].Obj].Bitin = 1))
-    or ((aWare = wtGoldOre) and (gMapElements[Land^[aLoc.Y,aLoc.X].Obj].Gold = 1))
-    or ((aWare = wtIronOre) and (gMapElements[Land^[aLoc.Y,aLoc.X].Obj].Iron = 1)) then
+    If gMapElements[obj].WareCount = 1 then
       SetObject(aLoc, OBJ_NONE)
     else
-    if ((aWare = wtCoal) and (gMapElements[Land^[aLoc.Y,aLoc.X].Obj - 1].Coal >= 1))
-    or ((aWare = wtBitinOre) and (gMapElements[Land^[aLoc.Y,aLoc.X].Obj - 1].Bitin >= 1))
-    or ((aWare = wtGoldOre) and (gMapElements[Land^[aLoc.Y,aLoc.X].Obj - 1].Gold >= 1))
-    or ((aWare = wtIronOre) and (gMapElements[Land^[aLoc.Y,aLoc.X].Obj - 1].Iron >= 1)) then
-      SetObject(aLoc, Land^[aLoc.Y,aLoc.X].Obj - 1)
+    If (gMapElements[obj - 1].WareCount >= 1) and (ObjectGetWare(obj - 1) = aWare) then
+      SetObject(aLoc, obj - 1)
     else
-    SetObject(aLoc, OBJ_NONE);
+      SetObject(aLoc, OBJ_NONE);
 
     Result := true;
     Exit;
   end;
-  //if TileIsMineShaft(aLoc) then
-  //  Exit;
 
   if ArrayContains(Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain, [325, 326, 327,  343, 344, 345,  334, 335, 336,  328, 329, 330, 337, 338, 339]) then
   begin
@@ -6442,16 +6410,6 @@ begin
 
         Result := true;
       end;
-
-      {case Land^[aLoc.Y,aLoc.X].TileOverlay2 of
-
-        toCoal1 : Land^[aLoc.Y,aLoc.X].TileOverlay2 := toNone;
-        toCoal2 : Land^[aLoc.Y,aLoc.X].TileOverlay2 := toCoal1;
-        toCoal3 : Land^[aLoc.Y,aLoc.X].TileOverlay2 := toCoal2;
-        toCoal4 : Land^[aLoc.Y,aLoc.X].TileOverlay2 := toCoal3;
-        toCoal5 : Land^[aLoc.Y,aLoc.X].TileOverlay2 := toCoal4;
-
-      end;}
 
     end;
     if not isOverlayCoal then
@@ -8230,12 +8188,10 @@ begin
         end;
 
     //if there was clay below it then remove it
-    if aHouseType <> htPottery then
-      for I := 1 to MAX_HOUSE_SIZE do
-        for K := 1 to MAX_HOUSE_SIZE do
-          if HA[I, K] <> 0 then
-            if gMapElements[Land^[aLoc.Y + I - 4, aLoc.X + K - 3].Obj].Clay > 0 then
-              Land^[aLoc.Y + I - 4, aLoc.X + K - 3].TileOverlay2 := OVERLAY_NONE;
+    for I := 1 to MAX_HOUSE_SIZE do
+      for K := 1 to MAX_HOUSE_SIZE do
+        if HA[I, K] <> 0 then
+          Land^[aLoc.Y + I - 4, aLoc.X + K - 3].TileOverlay2 := OVERLAY_NONE;
 
   end else
   begin

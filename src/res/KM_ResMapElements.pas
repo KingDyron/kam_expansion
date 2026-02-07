@@ -25,7 +25,11 @@ type
     SnowPic : Word;
     RandomPos,
     RenderAsTileOverlay, RotateToTile : Boolean;
-    Clay, Iron, Gold, Bitin, Coal, Stone : Word;
+    //Clay, Iron, Gold, Bitin, Coal, Stone : Word;
+
+    Ware : TKMWareType;
+    WareCount : Byte;
+
     VWareChance : Byte;
     VWares : array of record
       W : String;//Name
@@ -247,317 +251,13 @@ end;
 
 // Reading map elements properties and animation data
 procedure TKMResMapElements.LoadFromFile;
-const
-  ELEMENT_SIZE = 99; // Old size of TKMMapElement (before we have added our fields to it)
-
-  procedure CreateObject(aId, aPicID : Integer; CTree, DiagBlock, aAllBlocked, aCanBeRemoved : Boolean; aSnowPic : Integer; PlaceInEditor : Boolean = true; isTileOverlay : Boolean = false);
-  begin
-    with gMapElements[aID] do
-    begin
-      Anim.Count := 1;
-      Anim.Step[1] := aPicID;
-      CuttableTree := CTree;
-      DiagonalBlocked := DiagBlock;
-      AllBlocked := aAllBlocked;
-      WineOrCorn := False;
-      CanGrow := False;
-      DontPlantNear := False;
-      if PlaceInEditor then
-        Stump := -1
-      else
-        Stump := 12;
-      CanBeRemoved := aCanBeRemoved;
-      SnowPic :=  aSnowPic;
-      RenderAsTileOverlay := isTileOverlay;
-    end;
-  end;
-
-//var
-  //S: TMemoryStream;
-  //I: Integer;
-  //stage : TKMChopableAge;
 begin
-  //if not FileExists(aFileName) then Exit;
   OBJECTS_CNT := 648;
   fCount := OBJECTS_CNT + 1;
   SetLength(gMapElements, OBJECTS_CNT + 1);
   SetLength(gFruitTrees, 0);
   SetLength(gDecorations, 0);
-
-  {S := TMemoryStream.Create;
-  S.LoadFromFile(aFileName);
-  for I := Low(gMapElements) to 255 do
-  begin
-    S.Read(gMapElements[I], ELEMENT_SIZE);
-    gMapElements[I].KillByRoad := TKMKillByRoad(OBJ_KILL_BY_ROAD[I]);
-    gMapElements[I].SnowPic := 255;
-    gMapElements[I].AxeHitTimes := 14;
-    gMapElements[I].TrunksCount := 1;
-    gMapElements[I].CuttableTree := false;
-  end;
-
-  for I := 1 to High(CHOPABLE_TREES) do
-  begin
-    gMapElements[CHOPABLE_TREES[I, caAge1]].NextTreeAgeObj := CHOPABLE_TREES[I, caAge2];
-    gMapElements[CHOPABLE_TREES[I, caAge2]].NextTreeAgeObj := CHOPABLE_TREES[I, caAge3];
-    gMapElements[CHOPABLE_TREES[I, caAge3]].NextTreeAgeObj := CHOPABLE_TREES[I, caAgeFull];
-    gMapElements[CHOPABLE_TREES[I, caAgeFull]].FallTreeAnimObj := CHOPABLE_TREES[I, caAgeFall];
-
-    gMapElements[CHOPABLE_TREES[I, caAgeFull]].LandStump := CHOPABLE_TREES[I, caAgeStump];
-    gMapElements[CHOPABLE_TREES[I, caAgeFull]].NextTreeAgeObj := 0;
-    gMapElements[CHOPABLE_TREES[I, caAgeFull]].CuttableTree := true;
-
-    gMapElements[CHOPABLE_TREES[I, caAge1]].TreeGrowAge := TREE_AGE_1;
-    gMapElements[CHOPABLE_TREES[I, caAge2]].TreeGrowAge := TREE_AGE_2;
-    gMapElements[CHOPABLE_TREES[I, caAge3]].TreeGrowAge := TREE_AGE_FULL;
-    gMapElements[CHOPABLE_TREES[I, caAgeFull]].TreeGrowAge := 0;
-    gMapElements[CHOPABLE_TREES[I, caAgeFall]].TreeGrowAge := 0;
-
-
-
-  end;
-
-    
-  fCount := OBJECTS_CNT + 1; //254 by default
-  fCRC := Adler32CRC(S);
-  FreeAndNil(S);
-
-  gMapElements[63].Anim.Count := 1;
-  gMapElements[63].Anim.Step[1] := 16;
-  gMapElements[63].CuttableTree := False;
-  gMapElements[63].DiagonalBlocked := False;
-  gMapElements[63].AllBlocked := False;
-  gMapElements[63].WineOrCorn := False;
-  gMapElements[63].CanGrow := False;
-  gMapElements[63].DontPlantNear := False;
-  gMapElements[63].Stump := -1;
-  gMapElements[63].CanBeRemoved := True;
-
-  CreateObject(256, 336, false, false, false, false, 255, false);
-  CreateObject(257, 337, false, false, false, false, 255, false);
-  CreateObject(258, 338, false, false, false, false, 255, false);
-  CreateObject(259, 339, false, false, false, false, 255, false);
-
-  CreateObject(260, 340, false, false, false, false, 255, false);
-  CreateObject(261, 341, false, false, false, false, 255, false);
-  CreateObject(262, 342, false, false, false, false, 255, false);
-  CreateObject(263, 343, false, false, false, false, 255, false);
-
-  CreateObject(264, 344, false, true, false, false, 255);
-  CreateObject(265, 345, false, true, false, false, 255);
-  CreateObject(266, 346, false, true, false, false, 255);
-  CreateObject(267, 347, false, true, false, false, 255);
-  CreateObject(268, 348, false, true, false, false, 255);
-  CreateObject(269, 349, false, true, false, false, 255);
-  CreateObject(270, 350, false, true, false, false, 255);
-  CreateObject(271, 351, false, true, false, false, 255);
-  CreateObject(272, 352, false, true, false, false, 255);
-  CreateObject(273, 353, false, true, false, false, 255);
-  CreateObject(274, 354, false, true, false, false, 255);
-  CreateObject(275, 355, false, true, false, false, 255);
-
-  CreateObject(276, 356, false, false, false, true, 255);
-  CreateObject(277, 356, false, false, false, true, 255);
-  CreateObject(278, 359, false, false, true, false, 255);
-  CreateObject(279, 360, false, false, true, false, 255);
-  //clay
-  CreateObject(280, 361, false, false, false, true, 255);
-  gMapElements[280].Clay := 1;
-  gMapElements[280].RotateToTile := false;
-  gMapElements[280].KillByRoad := kbrWest;
-  gMapElements[280].RandomPos := true;
-
-  CreateObject(281, 362, false, false, false, true, 255);
-  gMapElements[281].Clay := 2;
-  gMapElements[281].RotateToTile := false;
-  gMapElements[281].KillByRoad := kbrWest;
-  gMapElements[281].RandomPos := true;
-
-  CreateObject(282, 363, false, false, false, true, 255);
-  gMapElements[282].Clay := 3;
-  gMapElements[282].RotateToTile := false;
-  gMapElements[282].KillByRoad := kbrWest;
-  gMapElements[282].RandomPos := true;
-
-  CreateObject(283, 364, false, false, false, true, 255);
-  gMapElements[283].Clay := 4;
-  gMapElements[283].RotateToTile := false;
-  gMapElements[283].KillByRoad := kbrWest;
-  gMapElements[283].RandomPos := true;
-
-  CreateObject(284, 365, false, false, false, true, 255);
-  gMapElements[284].Clay := 5;
-  gMapElements[284].RotateToTile := false;
-  gMapElements[284].KillByRoad := kbrWest;
-  gMapElements[284].RandomPos := true;
-
- gMapElements[277].WineOrCorn := true;
-  with gMapElements[276].Anim do
-  begin
-    Count := 12;
-    Step[1] := 358;
-    Step[2] := 358;
-    Step[3] := 358;
-    Step[4] := 356;
-    Step[5] := 356;
-    Step[6] := 356;
-    Step[7] := 357;
-    Step[8] := 357;
-    Step[9] := 357;
-    Step[10] := 356;
-    Step[11] := 356;
-    Step[12] := 356;
-    Step[13] := 357;
-    Step[14] := 357;
-    Step[15] := 357;
-  end;
-
-  with gMapElements[277].Anim do
-  begin
-    Count := 12;
-    Step[1] := 358;
-    Step[2] := 358;
-    Step[3] := 358;
-    Step[4] := 356;
-    Step[5] := 356;
-    Step[6] := 356;
-    Step[7] := 357;
-    Step[8] := 357;
-    Step[9] := 357;
-    Step[10] := 356;
-    Step[11] := 356;
-    Step[12] := 356;
-    Step[13] := 357;
-    Step[14] := 357;
-    Step[15] := 357;
-  end;
-  // Save to file if we want to have it there. For now hardcoded is ok
-  //SaveToFile(aFileName);
-  gMapElements[0].SnowPic := 292;
-  gMapElements[1].SnowPic := 276;
-  gMapElements[2].SnowPic := 277;
-  gMapElements[3].SnowPic := 278;
-  gMapElements[4].SnowPic := 279;
-
-  gMapElements[5].SnowPic := 293;
-  gMapElements[6].SnowPic := 294;
-  gMapElements[7].SnowPic := 297;
-
-  gMapElements[8].SnowPic := 281;
-  gMapElements[9].SnowPic := 280;
-
-  gMapElements[10].SnowPic := 295;
-  gMapElements[11].SnowPic := 296;
-  gMapElements[12].SnowPic := 298;
-
-  gMapElements[13].SnowPic := 284;
-  gMapElements[14].SnowPic := 325;
-  gMapElements[15].SnowPic := 326;
-  gMapElements[16].SnowPic := 329;
-  gMapElements[17].SnowPic := 256;
-  gMapElements[18].SnowPic := 257;
-  gMapElements[19].SnowPic := 258;
-  gMapElements[20].SnowPic := 311;
-  gMapElements[21].SnowPic := 267;
-
-  gMapElements[25].SnowPic := 311;
-  gMapElements[26].SnowPic := 311;
-  gMapElements[27].SnowPic := 311;
-  gMapElements[29].SnowPic := 326;
-  gMapElements[30].SnowPic := 326;
-  gMapElements[31].SnowPic := 326;
-
-  gMapElements[49].SnowPic := 283;
-
-  gMapElements[60].SnowPic := 333;
-  gMapElements[62].SnowPic := 333;
-  gMapElements[63].SnowPic := 275;
-
-
-  gMapElements[68].SnowPic := 330;
-  gMapElements[69].SnowPic := 331;
-  gMapElements[70].SnowPic := 261;
-  gMapElements[71].SnowPic := 260;
-  gMapElements[72].SnowPic := 332;
-  gMapElements[73].SnowPic := 259;
-
-  gMapElements[88].SnowPic := 285;
-  gMapElements[90].SnowPic := 321;
-  gMapElements[93].SnowPic := 317;
-  gMapElements[94].SnowPic := 316;
-  gMapElements[95].SnowPic := 310;
-  gMapElements[97].SnowPic := 285;
-  gMapElements[99].SnowPic := 321;
-
-  gMapElements[102].SnowPic := 285;
-  gMapElements[103].SnowPic := 321;
-  gMapElements[107].SnowPic := 285;
-
-
-
-  gMapElements[100].SnowPic := 286;
-  gMapElements[103].SnowPic := 320;
-  gMapElements[105].SnowPic := 289;
-
-
-  gMapElements[89].SnowPic := 320;
-  gMapElements[92].SnowPic := 302;
-  gMapElements[98].SnowPic := 320;
-  gMapElements[103].SnowPic := 320;
-  gMapElements[104].SnowPic := 321;
-  gMapElements[108].SnowPic := 320;
-  gMapElements[109].SnowPic := 322;
-  gMapElements[110].SnowPic := 300;
-
-  gMapElements[112].SnowPic := 269;
-  gMapElements[113].SnowPic := 305;
-  gMapElements[114].SnowPic := 304;
-  gMapElements[116].SnowPic := 269;
-  gMapElements[117].SnowPic := 305;
-  gMapElements[118].SnowPic := 304;
-  gMapElements[119].SnowPic := 303;
-
-
-
-  gMapElements[149].SnowPic := 335;
-  gMapElements[150].SnowPic := 315;
-  gMapElements[151].SnowPic := 334;
-  gMapElements[153].SnowPic := 335;
-  gMapElements[154].SnowPic := 315;
-  gMapElements[155].SnowPic := 336;
-  gMapElements[157].SnowPic := 335;
-  gMapElements[158].SnowPic := 315;
-  gMapElements[159].SnowPic := 336;
-
-  gMapElements[160].SnowPic := 312;
-
-  gMapElements[162].SnowPic := 335;
-  gMapElements[163].SnowPic := 315;
-  gMapElements[164].SnowPic := 334;
-  gMapElements[165].SnowPic := 306;
-
-  gMapElements[167].SnowPic := 335;
-  gMapElements[168].SnowPic := 315;
-  gMapElements[169].SnowPic := 334;
-  gMapElements[170].SnowPic := 309;
-  gMapElements[172].SnowPic := 313;
-
-  gMapElements[190].SnowPic := 266;
-  gMapElements[191].SnowPic := 263;
-  gMapElements[192].SnowPic := 262;
-  gMapElements[193].SnowPic := 264;
-  gMapElements[194].SnowPic := 265;
-
-  gMapElements[195].SnowPic := 323;
-  gMapElements[196].SnowPic := 324;
-
-  gMapElements[214].SnowPic := 274;
-  gMapElements[215].SnowPic := 273;
-
-  gMapElements[22].SnowPic := 270;
-  gMapElements[23].SnowPic := 271;
-  gMapElements[24].SnowPic := 272;}
-  fCRC := {fCRC xor }LoadFromJSON(ExeDir + 'data' + PathDelim + 'defines' + PathDelim + 'Objects.json');
+  fCRC := LoadFromJSON(ExeDir + 'data' + PathDelim + 'defines' + PathDelim + 'Objects.json');
 
 end;
 
@@ -727,14 +427,19 @@ begin
 
         RenderAsTileOverlay := nObject.B['RenderAsTileOverlay'];
         RotateToTile := nObject.B['RotateToTile'];
-
-
-        Clay := nObject.I['Clay'];
-        Stone := nObject.I['Stone'];
-        Bitin := nObject.I['Bitin'];
-        Iron := nObject.I['Iron'];
-        Gold := nObject.I['Gold'];
-        Coal := nObject.I['Coal'];
+        Ware := wtNone;
+        WareCount := 0;
+        If nObject.I['Clay'] > 0 then begin Ware := wtTile; WareCount := nObject.I['Clay'] end else
+        If nObject.I['Stone'] > 0 then begin Ware := wtStone; WareCount := nObject.I['Stone'] end else
+        If nObject.I['Bitin'] > 0 then begin Ware := wtBitinOre; WareCount := nObject.I['Bitin'] end else
+        If nObject.I['Iron'] > 0 then begin Ware := wtIronOre; WareCount := nObject.I['Iron'] end else
+        If nObject.I['Gold'] > 0 then begin Ware := wtGoldOre; WareCount := nObject.I['Gold'] end else
+        If nObject.I['Coal'] > 0 then begin Ware := wtCoal; WareCount := nObject.I['Coal'] end;
+        If nObject.Contains('Ware') then
+          If TKMEnumUtils.TryGetAs<TKMWareType>(nObject.S['Ware'], Ware) then
+          begin
+            WareCount := nObject.I['WareCount'];
+          end;
 
         VWareChance := nObject.I['MainGettingChance'];
         nArr2 := nObject.A['VirtualWares'];
@@ -791,12 +496,19 @@ begin
         end;
         PrevTreeAgeObj := 0;
 
-        If nObject.Contains('Clay') then Clay := nObject.I['Clay'];
-        If nObject.Contains('Stone') then Stone := nObject.I['Stone'];
-        If nObject.Contains('Bitin') then Bitin := nObject.I['Bitin'];
-        If nObject.Contains('Iron') then Iron := nObject.I['Iron'];
-        If nObject.Contains('Gold') then Gold := nObject.I['Gold'];
-        If nObject.Contains('Coal') then Coal := nObject.I['Coal'];
+        Ware := wtNone;
+        WareCount := 0;
+        If nObject.I['Clay'] > 0 then begin Ware := wtTile; WareCount := nObject.I['Clay'] end else
+        If nObject.I['Stone'] > 0 then begin Ware := wtStone; WareCount := nObject.I['Stone'] end else
+        If nObject.I['Bitin'] > 0 then begin Ware := wtBitinOre; WareCount := nObject.I['Bitin'] end else
+        If nObject.I['Iron'] > 0 then begin Ware := wtIronOre; WareCount := nObject.I['Iron'] end else
+        If nObject.I['Gold'] > 0 then begin Ware := wtGoldOre; WareCount := nObject.I['Gold'] end else
+        If nObject.I['Coal'] > 0 then begin Ware := wtCoal; WareCount := nObject.I['Coal'] end;
+        If nObject.Contains('Ware') then
+          If TKMEnumUtils.TryGetAs<TKMWareType>(nObject.S['Ware'], Ware) then
+          begin
+            WareCount := nObject.I['WareCount'];
+          end;
 
         If nObject.Contains('CanBeRemoved') then CanBeRemoved := nObject.B['CanBeRemoved'];
         If nObject.Contains('IsCuttableTree') then CuttableTree := nObject.B['IsCuttableTree'];
@@ -1039,12 +751,14 @@ begin
         obj.Add('RandomPos', RandomPos, false);
         obj.Add('RenderAsTileOverlay', RenderAsTileOverlay, false);
         obj.Add('RotateToTile', RotateToTile, false);
-        obj.Add('Clay', Clay, 0);
-        obj.Add('Iron', Iron, 0);
-        obj.Add('Gold', Gold, 0);
-        obj.Add('Coal', Coal, 0);
-        obj.Add('Stone', Stone, 0);
-        obj.Add('Bitin', Bitin, 0);
+        If (Ware <> wtNone)
+          and (WareCount > 0)
+          and TKMEnumUtils.GetName<TKMWareType>(Ware, S) then
+          begin
+            Obj.Add('Ware', S);
+            Obj.Add('WareCount', WareCount);
+          end;
+
         obj.Add('VWareChance', VWareChance, 0);
         If length(VWares) > 0 then
         begin
@@ -1438,35 +1152,15 @@ end;
 
 function ObjectIsWare(aObjId: Integer): Boolean;
 begin
-  Result := (gMapElements[aObjId].Stone > 0)
-            or (gMapElements[aObjId].Clay > 0)
-            or (gMapElements[aObjId].Bitin > 0)
-            or (gMapElements[aObjId].Coal > 0)
-            or (gMapElements[aObjId].Gold > 0)
-            or (gMapElements[aObjId].Iron > 0);
+  Result := (gMapElements[aObjID].Ware <> wtNone) and (gMapElements[aObjID].WareCount > 0);
 end;
 
 function ObjectGetWare(aObjId: Integer) : TKMWareType;
 begin
-  Result := wtNone;
-  if gMapElements[aObjId].Stone > 0 then
-    Result := wtStone
+  IF gMapElements[aObjID].WareCount > 0 then
+    Result := gMapElements[aObjID].Ware
   else
-  if gMapElements[aObjId].Clay > 0 then
-    Result := wtTile
-  else
-  if gMapElements[aObjId].Bitin > 0 then
-    Result := wtBitinOre
-  else
-  if gMapElements[aObjId].Coal > 0 then
-    Result := wtCoal
-  else
-  if gMapElements[aObjId].Gold > 0 then
-    Result := wtGoldOre
-  else
-  if gMapElements[aObjId].Iron > 0 then
-    Result := wtIronOre;
-
+    Result := wtNone;
 end;
 
 end.
