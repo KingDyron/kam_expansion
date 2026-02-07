@@ -731,6 +731,7 @@ begin
 
   Wares[wtBread      ].fMarketPrice := (1/PRODUCTION_RATE[wtBread]) + Wares[wtFlour].MarketPrice / 2 + Wares[wtVegetables].MarketPrice / 2 + Wares[wtWater].MarketPrice / 2;
   Wares[wtEgg].fMarketPrice := Wares[wtJewerly].fMarketPrice / 7;
+  Wares[wtCard].fMarketPrice := Wares[wtEgg].fMarketPrice / 3;
 end;
 
 function TKMResWares.LoadWareDistribution(aPath : String) : Cardinal;
