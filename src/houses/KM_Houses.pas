@@ -7278,8 +7278,8 @@ begin
   if GetPhaseCount(UT) = 0 then
     Exit;
 
-  for K := 0 to High(gRes.Units[UT].PalaceCost.Wares) do
-    with gRes.Units[UT].PalaceCost.Wares[K] do
+  for K := 0 to High(gRes.Units[UT].PalaceCost.MainWares) do
+    with gRes.Units[UT].PalaceCost.MainWares[K] do
       if gHands[Owner].VirtualWare[Index] < C * aOrderCount then
         Exit(false);
 end;
@@ -7295,8 +7295,8 @@ begin
   if GetPhaseCount(UT) = 0 then
     Exit;
 
-  for K := 0 to High(gRes.Units[UT].PalaceCost.Wares) do
-    with gRes.Units[UT].PalaceCost.Wares[K] do
+  for K := 0 to High(gRes.Units[UT].PalaceCost.PhaseWares) do
+    with gRes.Units[UT].PalaceCost.PhaseWares[K] do
       if gHands[Owner].VirtualWare[Index] < C * aOrderCount then
         Exit(false);
 end;
@@ -7311,8 +7311,8 @@ begin
 
   if fPhase = 0 then
   begin
-    for K := 0 to High(gRes.Units[UT].PalaceCost.Wares) do
-      with gRes.Units[UT].PalaceCost.Wares[K] do
+    for K := 0 to High(gRes.Units[UT].PalaceCost.MainWares) do
+      with gRes.Units[UT].PalaceCost.MainWares[K] do
         gHands[Owner].VirtualWareTake(W, C * fOrderCount );
   end;
 
@@ -7326,8 +7326,8 @@ begin
   if GetPhaseCount(UT) = 0 then
     Exit;
 
-  for K := 0 to High(gRes.Units[UT].PalaceCost.Wares) do
-    with gRes.Units[UT].PalaceCost.Wares[K] do
+  for K := 0 to High(gRes.Units[UT].PalaceCost.PhaseWares) do
+    with gRes.Units[UT].PalaceCost.PhaseWares[K] do
       gHands[Owner].VirtualWareTake(W, C * fOrderCount );
 end;
 

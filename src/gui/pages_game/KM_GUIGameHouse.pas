@@ -4135,10 +4135,10 @@ begin
     If not Palace.TrainingInProgress then
     begin
       UT := PALACE_UNITS_ORDER[fLastPalaceUnit];
-      for L := 0 to High(gRes.Units[UT].PalaceCost.Wares) do
-      If gRes.Units[UT].PalaceCost.Wares[L].W = gRes.Wares.VirtualWares[K].Name then
+      for L := 0 to High(gRes.Units[UT].PalaceCost.MainWares) do
+      If gRes.Units[UT].PalaceCost.MainWares[L].W = gRes.Wares.VirtualWares[K].Name then
       begin
-        count2 := gRes.Units[UT].PalaceCost.Wares[L].C;
+        count2 := gRes.Units[UT].PalaceCost.MainWares[L].C;
         Break;
       end;
       If count2 > 0 then
@@ -4164,10 +4164,10 @@ begin
     count2 := 0;
 
     UT := PALACE_UNITS_ORDER[fLastPalaceUnit];
-    for L := 0 to High(gRes.Units[UT].PalaceCost.Wares) do
-    If gRes.Units[UT].PalaceCost.Wares[L].W = gRes.Wares.VirtualWares[K].Name then
+    for L := 0 to High(gRes.Units[UT].PalaceCost.PhaseWares) do
+    If gRes.Units[UT].PalaceCost.PhaseWares[L].W = gRes.Wares.VirtualWares[K].Name then
     begin
-      count2 := gRes.Units[UT].PalaceCost.Wares[L].C;
+      count2 := gRes.Units[UT].PalaceCost.PhaseWares[L].C;
       Break;
     end;
     If count2 > 0 then

@@ -744,8 +744,8 @@ begin
       end else
       if UnitType in SPECIAL_UNITS then
       begin
-        for I := 0 to high(gRes.Units[UnitType].PalaceCost.Wares) do
-          VirtualWareTake(gRes.Units[UnitType].PalaceCost.Wares[I].W, - gRes.Units[UnitType].PalaceCost.Wares[I].C div 5 * aMulti);
+        for I := 0 to high(gRes.Units[UnitType].PalaceCost.PhaseWares) do
+          VirtualWareTake(gRes.Units[UnitType].PalaceCost.PhaseWares[I].W, - gRes.Units[UnitType].PalaceCost.PhaseWares[I].C div 5 * aMulti);
 
       end else
       begin

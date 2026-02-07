@@ -322,7 +322,6 @@ begin
   fUnitType := aType;
 
 
-  PalaceCost.Plan.SetCount(4);
   SiegeCost.SetCount(4);
   AmmoType := GetAmmoType;
   CanOrderAmmo := GetCanOrderAmmo;
@@ -975,20 +974,20 @@ begin
   if htSchool in fTrainingHouses then
     Result := htSchool
   else
-  if htShipYard in fTrainingHouses then
-    Result := htShipYard
-  else
-  if htPalace in fTrainingHouses then
-    Result := htPalace
-  else
-  if htSiegeWorkshop in fTrainingHouses then
-    Result := htSiegeWorkshop
+  if htBarracks in fTrainingHouses then
+    Result := htBarracks
   else
   if htTownHall in fTrainingHouses then
     Result := htTownHall
   else
-  if htBarracks in fTrainingHouses then
-    Result := htBarracks;
+  if htSiegeWorkshop in fTrainingHouses then
+    Result := htSiegeWorkshop
+  else
+  if htShipYard in fTrainingHouses then
+    Result := htShipYard
+  else
+  if htPalace in fTrainingHouses then
+    Result := htPalace;
 
 end;
 
@@ -1064,6 +1063,7 @@ var I, K, J : Integer;
   aAct, UAT : TKMUnitActionType;
   aDir : TKMDirection;
   WT : TKMWareType;
+  VName : String;
 begin
   if aUnit.Contains('HitPoints') then fUnitDat.HitPoints := aUnit.I['HitPoints'];
   if aUnit.Contains('Attack') then fUnitDat.Attack := aUnit.I['Attack'];
@@ -1166,31 +1166,34 @@ begin
     PalaceCost.PhaseCount := aUnit.O['PalaceCost'].I['PhaseCount'];
     nArr := aUnit.O['PalaceCost'].A['VirtualWares'];
     if nArr.Count > 0 then
-      SetLength(PalaceCost.Wares, 0);
+    begin
+      SetLength(PalaceCost.MainWares, 0);
+      SetLength(PalaceCost.PhaseWares, 0);
+    end;
 
     for I := 0 to nArr.Count - 1 do
     begin
       if nArr[I].I['Count'] = 0 then
         Continue;
 
-      SetLength(PalaceCost.Wares, length(PalaceCost.Wares) + 1);
 
-      PalaceCost.Wares[high(PalaceCost.Wares)].W := nArr[I].S['VirtualWareName'];
-      PalaceCost.Wares[high(PalaceCost.Wares)].C := nArr[I].I['Count'];
+      VName := nArr[I].S['VirtualWareName'];
+      If (VName = 'vtCoin')
+        or (VName = 'vtCertificate')
+        or (VName = 'vtPearl') then
+        begin
+          SetLength(PalaceCost.MainWares, length(PalaceCost.MainWares) + 1);
+          PalaceCost.MainWares[high(PalaceCost.MainWares)].W := nArr[I].S['VirtualWareName'];
+          PalaceCost.MainWares[high(PalaceCost.MainWares)].C := nArr[I].I['Count'];
+        end
+        else
+        begin
+          SetLength(PalaceCost.PhaseWares, length(PalaceCost.PhaseWares) + 1);
+          PalaceCost.PhaseWares[high(PalaceCost.PhaseWares)].W := nArr[I].S['VirtualWareName'];
+          PalaceCost.PhaseWares[high(PalaceCost.PhaseWares)].C := nArr[I].I['Count'];
+        end;
     end;
 
-    nArr := aUnit.O['PalaceCost'].A['Wares'];
-
-    for I := 0 to nArr.Count - 1 do
-      if I <= 3 then
-      begin
-        if not TKMEnumUtils.TryGetAs<TKMWareType>(nArr.O[I].S['WareType'],  PalaceCost.Plan[I].W) then
-          raise Exception.Create('Wrong TKMWareTypeType : ' + nArr.O[I].S['WareType']);
-
-        PalaceCost.Plan[I].C := nArr.O[I].I['Count'];
-      end
-      else
-        break;
   end;
 
   nArr := aUnit.A['BarracksCost'];
@@ -1360,10 +1363,13 @@ var I : Integer;
   U : TKMUnitType;
 begin
   for U := UNIT_MIN to UNIT_MAX do
-    for I := 0 to High(fItems[U].PalaceCost.Wares) do
-    begin
-      fItems[U].PalaceCost.Wares[I].Index := gRes.Wares.VirtualWares.WareS[fItems[U].PalaceCost.Wares[I].W].Index;
-    end;
+  begin
+    for I := 0 to High(fItems[U].PalaceCost.PhaseWares) do
+      fItems[U].PalaceCost.PhaseWares[I].Index := gRes.Wares.VirtualWares.WareS[fItems[U].PalaceCost.PhaseWares[I].W].Index;
+
+    for I := 0 to High(fItems[U].PalaceCost.MainWares) do
+      fItems[U].PalaceCost.MainWares[I].Index := gRes.Wares.VirtualWares.WareS[fItems[U].PalaceCost.MainWares[I].W].Index;
+  end;
 
 
 end;
@@ -1469,7 +1475,7 @@ begin
           end;
           root.EndLineArray;
           ///palace cost
-          If (PalaceCost.PhaseCount > 0) and (PalaceCost.PhaseDuration > 0) and (length(PalaceCost.Wares) > 0) then
+          {If (PalaceCost.PhaseCount > 0) and (PalaceCost.PhaseDuration > 0) and (length(PalaceCost.Wares) > 0) then
           begin
             root.WriteObject('PalaceCost');
               with PalaceCost do
@@ -1501,7 +1507,7 @@ begin
                 root.EndArray;
               end;
             root.EndObject;
-          end;
+          end;}
           ///Barracks cost
           If length(BarracksCost) > 0 then
           begin

@@ -418,16 +418,16 @@ type
     C : Word;
   end;
 
+  TKMVWarePlanPalace = array of record
+    W : String;
+    Index: Byte;
+    C : Word;
+  end;
 
   TKMVWarePlan = record
     PhaseCount : Integer;
     PhaseDuration : Integer;
-    Plan : TKMWarePlan;
-    Wares : array of record
-      W : String;
-      Index: Byte;
-      C : Byte;
-    end;
+    MainWares, PhaseWares : TKMVWarePlanPalace
   end;
   PKMVWarePlan = ^TKMVWarePlan;
 

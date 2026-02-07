@@ -415,7 +415,7 @@ end;
 
 function GetFilePath(aPath: string; aExt: AnsiString): string;
 begin
-  Result := aPath + aExt;
+  Result := aPath + String(aExt);
   If not FileExists(Result) then
     Result := '';
 end;

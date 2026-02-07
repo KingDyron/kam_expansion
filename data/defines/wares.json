@@ -117,7 +117,7 @@
 		"ProduceInHouses" : ["htFishermans"],
 		"ShowInHouses" : ["htPalace"],
 		"ProduceAfterWares" : [
-			{"Ware" : "wtFish", "Min" : 1, "Max" : 1, "Chance" : 10, "Cycles" : 10}
+			{"Ware" : "wtFish", "Min" : 1, "Max" : 1, "Chance" : 10, "Cycles" : 5}
 		],
 		"CoinPrice" : 27,
 		"MaxCountInStall" : 2,

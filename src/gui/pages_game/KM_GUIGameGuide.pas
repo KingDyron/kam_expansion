@@ -712,31 +712,33 @@ begin
 
   case gRes.Units[UT].GetTrainingHouse of
     htPalace: begin
-                warePlan := gRes.Units[UT].PalaceCost.Plan;
-                for I := 1 to 4 do
-                  if warePlan[I - 1].W <> wtNone then
-                  begin
-                    If warePlan[I - 1].C = 0 then
-                      fullCount := 0
-                    else
-                      fullCount := warePlan[I - 1].C + (gRes.Units[UT].PalaceCost.PhaseCount - 1);
+                ShowWareCost(1, 1, wtCard);
 
-                    ShowWareCost(I, fullCount, warePlan[I - 1].W);
+                J := 0;
+                with gRes.Units[UT].PalaceCost do
+                begin
+                  for I := 0 to High(MainWares) do
+                  begin
+                    fullCount := MainWares[I].C;
+                    TKMButtonFlat(VWareCost[J]).TexID := gRes.Wares.VirtualWares.Ware[MainWares[I].Index].GUIIcon;
+                    TKMButtonFlat(VWareCost[J]).Caption := fullCount.ToString;
+                    VWareCost[J].Tag := MainWares[I].Index;
+                    VWareCost[J].Show;
+                    VWareCost[J].Hint := gResTexts[gRes.Wares.VirtualWares.Ware[MainWares[I].Index].TextID];
+                    Inc(J);
                   end;
-                for I := 0 to High(VWareCost) do
-                  if I < length(gRes.Units[UT].PalaceCost.Wares) then
-                    with gRes.Units[UT].PalaceCost do
-                    begin
-                      J := Wares[I].Index;
-                      //VWareCost[I].Caption := IntToStr(Wares[I].C);
-                      TKMButtonFlat(VWareCost[I]).Caption := IntToStr(Wares[I].C);
-                      VWareCost[I].Show;
-                      VWareCost[I].Hint := gResTexts[gRes.Wares.VirtualWares.WareS[Wares[I].W].TextID];
-                      TKMButtonFlat(VWareCost[I]).TexID := gRes.Wares.VirtualWares.WareS[Wares[I].W].GUIIcon;
-                      //VWareCost[I].TexID := gRes.Wares.VirtualWares.Ware[J].GUIIcon;
-                      VWareCost[I].Tag := J;
-                    end;
-                SortVisibleControls(265, WareCost[high(WareCost)].Bottom + 3, 190, 3, VWareCost, false, true);
+                  for I := 0 to High(PhaseWares) do
+                  begin
+                    fullCount := PhaseWares[I].C * PhaseCount;
+                    TKMButtonFlat(VWareCost[J]).TexID := gRes.Wares.VirtualWares.Ware[PhaseWares[I].Index].GUIIcon;
+                    TKMButtonFlat(VWareCost[J]).Caption := fullCount.ToString;
+                    VWareCost[J].Tag := PhaseWares[I].Index;
+                    VWareCost[J].Show;
+                    VWareCost[J].Hint := gResTexts[gRes.Wares.VirtualWares.Ware[PhaseWares[I].Index].TextID];
+                    Inc(J);
+                  end;
+                end;
+                SortVisibleControls(265, 50, 190, 3, VWareCost, false, true);
               end;
     htBarracks: for I := 0 to high(gRes.Units[UT].BarracksCost) do
                   if gRes.Units[UT].BarracksCost[I].W <> wtNone then
