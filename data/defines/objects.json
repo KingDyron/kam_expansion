@@ -6713,6 +6713,41 @@
 			"TrunksCount" : 1, 
 			"Stump" : 255, 
 			"TreeGrowAge" : 45
+		}, 
+		{
+			"ObjectID" : 649, 
+			"AnimSteps":[1536], 
+			"PlaceableInEditor" : true, 
+			"SnowPic" : 255, 
+			"VWareChance" : 100, 
+			"VirtualWares":
+			[
+				{"Type" : "vtRandomAll", "Min" : 1, "Max" : 5, "Chance" : 100}
+			]
+		}, 
+		{
+			"ObjectID" : 650, 
+			"AnimSteps":[1536], 
+			"PlaceableInEditor" : true, 
+			"SnowPic" : 255, 
+			"Ware" : "wtValuable",
+			"WareCount" : 1
+		}, 
+		{
+			"ObjectID" : 651, 
+			"AnimSteps":[1537], 
+			"PlaceableInEditor" : true, 
+			"SnowPic" : 255, 
+			"Ware" : "wtNonValuable",
+			"WareCount" : 1
+		}, 
+		{
+			"ObjectID" : 652, 
+			"AnimSteps":[1538], 
+			"PlaceableInEditor" : true, 
+			"SnowPic" : 255, 
+			"Ware" : "wtCard",
+			"WareCount" : 1
 		}
 	], 
 	"Grain Types":

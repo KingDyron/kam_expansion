@@ -289,7 +289,7 @@ const
     3, 3, 3, 1, 1,
     1, 2, 3, 1, 2,
     3, 1, 0,
-    0,0,0,0
+    0,0,0,0,0
   );
   UNITS_WITH_BOOTS : set of TKMUnitType = [utSerf, utWoodcutter, utStonemason, utFisher, utBuilder, utFarmer];
   var

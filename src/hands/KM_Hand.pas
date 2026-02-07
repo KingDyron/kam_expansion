@@ -1884,6 +1884,10 @@ begin
           ware := W;
           count := Cmin + KamRandom(CMax - CMin + 1, 'TKMHand.AddJewerly');
           WareAdded := true;
+
+          If ware = 'vtRandomAll' then
+            ware := gRes.Wares.VirtualWares.Ware[KamRandom(gRes.Wares.VirtualWares.Count, 'RandomAll V-Ware')].Name;
+
           Break;
         end;
       end;

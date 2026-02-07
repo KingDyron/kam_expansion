@@ -143,7 +143,7 @@ const
     41, 42, 43, 44, 45, 46,
     47, 48, 49, 50, 51, 52,
 
-    0, 0, 0, 0 //rtAll, rtWarfare, rtFood
+    0, 0, 0, 0, 0 //rtAll, rtWarfare, rtFood
     );
   RES_COUNT = 53;
   WARE_ID_TO_TYPE: array [0..RES_COUNT-1] of TKMWareType = (
@@ -172,7 +172,7 @@ const
     1, 2, 1, 2, 3, 1,//wtWater
     2, 1, 1, 1, 1, 1,//wtBoots, wtHay..wtPlateArmor
     1, 1, 1,//wtBitinArmor, wtEgg
-    0, 0, 0, 0//wtFood,wtAny, wtWarfare, wtValuable
+    0, 0, 0, 0, 0//wtFood,wtAny, wtWarfare, wtValuable
 
   );
   //How many of resource gets produced per minute on AVERAGE
@@ -308,6 +308,7 @@ end;
 function  TKMVirtualWareList.GetItem(aName: String): TKMVirtualWare;
 var I : Integer;
 begin
+  FillChar(Result, SizeOf(Result), #0);
   Result.Name := 'NotFound:' + aName;
   Result.Index := high(word);
   for I := 0 to High(fList) do
@@ -356,7 +357,7 @@ const
     $FFBF00, $FFBF00, $00BFFF, $00BFFF, $00BFFF,
     $FFBF00, $FFBF00, $00BFFF, $00BFFF, $00BFFF,
     $00BFFF, $FFBF00, $FFBF00,
-    $004080,$004080,$004080,$004080 //wtAll, wtFood, wtWarfare, wtValuable
+    $004080,$004080,$004080,$004080,$004080 //wtAll, wtFood, wtWarfare, wtValuable
     );
 begin
   Result := WARE_COLOR[fType];

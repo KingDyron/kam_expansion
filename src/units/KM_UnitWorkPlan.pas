@@ -805,7 +805,7 @@ begin
                           aLoc := TKMHouseCollectors(aUnit.Home).FlagPoint;
 
                         Prod := gTerrain.FindCollectors(aLoc, MiningRect(wtJewerly), KMPOINT_ZERO, False, tmp);
-                        fIssued := not (Prod[0].W in [wtNone, wtAll]) and (aUnit.Home.CheckWareIn(Prod[0].W) < 5);
+                        fIssued := not (Prod[0].W in [wtNone, wtAll]) and (aUnit.Home.CheckWareIn(Prod[0].W) < 20);
                         if fIssued then
                         begin
                           //ResourcePlan(wtNone, 0, wtNone, 0, Prod[0].W);

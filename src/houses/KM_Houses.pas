@@ -731,6 +731,7 @@ type
     procedure SetNextMode;
 
     procedure FillMeat(aObjType : Word);
+    procedure CollectWare(aWare : TKMWareType; aCount : Integer);
     property Fill : Single read fFill;
 
     constructor Create(aUID: Integer; aHouseType: TKMHouseType; PosX, PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
@@ -7058,6 +7059,50 @@ begin
     ProduceWareFromFill(wtFeathers, fillSkin)
   else
     ProduceWareFromFill(wtSkin, fillSkin);
+end;
+
+procedure TKMHouseCollectors.CollectWare(aWare : TKMWareType; aCount : Integer);
+var R : Integer;
+begin
+  case aWare of
+    wtValuable :  begin
+                    R := KaMRandom(115, 'TKMHouseCollectors.CollectWare Valuable');
+                    case R of
+                      0..9: ProduceWare(wtFeathers, 3);
+                      10..39 : ProduceWare(wtGold, 2);
+                      40..69 : ProduceWare(wtIron, 1);
+                      70..77 : ProduceWare(wtBitinArmor, 1);
+                      78..95 : ProduceWare(wtCard, 1);
+                      96..100 : ProduceWare(wtJewerly, 1);
+                    end;
+                  end;
+    wtNonValuable :  begin
+                R := KaMRandom(WARE_CNT, 'TKMHouseCollectors.CollectWare Valuable');
+                while (TKMWareType(R + 1) in WARES_VALUABLE) or (TKMWareType(R + 1) in WARES_WARFARE) do
+                  R := KaMRandom(WARE_CNT, 'TKMHouseCollectors.CollectWare Valuable');
+
+                ProduceWare(TKMWareType(R + 1), 1);
+              end;
+    wtWarfare : begin
+                  R := KaMRandom(16, 'TKMHouseCollectors.CollectWare Valuable');
+                  case R of
+                    0..10 : ProduceWare(TKMWareType(R + byte(WEAPON_MIN)), 1);
+                    11: ProduceWare(wtMace, 1);
+                    12: ProduceWare(wtFlail, 1);
+                    13: ProduceWare(wtPlateArmor, 1);
+                    14: ProduceWare(wtQuiver, 1);
+                    15: ProduceWare(wtBoots, 1);
+                  end;
+                end;
+    wtCard :  begin
+                R := KaMRandom(100, 'TKMHouseCollectors.CollectWare Valuable');
+                If R >= 60 then
+                  ProduceWare(wtCard, 1);
+
+              end
+    else
+      ProduceWare(aWare, aCount);
+  end;
 end;
 
 procedure TKMHouseCollectors.SetNextMode;

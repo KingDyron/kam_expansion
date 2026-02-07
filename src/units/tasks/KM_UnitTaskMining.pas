@@ -754,14 +754,17 @@ begin
                                 ResAcquired := false;
                               end;
               gsCollector : begin
-                              ResAcquired := true;
-                              if (fObjectType <> 0) and (fObjectType <> 255) then
-                                If ArrayContains(fObjectType, [540, 541, 542, 543, 544, 545, 546, 547, 548]) then
-                                  TKMHouseCollectors(fUnit.Home).FillMeat(fObjectType)
-                                else
-                                if length(gMapElements[fObjectType].VWares) > 0 then
+                              ResAcquired := fDistantResAcquired;
+                              If fDistantResAcquired then
+                                if (fObjectType <> 0) and (fObjectType <> 255) then
                                 begin
-                                  gHands[fUnit.Owner].AddJewerly(fObjectType);
+                                  If ArrayContains(fObjectType, [540, 541, 542, 543, 544, 545, 546, 547, 548]) then
+                                    TKMHouseCollectors(fUnit.Home).FillMeat(fObjectType)
+                                  else
+                                  if length(gMapElements[fObjectType].VWares) > 0 then
+                                    gHands[fUnit.Owner].AddJewerly(fObjectType)
+                                  else
+                                    TKMHouseCollectors(fUnit.Home).CollectWare(WorkPlan.Prod[0].W, WorkPlan.Prod[0].C);
                                   ResAcquired := false;
                                 end;
                             end;
@@ -798,9 +801,7 @@ begin
                   if WorkPlan.GatheringScript = gsCarpenter then
                     if Home.GetWareOutIndex(WorkPlan.Prod[I].W) > 0 then
                       if Home.ProductionCycle[Home.GetWareOutIndex(WorkPlan.Prod[I].W)] mod 8 = 7 then //12% for getting SawDust
-                        Home.ProduceWare(wtSawDust)
-
-
+                        Home.ProduceWare(wtSawDust);
                 end;
 
               if (Home.HouseType = htQuarry) and (KaMRandom(100, 'Double stone') < 5) and gHands[Owner].BuildDevUnlocked(11) then

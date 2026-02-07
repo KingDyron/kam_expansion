@@ -24,7 +24,7 @@ type
     wtHay,      wtMace,          wtFlail,      wtFeathers,     wtPlateArmor,
     wtBitinArmor, wtEgg,         wtCard,
     // Special ware types
-    wtAll, wtWarfare, wtFood, wtValuable
+    wtAll, wtWarfare, wtFood, wtValuable, wtNonValuable
   );
 
   //* Ware type set
@@ -34,7 +34,7 @@ type
 const
   WARE_MIN = wtTrunk;
   WARE_MAX = wtCard;
-  WARE_MAX_ALL = wtValuable;
+  WARE_MAX_ALL = wtNonValuable;
   WARFARE_MIN = wtWoodenShield;
   WEAPON_MIN = wtWoodenShield;
   WEAPON_MAX = wtCrossbow;
