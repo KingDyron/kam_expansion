@@ -6716,7 +6716,7 @@
 		}, 
 		{
 			"ObjectID" : 649, 
-			"AnimSteps":[1536], 
+			"AnimSteps":[1539], 
 			"PlaceableInEditor" : true, 
 			"SnowPic" : 255, 
 			"VWareChance" : 100, 
@@ -6727,7 +6727,7 @@
 		}, 
 		{
 			"ObjectID" : 650, 
-			"AnimSteps":[1536], 
+			"AnimSteps":[1540], 
 			"PlaceableInEditor" : true, 
 			"SnowPic" : 255, 
 			"Ware" : "wtValuable",
@@ -6735,7 +6735,7 @@
 		}, 
 		{
 			"ObjectID" : 651, 
-			"AnimSteps":[1537], 
+			"AnimSteps":[1541], 
 			"PlaceableInEditor" : true, 
 			"SnowPic" : 255, 
 			"Ware" : "wtNonValuable",
@@ -6743,7 +6743,7 @@
 		}, 
 		{
 			"ObjectID" : 652, 
-			"AnimSteps":[1538], 
+			"AnimSteps":[1541], 
 			"PlaceableInEditor" : true, 
 			"SnowPic" : 255, 
 			"Ware" : "wtCard",

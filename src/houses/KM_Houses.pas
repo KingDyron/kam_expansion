@@ -785,6 +785,7 @@ type
     function CanStartTraining : Boolean;
     procedure StartTraining;
     procedure FinishTraining;
+    function TryStartTraining : Boolean;
 
     constructor Create(aUID: Integer; aHouseType: TKMHouseType; PosX, PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
     constructor Load(LoadStream: TKMemoryStream); override;
@@ -7404,6 +7405,7 @@ function TKMHousePalace.CanStartTraining: Boolean;
 begin
   Result := (fTrainingID <> NO_TRRAINING_ID)
     and (fOrderCount > 0)
+    and not TrainingInProgress
     and HasCard
     and (gHands[Owner].GetWorklessCount >= fOrderCount)
     and HasMainVWares(fTrainingID, fOrderCount)
@@ -7419,6 +7421,16 @@ begin
   for I := 1 to fOrderCount do
     gHands[Owner].TakeWorkless;
   fProgress := UnitProgress(PALACE_UNITS_ORDER[fTrainingID]);
+end;
+
+function TKMHousePalace.TryStartTraining : Boolean;
+begin
+  If TrainingInProgress then
+    Exit(false);
+
+  Result := CanStartTraining;
+  If Result then
+    StartTraining;
 end;
 
 procedure TKMHousePalace.FinishTraining;
@@ -7481,11 +7493,7 @@ begin
         fWait := 100;
     end
     else
-    If CanStartTraining then
-      StartTraining
-    else
       fWait := 100;
-
   end;
 end;
 

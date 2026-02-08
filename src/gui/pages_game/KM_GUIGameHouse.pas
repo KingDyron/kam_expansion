@@ -185,9 +185,6 @@ type
       Button_PalaceLeft, Button_PalaceRight, Button_PalaceTrain : TKMButton;
 
       WaresRow_CostOnce, WaresRow_CostPhase  : TKMWaresFlatRow;
-
-      Button_PalaceVWaresCost,
-      Button_PalaceVWares: array of TKMButtonFlat;
       Button_Palace_PreviousUnit,
       Button_Palace_NextUnit,
       Button_Palace_UnitPlan: TKMButtonFlat;
@@ -1255,29 +1252,6 @@ begin
     K := gRes.Wares.VirtualWares.PALACE_WARES[I];
     WaresRow_CostPhase.Add(gRes.Wares.VirtualWares[K].GUIIcon, '153', '151', 'jo³ ho³', I = J);
   end;
-  {SetLength(Button_PalaceVWares, length(gRes.Wares.VirtualWares.PALACE_WARES));
-  SetLength(Button_PalaceVWaresCost, length(gRes.Wares.VirtualWares.PALACE_WARES));
-
-  for I := 0 to High(Button_PalaceVWares) do
-  begin
-    K := gRes.Wares.VirtualWares.PALACE_WARES[I];
-
-    Button_PalaceVWares[I] := TKMButtonFlat.Create(Panel_House_Palace, 0, 0, 28, 32, 0, rxGui);
-    //Button_PalaceVWares[I].HideHighlight := true;
-    Button_PalaceVWares[I].LineWidth := 1;
-    Button_PalaceVWares[I].Clickable := false;
-
-    Button_PalaceVWares[I].TexID := gRes.Wares.VirtualWares[K].GUIIcon;
-    Button_PalaceVWares[I].Hint := gResTexts[gRes.Wares.VirtualWares[K].TextID];
-    Button_PalaceVWares[I].Left := I mod 6 * 30 + 1;
-    Button_PalaceVWares[I].Top := I div 6 * 36;
-
-    Button_PalaceVWaresCost[I] := TKMButtonFlat.Create(Panel_House_Palace, 0, 0, 28, 32, 0, rxGui);
-    Button_PalaceVWaresCost[I].LineWidth := 2;
-    Button_PalaceVWaresCost[I].Hitable := true;
-    Button_PalaceVWaresCost[I].Clickable := false;
-  end;
-  }
 
   Button_Palace_UnitPlan := TKMButtonFlat.Create(Panel_House_Palace, TB_WIDTH div 2 - 35, WaresRow_CostPhase.Bottom + 20 + 17, 70, 120, 0);
   Button_Palace_UnitPlan.Caption := '';
@@ -4084,7 +4058,10 @@ begin
 
 
   end;
-  if (Sender = Button_Palace_UnitPlan) or (Sender = Button_PalaceTrain) then
+  If (Sender = Button_PalaceTrain) then
+      gGame.GameInputProcess.CmdHouse(gicHousePalaceStart, fHouse)
+  else
+  if (Sender = Button_Palace_UnitPlan) then
   begin
     amt := 1;
     if ssShift in Shift then  amt := amt * 5;
@@ -4120,7 +4097,7 @@ var I, K, J, L, count, count2, lastID, phase : Integer;
   WP : TKMWarePlan;
 begin
   Palace := TKMHousePalace(aHouse);
-
+  Button_PalaceTrain.Enabled := Palace.CanStartTraining;
   WaresRow_CostOnce.RefreshItems;
   WaresRow_CostPhase.RefreshItems;
 
@@ -4219,6 +4196,11 @@ begin
 
   Button_Palace_UnitPlan.TexID := gRes.Units[UT].GUIScroll;
   Button_Palace_UnitPlan.FlagColor := gHands[aHouse.Owner].FlagColor;
+
+  If UT in [utPaladin, utAmmoCart, utPikeMachine, utArcher, utPyro] then
+    Button_Palace_UnitPlan.BackBevelColor := icGoldenYellow and $40FFFFFF
+  else
+    Button_Palace_UnitPlan.BackBevelColor := icLightCyan and $40FFFFFF;
 
   Label_Palace_Unit.Caption := gRes.Units[UT].GUIName;
   Button_Palace_PreviousUnit.FlagColor := gHands[aHouse.Owner].FlagColor;

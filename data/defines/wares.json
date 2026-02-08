@@ -351,7 +351,7 @@
 	{
 		"Name":"vtDinner",
 		"TextID" : 2347, 
-		"IconID" : 1064, 
+		"IconID" : 1205, 
 		"ProductionCountMin" : 1, 
 		"ProductionCountMax" : 1, 
 		"ShowInHouses" : ["htInn"],

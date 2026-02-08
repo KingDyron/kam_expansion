@@ -112,6 +112,7 @@ type
     gicHouseStallBuyCoin,            //buy coins for ware
     gicHouseStallBuyItem,            //buy items for ware
     gicHousePalaceOrder,             //set order in Palace
+    gicHousePalaceStart,             //starts recruitment in the palace
     gicHouseQueueAdd,                //queue house add ware
     gicHouseQueueRem,                //queue house remove ware
     gicHouseMerchantSendTo,          //Enable sending to player in merchant's
@@ -294,6 +295,7 @@ const
     gicHouseStallBuyCoin,
     gicHouseStallBuyItem,
     gicHousePalaceOrder,
+    gicHousePalaceStart,
     gicHouseQueueAdd,
     gicHouseQueueRem,
     gicHouseMerchantSendTo,
@@ -405,7 +407,7 @@ const
     gicpt_Int3, //gicHouseStallBuyCoin
     gicpt_Int3, //gicHouseStallBuyItem
     gicpt_Int3, //gicHousePalaceOrder
-
+    gicpt_Int1, //gicHousePalaceStart
     gicpt_Int3,//gicHouseQueueAdd
     gicpt_Int2,//gicHouseQueueRem
     gicpt_Int2,//gicHouseMerchantSendTo
@@ -1168,7 +1170,7 @@ begin
       gicHouseSchoolTrain, gicHouseSchoolTrainChOrder, gicHouseSchoolTrainChLastUOrder, gicHouseRemoveTrain,
       gicHouseWoodcutterMode, gicHBarracksAcceptRecruitsTgl, gicHouseArmorWSDeliveryToggle, gicHouseSiegeTrain, gicHouseDeliveryToggle, gicHouseMerchantSetType,
       gicHouseForceWork, gicHouseMakeUpgrade, gicHouseCancelUpgrade, gicHouseTransferWare, gicHouseDontAcceptWorker,
-      gicHouseStallBuyCoin, gicHouseStallBuyItem, gicHousePalaceOrder, gicHouseQueueAdd, gicHouseQueueRem, gicHouseMerchantSendTo, gicHouseFarmToggleGrain,
+      gicHouseStallBuyCoin, gicHouseStallBuyItem, gicHousePalaceOrder, gicHousePalaceStart, gicHouseQueueAdd, gicHouseQueueRem, gicHouseMerchantSendTo, gicHouseFarmToggleGrain,
       gicHStoreSetNotAcceptFlag, gicHStoreSetNotAllowTakeOutFlag, gicHouseStoreBell, gicHousePalaceCancelOrder, gicHouseFruitTreeToggleType, gicHouseShipType,
       gicHouseShipDoWork, gicHouseFarmMode, gicHouseCollectorsMode, gicCartographersMode, gicCartographersToggleView, gicCartographersSelectPlayer,
       gicCartographersDoSpying, gicHouseRepairSet, gicPearlSelectType,gicPearlConfirm, gicPearlSelectResFrom, gicPearlSelectResTo, gicPearlSelectVResTo,//arium
@@ -1343,6 +1345,7 @@ begin
       gicHouseStallBuyCoin         : TKMHouseStall(srcHouse).BuyCoin(IntParams[1], IntParams[2]);
       gicHouseStallBuyItem         : TKMHouseStall(srcHouse).BuyItem(IntParams[1], IntParams[2]);
       gicHousePalaceOrder          : TKMHousePalace(srcHouse).IncOrder(IntParams[1], IntParams[2]);
+      gicHousePalaceStart           : TKMHOusePalace(srcHouse).TryStartTraining;
       gicHousePalaceCancelOrder    : TKMHousePalace(srcHouse).CancelOrder{(IntParams[1])};
 
       gicHouseQueueAdd             : TKMHouseQueue(srcHouse).AddWareToQueue(TKMWareType(IntParams[1]), IntParams[2], 1);
@@ -1652,7 +1655,7 @@ procedure TKMGameInputProcess.CmdHouse(aCommandType: TKMGameInputCommandType; aH
 begin
   Assert(aCommandType in [gicHouseRepairToggle, gicHouseClosedForWorkerTgl, gicHBarracksAcceptRecruitsTgl, gicHouseDeliveryModeNext, gicHouseDeliveryModePrev,
                           gicHouseForceWork, gicHouseMakeUpgrade, gicHouseCancelUpgrade, gicHouseStoreBell, gicHouseShipDoWork, gicHouseCollectorsMode,
-                          gicCartographersDoSpying, gicPearlConfirm, gicPearlUseSpecial, gicArenaStartFestival, gicHouseQueueNotRem]);
+                          gicCartographersDoSpying, gicPearlConfirm, gicPearlUseSpecial, gicArenaStartFestival, gicHouseQueueNotRem, gicHousePalaceStart]);
   TakeCommand(MakeCommand(aCommandType, aHouse.UID));
 end;
 
