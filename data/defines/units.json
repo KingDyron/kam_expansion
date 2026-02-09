@@ -4852,7 +4852,7 @@
 			"AmmoType" : "uatNone",
 			"MinRange" : 0.00000,
 			"MaxRange" : 0.00000,
-			"TownhallCost" : 12,
+			"TownhallCost" : 8,
 			"FullUnitAnimations" : 
 			[	
 				{"ActionType" : "uaWalk", "StartStep" : 17074, "StepsCount" : 8},
