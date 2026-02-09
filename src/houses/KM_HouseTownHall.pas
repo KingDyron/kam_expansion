@@ -117,7 +117,7 @@ begin
     U.Condition := Round(TROOPS_TRAINED_CONDITION * UNIT_MAX_CONDITION); //All soldiers start with 3/4, so groups get hungry at the same time
     U.SetActionGoIn(uaWalk, gdGoOutside, Self, true);
 
-    if gHands[Owner].VirtualWareTake('vtHerbs', 3) or gHands[Owner].VirtualWareTake('vtAppleJuice') or gHands[Owner].VirtualWareTake('vtDishes') then
+    if {gHands[Owner].VirtualWareTake('vtHerbs', 3) or }gHands[Owner].VirtualWareTake('vtAppleJuice') or gHands[Owner].VirtualWareTake('vtDishes') then
       U.Condition := UNIT_MAX_CONDITION;
 
     Index := gRes.Wares.VirtualWares.WareS['vtCertificate'].Index;

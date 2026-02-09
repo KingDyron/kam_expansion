@@ -290,7 +290,7 @@ begin
   fHideOneGold := False;
   fTrainProgress := 0;
 
-  if gHands[Owner].VirtualWareTake('vtHerbs', 3) or gHands[Owner].VirtualWareTake('vtAppleJuice') or gHands[Owner].VirtualWareTake('vtDishes') then
+  if{ gHands[Owner].VirtualWareTake('vtHerbs', 3) or }gHands[Owner].VirtualWareTake('vtAppleJuice') or gHands[Owner].VirtualWareTake('vtDishes') then
     TKMUnit(aUnit).Condition := UNIT_MAX_CONDITION;
 
   //Attempt to start training next unit in queue

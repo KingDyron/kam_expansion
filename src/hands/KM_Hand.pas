@@ -333,6 +333,8 @@ type
     function GetHouseStoneCost(aHouseType: TKMHouseType; aLvl : Byte) : Byte; overload;
     function GetHouseTileCost(aHouseType: TKMHouseType; aLvl : Byte) : Byte; overload;
 
+    function GiveWareToRandomStore(aWare : TKMWareType; aCount : Integer = 1) : Boolean;
+
 
     procedure AddDevPoint(aType : TKMDevelopmentTreeType; aCount : Word = 1);
     function  TakeDevPoint(aType : TKMDevelopmentTreeType; aCount : Word = 1) : Boolean;
@@ -2900,6 +2902,28 @@ begin
 
   If (aHouseType in WALL_HOUSES) and (aLvl = 0) and BuildDevUnlocked(29) then
     Result := Max(Result - 1, 0);
+end;
+
+function TKMHand.GiveWareToRandomStore(aWare : TKMWareType; aCount : Integer = 1) : Boolean;
+var I, J, K : Integer;
+  H : TKMHouse;
+begin
+  Result := false;
+  K := Houses.Stores.Count;
+  If K = 0 then
+    Exit;
+  I := KaMRandom(K, 'TKMHand.GiveWareToRandomStore');
+  while not Houses.Stores[I].IsValid(htStore, false, true) and (J < 5) do
+  begin
+    I := KaMRandom(K, 'TKMHand.GiveWareToRandomStore');
+    Inc(J);
+  end;
+  H := Houses.Stores[I];
+
+  If not H.IsValid(htStore, false, true) then
+    Exit;
+  H.WareAddToIn(aWare, aCount);
+  Result := true;
 end;
 
 

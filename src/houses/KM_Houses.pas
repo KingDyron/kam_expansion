@@ -6268,7 +6268,7 @@ begin
         FruitType := fNextFruitTreeID;
         fGrowPhase := 0;
       end;
-      gHands[Owner].VirtualWareTake('vtHerbs', -10)
+      gHands[Owner].VirtualWareTake('vtHerbs', -50)
 
     end;
 

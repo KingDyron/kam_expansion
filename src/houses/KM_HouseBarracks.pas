@@ -401,7 +401,7 @@ begin
       U.OnUnitTrained(U);
     Result := U;
     U.Condition := condition;
-    if gHands[Owner].VirtualWareTake('vtHerbs', 3) or gHands[Owner].VirtualWareTake('vtAppleJuice') or gHands[Owner].VirtualWareTake('vtDishes') then
+    if {gHands[Owner].VirtualWareTake('vtHerbs', 3) or }gHands[Owner].VirtualWareTake('vtAppleJuice') or gHands[Owner].VirtualWareTake('vtDishes') then
       U.Condition := UNIT_MAX_CONDITION;
 
     if hadBoots then
@@ -415,7 +415,7 @@ begin
     soldier.Visible := False; //Make him invisible as he is inside the barracks
 
 
-    if gHands[Owner].VirtualWareTake('vtHerbs', 3) or gHands[Owner].VirtualWareTake('vtAppleJuice') or gHands[Owner].VirtualWareTake('vtDishes') then
+    if{ gHands[Owner].VirtualWareTake('vtHerbs', 3) or }gHands[Owner].VirtualWareTake('vtAppleJuice') or gHands[Owner].VirtualWareTake('vtDishes') then
       Soldier.Condition := UNIT_MAX_CONDITION
     else
       Soldier.Condition := condition;
