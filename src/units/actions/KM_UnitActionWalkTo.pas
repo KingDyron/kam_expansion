@@ -4,7 +4,7 @@ interface
 uses
   Classes, KromUtils, Math, SysUtils,
   KM_Defaults, KM_CommonClasses, KM_CommonTypes, KM_Points,
-  KM_Houses, KM_Units;
+  KM_Houses, KM_Units, KM_UnitGroup;
 
 type
   TKMInteractionStatus = (
@@ -33,6 +33,7 @@ type
     fDistance: Single; //How close we need to get to our target
     fTargetUnit: TKMUnit; //Folow this unit
     fTargetHouse: TKMHouse; //Go to this House
+    fTargetGroup : TKMUnitGroup;
     fPass: TKMTerrainPassability; //Desired passability set once on Create
     fDoesWalking, fWaitingOnStep: Boolean;
     fDestBlocked: Boolean; //Our route is blocked by busy units, so we must wait for them to clear. Give way to all other units (who might be carrying stone for the worker blocking us)
@@ -77,7 +78,7 @@ type
   public
     fVertexOccupied: TKMPoint; //Public because it needs to be used by AbandonWalk
     constructor Create(aUnit: TKMUnit; const aLocB: TKMPoint; aActionType: TKMUnitActionType; aDistance: Single; aSetPushed:
-                       Boolean; aTargetUnit: TKMUnit; aTargetHouse: TKMHouse; aTargetPassability: TKMTerrainPassability = tpNone;
+                       Boolean; aTargetUnit: TKMUnit; aTargetGroup: TKMUnitGroup; aTargetHouse: TKMHouse; aTargetPassability: TKMTerrainPassability = tpNone;
                        aTargetWalkConnectSet: TKMByteSet = []; aUseExactTarget: Boolean = True;
                        aAvoidLockedByMovementCost: Boolean = True; aSilent: Boolean = False);
     constructor Load(LoadStream: TKMemoryStream); override;
@@ -115,7 +116,7 @@ uses
   KM_Entity,
   KM_RenderAux, KM_Game, KM_GameParams,
   KM_HandsCollection, KM_HandTypes, KM_HandEntity,
-  KM_Terrain, KM_ResUnits, KM_UnitGroup,
+  KM_Terrain, KM_ResUnits,
   KM_UnitActionGoInOut, KM_UnitActionStay, KM_UnitTaskBuild, KM_PathFinding,
   KM_UnitWarrior, KM_Log, KM_Resource, KM_CommonClassesExt,
   KM_CommonExceptions;
@@ -145,6 +146,7 @@ constructor TKMUnitActionWalkTo.Create( aUnit: TKMUnit;
                                         aDistance: Single;
                                         aSetPushed: Boolean;
                                         aTargetUnit: TKMUnit;
+                                        aTargetGroup: TKMUnitGroup;
                                         aTargetHouse: TKMHouse;
                                         aTargetPassability: TKMTerrainPassability = tpNone;
                                         aTargetWalkConnectSet: TKMByteSet = [];
@@ -167,6 +169,11 @@ begin
 
   fAvoidLockedAsMovementCost := aAvoidLockedByMovementCost;
 
+  IF aTargetGroup <> nil then
+  begin
+    fTargetGroup := aTargetGroup.GetPointer;
+    fTargetUnit  := fTargetGroup.FlagBearer.GetPointer;
+  end else
   if aTargetUnit  <> nil then
     fTargetUnit  := aTargetUnit.GetPointer;
   if aTargetHouse <> nil then
@@ -285,6 +292,7 @@ begin
   LoadStream.Read(fNewWalkTo);
   LoadStream.Read(fDistance);
   LoadStream.Read(fTargetUnit, 4); //substitute it with reference on SyncLoad
+  LoadStream.Read(fTargetGroup, 4); //substitute it with reference on SyncLoad
   LoadStream.Read(fTargetHouse, 4); //substitute it with reference on SyncLoad
   LoadStream.Read(fPass, SizeOf(fPass));
   LoadStream.Read(fDoesWalking);
@@ -307,6 +315,7 @@ procedure TKMUnitActionWalkTo.SyncLoad;
 begin
   inherited;
   fTargetUnit   := gHands.GetUnitByUID(Integer(fTargetUnit));
+  fTargetGroup  := gHands.GetGroupByUID(Integer(fTargetGroup));
   fTargetHouse  := gHands.GetHouseByUID(Integer(fTargetHouse));
 end;
 
@@ -334,6 +343,7 @@ begin
     fUnit.IsExchanging := False;
 
   gHands.CleanUpUnitPointer(fTargetUnit);
+  gHands.CleanUpGroupPointer(fTargetGroup);
   gHands.CleanUpHousePointer(fTargetHouse);
   inherited;
 end;
@@ -602,7 +612,7 @@ begin
     begin
       U := fUnit; //Local copy since Self will get freed if TrySetActionWalk succeeds
       animStep := fUnit.AnimStep; //Save anim step locally
-      fUnit.SetActionWalk(fWalkTo, fType, fDistance, fTargetUnit, fTargetHouse);
+      fUnit.SetActionWalk(fWalkTo, fType, fDistance, fTargetUnit, fTargetGroup, fTargetHouse);
       //Now Self = nil since the walk action was replaced! Don't access members and exit ASAP
       //Restore direction, cause it usually looks unpleasant,
       //when warrior turns to locked Loc and then immidiately (in 1 tick) turns away when on new route
@@ -633,7 +643,7 @@ begin
       begin
         U := fUnit; //Local copy since Self will get freed if TrySetActionWalk succeeds
         animStep := fUnit.AnimStep; //Save anim step locally
-        if fUnit.TrySetActionWalk(fWalkTo, fType, fDistance, fTargetUnit, fTargetHouse, False) then
+        if fUnit.TrySetActionWalk(fWalkTo, fType, fDistance, fTargetUnit, fTargetGroup, fTargetHouse, False) then
         begin
           //Now Self = nil since the walk action was replaced! Don't access members and exit ASAP
           //Restore direction, cause it usually looks unpleasant,
@@ -1236,7 +1246,13 @@ begin
     //Check if target unit (warrior) has died and if so abandon our walk and so delivery task can exit itself
     if CanAbandonInternal then
       if CheckTargetHasDied then
+      begin
+        If (fTargetGroup <> nil) and not (fTargetGroup.IsDead) then
+        begin
+          fTargetUnit := fTargetGroup.FlagBearer;
+        end else
         Exit(arActAborted);
+      end;
 
     //This is sometimes caused by unit interaction changing the route so simply ignore it
     if KMSamePoint(fNodeList[fNodePos], fNodeList[fNodePos+1]) then
@@ -1352,6 +1368,7 @@ begin
   SaveStream.Write(fNewWalkTo);
   SaveStream.Write(fDistance);
   SaveStream.Write(fTargetUnit.UID); //Store ID, then substitute it with reference on SyncLoad
+  SaveStream.Write(fTargetGroup.UID); //Store ID, then substitute it with reference on SyncLoad
   SaveStream.Write(fTargetHouse.UID); //Store ID, then substitute it with reference on SyncLoad
 
   SaveStream.Write(fPass,SizeOf(fPass));

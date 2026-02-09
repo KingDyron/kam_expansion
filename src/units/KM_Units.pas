@@ -222,13 +222,14 @@ type
     procedure SetActionLockedStay(aTimeToStay: Integer; aAction: TKMUnitActionType; aStayStill: Boolean=True; aStillFrame: Byte = 0; aStep: Integer = 0);
 
     procedure SetActionWalk(const aLocB: TKMPoint; aActionType: TKMUnitActionType; aDistance: Single; aTargetUnit: TKMUnit;
-                            aTargetHouse: TKMHouse; aAvoidLockedByMovementCost: Boolean = True);
+                             aTargetGroup : Pointer; aTargetHouse: TKMHouse; aAvoidLockedByMovementCost: Boolean = True);
     function TrySetActionWalk(const aLocB: TKMPoint; aActionType: TKMUnitActionType; aDistance: Single; aTargetUnit: TKMUnit;
-                              aTargetHouse: TKMHouse; aAvoidLockedByMovementCost: Boolean = True;
+                               aTargetGroup : Pointer; aTargetHouse: TKMHouse; aAvoidLockedByMovementCost: Boolean = True;
                               aSilent: Boolean = True): Boolean;
     procedure SetActionWalkToHouse(aHouse: TKMHouse; aDistance: Single; aActionType: TKMUnitActionType = uaWalk);
     procedure SetActionWalkFromHouse(aHouse: TKMHouse; aDistance: Single; aActionType: TKMUnitActionType = uaWalk);
     procedure SetActionWalkToUnit(aUnit: TKMUnit; aDistance:single; aActionType: TKMUnitActionType = uaWalk);
+    procedure SetActionWalkToGroup(aGroup: Pointer; aDistance:single; aActionType: TKMUnitActionType = uaWalk);
     procedure SetActionWalkFromUnit(aUnit: TKMUnit; aDistance: Single; aActionType: TKMUnitActionType = uaWalk);
     procedure SetActionWalkToSpot(const aLocB: TKMPoint; aActionType: TKMUnitActionType = uaWalk; aDistance: Single = 0; aAnimStep: Integer = 0);
     procedure SetActionWalkFromSpot(const aLoc: TKMPoint; aDistanceMin, aDistanceMaX: Single; aActionType: TKMUnitActionType = uaWalk);
@@ -449,39 +450,21 @@ type
 
     function UpdateState: Boolean; override;
   end;
-
-  TKMUnitFeederGroup = record
-    Group : Pointer;
-    FoodRequested : Word;
-  end;
-
   TKMUnitFeeder = class(TKMCivilUnit)
   private
-    fGroupsToFeed : array of TKMUnitFeederGroup;
-    fFoodCount : Word;
-    procedure CheckGroups;
-    function HasGroup(aGroup : Pointer) : Boolean;
-    function DeleteGroup(aGroup : Pointer) : Boolean;
-
+    fFoodCollected : Word;
     function FindBestStore : TKMHouse;
-    procedure TryToFeedGroups;
   protected
     procedure PaintUnit(aTickLag: Single); override;
   public
-    constructor Load(LoadStream: TKMemoryStream); override;
-    procedure Save(SaveStream: TKMemoryStream); override;
-    procedure SyncLoad; Override;
-
-    function NeededFood : Word;
-    function TaskStarted : Boolean;
-    function FirstGroup : Pointer;
-
-    procedure CollectFood(aCount : Word);
     procedure FeedGroup(aGroup : Pointer);
+    procedure GiveFood(aCount : Integer);
+    procedure TakeFood(aCount : Integer);
+    property FoodCollected : Word read fFoodCollected;
 
-    procedure AddGroupToFeed(aGroup: Pointer);
-    procedure CloseUnit(aRemoveTileUsage: Boolean = True); override;
     function UpdateState: Boolean; override;
+    procedure Save(SaveStream: TKMemoryStream); override;
+    constructor Load(LoadStream: TKMemoryStream); override;
   end;
 
 
@@ -1661,114 +1644,29 @@ end;
 
 
 { TKMUnitFeeder }
-
-procedure TKMUnitFeeder.CheckGroups;
-
-  procedure Delete(aIndex : integer);
-  begin
-    gHands.CleanUpGroupPointer(TKMUnitGroup(fGroupsToFeed[aIndex].Group) );
-    fGroupsToFeed[aIndex] := fGroupsToFeed[high(fGroupsToFeed)];
-    SetLength(fGroupsToFeed, high(fGroupsToFeed));
-  end;
-
-var i : integer;
-begin
-  for I := High(fGroupsToFeed) downto 0 do
-    If TKMUnitGroup(fGroupsToFeed[I].Group).IsDead then
-      Delete(I);
-end;
-
-function TKMUnitFeeder.HasGroup(aGroup: Pointer): Boolean;
-var I : Integer;
-begin
-  Result := false;
-  for I := High(fGroupsToFeed) downto 0 do
-    If fGroupsToFeed[I].Group = aGroup then
-      Exit(true);
-end;
-
-function TKMUnitFeeder.DeleteGroup(aGroup: Pointer): Boolean;
-  procedure Delete(aIndex : integer);
-  begin
-    gHands.CleanUpGroupPointer(TKMUnitGroup(fGroupsToFeed[aIndex].Group) );
-    fGroupsToFeed[aIndex] := fGroupsToFeed[high(fGroupsToFeed)];
-    SetLength(fGroupsToFeed, high(fGroupsToFeed));
-  end;
-var I : Integer;
-begin
-  Result := false;
-  for I := High(fGroupsToFeed) downto 0 do
-    If fGroupsToFeed[I].Group = aGroup then
-      Delete(I);
-end;
-
-procedure TKMUnitFeeder.AddGroupToFeed(aGroup: Pointer);
-var I : Integer;
-begin
-  I := length(fGroupsToFeed);
-  SetLength(fGroupsToFeed, I + 1);
-  fGroupsToFeed[I].Group := TKMUnitGroup(aGroup).GetPointer;
-  fGroupsToFeed[I].FoodRequested := TKMUnitGroup(aGroup).Count;
-end;
-
-function TKMUnitFeeder.FirstGroup: Pointer;
-begin
-  //delete died groups
-  CheckGroups;
-
-  If length(fGroupsToFeed) > 0 then
-    Result := fGroupsToFeed[0].Group
-  else
-    Result := nil;
-end;
-
-procedure TKMUnitFeeder.CollectFood(aCount: Word);
-begin
-  Inc(fFoodCount, aCount);
-end;
-
-procedure TKMUnitFeeder.FeedGroup(aGroup: Pointer);
+procedure TKMUnitFeeder.FeedGroup(aGroup : Pointer);
 var G : TKMUnitGroup;
-  W : TKMUnitWarrior;
-  I : Integer;
+  H : TKMHouse;
 begin
   G := aGroup;
-  If HasGroup(aGroup) then
-    DeleteGroup(aGroup);
-
-  If G.IsDead then
-    Exit;
-
-  for I := 0 to G.Count - 1 do
-  begin
-    W := G.Members[I];
-    If not W.IsDeadOrDying then
-    begin
-      If fFoodCount > 0 then
-        dec(fFoodCount);
-      W.Feed(UNIT_MAX_CONDITION);
-    end;
-  end;
-  G.FoodRequested := false;
-
+  H := FindBestStore;
+  If H.IsValid(htStore, false, true) then
+    fTask := TKMTaskFeeder.Create(self, H, G);
 end;
 
-function TKMUnitFeeder.NeededFood: Word;
-var I : integer;
+procedure TKMUnitFeeder.GiveFood(aCount : Integer);
 begin
-  Result := 0;
-  for I := 0 to High(fGroupsToFeed) do
-    Inc(Result, fGroupsToFeed[I].FoodRequested);
-  Result := EnsureRange(Result - fFoodCount, 0, high(Word));
+  fFoodCollected := EnsureRange(fFoodCollected + aCount, 0, 500);
 end;
 
-function TKMUnitFeeder.TaskStarted: Boolean;
+procedure TKMUnitFeeder.TakeFood(aCount : Integer);
 begin
-  Result := IsHungry or ((fTask is TKMTaskFeeder) and (TKMTaskFeeder(fTask).Phase > 2));
+  fFoodCollected := EnsureRange(fFoodCollected - aCount, 0, 500);
 end;
+
 
 function TKMUnitFeeder.FindBestStore: TKMHouse;
-var I, lastBest, needsFood : Integer;
+var I, lastBest : Integer;
   arr : TKMArray<TKMHouse>;
   bid : array of Integer;
   H : TKMHouseStore;
@@ -1787,15 +1685,13 @@ begin
     Exit;
   SetLength(bid, arr.Count);
 
-  needsFood := NeededFood;
-
   for I := 0 to arr.Count - 1 do
   begin
     bid[I] := 100000;
     H := TKMHouseStore(arr[I]);
 
     Inc(  bid[I], Round(KMLengthDiag(Position, H.Entrance))   );
-    If H.FoodCount > needsFood then
+    If H.FoodCount > 100 then
       Dec(bid[I], H.FoodCount);
   end;
 
@@ -1809,36 +1705,12 @@ begin
     end;
 end;
 
-procedure TKMUnitFeeder.TryToFeedGroups;
-var H : TKMHouse;
-begin
-  If length(fGroupsToFeed) = 0 then
-    Exit;
-
-  CancelTask;
-  H := FindBestStore;
-  If H = nil then
-    Exit;
-  fTask := TKMTaskFeeder.Create(self, H);
-end;
-
-procedure TKMUnitFeeder.CloseUnit(aRemoveTileUsage: Boolean = True);
-var I : integer;
-begin
-  for I := 0 to High(fGroupsToFeed) do
-  begin
-    TKMUnitGroup(fGroupsToFeed[I].Group).FoodRequested := false;
-    TKMUnitGroup(fGroupsToFeed[I].Group).OrderFood(true);
-    gHands.CleanUpGroupPointer(TKMUnitGroup(fGroupsToFeed[I].Group) );
-  end;
-  Inherited;
-end;
-
 procedure TKMUnitFeeder.PaintUnit(aTickLag: Single);
 var
   ID: Integer;
   V: TKMUnitVisualState;
   xPaintPos, yPaintPos: Single;
+  act : TKMUnitActionType;
 begin
   V := fVisual.GetLerp(aTickLag);
 
@@ -1847,48 +1719,28 @@ begin
 
   ID := UID * Byte(not (V.Action in [uaDie, uaEat]));
 
-  gRenderPool.AddUnit(UnitType, ID, V.Action, V.Dir, V.AnimStep, V.AnimFraction, xPaintPos, yPaintPos, IfThen(FlagColor <> 0, FlagColor, gHands[Owner].GameFlagColor), True);
+  If (V.Action = uaWalk) and (fFoodCollected > 0) then
+    act := uaWalkTool
+  else
+    act := V.Action;
+
+  gRenderPool.AddUnit(UnitType, ID, act, V.Dir, V.AnimStep, V.AnimFraction, xPaintPos, yPaintPos, IfThen(FlagColor <> 0, FlagColor, gHands[Owner].GameFlagColor), True);
 
   if fThought <> thNone then
     gRenderPool.AddUnitThought(fType, V.Action, V.Dir, V.AnimStep, fThought, xPaintPos, yPaintPos);
 end;
 
-constructor TKMUnitFeeder.Load(LoadStream: TKMemoryStream);
-var I, J : integer;
-begin
-  Inherited;
-  LoadStream.Read(J);
-  SetLength(fGroupsToFeed, J);
-  for I := 0 to J - 1 do
-  begin
-    LoadStream.Read(fGroupsToFeed[I].FoodRequested);
-    LoadStream.Read(fGroupsToFeed[I].Group, 4);
-  end;
-  LoadStream.Read(fFoodCount);
-
-end;
-
 procedure TKMUnitFeeder.Save(SaveStream: TKMemoryStream);
-var I, J : integer;
 begin
   Inherited;
-  J := length(fGroupsToFeed);
-  SaveStream.Write(J);
-  for I := 0 to J - 1 do
-  begin
-    SaveStream.Write(fGroupsToFeed[I].FoodRequested);
-    SaveStream.Write(TKMUnitGroup(fGroupsToFeed[I].Group).UID);
-  end;
-  SaveStream.Write(fFoodCount);
+  SaveStream.PlaceMarker('TKMUnitFeeder');
+  SaveStream.Write(fFoodCollected);
 end;
-
-procedure TKMUnitFeeder.SyncLoad;
-var I: integer;
+constructor TKMUnitFeeder.Load(LoadStream: TKMemoryStream);
 begin
   Inherited;
-  for I := 0 to High(fGroupsToFeed) do
-    fGroupsToFeed[I].Group := gHands.GetGroupByUID(Integer(fGroupsToFeed[I].Group) );
-
+  LoadStream.CheckMarker('TKMUnitFeeder');
+  LoadStream.Read(fFoodCollected);
 end;
 
 function TKMUnitFeeder.UpdateState: Boolean;
@@ -1900,30 +1752,12 @@ begin
   if inherited UpdateState then Exit;
 
   CheckCondition;
-  Inc(fTicker);
-  If fTask = nil then
-      TryToFeedGroups;
-
-  if fTask = nil then
-  begin
-    Inc(fIdleTimer);
-    if fIdleTimer > 10 then
-      GoGetBoots;
-  end else
-    fIdleTimer := 0;
-
-  if (fTask = nil) then
-    Thought := thNone; //Remove build thought if we are no longer doing anything
 
   if (fTask = nil) and (fAction = nil) then SetActionStay(20, uaWalk);
 
   if fAction = nil then
     raise ELocError.Create(gRes.Units[UnitType].GUIName + ' has no action at end of TKMUnitWorker.UpdateState', fPositionRound);
 end;
-
-
-
-
 
 { TKMUnitAnimal }
 constructor TKMUnitAnimal.Create(aID: Cardinal; aUnitType: TKMUnitType; const aLoc: TKMPointDir; aOwner: TKMHandID);
@@ -3270,7 +3104,7 @@ end;
 //Try to set action walk for unit
 //Used for warriors when they try to update route when attacking house and their destination loc is locked, so they try to avoid it
 function TKMUnit.TrySetActionWalk(const aLocB: TKMPoint; aActionType: TKMUnitActionType; aDistance: Single;
-                                   aTargetUnit: TKMUnit; aTargetHouse: TKMHouse;
+                                   aTargetUnit: TKMUnit; aTargetGroup : Pointer; aTargetHouse: TKMHouse;
                                    aAvoidLockedByMovementCost: Boolean = True;
                                    aSilent: Boolean = True): Boolean; //Silent by default, as we consider fail could happen
 var
@@ -3286,7 +3120,7 @@ begin
   IF BlockWalking then
     Exit(false);
 
-  newAction := TKMUnitActionWalkTo.Create(Self, aLocB, aActionType, aDistance, False, aTargetUnit, aTargetHouse,
+  newAction := TKMUnitActionWalkTo.Create(Self, aLocB, aActionType, aDistance, False, aTargetUnit, aTargetGroup, aTargetHouse,
                                           tpNone, [], True, aAvoidLockedByMovementCost, aSilent);
 
   //Update action only if route was built, otherwise just keep using previous action
@@ -3305,14 +3139,14 @@ end;
 
 //WalkTo action with exact options (retranslated from WalkTo if Obstcale met)
 procedure TKMUnit.SetActionWalk(const aLocB: TKMPoint; aActionType: TKMUnitActionType; aDistance: Single;
-                                aTargetUnit: TKMUnit; aTargetHouse: TKMHouse; aAvoidLockedByMovementCost: Boolean = True);
+                                aTargetUnit: TKMUnit; aTargetGroup : Pointer; aTargetHouse: TKMHouse; aAvoidLockedByMovementCost: Boolean = True);
 begin
   if (Action is TKMUnitActionWalkTo) and not TKMUnitActionWalkTo(Action).CanAbandonExternal then
     raise Exception.Create('');
   if BlockWalking then
     Exit;
 
-  SetAction(TKMUnitActionWalkTo.Create(Self, aLocB, aActionType, aDistance, False, aTargetUnit, aTargetHouse,
+  SetAction(TKMUnitActionWalkTo.Create(Self, aLocB, aActionType, aDistance, False, aTargetUnit, aTargetGroup, aTargetHouse,
                                        tpNone, [], True, aAvoidLockedByMovementCost));
   UpdateLastTimeTrySetActionWalk;
 end;
@@ -3334,6 +3168,7 @@ begin
                                       aDistance,          //Proximity
                                       False,              //If we were pushed
                                       nil,                //Unit
+                                      nil,                //group
                                       aHouse              //House
                                       ));
 end;
@@ -3351,7 +3186,7 @@ begin
   If locB = KMPOINT_ZERO then
     SetActionStay(20, aActionType)
   else
-    SetAction(TKMUnitActionWalkTo.Create(Self, locB, aActionType, 1, False, nil, nil), 0);
+    SetAction(TKMUnitActionWalkTo.Create(Self, locB, aActionType, 1, False, nil, nil, nil), 0);
 end;
 
 //Approach unit
@@ -3369,10 +3204,30 @@ begin
                                       aDistance,          //Proximity
                                       False,              //If we were pushed
                                       aUnit,              //Unit
+                                      nil,                //group
                                       nil                 //House
                                       ));
 end;
 
+//Approach unit
+procedure TKMUnit.SetActionWalkToGroup(aGroup: Pointer; aDistance: Single; aActionType: TKMUnitActionType = uaWalk);
+begin
+  if (Action is TKMUnitActionWalkTo) and not TKMUnitActionWalkTo(Action).CanAbandonExternal then
+   raise Exception.Create('');
+  Assert(aDistance >= 1, 'Should not walk to Groups place');
+  if BlockWalking then
+    Exit;
+
+  SetAction(TKMUnitActionWalkTo.Create( Self,               //Who's walking
+                                      TKMUnitGroup(aGroup).FlagBearer.Position,//Target position
+                                      aActionType,        //
+                                      aDistance,          //Proximity
+                                      False,              //If we were pushed
+                                      nil,              //Unit
+                                      aGroup,                //group
+                                      nil                 //House
+                                      ));
+end;
 
 procedure TKMUnit.SetCondition(aValue: Integer);
 begin
@@ -3391,7 +3246,7 @@ begin
   if BlockWalking then
     Exit;
   If gTerrain.GetClosestWalkable(Position, aUnit.Position, aDistance, aDistance + 2, locB) then
-    SetAction(TKMUnitActionWalkTo.Create(Self, locB, aActionType, 1, False, nil, nil), 0)
+    SetAction(TKMUnitActionWalkTo.Create(Self, locB, aActionType, 1, False, nil, nil, nil), 0)
   else
     SetActionStay(20, aActionType);
 end;
@@ -3404,7 +3259,7 @@ begin
     raise Exception.Create('Interrupting unabandonable Walk action');
   if BlockWalking then
     Exit;
-  SetAction(TKMUnitActionWalkTo.Create(Self, aLocB, aActionType, aDistance, False, nil, nil), aAnimStep);
+  SetAction(TKMUnitActionWalkTo.Create(Self, aLocB, aActionType, aDistance, False, nil, nil, nil), aAnimStep);
 end;
 
 procedure TKMUnit.SetActionWalkFromSpot(const aLoc: TKMPoint; aDistanceMin, aDistanceMaX: Single; aActionType: TKMUnitActionType = uaWalk);
@@ -3415,7 +3270,7 @@ begin
   if BlockWalking then
     Exit;
   If gTerrain.GetClosestWalkable(Position, aLoc, aDistanceMin, aDistanceMaX, locB) then
-    SetAction(TKMUnitActionWalkTo.Create(Self, locB, aActionType, 2, False, nil, nil), 0)
+    SetAction(TKMUnitActionWalkTo.Create(Self, locB, aActionType, 2, False, nil, nil, nil), 0)
   else
     SetActionStay(20, aActionType);
 end;
@@ -3427,7 +3282,7 @@ begin
     raise Exception.Create('Interrupting unabandonable Walk action');
   if BlockWalking then
     Exit;
-  SetAction(TKMUnitActionWalkTo.Create(Self, KMPOINT_INVALID_TILE, aActionType, aDistance, False, nil, nil,
+  SetAction(TKMUnitActionWalkTo.Create(Self, KMPOINT_INVALID_TILE, aActionType, aDistance, False, nil, nil, nil,
                                        aTargetPassability, aTargetWalkConnectSet));
 end;
 
@@ -3442,7 +3297,7 @@ begin
   if BlockWalking then
     Exit;
 
-  SetAction(TKMUnitActionWalkTo.Create(Self, aLocB, aActionType, 0, True, nil, nil));
+  SetAction(TKMUnitActionWalkTo.Create(Self, aLocB, aActionType, 0, True, nil, nil, nil));
   //Once pushed, unit will try to walk away, if he bumps into more units he will
   //
 end;

@@ -4194,10 +4194,10 @@ begin
   for I := 0 to Units.Feeders.Count - 1 do
   begin
     U := TKMUnitFeeder(Units.Feeders[I]);
-    If not U.IsDeadOrDying and not U.TaskStarted then
+    If not U.IsDeadOrDying and U.IsIdle then
       If U.CanWalkTo(aGroup.Position, 1.42) then
       begin
-        U.AddGroupToFeed(aGroup);
+        U.FeedGroup(aGroup);
         Exit(true);
       end;
 

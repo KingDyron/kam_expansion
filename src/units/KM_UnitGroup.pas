@@ -1870,7 +1870,6 @@ begin
   //Tell both groups to reposition
   OrderRepeat(False);
   newGroup.CopyOrderFrom(Self, changeNewGroupOrderLoc, False);
-
   Result := newGroup; //Return the new group in case somebody is interested in it
 
   //Script may have additional event processors
