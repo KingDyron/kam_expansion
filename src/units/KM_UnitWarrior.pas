@@ -728,14 +728,14 @@ begin
       begin
         VirtualWareTake('vtIronFerrule', -2 * aMulti);
         VirtualWareTake('vtNeedle', -1 * aMulti);
-        If KaMRandom(100, 'Random chance to get card') < 15 then
+        If KaMRandom(100, 'Random chance to get card 1') < 10 then
           GiveWareToRandomStore(wtCard, 1);
       end else
       if UnitType in SIEGE_MACHINES then
       begin
         VirtualWareTake('vtIronFerrule', -4 * aMulti);
         VirtualWareTake('vtWoodenPlate', -10 * aMulti);
-        If KaMRandom(100, 'Random chance to get card') < 30 then
+        If KaMRandom(100, 'Random chance to get card 2') < 15 then
           GiveWareToRandomStore(wtCard, 1);
       end else
       if UnitType in UNITS_SHIPS then
@@ -745,14 +745,14 @@ begin
         VirtualWareTake('vtNeedle', -5 * aMulti);
         VirtualWareTake('vtLeatherSheet', -10 * aMulti);
         VirtualWareTake('vtPearl', -1 * aMulti);
-        If KaMRandom(100, 'Random chance to get card') < 50 then
+        If KaMRandom(100, 'Random chance to get card 3') < 40 then
           GiveWareToRandomStore(wtCard, 1);
       end else
       if UnitType in SPECIAL_UNITS then
       begin
         for I := 0 to high(gRes.Units[UnitType].PalaceCost.PhaseWares) do
           VirtualWareTake(gRes.Units[UnitType].PalaceCost.PhaseWares[I].W, - gRes.Units[UnitType].PalaceCost.PhaseWares[I].C div 5 * aMulti);
-        If KaMRandom(100, 'Random chance to get card') < 70 then
+        If KaMRandom(100, 'Random chance to get card 4') < 50 then
           GiveWareToRandomStore(wtCard, 1);
 
       end else
@@ -762,7 +762,7 @@ begin
         VirtualWareTake('vtCoin', -1 * aMulti);
         VirtualWareTake('vtLeatherSheet', -1 * aMulti);
         VirtualWareTake('vtWoodenPlate', -2 * aMulti);
-        If KaMRandom(100, 'Random chance to get card') < 10 then
+        If KaMRandom(100, 'Random chance to get card 5') < 5 then
           GiveWareToRandomStore(wtCard, 1);
       end;
     end;
