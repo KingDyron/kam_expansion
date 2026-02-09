@@ -142,7 +142,7 @@ procedure ReadTileFromStream(aStream: TKMemoryStream; var aTileBasic: TKMTerrain
   function CheckModRev : Boolean;
   begin
     //Result := not ArrayContains(aGameRev, [15122, 15379, 14787]);
-    Result := ArrayContains(aGameRev, [15834, 14787, 15453, 15833]);
+    Result := ArrayContains(aGameRev, [15834, 14787, 15453, 15833, 16000]);
   end;
 
 var
