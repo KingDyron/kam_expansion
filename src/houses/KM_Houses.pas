@@ -495,6 +495,8 @@ type
     function MiningRect(aUnitType : TKMUnitType) : TKMRect;overload; virtual;
     function MiningRect(aWare : TKMWareType) : TKMRect;overload; virtual;
 
+    procedure HouseVirtualWareClicked(aType, aAmount : Integer);virtual;
+
     property HSpec : TKMHouseSpec read GetHouseSpec;
 
     procedure UpdateDemands; virtual;
@@ -3725,6 +3727,11 @@ begin
     Inc(Result.Bottom, 1);
     Inc(Result.Right, 1);
   end;
+end;
+
+procedure TKMHouse.HouseVirtualWareClicked(aType, aAmount : Integer);
+begin
+  // do nothing
 end;
 
 

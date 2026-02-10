@@ -27,6 +27,7 @@ type
     function HasFood: Boolean;
     function HasSpace: Boolean;
     function GetFoodCnt: Integer;
+    procedure HouseVirtualWareClicked(aType, aAmount : Integer);override;
     procedure Save(SaveStream: TKMemoryStream); override;
     procedure Paint; override; //Render all eaters
   end;
@@ -36,6 +37,7 @@ implementation
 uses
   KM_RenderPool,
   KM_Hand, KM_HandsCollection, KM_HandTypes, KM_HandEntity,
+  KM_Resource, KM_ResWares,
   KM_Points, KM_CommonUtils;
 
 
@@ -122,6 +124,27 @@ end;
 function TKMHouseInn.GetFoodCnt: Integer;
 begin
   Result := CheckWareIn(wtSausage) + CheckWareIn(wtBread) + CheckWareIn(wtWine) + CheckWareIn(wtFish) + CheckWareIn(wtVegetables) + CheckWareIn(wtApple);
+end;
+
+procedure TKMHouseInn.HouseVirtualWareClicked(aType, aAmount : Integer);
+var I : integer;
+begin
+
+  If gRes.Wares.VirtualWares[aType].Name = 'vtDinner' then
+  begin
+    for I := 1 to aAmount do
+    If CheckWareIn(wtSausage) + CheckWareIn(wtBread) * CheckWareIn(wtWine) * CheckWareIn(wtFish) * CheckWareIn(wtVegetables) > 0 then
+    begin
+      WareTakeFromIn(wtSausage, 1, true);
+      WareTakeFromIn(wtBread, 1, true);
+      WareTakeFromIn(wtWine, 1, true);
+      WareTakeFromIn(wtFish, 1, true);
+      WareTakeFromIn(wtVegetables, 1, true);
+      gHands[Owner].VirtualWareTake(aType, -1);
+    end else
+      Exit;
+  end;
+
 end;
 
 

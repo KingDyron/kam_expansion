@@ -104,6 +104,7 @@ type
     procedure Ship_Clicked(Sender: TObject; Shift : TShiftState);
     procedure CollectorsClicked(Sender: TObject; Shift : TShiftState);
     procedure SetHouseStyleClicked(Sender: TObject; Shift : TShiftState);
+    procedure VirtualWareClicked(Sender: TObject; Shift : TShiftState);
   protected
     Panel_House: TKMScrollPanel;
       Label_House: TKMLabel;
@@ -537,7 +538,10 @@ begin
     VirtualWares_Row[I + 1] := TKMWaresRow.Create(Panel_House, 0, 76 + I * 25, TB_WIDTH);
     VirtualWares_Row[I + 1].RX := rxGui;
     VirtualWares_Row[I + 1].Tag := I;
-    VirtualWares_Row[I + 1].Hitable := false;
+    VirtualWares_Row[I + 1].Clickable := false;
+    VirtualWares_Row[I + 1].OnClickShift := VirtualWareClicked;
+    VirtualWares_Row[I + 1].HideHighlight := false;
+
     VirtualWares_Row[I + 1].WareCntAsNumber := true;
   end;
 
@@ -1672,9 +1676,12 @@ begin
       begin
 
         VirtualWares_Row[K].Top := 76 + demandTop;
+        VirtualWares_Row[K].Tag := I;
         VirtualWares_Row[K].TexID := GuiIcon;
         VirtualWares_Row[K].Caption := gResTexts[TextID];
+        VirtualWares_Row[K].Hint := gResTexts[TextID];
         VirtualWares_Row[K].Show;
+        VirtualWares_Row[K].Clickable := Name = 'vtDinner';
         VirtualWares_Row[K].WareCount := gHands[aHouse.Owner].VWaresCount[I];
         inc(K);
         if K = 10  then
@@ -4387,6 +4394,15 @@ begin
   IncLoop(I, 0, length(fHouse.HSpec.Styles), IfThen(ssRight in Shift, -1, 1));
 
   gGame.GameInputProcess.CmdHouse(gicHouseStyleSet, fHouse, I);
+end;
+
+procedure TKMGUIGameHouse.VirtualWareClicked(Sender: TObject; Shift: TShiftState);
+begin
+  gGame.GameInputProcess.CmdHouse(gicHouseVirtualWareClicked,
+                                  fHouse,
+                                  TKMControl(Sender).Tag,
+                                  IfThen((ssShift in Shift) or (ssRight in Shift), 10, 1)
+                                  );
 end;
 
 procedure TKMGUIGameHouse.Save(SaveStream: TKMemoryStream);

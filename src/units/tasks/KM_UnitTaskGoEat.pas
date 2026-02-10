@@ -125,6 +125,21 @@ function TKMTaskGoEat.Execute: TKMTaskResult;
     Until (Result <> wtNone) or (I > 20);
   end;
 
+  function TryToFeedWithDinner : Boolean;
+  begin
+    Result := false;
+    if (fFeedCnt >= 2) then  Exit; //Limit max number of times to eat in the Inn
+    if (fUnit.Condition >= UNIT_MAX_CONDITION * UNIT_STUFFED_CONDITION_LVL) then Exit;
+
+    If not gHands[fUnit.Owner].VirtualWareTake('vtDinner', 1) then
+      Exit;
+    Result := true;
+    fUnit.Feed(UNIT_MAX_CONDITION);
+    Inc(fFeedCnt);
+    If fUnit.ConditionPace <= 10 then
+      fUnit.ConditionPace := 11;
+  end;
+
   function FeedUnit(aWare : TKMWareType) : Boolean;
   var restoreCond : Single;
   begin
@@ -133,6 +148,8 @@ function TKMTaskGoEat.Execute: TKMTaskResult;
       Exit;
     if (fFeedCnt >= 2) then  Exit; //Limit max number of times to eat in the Inn
     if (fUnit.Condition >= UNIT_MAX_CONDITION * UNIT_STUFFED_CONDITION_LVL) then Exit;
+
+    if fInn.CheckWareIn(aWare) = 0 then Exit;
 
     case aWare of
       wtWine: restoreCond := UNIT_MAX_CONDITION * WINE_RESTORE;
@@ -143,7 +160,7 @@ function TKMTaskGoEat.Execute: TKMTaskResult;
       wtVegetables: restoreCond := UNIT_MAX_CONDITION * VEGE_RESTORE;
       else restoreCond := 0;
     end;
-    if fInn.CheckWareIn(aWare) = 0 then Exit;
+    Result := true;
 
     fInn.WareTakeFromIn(aWare);
     gHands[fUnit.Owner].Stats.WareConsumed(aWare);
@@ -187,7 +204,7 @@ begin
           Exit;
         end;
       end;
-   4..9: if not FeedUnit(RandomWare) then
+   4..9: if TryToFeedWithDinner or FeedUnit(RandomWare) then
         SetActionLockedStay(29*4, uaWalk)
       else
         SetActionLockedStay(1, uaWalk);
