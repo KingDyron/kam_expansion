@@ -72,6 +72,7 @@ begin
 
   If (aUnitType = utWarrior) and gHands[Owner].ArmyDevUnlocked(12) then
     Result := Result - 1;
+  Result := Max(Result, 1);
 end;
 
 function TKMHouseTownHall.CanEquip(aUnitType: TKMUnitType): Boolean;
