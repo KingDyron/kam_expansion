@@ -7476,7 +7476,7 @@ begin
       fWait := 100;
       Inc(fPhase);
 
-      if fPhase = GetPhaseCount(TrainedUnitType) then
+      if fPhase >= GetPhaseCount(TrainedUnitType) then
         FinishTraining;
     end;
 
