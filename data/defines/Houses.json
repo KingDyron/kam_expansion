@@ -3979,7 +3979,7 @@
 			"MaxWorkersCount" : 1,
 			"CanOverfill" : False,
 			"GatheringScript" : "gsNone",
-			"WareInput" : ["wtApple","wtGold","wtEgg","wtJewerly","wtNone","wtNone"],
+			"WareInput" : ["wtApple","wtEgg","wtCard","wtJewerly","wtNone","wtNone"],
 			"WareOutput" : ["wtNone","wtNone","wtNone","wtNone","wtNone","wtNone"],
 			"UnlockAfter" : ["htMarket","htPottery"],
 			"ha_Idle" : {"X" : 39,"Y" : 67,"Steps" : [2367,2367,2367,2367,2367,2367,2367,2368,2369,2370,2371,2371,2371,2371,2371,2371,2370,2369,2368]},
