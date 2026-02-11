@@ -1381,8 +1381,8 @@ var
 begin
   for I := 0 to fPlansCount - 1 do
   if (fPlans[I].HouseType <> htNone)
-  and ((aLoc.X - fPlans[I].Loc.X + 3 in [1..4]) and
-       (aLoc.Y - fPlans[I].Loc.Y + 4 in [1..4]) and
+  and ((aLoc.X - fPlans[I].Loc.X + 3 in [1..MAX_HOUSE_SIZE]) and
+       (aLoc.Y - fPlans[I].Loc.Y + 4 in [1..MAX_HOUSE_SIZE]) and
        (gRes.Houses[fPlans[I].HouseType].BuildArea[aLoc.Y - fPlans[I].Loc.Y + 4, aLoc.X - fPlans[I].Loc.X + 3] <> 0))
   then
   begin
