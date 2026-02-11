@@ -133,14 +133,15 @@ begin
   If gRes.Wares.VirtualWares[aType].Name = 'vtDinner' then
   begin
     for I := 1 to aAmount do
-    If CheckWareIn(wtSausage) + CheckWareIn(wtBread) * CheckWareIn(wtWine) * CheckWareIn(wtFish) * CheckWareIn(wtVegetables) > 0 then
+    If CheckWareIn(wtSausage) * CheckWareIn(wtBread) * CheckWareIn(wtWine) * CheckWareIn(wtFish) * CheckWareIn(wtVegetables) > 0 then
     begin
+
       WareTakeFromIn(wtSausage, 1, true);
       WareTakeFromIn(wtBread, 1, true);
       WareTakeFromIn(wtWine, 1, true);
       WareTakeFromIn(wtFish, 1, true);
       WareTakeFromIn(wtVegetables, 1, true);
-      gHands[Owner].VirtualWareTake(aType, -1);
+      gHands[Owner].VirtualWareTake(aType, -3);
     end else
       Exit;
   end;

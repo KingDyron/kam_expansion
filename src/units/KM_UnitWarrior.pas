@@ -764,6 +764,7 @@ begin
         VirtualWareTake('vtWoodenPlate', -2 * aMulti);
         If KaMRandom(100, 'Random chance to get card 5') < 5 then
           GiveWareToRandomStore(wtCard, 1);
+
       end;
     end;
 
