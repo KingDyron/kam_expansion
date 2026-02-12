@@ -4590,7 +4590,7 @@ begin
         // Only allow placing of roads etc. with the left mouse button
         if gMySpectator.FogOfWar.CheckTileRevelation(P.X, P.Y) = 0 then
         begin
-          if (gCursor.Mode in [cmErase, cmRoad, cmField, cmGrassLand, cmVegeField, cmWine, cmHouses, cmPalisade,
+          if (gCursor.Mode in [cmErase, cmRoad, cmField, cmGrassLand, cmVegeField, cmWine, cmHouses, cmPlanWalls, cmPalisade,
                               cmBridges, cmDecorations, cmAssignToShip, cmCustom]) and not gGameParams.IsReplayOrSpectate then
             // Can't place noise when clicking on unexplored areas
             gSoundPlayer.Play(sfxCantPlace, P, False, 4);
@@ -4675,7 +4675,19 @@ begin
             cmGrassLand: gCursor.Tag1 := Ord(cfmNone);
             cmVegeField: gCursor.Tag1 := Ord(cfmNone);
             cmWine:  gCursor.Tag1 := Ord(cfmNone);
-
+            cmPlanWalls :
+                          //if gMySpectator.Hand.CanAddHousePlan(P, htWall5) then
+                          begin
+                            If gCursor.PlanWallsStart = KMPOINT_INVALID_TILE then
+                              gCursor.PlanWallsStart := P
+                            else
+                            If gCursor.PlanWallsEnd = KMPOINT_INVALID_TILE then
+                            begin
+                              gCursor.PlanWallsEnd := P;
+                              gMySpectator.Hand.TryPlacePlanWalls(gCursor.PlanWallsStart, gCursor.PlanWallsEnd);
+                              gCursor.Mode := cmNone;
+                            end;
+                          end;
             cmHouses:
               if gMySpectator.Hand.CanAddHousePlan(P, TKMHouseType(gCursor.Tag1)) then
               begin

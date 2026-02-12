@@ -34,6 +34,7 @@ type
       Path, Name, ShortName : String;
       MissionID : Byte;
     end;
+    PlanWallsStart, PlanWallsEnd : TKMPoint;
 
     // MapEd brushes page
     MapEdFieldAge: Integer;
@@ -103,6 +104,7 @@ type
     MapEd_WaresMinCount : Byte;
     MapEd_WaresMaxCount : Byte;
     MapEd_WaresRandomCount : Boolean;
+
 
     constructor Create;
     procedure AddMod(aMod : TKMMapEdModification);
@@ -179,6 +181,9 @@ begin
   DragOffset := KMPOINT_ZERO;
   MapEdUseMagicBrush := False;
   SState := [];
+  PlanWallsStart := KMPOINT_INVALID_TILE;
+  PlanWallsEnd := KMPOINT_INVALID_TILE;
+
   if fMode = cmNone then  //Reset Tag1 also, when reset mode
   begin
     Tag1 := 0;

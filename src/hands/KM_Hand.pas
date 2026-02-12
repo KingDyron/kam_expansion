@@ -57,6 +57,8 @@ type
 
   TKMHand = class(TKMHandCommon)
   private
+    const MAX_WALL_DIST = WALLS_TO_GATE_DIST * 2 + 4 - 1;
+    var
     fAI: TKMHandAI;
     fEnabled: Boolean;
     fConstructions: TKMHandConstructions;
@@ -316,10 +318,14 @@ type
     function StructuresHitTest(X, Y: Integer): TKMStructure;
     function GroupsHitTest(X, Y: Integer): TKMUnitGroup;
     function ObjectByUID(aUID: Integer): TObject;
-    procedure GetHouseMarks(const aLoc: TKMPoint; aHouseType: TKMHouseType; aList: TKMPointTagList; aIgnoreFOW: Boolean = False; aIgnoreObjects: Boolean = false);
+    procedure GetHouseMarks(const aLoc: TKMPoint; aHouseType: TKMHouseType; aList: TKMPointTagList; aClearList : Boolean = true; aIgnoreFOW: Boolean = False; aIgnoreObjects: Boolean = false);
     procedure GetStructureMarks(const aLoc: TKMPoint; aIndex, aRot: Word; aList : TKMPointTagList; aIgnoreFOW: Boolean = false);
     procedure TakeOverHouse(aHouse : TKMHouse);
     procedure TakeOverAppleTree(aHouse : TKMHouse);
+
+    procedure GetWallPlanPlans(const aStart, aEnd: TKMPoint; aList: TKMPointTagList);
+    procedure GetWallPlanMarks(const aStart, aEnd: TKMPoint; aList: TKMPointTagList; aIgnoreFOW: Boolean = False; aIgnoreObjects: Boolean = false);
+    function TryPlacePlanWalls(aStart, aEnd : TKMPoint) : Boolean;
 
     procedure PearlBuilt(aType : TKMPearlType);
     procedure PearlDestroyed(aType : TKMPearlType);
@@ -2590,7 +2596,7 @@ begin
 end;
 
 
-procedure TKMHand.GetHouseMarks(const aLoc: TKMPoint; aHouseType: TKMHouseType; aList: TKMPointTagList; aIgnoreFOW: Boolean = False; aIgnoreObjects: Boolean = false);
+procedure TKMHand.GetHouseMarks(const aLoc: TKMPoint; aHouseType: TKMHouseType; aList: TKMPointTagList; aClearList : Boolean = true; aIgnoreFOW: Boolean = False; aIgnoreObjects: Boolean = false);
   //Replace existing icon with a Block
   procedure BlockPoint(const aPoint: TKMPoint; aID: Integer);
   var I: Integer;
@@ -2610,7 +2616,7 @@ var
   HA: TKMHouseAreaNew;
 begin
   //Get basic Marks
-  gTerrain.GetHouseMarks(aLoc, aHouseType, aList, aIgnoreObjects);
+  gTerrain.GetHouseMarks(aLoc, aHouseType, aList, aClearList, aIgnoreObjects);
 
   //Override marks if there are House/FieldPlans (only we know about our plans) and or FogOfWar
   HA := gRes.Houses[aHouseType].BuildArea;
@@ -2665,7 +2671,6 @@ begin
 end;
 
 procedure TKMHand.GetStructureMarks(const aLoc: TKMPoint; aIndex, aRot: Word; aList : TKMPointTagList; aIgnoreFOW: Boolean = false);
-
 var  allowBuild : Boolean;
   procedure BlockPoint(const aPoint : TKMPoint; aTag : Cardinal);
   var I: Integer;
@@ -2827,6 +2832,195 @@ begin
   end;
 
 
+end;
+
+procedure TKMHand.GetWallPlanPlans(const aStart: TKMPoint; const aEnd: TKMPoint; aList: TKMPointTagList);
+
+var sP, eP : TKMPoint;
+  I : Integer;
+  HT : TKMHouseType;
+  middle, dist : Integer;
+
+begin
+  sP := aStart;
+  eP := aEnd;
+  If (sP = KMPOINT_INVALID_TILE) or (eP = KMPOINT_INVALID_TILE) then
+    Exit;
+
+  If eP = KMPOINT_INVALID_TILE then
+    eP := gCursor.Cell;
+
+  If Abs(eP.X - sP.X) > Abs(eP.Y - sP.Y) then
+  begin
+    eP.Y := sP.Y;
+    dist := eP.X - sP.X;
+    If Abs(dist) > MAX_WALL_DIST then
+    begin
+      If dist > 0 then
+        eP.X := sP.X + MAX_WALL_DIST
+      else
+        eP.X := sP.X - MAX_WALL_DIST;
+    end;
+
+    If sP.X > eP.X then
+      SwapInt(sP.X, eP.X);
+
+    dist := Min(eP.X - sP.X, MAX_WALL_DIST);
+    If dist < 3 then
+      Exit
+    else
+    begin
+      middle := dist div 2 - 1;
+
+      aList.Add(KMPoint(sP.X + middle + 4, sP.Y), byte(htWall2));//1 =  horizontal wall gate;
+
+
+      I := middle - 1; //check left side
+      while I >= 0 do
+      begin
+        If I >= 3 then
+        begin
+          aList.Add(KMPoint(sP.X + I - 1, sP.Y), byte(htWall));//2 = horizontal wall
+          I := I - 3;
+        end else
+        begin
+          aList.Add(KMPoint(sP.X + I - 0, sP.Y), byte(htWall5));//5 = wall end
+          I := I - 1;
+        end;
+      end;
+
+
+      I := middle + 4; //check right side
+      while Dist - I >= 0 do
+      begin
+        If Dist - I >= 3 then
+        begin
+          aList.Add(KMPoint(sP.X + I + 1, sP.Y), byte(htWall));//2 = horizontal wall
+          I := I + 3;
+        end else
+        begin
+          aList.Add(KMPoint(sP.X + I + 0, sP.Y), byte(htWall5));//5 = wall end
+          I := I + 1;
+        end;
+      end;
+    end;
+
+
+  end else
+  begin
+    eP.X := sP.X;
+    dist := eP.Y - sP.Y;
+    If Abs(dist) > MAX_WALL_DIST then
+    begin
+      If dist > 0 then
+        eP.Y := sP.Y + MAX_WALL_DIST
+      else
+        eP.Y := sP.Y - MAX_WALL_DIST;
+    end;
+
+    If sP.Y > eP.Y then
+      SwapInt(sP.Y, eP.Y);
+
+    dist := Min(eP.Y - sP.Y, MAX_WALL_DIST);
+    If dist < 3 then
+      Exit
+    else
+    begin
+      middle := dist div 2 - 1;
+
+      aList.Add(KMPoint(sP.X, sP.Y + middle + 3), byte(htWall4));//3 =  vertical wall gate;
+
+      I := middle - 1; //check top
+      while I >= 0 do
+      begin
+        If I >= 3 then
+        begin
+          aList.Add(KMPoint(sP.X, sP.Y + I), byte(htWall3));//4 = vertical wall
+          I := I - 3;
+        end else
+        begin
+          aList.Add(KMPoint(sP.X, sP.Y + I - 0), byte(htWall5));//5 = wall end
+          I := I - 1;
+        end;
+      end;
+
+
+      I := middle + 4; //check down
+      while Dist - I >= 0 do
+      begin
+        If Dist - I >= 3 then
+        begin
+          aList.Add(KMPoint(sP.X, sP.Y + I + 2), byte(htWall3));//4 = vertical wall
+          I := I + 3;
+        end else
+        begin
+          aList.Add(KMPoint(sP.X, sP.Y + I), byte(htWall5));//5 = wall end
+          I := I + 1;
+        end;
+      end;
+    end;
+  end;
+end;
+
+procedure TKMHand.GetWallPlanMarks(const aStart, aEnd: TKMPoint; aList: TKMPointTagList; aIgnoreFOW: Boolean = False; aIgnoreObjects: Boolean = false);
+var planList : TKMPointTagList;
+  I : Integer;
+  P : TKMPoint;
+  HT : TKMHouseType;
+begin
+
+  planList := TKMPointTagList.Create;
+
+  try
+    GetWallPlanPlans(aStart, aEnd, planList);
+    aList.Clear;
+    for I := 0 to planList.Count - 1 do
+    begin
+      HT := TKMHouseType(planList.Tag[I]);
+      P := planList[I];
+      P.X := P.X - gRes.Houses[HT].EntranceOffsetX;
+      P.Y := P.Y - gRes.Houses[HT].EntranceOffsetY;
+      GetHouseMarks(P, HT, aList, false, aIgnoreFOW, aIgnoreObjects);
+    end;
+
+  finally
+    FreeAndNil(planList);
+  end;
+end;
+
+function TKMHand.TryPlacePlanWalls(aStart, aEnd : TKMPoint) : Boolean;
+var Cells : TKMPointTagList;
+  P : TKMPoint;
+  I : Integer;
+  HT : TKMHouseType;
+begin
+  Result := false;
+  Cells := TKMPointTagList.Create;
+
+  GetWallPlanPlans(aStart, aEnd, Cells);
+
+  for I := 0 to Cells.Count - 1 do
+  begin
+    HT := TKMHouseType(Cells.Tag[I]);
+    P := Cells[I];
+    P.X := P.X - gRes.Houses[HT].EntranceOffsetX;
+    P.Y := P.Y - gRes.Houses[HT].EntranceOffsetY;
+    If not CanAddHousePlan(P, HT) then
+      Exit;
+  end;
+  //place plans if we didn't exit earlier
+  for I := 0 to Cells.Count - 1 do
+  begin
+    HT := TKMHouseType(Cells.Tag[I]);
+    P := Cells[I];
+    P.X := P.X - gRes.Houses[HT].EntranceOffsetX;
+    P.Y := P.Y - gRes.Houses[HT].EntranceOffsetY;
+    AddHousePlan(HT, P);
+  end;
+
+  Result := true;
+
+  FreeAndNil(Cells);
 end;
 
 procedure TKMHand.PearlBuilt(aType: TKMPearlType);

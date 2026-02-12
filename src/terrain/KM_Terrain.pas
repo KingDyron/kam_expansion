@@ -207,7 +207,7 @@ type
     function ChooseTreeToPlant(const aLoc: TKMPoint): Integer;
     function ChooseTreeToPlace(const aLoc: TKMPoint; aTreeAge: TKMChopableAge; aAlwaysPlaceTree: Boolean): Integer;
 
-    procedure GetHouseMarks(const aLoc: TKMPoint; aHouseType: TKMHouseType; aList: TKMPointTagList; aIgnoreObjects : Boolean = false);
+    procedure GetHouseMarks(const aLoc: TKMPoint; aHouseType: TKMHouseType; aList: TKMPointTagList; aClearList : Boolean = true; aIgnoreObjects : Boolean = false);
     procedure GetStructureMarks(const aLoc: TKMPoint; aIndex, aRot: Word; aList: TKMPointTagList);
 
     function WaterHasFish(const aLoc: TKMPoint): Boolean;
@@ -5098,7 +5098,7 @@ begin
 
 end;
 
-procedure TKMTerrain.GetHouseMarks(const aLoc: TKMPoint; aHouseType: TKMHouseType; aList: TKMPointTagList; aIgnoreObjects : Boolean = false);
+procedure TKMTerrain.GetHouseMarks(const aLoc: TKMPoint; aHouseType: TKMHouseType; aList: TKMPointTagList; aClearList : Boolean = true; aIgnoreObjects : Boolean = false);
 
   procedure MarkPoint(aPoint: TKMPoint; aID: Integer);
   var
@@ -5117,7 +5117,7 @@ var
   HA: TKMHouseAreaNew;
   CanDoWall : Boolean;
 begin
-  Assert(aList.Count = 0);
+  Assert((aList.Count = 0) or not aClearList);
   HA := gRes.Houses[aHouseType].BuildArea;
 
   CanDoWall := false;
@@ -7596,6 +7596,7 @@ var
   L, M: Integer;
   HA: TKMHouseAreaNew;
 begin
+
   Result := True;
 
   if aHouseType in [htWall, htWall3, htWall5] then
@@ -8208,9 +8209,8 @@ begin
 end;
 
 function  TKMTerrain.CanPlaceWall(const aLoc: TKMPoint; aHouseType: TKMHouseType): Boolean;
-Const FIND_GATE_RADIUS = 10;
 var BestDIs : Integer;
-  tmpLocs : array[1..255, 1..255 ] of Byte;
+  tmpLocs : array of array of Byte;
   minDistance : byte;
   gateFound : Boolean;
   HT : TKMHouseType;
@@ -8219,8 +8219,9 @@ var BestDIs : Integer;
   procedure ResetTMP;
   var I, K : Integer;
   begin
-    for I := 1 to 255 do
-      for K := 1 to 255 do
+    Setlength(tmpLocs, fMapX, fMapY);
+    for I := 0 to fMapX - 1 do
+      for K := 0 to fMapY - 1 do
         tmpLocs[I, K] := 255;
   end;
 
@@ -8270,7 +8271,7 @@ var BestDIs : Integer;
 
 var hasWallNearby : Boolean;
 begin
-  if gGameParams.IsMapEditor then
+  //if gGameParams.IsMapEditor then
     Exit(true);
 
   ResetTMP;
@@ -8299,7 +8300,7 @@ begin
     else HT := htNone;
   end;
 
-  BestDis := FIND_GATE_RADIUS;
+  BestDis := WALLS_TO_GATE_DIST;
 
   if gHands.HousesHitTest(aLoc.X, aLoc.Y) = nil then
     Visit(aLoc.X, aLoc.Y, 0);

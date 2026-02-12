@@ -486,6 +486,7 @@ type
     cmVegeField,
     cmWine,
     cmHouses, // Gameplay
+    cmPlanWalls,
 
     //Map Editor
     cmElevate, //Height elevation

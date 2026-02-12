@@ -117,6 +117,7 @@ type
     procedure PaintFlagPoints(aFirstPass: Boolean);
 
     procedure RenderWireHousePlan(const P: TKMPoint; aHouseType: TKMHouseType; aIgnoreObjects: Boolean = false);
+    procedure RenderWireWallPlanning;
     procedure RenderTileOwnerLayer(const aRect: TKMRect);
     procedure RenderTilesGrid(const aRect: TKMRect);
 
@@ -3479,13 +3480,50 @@ begin
   fMarksList.Clear;
   //Show house marks ignoring player FOW if we can see all map in replay/spec
   showHMarksIgnoreFOW := gGameParams.IsReplayOrSpectate and (gMySpectator.FOWIndex = -1);
-  gMySpectator.Hand.GetHouseMarks(P, aHouseType, fMarksList, showHMarksIgnoreFOW, aIgnoreObjects);
+  gMySpectator.Hand.GetHouseMarks(P, aHouseType, fMarksList, true, showHMarksIgnoreFOW, aIgnoreObjects);
 
   for I := 0 to fMarksList.Count - 1 do
   if fMarksList.Tag[I] = TC_OUTLINE then
     RenderWireTile(fMarksList[I], icCyan) // Cyan rect
   else
     RenderSpriteOnTile(fMarksList[I], fMarksList.Tag[I]); // Icon
+end;
+
+procedure TKMRenderPool.RenderWireWallPlanning;
+var Cells : TKMPointTagList;
+  sP, eP : TKMPoint;
+  I : Integer;
+  C : Cardinal;
+  middle, dist : Integer;
+
+begin
+  sP := gCursor.PlanWallsStart;
+  eP := gCursor.Cell;
+  Cells := TKMPointTagList.Create;
+
+  If sP = KMPOINT_INVALID_TILE then
+  begin
+
+    sP := gCursor.Cell;
+    gMySpectator.Hand.GetHouseMarks(sP, htWall5, Cells);
+
+    for I := 0 to Cells.Count - 1 do
+      if Cells.Tag[I] = TC_OUTLINE then
+        RenderWireTile(Cells[I], icCyan) // Cyan rect
+      else
+        RenderSpriteOnTile(Cells[I], Cells.Tag[I]); // Icon
+
+  end else
+  begin
+
+    gMySpectator.Hand.GetWallPlanMarks(sP, eP, Cells);
+    for I := 0 to Cells.Count - 1 do
+      if Cells.Tag[I] = TC_OUTLINE then
+        RenderWireTile(Cells[I], icCyan) // Cyan rect
+      else
+        RenderSpriteOnTile(Cells[I], Cells.Tag[I]); // Icon
+  end;
+  FreeAndNil(Cells);
 end;
 
 
@@ -3818,6 +3856,8 @@ begin
                   else
                     RenderSpriteOnTile(P, TC_BLOCK);       // Red X
     cmHouses:     RenderWireHousePlan(KMPointAdd(P, gCursor.DragOffset), TKMHouseType(gCursor.Tag1), false); // Cyan quads and red Xs
+
+    cmPlanWalls : RenderWireWallPlanning;
     cmBrush:      RenderForegroundUI_Brush;
     cmTiles:      RenderForegroundUI_Tiles;{if gCursor.MapEdDir in [0..3] then
                     RenderTile(gCursor.Tag1, P.X, P.Y, gCursor.MapEdDir)

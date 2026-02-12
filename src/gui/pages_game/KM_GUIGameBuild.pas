@@ -284,6 +284,13 @@ var
 
     SetCost(cmHouses, Byte(aHouseType), houseSpec.GUIIcon, wood, stone, tile, houseSpec.HouseName);
   end;
+
+  procedure SetWallsPlaning;
+  begin
+    houseSpec := gRes.Houses[htWall5];
+
+    SetCost(cmPlanWalls, byte(htWall5), houseSpec.GUIIcon, 1, 0, 0, houseSpec.HouseName);
+  end;
 begin
   if Sender = nil then
   begin
@@ -359,7 +366,10 @@ begin
   end else
   begin
     house := TKMHouseType(TKMButton(Sender).Tag);
-    SetHouseCost(house);
+    If (house in WALL_HOUSES) and (ssShift in Shift) then
+      SetWallsPlaning
+    else
+      SetHouseCost(house);
     //houseSpec := gRes.Houses[house];
     //SetCost(cmHouses, Byte(house), houseSpec.GUIIcon, houseSpec.WoodCost, houseSpec.StoneCost, houseSpec.TileCost, houseSpec.HouseName);
   end;
