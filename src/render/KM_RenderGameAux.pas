@@ -139,7 +139,7 @@ end;
 
 procedure TKMRenderGameAux.TileTerrainTileLock(const aRect: TKMRect);
 const
-  TILE_LOCK_STR: array[TKMTileLock] of string = ('', 'Fenced', 'Digged', 'House', 'Wall', 'WallW', 'WallE','WallG', 'Structure', 'FieldW', 'RoadW');
+  TILE_LOCK_STR: array[TKMTileLock] of string = ('', 'Fenced', 'Digged', 'House', 'Wall', 'WallF', 'WallG','WallE', 'Structure', 'FieldW', 'RoadW');
 var
   I, J: Integer;
 begin

@@ -3493,8 +3493,6 @@ procedure TKMRenderPool.RenderWireWallPlanning;
 var Cells : TKMPointTagList;
   sP, eP : TKMPoint;
   I : Integer;
-  C : Cardinal;
-  middle, dist : Integer;
 
 begin
   sP := gCursor.PlanWallsStart;
@@ -3505,7 +3503,7 @@ begin
   begin
 
     sP := gCursor.Cell;
-    gMySpectator.Hand.GetHouseMarks(sP, htWall5, Cells);
+    gMySpectator.Hand.GetWallMarks(sP, KMPOINT_INVALID_TILE, sP, htWall5, Cells);
 
     for I := 0 to Cells.Count - 1 do
       if Cells.Tag[I] = TC_OUTLINE then
@@ -3518,9 +3516,16 @@ begin
 
     gMySpectator.Hand.GetWallPlanMarks(sP, eP, Cells);
     for I := 0 to Cells.Count - 1 do
-      if Cells.Tag[I] = TC_OUTLINE then
-        RenderWireTile(Cells[I], icCyan) // Cyan rect
-      else
+      if (Cells.Tag[I] = TC_OUTLINE) or (Cells.Tag[I] = TC_ENTRANCE) then
+      begin
+        If Cells.Tag2[I] = 1 then
+          RenderWireTile(Cells[I], icDarkOrange) // blue rect
+        else
+        If Cells.Tag2[I] = 2 then
+          RenderWireTile(Cells[I], icOrange) // orange rect
+        else
+          RenderWireTile(Cells[I], icYellow); // Cyan rect
+      end else
         RenderSpriteOnTile(Cells[I], Cells.Tag[I]); // Icon
   end;
   FreeAndNil(Cells);

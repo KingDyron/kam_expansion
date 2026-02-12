@@ -207,6 +207,7 @@ type
     function ChooseTreeToPlant(const aLoc: TKMPoint): Integer;
     function ChooseTreeToPlace(const aLoc: TKMPoint; aTreeAge: TKMChopableAge; aAlwaysPlaceTree: Boolean): Integer;
 
+    function IsTileLockedForHouses(const aLoc : TKMPoint) : Boolean;
     procedure GetHouseMarks(const aLoc: TKMPoint; aHouseType: TKMHouseType; aList: TKMPointTagList; aClearList : Boolean = true; aIgnoreObjects : Boolean = false);
     procedure GetStructureMarks(const aLoc: TKMPoint; aIndex, aRot: Word; aList: TKMPointTagList);
 
@@ -5098,6 +5099,11 @@ begin
 
 end;
 
+function TKMTerrain.IsTileLockedForHouses(const aLoc : TKMPoint) : Boolean;
+begin
+  Result := Land^[aLoc.Y,aLoc.X].TileLock in [tlFenced,tlDigged,tlHouse, tlWall, tlWallGate, tlWallEmpty, tlWallFence];
+end;
+
 procedure TKMTerrain.GetHouseMarks(const aLoc: TKMPoint; aHouseType: TKMHouseType; aList: TKMPointTagList; aClearList : Boolean = true; aIgnoreObjects : Boolean = false);
 
   procedure MarkPoint(aPoint: TKMPoint; aID: Integer);
@@ -5107,7 +5113,14 @@ procedure TKMTerrain.GetHouseMarks(const aLoc: TKMPoint; aHouseType: TKMHouseTyp
     for I := 0 to aList.Count - 1 do //Skip wires from comparison
       if (aList.Tag[I] <> TC_OUTLINE) and KMSamePoint(aList[I], aPoint) then
         Exit;
-    aList.Add(aPoint, aID);
+    If aHouseType in [htWall2, htWall4] then
+      aList.Add(aPoint, aID, 1)
+    else
+    If aHouseType in [htWall, htWall3] then
+      aList.Add(aPoint, aID, 2)
+    else
+      aList.Add(aPoint, aID, 0);
+
   end;
 
 var
@@ -5194,7 +5207,7 @@ begin
               for S := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do
                 for T := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do
                   if (S <> 0) or (T<>0) then  //This is a surrounding tile, not the actual tile
-                    if Land^[P2.Y+T,P2.X+S].TileLock in [tlFenced,tlDigged,tlHouse, tlWall, tlWallFence] then
+                    if IsTileLockedForHouses(KMPoint(P2.X+S,P2.Y+T)) then
                     begin
                       MarkPoint(KMPoint(P2.X+S,P2.Y+T), TC_BLOCK);
                       allowBuild := False;
@@ -5205,7 +5218,7 @@ begin
               for S := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do
               for T := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do
                 if (S <> 0) or (T<>0) then  //This is a surrounding tile, not the actual tile
-                  if (Land^[P2.Y+T,P2.X+S].TileLock in [tlFenced,tlDigged,tlHouse, tlWall, tlWallFence])
+                  if IsTileLockedForHouses(KMPoint(P2.X+S,P2.Y+T))
                     and House(P2.X+S, P2.Y+T).IsValid(htAppleTree, true)  then
                   begin
                     MarkPoint(KMPoint(P2.X+S,P2.Y+T), TC_BLOCK);
