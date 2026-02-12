@@ -3503,7 +3503,7 @@ begin
   begin
 
     sP := gCursor.Cell;
-    gMySpectator.Hand.GetWallMarks(sP, KMPOINT_INVALID_TILE, sP, htWall5, Cells);
+    gMySpectator.Hand.GetWallMarks(sP, htWall5, Cells);
 
     for I := 0 to Cells.Count - 1 do
       if Cells.Tag[I] = TC_OUTLINE then

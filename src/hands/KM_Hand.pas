@@ -279,6 +279,7 @@ type
     function CanAddFakeFieldPlan(const aLoc: TKMPoint; aFieldType: TKMFieldType; aRoadType : TKMRoadType = rtNone): Boolean;
     function CanRemFakeFieldPlan(const aLoc: TKMPoint; aFieldType: TKMFieldType): Boolean;
     function CanAddHousePlan(const aLoc: TKMPoint; aHouseType: TKMHouseType): Boolean;
+    function CanAddWallPlan(const aLoc: TKMPoint; aHouseType: TKMHouseType): Boolean;
     function CanAddHousePlanAI(aX, aY: Word; aHouseType: TKMHouseType; aCheckInfluence: Boolean): Boolean;
     function CanAddStructurePlan(const aLoc : TKMPoint; aIndex, aRot : Word) : Boolean;
     function HasVWares(aCost : TKMVWarePlanCommon) : Boolean;
@@ -319,7 +320,7 @@ type
     function GroupsHitTest(X, Y: Integer): TKMUnitGroup;
     function ObjectByUID(aUID: Integer): TObject;
     procedure GetHouseMarks(const aLoc: TKMPoint; aHouseType: TKMHouseType; aList: TKMPointTagList; aClearList : Boolean = true; aIgnoreFOW: Boolean = False; aIgnoreObjects: Boolean = false);
-    procedure GetWallMarks(const aStart, aEnd, aLoc: TKMPoint; aHouseType: TKMHouseType; aList: TKMPointTagList; aClearList: Boolean = True;
+    procedure GetWallMarks(const aLoc: TKMPoint; aHouseType: TKMHouseType; aList: TKMPointTagList; aClearList: Boolean = True;
                              aIgnoreFOW: Boolean = False; aIgnoreObjects: Boolean = false);
     procedure GetStructureMarks(const aLoc: TKMPoint; aIndex, aRot: Word; aList : TKMPointTagList; aIgnoreFOW: Boolean = false);
     procedure TakeOverHouse(aHouse : TKMHouse);
@@ -1631,6 +1632,87 @@ begin
 
 end;
 
+function TKMHand.CanAddWallPlan(const aLoc: TKMPoint; aHouseType: TKMHouseType): Boolean;
+
+  function HasWallEndAt(aX, aY : Integer) : Boolean;
+  begin
+    Result := gTerrain.House(aX, aY).IsValid(WALL_HOUSES);
+  end;
+
+var
+  I, K, J, S, T, Tx, Ty: Integer;
+  HA: TKMHouseAreaNew;
+  allowEndPoint : Boolean;
+begin
+  Result := CanBuildHouse(aHouseType);
+  if not Result then Exit;
+  Result := gTerrain.CanPlaceHouse(aLoc, aHouseType, IsComputer);
+  if not Result then Exit;
+
+  HA := gRes.Houses[aHouseType].BuildArea;
+  for I := 1 to MAX_HOUSE_SIZE do
+  for K := 1 to MAX_HOUSE_SIZE do
+  if HA[I,K] <> 0 then
+  begin
+    Tx := aLoc.X + K - 3- gRes.Houses[aHouseType].EntranceOffsetX;
+    Ty := aLoc.Y + I - 4 - gRes.Houses[aHouseType].EntranceOffsetY;
+    //AI ignores FOW (this function is used from scripting)
+    Result := Result and gTerrain.TileInMapCoords(Tx, Ty, 1)
+                     and (IsComputer
+                      or (NeedToChooseFirstStorehouseInGame and fFogOfWar.CheckTileInitialRevelation(Tx, Ty)) //Use initial revelation for first storehouse
+                      or (not NeedToChooseFirstStorehouseInGame and (fFogOfWar.CheckTileRevelation(Tx, Ty) > 0)));
+    //This checks below require Tx;Ty to be within the map so exit immediately if they are not
+    if not Result then exit;
+
+    if not IsComputer then
+      Result := Result and not gTerrain.IsReservedForAI(KMPoint(Tx,Ty));
+    if not Result then exit;
+
+    allowEndPoint := false;
+    If aHouseType = htWall5 then
+    begin
+      //check if there is a wall point to connect to
+      for S := -1 to 1 do
+        for T := -1 to 1 do
+          if (S = 0) or (T = 0) then //This is a surrounding tile, not the actual tile
+          If not allowEndPoint and HasWallEndAt(Tx + S , Ty + T) then
+            allowEndPoint := gTerrain.House(Tx + S , Ty + T).IsValid(htWall5);
+    end;
+
+    //This tile must not contain fields/houses of allied players or self
+    for J := 0 to gHands.Count - 1 do
+      if fAlliances[J] = atAlly then
+      begin
+        Result := Result and (gHands[J].fConstructions.FieldworksList.HasField(KMPoint(Tx,Ty)) = ftNone);
+
+        If aHouseType = htWall5 then
+        begin
+          //Check surrounding tiles in +/- 1 range for other houses pressence
+          If not allowEndPoint then
+          for S := -1 to 1 do
+            for T := -1 to 1 do
+              if (S = 0) or (T = 0) then //This is a surrounding tile, not the actual tile
+              begin
+                Result := Result
+                          and not (gHands[J].fConstructions.HousePlanList.HasPlan(KMPoint(Tx + S , Ty + T)) )
+                          and not gTerrain.IsTileLockedForHouses(KMPoint(Tx + S , Ty + T));
+              end;
+
+
+        end else
+        //Check surrounding tiles in +/- 1 range for other houses pressence
+          for S := -1 to 1 do
+            for T := -1 to 1 do //This is a surrounding tile, not the actual tile
+            begin
+              Result := Result
+                        and not (gHands[J].fConstructions.HousePlanList.HasPlan(KMPoint(Tx + S , Ty + T)) )
+                        and not gTerrain.IsTileLockedForHouses(KMPoint(Tx + S , Ty + T));
+            end;
+      end;
+  end;
+
+end;
+
 function TKMHand.CanAddStructurePlan(const aLoc: TKMPoint; aIndex, aRot: Word): Boolean;
 begin
   Result := gTerrain.CanPlaceStructure(aLoc, aIndex, aRot);
@@ -2672,7 +2754,7 @@ begin
       end;
 end;
 
-procedure TKMHand.GetWallMarks(const aStart, aEnd, aLoc: TKMPoint; aHouseType: TKMHouseType;
+procedure TKMHand.GetWallMarks(const aLoc: TKMPoint; aHouseType: TKMHouseType;
                               aList: TKMPointTagList; aClearList: Boolean = True;
                                aIgnoreFOW: Boolean = False; aIgnoreObjects: Boolean = false);
   //Replace existing icon with a Block
@@ -2741,7 +2823,8 @@ begin
               begin
                 for J := 0 to gHands.Count - 1 do
                   if (gHands[fID].Alliances[J] = atAlly)
-                    and (gHands[J].fConstructions.HousePlanList.HasPlan(KMPoint(P2.X + S, P2.Y + T)) ) then
+                    and (gHands[J].fConstructions.HousePlanList.HasPlan(KMPoint(P2.X + S, P2.Y + T))
+                        or (gHands[J].fConstructions.FieldworksList.HasField(KMPoint(P2.X + S, P2.Y + T)) <> ftNone) ) then
                   begin
                     BlockPoint(KMPoint(P2.X + S, P2.Y + T), TC_BLOCK); //Block surrounding points
                     allowBuild := False;
@@ -2764,7 +2847,8 @@ begin
               begin
                 for J := 0 to gHands.Count - 1 do
                   if (gHands[fID].Alliances[J] = atAlly)
-                    and (gHands[J].fConstructions.HousePlanList.HasPlan(KMPoint(P2.X + S, P2.Y + T)) ) then
+                    and (gHands[J].fConstructions.HousePlanList.HasPlan(KMPoint(P2.X + S, P2.Y + T))
+                        or (gHands[J].fConstructions.FieldworksList.HasField(KMPoint(P2.X + S, P2.Y + T)) <> ftNone) ) then
                   begin
                     BlockPoint(KMPoint(P2.X + S, P2.Y + T), TC_BLOCK); //Block surrounding points
                     allowBuild := False;
@@ -3096,7 +3180,7 @@ begin
       P := planList[I];
       P.X := P.X - gRes.Houses[HT].EntranceOffsetX;
       P.Y := P.Y - gRes.Houses[HT].EntranceOffsetY;
-      GetWallMarks(aStart, aEnd, P, HT, aList, false, aIgnoreFOW, aIgnoreObjects);
+      GetWallMarks(P, HT, aList, false, aIgnoreFOW, aIgnoreObjects);
     end;
 
   finally
@@ -3121,7 +3205,7 @@ begin
     P := Cells[I];
     P.X := P.X - gRes.Houses[HT].EntranceOffsetX;
     P.Y := P.Y - gRes.Houses[HT].EntranceOffsetY;
-    If not CanAddHousePlan(P, HT) then
+    If not CanAddWallPlan(P, HT) then
       Exit;
   end;
   //place plans if we didn't exit earlier
