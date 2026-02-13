@@ -105,6 +105,7 @@ type
     HintID,
     GuiIcon : Word;
     ClimateMulti: array[TKMTerrainClimate] of Single;
+    BestClimate : TKMTerrainClimate;
     function StagesCount : Byte;
     function GetStage(aObj : Word) : Byte;
   end;
@@ -590,7 +591,7 @@ begin
     nObject := nArr.O[I];
 
     if not TKMEnumUtils.TryGetAs<TKMGrainType>(nObject.S['GrainType'],  GT) then
-      raise Exception.Create('Error loading ' + jsonPath + ': wrong GranType name: ' + nObject.S['GrainType']);
+      raise Exception.Create('Error loading ' + jsonPath + ': wrong GrainType name: ' + nObject.S['GrainType']);
 
     tmpGrain.GuiIcon := nObject.I['GuiIcon'];
     tmpGrain.TextID := nObject.I['TextID'];
@@ -653,10 +654,15 @@ begin
     for K := 0 to nArr2.Count - 1 do
       gFruitTrees[I].Stage[K] := nArr2.I[K];
     gFruitTrees[I].ClimateMulti[tcNone] := 1;
+    gFruitTrees[I].BestClimate := tcNone;
     for TT := Low(TKMTerrainClimate) to High(TKMTerrainClimate) do
       if TT <> tcNone then
         if TKMEnumUtils.GetName<TKMTerrainClimate>(TT, S) then
+        begin
           gFruitTrees[I].ClimateMulti[TT] := nObject.D[S];
+          If gFruitTrees[I].ClimateMulti[TT] > gFruitTrees[I].ClimateMulti[gFruitTrees[I].BestClimate] then
+            gFruitTrees[I].BestClimate := TT;
+        end;
 
   end;
 
