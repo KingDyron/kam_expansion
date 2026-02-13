@@ -454,7 +454,7 @@ const
     gicpt_Int3,//gicArmyShootAtSpot
     gicpt_Int2,//gicArenaSelectFestival,
     gicpt_Int1,//gicArenaStartFestival,
-    gicpt_Int2,//gicUnlockDevelopment
+    gicpt_Int3,//gicUnlockDevelopment
     gicpt_Int1,//gicHouseQueueNotRem
     gicpt_Int2,//gicHouseDeliveryTo
     gicpt_Int2,//gicArmyEnterSiegeTower,
@@ -652,7 +652,7 @@ type
     procedure CmdGame(aCommandType: TKMGameInputCommandType; aValue: Integer); overload;
     procedure CmdGame(aCommandType: TKMGameInputCommandType; aValue: Single); overload;
 
-    procedure CmdHand(aCommandType: TKMGameInputCommandType; aValue1, aValue2 : Integer);
+    procedure CmdHand(aCommandType: TKMGameInputCommandType; aValue1, aValue2, aValue3 : Integer);
 
     procedure CmdGameBeacon(const aLocF: TKMPointF; aOwner: TKMHandID; aColor: Cardinal);
 
@@ -1388,7 +1388,7 @@ begin
       gicHouseDeliveryTo            : srcHouse.HouseToDeliver := gHands.GetHouseByUID(IntParams[1]);
       gicHouseVirtualWareClicked    : srcHouse.HouseVirtualWareClicked(IntParams[1], IntParams[2]);
 
-      gicUnlockDevelopment          : P.UnlockDevelopment(TKMDevelopmentTreeType(IntParams[0]), IntParams[1]);
+      gicUnlockDevelopment          : P.UnlockDevelopment(TKMDevelopmentTreeType(IntParams[0]), IntParams[1], IntParams[2] = 1);
 
       gicWareDistributionChange:  begin
                                     P.Stats.WareDistribution[TKMWareType(IntParams[0]), TKMHouseType(IntParams[1])] := IntParams[2];
@@ -1786,10 +1786,10 @@ begin
   TakeCommand(MakeCommandNoHand(aCommandType, aValue));
 end;
 
-procedure TKMGameInputProcess.CmdHand(aCommandType: TKMGameInputCommandType; aValue1, aValue2 : Integer);
+procedure TKMGameInputProcess.CmdHand(aCommandType: TKMGameInputCommandType; aValue1, aValue2, aValue3 : Integer);
 begin
   Assert(aCommandType in [gicUnlockDevelopment]);
-  TakeCommand(MakeCommand(aCommandType, aValue1, aValue2));
+  TakeCommand(MakeCommand(aCommandType, aValue1, aValue2, aValue3));
 end;
 
 

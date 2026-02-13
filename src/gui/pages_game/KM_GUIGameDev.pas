@@ -121,6 +121,8 @@ var dtt : TKMDevelopmentTreeType;
         aToButton.Next[I].Button_Tree.BackBevelColor := DEFAULT_COLOR and $AAFFFFFF;
       end;}
     end;
+    IF aToButton.Dev.IsSpecial then
+      B.BackBevelColor := $A700D9FF;
 
     //If aToButton.Parent <> nil then
       //UnlockPrevious(aType, aToButton.Parent);
@@ -240,9 +242,13 @@ begin
   If not (ssLeft in Shift) then
     Exit;
   B := TKMButtonFlat(Sender);
-  If B.Tag2 <> 1 then  //tag2 = 1, means that this development can be unlocked
+  //tag2 = 1, means that this development can be unlocked
+  //tag2 = 0, try to unlock previous ones
+  If not (B.Tag2 in [0, 1]) then
     Exit;
 
+  If (B.Tag2 = 0) and not (ssShift in Shift) then
+    Exit;
   If gMySpectator = nil then
     Exit;
 
@@ -253,7 +259,7 @@ begin
     Exit;
 
   //gMySpectator.Hand.UnlockDevelopment(fLastPage, B.Tag);
-  gGame.GameInputProcess.CmdHand(gicUnlockDevelopment, byte(fLastPage), B.Tag);
+  gGame.GameInputProcess.CmdHand(gicUnlockDevelopment, byte(fLastPage), B.Tag, byte(ssShift in Shift));
 end;
 
 
