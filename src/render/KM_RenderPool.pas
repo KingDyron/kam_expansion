@@ -3490,6 +3490,9 @@ begin
 end;
 
 procedure TKMRenderPool.RenderWireWallPlanning;
+const
+      WIRE_WIDTH = 3;
+      WIRE_INSET = 1.5/CELL_SIZE_PX;
 var Cells : TKMPointTagList;
   sP, eP : TKMPoint;
   I : Integer;
@@ -3519,12 +3522,15 @@ begin
       if (Cells.Tag[I] = TC_OUTLINE) or (Cells.Tag[I] = TC_ENTRANCE) then
       begin
         If Cells.Tag2[I] = 1 then
-          RenderWireTile(Cells[I], icDarkOrange) // blue rect
+          RenderWireTile(Cells[I], icDarkOrange, WIRE_INSET, WIRE_WIDTH) // blue rect
         else
         If Cells.Tag2[I] = 2 then
-          RenderWireTile(Cells[I], icOrange) // orange rect
+          RenderWireTile(Cells[I], icOrange, WIRE_INSET, WIRE_WIDTH) // orange rect
         else
-          RenderWireTile(Cells[I], icYellow); // Cyan rect
+        If Cells.Tag2[I] = 3 then
+          RenderWireTile(Cells[I], icRed, WIRE_INSET, WIRE_WIDTH) // orange rect
+        else
+          RenderWireTile(Cells[I], icYellow, WIRE_INSET, WIRE_WIDTH); // Cyan rect
       end else
         RenderSpriteOnTile(Cells[I], Cells.Tag[I]); // Icon
   end;
