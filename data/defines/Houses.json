@@ -4475,7 +4475,7 @@
 			"UnoccupiedMsgId" : -1,
 			"CanOverfill" : false,
 			"GatheringScript" : "gsNone",
-			"UnlockAfter" : ["htPottery"],
+			"UnlockAfter" : ["htPottery", "htInn", "htHouse", "ht"],
 			"WareInput" : ["wtNone"],
 		
 			"ha_Flag1" : {"X" : 166,"Y" : -123,"Steps" : [1169,1170,1171,1172,1173,1174,1175,1176,1177,1168]},
