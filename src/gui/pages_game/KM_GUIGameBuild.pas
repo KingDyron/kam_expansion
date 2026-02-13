@@ -287,9 +287,9 @@ var
 
   procedure SetWallsPlaning;
   begin
-    houseSpec := gRes.Houses[htWall5];
+    houseSpec := gRes.Houses[htWall];
 
-    SetCost(cmPlanWalls, byte(htWall5), houseSpec.GUIIcon, 1, 0, 0, houseSpec.HouseName);
+    SetCost(cmPlanWalls, byte(htWall), houseSpec.GUIIcon, 1, 0, 0, houseSpec.HouseName);
   end;
 begin
   if Sender = nil then
@@ -366,7 +366,7 @@ begin
   end else
   begin
     house := TKMHouseType(TKMButton(Sender).Tag);
-    If (house in WALL_HOUSES) and (ssShift in Shift) then
+    If (house in WALL_HOUSES){ and (ssShift in Shift) }then
       SetWallsPlaning
     else
       SetHouseCost(house);
@@ -586,7 +586,7 @@ begin
         for J := 0 to High(HOUSE_GUI_TAB_ORDER[I].H[L]) do
         begin
           H := HOUSE_GUI_TAB_ORDER[I].H[L, J];
-          if H = htSign then //Sign is allowed only in MapEd
+          if H in [htSign, htWall..htWall4] then //these houses are allowed only in the MapEd
             Continue;
           if gMySpectator.Hand.Locks.HouseLock[H] = hlNotVisible then
             Continue;
