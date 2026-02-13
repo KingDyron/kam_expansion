@@ -6681,17 +6681,14 @@ begin
   end else
     fNextFruitTreeID := fFruitTreeID;
 
-  if gHands[Owner].IsComputer then
+  if gHands[Owner].IsComputer or gGameParams.MissionBuiltInDifficulty.IsEasy then
     if aWasBuilt then
       if fFruitTreeID = 0 then
       begin
         K := 0;
         for I := 0 to High(gFruitTrees) do
-        begin
-
-          if gFruitTrees[I].ClimateMulti[fBestClimate] * gFruitTrees[I].Fruits > gFruitTrees[K].ClimateMulti[fBestClimate] * gFruitTrees[I].Fruits then
+          If fBestClimate = gFruitTrees[I].BestClimate then
             K := I;
-        end;
         fNextFruitTreeID := K;
       end;
 
