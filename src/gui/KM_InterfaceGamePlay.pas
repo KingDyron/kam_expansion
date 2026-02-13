@@ -4681,10 +4681,8 @@ begin
                             If gCursor.PlanWallsStart = KMPOINT_INVALID_TILE then
                               gCursor.PlanWallsStart := P
                             else
-                            If gCursor.PlanWallsEnd = KMPOINT_INVALID_TILE then
                             begin
-                              gCursor.PlanWallsEnd := P;
-                              gMySpectator.Hand.TryPlacePlanWalls(gCursor.PlanWallsStart, gCursor.PlanWallsEnd);
+                              gMySpectator.Hand.TryPlacePlanWalls(gCursor.PlanWallsStart, P);
                               gCursor.Mode := cmNone;
                             end;
                           end;

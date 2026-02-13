@@ -347,7 +347,7 @@ const
     );
 
   WALL_HOUSES : TKMHouseTypeSet = [ htWall, htWall2, htWall3, htWall4, htWall5];
-  WALLS_TO_GATE_DIST = 10;
+  WALLS_TO_GATE_DIST = 13;
   IGNORE_HOUSE_BLOCK : TKMHouseTypeSet = [htWall..htWall5, htAppleTree];
   NO_ROAD_CONNECTION_HOUSES : TKMHouseTypeSet = [ htWall, htWall2, htWall3, htWall4, htWall5, htWell, htSiegeTower];
 

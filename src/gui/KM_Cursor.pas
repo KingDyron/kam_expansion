@@ -34,7 +34,7 @@ type
       Path, Name, ShortName : String;
       MissionID : Byte;
     end;
-    PlanWallsStart, PlanWallsEnd : TKMPoint;
+    PlanWallsStart : TKMPoint;
 
     // MapEd brushes page
     MapEdFieldAge: Integer;
@@ -182,7 +182,6 @@ begin
   MapEdUseMagicBrush := False;
   SState := [];
   PlanWallsStart := KMPOINT_INVALID_TILE;
-  PlanWallsEnd := KMPOINT_INVALID_TILE;
 
   if fMode = cmNone then  //Reset Tag1 also, when reset mode
   begin

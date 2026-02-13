@@ -17,6 +17,7 @@ type
     procedure Build_ButtonClick(Sender: TObject; Shift: TShiftState);
     procedure BuildType_Click(Sender: TObject);
     procedure Build_ButtonOver(Sender : TObject; Shift: TShiftState);
+    procedure SetWallsCost;
     //procedure Build_ButtonOver(Sender: TObject; X, Y: Integer; Shift : TShiftState);
   protected
     Panel_Build: TKMScrollPanel;
@@ -54,7 +55,7 @@ Const BUTTON_BUILD_TAG2 = 2;
 
 implementation
 uses
-  KM_CommonTypes,
+  KM_CommonTypes, KM_Points,
   KM_GameSettings,
   KM_RenderUI, KM_Cursor, KM_HandsCollection, KM_ResTexts, KM_Resource, KM_ResFonts,
   KM_Utils, Math, KM_HandTypes,
@@ -238,9 +239,9 @@ procedure TKMGUIGameBuild.Build_ButtonClick(Sender: TObject; Shift: TShiftState)
     Row_Cost[1].WareCount := IfThen(aStone <> 0, aStone, 0);
     Row_Cost[2].WareCount := IfThen(aTile <> 0, aTile, 0);}
     Row_Cost.WarePlan.Reset;
-    Row_Cost.WarePlan.AddWare(wtTimber, aWood, true);
-    Row_Cost.WarePlan.AddWare(wtStone, aStone, true);
-    Row_Cost.WarePlan.AddWare(wtTile, aTile, true);
+    Row_Cost.WarePlan.AddWare(wtTimber, aWood);
+    Row_Cost.WarePlan.AddWare(wtStone, aStone);
+    Row_Cost.WarePlan.AddWare(wtTile, aTile);
 
     Label_Build.Caption := aCaption;
     Image_Build_Selected.TexID := aTexId;
@@ -287,9 +288,10 @@ var
 
   procedure SetWallsPlaning;
   begin
-    houseSpec := gRes.Houses[htWall];
+    houseSpec := gRes.Houses[htWall5];
 
-    SetCost(cmPlanWalls, byte(htWall), houseSpec.GUIIcon, 1, 0, 0, houseSpec.HouseName);
+    SetCost(cmPlanWalls, byte(htWall5), houseSpec.GUIIcon, 0, 0, 0, gResTexts[2351]);
+    SetWallsCost;
   end;
 begin
   if Sender = nil then
@@ -380,6 +382,34 @@ begin
   fSelectedType := TKMButton(Sender).Tag;
 
   UpdateState;
+end;
+
+procedure TKMGUIGameBuild.SetWallsCost;
+var Walls : TKMPointTagList;
+  sP, eP : TKMPoint;
+  I, woodCost : Integer;
+
+begin
+  sP := gCursor.PlanWallsStart;
+  eP := gCursor.Cell;
+    woodCost := 0;
+  If sP <> KMPOINT_INVALID_TILE then
+  begin
+    Walls := TKMPointTagList.Create;
+    try
+      gMySpectator.Hand.GetWallPlanPlans(sP, eP, Walls);
+
+      for I := 0 to Walls.Count - 1 do
+        Inc(woodCost, gMySpectator.Hand.GetHouseWoodCost(TKMHouseType(Walls.Tag[I]))  );
+
+    finally
+      FreeAndNil(Walls);
+    end;
+  end;
+
+  Row_Cost.WarePlan.Reset;
+  Row_Cost.WarePlan.AddWare(wtTimber, woodCost, true);
+
 end;
 
 procedure TKMGUIGameBuild.Build_ButtonOver(Sender: TObject; Shift: TShiftState);
@@ -599,7 +629,10 @@ begin
 
           if gMySpectator.Hand.Locks.HouseCanBuild(H) then
           begin
-            Button_Build[K].Hint := gRes.Houses[H].HouseName;
+            If H = htWall5 then
+              Button_Build[K].Hint := gResTexts[2351]
+            else
+              Button_Build[K].Hint := gRes.Houses[H].HouseName;
             Button_Build[K].TexID := gRes.Houses[H].GUIIcon;
             Button_Build[K].Tag := ord(H);
             Button_Build[K].Down := gCursor.Tag1 = Button_Build[K].Tag;
@@ -626,7 +659,8 @@ begin
       Inc(top, 4);
 
     end;
-
+    If gCursor.Mode = cmPlanWalls then
+      SetWallsCost;
   end else
   if fSelectedType = 1 then //structures
   begin
