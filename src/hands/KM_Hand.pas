@@ -3163,10 +3163,22 @@ begin
 end;
 
 procedure TKMHand.GetWallPlanMarks(const aStart, aEnd: TKMPoint; aList: TKMPointTagList; aIgnoreFOW: Boolean = False; aIgnoreObjects: Boolean = false);
+
+  function GetInc(A : Integer) : Integer;
+  begin
+    If A >= 0 then
+      Result := 1
+    else
+      Result := -1;
+  end;
+
 var planList : TKMPointTagList;
   I : Integer;
   P : TKMPoint;
   HT : TKMHouseType;
+
+  dist : Integer;
+  sP, eP : TKMPoint;
 begin
 
   planList := TKMPointTagList.Create;
@@ -3174,6 +3186,33 @@ begin
   try
     GetWallPlanPlans(aStart, aEnd, planList);
     aList.Clear;
+    If planList.Count = 0 then
+    begin
+      sP := aStart;
+      eP := aEnd;
+      If Abs(eP.X - sP.X) > Abs(eP.Y - sP.Y) then
+      begin
+        dist := eP.X - sP.X;
+        dist := dist + GetInc(dist);
+        I := 0;
+        while I <> dist do
+        begin
+          aList.Add(KMPoint(sP.X + I, sP.Y), TC_OUTLINE, 3);
+          I := I + GetInc(dist);
+        end;
+      end else
+      begin
+        dist := eP.Y - sP.Y;
+        dist := dist + GetInc(dist);
+        I := 0;
+        while I <> dist do
+        begin
+          aList.Add(KMPoint(sP.X, sP.Y + I), TC_OUTLINE, 3);
+          I := I + GetInc(dist);
+        end;
+      end;
+
+    end else
     for I := 0 to planList.Count - 1 do
     begin
       HT := TKMHouseType(planList.Tag[I]);
