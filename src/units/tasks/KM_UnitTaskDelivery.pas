@@ -9,7 +9,7 @@ uses
 
 
 type
-  TKMDeliverKind = (dkToHouse, dkToConstruction, dkToUnit, dkToWall, dkToStructure, dkOther, dkNone);
+  TKMDeliverKind = (dkToHouse, dkToConstruction, dkToUnit, dkToWall, dkToStructure, dkOther, dkNone, dkToHouseAround);
   TKMDeliverStage = (
     dsUnknown,
     dsToFromHouse,     //Serf is walking to the offer house
@@ -106,7 +106,10 @@ begin
     if aToHouse.HouseType in WALL_HOUSES then
       fDeliverKind := dkToWall
     else
-      fDeliverKind := dkToHouse
+    IF aToHouse.CanDeliverToAnyPoint(aWare) then
+      fDeliverKind := dkToHouseAround
+    else
+      fDeliverKind := dkToHouse;
   end else
   if aToHouse.HouseType in WALL_HOUSES then
     fDeliverKind := dkToWall
@@ -271,6 +274,7 @@ begin
   
   //do not abandon the delivery if target is destroyed/dead, we will find new target later
   case fDeliverKind of
+    dkToHouseAround,
     dkToHouse:        begin
 
                         Result := Result or fToHouse.IsDestroyed;
@@ -297,7 +301,7 @@ end;
 function TKMTaskDeliver.CanRestartAction(aLastActionResult: TKMActionResult): Boolean;
 begin
   Result :=     (aLastActionResult = arActCanNotStart)
-            and (fDeliverKind = dkToHouse)
+            and (fDeliverKind in [dkToHouse, dkToHouseAround])
             and (fPhase - 1 = 6); //Serf tried to get inside destination house
 end;
 
@@ -326,6 +330,9 @@ begin
       end else
       if fToHouse.HouseType in WALL_HOUSES then
         fDeliverKind := dkToWall
+      else
+      IF fToHouse.CanDeliverToAnyPoint(fWareType) then
+        fDeliverKind := dkToHouseAround
       else
         fDeliverKind := dkToHouse
     end else
@@ -388,6 +395,9 @@ begin
       if fToHouse.HouseType in WALL_HOUSES then
         fDeliverKind := dkToWall
       else
+      IF fToHouse.CanDeliverToAnyPoint(fWareType) then
+        fDeliverKind := dkToHouseAround
+      else
         fDeliverKind := dkToHouse
     end else
     if fToHouse.HouseType in WALL_HOUSES then
@@ -448,6 +458,7 @@ begin
     1..3:     Result := dsAtFromHouse;
     else
       case fDeliverKind of
+        dkToHouseAround,
         dkToHouse:         begin
                               case Phase of
                                 5:    Result := dsToDestination;
@@ -476,6 +487,7 @@ end;
 function TKMTaskDeliver.CanAbandonWalk: Boolean;
 begin
   case fDeliverKind of
+    dkToHouseAround,
     dkToHouse:         Result := fPhase <= 8;
     dkToWall:          Result := fPhase <= 6;
     dkToConstruction:  Result := fPhase <= 7;
@@ -572,20 +584,9 @@ begin
   with TKMUnitSerf(fUnit) do
   case fPhase of
     0..4:;
-    5:  begin
-          If fToHouse.CanDeliverToAnyPoint(Carry) then
-            SetActionWalkToHouse(fToHouse, 1)
-          else
-            SetActionWalkToSpot(fToHouse.GetClosestEntrance(Position).DirFaceloc{fToHouse.PointBelowEntrance});
-        end;
-    6:  If not fToHouse.CanDeliverToAnyPoint(Carry) then
-          SetActionGoIn(uaWalk, gdGoInside, fToHouse)
-        else
-          SetActionLockedStay(1, uaWalk);
-    7:  If not fToHouse.CanDeliverToAnyPoint(Carry) then
-          SetActionLockedStay(5, uaWalk) //wait a bit inside
-        else
-          SetActionLockedStay(5, uaWalk);
+    5:  SetActionWalkToSpot(fToHouse.GetClosestEntrance(Position).DirFaceloc{fToHouse.PointBelowEntrance});
+    6:  SetActionGoIn(uaWalk, gdGoInside, fToHouse);
+    7:  SetActionLockedStay(5, uaWalk);
     8:  begin
           fToHouse.WareAddToIn(Carry);
           CarryTake;
@@ -596,7 +597,6 @@ begin
 
           //If serf bring smth into the Inn and he is hungry - let him eat immidiately
           If fUnit.IsHungry
-            and not fToHouse.CanDeliverToAnyPoint(wtAll)
             and (fToHouse.HouseType = htInn)
             and TKMHouseInn(fToHouse).HasFood
             and TKMHouseInn(fToHouse).HasSpace
@@ -608,17 +608,32 @@ begin
           //But only if we are not hungry!
           //Otherwise there is a possiblity when he will go between houses until death
           if not fUnit.IsHungry
-            and not fToHouse.CanDeliverToAnyPoint(wtAll)
             and (fToHouse = InHouse)
             and TKMUnitSerf(fUnit).TryDeliverFrom(fToHouse) then
             Exit //Exit immidiately, since we created new task here and old task is destroyed!
                  //Changing any task fields here (f.e. Phase) could affect new task!
           else
-          If not fToHouse.CanDeliverToAnyPoint(wtAll) then
-            //No delivery found then just step outside
-            SetActionGoIn(uaWalk, gdGoOutside, fToHouse)
-          else
-            SetActionStay(1, uaWalk);
+            SetActionGoIn(uaWalk, gdGoOutside, fToHouse);
+        end;
+    else Result := trTaskDone;
+  end;
+
+  //Deliver into complete house, but can access any point around
+  if (fDeliverKind = dkToHouseAround) then
+  with TKMUnitSerf(fUnit) do
+  case fPhase of
+    0..4:;
+    5:  SetActionWalkToHouse(fToHouse, 1);
+    6:  SetActionLockedStay(1, uaWalk);
+    7:  SetActionLockedStay(5, uaWalk);
+    8:  begin
+          fToHouse.WareAddToIn(Carry);
+          CarryTake;
+
+          gHands[Owner].Deliveries.Queue.GaveDemand(fDeliverID);
+          gHands[Owner].Deliveries.Queue.AbandonDelivery(fDeliverID);
+          fDeliverID := DELIVERY_NO_ID; //So that it can't be abandoned if unit dies while trying to GoOut
+          SetActionStay(1, uaWalk);
         end;
     else Result := trTaskDone;
   end;

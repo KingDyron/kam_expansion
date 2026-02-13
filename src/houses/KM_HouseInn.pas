@@ -118,6 +118,7 @@ end;
 function TKMHouseInn.HasFood: Boolean;
 begin
   Result := CheckWareIn(wtSausage) + CheckWareIn(wtBread) + CheckWareIn(wtWine) + CheckWareIn(wtFish) + CheckWareIn(wtVegetables) + CheckWareIn(wtApple) > 0;
+  Result := Result or (gHands[Owner].VirtualWare['vtDinner'] > 0);
 end;
 
 
