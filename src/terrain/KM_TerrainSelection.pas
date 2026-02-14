@@ -937,7 +937,7 @@ var
 
   function CheckTilesAround(const aX, aY : Integer; aOVType: TKMTileOverlay): Boolean; overload;
   var
-    A,B, I, K: Integer;
+    I, K: Integer;
   begin
     Result := true;
     for I := Max(aX - 1, fSelectionRect.Left + 1) to Min(aX + 1, fSelectionRect.Right) do

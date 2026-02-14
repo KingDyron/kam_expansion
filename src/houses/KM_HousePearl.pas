@@ -339,7 +339,7 @@ begin
               and (WorkersCount= 0)
               and not IsDestroyed
               and IsComplete
-              and not IsClosedForWorker;
+              and not CanNotBeOccupied;
 end;
 
 procedure TKMHousePearl.Demolish(aFrom: TKMHandID; IsSilent: Boolean = False);

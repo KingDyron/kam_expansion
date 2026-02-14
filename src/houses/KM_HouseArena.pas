@@ -51,7 +51,8 @@ implementation
 uses
   Classes,
   KM_Game,
-  KM_HandsCollection, KM_HandLogistics,
+  KM_HandsCollection, KM_HandLogistics, KM_HandTypes, KM_Hand, KM_Entity, KM_HandEntity,
+  KM_TerrainTypes,
   KM_RenderPool, KM_RenderAux,
   KM_Resource,
   KM_Terrain,

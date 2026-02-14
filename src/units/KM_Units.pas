@@ -784,7 +784,7 @@ var
 begin
   if (fHome <> nil)
     and not fHome.IsDestroyed
-    and (fHome.IsClosedForWorker or not fHome.AcceptsWorker(self) or ((fHome.HouseType = htBarracks) and (TKMHouseBarracks(fHome).NotAcceptRecruitFlag)))
+    and (fHome.CanNotBeOccupied or not fHome.AcceptsWorker(self) or ((fHome.HouseType = htBarracks) and (TKMHouseBarracks(fHome).NotAcceptRecruitFlag)))
     and not (fTask is TKMTaskDie)
     and not (fTask is TKMTaskGoToWell)
     and not (fTask is TKMTaskDismiss) then

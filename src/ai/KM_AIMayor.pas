@@ -313,7 +313,7 @@ begin
   begin
     house := P.Houses[I];
     if house.IsValid(htAny, false, true) then
-    if not house.IsClosedForWorker then
+    if not house.CanNotBeOccupied then
     if not (house.HouseType in [htBarracks, htStore, htInn, htMarket]) then
     if gRes.Houses[house.HouseType].CanHasWorker then
     begin
@@ -831,7 +831,7 @@ begin
   for I := 0 to gHands[fOwner].Houses.Count - 1 do
   begin
     H := gHands[fOwner].Houses[I];
-    If not H.IsComplete or H.IsDestroyed or H.IsClosedForWorker then
+    If not H.IsComplete or H.IsDestroyed or H.CanNotBeOccupied then
       Continue;
     If H.GetWareInIndex(wtWater) = 0 then
       Continue;

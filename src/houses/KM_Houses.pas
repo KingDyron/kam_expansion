@@ -362,6 +362,8 @@ type
     //function CanHasWorker: Boolean;//deprecated
     property IsClosedForWorker: Boolean read GetClosedForWorker write SetIsClosedForWorker;
     function GetWasClosedByHand : Boolean;
+    function CanNotBeOccupied : Boolean; virtual;
+
     property DisableUnoccupiedMessage: Boolean read fDisableUnoccupiedMessage write fDisableUnoccupiedMessage;
     function HasWorkerInside : Boolean;
     function WorkersCount : Word;overload;
@@ -634,7 +636,6 @@ type
       procedure SetParentTree(aHouse : TKMHouse);
       procedure AddChildTree(aTree : Pointer);
 
-      function GetClosedForWorker : Boolean; override;
       function PaintHouseWork : Boolean; override;
       procedure RecheckParenting;
       procedure CheckForParentTree;
@@ -663,6 +664,8 @@ type
       property ParentTree : TKMHouse read GetParentTree write SetParentTree;
       function ChildTree(aIndex : Integer) : TKMHouseAppleTree;
       function ChildCount : Integer;
+
+      function CanNotBeOccupied : Boolean; override;
 
 
       procedure AddDemandBuildingMaterials; override;
@@ -3343,7 +3346,7 @@ begin
   if not IsValid then
     Exit(true);
 
-  Result := fIsClosedForWorker or ((fDamage / MaxHealth) > 0.8);
+  Result := fIsClosedForWorker;
 end;
 
 function TKMHouse.GetWasClosedByHand: Boolean;
@@ -3351,6 +3354,11 @@ begin
   if not IsValid then
     Exit(true);
   Result := fIsClosedForWorker;
+end;
+
+function TKMHOuse.CanNotBeOccupied: Boolean;
+begin
+  Result := IsClosedForWorker or ((fDamage / MaxHealth) > 0.8)
 end;
 
 //deprecated
@@ -6028,12 +6036,13 @@ begin
   //CheckForParentTree;
 end;
 
-function TKMHouseAppleTree.GetClosedForWorker: Boolean;
+function TKMHouseAppleTree.CanNotBeOccupied: Boolean;
 begin
   Result := Inherited;
   if ParentTree.IsValid then
     Result := true;
 end;
+
 
 function TKMHouseAppleTree.PaintHouseWork: Boolean;
 begin

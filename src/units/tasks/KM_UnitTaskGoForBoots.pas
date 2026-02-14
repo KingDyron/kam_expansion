@@ -141,7 +141,7 @@ end;
 
 function TKMTaskEnterSiegeTower.WalkShouldAbandon: Boolean;
 begin
-  Result := (fHouse = nil) or (fHouse.IsDestroyed) or fHouse.IsClosedForWorker or not TKMHOuseSiegeTower(fHouse).CanEnter(fUnit.UnitType);
+  Result := (fHouse = nil) or (fHouse.IsDestroyed) or fHouse.CanNotBeOccupied or not TKMHOuseSiegeTower(fHouse).CanEnter(fUnit.UnitType);
   Result := Result and (fPhase <= 1);
 end;
 

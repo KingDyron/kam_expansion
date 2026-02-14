@@ -251,7 +251,7 @@ begin
   begin
     house := P.Houses[I];
     if house.IsValid(htAny, false, true) then
-    if not house.IsClosedForWorker then
+    if not house.CanNotBeOccupied then
     if not (house.HouseType in [htBarracks, htStore, htInn, htMarket]) then
     if gRes.Houses[house.HouseType].CanHasWorker then
       for K := 0 to high(house.HSpec.Workers) do

@@ -981,7 +981,7 @@ end;
 
 procedure TKMMapEdHouse.HandleHouseClosedForWorker(aHouse: TKMHouse);
 begin
-  if aHouse.IsClosedForWorker then
+  if aHouse.CanNotBeOccupied then
   begin
     Button_House_Worker.ShowImageEnabled := False;
     Image_House_Worker_Closed.Show;

@@ -2785,7 +2785,7 @@ end;
 
 procedure TKMGUIGameHouse.HandleHouseClosedForWorker(aHouse: TKMHouse);
 begin
-  if aHouse.IsClosedForWorker and (aHouse.HSpec.CanHasWorker or (aHouse.HouseType in [htSiegeTower])) then
+  if aHouse.CanNotBeOccupied and (aHouse.HSpec.CanHasWorker or (aHouse.HouseType in [htSiegeTower])) then
   begin
     Button_House_Worker.ShowImageEnabled := False;
     Image_House_Worker_Closed.Show;

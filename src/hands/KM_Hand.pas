@@ -3711,7 +3711,7 @@ begin
 
     if H.HouseType in [htBarracks, htTownhall, htSchool, htInn, htMarket] then
       Continue;
-    if H.IsClosedForWorker then
+    if H.CanNotBeOccupied then
       Continue;
     //if H.HSpec.WorkerTypes = [] then
     //  Continue;

@@ -366,7 +366,6 @@ function TKMCityPlanner.NextToLoc(const aStart : TKMPoint; aHouseType : TKMHouse
 var
   I: Integer;
   Bid, BestBid: Single;
-  SeedLocs: TKMPointArray;
   Locs: TKMPointTagList;
 begin
   Result := False;
