@@ -488,7 +488,7 @@ uses
 // Hence, thie line below is commented out:
 //  {$R KaM_Remake_Icon.res} // Keeps the Icon
   {$R KaM_Expansion.res} // Standard RES file, keeps the Icon
-  {$R KaM_Manifest.res}
+  {.$R KaM_Manifest.res}
 {$ENDIF}
 {$IFDEF MSWindows}
   {$IFDEF FPC}
