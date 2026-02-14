@@ -5019,8 +5019,7 @@ begin
                    'HousesUpgradingCnt =%d%s' +
                    'ForceWorking = %s%s' +
                    'WorkingTime = %d%s' +
-                   'TotalWorkingTime = %d'
-                   ,
+                   'TotalWorkingTime = %d',
                    [aSeparator,
                     workerStr, aSeparator,
                     actStr, aSeparator,
@@ -5114,7 +5113,7 @@ begin
   //Show unoccupied message if needed and house belongs to human player and can have worker at all
   //and is not closed for worker and not a barracks
   if not gGameParams.MBD.IsRealism then
-    if not fDisableUnoccupiedMessage and not HasWorker and not fIsClosedForWorker
+    if not fDisableUnoccupiedMessage and not HasWorker and not CanNotBeOccupied
     and gRes.Houses[fType].CanHasWorker and (fType <> htBarracks) and ShowUnoccupiedMSG then
     begin
       Dec(fTimeSinceUnoccupiedReminder);
