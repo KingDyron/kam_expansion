@@ -1579,7 +1579,7 @@ procedure TKMUnitWarrior.ProceedClosedTower;
 begin
   if (fHome <> nil)
     and not fHome.IsDestroyed
-    and (fHome.IsClosedForWorker or (NextOrder = woLeaveSiegeTower))
+    and (fHome.CanNotBeOccupied or (NextOrder = woLeaveSiegeTower))
     and not (fTask is TKMTaskShootFromSiegeTower) then
     begin
       FreeAndNil(fTask);

@@ -2534,7 +2534,7 @@ begin
               and not (WorkersCount >= MaxWorkers)
               and not IsDestroyed
               and IsComplete
-              and not IsClosedForWorker
+              and not CanNotBeOccupied
               and (WorkersCount(aType) < MaxWorkers(aType));
 end;
 
@@ -6621,7 +6621,7 @@ end;
 
 function TKMHouseAppleTree.ShowUnoccupiedMSG: Boolean;
 begin
-  Result := not IsClosedForWorker;
+  Result := not CanNotBeOccupied;
 end;
 
 constructor TKMHouseAppleTree.Create(aUID: Integer; aHouseType: TKMHouseType; PosX: Integer; PosY: Integer; aOwner: ShortInt; aBuildState: TKMHouseBuildState);
@@ -9335,7 +9335,7 @@ end;
 
 function TKMHouseSiegeTower.CanEnter(aUnitType : TKMUnitType = utAny): Boolean;
 begin
-  Result := not IsClosedForWorker;
+  Result := not CanNotBeOccupied;
   Result := Result and (GetTotalWeight + GetUnitWeight(aUnitType) <= MAX_UNITS_INSIDE);
 end;
 
