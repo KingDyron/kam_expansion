@@ -18,7 +18,8 @@ uses
   KM_Hand,
   KM_Defaults, KM_Points, KM_CommonTypes, KM_CommonClasses, KM_CommonClassesExt,
   KM_GameUIDTracker,
-  KM_Achievements;
+  KM_Achievements,
+  KM_CardGame;
 
 type
   //Class that manages single game session
@@ -103,6 +104,7 @@ type
     fMapEdMapSaveEnded: TEvent;
     fWeather : TKMWeatherCollection;
     fTickLag : Single;
+    fCardGame : TKMCardGame;
     procedure IssueAutosaveCommand(aAfterPT: Boolean);
     function FindHandToSpec: Integer;
     function CheckIfPieceTimeJustEnded: Boolean;
@@ -531,6 +533,8 @@ begin
   if gRandomCheckLogger <> nil then
     gRandomCheckLogger.Clear;
 
+  FreeAndNil(fCardGame);
+
   FreeAndNil(fParams);
 
   if Assigned(fOnDestroy) then
@@ -792,7 +796,8 @@ begin
     fWeather.StartMission;
     gTerrain.AfterLoadFromFile;
 
-
+    If not fParams.IsMapEditor then
+      fCardGame := TKMCardGame.Create;
     // Set default goals for SP game on MP map with PlayableAsSP flag
     if fParams.IsSingle
       and fMapTxtInfo.IsPlayableAsSP

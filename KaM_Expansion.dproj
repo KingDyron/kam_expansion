@@ -673,6 +673,8 @@
         <DCCReference Include="src\res\KM_ResCosmetics.pas"/>
         <DCCReference Include="src\gui\pages_maped\player\KM_GUIMapEdPlayerCheck.pas"/>
         <DCCReference Include="src\gui\pages_game\house\KM_GUIGameHouseST.pas"/>
+        <DCCReference Include="src\card\KM_CardGame.pas"/>
+        <DCCReference Include="src\card\KM_CardGameTypes.pas"/>
         <None Include="KM_TextIDs.inc"/>
         <None Include="KaM_Remake.dpr"/>
         <None Include="KaM_Remake.inc"/>
