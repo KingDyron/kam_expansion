@@ -5135,7 +5135,7 @@ begin
 
   CanDoWall := false;
   if aHouseType in [htWall, htWall3, htWall5] then
-    CanDoWall := CanPlaceWall(aLoc, aHouseType)
+    CanDoWall := true{CanPlaceWall(aLoc, aHouseType)}
   else
   if aHouseType = htWell then
     CanDoWall := CanPlaceWell(aLoc)
@@ -7613,7 +7613,7 @@ begin
   Result := True;
 
   if aHouseType in [htWall, htWall3, htWall5] then
-    Result := Result and CanPlaceWall(aLoc, aHouseType)
+    Result := Result{ and CanPlaceWall(aLoc, aHouseType)}
   else
   if aHouseType = htWell then
     Result := Result and CanPlaceWell(aLoc, forAI)
@@ -8233,15 +8233,16 @@ var BestDIs : Integer;
   var I, K : Integer;
   begin
     Setlength(tmpLocs, fMapX, fMapY);
-    for I := 0 to fMapX - 1 do
+
+    {for I := 0 to fMapX - 1 do
       for K := 0 to fMapY - 1 do
-        tmpLocs[I, K] := 255;
+        tmpLocs[I, K] := 255;}
   end;
 
   procedure Visit(aX, aY, aDistance: Integer);
   begin
     //if not TileInMapCoords(aX, aY) then  Exit;
-    if aDistance >= tmpLocs[aY, aX] then Exit;
+    if (tmpLocs[aY, aX] > 0) and (aDistance >= tmpLocs[aY, aX]) then Exit;
 
     if aDistance > minDistance then
       if not CheckPassability(aX, aY, tpWall) then Exit;
@@ -8284,8 +8285,11 @@ var BestDIs : Integer;
 
 var hasWallNearby : Boolean;
 begin
-  //if gGameParams.IsMapEditor then
+  Result := false;
+  if gGameParams.IsMapEditor then
     Exit(true);
+  If aHouseType <> htWall5 then
+    Exit;
 
   ResetTMP;
   Result := false;
@@ -8295,8 +8299,6 @@ begin
     Exit;
 
   case aHouseType of
-    htWall3: hasWallNearby := CheckWallNearby(aLoc.X, aLoc.Y - 3) or CheckWallNearby(aLoc.X, aLoc.Y + 1);
-    htWall: hasWallNearby := CheckWallNearby(aLoc.X + 2, aLoc.Y) or CheckWallNearby(aLoc.X - 2, aLoc.Y);
     htWall5: hasWallNearby := true;
   end;
 

@@ -1677,6 +1677,8 @@ begin
           if (S = 0) or (T = 0) then //This is a surrounding tile, not the actual tile
           If not allowEndPoint and HasWallEndAt(Tx + S , Ty + T) then
             allowEndPoint := gTerrain.House(Tx + S , Ty + T).IsValid(htWall5);
+
+      allowEndPoint := allowEndPoint and gTerrain.CanPlaceWall(aLoc, htWall5);
     end;
 
     //This tile must not contain fields/houses of allied players or self
@@ -1691,7 +1693,7 @@ begin
           If not allowEndPoint then
           for S := -1 to 1 do
             for T := -1 to 1 do
-              if (S = 0) or (T = 0) then //This is a surrounding tile, not the actual tile
+              if (S <> 0) or (T <> 0) then //This is a surrounding tile, not the actual tile
               begin
                 Result := Result
                           and not (gHands[J].fConstructions.HousePlanList.HasPlan(KMPoint(Tx + S , Ty + T)) )
@@ -2801,6 +2803,8 @@ begin
 
         allowBuild := allowBuild and (IsComputer or not gTerrain.IsReservedForAI(P2));
 
+
+
         //wall ends cannot be surrounded with another wall, except for end points (htWall5)
         If aHouseType = htWall5 then
         begin
@@ -2814,12 +2818,13 @@ begin
               begin
                 allowEndPoint := gTerrain.House(P2.X + S , P2.Y + T).IsValid(htWall5);
               end;
+          allowEndPoint := allowEndPoint and gTerrain.CanPlaceWall(aLoc, htWall5);
 
           //Check surrounding tiles in +/- 1 range for other houses pressence
           If not allowEndPoint then
           for S := -1 to 1 do
             for T := -1 to 1 do
-              if (S = 0) or (T = 0) then //This is a surrounding tile, not the actual tile
+              if (S <> 0) or (T <> 0) then //This is a surrounding tile, not the actual tile
               begin
                 for J := 0 to gHands.Count - 1 do
                   if (gHands[fID].Alliances[J] = atAlly)
