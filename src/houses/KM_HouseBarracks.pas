@@ -316,11 +316,13 @@ end;
 
 
 function TKMHouseBarracks.ShouldAbandonDeliveryFromTo(aToHouse: TKMHouse; aWareType: TKMWareType; aImmidiateCheck: Boolean): Boolean;
+const
+  CAN_DELIVER_TO = [htMarket, htSchool, htStore, htBarracks];
 begin
   Result := inherited
               or (aToHouse = nil)
               //Do not allow delivery from Barracks to other houses except Market/Store/other Barracks
-              or not (aToHouse.HouseType in [htMarket, htSchool, htStore, htBarracks])
+              or not (aToHouse.HouseType in CAN_DELIVER_TO)
               or ((aToHouse.HouseType <> htMarket) //allow delivery to Market with any mode
                 //For other houses allow only when dmTakeOut and no flag NotAllowTakeOutFlag
                 and ({(GetDeliveryModeForCheck(aImmidiateCheck) <> dmTakeOut)
