@@ -5426,7 +5426,7 @@ begin
       fillColor := icOrange and fillColor;
       lineColor := icCyan;
     end;
-    gRenderPool.RenderDebug.RenderTiledArea(Position, RangeMin, RangeMax, GetLength, fillColor, lineColor);
+    gRenderPool.RenderDebug.RenderTiledArea(Position, RangeMin, GetRangeMax, GetLength, fillColor, lineColor);
   end;
 end;
 
