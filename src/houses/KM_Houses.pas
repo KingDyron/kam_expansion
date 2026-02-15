@@ -915,6 +915,7 @@ type
       procedure SetNextGrassType(aValue : Integer);
       procedure SetNextVegeType(aValue : Integer);
       procedure SetMode(aValue : TKMWoodcutterMode);
+      procedure CheckGrainTypes;
     protected
        procedure Activate(aWasBuilt: Boolean); override;
     public
@@ -8526,6 +8527,16 @@ end;
 procedure TKMHouseFarm.SetMode(aValue : TKMWoodcutterMode);
 begin
   fMode := aValue;
+end;
+
+procedure TKMHouseFarm.CheckGrainTypes;
+begin
+  If not (fGrainType in GRAIN_GRAIN + [gftNone, gftRandom]) then
+    fGrainType := GRAIN_GRAIN_MIN;
+  If not (fGrassType in GRAIN_GRASS + [gftNone, gftRandom]) then
+    fGrainType := GRAIN_GRASS_MIN;
+  If not (fGrainType in GRAIN_VEGE + [gftNone, gftRandom]) then
+    fGrainType := GRAIN_VEGE_MIN;
 end;
 
 function TKMHouseFarm.HasGrain : Boolean;
