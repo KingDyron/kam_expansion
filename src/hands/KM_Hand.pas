@@ -3291,7 +3291,7 @@ begin
   Result := gRes.Houses[aHouseType].WoodCost;
 
   If (aHouseType = htWoodcutters) and BuildDevUnlocked(5) then
-    Result := Max(Result - 1, 1);
+    Result := Max(Result - 2, 1);
   If (aHouseType in WALL_HOUSES) and BuildDevUnlocked(16) then
     Result := Max(Result - 1, 1);
   If (aHouseType in WALL_HOUSES) and BuildDevUnlocked(29) then
