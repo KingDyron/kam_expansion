@@ -302,6 +302,7 @@ type
     property TextMission: TKMTextLibraryMulti read fTextMission;
     property Weather : TKMWeatherCollection read fWeather;
     property Cheater: Boolean read fCheater write fCheater;
+    property CardGame : TKMCardGame read fCardGame;
     function Achievements : TKMAchievements;
 
     procedure RefreshDevelopmentTree;

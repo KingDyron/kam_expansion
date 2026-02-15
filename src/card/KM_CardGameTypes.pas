@@ -55,6 +55,7 @@ type
   TKMCardDeck = record
     Count : Integer;
     Cards : TKMCardArray;
+    LastTaken : Byte;
     procedure Reset;
     procedure AddCard(const aCard : TKMCard);
   end;
@@ -81,6 +82,8 @@ type
     TableCards : TKMTableCards;
     procedure Reset;
   end;
+  PKMCardGamePlayer = ^TKMCardGamePlayer;
+
   TKMCardGamePlayers = array of TKMCardGamePlayer;
 
 function KMGameCard(aType : TKMCardType; aValue : Byte = 0; aRank : TKMCardRankType = crtNone) : TKMCard;
@@ -127,6 +130,7 @@ end;
 procedure TKMCardDeck.Reset;
 begin
   Count := 0;
+  LastTaken := 0;
 end;
 
 procedure TKMCardDeck.AddCard(const aCard : TKMCard);
@@ -138,7 +142,6 @@ begin
     SetLength(Cards, Count + 32);
   Cards[I].CopyFrom(aCard);
 end;
-
 
 function KMGameCard(aType : TKMCardType; aValue : Byte = 0; aRank : TKMCardRankType = crtNone) : TKMCard;
 begin

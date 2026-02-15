@@ -675,6 +675,7 @@
         <DCCReference Include="src\gui\pages_game\house\KM_GUIGameHouseST.pas"/>
         <DCCReference Include="src\card\KM_CardGame.pas"/>
         <DCCReference Include="src\card\KM_CardGameTypes.pas"/>
+        <DCCReference Include="src\gui\pages_game\house\KM_GUIGameCards.pas"/>
         <None Include="KM_TextIDs.inc"/>
         <None Include="KaM_Remake.dpr"/>
         <None Include="KaM_Remake.inc"/>

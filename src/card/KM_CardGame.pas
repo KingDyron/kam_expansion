@@ -19,15 +19,20 @@ type
     fDecks : TKMCardDecks;
 
     procedure CreateDeck;
-
     procedure ShuffleDeck(aDeckType : TKMCardDeckType);
     procedure ShuffleDecks;
+    function TakeCard(aDeckType : TKMCardDeckType) : TKMCard;
+
+    procedure GiveStartingCardsTo(var aPlayer : TKMCardGamePlayer);
 
   public
     constructor Create;
 
     procedure Reset;
     procedure AddPlayer(aHandID : TKMHandID);
+    function GetPlayer(aHandID : TKMHandID) : PKMCardGamePlayer;
+
+    procedure GiveStartingCards;
   end;
 
 
@@ -43,6 +48,7 @@ begin
   Reset;
   CreateDeck;
   ShuffleDecks;
+  GiveStartingCards;
 end;
 
 procedure TKMCardGame.Reset;
@@ -149,6 +155,58 @@ var CDT : TKMCardDeckType;
 begin
   for CDT := Low(TKMCardDeckType) to High(TKMCardDeckType) do
     ShuffleDeck(CDT);
+end;
+
+function TKMCardGame.TakeCard(aDeckType: TKMCardDeckType): TKMCard;
+begin
+  Inc(fDecks[aDeckType].LastTaken);
+  If fDecks[aDeckType].LastTaken >= fDecks[aDeckType].Count then
+  begin
+    ShuffleDeck(aDeckType);
+    fDecks[aDeckType].LastTaken := 0;
+  end;
+
+  Result.CopyFrom(fDecks[aDeckType].Cards[fDecks[aDeckType].LastTaken]);
+end;
+
+procedure TKMCardGame.GiveStartingCardsTo(var aPlayer : TKMCardGamePlayer);
+var I : Integer;
+begin
+
+  //give commanders
+  for I := 0 to MAX_PLAYER_COMMANDER_CARDS - 1 do
+    aPlayer.CommanderCard[I] := TakeCard(cdtCommander);
+  //give 2 army
+  for I := 0 to 1 do
+    aPlayer.ArmyCard[I] := TakeCard(cdtArmy);
+  //give 1 support
+  aPlayer.SupportCard := TakeCard(cdtSupport);
+  //give palace units
+  aPlayer.PalaceCard := TakeCard(cdtPalace);
+
+end;
+
+procedure TKMCardGame.GiveStartingCards;
+var I : Integer;
+begin
+  for I := 0 to fPlayersCount - 1 do
+    GiveStartingCardsTo(fPlayers[I]);
+
+  GiveStartingCardsTo(fTablePlayer);
+end;
+
+function TKMCardGame.GetPlayer(aHandID : TKMHandID) : PKMCardGamePlayer;
+var I : Integer;
+begin
+  If aHandID = -1 then
+    Exit(@fTablePlayer);
+
+  for I := 0 to fPlayersCount - 1 do
+    If aHandID = fPlayers[I].HandID then
+    begin
+      Result := @fPlayers[I];
+      Exit;
+    end;
 end;
 
 end.

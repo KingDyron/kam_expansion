@@ -470,7 +470,8 @@ uses
   KM_GUIMapEdPlayerCheck in 'src\gui\pages_maped\player\KM_GUIMapEdPlayerCheck.pas',
   KM_GUIGameHouseST in 'src\gui\pages_game\house\KM_GUIGameHouseST.pas',
   KM_CardGame in 'src\card\KM_CardGame.pas',
-  KM_CardGameTypes in 'src\card\KM_CardGameTypes.pas';
+  KM_CardGameTypes in 'src\card\KM_CardGameTypes.pas',
+  KM_GUIGameCards in 'src\gui\pages_game\house\KM_GUIGameCards.pas';
 
 //KM_PerfLog in 'src\unused\KM_PerfLog.pas', //unused
 

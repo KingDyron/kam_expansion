@@ -6,6 +6,7 @@ uses
   KM_Defaults,
   KM_ResTypes, KM_ResDevelopment,
   KM_Controls, KM_ControlsBase, KM_ControlsSwitch, KM_ControlsWaresRow,
+  KM_GUIGameCards,
   KM_Houses, KM_HouseArena;
 
 type
@@ -21,6 +22,9 @@ type
         WareRow_FestivalPoints: array[TKMFestivalPointType] of TKMWaresRow;
         Button_FestivalType : array[DEVELOPMENT_MIN..DEVELOPMENT_MAX_ALL] of TKMButtonFlat;
         WareRow_Cost : array[0..2] of TKMWaresRow;
+        Button_ShowCardGame : TKMButton;
+
+        CardGame : TKMGuiGameCards;
         //Button_StartFestival : TKMButton;
     public
       constructor Create(aParent: TKMPanel);
@@ -93,6 +97,12 @@ begin
     WareRow_Cost[I].TexID := gRes.Wares[WT].GUIIcon;
     WareRow_Cost[I].Hint := gResTexts[FESTIVAL_TEXT_ID[TKMFestivalPointType(I)]];
   end;
+  top := WareRow_Cost[high(WareRow_Cost)].Bottom + 3;
+
+  Button_ShowCardGame := TKMButton.Create(self, 0, top, Width, 25, 'Play cards', bsGame);
+  Button_ShowCardGame.OnClick := SelectType_Click;
+
+  CardGame := TKMGuiGameCards.Create(self.MasterPanel);
 
   //top := WareRow_Cost[high(WareRow_Cost)].Bottom + 5;
 
@@ -142,6 +152,15 @@ end;
 procedure TKMGuiGameArena.SelectType_Click(Sender: TObject);
 var H : TKMHouseArena;
 begin
+
+  If Sender = Button_ShowCardGame then
+  begin
+    If CardGame.Visible then
+      CardGame.Hide
+    else
+      CardGame.Show;
+  end;
+
   H := TKMHouseArena(gMySpectator.Selected);
   gGame.GameInputProcess.CmdHouse(gicArenaSelectFestival, H, TKMControl(Sender).Tag);
   //H.FestivalType := TKMDevelopmentTreeType(TKMControl(Sender).Tag);
