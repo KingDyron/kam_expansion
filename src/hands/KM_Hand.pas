@@ -3038,7 +3038,7 @@ end;
 procedure TKMHand.GetWallPlanPlans(const aStart: TKMPoint; const aEnd: TKMPoint; aList: TKMPointTagList);
 
 var sP, eP : TKMPoint;
-  I : Integer;
+  I, J : Integer;
   middle, dist : Integer;
 
 begin
@@ -3074,35 +3074,35 @@ begin
 
       aList.Add(KMPoint(sP.X + middle + 4, sP.Y), byte(htWall2));//1 =  horizontal wall gate;
 
-
       I := middle - 1; //check left side
-      while I >= 0 do
+      J := middle + 4; //check right side
+
+      while (I >= 0) or (Dist - J >= 0) do
       begin
-        If I >= 3 then
-        begin
-          aList.Add(KMPoint(sP.X + I - 1, sP.Y), byte(htWall));//2 = horizontal wall
-          I := I - 3;
-        end else
-        begin
-          aList.Add(KMPoint(sP.X + I - 0, sP.Y), byte(htWall5));//5 = wall end
-          I := I - 1;
-        end;
+        If I >= 0 then
+          If I >= 3 then
+          begin
+            aList.Add(KMPoint(sP.X + I - 1, sP.Y), byte(htWall));//2 = horizontal wall
+            I := I - 3;
+          end else
+          begin
+            aList.Add(KMPoint(sP.X + I - 0, sP.Y), byte(htWall5));//5 = wall end
+            I := I - 1;
+          end;
+
+        If Dist - J >= 0 Then
+          If Dist - J >= 3 then
+          begin
+            aList.Add(KMPoint(sP.X + J + 1, sP.Y), byte(htWall));//2 = horizontal wall
+            J := J + 3;
+          end else
+          begin
+            aList.Add(KMPoint(sP.X + J + 0, sP.Y), byte(htWall5));//5 = wall end
+            J := J + 1;
+          end;
+
       end;
 
-
-      I := middle + 4; //check right side
-      while Dist - I >= 0 do
-      begin
-        If Dist - I >= 3 then
-        begin
-          aList.Add(KMPoint(sP.X + I + 1, sP.Y), byte(htWall));//2 = horizontal wall
-          I := I + 3;
-        end else
-        begin
-          aList.Add(KMPoint(sP.X + I + 0, sP.Y), byte(htWall5));//5 = wall end
-          I := I + 1;
-        end;
-      end;
     end;
 
 
@@ -3131,33 +3131,35 @@ begin
       aList.Add(KMPoint(sP.X, sP.Y + middle + 3), byte(htWall4));//3 =  vertical wall gate;
 
       I := middle - 1; //check top
-      while I >= 0 do
+      J := middle + 4; //check down
+      while (I >= 0) or (Dist - J >= 0) do
       begin
-        If I >= 3 then
+        If I >= 0 then
         begin
-          aList.Add(KMPoint(sP.X, sP.Y + I), byte(htWall3));//4 = vertical wall
-          I := I - 3;
-        end else
-        begin
-          aList.Add(KMPoint(sP.X, sP.Y + I - 0), byte(htWall5));//5 = wall end
-          I := I - 1;
+          If I >= 3 then
+          begin
+            aList.Add(KMPoint(sP.X, sP.Y + I), byte(htWall3));//4 = vertical wall
+            I := I - 3;
+          end else
+          begin
+            aList.Add(KMPoint(sP.X, sP.Y + I - 0), byte(htWall5));//5 = wall end
+            I := I - 1;
+          end;
         end;
-      end;
 
 
-      I := middle + 4; //check down
-      while Dist - I >= 0 do
-      begin
-        If Dist - I >= 3 then
-        begin
-          aList.Add(KMPoint(sP.X, sP.Y + I + 2), byte(htWall3));//4 = vertical wall
-          I := I + 3;
-        end else
-        begin
-          aList.Add(KMPoint(sP.X, sP.Y + I), byte(htWall5));//5 = wall end
-          I := I + 1;
-        end;
+        If Dist - J >= 0 then
+          If Dist - J >= 3 then
+          begin
+            aList.Add(KMPoint(sP.X, sP.Y + J + 2), byte(htWall3));//4 = vertical wall
+            J := J + 3;
+          end else
+          begin
+            aList.Add(KMPoint(sP.X, sP.Y + J), byte(htWall5));//5 = wall end
+            J := J + 1;
+          end;
       end;
+
     end;
   end;
 end;
