@@ -353,7 +353,7 @@ type
     property FestivalPoints : TKMFestivalPoints read fFestivalPoints;
 
     function DevPoints(aType : TKMDevelopmentTreeType) : Word;
-    procedure UnlockDevelopment(aType : TKMDevelopmentTreeType; aID : Integer; aPrevious : Boolean);
+    function UnlockDevelopment(aType : TKMDevelopmentTreeType; aID : Integer; aPrevious : Boolean) : Boolean;
     procedure UnlockDevelopmentScript(aType : TKMDevelopmentTreeType; aID : Integer; aLock : TKMHandDevLock);
     procedure UnlockDevScript(aType : TKMDevelopmentTreeType; aID : Integer; aUnlocked : Boolean; aUnlockPrevious : Boolean = false);
     procedure UnlockAllDevScript(aType : TKMDevelopmentTreeType; aUnlocked : Boolean);
@@ -3399,7 +3399,7 @@ begin
   Result := fDevPoints[aType];
 end;
 
-procedure TKMHand.UnlockDevelopment(aType: TKMDevelopmentTreeType; aID: Integer; aPrevious : Boolean);
+function TKMHand.UnlockDevelopment(aType: TKMDevelopmentTreeType; aID: Integer; aPrevious : Boolean) : Boolean;
 
   procedure FeedAllSiegeUnits;
   var I : Integer;
@@ -3422,6 +3422,7 @@ var dev, par : PKMDevelopment;
     listToUnlock[high(listToUnlock)] := aID;
   end;
 begin
+  Result := false;
   dev := gRes.Development.Tree[aType].GetItem(aID);
 
   If aPrevious then
@@ -3435,7 +3436,8 @@ begin
     end;
 
     for I := High(listToUnlock) downto 0 do
-      UnlockDevelopment(aType, listToUnlock[I], false);
+      If not UnlockDevelopment(aType, listToUnlock[I], false) then
+        Exit;
 
 
     Exit;
@@ -3444,7 +3446,7 @@ begin
   If (Locks.DevelopmentLock[aType, aID] = dlNone) and TakeDevPoint(aType, dev.Cost) then
   begin
     fLocks.DevelopmentLock[aType, aID] := dlUnlocked;
-
+    Result := true;
     If (aType = dttEconomy) and (aID = 1) then
       AddDevPoint(dttArmy, 3);
 
