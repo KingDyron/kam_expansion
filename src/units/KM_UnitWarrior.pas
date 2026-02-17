@@ -8,7 +8,6 @@ uses
   KM_Houses, KM_Terrain, KM_Units, KM_CommonGameTypes;
 
 
-
 type
   TKMUnitWarrior = class;
   TKMUnitWarriorShip = class;
@@ -2434,7 +2433,7 @@ begin
   if fCondition < UNIT_MIN_CONDITION then
     fThought := thEat; //thDeath checked in parent UpdateState
 
-  if not fNeverHungry and not gHands[Owner].NeverHungry then
+  if not fNeverHungry and not Immortal and not gHands[Owner].NeverHungry then
     if not (fType in SIEGE_MACHINES) and not gHands[Owner].ArmyDevUnlocked(13) then
       case fOrder of
         woWalk: If fTicker mod (fConditionPace + 10) = 0 then dec(fCondition);
