@@ -172,9 +172,10 @@ begin
   gCursor.MapEdApplyOverlayOnRoad := CheckBox_ApplyOnRoad.Checked;
 
   gCursor.MapEdSize := BrushSize.Position;
-  If BrushSquare.Down then
+  If Sender = BrushSquare then
     gCursor.MapEdShape := hsSquare
   else
+  If Sender = BrushCircle then
     gCursor.MapEdShape := hsCircle;
   BrushCircle.Down := gCursor.MapEdShape = hsCircle;
   BrushSquare.Down := gCursor.MapEdShape = hsSquare;
