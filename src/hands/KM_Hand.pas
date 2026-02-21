@@ -55,6 +55,13 @@ type
     function GetText : String;
   end;
 
+  TKMHandUnlockingDev = record
+    ID : Byte;//ID of the development
+    StartingTime, Duration : Cardinal;
+  end;
+  TKMHandUnlockingDevArray = array[DEVELOPMENT_MIN..DEVELOPMENT_MAX] of TKMHandUnlockingDev;
+
+
   TKMHand = class(TKMHandCommon)
   private
     const MAX_WALL_DIST = WALLS_TO_GATE_DIST * 2 + 4 - 1;
@@ -104,8 +111,9 @@ type
     //fBridgesBuilt : TKMStructureBasicArray;
     fCustomPanelData : TKMCustomPanelInfo;
     fPearlsBuilt : array[TKMPearlType] of Boolean;
-    fDevPoints : array[DEVELOPMENT_MIN..DEVELOPMENT_MAX] of Word;
-    fFestivalPoints: TKMFestivalPoints;
+
+    fDevsToUnlock : TKMHandUnlockingDevArray;
+    fDevPoints: Word;
 
     const
       MAX_FESTIVAL_POINTS = 1000000;
@@ -146,6 +154,8 @@ type
     procedure SetVWareByID(aIndex : Integer; aValue : Integer);
     procedure SetNeverHungry(aValue : Boolean);
     procedure SetWorklessCitizens(aValue : Word);
+
+    procedure CheckDevToUnlock(aTick : Cardinal);
   public
 
     MessageStack: array of record
@@ -345,25 +355,29 @@ type
     function GiveWareToRandomStore(aWare : TKMWareType; aCount : Integer = 1) : Boolean;
 
 
-    procedure AddDevPoint(aType : TKMDevelopmentTreeType; aCount : Word = 1);
-    function  TakeDevPoint(aType : TKMDevelopmentTreeType; aCount : Word = 1) : Boolean;
-    function  HasDevPoint(aType : TKMDevelopmentTreeType; aCount : Word = 1) : Boolean;
+    procedure AddDevPoint(aCount : Word = 1);
+    function  TakeDevPoint(aCount : Word = 1) : Boolean;
+    function  HasDevPoint(aCount : Word = 1) : Boolean;
     procedure AddFestivalPoints(aType : TKMFestivalPointType; aAmount : Integer);
     procedure TakeFestivalPoints(aType : TKMFestivalPointType; aAmount : Integer);
-    property FestivalPoints : TKMFestivalPoints read fFestivalPoints;
 
-    function DevPoints(aType : TKMDevelopmentTreeType) : Word;
-    function UnlockDevelopment(aType : TKMDevelopmentTreeType; aID : Integer; aPrevious : Boolean) : Boolean;
+    function DevPoints : Word;
+    function TryToUnlockDevelopment(aType : TKMDevelopmentTreeType; aID : Integer) : Boolean;
+    function UnlockDevelopment(aType : TKMDevelopmentTreeType; aID : Integer) : Boolean;
     procedure UnlockDevelopmentScript(aType : TKMDevelopmentTreeType; aID : Integer; aLock : TKMHandDevLock);
     procedure UnlockDevScript(aType : TKMDevelopmentTreeType; aID : Integer; aUnlocked : Boolean; aUnlockPrevious : Boolean = false);
     procedure UnlockAllDevScript(aType : TKMDevelopmentTreeType; aUnlocked : Boolean);
 
+    property DevsToUnlock : TKMHandUnlockingDevArray read fDevsToUnlock;
     function DevUnlocked(aType : TKMDevelopmentTreeType; aID : Integer) : Boolean;
     function BuildDevUnlocked(aID : Integer) : Boolean;
     function EconomyDevUnlocked(aID : Integer) : Boolean;
     function ArmyDevUnlocked(aID : Integer) : Boolean;
     procedure UnlockSpecialWalls;
     procedure UnlockAllBuildings;
+    function HasDevInProgress(aType : TKMDevelopmentTreeType) : Boolean;
+    function DevInProgress(aType : TKMDevelopmentTreeType; aID : Integer) : Boolean;
+    function GetDevProgress(aType : TKMDevelopmentTreeType; aID : Integer) : Single;
 
     function GetClosestHouse(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aWareSet : TKMWareTypeSet = [wtAll];
                             aMaxDistance : Single = 999; aCompletedOnly : Boolean = true) : TKMHouse;
@@ -471,6 +485,7 @@ uses
   KM_Cursor, KM_Game, KM_GameParams, KM_Terrain,
   KM_HandsCollection, KM_Sound, KM_AIFields, KM_MapEdTypes,
   KM_HouseStore, KM_HouseSchool,  KM_HouseBarracks,KM_HouseHelpers, KM_HousePearl,
+  KM_HouseArena,
   KM_Resource, KM_ResSound, KM_ResTexts, KM_ResMapElements, KM_ScriptingEvents, KM_ResUnits,
   KM_RenderPool, KM_RenderAux,
   KM_CommonUtils, KM_GameSettings,
@@ -599,6 +614,7 @@ end;
 constructor TKMHand.Create(aHandIndex: TKMHandID; aOnAllianceChange: TEvent);
 var
   I: Integer;
+  dtt: TKMDevelopmentTreeType;
 begin
   inherited Create(aHandIndex);
 
@@ -654,10 +670,9 @@ begin
     SetLength(ControlsData, 0);
   end;
 
-  FillChar(fFestivalPoints, sizeOf(fFestivalPoints), #0);
-  {fFestivalPoints[fptBuilding] := 10000;
-  fFestivalPoints[fptEconomy] := 10000;
-  fFestivalPoints[fptWarfare] := 10000;}
+  for dtt := DEVELOPMENT_MIN to DEVELOPMENT_MAX do
+    fDevsToUnlock[dtt].ID := DEV_ID_NONE;
+
 end;
 
 
@@ -3367,39 +3382,54 @@ begin
 end;
 
 
-procedure TKMHand.AddDevPoint(aType : TKMDevelopmentTreeType; aCount : Word = 1);
-var dtt : TKMDevelopmentTreeType;
+procedure TKMHand.AddDevPoint(aCount : Word = 1);
 begin
-  Assert(aType <> dttNone);
-  if aType = dttAll then
-  begin
-    for dtt := DEVELOPMENT_MIN to DEVELOPMENT_MAX do
-      Inc(fDevPoints[dtt], aCount);
-  end else
-    Inc(fDevPoints[aType], aCount);
+  fDevPoints := EnsureRange(fDevPoints + aCount, 0, high(Word));
 end;
 
-function  TKMHand.TakeDevPoint(aType : TKMDevelopmentTreeType; aCount : Word = 1) : Boolean;
+function  TKMHand.TakeDevPoint(aCount : Word = 1) : Boolean;
 begin
-  Assert(aType in DEVELOPMENT_VALID);
-  Result := fDevPoints[aType] >= aCount;
+  Result := fDevPoints >= aCount;
   If Result then
-    Dec(fDevPoints[aType], aCount);
+    Dec(fDevPoints, aCount);
 end;
 
-function  TKMHand.HasDevPoint(aType : TKMDevelopmentTreeType; aCount : Word = 1) : Boolean;
+function  TKMHand.HasDevPoint(aCount : Word = 1) : Boolean;
 begin
-  Assert(aType in DEVELOPMENT_VALID);
-  Result := fDevPoints[aType] >= aCount;
+  Result := fDevPoints >= aCount;
 end;
 
-function TKMHand.DevPoints(aType: TKMDevelopmentTreeType): Word;
+function TKMHand.DevPoints: Word;
 begin
-  Assert(aType in DEVELOPMENT_VALID);
-  Result := fDevPoints[aType];
+  Result := fDevPoints;
 end;
 
-function TKMHand.UnlockDevelopment(aType: TKMDevelopmentTreeType; aID: Integer; aPrevious : Boolean) : Boolean;
+function TKMHand.TryToUnlockDevelopment(aType : TKMDevelopmentTreeType; aID : Integer) : Boolean;
+var dev : PKMDevelopment;
+begin
+  Result := false;
+  If TakeDevPoint then
+  begin
+    Result := UnlockDevelopment(aType, aID);
+    If not Result then
+      AddDevPoint;
+  end else
+  If (Locks.DevelopmentLock[aType, aID] = dlNone) and (fDevsToUnlock[aType].ID = DEV_ID_NONE) then
+  begin
+    dev := gRes.Development.Tree[aType].GetItem(aID);
+    fDevsToUnlock[aType].ID := aID;
+    fDevsToUnlock[aType].StartingTime := gGameParams.Tick;
+     //unlocking development duration
+     //always 2 minutes + 20 seconds for every n cost
+     //arena gives development points to unlock the developments immediately
+     //so the time for a development that costs 54 has duration of 20 minutes
+    fDevsToUnlock[aType].Duration := (120 + 30 * dev.Cost) * 10;
+    Result := true;
+  end;
+
+end;
+
+function TKMHand.UnlockDevelopment(aType: TKMDevelopmentTreeType; aID: Integer) : Boolean;
 
   procedure FeedAllSiegeUnits;
   var I : Integer;
@@ -3409,46 +3439,18 @@ function TKMHand.UnlockDevelopment(aType: TKMDevelopmentTreeType; aID: Integer; 
         Units[I].Condition := UNIT_MAX_CONDITION;
   end;
 
-
-
-
 var dev, par : PKMDevelopment;
-  listToUnlock : array of Integer;
-  I : Integer;
-
-  procedure AddToList(aID : Integer);
-  begin
-    SetLength(listToUnlock, length(listToUnlock) + 1);
-    listToUnlock[high(listToUnlock)] := aID;
-  end;
 begin
   Result := false;
-  dev := gRes.Development.Tree[aType].GetItem(aID);
-
-  If aPrevious then
-  begin
-    AddToList(dev.ID);
-    par := dev.Parent;
-    while (par <> nil) and (Locks.DevelopmentLock[aType, par.ID] = dlNone) do
-    begin
-      AddToList(par.ID);
-      par := par.Parent;
-    end;
-
-    for I := High(listToUnlock) downto 0 do
-      If not UnlockDevelopment(aType, listToUnlock[I], false) then
-        Exit;
-
-
+  //dev := gRes.Development.Tree[aType].GetItem(aID);
+  If fDevsToUnlock[aType].ID = aID then
     Exit;
-  end;
-
-  If (Locks.DevelopmentLock[aType, aID] = dlNone) and TakeDevPoint(aType, dev.Cost) then
+  If (Locks.DevelopmentLock[aType, aID] = dlNone){ and TakeDevPoint(1) }then
   begin
     fLocks.DevelopmentLock[aType, aID] := dlUnlocked;
     Result := true;
     If (aType = dttEconomy) and (aID = 1) then
-      AddDevPoint(dttArmy, 3);
+      AddDevPoint(3);
 
     If (aType = dttBuilder) and (aID = 30) then
       UnlockSpecialWalls;
@@ -3548,6 +3550,41 @@ function TKMHand.ArmyDevUnlocked(aID : Integer) : Boolean;
 begin
   Result := DevUnlocked(dttArmy, aID);
 end;
+
+function TKMHand.HasDevInProgress(aType: TKMDevelopmentTreeType): Boolean;
+begin
+  Result := (fDevsToUnlock[aType].ID <> DEV_ID_NONE);
+end;
+
+function TKMHand.DevInProgress(aType : TKMDevelopmentTreeType; aID : Integer) : Boolean;
+begin
+  Result := HasDevInProgress(aType)
+            and (fDevsToUnlock[aType].ID = aID);
+end;
+
+function TKMHand.GetDevProgress(aType : TKMDevelopmentTreeType; aID : Integer) : Single;
+begin
+  Result := 0;
+  If fDevsToUnlock[aType].ID = aID then
+    Result := (gGameParams.Tick - fDevsToUnlock[aType].StartingTime) / fDevsToUnlock[aType].Duration;
+end;
+
+procedure TKMHand.CheckDevToUnlock(aTick : Cardinal);
+var dtt : TKMDevelopmentTreeType;
+begin
+
+  for dtt := DEVELOPMENT_MIN to DEVELOPMENT_MAX do
+    If fDevsToUnlock[dtt].ID <> DEV_ID_NONE then
+      If aTick >= fDevsToUnlock[dtt].StartingTime + fDevsToUnlock[dtt].Duration then
+      begin
+        UnlockDevelopment(dtt, fDevsToUnlock[dtt].ID);
+        fDevsToUnlock[dtt].ID := DEV_ID_NONE;
+        gGame.RefreshDevelopmentTree;
+      end;
+
+end;
+
+
 
 
 function TKMHand.GetClosestHouse(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet;
@@ -3971,7 +4008,7 @@ begin
 
   SaveStream.WriteData(fPearlsBuilt);
   SaveStream.WriteData(fDevPoints);
-  SaveStream.WriteData(fFestivalPoints);
+  SaveStream.WriteData(fDevsToUnlock);
   //fBridgesBuilt.SaveToStream(SaveStream);
 end;
 
@@ -4075,7 +4112,7 @@ begin
 
   LoadStream.ReadData(fPearlsBuilt);
   LoadStream.ReadData(fDevPoints);
-  LoadStream.ReadData(fFestivalPoints);
+  LoadStream.ReadData(fDevsToUnlock);
 
   //fBridgesBuilt.LoadFromStream(LoadStream);
 
@@ -4150,7 +4187,6 @@ begin
   EntityDestroyed(aGroup);
 end;
 
-
 procedure TKMHand.UpdateState(aTick: Cardinal);
 var I, J : Integer;
   WT : TKMWareType;
@@ -4171,6 +4207,8 @@ begin
 
   if fUpdateHandEntities then
     fHouses.UpdateState(aTick);
+
+  CheckDevToUnlock(aTick);
 
   if (aTick mod (gHands.Count * 5)) = (fID * 5) then
   begin
@@ -4677,8 +4715,20 @@ begin
 end;
 
 procedure TKMHand.AddFestivalPoints(aType : TKMFestivalPointType; aAmount : Integer);
+var I : Integer;
 begin
-  fFestivalPoints[aType] := EnsureRange(fFestivalPoints[aType] + aAmount, 0, MAX_FESTIVAL_POINTS);
+  case aType of
+    fptBuilding : aAmount := aAmount * 4;
+    fptEconomy : ;
+    fptWarfare : aAmount := aAmount * 2;
+  end;
+
+  for I := 0 to fHouses.Arenas.Count - 1 do
+    TKMHouseArena(fHouses.Arenas[I]).AddExp(aAmount);
+
+  //do nothing for now
+  //it will be taken to the arena it's self
+  //fFestivalPoints[aType] := EnsureRange(fFestivalPoints[aType] + aAmount, 0, MAX_FESTIVAL_POINTS);
 end;
 
 procedure TKMHand.TakeFestivalPoints(aType : TKMFestivalPointType; aAmount : Integer);
@@ -4686,25 +4736,6 @@ begin
   AddFestivalPoints(aType, -aAmount);
 end;
 
-
-{function TKMHand.HasBridgeBuiltAt(aLoc: TKMPoint): Boolean;
-var I, J, aRot : Integer;
-begin
-  Result := false;
-  for I := 0 to fBridgesBuilt.Count - 1 do
-    with gRes.Structures[fBridgesBuilt[I].Index] do
-    begin
-      aRot := fBridgesBuilt[I].Rotation;
-      for J := 0 to Count - 1 do
-      if Points[aRot, J] > 0 then
-      begin
-        if KMSamePoint(aLoc, KMPointAdd(fBridgesBuilt[I].Loc, KMPoint(J mod Size[aRot].X, J div Size[aRot].X))) then
-          Exit(true);
-      end;
-      
-    end;
-        
-end;}
 {TKMAnimalSpawner}
 procedure TKMAnimalSpawner.IncludeAnimal(aType: TKMUnitType);
 var I, id : Integer;

@@ -487,7 +487,6 @@ const
 
 type
   TKMFestivalPointType = (fptBuilding, fptEconomy, fptWarfare);
-  TKMFestivalPoints = array[TKMFestivalPointType] of Cardinal;
 const
   FESTIVAL_GUI_ICON : array[TKMFestivalPointType] of Word = (706, 1111, 658);
   FESTIVAL_TEXT_ID : array[TKMFestivalPointType] of Word = (2333, 2334, 2335);

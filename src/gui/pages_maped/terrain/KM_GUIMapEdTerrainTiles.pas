@@ -285,7 +285,7 @@ end;
 procedure TKMMapEdTerrainTiles.TilesChange(Sender: TObject);
 var
   isMagicWater, isEyedropper, isRotate, isRandom, isTileNum, isBrushSett: Boolean;
-  value, newV: Integer;
+  value{, newV}: Integer;
 begin
   isMagicWater := (Sender = TilesMagicWater) or (Sender = TilesPaletteMagicWater);
   isEyedropper := (Sender = TilesEyedropper) or (Sender = TilesPaletteEyedropper);

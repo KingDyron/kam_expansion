@@ -71,6 +71,7 @@ const
   TREE_TYPE_ICON : array[TKMDevelopmentTreeType] of Word = (0, 1079, 1077, 1080, 1081);
   TREE_TYPE_STRING : array[TKMDevelopmentTreeType] of String = ('None', 'Builder', 'Economy', 'Army', 'ALL');
   TREE_TYPE_HINT : array[TKMDevelopmentTreeType] of Word = (0, 2297, 2298, 2299, 1060);
+  DEV_ID_NONE = 255;
 
 implementation
 uses
@@ -118,7 +119,7 @@ begin
 end;
 
 procedure TKMDevelopmentTree.LoadFromJson(JSON: TKMJson);
-//var aID : Word;
+var totalCost : Word;
   procedure CheckForNext(var aTo : TKMDevelopment; aJson: TKMJson);
   var nArr : TKMJsonArray;
     I : Integer;
@@ -131,6 +132,7 @@ procedure TKMDevelopmentTree.LoadFromJson(JSON: TKMJson);
       fLastID := Max(ID, fLastID);
       HintID := aJson.I['HintID'];
       Cost := aJson.I['Cost'];
+      Inc(totalCost, Cost);
       Cost := max(Cost, 1);
       IsSpecial := aJson.B['IsSpecial'];
 
@@ -157,6 +159,7 @@ begin
   fList.Y := JSON.I['Y'];
   fList.GuiIcon := JSON.I['GuiIcon'];
   fList.Parent := nil;}
+  totalCost := 0;
   CheckForNext(fList, JSON);
 end;
 

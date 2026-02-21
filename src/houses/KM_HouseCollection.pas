@@ -23,7 +23,8 @@ type
     Palaces,
     SiegeWorkshops,
     Barracks,
-    Stores: TList<TKMHouse>;
+    Stores,
+    Arenas: TList<TKMHouse>;
     constructor Create;
     destructor Destroy; override;
 
@@ -90,19 +91,21 @@ begin
   Barracks := TList<TKMHouse>.Create;
   Stores := TList<TKMHouse>.Create;
   Markets := TList<TKMHouse>.Create;
+  Arenas := TList<TKMHouse>.Create;
 end;
 
 
 destructor TKMHousesCollection.Destroy;
 begin
-  fHouses.Free;
+  FreeAndNil(fHouses);
 
-  TownHalls.Free;
-  Palaces.Free;
-  SiegeWorkshops.Free;
-  Barracks.Free;
-  Stores.Free;
-  Markets.Free;
+  FreeAndNil(TownHalls);
+  FreeAndNil(Palaces);
+  FreeAndNil(SiegeWorkshops);
+  FreeAndNil(Barracks);
+  FreeAndNil(Stores);
+  FreeAndNil(Markets);
+  FreeAndNil(Arenas);
   inherited;
 end;
 
@@ -126,6 +129,7 @@ begin
     htPalace        : Palaces.Add(aHouse);
     htSiegeWorkshop : SiegeWorkshops.Add(aHouse);
     htBarracks      : Barracks.Add(aHouse);
+    htArena         : Arenas.Add(aHouse);
   end;
 end;
 

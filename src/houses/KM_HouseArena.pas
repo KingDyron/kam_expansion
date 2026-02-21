@@ -15,6 +15,9 @@ type
     fArenaWaitTillNext : Byte;
     fArenaAnimStep : Cardinal;
     fAnimColors : TKMCardinalArray;
+
+    fLevel : Word;
+    fExp : Cardinal;
     procedure UpdatePointBelowEntrance;
     function FestivalDuration : Word;
     procedure SetDevType(aValue : TKMDevelopmentTreeType);
@@ -37,9 +40,18 @@ type
     function PointsCount : Byte; overload;
     function PointsCount(aType : TKMDevelopmentTreeType) : Byte; overload;
 
+    procedure AddExp(aAmount : Cardinal);
+    function GetLVLExp(aLevel : Word) : Cardinal;
+    function LVLExp : Cardinal;
+    function NextLVLExp : Cardinal;
+    function GetLVLProgress : Single;
+    property EXP : Cardinal read fExp;
+    property LVL : Word read fLevel;
+
+
     procedure UpdateState(aTick: Cardinal); override;
     procedure Paint; override;
-    Constructor Load(LoadStream : TKMemoryStream);Override;
+    constructor Load(LoadStream : TKMemoryStream);Override;
     procedure Save(SaveStream : TKMemoryStream);Override;
   end;
 
@@ -101,6 +113,8 @@ begin
   fArenaAnimStep := 0;
   fArenaWaitTillNext := 120;
   fDevType := dttNone;
+  fLevel := 0;
+  fExp := 0;
 end;
 
 Constructor TKMHouseArena.Load(LoadStream : TKMemoryStream);
@@ -111,12 +125,13 @@ begin
   LoadStream.ReadData(fArenaAnimStep);
   LoadStream.ReadData(fCurrentDevType);
   LoadStream.ReadData(fDevType);
+  LoadStream.ReadData(fLevel);
+  LoadStream.ReadData(fExp);
+
   LoadStream.ReadData(N);
   SetLength(fAnimColors, N);
   for I := 0 to N - 1 do
     LoadStream.ReadData(fAnimColors[I]);
-
-
 
 end;
 
@@ -128,6 +143,8 @@ begin
   SaveStream.WriteData(fArenaAnimStep);
   SaveStream.WriteData(fCurrentDevType);
   SaveStream.WriteData(fDevType);
+  SaveStream.WriteData(fLevel);
+  SaveStream.WriteData(fExp);
 
   N := length(fAnimColors);
   SaveStream.WriteData(N);
@@ -223,10 +240,10 @@ end;
 
 function TKMHouseArena.CanStartFestival: Boolean;
 begin
-  Result := (fDevType <> dttNone)
+  {Result := (fDevType <> dttNone)
             and (gHands[Owner].FestivalPoints[fptBuilding] >= BuildingCost)
             and (gHands[Owner].FestivalPoints[fptEconomy] >= ValuableCost)
-            and (gHands[Owner].FestivalPoints[fptWarfare] >= WarfareCost);
+            and (gHands[Owner].FestivalPoints[fptWarfare] >= WarfareCost);}
 end;
 
 function TKMHouseArena.PointsCount: Byte;
@@ -288,6 +305,44 @@ begin
     Result := Result * 4 div 5;
 end;
 
+function TKMHouseArena.GetLVLExp(aLevel : Word) : Cardinal;
+const LEVEL_POINTS_INC = 400;
+begin
+  Result := Round(Sqr(aLevel / 3) * LEVEL_POINTS_INC);
+end;
+
+function TKMHouseArena.LVLExp: Cardinal;
+begin
+  Result := GetLVLExp(fLevel);
+end;
+function TKMHouseArena.NextLVLExp: Cardinal;
+begin
+  Result := GetLVLExp(fLevel + 1);
+end;
+
+function TKMHouseArena.GetLVLProgress: Single;
+var maxEXP, minEXP : Cardinal;
+begin
+  minEXP := LVLExp;
+  maxEXP := GetLVLExp(fLevel + 1) - minEXP;
+
+  Result := (fExp - minEXP) / maxEXP;
+end;
+
+procedure TKMHouseArena.AddExp(aAmount: Cardinal);
+begin
+  If not IsValid(htArena, false, true) then
+    Exit;
+  fExp := fExp + aAmount;
+
+  while fEXP >= GetLVLExp(fLevel + 1) do
+  begin
+    Inc(fLevel);
+    gHands[Owner].AddDevPoint;
+  end;
+
+end;
+
 
 procedure TKMHouseArena.UpdateState(aTick: Cardinal);
 begin
@@ -307,7 +362,7 @@ begin
         Inc(fArenaAnimStep);
         IF fArenaAnimStep >= FestivalDuration then
         begin
-          gHands[Owner].AddDevPoint( fCurrentDevType, PointsCount(fCurrentDevType) );
+          gHands[Owner].AddDevPoint(PointsCount(fCurrentDevType) );
           gGame.RefreshDevelopmentTree;
           fArenaAnimStep := 0;
           fArenaWaitTillNext := 150;

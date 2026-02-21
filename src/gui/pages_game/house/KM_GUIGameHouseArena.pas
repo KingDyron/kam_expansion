@@ -6,6 +6,7 @@ uses
   KM_Defaults,
   KM_ResTypes, KM_ResDevelopment,
   KM_Controls, KM_ControlsBase, KM_ControlsSwitch, KM_ControlsWaresRow,
+  KM_ControlsProgressBar,
   KM_GUIGameCards,
   KM_Houses, KM_HouseArena;
 
@@ -23,6 +24,7 @@ type
         Button_FestivalType : array[DEVELOPMENT_MIN..DEVELOPMENT_MAX_ALL] of TKMButtonFlat;
         WareRow_Cost : array[0..2] of TKMWaresRow;
         Button_ShowCardGame : TKMButton;
+        LVL_Progress : TKMPercentBar;
 
         CardGame : TKMGuiGameCards;
         //Button_StartFestival : TKMButton;
@@ -101,8 +103,10 @@ begin
 
   Button_ShowCardGame := TKMButton.Create(self, 0, top, Width, 25, 'Play cards', bsGame);
   Button_ShowCardGame.OnClick := SelectType_Click;
-
+  LVL_Progress := TKMPercentBar.Create(self, 0, top + 27, Width, 25, fntGrey);
+  LVL_Progress.TextYOffset := -3;
   CardGame := TKMGuiGameCards.Create(self.MasterPanel);
+
 
   //top := WareRow_Cost[high(WareRow_Cost)].Bottom + 5;
 
@@ -122,15 +126,16 @@ procedure TKMGuiGameArena.Refresh(Arena: TKMHouseArena);
 var dtt: TKMDevelopmentTreeType;
   FPT : TKMFestivalPointType;
   I : integer;
+  minProgress, maxProgress, currProgress : Cardinal;
 begin
 
   for FPT := Low(TKMFestivalPointType) to High(TKMFestivalPointType) do
   begin
-    WareRow_FestivalPoints[FPT].WareCount := gHands[Arena.Owner].FestivalPoints[FPT];
+    //WareRow_FestivalPoints[FPT].WareCount := gHands[Arena.Owner].FestivalPoints[FPT];
   end;
   for dtt := Low(Button_Points) to High(Button_Points) do
   begin
-    Button_Points[dtt].Caption := gMySpectator.Hand.DevPoints(dtt).ToString;
+    //Button_Points[dtt].Caption := gMySpectator.Hand.DevPoints(dtt).ToString;
   end;
 
   for dtt := Low(Button_FestivalType) to High(Button_FestivalType) do
@@ -146,6 +151,14 @@ begin
   WareRow_Cost[0].WareCount := Arena.BuildingCost;
   WareRow_Cost[1].WareCount := Arena.ValuableCost;
   WareRow_Cost[2].WareCount := Arena.WarfareCost;
+
+
+  minProgress := Arena.LVLExp;
+  maxProgress := Arena.NextLVLExp - minProgress;
+  currProgress := Arena.EXP - minProgress;
+
+  LVL_Progress.Position := Arena.GetLVLProgress;
+  LVL_Progress.Caption := 'Level: ' + Arena.LVL.ToString + ' EXP: ' + currProgress.ToString + ' / ' + maxProgress.ToString;
   //Button_StartFestival.Enabled := not Arena.FestivalStarted and Arena.CanStartFestival;
 end;
 

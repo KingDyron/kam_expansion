@@ -6477,7 +6477,7 @@ begin
     If InRange(aType, 1, 3) then
     If aHandID > -1 then
       If gHands[aHandID].Enabled then
-        gHands[aHandID].AddDevPoint(TKMDevelopmentTreeType(aType), aCount);
+        gHands[aHandID].AddDevPoint(aCount);
 
   except
     gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception

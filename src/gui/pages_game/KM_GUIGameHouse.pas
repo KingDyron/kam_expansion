@@ -2643,6 +2643,9 @@ end;
 
 procedure TKMGUIGameHouse.CheckLastSelected(var A : Byte; unitArr : array of TKMUnitType);
 begin
+  If A >= length(unitArr) then
+    A := PreviousUnit(length(unitArr), unitArr, true)
+  else
   If gHands[fHouse.Owner].Locks.GetUnitBlocked(unitArr[A], fHouse.HouseType) = ulNotVisible then
     A := PreviousUnit(length(unitArr), unitArr, true);
 end;

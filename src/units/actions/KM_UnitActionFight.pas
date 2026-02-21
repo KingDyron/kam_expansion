@@ -334,6 +334,8 @@ function TKMUnitActionFight.ExecuteProcessMelee(Step: Byte): Boolean;
       Exit(false);
     if aUnit.Owner = fUnit.Owner then
       Exit;
+    If aUnit.IsAnimal then
+      Exit;
 
     gScriptEvents.ProcUnitHit(aUnit, fUnit);
     aUnit.SetHitTime;//set hittime no matter if it does damage or not. He is in fight.

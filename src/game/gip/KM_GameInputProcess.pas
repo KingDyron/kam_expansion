@@ -1388,7 +1388,7 @@ begin
       gicHouseDeliveryTo            : srcHouse.HouseToDeliver := gHands.GetHouseByUID(IntParams[1]);
       gicHouseVirtualWareClicked    : srcHouse.HouseVirtualWareClicked(IntParams[1], IntParams[2]);
 
-      gicUnlockDevelopment          : P.UnlockDevelopment(TKMDevelopmentTreeType(IntParams[0]), IntParams[1], IntParams[2] = 1);
+      gicUnlockDevelopment          : P.TryToUnlockDevelopment(TKMDevelopmentTreeType(IntParams[0]), IntParams[1]{, IntParams[2] = 1});
 
       gicWareDistributionChange:  begin
                                     P.Stats.WareDistribution[TKMWareType(IntParams[0]), TKMHouseType(IntParams[1])] := IntParams[2];

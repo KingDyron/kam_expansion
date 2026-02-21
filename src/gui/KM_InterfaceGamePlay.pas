@@ -5135,7 +5135,10 @@ begin
   if fGuiGameBuild.Visible then
     fGuiGameBuild.UpdateState;
   if fGuiGameDevelopment.Visible then
+  begin
+    fGuiGameDevelopment.ReloadTrees;
     fGuiGameDevelopment.RefreshLabels;
+  end;
   if fGuiGameGoals.Visible then
     fGuiGameGoals.UpdateState;
   if fGuiGameWares.Visible then

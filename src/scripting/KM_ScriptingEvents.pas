@@ -715,9 +715,9 @@ begin
     ccUbelTelescope         : gMySpectator.Hand.FogOfWar.RevealEverything;
     ccOverthrow             : gMySpectator.Hand.AI.Defeat;
     ccDevelopment           : begin
-                                gMySpectator.Hand.AddDevPoint(dttBuilder, 20);
-                                gMySpectator.Hand.AddDevPoint(dttEconomy, 20);
-                                gMySpectator.Hand.AddDevPoint(dttArmy, 20);
+                                gMySpectator.Hand.AddDevPoint(20);
+                                gMySpectator.Hand.AddDevPoint(20);
+                                gMySpectator.Hand.AddDevPoint(20);
                               end;
   end;
 

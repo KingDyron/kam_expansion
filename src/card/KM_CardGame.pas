@@ -49,6 +49,7 @@ begin
   CreateDeck;
   ShuffleDecks;
   GiveStartingCards;
+  fMoney := 0;
 end;
 
 procedure TKMCardGame.Reset;
@@ -198,6 +199,7 @@ end;
 function TKMCardGame.GetPlayer(aHandID : TKMHandID) : PKMCardGamePlayer;
 var I : Integer;
 begin
+  Result := nil;
   If aHandID = -1 then
     Exit(@fTablePlayer);
 
