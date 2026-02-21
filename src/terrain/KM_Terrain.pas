@@ -8310,7 +8310,7 @@ begin
     else HT := htNone;
   end;
 
-  BestDis := WALLS_TO_GATE_DIST;
+  BestDis := WALLS_TO_GATE_DIST + 4;
 
   if gHands.HousesHitTest(aLoc.X, aLoc.Y) = nil then
     Visit(aLoc.X, aLoc.Y, 0);

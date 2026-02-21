@@ -3414,16 +3414,15 @@ end;
 function TKMHand.TryToUnlockDevelopment(aType : TKMDevelopmentTreeType; aID : Integer) : Boolean;
 var dev : PKMDevelopment;
 begin
+  dev := gRes.Development.Tree[aType].GetItem(aID);
   Result := false;
-  If TakeDevPoint then
+  If not dev.IsSpecial and HasDevPoint and UnlockDevelopment(aType, aID) then
   begin
-    Result := UnlockDevelopment(aType, aID);
-    If not Result then
-      AddDevPoint;
+    Result := true;
+    TakeDevPoint;
   end else
   If (Locks.DevelopmentLock[aType, aID] = dlNone) and (fDevsToUnlock[aType].ID = DEV_ID_NONE) then
   begin
-    dev := gRes.Development.Tree[aType].GetItem(aID);
     fDevsToUnlock[aType].ID := aID;
     fDevsToUnlock[aType].StartingTime := gGameParams.Tick;
      //unlocking development duration
@@ -3577,14 +3576,16 @@ end;
 
 procedure TKMHand.CheckDevToUnlock(aTick : Cardinal);
 var dtt : TKMDevelopmentTreeType;
+  tmp : Integer;
 begin
 
   for dtt := DEVELOPMENT_MIN to DEVELOPMENT_MAX do
     If fDevsToUnlock[dtt].ID <> DEV_ID_NONE then
       If aTick >= fDevsToUnlock[dtt].StartingTime + fDevsToUnlock[dtt].Duration then
       begin
-        UnlockDevelopment(dtt, fDevsToUnlock[dtt].ID);
+        tmp := fDevsToUnlock[dtt].ID;
         fDevsToUnlock[dtt].ID := DEV_ID_NONE;
+        UnlockDevelopment(dtt, tmp);
         gGame.RefreshDevelopmentTree;
       end;
 
@@ -4749,7 +4750,8 @@ begin
     fptEconomy : ;
     fptWarfare : aAmount := aAmount * 2;
   end;
-
+  If aAmount <= 0 then
+    Exit;
   AddExp(aAmount * Stats.GetHouseQty(htArena));
 
 end;

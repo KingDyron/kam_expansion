@@ -329,6 +329,7 @@ begin
     wtGold : CoinPrice := 10;
     wtEgg : CoinPrice := 30;
     wtJewerly : CoinPrice := 500;
+    wtCard : CoinPrice := 100;
     else CoinPrice := 1;
   end;
 
