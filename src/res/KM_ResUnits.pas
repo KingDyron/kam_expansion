@@ -1418,6 +1418,7 @@ var I, J: Integer;
   dir : TKMDirection;
   //dit: TKMUnitSpec;
 begin
+  {$IFNDEF SAVE_JSON_RESOURCES} Exit;{$ENDIF}
   root :=  TKMJsonSaver.Create;
   try
     root.BeginFile;

@@ -1437,6 +1437,7 @@ var
   S : String;
   B : Byte;
 begin
+  {$IFNDEF SAVE_JSON_RESOURCES} Exit;{$ENDIF}
   root := TKMJsonSaver.Create;
 
   try

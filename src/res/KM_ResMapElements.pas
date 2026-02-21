@@ -713,7 +713,7 @@ begin
 
   //gFieldGrains
     {Anim: TKMAnimLoop;}
-  //SaveToJson(ExeDir + 'Export\Objects.json');
+  SaveToJson(ExeDir + 'Export\Objects.json');
 end;
 
 
@@ -726,6 +726,7 @@ var root, obj, obj2 : TKMJsonObject;
   S : String;
 
 begin
+  {$IFNDEF SAVE_JSON_RESOURCES} Exit;{$ENDIF}
   root := TKMJsonObject.Create;
   try
     arr := root.AddArray('Objects');

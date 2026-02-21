@@ -103,6 +103,7 @@ type
     function GetWare(aIndex: TKMWareType): TKMWareSpec;
     procedure LoadWareFromJson(aJSONFile : TJsonObject);
     procedure LoadVirtualWaresFromJson(aJSONFile : TJsonObject);
+    procedure SaveToJson;
   public
 
     WareDistribution : TKMWareDistributionType;
@@ -1000,6 +1001,12 @@ begin
 
 end;
 
+procedure TKMResWares.SaveToJson;
+begin
+  {$IFNDEF SAVE_JSON_RESOURCES} Exit;{$ENDIF}
+
+end;
+
 procedure TKMResWares.ExportCSV(const aPath : String);
 var
   WT: TKMWareType;
@@ -1050,7 +1057,7 @@ begin
   finally
     FreeAndNil(SL);
   end;
-  Exit;
+  {$IFNDEF SAVE_JSON_RESOURCES} Exit;{$ENDIF}
   root := TKMJsonSaver.Create;
 
   try
