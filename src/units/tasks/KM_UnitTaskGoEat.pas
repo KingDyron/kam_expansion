@@ -136,8 +136,8 @@ function TKMTaskGoEat.Execute: TKMTaskResult;
     Result := true;
     fUnit.Feed(UNIT_MAX_CONDITION);
     Inc(fFeedCnt);
-    If fUnit.ConditionPace <= 10 then
-      fUnit.ConditionPace := 11;
+    //If fUnit.ConditionPace <= 10 then
+    //  fUnit.ConditionPace := 11;
   end;
 
   function FeedUnit(aWare : TKMWareType) : Boolean;
