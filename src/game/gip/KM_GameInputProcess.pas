@@ -1382,8 +1382,6 @@ begin
       gicPearlSelectRResTo          : TKMHousePearl(srcHouse).RResTo := TKMWareType(IntParams[1]);
       gicPearlDoExchange            : TKMHousePearl(srcHouse).DoExchange(IntParams[1]);
       gicPearlUseSpecial            : TKMHousePearl(srcHouse).DoUseSpecial;
-      gicArenaSelectFestival         : TKMHouseArena(srcHouse).FestivalType := TKMDevelopmentTreeType(IntParams[1]);
-      gicArenaStartFestival          : TKMHouseArena(srcHouse).StartFestival;
       gicHouseQueueNotRem           : TKMHouseQueue(srcHouse).NotRemLastPos := not TKMHouseQueue(srcHouse).NotRemLastPos;
       gicHouseDeliveryTo            : srcHouse.HouseToDeliver := gHands.GetHouseByUID(IntParams[1]);
       gicHouseVirtualWareClicked    : srcHouse.HouseVirtualWareClicked(IntParams[1], IntParams[2]);

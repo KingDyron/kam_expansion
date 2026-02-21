@@ -15,19 +15,13 @@ type
   TKMGuiGameArena = class(TKMPanel)
     private
       procedure Refresh(Arena : TKMHouseArena);
+      procedure SelectType_Click(Sender : TObject);
 
-      procedure SelectType_Click(Sender: TObject);
-      //procedure Start_Click(Sender : TObject);
     protected
-      Button_Points : array[DEVELOPMENT_MIN..DEVELOPMENT_MAX] of TKMButtonFlat;
-        WareRow_FestivalPoints: array[TKMFestivalPointType] of TKMWaresRow;
-        Button_FestivalType : array[DEVELOPMENT_MIN..DEVELOPMENT_MAX_ALL] of TKMButtonFlat;
-        WareRow_Cost : array[0..2] of TKMWaresRow;
         Button_ShowCardGame : TKMButton;
         LVL_Progress : TKMPercentBar;
 
         CardGame : TKMGuiGameCards;
-        //Button_StartFestival : TKMButton;
     public
       constructor Create(aParent: TKMPanel);
       procedure Show(aHouse : TKMHouse; aTop : Integer); Reintroduce;
@@ -48,71 +42,14 @@ var dtt: TKMDevelopmentTreeType;
   FPT : TKMFestivalPointType;
 begin
   Inherited Create(aParent, 0, 100, aParent.Width - 8, 600);
-
-
-  for FPT := Low(TKMFestivalPointType) to High(TKMFestivalPointType) do
-  begin
-    WareRow_FestivalPoints[FPT] := TKMWaresRow.Create(self, 0, 28 * byte(FPT), Width);
-    WareRow_FestivalPoints[FPT].WareCntAsNumber := true;
-    WareRow_FestivalPoints[FPT].TexID := FESTIVAL_GUI_ICON[FPT];
-    WareRow_FestivalPoints[FPT].Hint := gResTexts[FESTIVAL_TEXT_ID[FPT]];
-  end;
-  top := WareRow_FestivalPoints[high(FPT)].Bottom + 5;
-  TKMLabel.Create(self, 0, top, Width, 20, gResTexts[2302], fntMetal, taCenter);
-  for dtt := Low(Button_Points) to High(Button_Points) do
-  begin
-    I := byte(dtt);
-    Button_Points[dtt] := TKMButtonFlat.Create(self, I * 39 - 5, top + 30, 37, 35, TREE_TYPE_ICON[dtt]);
-    Button_Points[dtt].Caption := '';
-    Button_Points[dtt].Hint := gResTexts[2300]+ ' ' + gResTexts[TREE_TYPE_HINT[dtt]];
-    Button_Points[dtt].Tag := I;
-  end;
-
-  top := Button_Points[DEVELOPMENT_MIN].Bottom + 5;
-  TKMLabel.Create(self, 0, top, Width, 20, gResTexts[2303], fntMetal, taCenter);
-  for dtt := Low(Button_FestivalType) to High(Button_FestivalType) do
-  begin
-    I := byte(dtt) - 1;
-    Button_FestivalType[dtt] := TKMButtonFlat.Create(self, I * 39 + 10 + 5, top + 20, 37, 35, TREE_TYPE_ICON[dtt]);
-    case dtt of
-      dttAll : Button_FestivalType[dtt].Hint := gResTexts[2300]+ ' ' + gResTexts[TREE_TYPE_HINT[dtt]] + ' x1';
-      else Button_FestivalType[dtt].Hint := gResTexts[2300]+ ' ' + gResTexts[TREE_TYPE_HINT[dtt]] + ' x3';
-    end;
-    Button_FestivalType[dtt].Tag := I + 1;
-    Button_FestivalType[dtt].OnClick := SelectType_Click;
-
-  end;
-  top := Button_FestivalType[DEVELOPMENT_MIN].Bottom + 5;
-  TKMLabel.Create(self, 0, top, Width, 20, gResTexts[154], fntMetal, taLeft);
-  Inc(top, 20);
-  for I := Low(WareRow_Cost) to High(WareRow_Cost) do
-  begin
-    If I = 0 then
-      WT := wtTile
-    else
-    If I = 1 then
-      WT := wtValuable
-    else
-      WT := wtWarfare;
-    WareRow_Cost[I] := TKMWaresRow.Create(self, 0, top + 28 * I, Width);
-    WareRow_Cost[I].WareCntAsNumber := true;
-    WareRow_Cost[I].TexID := gRes.Wares[WT].GUIIcon;
-    WareRow_Cost[I].Hint := gResTexts[FESTIVAL_TEXT_ID[TKMFestivalPointType(I)]];
-  end;
-  top := WareRow_Cost[high(WareRow_Cost)].Bottom + 3;
-
-  Button_ShowCardGame := TKMButton.Create(self, 0, top, Width, 25, 'Play cards', bsGame);
-  Button_ShowCardGame.OnClick := SelectType_Click;
-  LVL_Progress := TKMPercentBar.Create(self, 0, top + 27, Width, 25, fntGrey);
+  top := 0;
+  LVL_Progress := TKMPercentBar.Create(self, 0, top, Width, 25, fntGrey);
   LVL_Progress.TextYOffset := -3;
+  {
   CardGame := TKMGuiGameCards.Create(self.MasterPanel);
-
-
-  //top := WareRow_Cost[high(WareRow_Cost)].Bottom + 5;
-
-  //Button_StartFestival := TKMButton.Create(self, 0, top, Width, 25, gResTexts[2301], bsGame);
-  //Button_StartFestival.OnClick := Start_Click;
-
+  Button_ShowCardGame := TKMButton.Create(self, 0, top + 27, Width, 25, 'Play cards', bsGame);
+  Button_ShowCardGame.OnClick := SelectType_Click;
+  }
 end;
 
 procedure TKMGuiGameArena.Show(aHouse : TKMHouse; aTop : Integer);
@@ -123,47 +60,18 @@ begin
 end;
 
 procedure TKMGuiGameArena.Refresh(Arena: TKMHouseArena);
-var dtt: TKMDevelopmentTreeType;
-  FPT : TKMFestivalPointType;
-  I : integer;
+var
   minProgress, maxProgress, currProgress : Cardinal;
 begin
-
-  for FPT := Low(TKMFestivalPointType) to High(TKMFestivalPointType) do
-  begin
-    //WareRow_FestivalPoints[FPT].WareCount := gHands[Arena.Owner].FestivalPoints[FPT];
-  end;
-  for dtt := Low(Button_Points) to High(Button_Points) do
-  begin
-    //Button_Points[dtt].Caption := gMySpectator.Hand.DevPoints(dtt).ToString;
-  end;
-
-  for dtt := Low(Button_FestivalType) to High(Button_FestivalType) do
-  begin
-    //Button_FestivalType[dtt].Enabled := not Arena.FestivalStarted;
-    Button_FestivalType[dtt].BackBevelColor := IfThen(Arena.FestivalType = dtt, $A5FFAF00, $00000000);
-    Button_FestivalType[dtt].Hint := gResTexts[2300]+ ' ' + gResTexts[TREE_TYPE_HINT[dtt]] + ' x' + Arena.PointsCount(dtt).ToString;
-  end;
-
-  for I := Low(WareRow_Cost) to High(WareRow_Cost) do
-    WareRow_Cost[I].Enabled := not Arena.FestivalStarted;
-
-  WareRow_Cost[0].WareCount := Arena.BuildingCost;
-  WareRow_Cost[1].WareCount := Arena.ValuableCost;
-  WareRow_Cost[2].WareCount := Arena.WarfareCost;
-
-
   minProgress := Arena.LVLExp;
   maxProgress := Arena.NextLVLExp - minProgress;
   currProgress := Arena.EXP - minProgress;
 
   LVL_Progress.Position := Arena.GetLVLProgress;
   LVL_Progress.Caption := 'Level: ' + Arena.LVL.ToString + ' EXP: ' + currProgress.ToString + ' / ' + maxProgress.ToString;
-  //Button_StartFestival.Enabled := not Arena.FestivalStarted and Arena.CanStartFestival;
 end;
 
 procedure TKMGuiGameArena.SelectType_Click(Sender: TObject);
-var H : TKMHouseArena;
 begin
 
   If Sender = Button_ShowCardGame then
@@ -172,24 +80,9 @@ begin
       CardGame.Hide
     else
       CardGame.Show;
+    Exit;
   end;
-
-  H := TKMHouseArena(gMySpectator.Selected);
-  gGame.GameInputProcess.CmdHouse(gicArenaSelectFestival, H, TKMControl(Sender).Tag);
-  //H.FestivalType := TKMDevelopmentTreeType(TKMControl(Sender).Tag);
-  Refresh(H);
 end;
-{
-procedure TKMGuiGameArena.Start_Click(Sender: TObject);
-var H : TKMHouseArena;
-begin
-  H := TKMHouseArena(gMySpectator.Selected);
-  //H.StartFestival;
-  gGame.GameInputProcess.CmdHouse(gicArenaStartFestival, H);
-  Refresh(H);
-end;}
-
-
 
 end.
 

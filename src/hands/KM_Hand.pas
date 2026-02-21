@@ -115,6 +115,9 @@ type
     fDevsToUnlock : TKMHandUnlockingDevArray;
     fDevPoints: Word;
 
+    fLevel : Word;
+    fEXP : Cardinal;
+
     const
       MAX_FESTIVAL_POINTS = 1000000;
     function IsDisabled: Boolean;
@@ -358,8 +361,12 @@ type
     procedure AddDevPoint(aCount : Word = 1);
     function  TakeDevPoint(aCount : Word = 1) : Boolean;
     function  HasDevPoint(aCount : Word = 1) : Boolean;
+    procedure AddExp(aAmount : Word);
+    function GetLVLExp(aLevel : Word) : Cardinal;
+    property Level : Word read fLevel;
+    property Exp : Cardinal read fExp;
+
     procedure AddFestivalPoints(aType : TKMFestivalPointType; aAmount : Integer);
-    procedure TakeFestivalPoints(aType : TKMFestivalPointType; aAmount : Integer);
 
     function DevPoints : Word;
     function TryToUnlockDevelopment(aType : TKMDevelopmentTreeType; aID : Integer) : Boolean;
@@ -3439,7 +3446,6 @@ function TKMHand.UnlockDevelopment(aType: TKMDevelopmentTreeType; aID: Integer) 
         Units[I].Condition := UNIT_MAX_CONDITION;
   end;
 
-var dev, par : PKMDevelopment;
 begin
   Result := false;
   //dev := gRes.Development.Tree[aType].GetItem(aID);
@@ -4009,7 +4015,8 @@ begin
   SaveStream.WriteData(fPearlsBuilt);
   SaveStream.WriteData(fDevPoints);
   SaveStream.WriteData(fDevsToUnlock);
-  //fBridgesBuilt.SaveToStream(SaveStream);
+  SaveStream.WriteData(fLevel);
+  SaveStream.WriteData(fEXP);
 end;
 
 
@@ -4113,6 +4120,8 @@ begin
   LoadStream.ReadData(fPearlsBuilt);
   LoadStream.ReadData(fDevPoints);
   LoadStream.ReadData(fDevsToUnlock);
+  LoadStream.ReadData(fLevel);
+  LoadStream.ReadData(fEXP);
 
   //fBridgesBuilt.LoadFromStream(LoadStream);
 
@@ -4714,8 +4723,26 @@ begin
 
 end;
 
+function TKMHand.GetLVLExp(aLevel : Word) : Cardinal;
+const LEVEL_POINTS_INC = 400;
+begin
+  Result := Round(Sqr(aLevel / 3) * LEVEL_POINTS_INC);
+end;
+
+procedure TKMHand.AddExp(aAmount: Word);
+begin
+  If (self = nil) or (aAmount = 0) then
+    Exit;
+  fExp := fExp + aAmount;
+
+  while fEXP >= GetLVLExp(fLevel + 1) do
+  begin
+    Inc(fLevel);
+    AddDevPoint;
+  end;
+end;
+
 procedure TKMHand.AddFestivalPoints(aType : TKMFestivalPointType; aAmount : Integer);
-var I : Integer;
 begin
   case aType of
     fptBuilding : aAmount := aAmount * 4;
@@ -4723,17 +4750,8 @@ begin
     fptWarfare : aAmount := aAmount * 2;
   end;
 
-  for I := 0 to fHouses.Arenas.Count - 1 do
-    TKMHouseArena(fHouses.Arenas[I]).AddExp(aAmount);
+  AddExp(aAmount * Stats.GetHouseQty(htArena));
 
-  //do nothing for now
-  //it will be taken to the arena it's self
-  //fFestivalPoints[aType] := EnsureRange(fFestivalPoints[aType] + aAmount, 0, MAX_FESTIVAL_POINTS);
-end;
-
-procedure TKMHand.TakeFestivalPoints(aType : TKMFestivalPointType; aAmount : Integer);
-begin
-  AddFestivalPoints(aType, -aAmount);
 end;
 
 {TKMAnimalSpawner}
