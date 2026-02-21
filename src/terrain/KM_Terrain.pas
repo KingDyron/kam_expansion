@@ -8230,13 +8230,8 @@ var BestDIs : Integer;
   H : TKMHouse;
 
   procedure ResetTMP;
-  var I, K : Integer;
   begin
     Setlength(tmpLocs, fMapX, fMapY);
-
-    {for I := 0 to fMapX - 1 do
-      for K := 0 to fMapY - 1 do
-        tmpLocs[I, K] := 255;}
   end;
 
   procedure Visit(aX, aY, aDistance: Integer);
