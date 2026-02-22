@@ -246,11 +246,9 @@ begin
   B := TKMButtonFlat(Sender);
   //tag2 = 1, means that this development can be unlocked
   //tag2 = 0, try to unlock previous ones
-  If not (B.Tag2 in [0, 1]) then
+  If not (B.Tag2 in [1]) then
     Exit;
 
-  If (B.Tag2 = 0) and not (ssShift in Shift) then
-    Exit;
   If gMySpectator = nil then
     Exit;
 

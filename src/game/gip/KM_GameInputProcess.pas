@@ -1,4 +1,3 @@
-
 unit KM_GameInputProcess;
 {$I KaM_Remake.inc}
 interface

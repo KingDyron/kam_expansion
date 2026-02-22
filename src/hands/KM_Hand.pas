@@ -3429,7 +3429,10 @@ begin
      //always 2 minutes + 20 seconds for every n cost
      //arena gives development points to unlock the developments immediately
      //so the time for a development that costs 54 has duration of 20 minutes
-    fDevsToUnlock[aType].Duration := (120 + 30 * dev.Cost) * 10;
+    If EconomyDevUnlocked(4) then
+      fDevsToUnlock[aType].Duration := (120 + 27 * dev.Cost) * 10
+    else
+      fDevsToUnlock[aType].Duration := (120 + 33 * dev.Cost) * 10;
     Result := true;
   end;
 
@@ -3454,8 +3457,9 @@ begin
   begin
     fLocks.DevelopmentLock[aType, aID] := dlUnlocked;
     Result := true;
+
     If (aType = dttEconomy) and (aID = 1) then
-      AddDevPoint(3);
+      AddExp(300);
 
     If (aType = dttBuilder) and (aID = 30) then
       UnlockSpecialWalls;
@@ -4740,11 +4744,16 @@ begin
   begin
     Inc(fLevel);
     AddDevPoint;
+    If EconomyDevUnlocked(32) then
+      If fLevel mod 3 = 0 then
+        AddDevPoint;
   end;
 end;
 
 procedure TKMHand.AddFestivalPoints(aType : TKMFestivalPointType; aAmount : Integer);
 begin
+  If EconomyDevUnlocked(32) then
+    aAmount := aAmount + 1;
   case aType of
     fptBuilding : aAmount := aAmount * 4;
     fptEconomy : ;
