@@ -88,6 +88,11 @@ type
     procedure Paint; override;
   end;
 
+  TKMLabelShadow = class(TKMLabel)
+    public
+      procedure Paint; override;
+  end;
+
   TKMOverlayLabel = class(TKMLabel)
     protected
       procedure SetCaption(const aCaption: UnicodeString); override;
@@ -570,6 +575,34 @@ begin
     end;
   end;
 
+  TKMRenderUI.WriteText(AbsLeft, AbsTop + t, Width, fText, fFont, fTextAlign, col, False, False, False, false, fTabWidth);
+
+  if fStrikethrough then
+    TKMRenderUI.WriteShape(TextLeft, AbsTop + fTextSize.Y div 2 - 2, fTextSize.X, 3, col, $FF000000);
+end;
+
+procedure TKMLabelShadow.Paint;
+var
+  t: Integer;
+  col: Cardinal;
+begin
+  if Enabled then
+    col := FontColor
+  else
+    col := $FF888888;
+
+  t := 0;
+  if Height > 0 then
+  begin
+    case fTextVAlign of
+      tvaNone,
+      tvaTop:     ;
+      tvaMiddle:  t := (Height - fTextSize.Y) div 2;
+      tvaBottom:  t := Height - fTextSize.Y;
+    end;
+  end;
+
+  TKMRenderUI.WriteText(AbsLeft + 2, AbsTop + t + 2, Width, fText, fFont, fTextAlign, $FF000000, False, False, False, false, fTabWidth);
   TKMRenderUI.WriteText(AbsLeft, AbsTop + t, Width, fText, fFont, fTextAlign, col, False, False, False, false, fTabWidth);
 
   if fStrikethrough then

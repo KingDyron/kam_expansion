@@ -11,6 +11,14 @@ uses
   KM_Houses, KM_HouseArena;
 
 type
+  TKMHappinessBar = class(TKMPercentBar)
+    protected
+    public
+      NewPosition : Single;
+
+      procedure UpdateState(aTickCount: Cardinal); override;
+      procedure Paint; override;
+  end;
 
   TKMGuiGameArena = class(TKMPanel)
     private
@@ -18,8 +26,10 @@ type
       procedure SelectType_Click(Sender : TObject);
 
     protected
+
         Button_ShowCardGame : TKMButton;
-        LVL_Progress : TKMPercentBar;
+        Label_Level : TKMLabelShadow;
+        LVL_Progress : TKMHappinessBar;
 
         CardGame : TKMGuiGameCards;
     public
@@ -36,14 +46,13 @@ uses
 
 
 constructor TKMGuiGameArena.Create(aParent: TKMPanel);
-var dtt: TKMDevelopmentTreeType;
-  I, top : Integer;
-  WT : TKMWareType;
-  FPT : TKMFestivalPointType;
+var top : Integer;
 begin
   Inherited Create(aParent, 0, 100, aParent.Width - 8, 600);
   top := 0;
-  LVL_Progress := TKMPercentBar.Create(self, 0, top, Width, 25, fntGrey);
+  Label_Level := TKMLabelShadow.Create(self, 0, top, Width, 20, gResTexts[2352], fntGrey, taLeft);
+  Inc(top, 20);
+  LVL_Progress := TKMHappinessBar.Create(self, 0, top, Width, 25, fntGrey);
   LVL_Progress.TextYOffset := -3;
   {
   CardGame := TKMGuiGameCards.Create(self.MasterPanel);
@@ -63,12 +72,13 @@ procedure TKMGuiGameArena.Refresh(Arena: TKMHouseArena);
 var
   minProgress, maxProgress, currProgress : Cardinal;
 begin
+  Label_Level.Caption := gResTexts[2352] + ' ' + Arena.LVL.ToString;
   minProgress := Arena.LVLExp;
   maxProgress := Arena.NextLVLExp - minProgress;
   currProgress := Arena.EXP - minProgress;
 
-  LVL_Progress.Position := Arena.GetLVLProgress;
-  LVL_Progress.Caption := 'Level: ' + Arena.LVL.ToString + ' EXP: ' + currProgress.ToString + ' / ' + maxProgress.ToString;
+  LVL_Progress.NewPosition := Arena.GetLVLProgress;
+  LVL_Progress.Caption := currProgress.ToString + ' / ' + maxProgress.ToString;
 end;
 
 procedure TKMGuiGameArena.SelectType_Click(Sender: TObject);
@@ -82,6 +92,30 @@ begin
       CardGame.Show;
     Exit;
   end;
+end;
+
+
+procedure TKMHappinessBar.UpdateState(aTickCount: Cardinal);
+begin
+  Inherited;
+end;
+
+procedure TKMHappinessBar.Paint;
+var dif : Single;
+begin
+  Inherited;
+  If Position <> NewPosition then
+  begin
+    If NewPosition < Position then
+      Position := 0;
+
+    dif := (NewPosition - Position) / 20;
+    Position := Position + (dif);
+
+    If (NewPosition - Position) < 0.005 then
+      Position := NewPosition;
+  end;
+
 end;
 
 end.
