@@ -326,7 +326,7 @@ begin
         lftField:             SetCost(cmField, 0, LOCK_FIELD_GUI[FT], 0, 0, 0, gResTexts[TX_BUILD_FIELD]);
         lftGrassField:        SetCost(cmGrassLand, 0, LOCK_FIELD_GUI[FT], 0, 0, 0, gResTexts[1990]);
         lftVegetablesField:   SetCost(cmVegeField, 0, LOCK_FIELD_GUI[FT], 0, 0, 0, gResTexts[1991]);
-        lftWineField:         SetCost(cmWine, 0, LOCK_FIELD_GUI[FT], 1, 0, 0, gResTexts[TX_BUILD_WINE]);
+        lftWineField:         SetCost(cmWine, 0, LOCK_FIELD_GUI[FT], 1 * byte(not gMySpectator.Hand.BuildDevUnlocked(28)), 0, 0, gResTexts[TX_BUILD_WINE]);
         lftRemove:            SetCost(cmErase, 0, LOCK_FIELD_GUI[FT], 0, 0, 0, gResTexts[TX_BUILD_DEMOLISH]);
       end;
       if ssRight in Shift then
