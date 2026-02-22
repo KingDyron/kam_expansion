@@ -4729,7 +4729,7 @@ begin
 end;
 
 function TKMHand.GetLVLExp(aLevel : Word) : Cardinal;
-const LEVEL_POINTS_INC = 400;
+const LEVEL_POINTS_INC = 500;
 begin
   Result := Round(Sqr(aLevel / 3) * LEVEL_POINTS_INC);
 end;
