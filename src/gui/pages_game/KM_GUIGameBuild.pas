@@ -635,7 +635,7 @@ begin
               Button_Build[K].Hint := gRes.Houses[H].HouseName;
             Button_Build[K].TexID := gRes.Houses[H].GUIIcon;
             Button_Build[K].Tag := ord(H);
-            Button_Build[K].Down := gCursor.Tag1 = Button_Build[K].Tag;
+            Button_Build[K].Down := (gCursor.Tag1 = Button_Build[K].Tag) and (gCursor.Mode in [cmHouses, cmPlanWalls]);
             Button_Build[K].OnClickShift := Build_ButtonClick;
           end else
           begin
