@@ -748,7 +748,7 @@ type
   private
     const
       NO_TRRAINING_ID = high(byte);
-      MAX_ORDER_COUNT_PALACE = 10;
+      MAX_ORDER_COUNT_PALACE = 4;
     var
     fTrainingID : Byte;
     fProgress, fPhase, fWait, fOrderCount : Word;
@@ -7188,7 +7188,7 @@ begin
 
   If gHands[Owner].ArmyDevUnlocked(5) then
     Result := Max(Result - 1, 1);
-  If gHands[Owner].ArmyDevUnlocked(36) then
+  If gHands[Owner].ArmyDevUnlocked(40) then
     Result := 1;
 end;
 
@@ -7230,6 +7230,7 @@ begin
 end;
 
 procedure TKMHousePalace.SetOrderCount(aIndex : Integer; aValue : Word);
+var maxOrder : Word;
 begin
   If TrainingInProgress then
     Exit;
@@ -7238,7 +7239,16 @@ begin
     CancelOrder;
     fTrainingID := aIndex;
   end;
-  fOrderCount := EnsureRange(aValue, 0, IfThen( TrainedUnitType = utFighter, MAX_ORDER_COUNT_PALACE * 2, MAX_ORDER_COUNT_PALACE));
+  If gHands[Owner].ArmyDevUnlocked(39) then
+    maxOrder := MAX_ORDER_COUNT_PALACE + 6
+  else
+    maxOrder := MAX_ORDER_COUNT_PALACE;
+
+  If PALACE_UNITS_ORDER[fTrainingID] = utFighter then
+    maxOrder := maxOrder * 2;
+
+  fOrderCount := EnsureRange(aValue, 0, maxOrder);
+
   fWait := 20;
 end;
 
@@ -7331,6 +7341,7 @@ end;
 function TKMHousePalace.HasMainVWares(aIndex: Integer; aOrderCount : Byte = 1): Boolean;
 var K : Integer;
     UT : TKMUnitType;
+    vC : Integer;
 begin
   If aIndex = NO_TRRAINING_ID then
     Exit(false);
@@ -7341,13 +7352,20 @@ begin
 
   for K := 0 to High(gRes.Units[UT].PalaceCost.MainWares) do
     with gRes.Units[UT].PalaceCost.MainWares[K] do
-      if gHands[Owner].VirtualWare[Index] < C * aOrderCount then
+    begin
+      vC := C;
+      if (W = 'vtCoin') and gHands[Owner].ArmyDevUnlocked(36) then
+        vC := Max(1, vC * 4 div 5);
+
+      if gHands[Owner].VirtualWare[Index] < vC * aOrderCount then
         Exit(false);
+    end;
 end;
  //v-wares that are taken every time
 function TKMHousePalace.HasPhaseVWares(aIndex: Integer; aOrderCount : Byte = 1): Boolean;
 var K : Integer;
     UT : TKMUnitType;
+    vC : Integer;
 begin
   If aIndex = NO_TRRAINING_ID then
     Exit(false);
@@ -7358,13 +7376,20 @@ begin
 
   for K := 0 to High(gRes.Units[UT].PalaceCost.PhaseWares) do
     with gRes.Units[UT].PalaceCost.PhaseWares[K] do
-      if gHands[Owner].VirtualWare[Index] < C * aOrderCount then
+    begin
+      vC := C;
+      if gHands[Owner].ArmyDevUnlocked(38) then
+        vC := Max(1, vC * 4 div 5);
+
+      if gHands[Owner].VirtualWare[Index] < vC * aOrderCount then
         Exit(false);
+    end;
 end;
 
 procedure TKMHousePalace.TakeMainVWares;
 var K : Integer;
   UT : TKMUnitType;
+  vC : Integer;
 begin
   UT := PALACE_UNITS_ORDER[fTrainingID];
   if GetPhaseCount(UT) = 0 then
@@ -7374,7 +7399,12 @@ begin
   begin
     for K := 0 to High(gRes.Units[UT].PalaceCost.MainWares) do
       with gRes.Units[UT].PalaceCost.MainWares[K] do
-        gHands[Owner].VirtualWareTake(W, C * fOrderCount );
+      begin
+        vC := C;
+        if (W = 'vtCoin') and gHands[Owner].ArmyDevUnlocked(36) then
+          vC := vC * 4 div 5;
+        gHands[Owner].VirtualWareTake(W, vC * fOrderCount );
+      end;
   end;
 
 end;
@@ -7382,6 +7412,7 @@ end;
 procedure TKMHousePalace.TakePhaseVWares;
 var K : Integer;
   UT : TKMUnitType;
+  vC : Integer;
 begin
   UT := PALACE_UNITS_ORDER[fTrainingID];
   if GetPhaseCount(UT) = 0 then
@@ -7389,7 +7420,13 @@ begin
 
   for K := 0 to High(gRes.Units[UT].PalaceCost.PhaseWares) do
     with gRes.Units[UT].PalaceCost.PhaseWares[K] do
-      gHands[Owner].VirtualWareTake(W, C * fOrderCount );
+    begin
+      vC := C;
+      if gHands[Owner].ArmyDevUnlocked(38) then
+        vC := Max(1, vC * 4 div 5);
+
+      gHands[Owner].VirtualWareTake(W, vC * fOrderCount );
+    end;
 end;
 
 procedure TKMHousePalace.TakeCard;

@@ -754,11 +754,44 @@
 										[
 											{
 												"ID" : 36,
-												"HintID" : 99,
-												"GuiIcon" : 1199,
+												"HintID" : 106,
+												"GuiIcon" : 1207,
 												"X" : 4,
-												"Cost" : 36,
-												"IsSpecial" : True
+												"Cost" : 6,
+												"IsSpecial" : False,
+												"Next" : 
+												[
+													{
+														"ID" : 38,
+														"HintID" : 107,
+														"GuiIcon" : 1208,
+														"X" : 4,
+														"Cost" : 7,
+														"IsSpecial" : False,
+														"Next" : 
+														[
+															{
+																"ID" : 39,
+																"HintID" : 108,
+																"GuiIcon" : 1209,
+																"X" : 4,
+																"Cost" : 10,
+																"IsSpecial" : False,
+																"Next" : 
+																[
+																	{
+																		"ID" : 40,
+																		"HintID" : 99,
+																		"GuiIcon" : 1199,
+																		"X" : 4,
+																		"Cost" : 36,
+																		"IsSpecial" : True
+																	}
+																]
+															}
+														]
+													}
+												]
 											}
 										]
 									}
@@ -804,7 +837,7 @@
 																"ID" : 11,
 																"HintID" : 70,
 																"GuiIcon" : 1150,
-																"X" : 4,
+																"X" : 3,
 																"Cost" : 7,
 																"IsSpecial" : False,
 																"Next" : 
@@ -813,7 +846,7 @@
 																		"ID" : 12,
 																		"HintID" : 71,
 																		"GuiIcon" : 1151,
-																		"X" : 4,
+																		"X" : 3,
 																		"Cost" : 9,
 																		"IsSpecial" : False
 																	}
