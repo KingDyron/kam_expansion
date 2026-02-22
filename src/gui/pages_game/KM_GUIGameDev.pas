@@ -141,7 +141,7 @@ var dtt : TKMDevelopmentTreeType;
     B.Tag2 := 0;
     TKMButtonFlatDevGame(B).Cost := aToButton.Dev.ID;
 
-    TKMButtonFlatDevGame(B).Progress := 0;
+    TKMButtonFlatDevGame(B).Progress := -1;
 
     If gMySpectator.Hand.DevInProgress(aType, aToButton.Dev.ID) then
     begin
@@ -287,7 +287,7 @@ begin
 
   If Progress > 0 then
   begin
-    TKMRenderUI.WritePicture(AbsLeft, AbsTop, Width, Height, [], rxGui, 1206, true, BackBevelColor or $FF000000, 0, Progress);
+    TKMRenderUI.WritePicture(AbsLeft, AbsTop, Width, Height, [anLeft, anTop, anRight, anBottom], rxGui, 1206, true, BackBevelColor or $FF000000, 0, Progress);
   end;
 end;
 
