@@ -4979,26 +4979,59 @@ end;
 function TKMTerrain.ChooseTreeToPlace(const aLoc: TKMPoint; aTreeAge: TKMChopableAge; aAlwaysPlaceTree: Boolean): Integer;
 var
   bestTreeType: TKMTerrainClimate;
+  obj, I : Integer;
 begin
-  //Result := OBJ_NONE;
-  //This function randomly chooses a tree object based on the terrain type. Values matched to KaM, using all soil tiles.
-  {case Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain of
-    0..3,5,6,8,9,11,13,14,18,19,56,57,66..69,72..74,84..86,93..98,180,188: bestTreeType := ttOnGrass;
-    26..28,75..80,182,190:                                                 bestTreeType := ttOnYellowGrass;
-    16,17,20,21,34..39,47,49,58,64,65,87..89,183,191,220,247:              bestTreeType := ttOnDirt;
-    else
-      bestTreeType := FindBestTreeType(aLoc);
-  end;}
   bestTreeType := FindBestClimatType(aLoc);
-  //Result := 88;
-  Result := RandomFromArr(gTreeTypeID[bestTreeType]);
-  {case bestTreeType of
-    ttNone:           if aAlwaysPlaceTree then
-                        Result := CHOPABLE_TREES[1 + KaMRandom(Length(CHOPABLE_TREES), 'TKMTerrain.ChooseTreeToPlant 4'), aTreeAge]; //If it isn't one of those soil types then choose a random tree
-    ttOnGrass:        Result := CHOPABLE_TREES[1 + KaMRandom(7, 'TKMTerrain.ChooseTreeToPlant'), aTreeAge]; //Grass (oaks, etc.)
-    ttOnYellowGrass:  Result := CHOPABLE_TREES[7 + KaMRandom(2, 'TKMTerrain.ChooseTreeToPlant 2'), aTreeAge]; //Yellow dirt
-    ttOnDirt:         Result := CHOPABLE_TREES[9 + KaMRandom(5, 'TKMTerrain.ChooseTreeToPlant 3'), aTreeAge]; //Brown dirt (pine trees)
-  end;}
+  obj := RandomFromArr(gTreeTypeID[bestTreeType]);
+
+  case aTreeAge of
+    caAge1,
+    caAge2,
+    caAge3 :  begin
+                I := byte(aTreeAge);
+
+                while (I > 0) and (gMapElements[obj].NextTreeAgeObj > 0) do
+                begin
+                  obj := gMapElements[obj].NextTreeAgeObj;
+                  Dec(I);
+                end;
+
+              end;
+    caAgeFull: begin
+                I := 10;
+
+                while (I > 0) and (gMapElements[obj].NextTreeAgeObj > 0) do
+                begin
+                  obj := gMapElements[obj].NextTreeAgeObj;
+                  if ObjectIsChoppableTree(obj, caAgeFull) then
+                    Break;
+
+                  Dec(I);
+                end;
+
+              end;
+    caAgeStump: begin
+                I := 10;
+
+                while (I > 0) and (gMapElements[obj].NextTreeAgeObj > 0) do
+                begin
+                  obj := gMapElements[obj].NextTreeAgeObj;
+                  If gMapElements[obj].LandStump > 0 then
+                  begin
+                    obj := gMapElements[obj].LandStump;
+                    Break;
+                  end;
+
+                  Dec(I);
+                end;
+
+              end;
+
+  end;
+  If obj = 0 then
+    Result := OBJ_NONE
+  else
+    Result := obj;
 end;
 
 function TKMTerrain.CanReachTileInDistance(const aLoc1: TKMPoint; const aLoc2: TKMPoint; aPassability: TKMTerrainPassability; aMaxDistance: Integer = 10): Boolean;
