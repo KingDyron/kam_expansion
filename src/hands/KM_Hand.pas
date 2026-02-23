@@ -354,6 +354,7 @@ type
     function GetHouseWoodCost(aHouseType: TKMHouseType; aLvl : Byte) : Byte; overload;
     function GetHouseStoneCost(aHouseType: TKMHouseType; aLvl : Byte) : Byte; overload;
     function GetHouseTileCost(aHouseType: TKMHouseType; aLvl : Byte) : Byte; overload;
+    function GetWareProductionCount(aWare : TKMWareType; aHouseType : TKMHouseType = htAny) : Word;
 
     function GiveWareToRandomStore(aWare : TKMWareType; aCount : Integer = 1) : Boolean;
 
@@ -3364,6 +3365,48 @@ begin
 
   If (aHouseType in WALL_HOUSES) and (aLvl = 0) and BuildDevUnlocked(29) then
     Result := Max(Result - 1, 0);
+end;
+
+function TKMHand.GetWareProductionCount(aWare : TKMWareType; aHouseType : TKMHouseType = htAny) : Word;
+
+  function CheckEcoDev(WT : TKMWareType; HT : TKMHouseType; aID : Integer) : Boolean;
+  begin
+    Result := (aWare = WT)
+              and (aHouseType = HT)
+              and EconomyDevUnlocked(aID);
+  end;
+
+  function CheckBuildDev(WT : TKMWareType; HT : TKMHouseType; aID : Integer) : Boolean;
+  begin
+    Result := (aWare = WT)
+              and (aHouseType = HT)
+              and BuildDevUnlocked(aID);
+  end;
+
+  function CheckArmyDev(WT : TKMWareType; HT : TKMHouseType; aID : Integer) : Boolean;
+  begin
+    Result := (aWare = WT)
+              and (aHouseType = HT)
+              and ArmyDevUnlocked(aID);
+  end;
+
+begin
+  Result := gRes.Wares[aWare].GetProductionCount(aHouseType);
+
+  If CheckEcoDev(wtSausage, htButchers, 7) then
+    Inc(Result);
+
+  If CheckBuildDev(wtTimber, htSawmill, 25) then
+    Inc(Result);
+
+  If CheckEcoDev(wtFish, htFishermans, 14) then
+    Inc(Result);
+
+  If CheckEcoDev(wtWater, htWell, 13) then
+    Inc(Result);
+
+  If CheckArmyDev(wtBitinE, htIronFoundry, 7) then
+    Inc(Result);
 end;
 
 function TKMHand.GiveWareToRandomStore(aWare : TKMWareType; aCount : Integer = 1) : Boolean;

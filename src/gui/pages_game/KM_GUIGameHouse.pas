@@ -2399,7 +2399,7 @@ end;
 
 procedure TKMGUIGameHouse.ShowCommonOutput(aHouse: TKMHouse; Base: Integer; var Line, RowRes: Integer);
 var
-  I, m1, m2: Integer;
+  I, m1: Integer;
   hSpec: TKMHouseSpec;
   W : TKMWareType;
 begin
@@ -2444,12 +2444,9 @@ begin
             Button_TransferWare[RowRes].Show;
           end;
 
-          m1 := gRes.Wares[W].MinProduction(aHouse.HouseType);
-          m2 := gRes.Wares[W].MaxProduction(aHouse.HouseType);
-          if m1 = m2 then
-            WaresProdCt_Common[RowRes].Caption := 'x'+IntToStr(m1)
-          else
-            WaresProdCt_Common[RowRes].Caption := IntToStr(m1) + '-' + IntToStr(m2);
+          m1 := aHouse.GetWareProdCt(W);
+          gRes.Wares[W].MinProduction(aHouse.HouseType);
+          WaresProdCt_Common[RowRes].Caption := 'x'+IntToStr(m1);
 
           case aHouse.HouseType of
             htHovel : If W = wtFeathers then WaresProdCt_Common[RowRes].Caption := '' else
@@ -2518,7 +2515,7 @@ end;
 
 procedure TKMGUIGameHouse.ShowCommonCost(aHouse: TKMHouse; Base: Integer; var Line, RowRes: Integer);
 var
-  I, m1, m2, lastLine: Integer;
+  I, m1, lastLine: Integer;
   W: TKMWareType;
   Warr : TKMWareTypeArray;
 begin
@@ -2540,15 +2537,9 @@ begin
         else
           CostsRow_Costs[I].Visible := true;
 
-      m1 := gRes.Wares[W].MinProduction(aHouse.HouseType);
-      m2 := gRes.Wares[W].MaxProduction(aHouse.HouseType);
+      m1 := aHouse.GetWareProdCt(W);
 
-      CostsRow_Costs[I].Caption := gRes.Wares[W].Title;
-      if m1 = m2 then
-        CostsRow_Costs[I].Caption := CostsRow_Costs[I].Caption + ' x' + IntToStr(m1)
-      else
-        CostsRow_Costs[I].Caption := CostsRow_Costs[I].Caption + ' x' + IntToStr(m1) + '-' + IntToStr(m2);
-
+      CostsRow_Costs[I].Caption := gRes.Wares[W].Title + ' x' + IntToStr(m1);
 
       CostsRow_Costs[I].RX := rxGui;
       //Hide the icons when they are not used

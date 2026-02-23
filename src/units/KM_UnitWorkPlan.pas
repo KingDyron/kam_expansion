@@ -168,11 +168,6 @@ begin
   If (aUnit.UnitType = utWoodcutter) and gHands[aUnit.Owner].BuildDevUnlocked(13) then
     WorkCyc := Round(WorkCyc * 0.7);
 
-  If (aUnit.Home.HouseType = htSawmill) and gHands[aUnit.Owner].BuildDevUnlocked(25) then
-    Prod[0].C := Prod[0].C + 1;
-
-  If (aUnit.Home.HouseType = htButchers) and gHands[aUnit.Owner].EconomyDevUnlocked(7) then
-    Prod[0].C := Prod[0].C + 1;
 
   If (aUnit.Home.HouseType in [htIronMine,htGoldMine,htCoalMine,htBitinMine]) and gHands[aUnit.Owner].EconomyDevUnlocked(9) then
     ActSetByMultiplier(aUnit, 0.9);
@@ -184,13 +179,6 @@ begin
   If (aUnit.Home.HouseType = htBakery) and gHands[aUnit.Owner].EconomyDevUnlocked(12) then
     Res[1].C := 0;
 
-  If (aUnit.Home.HouseType = htFishermans) and gHands[aUnit.Owner].EconomyDevUnlocked(14) then
-    Prod[0].C := Prod[0].C + 1;
-
-  If (aUnit.Home.HouseType = htIronFoundry) and gHands[aUnit.Owner].ArmyDevUnlocked(26) then
-    for I := 0 to High(Prod) do
-      If Prod[I].W = wtBitinE then
-        Prod[0].C := Prod[0].C + 1;
 end;
 
 procedure TKMUnitWorkPlan.ResourcePlan(Res1: TKMWareType; Qty1: Byte; Res2: TKMWareType; Qty2: Byte; Prod1: TKMWareType; Prod2: TKMWareType = wtNone;Prod3: TKMWareType = wtNone);
@@ -346,7 +334,7 @@ begin
         Res[I].W := wtNone;
         Res[I].C := 0;
       end;
-    Prod[0].C := TKMHouseQueue(H).Queue[0].Qt * gRes.Wares[Prod[0].W].GetProductionCount(htTailorsShop);
+    Prod[0].C := TKMHouseQueue(H).Queue[0].Qt * gHands[aUnit.Owner].GetWareProductionCount(Prod[0].W, fHome);
 
 
     if length(gRes.Houses[H.HouseType].WorkAnim) > 0 then
@@ -378,7 +366,8 @@ begin
 
     if Prod[I].W <> wtNone then
       if Prod[I].W <> wtSawDust then
-        Prod[I].C := gRes.Houses[fHome].GetWareProdCt(Prod[I].W);
+        Prod[I].C :=  gHands[aUnit.Owner].GetWareProductionCount(Prod[I].W, fHome);
+        //gRes.Houses[fHome].GetWareProdCt(Prod[I].W);
   end;
 
   if length(gRes.Houses[H.HouseType].WorkAnim) > 0 then
@@ -917,7 +906,7 @@ begin
                           begin
                             SubActAdd(haWork5, 6 * 20 div 10 + 1);//play clear animation
                             ResourcePlan(wtNone,1,wtNone, 0, wtApple);
-                            Prod[0].C := 1;{gRes.Wares[wtApple].GetProductionCount(htAppleTree)}
+                            Prod[0].C := 1;
                             fIssued := true;
                           end;
 

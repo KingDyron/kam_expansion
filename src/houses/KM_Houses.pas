@@ -3640,7 +3640,7 @@ end;
 //probably will be changed so everyone can change it
 function TKMHouse.GetWareProdCt(aWare: TKMWareType) : Byte;
 begin
-  Result := gRes.Wares[aWare].GetProductionCount(fType);
+  Result := gHands[Owner].GetWareProductionCount(aWare, fType);
 end;
 
 function TKMHouse.GetProductionCycle(aIndex : Byte) : Word;
