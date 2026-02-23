@@ -213,7 +213,7 @@
 																"HintID" : 100,
 																"GuiIcon" : 439,
 																"X" : 0,
-																"Cost" : 34,
+																"Cost" : 24,
 																"IsSpecial" : True
 															}
 														]
@@ -1056,7 +1056,7 @@
 																														"HintID" : 90,
 																														"GuiIcon" : 1170,
 																														"X" : 2,
-																														"Cost" : 20,
+																														"Cost" : 12,
 																														"IsSpecial" : True
 																													},
 																													{

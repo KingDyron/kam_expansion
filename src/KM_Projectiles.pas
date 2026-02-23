@@ -422,8 +422,8 @@ begin
                           //Can't hit units past max range because that's unintuitive/confusing to player
                           if (KMLengthSqr(fShotFrom, U.PositionF) <= Sqr(fMaxLength)) then
                           begin
-                            Damage := 80;
-                            UDamage := 2;
+                            Damage := 100;
+                            UDamage := 3;
                             Damage := Round(Damage / Math.max(U.GetProjectileDefence(false), 1)); //Max is not needed, but animals have 0 defence
 
 

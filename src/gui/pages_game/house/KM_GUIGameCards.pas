@@ -77,7 +77,6 @@ begin
   Inc(last);
   Cards[last].Card := P.PalaceCard;
     Cards[last].Visible := true;
-  Inc(last);
 end;
 
 
