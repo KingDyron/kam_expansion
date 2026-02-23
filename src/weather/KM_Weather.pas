@@ -25,6 +25,7 @@ type
       fClouds : array of TKMPointF;//make more clouds at the same time to add variety
 
       fCurrentClimate : TKMTerrainClimate;
+      //fRotation : Single;//will be used for birds
 
       function GetRandomPos(aPos : TKMPointF; aRadius : Single) : TKMPointF;
       function CanAnimBeStopped : Boolean;
@@ -115,6 +116,7 @@ uses
       KM_Terrain;
 
 constructor TKMWeather.Create(aType : TKMWeatherType; aPos, aSpeed : TKMPointF; aLifeTime : Cardinal; aRX: TRXType);
+//var distSqr : Single;
 begin
   Inherited Create;
 
@@ -131,6 +133,8 @@ begin
   fMaxStyles := 0;
 
   fCurrentClimate := gTerrain.FindBestClimatType(KMPoint(aPos));
+  //distSqr := Sqr(aSpeed.Y) + Sqr(aSpeed.Y);
+  //fRotation := ArcTan2(aSpeed.Y/distSqr, aSpeed.X/distSqr) * 180/Pi; will be used for birds
 end;
 
 
@@ -296,6 +300,12 @@ var I : Integer;
 begin
   addSpeed.X := fSpeed.X * aLag;
   addSpeed.Y := fSpeed.Y * aLag;
+
+  {for I := 1 to length(fClouds) do
+    gRenderPool.RenderSpriteCloud(fAnims[fState].Animation[fAge], fPos.X + fClouds[I - 1].X, fPos.Y + fClouds[I - 1].Y, fRotation, 1);
+  gRenderPool.RenderSpriteCloud(fAnims[fState].Animation[fAge], fPos.X, fPos.Y, fRotation, 1);
+  Exit;}//will be used for birds
+
   for I := 1 to length(fClouds) do
     if fState = wsLoop then
       gRenderPool.AddAnimation(fPos + fClouds[I - 1]{ + addSpeed}, fAnims[fState], fAge div (I + 1), 0, fRX, false, false, 0, true)

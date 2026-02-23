@@ -234,6 +234,8 @@ type
     procedure RenderWireTile(const P: TKMPoint; aCol: TColor4; aInset: Single = 0.0; aLineWidth: Single = -1);
     procedure RenderCircle(P: TKMPointF; aRad : Single; aFill, aLine : TColor4; aLineWidth : Integer = -1);
 
+    procedure RenderSpriteCloud(aId: Integer; aX, aY, aRotation, aNight: Single);
+
     property RenderDebug: TKMRenderDebug read fRenderDebug;
     property ViewPort : TKMViewport read fViewport;
 
@@ -474,6 +476,8 @@ begin
 
     fRenderList.SortRenderList;
     fRenderList.Render;
+    //if not gGameParams.IsMapEditor then
+    //  gGame.Weather.Paint(aTickLag, clipRect);
 
     if mlDefencesAll in gGameParams.VisibleLayers then
       fRenderDebug.PaintDefences;
@@ -2727,6 +2731,49 @@ begin
         glTexCoord2f(Alt.u1, Alt.v1); glVertex2f(rX                     , rY-pxHeight/CELL_SIZE_PX);
       glEnd;
     end;
+end;
+
+procedure TKMRenderPool.RenderSpriteCloud(aId: Integer; aX: Single; aY: Single; aRotation: Single; aNight: Single);
+var
+  tX, tY: Integer;
+  rX, rY: Single;
+  width, height : Single;
+begin
+  tX := EnsureRange(Round(aX), 1, gTerrain.MapX) - 1;
+  tY := EnsureRange(Round(aY), 1, gTerrain.MapY) - 1;
+  //Do not render if sprite is under FOW
+  if (gMySpectator.FogOfWar.CheckVerticeRenderRev(tX, tY) <= FOG_OF_WAR_MIN) then
+    Exit;
+
+  rX := RoundToTilePixel(aX);
+  rY := RoundToTilePixel(aY);
+
+  RenderCircle(KMPointF(aX, aY), 1, $00FFFFFF, $FFFFFFFF, 1);
+  glPushMatrix;
+  with gGFXData[rxTrees, aId] do
+  begin
+    // FOW is rendered over the top so no need to make sprites black anymore
+    glColor4ub(255, 255, 255, 255);
+
+    width := pxWidth/CELL_SIZE_PX;
+    height := pxHeight/CELL_SIZE_PX;
+
+    glTranslateF(rX, rY, 0);
+    glRotateF(aRotation, 0, 0, 1);
+    //glTranslated(-width, -height, 0);
+
+
+
+    TKMRender.BindTexture(Tex.TexID);
+
+    glBegin(GL_QUADS);
+      glTexCoord2f(Tex.u1, Tex.v2); glVertex2f(-width/2, height/2);
+      glTexCoord2f(Tex.u2, Tex.v2); glVertex2f(width / 2, height/2);
+      glTexCoord2f(Tex.u2, Tex.v1); glVertex2f(width/2, 0-height/2);
+      glTexCoord2f(Tex.u1, Tex.v1); glVertex2f(-width/2, 0-height/2);
+    glEnd;
+  end;
+  glPopMatrix;
 end;
 
 // Param - defines at which level alpha-test will be set (acts like a threshhold)
