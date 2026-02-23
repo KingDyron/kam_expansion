@@ -1269,7 +1269,7 @@ begin
                                     P.AddHousePlan(TKMHouseType(IntParams[0]), KMPoint(IntParams[1],IntParams[2]));
       gicPlaceStructurePlan:     if P.CanAddStructurePlan(KMPoint(SmallIntParams[0], SmallIntParams[1]), IntParams[0], SmallIntParams[2] ) then
                                     P.AddStructurePlan(KMPoint(SmallIntParams[0], SmallIntParams[1]), IntParams[0], SmallIntParams[2]);
-      gicPlanWalls:              P.TryPlacePlanWalls(IntParams[0], SmallIntParams[0]), KMPoint(SmallIntParams[1], SmallIntParams[2]));
+      gicPlanWalls:              P.TryPlacePlanWalls(KMPoint(IntParams[0], SmallIntParams[0]), KMPoint(SmallIntParams[1], SmallIntParams[2]));
       gicStructureRemove:       begin
                                   srcStructure.DestroyPlan;
                                 end;
