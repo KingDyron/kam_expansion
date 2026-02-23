@@ -4682,7 +4682,7 @@ begin
                               gCursor.PlanWallsStart := P
                             else
                             begin
-                              gMySpectator.Hand.TryPlacePlanWalls(gCursor.PlanWallsStart, P);
+                              gGame.GameInputProcess.CmdBuild(gicPlanWalls, gCursor.PlanWallsStart, P);
                               gCursor.Mode := cmNone;
                             end;
                           end;

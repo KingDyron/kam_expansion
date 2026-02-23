@@ -166,6 +166,7 @@ type
     gicArmyEnterSiegeTower,
     gicWarriorLeaveTower,
     gicHouseVirtualWareClicked,
+    gicPlanWalls,
 
     //V.     Delivery ratios changes (and other game-global settings)
     gicWareDistributionChange,   //Change of distribution for 1 ware
@@ -459,6 +460,7 @@ const
     gicpt_Int2,//gicArmyEnterSiegeTower,
     gicpt_Int1,//gicWarriorLeaveTower,
     gicpt_Int3,//gicHouseVirtualWareClicked,
+    gicpt_Int1SmInt3,//gicPlanWalls
 
     //V.     Delivery ratios changes (and other game-global settings)
     gicpt_Int3,     // gicWareDistributionChange
@@ -628,6 +630,7 @@ type
     procedure CmdBuild(aCommandType: TKMGameInputCommandType; const aLoc: TKMPoint; aHouseType: TKMHouseType); overload;
     procedure CmdBuild(aCommandType: TKMGameInputCommandType; const aLoc: TKMPoint; aBridgeType, aRotation: Integer); overload;
     procedure CmdBuild(aCommandType: TKMGameInputCommandType; const aLoc: TKMPoint; aParam: Integer); overload;
+    procedure CmdBuild(aCommandType: TKMGameInputCommandType; const aLoc1, aLoc2: TKMPoint); overload;
     procedure CmdBuild(aCommandType: TKMGameInputCommandType; const aStr: TKMStructure); overload;
 
     procedure CmdHouse(aCommandType: TKMGameInputCommandType; aHouse: TKMHouse); overload;
@@ -1266,6 +1269,7 @@ begin
                                     P.AddHousePlan(TKMHouseType(IntParams[0]), KMPoint(IntParams[1],IntParams[2]));
       gicPlaceStructurePlan:     if P.CanAddStructurePlan(KMPoint(SmallIntParams[0], SmallIntParams[1]), IntParams[0], SmallIntParams[2] ) then
                                     P.AddStructurePlan(KMPoint(SmallIntParams[0], SmallIntParams[1]), IntParams[0], SmallIntParams[2]);
+      gicPlanWalls:              P.TryPlacePlanWalls(IntParams[0], SmallIntParams[0]), KMPoint(SmallIntParams[1], SmallIntParams[2]));
       gicStructureRemove:       begin
                                   srcStructure.DestroyPlan;
                                 end;
@@ -1641,6 +1645,15 @@ begin
   if gGameParams.IsReplayOrSpectate then Exit;
 
   TakeCommand(MakeCommand(aCommandType, aLoc.X, aLoc.Y, aParam));
+end;
+
+procedure TKMGameInputProcess.CmdBuild(aCommandType: TKMGameInputCommandType; const aLoc1, aLoc2: TKMPoint);
+begin
+  Assert(aCommandType = gicPlanWalls);
+
+  if gGameParams.IsReplayOrSpectate then Exit;
+
+  TakeCommand(MakeCommandSmI(aCommandType, aLoc1.X, aLoc1.Y, aLoc2.X, aLoc2.Y));
 end;
 
 procedure TKMGameInputProcess.CmdBuild(aCommandType: TKMGameInputCommandType; const aStr: TKMStructure);
