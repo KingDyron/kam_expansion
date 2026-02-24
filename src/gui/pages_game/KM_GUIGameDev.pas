@@ -19,7 +19,7 @@ type
 
   TKMGUIGameDevelopment = class(TKMGUICommonDevelopment)
   protected
-    Label_DevPointsCount : array[DEVELOPMENT_MIN..DEVELOPMENT_MAX] of TKMLabel;
+    Label_DevPoints : TKMLabelShadow;
     procedure SwitchPage(Sender : TObject); override;
     procedure DevClicked(Sender : TObject; Shift : TShiftState);
 
@@ -40,36 +40,37 @@ uses
   KM_HandsCollection, KM_HandLocks, KM_HandTypes,
   KM_Game, KM_GameParams, KM_GameInputProcess,
   KM_InterfaceGame,
-  KM_ResTypes, KM_ResFonts,
+  KM_ResTypes, KM_ResFonts, KM_ResTexts,
   KM_RenderUI;
 
 constructor TKMGUIGameDevelopment.Create(aParent: TKMPanel);
-var dtt : TKMDevelopmentTreeType;
 begin
   Inherited Create(aParent, TB_PAD, 44, TB_WIDTH, aParent.Height - 50);
   OnButtonClickedShift := DevClicked;
 
-  for dtt := Low(Label_DevPointsCount) to High(Label_DevPointsCount) do
+  with TKMImage.Create(self, Width - 30, 5, 32, 31, 1081) do
   begin
-    Label_DevPointsCount[dtt] := TKMLabel.Create(self, Button_SwitchTree[dtt].Left + 3,
-                                                  Button_SwitchTree[dtt].Top - 5,
-                                                  Button_SwitchTree[dtt].Width, 20, '', fntGrey, taRight);
-    Label_DevPointsCount[dtt].Hitable := false;
+    Hint := gResTexts[2300];
   end;
-
+  Label_DevPoints := TKMLabelShadow.Create(self, Width - 31, 5 + 12, 30, 30, '', fntGrey, taCenter);
+  Label_DevPoints.Hitable := false;
 end;
 
 procedure TKMGUIGameDevelopment.RefreshLabels;
-var dtt : TKMDevelopmentTreeType;
+var d : Integer;
 begin
-  for dtt := Low(Label_DevPointsCount) to High(Label_DevPointsCount) do
-  begin
-    Label_DevPointsCount[dtt].Caption := gMySpectator.Hand.DevPoints.ToString;
-    If gMySpectator.Hand.DevPoints = 0 then
-      Label_DevPointsCount[dtt].SetColor($FF5151FF)
-    else
-      Label_DevPointsCount[dtt].SetColor($FF51FF53);
-  end;
+  d := gMySpectator.Hand.DevPoints;
+
+  If d = 0 then
+    Label_DevPoints.FontColor := $FF2222FF
+  else
+    Label_DevPoints.FontColor := $FFFFFFFF;
+
+  If d > 9 then
+    Label_DevPoints.Caption := '+9'
+  else
+    Label_DevPoints.Caption := gMySpectator.Hand.DevPoints.ToString;
+
 end;
 
 procedure TKMGUIGameDevelopment.Show;
