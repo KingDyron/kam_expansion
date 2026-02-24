@@ -12,8 +12,10 @@ type
   private
     fArenaWaitTillNext : Byte;
     fArenaAnimStep : Cardinal;
+    fAnimType : TKMDevelopmentTreeType;
     fAnimColors : TKMCardinalArray;
     procedure UpdatePointBelowEntrance;
+    procedure SetNewAnim;
   protected
     procedure UpdateEntrancePos; override;
   public
@@ -90,6 +92,7 @@ begin
   Inherited;
   fArenaAnimStep := 0;
   fArenaWaitTillNext := 120;
+  SetNewAnim;
 end;
 
 Constructor TKMHouseArena.Load(LoadStream : TKMemoryStream);
@@ -98,6 +101,7 @@ begin
   Inherited;
   LoadStream.ReadData(fArenaWaitTillNext);
   LoadStream.ReadData(fArenaAnimStep);
+  LoadStream.ReadData(fAnimType);
 
   LoadStream.ReadData(N);
   SetLength(fAnimColors, N);
@@ -112,6 +116,7 @@ begin
   Inherited;
   SaveStream.WriteData(fArenaWaitTillNext);
   SaveStream.WriteData(fArenaAnimStep);
+  SaveStream.WriteData(fAnimType);
 
   N := length(fAnimColors);
   SaveStream.WriteData(N);
@@ -176,13 +181,56 @@ begin
 end;
 
 
+procedure TKMHouseArena.SetNewAnim;
+var I, R : Integer;
+  tmp : Cardinal;
+begin
+  fAnimType := TKMDevelopmentTreeType( KaMRandom(DEVELOPMENT_COUNT + 1, 'TKMHouseArena.SetNewAnim') + 1 );
+  //set flag colors of the animation
+  SetLength(fAnimColors, 1);
+  fAnimColors[0] := gHands[Owner].FlagColor; //always add owner's color
+  //add allies
+  for I := 1 to gHands.Count - 1 do
+    If gHands[I].Enabled and (gHands[I].Alliances[Owner] = atAlly) then
+    begin
+      SetLength(fAnimColors, Length(fAnimColors) + 1);
+      fAnimColors[high(fAnimColors)] := gHands[I].FlagColor;
+    end;
+  //shuffle
+  for I := High(fAnimColors) downto 0 do
+  begin
+    R := KaMRandom(I, 'TKMHouseArena.StartFestival');
+    tmp := fAnimColors[I];
+    fAnimColors[I] := fAnimColors[R];
+    fAnimColors[R] := tmp;
+  end;
+end;
+
 
 procedure TKMHouseArena.UpdateState(aTick: Cardinal);
 begin
   Inherited;
   If not IsComplete then
     If aTick mod 10 = 0 then
-      UpdatePointBelowEntrance;
+      UpdatePointBelowEntrance
+    else
+  else
+  begin
+    If fArenaWaitTillNext > 0 then
+      Dec(fArenaWaitTillNext)
+    else
+    If fArenaAnimStep < 800 then
+    begin
+      Inc(fArenaAnimStep);
+      If fArenaAnimStep >= 800 then
+      begin
+        fArenaWaitTillNext := 255;
+        fArenaAnimStep := 0;
+        SetNewAnim;
+      end;
+    end;
+
+  end;
 end;
 
 
@@ -191,6 +239,8 @@ begin
   Inherited;
   If not IsComplete then
     Exit;
+  If fArenaAnimStep > 0 then
+    gRenderPool.AddHouseArena(fAnimType, Position, fArenaAnimStep, fAnimColors);
 end;
 
 end.
