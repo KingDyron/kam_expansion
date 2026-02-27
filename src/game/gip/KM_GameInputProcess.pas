@@ -416,7 +416,7 @@ const
     gicpt_Int3,//gicHStoreSetNotAcceptFlag
     gicpt_Int3,//gicHStoreSetNotAllowTakeOutFlag
     gicpt_Int1,//gicHouseStoreBell
-    gicpt_Int2,//gicHousePalaceCancelOrder
+    gicpt_Int1,//gicHousePalaceCancelOrder
     gicpt_Int2,//gicHouseFruitTreeToggleType
     gicpt_Int2,//gicHouseShipType
     gicpt_Int1,//gicHouseShipDoWork
@@ -1350,9 +1350,9 @@ begin
       gicHouseDontAcceptWorker     : srcHouse.DoNotAcceptWorker(IntParams[1]);
       gicHouseStallBuyCoin         : TKMHouseStall(srcHouse).BuyCoin(IntParams[1], IntParams[2]);
       gicHouseStallBuyItem         : TKMHouseStall(srcHouse).BuyItem(IntParams[1], IntParams[2]);
-      gicHousePalaceOrder          : TKMHousePalace(srcHouse).IncOrder(IntParams[1], IntParams[2]);
+      gicHousePalaceOrder          : TKMHousePalace(srcHouse).IncOrder(TKMUnitType(IntParams[1]), IntParams[2]);
       gicHousePalaceStart           : TKMHOusePalace(srcHouse).TryStartTraining;
-      gicHousePalaceCancelOrder    : TKMHousePalace(srcHouse).CancelOrder{(IntParams[1])};
+      gicHousePalaceCancelOrder    : TKMHousePalace(srcHouse).CancelOrder;
 
       gicHouseQueueAdd             : TKMHouseQueue(srcHouse).AddWareToQueue(TKMWareType(IntParams[1]), IntParams[2], 1);
       gicHouseQueueRem             : TKMHouseQueue(srcHouse).RemWareFromQueue(IntParams[1]);
@@ -1669,14 +1669,15 @@ procedure TKMGameInputProcess.CmdHouse(aCommandType: TKMGameInputCommandType; aH
 begin
   Assert(aCommandType in [gicHouseRepairToggle, gicHouseClosedForWorkerTgl, gicHBarracksAcceptRecruitsTgl, gicHouseDeliveryModeNext, gicHouseDeliveryModePrev,
                           gicHouseForceWork, gicHouseMakeUpgrade, gicHouseCancelUpgrade, gicHouseStoreBell, gicHouseShipDoWork, gicHouseCollectorsMode,
-                          gicCartographersDoSpying, gicPearlConfirm, gicPearlUseSpecial, gicArenaStartFestival, gicHouseQueueNotRem, gicHousePalaceStart]);
+                          gicCartographersDoSpying, gicPearlConfirm, gicPearlUseSpecial, gicArenaStartFestival, gicHouseQueueNotRem, gicHousePalaceStart,
+                          gicHousePalaceCancelOrder]);
   TakeCommand(MakeCommand(aCommandType, aHouse.UID));
 end;
 
 
 procedure TKMGameInputProcess.CmdHouse(aCommandType: TKMGameInputCommandType; aHouse: TKMHouse; aItem, aAmountChange: Integer);
 begin
-  Assert(aCommandType in [gicHouseOrderProduct, gicHouseSchoolTrainChOrder, gicHouseStallBuyCoin, gicHouseStallBuyItem, gicHousePalaceOrder,
+  Assert(aCommandType in [gicHouseOrderProduct, gicHouseSchoolTrainChOrder, gicHouseStallBuyCoin, gicHouseStallBuyItem,
                           gicHouseQueueAdd, gicHouseFarmToggleGrain, gicHouseMerchantSetType, gicHouseForestPlantTree,
                           gicHouseVirtualWareClicked]);
   TakeCommand(MakeCommand(aCommandType, aHouse.UID, aItem, aAmountChange));
@@ -1706,7 +1707,7 @@ end;
 
 procedure TKMGameInputProcess.CmdHouse(aCommandType: TKMGameInputCommandType; aHouse: TKMHouse; aUnitType: TKMUnitType; aCount: Integer);
 begin
-  Assert(aCommandType in [gicHouseSchoolTrain, gicHouseBarracksEquip, gicHouseTownHallEquip, gicHouseSiegeTrain]);
+  Assert(aCommandType in [gicHouseSchoolTrain, gicHouseBarracksEquip, gicHouseTownHallEquip, gicHouseSiegeTrain, gicHousePalaceOrder]);
   TakeCommand(MakeCommand(aCommandType, aHouse.UID, Byte(aUnitType), aCount));
 end;
 
@@ -1714,7 +1715,7 @@ end;
 procedure TKMGameInputProcess.CmdHouse(aCommandType: TKMGameInputCommandType; aHouse: TKMHouse; aValue: Integer);
 begin
   Assert(aCommandType in [gicHouseRemoveTrain, gicHouseSchoolTrainChLastUOrder, gicHouseTownHallMaxGold, gicHouseTransferWare,
-                          gicHouseDontAcceptWorker, gicHouseQueueRem, gicHouseMerchantSendTo, gicHousePalaceCancelOrder,
+                          gicHouseDontAcceptWorker, gicHouseQueueRem, gicHouseMerchantSendTo,
                           gicHouseFruitTreeToggleType, gicHouseShipType, gicHouseTownHallMaxBitin, gicCartographersMode,
                           gicCartographersToggleView, gicCartographersSelectPlayer, gicHouseRepairSet, gicPearlSelectType,
                           gicPearlSelectResFrom, gicPearlSelectResTo, gicPearlSelectVResTo, gicPearlSelectRResTo, gicPearlDoExchange,

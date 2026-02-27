@@ -341,7 +341,7 @@ var
     UT2 : TKMUnitType;
     HasOrders : Boolean;
   begin
-
+    {
     for I := 0 to gHands[fOwner].Houses.Palaces.Count - 1 do
     begin
       HP := TKMHousePalace(gHands[fOwner].Houses.Palaces[I]);
@@ -388,6 +388,7 @@ var
           Break;//Train only one unit
         end;
     end;
+    }
   end;
 
   procedure EquipShips(aStopBuilding : Boolean);

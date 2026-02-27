@@ -760,8 +760,9 @@ type
     procedure TakePhaseVWares;
     procedure TakeCard;
 
-    function  GetOrderCount(aIndex : Integer) : Word;
-    procedure SetOrderCount(aIndex : Integer; aValue : Word);
+    function GetUnitIndex(aUnitType : TKMUnitType) : Integer;
+    function  GetOrderCount(aUnitType : TKMUnitType) : Word;
+    procedure SetOrderCount(aUnitType : TKMUnitType; aValue : Word);
     function  GetMaxProgress : Integer;
     function  GetFullProgress : Single;
     function GetPhaseProgress : Single;
@@ -774,7 +775,7 @@ type
     procedure Activate(aWasBuilt: Boolean); override;
   public
     function IsTraining : Boolean;
-    property Orders[aIndex : Integer] : Word read GetOrderCount write SetOrderCount;
+    property Orders[aUnit : TKMUnitType] : Word read GetOrderCount write SetOrderCount;
     property FullProgress : Single read GetFullProgress;
     property PhaseProgress : Single read GetPhaseProgress;
     property BarColor : Cardinal read GetPhaseColor;
@@ -786,7 +787,7 @@ type
     function TrainedUnitType : TKMUnitType;
     function TrainedUnitID : Byte;
     function TrainingInProgress : Boolean;
-    procedure IncOrder(aIndex, aCount : Integer);
+    procedure IncOrder(aUnit : TKMUnitType; aCount : Integer);
     function CanStartTraining : Boolean;
     procedure StartTraining;
     procedure FinishTraining;
@@ -7221,23 +7222,36 @@ begin
 
 end;
 
-function  TKMHousePalace.GetOrderCount(aIndex : Integer) : Word;
+function TKMHousePalace.GetUnitIndex(aUnitType: TKMUnitType): Integer;
+var I : Integer;
 begin
-  If aIndex = fTrainingID then
+  Result := -1;
+  If aUnitType = utNone then
+    Exit;
+  for I := 0 to High(PALACE_UNITS_ORDER) do
+    If PALACE_UNITS_ORDER[I] = aUnitType then
+      Exit(I);
+end;
+
+function  TKMHousePalace.GetOrderCount(aUnitType : TKMUnitType) : Word;
+begin
+  If GetUnitIndex(aUnitType) = fTrainingID then
     Result := fOrderCount
   else
     Result := 0;
 end;
 
-procedure TKMHousePalace.SetOrderCount(aIndex : Integer; aValue : Word);
+procedure TKMHousePalace.SetOrderCount(aUnitType : TKMUnitType; aValue : Word);
 var maxOrder : Word;
+  index : Integer;
 begin
   If TrainingInProgress then
     Exit;
-  If aIndex <> fTrainingID then
+  index := GetUnitIndex(aUnitType);
+  If index <> fTrainingID then
   begin
     CancelOrder;
-    fTrainingID := aIndex;
+    fTrainingID := index;
   end;
   If gHands[Owner].ArmyDevUnlocked(39) then
     maxOrder := MAX_ORDER_COUNT_PALACE + 6
@@ -7252,9 +7266,12 @@ begin
   fWait := 20;
 end;
 
-procedure TKMHousePalace.IncOrder(aIndex, aCount : Integer);
+procedure TKMHousePalace.IncOrder(aUnit : TKMUnitType; aCount : Integer);
 begin
-  Orders[aIndex] := Max(Orders[aIndex] + aCount, 0);
+  If aUnit = utNone then
+    Exit;
+
+  Orders[aUnit] := Max(Orders[aUnit] + aCount, 0);
 end;
 
 function  TKMHousePalace.GetMaxProgress : Integer;

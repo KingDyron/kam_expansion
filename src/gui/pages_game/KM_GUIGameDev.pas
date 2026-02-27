@@ -140,7 +140,7 @@ var dtt : TKMDevelopmentTreeType;
 
     B.Visible := aState <> dlNotVisible;
     B.Tag2 := 0;
-    TKMButtonFlatDevGame(B).Cost := aToButton.Dev.ID;
+    //TKMButtonFlatDevGame(B).Cost := aToButton.Dev.ID;
 
     TKMButtonFlatDevGame(B).Progress := -1;
 
@@ -284,7 +284,7 @@ procedure TKMButtonFlatDevGame.Paint;
 begin
   inherited;
   //debuging option to know what ID has the development
-  TKMRenderUI.WriteText(AbsLeft + 3, AbsTop - 3, Width, Cost.ToString, fntGrey, taRight, CapColor);
+  //TKMRenderUI.WriteText(AbsLeft + 3, AbsTop - 3, Width, Cost.ToString, fntGrey, taRight, CapColor);
 
   If Progress > 0 then
   begin

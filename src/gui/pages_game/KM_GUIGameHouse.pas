@@ -12,25 +12,43 @@ uses
 const LINE_HEIGHT = 25; //Each new Line is placed ## pixels after previous
 
 type
+
   TKMGUIGameHouse = class
   private
+    type
+      TKMHouseUnitOrder = record
+        Count : Byte;
+        Selected : Byte;
+        Units : TKMUnitTypeArray;
+        procedure CheckOrder(aOwner : TKMHandID; aHouseType : TKMHouseType; aUnitToCheck : TKMUnitTypeArray);
+        function HasAnyUnit(aOwner : TKMHandID; aHouseType : TKMHouseType; aOnlyUnlocked : Boolean = false) : Boolean;
+        function NextUnit : TKMUnitType;Inline;
+        function PrevUnit : TKMUnitType;Inline;
+        function GetUnit : TKMUnitType;Inline;
+        procedure SetToUnit(aUnitType : TKMUnitType);
+        procedure SetToIndex(aIndex : Byte);
+        procedure SetToNext(aMax : Boolean = false);
+        procedure SetToPrev(aMax : Boolean = false);
+      end;
+
+    var
+
     fHouse: TKMHouse;
     fAnimStep: Cardinal;
-    fLastWareOutput : Byte;
-    fLastSiegeUnit : Byte;
-    fLastSchoolUnit: Byte;  //Last unit that was selected in School, global for all schools player owns
-    fLastBarracksUnit: Byte; //Last unit that was selected in Barracks, global for all barracks player owns
-    fLastTHUnit: Byte; //Last unit that was selected in Townhall, global for all townhalls player owns
-    fLastPalaceUnit: Byte;
+
+    fLastWareOutput : Byte; //used un queue houses
+
+    fLastSiegeUnit,  //Last unit that was selected in siege workshop, global for all siege workshops player owns
+    fLastSchoolUnit,  //Last unit that was selected in School, global for all schools player owns
+    fLastBarracksUnit, //Last unit that was selected in Barracks, global for all barracks player owns
+    fLastTHUnit, //Last unit that was selected in Townhall, global for all townhalls player owns
+    fLastPalaceUnit,
+    fLastShipUnit: TKMHouseUnitOrder; //Last unit that was selected in Palace, global for all Palaces player owns
 
     fSetViewportEvent: TPointFEvent;
     fSelectNextHouse : TBooleanEvent;
     fStoreWareOrder : array of array of TKMWareType;
-    function HasAnyUnit(unitArr : array of TKMUnitType) : Boolean; overload;
-    function HasAnyUnit(unitArr : array of TKMUnitType; OnlyVisible : Boolean) : Boolean;overload;
-    function NextUnit(startFrom : Byte; unitArr : array of TKMUnitType; toLast : Boolean = false) : Integer;
-    function PreviousUnit(startFrom : Byte; unitArr : array of TKMUnitType; toLast : Boolean = false) : Integer;
-    procedure CheckLastSelected(var A : Byte; unitArr : array of TKMUnitType);
+
     procedure Create_HouseTownhall;
     procedure Create_HouseBarracks;
     procedure Create_HouseMarket;
@@ -325,6 +343,106 @@ const
   SCHOOL_CH_ORDER_TO_0_SHIFT = ssShift; // Shift state to change Unit order in queue to 0 in School
   SCHOOL_CH_ORDER_TO_1_SHIFT = ssCtrl;  // Shift state to change Unit order in queue to 1 in School
 
+
+procedure TKMGUIGameHouse.TKMHouseUnitOrder.CheckOrder(aOwner : TKMHandID; aHouseType : TKMHouseType; aUnitToCheck: TKMUnitTypeArray);
+var I : Integer;
+begin
+  If length(Units) <> length(aUnitToCheck) then
+    SetLength(Units, length(aUnitToCheck));
+  Count := 0;
+  for I := 0 to high(aUnitToCheck) do
+    If gHands[aOwner].Locks.GetUnitBlocked(aUnitToCheck[I], aHouseType) <> ulNotVisible then
+    begin
+      Units[Count] := aUnitToCheck[I];
+      Inc(Count);
+    end;
+  If Selected >= Count then
+    Selected := 0;
+end;
+
+function TKMGUIGameHouse.TKMHouseUnitOrder.HasAnyUnit(aOwner : TKMHandID; aHouseType : TKMHouseType; aOnlyUnlocked : Boolean = false) : Boolean;
+var I : Integer;
+begin
+  Result := false;
+  If Count = 0 then
+    Exit;
+  If aOnlyUnlocked then
+  begin
+    for I := 0 to Count - 1 do
+      If gHands[I].Locks.GetUnitBlocked(Units[I], aHouseType) = ulUnlocked then
+        Exit(true);
+  end else
+    Result := true;
+end;
+
+function TKMGUIGameHouse.TKMHouseUnitOrder.NextUnit: TKMUnitType;
+begin
+  IF Count = 0 then
+    Exit(utNone);
+  If Selected < Count - 1 then
+    Result := Units[Selected + 1]
+  else
+    Result := utNone;
+end;
+
+function TKMGUIGameHouse.TKMHouseUnitOrder.PrevUnit: TKMUnitType;
+begin
+  IF Count = 0 then
+    Exit(utNone);
+  If Selected > 0 then
+    Result := Units[Selected - 1]
+  else
+    Result := utNone;
+end;
+
+function TKMGUIGameHouse.TKMHouseUnitOrder.GetUnit: TKMUnitType;
+begin
+  IF Count = 0 then
+    Exit(utNone);
+  Result := Units[Selected];
+end;
+
+procedure TKMGUIGameHouse.TKMHouseUnitOrder.SetToUnit(aUnitType : TKMUnitType);
+var I : Integer;
+begin
+  Selected := 0;
+  for I := 0 to Count - 1 do
+    If Units[I] = aUnitType then
+      Selected := I;
+
+end;
+
+procedure TKMGUIGameHouse.TKMHouseUnitOrder.SetToIndex(aIndex : Byte);
+begin
+  If aIndex < Count then
+    Selected := aIndex
+  else
+    Selected := 0;
+end;
+
+procedure TKMGUIGameHouse.TKMHouseUnitOrder.SetToNext(aMax: Boolean = False);
+begin
+  IF Count = 0 then
+    Exit;
+  If aMax then
+    Selected := Count - 1
+  else
+  begin
+    IncLoop(Selected, 0, Count - 1);
+  end;
+end;
+
+procedure TKMGUIGameHouse.TKMHouseUnitOrder.SetToPrev(aMax: Boolean = False);
+begin
+  IF Count = 0 then
+    Exit;
+  If aMax then
+    Selected := 0
+  else
+  begin
+    IncLoop(Selected, 0, Count - 1, -1);
+  end;
+end;
 
 constructor TKMGUIGameHouse.Create(aParent: TKMPanel; aSetViewportEvent: TPointFEvent; aSelectNextEvent : TBooleanEvent);
 var
@@ -1639,9 +1757,6 @@ begin
 
   SortVisibleControls(0, Button_ForceWork.Top, Panel_House.Width, 1, [Button_ForceWork]);
 
-  Ship_ShipType.Visible := (aHouse.HouseType = htShipYard) and HasAnyUnit(SHIPYARD_ORDER, true);
-  Ship_DoWork.Visible := Ship_ShipType.Visible;
-  //WaresOut_ShipYard.Visible := aHouse.HouseType = htShipYard;
 
 
 
@@ -1717,14 +1832,20 @@ begin
   line := 0;
   base := 2;
 
+
   //check if last selected unit is unlocked
   case fHouse.HouseType of
-    htSchool        : CheckLastSelected(fLastSchoolUnit, SCHOOL_GAME_ORDER);
-    htSiegeWorkshop : CheckLastSelected(fLastSiegeUnit, SIEGE_GAME_ORDER);
-    htBarracks      : CheckLastSelected(fLastBarracksUnit, BARRACKS_GAME_ORDER);
-    htTownhall      : CheckLastSelected(fLastTHUnit, TH_GAME_ORDER);
-    htPalace        : CheckLastSelected(fLastPalaceUnit, PALACE_UNITS_ORDER);
+    htSchool        : fLastSchoolUnit.CheckOrder(fHouse.Owner, fHouse.HouseType, SCHOOL_GAME_ORDER);
+    htSiegeWorkshop : fLastSiegeUnit.CheckOrder(fHouse.Owner, fHouse.HouseType, SIEGE_GAME_ORDER);
+    htBarracks      : fLastBarracksUnit.CheckOrder(fHouse.Owner, fHouse.HouseType, BARRACKS_GAME_ORDER);
+    htTownhall      : fLastTHUnit.CheckOrder(fHouse.Owner, fHouse.HouseType, TH_GAME_ORDER);
+    htPalace        : fLastPalaceUnit.CheckOrder(fHouse.Owner, fHouse.HouseType, PALACE_UNITS_ORDER);
+    htShipYard      : fLastShipUnit.CheckOrder(fHouse.Owner, fHouse.HouseType, SHIPYARD_ORDER);
   end;
+
+  Ship_ShipType.Visible := (aHouse.HouseType = htShipYard) and fLastShipUnit.HasAnyUnit(aHouse.Owner, aHouse.HouseType, true);
+  Ship_DoWork.Visible := Ship_ShipType.Visible;
+
   Button_ATBoltCount.Visible := aHouse.HouseType = htWallTower;
   case aHouse.HouseType of
     htMarket:         begin
@@ -2574,80 +2695,13 @@ begin
   House_TH_UnitChange(nil, []);
 end;
 
-function TKMGUIGameHouse.HasAnyUnit(unitArr: array of TKMUnitType): Boolean;
-var UT : TKMUnitType;
-begin
-  Result := false;
-  for UT in unitArr do
-    if gMySpectator.Hand.Locks.GetUnitBlocked(UT, fHouse.HouseType) <> ulNotVisible then
-      Exit(true);
-
-end;
-
-function TKMGUIGameHouse.HasAnyUnit(unitArr: array of TKMUnitType; OnlyVisible: Boolean): Boolean;
-var UT : TKMUnitType;
-begin
-  Result := false;
-  for UT in unitArr do
-    if gMySpectator.Hand.Locks.GetUnitBlocked(UT, fHouse.HouseType) = ulUnlocked then
-      Exit(true);
-
-end;
-
-function TKMGUIGameHouse.NextUnit(startFrom : Byte; unitArr : array of TKMUnitType; toLast : Boolean = false) : Integer;
-var K : Integer;
-begin
-  Result := -1;
-
-  if startFrom >= High(unitArr) then
-    Exit;
-
-  for K := startFrom + 1 to High(unitArr) do
-    if gMySpectator.Hand.Locks.GetUnitBlocked(unitArr[K], fHouse.HouseType) = ulNotVisible then
-      Continue
-    else
-    begin
-      Result := K;
-      if not toLast then
-        Exit;
-    end;
-
-end;
-
-function TKMGUIGameHouse.PreviousUnit(startFrom : Byte; unitArr : array of TKMUnitType; toLast : Boolean = false) : Integer;
-var K : Integer;
-begin
-  Result := -1;
-  if startFrom = low(unitArr) then
-    Exit;
-  for K :=  startFrom - 1 downto 0 do
-    if gMySpectator.Hand.Locks.GetUnitBlocked(unitArr[K], fHouse.HouseType) = ulNotVisible then
-      Continue
-    else
-    begin
-      Result := K;
-      if not toLast then
-        Exit;
-    end;
-
-end;
-
-procedure TKMGUIGameHouse.CheckLastSelected(var A : Byte; unitArr : array of TKMUnitType);
-begin
-  If A >= length(unitArr) then
-    A := PreviousUnit(length(unitArr), unitArr, true)
-  else
-  If gHands[fHouse.Owner].Locks.GetUnitBlocked(unitArr[A], fHouse.HouseType) = ulNotVisible then
-    A := PreviousUnit(length(unitArr), unitArr, true);
-end;
-
 procedure TKMGUIGameHouse.UpdateHotkeys;
 begin
   // School
   Button_School_Left.Hint := GetHintWHotkey(TX_HOUSE_SCHOOL_PREV_HINT, kfTrainGotoPrev);
   Button_School_Right.Hint := GetHintWHotkey(TX_HOUSE_SCHOOL_NEXT_HINT, kfTrainGotoNext);
 
-  if gMySpectator.Hand.Locks.GetUnitBlocked(SCHOOL_GAME_ORDER[fLastSchoolUnit], htAny) = ulUnlocked then
+  if gMySpectator.Hand.Locks.GetUnitBlocked(fLastSchoolUnit.GetUnit, htSchool) = ulUnlocked then
     Button_School_Train.Hint := GetHintWHotkey(TX_HOUSE_SCHOOL_TRAIN_HINT, kfTrainEquipUnit)
   else
     Button_School_Train.Hint := gResTexts[TX_HOUSE_SCHOOL_TRAIN_DISABLED_HINT];
@@ -2656,7 +2710,7 @@ begin
   Button_Barracks_Left.Hint := GetHintWHotkey(TX_HOUSE_BARRACKS_PREV_HINT, kfTrainGotoPrev);
   Button_Barracks_Right.Hint := GetHintWHotkey(TX_HOUSE_BARRACKS_NEXT_HINT, kfTrainGotoNext);
 
-  if gMySpectator.Hand.Locks.GetUnitBlocked(BARRACKS_GAME_ORDER[fLastBarracksUnit], htAny) = ulUnlocked then
+  if gMySpectator.Hand.Locks.GetUnitBlocked(fLastBarracksUnit.GetUnit, htBarracks) = ulUnlocked then
     Button_Barracks_Train.Hint := GetHintWHotkey(TX_HOUSE_BARRACKS_TRAIN_HINT, kfTrainEquipUnit)
   else
     Button_Barracks_Train.Hint := gResTexts[TX_HOUSE_BARRACKS_TRAIN_DISABLED_HINT];
@@ -2665,7 +2719,7 @@ begin
   Button_TH_Left.Hint := GetHintWHotkey(TX_HOUSE_BARRACKS_PREV_HINT, kfTrainGotoPrev);
   Button_TH_Right.Hint := GetHintWHotkey(TX_HOUSE_BARRACKS_NEXT_HINT, kfTrainGotoNext);
 
-  if gMySpectator.Hand.Locks.GetUnitBlocked(TH_GAME_ORDER[fLastTHUnit], htAny) = ulUnlocked then
+  if gMySpectator.Hand.Locks.GetUnitBlocked(fLastTHUnit.GetUnit, htTownhall) = ulUnlocked then
     Button_TH_Train.Hint := GetHintWHotkey(TX_HOUSE_BARRACKS_TRAIN_HINT, kfTrainEquipUnit)
   else
     Button_TH_Train.Hint := gResTexts[TX_HOUSE_BARRACKS_TRAIN_DISABLED_HINT];
@@ -2755,11 +2809,7 @@ begin
         house := gHands[fHouse.Owner].FindHouse(htSchool, 1);
         if not house.IsValid(htSchool, false, true) then
           Exit;
-        for I := 0 to High(SCHOOL_GAME_ORDER) do
-          If SCHOOL_GAME_ORDER[I] = UT then
-          begin
-            fLastSchoolUnit := I;
-          end;
+        fLastSchoolUnit.SetToUnit(UT);
 
         gMySpectator.Selected := house;
         gMySpectator.UpdateNewSelected;
@@ -3055,7 +3105,7 @@ begin
       Button_Barracks[I].Caption := IfThen(tmp = 0, '-', IntToKStr(tmp, 1000));
       //Set highlights
       Button_Barracks[I].Down := False;
-      UT := BARRACKS_GAME_ORDER[fLastBarracksUnit];
+      UT := fLastBarracksUnit.GetUnit;
       for K := 0 to High(gRes.Units[UT].BarracksCost) do
         if W = gRes.Units[UT].BarracksCost[K].W then
         begin
@@ -3068,12 +3118,12 @@ begin
         end;
 
       if W = wtBitinArmor then
-        if BARRACKS_GAME_ORDER[fLastBarracksUnit] in WARRIOR_BITIN_EQUIPABLE then
+        if UT in WARRIOR_BITIN_EQUIPABLE then
           if tmp > 0 then
             Button_Barracks[I].Down := true;
 
       if W = wtQuiver then
-        if TKMUnitSpec.IsRanged(BARRACKS_GAME_ORDER[fLastBarracksUnit]) then
+        if TKMUnitSpec.IsRanged(UT) then
           if tmp > 0 then
             Button_Barracks[I].Down := true;
 
@@ -3097,41 +3147,38 @@ begin
 
   Image_Barracks_NotAcceptRecruit.Visible := barracks.RecruitAccepted;
 
-  if HasAnyUnit(BARRACKS_GAME_ORDER) then
+  if fLastBarracksUnit.HasAnyUnit(fHouse.Owner, htBarracks) then
   begin
     if (Sender = Button_Barracks_Left) then
-      fLastBarracksUnit := PreviousUnit(fLastBarracksUnit, BARRACKS_GAME_ORDER, IsRMBInShiftState(Shift) );
+      fLastBarracksUnit.SetToPrev(IsRMBInShiftState(Shift) );
     if (Sender = Button_Barracks_Right) then
-      fLastBarracksUnit := NextUnit(fLastBarracksUnit, BARRACKS_GAME_ORDER, IsRMBInShiftState(Shift) );
+      fLastBarracksUnit.SetToNext(IsRMBInShiftState(Shift) );
 
     if Sender = Button_Barracks_Train then //Equip unit
-      gGame.GameInputProcess.CmdHouse(gicHouseBarracksEquip, barracks, BARRACKS_GAME_ORDER[fLastBarracksUnit], GetEquipAmount(Shift));
+      gGame.GameInputProcess.CmdHouse(gicHouseBarracksEquip, barracks, fLastBarracksUnit.GetUnit, GetEquipAmount(Shift));
     Button_Barracks_Train.Show;
-    Button_Barracks_Train.Enabled := not gGame.IsPeaceTime and barracks.CanEquip(BARRACKS_GAME_ORDER[fLastBarracksUnit]);
+    Button_Barracks_Train.Enabled := not gGame.IsPeaceTime and barracks.CanEquip(fLastBarracksUnit.GetUnit);
 
     Button_Barracks_Left.Disable;
     Button_Barracks_Right.Disable;
     Image_Barracks_Left.Hide;
     Image_Barracks_Right.Hide;
 
-    if PreviousUnit(fLastBarracksUnit, BARRACKS_GAME_ORDER ) > -1 then
+    if fLastBarracksUnit.PrevUnit <> utNone then
     begin
-      Image_Barracks_Left.TexID := gRes.Units[BARRACKS_GAME_ORDER[PreviousUnit(fLastBarracksUnit, BARRACKS_GAME_ORDER )]].GUIScroll;
+      Image_Barracks_Left.TexID := gRes.Units[fLastBarracksUnit.PrevUnit].GUIScroll;
       Button_Barracks_Left.Enable;
       Image_Barracks_Left.Show;
     end;
     Image_Barracks_Train.Show;
-    Image_Barracks_Train.TexID := gRes.Units[BARRACKS_GAME_ORDER[fLastBarracksUnit]].GUIScroll;
-    Label_Barracks_Unit.Caption := gRes.Units[BARRACKS_GAME_ORDER[fLastBarracksUnit]].GUIName;
+    Image_Barracks_Train.TexID := gRes.Units[fLastBarracksUnit.GetUnit].GUIScroll;
+    Label_Barracks_Unit.Caption := gRes.Units[fLastBarracksUnit.GetUnit].GUIName;
 
-    Image_Barracks_Train.Enabled := gMySpectator.Hand.Locks.GetUnitBlocked(BARRACKS_GAME_ORDER[fLastBarracksUnit], fHouse.HouseType) = ulUnlocked;
+    Image_Barracks_Train.Enabled := gMySpectator.Hand.Locks.GetUnitBlocked(fLastBarracksUnit.GetUnit, fHouse.HouseType) = ulUnlocked;
 
-    if fLastBarracksUnit < High(BARRACKS_GAME_ORDER) then
-      Image_Barracks_Right.TexID := gRes.Units[BARRACKS_GAME_ORDER[fLastBarracksUnit + 1]].GUIScroll;
-
-    if NextUnit(fLastBarracksUnit, BARRACKS_GAME_ORDER ) > -1 then
+    if fLastBarracksUnit.NextUnit <> utNone then
     begin
-      Image_Barracks_Right.TexID := gRes.Units[BARRACKS_GAME_ORDER[NextUnit(fLastBarracksUnit, BARRACKS_GAME_ORDER )]].GUIScroll;
+      Image_Barracks_Right.TexID := gRes.Units[fLastBarracksUnit.NextUnit].GUIScroll;
       Button_Barracks_Right.Enable;
       Image_Barracks_Right.Show;
     end;
@@ -3161,49 +3208,49 @@ begin
   Image_TH_Right.FlagColor := gHands[townHall.Owner].FlagColor;
   Image_TH_Train.FlagColor := gHands[townHall.Owner].FlagColor;
 
-  if not HasAnyUnit(TH_GAME_ORDER) then
+  if not fLastTHUnit.HasAnyUnit(fHouse.Owner, htTownhall) then
   begin
     Panel_HouseTownHall.Hide;
     Exit;
   end;
   if (Sender = Button_TH_Left) then
-    fLastTHUnit := PreviousUnit(fLastTHUnit, TH_GAME_ORDER, IsRMBInShiftState(Shift) );
+    fLastTHUnit.SetToPrev(IsRMBInShiftState(Shift) );
   if (Sender = Button_TH_Right) then
-    fLastTHUnit := NextUnit(fLastTHUnit, TH_GAME_ORDER, IsRMBInShiftState(Shift) );
+    fLastTHUnit.SetToNext(IsRMBInShiftState(Shift) );
 
   if Sender = Button_TH_Train then //Equip unit
-    gGame.GameInputProcess.CmdHouse(gicHouseTownHallEquip, townHall, TH_GAME_ORDER[fLastTHUnit], GetEquipAmount(Shift));
+    gGame.GameInputProcess.CmdHouse(gicHouseTownHallEquip, townHall, fLastTHUnit.GetUnit, GetEquipAmount(Shift));
 
-  Button_TH_Train.Enabled := not gGame.IsPeaceTime and townHall.CanEquip(TH_GAME_ORDER[fLastTHUnit]);
+  Button_TH_Train.Enabled := not gGame.IsPeaceTime and townHall.CanEquip(fLastTHUnit.GetUnit);
   Button_TH_Left.Disable;
   Button_TH_Right.Disable;
   Image_TH_Left.Hide;
   Image_TH_Right.Hide;
 
-  Image_TH_Train.TexID := gRes.Units[TH_GAME_ORDER[fLastTHUnit]].GUIScroll;
-  Label_TH_Unit.Caption := gRes.Units[TH_GAME_ORDER[fLastTHUnit]].GUIName;
+  Image_TH_Train.TexID := gRes.Units[fLastTHUnit.GetUnit].GUIScroll;
+  Label_TH_Unit.Caption := gRes.Units[fLastTHUnit.GetUnit].GUIName;
 
-  Image_TH_Train.Enabled := gMySpectator.Hand.Locks.GetUnitBlocked(TH_GAME_ORDER[fLastTHUnit], fHouse.HouseType) = ulUnlocked;
+  Image_TH_Train.Enabled := gMySpectator.Hand.Locks.GetUnitBlocked(fLastTHUnit.GetUnit, fHouse.HouseType) = ulUnlocked;
 
-  if gMySpectator.Hand.Locks.GetUnitBlocked(TH_GAME_ORDER[fLastTHUnit], fHouse.HouseType) = ulUnlocked then
+  if gMySpectator.Hand.Locks.GetUnitBlocked(fLastTHUnit.GetUnit, fHouse.HouseType) = ulUnlocked then
     Button_TH_Train.Hint := gResTexts[TX_HOUSE_BARRACKS_TRAIN_HINT]
   else
     Button_TH_Train.Hint := gResTexts[TX_HOUSE_BARRACKS_TRAIN_DISABLED_HINT];
 
-  if PreviousUnit(fLastTHUnit, TH_GAME_ORDER ) > -1 then
+  if fLastTHUnit.PrevUnit <> utNone then
   begin
-    Image_TH_Left.TexID := gRes.Units[TH_GAME_ORDER[PreviousUnit(fLastTHUnit, TH_GAME_ORDER )]].GUIScroll;
+    Image_TH_Left.TexID := gRes.Units[fLastTHUnit.PrevUnit].GUIScroll;
     Image_TH_Left.Show;
     Button_TH_Left.Enable;
   end;
 
-  if NextUnit(fLastTHUnit, TH_GAME_ORDER ) > -1 then
+  if fLastTHUnit.NextUnit <> utNone then
   begin
-    Image_TH_Right.TexID := gRes.Units[TH_GAME_ORDER[NextUnit(fLastTHUnit, TH_GAME_ORDER )]].GUIScroll;
+    Image_TH_Right.TexID := gRes.Units[fLastTHUnit.NextUnit].GUIScroll;
     Image_TH_Right.Show;
     Button_TH_Right.Enable;
   end;
-  CostsRow_TH_Cost.Count := townHall.UnitCost(TH_GAME_ORDER[fLastTHUnit]);
+  CostsRow_TH_Cost.Count := townHall.UnitCost(fLastTHUnit.GetUnit);
   CostsRow_TH_Cost.Caption := CostsRow_TH_Cost.Count.ToString;
 
   Panel_HouseTownHall.Show;
@@ -3225,16 +3272,16 @@ begin
   begin
     school := TKMHouseSchool(gMySpectator.Selected);
 
-    if not HasAnyUnit(SCHOOL_GAME_ORDER) then
+    if not fLastSchoolUnit.HasAnyUnit(fHouse.Owner, htSchool) then
     begin
      Panel_House_School.Hide;
      Exit;
     end;
     if (Sender = Button_School_Left) then
-      fLastSchoolUnit := PreviousUnit(fLastSchoolUnit, SCHOOL_GAME_ORDER, IsRMBInShiftState(Shift));
+      fLastSchoolUnit.SetToPrev(IsRMBInShiftState(Shift));
 
     if (Sender = Button_School_Right) then
-      fLastSchoolUnit := NextUnit(fLastSchoolUnit, SCHOOL_GAME_ORDER, IsRMBInShiftState(Shift));
+      fLastSchoolUnit.SetToNext(IsRMBInShiftState(Shift));
 
     {if (Sender = Button_School_Left) and (fLastSchoolUnit > 0) then
       fLastSchoolUnit := PreviousUnit(fLastSchoolUnit, School_Order);
@@ -3247,12 +3294,12 @@ begin
     begin
       // Right click - fill queue with same units
       if IsRMBInShiftState(Shift) then
-        gGame.GameInputProcess.CmdHouse(gicHouseSchoolTrain, school, SCHOOL_GAME_ORDER[fLastSchoolUnit], 10)
+        gGame.GameInputProcess.CmdHouse(gicHouseSchoolTrain, school, fLastSchoolUnit.GetUnit, 10)
       else
       if (ssLeft in Shift) then
       begin
         // Left click - add Unit to queue
-        gGame.GameInputProcess.CmdHouse(gicHouseSchoolTrain, school, SCHOOL_GAME_ORDER[fLastSchoolUnit], 1);
+        gGame.GameInputProcess.CmdHouse(gicHouseSchoolTrain, school, fLastSchoolUnit.GetUnit, 1);
         // If Ctrl is also pressed, then change last unit order to 0
         if SCHOOL_CH_ORDER_TO_0_SHIFT in Shift then
           gGame.GameInputProcess.CmdHouse(gicHouseSchoolTrainChLastUOrder, school, 0)
@@ -3282,33 +3329,28 @@ begin
       end;
 
     Button_School_Train.Enabled := (not school.QueueIsFull)
-                                    and (gMySpectator.Hand.Locks.GetUnitBlocked(SCHOOL_GAME_ORDER[fLastSchoolUnit], fHouse.HouseType) = ulUnlocked  );
-
-    //if School_Order[fLastSchoolUnit] in [utSerf, utBuilder] then
-    //   Button_School_Train.Enabled := Button_School_Train.Enabled and (gHands[School.Owner].CanTrainSerfs > 0);
+                                    and (gMySpectator.Hand.Locks.GetUnitBlocked(fLastSchoolUnit.GetUnit, fHouse.HouseType) = ulUnlocked  );
 
     Button_School_Left.Disable;
     Button_School_Right.Disable;
     Image_School_Left.Hide;
     Image_School_Right.Hide;
 
-    //if fLastSchoolUnit > 0 then
-    if PreviousUnit(fLastSchoolUnit, SCHOOL_GAME_ORDER) > -1 then
+    if fLastSchoolUnit.PrevUnit <> utNone then
     begin
-      Image_School_Left.TexID := gRes.Units[SCHOOL_GAME_ORDER[PreviousUnit(fLastSchoolUnit, SCHOOL_GAME_ORDER)]].GUIScroll;
+      Image_School_Left.TexID := gRes.Units[fLastSchoolUnit.PrevUnit].GUIScroll;
       Image_School_Left.Show;
       Button_School_Left.Enable
     end;
 
-    Label_School_Unit.Caption := gRes.Units[SCHOOL_GAME_ORDER[fLastSchoolUnit]].GUIName;
-    Image_School_Train.TexID := gRes.Units[SCHOOL_GAME_ORDER[fLastSchoolUnit]].GUIScroll;
+    Label_School_Unit.Caption := gRes.Units[fLastSchoolUnit.GetUnit].GUIName;
+    Image_School_Train.TexID := gRes.Units[fLastSchoolUnit.GetUnit].GUIScroll;
 
-    Image_School_Train.Enabled := gMySpectator.Hand.Locks.GetUnitBlocked(SCHOOL_GAME_ORDER[fLastSchoolUnit], fHouse.HouseType) = ulUnlocked;
+    Image_School_Train.Enabled := gMySpectator.Hand.Locks.GetUnitBlocked(fLastSchoolUnit.GetUnit, fHouse.HouseType) = ulUnlocked;
 
-    //if fLastSchoolUnit < High(School_Order) then
-    if NextUnit(fLastSchoolUnit, SCHOOL_GAME_ORDER) > -1 then
+    if fLastSchoolUnit.NextUnit <> utNone then
     begin
-      Image_School_Right.TexID := gRes.Units[SCHOOL_GAME_ORDER[NextUnit(fLastSchoolUnit, SCHOOL_GAME_ORDER)]].GUIScroll;
+      Image_School_Right.TexID := gRes.Units[fLastSchoolUnit.NextUnit].GUIScroll;
       Image_School_Right.Show;
       Button_School_Right.Enable;
     end;
@@ -3316,7 +3358,7 @@ begin
   end else
   if (gMySpectator.Selected is TKMHouseSiegeWorkshop) then
   begin
-    if not HasAnyUnit(SIEGE_GAME_ORDER) then
+    if not fLastSiegeUnit.HasAnyUnit(fHouse.Owner, htSiegeWorkshop) then
     begin
      Panel_House_Siege.Hide;
      Exit;
@@ -3325,21 +3367,21 @@ begin
 
 
     if (Sender = Button_Siege_Left) then
-      fLastSiegeUnit := PreviousUnit(fLastSiegeUnit, SIEGE_GAME_ORDER, IsRMBInShiftState(Shift));
+      fLastSiegeUnit.SetToPrev( IsRMBInShiftState(Shift));
 
     if (Sender = Button_Siege_Right) then
-      fLastSiegeUnit := NextUnit(fLastSiegeUnit, SIEGE_GAME_ORDER, IsRMBInShiftState(Shift));
+      fLastSiegeUnit.SetToNext(IsRMBInShiftState(Shift));
 
     if Sender = Button_Siege_Train then
     begin
       // Right click - fill queue with same units
       if IsRMBInShiftState(Shift) then
-        gGame.GameInputProcess.CmdHouse(gicHouseSiegeTrain, siege, SIEGE_GAME_ORDER[fLastSiegeUnit], 10)
+        gGame.GameInputProcess.CmdHouse(gicHouseSiegeTrain, siege, fLastSiegeUnit.GetUnit, 10)
       else
       if (ssLeft in Shift) then
       begin
         // Left click - add Unit to queue
-        gGame.GameInputProcess.CmdHouse(gicHouseSiegeTrain, siege, SIEGE_GAME_ORDER[fLastSiegeUnit], 1);
+        gGame.GameInputProcess.CmdHouse(gicHouseSiegeTrain, siege, fLastSiegeUnit.GetUnit, 1);
       end;
     end;
 
@@ -3368,31 +3410,29 @@ begin
       end;
 
     Button_Siege_Train.Enabled := (not siege.QueueIsFull)
-                                    and (gMySpectator.Hand.Locks.GetUnitBlocked(SIEGE_GAME_ORDER[fLastSiegeUnit], fHouse.HouseType) = ulUnlocked);
+                                    and (gMySpectator.Hand.Locks.GetUnitBlocked(fLastSiegeUnit.GetUnit, fHouse.HouseType) = ulUnlocked);
 
     Button_Siege_Left.Disable;
     Button_Siege_Right.Disable;
     Image_Siege_Left.Hide;
     Image_Siege_Right.Hide;
 
-    //if fLastSchoolUnit > 0 then
-    if PreviousUnit(fLastSiegeUnit, SIEGE_GAME_ORDER) > -1 then
+    if fLastSiegeUnit.PrevUnit <> utNone then
     begin
-      Image_Siege_Left.TexID := gRes.Units[SIEGE_GAME_ORDER[PreviousUnit(fLastSiegeUnit, SIEGE_GAME_ORDER)]].GUIScroll;
+      Image_Siege_Left.TexID := gRes.Units[fLastSiegeUnit.PrevUnit].GUIScroll;
       Image_Siege_Left.Show;
       Button_Siege_Left.Enable;
     end;
 
-    Label_Siege_Unit.Caption := gRes.Units[SIEGE_GAME_ORDER[fLastSiegeUnit]].GUIName;
-    Image_Siege_Train.TexID := gRes.Units[SIEGE_GAME_ORDER[fLastSiegeUnit]].GUIScroll;
+    Label_Siege_Unit.Caption := gRes.Units[fLastSiegeUnit.GetUnit].GUIName;
+    Image_Siege_Train.TexID := gRes.Units[fLastSiegeUnit.GetUnit].GUIScroll;
 
-    Image_Siege_Train.Enabled := gMySpectator.Hand.Locks.GetUnitBlocked(SIEGE_GAME_ORDER[fLastSiegeUnit], fHouse.HouseType) = ulUnlocked;
+    Image_Siege_Train.Enabled := gMySpectator.Hand.Locks.GetUnitBlocked(fLastSiegeUnit.GetUnit, fHouse.HouseType) = ulUnlocked;
 
 
-    //if fLastSchoolUnit < High(SiegeWorkshop_Order) then
-    if NextUnit(fLastSiegeUnit, SIEGE_GAME_ORDER) > -1 then
+    if fLastSiegeUnit.NextUnit <> utNone then
     begin
-      Image_Siege_Right.TexID := gRes.Units[SIEGE_GAME_ORDER[NextUnit(fLastSiegeUnit, SIEGE_GAME_ORDER)]].GUIScroll;
+      Image_Siege_Right.TexID := gRes.Units[fLastSiegeUnit.NextUnit].GUIScroll;
       Image_Siege_Right.Show;
       Button_Siege_Right.Enable;
     end;
@@ -4046,19 +4086,18 @@ begin
   //for I := 0 to High(Palace_Order) do
   if Sender = Image_CancelUnit then
   begin
-    gGame.GameInputProcess.CmdHouse(gicHousePalaceCancelOrder, fHouse, fLastPalaceUnit);
+    gGame.GameInputProcess.CmdHouse(gicHousePalaceCancelOrder, fHouse);
   end else
   if Sender is TKMButton then
   begin
     If Sender = Button_PalaceLeft then
-      fLastPalaceUnit := PreviousUnit(fLastPalaceUnit, PALACE_UNITS_ORDER, ssRight in Shift);
+      fLastPalaceUnit.SetToPrev(ssRight in Shift);
 
     If Sender = Button_PalaceRight then
-      fLastPalaceUnit := NextUnit(fLastPalaceUnit, PALACE_UNITS_ORDER, ssRight in Shift);
-
-
+      fLastPalaceUnit.SetToNext(ssRight in Shift);
 
   end;
+
   If (Sender = Button_PalaceTrain) then
       gGame.GameInputProcess.CmdHouse(gicHousePalaceStart, fHouse)
   else
@@ -4070,12 +4109,10 @@ begin
     if ssAlt in Shift then  amt := amt * 5;
 
     if ssLeft in Shift then
-      gGame.GameInputProcess.CmdHouse(gicHousePalaceOrder, fHouse, fLastPalaceUnit, amt);
-      //H.Orders[fLastPalaceUnit] := 1;
+      gGame.GameInputProcess.CmdHouse(gicHousePalaceOrder, fHouse, fLastPalaceUnit.GetUnit, amt);
 
     if ssRight in Shift then
-      gGame.GameInputProcess.CmdHouse(gicHousePalaceOrder, fHouse, fLastPalaceUnit, -amt);
-      //H.Orders[fLastPalaceUnit] := 0;
+      gGame.GameInputProcess.CmdHouse(gicHousePalaceOrder, fHouse, fLastPalaceUnit.GetUnit, -amt);
 
   end;
   House_PalaceRefresh(H);
@@ -4091,7 +4128,7 @@ procedure TKMGUIGameHouse.House_PalaceRefresh(aHouse : TKMHouse);
     WaresProdCt_Common[aIndex].Show;
   end;
 
-var I, K, J, L, count, count2, lastID, phase : Integer;
+var I, K, J, L, orders, count, count2, lastID, phase : Integer;
   Palace : TKMHousePalace;
   UT : TKMUnitType;
   trainingUnit : Byte;
@@ -4106,6 +4143,8 @@ begin
   //set important wares
   J := 2;
   WaresRow_CostOnce.Enabled := not Palace.TrainingInProgress;
+  UT := fLastPalaceUnit.GetUnit;
+  orders := Palace.Orders[UT];
   for I := 0 to J do
   begin
     K := gRes.Wares.VirtualWares.PALACE_WARES[I];
@@ -4114,7 +4153,6 @@ begin
 
     If not Palace.TrainingInProgress then
     begin
-      UT := PALACE_UNITS_ORDER[fLastPalaceUnit];
       for L := 0 to High(gRes.Units[UT].PalaceCost.MainWares) do
       If gRes.Units[UT].PalaceCost.MainWares[L].W = gRes.Wares.VirtualWares[K].Name then
       begin
@@ -4125,7 +4163,7 @@ begin
         Break;
       end;
       If count2 > 0 then
-        count2 := count2 * Max(Palace.Orders[fLastPalaceUnit], 1);
+        count2 := count2 * Max(orders, 1);
 
     end;
     WaresRow_CostOnce.SetItem(I, IntToKStr(count, 1000), count2.ToString, '');
@@ -4146,7 +4184,6 @@ begin
     count := gHands[Palace.Owner].VirtualWare[K];
     count2 := 0;
 
-    UT := PALACE_UNITS_ORDER[fLastPalaceUnit];
     for L := 0 to High(gRes.Units[UT].PalaceCost.PhaseWares) do
     If gRes.Units[UT].PalaceCost.PhaseWares[L].W = gRes.Wares.VirtualWares[K].Name then
     begin
@@ -4156,7 +4193,7 @@ begin
       Break;
     end;
     If count2 > 0 then
-      count2 := count2 * Max(Palace.Orders[fLastPalaceUnit], 1);
+      count2 := count2 * Max(orders, 1);
     WaresRow_CostPhase.SetItem(I, IntToKStr(count, 1000), count2.ToString, '');
     If count2 > 0 then
       If count2 > count then
@@ -4168,30 +4205,29 @@ begin
 
 
   if Palace.TrainingInProgress then
-    fLastPalaceUnit := Palace.TrainedUnitID;
+    fLastPalaceUnit.SetToUnit(Palace.TrainedUnitType);
 
-  if not HasAnyUnit(PALACE_UNITS_ORDER) then
+  if not fLastPalaceUnit.HasAnyUnit(fHouse.Owner, htPalace) then
   begin
     Panel_House_Palace.Hide;
     Exit;
   end;
 
-  Button_PalaceRight.Enabled := not Palace.TrainingInProgress and (NextUnit(fLastPalaceUnit, PALACE_UNITS_ORDER, false) <> -1);
-  Button_PalaceLeft.Enabled := not Palace.TrainingInProgress and (PreviousUnit(fLastPalaceUnit, PALACE_UNITS_ORDER, false) <> -1);
+  Button_PalaceRight.Enabled := not Palace.TrainingInProgress and (fLastPalaceUnit.NextUnit <> utNone);
+  Button_PalaceLeft.Enabled := not Palace.TrainingInProgress and (fLastPalaceUnit.PrevUnit <> utNone);
 
   Button_Palace_NextUnit.Enabled := not Palace.TrainingInProgress;
   Button_Palace_PreviousUnit.Enabled := not Palace.TrainingInProgress;
-  I := NextUnit(fLastPalaceUnit, PALACE_UNITS_ORDER, false);
-  Button_Palace_NextUnit.Visible := I <> -1;
-  if I > -1 then
-    Button_Palace_NextUnit.TexID := gRes.Units[PALACE_UNITS_ORDER[I]].GUIIcon;
 
-  I := PreviousUnit(fLastPalaceUnit, PALACE_UNITS_ORDER, false);
-  Button_Palace_PreviousUnit.Visible := I <> -1;
-  if I > -1 then
-    Button_Palace_PreviousUnit.TexID := gRes.Units[PALACE_UNITS_ORDER[I]].GUIIcon;
+  Button_Palace_NextUnit.Visible := fLastPalaceUnit.NextUnit <> utNone;
+  if Button_Palace_NextUnit.Visible then
+    Button_Palace_NextUnit.TexID := gRes.Units[fLastPalaceUnit.NextUnit].GUIIcon;
 
-  UT := PALACE_UNITS_ORDER[fLastPalaceUnit];
+  Button_Palace_PreviousUnit.Visible := fLastPalaceUnit.PrevUnit <> utNone;
+  if Button_Palace_PreviousUnit.Visible then
+    Button_Palace_PreviousUnit.TexID := gRes.Units[fLastPalaceUnit.PrevUnit].GUIIcon;
+
+  UT := fLastPalaceUnit.GetUnit;
   LastID := 0;
 
   Bar_Palace_ProgressLeft.Position := Palace.FullProgress * 0.97;
@@ -4219,7 +4255,7 @@ begin
 
   Image_CancelUnit.Visible := Palace.TrainingInProgress;
   Image_CancelUnit.TexID := 32;
-  Image_OrderCount.Caption := IntToStr(Palace.Orders[fLastPalaceUnit]);
+  Image_OrderCount.Caption := IntToStr(Palace.Orders[UT]);
 
   Panel_House_Palace.Show;
   ShowWaresProdCt(1, Palace.GetCardCost);
@@ -4408,22 +4444,24 @@ end;
 
 procedure TKMGUIGameHouse.Save(SaveStream: TKMemoryStream);
 begin
-  SaveStream.Write(fLastSchoolUnit);
-  SaveStream.Write(fLastBarracksUnit);
-  SaveStream.Write(fLastTHUnit);
-  SaveStream.Write(fLastPalaceUnit);
-  SaveStream.Write(fLastSiegeUnit);
+  SaveStream.Write(fLastSchoolUnit.Selected);
+  SaveStream.Write(fLastBarracksUnit.Selected);
+  SaveStream.Write(fLastTHUnit.Selected);
+  SaveStream.Write(fLastPalaceUnit.Selected);
+  SaveStream.Write(fLastSiegeUnit.Selected);
+  SaveStream.Write(fLastShipUnit.Selected);
   SaveStream.Write(fLastWareOutput);
 end;
 
 
 procedure TKMGUIGameHouse.Load(LoadStream: TKMemoryStream);
 begin
-  LoadStream.Read(fLastSchoolUnit);
-  LoadStream.Read(fLastBarracksUnit);
-  LoadStream.Read(fLastTHUnit);
-  LoadStream.Read(fLastPalaceUnit);
-  LoadStream.Read(fLastSiegeUnit);
+  LoadStream.Read(fLastSchoolUnit.Selected);
+  LoadStream.Read(fLastBarracksUnit.Selected);
+  LoadStream.Read(fLastTHUnit.Selected);
+  LoadStream.Read(fLastPalaceUnit.Selected);
+  LoadStream.Read(fLastSiegeUnit.Selected);
+  LoadStream.Read(fLastShipUnit.Selected);
   LoadStream.Read(fLastWareOutput);
 end;
 
