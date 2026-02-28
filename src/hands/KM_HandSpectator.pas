@@ -443,7 +443,7 @@ end;
 
 procedure TKMSpectator.PlayEnviromentSounds(aTick : Cardinal; aClipRect : TKMRect);
 const
-  SOUNDS_PACE = TERRAIN_PACE;
+  SOUNDS_PACE = TERRAIN_PACE + 100;
 var A, W, H : Integer;
   X, Y : Integer;
   soundsPlayed : Byte;
