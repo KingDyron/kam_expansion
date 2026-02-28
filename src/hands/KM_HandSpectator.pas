@@ -2,7 +2,7 @@ unit KM_HandSpectator;
 {$I KaM_Remake.inc}
 interface
 uses
-  KM_Hand, KM_FogOfWar,
+  KM_Hand, KM_FogOfWar, KM_Points,
   KM_CommonClasses, KM_Defaults,
   KM_HandEntity;
 
@@ -38,6 +38,7 @@ type
     function GetSelectedHandID: TKMHandID;
     function GetHighlight: TKMHandEntity;
 
+
   public
     constructor Create(aHandIndex: TKMHandID);
     destructor Destroy; override;
@@ -66,6 +67,7 @@ type
     procedure UpdateState(aTick: Cardinal);
 
     procedure ResetHighlightDebug;
+    procedure PlayEnviromentSounds(aTick : Cardinal; aClipRect : TKMRect);
   end;
 
 
@@ -73,13 +75,15 @@ implementation
 uses
   SysUtils,
   KM_Entity,
-  KM_GameParams, KM_Cursor,
+  KM_Game, KM_GameParams, KM_Cursor,
   KM_HandsCollection, KM_HandTypes,
   KM_Units, KM_UnitGroup, KM_UnitWarrior, KM_Houses, KM_ResTypes, KM_Resource,
   KM_Structure,
   KM_CommonUtils,
   KM_ScriptingEvents,
-  KM_GameTypes;
+  KM_GameTypes,
+  KM_Sound, KM_ResSound,
+  KM_Terrain;
 
 
 { TKMSpectator }
@@ -437,6 +441,38 @@ begin
 end;
 
 
+procedure TKMSpectator.PlayEnviromentSounds(aTick : Cardinal; aClipRect : TKMRect);
+const
+  SOUNDS_PACE = TERRAIN_PACE;
+var A, W, H : Integer;
+  X, Y : Integer;
+  soundsPlayed : Byte;
+  procedure PlaySound(aType : TSoundFXWeather; const aLoc : TKMPointF);
+  begin
+    gSoundPlayer.PlayWeather(aType, aLoc);
+    Inc(soundsPlayed);
+  end;
+begin
+  If SKIP_SOUND then
+    Exit;
+
+  W := aClipRect.Width - 1;
+  H := aClipRect.Height - 1;
+
+  A := aTick mod SOUNDS_PACE;
+  soundsPlayed := 0;
+  while (A < W * H) and (soundsPlayed < 2) do
+  begin
+    X := A mod W + aClipRect.Left + 1;
+    Y := A div W + aClipRect.Top + 1;
+
+    If gTerrain.ObjectIsChopableTree(X, Y) then
+      PlaySound(sfxwChirping, KMPointF(X, Y));
+    Inc(A, SOUNDS_PACE);
+  end;
+
+end;
+
 procedure TKMSpectator.UpdateState;
 begin
   //Hide the highlight
@@ -452,7 +488,9 @@ begin
   begin
     if not TKMUnitGroup(Selected).SelectedUnit.Visible and not (TKMUnitGroup(Selected).SelectedUnit.UnitType in [utLekter]) then
       Selected := nil;
-  end else
+  end;
+
+
 end;
 
 

@@ -1548,6 +1548,8 @@ begin
   if gGame <> nil then
   begin
     gGame.UpdateState(fGlobalTickCount);
+    If not gGame.Params.IsMapEditor then
+      gMySpectator.PlayEnviromentSounds(fGlobalTickCount, gGame.ActiveInterface.Viewport.GetClip);
     if gGame.Params.IsMultiPlayerOrSpec and (fGlobalTickCount mod 100 = 0) then
       SendMPGameInfo; //Send status to the server every 10 seconds
   end
@@ -1565,6 +1567,7 @@ begin
     if (gGame <> nil) and not (gGame.IsPaused and BLOCK_GAME_ON_PAUSE) and Assigned(fOnCursorUpdate) then
         fOnCursorUpdate(SB_ID_TIME, 'Time: ' + TimeToString(gGame.MissionTime));
   end;
+
   gAchievements.UpdateState;
   UpdatePerflog;
 end;
