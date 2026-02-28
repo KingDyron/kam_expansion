@@ -2014,6 +2014,7 @@ begin
   // Show outcome depending on actual situation.
   // By default PlayOnState is grCancel, if playing on after victory/defeat it changes
   StopPlay(gGame.GameResult);
+  gSoundPlayer.StopAllSounds;
 end;
 
 

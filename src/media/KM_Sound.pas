@@ -73,6 +73,7 @@ type
     property PrevVolume: Single read GetPrevVolume write fPrevVolume;
 
     procedure Init;
+    procedure StopSound(aIndex : Integer);
   public
     constructor Create(aVolume: Single);
     destructor Destroy; override;
@@ -113,6 +114,7 @@ type
 
     function PlayScriptSound(const aFile: UnicodeString; aLoc: TKMPointF; aAttenuate: Boolean; aVolume: Single; aRadius: Single; aFadeMusic, aLooped: Boolean): Integer;
     procedure StopScriptSound(aIndex: Integer);
+    procedure StopAllSounds;
 
     procedure Paint;
     procedure UpdateStateIdle;
@@ -456,7 +458,14 @@ end;
 procedure TKMSoundPlayer.PlayWeather(aSound: TSoundFXWeather; aLoc: TKMPointF; aVolume: Single = 0.5; aMaxRadius: Word = MAX_DISTANCE);
 begin
   if SKIP_SOUND or not fIsSoundInitialized then Exit;
+
+  If (aLoc.X >= gGame.MapSize.X - 1) or (aLoc.Y >= gGame.MapSize.Y) or (aLoc.X < 1) or (aLoc.Y < 1) then
+    Exit;
+  If gMySpectator.Hand.FogOfWar.CheckTileRevelation(aLoc.RX, aLoc.RY) < FOG_OF_WAR_MIN then
+    Exit;
+
   HalfVolume(aVolume);
+
   PlayWave(gRes.Sounds.GetWeatherSound(aSound), aLoc, stGame, true, aVolume, false, false, aMaxRadius);
 end;
 
@@ -832,6 +841,20 @@ begin
     end;
 end;
 
+procedure TKMSoundPlayer.StopSound(aIndex: Integer);
+begin
+  AlSourceStop(fALSounds[aIndex].ALSource);
+  AlSourcei(fALSounds[aIndex].ALSource, AL_BUFFER, 0);
+
+  fALSounds[aIndex].PlaySince := 0;
+end;
+
+procedure TKMSoundPlayer.StopAllSounds;
+var I : Integer;
+begin
+  for I := 0 to MAX_SOUNDS - 1 do
+    StopSound(I);
+end;
 
 procedure TKMSoundPlayer.StopScriptSound(aIndex: Integer);
 begin
@@ -839,10 +862,12 @@ begin
   if fScriptSoundALIndex[aIndex] = -1 then Exit;
 
   //Stop previously playing sound and release buffer
+  StopSound(fScriptSoundALIndex[aIndex]);
+  {
   AlSourceStop(fALSounds[fScriptSoundALIndex[aIndex]].ALSource);
   AlSourcei(fALSounds[fScriptSoundALIndex[aIndex]].ALSource, AL_BUFFER, 0);
 
-  fALSounds[fScriptSoundALIndex[aIndex]].PlaySince := 0;
+  fALSounds[fScriptSoundALIndex[aIndex]].PlaySince := 0;}
   fScriptSoundALIndex[aIndex] := -1;
 end;
 
