@@ -108,7 +108,7 @@ type
 implementation
 uses
       Math,
-      KM_Game,
+      KM_Game, KM_GameApp,
       KM_GameParams,
       KM_RenderPool,
       KM_Particles,
@@ -286,17 +286,17 @@ begin
       SetClimate;
   end;
 
-  If fAge mod 50 = 0 then
+  If gGameApp.GlobalTickCount mod 50 = 0 then
     case fType of
       wtCloudy1,
-      wtCloudy2: gSoundPlayer.PlayWeather(sfxwWind, fPos);
+      wtCloudy2: gSoundPlayer.PlayAmbiance(sfxwWind, fPos);
       wtRain,
-      wtStorm: gSoundPlayer.PlayWeather(sfxwRain, fPos);
+      wtStorm: gSoundPlayer.PlayAmbiance(sfxwRain, fPos);
       wtSnow,
       wtSnowyStorm,
       wtSandStorm1,
-      wtSandStorm2: gSoundPlayer.PlayWeather(sfxwSandStorm, fPos);
-      wtTornado: gSoundPlayer.PlayWeather(sfxwTornado, fPos);
+      wtSandStorm2: gSoundPlayer.PlayAmbiance(sfxwSandStorm, fPos);
+      wtTornado: gSoundPlayer.PlayAmbiance(sfxwTornado, fPos);
 
     end;
 
@@ -474,7 +474,7 @@ begin
   if Random(200) <= 5 then
   begin
     gParticles.AddWhiteLightning(GetRandomPos(aPos, 2));
-    gSoundPlayer.PlayWeather(sfxwThunder, fPos, 1);
+    gSoundPlayer.PlayAmbiance(sfxwThunder, fPos, 1);
   end;
 
 
@@ -562,7 +562,7 @@ begin
   if Random(200) <= 5 then
   begin
     gParticles.AddGoldLightning(GetRandomPos(aPos, 2));
-    gSoundPlayer.PlayWeather(sfxwThunder, fPos, 1);
+    gSoundPlayer.PlayAmbiance(sfxwThunder, fPos, 1);
   end;
 end;
 

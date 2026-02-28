@@ -1054,7 +1054,7 @@ uses
   TypInfo, SysUtils, Math, KromUtils,
   KM_CommonHelpers,
   KM_Entity, KM_HandsCollection,
-  KM_Game,KM_GameParams, KM_MapTypes,
+  KM_Game,KM_GameParams, KM_MapTypes, KM_GameApp,
   KM_Terrain, KM_RenderPool, KM_RenderAux, KM_Sound,
   KM_Hand, KM_HandLogistics, KM_HandTypes,
   KM_Units, KM_UnitWarrior, KM_HouseWoodcutters,
@@ -5102,6 +5102,11 @@ begin
   if fIsBurning > 0 then
     if fTick mod 10 = 0 then
       AddDamage(fIsBurning, nil, false);
+
+  //play fire sound
+  If IsDamaged then
+    If gGameApp.GlobalTickCount mod 20 = 0 then
+      gSoundPlayer.PlayAmbiance(sfxwFire, PositionF, 1);
 
   if fTick mod 50 = 0 then
     for I := 1 to WARES_IN_OUT_COUNT do

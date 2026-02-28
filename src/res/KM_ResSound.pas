@@ -86,7 +86,9 @@ type
     sfxnPearlChoir
 
     );
-  TSoundFXWeather = (sfxwRain, sfxwThunder, sfxwWind, sfxwSandStorm, sfxwTornado, sfxwFlyingBrids, sfxwChirping);
+  TSoundFXAmbiance = (
+  sfxwRain, sfxwThunder, sfxwWind, sfxwSandStorm, sfxwTornado,
+  sfxwFlyingBrids, sfxwChirping, sfxwFire, sfxwExplosion);
 
   //Sounds to play on different warrior orders
   TWarriorSpeech = (
@@ -133,7 +135,7 @@ type
   public
     fWavesCount: integer;
     fWaves: array of TKMSoundData;
-    WeatherSounds : array[TSoundFXWeather] of byte;
+    WeatherSounds : array[TSoundFXAmbiance] of byte;
 
     NotificationSoundCount: array[TAttackNotification] of byte;
     WarriorSoundCount: array[WARRIOR_MIN..WARRIOR_MAX, TWarriorSpeech] of byte;
@@ -152,7 +154,7 @@ type
     function GetSoundType(aSFX: TWarriorSpeech): TKMSoundType; overload;
     function GetSoundType(aSFX: TAttackNotification): TKMSoundType; overload;
 
-    function GetWeatherSound(aSound : TSoundFXWeather) : String;
+    function GetWeatherSound(aSound : TSoundFXAmbiance) : String;
 
     procedure ExportSounds;
   end;
@@ -234,14 +236,16 @@ const
     );
   WEATHER_SFX_FOLDER = 'Weather' + PathDelim;
 
-  WEATHER_SFX_NAMES: array[TSoundFXWeather] of String = (
+  WEATHER_SFX_NAMES: array[TSoundFXAmbiance] of String = (
   'Rain',
   'Thunder',
   'Wind',
   'SandStorm',
   'Tornado',
   'BirdsFlying',
-  'BirdsChirp'
+  'BirdsChirp',
+  'Fire',
+  'Explosion'
   );
 
 
@@ -412,7 +416,7 @@ begin
   Result := stGame; //All TSoundFX sounds considered as game sounds
 end;
 
-function TKMResSounds.GetWeatherSound(aSound: TSoundFXWeather): string;
+function TKMResSounds.GetWeatherSound(aSound: TSoundFXAmbiance): string;
 var I : Integer;
 begin
   If WeatherSounds[aSound] = 0 then
@@ -475,12 +479,12 @@ end;
 
 procedure TKMResSounds.ScanWeatherSounds;
 var I : integer;
-  sfxw : TSoundFXWeather;
+  sfxw : TSoundFXAmbiance;
   path : String;
 begin
   FillChar(WeatherSounds, SizeOf(WeatherSounds), 0);
 
-  for sfxw := Low(TSoundFXWeather) to High(TSoundFXWeather) do
+  for sfxw := Low(TSoundFXAmbiance) to High(TSoundFXAmbiance) do
   begin
     path := ExeDir + NEW_SFX_FOLDER + WEATHER_SFX_FOLDER + WEATHER_SFX_NAMES[sfxw];
     I := 0;

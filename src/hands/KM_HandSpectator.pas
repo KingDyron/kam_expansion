@@ -73,7 +73,7 @@ type
 
 implementation
 uses
-  SysUtils,
+  SysUtils, Math,
   KM_Entity,
   KM_Game, KM_GameParams, KM_Cursor,
   KM_HandsCollection, KM_HandTypes,
@@ -447,9 +447,9 @@ const
 var A, W, H : Integer;
   X, Y : Integer;
   soundsPlayed : Byte;
-  procedure PlaySound(aType : TSoundFXWeather; const aLoc : TKMPointF);
+  procedure PlaySound(aType : TSoundFXAmbiance; const aLoc : TKMPointF);
   begin
-    gSoundPlayer.PlayWeather(aType, aLoc);
+    gSoundPlayer.PlayAmbiance(aType, aLoc);
     Inc(soundsPlayed);
   end;
 begin
@@ -468,6 +468,9 @@ begin
 
     If gTerrain.ObjectIsChopableTree(X, Y) then
       PlaySound(sfxwChirping, KMPointF(X, Y));
+    IF InRange(gTerrain.Land[Y, X].Obj, 453, 456) then
+      PlaySound(sfxwFire, KMPointF(X, Y));
+
     Inc(A, SOUNDS_PACE);
   end;
 

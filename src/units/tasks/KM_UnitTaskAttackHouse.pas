@@ -305,6 +305,7 @@ begin
               begin
                 SetActionLockedStay(0, uaWork, true, 0, 1); // no pause for torchman
                 gSpecAnim.Add(gRes.Units.Explosion, fUnit.PositionF, 1, rxUnits, true);
+                gSoundPlayer.PlayAmbiance(sfxwExplosion, PositionF, 1);
                 If gHands[Owner].ArmyDevUnlocked(18) then
                 begin
                   if not fUnit.IsDeadOrDying then
