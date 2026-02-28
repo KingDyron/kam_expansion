@@ -3099,7 +3099,7 @@ begin
     glBlendFunc(GL_ONE, GL_ZERO);
 
     // Wood progress
-    glAlphaFunc(GL_GREATER, 1 - aWoodProgress);
+    glAlphaFunc(GL_GEQUAL, 1 - aWoodProgress);
     with gGFXData[aRX,aId] do
     begin
       glColor3f(1, 1, 1);
