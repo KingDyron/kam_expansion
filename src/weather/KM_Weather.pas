@@ -113,7 +113,8 @@ uses
       KM_RenderPool,
       KM_Particles,
       KM_CommonUtils, KM_CommonHelpers,
-      KM_Terrain;
+      KM_Terrain,
+      KM_ResSound, KM_Sound;
 
 constructor TKMWeather.Create(aType : TKMWeatherType; aPos, aSpeed : TKMPointF; aLifeTime : Cardinal; aRX: TRXType);
 //var distSqr : Single;
@@ -253,6 +254,7 @@ var I : Integer;
 begin
   if fDeleted then
     Exit;
+
   fPos := KMPointFAdd(fPos, fSpeed);
   Inc(fAge);
   case fState of
@@ -283,7 +285,22 @@ begin
     if (fAge + 1) mod 50 = 0 then //refresh climate every 5 secs
       SetClimate;
   end;
-  
+
+  If fAge mod 50 = 0 then
+    case fType of
+      wtCloudy1,
+      wtCloudy2: gSoundPlayer.PlayWeather(sfxwWind, fPos);
+      wtRain,
+      wtStorm: gSoundPlayer.PlayWeather(sfxwRain, fPos);
+      wtSnow,
+      wtSnowyStorm,
+      wtSandStorm1,
+      wtSandStorm2: gSoundPlayer.PlayWeather(sfxwSandStorm, fPos);
+      wtTornado: gSoundPlayer.PlayWeather(sfxwTornado, fPos);
+
+    end;
+
+
 end;
 
 
@@ -455,7 +472,10 @@ begin
     gParticles.AddWeatherParticle(GetRandomPos(aPos + KMPointF(1.3, 0), 0.5), fCurrentClimate);
   end;
   if Random(200) <= 5 then
+  begin
     gParticles.AddWhiteLightning(GetRandomPos(aPos, 2));
+    gSoundPlayer.PlayWeather(sfxwThunder, fPos, 1);
+  end;
 
 
   if gGameParams.MBD.IsRealism then
@@ -540,7 +560,10 @@ begin
   gParticles.AddWeatherParticle(GetRandomPos(aPos + KMPointF(1.3, 0.8), 1), fCurrentClimate);
 
   if Random(200) <= 5 then
+  begin
     gParticles.AddGoldLightning(GetRandomPos(aPos, 2));
+    gSoundPlayer.PlayWeather(sfxwThunder, fPos, 1);
+  end;
 end;
 
 

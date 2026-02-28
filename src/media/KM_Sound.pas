@@ -107,6 +107,7 @@ type
 
     procedure Play(aSoundID: TSoundFXNew; aVolume: Single = 1; aFadeMusic: Boolean = False); overload;
     procedure Play(aSoundID: TSoundFXNew; aLoc: TKMPoint; aAttenuated: Boolean = True; aVolume: Single = 1; aFadeMusic: Boolean = False; aMaxRadius : Word = MAX_DISTANCE); overload;
+    procedure PlayWeather(aSound : TSoundFXWeather; aLoc: TKMPointF; aVolume : Single = 0.5; aMaxRadius : Word = MAX_DISTANCE);
 
     procedure PlayHouse(aSoundID: Integer; aLoc: TKMPoint; aVolume: Single = 1);
 
@@ -452,6 +453,13 @@ begin
   PlayWave(gRes.Sounds.FileOfNewSFX(aSoundID), KMPointF(aLoc), gRes.Sounds.GetSoundType(aSoundID), aAttenuated, aVolume, aFadeMusic, false, aMaxRadius);
 end;
 
+procedure TKMSoundPlayer.PlayWeather(aSound: TSoundFXWeather; aLoc: TKMPointF; aVolume: Single = 0.5; aMaxRadius: Word = MAX_DISTANCE);
+begin
+  if SKIP_SOUND or not fIsSoundInitialized then Exit;
+  HalfVolume(aVolume);
+  PlayWave(gRes.Sounds.GetWeatherSound(aSound), aLoc, stGame, true, aVolume, false, false, aMaxRadius);
+end;
+
 
 {Wrapper for TSoundFX}
 procedure TKMSoundPlayer.Play(aSoundID: TSoundFX; aLoc: TKMPoint; aAttenuated: Boolean = True; aVolume: Single = 1);
@@ -487,6 +495,8 @@ function TKMSoundPlayer.PlayWave(const aFile: UnicodeString; const aLoc: TKMPoin
 begin
   Result := -1;
   if not fIsSoundInitialized then Exit;
+  If aFile = '' then
+    Exit;
   HalfVolume(aVolume);
   Result := PlaySound(sfxNone, aFile, aLoc, aSoundType, aAttenuated, aVolume, aMaxRadius, aFadeMusic, aLoop); //Redirect
 end;

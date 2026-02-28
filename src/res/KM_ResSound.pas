@@ -86,6 +86,7 @@ type
     sfxnPearlChoir
 
     );
+  TSoundFXWeather = (sfxwRain, sfxwThunder, sfxwWind, sfxwSandStorm, sfxwTornado, sfxwFlyingBrids, sfxwChirping);
 
   //Sounds to play on different warrior orders
   TWarriorSpeech = (
@@ -126,14 +127,18 @@ type
 
     procedure LoadSoundsDAT;
     procedure ScanWarriorSounds;
+    procedure ScanWeatherSounds;
     //function LoadWarriorSoundsFromFile(const aFile: string): Boolean;
     procedure SaveWarriorSoundsToFile(const aFile: string);
   public
     fWavesCount: integer;
     fWaves: array of TKMSoundData;
+    WeatherSounds : array[TSoundFXWeather] of byte;
 
     NotificationSoundCount: array[TAttackNotification] of byte;
     WarriorSoundCount: array[WARRIOR_MIN..WARRIOR_MAX, TWarriorSpeech] of byte;
+
+
 
     constructor Create(const aLocale, aFallback, aDefault: AnsiString);
 
@@ -146,6 +151,8 @@ type
     function GetSoundType(aSFX: TSoundFX): TKMSoundType; overload;
     function GetSoundType(aSFX: TWarriorSpeech): TKMSoundType; overload;
     function GetSoundType(aSFX: TAttackNotification): TKMSoundType; overload;
+
+    function GetWeatherSound(aSound : TSoundFXWeather) : String;
 
     procedure ExportSounds;
   end;
@@ -225,6 +232,17 @@ const
     'Units' + PathDelim + 'OrderAmmoBell.wav',
     'Buildings' + PathDelim + 'PearlChoir.wav'
     );
+  WEATHER_SFX_FOLDER = 'Weather' + PathDelim;
+
+  WEATHER_SFX_NAMES: array[TSoundFXWeather] of String = (
+  'Rain',
+  'Thunder',
+  'Wind',
+  'SandStorm',
+  'Tornado',
+  'BirdsFlying',
+  'BirdsChirp'
+  );
 
 
 { TKMResSounds }
@@ -244,6 +262,7 @@ begin
 
   LoadSoundsDAT;
   ScanWarriorSounds;
+  ScanWeatherSounds;
 end;
 
 
@@ -393,6 +412,15 @@ begin
   Result := stGame; //All TSoundFX sounds considered as game sounds
 end;
 
+function TKMResSounds.GetWeatherSound(aSound: TSoundFXWeather): string;
+var I : Integer;
+begin
+  If WeatherSounds[aSound] = 0 then
+    Exit('');
+  I := Random(WeatherSounds[aSound]) + 1;
+  Result := ExeDir + NEW_SFX_FOLDER + WEATHER_SFX_FOLDER + WEATHER_SFX_NAMES[aSound] + I.ToString + '.wav';
+end;
+
 
 //Scan and count the number of warrior sounds
 procedure TKMResSounds.ScanWarriorSounds;
@@ -443,6 +471,27 @@ begin
 
   //Save counts to DAT file for faster access next time
   SaveWarriorSoundsToFile(speechPath + 'count.dat');
+end;
+
+procedure TKMResSounds.ScanWeatherSounds;
+var I : integer;
+  sfxw : TSoundFXWeather;
+  path : String;
+begin
+  FillChar(WeatherSounds, SizeOf(WeatherSounds), 0);
+
+  for sfxw := Low(TSoundFXWeather) to High(TSoundFXWeather) do
+  begin
+    path := ExeDir + NEW_SFX_FOLDER + WEATHER_SFX_FOLDER + WEATHER_SFX_NAMES[sfxw];
+    I := 0;
+
+    while fileExists(path + IntToStr(I + 1) + '.wav') do
+    begin
+      Inc(I);
+      WeatherSounds[sfxw] := I;
+    end;
+
+  end;
 end;
 
 {
