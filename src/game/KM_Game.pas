@@ -2913,6 +2913,7 @@ begin
     end;
   end;
 
+  gRenderPool.CreateRenderDevice(fWeather.Settings);
   fIsJustStarted := True; // Mark game as just started
 end;
 
