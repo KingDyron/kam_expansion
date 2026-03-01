@@ -163,8 +163,8 @@ begin
   lifeTime := 100 + KaMRandom(100 + Settings.MaxLifeTime, 'TKMWeatherCollection.SpawnNewWeather 5'); //weather should not live longer than 1.5 minutes
 
   case KaMRandom(100, '') of
-    0..50: ;
-    51..85 : isRain := true;
+    0..60: ;
+    61..85 : isRain := true;
     86..99 :  begin
                 isStorm := true;
                 isRain := true;
@@ -174,7 +174,7 @@ begin
 
   if not isRain then
   begin
-    If KaMRandom(100, 'Tornado') < 20 then
+    If KaMRandom(100, 'Tornado') < 40 then
       wt := wtBirds
     else
       wt := wtCloudy1;

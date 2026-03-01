@@ -36,13 +36,13 @@ type
       procedure UpdateCloud(aPos : TKMPointF); virtual;
     public
       constructor Create(aType : TKMWeatherType; aPos, aSpeed : TKMPointF; aLifeTime : Cardinal; aRX: TRXType);
-      constructor Load(aType : TKMWeatherType; LoadStream : TKMemoryStream);
+      constructor Load(aType : TKMWeatherType; LoadStream : TKMemoryStream); virtual;
 
       property Deleted : Boolean read fDeleted;
       property WeatherType : TKMWeatherType read fType;
       property Style : Byte read fStyle write SetStyle;
 
-      procedure Save(SaveStream : TKMemoryStream);
+      procedure Save(SaveStream : TKMemoryStream); virtual;
       procedure UpdateState; virtual;
       procedure Paint(aLag : Single; aClipRect : TKMRect); virtual;
       procedure PaintClouds(aLag : Single);virtual;
@@ -109,6 +109,8 @@ type
       fRotation : Single;
     public
       constructor Create(aType : TKMWeatherType; aPos, aSpeed : TKMPointF; aLifeTime : Cardinal; aRX: TRXType);
+      constructor Load(aType : TKMWeatherType; LoadStream : TKMemoryStream); override;
+      procedure Save(SaveStream : TKMemoryStream); override;
       procedure PaintClouds(aLag : Single);override;
   end;
 
@@ -717,5 +719,17 @@ begin
 
   gRenderPool.RenderSpriteCloud(fAnims[fState].Animation[fAge], fPos.X, fPos.Y, fRotation, 1, alpha);
 end;
+constructor TKMWeatherBirds.Load(aType : TKMWeatherType; LoadStream : TKMemoryStream);
+begin
+  Inherited;
+  LoadStream.Read(fRotation);
+end;
+
+procedure TKMWeatherBirds.Save(SaveStream : TKMemoryStream);
+begin
+  Inherited;
+  SaveStream.Write(fRotation);
+end;
+
 
 end.
