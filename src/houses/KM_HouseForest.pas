@@ -323,6 +323,8 @@ end;
 
 
 procedure TKMHouseForest.UpdateState(aTick: Cardinal);
+const
+  GROWING_PACE = TERRAIN_PACE - 50;
 var I : Integer;
 begin
   Inherited;
@@ -338,10 +340,10 @@ begin
     If Age = high(word) then
       Continue;
     Inc(Age);
-    If Age = 8 * TERRAIN_PACE then
+    If Age = 8 * GROWING_PACE then
       Obj := gGrowingTrees[ID].ObjID
     else
-    If Age = (gMapElements[Obj].TreeGrowAge * TERRAIN_PACE) + (8 * TERRAIN_PACE) then
+    If Age = (gMapElements[Obj].TreeGrowAge * GROWING_PACE) + (8 * GROWING_PACE) then
     begin
       Obj := gMapElements[Obj].NextTreeAgeObj;
       If ObjectIsChoppableTree(Obj, caAgeFull) then
