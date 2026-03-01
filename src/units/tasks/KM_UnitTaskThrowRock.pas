@@ -239,7 +239,7 @@ end;
 procedure TKMTaskShootFromSiegeTower.Save(SaveStream: TKMemoryStream);
 begin
   inherited;
-  SaveStream.PlaceMarker('TaskThrowRock');
+  SaveStream.PlaceMarker('TaskShootFromSiegeTower');
   if fTarget <> nil then
     SaveStream.Write(fTarget.UID) //Store ID, then substitute it with reference on SyncLoad
   else
