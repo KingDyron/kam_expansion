@@ -234,7 +234,7 @@ type
     procedure RenderWireTile(const P: TKMPoint; aCol: TColor4; aInset: Single = 0.0; aLineWidth: Single = -1);
     procedure RenderCircle(P: TKMPointF; aRad : Single; aFill, aLine : TColor4; aLineWidth : Integer = -1);
 
-    procedure RenderSpriteCloud(aId: Integer; aX, aY, aRotation, aNight: Single);
+    procedure RenderSpriteCloud(aId: Integer; aX, aY, aRotation, aNight: Single; aAlpha : Single);
 
     property RenderDebug: TKMRenderDebug read fRenderDebug;
     property ViewPort : TKMViewport read fViewport;
@@ -467,7 +467,7 @@ begin
     begin
       gSpecAnim.Paint(0);
       gParticles.Paint(aTickLag, clipRect);
-      gGame.Weather.Paint(aTickLag, clipRect);
+      //gGame.Weather.Paint(aTickLag, clipRect);
     end;
 
 
@@ -476,8 +476,8 @@ begin
 
     fRenderList.SortRenderList;
     fRenderList.Render;
-    //if not gGameParams.IsMapEditor then
-    //  gGame.Weather.Paint(aTickLag, clipRect);
+    if not gGameParams.IsMapEditor then
+      gGame.Weather.Paint(aTickLag, clipRect);
 
     if mlDefencesAll in gGameParams.VisibleLayers then
       fRenderDebug.PaintDefences;
@@ -2733,44 +2733,42 @@ begin
     end;
 end;
 
-procedure TKMRenderPool.RenderSpriteCloud(aId: Integer; aX: Single; aY: Single; aRotation: Single; aNight: Single);
+procedure TKMRenderPool.RenderSpriteCloud(aId: Integer; aX: Single; aY: Single; aRotation: Single; aNight: Single; aAlpha : Single);
 var
   tX, tY: Integer;
   rX, rY: Single;
   width, height : Single;
+  rxData : TRXData;
 begin
   tX := EnsureRange(Round(aX), 1, gTerrain.MapX) - 1;
   tY := EnsureRange(Round(aY), 1, gTerrain.MapY) - 1;
   //Do not render if sprite is under FOW
   if (gMySpectator.FogOfWar.CheckVerticeRenderRev(tX, tY) <= FOG_OF_WAR_MIN) then
     Exit;
+  rxData := fRXData[rxTrees];
 
-  rX := RoundToTilePixel(aX);
-  rY := RoundToTilePixel(aY);
+  rX := RoundToTilePixel(aX) + rxData.Pivot[aID].X / CELL_SIZE_PX;
+  rY := RoundToTilePixel(aY) + (rxData.Pivot[aID].Y + rxData.Size[aID].Y / 2) / CELL_SIZE_PX;
 
-  RenderCircle(KMPointF(aX, aY), 1, $00FFFFFF, $FFFFFFFF, 1);
+  //RenderCircle(KMPointF(aX, aY), 1, $00FFFFFF, $FFFFFFFF, 1);
   glPushMatrix;
   with gGFXData[rxTrees, aId] do
   begin
-    // FOW is rendered over the top so no need to make sprites black anymore
-    glColor4ub(255, 255, 255, 255);
+    glColor4f(1, 1, 1, aAlpha);
 
     width := pxWidth/CELL_SIZE_PX;
     height := pxHeight/CELL_SIZE_PX;
 
     glTranslateF(rX, rY, 0);
     glRotateF(aRotation, 0, 0, 1);
-    //glTranslated(-width, -height, 0);
-
-
 
     TKMRender.BindTexture(Tex.TexID);
 
     glBegin(GL_QUADS);
-      glTexCoord2f(Tex.u1, Tex.v2); glVertex2f(-width/2, height/2);
-      glTexCoord2f(Tex.u2, Tex.v2); glVertex2f(width / 2, height/2);
-      glTexCoord2f(Tex.u2, Tex.v1); glVertex2f(width/2, 0-height/2);
-      glTexCoord2f(Tex.u1, Tex.v1); glVertex2f(-width/2, 0-height/2);
+      glTexCoord2f(Tex.u1, Tex.v2); glVertex2f(0, 0);
+      glTexCoord2f(Tex.u2, Tex.v2); glVertex2f(width, 0);
+      glTexCoord2f(Tex.u2, Tex.v1); glVertex2f(width, 0-height);
+      glTexCoord2f(Tex.u1, Tex.v1); glVertex2f(0, 0-height);
     glEnd;
   end;
   glPopMatrix;

@@ -44,7 +44,7 @@ type
 
       procedure Save(SaveStream : TKMemoryStream);
       procedure UpdateState; virtual;
-      procedure Paint(aLag : Single; aClipRect : TKMRect);
+      procedure Paint(aLag : Single; aClipRect : TKMRect); virtual;
       procedure PaintClouds(aLag : Single);virtual;
 
   end;
@@ -102,6 +102,14 @@ type
       procedure UpdateCloud(aPos : TKMPointF); override;
     public
       constructor Create(aType : TKMWeatherType; aPos, aSpeed : TKMPointF; aLifeTime : Cardinal; aRX: TRXType);
+  end;
+
+  TKMWeatherBirds = class(TKMWeather)
+    private
+      fRotation : Single;
+    public
+      constructor Create(aType : TKMWeatherType; aPos, aSpeed : TKMPointF; aLifeTime : Cardinal; aRX: TRXType);
+      procedure PaintClouds(aLag : Single);override;
   end;
 
 
@@ -297,6 +305,7 @@ begin
       wtSandStorm1,
       wtSandStorm2: gSoundPlayer.PlayAmbiance(sfxwSandStorm, fPos);
       wtTornado: gSoundPlayer.PlayAmbiance(sfxwTornado, fPos);
+      wtBirds: gSoundPlayer.PlayAmbiance(sfxwFlyingBrids, fPos);
 
     end;
 
@@ -313,23 +322,20 @@ end;
 
 procedure TKMWeather.PaintClouds(aLag : Single);
 var I : Integer;
-  addSpeed : TKMPointF;
 begin
-  addSpeed.X := fSpeed.X * aLag;
-  addSpeed.Y := fSpeed.Y * aLag;
 
-  {for I := 1 to length(fClouds) do
-    gRenderPool.RenderSpriteCloud(fAnims[fState].Animation[fAge], fPos.X + fClouds[I - 1].X, fPos.Y + fClouds[I - 1].Y, fRotation, 1);
-  gRenderPool.RenderSpriteCloud(fAnims[fState].Animation[fAge], fPos.X, fPos.Y, fRotation, 1);
-  Exit;}//will be used for birds
+  for I := 1 to length(fClouds) do
+    gRenderPool.RenderSpriteCloud(fAnims[fState].Animation[fAge], fPos.X + fClouds[I - 1].X, fPos.Y + fClouds[I - 1].Y, 0, 1, 1);
+  gRenderPool.RenderSpriteCloud(fAnims[fState].Animation[fAge], fPos.X, fPos.Y, 0, 1, 1);
+  Exit;
 
   for I := 1 to length(fClouds) do
     if fState = wsLoop then
-      gRenderPool.AddAnimation(fPos + fClouds[I - 1]{ + addSpeed}, fAnims[fState], fAge div (I + 1), 0, fRX, false, false, 0, true)
+      gRenderPool.AddAnimation(fPos + fClouds[I - 1], fAnims[fState], fAge div (I + 1), 0, fRX, false, false, 0, true)
     else
-      gRenderPool.AddAnimation(fPos + fClouds[I - 1]{ + addSpeed}, fAnims[fState], fAge, 0, fRX, false, false, 0, true);
+      gRenderPool.AddAnimation(fPos + fClouds[I - 1], fAnims[fState], fAge, 0, fRX, false, false, 0, true);
 
-  gRenderPool.AddAnimation(fPos{ + addSpeed}, fAnims[fState], fAge, 0, fRX, false, false, 0, true);
+  gRenderPool.AddAnimation(fPos, fAnims[fState], fAge, 0, fRX, false, false, 0, true);
 end;
 
 constructor TKMWeatherCloudy.Create(aType: TKMWeatherType; aPos: TKMPointF; aSpeed: TKMPointF; aLifeTime: Cardinal; aRX: TRXType);
@@ -471,7 +477,7 @@ begin
     gParticles.AddWeatherParticle(GetRandomPos(aPos + KMPointF(0, 0), 0.5), fCurrentClimate);
     gParticles.AddWeatherParticle(GetRandomPos(aPos + KMPointF(1.3, 0), 0.5), fCurrentClimate);
   end;
-  if Random(200) <= 5 then
+  if Random(200) <= 2 then
   begin
     gParticles.AddWhiteLightning(GetRandomPos(aPos, 2));
     gSoundPlayer.PlayAmbiance(sfxwThunder, fPos, 1);
@@ -559,7 +565,7 @@ begin
   gParticles.AddWeatherParticle(GetRandomPos(aPos + KMPointF(0, 0), 1), fCurrentClimate);
   gParticles.AddWeatherParticle(GetRandomPos(aPos + KMPointF(1.3, 0.8), 1), fCurrentClimate);
 
-  if Random(200) <= 5 then
+  if Random(200) <= 2 then
   begin
     gParticles.AddGoldLightning(GetRandomPos(aPos, 2));
     gSoundPlayer.PlayAmbiance(sfxwThunder, fPos, 1);
@@ -606,7 +612,7 @@ begin
   ExtendAnimations(1);
 
   fMaxStyles := 4;
-  Style := KaMRandom(fMaxStyles, 'TKMWeatherCloudy.Create');
+  Style := KaMRandom(fMaxStyles, 'TKMWeatherSandStorm2.Create');
   //add new clouds
   case Style of
     0: ;
@@ -652,6 +658,64 @@ begin
     gGame.Weather.AddItem(wtStorm, aPos + KMPointF(0, -4), speed, 100 + KaMRandom(100 + gGame.Weather.Settings.MaxLifeTime, 'TKMWeatherTornado'), rxTrees);
   end;
 
+end;
+
+constructor TKMWeatherBirds.Create(aType: TKMWeatherType; aPos: TKMPointF; aSpeed: TKMPointF; aLifeTime: Cardinal; aRX: TRXType);
+  procedure AddToSpeed(var aSpeed : Single; aAmount : Single);
+  begin
+    IF aSpeed < 0 then
+      aSpeed := aSpeed - aAmount
+    else
+      aSpeed := aSpeed + aAmount;
+  end;
+
+var distSqr : Single;
+begin
+  AddToSpeed(aSpeed.X, 0.1);
+  AddToSpeed(aSpeed.Y, 0.1);
+
+
+  Inherited;
+  fMaxStyles := 3;
+
+  distSqr := Sqr(aSpeed.Y) + Sqr(aSpeed.Y);
+  fRotation := ArcTan2(aSpeed.Y/distSqr, aSpeed.X/distSqr) * 180/Pi + 90;
+
+  Style := KaMRandom(fMaxStyles, 'TKMWeatherBirds.Create');
+  Case Style of
+  0:
+    begin
+      fAnims[wsStart].Create(0, 0, 1543, 9);
+      fAnims[wsLoop].Create(0, 0, 1543, 9);
+      fAnims[wsEnd].Create(0, 0, 1543, 9);
+    end;
+  1:
+    begin
+      fAnims[wsStart].Create(0, 0, 1552, 9);
+      fAnims[wsLoop].Create(0, 0, 1552, 9);
+      fAnims[wsEnd].Create(0, 0, 1552, 9);
+    end;
+  else
+    begin
+      fAnims[wsStart].Create(0, 0, 1561, 9);
+      fAnims[wsLoop].Create(0, 0, 1561, 9);
+      fAnims[wsEnd].Create(0, 0, 1561, 9);
+    end;
+  End;
+end;
+
+procedure TKMWeatherBirds.PaintClouds(aLag : Single);
+var alpha : Single;
+begin
+  IF fState = wsStart then
+    alpha := fAge / 9
+  else
+  IF fState = wsEnd then
+    alpha := 1 - ((fAge mod 9) / 9)
+  else
+    alpha := 1;
+
+  gRenderPool.RenderSpriteCloud(fAnims[fState].Animation[fAge], fPos.X, fPos.Y, fRotation, 1, alpha);
 end;
 
 end.
