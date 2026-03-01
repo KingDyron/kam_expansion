@@ -61,7 +61,7 @@ uses
   Classes, SysUtils,
   KM_Game,
   KM_HandsCollection,
-  KM_CommonUtils,
+  KM_CommonUtils, KM_CommonHelpers,
   KM_RenderPool,
   KM_ResMapElements,
   KM_Terrain,
@@ -168,7 +168,12 @@ begin
   Result := false;
   for I := 0 to aCount - 1 do
     If AddTree(aTreeID) then
+    begin
       Result := true;
+      If not ArrayContains(aTreeID, fAITrees) then
+        fAITrees := fAITrees + [aTreeID];
+    end;
+
 end;
 
 
@@ -344,7 +349,7 @@ begin
     end;
   end;
 
-  If gHands[Owner].IsComputer then
+  If gHands[Owner].IsComputer or gGame.Params.MBD.IsEasy then
     If aTick mod TERRAIN_PACE = 0 then
       PlantAITree;
 end;

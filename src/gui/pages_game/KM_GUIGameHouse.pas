@@ -4134,6 +4134,7 @@ var I, K, J, L, orders, count, count2, lastID, phase : Integer;
   trainingUnit : Byte;
   WP : TKMWarePlan;
   vC : Integer;
+  multi : Single;
 begin
   Palace := TKMHousePalace(aHouse);
   Button_PalaceTrain.Enabled := Palace.CanStartTraining;
@@ -4145,6 +4146,7 @@ begin
   WaresRow_CostOnce.Enabled := not Palace.TrainingInProgress;
   UT := fLastPalaceUnit.GetUnit;
   orders := Palace.Orders[UT];
+  multi := gHands[Palace.Owner].GetPalaceCostMultiplier;
   for I := 0 to J do
   begin
     K := gRes.Wares.VirtualWares.PALACE_WARES[I];
@@ -4157,6 +4159,7 @@ begin
       If gRes.Units[UT].PalaceCost.MainWares[L].W = gRes.Wares.VirtualWares[K].Name then
       begin
         count2 := gRes.Units[UT].PalaceCost.MainWares[L].C;
+        count2 := Trunc(count2 * multi);
         IF (gRes.Units[UT].PalaceCost.MainWares[L].W = 'vtCoin') and gHands[Palace.Owner].ArmyDevUnlocked(36) then
           count2 := Max(1, count2 * 4 div 5);
 
@@ -4188,6 +4191,7 @@ begin
     If gRes.Units[UT].PalaceCost.PhaseWares[L].W = gRes.Wares.VirtualWares[K].Name then
     begin
       count2 := gRes.Units[UT].PalaceCost.PhaseWares[L].C;
+      count2 := Trunc(count2 * multi);
       IF gHands[Palace.Owner].ArmyDevUnlocked(38) then
         count2 := Max(1, count2 * 4 div 5);
       Break;

@@ -15,7 +15,6 @@ type
   private
     fWorklessCount : Byte;
     fMaxCount : Byte;
-    fWorklessTime : TKMCardinalArray;
 
     fFamiliesCount: Byte;
     fFamilyKidCount, fKidBornTime, fKidBornMaxTime: TKMCardinalArray;
@@ -64,7 +63,7 @@ uses
   KM_Entity,
   KM_Units,
   KM_HandsCollection, KM_Hand, KM_HandTypes, KM_HandEntity,
-  KM_CommonUtils, KM_JSONUtils;
+  KM_CommonUtils, KM_CommonHelpers, KM_JSONUtils;
 const
   KID_AGE_MULTIPLIER : array[TKMWorklessAge] of Single = (0.8, 1.2, 1);
 
@@ -88,30 +87,28 @@ begin
   SetLength(fKidBornTime, fFamiliesCount);
   SetLength(fKidBornMaxTime, fFamiliesCount);
   SetLength(fFamilyKidCount, fFamiliesCount);
-  SetLength(fWorklessTime, MaxCount);
-  if not gGame.Params.IsMapEditor then
-    if not aWasBuilt then
+
+  if (not gGame.Params.IsMapEditor and not aWasBuilt)
+  or (aWasBuilt and gGame.Params.MBD.IsEasy) then
+  begin
+    if KamRandom(100, 'TKMHouseCottage.Activate1') < 25 then
     begin
-      if KamRandom(100, 'TKMHouseCottage.Activate1') < 25 then
-      begin
-        for I := 1 to 5 do
-          AddFamily;
-      end;
-
-      for I := fFamiliesCount - 1 downto 0 do
-        if KamRandom(100, 'TKMHouseCottage.Activate2') < 75 then
-        begin
-          AddKid(I, 1, true);
-          C := high(fKidAge);
-          fKidAge[C] := TKMWorklessAge(KamRandom(3, 'Baby age'))
-
-        end;
-      C := KamRandom(MaxCount + 1, 'Baby age');
-      for I := 1 to C do
-        ProductionComplete(1);
-
-
+      for I := 1 to 5 do
+        AddFamily;
     end;
+
+    for I := fFamiliesCount - 1 downto 0 do
+      if KamRandom(100, 'TKMHouseCottage.Activate2') < 75 then
+      begin
+        AddKid(I, 1, true);
+        C := high(fKidAge);
+        fKidAge[C] := TKMWorklessAge(KamRandom(3, 'Baby age'))
+
+      end;
+    C := KamRandom(MaxCount + 1, 'Baby age');
+    for I := 1 to C do
+      ProductionComplete(1);
+  end;
 
 end;
 
@@ -162,12 +159,6 @@ begin
   Inc(fWorklessCount);
   If fFurnitures > 0 then
     fFurnitures := fFurnitures - 1;
-  for I := 0 to high(fWorklessTime) do
-    if fWorklessTime[I] = 99999999 then
-    begin
-      fWorklessTime[I] := aTick - 1;
-      Break;
-    end;
 end;
 
 function TKMHouseCottage.GetStageDuration(aNewKidsCount : Byte) : Integer;
@@ -297,13 +288,6 @@ procedure TKMHouseCottage.TakeWorkless;
 var I : Integer;
 begin
   fWorklessCount := EnsureRange(fWorklessCount - 1, 0, MaxCount);
-
-  for I := high(fWorklessTime) downto 0 do
-    if fWorklessTime[I] <> 99999999 then
-    begin
-      fWorklessTime[I] := 99999999;
-      Break;
-    end;
 end;
 
 
@@ -316,7 +300,6 @@ begin
 
   LoadStream.Read(fWorklessCount);
   LoadStream.Read(fFamiliesCount);
-  LoadArrFromStream(LoadStream, fWorklessTime);
   LoadArrFromStream(LoadStream, fKidBornTime);
   LoadArrFromStream(LoadStream, fFamilyKidCount);
   LoadArrFromStream(LoadStream, fKidBornMaxTime);
@@ -343,7 +326,6 @@ begin
 
   SaveStream.Write(fWorklessCount);
   SaveStream.Write(fFamiliesCount);
-  SaveArrToStream(SaveStream, fWorklessTime);
   SaveArrToStream(SaveStream, fKidBornTime);
   SaveArrToStream(SaveStream, fFamilyKidCount);
   SaveArrToStream(SaveStream, fKidBornMaxTime);
@@ -478,16 +460,6 @@ begin
 
   for I := high(fKidTime) downto 0 do
     GrowKid(I, aTick);
-
-  for I := 0 to High(fWorklessTime) do
-    if fWorklessTime[I] <> 99999999 then
-      if (aTick - fWorklessTime[I]) mod 22000 = 0 then
-      begin
-        if CheckWareIn(wtApple) = 0 then
-          TakeWorkless
-        else
-          WareTakeFromIn(wtApple, 1);
-      end;
 end;
 
 

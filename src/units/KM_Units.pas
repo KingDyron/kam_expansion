@@ -2027,10 +2027,10 @@ begin
     fConditionPace := 10;
 
   if gGameParams.MBD.IsEasy then
-    fConditionPace := Round(fConditionPace * 1.5)
+    fConditionPace := fConditionPace + 1
   else
   if gGameParams.MBD.IsHardOrRealism then
-    fConditionPace := Round(fConditionPace * 0.8);
+    fConditionPace := fConditionPace - 1;
 
   If aUnitType in UNITS_HUMAN then
     if gHands[Owner].HasPearl(ptValtaria) then
@@ -3690,15 +3690,6 @@ begin
   if fCondition < 600 then
     Result := Result - 1;
 
-  if gHands[Owner].IsAffectedbyMBD then
-  begin
-    if gGameParams.MBD.IsEasy then
-      Result := Round(Result * 1.5)
-    else
-    if gGameParams.MBD.IsHardOrRealism then
-      Result := Round(Result * 0.8);
-  end;
-
   Result := Max(Result, 0);
 end;
 
@@ -3729,15 +3720,6 @@ begin
   else
   if fCondition < 600 then
     Result := Round(Result * 0.75);
-
-  if gHands[Owner].IsAffectedbyMBD then
-  begin
-    if gGameParams.MBD.IsEasy then
-      Result := Round(Result * 1.5)
-    else
-    if gGameParams.MBD.IsHardOrRealism then
-      Result := Round(Result * 0.8);
-  end;
 
   Result := Max(Result, 1);
 end;

@@ -1228,10 +1228,10 @@ begin
 
   if gHands[aUnit.Owner].IsAffectedbyMBD then
     if gGame.Params.MBD.IsEasy then
-      ActSetByMultiplier(aUnit, 0.75)
+      ActSetByMultiplier(aUnit, 0.9)
     else
     if gGame.Params.MBD.IsHardOrRealism then
-      ActSetByMultiplier(aUnit, 1.25);
+      ActSetByMultiplier(aUnit, 1.2);
 
     if gGame.Params.MPMode = mmBottomless then
       ActSetByMultiplier(aUnit, 1.1);

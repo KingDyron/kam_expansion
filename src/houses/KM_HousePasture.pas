@@ -46,7 +46,7 @@ type
     procedure UpdateState(aTick: Cardinal); override;
     procedure Paint; override;
 
-    procedure BuyAnimal(aAnimal : TKMPastureAnimalType);
+    procedure BuyAnimal(aAnimal : TKMPastureAnimalType; aScript : Boolean = false);
     procedure BuyAnimalScript(aAnimal : TKMPastureAnimalType; aCount : Integer);
 
     procedure SellAnimal(aIndex : Integer); overload;
@@ -68,7 +68,7 @@ uses
   KM_RenderPool, KM_RenderAux,
   KM_Resource, KM_ResUnits,
   KM_Terrain,
-  KM_CommonUtils;
+  KM_CommonUtils, KM_CommonHelpers;
 
 constructor TKMHousePasture.Create(aUID: Integer; aHouseType: TKMHouseType; PosX: Integer; PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
 begin
@@ -333,7 +333,7 @@ begin
   end;
 end;
 
-procedure TKMHousePasture.BuyAnimal(aAnimal: TKMPastureAnimalType);
+procedure TKMHousePasture.BuyAnimal(aAnimal: TKMPastureAnimalType; aScript : Boolean = false);
 var I : Integer;
 begin
   //check for free space
@@ -351,6 +351,9 @@ begin
       fAnimals[I].Multi2 := 0;
       fAnimals[I].Multi3 := 0;
       SetNewAction(fAnimals[I]);
+      IF not aScript then
+        If not ArrayContains(byte(aAnimal), fAIAnimals) then
+          fAIAnimals := fAIAnimals + [byte(aAnimal)];
       Exit;
     end;
 end;
@@ -417,12 +420,12 @@ begin
   If length(fAIAnimals) = 0 then
   begin
     R := KaMRandom(byte(high(TKMPastureAnimalType)), 'TKMHousePasture.BuyAIAnimal1') + 1;
-    BuyAnimal(TKMPastureAnimalType(R));
+    BuyAnimal(TKMPastureAnimalType(R), true);
 
   end else
   begin
     R := KaMRandom(length(fAIAnimals), 'TKMHousePasture.BuyAIAnimal2');
-    BuyAnimal(TKMPastureAnimalType(fAIAnimals[R]));
+    BuyAnimal(TKMPastureAnimalType(fAIAnimals[R]), true);
   end;
 
 end;
@@ -463,7 +466,7 @@ begin
     UpdateAnimal(fAnimals[I], I, aTick);
 
   If HasWorkerInside then
-    If gHands[Owner].IsComputer then
+    If gHands[Owner].IsComputer or gGame.Params.MBD.IsEasy then
       If aTick mod 300 = 0 then
         BuyAIAnimal;
 end;

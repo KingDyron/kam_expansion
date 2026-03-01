@@ -505,10 +505,19 @@ begin
   fDamageHouse := gRes.Units[aUnitType].HouseDamage;
 
   fRageTime := 0;
+
+  if gGameParams.MBD.IsEasy
+  and (aUnitType in [utBowMan, utCrossbowman, utRogue, utSkirmisher]) then
+    fInfinityAmmo := true;
+
   If fInfinityAmmo then
-    fBoltCount := 1000;
+    fBoltCount := 10000;
 
   fRemovedFromGroup := false;
+
+  If (UnitType in SIEGE_MACHINES)
+  and gGameParams.MBD.IsHardOrRealism then
+    SetSpeed(-3, true);
 end;
 
 
@@ -1689,9 +1698,9 @@ const
   CROSSBOWMEN_AIMING_DELAY_MIN = 8; //minimum time for crossbowmen to aim
   CROSSBOWMEN_AIMING_DELAY_ADD = 8; //random component
 
-  CATAPULT_AIMING_DELAY_MIN = 16; //minimum time for crossbowmen to aim
+  CATAPULT_AIMING_DELAY_MIN = 20; //minimum time for crossbowmen to aim
   CATAPULT_AIMING_DELAY_ADD = 16; //random component
-  BALLISTA_AIMING_DELAY_MIN = 16; //minimum time for balista to aim
+  BALLISTA_AIMING_DELAY_MIN = 20; //minimum time for balista to aim
 begin
   Result := 0;
   If gHands[Owner].ArmyDevUnlocked(37) then
@@ -1710,6 +1719,11 @@ begin
       utSkirmisher: Result := 10;
       else raise Exception.Create('Unknown shooter');
     end;
+
+  If (UnitType in SIEGE_MACHINES)
+  and gGameParams.MBD.IsHardOrRealism then
+    Result := Result + 10;
+
 end;
 
 procedure TKMUnitWarrior.UpdateHitPoints(UseEffect : Boolean = true);
@@ -1867,14 +1881,6 @@ function TKMUnitWarrior.GetDamageUnit: Word;
 begin
   Result := fDamageUnits;
   Result := Result + 2 * Result * byte(fRageTime > RageDelay);
-  if gHands[Owner].IsAffectedbyMBD then
-  begin
-    if gGameParams.MBD.IsEasy then
-      Result := Round(Result * 1.5)
-    else    
-    if gGameParams.MBD.IsHardOrRealism then
-      Result := Max(Round(Result * 0.8), 1);
-  end;
 
   if fGroup <> nil then
     if not (UnitType in SPECIAL_UNITS) then
@@ -1893,14 +1899,6 @@ function TKMUnitWarrior.GetDamageHouse: Word;
 begin
   Result := fDamageHouse;
   Result := Result + 2 * Result * byte(fRageTime > RageDelay);
-  if gHands[Owner].IsAffectedbyMBD then
-  begin
-    if gGameParams.MBD.IsEasy then
-      Result := Round(Result * 1.5)
-    else    
-    if gGameParams.MBD.IsHardOrRealism then
-      Result := Max(Round(Result * 0.8), 1);
-  end;
 
   if fGroup <> nil then
     if not (UnitType in SPECIAL_UNITS) then

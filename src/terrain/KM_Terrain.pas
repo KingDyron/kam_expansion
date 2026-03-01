@@ -8353,6 +8353,8 @@ end;
 
 function TKMTerrain.CanPlaceWell(const aLoc: TKMPoint; forAI : Boolean = false): Boolean;
 begin
+  IF gGameParams.MBD.IsEasy then
+    Exit(true);
   Result := not (TileIsSnow(aLoc.X, aLoc.Y) or TileIsSand(aLoc) or (TileIsCoal(aLoc.X, aLoc.Y) > 0))
     or Land[aLoc.Y, aLoc.X].TileOverlay2.AllowsBuilding or forAI;
 

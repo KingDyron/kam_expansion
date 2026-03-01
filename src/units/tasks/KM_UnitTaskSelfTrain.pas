@@ -40,11 +40,12 @@ begin
   fUnit.Visible := False;
 
   fTime := gRes.Units[fUnit.UnitType].SchoolTime;
+
   if gGame.Params.MBD.IsEasy then
-    fTime := Round(fTime * 0.8)
+    fTime := Round(fTime * 0.9)
   else
   if gGame.Params.MBD.IsHardOrRealism then
-    fTime := Round(fTime * 1.25);
+    fTime := Round(fTime * 1.1);
 
   if gHands[fUnit.Owner].HasPearl(ptValtaria) then
     fTime := Round(fTime * 0.8);

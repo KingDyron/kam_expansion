@@ -7364,6 +7364,7 @@ function TKMHousePalace.HasMainVWares(aIndex: Integer; aOrderCount : Byte = 1): 
 var K : Integer;
     UT : TKMUnitType;
     vC : Integer;
+    multi : Single;
 begin
   If aIndex = NO_TRRAINING_ID then
     Exit(false);
@@ -7372,10 +7373,12 @@ begin
   if GetPhaseCount(UT) = 0 then
     Exit;
 
+  multi := gHands[Owner].GetPalaceCostMultiplier;
+
   for K := 0 to High(gRes.Units[UT].PalaceCost.MainWares) do
     with gRes.Units[UT].PalaceCost.MainWares[K] do
     begin
-      vC := C;
+      vC := Trunc(C * multi);
       if (W = 'vtCoin') and gHands[Owner].ArmyDevUnlocked(36) then
         vC := Max(1, vC * 4 div 5);
 
@@ -7388,6 +7391,7 @@ function TKMHousePalace.HasPhaseVWares(aIndex: Integer; aOrderCount : Byte = 1):
 var K : Integer;
     UT : TKMUnitType;
     vC : Integer;
+    multi : Single;
 begin
   If aIndex = NO_TRRAINING_ID then
     Exit(false);
@@ -7396,10 +7400,12 @@ begin
   if GetPhaseCount(UT) = 0 then
     Exit;
 
+  multi := gHands[Owner].GetPalaceCostMultiplier;
+
   for K := 0 to High(gRes.Units[UT].PalaceCost.PhaseWares) do
     with gRes.Units[UT].PalaceCost.PhaseWares[K] do
     begin
-      vC := C;
+      vC := Trunc(C * multi);
       if gHands[Owner].ArmyDevUnlocked(38) then
         vC := Max(1, vC * 4 div 5);
 

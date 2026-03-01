@@ -357,6 +357,8 @@ type
     function GetWareProductionCount(aWare : TKMWareType; aHouseType : TKMHouseType = htAny) : Word;
 
     function GiveWareToRandomStore(aWare : TKMWareType; aCount : Integer = 1) : Boolean;
+    function GetPalaceCostMultiplier : Single;
+
 
 
     procedure AddDevPoint(aCount : Word = 1);
@@ -496,7 +498,7 @@ uses
   KM_HouseArena,
   KM_Resource, KM_ResSound, KM_ResTexts, KM_ResMapElements, KM_ScriptingEvents, KM_ResUnits,
   KM_RenderPool, KM_RenderAux,
-  KM_CommonUtils, KM_GameSettings,
+  KM_CommonUtils, KM_CommonHelpers, KM_GameSettings,
   KM_UnitGroupTypes,
   KM_MapTypes, KM_HouseCottage,
   KM_TerrainTypes;
@@ -3313,6 +3315,10 @@ function TKMHand.GetHouseWoodCost(aHouseType: TKMHouseType) : Byte;
 begin
   Result := gRes.Houses[aHouseType].WoodCost;
 
+
+  If gGameParams.MBD.IsHardOrRealism then
+    Result := Result + Result div 5;
+
   If (aHouseType = htWoodcutters) and BuildDevUnlocked(5) then
     Result := Max(Result - 2, 1);
   If (aHouseType in WALL_HOUSES) and BuildDevUnlocked(16) then
@@ -3322,11 +3328,15 @@ begin
 
   If (aHouseType = htBarracks) and BuildDevUnlocked(17) then
     Result := Max(Result - 1, 1);
+
+
 end;
 
 function TKMHand.GetHouseStoneCost(aHouseType: TKMHouseType) : Byte;
 begin
   Result := gRes.Houses[aHouseType].StoneCost;
+  If gGameParams.MBD.IsHardOrRealism then
+    Result := Result + Result div 5;
   If (aHouseType = htBarracks) and BuildDevUnlocked(17) then
     Result := Max(Result - 1, 0);
 end;
@@ -3334,6 +3344,8 @@ end;
 function TKMHand.GetHouseTileCost(aHouseType: TKMHouseType) : Byte;
 begin
   Result := gRes.Houses[aHouseType].TileCost;
+  If gGameParams.MBD.IsHardOrRealism then
+    Result := Result + Result div 5;
   If (aHouseType = htPottery) and BuildDevUnlocked(8) then
     Result := 0;
   If (aHouseType = htMill) and BuildDevUnlocked(10) then
@@ -3429,6 +3441,17 @@ begin
     Exit;
   H.WareAddToIn(aWare, aCount);
   Result := true;
+end;
+
+function TKMHand.GetPalaceCostMultiplier : Single;
+begin
+  If gGameParams.MBD.IsHardOrRealism then
+    Result := 1.25
+  else
+    If gGameParams.MBD.IsEasy then
+    Result := 0.9
+  else
+    Result := 1;
 end;
 
 
@@ -4773,8 +4796,17 @@ end;
 
 function TKMHand.GetLVLExp(aLevel : Word) : Cardinal;
 const LEVEL_POINTS_INC = 500;
+      LEVEL_POINTS_INC_EASY = 400;
+      LEVEL_POINTS_INC_HARD = 600;
+
 begin
-  Result := Round(Sqr(aLevel / 3) * LEVEL_POINTS_INC);
+  case gGameParams.MissionBuiltInDifficulty of
+    mdbEasy: Result := Round(Sqr(aLevel / 3) * LEVEL_POINTS_INC_EASY);
+    mdbHard,
+    mdbRealism : Result := Round(Sqr(aLevel / 3) * LEVEL_POINTS_INC_HARD);
+    else Result := Round(Sqr(aLevel / 3) * LEVEL_POINTS_INC);
+  end;
+
 end;
 
 procedure TKMHand.AddExp(aAmount: Word);
