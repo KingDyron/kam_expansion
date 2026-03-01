@@ -343,7 +343,7 @@
 		"ProductionCountMax" : 1, 
 		"ProduceInHouses" : ["htWoodCutters"],
 		"ProduceAfterWares" : [
-			{"Ware" : "wtTrunk", "Min" : 1, "Cycles" : 6}
+			{"Ware" : "wtTrunk", "Min" : 1, "Cycles" : 5}
 		],
 		"CoinPrice" : 0.6,
 		"MaxCountInStall" : 50
