@@ -443,10 +443,11 @@ end;
 
 procedure TKMSpectator.PlayEnviromentSounds(aTick : Cardinal; aClipRect : TKMRect);
 const
-  SOUNDS_PACE = TERRAIN_PACE + 100;
+  SOUNDS_PACE = 3;//how many sounds can be played
 var A, W, H : Integer;
   X, Y : Integer;
   soundsPlayed : Byte;
+  pace : Word;
   procedure PlaySound(aType : TSoundFXAmbiance; const aLoc : TKMPointF);
   begin
     gSoundPlayer.PlayAmbiance(aType, aLoc);
@@ -458,8 +459,8 @@ begin
 
   W := aClipRect.Width - 1;
   H := aClipRect.Height - 1;
-
-  A := aTick mod SOUNDS_PACE;
+  pace := ((W * H) div SOUNDS_PACE) + 1;
+  A := aTick mod pace;
   soundsPlayed := 0;
   while (A < W * H) and (soundsPlayed < 2) do
   begin
@@ -471,7 +472,7 @@ begin
     IF InRange(gTerrain.Land[Y, X].Obj, 453, 456) then
       PlaySound(sfxwFire, KMPointF(X, Y));
 
-    Inc(A, SOUNDS_PACE);
+    Inc(A, pace);
   end;
 
 end;

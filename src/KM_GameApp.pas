@@ -1549,7 +1549,8 @@ begin
   begin
     gGame.UpdateState(fGlobalTickCount);
     If not gGame.Params.IsMapEditor then
-      gMySpectator.PlayEnviromentSounds(fGlobalTickCount, gGame.ActiveInterface.Viewport.GetClip);
+      IF fGlobalTickCount mod 2 = 0 then
+      gMySpectator.PlayEnviromentSounds(fGlobalTickCount div 2, gGame.ActiveInterface.Viewport.GetClip);
     if gGame.Params.IsMultiPlayerOrSpec and (fGlobalTickCount mod 100 = 0) then
       SendMPGameInfo; //Send status to the server every 10 seconds
   end
