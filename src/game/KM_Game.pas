@@ -846,6 +846,7 @@ begin
   finally
     parser.Free;
   end;
+  gRenderPool.CreateRenderDevice(gGame.Weather.Settings);
 
   gLog.AddTime('Game options: ' + fOptions.ToString);
   gLog.AddTime('Gameplay initialized', True);

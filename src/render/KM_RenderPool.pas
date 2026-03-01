@@ -12,6 +12,7 @@ uses
 
 type
   TKMPaintLayer = (plTerrain, plObjects, plCursors);
+  TKMRenderType = (rtDefault, rtNoShadow, rtNoNight);
 
   TKMRenderSprite = record
     Loc: TKMPointF; // Where sprite lower-left corner is located
@@ -57,6 +58,37 @@ type
     procedure Render;
   end;
 
+  TKMRenderDeviceCommon = class
+  protected
+    procedure RenderSprite(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+                           HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1); overload; virtual;
+    procedure RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+                           HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1); virtual;
+    procedure RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY, aNight: Single;
+                                    aId2: Integer = 0; aStoneProgress: Single = 0; X2: Single = 0; Y2: Single = 0); virtual;
+  end;
+
+  TKMRenderDeviceNoShadow = class(TKMRenderDeviceCommon)
+  protected
+    procedure RenderSprite(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+                           HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1); overload; override;
+    procedure RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+                           HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1); override;
+    procedure RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY, aNight: Single;
+                                    aId2: Integer = 0; aStoneProgress: Single = 0; X2: Single = 0; Y2: Single = 0); override;
+  end;
+
+  TKMRenderDeviceNoNight = class(TKMRenderDeviceCommon)
+  protected
+    procedure RenderSprite(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+                           HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1); overload; override;
+    procedure RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+                           HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1); override;
+    procedure RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY, aNight: Single;
+                                    aId2: Integer = 0; aStoneProgress: Single = 0; X2: Single = 0; Y2: Single = 0); override;
+  end;
+
+
   // Collect everything that need to be rendered and put it in a list
   TKMRenderPool = class
   private
@@ -76,6 +108,7 @@ type
     fTabletsList: TKMPointTagList;
     fMarksList: TKMPointTagList;
     fHouseOutline: TKMPointList;
+    fRenderDevice: TKMRenderDeviceCommon;
     procedure UnitsHitTest(const X, Y : Integer);
     procedure ApplyTransform;
     procedure SetDefaultRenderParams;
@@ -243,29 +276,11 @@ type
     property RenderTerrain: TKMRenderTerrain read fRenderTerrain;
     procedure SetRotation(aH,aP,aB: Integer);
 
+    procedure CreateRenderDevice(aWeatherSettings : TKMSettingsWeather);
+
     procedure Render(aTickLag: Single);
 
     property BaseRender : TKMRender read fRender;
-  end;
-
-  TKMRenderPoolNoNight = class(TKMRenderPool)
-  protected
-    procedure RenderSprite(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
-                           HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1); overload; override;
-    procedure RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
-                           HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1); override;
-    procedure RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY, aNight: Single;
-                                    aId2: Integer = 0; aStoneProgress: Single = 0; X2: Single = 0; Y2: Single = 0); override;
-  end;
-
-  TKMRenderPoolNoShadows = class(TKMRenderPool)
-  protected
-    procedure RenderSprite(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
-                           HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1); overload; override;
-    procedure RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
-                           HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1); override;
-    procedure RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY, aNight: Single;
-                                    aId2: Integer = 0; aStoneProgress: Single = 0; X2: Single = 0; Y2: Single = 0); override;
   end;
 
 var
@@ -335,6 +350,7 @@ begin
   FreeAndNil(fRenderTerrain);
   FreeAndNil(gRenderGameAux);
   FreeAndNil(gRenderAux);
+  FreeAndNil(fRenderDevice);
 
   inherited;
 end;
@@ -353,6 +369,20 @@ begin
   rHeading := aH;
   rPitch   := aP;
   rBank    := aB;
+end;
+
+procedure TKMRenderPool.CreateRenderDevice(aWeatherSettings : TKMSettingsWeather);
+begin
+  FreeAndNil(fRenderDevice);
+
+  If (aWeatherSettings.NightTime = 0) and (aWeatherSettings.NightSpeed = 0) then
+    fRenderDevice := TKMRenderDeviceNoNight.Create
+  else
+  If not aWeatherSettings.DynamicShadow then
+  begin
+    fRenderDevice := TKMRenderDeviceNoShadow.Create
+  end else
+    fRenderDevice := TKMRenderDeviceCommon.Create;
 end;
 
 
@@ -2342,7 +2372,93 @@ begin
   RenderSprite(aRX, aId, aX, aY, 1, col, DoHighlight, HighlightColor, aForced, aAlphaStep);
 end;
 
-procedure TKMRenderPool.RenderSprite(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+procedure TKMRenderPool.RenderSpriteFront(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+                                   HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1);
+var
+  tX, tY: Integer;
+  rX, rY: Single;
+begin
+  tX := EnsureRange(Round(aX), 1, gTerrain.MapX) - 1;
+  tY := EnsureRange(Round(aY), 1, gTerrain.MapY) - 1;
+  //Do not render if sprite is under FOW
+  if not aForced and (gMySpectator.FogOfWar.CheckVerticeRenderRev(tX, tY) <= FOG_OF_WAR_MIN) then
+    Exit;
+
+  rX := RoundToTilePixel(aX);
+  rY := RoundToTilePixel(aY);
+
+  with gGFXData[aRX, aId] do
+  begin
+    // FOW is rendered over the top so no need to make sprites black anymore
+    glColor4ub(255, 255, 255, 255);
+
+    TKMRender.BindTexture(Tex.TexID);
+    if DoHighlight then
+      glColor3ub(HighlightColor AND $FF, HighlightColor SHR 8 AND $FF, HighlightColor SHR 16 AND $FF);
+    glBegin(GL_QUADS);
+      glTexCoord2f(Tex.u1, Tex.v2); glVertex2f(rX                     , rY                      );
+      glTexCoord2f(Tex.u2, Tex.v2); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY                      );
+      glTexCoord2f(Tex.u2, Tex.v1); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY-pxHeight/CELL_SIZE_PX);
+      glTexCoord2f(Tex.u1, Tex.v1); glVertex2f(rX                     , rY-pxHeight/CELL_SIZE_PX);
+    glEnd;
+  end;
+
+  if gGFXData[aRX, aId].Alt.TexID <> 0 then
+    with gGFXData[aRX, aId] do
+    begin
+      glColor4ubv(@Col);
+      TKMRender.BindTexture(Alt.TexID);
+      glBegin(GL_QUADS);
+        glTexCoord2f(Alt.u1, Alt.v2); glVertex2f(rX                     , rY                      );
+        glTexCoord2f(Alt.u2, Alt.v2); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY                      );
+        glTexCoord2f(Alt.u2, Alt.v1); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY-pxHeight/CELL_SIZE_PX);
+        glTexCoord2f(Alt.u1, Alt.v1); glVertex2f(rX                     , rY-pxHeight/CELL_SIZE_PX);
+      glEnd;
+    end;
+end;
+
+procedure TKMRenderPool.RenderSpriteCloud(aId: Integer; aX: Single; aY: Single; aRotation: Single; aNight: Single; aAlpha : Single);
+var
+  tX, tY: Integer;
+  rX, rY: Single;
+  width, height : Single;
+  rxData : TRXData;
+begin
+  tX := EnsureRange(Round(aX), 1, gTerrain.MapX) - 1;
+  tY := EnsureRange(Round(aY), 1, gTerrain.MapY) - 1;
+  //Do not render if sprite is under FOW
+  if (gMySpectator.FogOfWar.CheckVerticeRenderRev(tX, tY) <= FOG_OF_WAR_MIN) then
+    Exit;
+  rxData := fRXData[rxTrees];
+
+  rX := RoundToTilePixel(aX) + rxData.Pivot[aID].X / CELL_SIZE_PX;
+  rY := RoundToTilePixel(aY) + (rxData.Pivot[aID].Y + rxData.Size[aID].Y / 2) / CELL_SIZE_PX;
+
+  //RenderCircle(KMPointF(aX, aY), 1, $00FFFFFF, $FFFFFFFF, 1);
+  glPushMatrix;
+  with gGFXData[rxTrees, aId] do
+  begin
+    glColor4f(1, 1, 1, aAlpha);
+
+    width := pxWidth/CELL_SIZE_PX;
+    height := pxHeight/CELL_SIZE_PX;
+
+    glTranslateF(rX, rY, 0);
+    glRotateF(aRotation, 0, 0, 1);
+
+    TKMRender.BindTexture(Tex.TexID);
+
+    glBegin(GL_QUADS);
+      glTexCoord2f(Tex.u1, Tex.v2); glVertex2f(0, 0);
+      glTexCoord2f(Tex.u2, Tex.v2); glVertex2f(width, 0);
+      glTexCoord2f(Tex.u2, Tex.v1); glVertex2f(width, 0-height);
+      glTexCoord2f(Tex.u1, Tex.v1); glVertex2f(0, 0-height);
+    glEnd;
+  end;
+  glPopMatrix;
+end;
+
+procedure TKMRenderDeviceCommon.RenderSprite(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
                                    HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1);
 var
   tX, tY: Integer;
@@ -2507,6 +2623,31 @@ end;
 
 
 procedure TKMRenderPool.RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+                                   HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1);
+begin
+  fRenderDevice.RenderSpritePool(aRX, aID, aX, aY, aNight, Col, DoHighlight, HighlightColor, aForced, aAlphaStep);
+end;
+
+// Param - defines at which level alpha-test will be set (acts like a threshhold)
+// Then we render alpha-tested Mask to stencil buffer. Only those pixels that are
+// white there will have sprite rendered
+// If there are two masks then we need to render sprite only there
+// where its mask is white AND where second mask is black
+procedure TKMRenderPool.RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY, aNight: Single;
+  aId2: Integer = 0; aStoneProgress: Single = 0; X2: Single = 0; Y2: Single = 0);
+begin
+  fRenderDevice.RenderSpriteAlphaTest(aShadow, aRX, aID, aWoodProgress, aX, aY, aNight, aID2, aStoneProgress, X2, Y2);
+end;
+
+
+procedure TKMRenderPool.RenderSprite(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+                                   HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1);
+begin
+  fRenderDevice.RenderSprite(aRX, aID, aX, aY, aNight, Col, DoHighlight, HighlightColor, aForced, aAlphaStep);
+end;
+
+
+procedure TKMRenderDeviceCommon.RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
                                    HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1);
 var
   tX, tY: Integer;
@@ -2687,99 +2828,12 @@ begin
   glDisable(GL_STENCIL_TEST);
 end;
 
-
-procedure TKMRenderPool.RenderSpriteFront(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
-                                   HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1);
-var
-  tX, tY: Integer;
-  rX, rY: Single;
-begin
-  tX := EnsureRange(Round(aX), 1, gTerrain.MapX) - 1;
-  tY := EnsureRange(Round(aY), 1, gTerrain.MapY) - 1;
-  //Do not render if sprite is under FOW
-  if not aForced and (gMySpectator.FogOfWar.CheckVerticeRenderRev(tX, tY) <= FOG_OF_WAR_MIN) then
-    Exit;
-
-  rX := RoundToTilePixel(aX);
-  rY := RoundToTilePixel(aY);
-
-  with gGFXData[aRX, aId] do
-  begin
-    // FOW is rendered over the top so no need to make sprites black anymore
-    glColor4ub(255, 255, 255, 255);
-
-    TKMRender.BindTexture(Tex.TexID);
-    if DoHighlight then
-      glColor3ub(HighlightColor AND $FF, HighlightColor SHR 8 AND $FF, HighlightColor SHR 16 AND $FF);
-    glBegin(GL_QUADS);
-      glTexCoord2f(Tex.u1, Tex.v2); glVertex2f(rX                     , rY                      );
-      glTexCoord2f(Tex.u2, Tex.v2); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY                      );
-      glTexCoord2f(Tex.u2, Tex.v1); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY-pxHeight/CELL_SIZE_PX);
-      glTexCoord2f(Tex.u1, Tex.v1); glVertex2f(rX                     , rY-pxHeight/CELL_SIZE_PX);
-    glEnd;
-  end;
-
-  if gGFXData[aRX, aId].Alt.TexID <> 0 then
-    with gGFXData[aRX, aId] do
-    begin
-      glColor4ubv(@Col);
-      TKMRender.BindTexture(Alt.TexID);
-      glBegin(GL_QUADS);
-        glTexCoord2f(Alt.u1, Alt.v2); glVertex2f(rX                     , rY                      );
-        glTexCoord2f(Alt.u2, Alt.v2); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY                      );
-        glTexCoord2f(Alt.u2, Alt.v1); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY-pxHeight/CELL_SIZE_PX);
-        glTexCoord2f(Alt.u1, Alt.v1); glVertex2f(rX                     , rY-pxHeight/CELL_SIZE_PX);
-      glEnd;
-    end;
-end;
-
-procedure TKMRenderPool.RenderSpriteCloud(aId: Integer; aX: Single; aY: Single; aRotation: Single; aNight: Single; aAlpha : Single);
-var
-  tX, tY: Integer;
-  rX, rY: Single;
-  width, height : Single;
-  rxData : TRXData;
-begin
-  tX := EnsureRange(Round(aX), 1, gTerrain.MapX) - 1;
-  tY := EnsureRange(Round(aY), 1, gTerrain.MapY) - 1;
-  //Do not render if sprite is under FOW
-  if (gMySpectator.FogOfWar.CheckVerticeRenderRev(tX, tY) <= FOG_OF_WAR_MIN) then
-    Exit;
-  rxData := fRXData[rxTrees];
-
-  rX := RoundToTilePixel(aX) + rxData.Pivot[aID].X / CELL_SIZE_PX;
-  rY := RoundToTilePixel(aY) + (rxData.Pivot[aID].Y + rxData.Size[aID].Y / 2) / CELL_SIZE_PX;
-
-  //RenderCircle(KMPointF(aX, aY), 1, $00FFFFFF, $FFFFFFFF, 1);
-  glPushMatrix;
-  with gGFXData[rxTrees, aId] do
-  begin
-    glColor4f(1, 1, 1, aAlpha);
-
-    width := pxWidth/CELL_SIZE_PX;
-    height := pxHeight/CELL_SIZE_PX;
-
-    glTranslateF(rX, rY, 0);
-    glRotateF(aRotation, 0, 0, 1);
-
-    TKMRender.BindTexture(Tex.TexID);
-
-    glBegin(GL_QUADS);
-      glTexCoord2f(Tex.u1, Tex.v2); glVertex2f(0, 0);
-      glTexCoord2f(Tex.u2, Tex.v2); glVertex2f(width, 0);
-      glTexCoord2f(Tex.u2, Tex.v1); glVertex2f(width, 0-height);
-      glTexCoord2f(Tex.u1, Tex.v1); glVertex2f(0, 0-height);
-    glEnd;
-  end;
-  glPopMatrix;
-end;
-
 // Param - defines at which level alpha-test will be set (acts like a threshhold)
 // Then we render alpha-tested Mask to stencil buffer. Only those pixels that are
 // white there will have sprite rendered
 // If there are two masks then we need to render sprite only there
 // where its mask is white AND where second mask is black
-procedure TKMRenderPool.RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY, aNight: Single;
+procedure TKMRenderDeviceCommon.RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY, aNight: Single;
   aId2: Integer = 0; aStoneProgress: Single = 0; X2: Single = 0; Y2: Single = 0);
 var
   tX, tY: Integer;
@@ -2948,7 +3002,7 @@ end;
 
 
 
-procedure TKMRenderPoolNoNight.RenderSprite(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+procedure TKMRenderDeviceNoNight.RenderSprite(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
                                    HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1);
 var
   tX, tY: Integer;
@@ -2998,7 +3052,7 @@ begin
 end;
 
 
-procedure TKMRenderPoolNoNight.RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+procedure TKMRenderDeviceNoNight.RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
                                    HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1);
 var
   tX, tY: Integer;
@@ -3062,7 +3116,7 @@ end;
 // white there will have sprite rendered
 // If there are two masks then we need to render sprite only there
 // where its mask is white AND where second mask is black
-procedure TKMRenderPoolNoNight.RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY, aNight: Single;
+procedure TKMRenderDeviceNoNight.RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY, aNight: Single;
   aId2: Integer = 0; aStoneProgress: Single = 0; X2: Single = 0; Y2: Single = 0);
 var
   tX, tY: Integer;
@@ -3162,7 +3216,7 @@ end;
 
 
 
-procedure TKMRenderPoolNoShadows.RenderSprite(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+procedure TKMRenderDeviceNoShadow.RenderSprite(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
                                    HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1);
 var
   tX, tY: Integer;
@@ -3227,7 +3281,7 @@ begin
 end;
 
 
-procedure TKMRenderPoolNoShadows.RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+procedure TKMRenderDeviceNoShadow.RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
                                    HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1);
 var
   tX, tY: Integer;
@@ -3295,7 +3349,7 @@ end;
 // white there will have sprite rendered
 // If there are two masks then we need to render sprite only there
 // where its mask is white AND where second mask is black
-procedure TKMRenderPoolNoShadows.RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY, aNight: Single;
+procedure TKMRenderDeviceNoShadow.RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY, aNight: Single;
   aId2: Integer = 0; aStoneProgress: Single = 0; X2: Single = 0; Y2: Single = 0);
 var
   tX, tY: Integer;

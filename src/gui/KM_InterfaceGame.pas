@@ -77,7 +77,6 @@ type
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X,Y: Integer); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X,Y: Integer); override;
 
-    procedure ReCreateRenderPool;
     procedure ShowDebugInfo;
     procedure GameSpeedChanged(aFromSpeed, aToSpeed: Single);
     procedure SyncUI(aMoveViewport: Boolean = True); virtual;
@@ -473,23 +472,8 @@ begin
   Assert(aRender <> nil, 'TKMUserInterfaceGame.CreateRenderPool');
   IF gRenderPool <> nil then
     FreeAndNil(gRenderPool);
-
-  If (gGameSettings.Weather.NightTime = 0) and (gGameSettings.Weather.NightSpeed = 0) then
-  begin
-    gRenderPool := TKMRenderPoolNoNight.Create(fViewport, aRender)
-  end else
-  If not gGameSettings.Weather.DynamicShadow then
-  begin
-    gRenderPool := TKMRenderPoolNoShadows.Create(fViewport, aRender)
-  end else
-    gRenderPool := TKMRenderPool.Create(fViewport, aRender);
+  gRenderPool := TKMRenderPool.Create(fViewport, aRender);
 end;
-
-procedure TKMUserInterfaceGame.ReCreateRenderPool;
-begin
-  CreateRenderPool(nil);
-end;
-
 
 procedure TKMUserInterfaceGame.ViewportPositionChanged(const aPos: TKMPointF);
 begin

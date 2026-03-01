@@ -766,7 +766,7 @@ begin
   NightSpeed := 10;
   NightTime := 7;
   DynamicLight := true;
-  DynamicShadow := true;
+  //DynamicShadow := false;
 end;
 
 function TKMSettingsWeather.Copy: TKMSettingsWeather;
