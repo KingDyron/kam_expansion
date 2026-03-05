@@ -193,6 +193,8 @@ type
     fIsBurning : Byte;
     fWasTookOver : Boolean;
     fBuildCost : TKMHouseBuildCost;
+
+    fSoundPlayedAt : Cardinal;
     procedure CheckOnTerrain;
     function GetWareInArray: TKMByteArray;
     function GetWareOutArray: TKMByteArray;
@@ -5104,9 +5106,13 @@ begin
       AddDamage(fIsBurning, nil, false);
 
   //play fire sound
+
   If IsDamaged then
-    If gGameApp.GlobalTickCount mod 20 = 0 then
+    If (gGameApp.GlobalTickCount <> fSoundPlayedAt) and (gGameApp.GlobalTickCount mod 20 = 0) then
+    begin
       gSoundPlayer.PlayAmbiance(sfxwFire, PositionF, 1);
+      fSoundPlayedAt := gGameApp.GlobalTickCount;
+    end;
 
   if fTick mod 50 = 0 then
     for I := 1 to WARES_IN_OUT_COUNT do

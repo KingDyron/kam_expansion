@@ -88,7 +88,8 @@ type
     );
   TSoundFXAmbiance = (
   sfxwRain, sfxwThunder, sfxwWind, sfxwSandStorm, sfxwTornado,
-  sfxwFlyingBrids, sfxwChirping, sfxwFire, sfxwExplosion);
+  sfxwFlyingBrids, sfxwChirping, sfxwFire, sfxwExplosion,
+  sfxwLake, sfxwSwamp);
 
   //Sounds to play on different warrior orders
   TWarriorSpeech = (
@@ -245,7 +246,9 @@ const
   'BirdsFlying',
   'BirdsChirp',
   'Fire',
-  'Explosion'
+  'Explosion',
+  'Lake',
+  'Swamp'
   );
 
 

@@ -462,15 +462,22 @@ begin
   pace := ((W * H) div SOUNDS_PACE) + 1;
   A := aTick mod pace;
   soundsPlayed := 0;
-  while (A < W * H) and (soundsPlayed < 2) do
+  while (A < W * H) and (soundsPlayed < SOUNDS_PACE) do
   begin
     X := A mod W + aClipRect.Left + 1;
     Y := A div W + aClipRect.Top + 1;
 
     If gTerrain.ObjectIsChopableTree(X, Y) then
-      PlaySound(sfxwChirping, KMPointF(X, Y));
+      PlaySound(sfxwChirping, KMPointF(X, Y))
+    else
     IF InRange(gTerrain.Land[Y, X].Obj, 453, 456) then
-      PlaySound(sfxwFire, KMPointF(X, Y));
+      PlaySound(sfxwFire, KMPointF(X, Y))
+    else
+    If gTerrain.TileIsSwamp(X, Y) then
+      PlaySound(sfxwSwamp, KMPointF(X, Y))
+    else
+    If gTerrain.TileIsWater(X, Y) then
+      PlaySound(sfxwLake, KMPointF(X, Y));
 
     Inc(A, pace);
   end;

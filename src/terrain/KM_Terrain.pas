@@ -292,6 +292,7 @@ type
     function TileIsStone(X, Y: Word): Word; inline;
     function TileIsSnow(X, Y: Word): Boolean; inline;
     function TileHouseTerrain(X, Y: Word): TKMTerrPicType; inline;
+    function TileIsSwamp(X, Y: Word): Boolean; inline;
 
     function TileIsCoal(X, Y: Word): Word; inline;
     function TileIsIron(X, Y: Word): Word; inline;
@@ -1695,6 +1696,11 @@ begin
   else
   If TileHasParameter(X, Y, fTileset.TileIsSand) or ((X*Y > 0) and Land[Y, X].TileOverlay2.IsSand) then
     Result := tptSand;
+end;
+
+function TKMTerrain.TileIsSwamp(X: Word; Y: Word): Boolean;
+begin
+  Result := TileHasTerrainKinds(X, Y, [tkSwamp, tkGrassyWater]);
 end;
 
 

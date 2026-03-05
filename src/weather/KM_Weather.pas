@@ -27,6 +27,8 @@ type
       fCurrentClimate : TKMTerrainClimate;
       //fRotation : Single;//will be used for birds
 
+      fSoundPlayedAt: Cardinal;//tick at which sound was played so it doesn't duplicate.
+
       function GetRandomPos(aPos : TKMPointF; aRadius : Single) : TKMPointF;
       function CanAnimBeStopped : Boolean;
       procedure SetStyle(aValue : Byte);
@@ -142,6 +144,7 @@ begin
 
   fStyle := 0;
   fMaxStyles := 0;
+  fSoundPlayedAt := 0;
 
   fCurrentClimate := gTerrain.FindBestClimatType(KMPoint(aPos));
   //distSqr := Sqr(aSpeed.Y) + Sqr(aSpeed.Y);
@@ -154,6 +157,7 @@ var st : TKMWeatherState;
 var nCount, I : Integer;
 begin
   Inherited Create;
+  fSoundPlayedAt := 0;
 
   //LoadStream.Read(fType, SizeOf(fType)); //skip it here
   fType := aType;
@@ -296,7 +300,8 @@ begin
       SetClimate;
   end;
 
-  If gGameApp.GlobalTickCount mod 50 = 0 then
+  If (gGameApp.GlobalTickCount <> fSoundPlayedAt) and (gGameApp.GlobalTickCount mod 50 = 0) then
+  begin
     case fType of
       wtCloudy1,
       wtCloudy2: gSoundPlayer.PlayAmbiance(sfxwWind, fPos);
@@ -308,8 +313,9 @@ begin
       wtSandStorm2: gSoundPlayer.PlayAmbiance(sfxwSandStorm, fPos);
       wtTornado: gSoundPlayer.PlayAmbiance(sfxwTornado, fPos);
       wtBirds: gSoundPlayer.PlayAmbiance(sfxwFlyingBrids, fPos);
-
     end;
+    fSoundPlayedAt := gGameApp.GlobalTickCount;
+  end;
 
 
 end;
