@@ -8,7 +8,6 @@ uses
   KM_Houses, KM_Terrain, KM_Units, KM_CommonGameTypes;
 
 
-
 type
   TKMUnitWarrior = class;
   TKMUnitWarriorShip = class;
@@ -2090,7 +2089,7 @@ begin
 
                         //Take attack house order
                         if CanInterruptAction(fNextOrderForced) then
-                        if not (IsRanged and (fBoltCount <= 0)) then
+                        if not (IsRanged and not ( InfinityAmmo or (fBoltCount > 0)) ) then
                         begin
                           FreeAndNil(fTask); //e.g. TaskAttackHouse
                           fTask := TKMTaskAttackHouse.Create(Self, GetOrderHouseTarget);

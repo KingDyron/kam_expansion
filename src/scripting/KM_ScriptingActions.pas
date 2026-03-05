@@ -6013,7 +6013,11 @@ begin
       if G <> nil then
         for I := 0 to G.Count - 1 do
           if (G.Members[I] <> nil) then
+          begin
             G.Members[I].InfinityAmmo := aInfinity;
+            If aInfinity then
+              G.Members[I].BoltCount := 10000;
+          end;
     end
     else
       LogIntParamWarn('Actions.GroupInfiniteAmmoSet', [aGroupID, byte(aInfinity)]);
