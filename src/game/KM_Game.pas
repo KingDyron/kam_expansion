@@ -1563,6 +1563,7 @@ begin
   fIsStarted := True;
 
   gLog.AddTime('Gameplay initialized', True);
+  gRenderPool.CreateRenderDevice(fWeather.Settings);
 end;
 
 
