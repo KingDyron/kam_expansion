@@ -341,7 +341,7 @@ var
     UT2 : TKMUnitType;
     HasOrders : Boolean;
   begin
-    {
+
     for I := 0 to gHands[fOwner].Houses.Palaces.Count - 1 do
     begin
       HP := TKMHousePalace(gHands[fOwner].Houses.Palaces[I]);
@@ -351,15 +351,7 @@ var
 
       if HP.IsTraining then
         Continue;
-      HasOrders := false;
-      for J := 0 to High(PALACE_UNITS_ORDER) do
-        if (HP.Orders[J] > 0) then
-        begin
-          HasOrders := true;
-          Break;
-        end;
-      if HasOrders then
-        Continue;
+
       //Chose a random group type that we are going to attempt to train (so we don't always train certain group types first)
       K := 0;
       repeat
@@ -378,17 +370,17 @@ var
             Continue;
           if UT2 in [utSpy] then
             Continue;
-          if (HP.Orders[J] > 0) then
+          if (HP.Orders[UT2] > 0) then
             Continue;
 
           if not HP.CanEquip(J) then
             Continue;
 
-          HP.Orders[J] := 1;
+          HP.Orders[UT2] := 1;
           Break;//Train only one unit
         end;
     end;
-    }
+
   end;
 
   procedure EquipShips(aStopBuilding : Boolean);
