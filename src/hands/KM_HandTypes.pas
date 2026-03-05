@@ -25,7 +25,8 @@ type
     dlBlocked, // Never allowed
     dlUnlocked, // Always allowed, unlocks previous
     dlNotVisible,
-    dlUnlockedSingle// allowed single development
+    dlUnlockedSingle,// allowed single development
+    dlSkipped
   );
   //* House lock state
   TKMHandUnitLock = (

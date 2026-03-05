@@ -123,7 +123,7 @@ var dtt : TKMDevelopmentTreeType;
       B.BackBevelColor := GOLD_COLOR_UNLOCKED;
   end;
 
-  procedure CheckNext(aType : TKMDevelopmentTreeType; var aToButton : TKMDevButton; aTop : Byte; aState : TKMHandDevLock);
+  procedure CheckNext(aType : TKMDevelopmentTreeType; var aToButton : TKMDevButton; aTop : Byte; aState : TKMHandDevLock; aVisibleUnlocked : Boolean = false);
   var I: integer;
     B : TKMButtonFlat;
     nextState, currState : TKMHandDevLock;
@@ -138,7 +138,7 @@ var dtt : TKMDevelopmentTreeType;
     B.DownColor := TO_UNLOCK_COLOR;
     B.LineWidth := 2;
 
-    B.Visible := aState <> dlNotVisible;
+    B.Visible := not (aState in [dlNotVisible, dlSkipped]);
     B.Tag2 := 0;
     //TKMButtonFlatDevGame(B).Cost := aToButton.Dev.ID;
 
@@ -150,7 +150,7 @@ var dtt : TKMDevelopmentTreeType;
     end;
 
     currState := locks.DevelopmentLock[aType, aToButton.Dev.ID];
-    If (aState = dlUnlockedSingle) or ((currState = dlUnlockedSingle){ and (aState <> dlNotVisible)}) then
+    If (aState = dlUnlockedSingle) or ((currState = dlUnlockedSingle)) then
     begin
       SetButtonColor(aToButton.Button_Tree, UNLOCKED_COLOR_DOWN, 3, UNLOCKED_COLOR_DOWN and $77FFFFFF, 1);
       B.Enabled := true;
@@ -163,6 +163,14 @@ var dtt : TKMDevelopmentTreeType;
     If (aToButton.Parent = nil) and (aState = dlNone) then
       SetButtonColor(aToButton.Button_Tree, DEFAULT_COLOR, 3, DEFAULT_COLOR and $44FFFFFF, 1);
 
+    If aState <> dlSkipped then
+    begin
+      If aState in [dlUnlocked, dlUnlockedSingle] then
+        aVisibleUnlocked := true
+      else
+        aVisibleUnlocked := false;
+    end;
+
     for I := 0 to High(aToButton.Dev.Next) do
     begin
       nextState := locks.DevelopmentLock[aType, aToButton.Dev.Next[I].ID];
@@ -173,9 +181,12 @@ var dtt : TKMDevelopmentTreeType;
       If (aState = dlNotVisible) then
         nextState := dlNotVisible;
 
-      CheckNext(aType, aToButton.Next[I], aTop + 1, nextState);
+      CheckNext(aType, aToButton.Next[I], aTop + 1, nextState, aVisibleUnlocked);
 
       If aToButton.Next[I].Button_Tree.DownColor <> UNLOCKED_COLOR_DOWN then
+        IF (nextState = dlNone) and aVisibleUnlocked then
+          SetButtonColor(aToButton.Next[I].Button_Tree, DEFAULT_COLOR, 3, DEFAULT_COLOR and $44FFFFFF, 1)
+        else
         if (aState in [dlUnlocked, dlUnlockedSingle]) and (nextState = dlNone)then
           SetButtonColor(aToButton.Next[I].Button_Tree, DEFAULT_COLOR, 3, DEFAULT_COLOR and $44FFFFFF, 1)
         else
