@@ -347,10 +347,15 @@ begin
                             and (KMLengthSqr(fShotFrom, U.PositionF) <= Sqr(fMaxLength)) then
                             begin
                               U.SetHitTime;
-                              if fOwner.InstantKill or (fOwner.Attack >= 500) then
+                              if fOwner.InstantKill then
                               begin
                                 if (FRIENDLY_FIRE or (gHands.CheckAlliance(fOwner.Owner, U.Owner)= atEnemy)) then
-                                  U.HitPointsDecrease(U.HitPointsMax, fOwner)
+                                  U.HitPointsDecrease(U.HitPointsMax, fOwner) //Instant death
+                              end else
+                              if (fOwner.Attack >= 500) then
+                              begin
+                                if (FRIENDLY_FIRE or (gHands.CheckAlliance(fOwner.Owner, U.Owner)= atEnemy)) then
+                                  U.HitPointsDecrease(Max(15 - Round(U.GetProjectileDefence(false) / 8), 0), fOwner);
                               end else
                               if (fOwner.Attack >= 200) and (fOwner is TKMUnitWarrior) then
                               begin
