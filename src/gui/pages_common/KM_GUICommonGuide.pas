@@ -1,4 +1,4 @@
-﻿unit KM_GUIGameGuide;
+﻿unit KM_GUICommonGuide;
 {$I KaM_Remake.inc}
 interface
 uses
@@ -73,7 +73,7 @@ type
       procedure Paint; override;
   end;
 
-  TKMGUIGameGuide = class
+  TKMGUIGuide = class
   private
     fOnShow : TNotifyEvent;
     fType : TKMGuidePageType;
@@ -168,7 +168,7 @@ type
           Button_Ware : TKMButtonFlat;
 
   public
-    constructor Create(aParent: TKMPanel; aOnShow : TNotifyEvent);
+    constructor Create(aParent: TKMPanel; aOnShow : TNotifyEvent; aX : integer = 198;  aY : integer = 20);
 
     procedure Show; overload;
     procedure Show(aUnitType : TKMUnitType); overload;
@@ -189,7 +189,7 @@ uses  KM_RenderUI, KM_Resource, KM_HandsCollection,
       KM_GameApp,
       SysUtils, Math;
 
-constructor TKMGUIGameGuide.Create(aParent: TKMPanel; aOnShow : TNotifyEvent);
+constructor TKMGUIGuide.Create(aParent: TKMPanel; aOnShow : TNotifyEvent; aX : integer = 198;  aY : integer = 20);
 var I, top : Integer;
   PT : TKMGuidePageType;
 begin
@@ -198,7 +198,7 @@ begin
   fSelectedFruit := -1;
   fSelected := 255;
   fOnShow := aOnShow;
-  Pin_Open := TKMButtonFlatPin.Create(aParent, 198, 20, 25, 32, 314);
+  Pin_Open := TKMButtonFlatPin.Create(aParent, aX, aY, 25, 32, 314);
   Pin_Open.OnClick := ClosePanel;
   Pin_Open.Hint := gResTexts[1947];
   Panel_Guide := TKMPanel.Create(aParent, 240, 0, 500, aParent.Height - 200);
@@ -386,7 +386,7 @@ begin
   Hide;
 end;
 
-procedure TKMGUIGameGuide.CreateGrains;
+procedure TKMGUIGuide.CreateGrains;
 var I, J : Integer;
   GT : TKMGrainType;
 begin
@@ -449,7 +449,7 @@ begin
   Grain_ReGrowingTime.Hint := gResTexts[2186];
 end;
 
-procedure TKMGUIGameGuide.CreateFruits;
+procedure TKMGUIGuide.CreateFruits;
 var I: Integer;
 begin
   Panel_Fruit := TKMPanel.Create(Panel_Scroll, 10, 10, 470, 600);
@@ -500,7 +500,7 @@ begin
 
 end;
 
-procedure TKMGuiGameGuide.CreateAnimals;
+procedure TKMGUIGuide.CreateAnimals;
 var I : Integer;
   UT : TKMUnitType;
 begin
@@ -538,7 +538,7 @@ begin
 
 end;
 
-procedure TKMGUIGameGuide.CreateObjects;
+procedure TKMGUIGuide.CreateObjects;
 var I, C, vCount : Integer;
 begin
   Panel_Objects := TKMPanel.Create(Panel_Scroll, 10, 10, 470, 650);
@@ -584,7 +584,7 @@ begin
 
 end;
 
-procedure TKMGUIGameGuide.Show;
+procedure TKMGUIGuide.Show;
 var
   PT : TKMGuidePageType;
 begin
@@ -598,7 +598,7 @@ begin
   RefreshPanel;
 end;
 
-procedure TKMGuiGameGuide.Show(aUnitType : TKMUnitType);
+procedure TKMGUIGuide.Show(aUnitType : TKMUnitType);
 var I : Integer;
 begin
   for I := 0 to High(MapEd_Order) do
@@ -612,7 +612,7 @@ begin
 
 end;
 
-procedure TKMGuiGameGuide.Show(aHouseType : TKMHouseType);
+procedure TKMGUIGuide.Show(aHouseType : TKMHouseType);
 var I : Integer;
 begin
   for I := 0 to High(GUIHouseOrderFull) - 1 do
@@ -627,18 +627,18 @@ begin
 end;
 
 
-procedure TKMGUIGameGuide.Hide;
+procedure TKMGUIGuide.Hide;
 begin
   Panel_Guide.Hide;
 end;
 
 
-function TKMGUIGameGuide.Visible: Boolean;
+function TKMGUIGuide.Visible: Boolean;
 begin
   Result := Panel_Guide.Visible;
 end;
 
-procedure TKMGUIGameGuide.Guide_SelectType(Sender: TObject);
+procedure TKMGUIGuide.Guide_SelectType(Sender: TObject);
 var PT : TKMGuidePageType;
 begin
   PT := TKMGuidePageType(TKMButton(Sender).Tag);
@@ -651,7 +651,7 @@ begin
 
 end;
 
-procedure TKMGUIGameGuide.ClosePanel(Sender: TObject);
+procedure TKMGUIGuide.ClosePanel(Sender: TObject);
 begin
   if Sender = Pin_Open then
   begin
@@ -664,7 +664,7 @@ begin
     Hide;
 end;
 
-procedure TKMGUIGameGuide.RefreshUnit;
+procedure TKMGUIGuide.RefreshUnit;
   procedure ShowWareCost(aIndex, aCount: Integer; aWareType : TKMWareType);
   begin
     WareCost[aIndex].Tag := ord(aWareType);
@@ -762,7 +762,7 @@ begin
 
 end;
 
-procedure TKMGUIGameGuide.RefreshHouse;
+procedure TKMGUIGuide.RefreshHouse;
 var I, J : Integer;
   HT, HT2 : TKMHouseType;
   WT : TKMWareType;
@@ -859,7 +859,7 @@ begin
 
 end;
 
-procedure TKMGUIGameGuide.RefreshGrain;
+procedure TKMGUIGuide.RefreshGrain;
 var GT : TKMGrainDat;
   time : Cardinal;
   h,m,s : Byte;
@@ -934,7 +934,7 @@ begin
 
 end;
 
-procedure TKMGUIGameGuide.RefreshFruit;
+procedure TKMGUIGuide.RefreshFruit;
 var F : TKMFruitTree;
   cap : String;
   time, I, J : Integer;
@@ -1035,7 +1035,7 @@ begin
 end;
 
 
-procedure TKMGUIGameGuide.RefreshAnimal;
+procedure TKMGUIGuide.RefreshAnimal;
 var fill : Single;
    I : Integer;
 begin
@@ -1088,7 +1088,7 @@ begin
     Animal_CropsLabel.Caption := gResTexts[2187];
 end;
 
-procedure TKMGUIGameGuide.RefreshObjects;
+procedure TKMGUIGuide.RefreshObjects;
 var obj : Word;
   I : Integer;
   vWareName : String;
@@ -1122,7 +1122,7 @@ begin
   //Objects_Viewer.
 end;
 
-procedure TKMGUIGameGuide.RefreshPanel;
+procedure TKMGUIGuide.RefreshPanel;
 var I : Integer;
   UT : TKMUnitType;
 begin
@@ -1198,13 +1198,13 @@ begin
     gtObjects: RefreshObjects;
   end;
 end;
-procedure TKMGUIGameGuide.Guide_SelectIcon(Sender: TObject);
+procedure TKMGUIGuide.Guide_SelectIcon(Sender: TObject);
 begin
   fSelected := TKMButton(Sender).Tag;
   RefreshPanel;
 end;
 
-procedure TKMGUIGameGuide.ReleasedByClick(Sender: TObject);
+procedure TKMGUIGuide.ReleasedByClick(Sender: TObject);
 var I : integer;
   HT : TKMHouseType;
 begin
@@ -1218,7 +1218,7 @@ begin
   RefreshPanel;
 end;
 
-procedure TKMGUIGameGuide.WaresRowClick(Sender: TObject);
+procedure TKMGUIGuide.WaresRowClick(Sender: TObject);
   function FindHouseWhichProduceWare(aWare: TKMWareType; aAvoid : TKMHouseType) : TKMHouseType;
   var J : Integer;
     HT, HT2 : TKMHouseType;
@@ -1291,28 +1291,28 @@ begin
 
 
 end;
-procedure TKMGUIGameGuide.GrainClick(Sender : TOBject);
+procedure TKMGUIGuide.GrainClick(Sender : TOBject);
 begin
   fSelectedGrain := TKMGrainType(TKMButtonFlat(Sender).tag);
   GrainViewer.SetGrainType(fSelectedGrain);
   RefreshGrain;
 end;
 
-procedure TKMGUIGameGuide.FruitClick(Sender : TOBject);
+procedure TKMGUIGuide.FruitClick(Sender : TOBject);
 begin
   fSelectedFruit := TKMButtonFlat(Sender).Tag;
   Fruit_Viewer.SetFruitType(fSelectedFruit);
   RefreshFruit;
 end;
 
-procedure TKMGUIGameGuide.AnimalClick(Sender : TOBject);
+procedure TKMGUIGuide.AnimalClick(Sender : TOBject);
 begin
   fSelectedAnimal := TKMUnitType(TKMButtonFlat(Sender).Tag);
   Animal_Viewer.SetAnimalType(fSelectedAnimal);
   RefreshAnimal;
 end;
 
-procedure TKMGUIGameGuide.ObjectClick(Sender: TObject);
+procedure TKMGUIGuide.ObjectClick(Sender: TObject);
 begin
   Objects_Viewer.SetObject(TKMControl(Sender).Tag);
   RefreshObjects;

@@ -19,7 +19,7 @@ uses
   KM_GUIGameResultsSP,
   KM_GUIGameResultsMP,
   KM_GUIGameBuild, KM_GUIGameChat, KM_GUIGameHouse, KM_GUIGameUnit, KM_GUIGameRatios, KM_GUIGameStats,
-  KM_GuiGameCustomPanel, KM_GUIGameGuide, KM_GUIGameGoalsPopUp, KM_GUIGameWaresPopUp, KM_GUIGameStructure,
+  KM_GuiGameCustomPanel, KM_GUICommonGuide, KM_GUIGameGoalsPopUp, KM_GUIGameWaresPopUp, KM_GUIGameStructure,
   KM_GUIGameMessagesPopUp, KM_GuiGameDev,
   KM_GUIGameSpectator;
 
@@ -46,7 +46,7 @@ type
     fGuiGameBuild: TKMGUIGameBuild;
     fGuiGameChat: TKMGUIGameChat;
     fGuiGameCustomPanel: TKMGUIGameCustomPanel;
-    fGuiGameGuide: TKMGUIGameGuide;
+    fGuiGameGuide: TKMGUIGuide;
     fGuiGameGoals: TKMGUIGameGoalsPopUp;
     fGuiGameWares: TKMGUIGameWaresPopUp;
     fGuiGameHouse: TKMGUIGameHouse;
@@ -962,7 +962,7 @@ begin
 
   Create_Controls; // Includes all the child pages
   fGuiGameCustomPanel := TKMGuiGameCustomPanel.Create(Panel_Main);
-  fGuiGameGuide := TKMGUIGameGuide.Create(Panel_Main, PinPanels_OnShow);
+  fGuiGameGuide := TKMGUIGuide.Create(Panel_Main, PinPanels_OnShow);
   fGuiGameGoals := TKMGUIGameGoalsPopUp.Create(Panel_Main, PinPanels_OnShow);
   fGuiGameWares := TKMGUIGameWaresPopUp.Create(Panel_Main, PinPanels_OnShow);
   fGuiGameMessages := TKMGUIGameMessagesPopUp.Create(Panel_Main, PinPanels_OnShow);

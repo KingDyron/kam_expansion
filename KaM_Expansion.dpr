@@ -414,7 +414,6 @@ uses
   KM_MethodParserParams in 'src\utils\method_parser\KM_MethodParserParams.pas',
   KM_SpecialAnim in 'src\KM_SpecialAnim.pas',
   KM_HouseCottage in 'src\houses\KM_HouseCottage.pas',
-  KM_GUIGameGuide in 'src\gui\pages_game\KM_GUIGameGuide.pas',
   KM_GUIGameGoalsPopUp in 'src\gui\pages_game\KM_GUIGameGoalsPopUp.pas',
   KM_GUICommonWares in 'src\gui\pages_common\KM_GUICommonWares.pas',
   KM_GUIGameWaresPopUp in 'src\gui\pages_game\KM_GUIGameWaresPopUp.pas',
@@ -471,7 +470,8 @@ uses
   KM_GUIGameHouseST in 'src\gui\pages_game\house\KM_GUIGameHouseST.pas',
   KM_CardGame in 'src\card\KM_CardGame.pas',
   KM_CardGameTypes in 'src\card\KM_CardGameTypes.pas',
-  KM_GUIGameCards in 'src\gui\pages_game\house\KM_GUIGameCards.pas';
+  KM_GUIGameCards in 'src\gui\pages_game\house\KM_GUIGameCards.pas',
+  KM_GUICommonGuide in 'src\gui\pages_common\KM_GUICommonGuide.pas';
 
 //KM_PerfLog in 'src\unused\KM_PerfLog.pas', //unused
 

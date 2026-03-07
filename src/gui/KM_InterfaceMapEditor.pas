@@ -27,6 +27,7 @@ uses
   KM_GUIMapEdMenuQuickPlay,
   KM_GUIMapEdUnit,
   KM_GUIMapEdRMG,
+  KM_GuiCommonGuide,
   KM_MapEdTypes,
   KM_CommonTypes;
 
@@ -59,6 +60,7 @@ type
     fGuiMarkerReveal: TKMMapEdMarkerReveal;
     fGuiMarkerSpawner: TKMMapEdMarkerSpawner;
     fGuiMenu: TKMMapEdMenu;
+    fGuiGuide : TKMGUIGuide;
 
     fMapIsMultiplayer: Boolean;
 
@@ -416,6 +418,7 @@ begin
     S.LineWidth := 1;
     S.Hitable := False;
   end;
+  fGuiGuide := TKMGuiGuide.Create(Panel_Main, nil, 198 + 21, 20 + 213);
 
   InitDebugControls;
 
@@ -442,6 +445,7 @@ begin
   fGuiMenu.Free;
   fGuiMessage.Free;
   fGuiUnit.Free;
+  FreeAndNil(fGuiGuide);
 
   SHOW_TERRAIN_WIRES := False; //Don't show it in-game if they left it on in MapEd
   SHOW_TERRAIN_PASS := 0; //Don't show it in-game if they left it on in MapEd

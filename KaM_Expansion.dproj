@@ -618,7 +618,6 @@
         <DCCReference Include="src\utils\method_parser\KM_MethodParserParams.pas"/>
         <DCCReference Include="src\KM_SpecialAnim.pas"/>
         <DCCReference Include="src\houses\KM_HouseCottage.pas"/>
-        <DCCReference Include="src\gui\pages_game\KM_GUIGameGuide.pas"/>
         <DCCReference Include="src\gui\pages_game\KM_GUIGameGoalsPopUp.pas"/>
         <DCCReference Include="src\gui\pages_common\KM_GUICommonWares.pas"/>
         <DCCReference Include="src\gui\pages_game\KM_GUIGameWaresPopUp.pas"/>
@@ -676,6 +675,7 @@
         <DCCReference Include="src\card\KM_CardGame.pas"/>
         <DCCReference Include="src\card\KM_CardGameTypes.pas"/>
         <DCCReference Include="src\gui\pages_game\house\KM_GUIGameCards.pas"/>
+        <DCCReference Include="src\gui\pages_common\KM_GUICommonGuide.pas"/>
         <None Include="KM_TextIDs.inc"/>
         <None Include="KaM_Remake.dpr"/>
         <None Include="KaM_Remake.inc"/>
