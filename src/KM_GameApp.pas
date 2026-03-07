@@ -364,7 +364,7 @@ begin
   //Fonts might need reloading too
   gRes.LoadLocaleFonts(gGameSettings.Locale, gGameSettings.GFX.LoadFullFonts);
   gAchievements.ReloadTexts;//We changed locale so Achievements needs to reload texts
-
+  gRes.Development.ReloadTexts;
   //Force reload game resources, if they during loading process,
   //as that could cause an error in the loading thread
   //(did not figure it out why. Its easier just to reload game resources in that rare case)
