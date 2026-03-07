@@ -1077,6 +1077,8 @@ begin
   if fDestBlocked then fInteractionStatus := kisWaiting;
 
   //INTERACTION SOLUTIONS: Split into different sections or "solutions". If True returned it means exit.
+  If fUnit.CanNotInteract then
+    Exit;
 
   //If we are asking someone to move away then just wait until they are gone
   if IntCheckIfPushing(opponent) then exit;

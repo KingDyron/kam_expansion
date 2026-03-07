@@ -259,6 +259,7 @@ type
     procedure GroupMakeHero(aGroupID: Integer; makeHero: Boolean);
     procedure GroupInfiniteAmmoSet(aGroupID: Integer; aInfinity: Boolean);
     procedure GroupHungerPaceSet(aGroupID: Integer; aPace: Cardinal);
+    procedure GroupAddBitin(aGroupID: Integer);
 
     procedure HouseSetStats(aHouseID : Integer; aStats : TKMHouseStats);
     procedure HouseChangeOwner(aHouseID: Integer; aToOwner: Integer);
@@ -306,6 +307,7 @@ type
 
     procedure UnitBootsSet(aUnitID: Integer; aBoots: Boolean);
     procedure UnitBlockWalking(aUnitID: Integer; aBlock : Boolean);
+    procedure UnitCanInteract(aUnitID: Integer; aCan : Boolean);
     procedure UnitChangeSpec(aUnitID, aHPMax, aAttack, aAttackHorse, aDefence, aSpeed, aSight : Integer);
     procedure UnitHungerPaceSet(aUnitID: Integer; aPace: Cardinal);
     procedure UnitSetFlagColor(aUnitID : Integer; aColor : Cardinal);
@@ -5672,6 +5674,25 @@ begin
   end;
 end;
 
+procedure TKMScriptActions.UnitCanInteract(aUnitID: Integer; aCan : Boolean);
+var
+  U: TKMUnit;
+begin
+  try
+    if (aUnitID > 0) then
+    begin
+      U := fIDCache.GetUnit(aUnitID);
+      if U <> nil then
+        U.CanNotInteract := not aCan;
+    end
+    else
+      LogIntParamWarn('Actions.UnitCantInteract', [aUnitID]);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
 procedure TKMScriptActions.GroupSetFlagColor(aGroupID: Integer; aColor: Cardinal);
 var
   G: TKMUnitGroup;
@@ -6043,6 +6064,28 @@ begin
     end
     else
       LogIntParamWarn('Actions.GroupHungerPaceSet', [aGroupID, aPace]);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
+procedure TKMScriptActions.GroupAddBitin(aGroupID: Integer);
+var
+  I: Integer;
+  G: TKMUnitGroup;
+begin
+  try
+    if (aGroupID > 0) then
+    begin
+      G := fIDCache.GetGroup(aGroupID);
+      if G <> nil then
+        for I := 0 to G.Count - 1 do
+          if (G.Members[I] <> nil) then
+            G.Members[I].AddBitin(4);
+    end
+    else
+      LogIntParamWarn('Actions.GroupAddBitin', [aGroupID]);
   except
     gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
     raise;

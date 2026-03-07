@@ -986,6 +986,7 @@ begin
     RegisterMethodCheck(c, 'procedure GroupBlockOrders(aGroupID: Integer; aBlock: Boolean)');
     RegisterMethodCheck(c, 'procedure GroupDisableHungryMessage(aGroupID: Integer; aDisable: Boolean)');
     RegisterMethodCheck(c, 'procedure GroupHungerPaceSet(aGroupID: Integer; aPace: Cardinal)');
+    RegisterMethodCheck(c, 'procedure GroupAddBitin(aGroupID: Integer)');
     RegisterMethodCheck(c, 'procedure GroupHungerSet(aGroupID: Integer; aHungerLevel: Integer)');
     RegisterMethodCheck(c, 'procedure GroupInfiniteAmmoSet(aGroupID: Integer; aInfinity: Boolean)');
     RegisterMethodCheck(c, 'procedure GroupKillAll(aGroupID: Integer; aSilent: Boolean)');
@@ -1167,6 +1168,7 @@ begin
     RegisterMethodCheck(c, 'function  UnitOrderWalk(aUnitID: Integer; X, Y: Integer): Boolean');
     RegisterMethodCheck(c, 'function  UnitSetInstantKill(aUnitID: Integer; isInstant: Boolean): Boolean');
     RegisterMethodCheck(c, 'procedure  UnitBlockWalking(aUnitID: Integer; aBlock: Boolean)');
+    RegisterMethodCheck(c, 'procedure  UnitCanInteract(aUnitID: Integer; aBlock: Boolean)');
 
     RegisterMethodCheck(c, 'procedure  GroupSetFlagColor(aGroupID: Integer; aColor: Cardinal)');
     RegisterMethodCheck(c, 'procedure  HouseSetStats(aHouseID: Integer; aStats: TKMHouseStats)');
@@ -1842,6 +1844,7 @@ begin
       RegisterMethod(@TKMScriptActions.GroupBlockOrders, 'GroupBlockOrders');
       RegisterMethod(@TKMScriptActions.GroupDisableHungryMessage, 'GroupDisableHungryMessage');
       RegisterMethod(@TKMScriptActions.GroupHungerPaceSet, 'GroupHungerPaceSet');
+      RegisterMethod(@TKMScriptActions.GroupAddBitin, 'GroupAddBitin');
       RegisterMethod(@TKMScriptActions.GroupHungerSet, 'GroupHungerSet');
       RegisterMethod(@TKMScriptActions.GroupInfiniteAmmoSet, 'GroupInfiniteAmmoSet');
       RegisterMethod(@TKMScriptActions.GroupKillAll, 'GroupKillAll');
@@ -2009,6 +2012,7 @@ begin
       RegisterMethod(@TKMScriptActions.UnitOrderWalk, 'UnitOrderWalk');
       RegisterMethod(@TKMScriptActions.UnitSetInstantKill, 'UnitSetInstantKill');
       RegisterMethod(@TKMScriptActions.UnitBlockWalking, 'UnitBlockWalking');
+      RegisterMethod(@TKMScriptActions.UnitCanInteract, 'UnitCanInteract');
 
       RegisterMethod(@TKMScriptActions.GroupSetFlagColor, 'GroupSetFlagColor');
       RegisterMethod(@TKMScriptActions.HouseSetStats, 'HouseSetStats');

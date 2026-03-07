@@ -1484,6 +1484,7 @@ begin
   end;
 end;
 
+
 function TKMUnitWarrior.CheckForEnemy: Boolean;
 var
   newEnemy: TKMUnit;

@@ -1078,28 +1078,23 @@ begin
                             if fMembers[I].IsIdle then
                             begin
                               P := GetMemberLocExact(I);
+
                               if KMSamePoint(fMembers[I].Position, P.Loc)
-                              or (KMLength(fMembers[I].Position, OrderTargetUnit.Position) <= fMembers[I].GetFightMaxRange) then
-                              begin
-                                //We are at the right spot, so face towards enemy
-                                fMembers[I].Direction := KMGetDirection(fMembers[I].PositionNext, OrderTargetUnit.PositionNext);
-                                if fMembers[I].UnitType in UNITS_SHIPS then
-                                  fMembers[I].Direction := DIR_TO_NEXT2[fMembers[I].Direction];
-
-                                fMembers[I].FaceDir := fMembers[I].Direction;
-                                {if OrderTargetUnit <> nil then
-                                  fMembers[I].FightEnemy(OrderTargetUnit)
-                                else}
-                                if not fMembers[I].CheckForEnemy then
-                                  //If we are too close to shoot, make sure the animation still frame is still updated
-                                  fMembers[I].SetActionStay(10, uaWalk);
-
-                              end
-                              else
-                              begin
-                                fMembers[I].OrderWalk(P.Loc, P.Exact);
-                                fMembers[I].FaceDir := fOrderLoc.Dir;
-                              end;
+                                or (KMLength(fMembers[I].Position, OrderTargetUnit.Position) <= fMembers[I].GetFightMaxRange) then
+                                begin
+                                  //We are at the right spot, so face towards enemy
+                                  fMembers[I].Direction := KMGetDirection(fMembers[I].PositionNext, OrderTargetUnit.PositionNext);
+                                  fMembers[I].FaceDir := fMembers[I].Direction;
+                                  if not fMembers[I].CheckForEnemy then
+                                    //If we are too close to shoot, make sure the animation still frame is still updated
+                                    fMembers[I].SetActionStay(10, uaWalk);
+                                end
+                                else
+                                begin
+                                  //Too far away. Walk to the enemy in our formation
+                                  fMembers[I].OrderWalk(P.Loc, P.Exact);
+                                  fMembers[I].FaceDir := fOrderLoc.Dir;
+                                end;
                             end;
                       end
                       else

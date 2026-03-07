@@ -181,6 +181,7 @@ type
     InShip : Pointer;
     BlockWalking,
     Immortal : Boolean;
+    CanNotInteract : Boolean;
     constructor Create(aID: Cardinal; aUnitType: TKMUnitType; const aLoc: TKMPointDir; aOwner: TKMHandID; aInHouse: TKMHouse);
     destructor Destroy; override;
 
@@ -2090,6 +2091,7 @@ begin
 
 
   AllowAllyToSelect := true {gHands[Owner].IsHuman or gHands[Owner].CanBeHuman};
+  CanNotInteract := false;
 
 end;
 
@@ -2234,6 +2236,7 @@ begin
   LoadStream.Read(BlockWalking);
   LoadStream.Read(Immortal);
   LoadStream.ReadData(fSpecialEffect);
+  LoadStream.ReadData(CanNotInteract);
 end;
 
 
@@ -4004,6 +4007,7 @@ begin
   SaveStream.Write(BlockWalking);
   SaveStream.Write(Immortal);
   SaveStream.WriteData(fSpecialEffect);
+  SaveStream.WriteData(CanNotInteract);
 end;
 
 
