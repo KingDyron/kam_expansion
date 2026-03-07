@@ -9346,7 +9346,7 @@ begin
     P := validTiles[I];
     night := EnsureRange(KMLengthDiag(aLoc, P) / aRadius, 0, 1);
     night :=  (1 - night) * (aPower / 255);
-    night := (1 - night);
+    night := Sqr(1 - night);
 
     if night < Land[P.Y, P.X].NightAffection then
       Land[P.Y, P.X].NightAffection := night;
