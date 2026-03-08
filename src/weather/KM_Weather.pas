@@ -646,9 +646,9 @@ begin
   aSpeed.Y := aSpeed.Y / 2;
   Inherited Create(aType, aPos, aSpeed, aLifeTime, aRX);
 
-  fAnims[wsStart].Create(0, 0, 1413, 5);
-  fAnims[wsLoop].Create(0, 0, 1418, 72);
-  fAnims[wsEnd].Create(0, 0, 1413, 5, 0, true);
+  fAnims[wsStart].Create(0, 0, 1413, 6);
+  fAnims[wsLoop].Create(0, 0, 1419, 72);
+  fAnims[wsEnd].Create(0, 0, 1413, 6, 0, true);
   fAnims[wsStart].Extend(1);
   fAnims[wsEnd].Extend(1);
   fMaxStyles := 1;
