@@ -419,7 +419,7 @@ begin
     S.Hitable := False;
   end;
   fGuiGuide := TKMGuiGuide.Create(Panel_Main, nil, 198 + 21, 20 + 213);
-
+  Panel_Main.ChildSendToFront(fGuiTerrain.GuiObjects.Pallete, true);
   InitDebugControls;
 
   HidePages;

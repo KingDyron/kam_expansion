@@ -399,7 +399,7 @@ type
 
     property OnWidthChange: TObjectIntegerEvent read fOnWidthChange write fOnWidthChange;
     property OnHeightChange: TObjectIntegerEvent read fOnHeightChange write fOnHeightChange;
-    property OnSizeSet: TNotifyEvent read fOnSizeSet write fOnSizeSet;
+    property OnResize: TNotifyEvent read fOnSizeSet write fOnSizeSet;
     property OnPositionSet: TNotifyEvent read fOnPositionSet write fOnPositionSet;
     procedure RePaint;
     procedure Paint; virtual;

@@ -45,6 +45,7 @@ type
 
     property GuiTiles: TKMMapEdTerrainTiles read GetGuiTiles;
     property GuiSelection: TKMMapEdTerrainSelection read fGuiSelection;
+    property GuiObjects: TKMMapEdTerrainObjects read fGuiObjects;
 
     procedure Show(aTab: TKMTerrainTab);
     //procedure

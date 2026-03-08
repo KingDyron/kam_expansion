@@ -16,15 +16,15 @@ uses
 type
   TKMPopUpRectPanel = class(TKMPanel)
     private
-      Button_Shape : TKMButton;
-      Button_Back : TKMButton;
-      Bevel_Back : TKMBevel;
-      Bevel_Big : TKMBevel;
       fStyle : TKMButtonStyle;
       fSkipChilds : Byte;
     protected
+      Bevel_Back : TKMBevel;
+      Button_Shape : TKMButton;
+      Bevel_Big : TKMBevel;
       procedure SetHeight(aValue: Integer); override;
     public
+      Button_Back : TKMButton;
       constructor Create(aParent: TKMPanel; aWidth, aHeight: Integer; aStyle : TKMButtonStyle = bsPaper);
 
       procedure SetHeightToChilds(aMargin : Integer = 5); override;
@@ -198,7 +198,9 @@ begin
 
   Bevel_Big := TKMBevel.Create(self, -2000, -2000, 5000, 5000);
   Bevel_Big.HideParentOnClick;
+
   Bevel_Back := TKMBevel.Create(self, -5, -5, Width + 10, Height + 10);
+  Bevel_Back.AnchorsStretch;
 
   Button_Shape := TKMButton.Create(self, -5, -5, Width + 10, Height + 10, '', fStyle);
   Button_Shape.Hitable := false;
@@ -215,6 +217,7 @@ end;
 
 procedure TKMPopUpRectPanel.SetHeight(aValue: Integer);
 begin
+  Inherited;
   Button_Back.Top := Height - 30;
 end;
 
