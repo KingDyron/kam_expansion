@@ -433,9 +433,9 @@ end;
 procedure TKMWeatherRain.UpdateCloud(aPos: TKMPointF);
 var X, Y : Integer;
 begin
-  gParticles.AddWeatherParticle(GetRandomPos(aPos + KMPointF(-1, 0), 0.5), fCurrentClimate);
-  gParticles.AddWeatherParticle(GetRandomPos(aPos + KMPointF(0, 0), 0.5), fCurrentClimate);
-  gParticles.AddWeatherParticle(GetRandomPos(aPos + KMPointF(1.3, 0), 0.5), fCurrentClimate);
+  gParticles.AddWeatherParticle(GetRandomPos(aPos + KMPointF(-0.5, 0), 0.5), fCurrentClimate);
+  gParticles.AddWeatherParticle(GetRandomPos(aPos + KMPointF(0.5, 0), 0.5), fCurrentClimate);
+  gParticles.AddWeatherParticle(GetRandomPos(aPos + KMPointF(1.8, 0), 0.5), fCurrentClimate);
 
 
   if gGameParams.MBD.IsRealism then
@@ -481,13 +481,13 @@ var X, Y : Integer;
 begin
   for I := 1 to 3 do
   begin
-    gParticles.AddWeatherParticle(GetRandomPos(aPos + KMPointF(-1, -0.5), 0.5), fCurrentClimate);
-    gParticles.AddWeatherParticle(GetRandomPos(aPos + KMPointF(0, 0), 0.5), fCurrentClimate);
-    gParticles.AddWeatherParticle(GetRandomPos(aPos + KMPointF(1.3, 0), 0.5), fCurrentClimate);
+    gParticles.AddWeatherParticle(GetRandomPos(aPos + KMPointF(-0.5, -0.5), 0.5), fCurrentClimate);
+    gParticles.AddWeatherParticle(GetRandomPos(aPos + KMPointF(0.5, 0), 0.5), fCurrentClimate);
+    gParticles.AddWeatherParticle(GetRandomPos(aPos + KMPointF(1.8, 0), 0.5), fCurrentClimate);
   end;
   if Random(200) <= 2 then
   begin
-    gParticles.AddWhiteLightning(GetRandomPos(aPos, 2));
+    gParticles.AddWhiteLightning(GetRandomPos(aPos + KMPointF(0.5, 0), 2));
     gSoundPlayer.PlayAmbiance(sfxwThunder, fPos, 1);
   end;
 
@@ -533,9 +533,9 @@ begin
   if fAge mod 3 <> 0 then
     Exit;
 
-  gParticles.AddWeatherParticle(GetRandomPos(aPos + KMPointF(-1, -0.8), 1), fCurrentClimate);
-  gParticles.AddWeatherParticle(GetRandomPos(aPos + KMPointF(0, 0), 1), fCurrentClimate);
-  gParticles.AddWeatherParticle(GetRandomPos(aPos + KMPointF(1.3, 0.5), 1), fCurrentClimate);
+  gParticles.AddWeatherParticle(GetRandomPos(aPos + KMPointF(-0.5, -0.8), 1), fCurrentClimate);
+  gParticles.AddWeatherParticle(GetRandomPos(aPos + KMPointF(0.5, 0), 1), fCurrentClimate);
+  gParticles.AddWeatherParticle(GetRandomPos(aPos + KMPointF(1.8, 0.5), 1), fCurrentClimate);
 end;
 
 constructor TKMWeatherSnowStorm.Create(aType: TKMWeatherType; aPos: TKMPointF; aSpeed: TKMPointF; aLifeTime: Cardinal; aRX: TRXType);
@@ -569,13 +569,13 @@ end;
 
 procedure TKMWeatherSnowStorm.UpdateCloud(aPos: TKMPointF);
 begin
-  gParticles.AddWeatherParticle(GetRandomPos(aPos + KMPointF(-1, -0.8), 1), fCurrentClimate);
-  gParticles.AddWeatherParticle(GetRandomPos(aPos + KMPointF(0, 0), 1), fCurrentClimate);
-  gParticles.AddWeatherParticle(GetRandomPos(aPos + KMPointF(1.3, 0.8), 1), fCurrentClimate);
+  gParticles.AddWeatherParticle(GetRandomPos(aPos + KMPointF(-0.5, -0.8), 1), fCurrentClimate);
+  gParticles.AddWeatherParticle(GetRandomPos(aPos + KMPointF(0.5, 0), 1), fCurrentClimate);
+  gParticles.AddWeatherParticle(GetRandomPos(aPos + KMPointF(1.8, 0.5), 1), fCurrentClimate);
 
   if Random(200) <= 2 then
   begin
-    gParticles.AddGoldLightning(GetRandomPos(aPos, 2));
+    gParticles.AddGoldLightning(GetRandomPos(aPos + KMPointF(0.5, 0), 2));
     gSoundPlayer.PlayAmbiance(sfxwThunder, fPos, 1);
   end;
 end;

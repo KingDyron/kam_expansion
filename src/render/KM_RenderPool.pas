@@ -2431,10 +2431,9 @@ begin
     Exit;
   rxData := fRXData[rxTrees];
 
-  rX := RoundToTilePixel(aX) + rxData.Pivot[aID].X / CELL_SIZE_PX;
-  rY := RoundToTilePixel(aY) + (rxData.Pivot[aID].Y + rxData.Size[aID].Y / 2) / CELL_SIZE_PX;
+  rX := RoundToTilePixel(aX);
+  rY := RoundToTilePixel(aY);
 
-  //RenderCircle(KMPointF(aX, aY), 1, $00FFFFFF, $FFFFFFFF, 1);
   glPushMatrix;
   with gGFXData[rxTrees, aId] do
   begin
@@ -2445,6 +2444,8 @@ begin
 
     glTranslateF(rX, rY, 0);
     glRotateF(aRotation, 0, 0, 1);
+    glTranslateF((rxData.Pivot[aID].X) / CELL_SIZE_PX,
+                (rxData.Pivot[aID].Y + rxData.Size[aID].Y / 2) / CELL_SIZE_PX, 0);
 
     TKMRender.BindTexture(Tex.TexID);
 
