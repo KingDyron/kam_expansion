@@ -1812,11 +1812,11 @@ function TKMUnitWarrior.GetEffectiveWalkSpeed(aIsDiag: Boolean): Single;
 begin
   Result := inherited;
 
-  if not (UnitType in SPECIAL_UNITS) then
+  {if not (UnitType in SPECIAL_UNITS) then
     if UNIT_TO_GROUP_TYPE[UnitType] = gtMounted then
       if fGroup <> nil then
         if TKMUnitGroup(fGroup).HasUnitType(utTrainedWolf) then
-          Result := Result + 1/((1 + byte(aIsDiag) * 0.41) / (3/240)); //add 3 to speed if there is wolf in the group
+          Result := Result + 1/((1 + byte(aIsDiag) * 0.41) / (3/240)); //add 3 to speed if there is wolf in the group}
 
   If (UnitType in UNITS_SHIPS) and gHands[Owner].ArmyDevUnlocked(2) then
     Result := Result + 1/((1 + byte(aIsDiag) * 0.41) / (4/240));
