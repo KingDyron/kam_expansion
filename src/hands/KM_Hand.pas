@@ -3767,6 +3767,7 @@ begin
     HB := TKMHouseBarracks(Houses.Barracks[I]);
     if (HB <> nil)
     and (not HB.IsDestroyed)
+    and (not HB.NotAcceptFlag[aWare])
     and (HB.DeliveryMode = dmDelivery)
     and (not HB.WareAccepted(aWare))
     and (KMLengthDiag(aLoc, HB.Position) < lastDistance) then

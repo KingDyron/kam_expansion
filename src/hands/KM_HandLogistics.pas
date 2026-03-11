@@ -1346,7 +1346,7 @@ end;
 function TKMDeliveries.ValidDelivery(oWT, dWT: TKMWareType; iO, iD: Integer; aIgnoreOffer: Boolean = False): Boolean;
 var
   I: Integer;
-  nB, nS : TKMHouse;
+  //nB, nS : TKMHouse;
   B: TKMHouseBarracks;
   offer: PKMDeliveryOffer;
   demand: PKMDeliveryDemand;
@@ -1439,34 +1439,6 @@ begin
                   and not ((demand.Loc_House.HouseType in [htSmallStore, htStore])
                   and (offer.Loc_House.HouseType in [htSmallStore, htStore])
                   and (offer.Loc_House.DeliveryMode <> dmTakeOut));
-      end;
-
-  //find nearest storehouse or barracks
-  if Result then
-    if demand.Loc_House <> nil then
-      If demand.Loc_House.IsComplete and not demand.Loc_House.IsUpgrading then
-      begin
-
-        if demand.Loc_House is TKMHouseBarracks then
-        begin
-          nB := gHands[fOwner].GetClosestBarracks(offer.Loc_House.Position, oWT);
-          If (nB <> demand.Loc_House) then
-            Result := false;
-        end;
-
-        if demand.Loc_House is TKMHouseStore then
-        begin
-          //do not allow to deliver water to store
-          if dWT = wtWater then
-            Result := false
-          else
-          begin
-          nS := gHands[fOwner].GetClosestStore(offer.Loc_House.Position, oWT);
-            If (nS <> demand.Loc_House) then
-              Result := false;
-          end;
-        end;
-
       end;
 
   //If Demand and Offer are different HouseTypes, means forbid Store<->Store deliveries
@@ -1832,6 +1804,7 @@ begin
     iD := aBidCost.DemandID;
     oWT := aBidCost.OfferWare;
     dWT := aBidCost.DemandWare;
+
 
     //Modifications for bidding system
     if (fDemand[dWT,iD].Loc_House <> nil) //Prefer delivering to houses with fewer supply
