@@ -2648,13 +2648,14 @@
 					{"VirtualWareName" : "vtPearl","Count" : 5},
 					{"VirtualWareName" : "vtCertificate","Count" : 50},
 					{"VirtualWareName" : "vtCoin","Count" : 450},
-					{"VirtualWareName" : "vtBitinFrag","Count" : 10},
-					{"VirtualWareName" : "vtLeatherSheet","Count" : 5},
-					{"VirtualWareName" : "vtIronFerrule","Count" : 10},
-					{"VirtualWareName" : "vtGemStone","Count" : 16},
-					{"VirtualWareName" : "vtHoney","Count" : 12},
+					
+					{"VirtualWareName" : "vtBitinFrag","Count" : 5},
+					{"VirtualWareName" : "vtLeatherSheet","Count" : 2},
+					{"VirtualWareName" : "vtIronFerrule","Count" : 5},
+					{"VirtualWareName" : "vtGemStone","Count" : 10},
+					{"VirtualWareName" : "vtHoney","Count" : 8},
 					{"VirtualWareName" : "vtNeedle","Count" : 3},
-					{"VirtualWareName" : "vtHerbs","Count" : 16}
+					{"VirtualWareName" : "vtHerbs","Count" : 10}
 				]
 			},
 			"Animations" : 
@@ -2731,15 +2732,16 @@
 				"PhaseDuration" : 550,
 				"VirtualWares" : 
 				[
-					{"VirtualWareName" : "vtPearl","Count" : 1},
-					{"VirtualWareName" : "vtCertificate","Count" : 30},
-					{"VirtualWareName" : "vtCoin","Count" : 150},
-					{"VirtualWareName" : "vtLeatherSheet","Count" : 2},
+					{"VirtualWareName" : "vtPearl","Count" : 2},
+					{"VirtualWareName" : "vtCertificate","Count" : 20},
+					{"VirtualWareName" : "vtCoin","Count" : 200},
+					
+					{"VirtualWareName" : "vtLeatherSheet","Count" : 1},
 					{"VirtualWareName" : "vtIronFerrule","Count" : 1},
-					{"VirtualWareName" : "vtGemStone","Count" : 5},
-					{"VirtualWareName" : "vtHoney","Count" : 4},
+					{"VirtualWareName" : "vtGemStone","Count" : 3},
+					{"VirtualWareName" : "vtHoney","Count" : 1},
 					{"VirtualWareName" : "vtNeedle","Count" : 1},
-					{"VirtualWareName" : "vtWoodenPlate","Count" : 2},
+					{"VirtualWareName" : "vtWoodenPlate","Count" : 3},
 					{"VirtualWareName" : "vtHerbs","Count" : 22}
 				]
 			},
@@ -2817,14 +2819,13 @@
 				"PhaseDuration" : 500,
 				"VirtualWares" : 
 				[
-					{"VirtualWareName" : "vtPearl","Count" : 7},
+					{"VirtualWareName" : "vtPearl","Count" : 5},
 					{"VirtualWareName" : "vtCoin","Count" : 300},
 					{"VirtualWareName" : "vtCertificate","Count" : 45},
+					
 					{"VirtualWareName" : "vtLeatherSheet","Count" : 7},
-					{"VirtualWareName" : "vtGemStone","Count" : 21},
-					{"VirtualWareName" : "vtHoney","Count" : 12},
-					{"VirtualWareName" : "vtNeedle","Count" : 8},
-					{"VirtualWareName" : "vtHerbs","Count" : 15}
+					{"VirtualWareName" : "vtGemStone","Count" : 10},
+					{"VirtualWareName" : "vtNeedle","Count" : 8}
 				]
 			},
 			"Animations" : 
@@ -2901,8 +2902,8 @@
 				"VirtualWares" : 
 				[
 					{"VirtualWareName" : "vtCoin","Count" : 10},
-					{"VirtualWareName" : "vtLeatherSheet","Count" : 20},
-					{"VirtualWareName" : "vtHerbs","Count" : 150}
+					{"VirtualWareName" : "vtLeatherSheet","Count" : 8},
+					{"VirtualWareName" : "vtHerbs","Count" : 100}
 				]
 			},
 			"TownhallCost" : 4,
@@ -2975,11 +2976,12 @@
 					{"VirtualWareName" : "vtPearl","Count" : 4},
 					{"VirtualWareName" : "vtCertificate","Count" : 10},
 					{"VirtualWareName" : "vtCoin","Count" : 250},
-					{"VirtualWareName" : "vtLeatherSheet","Count" : 4},
+					
+					{"VirtualWareName" : "vtLeatherSheet","Count" : 1},
 					{"VirtualWareName" : "vtIronFerrule","Count" : 6},
-					{"VirtualWareName" : "vtResin","Count" : 40},
-					{"VirtualWareName" : "vtNeedle","Count" : 8},
-					{"VirtualWareName" : "vtWoodenPlate","Count" : 16}
+					{"VirtualWareName" : "vtResin","Count" : 30},
+					{"VirtualWareName" : "vtNeedle","Count" : 1},
+					{"VirtualWareName" : "vtWoodenPlate","Count" : 80}
 				]
 			},
 			"Animations" : 
@@ -3056,16 +3058,15 @@
 				"PhaseDuration" : 100,
 				"VirtualWares" : 
 				[
-					{"VirtualWareName" : "vtPearl","Count" : 1},
-					{"VirtualWareName" : "vtCoin","Count" : 150},
-					{"VirtualWareName" : "vtCertificate","Count" : 40},
+					{"VirtualWareName" : "vtPearl","Count" : 3},
+					{"VirtualWareName" : "vtCoin","Count" : 200},
+					{"VirtualWareName" : "vtCertificate","Count" : 60},
 					
 					{"VirtualWareName" : "vtHoney","Count" : 2},
 					{"VirtualWareName" : "vtGemStone","Count" : 1},
-					{"VirtualWareName" : "vtResin","Count" : 21},
-					{"VirtualWareName" : "vtNeedle","Count" : 1},
-					{"VirtualWareName" : "vtWoodenPlate","Count" : 8},
-					{"VirtualWareName" : "vtIronFerrule","Count" : 1},
+					{"VirtualWareName" : "vtResin","Count" : 12},
+					{"VirtualWareName" : "vtWoodenPlate","Count" : 35},
+					{"VirtualWareName" : "vtIronFerrule","Count" : 2},
 					{"VirtualWareName" : "vtLeatherSheet","Count" : 1}
 				]
 			},
@@ -3625,12 +3626,12 @@
 				"PhaseDuration" : 200,
 				"VirtualWares" : 
 				[
+					{"VirtualWareName" : "vtPearl","Count" : 1},
 					{"VirtualWareName" : "vtCoin","Count" : 200},
-					{"VirtualWareName" : "vtLeatherSheet","Count" : 1},
 					{"VirtualWareName" : "vtIronFerrule","Count" : 6},
 					{"VirtualWareName" : "vtResin","Count" : 40},
 					{"VirtualWareName" : "vtHoney","Count" : 4},
-					{"VirtualWareName" : "vtNeedle","Count" : 2},
+					{"VirtualWareName" : "vtHerbs","Count" : 20},
 					{"VirtualWareName" : "vtWoodenPlate","Count" : 20}
 				]
 			},
@@ -3876,14 +3877,14 @@
 				"PhaseDuration" : 1200,
 				"VirtualWares" : 
 				[
-					{"VirtualWareName" : "vtPearl","Count" : 1},
-					{"VirtualWareName" : "vtBitinFrag","Count" : 1},
-					{"VirtualWareName" : "vtLeatherSheet","Count" : 20},
-					{"VirtualWareName" : "vtCoin","Count" : 100},
+					{"VirtualWareName" : "vtPearl","Count" : 0},
+					{"VirtualWareName" : "vtBitinFrag","Count" : 0},
+					{"VirtualWareName" : "vtLeatherSheet","Count" : 10},
+					{"VirtualWareName" : "vtCoin","Count" : 80},
 					{"VirtualWareName" : "vtIronFerrule","Count" : 10},
 					{"VirtualWareName" : "vtResin","Count" : 100},
-					{"VirtualWareName" : "vtHoney","Count" : 2},
-					{"VirtualWareName" : "vtCertificate","Count" : 10},
+					{"VirtualWareName" : "vtHoney","Count" : 10},
+					{"VirtualWareName" : "vtCertificate","Count" : 5},
 					{"VirtualWareName" : "vtNeedle","Count" : 5}
 				]
 			},
@@ -3969,13 +3970,14 @@
 				"PhaseDuration" : 300,
 				"VirtualWares" : 
 				[
-					{"VirtualWareName" : "vtCoin","Count" : 90},
+					{"VirtualWareName" : "vtCoin","Count" : 80},
 					{"VirtualWareName" : "vtCertificate","Count" : 6},
-					{"VirtualWareName" : "vtLeatherSheet","Count" : 7},
+					
+					{"VirtualWareName" : "vtLeatherSheet","Count" : 3},
 					{"VirtualWareName" : "vtIronFerrule","Count" : 1},
 					{"VirtualWareName" : "vtResin","Count" : 11},
-					{"VirtualWareName" : "vtHoney","Count" : 6},
-					{"VirtualWareName" : "vtNeedle","Count" : 7},
+					{"VirtualWareName" : "vtHoney","Count" : 5},
+					{"VirtualWareName" : "vtNeedle","Count" : 6},
 					{"VirtualWareName" : "vtHerbs","Count" : 41}
 				]
 			},
@@ -4174,12 +4176,16 @@
 				"PhaseDuration" : 600,
 				"VirtualWares" : 
 				[
+					{"VirtualWareName" : "vtPearl","Count" : 2},
 					{"VirtualWareName" : "vtCoin","Count" : 200},
-					{"VirtualWareName" : "vtCertificate","Count" : 10},
+					{"VirtualWareName" : "vtCertificate","Count" : 15},
+					
 					{"VirtualWareName" : "vtLeatherSheet","Count" : 7},
-					{"VirtualWareName" : "vtResin","Count" : 33},
+					{"VirtualWareName" : "vtResin","Count" : 150},
 					{"VirtualWareName" : "vtHoney","Count" : 2},
-					{"VirtualWareName" : "vtHerbs","Count" : 34}
+					{"VirtualWareName" : "vtHerbs","Count" : 10},
+					{"VirtualWareName" : "vtGemStone","Count" : 10},
+					{"VirtualWareName" : "vtWoodenPlate","Count" : 15}
 				]
 			},
 			"Animations" : 
@@ -4264,12 +4270,13 @@
 				"PhaseDuration" : 3000,
 				"VirtualWares" : 
 				[
-					{"VirtualWareName" : "vtPearl","Count" : 1},
+					{"VirtualWareName" : "vtPearl","Count" : 0},
 					{"VirtualWareName" : "vtCertificate","Count" : 10},
-					{"VirtualWareName" : "vtCoin","Count" : 150},
+					{"VirtualWareName" : "vtCoin","Count" : 120},
+					
 					{"VirtualWareName" : "vtLeatherSheet","Count" : 8},
-					{"VirtualWareName" : "vtIronFerrule","Count" : 7},
-					{"VirtualWareName" : "vtResin","Count" : 50},
+					{"VirtualWareName" : "vtIronFerrule","Count" : 2},
+					{"VirtualWareName" : "vtWoodenPlate","Count" : 3},
 					{"VirtualWareName" : "vtHoney","Count" : 2},
 					{"VirtualWareName" : "vtNeedle","Count" : 5}
 				]
