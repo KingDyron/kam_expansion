@@ -392,6 +392,7 @@ begin
   //Special way to kill the Recruit because it is in a house
   TKMUnitRecruit(fRecruitsList.Items[0]).KillInHouse;
   fRecruitsList.Delete(0); //Delete first recruit in the list
+  gHands[Owner].Stats.UnitUsedForTraining(utRecruit);
 
   if aUnitType in UNITS_CITIZEN then
   begin

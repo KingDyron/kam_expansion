@@ -30,6 +30,8 @@ type
     Dismissing,       //Currently dismissing
     Trained,          //Trained by player
     Lost,             //Died of hunger or killed
+    Dismissed,        //unit dismissed
+    UsedForTraining,  //unit used in training, recruits in the barracks, operators in the siege workshop
     Killed: Cardinal; //Killed (incl. self)
   end;
 
@@ -64,7 +66,6 @@ type
     Units: array [HUMANS_MIN..HUMANS_MAX] of TKMUnitStats;
 
     fWareDistribution: TKMWareDistribution;
-    fRecruitsKilledInPearl : Word;
     function GetChartWares(aWare: TKMWareType): TKMCardinalArray;
     function GetChartArmy(aChartKind: TKMChartArmyKind; aWarrior: TKMUnitType): TKMCardinalArray;
     function GetArmyChartValue(aChartKind: TKMChartArmyKind; aUnitType: TKMUnitType): Integer;
@@ -95,9 +96,10 @@ type
     procedure UnitRemovedFromTrainingQueue(aType: TKMUnitType);
     procedure UnitDismissed(aType: TKMUnitType);
     procedure UnitDismissCanceled(aType: TKMUnitType);
+    procedure UnitAfterDismissed(aType: TKMUnitType);
+    procedure UnitUsedForTraining(aType: TKMUnitType);
     procedure UnitLost(aType: TKMUnitType);
     procedure UnitKilled(aType: TKMUnitType);
-    procedure RecruitKilledInPearl;
 
     property WareDistribution: TKMWareDistribution read fWareDistribution;
 
@@ -175,8 +177,6 @@ begin
   for CKind := cakTotal to cakLost do
     for WT := WARRIOR_MIN to WARRIOR_MAX do
       fArmyEmpty[CKind,WT] := True;
-
-  fRecruitsKilledInPearl := 0;
 end;
 
 
@@ -278,6 +278,16 @@ begin
   Dec(Units[aType].Dismissing);
 end;
 
+procedure TKMHandStats.UnitAfterDismissed(aType: TKMUnitType);
+begin
+  Inc(Units[aType].Dismissed);
+end;
+
+procedure TKMHandStats.UnitUsedForTraining(aType: TKMUnitType);
+begin
+  Inc(Units[aType].UsedForTraining);
+end;
+
 
 procedure TKMHandStats.UnitCreated(aType: TKMUnitType; aWasTrained: Boolean{; aFromTownHall: Boolean = False});
 begin
@@ -297,11 +307,6 @@ end;
 procedure TKMHandStats.UnitKilled(aType: TKMUnitType);
 begin
   Inc(Units[aType].Killed);
-end;
-
-procedure TKMHandStats.RecruitKilledInPearl;
-begin
-  Inc(fRecruitsKilledInPearl);
 end;
 
 
@@ -462,17 +467,9 @@ begin
                   Inc(Result, GetUnitQty(UT));
                   //Inc(Result, Units[UT].Initial + Units[UT].Trained - Units[UT].Lost);
     else        begin
-                  Result := Result + Units[aType].Initial + Units[aType].Trained - Units[aType].Lost;
-                  if aType = utRecruit then
-                  begin
-                    Dec(Result, fRecruitsKilledInPearl);
-                    for UT in BARRACKS_GAME_ORDER do
-                      Dec(Result, Units[UT].Trained); //Trained soldiers use a recruit
-                  end;
 
-                  if aType = utOperator then
-                    for UT in SIEGE_GAME_ORDER do
-                      Dec(Result, Units[UT].Trained * OPERATORS_PER_MACHINE); //Trained soldiers use a recruit
+                  Result := Result + Units[aType].Initial + Units[aType].Trained - Units[aType].Lost
+                            - Units[aType].UsedForTraining - Units[aType].Dismissed;
                 end;
   end;
 end;
@@ -486,12 +483,10 @@ begin
     case UT of
       utNone: ;
       utAny:     for UT2 := HUMANS_MIN to HUMANS_MAX do
-                    Inc(Result, Units[UT2].Initial + Units[UT2].Trained - Units[UT2].Lost);
+                    Inc(Result, GetUnitQty(UT));
       else        begin
+                    Inc(Result, GetUnitQty(UT));
                     Result := Units[UT].Initial + Units[UT].Trained - Units[UT].Lost;
-                    if UT = utRecruit then
-                      for UT2 := WARRIOR_EQUIPABLE_BARRACKS_MIN to WARRIOR_EQUIPABLE_BARRACKS_MAX do
-                        Dec(Result, Units[UT2].Trained); //Trained soldiers use a recruit
                   end;
     end;
 end;

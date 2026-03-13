@@ -616,10 +616,7 @@ begin
   begin
     // DISMISS UNIT
     fAskDismiss := False;
-    {if isGroup then
-      SendUnitDismissCommand//TKMUnitGroup(gMySpectator.Selected).SelectedUnit.Kill(HAND_NONE, True, False) //Debug option
-    else}
-      SendUnitDismissCommand;
+    SendUnitDismissCommand;
   end
   else
   begin

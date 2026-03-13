@@ -496,6 +496,7 @@ begin
       and not U.IsDeadOrDying then
       begin
         TKMCivilUnit(U).KillInHouse;
+        gHands[Owner].Stats.UnitUsedForTraining(utOperator);
         Inc(operatorsTaken);
       end;
   end;

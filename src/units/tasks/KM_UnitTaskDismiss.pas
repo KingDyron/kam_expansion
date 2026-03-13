@@ -199,7 +199,7 @@ begin
             if gMySpectator.Selected = fUnit then
               gMySpectator.Selected := nil; //Reset view, in case we were watching dismissed unit
             gHands[fUnit.Owner].Workless := gHands[fUnit.Owner].Workless + 1;
-            gHands[fUnit.Owner].Stats.UnitLost(fUnit.UnitType);
+            gHands[fUnit.Owner].Stats.UnitAfterDismissed(fUnit.UnitType);
             gHands[Owner].AddFestivalPoints(fptEconomy, -1);
             TKMCivilUnit(fUnit).KillInHouse; //Kill unit silently inside house
             Exit; //Exit immidiately, since we destroyed current task!
@@ -315,7 +315,7 @@ begin
             if gMySpectator.Selected = fUnit then
               gMySpectator.Selected := nil; //Reset view, in case we were watching dismissed unit
             gHands[fUnit.Owner].Workless := gHands[fUnit.Owner].Workless + 1;
-            gHands[fUnit.Owner].Stats.UnitLost(fUnit.UnitType);
+            gHands[fUnit.Owner].Stats.UnitAfterDismissed(fUnit.UnitType);
 
             for I := 0 to high(gRes.Units[UnitType].BarracksCost) do
               fBarracks.WareAddToIn(gRes.Units[UnitType].BarracksCost[I].W, gRes.Units[UnitType].BarracksCost[I].C);

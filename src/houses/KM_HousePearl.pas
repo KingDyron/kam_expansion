@@ -717,11 +717,10 @@ begin
       U := TKMUnitRecruit(fWorkers[I]);
       self.SetState(hstEmpty);
       U.KillInHouse;
-      If not IsBarracksUnit(aUnitType) then
-        gHands[Owner].Stats.RecruitKilledInPearl;
+      gHands[Owner].Stats.UnitUsedForTraining(utRecruit);
 
       W := TKMUnitWarrior(gHands[Owner].TrainUnit(aUnitType, Self));
-      W.Visible := False; //Make him invisible as he is inside the barracks
+      W.Visible := False; //Make him invisible as he is inside the house
       W.Condition := UNIT_MAX_CONDITION;
 
       W.SetActionGoIn(uaWalk, gdGoOutside, Self, true);
