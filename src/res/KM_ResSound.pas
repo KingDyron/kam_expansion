@@ -83,7 +83,8 @@ type
     sfxnPalace,
     sfxnStoreBell,
     sfxnAmmoBell,
-    sfxnPearlChoir
+    sfxnPearlChoir,
+    sfxnDevComplete
 
     );
   TSoundFXAmbiance = (
@@ -230,10 +231,11 @@ const
     'UI'   + PathDelim + 'Beacon.wav',
     'UI'   + PathDelim + 'Error.wav',
     'Misc' + PathDelim + 'PeaceTime.wav',
-    'Buildings' + PathDelim + 'Palace.wav',
-    'Buildings' + PathDelim + 'StoreBell.wav',
-    'Units' + PathDelim + 'OrderAmmoBell.wav',
-    'Buildings' + PathDelim + 'PearlChoir.wav'
+    'Buildings'   + PathDelim + 'Palace.wav',
+    'Buildings'   + PathDelim + 'StoreBell.wav',
+    'Units'       + PathDelim + 'OrderAmmoBell.wav',
+    'Buildings'   + PathDelim + 'PearlChoir.wav',
+    'UI'          + PathDelim + 'DevelopmentComplete.wav'
     );
   WEATHER_SFX_FOLDER = 'Weather' + PathDelim;
 

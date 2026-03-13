@@ -3657,6 +3657,7 @@ begin
         fDevsToUnlock[dtt].ID := DEV_ID_NONE;
         UnlockDevelopment(dtt, tmp);
         gGame.RefreshDevelopmentTree;
+        gSoundPlayer.Play(sfxnDevComplete, 1);
       end;
 
 end;
