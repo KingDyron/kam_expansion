@@ -1957,8 +1957,8 @@ var
     case fSortMethod of
       smByFavouriteAsc:       Result := A.IsFavourite and not B.IsFavourite;
       smByFavouriteDesc:      Result := not A.IsFavourite and B.IsFavourite;
-      smByNameAsc:            Result := CompareTextLogical(A.Name, B.Name) < 0;
-      smByNameDesc:           Result := CompareTextLogical(A.Name, B.Name) > 0;
+      smByNameAsc:            Result := CompareTextLogical(A.MapName, B.MapName) < 0;
+      smByNameDesc:           Result := CompareTextLogical(A.MapName, B.MapName) > 0;
       smBySizeAsc:            // Compare by actual map area, size indexes will be sorted automatically
                               Result := A.MapSizeX*A.MapSizeY < B.MapSizeX*B.MapSizeY;
       smBySizeDesc:           // Compare by actual map area, size indexes will be sorted automatically
