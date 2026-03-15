@@ -104,7 +104,6 @@ type
     procedure CreateAnimals;
     procedure CreateObjects;
   protected
-    Pin_Open : TKMButtonFlatPin;
     Panel_Guide : TKMPanel;
       Image_Background: TKMImage;
       Image_ClosePanel: TKMImage;
@@ -168,7 +167,8 @@ type
           Button_Ware : TKMButtonFlat;
 
   public
-    constructor Create(aParent: TKMPanel; aOnShow : TNotifyEvent; aX : integer = 198;  aY : integer = 20);
+    Pin_Open : TKMButtonFlatPin;
+    constructor Create(aParent: TKMPanel; aOnShow : TNotifyEvent; aX : integer = 198;  aY : integer = 20; aCreatePin : Boolean = true);
 
     procedure Show; overload;
     procedure Show(aUnitType : TKMUnitType); overload;
@@ -189,7 +189,7 @@ uses  KM_RenderUI, KM_Resource, KM_HandsCollection,
       KM_GameApp,
       SysUtils, Math;
 
-constructor TKMGUIGuide.Create(aParent: TKMPanel; aOnShow : TNotifyEvent; aX : integer = 198;  aY : integer = 20);
+constructor TKMGUIGuide.Create(aParent: TKMPanel; aOnShow : TNotifyEvent; aX : integer = 198;  aY : integer = 20; aCreatePin : Boolean = true);
 var I, top : Integer;
   PT : TKMGuidePageType;
 begin
@@ -198,9 +198,13 @@ begin
   fSelectedFruit := -1;
   fSelected := 255;
   fOnShow := aOnShow;
-  Pin_Open := TKMButtonFlatPin.Create(aParent, aX, aY, 25, 32, 314);
-  Pin_Open.OnClick := ClosePanel;
-  Pin_Open.Hint := gResTexts[1947];
+  If aCreatePin then
+  begin
+    Pin_Open := TKMButtonFlatPin.Create(aParent, aX, aY, 25, 32, 314);
+    Pin_Open.OnClick := ClosePanel;
+    Pin_Open.Hint := gResTexts[1947];
+  end;
+
   Panel_Guide := TKMPanel.Create(aParent, 240, 0, 500, aParent.Height - 200);
   Panel_Guide.Anchors := [anLeft, anTop, anBottom];
 

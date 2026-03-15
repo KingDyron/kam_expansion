@@ -76,6 +76,7 @@ type
     procedure UniversalEraser_Click(Sender: TObject);
     procedure ChangeResCount_Click(Sender: TObject);
     procedure ChangeResCount_Changed(Sender: TObject);
+    procedure ShowGuide(Sender: TObject);
 
     procedure UpdateMapEdCursor(X, Y: Integer; Shift: TShiftState);
     procedure Main_ButtonClick(Sender: TObject);
@@ -150,6 +151,8 @@ type
       Button_History_Undo,
       Button_History_Redo,
       Button_History_JumpTo: TKMButton;
+
+    Button_OpenGuide : TKMButtonFlatPin;
 
     function GetToolbarWidth: Integer; override;
 
@@ -285,13 +288,13 @@ begin
   Button_UniversalEraser.Down := False;
   Button_UniversalEraser.OnClick := UniversalEraser_Click;
 
-
-
   Button_ChangeResCount := TKMButtonFlat.Create(Panel_Main, MAPED_TOOLBAR_WIDTH - 33, TOP_SIDE_BTN + 140, 30, 32, 717);
   Button_ChangeResCount.BackAlpha := 1;
   Button_ChangeResCount.Down := False;
   Button_ChangeResCount.Hint := gResTexts[2111];
   Button_ChangeResCount.OnClick := ChangeResCount_Click;
+
+
     PopUp_ChangeRes := TKMPopUpPanel.Create(Panel_Main, 270, 100, gResTexts[110], pbPaper, True, False, False);
     PopUp_ChangeRes.Left := Button_ChangeResCount.Right + 5;
     PopUp_ChangeRes.Top  := Button_ChangeResCount.Top;
@@ -318,6 +321,10 @@ begin
     Edit_MaxCount.Value := 5;
     Edit_MaxCount.Hint := gResTexts[2114];
     Edit_MaxCount.OnChange := ChangeResCount_Changed;
+
+  Button_OpenGuide := TKMButtonFlatPin.Create(Panel_Main, Button_ChangeResCount.Left + 2, Button_ChangeResCount.Bottom + 13, 25, 32, 314);
+  Button_OpenGuide.OnClick := ShowGuide;
+  Button_OpenGuide.Hint := gResTexts[1947];
 
   Image_Extra := TKMImage.Create(Panel_Main, MAPED_TOOLBAR_WIDTH, Panel_Main.Height - 48, 30, 48, 494);
   Image_Extra.Anchors := [anLeft, anBottom];
@@ -418,8 +425,8 @@ begin
     S.LineWidth := 1;
     S.Hitable := False;
   end;
-  fGuiGuide := TKMGuiGuide.Create(Panel_Main, nil, 198 + 21, 20 + 213);
-  Panel_Main.ChildSendToFront(fGuiTerrain.GuiObjects.Pallete, true);
+  fGuiGuide := TKMGuiGuide.Create(Panel_Main, nil, 198 + 21, 20 + 213, false);
+  //Panel_Main.ChildSendToFront(fGuiTerrain.GuiObjects.Pallete, true);
   InitDebugControls;
 
   HidePages;
@@ -788,6 +795,14 @@ begin
   gCursor.MapEd_WaresMinCount := Edit_MinCount.Value;
   gCursor.MapEd_WaresMaxCount := Edit_MaxCount.Value;
   gCursor.MapEd_WaresRandomCount := CheckBox_Random.Checked;
+end;
+
+procedure TKMMapEdInterface.ShowGuide(Sender: TObject);
+begin
+  If fGuiGuide.Visible then
+    fGuiGuide.Hide
+  else
+    fGuiGuide.Show;
 end;
 
 procedure TKMMapEdInterface.UnRedo_Click(Sender: TObject);
