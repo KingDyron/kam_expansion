@@ -355,12 +355,18 @@ const
 
 
 procedure TKMButtonFlatBlockWare.Paint;
+const
+  MARGIN = 0;
 begin
-  Inherited;
   case Block of
-    wlFromOnly: TKMRenderUI.WritePicture(AbsLeft, AbsTop, 0, 0, [anLeft, anTop], rxGuiMain, 128, Enabled);
-    wlToOnly: TKMRenderUI.WritePicture(AbsRight, AbsTop, 0, 0, [anRight, anTop], rxGuiMain, 129, Enabled);
+    wlBothWays: begin
+                  TKMRenderUI.WritePicture(AbsLeft + MARGIN, AbsTop + MARGIN, 0, 0, [anLeft, anTop], rxGuiMain, 128, Enabled);
+                  TKMRenderUI.WritePicture(AbsRight - MARGIN, AbsTop + MARGIN, 0, 0, [anRight, anTop], rxGuiMain, 129, Enabled);
+                end;
+    wlFromOnly: TKMRenderUI.WritePicture(AbsLeft + MARGIN, AbsTop + MARGIN, 0, 0, [anLeft, anTop], rxGuiMain, 128, Enabled);
+    wlToOnly: TKMRenderUI.WritePicture(AbsRight - MARGIN, AbsTop + MARGIN, 0, 0, [anRight, anTop], rxGuiMain, 129, Enabled);
   end;
+  Inherited;
 end;
 
 
@@ -810,6 +816,8 @@ begin
       B[J].Tag := Byte(W);
       B[J].OnClickShift := House_MarketSelect;
       B[J].LineWidth := 2;
+      B[J].BackAlpha := 0.5;
+      B[J].EdgeAlpha := 1;
     end;
     Inc(J);
   end;
@@ -3700,9 +3708,9 @@ begin
       Button_Market[I].B[J].Left := K mod 5 * 37;
       Button_Market[I].B[J].Top := top + K div 5 * 37 + 20;
 
+      Button_Market[I].B[J].Block := gHands[aMarket.Owner].Locks.WareTradeLock[W];
       if M.AllowedToTrade(W) then
       begin
-        Button_Market[I].B[J].Block := gHands[aMarket.Owner].Locks.WareTradeLock[W];
         Button_Market[I].B[J].TexID := gRes.Wares[W].GUIIcon;
         Button_Market[I].B[J].Hint := gRes.Wares[W].Title;
         tmp := M.GetResTotal(W);

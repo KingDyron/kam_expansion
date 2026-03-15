@@ -38,10 +38,10 @@ type
   //* House lock state
   TKMHandWareTradeLock = (
     wlBothWays, //can be traded both ways
-    wlBlocked,//ware is blocked
-    wlNotVisible, //ware not visible in gui
     wlFromOnly, //can be only used as payment
-    wlToOnly //cannot use as payment
+    wlToOnly, //cannot use as payment
+    wlBlocked,//ware is blocked
+    wlNotVisible //ware not visible in gui
   );
   TKMHandWareLockCheck = (wlcFrom, wlcTo, wlcAny);
 

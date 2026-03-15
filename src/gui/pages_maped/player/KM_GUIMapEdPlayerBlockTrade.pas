@@ -75,7 +75,7 @@ begin
     If J >= length(Button_BlockTrade) then
     SetLength(Button_BlockTrade, J + 20);
 
-    Button_BlockTrade[J] := TKMButtonFlatBlockWare.Create(Panel_BlockTrade, 9 + (C mod 5)*37, top + (C div 5)*37,33,33, 0);
+    Button_BlockTrade[J] := TKMButtonFlatBlockWare.Create(Panel_BlockTrade, 9 + (C mod 5)*37, top + (C div 5)*37,32,36, 0);
     Button_BlockTrade[J].TexID := gRes.Wares[StoreResType[I]].GUIIcon;
     Button_BlockTrade[J].Hint := gRes.Wares[StoreResType[I]].Title;
     Button_BlockTrade[J].OnMouseDown := Player_BlockTradeClick;
@@ -169,19 +169,23 @@ begin
 end;
 
 procedure TKMButtonFlatBlockWare.Paint;
-var aID : Integer;
+const
+  MARGIN = 0;
 begin
-  Inherited;
-  aID := 0;
+
   case Block of
-    //wlBothWays: aID := 127;
-    wlNotVisible: aID := 91;
-    wlBlocked: aID := 32;
-    wlFromOnly: aID := 128;
-    wlToOnly: aID := 129;
+    wlBothWays: begin
+                  TKMRenderUI.WritePicture(AbsLeft + MARGIN, AbsTop + MARGIN, 0, 0, [anLeft, anTop], rxGuiMain, 128, Enabled);
+                  TKMRenderUI.WritePicture(AbsRight - MARGIN, AbsTop + MARGIN, 0, 0, [anRight, anTop], rxGuiMain, 129, Enabled);
+                end;
+    wlFromOnly: TKMRenderUI.WritePicture(AbsLeft + MARGIN, AbsTop + MARGIN, 0, 0, [anLeft, anTop], rxGuiMain, 128, Enabled);
+    wlToOnly: TKMRenderUI.WritePicture(AbsRight - MARGIN, AbsTop + MARGIN, 0, 0, [anRight, anTop], rxGuiMain, 129, Enabled);
   end;
-  if aID > 0 then
-    TKMRenderUI.WritePicture(AbsRight - 16, AbsBottom - 16, 16, 16, [], rxGuiMain, aId, Enabled);
+  Inherited;
+  case Block of
+    wlNotVisible: TKMRenderUI.WritePicture(AbsRight - 16, AbsBottom - 16, 16, 16, [], rxGuiMain, 91, Enabled);
+    wlBlocked: TKMRenderUI.WritePicture(AbsRight - 16, AbsBottom - 16, 16, 16, [], rxGuiMain, 32, Enabled);
+  end;
 end;
 
 
