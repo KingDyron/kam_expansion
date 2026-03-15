@@ -1182,6 +1182,7 @@ begin
     RegisterMethodCheck(c, 'procedure  UnitSetStats(aUnitID: Integer; aStats: TKMUnitStats)');
     RegisterMethodCheck(c, 'procedure  UnitSetThought(aUnitID : Integer; aThought : TKMUnitThought)');
     RegisterMethodCheck(c, 'procedure  WeatherSpawn(aType : TKMWeatherType; aLifeTime : Cardinal; aX, aY : Single; aSpeedX, aSpeedY : Single)');
+    RegisterMethodCheck(c, 'procedure  WareSetMarketPrice(aWare : TKMWareType; aPrice : Single)');
     RegisterMethodCheck(c, 'procedure  MusicPlay(aName : String; aForceOn : Boolean)');
     RegisterMethodCheck(c, 'procedure  DebugShowGrid(aShow: Boolean)');
     RegisterMethodCheck(c, 'procedure  DebugShowUnitRoutes(aShow: Boolean)');
@@ -2026,6 +2027,7 @@ begin
       RegisterMethod(@TKMScriptActions.UnitSetStats, 'UnitSetStats');
       RegisterMethod(@TKMScriptActions.UnitSetThought, 'UnitSetThought');
       RegisterMethod(@TKMScriptActions.WeatherSpawn, 'WeatherSpawn');
+      RegisterMethod(@TKMScriptActions.WareSetMarketPrice, 'WareSetMarketPrice');
       RegisterMethod(@TKMScriptActions.MusicPlay, 'MusicPlay');
       RegisterMethod(@TKMScriptActions.DebugShowGrid, 'DebugShowGrid');
       RegisterMethod(@TKMScriptActions.DebugShowUnitRoutes, 'DebugShowUnitRoutes');

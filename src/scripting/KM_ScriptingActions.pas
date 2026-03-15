@@ -320,6 +320,7 @@ type
     procedure WatchTowerRangeSet(aWatchTower : Integer; aRangeMin, aRangeMax : Single);
     procedure WatchTowerCyclesSet(aWatchTower : Integer; aCycles : Byte);
     procedure WeatherSpawn(aType : TKMWeatherType; aLifeTime : Cardinal; aX, aY : Single; aSpeedX, aSpeedY : Single);
+    procedure WareSetMarketPrice(aWare : TKMWareType; aPrice : Single);
 
 
 
@@ -6459,7 +6460,19 @@ begin
     gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
     raise;
   end;
+end;
 
+procedure TKMScriptActions.WareSetMarketPrice(aWare : TKMWareType; aPrice : Single);
+begin
+  try
+    If aWare in WARES_VALID then
+      gRes.Wares[aWare].MarketPriceMultiplier := aPrice
+    else
+      LogIntParamWarn('Actions.GroupSetFormation', [WARE_TY_TO_ID[aWare]]);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
 end;
 
 procedure TKMScriptActions.MusicPlay(aName : String; aForceOn : Boolean);
