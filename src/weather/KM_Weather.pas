@@ -647,7 +647,7 @@ begin
   Inherited Create(aType, aPos, aSpeed, aLifeTime, aRX);
 
   fAnims[wsStart].Create(0, 0, 1413, 6);
-  fAnims[wsLoop].Create(0, 0, 1419, 72);
+  fAnims[wsLoop].Create(0, 0, 1419, 71);
   fAnims[wsEnd].Create(0, 0, 1413, 6, 0, true);
   fAnims[wsStart].Extend(1);
   fAnims[wsEnd].Extend(1);
