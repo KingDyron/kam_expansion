@@ -1840,7 +1840,7 @@ begin
         WT := WARE_MARKET_IMPORTANCE[J];
         if WT = W then
           Continue;
-        if not gHands[fOwner].Locks.AllowToTrade[WT] then
+        if not gHands[fOwner].Locks.AllowToTrade(WT, wlcTo) then
           Continue;
         if WaresTaken[WT] > WareToMaxCount(WT) then  //don't trade this ware if we have enough
           Continue;
@@ -1857,7 +1857,7 @@ begin
 
       //get best ware
       for WT := WARE_MIN to WARE_MAX do
-        if gHands[fOwner].Locks.AllowToTrade[WT] then
+        if gHands[fOwner].Locks.AllowToTrade(WT, wlcFrom) then
           if (gRes.Wares.RatioFrom(WT, toW) <= 20) {and (gRes.Wares.RatioTo(WT, toW) < 200)} then
             if HM.CheckWareOut(WT) = 0 then
               if (Wares[WT] > WareFromMinCount(WT)) then //take only resources that has min count
@@ -1956,7 +1956,7 @@ begin
     W := wtNone;
     for WT := WARE_MIN to WARE_MAX do
       if not (WT in wareTaken) then
-        if gHands[fOwner].Locks.AllowToTrade[WT] then
+        if gHands[fOwner].Locks.AllowToTrade(WT, wlcAny) then
           if gHands[fOwner].Stats.Wares[WT].ActualCnt > WareFromMinCount(WT) then //take only resources that has min count
             if (W = wtNone) or (gHands[fOwner].Stats.Wares[WT].ActualCnt * gRes.Wares[WT].MarketPrice > gHands[fOwner].Stats.Wares[W].ActualCnt * gRes.Wares[W].MarketPrice) then
               W := WT;

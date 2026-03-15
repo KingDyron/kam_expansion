@@ -7,11 +7,18 @@ uses
   KM_CommonClasses, KM_CommonTypes, KM_Defaults, KM_Pics, KM_ControlsPopUp, KM_ControlsEdit, KM_ControlsScroll,
   KM_GUIGameHouseCartographer, KM_GuiGameHousePearl, KM_GuiGameHousePasture, KM_GuiGameHouseForest,
   KM_GuiGameHouseArena, KM_GUIGameHouseST,
-  KM_InterfaceGame, KM_Houses, KM_HouseMarket, KM_HouseQueue, KM_ResWares, KM_ResTypes;
+  KM_InterfaceGame, KM_Houses, KM_HouseMarket, KM_HouseQueue, KM_ResWares, KM_ResTypes,
+  KM_HandTypes;
 
 const LINE_HEIGHT = 25; //Each new Line is placed ## pixels after previous
 
 type
+
+  TKMButtonFlatBlockWare = class(TKMButtonFlat)
+  public
+    Block : TKMHandWareTradeLock;
+    procedure Paint; override;
+  end;
 
   TKMGUIGameHouse = class
   private
@@ -164,7 +171,10 @@ type
       CostsRow_Common : TKMCostsRowMulti;
 
     Panel_HouseMarket: TKMPanel;
-      Button_Market: array of TKMButtonFlat;
+      Button_Market: array of record
+        B : array of TKMButtonFlatBlockWare;
+        L : TKMLabel;
+      end;
       Label_Market_In, Label_Market_Out: TKMLabel;
       Button_Market_In, Button_Market_Out: TKMButtonFlat;
       Button_Market_Add,Button_Market_Remove: TKMButton;
@@ -328,7 +338,7 @@ uses
   KM_HouseBarracks, KM_HouseSchool, KM_HouseTownHall, KM_HouseWoodcutters, KM_HouseStore,
   KM_HouseArmorWorkshop, KM_HouseSiegeWorkshop, KM_HouseWoodBurner, KM_HouseCottage,
   KM_HouseSwineStable, KM_HouseCartographers,
-  KM_HandsCollection, KM_HandTypes, KM_HandEntity,
+  KM_HandsCollection, KM_HandEntity,
   KM_RenderUI, KM_ResKeys, KM_ResMapElements,
   KM_Resource, KM_ResFonts, KM_ResHouses, KM_ResTexts, KM_ResUnits, KM_Utils, KM_UtilsExt, KM_Points,
   KM_Cursor,
@@ -342,6 +352,16 @@ const
 
   SCHOOL_CH_ORDER_TO_0_SHIFT = ssShift; // Shift state to change Unit order in queue to 0 in School
   SCHOOL_CH_ORDER_TO_1_SHIFT = ssCtrl;  // Shift state to change Unit order in queue to 1 in School
+
+
+procedure TKMButtonFlatBlockWare.Paint;
+begin
+  Inherited;
+  case Block of
+    wlFromOnly: TKMRenderUI.WritePicture(AbsLeft, AbsTop, 0, 0, [anLeft, anTop], rxGuiMain, 128, Enabled);
+    wlToOnly: TKMRenderUI.WritePicture(AbsRight, AbsTop, 0, 0, [anRight, anTop], rxGuiMain, 129, Enabled);
+  end;
+end;
 
 
 procedure TKMGUIGameHouse.TKMHouseUnitOrder.CheckOrder(aOwner : TKMHandID; aHouseType : TKMHouseType; aUnitToCheck: TKMUnitTypeArray);
@@ -713,7 +733,7 @@ var
   lineH: Integer;
 
   J, K: Integer;
-  top, C: Integer;
+  W : TKMWareType;
 
 begin
   Panel_HouseMarket := TKMPanel.Create(Panel_House, 0, 76, TB_WIDTH, 650);
@@ -759,38 +779,42 @@ begin
   Label_Market_ToAmount   := TKMLabel.Create(Panel_HouseMarket, 127, lineH, '', fntGrey, taCenter);
 
   J := 0;
-  C := 0;
-  K := 0;
-  top := Button_Market_Out.Bottom + 10;
-  SetLength(Button_Market, 0);
+  K := -1;
+  SetLength(Button_Market, 10);
+
   for I := 1 to STORE_RES_COUNT do
   begin
-    if StoreResType[I] = wtNone then
+    W := StoreResType[I];
+    if W = wtNone then
     begin
-      C := 0;
-      if J > 0 then
-        top := Button_Market[J - 1].Bottom + 1;
-      with TKMLabel.Create(Panel_HouseMarket, 0, top, Panel_HouseMarket.Width, 15, gResTexts[1657 + K], fntOutline, taCenter) do
-        Hitable := false;
+      If K >= 0 then
+        SetLength(Button_Market[K].B, J);
 
-      Inc(top, 17);
+      J := 0;
       Inc(K);
+      Button_Market[K].L := TKMLabel.Create(Panel_HouseMarket, 0, 0, Panel_HouseMarket.Width, 15, gResTexts[1657 + K], fntOutline, taCenter);
+      Button_Market[K].L.Hitable := false;
       Continue;
     end;
-    SetLength(Button_Market, J + 1);
+    If K = -1 then
+      Continue;
 
-    Button_Market[J] := TKMButtonFlat.Create(Panel_HouseMarket, C mod 5 * 37, C div 5 * 37 + top, 32, 36, 0);
-
-    Button_Market[J].TexOffsetY := 1;
-    Button_Market[J].TexID := gRes.Wares[StoreResType[I]].GUIIcon;
-    Button_Market[J].Hint := gRes.Wares[StoreResType[I]].Title;
-    Button_Market[J].Tag := Byte(StoreResType[I]);
-    Button_Market[J].OnClickShift := House_MarketSelect;
-    Button_Market[J].LineWidth := 2;
-
-    Inc(C);
+    with Button_Market[K] do
+    begin
+      If J >= length(B) then
+        SetLength(B, J + 16);
+      B[J] := TKMButtonFlatBlockWare.Create(Panel_HouseMarket, 0, 0, 32, 36, 0);
+      B[J].TexOffsetY := 1;
+      B[J].TexID := gRes.Wares[StoreResType[I]].GUIIcon;
+      B[J].Hint := gRes.Wares[StoreResType[I]].Title;
+      B[J].Tag := Byte(W);
+      B[J].OnClickShift := House_MarketSelect;
+      B[J].LineWidth := 2;
+    end;
     Inc(J);
   end;
+  SetLength(Button_Market, K + 1);
+  SetLength(Button_Market[K].B, J);
 end;
 
 
@@ -2796,7 +2820,6 @@ procedure TKMGUIGameHouse.House_ClosedForWorkerToggle(Sender: TObject; Shift: TS
 var
   house: TKMHouse;
   UT : TKMUnitType;
-  I : Integer;
 begin
   if (gMySpectator.Selected = nil) or not (gMySpectator.Selected is TKMHouse)
     or (gMySpectator.Selected is TKMHouseBarracks) then Exit;
@@ -3625,57 +3648,96 @@ end;
 
 procedure TKMGUIGameHouse.House_MarketFill(aMarket: TKMHouseMarket);
 var
-  I, tmp: Integer;
+  I, J, K, top, tmp: Integer;
   W: TKMWareType;
   M : TKMHouseMarket;
+  hasAny : Boolean;
 begin
 
   M := aMarket;
-
-  for I := 0 to high(Button_Market) do
+  top := 45 - 37;
+  K := 0;
+  for I := 0 to High(Button_Market) do
+  begin
+    hasAny := false;
+    for J := 0 to High(Button_Market[I].B) do
     begin
-      //First clean the down and color;
+      W := TKMWareType(Button_Market[I].B[J].Tag);
+      IF gHands[aMarket.Owner].Locks.WareTradeLock[W] <> wlNotVisible then
+      begin
+        hasAny := true;
+        Break;
+      end;
+    end;
 
-      Button_Market[I].DownColor := $FFFFFFFF;
-      Button_Market[I].Down := false;
-      Button_Market[I].HighLightColor := $40FFFFFF;
+    If not hasAny then
+    begin
+      for J := 0 to High(Button_Market[I].B) do
+        Button_Market[I].B[J].Hide;
+      Button_Market[I].L.Hide;
+      Continue;
 
+    end;
+    Inc(top, (((K - 1) div 5) + 1) * 37 + 20);
+    K := 0;//position
 
-      W := TKMWareType(Button_Market[I].Tag);
+    Button_Market[I].L.Top := top + 2;
+    Button_Market[I].L.Show;
+
+    for J := 0 to High(Button_Market[I].B) do
+    begin
+      W := TKMWareType(Button_Market[I].B[J].Tag);
+      IF gHands[aMarket.Owner].Locks.WareTradeLock[W] = wlNotVisible then
+      begin
+        Button_Market[I].B[J].Hide;
+        Continue;
+      end;
+      //clean the colors
+      Button_Market[I].B[J].DownColor := $FFFFFFFF;
+      Button_Market[I].B[J].Down := false;
+      Button_Market[I].B[J].HighLightColor := $40FFFFFF;
+      //set position
+      Button_Market[I].B[J].Left := K mod 5 * 37;
+      Button_Market[I].B[J].Top := top + K div 5 * 37 + 20;
+
       if M.AllowedToTrade(W) then
       begin
-
-        Button_Market[I].TexID := gRes.Wares[W].GUIIcon;
-        Button_Market[I].Hint := gRes.Wares[W].Title;
+        Button_Market[I].B[J].Block := gHands[aMarket.Owner].Locks.WareTradeLock[W];
+        Button_Market[I].B[J].TexID := gRes.Wares[W].GUIIcon;
+        Button_Market[I].B[J].Hint := gRes.Wares[W].Title;
         tmp := M.GetResTotal(W);
-        Button_Market[I].Caption := IfThen(tmp = 0, '-', IntToKStr(tmp, 1000)); // Convert 1234 -> '1k'
+        Button_Market[I].B[J].Caption := IfThen(tmp = 0, '-', IntToKStr(tmp, 1000)); // Convert 1234 -> '1k'
+
       end else
       begin
-        Button_Market[I].TexID := 41;
-        Button_Market[I].Hint := gResTexts[TX_HOUSES_MARKET_HINT_BLOCKED];
-        Button_Market[I].Caption := '-';
+        Button_Market[I].B[J].TexID := 41;
+        Button_Market[I].B[J].Hint := gResTexts[TX_HOUSES_MARKET_HINT_BLOCKED];
+        Button_Market[I].B[J].Caption := '-';
       end;
 
-      //Disabling buttons will let player know that he cant select new trade without canceling current one
-      Button_Market[I].Enabled := (W in [M.ResFrom, M.ResTo]) or not M.TradeInProgress;
+      Button_Market[I].B[J].Enabled := (W in [M.ResFrom, M.ResTo]) or not M.TradeInProgress;
 
       if M.ResFrom <> wtNone then
         if W = M.ResFrom then
         begin
-          Button_Market[I].DownColor := $FF00C000;
-          Button_Market[I].Down := true;
-          Button_Market[I].HighLightColor := $4000C000;
+          Button_Market[I].B[J].DownColor := $FF00C000;
+          Button_Market[I].B[J].Down := true;
+          Button_Market[I].B[J].HighLightColor := $4000C000;
         end;
       if M.ResTo <> wtNone then
         if W = M.ResTo then
         begin
-          Button_Market[I].DownColor := $FF0707FF;
-          Button_Market[I].HighLightColor := $400707FF;
-          Button_Market[I].Down := true;
+          Button_Market[I].B[J].DownColor := $FF0707FF;
+          Button_Market[I].B[J].HighLightColor := $400707FF;
+          Button_Market[I].B[J].Down := true;
         end;
 
+      Button_Market[I].B[J].Show;
 
+      Inc(K);
     end;
+
+  end;
 
   //Position the shape that marks the FROM ware
   if M.ResFrom <> wtNone then
@@ -3742,9 +3804,13 @@ begin
     M := TKMHouseMarket(gMySpectator.Selected);
 
     if Shift = [ssLeft] then
-      gGame.GameInputProcess.CmdHouse(gicHouseMarketFrom, M, TKMWareType(TKMButtonFlat(Sender).Tag));
+    begin
+      If M.AllowedToTradeFrom(TKMWareType(TKMButtonFlat(Sender).Tag)) then
+        gGame.GameInputProcess.CmdHouse(gicHouseMarketFrom, M, TKMWareType(TKMButtonFlat(Sender).Tag));
+    end else
     if Shift = [ssRight] then
-      gGame.GameInputProcess.CmdHouse(gicHouseMarketTo, M, TKMWareType(TKMButtonFlat(Sender).Tag));
+      If M.AllowedToTradeTo(TKMWareType(TKMButtonFlat(Sender).Tag)) then
+        gGame.GameInputProcess.CmdHouse(gicHouseMarketTo, M, TKMWareType(TKMButtonFlat(Sender).Tag));
 
   end;
 

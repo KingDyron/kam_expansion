@@ -28,6 +28,7 @@ type
     fDecorationLock : array of TKMHandUnitLock;
     fUnitBlocked: array[TKMUnitHouseBlock] of TKMArray<TKMUnitBlockRec>;
     fDevLock: array[DEVELOPMENT_MIN..DEVELOPMENT_MAX] of array of TKMHandDevLock;
+    fWareTradeLock: array [WARE_MIN..WARE_MAX] of TKMHandWareTradeLock; //Allowance derived from mission script
     procedure UpdateReqDone(aType: TKMHouseType);
 
     function GetHouseBlocked(aHouseType: TKMHouseType): Boolean;
@@ -48,8 +49,10 @@ type
 
     function GetDevLock(aType : TKMDevelopmentTreeType; aID : Integer) : TKMHandDevLock;
     procedure SetDevLock(aType : TKMDevelopmentTreeType; aID : Integer; aValue : TKMHandDevLock);
+
+    procedure SetWareTradeLock(aWare : TKMWareType; aLock : TKMHandWareTradeLock);
+    function GetWareTradeLock(aWare : TKMwareType): TKMHandWareTradeLock;
   public
-    AllowToTrade: array [WARE_MIN..WARE_MAX] of Boolean; //Allowance derived from mission script
     constructor Create;
 
     property HouseBlocked[aHouseType: TKMHouseType]: Boolean read GetHouseBlocked;
@@ -67,6 +70,9 @@ type
     function GetUnitBlocked(aUnitType: TKMUnitType; aHouseType: TKMHouseType): TKMHandUnitLock;
     function UnitUnlocked(aUnitType : TKMUnitType; aHouseType: TKMHouseType = htAny) : Boolean;
     function UnitsUnlocked(aUnitType : array of TKMUnitType; aHouseType: TKMHouseType = htAny) : Boolean;
+
+    function AllowToTrade(aWare : TKMWareType; aCheck : TKMHandWareLockCheck) : Boolean;
+    property WareTradeLock[aWare : TKMWareType] : TKMHandWareTradeLock read GetWareTradeLock write SetWareTradeLock;
 
     property DevelopmentLock[aType : TKMDevelopmentTreeType; aID : Integer] : TKMHandDevLock read GetDevLock write SetDevlock;
     function DevelopmentCount(aType : TKMDevelopmentTreeType) : Word;
@@ -105,7 +111,7 @@ begin
 
   for W := WARE_MIN to high(TKMWareType) do
     if W in WARES_VALID then
-      AllowToTrade[W] := True;
+      WareTradeLock[W] := wlBothWays;
 
   //Release Store at the start of the game by default
   fHouseUnlocked[htStore] := True;
@@ -399,6 +405,15 @@ begin
     CheckDev(dtt, gRes.Development[dtt].FirstItem, fDevLock[dtt, 0]);
 end;
 
+function TKMHandLocks.GetWareTradeLock(aWare : TKMwareType): TKMHandWareTradeLock;
+begin
+  Result := fWareTradeLock[aWare];
+end;
+
+procedure TKMHandLocks.SetWareTradeLock(aWare : TKMWareType; aLock : TKMHandWareTradeLock);
+begin
+  fWareTradeLock[aWare] := aLock;
+end;
 
 function TKMHandLocks.HouseToType(aHouseType: TKMHouseType): TKMUnitHouseBlock;
 begin
@@ -478,6 +493,13 @@ begin
       Exit(true);
 end;
 
+function TKMHandLocks.AllowToTrade(aWare : TKMWareType; aCheck : TKMHandWareLockCheck) : Boolean;
+begin
+  Result := ((aCheck = wlcAny) and (fWareTradeLock[aWare] in [wlBothWays, wlFromOnly, wlToOnly]))
+            or ((aCheck = wlcFrom) and (fWareTradeLock[aWare] in [wlBothWays, wlFromOnly]))
+            or ((aCheck = wlcTo) and (fWareTradeLock[aWare] in [wlBothWays, wlToOnly]))
+end;
+
 function TKMHandLocks.FieldLocked(aType : TKMLockFieldType) : Boolean;
 begin
   Result := fFieldBlocked[aType];
@@ -498,7 +520,7 @@ begin
   //SaveStream.Write(fUnitBlocked, SizeOf(fUnitBlocked)); //deprecated
   for UHT := Low(TKMUnitHouseBlock) to High(TKMUnitHouseBlock) do
     fUnitBlocked[UHT].SaveToStream(SaveStream);
-  SaveStream.Write(AllowToTrade, SizeOf(AllowToTrade));
+  SaveStream.Write(fWareTradeLock, SizeOf(fWareTradeLock));
   SaveStream.Write(fHouseUnlocked, SizeOf(fHouseUnlocked));
   SaveStream.Write(fHandHouseMaxLvl, SizeOf(fHandHouseMaxLvl));
   SaveStream.Write(fFieldBlocked, SizeOf(fFieldBlocked));
@@ -534,7 +556,7 @@ begin
   for UHT := Low(TKMUnitHouseBlock) to High(TKMUnitHouseBlock) do
     fUnitBlocked[UHT].LoadFromStream(LoadStream);
 
-  LoadStream.Read(AllowToTrade, SizeOf(AllowToTrade));
+  LoadStream.Read(fWareTradeLock, SizeOf(fWareTradeLock));
   LoadStream.Read(fHouseUnlocked, SizeOf(fHouseUnlocked));
   LoadStream.Read(fHandHouseMaxLvl, SizeOf(fHandHouseMaxLvl));
   LoadStream.Read(fFieldBlocked, SizeOf(fFieldBlocked));

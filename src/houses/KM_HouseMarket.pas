@@ -56,6 +56,8 @@ type
     function ShouldAbandonDeliveryTo(aWareType: TKMWareType): Boolean; override;
 
     function AllowedToTrade(aWare: TKMWareType): Boolean;
+    function AllowedToTradeFrom(aWare: TKMWareType): Boolean;
+    function AllowedToTradeTo(aWare: TKMWareType): Boolean;
     function TradeInProgress: Boolean;
     function GetResTotal(aWare: TKMWareType): Word; overload;
     function CheckWareIn(aWare: TKMWareType): Word; override;
@@ -329,13 +331,26 @@ function TKMHouseMarket.AllowedToTrade(aWare: TKMWareType): Boolean;
 begin
   Result := false;
   if aWare in WARES_VALID then
-    Result := gHands[Owner].Locks.AllowToTrade[aWare];
+    Result := gHands[Owner].Locks.AllowToTrade(aWare, wlcAny);
 end;
 
+function TKMHouseMarket.AllowedToTradeFrom(aWare: TKMWareType): Boolean;
+begin
+  Result := false;
+  if aWare in WARES_VALID then
+    Result := gHands[Owner].Locks.AllowToTrade(aWare, wlcFrom);
+end;
+
+function TKMHouseMarket.AllowedToTradeTo(aWare: TKMWareType): Boolean;
+begin
+  Result := false;
+  if aWare in WARES_VALID then
+    Result := gHands[Owner].Locks.AllowToTrade(aWare, wlcTo);
+end;
 
 procedure TKMHouseMarket.SetWareFrom(aWare: TKMWareType);
 begin
-  if TradeInProgress or not AllowedToTrade(aWare) then
+  if TradeInProgress or not AllowedToTradeFrom(aWare) then
     Exit;
 
   fResFrom := aWare;
@@ -346,7 +361,7 @@ end;
 
 procedure TKMHouseMarket.SetWareTo(aWare: TKMWareType);
 begin
-  if TradeInProgress or not AllowedToTrade(aWare) then
+  if TradeInProgress or not AllowedToTradeTo(aWare) then
     Exit;
 
   fResTo := aWare;

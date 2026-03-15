@@ -2858,8 +2858,14 @@ begin
   try
     //Verify all input parameters
     if InRange(aHand, 0, gHands.Count - 1) and gHands[aHand].Enabled
-      and (aResType in [Low(WARE_ID_TO_TYPE)..High(WARE_ID_TO_TYPE)]) then
-      gHands[aHand].Locks.AllowToTrade[WARE_ID_TO_TYPE[aResType]] := aAllowed
+    and (aResType in [Low(WARE_ID_TO_TYPE)..High(WARE_ID_TO_TYPE)]) then
+    begin
+      If aAllowed then
+        gHands[aHand].Locks.WareTradeLock[WARE_ID_TO_TYPE[aResType]] := wlBothWays
+      else
+        gHands[aHand].Locks.WareTradeLock[WARE_ID_TO_TYPE[aResType]] := wlBlocked;
+
+    end
     else
       LogIntParamWarn('Actions.SetTradeAllowed', [aHand, aResType, Byte(aAllowed)]);
   except
@@ -2885,10 +2891,19 @@ begin
       begin
         for I := 0 to gHands.Count - 1 do
           if gHands[I].Enabled then
-            gHands[I].Locks.AllowToTrade[aWareType] := aAllowed;
+          begin
+            If aAllowed then
+              gHands[aHand].Locks.WareTradeLock[aWareType] := wlBothWays
+            else
+              gHands[aHand].Locks.WareTradeLock[aWareType] := wlBlocked;
+
+          end
       end
       else
-        gHands[aHand].Locks.AllowToTrade[aWareType] := aAllowed;
+        If aAllowed then
+          gHands[aHand].Locks.WareTradeLock[aWareType] := wlBothWays
+        else
+          gHands[aHand].Locks.WareTradeLock[aWareType] := wlBlocked;
     end
     else
       LogParamWarn('Actions.PlayerTradeAllowed', [aHand, GetEnumName(TypeInfo(TKMWareType), Integer(aWareType)), BoolToStr(aAllowed, True)]);

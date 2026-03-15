@@ -691,7 +691,10 @@ begin
     ctBlockTrade:       if fLastHand <> HAND_NONE then
                         begin
                           if WARE_ID_TO_TYPE[P[0]] in [WARE_MIN..WARE_MAX] then
-                            gHands[fLastHand].Locks.AllowToTrade[WARE_ID_TO_TYPE[P[0]]] := False;
+                            If P[1] = -1 then
+                              gHands[fLastHand].Locks.WareTradeLock[WARE_ID_TO_TYPE[P[0]]] := wlBlocked
+                            else
+                              gHands[fLastHand].Locks.WareTradeLock[WARE_ID_TO_TYPE[P[0]]] :=TKMHandWareTradeLock(P[1]);
                         end;
 
     ctBlockUnit:        if fLastHand <> HAND_NONE then
@@ -1662,8 +1665,8 @@ begin
 
     //Block trades
     for WT := WARE_MIN to WARE_MAX do
-      if not gHands[I].Locks.AllowToTrade[WT] then
-        AddCommand(ctBlockTrade, [WARE_TY_TO_ID[WT]]);
+      if gHands[I].Locks.WareTradeLock[WT] <> wlBothWays then
+        AddCommand(ctBlockTrade, [WARE_TY_TO_ID[WT], byte(gHands[I].Locks.WareTradeLock[WT])]);
 
     gHands[I].Locks.CheckDevLocksMapEd;
     for dtt := DEVELOPMENT_MIN to DEVELOPMENT_MAX do

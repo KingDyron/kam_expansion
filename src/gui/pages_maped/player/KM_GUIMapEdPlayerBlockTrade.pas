@@ -4,9 +4,15 @@ interface
 uses
    Classes,
    KM_Controls, KM_ControlsBase, KM_ControlsScroll,
-   KM_Pics, KM_InterfaceGame, KM_ResWares;
+   KM_Pics, KM_InterfaceGame, KM_ResWares, KM_HandTypes;
 
 type
+  TKMButtonFlatBlockWare = class(TKMButtonFlat)
+  public
+    Block : TKMHandWareTradeLock;
+    procedure Paint; override;
+  end;
+
   TKMMapEdPlayerBlockTrade = class
   private
     procedure Player_BlockTradeClick(Sender: TObject; X, Y : Integer; Shift: TShiftState);
@@ -15,8 +21,7 @@ type
 
   protected
     Panel_BlockTrade: TKMScrollPanel;
-    Button_BlockTrade: array of TKMButtonFlat;
-    Image_BlockTrade: array of TKMImage;
+    Button_BlockTrade: array of TKMButtonFlatBlockWare;
   public
     constructor Create(aParent: TKMPanel);
 
@@ -28,10 +33,11 @@ type
 
 implementation
 uses
+  Math,
   KM_HandsCollection, KM_ResTexts,
   KM_Resource, KM_RenderUI, KM_ResFonts,
-  KM_ResTypes;
-
+  KM_ResTypes,
+  KM_CommonUtils;
 
 { TKMMapEdPlayerBlockTrade }
 constructor TKMMapEdPlayerBlockTrade.Create(aParent: TKMPanel);
@@ -66,11 +72,10 @@ begin
       Inc(K);
       Continue;
     end;
+    If J >= length(Button_BlockTrade) then
+    SetLength(Button_BlockTrade, J + 20);
 
-    SetLength(Button_BlockTrade, J + 1);
-    SetLength(Image_BlockTrade, J + 1);
-
-    Button_BlockTrade[J] := TKMButtonFlat.Create(Panel_BlockTrade, 9 + (C mod 5)*37, top + (C div 5)*37,33,33, 0);
+    Button_BlockTrade[J] := TKMButtonFlatBlockWare.Create(Panel_BlockTrade, 9 + (C mod 5)*37, top + (C div 5)*37,33,33, 0);
     Button_BlockTrade[J].TexID := gRes.Wares[StoreResType[I]].GUIIcon;
     Button_BlockTrade[J].Hint := gRes.Wares[StoreResType[I]].Title;
     Button_BlockTrade[J].OnMouseDown := Player_BlockTradeClick;
@@ -78,15 +83,10 @@ begin
     Button_BlockTrade[J].Tag2 := BUTTON_BLOCK_WARE_TRADE_TAG_2;
     Button_BlockTrade[J].OnMouseOver := Player_BlockTradeOver;
 
-
-    Image_BlockTrade[J] := TKMImage.Create(Panel_BlockTrade, 9 + (C mod 5)*37 + 15, top + (C div 5)*37 + 15, 16, 16, 0, rxGuiMain);
-    Image_BlockTrade[J].Hitable := False;
-    Image_BlockTrade[J].ImageCenter;
-
     Inc(J);
     Inc(C);
-
   end;
+  SetLength(Button_BlockTrade, J);
 end;
 
 
@@ -97,8 +97,9 @@ var
 begin
   I := TKMButtonFlat(Sender).Tag;
   WT := TKMWareType(I);
-
-  gMySpectator.Hand.Locks.AllowToTrade[WT] := not gMySpectator.Hand.Locks.AllowToTrade[WT];
+  I := byte(gMySpectator.Hand.Locks.WareTradeLock[WT]);
+  IncLoop(I, 0, Byte(high(TKMHandWareTradeLock)), IfThen(ssRight in Shift, -1, 1) );
+  gMySpectator.Hand.Locks.WareTradeLock[WT] := TKMHandWareTradeLock(I);
 
   Player_BlockTradeRefresh;
 end;
@@ -121,9 +122,9 @@ begin
     W1 := TKMWareType(CtrlDown.Tag);
     W2 := TKMWareType(TKMButtonFlat(Sender).Tag);
 
-    if gMySpectator.Hand.Locks.AllowToTrade[W1] <> gMySpectator.Hand.Locks.AllowToTrade[W2] then
+    if gMySpectator.Hand.Locks.WareTradeLock[W1] <> gMySpectator.Hand.Locks.WareTradeLock[W2] then
     begin
-      gMySpectator.Hand.Locks.AllowToTrade[W2] := gMySpectator.Hand.Locks.AllowToTrade[W1];
+      gMySpectator.Hand.Locks.WareTradeLock[W2] := gMySpectator.Hand.Locks.WareTradeLock[W1];
       Player_BlockTradeRefresh;
     end;
 
@@ -139,16 +140,12 @@ var
   I: Integer;
   WT: TKMWareType;
 begin
-  for I := 0 to high(Image_BlockTrade) do
+  for I := 0 to high(Button_BlockTrade) do
   begin
     WT := TKMWareType(Button_BlockTrade[I].Tag);
     if not( WT in WARES_VALID) then
       Continue;
-
-    if gMySpectator.Hand.Locks.AllowToTrade[WT] then
-      Image_BlockTrade[I].TexID := 0
-    else
-      Image_BlockTrade[I].TexID := 32; //Red cross
+    Button_BlockTrade[I].Block := gMySpectator.Hand.Locks.WareTradeLock[WT];
   end;
 end;
 
@@ -169,6 +166,22 @@ end;
 function TKMMapEdPlayerBlockTrade.Visible: Boolean;
 begin
   Result := Panel_BlockTrade.Visible;
+end;
+
+procedure TKMButtonFlatBlockWare.Paint;
+var aID : Integer;
+begin
+  Inherited;
+  aID := 0;
+  case Block of
+    //wlBothWays: aID := 127;
+    wlNotVisible: aID := 91;
+    wlBlocked: aID := 32;
+    wlFromOnly: aID := 128;
+    wlToOnly: aID := 129;
+  end;
+  if aID > 0 then
+    TKMRenderUI.WritePicture(AbsRight - 16, AbsBottom - 16, 16, 16, [], rxGuiMain, aId, Enabled);
 end;
 
 
