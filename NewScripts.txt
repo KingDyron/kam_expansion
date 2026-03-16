@@ -11,6 +11,7 @@
     procedure DevPointsAdd(aHandID : Integer; aType : Byte; aCount : Word);
     procedure FestivalPointsAdd(aHandID : Integer; aType : Byte; aCount : Word);
 
+    procedure GiveWorkless(aHand : Integer; aCount : Integer);// gives workless units to the player
     procedure GroupSetFlagColor(aGroupID : Integer; aColor : Cardinal);
     procedure GroupMakeHero(aGroupID: Integer; makeHero: Boolean);
     procedure GroupInfiniteAmmoSet(aGroupID: Integer; aInfinity: Boolean);
