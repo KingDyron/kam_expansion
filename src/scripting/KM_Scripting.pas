@@ -1170,6 +1170,7 @@ begin
     RegisterMethodCheck(c, 'procedure  UnitBlockWalking(aUnitID: Integer; aBlock: Boolean)');
     RegisterMethodCheck(c, 'procedure  UnitCanInteract(aUnitID: Integer; aBlock: Boolean)');
 
+    RegisterMethodCheck(c, 'procedure  GiveWorkless(aHand : Integer; aCount : Integer)');
     RegisterMethodCheck(c, 'procedure  GroupSetFlagColor(aGroupID: Integer; aColor: Cardinal)');
     RegisterMethodCheck(c, 'procedure  HouseSetStats(aHouseID: Integer; aStats: TKMHouseStats)');
     RegisterMethodCheck(c, 'procedure  MoveCamera(aPlayer, aX, aY : Integer)');
@@ -2015,6 +2016,7 @@ begin
       RegisterMethod(@TKMScriptActions.UnitBlockWalking, 'UnitBlockWalking');
       RegisterMethod(@TKMScriptActions.UnitCanInteract, 'UnitCanInteract');
 
+      RegisterMethod(@TKMScriptActions.GiveWorkless, 'GiveWorkless');
       RegisterMethod(@TKMScriptActions.GroupSetFlagColor, 'GroupSetFlagColor');
       RegisterMethod(@TKMScriptActions.HouseSetStats, 'HouseSetStats');
       RegisterMethod(@TKMScriptActions.MoveCamera, 'MoveCamera');

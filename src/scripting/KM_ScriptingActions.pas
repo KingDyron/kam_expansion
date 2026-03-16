@@ -255,6 +255,7 @@ type
     procedure DevPointsAdd(aHandID : Integer; aType : Byte; aCount : Word);
     procedure FestivalPointsAdd(aHandID : Integer; aType : Byte; aCount : Word);
 
+    procedure GiveWorkless(aHand : Integer; aCount : Integer);
     procedure GroupSetFlagColor(aGroupID : Integer; aColor : Cardinal);
     procedure GroupMakeHero(aGroupID: Integer; makeHero: Boolean);
     procedure GroupInfiniteAmmoSet(aGroupID: Integer; aInfinity: Boolean);
@@ -5708,6 +5709,22 @@ begin
     raise;
   end;
 end;
+
+procedure TKMScriptActions.GiveWorkless(aHand : Integer; aCount : Integer);
+begin
+  try
+    if InRange(aHand, 0, gHands.Count - 1) then //-1 means all players
+    begin
+      gHands[aHand].Workless := EnsureRange(gHands[aHand].Workless + aCount, 0, high(word));
+    end
+    else
+      LogIntParamWarn('Actions.GiveWorkless: ', [aHand, aCount]);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
 
 procedure TKMScriptActions.GroupSetFlagColor(aGroupID: Integer; aColor: Cardinal);
 var
