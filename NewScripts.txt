@@ -1,0 +1,193 @@
+﻿Actions: 
+
+    procedure CursorCustomSet(aPlayer : Shortint; aMode : TKMCursorRenderType; aTag1, aTag2 : Integer);
+
+    procedure DebugShowGrid(aShow : Boolean);
+    procedure DebugShowUnitRoutes(aShow : Boolean);
+
+    procedure DevelopmentUnlockWithPrevious(aHandID : Integer; aType : Byte; aID : Integer; aUnlocked : Boolean);
+    procedure DevelopmentUnlockSingle(aHandID : Integer; aType : Byte; aID : Integer);
+    procedure DevelopmentUnlockAll(aHandID : Integer; aType : Byte);
+    procedure DevPointsAdd(aHandID : Integer; aType : Byte; aCount : Word);
+    procedure FestivalPointsAdd(aHandID : Integer; aType : Byte; aCount : Word);
+
+    procedure GroupSetFlagColor(aGroupID : Integer; aColor : Cardinal);
+    procedure GroupMakeHero(aGroupID: Integer; makeHero: Boolean);
+    procedure GroupInfiniteAmmoSet(aGroupID: Integer; aInfinity: Boolean);
+    procedure GroupHungerPaceSet(aGroupID: Integer; aPace: Cardinal);
+    procedure GroupAddBitin(aGroupID: Integer);
+
+    procedure HouseSetStats(aHouseID : Integer; aStats : TKMHouseStats);
+    procedure HouseChangeOwner(aHouseID: Integer; aToOwner: Integer);
+
+    procedure MoveCamera(aPlayer, aX, aY : Integer);
+    procedure MusicPlay(aName : String; aForceOn : Boolean);
+
+    procedure MapTileSelect(X, Y : Integer; aSelected : Boolean);
+    procedure MapLayerLoad(aLayerName : String);
+
+    procedure OverlayTextSetAlignToCenter(aHand: Shortint; aSet: Boolean);
+    procedure OverlayTextSetAddBevel(aHand: Shortint; aSet: Boolean);
+    procedure OverlayTextSetFromBottom(aHand: Shortint; aSet: Boolean);
+    procedure OverlayTextSetMaxWidth(aHand: Shortint; aSet: Word);
+
+    function PanelControlAdd(aPlayer : Shortint; aInfo : TKMControlInfo) : Integer;//returns button ID
+    procedure PanelControlChange(aPlayer : Shortint; aButtonID : Integer; aInfo : TKMControlInfo);
+    procedure PanelControlVisible(aPlayer : Shortint; aButtonID : Integer; aVisible : Boolean);
+    procedure PanelControlTexID(aPlayer : Shortint; aButtonID : Integer; aValue : Integer);
+    procedure PanelControlCaption(aPlayer : Shortint; aButtonID : Integer; aValue : String);
+    procedure PanelControlCaptionFormatted(aPlayer : Shortint; aButtonID : Integer; aValue : String; aParams: array of const);
+    procedure PanelControlHint(aPlayer : Shortint; aButtonID : Integer; aValue : String);
+    procedure PanelControlHintFormatted(aPlayer : Shortint; aButtonID : Integer; aValue : String; aParams: array of const);
+    procedure PanelControlRect(aPlayer : Shortint; aButtonID : Integer; X, Y, Width, Height : Integer);
+    procedure PanelControlEnabled(aPlayer : Shortint; aButtonID : Integer; aValue : Boolean);
+    procedure PanelControlAlphaStep(aPlayer : Shortint; aButtonID : Integer; aValue : Single);
+    procedure PanelResize(aPlayer : Shortint; Left,Top, Width, Height : Integer);
+    procedure PanelExpand(aPlayer : Shortint; aExpanded : Boolean);
+
+    procedure PlayerAddWorkers(const aPlayer: Integer; addBoots: Boolean);//adds workers to every house for a given player
+    procedure PlayerAllowFieldEx(const aPlayer: Integer; aFieldType : TKMLockFieldType; aAllow : Boolean);//allows/blocks planning fields
+    function PlanFieldAdd(aHand, X, Y: Integer; aFIeldType : TKMLockFieldType): Boolean;//Returns true if the field plan was added
+    procedure PlayerUpdateEntitiesSet(const aPlayer: Integer; doUpdate: Boolean);//disables/enables updating players houses/groups/units
+
+    procedure ResetZoom(aPlayer: Integer);
+
+    procedure SpecialAnimAdd(aX, aY : Single; aAnim :  array of Integer; aLoopTimes : Byte);//adds an animation. aAnim is a set of animations steps (sprites of rxTrees)
+    procedure SpecialAnimAddFront(aX, aY : Single; aAnim :  array of Integer; aLoopTimes : Byte);//adds an animation. aAnim is a set of animations steps (sprites of rxTrees)
+    procedure StructureUnlock(aHand, aStructure: Integer; aUnlocked : Boolean);//unlocks/blocks building given structure
+	
+    procedure ShowMsgScroll(aHand: Shortint; const aText: AnsiString; aScrollType : Byte);
+    procedure ShowMsgScrollFormatted(aHand: Shortint; const aText: AnsiString; aScrollType : Byte; Params: array of const);
+    procedure ShowMsgScrollGoto(aHand: Shortint; aX, aY: Integer; const aText: AnsiString; aScrollType : Byte);
+    procedure ShowMsgScrollGotoFormatted(aHand: Shortint; aX, aY: Integer; const aText: AnsiString; aScrollType : Byte; Params: array of const);
+
+    procedure UnitBootsSet(aUnitID: Integer; aBoots: Boolean);//gives units boots
+    procedure UnitBlockWalking(aUnitID: Integer; aBlock : Boolean);//block unit's walking (will stay in position)
+    procedure UnitChangeSpec(aUnitID, aHPMax, aAttack, aAttackHorse, aDefence, aSpeed, aSight : Integer);//set unit's main stats
+    procedure UnitHungerPaceSet(aUnitID: Integer; aPace: Cardinal);//sets unit's hunger pace (0 = unit never hungry)
+    procedure UnitSetFlagColor(aUnitID : Integer; aColor : Cardinal);//sets unit's flag color
+    function  UnitSetInstantKill(aUnitID: Integer; isInstant: Boolean): Boolean;//give unit instant kill effect
+    procedure UnitSetRage(aUnitID, aDuration : Integer);//gives unit a rage effect (like the paladin has)
+    procedure UnitSetStats(aUnitID : Integer; aStats : TKMUnitStats);//sets the unit's important data 
+    procedure UnitSetThought(aUnitID : Integer; aThought : TKMUnitThought);//sets unit's thought 'cloud'
+	
+	procedure CampaignUnlockMission(aMission : Byte; aUnlocked : Boolean);
+
+
+    procedure WatchTowerRangeSet(aWatchTower : Integer; aRangeMin, aRangeMax : Single);//Sets tower range
+    procedure WatchTowerCyclesSet(aWatchTower : Integer; aCycles : Byte);//Sets the delay of throwing stone/bolts from the tower
+    procedure WeatherSpawn(aType : TKMWeatherType; aLifeTime : Cardinal; aX, aY : Single; aSpeedX, aSpeedY : Single);//Spawns a weather
+    procedure WareSetMarketPrice(aWare : TKMWareType; aPrice : Single);//Sets new market price
+	
+	
+States:
+    //new
+    function HouseArea(aHouseType: Integer): TKMHouseAreaNew;
+    function HouseEntranceOffset(aHouseType: Integer): TKMPoint;//Gets house entrance offset 
+    function HouseTypeToID(aHouseType: TKMHouseType): Integer;//gets ID of the HouseType from the TKMHouseType
+    function HouseIDtoType(aHouseType: Integer): TKMHouseType;//gets TKMHouseType from the ID of the HouseType
+    function HouseStats(aHouseID: Integer; aWithWares : Boolean): TKMHouseStats;//Gets all the important data about the house
+
+    function MapFieldType(X, Y: Integer): TKMLockFieldType;//gets current field type on the tile or lftRemove when there is none
+    function MapTileSelected(X, Y : Integer): Boolean;//checks if the tile is selected (has a blue mark on it)
+
+    function StatResourceTotalCount(aHand: Integer; aWareType: TKMWareType): Integer;//get current total count of the ware
+
+    function WareTypeToID(aWareType: TKMWareType): Integer;//gets ID of the WareType from the TKMWareType
+    function WareIdToType(aWareType: Integer): TKMWareType;//gets TKMWareType from the ID of the WareType
+
+    function UnitTypeToID(aUnitType: TKMUnitType): Integer;//gets ID of the UnitType from the TKMUnitType
+    function UnitIDToType(aUnitType: Integer): TKMUnitType;//gets TKMUnitType from the ID of the UnitType
+    function UnitStats(aUnitID: Integer): TKMUnitStats;//Gets all the important data about the unit
+
+    //tower defense
+    function TDHouseCanPlace(aHouseType: byte; aX, aY : Integer): Boolean;//checks if house can be placed on tile. Used in tower defense
+	
+Events:	
+    OnFieldPlanPlaced(aPlayer: ShortInt; aX: Integer; aY: Integer; aFieldType: TKMLockFieldType);
+    OnFieldPlanRemoved(aPlayer: ShortInt; aX: Integer; aY: Integer; aFieldType: TKMLockFieldType);
+    OnFieldPlanDigged(aPlayer: ShortInt; aX: Integer; aY: Integer; aFieldType: TKMLockFieldType);
+    OnFieldPlanBuilt(aPlayer: ShortInt; aX: Integer; aY: Integer; aFieldType: TKMLockFieldType);
+    OnCustomPanelButtonPressed(aPlayer: ShortInt; aID: Integer; aTag: Integer);//happens when player clicked on the customised panel
+    OnCustomCursorClick(aPlayer: ShortInt; X, Y, aTag: Integer);//happens when player clicks on the map when the cursor is set to custom A.CursorCustomSet
+    OnUnitHit(aUnit, aAttacker : Integer);//happens when the attacker hits the unit (takes the damage)
+    OnUnitSelected(aPlayer : ShortInt; aUnit: Integer; aSelected : Boolean);//happens when player selects a unit or unselect it
+    OnHouseSelected(aPlayer : ShortInt; aHouse: Integer; aSelected : Boolean);//happens when player selects a house or unselect it
+    OnHouseUpgraded(aHouse: Integer; aLevel: Integer); //happens when the house is upgraded
+    OnShipLoaded(aShip, aUnit : integer); //happens when unit is loaded on a ship
+    OnShipUnLoaded(aShip, aUnit : integer); //happens when unit is unloaded from a ship
+
+	OnPearlCompleted(aHouse : Integer; aType : Integer); // is called when pearl is completed
+	OnPearlConfirmed(aHouse : Integer; aType : Integer); // is called when pearl type was confirmed
+	OnPearlSelected(aHouse : Integer; aType : Integer); // is called when pearl type is selected
+	OnStructureBuilt(aOwner : Integer; aX, aY, aIndex : Integer); // is called when structure is completed
+	OnDevUnlocked(aOwner : Integer; aType, aID : Integer); // is called when development is unlocked
+
+LookUp tables: 
+	aScrollType : 
+		0: 	Scroll: Default
+		1: 	Scroll: House
+		2:	Scroll: Unit
+		3: 	Scroll: Feather
+		4:	Scroll: Closed
+		5:	Scroll: Closed with stamp
+		6:	Scroll with stamp 1
+		7:	Scroll with stamp 2
+		8:	Scroll with shield 1
+		9:	Scroll with shield 2
+		10:	Scroll with coin
+		11:	Big scroll with stamps
+		12:	Big scroll with feather
+		
+Types:
+    TKMControlType = (ctButton, ctLabel, ctImage, ctBevel, ctButtonFlat);
+
+	TKMControlInfo = packed record
+		ID: Integer;
+		Left,Top,Width,Height: Integer;
+		Caption, Hint : AnsiString;
+		TexID : Word;
+		Tag: Word;
+		Enabled: Boolean;
+		Visible : Boolean;
+		CType : TKMControlType;
+		ImageAlphaStep : Single;
+	end;
+    
+	TKMHouseArea = array [1..4] of array [1..4] of Byte;
+
+    TKMCursorRenderType = (crtNone, crtWireTile, crtTile, crtObject, crtUnit, crtHouseSite, crtHouse, crtX, crtDelete);
+	
+    TKMLockFieldType = (lftRoadStone, lftRoadWooden, lftRoadClay, lftRoadExclusive, lftPalisade,
+                      lftField, lftGrassField, lftVegetablesField, lftWineField, lftRemove);
+
+
+	TKMUnitStats = packed record
+		ID, GroupID : Integer;
+		UnitType : TKMUnitType;
+		X, Y, Owner : Word;
+		Attack, Defence, AttackHorse, HP, MaxHP, Speed, Sight,
+		Condition, DamageHouse, DamageUnits, Ammo: Word;
+	end;
+
+	TKMHouseStats = packed record
+		ID : Integer;
+		HouseType : TKMHouseType;
+		X, Y, Owner,
+		FlagX, FlagY : Word;
+		IsDestroyed, IsComplete, RepairOn: Boolean;
+		Damage, MaxHealth: Word;
+		Level : Byte;
+		WareSlot : Byte;
+		Wares : TKMWarePlan;
+	end;
+
+	TKMWarePlanSingle = packed record
+	  W : TKMWareType;
+	  C : Word;
+	end;
+	TKMWarePlan = array of TKMWarePlanSingle;
+
+    TKMUnitThought = (thNone, thEat, thHome, thBuild, thStone, thWood, thDeath, thQuest, thDismiss, thArmor, thSpy, thTile, thExclusive, thImportant, thBucket, thBoots, thDiamond, thBow, thTalk);
+
+    TKMWeatherType = (wttNone, wtCloudy1, wtCloudy2, wtRain, wtStorm, wtSnow, wtSnowyStorm, wtSandStorm1, wtSandStorm2, wtTornado);
