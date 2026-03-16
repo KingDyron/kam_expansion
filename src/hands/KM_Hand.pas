@@ -3426,6 +3426,8 @@ var I, J, K : Integer;
   H : TKMHouse;
 begin
   Result := false;
+  If (aWare = wtCard) and (Stats.GetHouseQty(htPalace) = 0) then
+    Exit;
   K := Houses.Stores.Count;
   If K = 0 then
     Exit;
