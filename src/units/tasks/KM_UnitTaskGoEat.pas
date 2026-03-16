@@ -134,7 +134,7 @@ function TKMTaskGoEat.Execute: TKMTaskResult;
     If not gHands[fUnit.Owner].VirtualWareTake('vtDinner', 1) then
       Exit;
     Result := true;
-    fUnit.Feed(UNIT_MAX_CONDITION);
+    fUnit.Feed(UNIT_MAX_CONDITION * 0.8);
     Inc(fFeedCnt);
     //If fUnit.ConditionPace <= 10 then
     //  fUnit.ConditionPace := 11;

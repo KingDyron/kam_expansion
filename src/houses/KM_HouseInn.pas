@@ -142,7 +142,7 @@ begin
       WareTakeFromIn(wtWine, 1, true);
       WareTakeFromIn(wtFish, 1, true);
       WareTakeFromIn(wtVegetables, 1, true);
-      gHands[Owner].VirtualWareTake(aType, -3);
+      gHands[Owner].VirtualWareTake(aType, -5);
     end else
       Exit;
   end;
