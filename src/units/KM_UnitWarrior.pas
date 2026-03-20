@@ -1797,7 +1797,9 @@ begin
   If (UnitType = utFighter) and gHands[Owner].ArmyDevUnlocked(1) then
     Result := Result + 5;
 
-  If (UnitType in [utLanceCarrier, utMilitia, utAxeFighter, utBowman]) and gHands[Owner].ArmyDevUnlocked(6) then
+  If (UnitType in [utLanceCarrier, utMilitia, utAxeFighter, utBowman, utClubMan,
+  utScout, utVagabond, utArcher, utSkirmisher, utBerserker])
+  and gHands[Owner].ArmyDevUnlocked(6) then
     Result := Result + 15;
   If (UnitType = utCrossbowMan) and gHands[Owner].ArmyDevUnlocked(7) then
     Result := Result + 20;
