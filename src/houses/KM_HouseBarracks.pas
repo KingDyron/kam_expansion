@@ -434,6 +434,12 @@ begin
     if soldier.GiveBoots(false) then
         WareTakeFromOut(wtBoots, 1);
 
+    if aUnitType in WARRIOR_BITIN_EQUIPABLE then
+      if CheckWareIn(wtBitinArmor) > 0 then
+      begin
+        soldier.AddBitin;
+        WareTakeFromOut(wtBitinArmor, 1);
+      end;
 
 
 
@@ -470,13 +476,6 @@ begin
 
     if U = nil then
       Exit;
-
-    if aUnitType in WARRIOR_BITIN_EQUIPABLE then
-      if CheckWareIn(wtBitinArmor) > 0 then
-      begin
-        TKMUnitWarrior(U).AddBitin;
-        WareTakeFromOut(wtBitinArmor, 1);
-      end;
 
     Inc(Result);
   end;
