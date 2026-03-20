@@ -1743,7 +1743,7 @@ begin
 
         if H.DontNeedRes then
           AddCommand(ctSetHouseNoRes, []);
-
+        If not (H.HouseType in [htTownhall]) then
         for J := 1 to 4 do
           if not(H.WareInput[J] in [wtNone, wtAll, wtWarfare, wtFood, wtValuable]) then
             if H.GetAcceptWareIn(H.WareInput[J]) > 0 then
