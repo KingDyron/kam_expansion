@@ -65,7 +65,8 @@ type
     function Insert(aIndex: Integer; const aPos: TKMPointDir; aGroupType: TKMGroupType; aRadius: Integer; aDefenceType: TKMAIDefencePosType): Integer;
     procedure Clear;
     property Count: Integer read GetCount;
-    procedure Delete(aIndex: Integer);
+    procedure Delete(aIndex: Integer);overload;
+    procedure Delete(aDefPos: TAIDefencePosition);overload;
     property Positions[aIndex: Integer]: TAIDefencePosition read GetPosition; default;
     function GetBacklineCount: Integer;
     function AverageUnitsPerGroup: Integer;
@@ -81,6 +82,8 @@ type
     function GetAlUnitsCount : Word;
     function GetAttackingPositionsCount(aGroupType : TKMGroupType) : Word;
     function GetPositionByUID(aID: Integer): TAIDefencePosition;
+    function GetIndexOf(aID: Integer): Integer; Overload;
+    function GetIndexOf(aDefPos: TAIDefencePosition): Integer;  Overload;
 
     procedure MoveUp(aIndex: Integer);
     procedure MoveDown(aIndex: Integer);
@@ -540,6 +543,27 @@ begin
 
 end;
 
+function TAIDefencePositions.GetIndexOf(aID: Integer): Integer;
+var I : Integer;
+begin
+  Result := -1;
+  for I := 0 to Count - 1 do
+    If TAIDefencePosition(fPositions[I]).UID = aID then
+      Exit(I);
+
+end;
+
+function TAIDefencePositions.GetIndexOf(aDefPos: TAIDefencePosition): Integer;
+var I : Integer;
+begin
+  Result := -1;
+  for I := 0 to Count - 1 do
+    If TAIDefencePosition(fPositions[I]) = aDefPos then
+      Exit(I);
+
+end;
+
+
 
 function TAIDefencePositions.CreateDefPosition(const aPos: TKMPointDir; aGroupType: TKMGroupType; aRadius: Integer; aDefenceType: TKMAIDefencePosType): TAIDefencePosition;
 begin
@@ -584,6 +608,10 @@ begin
   fPositions.Delete(aIndex);
 end;
 
+procedure TAIDefencePositions.Delete(aDefPos: TAIDefencePosition);
+begin
+  fPositions.Delete(GetIndexOf(aDefPos));
+end;
 
 function TAIDefencePositions.GetBacklineCount: Integer;
 var I: Integer;

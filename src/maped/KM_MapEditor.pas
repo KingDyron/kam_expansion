@@ -770,10 +770,12 @@ end;
 function TKMMapEditor.ChangeEntityOwner(aEntity: TKMHandEntity; aOwner: TKMHandID): Boolean;
 var
   house: TKMHouse;
+  oldOwner : TKMHandID;
+  defPos, newDefPos : TAIDefencePosition;
 begin
   Result := False;
   if (aEntity = nil) or (aEntity.Owner = aOwner) then Exit;
-
+  oldOwner := aEntity.Owner;
   case aEntity.EntityType of
     etNone:   ;
     etHouse:  begin
@@ -799,6 +801,14 @@ begin
                 fHistory.MakeCheckpoint(caUnits, Format(gResTexts[TX_MAPED_HISTORY_CHPOINT_CHOWNER_SMTH],
                                                         [gRes.Units[aEntity.AsGroup.FlagBearer.UnitType].GUIName,
                                                          aEntity.AsGroup.FlagBearer.Position.ToString]));
+
+                defPos := gHands[oldOwner].AI.General.DefencePositions.FindPositionAtLoc(aEntity.AsGroup.Position);
+                If defPos <> nil then
+                begin
+                  gMySpectator.Hand.AI.General.DefencePositions.Add(defPos.Position, defPos.GroupType, defPos.Radius, defPos.DefenceType);
+                  gHands[oldOwner].AI.General.DefencePositions.Delete(defPos);
+                end;
+
               end;
   end;
 end;
