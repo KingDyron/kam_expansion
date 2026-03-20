@@ -160,6 +160,7 @@ type
     gicArenaSelectFestival,
     gicArenaStartFestival,
     gicHouseForestToggleTree,
+    gicHousePastureToggleAnimal,
 
     gicUnlockDevelopment,
     gicHouseQueueNotRem,
@@ -335,7 +336,8 @@ const
     gicHouseQueueNotRem,
     gicHouseDeliveryTo,
     gicArmyEnterSiegeTower,
-    gicHouseForestToggleTree
+    gicHouseForestToggleTree,
+    gicHousePastureToggleAnimal
     ];
 
 
@@ -457,6 +459,7 @@ const
     gicpt_Int2,//gicArenaSelectFestival,
     gicpt_Int1,//gicArenaStartFestival,
     gicpt_Int2,//gicHouseForestToggleTree,
+    gicpt_Int2,//gicHousePastureToggleAnimal
     gicpt_Int3,//gicUnlockDevelopment
     gicpt_Int1,//gicHouseQueueNotRem
     gicpt_Int2,//gicHouseDeliveryTo
@@ -1183,7 +1186,7 @@ begin
       gicCartographersDoSpying, gicHouseRepairSet, gicPearlSelectType,gicPearlConfirm, gicPearlSelectResFrom, gicPearlSelectResTo, gicPearlSelectVResTo,//arium
       gicPearlSelectRResTo, gicPearlDoExchange, gicPearlUseSpecial, gicHouseStyleSet, gicStoreHouseUnlockAll, gicStoreHouseBlockAll, gicHouseForestPlantTree,
       gicHousePastureBuyAnimal, gicHousePastureSellAnimal, gicArenaSelectFestival, gicArenaStartFestival, gicHouseQueueNotRem, gicHouseDeliveryTo,
-      gicHouseVirtualWareClicked, gicHouseForestToggleTree] then
+      gicHouseVirtualWareClicked, gicHouseForestToggleTree, gicHousePastureToggleAnimal] then
     begin
       srcHouse := gHands.GetHouseByUID(IntParams[0]);
       if (srcHouse = nil) or srcHouse.IsDestroyed //House has been destroyed before command could be executed
@@ -1380,6 +1383,7 @@ begin
       gicHouseForestToggleTree      : TKMHouseForest(srcHouse).ToggleTreeToPlant(IntParams[1]);
       gicHousePastureBuyAnimal      : TKMHousePasture(srcHouse).BuyAnimal(PASTURE_ANIMALS_ORDER[IntParams[1]]);
       gicHousePastureSellAnimal     : TKMHousePasture(srcHouse).SellAnimal(IntParams[1]);
+      gicHousePastureToggleAnimal   : TKMHousePasture(srcHouse).ToggleAnnimalToBuy(byte( PASTURE_ANIMALS_ORDER[IntParams[1]] ) );
 
       gicPearlSelectType            : TKMHousePearl(srcHouse).SelectType(TKMPearlType(IntParams[1]));
       gicPearlConfirm               : TKMHousePearl(srcHouse).ConfirmBuild;
@@ -1724,7 +1728,7 @@ begin
                           gicCartographersToggleView, gicCartographersSelectPlayer, gicHouseRepairSet, gicPearlSelectType,
                           gicPearlSelectResFrom, gicPearlSelectResTo, gicPearlSelectVResTo, gicPearlSelectRResTo, gicPearlDoExchange,
                           gicHouseStyleSet, gicStoreHouseUnlockAll, gicStoreHouseBlockAll, gicHousePastureBuyAnimal, gicHousePastureSellAnimal,
-                          gicArenaSelectFestival, gicHouseDeliveryTo, gicHouseForestToggleTree]);
+                          gicArenaSelectFestival, gicHouseDeliveryTo, gicHouseForestToggleTree, gicHousePastureToggleAnimal]);
   //Assert((aHouse is TKMHouseSchool) or (aHouse is TKMHouseTownHall) or (aHouse is TKMHouseSiegeWorkshop));
   TakeCommand(MakeCommand(aCommandType, aHouse.UID, aValue));
 end;

@@ -34,7 +34,7 @@ type
       procedure RefreshAnimals;
       procedure RefreshShop;
 
-      procedure BuyAnimal_Click(Sender : TObject);
+      procedure BuyAnimal_Click(Sender : TObject; Shift : TShiftState);
       procedure SellAnimal_Click(Sender : TObject);
     protected
       Button_Page :array[TKMPasturePageType] of TKMButton;
@@ -96,7 +96,7 @@ begin
       View_Animal[I] := TKMAnimalCostView.Create(Panel_Shop, 0, top, Width, PAT);
       View_Animal[I].CoinTexID := gRes.Wares.VirtualWares[fCoinIndex].GUIIcon;
       Button_Buy[I] := TKMButtonFlat.Create(Panel_Shop, 0, top, 30, 30, animal.GuiIcon);
-      Button_Buy[I].OnClick := BuyAnimal_Click;
+      Button_Buy[I].OnClickShift := BuyAnimal_Click;
       //what it produces:
       S := '|' + gResTexts[140] + ':|';
       If animal.Feathers > 0 then S := S + gRes.Wares[wtFeathers].Title + ' x'+ animal.Feathers.ToString(ffNumber, 1, 1) + '|';
@@ -181,13 +181,22 @@ var I : Integer;
 begin
   Panel_Shop.Show;
   for I := low(Button_Buy) to high(Button_Buy) do
+  begin
     Button_Buy[I].Enabled := gHands[fPasture.Owner].VirtualWare[fCoinIndex] > PASTURE_ANIMALS_ORDER[I].Spec.Cost;
+    If fPasture.IsAnimalAddedToBuy( byte( PASTURE_ANIMALS_ORDER[ Button_Buy[I].Tag ]) ) then
+      Button_Buy[I].BackBevelColor := $5500FF00
+    else
+      Button_Buy[I].BackBevelColor := 0;
+  end;
 end;
 
-procedure TKMGuiGamePasture.BuyAnimal_Click(Sender : TObject);
+procedure TKMGuiGamePasture.BuyAnimal_Click(Sender : TObject; Shift : TShiftState);
 begin
   //fPasture.BuyAnimal(PASTURE_ANIMALS_ORDER[TKMControl(Sender).Tag]);
-  gGame.GameInputProcess.CmdHouse(gicHousePastureBuyAnimal, TKMHouse(fPasture), TKMControl(Sender).Tag);
+  If ssRight in Shift then
+    gGame.GameInputProcess.CmdHouse(gicHousePastureToggleAnimal, TKMHouse(fPasture), TKMControl(Sender).Tag)
+  else
+    gGame.GameInputProcess.CmdHouse(gicHousePastureBuyAnimal, TKMHouse(fPasture), TKMControl(Sender).Tag);
 end;
 
 procedure TKMGuiGamePasture.SellAnimal_Click(Sender : TObject);

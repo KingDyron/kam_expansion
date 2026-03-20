@@ -4333,7 +4333,6 @@
 			"UnoccupiedMsgId" : -1,
 			"CanOverfill" : False,
 			"GatheringScript" : "gsNone",
-			"WareInput" : ["wtCorn","wtHay","wtVegetables","wtSeed"],
 			"WareOutput" : ["wtPig","wtSkin","wtFeathers","wtEgg","wtNone","wtNone"],
 			"UnlockAfter" : ["htFarm"],
 			"SupplyIn1" : [2772,2773],

@@ -48,6 +48,8 @@ type
 
     procedure BuyAnimal(aAnimal : TKMPastureAnimalType; aScript : Boolean = false);
     procedure BuyAnimalScript(aAnimal : TKMPastureAnimalType; aCount : Integer);
+    procedure ToggleAnnimalToBuy(aAnimal : Byte);
+    function IsAnimalAddedToBuy(aAnimal : Byte) : Boolean;
 
     procedure SellAnimal(aIndex : Integer); overload;
     procedure SellAnimal(aAnimal : TKMPastureAnimalType); overload;
@@ -351,9 +353,6 @@ begin
       fAnimals[I].Multi2 := 0;
       fAnimals[I].Multi3 := 0;
       SetNewAction(fAnimals[I]);
-      IF not aScript then
-        If not ArrayContains(byte(aAnimal), fAIAnimals) then
-          fAIAnimals := fAIAnimals + [byte(aAnimal)];
       Exit;
     end;
 end;
@@ -397,6 +396,28 @@ begin
     end;
 end;
 
+procedure TKMHousePasture.ToggleAnnimalToBuy(aAnimal : Byte);
+var I : Integer;
+begin
+  If not ArrayContains(aAnimal, fAIAnimals) then
+    fAIAnimals := fAIAnimals + [aAnimal]
+  else
+  begin
+    for I := 0 to High(fAIAnimals) do
+    If fAIAnimals[I] = aAnimal then
+    begin
+      fAIAnimals[I] := fAIAnimals[high(fAIAnimals)];
+      SetLength(fAIAnimals, high(fAIAnimals));
+      Break;
+    end;
+  end;
+end;
+
+function TKMHousePasture.IsAnimalAddedToBuy(aAnimal : Byte) : Boolean;
+begin
+  Result := not gGame.Params.MBD.IsRealism and ArrayContains(aAnimal, fAIAnimals);
+end;
+
 function TKMHousePasture.GetAnimal(aIndex : Integer) : TKMPastureAnimal;
 begin
   Result := fAnimals[aIndex];
@@ -419,6 +440,8 @@ begin
     Exit;
   If length(fAIAnimals) = 0 then
   begin
+    If gHands[Owner].IsHuman then
+      Exit;
     R := KaMRandom(byte(high(TKMPastureAnimalType)), 'TKMHousePasture.BuyAIAnimal1') + 1;
     BuyAnimal(TKMPastureAnimalType(R), true);
 
@@ -465,10 +488,9 @@ begin
   for I := 0 to MAX_ANIMALS - 1 do
     UpdateAnimal(fAnimals[I], I, aTick);
 
-  If HasWorkerInside then
-    If gHands[Owner].IsComputer or gGame.Params.MBD.IsEasy then
-      If aTick mod 300 = 0 then
-        BuyAIAnimal;
+  If gHands[Owner].IsComputer or (not gGame.Params.MBD.IsRealism and HasWorkerInside) then
+    If aTick mod 300 = 0 then
+      BuyAIAnimal;
 end;
 
 
