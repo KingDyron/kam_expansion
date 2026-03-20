@@ -8244,9 +8244,9 @@ begin
   If not (fGrainType in GRAIN_GRAIN + [gftNone, gftRandom]) then
     fGrainType := GRAIN_GRAIN_MIN;
   If not (fGrassType in GRAIN_GRASS + [gftNone, gftRandom]) then
-    fGrainType := GRAIN_GRASS_MIN;
-  If not (fGrainType in GRAIN_VEGE + [gftNone, gftRandom]) then
-    fGrainType := GRAIN_VEGE_MIN;
+    fGrassType := GRAIN_GRASS_MIN;
+  If not (fVegeType in GRAIN_VEGE + [gftNone, gftRandom]) then
+    fVegeType := GRAIN_VEGE_MIN;
 end;
 
 procedure TKMHouseProdThatch.SetGrainTypes(aGrain: TKMGrainType; aGrass: TKMGrainType; aVegetables: TKMGrainType);
@@ -8619,9 +8619,9 @@ begin
   If not (fGrainType in GRAIN_GRAIN + [gftNone, gftRandom]) then
     fGrainType := GRAIN_GRAIN_MIN;
   If not (fGrassType in GRAIN_GRASS + [gftNone, gftRandom]) then
-    fGrainType := GRAIN_GRASS_MIN;
-  If not (fGrainType in GRAIN_VEGE + [gftNone, gftRandom]) then
-    fGrainType := GRAIN_VEGE_MIN;
+    fGrassType := GRAIN_GRASS_MIN;
+  If not (fVegeType in GRAIN_VEGE + [gftNone, gftRandom]) then
+    fVegeType := GRAIN_VEGE_MIN;
 end;
 
 function TKMHouseFarm.HasGrain : Boolean;
