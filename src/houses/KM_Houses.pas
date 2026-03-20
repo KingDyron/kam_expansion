@@ -794,6 +794,7 @@ type
     procedure StartTraining;
     procedure FinishTraining;
     function TryStartTraining : Boolean;
+    procedure TrySetMaxOrder;
 
     constructor Create(aUID: Integer; aHouseType: TKMHouseType; PosX, PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
     constructor Load(LoadStream: TKMemoryStream); override;
@@ -7516,6 +7517,21 @@ begin
   Result := CanStartTraining;
   If Result then
     StartTraining;
+end;
+
+procedure TKMHousePalace.TrySetMaxOrder;
+var I, old : Integer;
+begin
+  for I := 1 to 8 do
+  begin
+    old := fOrderCount;
+    fOrderCount := I;
+    If CanStartTraining then
+      old := I
+    else
+      Break;
+  end;
+  fOrderCount := old;
 end;
 
 procedure TKMHousePalace.FinishTraining;

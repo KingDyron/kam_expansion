@@ -377,6 +377,8 @@ var
             Continue;
 
           HP.Orders[UT2] := 1;
+          HP.TrySetMaxOrder;
+          HP.TryStartTraining;
           Break;//Train only one unit
         end;
     end;
