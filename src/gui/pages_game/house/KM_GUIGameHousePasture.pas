@@ -9,7 +9,6 @@ uses
   KM_Houses, KM_HousePasture;
 
 type
-  TKMPasturePageType = (pptAnimals, pptShop);
 
   TKMAnimalCostView = class(TKMControl)
   private
@@ -26,10 +25,7 @@ type
   TKMGuiGamePasture = class(TKMPanel)
     private
       fCoinIndex : Word;
-      fLastPage : TKMPasturePageType;
       fPasture : TKMHousePasture;
-      procedure ChangePage_Click(Sender : TObject);
-      procedure ChangePage(aPage : TKMPasturePageType);
       procedure Refresh;
       procedure RefreshAnimals;
       procedure RefreshShop;
@@ -37,7 +33,6 @@ type
       procedure BuyAnimal_Click(Sender : TObject; Shift : TShiftState);
       procedure SellAnimal_Click(Sender : TObject);
     protected
-      Button_Page :array[TKMPasturePageType] of TKMButton;
 
       Panel_Animals : TKMPanel;
         Button_Count : array [0..MAX_ANIMALS - 1] of TKMButtonFlat;
@@ -58,11 +53,7 @@ uses
 
 
 constructor TKMGuiGamePasture.Create(aParent: TKMPanel);
-const PAGE_HINT : array[TKMPasturePageType] of Word = (2288, 2287);
-      PAGE_TEX_ID : array[TKMPasturePageType] of Word = (874, 867);
-
 var I : Integer;
-  PPT : TKMPasturePageType;
   PAT : TKMPastureAnimalType;
   top : Integer;
   animal : TKMPasAnimalSpec;
@@ -70,30 +61,23 @@ var I : Integer;
 begin
   Inherited Create(aParent, 0, 100, aParent.Width - 8, 600);
   fCoinIndex := gRes.Wares.VirtualWares.WareS['vtCoin'].Index;
-  for PPT := Low(TKMPasturePageType) to High(TKMPasturePageType) do
-  begin
-    Button_Page[PPT] := TKMButton.Create(self, byte(PPT) * 33, 0, 35, 25, PAGE_TEX_ID[PPT], rxGui, bsGame);
-    Button_Page[PPT].Hint := gResTexts[PAGE_HINT[PPT]];
-    Button_Page[PPT].OnClick := ChangePage_Click;
-    Button_Page[PPT].Tag := byte(PPT);
-  end;
 
-  Panel_Animals := TKMPanel.Create(self, 0, 35, Width, Height);
+  Panel_Animals := TKMPanel.Create(self, 0, 35, Width, 37 * 2);
     for I := 0 to High(Button_Count) do
       begin
-        Button_Count[I] := TKMButtonFlat.Create(Panel_Animals, I mod 5 * 33, I div 5 * 37, 30, 34, 0);
+        Button_Count[I] := TKMButtonFlat.Create(Panel_Animals, I mod 5 * 38, I div 5 * 37, 30, 34, 0);
         Button_Count[I].Tag := I;
         Button_Count[I].OnClick := SellAnimal_Click;
       end;
 
-  Panel_Shop := TKMPanel.Create(self, 0, 35, Width, Height);
+  Panel_Shop := TKMPanel.Create(self, 0, Panel_Animals.Bottom + 2, Width, Height);
 
     for I := low(Button_Buy) to high(Button_Buy) do
     begin
       PAT := PASTURE_ANIMALS_ORDER[I];
       animal := Pat.Spec;
       top := I * 35;
-      View_Animal[I] := TKMAnimalCostView.Create(Panel_Shop, 0, top, Width, PAT);
+      View_Animal[I] := TKMAnimalCostView.Create(Panel_Shop, 0, top, Width + 2, PAT);
       View_Animal[I].CoinTexID := gRes.Wares.VirtualWares[fCoinIndex].GUIIcon;
       Button_Buy[I] := TKMButtonFlat.Create(Panel_Shop, 0, top, 30, 30, animal.GuiIcon);
       Button_Buy[I].OnClickShift := BuyAnimal_Click;
@@ -107,25 +91,6 @@ begin
 
       Button_Buy[I].Hint := Format(gResTexts[2280] + S, [gResTexts[animal.Hint], animal.Cost]);
       Button_Buy[I].Tag := I;
-
-      {TKMBevel.Create(Panel_Shop, 0, top - 1, Width, 62);
-      Button_Buy[I] := TKMButtonFlat.Create(Panel_Shop, 0, top, 30, 30, PAT.Spec.GuiIcon);
-      Button_Buy[I].Hint := gResTexts[PAT.Spec.Hint];
-      Button_Cost[I] := TKMButtonFlat.Create(Panel_Shop, 0, top + 30, 30, 30, 0);
-      Button_Cost[I].TexID := gRes.Wares.VirtualWares[fCoinIndex].GUIIcon;
-      Button_Cost[I].Caption := '200';
-      Button_Cost[I].CapOffsetY := -5;
-      Button_Cost[I].TexOffsetY := -5;
-      Button_Cost[I].Hint := gResTexts[1907];
-
-      S := '';
-      If animal.Feathers > 0 then S := S + gRes.Wares[wtFeathers].Title + ' x ' + animal.Feathers.ToString(ffNumber, 1, 1) + '|';
-      If animal.Eggs > 0 then S := S + gRes.Wares[wtEgg].Title + ' x ' + animal.Eggs.ToString(ffNumber, 1, 1) + '|';
-      If animal.Meat > 0 then S := S + gRes.Wares[wtPig].Title + ' x ' + animal.Meat.ToString(ffNumber, 1, 1) + '|';
-      If animal.Skin > 0 then S := S + gRes.Wares[wtSkin].Title + ' x ' + animal.Skin.ToString(ffNumber, 1, 1) + '|';
-
-      Label_Info[I] := TKMLabel.Create(Panel_Shop, 35, top, Panel_Shop.Width - 35, 50, S, fntMetal, taLeft);
-      Label_Info[I].WordWrap := true;}
     end;
 
 
@@ -139,26 +104,12 @@ begin
   Refresh;
 end;
 
-procedure TKMGuiGamePasture.ChangePage_Click(Sender: TObject);
-begin
-  ChangePage(TKMPasturePageType(TKMButton(Sender).Tag));
-end;
-
-procedure TKMGuiGamePasture.ChangePage(aPage: TKMPasturePageType);
-begin
-  fLastPage := aPage;
-  Refresh;
-end;
-
 procedure TKMGuiGamePasture.Refresh;
 begin
   Panel_Animals.Hide;
   Panel_Shop.Hide;
-
-  case fLastPage of
-    pptAnimals: RefreshAnimals;
-    pptShop: RefreshShop;
-  end;
+  RefreshAnimals;
+  RefreshShop;
 end;
 
 procedure TKMGuiGamePasture.RefreshAnimals;
