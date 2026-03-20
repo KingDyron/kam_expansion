@@ -156,7 +156,7 @@ begin
     Button_Build[I].OnMouseOver := Build_ButtonOver;
   end;
 
-  Panel_Cost := TKMPanel.Create(aParent, TB_PAD, 44, TB_WIDTH, 100);
+  Panel_Cost := TKMPanel.Create(aParent, TB_PAD, 44 + MENU_ADD_TO_TOP, TB_WIDTH, 100);
 
   Bevel_Build := TKMBevel.Create(Panel_Cost, 0, 0, TB_WIDTH, 0);
   Bevel_Build.Color.SetColor(0.05, 0.1, 0.05);

@@ -71,7 +71,7 @@ begin
 
   fActiveTab := 0;
   fAllowEditing := aAllowEditing;
-  Panel_Ratios:=TKMPanel.Create(aParent, TB_PAD, 44, TB_WIDTH, 332);
+  Panel_Ratios:=TKMPanel.Create(aParent, TB_PAD, 44 + MENU_ADD_TO_TOP, TB_WIDTH, 332);
 
   SetLength(Button_Ratios, length(gRes.Wares.WareDistribution));
   for I := 0 to High(gRes.Wares.WareDistribution) do

@@ -323,6 +323,8 @@ const
   BUTTON_BLOCK_DECOR_TAG_2 = 8;
   BUTTON_BLOCK_SPAWNER_TAG_2 = 9;
 
+  MENU_ADD_TO_TOP = 30;
+
 implementation
 uses
   StrUtils, KromUtils,

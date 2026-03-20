@@ -34,7 +34,7 @@ const
 type
   //tbNone is the last, since we use Byte(Value) at some places
   //todo: refactor
-  TKMTabButtons = (tbBuild, tbRatio, tbStats, tbTree, tbMenu, tbNone);
+  TKMTabButtons = (tbBuild, tbRatio, tbTree, tbStats, tbMenu, tbNone);
 
   TKMGamePlayInterface = class(TKMUserInterfaceGame)
   private
@@ -634,16 +634,24 @@ procedure TKMGamePlayInterface.SwitchPage(Sender: TObject);
 var
   LastVisiblePage: TObject;
 
-  procedure Flip4MainButtons(ShowEm: Boolean);
+  procedure Flip4MainButtons;
   var T: TKMTabButtons;
   begin
     for T := low(Button_Main) to high(Button_Main) do
-      Button_Main[T].Visible := ShowEm;
-    Button_Back.Visible := not ShowEm;
-    Label_MenuTitle.Visible := not ShowEm;
-    Button_Main[tbTree].Visible := SHOW_TREE_TAB and ShowEm;
+      Button_Main[T].Visible := true;
+
+    Label_MenuTitle.Visible := true;
+    Button_Back.Visible := false;
   end;
 
+  procedure BlackSelectedButton;
+  var T: TKMTabButtons;
+  begin
+    for T := low(Button_Main) to high(Button_Main) do
+      Button_Main[T].ShowImageEnabled := fOpenedMenu <> T;
+  end;
+
+var T : TKMTabButtons;
 begin
   If not (gCursor.Mode in [cmPearlRepair, cmCustom]) then
     gCursor.Mode := cmNone;
@@ -678,11 +686,25 @@ begin
   if (LastVisiblePage = Panel_Save) or (LastVisiblePage = Panel_Load) then
     fSaves.TerminateScan;
 
+
+  If (fOpenedMenu <> tbNone) then
+  begin
+    for T := low(Button_Main) to high(Button_Main) do
+      If (Sender = Button_Main[T]) and (fOpenedMenu = T) then
+      begin
+        SwitchPage(nil);
+        Exit;
+      end;
+
+  end;
+
   HidePages;
 
   // If Sender is one of 4 main buttons, then open the page, hide the buttons and show Return button
-  Flip4MainButtons(False);
+  Flip4MainButtons;
+  Label_MenuTitle.Caption := '';
   fOpenedMenu := tbNone;
+
   if Sender = Button_Main[tbBuild] then
   begin
     Label_MenuTitle.Caption := gResTexts[TX_MENU_TAB_BUILD];
@@ -763,10 +785,11 @@ begin
       Panel_Quit.Show
     else // If Sender is anything else - then show all 4 buttons and hide Return button
     begin
-      Flip4MainButtons(True);
+      //Flip4MainButtons(True);
       fOpenedMenu := tbNone;
     end;
   end;
+  BlackSelectedButton;
 end;
 
 
@@ -1438,10 +1461,10 @@ const
   MAIN_BTN_HINT: array [tbBuild..TKMTabButtons(Byte(high(TKMTabButtons)) - 1)] of Word = (
     TX_MENU_TAB_HINT_BUILD,
     TX_MENU_TAB_HINT_DISTRIBUTE,
-    TX_MENU_TAB_HINT_STATISTICS,
     2290,
+    TX_MENU_TAB_HINT_STATISTICS,
     TX_MENU_TAB_HINT_OPTIONS);
-  MAIN_BTN_ICON: array [tbBuild..TKMTabButtons(Byte(high(TKMTabButtons)) - 1)] of Word = (439, 440, 441, 1078, 442);
+  MAIN_BTN_ICON: array [tbBuild..TKMTabButtons(Byte(high(TKMTabButtons)) - 1)] of Word = (439, 440, 1078, 441, 442);
 var
   I, J, gap: Integer;
   T: TKMTabButtons;
@@ -1516,8 +1539,8 @@ begin
     Button_Back.OnClick := SwitchPage;
     Button_Back.Hint := gResTexts[TX_MENU_TAB_HINT_GO_BACK];
 
-    Label_MenuTitle := TKMLabel.Create(Panel_Controls, 54, 4, 138, 36, '', fntMetal, taLeft);
-    Label_MenuTitle.WordWrap := True;
+    Label_MenuTitle := TKMLabel.Create(Panel_Controls, TB_PAD, 40, TB_WIDTH, 36, '', fntMetal, taCenter);
+    //Label_MenuTitle.WordWrap := True;
     Label_MenuTitle.TextVAlign := tvaMiddle;
 
   fGuiGameBuild := TKMGUIGameBuild.Create(Panel_Controls);
@@ -1603,7 +1626,7 @@ end;
 { Menu page }
 procedure TKMGamePlayInterface.Create_Menu;
 begin
-  Panel_Menu := TKMPanel.Create(Panel_Controls, TB_PAD, 44, TB_WIDTH, 332);
+  Panel_Menu := TKMPanel.Create(Panel_Controls, TB_PAD, 44 + MENU_ADD_TO_TOP, TB_WIDTH, 332);
   Button_Menu_Load := TKMButton.Create(Panel_Menu, 0, 20, TB_WIDTH, 30, gResTexts[TX_MENU_LOAD_GAME], bsGame);
   Button_Menu_Load.OnClick := SwitchPage;
   Button_Menu_Load.Hint := gResTexts[TX_MENU_LOAD_GAME];
@@ -1646,7 +1669,7 @@ begin
 { Save page }
 procedure TKMGamePlayInterface.Create_Save;
 begin
-  Panel_Save := TKMPanel.Create(Panel_Controls, TB_PAD, 44, TB_WIDTH, 332);
+  Panel_Save := TKMPanel.Create(Panel_Controls, TB_PAD, 44 + MENU_ADD_TO_TOP, TB_WIDTH, 332);
 
     // Edit field created first to pick a focus on panel show
     FilenameEdit_Save := TKMFilenameEdit.Create(Panel_Save, 0, 235, TB_WIDTH, 20, fntMetal);
@@ -1672,7 +1695,7 @@ end;
 { Load page }
 procedure TKMGamePlayInterface.Create_Load;
 begin
-  Panel_Load := TKMPanel.Create(Panel_Controls, TB_PAD, 44, TB_WIDTH, 332);
+  Panel_Load := TKMPanel.Create(Panel_Controls, TB_PAD, 44 + MENU_ADD_TO_TOP, TB_WIDTH, 332);
 
     ListBox_Load := TKMListBox.Create(Panel_Load, 0, 2, TB_WIDTH, 260, fntMetal, bsGame);
     ListBox_Load.AutoHideScrollBar := True;
