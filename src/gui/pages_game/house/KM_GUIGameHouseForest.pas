@@ -66,7 +66,13 @@ begin
   fForest := TKMHouseForest(aHouse);
   hasSapling := gHands[fForest.Owner].VirtualWare['vtSapling'] > 0;
   for I := 0 to High(Button_PlantTree) do
+  begin
     Button_PlantTree[I].Enabled := hasSapling;
+    If fForest.IsTreeAddedToPlant(I) then
+      Button_PlantTree[I].BackBevelColor := $5500FF00
+    else
+      Button_PlantTree[I].BackBevelColor := 0;
+  end;
   WareRow_TreeCount.WareCount := fForest.TotalCount;
   Button_Spalings.Caption := gHands[fForest.Owner].VirtualWare['vtSapling'].ToString;
 end;
@@ -77,7 +83,10 @@ procedure TKMGuiGameForest.PlantTree_Clicked(Sender: TObject; Shift: TShiftState
 begin
   IF fForest = nil then
     Exit;
-  gGame.GameInputProcess.CmdHouse(gicHouseForestPlantTree, TKMHouse(fForest), TKMControl(Sender).Tag, IfThen(ssRight in Shift, 5, 1))
+  If ssShift in Shift then
+    gGame.GameInputProcess.CmdHouse(gicHouseForestToggleTree, TKMHouse(fForest), TKMControl(Sender).Tag)
+  else
+    gGame.GameInputProcess.CmdHouse(gicHouseForestPlantTree, TKMHouse(fForest), TKMControl(Sender).Tag, IfThen(ssRight in Shift, 5, 1));
 end;
 
 end.

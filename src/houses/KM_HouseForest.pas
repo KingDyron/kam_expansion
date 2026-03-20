@@ -36,6 +36,8 @@ type
 
     function AddTree(aTreeID : Byte; aScript : Boolean = false) : Boolean; overload;
     function AddTree(aTreeID : Byte; aCount : Byte) : Boolean; overload;
+    procedure ToggleTreeToPlant(aTreeID : Byte);
+    function IsTreeAddedToPlant(aTreeID : Byte) : Boolean;
 
     procedure AddMapEdTree(aTreeID : Byte; aCount : integer = 1);
     procedure RemoveMapEdTree(aTreeID : Byte; aCount : integer = 1);
@@ -170,8 +172,6 @@ begin
     If AddTree(aTreeID) then
     begin
       Result := true;
-      If not ArrayContains(aTreeID, fAITrees) then
-        fAITrees := fAITrees + [aTreeID];
     end;
 
 end;
@@ -242,12 +242,37 @@ begin
     end;
 end;
 
+procedure TKMHouseForest.ToggleTreeToPlant(aTreeID : Byte);
+var I : Integer;
+begin
+  If not ArrayContains(aTreeID, fAITrees) then
+    fAITrees := fAITrees + [aTreeID]
+  else
+  begin
+    for I := 0 to High(fAITrees) do
+    If fAITrees[I] = aTreeID then
+    begin
+      fAITrees[I] := fAITrees[high(fAITrees)];
+      SetLength(fAITrees, high(fAITrees));
+      Break;
+    end;
+  end;
+end;
+
+function TKMHouseForest.IsTreeAddedToPlant(aTreeID : Byte) : Boolean;
+begin
+  Result := not gGame.Params.MBD.IsRealism and ArrayContains(aTreeID, fAITrees);
+end;
+
 procedure TKMHouseForest.PlantAITree;
 var R : Byte;
 begin
-  If length(fAITrees) = 0 then
+  If (length(fAITrees) = 0) then
   begin
-    R := KaMRandom(length(gGrowingTrees), 'TKMHouseForest.PlatAITree1');
+    If gHands[Owner].IsHuman then
+      Exit;
+
+    R := KaMRandom(length(gGrowingTrees), 'TKMHouseForest.PlantAITree1');
     AddTree(R);
   end else
   begin
@@ -351,7 +376,7 @@ begin
     end;
   end;
 
-  If gHands[Owner].IsComputer or gGame.Params.MBD.IsEasy then
+  If gHands[Owner].IsComputer or (not gGame.Params.MBD.IsRealism and HasWorkerInside) then
     If aTick mod TERRAIN_PACE = 0 then
       PlantAITree;
 end;
