@@ -1,5 +1,88 @@
 ﻿[$5555FF] WARNING : The English version may not be written well. The original language is Polish
 
+[$5555FF]KaM Expansion patch v1.2.2
+
+[$55FF55]Buildings
+	- Added quivers and lances to the silo
+	- Increased production of some by-products
+	- Improved palace functionality
+	- Sawmill and Quarry can now overflow with goods
+		(5 stone is in the quarry after producing 8)
+	- Changed required wares in the market stall
+	- fixed deletion of a large building plan (5x5)
+	- Added improved wall planning
+	- Festival is unlocked after: Marketplace, Pottery, Inn, House
+	- After being repaired, the building is reopened (it remained closed)
+	- fixed display of the tower's range after unlocking a research
+	- Changed the system for obtaining development points in the festival
+	- Trees in the nursery grow 25% faster
+	- Fixed a bug with loading the siege tower
+	- Automatic planting of trees in the nursery
+	- Automatic purchase of animals in the pasture
+	- The siege tower now has the ability to feed units inside
+	
+
+[$55FF55]Units
+	- Fixed: Serf disappearing after bringing water to the fruit tree
+	- Hungry units have higher priority for bringing food
+	- fixed the feeder (sometimes errors occurred)
+	- Reduced the cost of the Mounted serf to 8 gold
+	- Fixed: Units with infinite ammo sometimes wouldn't shoot
+	- Corrected the ballista description
+	- Changed the cost of training units in the palace
+	
+
+[$55FF55]Interface
+	- Hidden clay from the objects tab in the quick guide (during gameplay)
+	- Fixed: When the road was removed Armor smithy was highlighted in the construction panel
+	- fixed the display of the amount of wares produced in the building
+	- After changing the game language, the development tree still had the old text
+	- fixed map sorting by name
+	
+[$55FF55]Edytor map
+	- It was impossible to select a square brush in the Tile Overlays tab.
+	- fixed the object brush: trees were only painted in the early stages of growth.
+	- Added a guide.
+	- Fixed a bug with changing the object palette size.
+	- Expanded the blocking of wares trading.
+	
+[$55FF55]Gameplay
+	- Added a new by-product: Dinner.
+	It can be purchased in the Inn for any type of food (excluding fruits).
+	- Added a new ware: Training Card. Needed in the palace to train units.
+		It is obtained primarily through combat.
+	- Added several new objects with valuable goods.
+	- Fixed: After unlocking a development with fewer phases in the palace,
+		training in the palace could not be completed.
+	- Difficulty levels do not affect unit attack and defense,
+		but many other minor things.
+	- Fixed: Unlocking the development that reduced the cost of a woodcutter's hut	by 2
+		only reduced it by 1.
+	- Changed the unlocking of development in the development trees.
+	- Changed several developments in the development tree due to their new unlocking system.
+	- Fixed: Unlocking the development that reduced the cost of a winefield to 0 timber
+		did not change anything in the construction panel.
+	- Added descriptions to special development.
+	- Added ambient sounds.
+	- Added the sound that's played when a development is unlocked.
+	- fixed unit switching in the training buildings menu.
+	
+	
+[$55FF55]Other
+	- Fixed incorrect rendering of the Pearl of Architecture when night was disabled.
+	- After loading old maps, the farm and production thatch will now select default crop types if they were not loaded correctly.
+	- Added a new "weather" type: migrating birds.
+	- Added a new development block type in the research tree: skip.
+	- Ranged units with an attack above 500 could kill units instantly.
+		This has been changed to deal high damage.
+	- Light sources (lamps, houses, campfires) now generate more intense light.
+	- fixed tornado animation.
+	- fixed Skirmisher animation.
+	- fixed Berserker animation.
+	- Improved loading icons in Great Buildings.
+	- Improved unit counting in statistics.
+	- Added sliders to control the volume of various sounds.
+
 [$5555FF]KaM Expansion patch v1.2.1 
 
 [$55FF55]Buildings

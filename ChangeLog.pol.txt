@@ -1,4 +1,91 @@
 ﻿
+[$5555FF]KaM Expansion patch v1.2.2
+
+[$55FF55]Budynki
+	- dodano kołczany oraz lance do silosu
+	- zwiększono produkcję niektórych produktów ubocznych
+	- ilepszono funkcjonalność pałacu
+	- tartak oraz kamieniołom będą mogli przepełnić się towarem
+		(5 kamienia jest w kamieniołomie po produkcji 8)
+	- zmieniono wymagane surowce w straganie
+	- poprawiono usuwanie dużego planu budynku (5x5)
+	- dodano usprawione planowanie murów
+	- Festyn jest odblokowany po : Targowisku, Garncarni, Jadalni, Domie mieszkalnym
+	- budynek po naprawie jest spowrotem otwarty (pozostawał zamknięty)
+	- poprawiono wyświetlanie się zasięgu wierzy po odblokowaniu badania
+	- zmieniono w festynie system otrzymywania punktów rozwoju
+	- drzewa w szkółce leśnej rosną szybciej o 25%
+	- naprawiono błąd z wczytywaniem wieży oblężniczej
+	- automatyczne sadzenie drzew w szkółce leśnej
+	- automatyczne kupowanie zwierząt w pastwisku
+	- Wieża oblężnicza otrzymała możliwość karmienia jednostek będących w środku
+	
+
+[$55FF55]Jednostki
+	- naprawiono: pomocnik znikał po zaniesieniu wody do drzewa owocowego
+	- bardziej głodne jednostki mają większy priorytet do przyniesienia jedzenia
+	- poprawiono działanie jadłopodawcy występowałyu częste błędy)
+	- zmniejszono koszt pomocnego jęźdźca do 8 złota
+	- poprawiono: jednostki z nieskończoną amunicją czasami nie strzelały
+	- poprawiono opis balisty
+	- zmieniono koszty szkolenia jednostek w pałacu
+	
+
+[$55FF55]Interfejs
+	- w podręcznym przewodniku (w trakcie gry) ukryto glinę z zakładki obiektów
+	- poprawiono: kiedy usuwano drogę Kuźnia zbroi w panelu budowy była podświetlona
+	- poprawiono wyświetlanie ilości produkowanego towaru w budynku
+	- po zmianie języka gry, drzewko rozwoju nadal miało stare teksty
+	- poprawiono sortowanie map według nazwy
+	
+[$55FF55]Edytor map
+	- nie można było wybrać kwadratowego pędzla w zakładce nakładek płytki
+	- poprawiono pędzel obiektów: malowane drzewa były tylko we wczesnym etapie rośnięcia
+	- poprawiono przełączanie jednostek w menu budynków szkoleniowych
+	- dodano przewodnik
+	- poprawiono błąd ze zmianą wielkości palety obiektów
+	- rozwinięto blokowanie handlowania towarów
+	
+[$55FF55]Rozgrywka
+	- dodano nowy produkt uboczny: Potrawa. 
+		Można ją kupić w jadalni za każdy rodzaj jedzenia (nie licząc jabłek)
+	- dodano nowy towar : Karta szkolenia. Potrzebna w pałacu do szkolenia jednostek.
+		Pozyskuje się ją głównie z walki.
+	- dodano kilka nowych obiektów z wartościowymi towarami
+	- naprawiono: po odblokowaniu badania z mniejszą ilością faz w pałacu,
+		szkolenie w pałacu mogło się nie ukończyć
+	- poziomy trudności nie wpływają na atak i defensywę jednostek, 
+		lecz na wiele innych mniejszych rzeczy.
+	- poprawiono: odblokowanie badania, które zmniejszało koszt leśniczówki o 2, 
+		zmniejszało go tylko o 1
+	- zmieniono odblokowywanie badań w drzewkach rozwoju
+	- zmieniono kilka badań w drzewku rozwoju ze względu na ich nowy system odblokowania
+	- poprawiono: odblokowanie badania, które zmniejszało koszt pola winnicznego do 0 desek, 
+		nic nie zmieniało w panelu budowy
+	- dodano do specjalnych badań opisy
+	- dodano dźwięki otoczenia
+	- dodano dźwięk odblokowania badań
+	
+	
+[$55FF55]Inne
+	- naprawiono błędne renderowanie perły architektury, 
+		kiedy noc była wyłączona
+	- po wczytaniu starych map gospodarstwo oraz strzecha produkcyjna będzie 
+		wybierała domyślne rodzaje upraw jeśli te były nie poprawnie załadowane
+	- dodano nowy rodzaj "pogody": migrujące ptaki
+	- dodano nowy rodzaj blokady badania w drzewku rozwoju: pomiń
+	- jednostki strzelecie	z atakiem powyżej 500 zabijały od razu.
+		Zmieniono to aby zadawały duże obrażenia
+	- źródła światła (lampy, domy, ogniska) generują mocniejsze światło
+	- poprawiono animację tornada
+	- poprawiono animację Harcownika
+	- poprawiono animację Berserkera
+	- poprawiono ikony ładowania w perłach architektury
+	- poprawiono zliczanie jednostek w statystykach
+	- dodano suwaki do kontrolowania głosności różnych dźwięków
+
+
+
 [$5555FF]KaM Expansion patch v1.2.1 
 
 [$55FF55]Budynki
@@ -73,6 +160,11 @@
 		A.ShowMsgScrollGoto
 		A.ShowMsgScrollGotoFormatted
 		A.CampaignUnlockMission
+	
+	- zaktualizowano na potrzeby Expansion: Scripting Editor
+	- poprawiono wiele rzeczy związanymi z kampanią KamStar - Beginning
+	- poprawiono skrypty w samouczkach budowlanych
+	
 	
 
 
