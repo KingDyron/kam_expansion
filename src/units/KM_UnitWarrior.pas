@@ -2461,9 +2461,18 @@ begin
       and not (fTask is TKMTaskGoOutShowHungry)
       and not fVisible then
     begin
-      if fTask <> nil then
-        FreeAndNil(fTask);
-      fTask := TKMTaskGoOutShowHungry.Create(Self);
+      //try to use dinner or apple juice
+      If gHands[Owner].VirtualWareTake('vtDinner') then
+        Feed(UNIT_MAX_CONDITION * 0.7)
+      else
+      If gHands[Owner].VirtualWareTake('vtAppleJuice') then
+        Feed(UNIT_MAX_CONDITION * 0.5)
+      else
+      begin
+        if fTask <> nil then
+          FreeAndNil(fTask);
+        fTask := TKMTaskGoOutShowHungry.Create(Self);
+      end;
     end;
 
     If IsRanged and IsIdle then

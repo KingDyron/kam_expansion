@@ -21,7 +21,7 @@
 		"ProductionCountMax" : 1, 
 		"Cycles" : 4,
 		"ProduceInHouses" : ["htAppleTree"],
-		"ShowInHouses" : ["htInn"],
+		"ShowInHouses" : ["htInn", "htSiegeTower"],
 		"CoinPrice" : 2,
 		"MaxCountInStall" : 12,
 		"SpriteInStall" : 2496
@@ -354,7 +354,7 @@
 		"IconID" : 1205, 
 		"ProductionCountMin" : 1, 
 		"ProductionCountMax" : 1, 
-		"ShowInHouses" : ["htInn"],
+		"ShowInHouses" : ["htInn", "htSiegeTower"],
 		"CoinPrice" : 27,
 		"MaxCountInStall" : 3
 	}
