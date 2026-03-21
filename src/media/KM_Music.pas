@@ -621,18 +621,18 @@ begin
   // Stay on the current song
   curSong := fTrackOrder[fIndex];
   // Shuffle everything except for first (menu) track
-  for I := fCount - 1 downto 1 do
+  for I := fCount - 1 downto 0 do
   begin
-    R := RandomRange(1, I);
+    R := RandomRange(0, I);
     KromUtils.SwapInt(fTrackOrder[R], fTrackOrder[I]);
     if (fTrackOrder[I] = curSong) and (fPlaylistIndex = 0) then
       fIndex := I;
   end;
   curSong := fMusicIndex;
   for J := 0 to High(fPlaylists) do
-  for I := fPlaylists[J].Count - 1 downto 1 do
+  for I := fPlaylists[J].Count - 1 downto 0 do
   begin
-    R := RandomRange(1, I);
+    R := RandomRange(0, I);
     KromUtils.SwapInt(fPlaylists[J].Order[R], fPlaylists[J].Order[I]);
     If (fPlaylistIndex > 0) and (J = fPlaylistIndex - 1) and (fPlaylists[J].Order[I] = curSong) then
       fMusicIndex := I;

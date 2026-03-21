@@ -9,7 +9,8 @@ uses
   KM_Defaults, KM_CommonTypes, KM_CommonClasses,
 
   KM_IoXML, KM_InterfaceTypes,
-  KM_GameAppSettingsPart;
+  KM_GameAppSettingsPart,
+  KM_ResSound;
 
 
 type
@@ -40,6 +41,7 @@ type
     MusicEnabled: Boolean;
     ShuffleOn: Boolean;
     Playlist : Byte;
+    SFXVolume : TKMSFXVolumeArray;
     property MusicVolume: Single read fMusicVolume write SetMusicVolume;
     property SoundFXVolume: Single read fSoundFXVolume write SetSoundFXVolume;
   end;
@@ -500,6 +502,7 @@ var
   S : String;
   I : Integer;
   arr : TBooleanArray;
+  GST : TKMGameSoundType;
 begin
   if Self = nil then Exit;
   inherited;
@@ -515,6 +518,8 @@ begin
   // SFX
   nSFX := nGameSettings.AddOrFindChild('SFX');
     SFX.SoundFXVolume  := nSFX.Attributes['Volume'].AsFloat(0.5);
+    for GST := Low(TKMGameSoundType) to High(TKMGameSoundType) do
+      SFX.SFXVolume[GST] := nSFX.Attributes['SFXVolume' + IntToStr(byte(GST))].AsFloat(0.5);
 
   // Music
   nMusic := nGameSettings.AddOrFindChild('Music');
@@ -745,6 +750,7 @@ var
   nTutorials: TKMXmlNode;
 var I : Integer;
   S : String;
+  GST : TKMGameSoundType;
 begin
   if Self = nil then Exit;
   if BLOCK_FILE_WRITE then Exit;
@@ -764,6 +770,9 @@ begin
   // SFX
   nSFX := nGameSettings.AddOrFindChild('SFX');
     nSFX.Attributes['Volume'] := SFX.SoundFXVolume;
+    for GST := Low(TKMGameSoundType) to High(TKMGameSoundType) do
+      nSFX.Attributes['SFXVolume' + IntToStr(byte(GST))] := SFX.SFXVolume[GST];
+
 
   // Music
   nMusic := nGameSettings.AddOrFindChild('Music');

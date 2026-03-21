@@ -42,6 +42,7 @@ type
       Looped: Boolean;
       FromScript: Boolean;
       FadesMusic: Boolean;
+      SoundType : TKMGameSoundType;
     end;
 
     fScriptSoundALIndex: array[0..MAX_SCRIPT_SOUNDS-1] of Integer;
@@ -50,6 +51,7 @@ type
 
     fVolume: Single; // aka "Global volume"
     fPrevVolume: Single; // Volume before sound was 'muted'
+    fSFXVolume: TKMSFXVolumeArray; //volume for each type
 
     fMusicIsFaded: Boolean;
 
@@ -58,9 +60,9 @@ type
     procedure CheckOpenALError;
     function IsSoundPlaying(aIndex: Integer): Boolean;
 
-    function PlayWave(const aFile: UnicodeString; const aLoc: TKMPointF; aSoundType: TKMSoundType; aAttenuated: Boolean = True;
+    function PlayWave(const aFile: UnicodeString; const aLoc: TKMPointF; aSoundType: TKMSoundType; aGameSoundType : TKMGameSoundType; aAttenuated: Boolean = True;
                       aVolume: Single = 1; aFadeMusic: Boolean = False; aLoop: Boolean = False; aMaxRadius : Word = MAX_DISTANCE): Integer;
-    function PlaySound(aSoundID: TSoundFX; const aFile: UnicodeString; const Loc: TKMPointF; aSoundType: TKMSoundType;
+    function PlaySound(aSoundID: TSoundFX; const aFile: UnicodeString; const Loc: TKMPointF; aSoundType: TKMSoundType; aGameSoundType : TKMGameSoundType;
                        aAttenuated: Boolean; aVolume: Single; aRadius: Single; aFadeMusic, aLooped: Boolean; aFromScript: Boolean = False): Integer;
     function CanAddLoopSound: Boolean;
 
@@ -69,7 +71,6 @@ type
 
     function GetPrevVolume: Single;
     function GetIsReady: Boolean;
-    Procedure HalfVolume(var aVolume : Single);
     property PrevVolume: Single read GetPrevVolume write fPrevVolume;
 
     procedure Init;
@@ -87,6 +88,7 @@ type
 
     procedure UpdateListener(X,Y: Single);
     procedure UpdateSoundVolume(aValue: Single);
+    procedure UpdateSFXVolumes(aVolume : TKMSFXVolumeArray; doUpdate : Boolean = true);
     property Volume: Single read fVolume write UpdateSoundVolume;
     procedure ToggleMuted;
 
@@ -151,6 +153,7 @@ const
 
 { TKMSoundPlayer }
 constructor TKMSoundPlayer.Create(aVolume: Single);
+var GST : TKMGameSoundType;
 begin
   inherited Create;
 
@@ -158,6 +161,8 @@ begin
 
   fVolume := aVolume;
   fPrevVolume := aVolume;
+  for GST := Low(TKMGameSoundType) to High(TKMGameSoundType) do
+    fSFXVolume[GST] := 1;//it should be 1 by default;
 end;
 
 
@@ -336,13 +341,6 @@ begin
   Result := IfThen(fPrevVolume = 0, 0.5, fPrevVolume);
 end;
 
-procedure TKMSoundPlayer.HalfVolume(var aVolume: Single);
-begin
-  //Exit;
-  aVolume := aVolume * 0.75;
-end;
-
-
 function TKMSoundPlayer.GetIsReady: Boolean;
 begin
   Result := fInitComplete and fIsSoundInitialized;
@@ -394,7 +392,7 @@ procedure TKMSoundPlayer.UpdateSoundVolume(aValue: Single);
 
   procedure UpdateSound(aI: Integer);
   begin
-    AlSourcef(fALSounds[aI].ALSource, AL_GAIN, 1 * fALSounds[aI].Volume * fVolume);
+    AlSourcef(fALSounds[aI].ALSource, AL_GAIN, 1 * fALSounds[aI].Volume * fVolume * fSFXVolume[fALSounds[aI].SoundType]);
   end;
 
 var
@@ -418,12 +416,20 @@ begin
       UpdateSound(I);//AlSourcef(fSound[I].ALSource, AL_GAIN, 1 * fSound[I].Volume * fSoundGain);
 end;
 
+procedure TKMSoundPlayer.UpdateSFXVolumes(aVolume: TKMSFXVolumeArray; doUpdate : Boolean = true);
+var GST : TKMGameSoundType;
+begin
+  for GST := Low(TKMGameSoundType) to High(TKMGameSoundType) do
+    fSFXVolume[GST] := aVolume[GST];
+  If doUpdate then
+    UpdateSoundVolume(fVolume);
+end;
+
 
 // Wrapper with fewer options for non-attenuated sounds
 procedure TKMSoundPlayer.Play(aSoundID: TSoundFX; aVolume: Single = 1);
 begin
   if SKIP_SOUND or not fIsSoundInitialized then Exit;
-  HalfVolume(aVolume);
   // Check for consecutive messageNotices
   // When many warrior groups are hungry at the same time or many houses are not occupied at the same time
   // Sound should not be played N times, 1 is enough
@@ -443,7 +449,6 @@ end;
 procedure TKMSoundPlayer.Play(aSoundID: TSoundFXNew; aVolume: Single = 1; aFadeMusic: Boolean = False);
 begin
   if SKIP_SOUND or not fIsSoundInitialized then Exit;
-  HalfVolume(aVolume);
   Play(aSoundID, KMPOINT_ZERO, False, aVolume, aFadeMusic);
 end;
 
@@ -451,8 +456,8 @@ end;
 procedure TKMSoundPlayer.Play(aSoundID: TSoundFXNew; aLoc: TKMPoint; aAttenuated: Boolean = True; aVolume: Single = 1; aFadeMusic: Boolean = False; aMaxRadius : Word = MAX_DISTANCE);
 begin
   if SKIP_SOUND or not fIsSoundInitialized then Exit;
-  HalfVolume(aVolume);
-  PlayWave(gRes.Sounds.FileOfNewSFX(aSoundID), KMPointF(aLoc), gRes.Sounds.GetSoundType(aSoundID), aAttenuated, aVolume, aFadeMusic, false, aMaxRadius);
+  PlayWave(gRes.Sounds.FileOfNewSFX(aSoundID), KMPointF(aLoc), gRes.Sounds.GetSoundType(aSoundID),
+          gRes.Sounds.GetGameSoundType(aSoundID), aAttenuated, aVolume, aFadeMusic, false, aMaxRadius);
 end;
 
 procedure TKMSoundPlayer.PlayAmbiance(aSound: TSoundFXAmbiance; aLoc: TKMPointF; aVolume: Single = 0.5; aMaxRadius: Word = MAX_DISTANCE);
@@ -464,9 +469,9 @@ begin
   If gMySpectator.Hand.FogOfWar.CheckTileRevelation(aLoc.RX, aLoc.RY) < FOG_OF_WAR_MIN then
     Exit;
 
-  HalfVolume(aVolume);
 
-  PlayWave(gRes.Sounds.GetWeatherSound(aSound), aLoc, stGame, true, aVolume, false, false, aMaxRadius);
+  PlayWave(gRes.Sounds.GetWeatherSound(aSound), aLoc, stGame,
+            gRes.Sounds.GetGameSoundType(aSound), true, aVolume, false, false, aMaxRadius);
 end;
 
 
@@ -474,16 +479,16 @@ end;
 procedure TKMSoundPlayer.Play(aSoundID: TSoundFX; aLoc: TKMPoint; aAttenuated: Boolean = True; aVolume: Single = 1);
 begin
   if SKIP_SOUND or not fIsSoundInitialized then Exit;
-  HalfVolume(aVolume);
-  PlaySound(aSoundID, '', KMPointF(aLoc), gRes.Sounds.GetSoundType(aSoundID), aAttenuated, aVolume, MAX_DISTANCE, False, False); //Redirect
+  PlaySound(aSoundID, '', KMPointF(aLoc), gRes.Sounds.GetSoundType(aSoundID),
+            gRes.Sounds.GetGameSoundType(aSoundID), aAttenuated, aVolume, MAX_DISTANCE, False, False); //Redirect
 end;
 
 
 procedure TKMSoundPlayer.Play(aSoundID: TSoundFX; aLoc: TKMPointF; aAttenuated: Boolean = True; aVolume: Single = 1);
 begin
   if SKIP_SOUND or not fIsSoundInitialized then Exit;
-  HalfVolume(aVolume);
-  PlaySound(aSoundID, '', aLoc, gRes.Sounds.GetSoundType(aSoundID), aAttenuated, aVolume, MAX_DISTANCE, False, False); //Redirect
+  PlaySound(aSoundID, '', aLoc, gRes.Sounds.GetSoundType(aSoundID),
+            gRes.Sounds.GetGameSoundType(aSoundID), aAttenuated, aVolume, MAX_DISTANCE, False, False); //Redirect
 end;
 
 procedure TKMSoundPlayer.PlayHouse(aSoundID: Integer; aLoc: TKMPoint; aVolume: Single = 1);
@@ -491,23 +496,21 @@ const SOUND_PATH = 'Sounds' + PathDelim + 'Custom' + PathDelim;
 begin
   if SKIP_SOUND or not fIsSoundInitialized then Exit;
 
-  HalfVolume(aVolume);
 
-  PlaySound(sfxNone, ExeDir + SOUND_PATH + 'Sound'+IntToStr(aSoundID) + '.wav', KMPointF(aLoc), stGame, true, aVolume, MAX_DISTANCE, False, False); //Redirect
+  PlaySound(sfxNone, ExeDir + SOUND_PATH + 'Sound'+IntToStr(aSoundID) + '.wav', KMPointF(aLoc), stGame, gstHouse, true, aVolume, MAX_DISTANCE, False, False); //Redirect
 
 end;
 
 
 {Wrapper WAV files}
-function TKMSoundPlayer.PlayWave(const aFile: UnicodeString; const aLoc: TKMPointF; aSoundType: TKMSoundType; aAttenuated: Boolean = True;
+function TKMSoundPlayer.PlayWave(const aFile: UnicodeString; const aLoc: TKMPointF; aSoundType: TKMSoundType; aGameSoundType : TKMGameSoundType; aAttenuated: Boolean = True;
                                  aVolume: Single = 1; aFadeMusic: Boolean = False; aLoop: Boolean = False; aMaxRadius : Word = MAX_DISTANCE): Integer;
 begin
   Result := -1;
   if not fIsSoundInitialized then Exit;
   If aFile = '' then
     Exit;
-  HalfVolume(aVolume);
-  Result := PlaySound(sfxNone, aFile, aLoc, aSoundType, aAttenuated, aVolume, aMaxRadius, aFadeMusic, aLoop); //Redirect
+  Result := PlaySound(sfxNone, aFile, aLoc, aSoundType, aGameSoundType, aAttenuated, aVolume, aMaxRadius, aFadeMusic, aLoop); //Redirect
 end;
 
 
@@ -516,6 +519,7 @@ end;
 {Attenuated means if sound should fade over distance or not}
 //Returns index in fALSound array
 function TKMSoundPlayer.PlaySound(aSoundID: TSoundFX; const aFile: UnicodeString; const Loc: TKMPointF; aSoundType: TKMSoundType;
+                                  aGameSoundType : TKMGameSoundType;
                                   aAttenuated: Boolean; aVolume: Single; aRadius: Single; aFadeMusic, aLooped: Boolean;
                                   aFromScript: Boolean = False): Integer;
 var
@@ -690,7 +694,7 @@ begin
   //Set source properties
   AlSourcei(fALSounds[freeBuf].ALSource, AL_BUFFER, fALSounds[freeBuf].ALBuffer);
   AlSourcef(fALSounds[freeBuf].ALSource, AL_PITCH, 1);
-  AlSourcef(fALSounds[freeBuf].ALSource, AL_GAIN, 1 * aVolume * fVolume);
+  AlSourcef(fALSounds[freeBuf].ALSource, AL_GAIN, 1 * aVolume * fVolume * fSFXVolume[aGameSoundType]);
   if aAttenuated then
   begin
     dif[1]:=Loc.X; dif[2]:=Loc.Y; dif[3]:=0;
@@ -726,6 +730,7 @@ begin
   fALSounds[freeBuf].FromScript := aFromScript;
   fALSounds[freeBuf].Looped := aLooped;
   fALSounds[freeBuf].FadesMusic := aFadeMusic;
+  fALSounds[freeBuf].SoundType := aGameSoundType;
 
   Result := freeBuf;
 end;
@@ -753,7 +758,8 @@ begin
   hasLoc := not KMSamePointF(aLoc, KMPOINTF_ZERO);
   wave := gRes.Sounds.FileOfCitizen(aUnitType, aSound);
   if FileExists(wave) then
-    PlayWave(wave, aLoc, gRes.Sounds.GetSoundType(aSound), hasLoc, 1 + 3*byte(hasLoc)); //Attenuate sounds when aLoc is valid
+    PlayWave(wave, aLoc, gRes.Sounds.GetSoundType(aSound),
+            gRes.Sounds.GetGameSoundType(aSound), hasLoc, 1 + 3*byte(hasLoc)); //Attenuate sounds when aLoc is valid
 end;
 
 
@@ -768,7 +774,8 @@ begin
 
   wave := gRes.Sounds.FileOfNotification(aSound, Random(count));
   if FileExists(wave) then
-    PlayWave(wave, KMPOINTF_ZERO, gRes.Sounds.GetSoundType(aSound), False, 1);
+    PlayWave(wave, KMPOINTF_ZERO, gRes.Sounds.GetSoundType(aSound),
+            gRes.Sounds.GetGameSoundType(aSound), False, 1);
 end;
 
 
@@ -797,7 +804,8 @@ begin
   hasLoc := not KMSamePointF(aLoc, KMPOINTF_ZERO);
   wave := gRes.Sounds.FileOfWarrior(aUnitType, aSound, Random(count));
   if FileExists(wave) then
-    PlayWave(wave, aLoc, gRes.Sounds.GetSoundType(aSound), hasLoc, 1 + 3*Byte(hasLoc)); //Attenuate sounds when aLoc is valid
+    PlayWave(wave, aLoc, gRes.Sounds.GetSoundType(aSound),
+             gRes.Sounds.GetGameSoundType(aSound), hasLoc, 1 + 3*Byte(hasLoc)); //Attenuate sounds when aLoc is valid
 end;
 
 
@@ -834,7 +842,7 @@ begin
     if fScriptSoundALIndex[I] = -1 then //Empty slot here
     begin
       //Save sound index from fALSound array
-      fScriptSoundALIndex[I] := PlaySound(sfxNone, aFile, aLoc, stGame, aAttenuate, aVolume, aRadius, aFadeMusic, aLooped, True);
+      fScriptSoundALIndex[I] := PlaySound(sfxNone, aFile, aLoc, stGame, gstScript, aAttenuate, aVolume, aRadius, aFadeMusic, aLooped, True);
       if fScriptSoundALIndex[I] <> -1 then
         Result := I; //Successfully playing
       Exit;

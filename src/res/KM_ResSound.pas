@@ -9,6 +9,10 @@ uses
 type
   TAttackNotification = (anCitizens, anTown, anTroops, anFood);
 
+  //game sound types used to set volume for each sound separately
+  TKMGameSoundType = (gstSFX, gstWeather, gstAmbiance, gstUnit, gstHouse, gstScript);
+  TKMSFXVolumeArray =  array[TKMGameSoundType] of Single;
+
   TSoundFX = (
     sfxNone=0,
     sfxCornCut,
@@ -155,6 +159,12 @@ type
     function GetSoundType(aSFX: TSoundFX): TKMSoundType; overload;
     function GetSoundType(aSFX: TWarriorSpeech): TKMSoundType; overload;
     function GetSoundType(aSFX: TAttackNotification): TKMSoundType; overload;
+
+    function GetGameSoundType(aNewSFX: TSoundFXNew): TKMGameSoundType; overload;
+    function GetGameSoundType(aSFX: TSoundFX): TKMGameSoundType; overload;
+    function GetGameSoundType(aSFX: TWarriorSpeech): TKMGameSoundType; overload;
+    function GetGameSoundType(aSFX: TAttackNotification): TKMGameSoundType; overload;
+    function GetGameSoundType(aSFX: TSoundFXAmbiance): TKMGameSoundType; overload;
 
     function GetWeatherSound(aSound : TSoundFXAmbiance) : String;
 
@@ -420,6 +430,109 @@ function TKMResSounds.GetSoundType(aSFX: TAttackNotification): TKMSoundType;
 begin
   Result := stGame; //All TSoundFX sounds considered as game sounds
 end;
+
+function TKMResSounds.GetGameSoundType(aSFX: TSoundFX): TKMGameSoundType;
+begin
+  If aSFX in [
+    sfxCornCut,
+    sfxDig,
+    sfxPave,
+    sfxMineStone,
+    sfxCornSow,
+    sfxChopTree,
+    sfxhousebuild,
+    sfxTreeDown,
+    sfxWoodcutterDig,
+    sfxMelee34, sfxMelee35, sfxMelee36, sfxMelee37, sfxMelee38,
+    sfxMelee39, sfxMelee40, sfxMelee41, sfxMelee42, sfxMelee43,
+    sfxMelee44, sfxMelee45, sfxMelee46, sfxMelee47, sfxMelee48,
+    sfxMelee49, sfxMelee50, sfxMelee51, sfxMelee52, sfxMelee53,
+    sfxMelee54, sfxMelee55, sfxMelee56, sfxMelee57,
+    sfxBowDraw,
+    sfxArrowHit,
+    sfxCrossbowShoot,
+    sfxCrossbowDraw,
+    sfxBowShoot,
+    sfxSlingerShoot,
+    sfxBalistaShoot,
+    sfxCatapultShoot,
+    sfxCatapultReload,
+    sfxSiegeBuildingSmash
+  ] then
+    Result := gstUnit
+  else
+  If aSFX in [
+    sfxmill,
+    sfxsaw,
+    sfxwineStep,
+    sfxwineDrain,
+    sfxmetallurgists,
+    sfxcoalDown,
+    sfxPig1,sfxPig2,sfxPig3,sfxPig4,
+    sfxMine,
+    sfxunknown21, //Pig?
+    sfxLeather,
+    sfxBakerSlap,
+    sfxCoalMineThud,
+    sfxButcherCut,
+    sfxSausageString,
+    sfxQuarryClink,
+    sfxBlacksmithBang,
+    sfxBlacksmithFire,
+    sfxCarpenterHammer, //65
+    sfxHorse1,sfxHorse2,sfxHorse3,sfxHorse4,
+    sfxHouseDestroy,
+    sfxSchoolDing
+  ] then
+    Result := gstHouse
+  else
+    Result := gstSFX;
+end;
+
+
+function TKMResSounds.GetGameSoundType(aNewSFX: TSoundFXNew): TKMGameSoundType;
+begin
+  If aNewSFX in [
+    sfxnTrade,
+    sfxnPalace,
+    sfxnStoreBell,
+    sfxnAmmoBell,
+    sfxnPearlChoir
+  ] then
+    Result := gstHouse
+  else
+    Result := gstSFX;
+end;
+
+
+function TKMResSounds.GetGameSoundType(aSFX: TWarriorSpeech): TKMGameSoundType;
+begin
+  Result := gstUnit;
+end;
+
+
+function TKMResSounds.GetGameSoundType(aSFX: TAttackNotification): TKMGameSoundType;
+begin
+  Result := gstSFX;
+end;
+
+function TKMResSounds.GetGameSoundType(aSFX: TSoundFXAmbiance): TKMGameSoundType;
+begin
+  If aSFX in [sfxwExplosion] then
+    Result := gstUnit
+  else
+  If aSFX in [sfxwFire] then
+    Result := gstHouse
+  else
+  If aSFX in [sfxwRain, sfxwThunder, sfxwWind, sfxwSandStorm, sfxwTornado] then
+    Result := gstWeather
+  else
+  If aSFX in [sfxwFlyingBrids, sfxwChirping, sfxwLake, sfxwSwamp] then
+    Result := gstAmbiance
+  else
+    Result := gstSFX;
+end;
+
 
 function TKMResSounds.GetWeatherSound(aSound: TSoundFXAmbiance): string;
 var I : Integer;

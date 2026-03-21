@@ -8,6 +8,7 @@ uses
   KromOGLUtils,
   KM_MainSettings,
   KM_Pics, KM_Resolutions, KM_ResKeyFuncs, KM_GUICommonKeys,
+  KM_ResSound,
   KM_InterfaceDefaults, KM_InterfaceTypes, KM_CommonTypes;
 
 
@@ -45,6 +46,7 @@ type
     procedure CreateGraphics(var aTopBlock: Integer; var aLeftBlock: Integer);
     procedure CreateVideos(var aTopBlock: Integer; var aLeftBlock: Integer);
     procedure CreateSound(var aTopBlock: Integer; var aLeftBlock: Integer);
+    procedure CreateSoundSFX;
     procedure CreateControls(var aTopBlock: Integer; var aLeftBlock: Integer);
     procedure CreateGameplay(var aTopBlock: Integer; var aLeftBlock: Integer);
     procedure CreateReplay(var aTopBlock: Integer; var aLeftBlock: Integer);
@@ -119,6 +121,11 @@ type
         CheckBox_MusicOff: TKMCheckBox;
         CheckBox_ShuffleOn: TKMCheckBox;
         DropList_Playlist: TKMDropList;
+        Button_DropSFX : TKMButton;
+        Panel_SFX: TKMPanel;
+          TrackBar_SFXVolume : array[TKMGameSoundType] of TKMTrackBar;
+
+
       Panel_Lang: TKMPanel;
         Radio_Lang: TKMRadioGroup;
         Image_Lang_Flags: array of TKMImage;
@@ -146,7 +153,7 @@ type
 
 implementation
 uses
-  KM_Main, KM_Music, KM_Sound, KM_RenderUI, KM_Resource, KM_ResTexts, KM_ResLocales, KM_ResFonts, KM_ResSound, KM_Video,
+  KM_Main, KM_Music, KM_Sound, KM_RenderUI, KM_Resource, KM_ResTexts, KM_ResLocales, KM_ResFonts, KM_Video,
   KM_ResTypes,
   KM_Defaults,
   KM_Game, KM_GameSettings, KM_GameParams, KM_GameTypes,
@@ -222,6 +229,7 @@ begin
 
                     CreateLanguages(topBlock, leftBlock);
                     CreateWeather;
+                    CreateSoundSFX;
                   end;
       guiOptGame: begin
                     //--- Column 1 --------------------------------------------------------------
@@ -240,6 +248,7 @@ begin
                     CreateGameplay(topBlock, leftBlock);
                     CreateReplay(topBlock, leftBlock);
                     CreateMods(topBlock, leftBlock);
+                    CreateSoundSFX;
                   end;
     end;
 
@@ -405,8 +414,8 @@ begin
     TKMLabel.Create(Panel_Sound,6,0,270,20,gResTexts[TX_MENU_OPTIONS_SOUND],fntOutline,taLeft);
     TKMBevel.Create(Panel_Sound,0,20,280,Panel_Sound.Height - 20);
 
-    TrackBar_SFX       := TKMTrackBar.Create(Panel_Sound, 10, 27, 256, OPT_SLIDER_MIN, OPT_SLIDER_MAX);
-    TrackBar_Music     := TKMTrackBar.Create(Panel_Sound, 10, 77, 256, OPT_SLIDER_MIN, OPT_SLIDER_MAX);
+    TrackBar_SFX       := TKMTrackBar.Create(Panel_Sound, 10, 27, 256 - 20, OPT_SLIDER_MIN, OPT_SLIDER_MAX);
+    TrackBar_Music     := TKMTrackBar.Create(Panel_Sound, 10, 77, 256 - 20, OPT_SLIDER_MIN, OPT_SLIDER_MAX);
     CheckBox_MusicOff  := TKMCheckBox.Create(Panel_Sound, 10, 127, 256, 20, gResTexts[TX_MENU_OPTIONS_MUSIC_DISABLE], fntMetal);
     CheckBox_ShuffleOn := TKMCheckBox.Create(Panel_Sound, 10, 147, 256, 20, gResTexts[TX_MENU_OPTIONS_MUSIC_SHUFFLE], fntMetal);
 
@@ -428,8 +437,32 @@ begin
     CheckBox_MusicOff.OnClick  := Change;
     CheckBox_ShuffleOn.OnClick := Change;
     DropList_Playlist.OnChange := Change;
+
+
+    Button_DropSFX  := TKMButton.Create(Panel_Sound, TrackBar_SFX.Right, TrackBar_SFX.Bottom - 20, 20, 20, 5, rxGui, bsGame);
+    Button_DropSFX.OnClick := Change;
 end;
 
+
+procedure TKMGUICommonOptions.CreateSoundSFX;
+var GST : TKMGameSoundType;
+begin
+
+  Panel_SFX       := TKMPanel.Create(Panel_Options, Panel_Sound.Left, Panel_Sound.Top + TrackBar_SFX.Bottom + 5, Panel_Sound.Width,
+                                    (byte(high(TKMGameSoundType)) + 1) * 40 + 10  );
+  with TKMButton.Create(Panel_SFX, 0, 0, Panel_SFX.Width, Panel_SFX.Height, '', bsPaper) do
+  begin
+    Hitable := false;
+  end;
+
+  for GST := Low(TKMGameSoundType) to High(TKMGameSoundType) do
+  begin
+    TrackBar_SFXVolume[GST] := TKMTrackBar.Create(Panel_SFX, 10, byte(GST) * 40 + 5, 256 - 20, OPT_SLIDER_MIN, OPT_SLIDER_MAX);
+    TrackBar_SFXVolume[GST].Caption := gResTexts[byte(GST) + 2353];
+    TrackBar_SFXVolume[GST].OnChange := Change;
+  end;
+  Panel_SFX.Hide;
+end;
 
 procedure TKMGUICommonOptions.CreateControls(var aTopBlock: Integer; var aLeftBlock: Integer);
 begin
@@ -727,6 +760,8 @@ end;
 // Note: Options can be required to fill before gGameApp is completely initialized,
 // hence we need to pass either gGameApp.Settings or a direct Settings link
 procedure TKMGUICommonOptions.Refresh;
+
+var GST : TKMGameSoundType;
 begin
   Init;
 
@@ -745,7 +780,8 @@ begin
   DropList_Playlist.ItemIndex   := gGameSettings.SFX.Playlist;
   CheckBox_SnowHouses.Checked   := gGameSettings.GFX.AllowSnowHouses;
   CheckBox_SnowObjects.Checked   := gGameSettings.GFX.AllowSnowObjects;
-
+  for GST := Low(TKMGameSoundType) to High(TKMGameSoundType) do
+    TrackBar_SFXVolume[GST].Position := Round(gGameSettings.SFX.SFXVolume[GST] * TrackBar_SFX.MaxValue);
   CheckBox_VideoEnable.Checked   := gGameSettings.Video.Enabled;
   CheckBox_VideoStretch.Checked  := gGameSettings.Video.VideoStretch;
   CheckBox_VideoStretch.Enabled  := gGameSettings.Video.Enabled;
@@ -826,8 +862,15 @@ end;
 procedure TKMGUICommonOptions.Change(Sender: TObject);
 var
   musicToggled, shuffleToggled: Boolean;
+ GST : TKMGameSoundType;
 begin
-  // Change these options only if they changed state since last time
+  If sender = Button_DropSFX then
+  begin
+    Panel_SFX.Visible := not Panel_SFX.Visible;
+    Button_DropSFX.TexID := IFThen(Panel_SFX.Visible, 4, 5);
+    Exit;
+  end;
+  // Change these optionsonly if they changed state since last time
   musicToggled := (gGameSettings.SFX.MusicEnabled <> not CheckBox_MusicOff.Checked);
   shuffleToggled := (gGameSettings.SFX.ShuffleOn <> CheckBox_ShuffleOn.Checked);
 
@@ -845,10 +888,14 @@ begin
   gGameSettings.GFX.AllowSnowHouses    := CheckBox_SnowHouses.Checked;
   gGameSettings.GFX.AllowSnowObjects    := CheckBox_SnowObjects.Checked;
 
+  for GST := Low(TKMGameSoundType) to High(TKMGameSoundType) do
+    gGameSettings.SFX.SFXVolume[GST]  := TrackBar_SFXVolume[GST].Position / TrackBar_SFXVolume[GST].MaxValue;
+
   TrackBar_Music.Enabled      := not CheckBox_MusicOff.Checked;
   CheckBox_ShuffleOn.Enabled  := not CheckBox_MusicOff.Checked;
   DropList_Playlist.Enabled  := not CheckBox_MusicOff.Checked;
 
+  gSoundPlayer.UpdateSFXVolumes(gGameSettings.SFX.SFXVolume, false);
   gSoundPlayer.UpdateSoundVolume(gGameSettings.SFX.SoundFXVolume);
   gMusic.Volume := gGameSettings.SFX.MusicVolume;
   gGameSettings.SFX.Playlist := DropList_Playlist.ItemIndex;
