@@ -9344,7 +9344,7 @@ end;
 
 function TKMHouseWallSingle.GetSnowPic : Integer;
 begin
-  If (Style = 0) and (fWallStyle > 0) then
+  If (Style = 0) and (OnTerrain <> tptNone) and (fWallStyle > 0) then
     Result := gRes.Houses[fType].Styles[fWallStyle - 1].SnowPic[OnTerrain]
   else
   Result := Inherited;
