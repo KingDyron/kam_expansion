@@ -362,7 +362,7 @@ type
   private
     const
       ARCHERS_COUNT = 10;
-      ARCHER_MAX_RANGE = 3;
+      ARCHER_MAX_RANGE = 4;
 
       //every archer should have a vary delay
       ARCHER_PACE = 5;
@@ -370,11 +370,11 @@ type
       ARCHER_RELOAD_RANGE = 20 div ARCHER_PACE;// 2 seconds
 
       SHOOT_OFFSET_DIR_N : array[1..ARCHERS_COUNT div 2] of TKMPoint = (
-        (X : -4; Y : -2),//^^-
-        (X : -5; Y : -1),//^--
-        (X : -5; Y : 0),//---
-        (X : -5; Y : 1),//\/--
-        (X : -4; Y : 2)//\/\/-
+        (X : -5; Y : -3),//^^-
+        (X : -6; Y : -1),//^--
+        (X : -6; Y : 0),//---
+        (X : -6; Y : 1),//\/--
+        (X : -5; Y : 3)//\/\/-
         );
       SHOOT_OFFSET_DIR_E : array[1..ARCHERS_COUNT div 2] of TKMPoint = (
         (X : -1; Y : -5),//^^-
