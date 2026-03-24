@@ -1548,9 +1548,9 @@ begin
           gTerrain.FlattenTerrain(fCellsToDig[fLastToDig]);
           gTerrain.FlattenTerrain(fCellsToDig[fLastToDig]); //Flatten the terrain twice now to ensure it really is flat
 
-          if gTerrain.Land^[fCellsToDig[fLastToDig].Y, fCellsToDig[fLastToDig].X].TileLock = tlWallFence then
+          {if gTerrain.Land^[fCellsToDig[fLastToDig].Y, fCellsToDig[fLastToDig].X].TileLock = tlWallFence then
             gTerrain.SetTileLock(fCellsToDig[fLastToDig], tlWallFence) //Block passability on tile
-          else
+          else}
             gTerrain.SetTileLock(fCellsToDig[fLastToDig], tlDigged); //Block passability on tile
 
           if KMSamePoint(fHouse.Entrance, fCellsToDig[fLastToDig]) then

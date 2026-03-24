@@ -6543,7 +6543,7 @@ begin
     and CheckHeightPass(aLoc, hpWalking) then
     AddPassability(tpOwn);
 
-  if Land^[aLoc.Y,aLoc.X].TileLock in [tlWall, tlWallFence, tlWallGate] then
+  if Land^[aLoc.Y,aLoc.X].TileLock in [tlWall, tlWallGate] then
     AddPassability(tpWall);
 
 
@@ -6552,7 +6552,7 @@ begin
 }
 
   //For all passability types other than CanAll, houses and fenced houses are excluded
-  if Land^[aLoc.Y,aLoc.X].TileLock in [tlNone, tlDigged, tlFenced, tlFieldWork, tlRoadWork, tlWallEmpty, tlStructure] then
+  if Land^[aLoc.Y,aLoc.X].TileLock in [tlNone, tlDigged, tlFenced, tlFieldWork, tlRoadWork, tlWallFence, tlWallEmpty, tlStructure] then
   begin
     if (TileIsWalkable(aLoc)
         or Land^[aLoc.Y,aLoc.X].TileOverlay2.AllowsBuilding)
