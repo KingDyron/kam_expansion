@@ -170,7 +170,7 @@ type
     function NeedsToReload(aFightAnimLength: Byte): Boolean;
     procedure SetLastShootTime;
     function FindLinkUnit(const aLoc: TKMPoint): TKMUnitWarrior;
-    function CheckforEnemyWhileStorming : Boolean;
+    function CheckforEnemyWhileStorming : Boolean; virtual;
     function CheckForEnemy: Boolean; virtual;
     procedure ProceedClosedTower;
     function IsShootingFromTower : Boolean;
@@ -459,7 +459,18 @@ type
     constructor Load(LoadStream: TKMemoryStream); override;
     procedure Save(SaveStream: TKMemoryStream); override;
     function UpdateState : Boolean; override;
+  end;
 
+  TKMUnitWarriorChampion = class(TKMunitWarrior)
+    private
+      function GetDamageUnit : Word; override;
+      function GetDamageHouse : Word;override;
+    protected
+      function GetDefence : SmallInt;override;
+      function GetAttack : SmallInt; override;
+    public
+      function CheckforEnemyWhileStorming: Boolean; override;
+      function GetProjectileDefence(isBolt : Boolean) : Single; override;
   end;
 
 
@@ -4216,5 +4227,67 @@ begin
       end;
   end;
 end;
+
+function TKMUnitWarriorChampion.GetProjectileDefence(isBolt: Boolean): Single;
+begin
+  If Action is TKMUnitActionStormAttack then
+    Result := 999999
+  else
+    Result := Inherited;
+end;
+
+
+function TKMUnitWarriorChampion.CheckforEnemyWhileStorming: Boolean;
+var
+  newEnemy: TKMUnit;
+  I : integer;
+  LocDir : TKMPointDir;
+begin
+  Result := Inherited;
+
+
+  //Ranged units should not check for enemy while walking or when facing the wrong way
+  LocDir := KMPointDir(PositionNext, Direction);
+  for I := 0 to 1 do //check only two tiles
+  begin
+    LocDir.Loc := LocDir.DirFaceLoc;
+    newEnemy := gTerrain.GetUnit(LocDir.Loc);
+    if newEnemy <> nil then
+    begin
+      newEnemy.DoHitFrom(self);
+      Break;
+    end;
+  end;
+end;
+
+function TKMUnitWarriorChampion.GetDamageUnit: Word;
+begin
+  Result := Inherited;
+  If Action is TKMUnitActionStormAttack then
+    Result := Result * 2;
+end;
+
+function TKMUnitWarriorChampion.GetDamageHouse: Word;
+begin
+  Result := Inherited;
+  If Action is TKMUnitActionStormAttack then
+    Result := Result * 2;
+end;
+
+
+function TKMUnitWarriorChampion.GetDefence: SmallInt;
+begin
+  Result := Inherited;
+  If Action is TKMUnitActionStormAttack then
+    Result := Result * 6;
+end;
+
+function TKMUnitWarriorChampion.GetAttack: SmallInt;
+begin
+  Result := Inherited;
+  If Action is TKMUnitActionStormAttack then
+    Result := Result * 2;
+end;
+
 
 end.

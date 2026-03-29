@@ -4387,13 +4387,10 @@ begin
   //if anything found, decrease it's deposits
   if (Land^[aLoc.Y, aLoc.X].Ware.C > 0) and (TKMWareType(Land^[aLoc.Y, aLoc.X].Ware.W) <> wtNone) then
   begin
-    if Land^[aLoc.Y, aLoc.X].Ware.C > 0 then
-    begin
-      Land^[aLoc.Y, aLoc.X].Ware.C := Max(Land^[aLoc.Y, aLoc.X].Ware.C - aCount, 0);
-      Result := true;
-    end;
+    Land^[aLoc.Y, aLoc.X].Ware.C := Max(Land^[aLoc.Y, aLoc.X].Ware.C - aCount, 0);
+    Result := true;
+    UpdatePassability(KMRectGrow(KMRect(aLoc), 1));
   end;
-
 end;
 
 

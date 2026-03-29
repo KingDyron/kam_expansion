@@ -680,6 +680,7 @@ type
     utFighter,      utSpikedTrap,   utWoodenWall,    utTorchMan,
     utMedic,        utBattleShip,   utBoat,          utPyro,
     utLekter,       utMobileTower,  utSkirmisher,    utBerserker,
+    utChampion,     utWarfareCart,
 
     utWolf,         utFish,         utWatersnake,    utSeastar,
     utCrab,         utWaterflower,  utWaterleaf,     utDuck,
@@ -700,13 +701,13 @@ const
   CITIZEN_MIN = utSerf;
   CITIZEN_MAX = utMountedSerf;
   WARRIOR_MIN = utMilitia;
-  WARRIOR_MAX = utBerserker;
+  WARRIOR_MAX = utWarfareCart;
   WARRIOR_EQUIPABLE_BARRACKS_MIN = utMilitia; //Available from barracks
   WARRIOR_EQUIPABLE_BARRACKS_MAX = utKnight;
   WARRIOR_EQUIPABLE_TH_MIN = utBarbarian; //Available from Townhall
   WARRIOR_EQUIPABLE_TH_MAX =  utWarrior;
   HUMANS_MIN = utSerf;
-  HUMANS_MAX =  utBerserker;
+  HUMANS_MAX =  utWarfareCart;
   ANIMAL_MIN = utWolf;
   ANIMAL_MAX = utSpider;
   WARRIOR_BITIN_EQUIPABLE = [ utSwordFighter, utCrossbowman, utPikeman, utKnight, utCatapult, utShieldBearer,
@@ -720,12 +721,13 @@ const
   WARRIORS_LEATHER = [utRebel, utRogue, utVagabond, utClubMan, utMaceFighter, utSkirmisher, utBerserker,
                       utMilitia, utAxeFighter, utBowman, utLanceCarrier, utScout, utBarbarian];
   WARRIORS_IRON = [utSwordFighter, utCrossbowman, utPikeman, utKnight, utWarrior, utFlailFighter, utShieldBearer];
-  SPECIAL_UNITS = [utPaladin, utTrainedWolf, utArcher, utSpy, utAmmoCart, utShip, utBoat, utBattleShip, utPyro, utLekter, utTorchMan, utMedic];
+  SPECIAL_UNITS = [utPaladin, utTrainedWolf, utArcher, utSpy, utAmmoCart, utShip, utBoat, utBattleShip, utPyro, utLekter, utTorchMan, utMedic,
+                  utChampion];
 
   CITIZENS_CNT = Integer(CITIZEN_MAX) - Integer(CITIZEN_MIN) + 1;
   WARRIORS_CNT = Integer(WARRIOR_MAX) - Integer(WARRIOR_MIN) + 1;
   UNITS_CNT = Integer(UNIT_MAX) - Integer(UNIT_MIN) + 1;
-  SIEGE_MACHINES = [utBallista, utCatapult, utRam, utAmmoCart, utWoodenWall, utSpikedTrap, utPikeMachine, utMobileTower];
+  SIEGE_MACHINES = [utBallista, utCatapult, utRam, utAmmoCart, utWoodenWall, utSpikedTrap, utPikeMachine, utMobileTower, utWarfareCart];
   UNITS_SHIPS = [utBoat, utShip, utBattleShip];
 
   OPERATORS_PER_MACHINE = 4;
@@ -802,7 +804,9 @@ const
     gtMelee,
     gtMachines,
     gtRanged,
-    gtMelee
+    gtMelee,
+    gtMelee,
+    gtMachinesMelee//utWarfareCart
     );
 
 type
@@ -1325,17 +1329,12 @@ const
     0.5, 10, 10,
     2, 2, 2, 2, 10, 10,
     10,
-    4, 5
+    4, 5,
+    16, 10
   );
 
   TOWN_TUTORIAlS_COUNT = 11;
   BATTLE_TUTORIAlS_COUNT = 8;
-{
-type
-  TKMGUIStyle = (gsStandard, gsBricks);
-const
-  GUI_STYLE_TEXT : array[TKMGUIStyle] of Word = (2313, 2314);}
-
 
 implementation
 

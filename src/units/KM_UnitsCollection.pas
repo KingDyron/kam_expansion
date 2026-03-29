@@ -161,6 +161,7 @@ begin
                                     utPaladin    : Result := TKMUnitWarriorPaladin.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
                                     utMobileTower: Result := TKMUnitWarriorTower.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
                                     utRam        : Result := TKMUnitWarriorRam.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
+                                    utChampion   : Result := TKMUnitWarriorChampion.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
                                     else Result := TKMUnitWarrior.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
                                   end;
     // Do not specify aAddInHouse, we want to call TKMUnitAnimal constructor
@@ -406,6 +407,7 @@ begin
                                   utPaladin       : U := TKMUnitWarriorPaladin.Load(LoadStream);
                                   utMobileTower   : U := TKMUnitWarriorTower.Load(LoadStream);
                                   utRam           : U := TKMUnitWarriorRam.Load(LoadStream);
+                                  utChampion      : U := TKMUnitWarriorChampion.Load(LoadStream);
                                   else U := TKMUnitWarrior.Load(LoadStream);
                                 end;
       utWolf,

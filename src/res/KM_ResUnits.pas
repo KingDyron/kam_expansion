@@ -219,12 +219,12 @@ const
     14,15,16,17,18,19,20,21,22,23, //Warriors
     -1,-1,-1,-1, -1,-1, -1, -1, -1, -1, -1, - 1, -1, -1, -1, -1, //TPR warriors (can't be placed with SET_UNIT)
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1,
+    -1, -1, -1,
     24,25,26,27,28,29,30,31, 37, 38, 39, 40, 41, 42, 43,
     44, 45, 46); //Animals
 
   //This is a map of the valid values for !SET_GROUP, and the corresponing unit that will be created (matches KaM behavior)
-  UNIT_ID_TO_TYPE: array[0..81] of TKMUnitType = (
+  UNIT_ID_TO_TYPE: array[0..83] of TKMUnitType = (
     utSerf,utWoodcutter,utMiner,utAnimalBreeder,utFarmer,
     utCarpenter,utBaker,utButcher,utFisher,utBuilder,
     utStonemason,utSmith,utMetallurgist,utRecruit, //Units
@@ -243,7 +243,7 @@ const
     utPyro, utLekter, utDeerMale, utDeerFemale, utFox, utBoar, utBear,
     utLandDuck, utRabbit,utWhiteBear, utSandSnake, utSpider,
     utMobileTower, utFeeder, utHouseBuilder, utMountedSerf,
-    utSkirmisher, utBerserker,
+    utSkirmisher, utBerserker, utChampion, utWarfareCart,
     utNone, utNone, utNone
     );
 
@@ -255,7 +255,7 @@ const
     24,25,26,27, 28,29,//TPR warriors
     38, 39, 40, 41, 42, 43, 44, 45, 46, 47,//My Warriors
     48, 49, 50, 52, 53, 54, 55, 57, 58, 59, 60,
-    61, 62, 73, 77, 78,//pyro, lekter, mobile wall, skirmisher
+    61, 62, 73, 77, 78, 79, 80,//pyro, lekter, mobile wall, skirmisher, Champion, Cart
     30,31,32,33,34,35,36,37, //Animals
     63, 64, 65, 66, 67, 68, 69, 70, 71, 72);//deerMale .. utWarehouseMan
 
@@ -584,7 +584,9 @@ const
     [uaWalk, uaWork, uaDie, uaEat, uaStay],//utLekter
     [uaWalk, uaWork, uaDie, uaEat],//utMobileTower
     [uaWalk, uaWork, uaDie, uaEat, uaSpec],//utSkirmisher
-    [uaWalk, uaWork, uaDie, uaEat, uaSpec],//utSkirmisher
+    [uaWalk, uaWork, uaDie, uaEat, uaSpec],//utBerserker
+    [uaWalk, uaWork, uaDie, uaEat, uaSpec],//utChampion
+    [uaWalk, uaWork, uaDie, uaEat, uaSpec],//utWarfareCart
 
     [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], //Animals
     [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk], [uaWalk],//deermale
@@ -637,7 +639,7 @@ const
     ftMelee,                   //utMetalBarbarian
     ftMelee,                    //utHorseman
     ftRanged,ftRanged,ftMelee,  //utCatapult, utBallista, utRam
-    ftBoth, ftMelee, //golems
+    ftMelee, ftMelee, //golems
     ftMelee, ftRanged, //paladin, archer
     ftMelee, ftMelee, ftMelee, ftMelee, //spy, wolf, ammo cart
     ftMelee, // ship
@@ -652,6 +654,8 @@ const
     ftMelee,
     ftRanged,
     ftRanged,
+    ftMelee,
+    ftMelee,
     ftMelee
   );
 begin
@@ -720,6 +724,7 @@ begin
     utSkirmisher: Result := 1185;
     utMountedSerf: Result := 1187;
     utBerserker: Result := 1188;
+    utChampion: Result := 1188;
   else
     if IsCitizen then
       Result := 141 + UNIT_TYPE_TO_ID[fUnitType]
@@ -790,7 +795,7 @@ const
     $80B0B0 ,$80B0B0,$80B0B0,$80B0B0,$80B0B0, $80B0B0, $80B0B0, $80B0B0, $80B0B0, $80B0B0,
     $80B0B0, $80B0B0 ,$80B0B0,$80B0B0, $80B0B0, $80B0B0 ,$80B0B0,$80B0B0,$80B0B0,$80B0B0,
     $80B0B0,$80B0B0,$80B0B0,$80B0B0,$80B0B0,$80B0B0,$80B0B0,$80B0B0,$80B0B0,$80B0B0,$80B0B0,
-    $80B0B0,$80B0B0,$80B0B0,$80B0B0, $000000, $000000); //Exact colors can be tweaked
+    $80B0B0,$80B0B0,$80B0B0,$80B0B0, $000000, $000000, 0, 0); //Exact colors can be tweaked
 begin
   Result := MM_COLOR[fUnitType] or $FF000000;
 end;

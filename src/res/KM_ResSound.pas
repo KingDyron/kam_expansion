@@ -184,7 +184,9 @@ const
     'rebel', 'rogue', 'warrior', 'vagabond', 'machines', 'machines', 'machines', '', '', 'paladin',
     'bowman', 'pikeman', 'wolf', 'machines', 'machines', 'machines',
     'swordman', 'bowman', 'crossbowman', 'vagabond', 'fighter', 'machines', 'machines',//club man, maceF, flailF, shield bearer, fighter, spiked trap, wooden wall,
-    'destroyer', 'bowman', '', '', 'knights', 'axeman', 'machines', 'militia', 'axeman');//destroyer, medic, battle ship, boat, pyro, lekter, mobile wall
+    'destroyer', 'bowman', '', '', 'knights', 'axeman', 'machines', 'militia', 'axeman',//destroyer, medic, battle ship, boat, pyro, lekter, mobile wall
+    'knight', 'machines'
+    );
 
   //TPR warriors reuse TSK voices in some languages, so if the specific ones don't exist use these
   WARRIOR_SFX_FOLDER_BACKUP: array[WARRIOR_MIN..WARRIOR_MAX] of string = (
@@ -193,7 +195,8 @@ const
     'bowman', 'lanceman', 'barbarian', 'cavalry', 'machines', 'machines', 'machines', '', '', 'knights',
     'bowman', 'lanceman', 'wolf', 'machines', 'machines', 'machines',
     'swordman', 'bowman', 'crossbowman', 'cavalry', 'lanceman', 'machines', 'machines',
-    'knights', 'bowman', '', '', 'crossbowman', 'axeman', 'machines', 'militia', 'axeman');
+    'knights', 'bowman', '', '', 'crossbowman', 'axeman', 'machines', 'militia', 'axeman',
+    'knight', 'machines');
 
   WARRIOR_SFX: array[TWarriorSpeech] of string = (
     'select', 'eat', 'left', 'right', 'halve',
