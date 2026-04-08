@@ -5827,7 +5827,7 @@ procedure TKMScriptActions.StructureUnlock(aHand, aStructure: Integer; aUnlocked
 var I : Integer;
 begin
   try
-    If (aStructure < gRes.Structures.Count - 1) then
+    If (aStructure < gRes.Structures.Count) then
     begin
       If aHand = -1 then
       begin
