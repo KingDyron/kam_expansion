@@ -281,7 +281,7 @@ const
     utRebel, utRogue, utClubMan, utVagabond, utSkirmisher, utBerserker, utShieldBearer, utBarbarian, utWarrior,
     utCatapult, utBallista, utRam, utWoodenWall, utMobileTower,
     utAmmoCart, utPikeMachine,
-    utTorchMan, utPyro, utLekter, utMedic, utPaladin, utArcher, utSpy, utTrainedWolf, utSpikedTrap, utChampion,
+    utTorchMan, utPyro, utLekter, utMedic, utChampion, utPaladin, utArcher, utSpy, utTrainedWolf, utSpikedTrap,
     utBoat, utShip, utBattleShip{, utGolem, utGiant});
 
   MapEd_Icon: array [0..26] of Word = (

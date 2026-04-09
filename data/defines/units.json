@@ -4986,7 +4986,7 @@
 		{
 			"UnitType" : "utChampion",
 			"GameID" : 79,
-			"DescriptionID" : 2325,
+			"DescriptionID" : 2359,
 			"HitPoints" : 11,
 			"Attack" : 140,
 			"AttackHorse" : 95,
@@ -5013,22 +5013,22 @@
 			],
 			"Animations" : 
 			[
-				{"ActionType" : "uaDie","Dir" : "dirN","X" : 0,"Y" : 0,"Steps" : [5950, 5935, 5936, 5937, 5938, 5939, 5940, 5941, 5942, 5943, 5944, 5945, 5946, 5947, 5948, 5949]},
-				{"ActionType" : "uaDie","Dir" : "dirNE","X" : 0,"Y" : 0,"Steps" : [5950, 5935, 5936, 5937, 5938, 5939, 5940, 5941, 5942, 5943, 5944, 5945, 5946, 5947, 5948, 5949]},
-				{"ActionType" : "uaDie","Dir" : "dirE","X" : 0,"Y" : 0,"StepStart" : 5903,"Count" : 14},
-				{"ActionType" : "uaDie","Dir" : "dirSE","X" : 0,"Y" : 0,"StepStart" : 5903,"Count" : 14},
-				{"ActionType" : "uaDie","Dir" : "dirS","X" : 0,"Y" : 0,"StepStart" : 5236,"Count" : 15},
-				{"ActionType" : "uaDie","Dir" : "dirSW","X" : 0,"Y" : 0,"StepStart" : 5236,"Count" : 15},
-				{"ActionType" : "uaDie","Dir" : "dirW","X" : 0,"Y" : 0,"StepStart" : 5917,"Count" : 18},
-				{"ActionType" : "uaDie","Dir" : "dirNW","X" : 0,"Y" : 0,"StepStart" : 5917,"Count" : 18},
-				{"ActionType" : "uaWalkArm","Dir" : "dirN","X" : 10,"Y" : -42,"StepStart" : 4962,"Count" : 8},
-				{"ActionType" : "uaWalkArm","Dir" : "dirNE","X" : -1,"Y" : -40,"StepStart" : 4978,"Count" : 8},
-				{"ActionType" : "uaWalkArm","Dir" : "dirE","X" : 2,"Y" : -40,"Steps" : [4988, 4999, 5000, 5001, 5002, 5003, 4986, 4987]},
-				{"ActionType" : "uaWalkArm","Dir" : "dirSE","X" : 1,"Y" : -44,"StepStart" : 4970,"Count" : 8},
-				{"ActionType" : "uaWalkArm","Dir" : "dirS","X" : -6,"Y" : -45,"StepStart" : 4962,"Count" : 8},
-				{"ActionType" : "uaWalkArm","Dir" : "dirSW","X" : -10,"Y" : -46,"StepStart" : 4978,"Count" : 8},
-				{"ActionType" : "uaWalkArm","Dir" : "dirW","X" : 4,"Y" : -45,"Steps" : [4988, 4999, 5000, 5001, 5002, 5003, 4986, 4987]},
-				{"ActionType" : "uaWalkArm","Dir" : "dirNW","X" : 13,"Y" : -43,"StepStart" : 4970,"Count" : 8}
+				{"ActionType" : "uaDie","Dir" : "dirN","X" : 0,"Y" : 0,"Steps" : [4369, 4369, 4370, 4371, 4372, 4373, 4374, 4375, 4376, 4377, 4378, 4379, 4380, 4381, 4382, 5951, 5952, 5953, 5954]},
+				{"ActionType" : "uaDie","Dir" : "dirNE","X" : 0,"Y" : 0,"Steps" : [4369, 4369, 4370, 4371, 4372, 4373, 4374, 4375, 4376, 4377, 4378, 4379, 4380, 4381, 4382, 5951, 5952, 5953, 5954]},
+				{"ActionType" : "uaDie","Dir" : "dirE","X" : 0,"Y" : 0,"Steps" : [4127, 4127, 4128, 4129, 4130, 4131, 4132, 4133, 4134, 4135, 4136, 4137, 4138, 4139, 4140, 4141]},
+				{"ActionType" : "uaDie","Dir" : "dirSE","X" : 0,"Y" : 0,"Steps" : [4127, 4127, 4128, 4129, 4130, 4131, 4132, 4133, 4134, 4135, 4136, 4137, 4138, 4139, 4140, 4141]},
+				{"ActionType" : "uaDie","Dir" : "dirS","X" : 0,"Y" : 0,"Steps" : [4190, 4319, 4321, 4322, 4323, 4324, 4325, 4326, 4327, 4328, 4329, 4330, 4331, 4332, 4333, 4334, 4335]},
+				{"ActionType" : "uaDie","Dir" : "dirSW","X" : 0,"Y" : 0,"Steps" : [4190, 4319, 4321, 4322, 4323, 4324, 4325, 4326, 4327, 4328, 4329, 4330, 4331, 4332, 4333, 4334, 4335]},
+				{"ActionType" : "uaDie","Dir" : "dirW","X" : 0,"Y" : 0,"Steps" : [4142, 4142, 4143, 4144, 4145, 4146, 4147, 4148, 4149, 4150, 4151, 4152, 4153, 4154, 4155, 4156]},
+				{"ActionType" : "uaDie","Dir" : "dirNW","X" : 0,"Y" : 0,"Steps" : [4142, 4142, 4143, 4144, 4145, 4146, 4147, 4148, 4149, 4150, 4151, 4152, 4153, 4154, 4155, 4156]},
+				{"ActionType" : "uaWalkArm","Dir" : "dirN","X" : 6,"Y" : -66,"Steps" : [5074, 5075, 5068, 5069, 5070, 5071, 5072, 5073]},
+				{"ActionType" : "uaWalkArm","Dir" : "dirNE","X" : 2,"Y" : -54,"Steps" : [5090, 5091, 5084, 5085, 5086, 5087, 5088, 5089]},
+				{"ActionType" : "uaWalkArm","Dir" : "dirE","X" : 3,"Y" : -54,"Steps" : [5098, 5099, 5092, 5093, 5094, 5095, 5096, 5097]},
+				{"ActionType" : "uaWalkArm","Dir" : "dirSE","X" : -5,"Y" : -66,"Steps" : [5082, 5083, 5076, 5077, 5078, 5079, 5080, 5081]},
+				{"ActionType" : "uaWalkArm","Dir" : "dirS","X" : -10,"Y" : -65,"Steps" : [5074, 5075, 5068, 5069, 5070, 5071, 5072, 5073]},
+				{"ActionType" : "uaWalkArm","Dir" : "dirSW","X" : -8,"Y" : -68,"Steps" : [5090, 5091, 5084, 5085, 5086, 5087, 5088, 5089]},
+				{"ActionType" : "uaWalkArm","Dir" : "dirW","X" : 5,"Y" : -67,"Steps" : [5098, 5099, 5092, 5093, 5094, 5095, 5096, 5097]},
+				{"ActionType" : "uaWalkArm","Dir" : "dirNW","X" : 6,"Y" : -66,"Steps" : [5082, 5083, 5076, 5077, 5078, 5079, 5080, 5081]}
 			]
 		}
 	],
@@ -5741,6 +5741,6 @@
 	"Barracks Order" : ["utFighter","utMilitia","utAxeFighter","utSwordFighter","utBowman","utCrossbowman","utLanceCarrier","utPikeman","utMaceFighter","utFlailFighter","utScout","utKnight"],
 	"Townhall Order" : ["utFighter","utRebel","utRogue","utClubMan","utVagabond", "utSkirmisher", "utBerserker","utShieldBearer","utBarbarian","utWarrior", "utMobileTower", "utFeeder", "utHouseBuilder", "utMountedSerf"],
 	"SiegeWorkshop Order" : ["utBallista","utCatapult","utRam","utWoodenWall"],
-	"Palace Order" : ["utFighter","utTrainedWolf","utTorchMan","utLekter","utMedic","utSpy","utSpikedTrap","utPaladin","utAmmoCart","utPikeMachine","utArcher","utPyro"],
+	"Palace Order" : ["utFighter","utTrainedWolf","utTorchMan","utLekter","utMedic","utSpy","utSpikedTrap","utPaladin","utChampion","utAmmoCart","utPikeMachine","utArcher","utPyro"],
 	"Shipyard Order" : ["utBoat","utShip","utBattleShip"]
 }

@@ -724,7 +724,7 @@ begin
     utSkirmisher: Result := 1185;
     utMountedSerf: Result := 1187;
     utBerserker: Result := 1188;
-    utChampion: Result := 1188;
+    utChampion: Result := 1211;
   else
     if IsCitizen then
       Result := 141 + UNIT_TYPE_TO_ID[fUnitType]
@@ -778,6 +778,7 @@ begin
       utSkirmisher: Result := 1184;
       utMountedSerf: Result := 1186;
       utBerserker: Result := 1189;
+      utChampion: Result := 1210;
     end;
   end;
 end;
@@ -809,7 +810,7 @@ begin
     utFarmer:      Result := 10;
     utStonemason:  Result := 16;
     utFisher:      Result := 14;
-    utBoat:        Result := 5;
+    utBoat:        Result := 7;
   else
     raise Exception.Create(GUIName + ' has no mining range');
   end;
