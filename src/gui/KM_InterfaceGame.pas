@@ -274,7 +274,7 @@ const
     (HouseType: (htStore, htSchool, htInn, htMarket, htNone);                             UnitType: (utSerf, utBuilder))
     ); }
 
-  MapEd_Order: array [0..40] of TKMUnitType = (
+  MapEd_Order: array [0..41] of TKMUnitType = (
     utFighter, utMilitia, utAxeFighter, utSwordFighter, utBowman, utCrossbowman,
     utLanceCarrier, utPikeman, utMaceFighter, utFlailFighter,
     utScout, utKnight,
@@ -282,6 +282,7 @@ const
     utCatapult, utBallista, utRam, utWoodenWall, utMobileTower,
     utAmmoCart, utPikeMachine,
     utTorchMan, utPyro, utLekter, utMedic, utChampion, utPaladin, utArcher, utSpy, utTrainedWolf, utSpikedTrap,
+    utWarfareCart,
     utBoat, utShip, utBattleShip{, utGolem, utGiant});
 
   MapEd_Icon: array [0..26] of Word = (

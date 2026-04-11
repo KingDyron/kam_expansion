@@ -725,6 +725,7 @@ begin
     utMountedSerf: Result := 1187;
     utBerserker: Result := 1188;
     utChampion: Result := 1211;
+    utWarfareCart: Result := 1213;
   else
     if IsCitizen then
       Result := 141 + UNIT_TYPE_TO_ID[fUnitType]
@@ -779,6 +780,7 @@ begin
       utMountedSerf: Result := 1186;
       utBerserker: Result := 1189;
       utChampion: Result := 1210;
+      utWarfareCart: Result := 1212;
     end;
   end;
 end;
@@ -914,9 +916,11 @@ begin
     utMobileTower:       Result := 2276;
     utFeeder:            Result := 2291;
     utHouseBuilder:      Result := 2294;
-    utMountedSerf:      Result := 2322;
-    utSkirmisher:         Result := 2320;
+    utMountedSerf:       Result := 2322;
+    utSkirmisher:        Result := 2320;
     utBerserker:         Result := 2324;
+    utChampion:          Result := 2360;
+    utWarfareCart:       Result := 2361;
   else
     Result := TX_UNITS_NAMES__29 + UNIT_TYPE_TO_ID[fUnitType];
   end;

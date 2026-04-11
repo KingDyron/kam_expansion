@@ -149,18 +149,26 @@ begin
     utFeeder:                     Result := TKMUnitFeeder.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
     utOperator,
     utRecruit:                    Result := TKMUnitRecruit.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
-    WARRIOR_MIN..WARRIOR_MAX:     case aUnitType of
-                                    utSpy        : Result := TKMUnitWarriorSpy.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
+    WARRIOR_MIN..WARRIOR_MAX:   If aUnitType in SIEGE_MACHINES then
+                                begin
+                                  case aUnitType of
+                                    utSpikedTrap    : Result := TKMUnitWarriorSpikedTrap.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
                                     utAmmoCart   : Result := TKMUnitWarriorAmmoCart.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
+                                    utMobileTower: Result := TKMUnitWarriorTower.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
+                                    utRam        : Result := TKMUnitWarriorRam.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
+                                    else
+                                      Result := TKMUnitWarriorMachine.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
+                                  end;
+
+                                end else
+                                case aUnitType of
+                                    utSpy        : Result := TKMUnitWarriorSpy.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
                                     utShip       : Result := TKMUnitWarriorShip.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
-                                    utSpikedTrap : Result := TKMUnitWarriorSpikedTrap.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
                                     utMedic      : Result := TKMUnitWarriorMedic.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
                                     utBattleShip : Result := TKMUnitWarriorBShip.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
                                     utBoat       : Result := TKMUnitWarriorBoat.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
                                     utLekter     : Result := TKMUnitWarriorLekter.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
                                     utPaladin    : Result := TKMUnitWarriorPaladin.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
-                                    utMobileTower: Result := TKMUnitWarriorTower.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
-                                    utRam        : Result := TKMUnitWarriorRam.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
                                     utChampion   : Result := TKMUnitWarriorChampion.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
                                     else Result := TKMUnitWarrior.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
                                   end;
@@ -395,18 +403,26 @@ begin
       utOperator,
       utRecruit:                U := TKMUnitRecruit.Load(LoadStream);
       utFeeder:                 U := TKMUnitFeeder.Load(LoadStream);
-      WARRIOR_MIN..WARRIOR_MAX: case unitType of
+      WARRIOR_MIN..WARRIOR_MAX: If unitType in SIEGE_MACHINES then
+                                begin
+                                  case unitType of
+                                    utSpikedTrap    : U := TKMUnitWarriorSpikedTrap.Load(LoadStream);
+                                    utMobileTower   : U := TKMUnitWarriorTower.Load(LoadStream);
+                                    utRam           : U := TKMUnitWarriorRam.Load(LoadStream);
+                                    utAmmoCart      : U := TKMUnitWarriorAmmoCart.Load(LoadStream);
+                                    else
+                                      U := TKMUnitWarriorMachine.Load(LoadStream);
+                                  end;
+
+                                end else
+                                case unitType of
                                   utSpy           : U := TKMUnitWarriorSpy.Load(LoadStream);
-                                  utAmmoCart      : U := TKMUnitWarriorAmmoCart.Load(LoadStream);
                                   utShip          : U := TKMUnitWarriorShip.Load(LoadStream);
-                                  utSpikedTrap    : U := TKMUnitWarriorSpikedTrap.Load(LoadStream);
                                   utMedic         : U := TKMUnitWarriorMedic.Load(LoadStream);
                                   utBattleShip    : U := TKMUnitWarriorBShip.Load(LoadStream);
                                   utBoat          : U := TKMUnitWarriorBoat.Load(LoadStream);
                                   utLekter        : U := TKMUnitWarriorLekter.Load(LoadStream);
                                   utPaladin       : U := TKMUnitWarriorPaladin.Load(LoadStream);
-                                  utMobileTower   : U := TKMUnitWarriorTower.Load(LoadStream);
-                                  utRam           : U := TKMUnitWarriorRam.Load(LoadStream);
                                   utChampion      : U := TKMUnitWarriorChampion.Load(LoadStream);
                                   else U := TKMUnitWarrior.Load(LoadStream);
                                 end;

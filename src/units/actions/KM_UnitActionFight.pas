@@ -273,29 +273,6 @@ begin
     if fOpponent is TKMUnitWarriorSpy then
       TKMUnitWarriorSpy(fOpponent).SetAttackedTime;//Spy can only attack house
 
-    //Fire the arrow
-    {if fUnit.UnitType = utBattleShip then
-    begin
-      dir := DIR_TO_PREV2[fUnit.Direction];
-      if W.TakeBolt then
-        gProjectiles.AimTarget(fUnit.PositionF, KMPointAffectDir(fOpponent.PositionF, dir, -2), 0.5, W.ProjectileType, fUnit, W.RangeMax, W.RangeMin);//aim to the left
-      if W.TakeBolt then
-        gProjectiles.AimTarget(fUnit.PositionF, KMPointAffectDir(fOpponent.PositionF, dir, -1), 0.5, W.ProjectileType, fUnit, W.RangeMax, W.RangeMin);//aim to the left
-
-      if W.TakeBolt then
-        gProjectiles.AimTarget(fUnit.PositionF, KMPointAffectDir(fOpponent.PositionF, dir, 0), 0.1, W.ProjectileType, fUnit, W.RangeMax, W.RangeMin);//aim directly at opponent
-
-      if W.TakeBolt then
-        gProjectiles.AimTarget(fUnit.PositionF, KMPointAffectDir(fOpponent.PositionF, dir, 1), 0.5, W.ProjectileType, fUnit, W.RangeMax, W.RangeMin);//aim to the right
-      if W.TakeBolt then
-        gProjectiles.AimTarget(fUnit.PositionF, KMPointAffectDir(fOpponent.PositionF, dir, 2), 0.5, W.ProjectileType, fUnit, W.RangeMax, W.RangeMin);//aim to the right
-      {if W.TakeBolt then
-        gProjectiles.AimTarget(fUnit.PositionF, fOpponent.PositionF, 1, W.ProjectileType, fUnit, W.RangeMax, W.RangeMin);//aim directly at opponent
-      if W.TakeBolt then
-        gProjectiles.AimTarget(fUnit.PositionF, KMPointFAdd(fOpponent.PositionF, KMPointF(-2, 0)), 1, W.ProjectileType, fUnit, W.RangeMax, W.RangeMin);//aim a little bit to the left
-      if W.TakeBolt then
-        gProjectiles.AimTarget(fUnit.PositionF, KMPointFAdd(fOpponent.PositionF, KMPointF(2, 0)), 1, W.ProjectileType, fUnit, W.RangeMax, W.RangeMin);//aim a little bit to the right}
-    {end else}
     If (W.UnitType = utCatapult) and gHands[W.Owner].ArmyDevUnlocked(33) then
     begin
       for I := 0 to 2 do
@@ -304,16 +281,6 @@ begin
     end else
       if W.TakeBolt then
         gProjectiles.AimTarget(fUnit.PositionF, fOpponent, W.ProjectileType, fUnit, W.RangeMax, W.RangeMin);
-    {//decrease ammo count
-    if gRes.Units[W.UnitType].CanOrderAmmo then
-      if not W.InfinityAmmo then
-      begin
-        W.BoltCount := W.BoltCount - 1;
-
-        if (gHands[W.Owner].IsComputer) or W.CanOrderAmmoFromCart then
-          if W.BoltCount < 5 then
-            W.OrderAmmo;
-      end;}
 
     fFightDelay := -1; //Reset
   end;
@@ -327,7 +294,7 @@ function TKMUnitActionFight.ExecuteProcessMelee(Step: Byte): Boolean;
     isHit: Boolean;
     damage: Word;
   begin
-    Result := true;
+    Result := false;
     if aUnit = nil then
       Exit(false);
     if aUnit.IsDeadOrDying then
@@ -371,6 +338,16 @@ function TKMUnitActionFight.ExecuteProcessMelee(Step: Byte): Boolean;
           aUnit.HitPointsDecrease(TKMUnitWarrior(fUnit).DamageUnits, fUnit);
     end;
     MakeSound(isHit); //Different sounds for hit and for miss
+    Result := isHit;
+    If IsHit and (aUnit is TKMUnitWarriorMachine) then
+    begin
+      If TKMUnitWarriorMachine(aUnit).DoThornsEffect then
+      begin
+        fUnit.HitPointsDecrease(60, 1, aUnit, false);
+        Result := false;
+      end;
+    end;
+
 
   end;
 var
@@ -391,22 +368,26 @@ begin
   //Melee units place hit on this step
   if {Step = STRIKE_STEP} ArrayContains(Step, gRes.Units[fUnit.UnitType].StrikeSteps) then
   begin
-    HitUnit(fOpponent);
+    If not HitUnit(fOpponent) then
+      Exit(true);
 
     if fUnit.UnitType = utPikeMachine then
     begin
       aLoc := KMPointDir(fUnit.Position, fUnit.Direction);
       aLoc.Dir := DIR_TO_NEXT[aLoc.Dir];
-      HitUnit(gTerrain.GetUnit(aLoc.DirFaceLoc));
+      If not HitUnit(gTerrain.GetUnit(aLoc.DirFaceLoc)) then
+        Exit(true);
       aLoc.Dir := DIR_TO_PREV2[aLoc.Dir];
-      HitUnit(gTerrain.GetUnit(aLoc.DirFaceLoc));
+      If not HitUnit(gTerrain.GetUnit(aLoc.DirFaceLoc)) then
+        Exit(true);
     end else
     if fUnit.UnitType = utFlailFighter then
     begin
       aLoc := KMPointDir(fUnit.Position, fUnit.Direction);
       aLoc.Loc := aLoc.DirFaceLoc;
       aLoc.Loc := aLoc.DirFaceLoc;
-      HitUnit(gTerrain.GetUnit(aLoc.Loc));
+      If not HitUnit(gTerrain.GetUnit(aLoc.Loc)) then
+        Exit(true);
     end;
   end;
 

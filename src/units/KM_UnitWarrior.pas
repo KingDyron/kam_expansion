@@ -248,7 +248,19 @@ type
 
   end;
 
-  TKMUnitWarriorAmmoCart = class(TKMUnitWarrior)
+  TKMUnitWarriorMachine = class(TKMUnitWarrior)
+    private
+      fOnFire : Boolean;
+    public
+      procedure HitPointsDecrease(aAmount: Byte; aAttacker: TKMUnit); override;
+      function DoThornsEffect : Boolean;
+      constructor Load(LoadStream: TKMemoryStream); override;
+      function UpdateState : Boolean; override;
+      procedure Save(SaveStream: TKMemoryStream); override;
+      procedure SetOnFire;
+  end;
+
+  TKMUnitWarriorAmmoCart = class(TKMUnitWarriorMachine)
   private
     fAmmo : array[TKMUnitAmmoType] of Word;
     fAmmoRequested : array[TKMUnitAmmoType] of Boolean;
@@ -273,7 +285,7 @@ type
     function ObjToString(const aSeparator: String = '|'): String; override;
   end;
 
-  TKMUnitWarriorSpikedTrap = class(TKMUnitWarrior)
+  TKMUnitWarriorSpikedTrap = class(TKMUnitWarriorMachine)
     private
       fAnimKill,
       fStayTime : Word;
@@ -438,7 +450,7 @@ type
     procedure OrderAttackHouse(aTargetHouse: TKMHouse; aForced: Boolean = True);override;
   end;
 
-  TKMUnitWarriorTower = class(TKMUnitWarrior)
+  TKMUnitWarriorTower = class(TKMUnitWarriorMachine)
   private
     const
       MAX_ARCHERS = 4;
@@ -452,7 +464,7 @@ type
     function UpdateState : Boolean; override;
   end;
 
-  TKMUnitWarriorRam = class(TKMUnitWarrior)
+  TKMUnitWarriorRam = class(TKMUnitWarriorMachine)
   private
     fRamTicker : Byte;
   public
@@ -2744,87 +2756,67 @@ begin
     else
       SetRageTime(150);//15 secs of special damage and defense
   end;
-
-  {if fRageDuration > 0 then
-  begin
-    Dec(fRageDuration);
-
-    if fRageDuration = 0 then
-      fToRageTime := 1200;
-  end else
-  begin
-    if fToRageTime > 0 then
-      Dec(fToRageTime);
-    if (fToRageTime = 0) and InFight then
-      fRageDuration := 150;//15 secs of special damage and defense
-
-  end;}
-
 end;
 
 constructor TKMUnitWarriorPaladin.Load(LoadStream: TKMemoryStream);
 begin
   Inherited;
-  //LoadStream.Read(fRageDuration);
-  //LoadStream.Read(fToRageTime);
 end;
 
 procedure TKMUnitWarriorPaladin.Save(SaveStream: TKMemoryStream);
 begin
   Inherited;
-  //SaveStream.Write(fRageDuration);
-  //SaveStream.Write(fToRageTime);
 end;
 
 procedure TKMUnitWarriorPaladin.PaintUnit(aTickLag: Single);
-{var
-  V: TKMUnitVisualState;
-  act: TKMUnitActionType;
-  unitPos: TKMPointF;
-  fillColor, lineColor: Cardinal; }
 begin
   Inherited;
-  {if not (fType in [utSpy, utSpikedTrap, utMedic]) then
-  begin}
+end;
 
-  {V := fVisual.GetLerp(aTickLag);
+procedure TKMUnitWarriorMachine.HitPointsDecrease(aAmount: Byte; aAttacker: TKMUnit);
+begin
+  {If (aAttacker <> nil)
+  and (aAttacker is TKMUnitWarrior)
+  and not TKMUnitWarrior(aAttacker).IsRanged
+  and (fGroup <> nil)
+  and TKMUnitGroup(fGroup).HasUnitType(utWarfareCart) then
+    aAttacker.HitPointsDecrease(45, 2, self, false);}
 
-  act := V.Action;
-  unitPos.X := V.PositionF.X + UNIT_OFF_X + V.SlideX;
-  unitPos.Y := V.PositionF.Y + UNIT_OFF_Y + V.SlideY;
-  }
-  {if fRageDuration > 0 then
-  begin
+  Inherited;
+end;
 
-    gRenderPool.AddAnimation(unitPos + KMPointF(0.3, -2.3), gRes.Units.RageAnim, fTicker,
-                            IfThen(FlagColor <> 0, FlagColor, gHands[Owner].GameFlagColor), rxUnits,
-                            false, false, 0, true);
-  end;}
-  {gRenderPool.AddUnit(fType, UID, act, V.Dir, V.AnimStep, V.AnimFraction, unitPos.X, unitPos.Y, IfThen(FlagColor <> 0, FlagColor, gHands[Owner].GameFlagColor), True);
+function TKMUnitWarriorMachine.DoThornsEffect : Boolean;
+begin
+  Result := (fGroup <> nil)
+            and TKMUnitGroup(fGroup).HasUnitType(utWarfareCart);
+end;
 
-  if (fThought <> thNone) then
-    gRenderPool.AddUnitThought(fType, act, V.Dir, V.AnimStep, fThought, unitPos.X, unitPos.Y)
-  else
-  if (gGameParams.IsMapEditor and BitinAdded) then
-    gRenderPool.AddUnitThought(fType, act, V.Dir, thArmor, unitPos.X, unitPos.Y);
+constructor TKMUnitWarriorMachine.Load(LoadStream: TKMemoryStream);
+begin
+  Inherited;
+  LoadStream.Read(fOnFire);
+end;
 
+function TKMUnitWarriorMachine.UpdateState : Boolean;
+begin
+  Result := Inherited;
+  If IsDeadOrDying then
+    Exit;
 
+  If fOnFire then
+    If fTicker mod 20 = 0 then
+      HitPointsDecrease(85, 1, nil, false);
+end;
 
-  if SHOW_ATTACK_RADIUS or (mlUnitsAttackRadius in gGameParams.VisibleLayers) then
-    if IsRanged then
-    begin
-      fillColor := $40FFFFFF;
-      lineCOlor := icWhite;
-      if (gMySpectator.Selected = Self)
-        or ((gMySpectator.Selected is TKMUnitGroup)
-          and (TKMUnitGroup(gMySpectator.Selected).FlagBearer = Self)) then
-      begin
-        fillColor := icRed and fillColor;
-        lineColor := icCyan;
-      end;
+procedure TKMUnitWarriorMachine.Save(SaveStream: TKMemoryStream);
+begin
+  Inherited;
+  SaveStream.Write(fOnFire);
+end;
 
-      gRenderPool.RenderDebug.RenderTiledArea(Position, GetFightMinRange, GetFightMaxRange, GetLength, fillColor, lineColor);
-    end;}
+procedure TKMUnitWarriorMachine.SetOnFire;
+begin
+  fOnFire := true;
 end;
 
 constructor TKMUnitWarriorAmmoCart.Create(aID: Cardinal; aUnitType: TKMUnitType; const aLoc: TKMPointDir; aOwner: ShortInt; aInHouse: TKMHouse);
@@ -3539,8 +3531,8 @@ begin
   if IsIdle then
   begin
     fStayTime := EnsureRange(fStayTime + 1, 0, 250);
-    for I := 1 to TKMUnitGroup(Group).UnitTypeCount(utMedic) do
-      fStayTime := EnsureRange(fStayTime + 1, 0, 250);
+    fStayTime := EnsureRange(fStayTime + TKMUnitGroup(Group).UnitTypeCount(utMedic) + TKMUnitGroup(Group).UnitTypeCount(utWarfareCart) * 5,
+                              0, 250);
   end
   else
     fStayTime := 0;

@@ -260,8 +260,8 @@ type
     procedure OwnerUpdate(aOwner: TKMHandID; aMoveToNewOwner: Boolean = False);
     procedure DoHitFrom(aAttacker : TKMUnit);
     procedure HitPointsChangeFromScript(aAmount: Integer);
-    procedure HitPointsDecrease(aAmount: Byte; aAttacker: TKMUnit); overload;
-    procedure HitPointsDecrease(aAttack, aDamage : Integer; aAttacker : TKMUnit;aInstantKill : Boolean = false); overload;
+    procedure HitPointsDecrease(aAmount: Byte; aAttacker: TKMUnit); overload; virtual;
+    procedure HitPointsDecrease(aAttack, aDamage : Integer; aAttacker : TKMUnit;aInstantKill : Boolean = false); overload; virtual;
     property  HitPointsMax: Byte read GetHitPointsMax write fHitPointsMax;
     procedure SetHitTime; virtual;
     property  Attack : SmallInt read GetAttack write SetAttack;
