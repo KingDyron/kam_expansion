@@ -733,7 +733,7 @@ begin
 
   Panel_GameOptions := TKMPanel.Create(Panel_SetupOptions, 0, 0, Panel_SetupOptions.Width, 150);
   TKMBevel.Create(Panel_GameOptions, 0, 0, Panel_GameOptions.Width, Panel_GameOptions.Height);
-    TrackBar_LobbyPeacetime := TKMTrackBar.Create(Panel_GameOptions, 10, 0, 250, 0, 120);
+    TrackBar_LobbyPeacetime := TKMTrackBar.Create(Panel_GameOptions, 10, 0, 250, 0, 240);
     TrackBar_LobbyPeacetime.Anchors := [anLeft,anBottom];
     TrackBar_LobbyPeacetime.Caption := gResTexts[TX_LOBBY_PEACETIME];
     TrackBar_LobbyPeacetime.Step := 5; //Round to 5min steps
