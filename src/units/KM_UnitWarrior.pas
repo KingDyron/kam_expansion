@@ -4246,6 +4246,8 @@ begin
     newEnemy := gTerrain.GetUnit(LocDir.Loc);
     if newEnemy <> nil then
     begin
+      If (newEnemy is TKMUnitWarrior) then
+        TKMUnitWarrior(newEnemy).SetRageTime(0);
       newEnemy.DoHitFrom(self);
       Break;
     end;
