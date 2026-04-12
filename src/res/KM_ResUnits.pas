@@ -29,13 +29,6 @@ type
 
   TKMUnitSpriteNew = array [TKMUnitActionType, dirN..dirNW] of TKMAnimation;//TKMAnimation can have more steps
 
-  TKMUnitSpecInfo = record
-    StepsPerTile: Byte;
-    StepsPerTileDiag: Byte;
-    StepsPerTileStorm: Byte;
-    StepsPerTileStormDiag: Byte;
-  end;
-
   TKMUnitShipSketch = array[dirN..dirNW] of TKMAnimLoop;
 
   TKMUnitSprite2 = array [1..18] of SmallInt; //Sound indices vs sprite ID
@@ -58,7 +51,7 @@ type
   private
     fUnitType: TKMUnitType;
     fUnitDat: TKMUnitDat;
-    fUnitSpecInfo: TKMUnitSpecInfo;
+    //fUnitSpecInfo: TKMUnitSpecInfo;
     //fUnitSprite: TKMUnitSprite;
     //fUnitSprite2: TKMUnitSprite2;
     fUnitSpriteNew : TKMUnitSpriteNew;
@@ -73,7 +66,7 @@ type
     function GetGUIScroll: Word;
     function GetMinimapColor: Cardinal;
     function GetMiningRange: Byte;
-    function GetSpeed: Single;
+    function GetSpeed: Byte;
     function GetUnitAnim(aAction: TKMUnitActionType; aDir: TKMDirection): TKMAnimation;
     function GetUnitTextID: Integer;
     function GetUnitName: UnicodeString;
@@ -137,10 +130,7 @@ type
     property GUIScroll: Word read GetGUIScroll;
     property MinimapColor: Cardinal read GetMinimapColor;
     property MiningRange: Byte read GetMiningRange;
-    property Speed: Single read GetSpeed;
-    function GetEffectiveSpeed(aMovementType: TKMUnitMoveType): Single;
-    function GetEffectiveWalkSpeed(aIsDiag: Boolean): Single;
-    function GetEffectiveStormSpeed(aIsDiag: Boolean): Single;
+    property Speed: Byte read GetSpeed;
     function SupportsAction(aAct: TKMUnitActionType): Boolean;
     property UnitAnim[aAction: TKMUnitActionType; aDir: TKMDirection]: TKMAnimation read GetUnitAnim;
     property GUIName: UnicodeString read GetUnitName;
@@ -309,9 +299,6 @@ uses
   KromUtils, KM_ResTexts, KM_CommonUtils, KM_CommonClassesExt, KM_Resource,
   KM_JSONUtils, KM_CommonShellUtils,
   Math, Windows;
-
-const
-  STORM_SPEEDUP = 1.5;
 
 
 { TKMUnitsDatClass }
@@ -819,42 +806,10 @@ begin
 end;
 
 
-function TKMUnitSpec.GetSpeed: single;
+function TKMUnitSpec.GetSpeed: Byte;
 begin
-  Result := fUnitDat.Speed / 240;
+  Result := fUnitDat.Speed;
 end;
-
-
-function TKMUnitSpec.GetEffectiveSpeed(aMovementType: TKMUnitMoveType): Single;
-begin
-  case aMovementType of
-    umtWalk:      Result := 1 / fUnitSpecInfo.StepsPerTile;
-    umtWalkDiag:  Result := 1 / fUnitSpecInfo.StepsPerTileDiag;
-    umtStorm:     Result := 1 / fUnitSpecInfo.StepsPerTileStorm;
-    umtStormDiag: Result := 1 / fUnitSpecInfo.StepsPerTileStormDiag;
-  else
-    raise Exception.Create('Unexpected type');
-  end;
-end;
-
-
-function TKMUnitSpec.GetEffectiveWalkSpeed(aIsDiag: Boolean): Single;
-begin
-  if aIsDiag then
-    Result := GetEffectiveSpeed(umtWalkDiag)
-  else
-    Result := GetEffectiveSpeed(umtWalk);
-end;
-
-
-function TKMUnitSpec.GetEffectiveStormSpeed(aIsDiag: Boolean): Single;
-begin
-  if aIsDiag then
-    Result := GetEffectiveSpeed(umtStormDiag)
-  else
-    Result := GetEffectiveSpeed(umtStorm);
-end;
-
 
 function TKMUnitSpec.GetUnitAnim(aAction: TKMUnitActionType; aDir: TKMDirection): TKMAnimation;
 begin
@@ -1104,11 +1059,6 @@ begin
     if not TKMEnumUtils.TryGetAs<TKMFightType>(aUnit.S['FightType'],  FightType) then
       raise Exception.Create('Wrong TKMFightType: ' + aUnit.S['FightType']);
 
-  {fUnitSpecInfo.StepsPerTile          := Round(1    / fUnitDat.Speed);
-  fUnitSpecInfo.StepsPerTileDiag      := Round(1.41 / fUnitDat.Speed);
-  fUnitSpecInfo.StepsPerTileStorm     := Round(1    / (fUnitDat.Speed * STORM_SPEEDUP));
-  fUnitSpecInfo.StepsPerTileStormDiag := Round(1.41 / (fUnitDat.Speed * STORM_SPEEDUP));}
-
   nArr := aUnit.A['StrikeSteps'];
 
   JSONArrToValidSet(aUnit.A['ProducesWares'], ProducesWares);
@@ -1317,10 +1267,6 @@ begin
   begin
     If fItems[UT].fUnitDat.Speed < 4 then
       fItems[UT].fUnitDat.Speed := 8;
-    fItems[UT].fUnitSpecInfo.StepsPerTile          := Round(1    / fItems[UT].Speed);
-    fItems[UT].fUnitSpecInfo.StepsPerTileDiag      := Round(1.41 / fItems[UT].Speed);
-    fItems[UT].fUnitSpecInfo.StepsPerTileStorm     := Round(1    / (fItems[UT].Speed * STORM_SPEEDUP));
-    fItems[UT].fUnitSpecInfo.StepsPerTileStormDiag := Round(1.41 / (fItems[UT].Speed * STORM_SPEEDUP));
   end;
 
   CalculateTroopTrainOrder;

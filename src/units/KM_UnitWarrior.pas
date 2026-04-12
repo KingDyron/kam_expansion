@@ -96,6 +96,7 @@ type
     function IsSelected : Boolean; override;
     function RageDelay : Word; virtual;
     function GetMaxFireDelay(aUnitType : TKMUnitType) : byte;virtual;
+    function GetSpeed : byte; override;
 
   public
     OnWarriorDismissed: TKMWarriorEvent; //Separate event from OnUnitDied to report to Group
@@ -184,7 +185,6 @@ type
     function CanOrderAmmo : Boolean; Virtual;
     procedure AddBitin(aCount : Integer = 1);
     function IsAttackingUnit(aUnit: TKMUnit): Boolean;
-    function GetEffectiveWalkSpeed(aIsDiag: Boolean): Single; override;
     property NextOrder : TKMWarriorOrder  read fNextOrder;
     property CurrentOrder : TKMWarriorOrder  read fOrder;
 
@@ -1830,21 +1830,22 @@ begin
     Result := Result + 40;
 end;
 
-function TKMUnitWarrior.GetEffectiveWalkSpeed(aIsDiag: Boolean): Single;
+function TKMUnitWarrior.GetSpeed: Byte;
 begin
   Result := inherited;
 
-  {if not (UnitType in SPECIAL_UNITS) then
-    if UNIT_TO_GROUP_TYPE[UnitType] = gtMounted then
-      if fGroup <> nil then
-        if TKMUnitGroup(fGroup).HasUnitType(utTrainedWolf) then
-          Result := Result + 1/((1 + byte(aIsDiag) * 0.41) / (3/240)); //add 3 to speed if there is wolf in the group}
-
   If (UnitType in UNITS_SHIPS) and gHands[Owner].ArmyDevUnlocked(2) then
-    Result := Result + 1/((1 + byte(aIsDiag) * 0.41) / (4/240));
-
+    Result := Result + 4;
   If (UnitType = utVagabond) and gHands[Owner].ArmyDevUnlocked(28) then
-    Result := Result + 1/((1 + byte(aIsDiag) * 0.41) / (3/240));
+    Result := Result + 4;
+  If not (UnitType in SPECIAL_UNITS) then
+  begin
+    If TKMUnitGroup(fGroup).HasUnitType(utChampion) then
+      Result := Result + 4
+    else
+    If TKMUnitGroup(fGroup).HasUnitType(utWarfareCart) then
+      Result := Result + 4;
+  end;
 end;
 
 function TKMUnitWarrior.CanJoinToGroup(aGroup: Pointer): Boolean;

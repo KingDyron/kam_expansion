@@ -125,8 +125,7 @@ type
     fAttack, fAttackHorse, fDefence, fSight : SmallInt;
     fProjectileDefence : Single;
     fHitPointsMax : Byte;
-    fSpeed : Single;
-    fStepsPerTile, fStepsPerTileDiag, fStepsPerTileStorm, fStepsPerTileStormDiag : SmallInt;
+    fSpeed : Byte;
     fConditionPace : Cardinal;
     fVisual: TKMUnitVisual;
     fNeverHungry : Boolean;
@@ -158,11 +157,14 @@ type
     procedure UpdateLastTimeTrySetActionWalk;
     function GetUnitSpec : TKMUnitSpec;
     function IsSelected : Boolean; virtual;
+    function GetSpeedF : Single;
+    function GetSpeedFStorm : Single;
   private
     function GetTask: TKMUnitTask;
     function GetInHouse: TKMHouse;
   protected
     fSpecialEffect : TKMUnitEffect;
+    function GetSpeed : Byte; virtual;
     function GetInstance: TKMUnit; override;
     function GetPositionForDisplayF: TKMPointF; override;
     procedure SetPositionF(const aPositionF: TKMPointF);
@@ -198,7 +200,6 @@ type
     //Could be used only in UI
     procedure DismissStarted;
     property DismissInProgress: Boolean read fDismissInProgress write fDismissInProgress;
-    procedure UpdateSpeed;
 
     procedure CloseUnit(aRemoveTileUsage: Boolean = True); virtual;
     property NeverHungry : Boolean read fNeverHungry write fNeverHungry;
@@ -268,7 +269,7 @@ type
     property  AttackHorse : SmallInt read  fAttackHorse write fAttackHorse;
     property  Defence : SmallInt read  GetDefence write SetDefence;
     property  ProjectilesDefence : Single read  fProjectileDefence write fProjectileDefence;
-    property  Speed : Single read fSpeed;
+    property  Speed : Byte read fSpeed;
     property  Sight : SmallInt read GetSight write fSight;
     function GetProjectileDefence(isBolt : Boolean) : Single; virtual;
     procedure SetSpeed(aValue : SmallInt; addTo : Boolean = false);
@@ -401,6 +402,7 @@ type
   protected
     procedure PaintUnit(aTickLag: Single); override;
     function GetDesiredPassability: TKMTerrainPassability; override;
+    function GetSpeed : Byte; override;
   public
     constructor Create(aID: Cardinal; aUnitType: TKMUnitType; const aLoc: TKMPointDir; aOwner: TKMHandID; aInHouse: TKMHouse);
     constructor Load(LoadStream: TKMemoryStream); override;
@@ -416,7 +418,6 @@ type
     property Carry: TKMWareType read GetCarry;
     procedure CarryGive(aWare: TKMWareType);
     procedure CarryTake;
-    function GetEffectiveWalkSpeed(aIsDiag: Boolean): Single; override;
 
     function ObjToString(const aSeparator: String = '|'): String; override;
 
@@ -427,13 +428,14 @@ type
     protected
       procedure PaintUnit(aTickLag: Single); override;
       function GetDesiredPassability: TKMTerrainPassability; override;
+      function GetSpeed : Byte; override;
     public
-      function GetEffectiveWalkSpeed(aIsDiag: Boolean): Single; override;
   end;
   //Worker class - builds everything in game
   TKMUnitWorker = class(TKMCivilUnit)
   protected
     procedure PaintUnit(aTickLag: Single); override;
+    function GetSpeed: Byte; override;
   public
     procedure BuildStructure(aStructure : TKMStructure; aIndex: Integer);
     procedure BuildPearl(aHouse: TKMHouse; aIndex: Integer);
@@ -447,7 +449,6 @@ type
     function PickNextSpot(aList: TKMPointDirList; out Loc: TKMPointDir; var aLastCellID : Byte): Boolean;
 
     function OnlyBuildsHouse : Boolean;
-    function GetEffectiveWalkSpeed(aIsDiag: Boolean): Single; override;
 
     function UpdateState: Boolean; override;
   end;
@@ -1355,23 +1356,9 @@ begin
   //SetSpeed(28);
 end;
 
-function TKMUnitSerf.GetEffectiveWalkSpeed(aIsDiag: Boolean): Single;
-var fCarrySpeed : Integer;
+function TKMUnitSerf.GetSpeed : Byte;
 begin
-  if aIsDiag then
-    Result := GetEffectiveSpeed(umtWalkDiag)
-  else
-    Result := GetEffectiveSpeed(umtWalk);
-
-  fCarrySpeed := SERF_WARE_SPEED_DECREASE[Carry];
-
-  case gTerrain.GetRoadType(fPositionRound) of
-    rtWooden: If gHands[Owner].BuildDevUnlocked(6) then fCarrySpeed := -1;
-    rtStone : fCarrySpeed := fCarrySpeed - 2;
-    rtClay: fCarrySpeed := fCarrySpeed - 5;
-    rtExclusive: fCarrySpeed := -5;
-  end;
-  Result := Result - ConvertSpeed(fCarrySpeed, aIsDiag);
+  Result := Inherited - SERF_WARE_SPEED_DECREASE[Carry];
 end;
 
 function TKMUnitMountedSerf.GetDesiredPassability: TKMTerrainPassability;
@@ -1380,21 +1367,9 @@ begin
   //Result := tpWalk;
 end;
 
-function TKMUnitMountedSerf.GetEffectiveWalkSpeed(aIsDiag: Boolean): Single;
-var fCarrySpeed : Integer;
+function TKMUnitMountedSerf.GetSpeed: Byte;
 begin
-  if aIsDiag then
-    Result := GetEffectiveSpeed(umtWalkDiag)
-  else
-    Result := GetEffectiveSpeed(umtWalk);
-  fCarrySpeed := 0;
-  case gTerrain.GetRoadType(fPositionRound) of
-    rtWooden: If gHands[Owner].BuildDevUnlocked(6) then fCarrySpeed := -1;
-    rtStone : fCarrySpeed := fCarrySpeed - 2;
-    rtClay: fCarrySpeed := fCarrySpeed - 5;
-    rtExclusive: fCarrySpeed := -5;
-  end;
-  Result := Result - ConvertSpeed(fCarrySpeed, aIsDiag);
+  Result := Inherited + SERF_WARE_SPEED_DECREASE[Carry];
 end;
 
 procedure TKMUnitMountedSerf.PaintUnit(aTickLag: Single);
@@ -1428,12 +1403,13 @@ begin
   Result := UnitType = utHouseBuilder;
 end;
 
-function TKMUnitWorker.GetEffectiveWalkSpeed(aIsDiag: Boolean): Single;
+
+function TKMUnitWorker.GetSpeed: Byte;
 begin
   Result := Inherited;
-
   If gHands[Owner].BuildDevUnlocked(14) then
-    Result := Result - ConvertSpeed(-2, aIsDiag);
+    Result := Result + 4;
+
 end;
 
 procedure TKMUnitWorker.BuildHouse(aHouse: TKMHouse; aIndex: Integer);
@@ -2061,7 +2037,6 @@ begin
   fHitPointsMax := gRes.Units[fType].HitPoints;
   fHitPoints      := HitPointsMax;
   fProjectileDefence := gRes.Units[fType].ProjectileDefence;
-  UpdateSpeed;
 
   //Must be locked for this initial pause so animals don't get pushed
   if IsAnimal then
@@ -2226,7 +2201,6 @@ begin
   LoadStream.Read(fSpeed);
   LoadStream.Read(fProjectileDefence);
 
-  UpdateSpeed;
   LoadStream.Read(InstantKill);
   LoadStream.Read(IsHero);
   LoadStream.Read(fConditionPace);
@@ -2256,19 +2230,6 @@ begin
   fVisual := TKMUnitVisual.Create(Self);
 end;
 
-procedure TKMUnit.UpdateSpeed;
-var
-  A : Single;
-begin
-    A := fSpeed;
-
-    fStepsPerTile          := Round(1    / A);
-    fStepsPerTileDiag      := Round(1.41 / A);
-    fStepsPerTileStorm     := Round(1    / (A * 1.5));
-    fStepsPerTileStormDiag := Round(1.41 / (A * 1.5));
-
-end;
-
 function TKMUnit.ConvertSpeed(aSpeed : Integer; aIsDiag: Boolean) : Single;
 begin
   if aSpeed = 0 then
@@ -2281,10 +2242,10 @@ end;
 function TKMUnit.GetEffectiveSpeed(aMovementType: TKMUnitMoveType): Single;
 begin
   case aMovementType of
-    umtWalk:      Result := 1 / fStepsPerTile;
-    umtWalkDiag:  Result := 1 / fStepsPerTileDiag;
-    umtStorm:     Result := 1 / fStepsPerTileStorm;
-    umtStormDiag: Result := 1 / fStepsPerTileStormDiag;
+    umtWalk:      Result := 1 / (1 / GetSpeedF);
+    umtWalkDiag:  Result := 1 / (1.41 / GetSpeedF);
+    umtStorm:     Result := 1 / (1 / GetSpeedFStorm);
+    umtStormDiag: Result := 1 / (1.41 / GetSpeedFStorm);
   else
     raise Exception.Create('Unexpected type');
   end;
@@ -2298,30 +2259,7 @@ begin
     Result := GetEffectiveSpeed(umtWalkDiag)
   else
     Result := GetEffectiveSpeed(umtWalk);
-  //Exit;
-  addSpeed := 0;
-  case gTerrain.GetRoadType(fPositionRound) of
-    rtWooden: If gHands[Owner].BuildDevUnlocked(6) then addSpeed := -1;
-    rtStone : addSpeed := -2;
-    rtClay: addSpeed := -4;
-    rtExclusive: addSpeed := -10;
-  end;
-  Inc(addSpeed, -6 * byte(fSpecialEffect.EffectType = uetSpeedUp));
-  Result := Result - ConvertSpeed(addSpeed, aIsDiag);
 
-  //It needs 10 seconds to "hide the bow". Slow down the speed so it make Archer less OP
-  {if fType = utArcher then
-    if gGameParams.Tick < (TKMUnitWarrior(self).LastShootTime + 25) then
-      Result := Result / 4
-    else
-    if gGameParams.Tick < (TKMUnitWarrior(self).LastShootTime + 50) then
-      Result := Result / 3
-    else
-    if gGameParams.Tick < (TKMUnitWarrior(self).LastShootTime + 75) then
-      Result := Result / 2.2
-    else
-    if gGameParams.Tick < (TKMUnitWarrior(self).LastShootTime + 100) then
-      Result := Result / 1.5;}
 end;
 
 
@@ -2824,20 +2762,12 @@ begin
 end;
 
 procedure TKMUnit.SetSpeed(aValue: SmallInt; addTo: Boolean = false);
-var A : Single;
 begin
-  if addTo then
-  begin
-    A := fSpeed * 240;
+  If addTo then
+    fSpeed := EnsureRange(fSpeed + aValue, 8, 50)
+  else
+    fSpeed := EnsureRange(aValue, 8, 50);
 
-    fSpeed := (A + aValue) / 240;
-    UpdateSpeed;
-
-  end else
-  begin
-    fSpeed := aValue / 240;
-    UpdateSpeed;
-  end;
 end;
 
 function TKMUnit.GetStats : TKMUnitStats;
@@ -2852,7 +2782,7 @@ begin
   Result.AttackHorse := fAttackHorse;
   Result.HP := fHitPoints;
   Result.MaxHP := fHitPointsMax;
-  Result.Speed := Round(fSpeed * 240);
+  Result.Speed := fSpeed;
   Result.Sight := fSight;
   Result.Condition := Condition;
   Result.DamageHouse := 0;
@@ -3732,6 +3662,30 @@ begin
   fAttack := Max(aValue, 1);
 end;
 
+function TKMUnit.GetSpeed : Byte;
+begin
+  Result := fSpeed;
+
+  case gTerrain.GetRoadType(fPositionRound) of
+    rtWooden: If gHands[Owner].BuildDevUnlocked(6) then Result := Result + 1;
+    rtStone :  Result := Result + 2;
+    rtClay:  Result := Result + 4;
+    rtExclusive: Result := Result + 10;
+  end;
+  If fSpecialEffect.EffectType = uetSpeedUp then
+    Result := Result + 6;
+end;
+
+function TKMUnit.GetSpeedF : Single;
+begin
+  Result := GetSpeed / 240;
+end;
+
+function TKMUnit.GetSpeedFStorm : Single;
+begin
+  Result := GetSpeedF * 1.5;
+end;
+
 function TKMUnit.GetSlide(aCheck: TKMCheckAxis): Single;
 var
   dY, dX, pixelPos, lookupDiagonal: ShortInt;
@@ -3928,7 +3882,7 @@ begin
                     BoolToStr(fVisible, True), aSeparator,
                     AnimStep, aSeparator,
                     BoolToStr(BlockWalking, True), aSeparator,
-                    Round(fSpeed * 240), aSeparator]);
+                    fSpeed, aSeparator]);
 end;
 
 
