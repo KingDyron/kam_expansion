@@ -252,7 +252,6 @@ type
     private
       fOnFire : Boolean;
     public
-      procedure HitPointsDecrease(aAmount: Byte; aAttacker: TKMUnit); override;
       function DoThornsEffect : Boolean;
       constructor Load(LoadStream: TKMemoryStream); override;
       function UpdateState : Boolean; override;
@@ -2770,18 +2769,6 @@ end;
 
 procedure TKMUnitWarriorPaladin.PaintUnit(aTickLag: Single);
 begin
-  Inherited;
-end;
-
-procedure TKMUnitWarriorMachine.HitPointsDecrease(aAmount: Byte; aAttacker: TKMUnit);
-begin
-  {If (aAttacker <> nil)
-  and (aAttacker is TKMUnitWarrior)
-  and not TKMUnitWarrior(aAttacker).IsRanged
-  and (fGroup <> nil)
-  and TKMUnitGroup(fGroup).HasUnitType(utWarfareCart) then
-    aAttacker.HitPointsDecrease(45, 2, self, false);}
-
   Inherited;
 end;
 

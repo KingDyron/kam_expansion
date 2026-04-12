@@ -289,12 +289,12 @@ end;
 
 //A result of True means exit from Execute
 function TKMUnitActionFight.ExecuteProcessMelee(Step: Byte): Boolean;
-  function HitUnit(aUnit : TKMUnit) : Boolean;
+  function HitUnit(aUnit : TKMUnit; var StopExec : Boolean) : Boolean;
   var
     isHit: Boolean;
     damage: Word;
   begin
-    Result := false;
+    Result := true;
     if aUnit = nil then
       Exit(false);
     if aUnit.IsDeadOrDying then
@@ -338,13 +338,12 @@ function TKMUnitActionFight.ExecuteProcessMelee(Step: Byte): Boolean;
           aUnit.HitPointsDecrease(TKMUnitWarrior(fUnit).DamageUnits, fUnit);
     end;
     MakeSound(isHit); //Different sounds for hit and for miss
-    Result := isHit;
     If IsHit and (aUnit is TKMUnitWarriorMachine) then
     begin
       If TKMUnitWarriorMachine(aUnit).DoThornsEffect then
       begin
-        fUnit.HitPointsDecrease(60, 1, aUnit, false);
-        Result := false;
+        fUnit.HitPointsDecrease(90, 2, aUnit, false);
+        StopExec := true;
       end;
     end;
 
@@ -352,9 +351,10 @@ function TKMUnitActionFight.ExecuteProcessMelee(Step: Byte): Boolean;
   end;
 var
   aLoc : TKMPointDir;
+  doStop : Boolean;
 begin
   Result := False;
-
+  doStop := false;
   if Step = 1 then
   begin
     //Tell the Opponent we are attacking him
@@ -368,29 +368,30 @@ begin
   //Melee units place hit on this step
   if {Step = STRIKE_STEP} ArrayContains(Step, gRes.Units[fUnit.UnitType].StrikeSteps) then
   begin
-    If not HitUnit(fOpponent) then
-      Exit(true);
-
-    if fUnit.UnitType = utPikeMachine then
+    HitUnit(fOpponent, doStop);
+    If not doStop then
     begin
-      aLoc := KMPointDir(fUnit.Position, fUnit.Direction);
-      aLoc.Dir := DIR_TO_NEXT[aLoc.Dir];
-      If not HitUnit(gTerrain.GetUnit(aLoc.DirFaceLoc)) then
-        Exit(true);
-      aLoc.Dir := DIR_TO_PREV2[aLoc.Dir];
-      If not HitUnit(gTerrain.GetUnit(aLoc.DirFaceLoc)) then
-        Exit(true);
-    end else
-    if fUnit.UnitType = utFlailFighter then
-    begin
-      aLoc := KMPointDir(fUnit.Position, fUnit.Direction);
-      aLoc.Loc := aLoc.DirFaceLoc;
-      aLoc.Loc := aLoc.DirFaceLoc;
-      If not HitUnit(gTerrain.GetUnit(aLoc.Loc)) then
-        Exit(true);
+      if fUnit.UnitType = utPikeMachine then
+      begin
+        aLoc := KMPointDir(fUnit.Position, fUnit.Direction);
+        aLoc.Dir := DIR_TO_NEXT[aLoc.Dir];
+        If not doStop then
+          HitUnit(gTerrain.GetUnit(aLoc.DirFaceLoc), doStop);
+        aLoc.Dir := DIR_TO_PREV2[aLoc.Dir];
+        If not doStop then
+          HitUnit(gTerrain.GetUnit(aLoc.DirFaceLoc), doStop);
+      end else
+      if fUnit.UnitType = utFlailFighter then
+      begin
+        aLoc := KMPointDir(fUnit.Position, fUnit.Direction);
+        aLoc.Loc := aLoc.DirFaceLoc;
+        aLoc.Loc := aLoc.DirFaceLoc;
+        If not doStop then
+          HitUnit(gTerrain.GetUnit(aLoc.Loc), doStop);
+      end;
     end;
   end;
-
+  Result := doStop;
   //In KaM melee units pause for 1 tick on Steps [0,3,6]. Made it random so troops are not striking in sync,
   //plus it adds randomness to battles
   if Step in [0,3,6] then
