@@ -2403,8 +2403,8 @@ begin
   loc := fPosition;
   houseArea := gRes.Houses[fType].BuildArea;
 
-  for I := Max(loc.Y - 3, 1) to loc.Y do
-    for K := Max(loc.X - 2, 1) to Min(loc.X + 1, gTerrain.MapX) do
+  for I := Max(loc.Y - 3, 1) to Min(loc.Y + 1, gTerrain.MapY) do
+    for K := Max(loc.X - 2, 1) to Min(loc.X + 2, gTerrain.MapX) do
       if houseArea[I - loc.Y + 4, K - loc.X + 3] in [1, 2] then
         aCells.Add(KMPoint(K, I));
 end;
