@@ -899,6 +899,7 @@ begin
     Exit(false);
 
   case fType of
+    utMobileTower:  Result := fBoltCount <= 75;
     utGolem,
     utArcher,
     utCrossbowman,
@@ -930,7 +931,7 @@ function TKMUnitWarrior.CanOrderAmmoFromCart : Boolean;
 var ammoCart : TKMUnitWarriorAmmoCart;
 begin
   ammoCart := nil;
-  if UnitType in [utCatapult, utBallista] then
+  if UnitType in [utCatapult, utBallista, utMobileTower] then
     if fGroup <> nil then
       ammoCart :=  TKMUnitGroup(fGroup).GetUnitAmmoCart(gRes.Units[UnitType].AmmoType);
 
@@ -948,7 +949,7 @@ begin
   if not CanOrderAmmo then
     Exit;
   ammoCart := nil;
-  if UnitType in [utCatapult, utBallista] then
+  if UnitType in [utCatapult, utBallista, utMobileTower] then
     if fGroup <> nil then
       ammoCart :=  TKMUnitGroup(fGroup).GetUnitAmmoCart(gRes.Units[UnitType].AmmoType);
 
@@ -956,10 +957,11 @@ begin
   begin
     count := 0;
     case UnitType of
+      utMobileTower,
       utGolem,
       utArcher,
       utCrossbowMan,
-      utBowMan : count := ammoCart.TakeAmmo(gRes.Units[UnitType].AmmoType, 30);
+      utBowMan : count := ammoCart.TakeAmmo(gRes.Units[UnitType].AmmoType, 50);
 
       utRogue : begin
                   count := ammoCart.TakeAmmo(gRes.Units[UnitType].AmmoType, 1);
@@ -974,7 +976,7 @@ begin
   begin
     case gRes.Units[UnitType].AmmoType of
       uatNone: ;
-      uatArrow: gHands[Owner].Deliveries.Queue.AddDemand(nil, Self, wtQuiver, 1, dtOnce, diHigh2);
+      uatArrow: gHands[Owner].Deliveries.Queue.AddDemand(nil, Self, wtQuiver, IfThen(UnitType in [utMobileTower], 2, 1), dtOnce, diHigh2);
       uatRogueStone: gHands[Owner].Deliveries.Queue.AddDemand(nil, Self, wtStoneBolt, 1, dtOnce, diHigh2);
       uatStoneBolt: gHands[Owner].Deliveries.Queue.AddDemand(nil, Self, wtStoneBolt, 2, dtOnce, diHigh2);
       uatBolt: gHands[Owner].Deliveries.Queue.AddDemand(nil, Self, wtBolt, 2, dtOnce, diHigh2);
@@ -2900,8 +2902,7 @@ end;
 function TKMUnitWarriorAmmoCart.GetAmmoMinCount(aType: TKMUnitAmmoType) : Word;
 begin
   case aType of
-      uatArrow: Result := 100;
-      uatRogueStone: Result := 100;
+      uatArrow: Result := 500;
       uatStoneBolt: Result := 30;
       uatBolt: Result := 45;
     else
@@ -2912,8 +2913,7 @@ end;
 function TKMUnitWarriorAmmoCart.GetAmmoMaxCount(aType: TKMUnitAmmoType) : Word;
 begin
   case aType of
-      uatArrow: Result := 1000;
-      uatRogueStone: Result := 1000;
+      uatArrow: Result := 2000;
       uatStoneBolt: Result := 200;
       uatBolt: Result := 300;
     else
@@ -2950,30 +2950,22 @@ begin
   begin
     fAmmo[uatStoneBolt] := GetAmmoMaxCount(uatStoneBolt);
     fAmmo[uatBolt] := GetAmmoMaxCount(uatBolt);
+    fAmmo[uatArrow] := GetAmmoMaxCount(uatArrow);
   end else
   case aWare of
     wtQuiver :  begin
-                  Inc(fAmmo[uatArrow], IfThen(doMax, GetAmmoMaxCount(uatArrow), 180 + KamRandom(40, 'TKMUnitWarriorAmmoCart.ReloadAmmo1') ));
+                  Inc(fAmmo[uatArrow], IfThen(doMax, GetAmmoMaxCount(uatArrow), 200));
                   if fAmmo[uatArrow] > GetAmmoMinCount(uatArrow) then
                     fAmmoRequested[uatArrow] := false;
                 end;
     wtStoneBolt : begin
-                    if fAmmoRequested[uatRogueStone] then
-                    begin
-                      Inc(fAmmo[uatRogueStone], IfThen(doMax, GetAmmoMaxCount(uatRogueStone), 180 + KamRandom(40, 'TKMUnitWarriorAmmoCart.ReloadAmmo2') ));
-                      if fAmmo[uatRogueStone] > GetAmmoMinCount(uatRogueStone) then
-                        fAmmoRequested[uatRogueStone] := false;
-                    end else
-                    begin
-                      Inc(fAmmo[uatStoneBolt], IfThen(doMax, GetAmmoMaxCount(uatStoneBolt), 20));
+                    Inc(fAmmo[uatStoneBolt], IfThen(doMax, GetAmmoMaxCount(uatStoneBolt), 20));
 
-                      If (gGame.Params.Tick > 1) and gHands[Owner].ArmyDevUnlocked(21) then
-                          Inc(fAmmo[uatStoneBolt], 10);
+                    If (gGame.Params.Tick > 1) and gHands[Owner].ArmyDevUnlocked(21) then
+                        Inc(fAmmo[uatStoneBolt], 10);
 
-                      if fAmmo[uatStoneBolt] > GetAmmoMinCount(uatStoneBolt) then
-                        fAmmoRequested[uatStoneBolt] := false;
-
-                    end;
+                    if fAmmo[uatStoneBolt] > GetAmmoMinCount(uatStoneBolt) then
+                      fAmmoRequested[uatStoneBolt] := false;
                   end;
     wtBolt :    begin
                   Inc(fAmmo[uatBolt], IfThen(doMax, GetAmmoMaxCount(uatBolt), 30));
@@ -2996,7 +2988,7 @@ begin
       if (fAmmo[AT] <= GetAmmoMinCount(AT)) and not fAmmoRequested[AT] then
         case AT of
           uatArrow: begin
-                      I := (GetAmmoMaxCount(AT) - fAmmo[AT]) div 100;
+                      I := (GetAmmoMaxCount(AT) - fAmmo[AT]) div 200;
                       gHands[Owner].Deliveries.Queue.AddDemand(nil, Self, wtQuiver, I, dtOnce, diHigh2);
                       fAmmoRequested[AT] := true;
                     end;
@@ -3032,7 +3024,7 @@ begin
 
   case aType of
     uatArrow: begin
-                I := (GetAmmoMaxCount(aType) - fAmmo[aType]) div 100;
+                I := (GetAmmoMaxCount(aType) - fAmmo[aType]) div 200;
                 gHands[Owner].Deliveries.Queue.AddDemand(nil, Self, wtQuiver, I, dtOnce, diHigh2);
                 fAmmoRequested[aType] := true;
               end;
@@ -4196,14 +4188,15 @@ var I : Integer;
 begin
   If not HasReadyArcher then
     Exit;
-
+  If (BoltCount = 0) and not InfinityAmmo then
+    Exit;
   U := gTerrain.UnitsHitTestWithinRad(Position, GetFightMinRange, GetFightMaxRange, Owner, atEnemy, dirNA, not RANDOM_TARGETS);
   //no unit found so no need to check every archer
   If (U = nil) or (U.IsDeadOrDying) then
     Exit;
 
   for I := 0 to MAX_ARCHERS - 1 do
-  If gGameParams.Tick > fArcher[I] then
+  If (gGameParams.Tick > fArcher[I]) and ((BoltCount > 0) or InfinityAmmo) then
   begin
     If U = nil then
     begin
@@ -4215,6 +4208,7 @@ begin
     PosF := PositionF;
     If Home is TKMHouseSiegeTower then
       PosF := PosF + KMPointF(0, -4);
+    TakeBolt;
     gProjectiles.AimTarget(PosF, U, ProjectileType, self, RangeMax + 3, RangeMin);
     fArcher[I] := gGameParams.Tick + ARCHER_RELOAD_TIME + KamRandom(10, 'TKMUnitWarriorTower.CheckForEnemies');
     U := nil;

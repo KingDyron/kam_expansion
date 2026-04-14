@@ -771,7 +771,7 @@ function TKMMapEditor.ChangeEntityOwner(aEntity: TKMHandEntity; aOwner: TKMHandI
 var
   house: TKMHouse;
   oldOwner : TKMHandID;
-  defPos, newDefPos : TAIDefencePosition;
+  defPos : TAIDefencePosition;
 begin
   Result := False;
   if (aEntity = nil) or (aEntity.Owner = aOwner) then Exit;

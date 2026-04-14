@@ -2254,7 +2254,6 @@ end;
 
 
 function TKMUnit.GetEffectiveWalkSpeed(aIsDiag: Boolean): Single;
-var addSpeed : Integer;
 begin
   if aIsDiag then
     Result := GetEffectiveSpeed(umtWalkDiag)

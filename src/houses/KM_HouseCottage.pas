@@ -154,7 +154,6 @@ begin
 end;
 //Workless is produced and is ready to train in school
 procedure TKMHouseCottage.ProductionComplete(aTick : Cardinal);
-var I : Integer;
 begin
   Inc(fWorklessCount);
   If fFurnitures > 0 then
@@ -285,7 +284,6 @@ begin
 end;
 
 procedure TKMHouseCottage.TakeWorkless;
-var I : Integer;
 begin
   fWorklessCount := EnsureRange(fWorklessCount - 1, 0, MaxCount);
 end;

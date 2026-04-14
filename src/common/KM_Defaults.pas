@@ -739,8 +739,8 @@ type
 const
   AMMO_GUI_ICON : array[TKMUnitAmmoType] of Word = (0, 699, 695, 695, 696, 371, 373);
   AMMO_GUI_TEXT : array[TKMUnitAmmoType] of Word = (0, 1874, 1874, 1875, 1876, 2098, 2319);
-  AMMOCART_AMMO : set of TKMUnitAmmoType = [uatStoneBolt, uatBolt];
-  AmmoCart_AmmoOrder : array[0..1] of TKMUnitAmmoType = (uatStoneBolt, uatBolt);
+  AMMOCART_AMMO : set of TKMUnitAmmoType = [uatStoneBolt, uatBolt, uatArrow];
+  AmmoCart_AmmoOrder : array[0..2] of TKMUnitAmmoType = (uatStoneBolt, uatBolt, uatArrow);
 
 type
   TKMCheckAxis = (axX, axY);
