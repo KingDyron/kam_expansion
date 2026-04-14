@@ -45,7 +45,7 @@ uses
 
 constructor TKMGUIGameDevelopment.Create(aParent: TKMPanel);
 begin
-  Inherited Create(aParent, TB_PAD, 44 + MENU_ADD_TO_TOP, TB_WIDTH, aParent.Height - 50);
+  Inherited Create(aParent, TB_PAD, 44 + MENU_ADD_TO_TOP, TB_WIDTH, aParent.Height - 100);
   OnButtonClickedShift := DevClicked;
 
   with TKMImage.Create(self, Width - 30, 5, 32, 31, 1081) do
