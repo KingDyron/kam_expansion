@@ -1703,7 +1703,7 @@ begin
           If not allowEndPoint and HasWallEndAt(Tx + S , Ty + T) then
             allowEndPoint := gTerrain.House(Tx + S , Ty + T).IsValid(htWall5);
 
-      allowEndPoint := allowEndPoint{ and gTerrain.CanPlaceWall(aLoc, htWall5)};
+      allowEndPoint := allowEndPoint and gTerrain.CanPlaceWall(aLoc, htWall5);
     end;
 
     //This tile must not contain fields/houses of allied players or self
@@ -2843,7 +2843,7 @@ begin
               begin
                 allowEndPoint := gTerrain.House(P2.X + S , P2.Y + T).IsValid(htWall5);
               end;
-          allowEndPoint := allowEndPoint{ and gTerrain.CanPlaceWall(aLoc, htWall5)};
+          allowEndPoint := allowEndPoint and gTerrain.CanPlaceWall(aLoc, htWall5);
 
           //Check surrounding tiles in +/- 1 range for other houses pressence
           If not allowEndPoint then

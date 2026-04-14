@@ -1010,7 +1010,7 @@ type
         tlFenced,   // -        X         X       X          X     -      X
         tlDigged,   // -        -         X       X          X     X      X
         tlHouse,    // -        -         -       -          X     X      -
-        tlWall, tlWallFence, tlWallGate, tlWallEmpty,
+        tlWall, tlWallFence, tlWallGate, tlWallEmpty, tlWallDigged,
         tlStructure,
         //Used by workers making roads/fields to prevent you from building over them
         tlFieldWork,// -        X         X       X          -     X      -

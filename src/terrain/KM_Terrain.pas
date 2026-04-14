@@ -1038,7 +1038,7 @@ begin
   //Will this change make a unit stuck?
   if UnitWillGetStuck
     //Will this change block a construction site?
-    or ((Land^[Y, X].TileLock in [tlFenced, tlDigged, tlHouse, tlWall, tlWallFence])
+    or ((Land^[Y, X].TileLock in [tlFenced, tlWallDigged, tlDigged, tlHouse, tlWall, tlWallFence])
       and (not fTileSet[aType].Roadable or not fTileset[aType].Walkable)) then
     Exit(False);
 
@@ -1090,7 +1090,7 @@ function TKMTerrain.TrySetTileObject(X, Y: Integer; aObject: Word; out aDiagonal
       for K := -1 * Byte(gMapElements[aObject].DiagonalBlocked) to 0 do
       if TileInMapCoords(X+K, Y+I) then
         //Can't put objects near houses or house sites
-        if (Land^[Y+I, X+K].TileLock in [tlFenced, tlDigged, tlHouse, tlWall, tlWallFence]) then
+        if (Land^[Y+I, X+K].TileLock in [tlFenced, tlDigged, tlWallDigged, tlHouse, tlWall, tlWallFence]) then
           Exit(True);
   end;
 
@@ -1624,7 +1624,7 @@ function TKMTerrain.TileGoodToPlantTree(X,Y: Word): Boolean;
     for I := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do
     for K := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do
       if TileInMapCoords(X+K, Y+I)
-      and (Land^[Y+I,X+K].TileLock in [tlFenced,tlDigged,tlHouse]) then
+      and (Land^[Y+I,X+K].TileLock in [tlFenced,tlDigged, tlWallDigged,tlHouse]) then
       begin
         if (I+1 in [0,1]) and (K+1 in [0,1]) then //Only houses above/left of the tile
           Result := True;
@@ -3155,7 +3155,7 @@ procedure TKMTerrain.SetTileLock(const aLoc: TKMPoint; aTileLock: TKMTileLock);
 var
   R: TKMRect;
 begin
-  Assert(aTileLock in [tlDigged, tlRoadWork, tlFieldWork, tlWallFence, tlStructure], 'We expect only these 5 locks, that affect only 1 tile an don''t change neighbours Passability');
+  Assert(aTileLock in [tlDigged, tlRoadWork, tlFieldWork, tlWallFence, tlStructure, tlWallDigged], 'We expect only these 5 locks, that affect only 1 tile an don''t change neighbours Passability');
 
   Land^[aLoc.Y, aLoc.X].TileLock := aTileLock;
   R := KMRect(aLoc);
@@ -3173,7 +3173,7 @@ procedure TKMTerrain.UnlockTile(const aLoc: TKMPoint);
 var
   R: TKMRect;
 begin
-  Assert(Land^[aLoc.Y, aLoc.X].TileLock in [tlDigged, tlRoadWork, tlFieldWork, tlWallFence, tlStructure], 'We expect only these 5 locks, that affect only 1 tile an don''t change neighbours Passability');
+  Assert(Land^[aLoc.Y, aLoc.X].TileLock in [tlDigged, tlWallDigged, tlRoadWork, tlFieldWork, tlWallFence, tlStructure], 'We expect only these 5 locks, that affect only 1 tile an don''t change neighbours Passability');
 
   Land^[aLoc.Y, aLoc.X].TileLock := tlNone;
   R := KMRect(aLoc);
@@ -5137,7 +5137,7 @@ end;
 
 function TKMTerrain.IsTileLockedForHouses(const aLoc : TKMPoint) : Boolean;
 begin
-  Result := Land^[aLoc.Y,aLoc.X].TileLock in [tlFenced,tlDigged,tlHouse, tlWall, tlWallGate, tlWallEmpty, tlWallFence];
+  Result := Land^[aLoc.Y,aLoc.X].TileLock in [tlFenced,tlDigged, tlWallDigged,tlHouse, tlWall, tlWallGate, tlWallEmpty, tlWallFence];
 end;
 
 procedure TKMTerrain.GetHouseMarks(const aLoc: TKMPoint; aHouseType: TKMHouseType; aList: TKMPointTagList; aClearList : Boolean = true; aIgnoreObjects : Boolean = false);
@@ -5232,7 +5232,7 @@ begin
               for S := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do
                 for T := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do
                   if (S <> 0) or (T<>0) then  //This is a surrounding tile, not the actual tile
-                    if Land^[P2.Y+T,P2.X+S].TileLock in [tlFenced,tlDigged,tlHouse] then
+                    if Land^[P2.Y+T,P2.X+S].TileLock in [tlFenced,tlDigged, tlWallDigged,tlHouse] then
                     begin
                       MarkPoint(KMPoint(P2.X+S,P2.Y+T), TC_BLOCK);
                       allowBuild := False;
@@ -5307,7 +5307,7 @@ var allowBuild : Boolean;
     for I := -1 to 1 do
       for K := -1 to 1 do
         if (I <> 0) or (K <> 0) then //This is a surrounding tile, not the actual tile
-          if Land^[aPoint.Y+I,aPoint.X+K].TileLock in [tlFenced,tlDigged,tlHouse, tlWall, tlWallFence] then
+          if Land^[aPoint.Y+I,aPoint.X+K].TileLock in [tlFenced,tlDigged, tlWallDigged,tlHouse, tlWall, tlWallFence] then
             Exit(false);
 
   end;
@@ -6549,11 +6549,11 @@ begin
 }
 
   //For all passability types other than CanAll, houses and fenced houses are excluded
-  if Land^[aLoc.Y,aLoc.X].TileLock in [tlNone, tlDigged, tlFenced, tlFieldWork, tlRoadWork, tlWallFence, tlWallEmpty, tlStructure] then
+  if Land^[aLoc.Y,aLoc.X].TileLock in [tlNone, tlDigged, tlWallDigged, tlFenced, tlFieldWork, tlRoadWork, tlWallFence, tlWallEmpty, tlStructure] then
   begin
     if (TileIsWalkable(aLoc)
         or Land^[aLoc.Y,aLoc.X].TileOverlay2.AllowsBuilding)
-      and (Land^[aLoc.Y,aLoc.X].TileLock <> tlDigged)
+      and not (Land^[aLoc.Y,aLoc.X].TileLock in [tlDigged, tlWallDigged])
       and gRes.Tileset[gRes.Tileset.Overlay[Land^[aLoc.Y,aLoc.X].TileOverlay2].TileID].Walkable
       and not Land^[aLoc.Y,aLoc.X].TileOverlay.BlocksWalking
       and not gMapElements[Land^[aLoc.Y,aLoc.X].Obj].AllBlocked
@@ -6570,7 +6570,7 @@ begin
     for I := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do
       for K := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do
         if TileInMapCoords(aLoc.X+K, aLoc.Y+I)
-          and (Land^[aLoc.Y+I,aLoc.X+K].TileLock in [tlFenced,tlDigged,tlHouse]) then
+          and (Land^[aLoc.Y+I,aLoc.X+K].TileLock in [tlFenced,tlDigged{, tlWallDigged},tlHouse]) then
           hasHousesNearTile := True;
 
     isBuildNoObj := False;
@@ -7622,7 +7622,7 @@ begin
   Result := False;
   for I := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do
     for K := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do
-      if (Land^[Y + I, X + K].TileLock in [tlFenced, tlDigged, tlHouse]) then
+      if (Land^[Y + I, X + K].TileLock in [tlFenced, tlDigged, tlWallDigged, tlHouse]) then
         Result := True;
 end;
 
@@ -7711,7 +7711,7 @@ begin
       if not (aHouseType in IGNORE_HOUSE_BLOCK) then
       for L := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do
       for M := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do
-      if TileInMapCoords(X+M, Y+L) and (Land^[Y+L, X+M].TileLock in [tlFenced,tlDigged,tlHouse, tlWall, tlWallFence]) then
+      if TileInMapCoords(X+M, Y+L) and (Land^[Y+L, X+M].TileLock in [tlFenced,tlDigged, tlWallDigged,tlHouse, tlWall, tlWallFence]) then
         Result := False;
 
       if aHouseType = htAppleTree then
@@ -7719,10 +7719,10 @@ begin
         for L := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do
         for M := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do
         if TileInMapCoords(X+M, Y+L)
-        and (Land^[Y+L, X+M].TileLock in [tlFenced,tlDigged,tlHouse, tlWall, tlWallFence])
+        and (Land^[Y+L, X+M].TileLock in [tlFenced,tlDigged, tlWallDigged,tlHouse, tlWall, tlWallFence])
         and House(X+M, Y+L).IsValid(htAppleTree, true) then
             Result := False;
-        //and (Land^[TY+L, TX+M].TileLock in [tlFenced,tlDigged,tlHouse, tlWall, tlWallFence])
+        //and (Land^[TY+L, TX+M].TileLock in [tlFenced,tlDigged, tlWallDigged,tlHouse, tlWall, tlWallFence])
         //and (not (( House(TX+M, TY+L) is TKMHouseAppleTree) and (TKMHouseAppleTree(House(TX+M, TY+L)).CanAddChildTree))
       end;
 
@@ -7789,14 +7789,14 @@ begin
     if aHouseType <> htAppleTree then
     for L := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do
     for M := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do
-    if TileInMapCoords(TX+M, TY+L) and (Land^[TY+L, TX+M].TileLock in [tlFenced,tlDigged,tlHouse]) then
+    if TileInMapCoords(TX+M, TY+L) and (Land^[TY+L, TX+M].TileLock in [tlFenced,tlDigged, tlWallDigged,tlHouse]) then
       Result := False;
 
     //Check surrounding tiles for another house that overlaps
     if not (aHouseType in IGNORE_HOUSE_BLOCK) then
     for L := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do
     for M := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do
-    if TileInMapCoords(TX+M, TY+L) and (Land^[TY+L, TX+M].TileLock in [tlFenced,tlDigged,tlHouse, tlWall, tlWallFence]) then
+    if TileInMapCoords(TX+M, TY+L) and (Land^[TY+L, TX+M].TileLock in [tlFenced,tlDigged, tlWallDigged,tlHouse, tlWall, tlWallFence]) then
       Result := False;
 
     if aHouseType = htAppleTree then
@@ -7817,7 +7817,7 @@ begin
       for L := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do
       for M := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do
       if TileInMapCoords(TX+M, TY+L)
-      and (Land^[TY+L, TX+M].TileLock in [tlFenced,tlDigged,tlHouse, tlWall, tlWallFence])
+      and (Land^[TY+L, TX+M].TileLock in [tlFenced,tlDigged, tlWallDigged,tlHouse, tlWall, tlWallFence])
       and House(TX+M, TY+L).IsValid(htAppleTree, true) then
         Result := False;
     end;
@@ -7864,14 +7864,14 @@ begin
 
     for L := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do
     for M := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do
-    if TileInMapCoords(TX+M, TY+L) and (Land^[TY+L, TX+M].TileLock in [tlFenced,tlDigged,tlHouse]) then
+    if TileInMapCoords(TX+M, TY+L) and (Land^[TY+L, TX+M].TileLock in [tlFenced,tlDigged, tlWallDigged,tlHouse]) then
       Result := False;
 
     //Check surrounding tiles for another house that overlaps
     if not (aHouseType in IGNORE_HOUSE_BLOCK) then
     for L := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do
     for M := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do
-    if TileInMapCoords(TX+M, TY+L) and (Land^[TY+L, TX+M].TileLock in [tlFenced,tlDigged,tlHouse, tlWall, tlWallFence]) then
+    if TileInMapCoords(TX+M, TY+L) and (Land^[TY+L, TX+M].TileLock in [tlFenced,tlDigged, tlWallDigged,tlHouse, tlWall, tlWallFence]) then
       Result := False;
 
     //Check if there are units below placed BEFORE the house is added
@@ -7900,7 +7900,7 @@ function TKMTerrain.CanPlaceStructure(const aLoc : TKMPoint; aIndex, aRot : Word
     for I := -1 to 1 do
       for K := -1 to 1 do
         if (I <> 0) or (K <> 0) then //This is a surrounding tile, not the actual tile
-          if Land^[aPoint.Y+I,aPoint.X+K].TileLock in [tlFenced,tlDigged,tlHouse, tlWall, tlWallFence] then
+          if Land^[aPoint.Y+I,aPoint.X+K].TileLock in [tlFenced,tlDigged, tlWallDigged,tlHouse, tlWall, tlWallFence] then
             Exit(false);
 
   end;
@@ -8079,7 +8079,7 @@ begin
 
   case aFieldType of
     ftRemove : Result := (Land^[aY, aX].TileOwner = aOwner)
-                          and not (Land^[aY, aX].TileLock in [tlFieldWork,tlHouse, tlWall, tlWallFence,tlDigged,tlFenced])
+                          and not (Land^[aY, aX].TileLock in [tlFieldWork,tlHouse, tlWall, tlWallFence,tlDigged, tlWallDigged,tlFenced])
                           and (TileIsCornField(KMPoint(aX, aY)) or TileIsWineField(KMPoint(aX, aY)) or TileIsGrassField(KMPoint(aX, aY)) or TileIsVegeField(KMPoint(aX, aY))
                               or TileHasRoad(aX, aY) or TileHasPalisade(aX, aY));
     ftPalisade :  Result := InRange(aX, 1, fMapX - 1)
@@ -8090,7 +8090,7 @@ begin
                             and not TileIsWineField(KMPoint(aX, aY))
                             and not TileIsGrassField(KMPoint(aX, aY))
                             and not TileIsVegeField(KMPoint(aX, aY))
-                            and not (Land^[aY, aX].TileLock in [tlFieldWork,tlHouse, tlWall, tlWallFence,tlDigged,tlFenced])
+                            and not (Land^[aY, aX].TileLock in [tlFieldWork,tlHouse, tlWall, tlWallFence,tlDigged, tlWallDigged,tlFenced])
                             and (tpWalk in Land^[aY, aX].Passability)
                             and HasWall;
 
@@ -8451,7 +8451,7 @@ procedure TKMTerrain.UpdateFences(const aLoc: TKMPoint; aCheckSurrounding: Boole
         htForest : Result := fncPasture;
       end;
     end else
-    if Land^[aLoc.Y,aLoc.X].TileLock in [tlFenced, tlDigged,tlWallFence, tlStructure] then
+    if Land^[aLoc.Y,aLoc.X].TileLock in [tlFenced, tlDigged, tlWallDigged,tlWallFence, tlStructure] then
       Result := fncHouseFence
     else
     if Land^[aLoc.Y, aLoc.X].BridgeType = 2 then
@@ -8493,8 +8493,8 @@ procedure TKMTerrain.UpdateFences(const aLoc: TKMPoint; aCheckSurrounding: Boole
        )
        or
        ((Land^[aLoc.Y, aLoc.X].BridgeType > 0) and (Land^[Y, X].BridgeType > 0)) or //Both are bridges
-       ((Land^[aLoc.Y, aLoc.X].TileLock in [tlFenced, tlDigged, tlWallFence, tlStructure]) and
-        (Land^[Y, X].TileLock in [tlFenced, tlDigged, tlWallFence, tlStructure])) then //Both are either house fence
+       ((Land^[aLoc.Y, aLoc.X].TileLock in [tlFenced, tlDigged, tlWallDigged, tlWallFence, tlStructure]) and
+        (Land^[Y, X].TileLock in [tlFenced, tlDigged, tlWallDigged, tlWallFence, tlStructure])) then //Both are either house fence
       Result := False;
   end;
 begin

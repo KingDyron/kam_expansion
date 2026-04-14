@@ -1551,6 +1551,9 @@ begin
           {if gTerrain.Land^[fCellsToDig[fLastToDig].Y, fCellsToDig[fLastToDig].X].TileLock = tlWallFence then
             gTerrain.SetTileLock(fCellsToDig[fLastToDig], tlWallFence) //Block passability on tile
           else}
+          If fHouseType in WALL_HOUSES then
+            gTerrain.SetTileLock(fCellsToDig[fLastToDig], tlWallDigged) //Block passability on tile
+          else
             gTerrain.SetTileLock(fCellsToDig[fLastToDig], tlDigged); //Block passability on tile
 
           if KMSamePoint(fHouse.Entrance, fCellsToDig[fLastToDig]) then
