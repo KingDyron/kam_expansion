@@ -165,6 +165,7 @@ type
     Explosion,
     Thought : TKMAnimation;
     PastureAnimals: array[TKMPastureAnimalType] of TKMPasAnimalSpec;//Anim : array[TKMPastureAnimalType, TKMPastureAnimalAction, dirN..dirNW] of TKMAnimation;
+    FireAnim : TKMAnimation;
     constructor Create;
     destructor Destroy; override;
 
@@ -1249,6 +1250,7 @@ begin
   ShipSketch[dirSW].Create(0, 0, 12913, 14);
   ShipSketch[dirW].Create(0, 0, 12927, 14);
   ShipSketch[dirNW].Create(0, 0, 12941, 14);
+  FireAnim.Create(76, 21, [1636,1637,1638,1633,1634,1635]);
 
   for dir := dirN to dirNW do
   begin

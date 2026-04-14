@@ -251,6 +251,8 @@ type
   TKMUnitWarriorMachine = class(TKMUnitWarrior)
     private
       fOnFire : Boolean;
+    protected
+      procedure PaintUnit(aTickLag: Single); override;
     public
       function DoThornsEffect : Boolean;
       constructor Load(LoadStream: TKMemoryStream); override;
@@ -876,12 +878,12 @@ begin
     end;
   end else
   begin
-    Attack := Attack + IfThen(IsRanged, 15, 5);
+    //Attack := Attack + IfThen(IsRanged, 15, 5);
 
-    if AttackHorse > 0 then
-      AttackHorse := AttackHorse + 5;
+    //if AttackHorse > 0 then
+    //  AttackHorse := AttackHorse + 5;
 
-    Defence := Defence + 4;
+    //Defence := Defence + 4;
     HitPointsMax := HitPointsMax + 2;
     HitPointsChangeFromScript(2);
   end;
@@ -1801,6 +1803,9 @@ begin
 
   If (UnitType in [utRam, utWoodenWall]) and gHands[Owner].ArmyDevUnlocked(29) then
     Result := Result + 3;
+
+  If not (UnitType in SIEGE_MACHINES) and fBitinAdded then
+    Result := Result + 4;
 end;
 
 function TKMUnitWarrior.GetAttack : SmallInt;
@@ -1828,6 +1833,9 @@ begin
 
   If (UnitType = utPikeMachine) and gHands[Owner].ArmyDevUnlocked(24) then
     Result := Result + 40;
+
+  If not (UnitType in SIEGE_MACHINES) and fBitinAdded then
+    Result := Result + 15;
 end;
 
 function TKMUnitWarrior.GetSpeed: Byte;
@@ -1927,7 +1935,7 @@ begin
     if not (UnitType in SPECIAL_UNITS) then
       if UNIT_TO_GROUP_TYPE[UnitType] = gtWreckers then
         if TKMUnitGroup(fGroup).HasUnitType(utPyro) then //
-          Result := Result + 2;
+          Result := Result + Result;
 end;
 
 function TKMUnitWarrior.RageDelay: Word;
@@ -2793,7 +2801,7 @@ begin
 
   If fOnFire then
     If fTicker mod 20 = 0 then
-      HitPointsDecrease(85, 1, nil, false);
+      HitPointsDecrease(1, nil);
 end;
 
 procedure TKMUnitWarriorMachine.Save(SaveStream: TKMemoryStream);
@@ -2806,6 +2814,57 @@ procedure TKMUnitWarriorMachine.SetOnFire;
 begin
   fOnFire := true;
 end;
+
+procedure TKMUnitWarriorMachine.PaintUnit(aTickLag: Single);
+var
+  V: TKMUnitVisualState;
+  act: TKMUnitActionType;
+  unitPos: TKMPointF;
+  fillColor, lineColor: Cardinal;
+begin
+
+  V := fVisual.GetLerp(aTickLag);
+
+  act := V.Action;
+  unitPos.X := V.PositionF.X + UNIT_OFF_X + V.SlideX;
+  unitPos.Y := V.PositionF.Y + UNIT_OFF_Y + V.SlideY;
+
+  if fRageTime > RageDelay then
+  begin
+
+    gRenderPool.AddAnimation(unitPos + KMPointF(0.3, -1.9), gRes.Units.RageAnim, fTicker,
+                            IfThen(FlagColor <> 0, FlagColor, gHands[Owner].GameFlagColor), rxUnits,
+                            false, false, 0, true);
+  end;
+
+  gRenderPool.AddUnit(fType, UID, act, V.Dir, V.AnimStep, V.AnimFraction, unitPos.X, unitPos.Y, IfThen(FlagColor <> 0, FlagColor, gHands[Owner].GameFlagColor), True);
+
+  if (fThought <> thNone) then
+    gRenderPool.AddUnitThought(fType, act, V.Dir, V.AnimStep, fThought, unitPos.X, unitPos.Y)
+  else
+  if (gGameParams.IsMapEditor and BitinAdded) then
+    gRenderPool.AddUnitThought(fType, act, V.Dir, V.AnimStep, thArmor, unitPos.X, unitPos.Y);
+
+  If fOnFire then
+    gRenderPool.AddAnimation(unitPos, gRes.Units.FireAnim, gTerrain.AnimStep, 0, rxHouses);
+
+  if SHOW_ATTACK_RADIUS or (mlUnitsAttackRadius in gGameParams.VisibleLayers) then
+    if IsRanged then
+    begin
+      fillColor := gHands[Owner].GameFlagColor and $40FFFFFF;
+      lineCOlor := gHands[Owner].GameFlagColor;
+      if (gMySpectator.Selected = Self)
+        or ((gMySpectator.Selected is TKMUnitGroup)
+          and (TKMUnitGroup(gMySpectator.Selected).FlagBearer = Self)) then
+      begin
+        fillColor := icRed and fillColor;
+        lineColor := icCyan;
+      end;
+
+      gRenderPool.RenderDebug.RenderTiledArea(Position, GetFightMinRange, GetFightMaxRange, GetLength, fillColor, lineColor);
+    end;
+end;
+
 
 constructor TKMUnitWarriorAmmoCart.Create(aID: Cardinal; aUnitType: TKMUnitType; const aLoc: TKMPointDir; aOwner: ShortInt; aInHouse: TKMHouse);
 var AT : TKMUnitAmmoType;
@@ -3512,7 +3571,6 @@ begin
 end;
 
 function TKMUnitWarriorSpikedTrap.UpdateState: Boolean;
-var I : Integer;
 begin
   Result := Inherited;
 

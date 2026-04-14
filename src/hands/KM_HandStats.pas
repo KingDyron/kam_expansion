@@ -485,7 +485,6 @@ begin
       utAny:     for UT2 := HUMANS_MIN to HUMANS_MAX do
                     Inc(Result, GetUnitQty(UT));
       else        begin
-                    Inc(Result, GetUnitQty(UT));
                     Result := Units[UT].Initial + Units[UT].Trained - Units[UT].Lost;
                   end;
     end;

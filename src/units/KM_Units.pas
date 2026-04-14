@@ -265,6 +265,7 @@ type
     procedure HitPointsDecrease(aAttack, aDamage : Integer; aAttacker : TKMUnit;aInstantKill : Boolean = false); overload; virtual;
     property  HitPointsMax: Byte read GetHitPointsMax write fHitPointsMax;
     procedure SetHitTime; virtual;
+    property DefAttack: SmallInt read fAttack;
     property  Attack : SmallInt read GetAttack write SetAttack;
     property  AttackHorse : SmallInt read  fAttackHorse write fAttackHorse;
     property  Defence : SmallInt read  GetDefence write SetDefence;

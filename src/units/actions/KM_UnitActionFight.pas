@@ -53,7 +53,8 @@ uses
   KM_HandsCollection, KM_HandTypes, KM_HandEntity,
   KM_Sound, KM_UnitWarrior, KM_Resource, KM_Projectiles, KM_ResTypes, KM_HandLogistics,
   KM_Terrain,
-  KM_ResUnits, KM_Hand, KM_ScriptingEvents;
+  KM_ResUnits, KM_Hand, KM_ScriptingEvents,
+  KM_UnitGroup;
 
 
 const
@@ -353,7 +354,6 @@ var
   aLoc : TKMPointDir;
   doStop : Boolean;
 begin
-  Result := False;
   doStop := false;
   if Step = 1 then
   begin
@@ -368,6 +368,26 @@ begin
   //Melee units place hit on this step
   if {Step = STRIKE_STEP} ArrayContains(Step, gRes.Units[fUnit.UnitType].StrikeSteps) then
   begin
+    If (fUnit.UnitType = utPyro) and (fOpponent.UnitType in SIEGE_MACHINES) then
+      TKMUnitWarriorMachine(fOpponent).SetOnFire;
+
+    If fUnit.UnitType in [utClubMan, utMaceFighter, utFlailFighter] then
+      If TKMUnitGroup(TKMUnitWarrior(fUnit).Group).HasUnitType(utPyro) then
+      begin
+        If fOpponent is TKMUnitWarrior then
+        begin
+          TKMUnitWarrior(fOpponent).BitinAdded := false;
+          TKMUnitWarrior(fOpponent).Thought := thNone;
+        end;
+        case fUnit.UnitType of
+          utClubMan : fOpponent.Attack := fOpponent.DefAttack - 2;
+          utMaceFighter : fOpponent.Attack := fOpponent.DefAttack - 3;
+          utFlailFighter : fOpponent.Attack := fOpponent.DefAttack - 10;
+        end;
+      end;
+
+
+
     HitUnit(fOpponent, doStop);
     If not doStop then
     begin

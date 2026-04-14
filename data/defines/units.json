@@ -4162,7 +4162,7 @@
 			"ProjectileDefence" : 0.00000,
 			"CanOrderAmmo" : False,
 			"CanStorm" : False,
-			"CanAttackUnits" : False,
+			"CanAttackUnits" : true,
 			"CanAttackHouses" : true,
 			"FightType" : "ftMelee",
 			"AmmoType" : "uatNone",
