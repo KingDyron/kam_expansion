@@ -3228,12 +3228,12 @@ end;
 
 procedure TKMHouse.SetOnFire;
 begin
-  fIsBurning := EnsureRange(fIsBurning + 1, 0, 20);
+  fIsBurning := EnsureRange(fIsBurning + 2, 0, 20);
   If (HouseType in WALL_HOUSES) and gHands[Owner].BuildDevUnlocked(21) then
     fIsBurning := 0;
 
-  If (HouseType in WALL_HOUSES) and gHands[Owner].ArmyDevUnlocked(17) then
-    fIsBurning := EnsureRange(fIsBurning + 1, 0, 20);
+  If gHands[Owner].ArmyDevUnlocked(17) then
+    fIsBurning := EnsureRange(fIsBurning + 2, 0, 20);
 end;
 
 procedure TKMHouse.TakeOver;
