@@ -516,6 +516,14 @@ begin
   Panel_Army.Visible := not fAskDismiss and not fJoiningGroups;
   Panel_Army_JoinGroups.Visible := not fAskDismiss and fJoiningGroups;
   Panel_Unit_Dismiss.Visible := FEAT_DISMISS_GROUP_BTN and fAskDismiss and not fJoiningGroups;
+  If not Panel_AmmoCart.Hidden then
+    if fAskDismiss or fJoiningGroups then
+    begin
+      Panel_AmmoCart.Hidden := true;
+      Panel_AmmoCart.Hide;
+    end;
+
+  Button_AssignToShip.Visible := not fAskDismiss and not fJoiningGroups;
 
   Button_Army_Ammo.Visible := gRes.Units[W.UnitType].CanOrderAmmo and not W.InfinityAmmo;
   Row_Ammo.Visible := Button_Army_Ammo.Visible or (W.AttackHorse > 0);
@@ -789,6 +797,7 @@ begin
     Panel_Army.Hide;
     Panel_Army_JoinGroups.Show;
     fJoiningGroups := True;
+    ShowGroupInfo(TKMUnitGroup(gMySpectator.Selected));
   end;
 
   if Sender = Button_Army_Feed    then
