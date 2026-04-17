@@ -249,6 +249,7 @@ type
     procedure DebugShowGrid(aShow : Boolean);
     procedure DebugShowUnitRoutes(aShow : Boolean);
 
+    procedure DevelopmentUnlock(aHandID : Integer; aType : Byte; aID : Integer; aLockType : TKMHandDevLock);
     procedure DevelopmentUnlockWithPrevious(aHandID : Integer; aType : Byte; aID : Integer; aUnlocked : Boolean);
     procedure DevelopmentUnlockSingle(aHandID : Integer; aType : Byte; aID : Integer);
     procedure DevelopmentUnlockAll(aHandID : Integer; aType : Byte);
@@ -6523,6 +6524,20 @@ begin
   end;
 
 end;
+
+procedure TKMScriptActions.DevelopmentUnlock(aHandID : Integer; aType : Byte; aID : Integer; aLockType : TKMHandDevLock);
+begin
+  try
+    If aType > 0 then
+    If aHandID > -1 then
+      If gHands[aHandID].Enabled then
+        gHands[aHandID].UnlockDevScript(TKMDevelopmentTreeType(aType), aID, aLockType);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
 procedure TKMScriptActions.DevelopmentUnlockWithPrevious(aHandID : Integer; aType : Byte; aID : Integer; aUnlocked : Boolean);
 begin
   try

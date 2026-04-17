@@ -646,6 +646,7 @@ begin
     Sender.AddTypeS('TKMUnitThought', '(thNone, thEat, thHome, thBuild, thStone, thWood, thDeath, thQuest, thDismiss, thArmor, thSpy, thTile, thExclusive, thImportant, thBucket, thBoots, thDiamond, thBow, thTalk)');
 
     Sender.AddTypeS('TKMWeatherType', '(wttNone, wtCloudy1, wtCloudy2, wtRain, wtStorm, wtSnow, wtSnowyStorm, wtSandStorm1, wtSandStorm2, wtTornado)');
+    Sender.AddTypeS('TKMHandDevLock', '(dlNone, dlBlocked, dlUnlocked, dlNotVisible, dlUnlockedSingle, dlSkipped)');
 
     //*Types-Reg*//
 
@@ -1187,6 +1188,7 @@ begin
     RegisterMethodCheck(c, 'procedure  MusicPlay(aName : String; aForceOn : Boolean)');
     RegisterMethodCheck(c, 'procedure  DebugShowGrid(aShow: Boolean)');
     RegisterMethodCheck(c, 'procedure  DebugShowUnitRoutes(aShow: Boolean)');
+    RegisterMethodCheck(c, 'procedure  DevelopmentUnlock(aHandID : Integer; aType : Byte; aID : Integer; aLockType : TKMHandDevLock)');
     RegisterMethodCheck(c, 'procedure  DevelopmentUnlockWithPrevious(aHandID : Integer; aType : Byte; aID : Integer; aUnlocked : Boolean)');
     RegisterMethodCheck(c, 'procedure  DevelopmentUnlockSingle(aHandID : Integer; aType : Byte; aID : Integer)');
     RegisterMethodCheck(c, 'procedure  DevelopmentUnlockAll(aHandID : Integer; aType : Byte)');
@@ -2033,6 +2035,7 @@ begin
       RegisterMethod(@TKMScriptActions.MusicPlay, 'MusicPlay');
       RegisterMethod(@TKMScriptActions.DebugShowGrid, 'DebugShowGrid');
       RegisterMethod(@TKMScriptActions.DebugShowUnitRoutes, 'DebugShowUnitRoutes');
+      RegisterMethod(@TKMScriptActions.DevelopmentUnlock, 'DevelopmentUnlock');
       RegisterMethod(@TKMScriptActions.DevelopmentUnlockWithPrevious, 'DevelopmentUnlockWithPrevious');
       RegisterMethod(@TKMScriptActions.DevelopmentUnlockSingle, 'DevelopmentUnlockSingle');
       RegisterMethod(@TKMScriptActions.DevelopmentUnlockAll, 'DevelopmentUnlockAll');

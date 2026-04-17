@@ -375,7 +375,8 @@ type
     function TryToUnlockDevelopment(aType : TKMDevelopmentTreeType; aID : Integer) : Boolean;
     function UnlockDevelopment(aType : TKMDevelopmentTreeType; aID : Integer) : Boolean;
     procedure UnlockDevelopmentScript(aType : TKMDevelopmentTreeType; aID : Integer; aLock : TKMHandDevLock);
-    procedure UnlockDevScript(aType : TKMDevelopmentTreeType; aID : Integer; aUnlocked : Boolean; aUnlockPrevious : Boolean = false);
+    procedure UnlockDevScript(aType : TKMDevelopmentTreeType; aID : Integer; aUnlocked : Boolean; aUnlockPrevious : Boolean = false); overload;
+    procedure UnlockDevScript(aType : TKMDevelopmentTreeType; aID : Integer; aLockType : TKMHandDevLock); overload;
     procedure UnlockAllDevScript(aType : TKMDevelopmentTreeType; aUnlocked : Boolean);
 
     property DevsToUnlock : TKMHandUnlockingDevArray read fDevsToUnlock;
@@ -3550,15 +3551,6 @@ end;
 procedure TKMHand.UnlockDevelopmentScript(aType: TKMDevelopmentTreeType; aID: Integer; aLock : TKMHandDevLock);
 begin
   fLocks.DevelopmentLock[aType, aID] := aLock;
-
-  {If (aType = dttEconomy) and (aID = 1) then
-    AddDevPoint(dttArmy, 3);
-
-  If (aType = dttBuilder) and (aID = 30) then
-    UnlockSpecialWalls;
-
-  If (aType = dttBuilder) and (aID = 32) then
-    UnlockAllBuildings;}
 end;
 
 procedure TKMHand.UnlockDevScript(aType: TKMDevelopmentTreeType; aID: Integer; aUnlocked: Boolean; aUnlockPrevious: Boolean = False);
@@ -3573,6 +3565,14 @@ begin
 
   If aUnlockPrevious then
     fLocks.CheckDevLocksGame;
+end;
+
+procedure TKMHand.UnlockDevScript(aType : TKMDevelopmentTreeType; aID : Integer; aLockType : TKMHandDevLock);
+begin
+  If aID >= gRes.Development[aType].Count then
+    Exit;
+
+  fLocks.DevelopmentLock[aType, aID] := aLockType;
 end;
 
 procedure TKMHand.UnlockAllDevScript(aType: TKMDevelopmentTreeType; aUnlocked: Boolean);
