@@ -4992,7 +4992,7 @@
 			"AttackHorse" : 95,
 			"Defence" : 6,
 			"Speed" : 36,
-			"Sight" : 8,
+			"Sight" : 13,
 			"HouseDamage" : 5,
 			"UnitDamage" : 4,
 			"ProjectileDefence" : 5.00000,
