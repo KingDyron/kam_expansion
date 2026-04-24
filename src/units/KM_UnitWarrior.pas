@@ -1682,7 +1682,7 @@ end;
 function TKMUnitWarrior.CanInterruptAction(aForced: Boolean = True): Boolean;
 begin
   if (Action is TKMUnitActionStay)
-    and ((Task is TKMTaskAttackHouse) or (Task is TKMTaskShootAtSpot)) then
+    and ( (Action.ActionType = uaStay) or (Task is TKMTaskAttackHouse) or (Task is TKMTaskShootAtSpot)) then
       Result := True //We can abandon attack house if the action is stay
   else
     Result := Action.CanBeInterrupted(aForced);
