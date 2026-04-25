@@ -115,6 +115,7 @@ type
 
     procedure Delete(aIndex : Integer);
     procedure Extend(aCount : Byte);
+    procedure CopyFirst(aCount : Byte);
     procedure SaveToStream(SaveStream : TObject);
     procedure LoadFromStream(LoadStream : TObject);
 
@@ -636,6 +637,24 @@ begin
       inc(lastID);
     end;
   SetLength(aArr, lastID);
+  fSteps := aArr;
+
+end;
+
+procedure TKMAnimation.CopyFirst(aCount: Byte);
+var I : Integer;
+  aArr : TKMWordArray;
+begin
+  if aCount = 0 then
+    Exit;
+  SetLength(aArr, length(fSteps) + (aCount));
+
+  //SetLength(fSteps, length(tmp) * aCount )
+  for I := 0 to aCount do
+    aArr[I] := fSteps[0];
+
+  for I := 1 to high(fSteps) do
+    aArr[aCount + I] := fSteps[I];
   fSteps := aArr;
 
 end;

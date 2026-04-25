@@ -5094,6 +5094,63 @@
 				{"ActionType" : "uaWalkArm","Dir" : "dirW","X" : 8,"Y" : -55,"Steps" : [5032, 5033, 5034, 5035, 5028, 5029, 5030, 5031]},
 				{"ActionType" : "uaWalkArm","Dir" : "dirNW","X" : 6,"Y" : -53,"Steps" : [5014, 5015, 5016, 5017, 5018, 5019, 5012, 5013]}
 			]
+		},
+		{
+			"UnitType" : "utAlchemist",
+			"GameID" : 81,
+			"DescriptionID" : 1773,
+			"HitPoints" : 4,
+			"Attack" : 70,
+			"AttackHorse" : 116,
+			"Defence" : 1,
+			"Speed" : 24,
+			"Sight" : 6,
+			"HouseDamage" : 1,
+			"UnitDamage" : 1,
+			"ProjectileDefence" : 1.00000,
+			"CanOrderAmmo" : false,
+			"CanStorm" : False,
+			"CanAttackUnits" : true,
+			"CanAttackHouses" : true,
+			"FightType" : "ftRanged",
+			"AmmoType" : "uatNone",
+			"MinRange" : 2.00000,
+			"MaxRange" : 7.999,
+			"StrikeSteps" : [5],
+			"ProducesWares" : ["wtAll"],
+			"FullUnitAnimations" : 
+			[	
+				{"ActionType" : "uaWalk", "StartStep" : 17954, "StepsCount" : 8},
+				{"ActionType" : "uaWork", "StartStep" : 18018, "StepsCount" : 18},
+				{"ActionType" : "uaStay", "StartStep" : 18162, "StepsCount" : 14, "CopyFirst" : 4}
+			],
+			"Animations" : 
+			[
+				{"ActionType" : "uaSpec","Dir" : "dirN","X" : 0,"Y" : 0,"StepStart" : 4512,"Count" : 5},
+				{"ActionType" : "uaSpec","Dir" : "dirNE","X" : 0,"Y" : 0,"StepStart" : 4517,"Count" : 5},
+				{"ActionType" : "uaSpec","Dir" : "dirE","X" : 0,"Y" : 0,"StepStart" : 4522,"Count" : 5},
+				{"ActionType" : "uaSpec","Dir" : "dirSE","X" : 0,"Y" : 0,"StepStart" : 4527,"Count" : 5},
+				{"ActionType" : "uaSpec","Dir" : "dirS","X" : 0,"Y" : 0,"StepStart" : 4532,"Count" : 5},
+				{"ActionType" : "uaSpec","Dir" : "dirSW","X" : 0,"Y" : 0,"StepStart" : 4537,"Count" : 5},
+				{"ActionType" : "uaSpec","Dir" : "dirW","X" : 0,"Y" : 0,"StepStart" : 4542,"Count" : 5},
+				{"ActionType" : "uaSpec","Dir" : "dirNW","X" : 0,"Y" : 0,"StepStart" : 4547,"Count" : 5},
+				{"ActionType" : "uaDie","Dir" : "dirN","X" : 0,"Y" : 0,"Steps" : [5950, 5935, 5936, 5937, 5938, 5939, 5940, 5941, 5942, 5943, 5944, 5945, 5946, 5947, 5948, 5949]},
+				{"ActionType" : "uaDie","Dir" : "dirNE","X" : 0,"Y" : 0,"Steps" : [5950, 5935, 5936, 5937, 5938, 5939, 5940, 5941, 5942, 5943, 5944, 5945, 5946, 5947, 5948, 5949]},
+				{"ActionType" : "uaDie","Dir" : "dirE","X" : 0,"Y" : 0,"StepStart" : 5903,"Count" : 14},
+				{"ActionType" : "uaDie","Dir" : "dirSE","X" : 0,"Y" : 0,"StepStart" : 5903,"Count" : 14},
+				{"ActionType" : "uaDie","Dir" : "dirS","X" : 0,"Y" : 0,"StepStart" : 5236,"Count" : 15},
+				{"ActionType" : "uaDie","Dir" : "dirSW","X" : 0,"Y" : 0,"StepStart" : 5236,"Count" : 15},
+				{"ActionType" : "uaDie","Dir" : "dirW","X" : 0,"Y" : 0,"StepStart" : 5917,"Count" : 18},
+				{"ActionType" : "uaDie","Dir" : "dirNW","X" : 0,"Y" : 0,"StepStart" : 5917,"Count" : 18},
+				{"ActionType" : "uaWalkArm","Dir" : "dirN","X" : 8,"Y" : -42,"Steps" : [5006, 5007, 5008, 5009, 5010, 5011, 5004, 5005]},
+				{"ActionType" : "uaWalkArm","Dir" : "dirNE","X" : 6,"Y" : -40,"Steps" : [5022, 5023, 5024, 5025, 5026, 5027, 5020, 5021]},
+				{"ActionType" : "uaWalkArm","Dir" : "dirE","X" : 6,"Y" : -40,"Steps" : [5032, 5033, 5034, 5035, 5028, 5029, 5030, 5031]},
+				{"ActionType" : "uaWalkArm","Dir" : "dirSE","X" : -6,"Y" : -44,"Steps" : [5014, 5015, 5016, 5017, 5018, 5019, 5012, 5013]},
+				{"ActionType" : "uaWalkArm","Dir" : "dirS","X" : -8,"Y" : -45,"Steps" : [5006, 5007, 5008, 5009, 5010, 5011, 5004, 5005]},
+				{"ActionType" : "uaWalkArm","Dir" : "dirSW","X" : -3,"Y" : -46,"Steps" : [5022, 5023, 5024, 5025, 5026, 5027, 5020, 5021]},
+				{"ActionType" : "uaWalkArm","Dir" : "dirW","X" : 8,"Y" : -45,"Steps" : [5032, 5033, 5034, 5035, 5028, 5029, 5030, 5031]},
+				{"ActionType" : "uaWalkArm","Dir" : "dirNW","X" : 6,"Y" : -43,"Steps" : [5014, 5015, 5016, 5017, 5018, 5019, 5012, 5013]}
+			]
 		}
 	],
 	"SerfCarryAnimations" : 
@@ -5805,6 +5862,6 @@
 	"Barracks Order" : ["utFighter","utMilitia","utAxeFighter","utSwordFighter","utBowman","utCrossbowman","utLanceCarrier","utPikeman","utMaceFighter","utFlailFighter","utScout","utKnight"],
 	"Townhall Order" : ["utFighter","utRebel","utRogue","utClubMan","utVagabond", "utSkirmisher", "utBerserker","utShieldBearer","utBarbarian","utWarrior", "utMobileTower", "utFeeder", "utHouseBuilder", "utMountedSerf"],
 	"SiegeWorkshop Order" : ["utBallista","utCatapult","utRam","utWoodenWall"],
-	"Palace Order" : ["utFighter","utTrainedWolf","utTorchMan","utLekter","utMedic","utSpy","utSpikedTrap","utPaladin","utChampion","utAmmoCart", "utWarfareCart","utPikeMachine","utArcher","utPyro"],
+	"Palace Order" : ["utFighter","utTrainedWolf","utAlchemist","utTorchMan","utLekter","utMedic","utSpy","utSpikedTrap","utPaladin","utChampion","utAmmoCart", "utWarfareCart","utPikeMachine","utArcher","utPyro"],
 	"Shipyard Order" : ["utBoat","utShip","utBattleShip"]
 }

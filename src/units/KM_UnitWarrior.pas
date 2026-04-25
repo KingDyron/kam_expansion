@@ -533,6 +533,9 @@ begin
   and (aUnitType in [utBowMan, utCrossbowman, utRogue, utSkirmisher]) then
     fInfinityAmmo := true;
 
+  If aUnitType in [utAlchemist] then
+    fInfinityAmmo := true;
+
   If fInfinityAmmo then
     fBoltCount := 10000;
 
@@ -1468,6 +1471,8 @@ end;
 
 function TKMUnitWarrior.TakeBolt: Boolean;
 begin
+  If UnitType in [utAlchemist] then
+    Exit(true);
   Result := gRes.Units[UnitType].CanOrderAmmo;
   if not Result then
     Exit;
@@ -1708,6 +1713,7 @@ begin
       utBallista:  Result := BALLISTA_FIRING_DELAY;
       utCatapult:  Result := CATAPULT_FIRING_DELAY;
       utSkirmisher: Result := 4;
+      utAlchemist: Result := 3;
       else raise Exception.Create('Unknown shooter');
     end;
 end;
@@ -1741,6 +1747,7 @@ begin
       utBallista:  Result := BALLISTA_AIMING_DELAY_MIN + KaMRandom(BALLISTA_AIMING_DELAY_MIN, 'TKMUnitWarrior.GetAimingDelay 4');
       utCatapult:  Result := CATAPULT_AIMING_DELAY_MIN + KaMRandom(CATAPULT_AIMING_DELAY_ADD, 'TKMUnitWarrior.GetAimingDelay 5');
       utSkirmisher: Result := 10;
+      utAlchemist: Result := 6;
       else raise Exception.Create('Unknown shooter');
     end;
 
@@ -2038,6 +2045,7 @@ begin
     utCatapult : Result := ptCatapultRock;
     utRogue:  Result := ptSlingRock;
     utSkirmisher:  Result := ptLance;
+    utAlchemist:  Result := ptLance;
     else raise Exception.Create('Unknown shooter');
   end;
 end;
