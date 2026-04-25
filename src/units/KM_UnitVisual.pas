@@ -26,6 +26,7 @@ type
     fCurr: TKMUnitVisualState;
     fPrev: TKMUnitVisualState;
     fPrevPrev: TKMUnitVisualState;
+    fRandomPos : TKMPointF;
   public
     constructor Create(aUnit: TObject);
 
@@ -84,6 +85,8 @@ begin
   fUnit := TKMUnit(aUnit);
   fPrev.SetFromUnit(fUnit);
   fCurr.SetFromUnit(fUnit);
+  fRandomPos.X := (Random - 0.5) / 3.5;
+  fRandomPos.Y:= (Random - 0.5) / 3.5;
 end;
 
 
@@ -171,6 +174,8 @@ begin
         Result.AnimFraction := 0.0;
     end;
   end;
+  Result.SlideX := Result.SlideX + fRandomPos.X;
+  Result.SlideY := Result.SlideY + fRandomPos.Y;
 end;
 
 

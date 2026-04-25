@@ -1855,14 +1855,15 @@ begin
     Result := Result + 4;
   If (UnitType = utVagabond) and gHands[Owner].ArmyDevUnlocked(28) then
     Result := Result + 4;
-  If not (UnitType in SPECIAL_UNITS) then
-  begin
-    If TKMUnitGroup(fGroup).HasUnitType(utChampion) then
-      Result := Result + 4
-    else
-    If TKMUnitGroup(fGroup).HasUnitType(utWarfareCart) then
-      Result := Result + 4;
-  end;
+  iF fGroup <> nil then
+    If not (UnitType in SPECIAL_UNITS) then
+    begin
+      If TKMUnitGroup(fGroup).HasUnitType(utChampion) then
+        Result := Result + 4
+      else
+      If TKMUnitGroup(fGroup).HasUnitType(utWarfareCart) then
+        Result := Result + 4;
+    end;
 end;
 
 function TKMUnitWarrior.CanJoinToGroup(aGroup: Pointer): Boolean;

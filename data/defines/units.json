@@ -5122,7 +5122,7 @@
 			[	
 				{"ActionType" : "uaWalk", "StartStep" : 17954, "StepsCount" : 8},
 				{"ActionType" : "uaWork", "StartStep" : 18018, "StepsCount" : 18},
-				{"ActionType" : "uaStay", "StartStep" : 18162, "StepsCount" : 14, "CopyFirst" : 4}
+				{"ActionType" : "uaStay", "StartStep" : 18162, "StepsCount" : 14, "CopyFirst" : 15}
 			],
 			"Animations" : 
 			[
