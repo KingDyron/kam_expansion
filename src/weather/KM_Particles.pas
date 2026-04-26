@@ -15,7 +15,6 @@ type
       fCount : Integer;
       fCounter : Cardinal;
       fParticles : TKMParticles;
-
       ParticlesAnims : array of TKMAnimation;
     protected
     public
@@ -27,6 +26,7 @@ type
       procedure AddGoldLightning(aStartPos : TKMPointF);
       procedure AddWeatherParticle(aStartPos : TKMPointF; aClimate : TKMTerrainClimate);
       procedure AddDustParticle(aStartPos : TKMPointF);
+      procedure AddUnitEffectParticle(aStartPos : TKMPointF; aEffect : TKMUnitEffectType);
 
       procedure Delete(aIndex : Integer);
 
@@ -164,6 +164,23 @@ begin
       rSpeed, //speed/vector
       gRes.Units.BootsAnim.Count, rxUnits, //lifeTime, rxType
       gRes.Units.BootsAnim,
+      true
+    );
+end;
+
+procedure TKMParticlesCollection.AddUnitEffectParticle(aStartPos : TKMPointF; aEffect : TKMUnitEffectType);
+const MAX_SPEED_X = 0.04;
+var rSpeed : TKMPointF;
+begin
+  If aEffect = uetNone then
+    Exit;
+  rSpeed.X := (Random(100) / 100 * MAX_SPEED_X) - MAX_SPEED_X / 2;
+  rSpeed.Y := -Random(100) / 100 / 20 - 0.02;
+  aStartPos.X := aStartPos.X + 0.25 + (Random / 4);
+  Add(aStartPos, //startpos
+      rSpeed, //speed/vector
+      15, rxGui, //lifeTime, rxType
+      gRes.Units.EffectAnim[aEffect],
       true
     );
 end;

@@ -102,6 +102,7 @@ type
     function FindPlaceForUnit(aX, aY: Integer; aUnitType: TKMUnitType; var aPlacePoint: TKMPoint; aRequiredWalkConnect: Byte): Boolean; overload;
 
     procedure HitAllInRadius(aOwner, aBaseUnit: TKMUnit; aTilePos: TKMPointF; aRadius: Single; Damage, UDamage, HDamage : Integer);
+    procedure HitAlchemist(aOwner: TKMUnit; aTilePos: TKMPointF; aRadius: Single);
     //Check how Player1 feels towards Player2
     //Note: this is position dependant, e.g. Player1 may be allied with
     //      Player2, but Player2 could be an enemy to Player1
@@ -1050,6 +1051,27 @@ begin
     H.AddDamage(HDamage, aOwner, false);
   end;
 
+
+end;
+
+procedure  TKMHandsCollection.HitAlchemist(aOwner: TKMUnit; aTilePos: TKMPointF; aRadius: Single);
+var arr : TPointerArray;
+  U : TKMUnit;
+  H : TKMHouse;
+  I : Integer;
+begin
+
+  gTerrain.UnitsHitAllTestF(aTilePos, aRadius, arr);
+
+  for I := 0 to High(arr) do
+  begin
+    U := TKMUnit(arr[I]);
+    if U = nil then
+      Continue;
+    U.SetHitTime;
+    gScriptEvents.ProcUnitHit(U, aOwner);
+    U.AddEffect(uetPoison, 200);
+  end;
 
 end;
 

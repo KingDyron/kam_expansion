@@ -24,9 +24,8 @@ type
 
   TKMActionResult = (arActContinues, arActDone, arActAborted, arActCanNotStart);
 
-  TKMUnitEffectType = (uetNone, uetHealing, uetSpeedUp, uetAttack, uetDefence);
   TKMUnitEffect = record
-    Duration : Word;
+    Duration, Power : Word;
     EffectType : TKMUnitEffectType;
   end;
 
@@ -170,6 +169,7 @@ type
     procedure SetPositionF(const aPositionF: TKMPointF);
     function GetIsSelectable: Boolean; override;
     procedure PaintUnit(aTickLag: Single); virtual;
+    procedure SetEffect(aType : TKMUnitEffectType; aDuration : Word = 0);
   public
     FlagColor : Cardinal;
     AnimStep: Integer;
@@ -281,7 +281,7 @@ type
     procedure GoToStore(aLocTo : TKMPoint);
     procedure GoToPearl(aLocTo : TKMPoint);
     procedure GoMakePearlRally(aPearl : TKMHouse);
-    procedure SetEffect(aType : TKMUnitEffectType; aDuration : Word);
+    procedure AddEffect(aType : TKMUnitEffectType; aDuration : Word);//it's almost the same as set effect but with some interractions with next effect
 
     procedure CancelTask(aFreeTaskObject: Boolean = True);
     property  Visible: Boolean read fVisible write fVisible;
@@ -2717,7 +2717,7 @@ end;
 
 procedure TKMUnit.SetHitTime;
 begin
-  If fSpecialEffect.EffectType <> uetHealing then
+  If not (fSpecialEffect.EffectType in [uetHealing, uetHealingPearl, uetHealingMedic]) then
     fHitPointCounter := 1;
 end;
 
@@ -2853,10 +2853,56 @@ begin
     fTask := TKMTaskPearlRally.Create(self, TKMHousePearl(aPearl));
 end;
 
-procedure TKMUnit.SetEffect(aType: TKMUnitEffectType; aDuration: Word);
+procedure TKMUnit.SetEffect(aType: TKMUnitEffectType; aDuration: Word = 0);
 begin
   fSpecialEffect.EffectType := aType;
+  If aType = uetNone then
+  begin
+    fSpecialEffect.Duration := 0;
+    fSpecialEffect.Power := 0;
+    Exit;
+  end;
   fSpecialEffect.Duration := (aDuration div 10) * 10;
+  fSpecialEffect.Power := 1;
+end;
+
+procedure TKMUnit.AddEffect(aType: TKMUnitEffectType; aDuration: Word);
+  procedure DoSetEffect;
+  begin
+    If fSpecialEffect.EffectType = uetNone then
+      SetEffect(aType, aDuration);
+  end;
+begin
+  If (aType = uetPoison) then
+  begin
+    If (fSpecialEffect.EffectType in [uetHealing, uetHealingMedic, uetHealingPearl]) then //remove healing effect
+      SetEffect(uetNone, 0)
+    else
+    If (fSpecialEffect.EffectType = uetPoison) then //increase poison effect
+    begin
+      fSpecialEffect.Duration := (aDuration div 10) * 10;
+      Inc(fSpecialEffect.Power)
+    end
+    else
+      DoSetEffect;//set new effect
+
+  end else
+  If (aType in [uetHealingPearl, uetHealingMedic]) then //healing from pearl and medic can add up
+  begin
+    If (fSpecialEffect.EffectType = uetPoison) then //remove poison effect
+      SetEffect(uetNone, 0)
+    else
+    If (fSpecialEffect.EffectType in ([uetHealingPearl, uetHealingMedic] - [aType])) then //increase healing effect
+    begin
+      SetEffect(uetHealing, aDuration);
+      fSpecialEffect.Duration := (aDuration div 10) * 10;
+      fSpecialEffect.Power := 2;
+    end
+    else
+      DoSetEffect;//set new effect
+
+  end else
+    DoSetEffect;//set new effect
 end;
 
 procedure TKMUnit.SetThought(aThought: TKMUnitThought);
@@ -3599,6 +3645,8 @@ begin
   restorePace := HITPOINT_RESTORE_PACE;
   If gHands[Owner].ArmyDevUnlocked(10) then
     restorePace := restorePace - 20;
+  If fSpecialEffect.EffectType in [uetHealing, uetHealingPearl, uetHealingMedic] then
+    restorePace := restorePace div (fSpecialEffect.Power + 1);
   //Use fHitPointCounter as a counter to restore hit points every X ticks (Humbelum says even when in fights)
   if restorePace = 0 then Exit; //0 pace means don't restore
 
@@ -3613,7 +3661,7 @@ function TKMUnit.GetDefence : SmallInt;
 begin
   Result := fDefence;
 
-  inc(Result, byte(fSpecialEffect.EffectType = uetDefence) * 3);
+  inc(Result, byte(fSpecialEffect.EffectType = uetDefence) * 3 * fSpecialEffect.Power);
   if fCondition < 150 then
     Result := Result - 3
   else
@@ -3643,7 +3691,7 @@ end;
 function TKMUnit.GetAttack : SmallInt;
 begin
   Result := fAttack;
-  inc(Result, byte(fSpecialEffect.EffectType = uetAttack) * 50);
+  inc(Result, byte(fSpecialEffect.EffectType = uetAttack) * 50 * fSpecialEffect.Power);
 
   if fCondition < 150 then
     Result := Round(Result * 0.25)
@@ -3673,7 +3721,7 @@ begin
     rtExclusive: Result := Result + 10;
   end;
   If fSpecialEffect.EffectType = uetSpeedUp then
-    Result := Result + 6;
+    Result := Result + 6 * fSpecialEffect.Power;
 end;
 
 function TKMUnit.GetSpeedF : Single;
@@ -4080,9 +4128,11 @@ begin
   begin
     If (fSpecialEffect.Duration > 0) then
     begin
+      If Visible then
+        gParticles.AddUnitEffectParticle(fPositionF, fSpecialEffect.EffectType);
       Dec(fSpecialEffect.Duration, 10);
       If fSpecialEffect.Duration = 0 then
-        fSpecialEffect.EffectType := uetNone;
+        SetEffect(uetNone);
     end;
 
     if gTerrain.TileHasPalisade(fPositionRound.X, fPositionRound.Y) then

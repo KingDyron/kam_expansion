@@ -2112,6 +2112,7 @@ begin
     ptLance: A := gRes.Units[utSkirmisher].UnitAnim[uaSpec, aDir];
     ptTowerRock,
     ptCatapultRock:      A :=gRes.Units[utCatapult].UnitAnim[uaSpec, aDir];
+    ptRedVial:     A :=gRes.Units[utAlchemist].UnitAnim[uaSpec, aDir];
     //ptTowerRock: A :=gRes.Units[utRecruit].UnitAnim[uaSpec, aDir];
     else  Exit;
   end;

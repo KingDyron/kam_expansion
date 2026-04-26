@@ -494,6 +494,9 @@ const
   function GetKeyFunctionStr(aKeyFun: TKMKeyFunction): string;
   procedure ClearWarePlan(var aPlan : TKMWarePlan);
 
+type
+  TKMUnitEffectType = (uetNone, uetHealing, uetSpeedUp, uetAttack, uetDefence, uetPoison, uetHealingPearl, uetHealingMedic);
+
 implementation
 uses
   TypInfo;

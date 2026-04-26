@@ -3,7 +3,8 @@ unit KM_CommonGameTypes;
 interface
 
 type
-  TKMProjectileType = (ptArrow, ptBolt, ptSlingRock, ptTowerRock, ptCatapultRock, ptBallistaBolt, ptTowerBolt, ptWallBolt, ptLance);
+  TKMProjectileType = (ptArrow, ptBolt, ptSlingRock, ptTowerRock, ptCatapultRock, ptBallistaBolt, ptTowerBolt, ptWallBolt, ptLance,
+                      ptRedVial);
   
 implementation
 

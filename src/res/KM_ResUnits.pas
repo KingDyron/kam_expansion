@@ -166,6 +166,7 @@ type
     Thought : TKMAnimation;
     PastureAnimals: array[TKMPastureAnimalType] of TKMPasAnimalSpec;//Anim : array[TKMPastureAnimalType, TKMPastureAnimalAction, dirN..dirNW] of TKMAnimation;
     FireAnim : TKMAnimation;
+    EffectAnim : array[uetHealing..high(TKMUnitEffectType)] of TKMAnimation;
     constructor Create;
     destructor Destroy; override;
 
@@ -719,6 +720,7 @@ begin
     utBerserker: Result := 1188;
     utChampion: Result := 1211;
     utWarfareCart: Result := 1213;
+    utAlchemist: Result := 1215;
   else
     if IsCitizen then
       Result := 141 + UNIT_TYPE_TO_ID[fUnitType]
@@ -774,6 +776,7 @@ begin
       utBerserker: Result := 1189;
       utChampion: Result := 1210;
       utWarfareCart: Result := 1212;
+      utAlchemist: Result := 1214;
     end;
   end;
 end;
@@ -882,6 +885,7 @@ begin
     utBerserker:         Result := 2324;
     utChampion:          Result := 2360;
     utWarfareCart:       Result := 2361;
+    utAlchemist:       Result := 2363;
   else
     Result := TX_UNITS_NAMES__29 + UNIT_TYPE_TO_ID[fUnitType];
   end;
@@ -1242,6 +1246,7 @@ var
   UT: TKMUnitType;
   //act : TKMUnitActionType;
   dir : TKMDirection;
+  ET : TKMUnitEffectType;
 begin
   inherited;
 
@@ -1277,6 +1282,9 @@ begin
     If fItems[UT].fUnitDat.Speed < 4 then
       fItems[UT].fUnitDat.Speed := 8;
   end;
+
+  for ET := uetHealing to High(TKMUnitEffectType) do
+    EffectAnim[ET].Create(0, 0, [1215 + byte(ET)]);
 
   CalculateTroopTrainOrder;
 end;

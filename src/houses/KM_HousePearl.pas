@@ -554,7 +554,7 @@ begin
   effectType := uetNone;
 
   case fPearlType of
-    ptValtaria : effectType := uetHealing;
+    ptValtaria : effectType := uetHealingPearl;
     ptArium : effectType := uetSpeedUp;
 
     ptAgros : effectType := uetAttack;
@@ -564,7 +564,7 @@ begin
   for I := 0 to gHands[Owner].Units.Count - 1 do
     If (KMLengthDiag(gHands[Owner].Units[I].Position, PearlCenter) <= AuraDistance)
       and not gHands[Owner].Units[I].IsDeadOrDying then
-      gHands[Owner].Units[I].SetEffect(effectType, 100);
+      gHands[Owner].Units[I].AddEffect(effectType, 100);
 end;
 
 
