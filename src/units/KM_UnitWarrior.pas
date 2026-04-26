@@ -90,7 +90,6 @@ type
     procedure SetAllowAllyToSelect(aAllow: Boolean); override;
     function GetDefence : SmallInt;override;
     function GetAttack : SmallInt; override;
-    procedure UpdateHitPoints(UseEffect : Boolean = true); override;
     procedure PaintUnit(aTickLag: Single); override;
     procedure DoDismiss;override;
     function IsSelected : Boolean; override;
@@ -317,6 +316,7 @@ type
 
       procedure Save(SaveStream: TKMemoryStream); override;
       property IsHealing : Boolean read fIsHealing;
+      procedure CheckHealing;
       function UpdateState : Boolean; override;
   end;
 
@@ -500,7 +500,7 @@ uses
   KM_UnitTaskThrowRock, KM_UnitTaskGoForBoots, KM_UnitTaskGoOutShowHungry,
   KM_Game, KM_MapTypes,
   KM_GameParams, KM_CommonUtils, KM_RenderDebug, KM_UnitVisual, KM_RenderAux,
-  KM_CommonExceptions, KM_CommonHelpers,
+  KM_CommonExceptions, KM_CommonHelpers, KM_CommonTypes,
   KM_UnitGroupTypes,
   KM_ScriptingEvents,
   KM_Projectiles;
@@ -978,7 +978,7 @@ begin
   if not fRequestedAmmo then
   begin
     case gRes.Units[UnitType].AmmoType of
-      uatNone: ;
+      //uatNone: ;
       uatArrow: gHands[Owner].Deliveries.Queue.AddDemand(nil, Self, wtQuiver, IfThen(UnitType in [utMobileTower], 2, 1), dtOnce, diHigh2);
       uatRogueStone: gHands[Owner].Deliveries.Queue.AddDemand(nil, Self, wtStoneBolt, 1, dtOnce, diHigh2);
       uatStoneBolt: gHands[Owner].Deliveries.Queue.AddDemand(nil, Self, wtStoneBolt, 2, dtOnce, diHigh2);
@@ -1001,7 +1001,7 @@ begin
     Inc(fBoltCount, 500)
   else
   case gRes.Units[UnitType].AmmoType of
-    uatNone: ;
+    //uatNone: ;
     uatArrow: Inc(fBoltCount, 90 + KamRandom(20, 'TKMUnitWarrior.ReloadAmmo1'));
     uatRogueStone: Inc(fBoltCount, 90 + KamRandom(20, 'RTKMUnitWarrior.ReloadAmmo2'));
     uatStoneBolt: If doMax then Inc(fBoltCount, 20) else Inc(fBoltCount, 10);
@@ -1012,7 +1012,7 @@ begin
 
   If (gGame.Params.Tick > 1) and gHands[Owner].ArmyDevUnlocked(19) then
     case gRes.Units[UnitType].AmmoType of
-      uatNone: ;
+      //uatNone: ;
       uatArrow: Inc(fBoltCount, 30);
       uatRogueStone: Inc(fBoltCount, 30);
       uatStoneBolt: Inc(fBoltCount, 5);
@@ -1023,7 +1023,7 @@ begin
 
   If (gGame.Params.Tick > 1) and gHands[Owner].ArmyDevUnlocked(20) then
     case gRes.Units[UnitType].AmmoType of
-      uatNone: ;
+      //uatNone: ;
       uatArrow: Inc(fBoltCount, 50);
       uatRogueStone: Inc(fBoltCount, 50);
       uatStoneBolt: Inc(fBoltCount, 7);
@@ -1756,43 +1756,6 @@ begin
     Result := Result + 10;
 
 end;
-
-procedure TKMUnitWarrior.UpdateHitPoints(UseEffect : Boolean = true);
-var medicsCount : Byte;
-  restorePace : Byte;
-begin
-  if UnitType in UNITS_SHIPS then   //do not increase health if it's ship
-    Exit;
-  If IsDeadOrDying then
-    Exit;
-  restorePace := HITPOINT_RESTORE_PACE;
-  If gHands[Owner].ArmyDevUnlocked(10) then
-    restorePace := restorePace - 20;
-  //Use fHitPointCounter as a counter to restore hit points every X ticks (Humbelum says even when in fights)
-  if restorePace = 0 then Exit; //0 pace means don't restore
-  medicsCount := 0;
-  if Group <> nil then
-  begin
-    medicsCount := TKMUnitGroup(Group).UnitTypeCount(utMedic);
-    medicsCount := Min(medicsCount, (TKMUnitGroup(Group).Count - medicsCount) div 2);
-  end;
-  if medicsCount > 0 then
-  begin
-    if (fTicker mod (restorePace div medicsCount) = 0)
-      and (fHitPoints < HitPointsMax) then
-      Inc(fHitPoints);
-
-  end else
-  if (fHitPointCounter > 200) then
-    if (fHitPointCounter mod restorePace = 0)
-      and (fHitPoints < HitPointsMax) then
-      Inc(fHitPoints);
-
-  Inc(fHitPointCounter, 1); //Increasing each tick by 1 would require 13,6 years to overflow Cardinal
-  If UseEffect and (fSpecialEffect.EffectType = uetHealing) then
-    UpdateHitPoints(false);
-end;
-
 
 function TKMUnitWarrior.GetDefence : SmallInt;
 begin
@@ -2541,9 +2504,6 @@ var
   unitPos: TKMPointF;
   fillColor, lineColor: Cardinal;
 begin
-  {if not (fType in [utSpy, utSpikedTrap, utMedic]) then
-  begin}
-
   V := fVisual.GetLerp(aTickLag);
 
   act := V.Action;
@@ -2746,6 +2706,9 @@ begin
   If gHands[Owner].ArmyDevUnlocked(35) then
     restorePace := 50;
 
+  If fSpecialEffect.EffectType in [uetHealing, uetHealingPearl, uetHealingMedic] then
+    restorePace := restorePace div (fSpecialEffect.Power + 1);
+
   if restorePace = 0 then Exit; //0 pace means don't restore
 
   if (fHitPointCounter > 200) then
@@ -2754,7 +2717,7 @@ begin
       Inc(fHitPoints);
 
   Inc(fHitPointCounter, 1); //Increasing each tick by 1 would require 13,6 years to overflow Cardinal
-  If UseEffect and (fSpecialEffect.EffectType = uetHealing) then
+  If UseEffect and (fSpecialEffect.EffectType  in [uetHealing, uetHealingPearl, uetHealingMedic]) then
     UpdateHitPoints(false);
 end;
 
@@ -3681,50 +3644,41 @@ begin
   SaveStream.Write(fIsHealing);
 end;
 
-function TKMUnitWarriorMedic.UpdateState: Boolean;
-var tmp : Boolean;
-  //I : Integer;
+procedure TKMUnitWarriorMedic.CheckHealing;
+var arr : TPointerArray;
+  I : integer;
+  U : TKMUnit;
+begin
+  If not IsIdle then
+    Exit;
+  SetLength(arr, 0);
+  gTerrain.UnitsHitAllTestF(PositionF, 5, arr);
+  for I := 0 to High(arr) do
+  begin
+    U := TKMUnit(arr[I]);
+    If U.IsDeadOrDying or (U = self) or not U.Visible
+    or (U.Owner <> Owner) then
+      Continue;
 
+    U.AddEffect(uetHealingMedic, 150);
+    U.Heal(1);
+    If fHealingTick = 0 then
+      fHealingTick := Spec.UnitAnim[uaSpec, Direction].Count * 2;
+  end;
+
+
+end;
+
+function TKMUnitWarriorMedic.UpdateState: Boolean;
 begin
   Result := inherited;
+  If not IsIdle then
+    fHealingTick := 0;
 
-  tmp := fIsHealing;
-
-  if Group <> nil then
-  begin
-    fIsHealing := TKMUnitGroup(Group).HasDamagedUnits(false);
-    If TKMUnitGroup(Group).InFight(false) then
-      BlockWalking := true
-    else
-      BlockWalking := false;
-
-  end
-  else
-    fIsHealing := false;
-  if fIsHealing <> tmp then
-  begin
-    if fIsHealing then
-    begin
-      fHealingTick := fTicker;
-      OrderStay(true);
-      BlockWalking := true;
-    end
-    else
-    begin
-      fHealingTick := 0;
-      OrderStay(true);
-      BlockWalking := false;
-    end;
-  end;
-  if fIsHealing then
-  begin
-    if PositionPrev = self.PositionNext then
-      if (Action <> nil) and Action.CanBeInterrupted(true) then
-        SetActionLockedStay(64, uaSpec, false)
-    else
-    else
-      OrderStay(true);
-  end;
+  if (fHealingTick > 0) then
+    dec(fHealingTick);
+  If fTicker mod 100 = 0 then
+    CheckHealing;
 end;
 
 procedure TKMUnitWarriorMedic.PaintUnit(aTickLag: Single);
@@ -3741,7 +3695,7 @@ begin
   if (fHealingTick > 0) then
   begin
     act := uaSpec;
-    animStep := fTicker - fHealingTick;
+    animStep := fTicker;
   end
   else
   begin

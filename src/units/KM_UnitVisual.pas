@@ -26,7 +26,6 @@ type
     fCurr: TKMUnitVisualState;
     fPrev: TKMUnitVisualState;
     fPrevPrev: TKMUnitVisualState;
-    fRandomPos : TKMPointF;
   public
     constructor Create(aUnit: TObject);
 

@@ -240,6 +240,7 @@ type
     procedure SetActionWalkPushed(const aLocB: TKMPoint; aActionType: TKMUnitActionType = uaWalk);
 
     procedure Feed(Amount: Single);
+    procedure Heal(aAmount : Byte);
     function IsHungry: Boolean;
     procedure AbandonWalk;
     property  DesiredPassability: TKMTerrainPassability read GetDesiredPassability;
@@ -2027,7 +2028,7 @@ begin
     fStartWDefaultCondition := True;
   end;
 
-  fHitPointCounter := 1;
+  fHitPointCounter := 200;
   HitPointsInvulnerable := False;
 
   fAttack     := gRes.Units[fType].Attack;
@@ -2869,7 +2870,7 @@ end;
 procedure TKMUnit.AddEffect(aType: TKMUnitEffectType; aDuration: Word);
   procedure DoSetEffect;
   begin
-    If fSpecialEffect.EffectType = uetNone then
+    If fSpecialEffect.EffectType in [uetNone, aType] then
       SetEffect(aType, aDuration);
   end;
 begin
@@ -3349,6 +3350,11 @@ begin
   fCondition := Math.min(fCondition + Round(Amount), UNIT_MAX_CONDITION);
 end;
 
+procedure TKMUnit.Heal(aAmount: Byte);
+begin
+  fHitPoints := EnsureRange(fHitPoints + aAmount, 0, fHitPointsMax);
+end;
+
 
 function TKMUnit.IsHungry: Boolean;
 begin
@@ -3642,11 +3648,13 @@ var restorePace : Byte;
 begin
   if UnitType in UNITS_SHIPS then   //do not increase health if it's ship
     Exit;
+  If IsDeadOrDying then
+    Exit;
   restorePace := HITPOINT_RESTORE_PACE;
   If gHands[Owner].ArmyDevUnlocked(10) then
     restorePace := restorePace - 20;
   If fSpecialEffect.EffectType in [uetHealing, uetHealingPearl, uetHealingMedic] then
-    restorePace := restorePace div (fSpecialEffect.Power + 1);
+    restorePace := restorePace div ((fSpecialEffect.Power + 1) * 2);
   //Use fHitPointCounter as a counter to restore hit points every X ticks (Humbelum says even when in fights)
   if restorePace = 0 then Exit; //0 pace means don't restore
 

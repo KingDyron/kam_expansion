@@ -2725,10 +2725,12 @@ var
   U: TKMUnit;
   T: Single;
   units : TPointerArray;
+  Rad : Word;
 begin
   SetLength(units, 0);
-  for I := Max(Trunc(aLoc.Y) - 1, 1) to Min(Trunc(aLoc.Y) + 2, fMapY) do
-    for K := Max(Trunc(aLoc.X) - 1, 1) to Min(Trunc(aLoc.X) + 2, fMapX) do
+  Rad := round(aRadius);
+  for I := Max(Trunc(aLoc.Y) - Rad, 1) to Min(Trunc(aLoc.Y) + Rad, fMapY - 1) do
+    for K := Max(Trunc(aLoc.X) - Rad, 1) to Min(Trunc(aLoc.X) + Rad, fMapX - 1) do
     begin
       U := Land^[I,K].IsUnit;
       if (U <> nil) and not U.IsDeadOrDying and not U.IsAnimal then

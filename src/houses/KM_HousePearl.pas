@@ -564,7 +564,10 @@ begin
   for I := 0 to gHands[Owner].Units.Count - 1 do
     If (KMLengthDiag(gHands[Owner].Units[I].Position, PearlCenter) <= AuraDistance)
       and not gHands[Owner].Units[I].IsDeadOrDying then
-      gHands[Owner].Units[I].AddEffect(effectType, 100);
+      begin
+        gHands[Owner].Units[I].AddEffect(effectType, 150);
+        gHands[Owner].Units[I].Heal(2);
+      end;
 end;
 
 
