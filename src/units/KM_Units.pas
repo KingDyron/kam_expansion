@@ -2882,7 +2882,7 @@ begin
     If (fSpecialEffect.EffectType = uetPoison) then //increase poison effect
     begin
       fSpecialEffect.Duration := (aDuration div 10) * 10;
-      Inc(fSpecialEffect.Power)
+      EnsureRange(fSpecialEffect.Power + 1, 0, 5)
     end
     else
       DoSetEffect;//set new effect
@@ -3651,16 +3651,23 @@ begin
   If IsDeadOrDying then
     Exit;
   restorePace := HITPOINT_RESTORE_PACE;
-  If gHands[Owner].ArmyDevUnlocked(10) then
-    restorePace := restorePace - 20;
-  If fSpecialEffect.EffectType in [uetHealing, uetHealingPearl, uetHealingMedic] then
-    restorePace := restorePace div ((fSpecialEffect.Power + 1) * 2);
-  //Use fHitPointCounter as a counter to restore hit points every X ticks (Humbelum says even when in fights)
-  if restorePace = 0 then Exit; //0 pace means don't restore
+  If fSpecialEffect.EffectType = uetPoison then
+    If fTicker mod (200 div fSpecialEffect.Power) = 0 then
+      HitPointsDecrease(1, nil);
 
-  if fHitPointCounter > 200 then//wait minimum 20 seconds
-    if (fHitPointCounter mod restorePace = 0) and (fHitPoints < HitPointsMax) then
-      Inc(fHitPoints);
+  If fSpecialEffect.EffectType <> uetPoison then
+  begin
+    If gHands[Owner].ArmyDevUnlocked(10) then
+      restorePace := restorePace - 20;
+    If fSpecialEffect.EffectType in [uetHealing, uetHealingPearl, uetHealingMedic] then
+      restorePace := restorePace div ((fSpecialEffect.Power + 1) * 2);
+    //Use fHitPointCounter as a counter to restore hit points every X ticks (Humbelum says even when in fights)
+    if restorePace = 0 then Exit; //0 pace means don't restore
+
+    if fHitPointCounter > 200 then//wait minimum 20 seconds
+      if (fHitPointCounter mod restorePace = 0) and (fHitPoints < HitPointsMax) then
+        Inc(fHitPoints);
+  end;
 
   Inc(fHitPointCounter, 1); //Increasing each tick by 1 would require 13,6 years to overflow Cardinal
 end;

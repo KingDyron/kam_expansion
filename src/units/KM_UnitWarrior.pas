@@ -1746,8 +1746,8 @@ begin
       utRogue:  Result := SLINGSHOT_AIMING_DELAY_MIN + KaMRandom(SLINGSHOT_AIMING_DELAY_ADD, 'TKMUnitWarrior.GetAimingDelay 3');
       utBallista:  Result := BALLISTA_AIMING_DELAY_MIN + KaMRandom(BALLISTA_AIMING_DELAY_MIN, 'TKMUnitWarrior.GetAimingDelay 4');
       utCatapult:  Result := CATAPULT_AIMING_DELAY_MIN + KaMRandom(CATAPULT_AIMING_DELAY_ADD, 'TKMUnitWarrior.GetAimingDelay 5');
-      utSkirmisher: Result := 10;
-      utAlchemist: Result := 6;
+      utSkirmisher: Result := 10 + KaMRandom(5, 'TKMUnitWarrior.GetAimingDelay 6');
+      utAlchemist: Result := 6 + KaMRandom(10, 'TKMUnitWarrior.GetAimingDelay 7');
       else raise Exception.Create('Unknown shooter');
     end;
 
@@ -2009,7 +2009,7 @@ begin
     utCatapult : Result := ptCatapultRock;
     utRogue:  Result := ptSlingRock;
     utSkirmisher:  Result := ptLance;
-    utAlchemist:  Result := ptLance;
+    utAlchemist:  Result := ptRedVial;
     else raise Exception.Create('Unknown shooter');
   end;
 end;
@@ -2699,22 +2699,28 @@ begin
   If IsDeadOrDying then
     Exit;
   restorePace := HITPOINT_RESTORE_PACE;
+  If fSpecialEffect.EffectType = uetPoison then
+    If fTicker mod (200 div fSpecialEffect.Power) = 0 then
+      HitPointsDecrease(1, nil);
 
-  If gHands[Owner].ArmyDevUnlocked(10) then
-    restorePace := restorePace - 20;
+  If fSpecialEffect.EffectType <> uetPoison then
+  begin
+    If gHands[Owner].ArmyDevUnlocked(10) then
+      restorePace := restorePace - 20;
 
-  If gHands[Owner].ArmyDevUnlocked(35) then
-    restorePace := 50;
+    If gHands[Owner].ArmyDevUnlocked(35) then
+      restorePace := 50;
 
-  If fSpecialEffect.EffectType in [uetHealing, uetHealingPearl, uetHealingMedic] then
-    restorePace := restorePace div (fSpecialEffect.Power + 1);
+    If fSpecialEffect.EffectType in [uetHealing, uetHealingPearl, uetHealingMedic] then
+      restorePace := restorePace div (fSpecialEffect.Power + 1);
 
-  if restorePace = 0 then Exit; //0 pace means don't restore
+    if restorePace = 0 then Exit; //0 pace means don't restore
 
-  if (fHitPointCounter > 200) then
-    if (fHitPointCounter mod restorePace = 0)
-      and (fHitPoints < HitPointsMax) then
-      Inc(fHitPoints);
+    if (fHitPointCounter > 200) then
+      if (fHitPointCounter mod restorePace = 0)
+        and (fHitPoints < HitPointsMax) then
+        Inc(fHitPoints);
+  end;
 
   Inc(fHitPointCounter, 1); //Increasing each tick by 1 would require 13,6 years to overflow Cardinal
   If UseEffect and (fSpecialEffect.EffectType  in [uetHealing, uetHealingPearl, uetHealingMedic]) then
