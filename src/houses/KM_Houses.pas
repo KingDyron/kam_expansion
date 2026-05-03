@@ -140,7 +140,7 @@ type
     // Delivery mode set with small delay (couple of ticks), to avoid occasional clicks on delivery mode button
     fUpdateDeliveryModeOnTick: Cardinal; // Tick, on which we have to update real delivery mode with its NEW value
 
-    fWareIn: array[1..WARES_IN_OUT_COUNT] of Byte; // Ware count in input
+    fWareIn: array[1..WARES_IN_OUT_COUNT] of Word; // Ware count in input
     fWareBlocked: array[1..WARES_IN_OUT_COUNT] of Word; // Ware count in input
     fWareInput : array[1..WARES_IN_OUT_COUNT] of TKMWareType;
     fWareOutput : array[1..WARES_IN_OUT_COUNT] of TKMWareType;
@@ -157,9 +157,9 @@ type
     fWareDeliveryCount: array[1..WARES_IN_OUT_COUNT] of Word; // = fWareIn + Demands count (including closing demands)
     fWareDemandsClosing: array[1..WARES_IN_OUT_COUNT] of Word; // Number of closing demands at the moment
 
-    fWareOut: array [1..WARES_IN_OUT_COUNT] of Byte; //Resource count in output
+    fWareOut: array [1..WARES_IN_OUT_COUNT] of Word; //Resource count in output
     fWareOrder: array [1..WARES_IN_OUT_COUNT] of Word; //If HousePlaceOrders=True then here are production orders
-    fWareOutPool: array[0..19] of Byte;
+    fWareOutPool: array[0..19] of Word;
     fFoodToRot : TKMArray<TKMHouseRottenFood>;
     fLastOrderProduced: Byte;
 //    fWareOrderDesired: array [1..4] of Single;
@@ -196,9 +196,9 @@ type
 
     fSoundPlayedAt : Cardinal;
     procedure CheckOnTerrain;
-    function GetWareInArray: TKMByteArray;
-    function GetWareOutArray: TKMByteArray;
-    function GetWareOutPoolArray: TKMByteArray;
+    function GetWareInArray: TKMWordArray;
+    function GetWareOutArray: TKMWordArray;
+    function GetWareOutPoolArray: TKMWordArray;
 
     procedure SetIsClosedForWorker(aIsClosed: Boolean);
     function GetClosedForWorker : Boolean; virtual;
@@ -390,9 +390,9 @@ type
     function GetBuildResourceDelivered: Byte;
     function GetBuildResDeliveredPercent: Single;
 
-    property WareInArray: TKMByteArray read GetWareInArray;
-    property WareOutArray: TKMByteArray read GetWareOutArray;
-    property WareOutPoolArray: TKMByteArray read GetWareOutPoolArray;
+    property WareInArray: TKMWordArray read GetWareInArray;
+    property WareOutArray: TKMWordArray read GetWareOutArray;
+    property WareOutPoolArray: TKMWordArray read GetWareOutPoolArray;
 
     property BuildingState: TKMHouseBuildState read fBuildState write fBuildState;
     property BuildSupplyWood: Byte read fBuildSupplyWood;
@@ -3419,7 +3419,7 @@ begin
 end;
 
 
-function TKMHouse.GetWareInArray: TKMByteArray;
+function TKMHouse.GetWareInArray: TKMWordArray;
 var
   I, iOffset: Integer;
 begin
@@ -3430,7 +3430,7 @@ begin
 end;
 
 
-function TKMHouse.GetWareOutArray: TKMByteArray;
+function TKMHouse.GetWareOutArray: TKMWordArray;
 var
   I, iOffset: Integer;
 begin
@@ -3442,7 +3442,7 @@ begin
 end;
 
 
-function TKMHouse.GetWareOutPoolArray: TKMByteArray;
+function TKMHouse.GetWareOutPoolArray: TKMWordArray;
 var
   I: Integer;
 begin
@@ -3734,7 +3734,7 @@ end;
 function TKMHouse.MiningRect(aWare : TKMWareType) : TKMRect;
 begin
   Result := gTerrain.GetMiningRect(aWare);
-  If (aWare = wtCoal) and (gHands[Owner].EconomyDevUnlocked(33)) then
+  If (aWare = wtCoal) and (gHands[Owner].BuildDevUnlocked(34)) then
   begin
     Inc(Result.Left, 1);
     Inc(Result.Top, 1);
@@ -4149,7 +4149,7 @@ begin
 
   If (HouseType = htFarm) and gHands[Owner].BuildDevUnlocked(12) then
     Result := Result + 5;
-  If (HouseType = htProductionThatch) and gHands[Owner].BuildDevUnlocked(22) then
+  If (HouseType = htProductionThatch) and gHands[Owner].BuildDevUnlocked(33) then
     Result := Result + 20;
 end;
 
@@ -6288,7 +6288,7 @@ begin
     begin
       fPhase := 3 + KamRandom(5, 'TKMHouseAppleTree.SetProgress'); //make it sapling again
 
-      If gHands[Owner].EconomyDevUnlocked(28) then
+      If gHands[Owner].BuildDevUnlocked(35) then
         fGrowPhase := gFruitTrees[fFruitTreeID].MatureTreeStage
       else
         fGrowPhase := 0;

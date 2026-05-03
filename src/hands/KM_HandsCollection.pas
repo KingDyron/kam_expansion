@@ -1057,7 +1057,6 @@ end;
 procedure  TKMHandsCollection.HitAlchemist(aOwner: TKMUnit; aTilePos: TKMPointF; aRadius: Single);
 var arr : TPointerArray;
   U : TKMUnit;
-  H : TKMHouse;
   I : Integer;
 begin
 
@@ -1068,9 +1067,13 @@ begin
     U := TKMUnit(arr[I]);
     if U = nil then
       Continue;
+
+    If U.Owner = aOwner.Owner then
+      Continue;
+
     U.SetHitTime;
     gScriptEvents.ProcUnitHit(U, aOwner);
-    U.AddEffect(uetPoison, 200);
+    U.AddEffect(uetPoison, 300);
   end;
 
 end;

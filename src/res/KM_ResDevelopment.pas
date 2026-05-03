@@ -20,7 +20,7 @@ type
   PKMDevelopment = ^TKMDevelopment;
   TKMDevelopment = record
     HintID : Word;
-    X{, Y} : Byte;//grid position
+    X, Y : Byte;//grid position
     GuiIcon, ID : Word;
     Parent : PKMDevelopment;
     Cost : Byte;
@@ -30,6 +30,7 @@ type
     function AddNext(aId : Word; aX : Byte): PKMDevelopment;
     function RemNext(aIndex : Integer): Boolean;overload;
     function RemNext(aDev : PKMDevelopment): Boolean;overload;
+    procedure SaveToJson(JSON : TKMJsonObject);
   end;
   TKMDevelopmentTree = class
     private
@@ -137,6 +138,7 @@ var totalCost : Word;
       IsSpecial := aJson.B['IsSpecial'];
 
       X := aJson.I['X'];
+      Y := aJson.I['Y'];
       //Y := aJson.I['Y'];
       GuiIcon := aJson.I['GuiIcon'];
       Parent := nil;
@@ -153,12 +155,6 @@ var totalCost : Word;
   end;
 
 begin
-  //aID := 0;
-  {fList.TextID := JSON.I['TextID'];
-  fList.X := JSON.I['X'];
-  fList.Y := JSON.I['Y'];
-  fList.GuiIcon := JSON.I['GuiIcon'];
-  fList.Parent := nil;}
   totalCost := 0;
   CheckForNext(fList, JSON);
 end;
@@ -278,6 +274,7 @@ var nRoot : TKMJsonSaver;
     nRoot.Write('HintID', aDev.HintID);
     nRoot.Write('GuiIcon', aDev.GuiIcon);
     nRoot.Write('X', aDev.X);
+    nRoot.Write('Y', aDev.Y);
     nRoot.Write('Cost', aDev.Cost);
     nRoot.Write('IsSpecial', aDev.IsSpecial);
 
@@ -333,6 +330,7 @@ begin
   Result := @Next[I];
   //Result.Parent := @self;
   Result.X := aX;
+  Result.Y := 0;
   Result.ID := aID;
 end;
 
@@ -352,5 +350,29 @@ begin
     Exit;
   Result := RemNext(I);
 end;
+
+procedure TKMDevelopment.SaveToJson(JSON: TKMJsonObject);
+var arr : TKMJsonArrayNew;
+  I : Integer;
+begin
+  If JSON = nil then
+    Exit;
+
+  Json.Add('ID', ID);
+  Json.Add('HintID', HintID);
+  Json.Add('GuiIcon', GuiIcon);
+  Json.Add('X', X);
+  Json.Add('Y', Y);
+  Json.Add('Cost', Cost);
+  Json.Add('IsSpecial', IsSpecial);
+
+  If Length(Next) > 0 then
+  begin
+    arr := Json.AddArray('Next');
+    for I := 0 to high(Next) do
+      Next[I].SaveToJson(arr.AddObject);
+  end;
+end;
+
 
 end.

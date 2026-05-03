@@ -95,7 +95,7 @@ var dtt : TKMDevelopmentTreeType;
     SetLength(aToButton.Next, length(aDevelopment.Next));
     for I := 0 to High(aDevelopment.Next) do
     begin
-      CreateNext(aType, aToButton.Next[I], @aDevelopment.Next[I], aTop + 1);
+      CreateNext(aType, aToButton.Next[I], @aDevelopment.Next[I], aTop + 1 + aDevelopment.Next[I].Y);
       aToButton.Next[I].Parent := @aToButton;
     end;
   end;
@@ -226,7 +226,7 @@ var dtt : TKMDevelopmentTreeType;
     SetLength(aToButton.Next, length(aDevelopment.Next));
     for I := 0 to High(aDevelopment.Next) do
     begin
-      CreateNext(aType, aToButton.Next[I], @aDevelopment.Next[I], aTop + 1);
+      CreateNext(aType, aToButton.Next[I], @aDevelopment.Next[I], aTop + 1 + aDevelopment.Next[I].Y);
       aToButton.Next[I].Parent := @aToButton;
     end;
   end;
@@ -268,7 +268,7 @@ var firstVisibleTop : Byte;
       Inc(aTop)
     end;}
     for I := 0 to High(aDev.Next) do
-      CheckFirst(aType, aDev.Next[I], aTop + 1);
+      CheckFirst(aType, aDev.Next[I], aTop + 1 + aDev.Next[I].Dev.Y);
   end;
 
   procedure RepositionNext(aType: TKMDevelopmentTreeType; aDev : TKMDevButton; aTop : Byte);
@@ -280,7 +280,7 @@ var firstVisibleTop : Byte;
     //  aDev.Button_Tree.Top := 0;
 
     for I := 0 to High(aDev.Next) do
-      RepositionNext(aType, aDev.Next[I], aTop + 1);
+      RepositionNext(aType, aDev.Next[I], aTop + 1 + aDev.Next[I].Dev.Y);
   end;
 
 

@@ -3409,7 +3409,7 @@ begin
   If CheckEcoDev(wtSausage, htButchers, 7) then
     Inc(Result);
 
-  If CheckBuildDev(wtTimber, htSawmill, 25) then
+  If CheckEcoDev(wtTimber, htSawmill, 35) then
     Inc(Result);
 
   If CheckEcoDev(wtFish, htFishermans, 14) then

@@ -5122,18 +5122,11 @@
 			[	
 				{"ActionType" : "uaWalk", "StartStep" : 17954, "StepsCount" : 8},
 				{"ActionType" : "uaWork", "StartStep" : 18018, "StepsCount" : 18},
-				{"ActionType" : "uaStay", "StartStep" : 18162, "StepsCount" : 14, "CopyFirst" : 15}
+				{"ActionType" : "uaStay", "StartStep" : 18162, "StepsCount" : 14, "CopyFirst" : 15},
+				{"ActionType" : "uaSpec", "StartStep" : 18276, "StepsCount" : 5}
 			],
 			"Animations" : 
 			[
-				{"ActionType" : "uaSpec","Dir" : "dirN","X" : 0,"Y" : 0,"StepStart" : 4512,"Count" : 5},
-				{"ActionType" : "uaSpec","Dir" : "dirNE","X" : 0,"Y" : 0,"StepStart" : 4517,"Count" : 5},
-				{"ActionType" : "uaSpec","Dir" : "dirE","X" : 0,"Y" : 0,"StepStart" : 4522,"Count" : 5},
-				{"ActionType" : "uaSpec","Dir" : "dirSE","X" : 0,"Y" : 0,"StepStart" : 4527,"Count" : 5},
-				{"ActionType" : "uaSpec","Dir" : "dirS","X" : 0,"Y" : 0,"StepStart" : 4532,"Count" : 5},
-				{"ActionType" : "uaSpec","Dir" : "dirSW","X" : 0,"Y" : 0,"StepStart" : 4537,"Count" : 5},
-				{"ActionType" : "uaSpec","Dir" : "dirW","X" : 0,"Y" : 0,"StepStart" : 4542,"Count" : 5},
-				{"ActionType" : "uaSpec","Dir" : "dirNW","X" : 0,"Y" : 0,"StepStart" : 4547,"Count" : 5},
 				{"ActionType" : "uaDie","Dir" : "dirN","X" : 0,"Y" : 0,"Steps" : [5950, 5935, 5936, 5937, 5938, 5939, 5940, 5941, 5942, 5943, 5944, 5945, 5946, 5947, 5948, 5949]},
 				{"ActionType" : "uaDie","Dir" : "dirNE","X" : 0,"Y" : 0,"Steps" : [5950, 5935, 5936, 5937, 5938, 5939, 5940, 5941, 5942, 5943, 5944, 5945, 5946, 5947, 5948, 5949]},
 				{"ActionType" : "uaDie","Dir" : "dirE","X" : 0,"Y" : 0,"StepStart" : 5903,"Count" : 14},

@@ -445,6 +445,7 @@ type
     procedure SetHeightToChilds(aMargin : Integer = 5);virtual;
     procedure SetWidthToChilds(aMargin : Integer = 5);virtual;
     procedure SetRectToChilds(aMargin : Integer = 5);virtual;
+    procedure ChildRemove(aChild : TKMControl);
     procedure ChildSendToBack(aID1 : Integer; aMax : Boolean = false);overload;
     procedure ChildSendToFront(aID1 : Integer; aMax : Boolean = false);overload;
     procedure ChildSendToBack(aControl : TKMControl; aMax : Boolean = false);overload;
@@ -1728,6 +1729,21 @@ begin
       Exit(I);
 end;
 
+procedure TKMPanel.ChildRemove(aChild: TKMControl);
+var I : Integer;
+begin
+  If ChildCount = 0 then
+    Exit;
+  for I := 0 to High(Childs) do
+    If Childs[I] = aChild then
+    begin
+      Dec(ChildCount);
+      Childs[I] := Childs[ChildCount];
+      SetLength(Childs, ChildCount);
+      Exit;
+    end;
+end;
+
 procedure TKMPanel.ChildSendToBack(aID1 : Integer; aMax : Boolean = false);
 var tmp : TKMControl;
     id2 : Integer;
@@ -1920,8 +1936,8 @@ begin
 
   // Paint children
   for I := 0 to ChildCount - 1 do
-    if Childs[I].fVisible then
-      Childs[I].Paint;
+      if Childs[I].fVisible then
+        Childs[I].Paint;
 end;
 
 

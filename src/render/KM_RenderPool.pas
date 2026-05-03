@@ -239,7 +239,7 @@ type
     procedure AddSpriteGSnow(const aLoc, aOffset: TKMPoint; aID : Word; aProgress : Single; RX : TRXType; aFlagColor : Cardinal;
                         aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: Cardinal = 0; aFront : Boolean = false; aAlphaStep : Single = -1);
 
-    procedure AddHouseSupply(aHouse: TKMHouseType; const aLoc: TKMPoint; const R1, R2, R3: array of Byte; aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
+    procedure AddHouseSupply(aHouse: TKMHouseType; const aLoc: TKMPoint; const R1, R2, R3: array of Word; aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
     procedure AddHouseMarketSupply(const aLoc: TKMPoint; aResType: TKMWareType; aResCount: Word; aAnimStep: Integer);
     procedure AddHouseStableBeasts(aHouse: TKMHouseType; const aLoc: TKMPoint; aBeastId,aBeastAge,aAnimStep: Integer; aRX: TRXType = rxHouses);
     procedure AddHousePalaceFlags(aHouse: TKMHouseType; const aLoc: TKMPoint; aFlagID,aAnimStep: Integer; FlagColor : Cardinal);
@@ -1773,7 +1773,7 @@ begin
   end;
 end;
 
-procedure TKMRenderPool.AddHouseSupply(aHouse: TKMHouseType; const aLoc: TKMPoint; const R1, R2, R3: array of Byte;
+procedure TKMRenderPool.AddHouseSupply(aHouse: TKMHouseType; const aLoc: TKMPoint; const R1, R2, R3: array of Word;
                                      aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0);
 var
   id, I, K, I2, count: Integer;

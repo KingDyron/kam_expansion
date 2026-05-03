@@ -39,6 +39,27 @@ type
     Cost : Byte;
     procedure Paint; override;
   end;
+  TKMDevRepoInfo = class
+  public
+    Button : TKMButtonFlat;
+    ID : Integer;
+    Dev : PKMDevelopment;
+    X, Y : Integer;  //new position
+    Next : array of TKMDevRepoInfo;
+    Parent : TKMDevRepoInfo;
+    constructor Create(aParent : TKMPanel; aOnClickShift : TNotifyEventShift; aX, aY : Integer);
+    function AddNext(aParent : TKMPanel; aOnClickShift : TNotifyEventShift; aX, aY : Integer) : TKMDevRepoInfo;
+    destructor Destroy; override;
+    procedure Delete(aNext : TKMDevRepoInfo);
+  end;
+
+  TKMDevRepoTree = class(TKMPanel)
+    public
+      List : TKMDevRepoInfo;
+      procedure Refresh;
+      procedure Paint; override;
+  end;
+
 
   TKMGUIDevelopmentDebug = class(TKMGUICommonDevelopment)
     protected
@@ -79,6 +100,10 @@ type
 
     procedure TreeButtonClicked(Sender: TObject; Shift : TShiftState);
     procedure TreeDevelopmentChange(Sender : TObject);
+
+    procedure TreeRepoButtonClicked(Sender: TObject; Shift : TShiftState);
+    procedure TreeRepoChange(Sender : TObject);
+    procedure SaveRepo;
   protected
     Panel_Debug: TKMPanel;
       Button_T_Back : TKMButton;
@@ -115,6 +140,16 @@ type
             Button_AddDev : TKMButton;
             Button_DelDev : TKMButton;
             Button_SavDev : TKMButton;
+          //Development reposition
+          Button_SaveRepo : TKMButton;
+          SelectedTreeType : TKMDevelopmentTreeType;
+          Button_SelectType : array[DEVELOPMENT_MIN..DEVELOPMENT_MAX] of TKMButton;
+          Tree_Repo : array[DEVELOPMENT_MIN..DEVELOPMENT_MAX] of TKMDevRepoTree;
+            Repo_DevID,
+            Repo_Position_X,
+            Repo_Position_Y : TKMNumericEdit;
+            Repo_Button_Add, Repo_Button_Del : TKMButton;
+
 
 
 
@@ -128,8 +163,10 @@ type
 
 implementation
 uses
+  KM_Points,
   KM_ResTexts, KM_ResFonts, KM_Resource,
   KM_CommonUtils, KM_RenderUI, KM_Pics,
+  KM_JsonHelpers,
   IOUtils;
 
 const
@@ -152,6 +189,7 @@ var HT : TKMHouseType;
   I, K, L : Integer;
   HA : TKMHouseActionType;
   P : TKMPanel;
+  dtt : TKMDevelopmentTreeType;
 begin
   inherited Create(gpDebug);
 
@@ -316,6 +354,49 @@ begin
       Button_DelDev.OnClick := TreeDevelopmentChange;
       Button_SavDev := TKMButton.Create(P, 30, 210, 75, 25, 'Save', bsGame);
       Button_SavDev.OnClick := TreeDevelopmentChange;
+  SelectedTreeType := dttBuilder;
+  for dtt := DEVELOPMENT_MIN to DEVELOPMENT_MAX do
+  begin
+    Button_SelectType[dtt] := TKMButton.Create(Panel_Debug, Panel_Debug.Width div 2 - 90 + byte(dtt) * 30, 50, 30, 30, TREE_TYPE_ICON[dtt], rxGui, bsGame);
+    Button_SelectType[dtt].OnClickShift := TreeRepoButtonClicked;
+    Button_SelectType[dtt].Tag := byte(dtt);
+
+    Tree_Repo[dtt] := TKMDevRepoTree.Create(Panel_Debug, Panel_Debug.Width div 2 - 90, 80, 180, Panel_Debug.Height - 125);
+    Tree_Repo[dtt].List := TKMDevRepoInfo.Create(Tree_Repo[dtt], TreeRepoButtonClicked, 2, 0);
+    Tree_Repo[dtt].List.Button.Tag := Integer(Tree_Repo[dtt].List);
+    Tree_Repo[dtt].List.Button.Down := true;
+    Tree_Repo[dtt].Tag := Tree_Repo[dtt].List.Button.Tag;
+
+    Tree_Repo[dtt].List.Dev := gRes.Development[SelectedTreeType].GetItem(Tree_Repo[dtt].List.Id);
+    If Tree_Repo[dtt].List.Dev <> nil then
+    begin
+      Tree_Repo[dtt].List.Button.TexID := Tree_Repo[dtt].List.Dev.GuiIcon;
+      Tree_Repo[dtt].List.Button.Hint := gRes.Development.GetText(Tree_Repo[dtt].List.Dev.HintID);
+      Tree_Repo[dtt].List.Button.Caption := Tree_Repo[dtt].List.ID.ToString;
+    end;
+  end;
+    P := AddNewPanel;//development  Repo
+      Repo_Position_X := TKMNumericEdit.Create(P, 30, 20, 0, 4);
+      Repo_Position_X.OnChange := TreeRepoChange;
+      Repo_Position_X.Width := 80;
+      Repo_Position_X.Hint := 'Position X';
+      Repo_Position_X.Value := 2;
+      Repo_Position_Y := TKMNumericEdit.Create(P, 30, 40, 0, 4);
+      Repo_Position_Y.OnChange := TreeRepoChange;
+      Repo_Position_Y.Width := 80;
+      Repo_Position_Y.Hint := 'Position Y';
+      Repo_Position_Y.Value := 0;
+
+      Repo_DevID := TKMNumericEdit.Create(P, 30, 70, 0, 100);
+      Repo_DevID.OnChange := TreeRepoChange;
+      Repo_DevID.Width := 80;
+      Repo_DevID.Hint := 'Dev ID';
+      Repo_Button_Add := TKMButton.Create(P, 30, 160, 75, 25, 'Add', bsGame);
+      Repo_Button_Add.OnClick := TreeRepoChange;
+      Repo_Button_Del := TKMButton.Create(P, 30, 180, 75, 25, 'Del', bsGame);
+      Repo_Button_Del.OnClick := TreeRepoChange;
+      Button_SaveRepo := TKMButton.Create(P, 30, 220, 75, 25, 'Save', bsGame);
+      Button_SaveRepo.OnClick := TreeRepoChange;
 
   Switch_Type.Selected := 0;
   SwitchType(nil);
@@ -369,7 +450,9 @@ procedure TKMMenuDebug.RefreshControls;
 var I : Integer;
 begin
   for I := 0 to High(Panel_Type) do
-    Panel_Type[I].Enabled := ((fHouse in HOUSES_VALID) and (Switch_Type.Selected < 2)) or (Switch_Type.Selected = 2);
+    Panel_Type[I].Enabled := ((fHouse in HOUSES_VALID) and (Switch_Type.Selected < 2))
+                             or (Switch_Type.Selected = 2)
+                             or (Switch_Type.Selected = 3);
 
     Edit_X.Enabled := fSelectedAnim <> -1;
     Edit_Y.Enabled := fSelectedAnim <> -1;
@@ -550,9 +633,17 @@ end;
 
 procedure TKMMenuDebug.SwitchType(Sender: TObject);
 var I : Integer;
+  dtt : TKMDevelopmentTreeType;
 begin
   If Tree = nil then
     Exit;
+
+  for dtt := DEVELOPMENT_MIN to DEVELOPMENT_MAX do
+  begin
+    Tree_Repo[dtt].Visible := (Switch_Type.Selected = 3) and (SelectedTreeType = dtt);
+    Button_SelectType[dtt].Visible := (Switch_Type.Selected = 3);
+  end;
+
   Tree.Visible := Switch_Type.Selected = 2;
   ColumnBox_Houses.Visible := Switch_Type.Selected < 2;
   House_Viewer.Visible := Switch_Type.Selected < 2;
@@ -562,7 +653,7 @@ begin
     1 : Label_Type.Caption := 'Supply Pile Offset';
     2 : Label_Type.Caption := 'Development tree';
   end;
-  Button_SaveRes.Visible := Switch_Type.Selected <> 2;
+  Button_SaveRes.Visible := Switch_Type.Selected < 2;
   for I := 0 to High(Panel_Type) do
     Panel_Type[I].Visible := Switch_Type.Selected = I;
   House_Viewer.ViewAsConstruction := Switch_Type.Selected = 1;
@@ -758,15 +849,136 @@ begin
 
 end;
 
+procedure TKMMenuDebug.TreeRepoButtonClicked(Sender: TObject; Shift: TShiftState);
+var old : Integer;
+var dev : TKMDevRepoInfo;
+  dtt : TKMDevelopmentTreeType;
+  IsType : Boolean;
+begin
+  If Sender = nil then
+    Exit;
+  IsType := false;
+  for dtt := DEVELOPMENT_MIN to DEVELOPMENT_MAX do
+    If Sender = Button_SelectType[dtt] then
+    begin
+      SelectedTreeType := dtt;
+      IsType := true;
+      Break
+    end;
+  If IsType then
+  begin
+    for dtt := DEVELOPMENT_MIN to DEVELOPMENT_MAX do
+        Tree_Repo[dtt].Visible := SelectedTreeType = dtt;
+    Exit;
+  end;
 
+  TKMButtonFlat(Sender).Down := true;
+  old := Tree_Repo[SelectedTreeType].Tag;
+  Tree_Repo[SelectedTreeType].Tag := TKMButtonFlat(Sender).Tag;
 
+  If old <> TKMButtonFlat(Sender).Tag then
+  begin
+    dev := TKMDevRepoInfo(Tree_Repo[SelectedTreeType].Tag);
+    Repo_Position_X.Value := dev.X;
+    Repo_Position_Y.Value := dev.Y;
+    Repo_DevID.Value := dev.ID;
+  end;
 
+  Tree_Repo[SelectedTreeType].Refresh;
+end;
 
+procedure TKMMenuDebug.TreeRepoChange(Sender: TObject);
+var dev, par : TKMDevRepoInfo;
+begin
+  If Sender = Button_SaveRepo then
+  begin
+    SaveRepo;
+    Exit;
+  end;
+  If Tree_Repo[SelectedTreeType].Tag = 0 then
+    Exit;
+  dev := TKMDevRepoInfo(Tree_Repo[SelectedTreeType].Tag);
+  par := dev.Parent;
+  If Sender = Repo_Button_Del then
+  begin
+    If par <> nil then
+    begin
+      par.Delete(dev);
+      TreeRepoButtonClicked(par.Button, []);
+    end;
+  end else
+  If Sender = Repo_Button_Add then
+  begin
+    TreeRepoButtonClicked(dev.AddNext(Tree_Repo[SelectedTreeType], TreeRepoButtonClicked, -1, 0).Button, []);
+  end
+  else
+  If Sender = Repo_Position_X then
+    dev.X := Repo_Position_X.Value
+  else
+  If Sender = Repo_Position_Y then
+    dev.Y := Repo_Position_Y.Value
+  else
+  If Sender = Repo_DevID then
+  begin
+    Dev.Id := Repo_DevID.Value;
 
+    Dev.Button.TexID := 0;
+    Dev.Button.Caption := '';
+    Dev.Button.Hint := '';
+    If (Dev.Id = -1) or (dev.ID >= gRes.Development[SelectedTreeType].Count) then
+      Dev.Dev := nil
+    else
+      Dev.Dev := gRes.Development[SelectedTreeType].GetItem(Dev.Id);
+    If Dev.Dev <> nil then
+    begin
+      Dev.Button.TexID := Dev.Dev.GuiIcon;
+      Dev.Button.Hint := gRes.Development.GetText(Dev.Dev.HintID);
+      Dev.Button.Caption := Dev.ID.ToString;
+    end;
+  end;
 
+  Tree_Repo[SelectedTreeType].Refresh;
 
+end;
 
+procedure TKMMenuDebug.SaveRepo;
+  procedure SaveDev(Json : TKMJsonObject; aDev : TKMDevRepoInfo);
+  var arr : TKMJsonArrayNew;
+    I : Integer;
+  begin
+    If JSON = nil then
+      Exit;
 
+    Json.Add('ID', aDev.Dev.ID);
+    Json.Add('HintID', aDev.Dev.HintID);
+    Json.Add('GuiIcon', aDev.Dev.GuiIcon);
+    Json.Add('X', aDev.X);
+    Json.Add('Y', aDev.Y);
+    Json.Add('Cost', aDev.Dev.Cost);
+    Json.Add('IsSpecial', aDev.Dev.IsSpecial);
+
+    If Length(aDev.Next) > 0 then
+    begin
+      arr := Json.AddArray('Next');
+      for I := 0 to high(aDev.Next) do
+        SaveDev(arr.AddObject, aDev.Next[I]);
+    end;
+  end;
+
+var nRoot, dev : TKMJsonObject;
+  dtt : TKMDevelopmentTreeType;
+begin
+  nRoot := TKMJsonObject.Create;
+  try
+    for dtt := DEVELOPMENT_MIN to DEVELOPMENT_MAX do
+    begin
+      SaveDev(nRoot.AddObject(TREE_TYPE_STRING[dtt]), Tree_Repo[dtt].List);
+    end;
+    nRoot.SaveToFile(ExeDir + 'Export' + PathDelim + 'DevelopmentTreeRepo.json');
+  finally
+    FreeAndNil(nRoot);
+  end;
+end;
 
 
 
@@ -881,6 +1093,163 @@ begin
 
   end;
   TKMRenderUI.WriteText(AbsLeft, AbsTop + height - 13, Width, Dev.ID.ToString, fntMini, taCenter);
+end;
+
+
+
+procedure TKMDevRepoTree.Refresh;
+  procedure Reposition(aDev : TKMDevRepoInfo; aY : Integer);
+  var I : integer;
+  begin
+    aDev.Button.Top := 4 + aY * DISTANCE_BETWEEN_ROWS;
+    aDev.Button.Left := aDev.X * 34;
+    aDev.Button.Down := aDev.Button.Tag = self.Tag;
+
+    for I := 0 to High(aDev.Next) do
+      Reposition(aDev.Next[I], aY + 1 + aDev.Next[I].Y);
+
+  end;
+begin
+  Reposition(List, 0);
+end;
+
+
+procedure TKMDevRepoTree.Paint;
+  procedure MakeLine(aFrom : TKMPoint; aTo : TKMDevRepoInfo);
+  var I : Integer;
+    cent : TKMPoint;
+  begin
+    cent := aTo.Button.AbsCenter;
+    //render a little dot behind first item
+    TKMRenderUI.WriteLine(aFrom.X, aFrom.Y, aFrom.X, cent.Y - (DISTANCE_BETWEEN_ROWS div 2),
+                          aTo.Button.DownColor, 65535, aTo.Button.LineWidth);//  \/
+    TKMRenderUI.WriteLine(aFrom.X, cent.Y - (DISTANCE_BETWEEN_ROWS div 2),
+                          cent.X, cent.Y - (DISTANCE_BETWEEN_ROWS div 2),
+                          aTo.Button.DownColor, 65535, aTo.Button.LineWidth);//  <>
+
+    TKMRenderUI.WriteLine(cent.X, cent.Y, cent.X, cent.Y - (DISTANCE_BETWEEN_ROWS div 2),
+                          aTo.Button.DownColor, 65535, aTo.Button.LineWidth);//  /\
+
+    for I := 0 to high(aTo.Next) do
+        MakeLine(cent, aTo.Next[I]);
+  end;
+var I : integer;
+begin
+  If Visible then
+  begin
+    TKMRenderUI.WriteBevel(AbsLeft, AbsTop, Width, Height, 1, 0.4);
+    TKMRenderUI.SetupClipY(AbsTop, AbsTop + Height - 5);
+
+    for I := 0 to high(List.Next) do
+    begin
+      MakeLine(List.Button.AbsCenter,
+                List.Next[I]);
+    end;
+    TKMRenderUI.ReleaseClipY;
+  end;
+
+  Inherited;
+end;
+
+constructor TKMDevRepoInfo.Create(aParent: TKMPanel; aOnClickShift: TNotifyEventShift; aX: Integer; aY: Integer);
+begin
+  Inherited Create;
+  Button := TKMButtonFlat.Create(aParent, aX * 34, 4 + aY * DISTANCE_BETWEEN_ROWS, 31, 31, 0);
+  Button.BackBevelColor := $FF000000;
+  Button.BackAlpha := 1;
+  //Button.Tag := Integer(@self);
+  Button.OnClickShift := aOnClickShift;
+  X := aX;
+  Id := -1;
+  Dev := nil;
+  SetLength(Next, 0);
+  Parent := nil;
+end;
+
+function TKMDevRepoInfo.AddNext(aParent : TKMPanel; aOnClickShift : TNotifyEventShift; aX, aY : Integer) : TKMDevRepoInfo;
+  function HasAt(X : Integer) : Boolean;
+  var I : Integer;
+  begin
+    Result := false;
+    for I := 0 to High(Next) do
+      If Next[I].X = X then
+        Exit(True);
+  end;
+
+  function GetX : Integer;
+  var I, J : Integer;
+  begin
+    Result := -1;
+    If aX = -1 then
+      J := X
+    else
+      J := aX;
+    I := 0;
+    While HasAt(J) do
+    begin
+      IncLoop(J, 0, 4, 1);
+      Inc(I);
+      If I = 5 then
+        Exit;
+    end;
+    Result := J;
+  end;
+
+var I, J : Integer;
+begin
+  Result := nil;
+  //check for free space
+  J := -1;
+  for I := 0 to High(Next) do
+    If Next[I] = nil then
+    begin
+      J := I;
+      Break;
+    end;
+
+  I := length(Next);
+  If I >= 5 then
+    Exit;
+
+  aX := GetX;
+  If aX = -1 then //no free space
+    Exit;
+
+  If J = -1 then
+  begin
+    J := I;
+    SetLength(Next, I + 1);
+  end;
+
+  Next[J] := TKMDevRepoInfo.Create(aParent, aOnClickShift, aX, aY);
+  Next[J].Parent := self;
+  Next[J].Button.Tag := Integer(Next[J]);
+  Result := Next[J];
+end;
+
+destructor TKMDevRepoInfo.Destroy;
+var I : integer;
+begin
+  Button.Parent.ChildRemove(Button);
+  FreeAndNil(Button);
+  for I := 0 to High(Next) do
+      FreeAndNil(Next[I]);
+  Inherited;
+end;
+
+procedure TKMDevRepoInfo.Delete(aNext: TKMDevRepoInfo);
+var I : integer;
+begin
+  for I := 0 to High(Next) do
+  If Next[I] = aNext then
+  begin
+    FreeAndNil(Next[I]);
+
+    Next[I] := Next[high(Next)];
+    SetLength(Next, high(Next));
+    Exit;
+  end;
+
 end;
 
 end.

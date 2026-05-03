@@ -137,7 +137,6 @@ type
       property OnChange : TNotifyEvent read fOnChange write fOnChange;
 
       procedure MouseUp(X,Y: Integer; Shift: TShiftState; Button: TMouseButton); override;
-      procedure UpdateState(aTickCount: Cardinal); override;
       procedure Paint; override;
   end;
 
@@ -650,31 +649,29 @@ begin
   Inherited;
 end;
 
-procedure TKMSwitch.UpdateState(aTickCount: Cardinal);
-var delta : Byte;
-begin
-  If fPosition < Offset then
-  begin
-    delta := Max((Offset - fPosition) div 2, 1);
-    Inc(fPosition, delta);
-    If fPosition = Offset then
-    begin
-      fSelected := fNextSelected;
-    end;
-  end;
-  Inherited;
-end;
-
 procedure TKMSwitch.Paint;
 var color : Cardinal;
   progress : single;
   finColor1, finColor2 : Cardinal;
   lt, tp : Integer;
   bevCenterLeft : Integer;
+var delta : Byte;
 begin
   Inherited;
   If Count = 0 then
     Exit;
+
+  If fPosition < Offset then
+  begin
+    delta := Max((Offset - fPosition) div 5, 1);
+    Inc(fPosition, delta);
+    If fPosition = Offset then
+    begin
+      fSelected := fNextSelected;
+    end;
+  end;
+
+
   lt := AbsLeft + Width div 2;
   tp := AbsTop + Height div 2;
   bevCenterLeft := Width div 3;
