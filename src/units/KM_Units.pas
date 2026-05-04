@@ -2874,8 +2874,12 @@ procedure TKMUnit.AddEffect(aType: TKMUnitEffectType; aDuration: Word);
       SetEffect(aType, aDuration);
   end;
 begin
+  If (aType = uetPoison) and (UnitType in UNITS_NO_POISONS) then
+    Exit;
+
   If (aType = uetPoison) then
   begin
+
     If (fSpecialEffect.EffectType in [uetHealing, uetHealingMedic, uetHealingPearl]) then //remove healing effect
       SetEffect(uetNone, 0)
     else

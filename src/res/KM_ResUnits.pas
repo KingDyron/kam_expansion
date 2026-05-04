@@ -285,6 +285,8 @@ const
     0,0,0,0,0
   );
   UNITS_WITH_BOOTS : set of TKMUnitType = [utSerf, utWoodcutter, utStonemason, utFisher, utBuilder, utFarmer];
+  UNITS_NO_POISONS : set of TKMUnitType = SIEGE_MACHINES + [utAlchemist, utBarbarian, utGolem, utGiant, utMedic];
+
   var
   //TownHall default units troops cost (number of gold chests needed)
   //Could be modified by script functions
