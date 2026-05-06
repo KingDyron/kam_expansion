@@ -5005,6 +5005,24 @@
 			"MinRange" : 0.00000,
 			"MaxRange" : 1.999,
 			"StrikeSteps" : [4],
+			"PalaceCost" : 
+			{
+				"PhaseCount" : 8,
+				"PhaseDuration" : 350,
+				"VirtualWares" : 
+				[
+					{"VirtualWareName" : "vtPearl","Count" : 7},
+					{"VirtualWareName" : "vtCertificate","Count" : 40},
+					{"VirtualWareName" : "vtCoin","Count" : 350},
+					
+					{"VirtualWareName" : "vtLeatherSheet","Count" : 1},
+					{"VirtualWareName" : "vtIronFerrule","Count" : 13},
+					{"VirtualWareName" : "vtGemStone","Count" : 7},
+					{"VirtualWareName" : "vtHoney","Count" : 6},
+					{"VirtualWareName" : "vtNeedle","Count" : 3},
+					{"VirtualWareName" : "vtHerbs","Count" : 68}
+				]
+			},
 			"FullUnitAnimations" : 
 			[	
 				{"ActionType" : "uaWalk", "StartStep" : 17634, "StepsCount" : 8},
@@ -5056,19 +5074,18 @@
 			"ProducesWares" : ["wtAll"],
 			"PalaceCost" : 
 			{
-				"PhaseCount" : 6,
-				"PhaseDuration" : 420,
+				"PhaseCount" : 7,
+				"PhaseDuration" : 300,
 				"VirtualWares" : 
 				[
-					{"VirtualWareName" : "vtPearl","Count" : 4},
+					{"VirtualWareName" : "vtPearl","Count" : 3},
 					{"VirtualWareName" : "vtCertificate","Count" : 10},
-					{"VirtualWareName" : "vtCoin","Count" : 250},
+					{"VirtualWareName" : "vtCoin","Count" : 200},
 					
 					{"VirtualWareName" : "vtLeatherSheet","Count" : 1},
-					{"VirtualWareName" : "vtIronFerrule","Count" : 6},
-					{"VirtualWareName" : "vtResin","Count" : 30},
-					{"VirtualWareName" : "vtNeedle","Count" : 1},
-					{"VirtualWareName" : "vtWoodenPlate","Count" : 80}
+					{"VirtualWareName" : "vtIronFerrule","Count" : 4},
+					{"VirtualWareName" : "vtResin","Count" : 45},
+					{"VirtualWareName" : "vtWoodenPlate","Count" : 100}
 				]
 			},
 			"FullUnitAnimations" : 
@@ -5118,6 +5135,23 @@
 			"MaxRange" : 7.999,
 			"StrikeSteps" : [5],
 			"ProducesWares" : ["wtAll"],
+			"PalaceCost" : 
+			{
+				"PhaseCount" : 4,
+				"PhaseDuration" : 420,
+				"VirtualWares" : 
+				[
+					{"VirtualWareName" : "vtPearl","Count" : 1},
+					{"VirtualWareName" : "vtCertificate","Count" : 15},
+					{"VirtualWareName" : "vtCoin","Count" : 150},
+					
+					{"VirtualWareName" : "vtLeatherSheet","Count" : 5},
+					{"VirtualWareName" : "vtResin","Count" : 45},
+					{"VirtualWareName" : "vtWoodenPlate","Count" : 85},
+					{"VirtualWareName" : "vtHoney","Count" : 7},
+					{"VirtualWareName" : "vtHerbs","Count" : 34}
+				]
+			},
 			"FullUnitAnimations" : 
 			[	
 				{"ActionType" : "uaWalk", "StartStep" : 17954, "StepsCount" : 8},
