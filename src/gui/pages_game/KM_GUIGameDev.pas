@@ -14,6 +14,8 @@ type
   public
     Cost : Byte;
     Progress : Single;
+    Lvl : Byte;
+    Special : Boolean;
     procedure Paint; override;
   end;
 
@@ -132,6 +134,13 @@ var dtt : TKMDevelopmentTreeType;
       B := aToButton.Button_Tree;
 
     B.Enabled := aState in [dlNone, dlUnlocked, dlUnlockedSingle];
+    If B.Enabled then
+      B.Clickable := gMySpectator.Hand.Level >= aToButton.Dev.Level;
+    If gMySpectator.Hand.Level < aToButton.Dev.Level then
+      TKMButtonFlatDevGame(B).Lvl := aToButton.Dev.Level
+    else
+      TKMButtonFlatDevGame(B).Lvl := 0;
+
     //set default
     B.Down := false;
     B.BackBevelColor := 0;
@@ -283,20 +292,22 @@ end;
 
 procedure TKMGUIGameDevelopment.SetUpButton(B : TKMButtonFlat; aDev : PKMDevelopment);
 begin
-  TKMButtonFlatDevGame(B).Cost := aDev.ID;
+  TKMButtonFlatDevGame(B).Special := aDev.IsSpecial;
 end;
 
 procedure TKMGUIGameDevelopment.RefreshSingle(B : TKMButtonFlat; aDev : PKMDevelopment);
 begin
-  TKMButtonFlatDevGame(B).Cost := aDev.ID;
+  TKMButtonFlatDevGame(B).Special := aDev.IsSpecial;
 end;
 
 procedure TKMButtonFlatDevGame.Paint;
 begin
+  If Special then
+    TKMRenderUI.WritePicture(AbsLeft - 6, AbsTop - 6, Width + 11, Height + 11, [anLeft, anTop, anRight, anBottom], rxTiles, 751, true, BackBevelColor or $FF000000, 0.5);
   inherited;
   //debuging option to know what ID has the development
-  //TKMRenderUI.WriteText(AbsLeft + 3, AbsTop - 3, Width, Cost.ToString, fntGrey, taRight, CapColor);
-
+  If lvl > 0 then
+    TKMRenderUI.WriteText(AbsLeft, AbsTop + 7, Width, Lvl.ToString, fntOutline, taCenter, $FF5555FF);
   If Progress > 0 then
   begin
     TKMRenderUI.WritePicture(AbsLeft, AbsTop, Width, Height, [anLeft, anTop, anRight, anBottom], rxGui, 1206, true, BackBevelColor or $FF000000, 0, Progress);

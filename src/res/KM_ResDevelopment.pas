@@ -25,12 +25,13 @@ type
     Parent : PKMDevelopment;
     Cost : Byte;
     IsSpecial : Boolean;
+    Level : Byte;
     Next : array of TKMDevelopment;
     function IndexOf(aDev : PKMDevelopment) : Integer;
     function AddNext(aId : Word; aX : Byte): PKMDevelopment;
     function RemNext(aIndex : Integer): Boolean;overload;
     function RemNext(aDev : PKMDevelopment): Boolean;overload;
-    procedure SaveToJson(JSON : TKMJsonObject);
+    procedure SaveToJson(JSON : TKMJsonObject; aDoNext : Boolean);
   end;
   TKMDevelopmentTree = class
     private
@@ -141,6 +142,7 @@ var totalCost : Word;
       Y := aJson.I['Y'];
       //Y := aJson.I['Y'];
       GuiIcon := aJson.I['GuiIcon'];
+      Level := aJson.I['Level'];
       Parent := nil;
 
       nArr := aJson.A['Next'];
@@ -331,6 +333,7 @@ begin
   //Result.Parent := @self;
   Result.X := aX;
   Result.Y := 0;
+  Result.Level := 0;
   Result.ID := aID;
 end;
 
@@ -351,7 +354,7 @@ begin
   Result := RemNext(I);
 end;
 
-procedure TKMDevelopment.SaveToJson(JSON: TKMJsonObject);
+procedure TKMDevelopment.SaveToJson(JSON: TKMJsonObject; aDoNext : Boolean);
 var arr : TKMJsonArrayNew;
   I : Integer;
 begin
@@ -359,18 +362,19 @@ begin
     Exit;
 
   Json.Add('ID', ID);
-  Json.Add('HintID', HintID);
-  Json.Add('GuiIcon', GuiIcon);
-  Json.Add('X', X);
-  Json.Add('Y', Y);
-  Json.Add('Cost', Cost);
-  Json.Add('IsSpecial', IsSpecial);
+  Json.Add('HintID', HintID, 0);
+  Json.Add('GuiIcon', GuiIcon, 0);
+  Json.Add('X', X, 0);
+  Json.Add('Y', Y, 0);
+  Json.Add('Cost', Cost, 0);
+  Json.Add('IsSpecial', IsSpecial, false);
+  Json.Add('Level', Level, 0);
 
-  If Length(Next) > 0 then
+  If (Length(Next) > 0) and aDoNext then
   begin
     arr := Json.AddArray('Next');
     for I := 0 to high(Next) do
-      Next[I].SaveToJson(arr.AddObject);
+      Next[I].SaveToJson(arr.AddObject, aDoNext);
   end;
 end;
 

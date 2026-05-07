@@ -66,6 +66,7 @@
 												"X" : 0, 
 												"Y" : 0, 
 												"Cost" : 14, 
+												"Level" : 6,
 												"IsSpecial" : true
 											}
 										]
@@ -128,6 +129,7 @@
 																"X" : 2, 
 																"Y" : 0, 
 																"Cost" : 24, 
+																"Level" : 7,
 																"IsSpecial" : true
 															}
 														]
@@ -186,6 +188,7 @@
 														"X" : 4, 
 														"Y" : 0, 
 														"Cost" : 15, 
+														"Level" : 2,
 														"IsSpecial" : true
 													}
 												]
@@ -283,6 +286,7 @@
 						"X" : 4, 
 						"Y" : 0, 
 						"Cost" : 9, 
+						"Level" : 7,
 						"IsSpecial" : true
 					}, 
 					{
@@ -302,6 +306,7 @@
 								"X" : 3, 
 								"Y" : 0, 
 								"Cost" : 12, 
+								"Level" : 5,
 								"IsSpecial" : true
 							}
 						]
@@ -387,6 +392,7 @@
 								"X" : 0, 
 								"Y" : 0, 
 								"Cost" : 9, 
+								"Level" : 7,
 								"IsSpecial" : true
 							}
 						]
@@ -479,6 +485,7 @@
 														"X" : 2, 
 														"Y" : 0, 
 														"Cost" : 14, 
+														"Level" : 6, 
 														"IsSpecial" : true, 
 														"Next":
 														[
@@ -489,6 +496,7 @@
 																"X" : 2, 
 																"Y" : 0, 
 																"Cost" : 54, 
+																"Level" : 8, 
 																"IsSpecial" : true
 															}
 														]
@@ -519,7 +527,8 @@
 																		"GuiIcon" : 1137, 
 																		"X" : 3, 
 																		"Y" : 0, 
-																		"Cost" : 10, 
+																		"Cost" : 10,
+																		"Level" : 0,
 																		"IsSpecial" : true
 																	}
 																]
@@ -591,6 +600,7 @@
 																"X" : 1, 
 																"Y" : 0, 
 																"Cost" : 37, 
+																"Level" : 9,
 																"IsSpecial" : true
 															}
 														]
@@ -856,6 +866,7 @@
 																"X" : 1, 
 																"Y" : 0, 
 																"Cost" : 30, 
+																"Level" : 10,
 																"IsSpecial" : true
 															}
 														]
@@ -943,6 +954,7 @@
 																"X" : 2, 
 																"Y" : 0, 
 																"Cost" : 54, 
+																"Level" : 13,
 																"IsSpecial" : true
 															}
 														]
@@ -985,6 +997,7 @@
 																"X" : 4, 
 																"Y" : 0, 
 																"Cost" : 12, 
+																"Level" : 3,
 																"IsSpecial" : true
 															}
 														]
@@ -997,6 +1010,7 @@
 														"Y" : 0, 
 														"Cost" : 12, 
 														"IsSpecial" : true, 
+														"Level" : 9,
 														"Next":
 														[
 															{
@@ -1006,6 +1020,7 @@
 																"X" : 3, 
 																"Y" : 0, 
 																"Cost" : 18, 
+																"Level" : 11,
 																"IsSpecial" : true
 															}
 														]
@@ -1086,6 +1101,7 @@
 								"X" : 3, 
 								"Y" : 0, 
 								"Cost" : 36, 
+								"Level" : 9,
 								"IsSpecial" : true
 							}
 						]
