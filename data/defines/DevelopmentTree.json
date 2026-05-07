@@ -65,7 +65,7 @@
 												"GuiIcon" : 1109, 
 												"X" : 0, 
 												"Y" : 0, 
-												"Cost" : 14, 
+												"Cost" : 12, 
 												"Level" : 6,
 												"IsSpecial" : true
 											}
@@ -599,7 +599,7 @@
 																"GuiIcon" : 358, 
 																"X" : 1, 
 																"Y" : 0, 
-																"Cost" : 37, 
+																"Cost" : 27, 
 																"Level" : 9,
 																"IsSpecial" : true
 															}
@@ -865,7 +865,7 @@
 																"GuiIcon" : 376, 
 																"X" : 1, 
 																"Y" : 0, 
-																"Cost" : 30, 
+																"Cost" : 15, 
 																"Level" : 10,
 																"IsSpecial" : true
 															}
@@ -953,7 +953,7 @@
 																"GuiIcon" : 738, 
 																"X" : 2, 
 																"Y" : 0, 
-																"Cost" : 54, 
+																"Cost" : 38, 
 																"Level" : 13,
 																"IsSpecial" : true
 															}
@@ -996,7 +996,7 @@
 																"GuiIcon" : 1170, 
 																"X" : 4, 
 																"Y" : 0, 
-																"Cost" : 12, 
+																"Cost" : 10, 
 																"Level" : 3,
 																"IsSpecial" : true
 															}
@@ -1008,7 +1008,7 @@
 														"GuiIcon" : 1171, 
 														"X" : 3, 
 														"Y" : 0, 
-														"Cost" : 12, 
+														"Cost" : 10, 
 														"IsSpecial" : true, 
 														"Level" : 9,
 														"Next":
@@ -1019,7 +1019,7 @@
 																"GuiIcon" : 1172, 
 																"X" : 3, 
 																"Y" : 0, 
-																"Cost" : 18, 
+																"Cost" : 12, 
 																"Level" : 11,
 																"IsSpecial" : true
 															}
@@ -1100,7 +1100,7 @@
 								"GuiIcon" : 1199, 
 								"X" : 3, 
 								"Y" : 0, 
-								"Cost" : 36, 
+								"Cost" : 28, 
 								"Level" : 9,
 								"IsSpecial" : true
 							}
