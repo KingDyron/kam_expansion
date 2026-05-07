@@ -91,7 +91,7 @@ constructor TKMHouseArena.Create(aUID: Integer; aHouseType: TKMHouseType; PosX: 
 begin
   Inherited;
   fArenaAnimStep := 0;
-  fArenaWaitTillNext := 120;
+  fArenaWaitTillNext := 120 + aUID mod 120;
   SetNewAnim;
 end;
 
@@ -224,7 +224,7 @@ begin
       Inc(fArenaAnimStep);
       If fArenaAnimStep >= 800 then
       begin
-        fArenaWaitTillNext := 255;
+        fArenaWaitTillNext := 120 + aUID mod 120;
         fArenaAnimStep := 0;
         SetNewAnim;
       end;
