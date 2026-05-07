@@ -13,6 +13,7 @@ type
   TKMButtonFlatBlock = class(TKMButtonFlat)
   public
     DevBlock : TKMHandDevLock;
+    Special : Boolean;
     procedure Paint; override;
   end;
 
@@ -46,6 +47,8 @@ end;
 procedure TKMButtonFlatBlock.Paint;
 var id : Integer;
 begin
+  If Special then
+    TKMRenderUI.WritePicture(AbsLeft - 6, AbsTop - 6, Width + 11, Height + 11, [anLeft, anTop, anRight, anBottom], rxTiles, 751, true, BackBevelColor or $FF000000, 0.5);
   Inherited;
   id := 0;
   case DevBlock of
@@ -182,9 +185,11 @@ var dtt : TKMDevelopmentTreeType;
     B.DownColor := TO_UNLOCK_COLOR;
     B.LineWidth := 1;
 
+
     //B.Visible := aState <> dlNotVisible;
     B.Tag2 := 0;
     TKMButtonFlatBlock(B).DevBlock := aState;
+    TKMButtonFlatBlock(B).Special := aToButton.Dev.IsSpecial;
     currState := locks.DevelopmentLock[aType, aToButton.Dev.ID];
     If (aState = dlUnlockedSingle) or ((currState = dlUnlockedSingle){ and (aState <> dlNotVisible)}) then
     begin
