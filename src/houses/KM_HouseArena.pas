@@ -224,7 +224,7 @@ begin
       Inc(fArenaAnimStep);
       If fArenaAnimStep >= 800 then
       begin
-        fArenaWaitTillNext := 120 + aUID mod 120;
+        fArenaWaitTillNext := 120 + self.UID mod 120;
         fArenaAnimStep := 0;
         SetNewAnim;
       end;
