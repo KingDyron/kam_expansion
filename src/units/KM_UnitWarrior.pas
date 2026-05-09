@@ -2467,6 +2467,9 @@ begin
       and not fVisible then
     begin
       //try to use dinner or apple juice
+      If gHands[Owner].UseSiegeTowerDinner then
+        Feed(UNIT_MAX_CONDITION * 0.7)
+      else
       If gHands[Owner].VirtualWareTake('vtDinner') then
         Feed(UNIT_MAX_CONDITION * 0.7)
       else

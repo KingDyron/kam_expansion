@@ -1040,6 +1040,7 @@ type
     function GetUnitWeight(aUnitType : TKMUnitType) : Byte;
     function GetTotalWeight : Byte;
     function CanEnter(aUnitType : TKMUnitType = utAny) : Boolean;
+    procedure TryReserveDinner(aCount : Integer);
     procedure Paint;override;
   end;
 
@@ -9449,6 +9450,23 @@ function TKMHouseSiegeTower.CanEnter(aUnitType : TKMUnitType = utAny): Boolean;
 begin
   Result := not CanNotBeOccupied;
   Result := Result and (GetTotalWeight + GetUnitWeight(aUnitType) <= MAX_UNITS_INSIDE);
+end;
+
+procedure TKMHouseSiegeTower.TryReserveDinner(aCount: Integer);
+var rest, C, I : Integer;
+begin
+  C := Min(gHands[Owner].VirtualWare['vtDinner'], aCount);//check if we already have dinner
+  rest := aCount - C;//amount of dinner to buy
+  If gHands[Owner].VirtualWareTake('vtDinner', C) then
+    gHands[Owner].AddSiegeTowerDinner(C);
+
+  //try buy remaining
+  for I := 1 to rest do
+    if gHands[Owner].VirtualWareTake('vtCoin', Round(gRes.Wares.VirtualWares.WareS['vtDinner'].CoinPrice) ) then
+    begin
+      gHands[Owner].AddSiegeTowerDinner(1);
+    end else
+      Break;
 end;
 
 procedure TKMHouseSiegeTower.Paint;

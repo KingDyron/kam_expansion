@@ -117,6 +117,7 @@ type
 
     fLevel : Word;
     fEXP : Cardinal;
+    fSiegeTowerDinner : Word;
 
     const
       MAX_FESTIVAL_POINTS = 1000000;
@@ -195,6 +196,9 @@ type
     property MessageLog: TKMMessageLog read fMessageLog;
     property UpdateHandEntities : Boolean read fUpdateHandEntities write fUpdateHandEntities;
     property NeverHungry : Boolean read fNeverHungry write SetNeverHungry;
+    function UseSiegeTowerDinner : Boolean;
+    procedure AddSiegeTowerDinner(aCount : Integer);
+    property SiegeTowerDinner : Word read fSiegeTowerDinner;
 
     Procedure DeleteFromMessageQueue(aIndex : Integer);
     Procedure AddToMessageQueue(const aID : Integer = -1; const aTime : Integer = -1; const aKind : TKMMessageKind = mkText; const aText : String = '');
@@ -683,6 +687,7 @@ begin
 
   for dtt := DEVELOPMENT_MIN to DEVELOPMENT_MAX do
     fDevsToUnlock[dtt].ID := DEV_ID_NONE;
+  fSiegeTowerDinner := 0;
 
 end;
 
@@ -4092,6 +4097,7 @@ begin
   SaveStream.WriteData(fDevsToUnlock);
   SaveStream.WriteData(fLevel);
   SaveStream.WriteData(fEXP);
+  SaveStream.WriteData(fSiegeTowerDinner);
 end;
 
 
@@ -4197,8 +4203,7 @@ begin
   LoadStream.ReadData(fDevsToUnlock);
   LoadStream.ReadData(fLevel);
   LoadStream.ReadData(fEXP);
-
-  //fBridgesBuilt.LoadFromStream(LoadStream);
+  LoadStream.ReadData(fSiegeTowerDinner);
 
 end;
 
@@ -4655,6 +4660,18 @@ end;
 procedure TKMHand.SetNeverHungry(aValue: Boolean);
 begin
   fNeverHungry := aValue;
+end;
+
+function TKMHand.UseSiegeTowerDinner : Boolean;
+begin
+  Result := fSiegeTowerDinner > 0;
+  If Result then
+    Dec(fSiegeTowerDinner);
+end;
+
+procedure TKMHand.AddSiegeTowerDinner(aCount : Integer);
+begin
+  Inc(fSiegeTowerDinner, aCount)
 end;
 
 procedure TKMHand.SetWorklessCitizens(aValue: Word);

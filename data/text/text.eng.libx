@@ -2308,3 +2308,5 @@
 2362:Supplies close-combat machines.|Adds a speed bonus to every machine in the group. |Adds a thorn effect to every machine in the stack (units attacking them will take damage). |Speeds up the deployment of spike traps.
 2363:Alchemist
 2364:Thanks to his knowledge of nature, he is able to brew a poisonous potion. By throwing the vial of poison and shattering it, several units can be poisoned at once.||Posion doesn't work on: Siege machine, Alchemist, Medic, Barbarian.
+2365:Reserve a meal
+2366:Reserve a meal from your current inventory or purchase one with coins| LPM x1, PPM x5

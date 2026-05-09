@@ -169,6 +169,8 @@ type
     gicWarriorLeaveTower,
     gicHouseVirtualWareClicked,
     gicPlanWalls,
+    gicSiegeTowerDinner,
+    gicSiegeTowerMode,
 
     //V.     Delivery ratios changes (and other game-global settings)
     gicWareDistributionChange,   //Change of distribution for 1 ware
@@ -337,7 +339,13 @@ const
     gicHouseDeliveryTo,
     gicArmyEnterSiegeTower,
     gicHouseForestToggleTree,
-    gicHousePastureToggleAnimal
+    gicHousePastureToggleAnimal,
+
+    gicHouseQueueNotRem,
+    gicHouseDeliveryTo,
+    gicHouseVirtualWareClicked,
+    gicSiegeTowerDinner,
+    gicSiegeTowerMode
     ];
 
 
@@ -467,6 +475,8 @@ const
     gicpt_Int1,//gicWarriorLeaveTower,
     gicpt_Int3,//gicHouseVirtualWareClicked,
     gicpt_Int1SmInt3,//gicPlanWalls
+    gicpt_Int2,//gicSiegeTowerDinner,
+    gicpt_Int2,//gicSiegeTowerMode,
 
     //V.     Delivery ratios changes (and other game-global settings)
     gicpt_Int3,     // gicWareDistributionChange
@@ -1186,7 +1196,7 @@ begin
       gicCartographersDoSpying, gicHouseRepairSet, gicPearlSelectType,gicPearlConfirm, gicPearlSelectResFrom, gicPearlSelectResTo, gicPearlSelectVResTo,//arium
       gicPearlSelectRResTo, gicPearlDoExchange, gicPearlUseSpecial, gicHouseStyleSet, gicStoreHouseUnlockAll, gicStoreHouseBlockAll, gicHouseForestPlantTree,
       gicHousePastureBuyAnimal, gicHousePastureSellAnimal, gicArenaSelectFestival, gicArenaStartFestival, gicHouseQueueNotRem, gicHouseDeliveryTo,
-      gicHouseVirtualWareClicked, gicHouseForestToggleTree, gicHousePastureToggleAnimal] then
+      gicHouseVirtualWareClicked, gicHouseForestToggleTree, gicHousePastureToggleAnimal, gicSiegeTowerDinner] then
     begin
       srcHouse := gHands.GetHouseByUID(IntParams[0]);
       if (srcHouse = nil) or srcHouse.IsDestroyed //House has been destroyed before command could be executed
@@ -1396,6 +1406,7 @@ begin
       gicHouseQueueNotRem           : TKMHouseQueue(srcHouse).NotRemLastPos := not TKMHouseQueue(srcHouse).NotRemLastPos;
       gicHouseDeliveryTo            : srcHouse.HouseToDeliver := gHands.GetHouseByUID(IntParams[1]);
       gicHouseVirtualWareClicked    : srcHouse.HouseVirtualWareClicked(IntParams[1], IntParams[2]);
+      gicSiegeTowerDinner           : TKMHouseSiegeTower(srcHouse).TryReserveDinner(IntParams[1]);
 
       gicUnlockDevelopment          : P.TryToUnlockDevelopment(TKMDevelopmentTreeType(IntParams[0]), IntParams[1]{, IntParams[2] = 1});
 
@@ -1728,7 +1739,8 @@ begin
                           gicCartographersToggleView, gicCartographersSelectPlayer, gicHouseRepairSet, gicPearlSelectType,
                           gicPearlSelectResFrom, gicPearlSelectResTo, gicPearlSelectVResTo, gicPearlSelectRResTo, gicPearlDoExchange,
                           gicHouseStyleSet, gicStoreHouseUnlockAll, gicStoreHouseBlockAll, gicHousePastureBuyAnimal, gicHousePastureSellAnimal,
-                          gicArenaSelectFestival, gicHouseDeliveryTo, gicHouseForestToggleTree, gicHousePastureToggleAnimal]);
+                          gicArenaSelectFestival, gicHouseDeliveryTo, gicHouseForestToggleTree, gicHousePastureToggleAnimal,
+                          gicSiegeTowerDinner]);
   //Assert((aHouse is TKMHouseSchool) or (aHouse is TKMHouseTownHall) or (aHouse is TKMHouseSiegeWorkshop));
   TakeCommand(MakeCommand(aCommandType, aHouse.UID, aValue));
 end;
