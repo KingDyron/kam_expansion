@@ -2181,7 +2181,6 @@ begin
     htStall:          begin
                         for I := 0 to Panel_House_Common.ChildCount - 1 do
                           Panel_House_Common.Childs[I].Hide;
-                        tmp := 0;
                         for I := Low(Button_Wares) to High(Button_Wares) do
                         begin
                           Button_Wares[I].Visible := gRes.Wares[aHouse.WareInput[I]].IsValid;
@@ -2191,25 +2190,16 @@ begin
                           Button_Wares[I].Caption := IntToStr(aHouse.ResIn[I]);
                           Button_NotAcceptWares[I].Visible := gRes.Wares[aHouse.WareInput[I]].IsValid;
                           Button_NotAcceptWares[I].TexID := IfThen(aHouse.GetAcceptWareIn(aHouse.WareInput[I]) > 0, 32, 33);
-                          K := 0;
-                          if gRes.Wares[aHouse.WareInput[I]].IsValid then
-                            K := TKMHouseStall(aHouse).WareRatioTo(I);
 
                           Button_Wares[I].Hint := Format(gResTexts[1987], [gRes.Wares[aHouse.WareInput[I]].Title, 1,
                                                                             gResTexts[gRes.Wares.VirtualWares.WareS['vtCoin'].TextID],
-                                                                            K
+                                                                            TKMHouseStall(aHouse).GetWarePrice(I)
                                                                             ]);
-                          Inc(tmp, K);
-
                         end;
-                        K := 0;
-                        for I := Low(Button_Wares) to High(Button_Wares) do
-                          if gRes.Wares[aHouse.WareInput[I]].IsValid then
-                            inc(K, TKMHouseStall(aHouse).WareRatioTo(I) * aHouse.ResIn[I]);
-
                         Button_Coin.Caption := IntToStr(gHands[aHouse.Owner].VirtualWare['vtCoin']);
 
-                        Button_Coin.Hint := Format(gResTexts[1986], [tmp, K]);
+                        Button_Coin.Hint := Format(gResTexts[1986], [TKMHouseStall(aHouse).GetAllWaresPrice,
+                                                                     TKMHouseStall(aHouse).GetAllWaresMaxPrice]);
                         Button_Coin.Enabled := aHouse.HasWorkerInside;
                         Button_CoinV.Caption := Button_Coin.Caption;
 
@@ -4407,11 +4397,9 @@ begin
     if Sender = Button_Wares[I] then
     begin
       if (ssRight in Shift) or (ssShift in Shift) then
-        gGame.GameInputProcess.CmdHouse(gicHouseStallBuyCoin, fHouse, I, 10)
-        //TKMHouseStall(gMySpectator.Selected).BuyCoin(I, 10)
+        gGame.GameInputProcess.CmdHouse(gicHouseStallBuyCoin, fHouse, I, 100)
       else
         gGame.GameInputProcess.CmdHouse(gicHouseStallBuyCoin, fHouse, I, 1)
-        //TKMHouseStall(gMySpectator.Selected).BuyCoin(I, 1);
     end else
     if Sender = Button_NotAcceptWares[I] then
     begin
@@ -4419,22 +4407,15 @@ begin
         gGame.GameInputProcess.CmdHouse(gicHouseDeliveryToggle, H, H.WareInput[I], -1000)
       else
         gGame.GameInputProcess.CmdHouse(gicHouseDeliveryToggle, H, H.WareInput[I], 1000);
-      {if H.GetAcceptWareIn(H.WareInput[I]) > 0 then
-
-        //H.ToggleAcceptWaresIn(H.WareInput[I], -1000)
-      else
-        //H.ToggleAcceptWaresIn(H.WareInput[I], 1000);}
     end;
 
   if Sender = Button_Coin then
   begin
-    for I := 1 to 4 do
+    for I := 1 to 6 do
       if (ssRight in Shift) or (ssShift in Shift) then
-        gGame.GameInputProcess.CmdHouse(gicHouseStallBuyCoin, fHouse, I, 10)
-        //TKMHouseStall(gMySpectator.Selected).BuyCoin(I, 10)
+        gGame.GameInputProcess.CmdHouse(gicHouseStallBuyCoin, fHouse, I, 100)
       else
         gGame.GameInputProcess.CmdHouse(gicHouseStallBuyCoin, fHouse, I, 1);
-        //TKMHouseStall(gMySpectator.Selected).BuyCoin(I, 1);
   end;
 
 end;

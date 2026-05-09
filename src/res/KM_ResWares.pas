@@ -326,8 +326,7 @@ begin
   fType := aType;
 
   case fType of
-    wtApple : CoinPrice := 4;
-    wtGold : CoinPrice := 10;
+    wtApple : CoinPrice := 10;
     wtEgg : CoinPrice := 30;
     wtJewerly : CoinPrice := 500;
     wtCard : CoinPrice := 100;

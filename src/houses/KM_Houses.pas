@@ -827,6 +827,10 @@ type
     function CanBuyItem(aIndex : Byte) : Boolean;
     property VWare[aIndex : Byte] : String read GetVWareName;
     property VWareCount[aIndex : Byte] : Byte read GetVWareCount;
+    function GetWarePrice(aIndex : Byte) : Word;
+    function GetWareMaxPrice(aIndex : Byte) : Word;
+    function GetAllWaresPrice : Word;
+    function GetAllWaresMaxPrice : Word;
 
     constructor Create(aUID: Integer; aHouseType: TKMHouseType; PosX, PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
     constructor Load(LoadStream: TKMemoryStream); override;
@@ -7864,6 +7868,40 @@ begin
     Exit(0);
   Result := Round(costFrom / Min(costTo, costFrom));
 end;
+
+function TKMHouseStall.GetWarePrice(aIndex : Byte) : Word;
+begin
+  If gRes.Wares[fWareInput[aIndex]].IsValid then
+    Result := WareRatioTo(aIndex)
+  else
+    Result := 0;
+end;
+
+function TKMHouseStall.GetWareMaxPrice(aIndex : Byte) : Word;
+begin
+  If gRes.Wares[fWareInput[aIndex]].IsValid then
+    Result := WareRatioTo(aIndex) * fWareIn[aIndex]
+  else
+    Result := 0;
+end;
+
+function TKMHouseStall.GetAllWaresPrice : Word;
+var I : Integer;
+begin
+  Result := 0;
+  for I := 1 to WARES_IN_OUT_COUNT do
+    If fWareIn[I] > 0 then
+      Inc(Result, GetWarePrice(I));
+end;
+
+function TKMHouseStall.GetAllWaresMaxPrice : Word;
+var I : Integer;
+begin
+  Result := 0;
+  for I := 1 to WARES_IN_OUT_COUNT do
+    Inc(Result, GetWarePrice(I) * fWareIn[I]) ;
+end;
+
 
 function TKMHouseStall.CanBuyItem(aIndex: Byte): Boolean;
 begin

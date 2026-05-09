@@ -1921,9 +1921,9 @@
 1983:Stocznia
 1984:Rozpocznij samouczek
 1985:Nazwa mapy
-1986:Sprzedaj po jednym surowcu za: %d. Prawym przyciskiem myszy sprzedaj wszystko za: %d
-1987:Sprzedaj: [ %s x %d ] na : [ %s x %d ]
-1988:Wymień: [ %s x %d ] na : [ %s x %d ]
+1986:Sprzedaj po jednym surowcu za: %d|Prawym przyciskiem myszy sprzedaj wszystko za: %d
+1987:Sprzedaj: [ %s x %d ]|na : [ %s x %d ]
+1988:Wymień: [ %s x %d ]|na : [ %s x %d ]
 1989:Samouczki Bitewne
 1990:Łąka
 1991:Warzywniak

@@ -1929,9 +1929,9 @@
 1983:Shipyard
 1984:Start tutorial
 1985:Map name
-1986:Sell every ware for: %d. Right click to sell evrything for: %d
-1987:Sell: [ %s x %d ] for: [ %s x %d ]
-1988:Exchange: [ %s x %d ] for : [ %s x %d ]
+1986:Sell every ware for: %d|Right click to sell evrything for: %d
+1987:Sell: [ %s x %d ]|for: [ %s x %d ]
+1988:Exchange: [ %s x %d ]|for : [ %s x %d ]
 1989:Battle Tutorials
 1990:Grass field
 1991:Vegetable field
