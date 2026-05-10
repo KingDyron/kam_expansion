@@ -130,6 +130,10 @@ type
   TKMPTAnim = record
     StartTick, EndTick : Cardinal;
   end;
+                      //random, no citizens,
+  TKMSiegeTowerMode = (stmRandom, stmPassive, stmRangedOnly, stmLowHP, stmStrongest, stmWeakest, stmFurthest, stmClosest);
+
+
   TKMKeyFunction = (
     kfNone,
 

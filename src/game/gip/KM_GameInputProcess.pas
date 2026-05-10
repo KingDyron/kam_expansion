@@ -1196,7 +1196,7 @@ begin
       gicCartographersDoSpying, gicHouseRepairSet, gicPearlSelectType,gicPearlConfirm, gicPearlSelectResFrom, gicPearlSelectResTo, gicPearlSelectVResTo,//arium
       gicPearlSelectRResTo, gicPearlDoExchange, gicPearlUseSpecial, gicHouseStyleSet, gicStoreHouseUnlockAll, gicStoreHouseBlockAll, gicHouseForestPlantTree,
       gicHousePastureBuyAnimal, gicHousePastureSellAnimal, gicArenaSelectFestival, gicArenaStartFestival, gicHouseQueueNotRem, gicHouseDeliveryTo,
-      gicHouseVirtualWareClicked, gicHouseForestToggleTree, gicHousePastureToggleAnimal, gicSiegeTowerDinner] then
+      gicHouseVirtualWareClicked, gicHouseForestToggleTree, gicHousePastureToggleAnimal, gicSiegeTowerDinner, gicSiegeTowerMode] then
     begin
       srcHouse := gHands.GetHouseByUID(IntParams[0]);
       if (srcHouse = nil) or srcHouse.IsDestroyed //House has been destroyed before command could be executed
@@ -1407,6 +1407,7 @@ begin
       gicHouseDeliveryTo            : srcHouse.HouseToDeliver := gHands.GetHouseByUID(IntParams[1]);
       gicHouseVirtualWareClicked    : srcHouse.HouseVirtualWareClicked(IntParams[1], IntParams[2]);
       gicSiegeTowerDinner           : TKMHouseSiegeTower(srcHouse).TryReserveDinner(IntParams[1]);
+      gicSiegeTowerMode             : TKMHouseSiegeTower(srcHouse).SetMode(IntParams[1]);
 
       gicUnlockDevelopment          : P.TryToUnlockDevelopment(TKMDevelopmentTreeType(IntParams[0]), IntParams[1]{, IntParams[2] = 1});
 
@@ -1740,7 +1741,7 @@ begin
                           gicPearlSelectResFrom, gicPearlSelectResTo, gicPearlSelectVResTo, gicPearlSelectRResTo, gicPearlDoExchange,
                           gicHouseStyleSet, gicStoreHouseUnlockAll, gicStoreHouseBlockAll, gicHousePastureBuyAnimal, gicHousePastureSellAnimal,
                           gicArenaSelectFestival, gicHouseDeliveryTo, gicHouseForestToggleTree, gicHousePastureToggleAnimal,
-                          gicSiegeTowerDinner]);
+                          gicSiegeTowerDinner, gicSiegeTowerMode]);
   //Assert((aHouse is TKMHouseSchool) or (aHouse is TKMHouseTownHall) or (aHouse is TKMHouseSiegeWorkshop));
   TakeCommand(MakeCommand(aCommandType, aHouse.UID, aValue));
 end;

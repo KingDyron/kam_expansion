@@ -5,7 +5,7 @@ uses
   StrUtils, SysUtils, Math, Classes,
   KM_Defaults,
   KM_ResTypes,
-  KM_Controls, KM_ControlsBase,
+  KM_Controls, KM_ControlsBase, KM_ControlsSwitch,
   KM_Houses, KM_HouseArena;
 
 type
@@ -14,8 +14,10 @@ type
       procedure Refresh(Tower : TKMHouseSiegeTower);
       procedure UnitClicked(Sender : TObject);
       procedure ButtonClickShift(Sender : TObject; Shift : TShiftState);
+      procedure SetMode(Sender : TObject);
     protected
       Button_Unit : array[0..TKMHouseSiegeTower.MAX_UNITS_INSIDE - 1] of TKMButtonFlat;
+      DropList_Mode : TKMRadioGroup;
       Button_BuyDinner: TKMButtonFlat;
       Label_Arrow : TKMLabel;
       Button_Coin, Button_Dinner : TKMButtonFlat;
@@ -35,8 +37,10 @@ uses
 
 
 constructor TKMGuiGameSiegeTower.Create(aParent: TKMPanel);
-var I : integer;
-  cPrice : String;
+const
+  SIEGE_TOWER_MODE_TEXT: array[TKMSiegeTowerMode] of Word = (2368, 2369, 2370, 2371, 2372, 2373, 2374, 2375);
+var I, top : integer;
+  stm : TKMSiegeTowerMode;
 begin
   Inherited Create(aParent, 0, 100, aParent.Width - 8, 600);
 
@@ -52,17 +56,24 @@ begin
     //Button_Unit[I].Hide;
     Button_Unit[I].Tag := I;
   end;
+  top := 100;
+  DropList_Mode := TKMRadioGroup.Create(self, 0, top, Width, 125, fntGrey);
+  DropList_Mode.Hint := gResTexts[2367];
+  for stm := stmRandom to high(TKMSiegeTowerMode) do
+    DropList_Mode.Add(gResTexts[SIEGE_TOWER_MODE_TEXT[stm] ]);
+  DropList_Mode.OnChange := SetMode;
 
-  TKMLabel.Create(self, 2, 100, Width, 20, gResTexts[2365], fntMetal, taCenter);
-  Button_BuyDinner:= TKMButtonFlat.Create(self, Width div 2 - 16, 120, 33, 44, gRes.Wares.VirtualWares.WareS['vtDinner'].GUIIcon, rxGui);
+  top := 230;
+  TKMLabel.Create(self, 2, top, Width, 20, gResTexts[2365], fntMetal, taCenter);
+  Button_BuyDinner:= TKMButtonFlat.Create(self, Width div 2 - 16, top + 20, 33, 44, gRes.Wares.VirtualWares.WareS['vtDinner'].GUIIcon, rxGui);
   Button_BuyDinner.Hint := gResTexts[2366];
   Button_BuyDinner.Caption := '0';
   Button_BuyDinner.OnClickShift := ButtonClickShift;
 
-  Label_Arrow := TKMLabel.Create(self, 0, 185, Width, 20, '-->', fntMetal, taCenter);
-  Button_Coin := TKMButtonFlat.Create(self, Width div 2 - 50 - 16, 170, 33, 44, gRes.Wares.VirtualWares.WareS['vtCoin'].GUIIcon, rxGui);
+  Label_Arrow := TKMLabel.Create(self, 0, top + 75, Width, 20, '-->', fntMetal, taCenter);
+  Button_Coin := TKMButtonFlat.Create(self, Width div 2 - 50 - 16, top + 60, 33, 44, gRes.Wares.VirtualWares.WareS['vtCoin'].GUIIcon, rxGui);
   Button_Coin.Caption := 'x' + Round(gRes.Wares.VirtualWares.WareS['vtDinner'].CoinPrice).ToString;
-  Button_Dinner := TKMButtonFlat.Create(self, Width div 2 + 50 - 16, 170, 33, 44, gRes.Wares.VirtualWares.WareS['vtDinner'].GUIIcon, rxGui);
+  Button_Dinner := TKMButtonFlat.Create(self, Width div 2 + 50 - 16, top + 60, 33, 44, gRes.Wares.VirtualWares.WareS['vtDinner'].GUIIcon, rxGui);
   Button_Dinner.Caption := 'x1';
 end;
 
@@ -124,6 +135,7 @@ begin
     end;
   end;
   Button_BuyDinner.Caption := gMySpectator.Hand.SiegeTowerDinner.ToString;
+  DropList_Mode.ItemIndex := byte(Tower.Mode);
 end;
 
 procedure TKMGuiGameSiegeTower.UnitClicked(Sender: TObject);
@@ -139,7 +151,6 @@ end;
 
 procedure TKMGuiGameSiegeTower.ButtonClickShift(Sender: TObject; Shift: TShiftState);
 var I : Integer;
-  W : TKMUnitWarrior;
   ST : TKMHouseSiegeTower;
 begin
   I := 1;
@@ -153,6 +164,14 @@ begin
     I := I * 5;
   ST := TKMHouseSiegeTower(gMySpectator.Selected);
   gGame.GameInputProcess.CmdHouse(gicSiegeTowerDinner, ST, I);
+end;
+
+procedure TKMGuiGameSiegeTower.SetMode(Sender: TObject);
+var
+  ST : TKMHouseSiegeTower;
+begin
+  ST := TKMHouseSiegeTower(gMySpectator.Selected);
+  gGame.GameInputProcess.CmdHouse(gicSiegeTowerMode, ST, DropList_Mode.ItemIndex);
 end;
 
 

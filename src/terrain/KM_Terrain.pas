@@ -376,6 +376,8 @@ type
     function IsPlayerUnitWithinRad(const aPlayer : Integer; const aLoc: TKMPoint; const aRadius : Byte) : Boolean;
     function UnitsHitTestWithinRad(const aLoc: TKMPoint; aMinRad, aMaxRad: Single; aPlayer: TKMHandID; aAlliance: TKMAllianceType;
                                    aDir: TKMDirection; const aClosest: Boolean; aTestDiagWalkable: Boolean = True): Pointer;
+    function UnitsHitTestSiegeTower(const aLoc: TKMPoint; aMinRad, aMaxRad: Single; aPlayer: TKMHandID; aAlliance: TKMAllianceType;
+                                   const aMode: TKMSiegeTowerMode): Pointer;
     function FindPlaceForUnit(aLoc : TKMPoint; aPass: TKMTerrainPassability; aMaxDistance : Byte) : TKMPoint;
     function FindWalkableSpot(aLoc : TKMPoint) : TKMPoint;
     function IsTileNearWater(aLoc : TKMPoint) : Boolean;
@@ -2953,6 +2955,195 @@ begin
         Result := C[KaMRandom(cCount, 'TKMTerrain.UnitsHitTestWithinRad 2')]
       else
         Result := nil;
+  end;
+end;
+
+
+function TKMTerrain.UnitsHitTestSiegeTower(const aLoc: TKMPoint; aMinRad: Single; aMaxRad: Single;
+                                          aPlayer: TKMHandID; aAlliance: TKMAllianceType; const aMode: TKMSiegeTowerMode): Pointer;
+type
+  TKMUnitArray = array of TKMUnit;
+  procedure Append(var aArray: TKMUnitArray; var aCount: Integer; const aUnit: TKMUnit);
+  begin
+    if aCount >= Length(aArray) then
+      SetLength(aArray, aCount + 32);
+
+    aArray[aCount] := aUnit;
+    Inc(aCount);
+  end;
+
+  function GetSectorRect: TKMRect;
+  var IntegerRadius: Integer;
+  begin
+    //Scan one tile further than the maximum radius due to rounding
+    IntegerRadius := Round(aMaxRad + 1);  //1.42 gets rounded to 1
+
+    Result.Left := aLoc.X-IntegerRadius;
+    Result.Right := aLoc.X+IntegerRadius;
+    Result.Top := aLoc.Y-IntegerRadius;
+    Result.Bottom := aLoc.Y+IntegerRadius;
+
+    Result := KMClipRect(Result, 1, 1, fMapX, fMapY); //Clip to map bounds
+  end;
+  procedure Sort(var aArray: TKMUnitArray; var aCount: Integer);
+  var I, K, maxC : Integer;
+    lowest : Single;
+    tmp : TKMUnit;
+  begin
+    If aCount = 0 then
+      Exit;
+    maxC := 0;
+    for I := 0 to aCount - 2 do
+    begin
+      for K := I to aCount - 1 do
+      begin
+        case aMode of
+          stmLowHP : If aArray[I].CurrentHitPoints < aArray[K].CurrentHitPoints then Continue;
+          stmWeakest : If gRes.Units[aArray[I].UnitType].UnitPower < gRes.Units[aArray[K].UnitType].UnitPower then Continue;
+          stmStrongest : If gRes.Units[aArray[I].UnitType].UnitPower > gRes.Units[aArray[K].UnitType].UnitPower then Continue;
+        end;
+        tmp := aArray[I];
+        aArray[I] := aArray[K];
+        aArray[K] := tmp;
+      end;
+
+      If I = 0 then
+      begin
+        Case aMode of
+          stmLowHP : lowest := aArray[I].CurrentHitPoints;
+          stmWeakest, stmStrongest : lowest := gRes.Units[aArray[I].UnitType].UnitPower;
+          else
+            lowest := 0;
+        end;
+        If lowest > 0 then
+          maxC := 1;
+      end else
+      begin
+        Case aMode of
+          stmLowHP : If aArray[I].CurrentHitPoints < lowest + 1 then maxC := I + 1;
+          stmWeakest : If gRes.Units[aArray[I].UnitType].UnitPower < lowest + 30 then maxC := I + 1;
+          stmStrongest : If gRes.Units[aArray[I].UnitType].UnitPower < lowest - 30 then maxC := I + 1;
+          else
+            maxC := aCount;
+        end;
+
+      end;
+
+    end;
+    aCount := maxC;
+
+  end;
+
+const
+  RANDOM_MODES = [stmRandom, stmPassive, stmRangedOnly, stmLowHP, stmWeakest, stmStrongest];
+  SORT_MODES = [stmLowHP, stmWeakest, stmStrongest];
+var
+  I,K: Integer; //Counters
+  boundsRect: TKMRect;
+  dX,dY: Integer;
+  requiredMaxRad: Single;
+  U: TKMUnit;
+  P: TKMPoint;
+  wCount, cCount, initialSize: Integer;
+  W, C: TKMUnitArray;
+begin
+  wCount := 0;
+  cCount := 0;
+
+  if not (aMode in RANDOM_MODES) then
+    initialSize := 1 //We only need to keep 1 result
+  else
+    initialSize := 32; //Should be enough most times, Append will add more if needed
+
+  SetLength(W, initialSize);
+  SetLength(C, initialSize);
+
+  //This function sets LowX, LowY, HighX, HighY based on the direction
+  boundsRect := GetSectorRect;
+
+  for I := boundsRect.Top to boundsRect.Bottom do
+  for K := boundsRect.Left to boundsRect.Right do
+  begin
+    U := Land^[I,K].IsUnit;
+    if U = nil then Continue; //Most tiles are empty, so check it first
+
+    //Check archer sector. If it's not within the 90 degree sector for this direction, then don't use this tile (continue)
+    dX := K - aLoc.X;
+    dY := I - aLoc.Y;
+    //Alliance is the check that will invalidate most candidates, so do it early on
+    if U.IsDeadOrDying //U = nil already checked earlier (above sector check)
+    or (gHands.CheckAlliance(aPlayer, U.Owner) <> aAlliance) //How do WE feel about enemy, not how they feel about us
+    or ((U is TKMUnitWarriorSpikedTrap) and (not TKMUnitWarriorSpikedTrap(U).IsVisible))
+    or not U.Visible then //Inside of house
+      Continue;
+
+    case aMode of
+      stmRandom         : ;//don't skip
+      stmPassive        : If U is TKMCivilUnit then Continue;//don't check civilians
+      stmRangedOnly     : If not (U is TKMUnitWarrior) or ((U is TKMUnitWarrior) and not TKMUnitWarrior(U).IsRanged) then Continue;//skip all but ranged units
+
+      //stmLowHP          : If (W[0] <> nil) and (U.CurrentHitPoints >= W[0].CurrentHitPoints) Then Continue;
+      //stmStrongest      : If (W[0] <> nil) and ( gRes.Units[U.UnitType].UnitPower <= gRes.Units[W[0].UnitType].UnitPower) Then Continue;
+      //stmWeakest        : If (W[0] <> nil) and ( gRes.Units[U.UnitType].UnitPower >= gRes.Units[W[0].UnitType].UnitPower) Then Continue;
+      stmFurthest       : If (W[0] <> nil) and (KMLengthSqr(aLoc, KMPoint(K,I)) <= KMLengthSqr(aLoc, W[0].Position)) Then Continue;
+      stmClosest        : If (W[0] <> nil) and (KMLengthSqr(aLoc, KMPoint(K,I)) >= KMLengthSqr(aLoc, W[0].Position)) Then Continue;
+    end;
+
+    //In KaM archers can shoot further than sight radius (shoot further into explored areas)
+    //so CheckTileRevelation is required, we can't remove it to optimise.
+    //But because it will not invalidate many candidates, check it late so other checks can do their work first
+    if (gHands[aPlayer].FogOfWar.CheckTileRevelation(K,I) <> 255) then Continue;
+
+    //This unit could be on a different tile next to KMPoint(k,i), so we cannot use that anymore.
+    //There was a crash caused by VertexUsageCompatible checking (k,i) instead of U.CurrPosition.
+    //In that case aLoc = (37,54) and k,i = (39;52) but U.CurrPosition = (38;53).
+    //This shows why you can't use (k,i) in checks because it is distance >2 from aLoc! (in melee fight)
+    P := U.Position;
+
+    requiredMaxRad := aMaxRad;
+    if U is TKMUnitWarriorSpy then
+      if not TKMUnitWarriorSpy(U).IsVisibleForEnemy then
+          Continue;
+
+    if InRange(KMLength(KMPointF(aLoc), U.PositionF), aMinRad, requiredMaxRad) //Unit's exact position must be close enough
+    then
+    begin
+      if not (aMode in RANDOM_MODES)  then
+      begin
+        if U is TKMUnitWarrior then
+          W[0] := U
+        else
+          C[0] := U;
+      end
+      else
+      begin
+        if (U is TKMUnitWarrior)then
+          Append(W, wCount, U)
+        else
+          Append(C, cCount, U);
+      end;
+    end;
+  end;
+
+  if not (aMode in RANDOM_MODES) then
+  begin
+    if W[0] <> nil then
+      Result := W[0]
+    else
+      Result := C[0];
+  end
+  else
+  begin
+    If aMode in SORT_MODES then
+      Sort(W, wCount);
+
+    if wCount > 0 then
+      Result := W[KaMRandom(wCount, 'TKMTerrain.UnitsHitTestWithinRad')]
+    else
+    if cCount > 0 then
+      Result := C[KaMRandom(cCount, 'TKMTerrain.UnitsHitTestWithinRad 2')]
+    else
+      Result := nil;
   end;
 end;
 

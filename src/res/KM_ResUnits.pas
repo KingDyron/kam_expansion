@@ -895,6 +895,8 @@ end;
 
 function TKMUnitSpec.UnitPower : Single;
 begin
+  If fUnitType in UNITS_CITIZEN then
+    Exit(0);
   Result := (fUnitDat.HitPoints * fUnitDat.Defence)
             + (fUnitDat.Attack + fUnitDat.AttackHorse);
   Result := Result * fUnitDat.Speed;

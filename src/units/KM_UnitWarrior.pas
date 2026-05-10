@@ -1601,7 +1601,8 @@ begin
     Exit;
   //from := GetRandomCellWithin;
   from := fHome.Entrance{ + KMPoint(0, -4)};
-  U := gTerrain.UnitsHitTestWithinRad(from, RangeMin, RangeMax, Owner, atEnemy, dirNA, not RANDOM_TARGETS);
+  //U := gTerrain.UnitsHitTestWithinRad(from, RangeMin, RangeMax, Owner, atEnemy, dirNA, not RANDOM_TARGETS);
+  U := gTerrain.UnitsHitTestSiegeTower(from, RangeMin, RangeMax, Owner, atEnemy, TKMHouseSiegeTower(fHome).Mode);
   //no unit found so no need to check every archer
   If (U = nil) or (U.IsDeadOrDying) then
     Exit;

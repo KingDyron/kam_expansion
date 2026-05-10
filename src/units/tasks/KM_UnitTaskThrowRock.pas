@@ -214,14 +214,14 @@ begin
                 If TakeBolt then
                   gProjectiles.AimTarget(KMPointF(Home.Entrance.X, Home.Entrance.Y - 4.5),
                                           fTarget, ProjectileType,
-                                          fUnit, RangeMax + 8,
-                                          RangeMin);
+                                          fUnit, RangeMax + 20,
+                                          RangeMin - 5);
             end else
             If TakeBolt then
               gProjectiles.AimTarget(KMPointF(Home.Entrance.X, Home.Entrance.Y - 4.5),
                                       fTarget, ProjectileType,
-                                      fUnit, RangeMax + 8,
-                                      RangeMin);
+                                      fUnit, RangeMax + 20,
+                                      RangeMin - 5);
 
             gHands.CleanUpUnitPointer(fTarget); //We don't need it anymore
             SetActionLockedStay(1, uaWalk);

@@ -1038,13 +1038,20 @@ type
 
   TKMHouseSiegeTower = class (TKMHouseWFlagPoint)
   private
+    fMode : TKMSiegeTowerMode;
   public
     const
       MAX_UNITS_INSIDE = 10;
+    property Mode : TKMSiegeTowerMode read fMode;
+    procedure SetMode(aIndex : integer);
     function GetUnitWeight(aUnitType : TKMUnitType) : Byte;
     function GetTotalWeight : Byte;
     function CanEnter(aUnitType : TKMUnitType = utAny) : Boolean;
     procedure TryReserveDinner(aCount : Integer);
+
+    constructor Create(aUID: Integer; aHouseType: TKMHouseType; PosX, PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
+    constructor Load(LoadStream: TKMemoryStream); override;
+    procedure Save(SaveStream: TKMemoryStream); override;
     procedure Paint;override;
   end;
 
@@ -9454,6 +9461,16 @@ begin
   SaveStream.Write(fWallStyle);
 end;
 
+procedure TKMHouseSiegeTower.SetMode(aIndex : Integer);
+var new : TKMSiegeTowerMode;
+begin
+  If aIndex = -1 then
+    Exit;
+  new :=  TKMSiegeTowerMode(aIndex);
+  If new <> fMode then
+    fMode := new;
+end;
+
 function TKMHouseSiegeTower.GetUnitWeight(aUnitType: TKMUnitType): Byte;
 begin
   case aUnitType of
@@ -9505,6 +9522,23 @@ begin
       gHands[Owner].AddSiegeTowerDinner(1);
     end else
       Break;
+end;
+
+constructor TKMHouseSiegeTower.Create(aUID: Integer; aHouseType: TKMHouseType; PosX, PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
+begin
+  Inherited;
+  fMode := stmFurthest;
+end;
+constructor TKMHouseSiegeTower.Load(LoadStream : TKMemoryStream);
+begin
+  Inherited;
+  LoadStream.ReadData(fMode);
+end;
+
+procedure TKMHouseSiegeTower.Save(SaveStream: TKMemoryStream);
+begin
+  Inherited;
+  SaveStream.WriteData(fMode);
 end;
 
 procedure TKMHouseSiegeTower.Paint;
