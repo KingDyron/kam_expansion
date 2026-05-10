@@ -114,6 +114,7 @@ type
   TKMSwitch = class(TKMControl)
     private
       fID : TKMWordArray;
+      fHints : TKMStringArray;
       fPosition,
       fSelected : Byte;
       fNextSelected : Byte;
@@ -123,8 +124,13 @@ type
       procedure SetSelected(aValue : Byte);
       function NextIcon(aFrom : Integer = -1) : Word;
       function PrevIcon(aFrom : Integer = -1) : Word;
+      function NextPosition : Word;
+      function PrevPosition : Word;
+    protected
+      function GetHint : UnicodeString; override;
     public
       RX : TRXType;
+      MainColor : TKMColor3f;
 
       Offset : Byte;
       constructor Create(aParent: TKMPanel; aLeft, aTop, aWidth, aHeight: Integer);
@@ -135,6 +141,7 @@ type
       procedure SelectPrevius;
       property Selected : Byte read fNextSelected write SetSelected;
       property OnChange : TNotifyEvent read fOnChange write fOnChange;
+      procedure Add(aTexID : Word; aHint : String);
 
       procedure MouseUp(X,Y: Integer; Shift: TShiftState; Button: TMouseButton); override;
       procedure Paint; override;
@@ -148,7 +155,8 @@ uses
   KM_Resource,
   KM_Defaults,
   KM_Game, KM_GameApp,
-  KM_CommonUtils;
+  KM_CommonUtils,
+  KM_Cursor;
 
 
 { TKMCheckBoxCommon }
@@ -578,6 +586,7 @@ begin
   fSelected := 0;
   fPosition := 0;
   Offset := 20;
+  MainColor := TKMColor3f.New(0, 1, 0 );
 end;
 
 function TKMSwitch.GetCount: Byte;
@@ -587,6 +596,8 @@ end;
 
 procedure TKMSwitch.SetSelected(aValue : Byte);
 begin
+  If aValue = fNextSelected then
+    Exit;
   fSelected := EnsureRange(aValue, 0, Count - 1);
   fNextSelected := fSelected;
 end;
@@ -610,6 +621,18 @@ begin
 
   IncLoop(Result, 0, Count - 1, -1);
   Result := fID[Result];
+end;
+
+function TKMSwitch.NextPosition: Word;
+begin
+  Result := Selected;
+  IncLoop(Result, 0, Count - 1, 1);
+end;
+
+function TKMSwitch.PrevPosition: Word;
+begin
+  Result := Selected;
+  IncLoop(Result, 0, Count - 1, -1);
 end;
 
 procedure TKMSwitch.SelectNext;
@@ -638,10 +661,47 @@ begin
     fOnChange(Self);
 end;
 
+function TKMSwitch.GetHint: UnicodeString;
+var w, l : Integer;
+begin
+  Result := Inherited;
+  If length(fHints) = 0 then
+    Exit;
+
+  w := Width div 3;
+  l := AbsLeft;
+
+  If InRange(gCursor.Pixel.X, l, l + w - 1) then //left
+    Result := fHints[PrevPosition]
+  else
+  If InRange(gCursor.Pixel.X, l + w, l + w * 2) then  //center
+    Result := fHints[fSelected]
+  else
+    Result := fHints[NextPosition]; //right
+end;
+
+procedure TKMSwitch.Add(aTexID: Word; aHint: string);
+var I : Integer;
+begin
+  I := Count;
+  SetLength(fID, I + 1);
+  SetLength(fHints, I + 1);
+  fID[I] := aTexID;
+  fHints[I] := aHint;
+end;
 
 procedure TKMSwitch.MouseUp(X: Integer; Y: Integer; Shift: TShiftState; Button: TMouseButton);
+var l, w : Integer;
+  doLeft : Boolean;
 begin
+  w := Width div 3;
+  l := AbsLeft;
+
+  doLeft := InRange(X, l, l + w);
   If ssRight in Shift then
+    doLeft := not doLeft;
+
+  If doLeft then
     SelectPrevius
   else
     SelectNext;
@@ -666,9 +726,7 @@ begin
     delta := Max((Offset - fPosition) div 5, 1);
     Inc(fPosition, delta);
     If fPosition = Offset then
-    begin
       fSelected := fNextSelected;
-    end;
   end;
 
 
@@ -678,7 +736,7 @@ begin
   bevCenterLeft := lt - bevCenterLeft div 2;
 
   TKMRenderUI.WriteBevel(ABSLeft, ABSTop, Width, Height, 1, 0.3);
-  TKMRenderUI.WriteBevel(bevCenterLeft, ABSTop, Width div 3, Height, 1, 0.3);
+  TKMRenderUI.WriteBevel(bevCenterLeft, ABSTop, Width div 3, Height, MainColor, 1, 0.3);
   If fSelected <> fNextSelected then
   begin
     color := $FFFF00FF;

@@ -17,7 +17,8 @@ type
       procedure SetMode(Sender : TObject);
     protected
       Button_Unit : array[0..TKMHouseSiegeTower.MAX_UNITS_INSIDE - 1] of TKMButtonFlat;
-      DropList_Mode : TKMRadioGroup;
+      //DropList_Mode : TKMRadioGroup;
+      Switch_Mode : TKMSwitch;
       Button_BuyDinner: TKMButtonFlat;
       Label_Arrow : TKMLabel;
       Button_Coin, Button_Dinner : TKMButtonFlat;
@@ -29,6 +30,7 @@ type
 
 implementation
 uses
+  KM_CommonTypes,
   KM_Game, KM_GameInputProcess,
   KM_HandsCollection,
   KM_RenderUI, KM_Cursor,
@@ -57,13 +59,22 @@ begin
     Button_Unit[I].Tag := I;
   end;
   top := 100;
+  TKMLabel.Create(self, 2, top, Width, 20, gResTexts[2367], fntMetal, taCenter);
+  top := 117;
+  {
   DropList_Mode := TKMRadioGroup.Create(self, 0, top, Width, 125, fntGrey);
   DropList_Mode.Hint := gResTexts[2367];
   for stm := stmRandom to high(TKMSiegeTowerMode) do
     DropList_Mode.Add(gResTexts[SIEGE_TOWER_MODE_TEXT[stm] ]);
-  DropList_Mode.OnChange := SetMode;
+  DropList_Mode.OnChange := SetMode;}
+  Switch_Mode := TKMSwitch.Create(self, 0, top, Width, 35);
+  for stm := stmRandom to high(TKMSiegeTowerMode) do
+    Switch_Mode.Add(byte(stm) + 1223, gResTexts[SIEGE_TOWER_MODE_TEXT[stm]]);
+  Switch_Mode.OnChange := SetMode;
+  Switch_Mode.Offset := Width div 2 - 20;
+  Switch_Mode.MainColor := TKMColor3f.New(0, 1, 0);
 
-  top := 230;
+  Inc(top, 40);
   TKMLabel.Create(self, 2, top, Width, 20, gResTexts[2365], fntMetal, taCenter);
   Button_BuyDinner:= TKMButtonFlat.Create(self, Width div 2 - 16, top + 20, 33, 44, gRes.Wares.VirtualWares.WareS['vtDinner'].GUIIcon, rxGui);
   Button_BuyDinner.Hint := gResTexts[2366];
@@ -135,7 +146,7 @@ begin
     end;
   end;
   Button_BuyDinner.Caption := gMySpectator.Hand.SiegeTowerDinner.ToString;
-  DropList_Mode.ItemIndex := byte(Tower.Mode);
+  Switch_Mode.Selected := byte(Tower.Mode);
 end;
 
 procedure TKMGuiGameSiegeTower.UnitClicked(Sender: TObject);
@@ -171,7 +182,7 @@ var
   ST : TKMHouseSiegeTower;
 begin
   ST := TKMHouseSiegeTower(gMySpectator.Selected);
-  gGame.GameInputProcess.CmdHouse(gicSiegeTowerMode, ST, DropList_Mode.ItemIndex);
+  gGame.GameInputProcess.CmdHouse(gicSiegeTowerMode, ST, Switch_Mode.Selected);
 end;
 
 
