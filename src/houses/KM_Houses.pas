@@ -1045,6 +1045,7 @@ type
     property Mode : TKMSiegeTowerMode read fMode;
     procedure SetMode(aIndex : integer);
     function GetUnitWeight(aUnitType : TKMUnitType) : Byte;
+    function HasAmmoCart : Pointer;
     function GetTotalWeight : Byte;
     function CanEnter(aUnitType : TKMUnitType = utAny) : Boolean;
     procedure TryReserveDinner(aCount : Integer);
@@ -9486,9 +9487,10 @@ begin
     utRogue,
     utSkirmisher: Result := 1;
 
-    utBallista:  Result := 6;
-    utCatapult:  Result := 8;
-    utMobileTower:  Result := 8;
+    utBallista:  Result := 5;
+    utCatapult:  Result := 6;
+    utMobileTower:  Result := 6;
+    utAmmoCart: Result := 4;
     else raise Exception.Create('Unknown shooter');
   end;
 end;
@@ -9499,6 +9501,15 @@ begin
   Result := 0;
   for I := 0 to high(fWorkers) do
     inc(Result, GetUnitWeight(TKMUnit(fWorkers[I]).UnitType));
+end;
+
+function TKMHouseSiegeTower.HasAmmoCart: Pointer;
+var I : Integer;
+begin
+  Result := nil;
+  for I := 0 to high(fWorkers) do
+    If TKMUnit(fWorkers[I]).UnitType = utAmmoCart then
+      Exit(fWorkers[I]);
 end;
 
 function TKMHouseSiegeTower.CanEnter(aUnitType : TKMUnitType = utAny): Boolean;

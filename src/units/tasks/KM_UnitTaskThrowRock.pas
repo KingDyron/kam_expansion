@@ -224,11 +224,11 @@ begin
                                       RangeMin - 5);
 
             gHands.CleanUpUnitPointer(fTarget); //We don't need it anymore
-            SetActionLockedStay(1, uaWalk);
+            SetActionLockedStay(0, uaWalk);
           end;
-      2:  SetActionLockedStay(2, uaWalk); //Pretend to look how it goes
+      2:  SetActionLockedStay(0, uaWalk); //Pretend to look how it goes
       3:  begin
-            SetActionStay(3, uaWalk); //Idle before throwing another rock
+            SetActionStay(0, uaWalk); //Idle before throwing another rock
           end;
       else Result := trTaskDone;
     end;

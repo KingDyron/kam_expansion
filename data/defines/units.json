@@ -2961,10 +2961,10 @@
 			"CanStorm" : False,
 			"CanAttackUnits" : False,
 			"CanAttackHouses" : False,
-			"FightType" : "ftMelee",
+			"FightType" : "ftRanged",
 			"AmmoType" : "uatNone",
 			"MinRange" : 0.00000,
-			"MaxRange" : 0.00000,
+			"MaxRange" : 2.00000,
 			"StrikeSteps" : [5],
 			"ProducesWares" : ["wtAll"],
 			"PalaceCost" : 

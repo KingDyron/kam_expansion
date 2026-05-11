@@ -1509,6 +1509,8 @@ begin
     begin
       FightEnemy(newEnemy);
       newEnemy.DoHitFrom(self);
+      If Action is TKMUnitActionFight then
+        AnimStep := gRes.Units[UnitType].StrikeSteps[0] - 1;
     end;
 
     Result := True; //Found someone
@@ -1594,10 +1596,40 @@ begin
 end;
 
 procedure TKMUnitWarrior.CheckForTowerEnemy;
+
+  function TryTakeAmmoFromCart : Boolean;
+  var cart : TKMUnitWarriorAmmoCart;
+    count : Integer;
+  begin
+
+    Result := false;
+    cart := TKMHouseSiegeTower(fHome).HasAmmoCart;
+    If cart = nil then
+      Exit;
+
+    count := 0;
+    case UnitType of
+      utMobileTower,
+      utGolem,
+      utArcher,
+      utCrossbowMan,
+      utBowMan : count := cart.TakeAmmo(gRes.Units[UnitType].AmmoType, 50);
+
+      utRogue : begin
+                  count := cart.TakeAmmo(gRes.Units[UnitType].AmmoType, 1);
+                  count := count * 10;
+                end;
+      utBallista,
+      utCatapult : count := cart.TakeAmmo(gRes.Units[UnitType].AmmoType, 5);
+    end;
+    Inc(fBoltCount, count);
+    Result := count > 0;
+
+  end;
 var U : TKMUnit;
   from : TKMPoint;
 begin
-  If (BoltCount = 0) and not InfinityAmmo then
+  If not InfinityAmmo and (BoltCount = 0) and not TryTakeAmmoFromCart then
     Exit;
   //from := GetRandomCellWithin;
   from := fHome.Entrance{ + KMPoint(0, -4)};
@@ -4262,6 +4294,8 @@ begin
       If (newEnemy is TKMUnitWarrior) then
         TKMUnitWarrior(newEnemy).SetRageTime(0);
       newEnemy.DoHitFrom(self);
+      If newEnemy is TKMUnitAnimal then
+        newEnemy.Kill(HAND_NONE, false, false);
       Break;
     end;
   end;

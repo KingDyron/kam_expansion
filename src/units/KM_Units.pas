@@ -2584,12 +2584,13 @@ begin
     Exit;
   if Immortal then
     Exit;
+  If IsAnimal then
+    Exit;
   //When we are first hit reset the counter
   if fHitPoints = HitPointsMax then
     fHitPointCounter := 1;
 
   fHitPoints := Max(fHitPoints - aAmount, 0);
-
   gHands[Owner].AI.UnitHPDecreaseNotification(Self, aAttacker);
 
   //Make sure to kill only once
@@ -2670,6 +2671,8 @@ begin
   if aAttacker.IsDeadOrDying then
     Exit;
   if aAttacker.Owner = self.Owner then
+    Exit;
+  If IsAnimal then
     Exit;
 
   //gScriptEvents.ProcUnitHit(self, aAttacker);
