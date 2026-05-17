@@ -135,8 +135,8 @@ end;
 procedure TKMSelection.Selection_SyncCellRect;
 begin
   //Convert RawRect values that can be inverted to tilespace Rect
-  fSelectionRect.Left   := Trunc(Max(0, Math.Min(fSelectionRectF.Left, fSelectionRectF.Right)));
-  fSelectionRect.Top    := Trunc(Max(0, Math.Min(fSelectionRectF.Top, fSelectionRectF.Bottom)));
+  fSelectionRect.Left   := Trunc({Max(0, }Math.Min(fSelectionRectF.Left, fSelectionRectF.Right){)});
+  fSelectionRect.Top    := Trunc({Max(0, }Math.Min(fSelectionRectF.Top, fSelectionRectF.Bottom){)});
   fSelectionRect.Right  := Ceil(Max3(0, fSelectionRectF.Left, fSelectionRectF.Right));
   fSelectionRect.Bottom := Ceil(Max3(0, fSelectionRectF.Top, fSelectionRectF.Bottom));
   //Selection must be at least one tile
@@ -174,8 +174,8 @@ begin
                     MoveX := CursorCell.X - fSelPrevX;
                     MoveY := CursorCell.Y - fSelPrevY;
                     //Don't allow the selection to be moved out of the map bounds
-                    MoveX := EnsureRange(MoveX, -fSelectionRect.Left, gTerrain.MapX-1-fSelectionRect.Right);
-                    MoveY := EnsureRange(MoveY, -fSelectionRect.Top, gTerrain.MapY-1-fSelectionRect.Bottom);
+                    //MoveX := EnsureRange(MoveX, -fSelectionRect.Left, gTerrain.MapX-1-fSelectionRect.Right);
+                    //MoveY := EnsureRange(MoveY, -fSelectionRect.Top, gTerrain.MapY-1-fSelectionRect.Bottom);
                     RectO := KMRectMove(fSelectionRect, MoveX, MoveY);
                     fSelectionRectF := KMRectF(RectO);
 
