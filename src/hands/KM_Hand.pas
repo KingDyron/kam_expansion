@@ -1667,7 +1667,7 @@ function TKMHand.CanAddWallPlan(const aLoc: TKMPoint; aHouseType: TKMHouseType):
 
   function HasWallEndAt(aX, aY : Integer) : Boolean;
   begin
-    Result := gTerrain.House(aX, aY).IsValid(WALL_HOUSES);
+    Result := gTerrain.House(aX, aY).IsValid([htWall, htWall3, htWall5]);
   end;
 
 var
@@ -1707,9 +1707,9 @@ begin
         for T := -1 to 1 do
           if (S = 0) or (T = 0) then //This is a surrounding tile, not the actual tile
           If not allowEndPoint and HasWallEndAt(Tx + S , Ty + T) then
-            allowEndPoint := gTerrain.House(Tx + S , Ty + T).IsValid([htWall..htWall5]);
+            allowEndPoint := gTerrain.House(Tx + S , Ty + T).IsValid([htWall, htWall3, htWall5]);
 
-      allowEndPoint := allowEndPoint and gTerrain.CanPlaceWall(aLoc, htWall5);
+      allowEndPoint := allowEndPoint and (gTerrain.CanPlaceWall(aLoc, htWall5) > 0);
     end;
 
     //This tile must not contain fields/houses of allied players or self
@@ -2847,9 +2847,9 @@ begin
               if (S = 0) or (T = 0) then //This is a surrounding tile, not the actual tile
               If not allowEndPoint and HasWallEndAt(P2.X + S , P2.Y + T) then
               begin
-                allowEndPoint := gTerrain.House(P2.X + S , P2.Y + T).IsValid(WALL_HOUSES);
+                allowEndPoint := gTerrain.House(P2.X + S , P2.Y + T).IsValid([htWall, htWall3, htWall5]);
               end;
-          allowEndPoint := allowEndPoint and gTerrain.CanPlaceWall(aLoc, htWall5);
+          allowEndPoint := allowEndPoint and (gTerrain.CanPlaceWall(aLoc, htWall5) > 0);
 
           //Check surrounding tiles in +/- 1 range for other houses pressence
           If not allowEndPoint then
@@ -3076,6 +3076,15 @@ procedure TKMHand.GetWallPlanPlans(const aStart: TKMPoint; const aEnd: TKMPoint;
 var sP, eP : TKMPoint;
   I, J : Integer;
   middle, dist : Integer;
+  gateDist : Byte;
+  maxDist : Byte;
+
+  procedure CheckWallConnection;
+  begin
+    gateDist := gTerrain.CanPlaceWall(aStart, htWall5);
+    If gateDist > 0 then
+      gateDist := EnsureRange(MAX_WALL_DIST div 2 - gateDist, 0, 255);
+  end;
 
 begin
   sP := aStart;
@@ -3086,32 +3095,42 @@ begin
   If eP = KMPOINT_INVALID_TILE then
     eP := gCursor.Cell;
 
+  maxDist := MAX_WALL_DIST;
   If Abs(eP.X - sP.X) > Abs(eP.Y - sP.Y) then
   begin
     eP.Y := sP.Y;
     dist := eP.X - sP.X;
-    If Abs(dist) > MAX_WALL_DIST then
+    CheckWallConnection;
+    If Abs(dist) > maxDist then
     begin
       If dist > 0 then
-        eP.X := sP.X + MAX_WALL_DIST
+        eP.X := sP.X + maxDist
       else
-        eP.X := sP.X - MAX_WALL_DIST;
+        eP.X := sP.X - maxDist;
     end;
 
     If sP.X > eP.X then
       SwapInt(sP.X, eP.X);
 
-    dist := Min(eP.X - sP.X, MAX_WALL_DIST);
+    dist := Min(eP.X - sP.X, maxDist);
     If dist < 3 then
-      Exit
-    else
+    begin
+      Exit;
+    end else
     begin
       middle := dist div 2 - 1;
+      If (gateDist = 0) or (gateDist < dist) then
+      begin
 
-      aList.Add(KMPoint(sP.X + middle + 4, sP.Y), byte(htWall2));//1 =  horizontal wall gate;
+        aList.Add(KMPoint(sP.X + middle + 4, sP.Y), byte(htWall2));//1 =  horizontal wall gate;
 
-      I := middle - 1; //check left side
-      J := middle + 4; //check right side
+        I := middle - 1; //check left side
+        J := middle + 4; //check right side
+      end else
+      begin
+        I := Dist - 1;
+        J := Dist;
+      end;
 
       while (I >= 0) or (Dist - J >= 0) do
       begin
@@ -3146,28 +3165,38 @@ begin
   begin
     eP.X := sP.X;
     dist := eP.Y - sP.Y;
-    If Abs(dist) > MAX_WALL_DIST then
+    CheckWallConnection;
+    If Abs(dist) > maxDist then
     begin
       If dist > 0 then
-        eP.Y := sP.Y + MAX_WALL_DIST
+        eP.Y := sP.Y + maxDist
       else
-        eP.Y := sP.Y - MAX_WALL_DIST;
+        eP.Y := sP.Y - maxDist;
     end;
 
     If sP.Y > eP.Y then
       SwapInt(sP.Y, eP.Y);
 
-    dist := Min(eP.Y - sP.Y, MAX_WALL_DIST);
+    dist := Min(eP.Y - sP.Y, maxDist);
     If dist < 3 then
-      Exit
-    else
+    begin
+      Exit;
+    end else
     begin
       middle := dist div 2 - 1;
 
-      aList.Add(KMPoint(sP.X, sP.Y + middle + 3), byte(htWall4));//3 =  vertical wall gate;
+      If (gateDist = 0) or (gateDist < dist) then
+      begin
+        aList.Add(KMPoint(sP.X, sP.Y + middle + 3), byte(htWall4));//3 =  vertical wall gate;
 
-      I := middle - 1; //check top
-      J := middle + 4; //check down
+        I := middle - 1; //check top
+        J := middle + 4; //check down
+      end else
+      begin
+        I := Dist - 1;
+        J := Dist;
+      end;
+
       while (I >= 0) or (Dist - J >= 0) do
       begin
         If I >= 0 then

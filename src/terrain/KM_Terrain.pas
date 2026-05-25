@@ -144,7 +144,7 @@ type
     function CheckHeightPass(const aLoc: TKMPoint; aPass: TKMHeightPass): Boolean;
     procedure AddHouseRemainder(const aLoc: TKMPoint; aHouseType: TKMHouseType; aBuildState: TKMHouseBuildState; Resources : array of TKMWareType);
 
-    function CanPlaceWall(const aLoc : TKMPoint; aHouseType : TKMHouseType) : Boolean;
+    function CanPlaceWall(const aLoc : TKMPoint; aHouseType : TKMHouseType) : byte;
     function CanPlaceWell(const aLoc : TKMPoint; forAI : Boolean = false) : Boolean;
 
     procedure FindWineFieldLocs(const aLoc: TKMPoint; aRadius: Integer; aCornLocs: TKMPointList);
@@ -8468,12 +8468,11 @@ begin
                     (aBuildState in [hbsStone, hbsDone])); //Rubble objects block diagonals
 end;
 
-function  TKMTerrain.CanPlaceWall(const aLoc: TKMPoint; aHouseType: TKMHouseType): Boolean;
+function  TKMTerrain.CanPlaceWall(const aLoc: TKMPoint; aHouseType: TKMHouseType): Byte;
 var BestDIs : Integer;
   tmpLocs : array of array of Byte;
   minDistance : byte;
   gateFound : Boolean;
-  HT : TKMHouseType;
   H : TKMHouse;
 
   procedure ResetTMP;
@@ -8498,7 +8497,8 @@ var BestDIs : Integer;
     if Land^[aY, aX].TileLock = tlWallGate then
     begin
       gateFound := true;
-      Result := true;
+      Result := aDistance;
+      Exit;
     end;
 
     If aDistance + 1 <= BestDis then
@@ -8521,30 +8521,18 @@ var BestDIs : Integer;
   end;
 
 begin
-  Result := false;
+  Result := 0;
   if gGameParams.IsMapEditor then
-    Exit(true);
+    Exit(255);
   If aHouseType <> htWall5 then
     Exit;
 
   ResetTMP;
-  Result := false;
+  Result := 0;
   gateFound := false;
   if Land^[aLoc.Y, aLoc.X].TileLock in [tlWallGate, tlWallEmpty, tlWall] then
     Exit;
-
-  case aHouseType of
-    htWall: minDistance := 1;
-    htWall3: minDistance := 2;
-    htWall5: minDistance := 0;
-  end;
-
-  case aHouseType of
-    htWall: HT := htWall2;
-    htWall3: HT := htWall4;
-    else HT := htNone;
-  end;
-
+  minDistance := 0;
   BestDis := WALLS_TO_GATE_DIST + 4;
 
   if House(aLoc) = nil then
