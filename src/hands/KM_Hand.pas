@@ -1707,7 +1707,7 @@ begin
         for T := -1 to 1 do
           if (S = 0) or (T = 0) then //This is a surrounding tile, not the actual tile
           If not allowEndPoint and HasWallEndAt(Tx + S , Ty + T) then
-            allowEndPoint := gTerrain.House(Tx + S , Ty + T).IsValid(htWall5);
+            allowEndPoint := gTerrain.House(Tx + S , Ty + T).IsValid([htWall..htWall5]);
 
       allowEndPoint := allowEndPoint and gTerrain.CanPlaceWall(aLoc, htWall5);
     end;
@@ -2847,7 +2847,7 @@ begin
               if (S = 0) or (T = 0) then //This is a surrounding tile, not the actual tile
               If not allowEndPoint and HasWallEndAt(P2.X + S , P2.Y + T) then
               begin
-                allowEndPoint := gTerrain.House(P2.X + S , P2.Y + T).IsValid(htWall5);
+                allowEndPoint := gTerrain.House(P2.X + S , P2.Y + T).IsValid(WALL_HOUSES);
               end;
           allowEndPoint := allowEndPoint and gTerrain.CanPlaceWall(aLoc, htWall5);
 

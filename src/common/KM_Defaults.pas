@@ -612,10 +612,9 @@ type
     tpWorker,      // Like CanWalk but allows walking on building sites
     tpOwn,         // For AI ownership
     tpFactor,       // Allows vertex (top left) to be factored as a neighbour in flattening algorithm (it is to stop mines flattening strangely due to surrounding hills)
-    tpWall,
-    tpWallGate,
     tpPolarBear,
-    tpFox
+    tpFox,
+    tpCanWalls
   );
   TKMTerrainPassabilitySet = set of TKMTerrainPassability;
 
@@ -637,10 +636,9 @@ const
     'Can worker',
     'Can own',
     'Can factor',
-    'Can Wall',
-    'Is WallGate',
     'Can polar bear',
-    'Can Deer'
+    'Can Deer',
+    'Can build walls'
   );
 
 

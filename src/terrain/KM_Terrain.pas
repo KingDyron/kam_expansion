@@ -5409,6 +5409,10 @@ begin
                             //  allowBuild := allowBuild and (not House(P2.X, P2.Y - 2).IsValid(htAppleTree) or TKMHouseAppleTree(House(P2.X, P2.Y - 2)).CanAddChildTree(P2))
 
                           end;
+            htWall..htWall5: If aIgnoreObjects then
+                              allowBuild := (tpBuildNoObj in Land^[P2.Y,P2.X].Passability)
+                            else
+                              allowBuild := (tpCanWalls in Land^[P2.Y,P2.X].Passability);
             else  If aIgnoreObjects then
                     allowBuild := (tpBuildNoObj in Land^[P2.Y,P2.X].Passability)
                   else
@@ -6733,14 +6737,6 @@ begin
     and CheckHeightPass(aLoc, hpWalking) then
     AddPassability(tpOwn);
 
-  if Land^[aLoc.Y,aLoc.X].TileLock in [tlWall, tlWallGate] then
-    AddPassability(tpWall);
-
-
-{   if Land^[aLoc.Y,aLoc.X].TileLock = tlWallGate then
-      AddPassability(tpWallGate);
-}
-
   //For all passability types other than CanAll, houses and fenced houses are excluded
   if Land^[aLoc.Y,aLoc.X].TileLock in [tlNone, tlDigged, tlWallDigged, tlFenced, tlFieldWork, tlRoadWork, tlWallFence, tlWallEmpty, tlStructure] then
   begin
@@ -6790,6 +6786,27 @@ begin
     if isBuildNoObj and not hasHousesNearTile
       and((Land[aLoc.Y,aLoc.X].Obj = OBJ_NONE) or (gMapElements[Land^[aLoc.Y,aLoc.X].Obj].CanBeRemoved)) then //Only certain objects are excluded
       AddPassability(tpBuild);
+
+    isBuildNoObj := False;
+    if (
+        (tpWalk in Land^[aLoc.Y,aLoc.X].Passability)
+        //and (TileIsRoadable(aLoc)
+        and (not gRes.Tileset[Land^[aLoc.Y,aLoc.X].TileOverlay2.Params.TileID].NotBuildable
+        and not Land^[aLoc.Y,aLoc.X].TileOverlay.BlocksBuilding
+        and not Land^[aLoc.Y,aLoc.X].TileOverlay2.BlocksBuilding)
+        or Land^[aLoc.Y,aLoc.X].TileOverlay2.AllowsBuilding
+      )
+      and not TileIsCornField(aLoc) //Can't build houses on fields
+      and not TileIsWineField(aLoc)
+      and not TileIsGrassField(aLoc)
+      and not TileIsVegeField(aLoc)
+      and (Land^[aLoc.Y,aLoc.X].TileLock in [tlNone])
+      and TileInMapCoords(aLoc.X, aLoc.Y, 1)
+      and CheckHeightPass(aLoc, hpBuilding)
+      and((Land[aLoc.Y,aLoc.X].Obj = OBJ_NONE) or (gMapElements[Land^[aLoc.Y,aLoc.X].Obj].CanBeRemoved)) then //Only certain objects are excluded
+    begin
+      AddPassability(tpCanWalls);
+    end;
 
     if (
       ((tpWalk in Land^[aLoc.Y,aLoc.X].Passability)
@@ -7889,6 +7906,7 @@ begin
                        // if I = 4 then
                        //   Result := Result and (not House(X, Y - 2).IsValid(htAppleTree) or TKMHouseAppleTree(House(X, Y - 2)).CanAddChildTree(X, Y))
                       end;
+        htWall..htWall5: Result := Result and (tpCanWalls in Land^[Y,X].Passability);
         else         Result := Result and (tpBuild in Land^[Y,X].Passability);
       end;
       If not Result then
@@ -8469,7 +8487,7 @@ var BestDIs : Integer;
     if (tmpLocs[aY, aX] > 0) and (aDistance >= tmpLocs[aY, aX]) then Exit;
 
     if aDistance > minDistance then
-      if not CheckPassability(aX, aY, tpWall) then Exit;
+      if not (Land^[aY, aX].TileLock in [tlWallGate, tlWall]) then Exit;
 
     //SetOverlay(KMPoint(aX, aY),  toCoal3, false);
 
@@ -8477,15 +8495,10 @@ var BestDIs : Integer;
 
     tmpLocs[aY, aX] := aDistance;
 
-    if Land^[aY, aX].TileLock = tlWallGate  {CheckPassability(aX, aY, tpWallGate)} then
+    if Land^[aY, aX].TileLock = tlWallGate then
     begin
-      H := gHands.HousesHitTest(aX, aY);
-      if ((H <> nil) and (H.HouseType = HT)) or (HT = htNone) then
-      begin
-        gateFound := true;
-        Result := true;
-        Exit;
-      end;
+      gateFound := true;
+      Result := true;
     end;
 
     If aDistance + 1 <= BestDis then
@@ -8507,7 +8520,6 @@ var BestDIs : Integer;
     Result := Land^[Y, X].TileLock in [tlWall, tlWallFence, tlWallGate]
   end;
 
-var hasWallNearby : Boolean;
 begin
   Result := false;
   if gGameParams.IsMapEditor then
@@ -8518,21 +8530,15 @@ begin
   ResetTMP;
   Result := false;
   gateFound := false;
-  hasWallNearby := false;
-  if Land^[aLoc.Y, aLoc.X].TileLock in [tlWallGate, tlWallEmpty] then
+  if Land^[aLoc.Y, aLoc.X].TileLock in [tlWallGate, tlWallEmpty, tlWall] then
     Exit;
-
-  case aHouseType of
-    htWall5: hasWallNearby := true;
-  end;
-
-  if not hasWallNearby then Exit(false);
 
   case aHouseType of
     htWall: minDistance := 1;
     htWall3: minDistance := 2;
     htWall5: minDistance := 0;
   end;
+
   case aHouseType of
     htWall: HT := htWall2;
     htWall3: HT := htWall4;
@@ -8541,7 +8547,7 @@ begin
 
   BestDis := WALLS_TO_GATE_DIST + 4;
 
-  if gHands.HousesHitTest(aLoc.X, aLoc.Y) = nil then
+  if House(aLoc) = nil then
     Visit(aLoc.X, aLoc.Y, 0);
 
 
