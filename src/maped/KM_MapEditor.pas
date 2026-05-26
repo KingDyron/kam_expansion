@@ -1404,6 +1404,18 @@ begin
 
                 cmPaintBucket:      ChangeOwner(ssShift in gCursor.SState);
                 cmUniversalEraser:  EraseObject(ssShift in gCursor.SState);
+                cmPlanWalls :
+                              //if gMySpectator.Hand.CanAddHousePlan(P, htWall5) then
+                              begin
+                                If gCursor.PlanWallsStart = KMPOINT_INVALID_TILE then
+                                  gCursor.PlanWallsStart := P
+                                else
+                                begin
+                                  //gGame.GameInputProcess.CmdBuild(gicPlanWalls, gCursor.PlanWallsStart, P);
+                                  gMySpectator.Hand.TryPlaceWalls(gCursor.PlanWallsStart, P, gCursor.MapEd_HouseLevel);
+                                  gCursor.Mode := cmNone;
+                                end;
+                              end;
               end;
     mbRight:  case gCursor.Mode of
                               //Actual change was made in UpdateStateIdle, we just register it is done here

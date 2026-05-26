@@ -8483,7 +8483,7 @@ var BestDIs : Integer;
   procedure Visit(aX, aY, aDistance: Integer);
   begin
     //if not TileInMapCoords(aX, aY) then  Exit;
-    if (tmpLocs[aY, aX] > 0) and (aDistance >= tmpLocs[aY, aX]) then Exit;
+    if (tmpLocs[aX, aY] > 0) and (aDistance >= tmpLocs[aX, aY]) then Exit;
 
     if aDistance > minDistance then
       if not (Land^[aY, aX].TileLock in [tlWallGate, tlWall]) then Exit;
@@ -8492,7 +8492,7 @@ var BestDIs : Integer;
 
     if gateFound then Exit;
 
-    tmpLocs[aY, aX] := aDistance;
+    tmpLocs[aX, aY] := aDistance;
 
     if Land^[aY, aX].TileLock = tlWallGate then
     begin
@@ -8522,8 +8522,6 @@ var BestDIs : Integer;
 
 begin
   Result := 0;
-  if gGameParams.IsMapEditor then
-    Exit(255);
   If aHouseType <> htWall5 then
     Exit;
 

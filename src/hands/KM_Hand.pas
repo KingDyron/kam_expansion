@@ -346,6 +346,7 @@ type
     procedure GetWallPlanPlans(const aStart, aEnd: TKMPoint; aList: TKMPointTagList);
     procedure GetWallPlanMarks(const aStart, aEnd: TKMPoint; aList: TKMPointTagList; aIgnoreFOW: Boolean = False; aIgnoreObjects: Boolean = false);
     function TryPlacePlanWalls(aStart, aEnd : TKMPoint) : Boolean;
+    function TryPlaceWalls(aStart, aEnd : TKMPoint; aLevel : Byte) : Boolean;
 
     procedure PearlBuilt(aType : TKMPearlType);
     procedure PearlDestroyed(aType : TKMPearlType);
@@ -3322,6 +3323,46 @@ begin
     P.X := P.X - gRes.Houses[HT].EntranceOffsetX;
     P.Y := P.Y - gRes.Houses[HT].EntranceOffsetY;
     AddHousePlan(HT, P);
+  end;
+
+  Result := true;
+
+  FreeAndNil(Cells);
+end;
+
+function TKMHand.TryPlaceWalls(aStart, aEnd : TKMPoint; aLevel : Byte) : Boolean;
+var Cells : TKMPointTagList;
+  P : TKMPoint;
+  I : Integer;
+  HT : TKMHouseType;
+  H : TKMHouse;
+begin
+  If not gGameParams.IsMapEditor then
+    Exit;
+  Result := false;
+  Cells := TKMPointTagList.Create;
+
+  GetWallPlanPlans(aStart, aEnd, Cells);
+
+  for I := 0 to Cells.Count - 1 do
+  begin
+    HT := TKMHouseType(Cells.Tag[I]);
+    P := Cells[I];
+    P.X := P.X - gRes.Houses[HT].EntranceOffsetX;
+    P.Y := P.Y - gRes.Houses[HT].EntranceOffsetY;
+    If not CanAddWallPlan(P, HT) then
+      Exit;
+  end;
+  //place plans if we didn't exit earlier
+  for I := 0 to Cells.Count - 1 do
+  begin
+    HT := TKMHouseType(Cells.Tag[I]);
+    P := Cells[I];
+    P.X := P.X - gRes.Houses[HT].EntranceOffsetX;
+    P.Y := P.Y - gRes.Houses[HT].EntranceOffsetY;
+    H := AddHouse(HT, P.X, P.Y, true);
+    If H <> nil then
+      H.CurrentLevel := aLevel;
   end;
 
   Result := true;

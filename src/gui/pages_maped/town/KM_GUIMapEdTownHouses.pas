@@ -16,6 +16,7 @@ type
     procedure Town_FieldShiftClick(Sender: TObject; Shift: TShiftState);
     procedure Town_FieldMWheel(Sender: TObject; WheelSteps: Integer; var aHandled: Boolean);
     procedure Town_BuildChange(Sender: TObject);
+    procedure Town_BuildChangeShift(Sender: TObject; Shift : TShiftState);
     procedure Town_BuildRefresh;
     procedure Town_SetStyle(Sender : TObject);
     procedure Town_SetLevel(Sender: TObject; Shift: TShiftState);
@@ -228,7 +229,7 @@ begin
           Continue;
         SetLength(Button_Build, J + 1);//add new elements
         Button_Build[J] := TKMButtonFlat.Create(Panel_Build, lastID mod 5 * 37 + 9, top + (lastID div 5) * 37,33,33,gRes.Houses[H].GUIIcon);
-        Button_Build[J].OnClick := Town_BuildChange;
+        Button_Build[J].OnClickShift := Town_BuildChangeShift;
         Button_Build[J].Tag := Byte(H);
         Button_Build[J].Hint := gRes.Houses[H].HouseName;
         Inc(J);
@@ -517,6 +518,7 @@ procedure TKMMapEdTownHouses.Town_BuildChange(Sender: TObject);
 var
   I: Integer;
   oldMode : TKMCursorMode;
+  HT : TKMHouseType;
 begin
   //Reset cursor and see if it needs to be changed
   oldMode := gCursor.Mode;
@@ -529,41 +531,15 @@ begin
       gCursor.Mode := oldMode;
   end
   else
-
-  {if (Sender = Button_BuildPalisade) then
-    gCursor.Mode := cmPalisade
-  else
-  if (Sender = Button_BuildCancel) or ( Sender = BrushSize) then
-    gCursor.Mode := cmErase
-  else
-  if Sender = Button_BuildRoad[rtStone] then
-    SetMode(cmRoad, 0, rtStone)
-  else
-  if Sender = Button_BuildRoad[rtWooden] then
-    SetMode(cmRoad, 0, rtWooden)
-  else
-  if Sender = Button_BuildRoad[rtClay] then
-    SetMode(cmRoad, 0, rtClay)
-  else
-  if Sender = Button_BuildRoad[rtExclusive] then
-    SetMode(cmRoad, 0, rtExclusive)
-  else
-  if Sender = Button_BuildWine then
-    Town_FieldShiftClick(Sender, [])
-  else
-  if Sender = Button_BuildField then
-    Town_FieldShiftClick(Sender, [])
-  else
-  if Sender = Button_BuildGrassField then
-    Town_FieldShiftClick(Sender, [])
-  else}
-
   for I := 0 to high(Button_Build) do
     if Sender = Button_Build[I] then
     begin
       gCursor.Mode := cmHouses;
       oldHT := gCursor.Tag1;
       gCursor.Tag1 := Button_Build[I].Tag;
+      HT := TKMHouseType(Button_Build[I].Tag);
+      If (HT in WALL_HOUSES) and (ssShift in gCursor.SState) then
+        gCursor.Mode := cmPlanWalls;
       gCursor.MapEd_HouseStyle := Min(length(gRes.Houses[TKMHouseType(Button_Build[I].Tag)].Styles), gCursor.MapEd_HouseStyle);
     end;
     
@@ -572,6 +548,46 @@ begin
   Town_BuildRefresh;
 end;
 
+
+procedure TKMMapEdTownHouses.Town_BuildChangeShift(Sender: TObject; Shift : TShiftState);
+  procedure SetMode(aMode : TKMCursorMode; aTag : Integer; aRoadType : TKMRoadType = rtNone);
+  begin
+    gCursor.Mode := aMode;
+    gCursor.Tag1 := aTag;
+    gCursor.RoadType := aRoadType;
+  end;
+var
+  I: Integer;
+  oldMode : TKMCursorMode;
+  HT : TKMHouseType;
+begin
+  //Reset cursor and see if it needs to be changed
+  oldMode := gCursor.Mode;
+  gCursor.Mode := cmNone;
+  if (Sender = BrushSize) then
+  begin
+    If not (oldMode in [cmErase, cmRoad]) then
+      gCursor.Mode := cmErase
+    else
+      gCursor.Mode := oldMode;
+  end
+  else
+  for I := 0 to high(Button_Build) do
+    if Sender = Button_Build[I] then
+    begin
+      gCursor.Mode := cmHouses;
+      oldHT := gCursor.Tag1;
+      gCursor.Tag1 := Button_Build[I].Tag;
+      HT := TKMHouseType(Button_Build[I].Tag);
+      If (HT in WALL_HOUSES) and (ssShift in Shift) then
+        gCursor.Mode := cmPlanWalls;
+      gCursor.MapEd_HouseStyle := Min(length(gRes.Houses[TKMHouseType(Button_Build[I].Tag)].Styles), gCursor.MapEd_HouseStyle);
+    end;
+
+
+  gCursor.MapEdSize := BrushSize.Position;
+  Town_BuildRefresh;
+end;
 
 procedure TKMMapEdTownHouses.Town_BuildRefresh;
 var
@@ -596,7 +612,7 @@ begin
   BrushSize.Enabled := (gCursor.Mode in [cmErase, cmRoad]);
 
   for I := 0 to high(Button_Build) do
-      Button_Build[I].Down := (gCursor.Mode = cmHouses) and (gCursor.Tag1 = Button_Build[I].Tag);
+      Button_Build[I].Down := (gCursor.Mode in [cmHouses, cmPlanWalls]) and (gCursor.Tag1 = Button_Build[I].Tag);
 
 
 
@@ -612,7 +628,7 @@ begin
     Button_HouseSite.TexID := 976;
 
 
-  if (gCursor.Mode = cmHouses) then
+  if (gCursor.Mode in [cmHouses, cmPlanWalls]) then
   begin
     Button_HouseRandomRes.Enable;
     HT := TKMHouseType(gCursor.Tag1);
