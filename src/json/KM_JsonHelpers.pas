@@ -1956,7 +1956,7 @@ begin
   S := TKMemoryStreamBinary.Create;
   try
     SaveToStream(S);
-    S.SaveToFileCompressed(aPath, 'JsonStream');
+    S.SaveToFileCompressed(aPath, '');
   finally
     FreeAndNil(S);
   end;
@@ -2007,7 +2007,7 @@ var S : TKMemoryStream;
 begin
   S := TKMemoryStreamBinary.Create;
   try
-    S.LoadFromFileCompressed(aPath, 'JsonStream');
+    S.LoadFromFileCompressed(aPath, '');
     LoadFromStream(S);
   finally
     FreeAndNil(S);
@@ -2932,20 +2932,6 @@ begin
     end;
   end;
 
-end;
-
-initialization
-var obj : TKMJsonObject;
-begin
-  obj := TKMJsonObject.Create;
-  obj.LoadFromFile('E:\programowanie\projekty delphi\kam_expansion\Export\units.json');
-  obj.SaveToStream('E:\programowanie\projekty delphi\kam_expansion\Export\units1.dat');
-  obj.Free;
-
-  obj := TKMJsonObject.Create;
-  obj.LoadFromStream('E:\programowanie\projekty delphi\kam_expansion\Export\units1.dat');
-  obj.SaveToFile('E:\programowanie\projekty delphi\kam_expansion\Export\units2.json');
-  obj.Free;
 end;
 
 end.
