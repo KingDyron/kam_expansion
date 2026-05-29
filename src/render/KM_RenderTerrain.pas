@@ -914,14 +914,14 @@ begin
   if to1.funct = tofRoad then
   begin
     road := 0;
-    if (pY - 1 >= 1) then
-      road := road + Byte(gTerrain.Land^[pY - 1, pX].TileOverlay.IsRoad) shl 0;
-    if (pX + 1 <= gTerrain.MapX - 1) then
-      road := road + Byte(gTerrain.Land^[pY, pX + 1].TileOverlay.IsRoad) shl 1;
-    if (pY + 1 <= gTerrain.MapY - 1) then
-      road := road + Byte(gTerrain.Land^[pY + 1, pX].TileOverlay.IsRoad) shl 2;
-    if (pX - 1 >= 1) then
-      road := road + Byte(gTerrain.Land^[pY, pX - 1].TileOverlay.IsRoad) shl 3;
+    if (pY - 1 >= 0) then
+      road := road + Byte((pY - 1 = 0) or gTerrain.Land^[pY - 1, pX].TileOverlay.IsRoad) shl 0;
+    if (pX + 1 <= gTerrain.MapX) then
+      road := road + Byte((pX + 1 = gTerrain.MapX) or gTerrain.Land^[pY, pX + 1].TileOverlay.IsRoad) shl 1;
+    if (pY + 1 <= gTerrain.MapY) then
+      road := road + Byte((pY + 1 = gTerrain.MapY) or gTerrain.Land^[pY + 1, pX].TileOverlay.IsRoad) shl 2;
+    if (pX - 1 >= 0) then
+      road := road + Byte((pX - 1 = 0) or gTerrain.Land^[pY, pX - 1].TileOverlay.IsRoad) shl 3;
     //ID := RoadsConnectivity[road, 1];
     rot := RoadsConnectivity[road, 2];
 
