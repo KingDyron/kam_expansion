@@ -7975,6 +7975,8 @@ var
   TX, TY: Integer;
 begin
   Result := True;
+  If not gTerrain.TileInMapCoords(aLoc, 1) then
+    Exit(false);
   HA := gRes.Houses[aHouseType].BuildArea;
 
   for I := 1 to MAX_HOUSE_SIZE do
