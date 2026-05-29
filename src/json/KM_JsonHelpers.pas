@@ -2,7 +2,7 @@ unit KM_JsonHelpers;
 {$I KaM_Remake.inc}
 interface
 uses
-  Classes, KM_Defaults, KM_CommonTypes, KM_ResTypes,
+  Classes, KM_Defaults, KM_CommonTypes, KM_ResTypes, KM_CommonClasses,
   KM_Points, KromUtils,
   JsonDataObjects;
 
@@ -195,6 +195,10 @@ type
     destructor Destroy; override;
     procedure LoadFromFile(aPath : String);
     procedure SaveToFile(aPath : String);
+    procedure SaveToStream(aStream : TKMemoryStream); overload;
+    procedure SaveToStream(aPath : String); overload;
+    procedure LoadFromStream(aStream : TKMemoryStream); overload;
+    procedure LoadFromStream(aPath : String); overload;
     //basic
     function GetI(aName : String) : Integer; overload;
     function GetD(aName : String) : Single;  overload;
@@ -266,6 +270,8 @@ type
     procedure AddObjectToList(aObject : TKMJsonObject);
     procedure AddArrayToList(aArray : TKMJsonArrayNew);
     procedure SaveToText(var aText : String; aLeft : Integer; aInOneLine : Boolean);
+    procedure SaveToStream(aStream : TKMemoryStream);
+    procedure LoadFromStream(aStream : TKMemoryStream);
     procedure LoadFromText(var aText : String; var aID, aLine : Cardinal);
 
     function GetCount : Integer;
@@ -1657,7 +1663,7 @@ begin
     L := 1;
     LoadFromText(S, I, L);
   finally
-
+    StringList.Free;
   end;
 end;
 
@@ -1722,6 +1728,24 @@ var newObj : TKMJsonObject;
 
       If aText[aID] = '.' then
         isValueSingle := true;
+      Inc(aID);
+    end;
+    vValue := Copy(aText, startID, aCount);
+    Assert(length(vValue) <> 0, 'numeric value of a parameter is invalid at line : ' + aLine.ToString);
+    IF aText[aID] = ',' then
+      nextValueExpected := true;
+    //Inc(aID);
+  end;
+
+  procedure GetHexValue;
+  var startID, aCount : Cardinal;
+  begin
+    aCount := 0;
+    startID := aID;
+    Inc(aID);
+    while SysUtils.CharInSet(aText[aID], ['0'..'9', 'A'..'F', 'a'..'f' ]) and (aID < length(aText)) do
+    begin
+      Inc(aCount);
       Inc(aID);
     end;
     vValue := Copy(aText, startID, aCount);
@@ -1830,6 +1854,11 @@ begin
         GetStringValue;
         AddNewValue(jvtString);
       end else
+      If aText[aID] = '$' then
+      begin
+        GetHexValue;
+        AddNewValue(jvtInteger);
+      end else
       If SysUtils.CharInSet(aText[aID], ['-', '+', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']) then
       begin
         isValueSingle := false;
@@ -1895,6 +1924,95 @@ begin
   finally
     FreeAndNil(stringList);
   end;
+end;
+
+procedure TKMJsonObject.SaveToStream(aStream : TKMemoryStream);
+var I, C : Integer;
+begin
+  C := Count;
+  aStream.Write(fIsOneLiner);
+  aStream.Write(C);
+  for I := 0 to C - 1 do
+  begin
+    aStream.WriteData(fList[I].ValueType);
+    aStream.WriteANSI(String(fList[I].Name));
+
+    case fList[I].ValueType of
+      jvtNone,
+      jvtBoolean,
+      jvtInteger,
+      jvtString,
+      jvtSingle : aStream.WriteANSI(String(fList[I].Value) );
+      jvtObject : TKMJsonObject(fList[I].Value).SaveToStream(aStream);
+      jvtArray : TKMJsonArrayNew(fList[I].Value).SaveToStream(aStream);
+    end;
+  end;
+
+end;
+
+procedure TKMJsonObject.SaveToStream(aPath : String);
+var S : TKMemoryStream;
+begin
+  S := TKMemoryStreamBinary.Create;
+  try
+    SaveToStream(S);
+    S.SaveToFileCompressed(aPath, 'JsonStream');
+  finally
+    FreeAndNil(S);
+  end;
+
+end;
+
+
+procedure TKMJsonObject.LoadFromStream(aStream : TKMemoryStream);
+var C, I : integer;
+  newObj : TKMJsonObject;
+  newArr : TKMJsonArrayNew;
+  vType : TKMJsonValueType;
+  vName, vValue : String;
+begin
+  aStream.Read(fIsOneLiner);
+  aStream.Read(C);
+
+  for I := 0 to C - 1 do
+  begin
+    aStream.ReadData(vType);
+    aStream.ReadAnsi(vName);
+
+    case vType of
+      jvtNone,
+      jvtBoolean,
+      jvtInteger,
+      jvtString,
+      jvtSingle : begin
+                    aStream.ReadANSI(vValue);
+                    self.AddValue(vName, vValue, vType);
+                  end;
+      jvtObject : begin
+                    newObj := TKMJsonObject.Create;
+                    newObj.LoadFromStream(aStream);
+                    AddObjectToList(vName, newObj);
+                  end;
+      jvtArray  : begin
+                    newArr := TKMJsonArrayNew.Create;
+                    newArr.LoadFromStream(aStream);
+                    AddArrayToList(vName, newArr);
+                  end
+    end;
+  end;
+end;
+
+procedure TKMJsonObject.LoadFromStream(aPath : String);
+var S : TKMemoryStream;
+begin
+  S := TKMemoryStreamBinary.Create;
+  try
+    S.LoadFromFileCompressed(aPath, 'JsonStream');
+    LoadFromStream(S);
+  finally
+    FreeAndNil(S);
+  end;
+
 end;
 
 destructor TKMJsonObject.Destroy;
@@ -2533,6 +2651,7 @@ begin
   aText := aText + ']';
 end;
 
+
 procedure TKMJsonArrayNew.LoadFromText(var aText: string; var aID, aLine: Cardinal);
 var newObj : TKMJsonObject;
   newArray : TKMJsonArrayNew;
@@ -2590,6 +2709,24 @@ var newObj : TKMJsonObject;
     //Inc(aID);
   end;
 
+  procedure GetHexValue;
+  var startID, aCount : Cardinal;
+  begin
+    aCount := 0;
+    startID := aID;
+    Inc(aID);
+    while CkeckChar(aText[aID], ['0'..'9', 'A'..'F', 'a'..'f' ]) and (aID < length(aText)) do
+    begin
+      Inc(aCount);
+      Inc(aID);
+    end;
+    vValue := Copy(aText, startID, aCount);
+    Assert(length(vValue) <> 0, 'numeric value of a parameter is invalid at line : ' + aLine.ToString + ':  ' + vValue);
+    IF aText[aID] = ',' then
+      nextValueExpected := true;
+    //Inc(aID);
+  end;
+
   procedure GetBooleanValue;
   var checkString : String;
     I : Integer;
@@ -2603,7 +2740,7 @@ var newObj : TKMJsonObject;
 
     for I := 1 to length(CheckString) do
     begin
-      Assert(LowerCase(aText[aID]) = CheckString[I], 'Boolean value is invalid at line : ' + aLine.ToString);
+      Assert(LowerCase(aText[aID]) = CheckString[I], 'Boolean value is invalid at line : ' + aLine.ToString + ' Issue: ' + CheckString[I] + '<>' + LowerCase(aText[aID]) );
       Inc(aID);
     end;
     vValue := CheckString;
@@ -2686,6 +2823,11 @@ begin
       GetStringValue;
       AddNewValue(jvtString);
     end else
+    If aText[aID] = '$' then
+    begin
+      GetHexValue;
+      AddNewValue(jvtInteger);
+    end else
     If SysUtils.CharInSet(aText[aID], ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']) then
     begin
       isValueSingle := false;
@@ -2733,4 +2875,78 @@ begin
   Until (aID > length(aText)) or arrayFinished;
 end;
 
+procedure TKMJsonArrayNew.SaveToStream(aStream: TKMemoryStream);
+var C, I : Integer;
+begin
+  C := fCount;
+  aStream.Write(fIsOneLiner);
+  aStream.Write(C);
+  for I := 0 to C - 1 do
+  begin
+    aStream.WriteData(fList[I].ValueType);
+    case fList[I].ValueType of
+      jvtNone,
+      jvtBoolean,
+      jvtInteger,
+      jvtString,
+      jvtSingle : aStream.WriteANSI(String(fList[I].Value) );
+      jvtObject : TKMJsonObject(fList[I].Value).SaveToStream(aStream);
+      jvtArray : TKMJsonArrayNew(fList[I].Value).SaveToStream(aStream);
+    end;
+  end;
+end;
+
+procedure TKMJsonArrayNew.LoadFromStream(aStream : TKMemoryStream);
+var C, I : integer;
+  newObj : TKMJsonObject;
+  newArr : TKMJsonArrayNew;
+  vType : TKMJsonValueType;
+  vValue : String;
+begin
+  aStream.Read(fIsOneLiner);
+  aStream.Read(C);
+
+  for I := 0 to C - 1 do
+  begin
+    aStream.ReadData(vType);
+
+    case vType of
+      jvtNone,
+      jvtBoolean,
+      jvtInteger,
+      jvtString,
+      jvtSingle : begin
+                    aStream.ReadANSI(vValue);
+                    AddToList(vValue, vType);
+                  end;
+      jvtObject : begin
+                    newObj := TKMJsonObject.Create;
+                    newObj.LoadFromStream(aStream);
+                    AddObjectToList(newObj);
+                  end;
+      jvtArray  : begin
+                    newArr := TKMJsonArrayNew.Create;
+                    newArr.LoadFromStream(aStream);
+                    AddArrayToList(newArr);
+                  end
+    end;
+  end;
+
+end;
+
+initialization
+var obj : TKMJsonObject;
+begin
+  obj := TKMJsonObject.Create;
+  obj.LoadFromFile('E:\programowanie\projekty delphi\kam_expansion\Export\units.json');
+  obj.SaveToStream('E:\programowanie\projekty delphi\kam_expansion\Export\units1.dat');
+  obj.Free;
+
+  obj := TKMJsonObject.Create;
+  obj.LoadFromStream('E:\programowanie\projekty delphi\kam_expansion\Export\units1.dat');
+  obj.SaveToFile('E:\programowanie\projekty delphi\kam_expansion\Export\units2.json');
+  obj.Free;
+end;
+
 end.
+
