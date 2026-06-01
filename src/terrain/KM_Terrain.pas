@@ -6741,7 +6741,9 @@ begin
   if Land^[aLoc.Y,aLoc.X].TileLock in [tlNone, tlDigged, tlWallDigged, tlFenced, tlFieldWork, tlRoadWork, tlWallFence, tlWallEmpty, tlStructure] then
   begin
     if (TileIsWalkable(aLoc)
-        or Land^[aLoc.Y,aLoc.X].TileOverlay2.AllowsBuilding)
+        or Land^[aLoc.Y,aLoc.X].TileOverlay2.AllowsBuilding
+        or Land^[aLoc.Y,aLoc.X].TileOverlay2.AllowsWalking
+      )
       and not (Land^[aLoc.Y,aLoc.X].TileLock in [tlDigged, tlWallDigged])
       and gRes.Tileset[gRes.Tileset.Overlay[Land^[aLoc.Y,aLoc.X].TileOverlay2].TileID].Walkable
       and not Land^[aLoc.Y,aLoc.X].TileOverlay.BlocksWalking

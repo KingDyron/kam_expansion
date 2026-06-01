@@ -994,9 +994,11 @@
     {"ID": 961, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkStationaryLava", "tkIronMount", "tkStationaryLava", "tkStationaryLava"], "AnimLayers": [{"Frames": 1, "Start": 4157, "Count" : 40}]},
     {"ID": 962, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkStationaryLava", "tkStone", "tkStationaryLava", "tkStationaryLava"], "AnimLayers": [{"Frames": 1, "Start": 4157, "Count" : 40}]},
     {"ID": 963, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkGoldMount", "tkGoldMount", "tkGoldMount", "tkGoldMount"]},
-    {"ID": 963, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkIronMount", "tkIronMount", "tkIronMount", "tkIronMount"]},
-    {"ID": 963, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkStone", "tkStone", "tkStone", "tkStone"]},
-    {"ID": 966, "Walkable": true, "Roadable": true, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]}
+    {"ID": 964, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkIronMount", "tkIronMount", "tkIronMount", "tkIronMount"]},
+    {"ID": 965, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkStone", "tkStone", "tkStone", "tkStone"]},
+    {"ID": 966, "Walkable": true, "Roadable": true, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
+    {"ID": 967, "Walkable": true, "Roadable": false, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
+    {"ID": 968, "Walkable": true, "Roadable": false, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]}
 
   ],
   "Overlays" : [
@@ -1070,13 +1072,15 @@
 		"Connection" : 		[782, 783, 784, 785,  		786, 787, 788, 789,  	790, 791, 792, 793,  		794, 795, 796, 797],
 		"ConnectionRot" : 	[0, 0, 0, 0,       			0, 0, 0, 0,          	0, 0, 0, 0,          		0, 0, 0, 0]
 	},
-	{"TileID": 966, "IsFirstLayer": false, "Visible": true, "ViewInGame": false, "CanTree" : true, "Function" : 10, "Hint" : 0}  
+	{"TileID": 966, "IsFirstLayer": false, "Visible": true, "ViewInGame": false, "CanTree" : true, "Function" : 10, "Hint" : 0},
+	{"TileID": 967, "IsFirstLayer": false, "Visible": true, "ViewInGame": true, "CanTree" : false, "Function" : 11, "Hint" : 0},  
+	{"TileID": 968, "IsFirstLayer": false, "Visible": true, "ViewInGame": true, "CanTree" : false, "Function" : 11, "Hint" : 0}  
   ],
   
   "OverlayGuiOrder" : [0, 1, 2, 3, 4, 5,
     27, 28, 29, 30, 31, 32,
     0,
-	39, 20, 18, 38, 19, 40, 41, 42,
+	39, 20, 18, 38, 19, 40, 41, 42, 48, 49,
 	0,
 	16, 17, 21, 46,
     0, 

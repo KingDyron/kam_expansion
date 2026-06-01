@@ -20,7 +20,7 @@ type
 
 
   TKMTerrainOverlayFunction = (tofNone, tofRoadDig, tofRoad, tofInfinity, tofBlock, tofBlockBuilding, tofStopGrowing, tofAllowBuild,
-                              tofSnow, tofRoadWalk, tofSand);
+                              tofSnow, tofRoadWalk, tofSand, tofWalk);
   //tofNone = decorative tile overlay
 
   {TKMTileOverlay = byte;(toNone, toDig1, toDig2, toDig3, toDig4, toRoad,
@@ -151,6 +151,7 @@ type
     function IsSnow : Boolean;
     function IsRoadWalkable: Boolean;
     function IsSand : Boolean;
+    function AllowsWalking : Boolean;
   end;
 
 const
@@ -1085,6 +1086,10 @@ end;
 function TKMTerrainOverlayHelper.IsSand : Boolean;
 begin
   Result := gRes.Tileset.Overlay[Word(self)].funct = tofSand;
+end;
+function TKMTerrainOverlayHelper.AllowsWalking : Boolean;
+begin
+  Result := gRes.Tileset.Overlay[Word(self)].funct = tofWalk;
 end;
 
 end.
