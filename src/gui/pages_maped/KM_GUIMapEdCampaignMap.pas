@@ -43,6 +43,7 @@ type
           Edit_UnlockAfter : array[0..4] of TKMNumericEdit;
           Radio_TextPos : TKMRadioGroup;//left or right
           Label_MissionTitle : TKMLabel;
+          Edit_FlagStyle,
           Edit_NodeCount,
           Edit_FlagsCount : TKMNumericEdit;
         PopUpRGB : TKMPopUpPanelRGB;
@@ -59,10 +60,10 @@ type
 
 implementation
 uses KM_ResTypes, KM_ResFonts, KM_Defaults, KM_ResTexts,
+  KM_Resource,
+    KM_CampaignTypes,
       KM_RenderUI;
 const
-  FLAG_LABEL_OFFSET_X = 10;
-  FLAG_LABEL_OFFSET_Y = 3;
   CAMP_NODE_ANIMATION_PERIOD = 5;
   IMG_SCROLL_MAX_HEIGHT = 430;
 
@@ -138,8 +139,8 @@ begin
       end;
 
       Radio_TextPos := TKMRadioGroup.Create(Panel_Settings, 10, Edit_UnlockAfter[0].Top - 55, Panel_Settings.Width - 20, 40, fntMetal);
-      Radio_TextPos.Add(gResTexts[2175]);
       Radio_TextPos.Add(gResTexts[2176]);
+      Radio_TextPos.Add(gResTexts[2175]);
       Radio_TextPos.OnChange := Campaign_Click;
 
       TKMLabel.Create(Panel_Settings, 10, Radio_TextPos.Top - 20, Panel_Settings.Width - 20, 20, gResTexts[2174], fntOutline, taLeft);
@@ -148,7 +149,14 @@ begin
       Edit_NodeCount.OnChange := Campaign_Click;
 
       TKMLabel.Create(Panel_Settings, 10, Edit_NodeCount.Top - 20, Panel_Settings.Width - 20, 20, gResTexts[2173], fntOutline, taLeft);
-      Label_MissionTitle := TKMLabel.Create(Panel_Settings, 0, Edit_NodeCount.Top - 60, Panel_Settings.Width, 20, '', fntOutLine, taCenter);
+
+      Edit_FlagStyle:= TKMNumericEdit.Create(Panel_Settings, 10, Edit_NodeCount.Top - 45, 0, 64);
+      Edit_FlagStyle.ValueMax := high(CAMPAIGN_FLAG_STYLES);
+      Edit_FlagStyle.OnChange := Campaign_Click;
+
+      TKMLabel.Create(Panel_Settings, 10, Edit_FlagStyle.Top - 20, Panel_Settings.Width - 20, 20, gResTexts[2376], fntOutline, taLeft);
+
+      Label_MissionTitle := TKMLabel.Create(Panel_Settings, 0, Edit_FlagStyle.Top - 60, Panel_Settings.Width, 20, '', fntOutLine, taCenter);
 
   PopUpRGB := TKMPopUpPanelRGB.Create(Panel_Campaign);
   PopUpRGB.OnConfirm := Campaign_SetFlagColor;
@@ -174,7 +182,7 @@ begin
 end;
 
 procedure TKMCampaignMapEditor.Show(aCampaign : TKMCampaign);
-var I : Integer;
+var I, J : Integer;
 begin
   fCampaign := aCampaign;
   fCData.Maps := fCampaign.Maps;
@@ -197,10 +205,15 @@ begin
           //Pivot flags around Y=bottom X=middle, that's where the flag pole is
           Left := fCampaign.Maps[I].Flag.X - Round((Width/2)*(1-Panel_Flags.Scale));
           Top  := fCampaign.Maps[I].Flag.Y - Round(Height   *(1-Panel_Flags.Scale));
-          Label_CampaignFlags[I].AbsLeft := AbsLeft;
-          Label_CampaignFlags[I].AbsTop := AbsTop + FLAG_LABEL_OFFSET_Y;
+          Label_CampaignFlags[I].AbsLeft := AbsLeft - 10 + CAMPAIGN_FLAG_STYLES[fCampaign.Maps[I].FlagStyle].LabelOffsetX;
+          Label_CampaignFlags[I].AbsTop := AbsTop + CAMPAIGN_FLAG_STYLES[fCampaign.Maps[I].FlagStyle].LabelOffsetY;
           Label_CampaignFlags[I].Show;
           FlagColor := fCData.Maps[I].FlagColor;
+
+          J := CAMPAIGN_FLAG_STYLES[fCampaign.Maps[I].FlagStyle].CompletedID;
+          Image_CampaignFlags[I].Width := gRes.Sprites.Sprites[rxGuiMain].RXData.Size[J].X;
+          Image_CampaignFlags[I].Height := gRes.Sprites.Sprites[rxGuiMain].RXData.Size[J].Y;
+          Image_CampaignFlags[I].TexID := J;
           Show;
         end;
 
@@ -226,6 +239,21 @@ procedure TKMCampaignMapEditor.Campaign_Click(Sender : TObject);
 var I : Integer;
 begin
 
+  if Sender = Edit_FlagStyle then
+  begin
+    if fMapSelected = 255 then
+      Exit;
+
+    fCData.Maps[fMapSelected].FlagStyle := EnsureRange(Edit_FlagStyle.Value, 0, high(CAMPAIGN_FLAG_STYLES));
+    for I := 0 to 63 do
+      if fCData.Maps[fMapSelected].Nodes[I].X = 0 then
+      begin
+        fCData.Maps[fMapSelected].Nodes[I].X := 20;
+        fCData.Maps[fMapSelected].Nodes[I].Y := 20;
+      end;
+
+    Campaign_SelectMap(fMapSelected);
+  end else
   if Sender = Edit_NodeCount then
   begin
     if fMapSelected = 255 then
@@ -322,12 +350,13 @@ begin
       Image_CampaignSubNode[I].Left := fCData.Maps[fMapSelected].Nodes[I].X - 11 div 2;
       Image_CampaignSubNode[I].Top  := fCData.Maps[fMapSelected].Nodes[I].Y - 11 div 2;
       Image_CampaignSubNode[I].FlagColor := fCData.Maps[fMapSelected].FlagColor;
+      Image_CampaignSubNode[I].TexID := CAMPAIGN_FLAG_STYLES[fCData.Maps[fMapSelected].FlagStyle].NodeID;
     end;
 
 end;
 
 procedure TKMCampaignMapEditor.Campaign_SelectMap(aMapID : Integer);
-var I : Integer;
+var I, J : Integer;
 begin
   //disable Everything first
   fMapSelected := aMapID;
@@ -336,6 +365,8 @@ begin
   Button_SetFlagColor.Disable;
   Radio_TextPos.Disable;
   Edit_NodeCount.Disable;
+  Edit_FlagStyle.Disable;
+
   for I := 0 to Radio_TextPos.Count - 1 do
     Radio_TextPos.SetItemEnabled(I, false);
 
@@ -345,7 +376,20 @@ begin
     Edit_UnlockAfter[I].Disable;
 
   for I := 0 to High(Image_CampaignFlags) do
+  begin
     Image_CampaignFlags[I].Highlight := fMapSelected = I;
+
+    If I < fCampaign.MapCount then
+    begin
+      J := CAMPAIGN_FLAG_STYLES[fCampaign.Maps[I].FlagStyle].CompletedID;
+      Image_CampaignFlags[I].Width := gRes.Sprites.Sprites[rxGuiMain].RXData.Size[J].X;
+      Image_CampaignFlags[I].Height := gRes.Sprites.Sprites[rxGuiMain].RXData.Size[J].Y;
+
+      Image_CampaignFlags[I].TexID := CAMPAIGN_FLAG_STYLES[fCampaign.Maps[I].FlagStyle].CompletedID;
+      Label_CampaignFlags[I].AbsLeft := Image_CampaignFlags[I].AbsLeft - 10 + CAMPAIGN_FLAG_STYLES[fCampaign.Maps[I].FlagStyle].LabelOffsetX;
+      Label_CampaignFlags[I].AbsTop := Image_CampaignFlags[I].AbsTop + CAMPAIGN_FLAG_STYLES[fCampaign.Maps[I].FlagStyle].LabelOffsetY;
+    end;
+  end;
 
   if fMapSelected = 255 then
     Exit;
@@ -371,6 +415,8 @@ begin
   Label_MissionTitle.Caption := fCampaign.ShortName + ' ' + IntToStr(fMapSelected + 1); {fCampaign.GetCampaignMissionTitle(fMapSelected)};
   Edit_NodeCount.Value := fCData.Maps[fMapSelected].NodeCount;
   Edit_NodeCount.Enabled := true;
+  Edit_FlagStyle.Enabled:= true;
+  Edit_FlagStyle.Value := fCData.Maps[fMapSelected].FlagStyle;
   RefreshNodes;
 end;
 
@@ -414,8 +460,8 @@ begin
       fCData.Maps[fDragingID].Flag.X := aX;
       fCData.Maps[fDragingID].Flag.Y := aY;
 
-      Label_CampaignFlags[fDragingID].AbsLeft := AbsLeft;
-      Label_CampaignFlags[fDragingID].AbsTop := AbsTop + FLAG_LABEL_OFFSET_Y;
+      Label_CampaignFlags[fDragingID].AbsLeft := AbsLeft - 10 + CAMPAIGN_FLAG_STYLES[fCampaign.Maps[fDragingID].FlagStyle].LabelOffsetX;
+      Label_CampaignFlags[fDragingID].AbsTop := AbsTop + CAMPAIGN_FLAG_STYLES[fCampaign.Maps[fDragingID].FlagStyle].LabelOffsetY;
     end;
   end;
 end;
@@ -433,6 +479,8 @@ begin
       aY := Y - Panel_Flags.AbsTop + 2;
 
       I := fCData.Maps[fMapSelected].NodeCount;
+      If I >= MAX_CAMP_NODES then
+        Exit;
       fCData.Maps[fMapSelected].NodeCount := fCData.Maps[fMapSelected].NodeCount + 1;
       fCData.Maps[fMapSelected].Nodes[I].X := aX;
       fCData.Maps[fMapSelected].Nodes[I].Y := aY;

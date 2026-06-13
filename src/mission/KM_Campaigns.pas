@@ -72,16 +72,7 @@ type
     procedure UpdateShortName;
     function GetCampaignProgressFilePath : String;
   public
-    Maps: TKMCampaignMapsInfo;{record
-      Flag: TKMPointW;
-      NodeCount: Byte;
-      Nodes: array [0 .. MAX_CAMP_NODES - 1] of TKMPointW;
-      TextPos: TKMBriefingCorner;
-      UnlockAfter: array[0..4] of Integer;
-      IsUnlocked: Boolean;
-      FlagColor : Cardinal;
-      FlagStyle: Byte;
-    end;}
+    Maps: TKMCampaignMapsInfo;
     MapsUnlockableByScriptOnly : Boolean;
     constructor Create;
     destructor Destroy; override;
@@ -800,7 +791,7 @@ begin
       Add('X', Maps[K].Flag.X);
       Add('Y', Maps[K].Flag.Y);
     end;
-    map.Add('FlagStyle', Maps[K].FlagStyle);
+    map.Add('FlagStyle', Maps[K].FlagStyle, 0);
     map.Add('FlagColor', Maps[K].FlagColor);
     map.Add('TextPos', Byte(Maps[K].TextPos));
 
@@ -856,7 +847,7 @@ begin
       map := arr1.O[I];
       Maps[I].Flag.X := Map.O['Flag'].I['X'];
       Maps[I].Flag.Y := Map.O['Flag'].I['Y'];
-      Maps[I].FlagStyle := map.I['FlagStyle'];
+      Maps[I].FlagStyle := EnsureRange(map.I['FlagStyle'], 0, high(CAMPAIGN_FLAG_STYLES));
       Maps[I].FlagColor := map.C['FlagColor'];
       Maps[I].TextPos := TKMBriefingCorner(map.I['TextPos']);
 

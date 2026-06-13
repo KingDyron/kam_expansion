@@ -104,6 +104,7 @@ uses
   {$ENDIF}
   KromUtils, KM_Log, KM_Points,
   KM_ResTexts, KM_ResKeyFuncs, KM_ResTilesetTypes, KM_CommonClasses,
+  KM_CampaignTypes,
   Math,
   KM_GameApp;
 
@@ -189,6 +190,7 @@ begin
   fPalettes.LoadDefaultPalette(ExeDir + 'data' + PathDelim + 'gfx' + PathDelim);
   gLog.AddTime('Reading palettes', True);
   fJson := TKMJsonData.Create;
+  KM_CampaignTypes.LoadCampaignFlags;
 
   fSprites := TKMResSprites.Create(StepRefresh, StepCaption);
   fCursors := TKMResCursors.Create;

@@ -71,13 +71,11 @@ uses
   KM_Audio, KM_Music, KM_Sound, KM_Video,
   KM_GameSettings,
   KM_Maps,
-  KM_ResTexts, KM_ResFonts, KM_ResSound, KM_ResTypes,
+  KM_Resource, KM_ResTexts, KM_ResFonts, KM_ResSound, KM_ResTypes,
   KM_RenderUI,
   KM_Defaults;
 
 const
-  FLAG_LABEL_OFFSET_X = 10;
-  FLAG_LABEL_OFFSET_Y = 3;
   CAMP_NODE_ANIMATION_PERIOD = 5;
   IMG_SCROLL_MAX_HEIGHT = 430;
 
@@ -186,10 +184,8 @@ end;
 
 
 procedure TKMMenuCampaign.RefreshCampaign;
-const
-  MAP_PIC: array [Boolean] of Byte = (10, 11);
 var
-  I: Integer;
+  I, J: Integer;
 begin
   fCampaign := fCampaigns.CampaignById(fCampaignId);
 
@@ -207,12 +203,12 @@ begin
     if I < fCampaign.MapCount then
     begin
       if fCampaign.MapsProgressData[I].Completed and fCampaign.Maps[I].IsUnlocked then
-        Image_CampaignFlags[I].TexID   := 11
+        Image_CampaignFlags[I].TexID   := CAMPAIGN_FLAG_STYLES[fCampaign.Maps[I].FlagStyle].CompletedID
       else
       if fCampaign.Maps[I].IsUnlocked then
-        Image_CampaignFlags[I].TexID   := 93
+        Image_CampaignFlags[I].TexID   :=  CAMPAIGN_FLAG_STYLES[fCampaign.Maps[I].FlagStyle].UnlockedID
       else
-        Image_CampaignFlags[I].TexID := 10;
+        Image_CampaignFlags[I].TexID :=  CAMPAIGN_FLAG_STYLES[fCampaign.Maps[I].FlagStyle].ToUnlockID;
         //Image_CampaignFlags[I].TexID   := FLAG_STYLES[fCampaign.Maps[I].FlagStyle] + byte(fCampaign.Maps[I].IsUnlocked);//MAP_PIC[fCampaign.Maps[I].IsUnlocked];
 
 
@@ -231,8 +227,11 @@ begin
     Image_CampaignFlags[I].Left := fCampaign.Maps[I].Flag.X - Round((Image_CampaignFlags[I].Width/2)*(1-Panel_Campaign_Flags.Scale));
     Image_CampaignFlags[I].Top  := fCampaign.Maps[I].Flag.Y - Round(Image_CampaignFlags[I].Height   *(1-Panel_Campaign_Flags.Scale));
     Image_CampaignFlags[I].FlagColor := fCampaign.Maps[I].FlagColor;
-    Label_CampaignFlags[I].AbsLeft := Image_CampaignFlags[I].AbsLeft + FLAG_LABEL_OFFSET_X;
-    Label_CampaignFlags[I].AbsTop := Image_CampaignFlags[I].AbsTop + FLAG_LABEL_OFFSET_Y;
+    J := CAMPAIGN_FLAG_STYLES[fCampaign.Maps[I].FlagStyle].CompletedID;
+    Image_CampaignFlags[I].Width := gRes.Sprites.Sprites[rxGuiMain].RXData.Size[J].X;
+    Image_CampaignFlags[I].Height := gRes.Sprites.Sprites[rxGuiMain].RXData.Size[J].Y;
+    Label_CampaignFlags[I].AbsLeft := Image_CampaignFlags[I].AbsLeft + CAMPAIGN_FLAG_STYLES[fCampaign.Maps[I].FlagStyle].LabelOffsetX;
+    Label_CampaignFlags[I].AbsTop := Image_CampaignFlags[I].AbsTop + CAMPAIGN_FLAG_STYLES[fCampaign.Maps[I].FlagStyle].LabelOffsetY;
   end;
 
   //Select last map, no brifing will be played, since its set as
@@ -346,6 +345,7 @@ begin
     Image_CampaignSubNode[I].Visible := False;
     Image_CampaignSubNode[I].Left := fCampaign.Maps[fMapIndex].Nodes[I].X;
     Image_CampaignSubNode[I].Top  := fCampaign.Maps[fMapIndex].Nodes[I].Y;
+    Image_CampaignSubNode[I].TexID  := CAMPAIGN_FLAG_STYLES[fCampaign.Maps[fMapIndex].FlagStyle].NodeID;
     Image_CampaignSubNode[I].FlagColor := fCampaign.Maps[fMapIndex].FlagColor;
   end;
 
@@ -473,8 +473,8 @@ begin
         Left := fCampaign.Maps[I].Flag.X - Round((Width/2)*(1-Panel_Campaign_Flags.Scale));
         Top  := fCampaign.Maps[I].Flag.Y - Round(Height   *(1-Panel_Campaign_Flags.Scale));
 
-        Label_CampaignFlags[I].AbsLeft := AbsLeft + FLAG_LABEL_OFFSET_X;
-        Label_CampaignFlags[I].AbsTop := AbsTop + FLAG_LABEL_OFFSET_Y;
+        Label_CampaignFlags[I].AbsLeft := AbsLeft + CAMPAIGN_FLAG_STYLES[fCampaign.Maps[I].FlagStyle].LabelOffsetX;
+        Label_CampaignFlags[I].AbsTop := AbsTop + CAMPAIGN_FLAG_STYLES[fCampaign.Maps[I].FlagStyle].LabelOffsetY;
       end;
 end;
 
