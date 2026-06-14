@@ -1,7 +1,10 @@
 {
   "Flags": 
   [ 
-	{ "ToUnlock": 10, "Unlocked" : 93, "Completed" : 11, "Node" : 16}
+	{ "ToUnlock": 10, "Unlocked" : 93, "Completed" : 11, "Node" : 16},
+	{ "ToUnlock": 128, "Unlocked" : 127, "Completed" : 126, "Node" : 16, "LabelOffsetX" : 15},
+	{ "ToUnlock": 128, "Unlocked" : 127, "Completed" : 126, "Node" : 131, "LabelOffsetX" : 15},
+	{ "ToUnlock": 128, "Unlocked" : 127, "Completed" : 126, "Node" : 130, "LabelOffsetX" : 15}
   ]
   
 }
