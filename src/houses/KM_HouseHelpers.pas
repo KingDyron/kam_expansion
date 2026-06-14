@@ -5,7 +5,7 @@ uses
   KM_Houses,
   KM_Hand, KM_HandsCollection, KM_HouseWoodcutters, KM_HouseArmorWorkshop, KM_HouseBarracks, KM_HouseCottage, KM_HouseInn, KM_HouseTownHall,
   KM_HouseMarket, KM_HouseSchool, KM_HouseQueue, KM_HouseSiegeWorkshop, KM_HouseStore, KM_HouseSwineStable, KM_HouseWoodBurner,
-  KM_HouseCartographers, KM_HousePearl,
+  KM_HouseCartographers, KM_HousePearl, KM_HouseShipyard,
   KM_ResTypes;
   
 type

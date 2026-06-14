@@ -337,7 +337,7 @@ uses
   KM_CommonUtils, KM_CommonHelpers,
   KM_HouseBarracks, KM_HouseSchool, KM_HouseTownHall, KM_HouseWoodcutters, KM_HouseStore,
   KM_HouseArmorWorkshop, KM_HouseSiegeWorkshop, KM_HouseWoodBurner, KM_HouseCottage,
-  KM_HouseSwineStable, KM_HouseCartographers,
+  KM_HouseSwineStable, KM_HouseCartographers, KM_HouseShipyard,
   KM_HandsCollection, KM_HandEntity,
   KM_RenderUI, KM_ResKeys, KM_ResMapElements,
   KM_Resource, KM_ResFonts, KM_ResHouses, KM_ResTexts, KM_ResUnits, KM_Utils, KM_UtilsExt, KM_Points,
@@ -2384,10 +2384,10 @@ begin
                       end;
           htShipYard: begin
                         CostsRow_Common.Top := base + line * 25 + 20;
-                        CostsRow_Common.WarePlan := TShipyard(fHouse).GetWarePlan;
+                        CostsRow_Common.WarePlan := TKMHouseShipyard(fHouse).GetWarePlan;
                         CostsRow_Common.Visible := Ship_ShipType.Visible;
                         WaresOut_ShipYard.Top := CostsRow_Common.Bottom + 15;
-                        WaresOut_ShipYard.WarePlan := TShipyard(fHouse).WaresOut;
+                        WaresOut_ShipYard.WarePlan := TKMHouseShipyard(fHouse).WaresOut;
                         WaresOut_ShipYard.Show;
                         if Ship_DoWork.Visible then
                         begin

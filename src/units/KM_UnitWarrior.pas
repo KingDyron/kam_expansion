@@ -494,6 +494,7 @@ uses
   KM_ResTexts, KM_HandsCollection, KM_RenderPool, KM_UnitTaskAttackHouse,
   KM_AIDefensePos, KM_UnitTaskDie, KM_AIFields,
   KM_Hand, KM_HandLogistics, KM_HandTypes, KM_HandEntity,
+  KM_HouseShipyard,
   KM_UnitActionFight, KM_UnitActionGoInOut, KM_UnitActionWalkTo, KM_UnitActionStay,
   KM_UnitActionStormAttack, KM_Resource, KM_ResUnits, KM_UnitGroup,
   KM_UnitTaskCollectWares, KM_UnitTaskDismiss, KM_UnitTaskGoHome,

@@ -549,7 +549,9 @@ uses
   KM_Game, KM_GameParams, KM_GameApp,
   KM_RenderPool, KM_RenderAux, KM_ResTexts,
   KM_HandsCollection, KM_UnitWarrior, KM_Resource,
-  KM_Hand, KM_MapEdTypes, KM_HousePearl, KM_HouseForest,
+  KM_Hand, KM_MapEdTypes,
+  KM_HousePearl, KM_HouseForest, KM_HouseShipyard,
+
   KM_CommonHelpers,
   KM_UnitActionAbandonWalk,
   KM_UnitActionFight,

@@ -40,6 +40,7 @@ uses
   KM_CommonUtils,
   KM_Game,
   KM_Houses, KM_HouseWoodcutters, KM_HouseSwineStable, KM_HouseSiegeWorkshop, KM_HouseWoodBurner, KM_HouseQueue,
+  KM_HouseShipyard,
   KM_HandsCollection, KM_HandTypes, KM_HandEntity,
   KM_MapEditor, KM_MapEdTypes, KM_MapTypes,
   KM_Resource, KM_ResMapElements, KM_ResTexts, KM_Log, KM_ResTileset, KM_ResTilesetTypes,
@@ -583,8 +584,8 @@ begin
 
 
             if WorkPlan.GatheringScript = gsShipyard then
-              if TShipYard(fUnit.Home).CanWork then
-                TShipYard(fUnit.Home).StartWorking
+              if TKMHouseShipyard(fUnit.Home).CanWork then
+                TKMHouseShipyard(fUnit.Home).StartWorking
               else
                 Exit(trTaskDone);
 

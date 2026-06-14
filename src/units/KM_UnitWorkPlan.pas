@@ -73,7 +73,7 @@ uses
   KM_Hand, KM_HandTypes, KM_Entity, KM_HandEntity,
   KM_ResUnits,
   KM_Houses, KM_HouseWoodcutters, KM_HouseSiegeWorkshop, KM_HouseWoodBurner, KM_HouseQueue,
-  KM_HouseSwineStable,
+  KM_HouseSwineStable, KM_HouseShipyard,
   KM_MapEditor, KM_MapEdTypes, KM_MapTypes,
   KM_Terrain, KM_ResWares, KM_Log, KM_ResMapElements, KM_ResTileset, KM_ResTilesetTypes,
   KM_Resource, KM_CommonUtils, KM_HandsCollection, Math;
@@ -1120,7 +1120,7 @@ begin
                         hardWritten := true;
                         DefaultPlan(aUnit);
                         Res.Clear;
-                        Res.CopyFrom(TShipYard(aUnit.Home).GetWarePlan);
+                        Res.CopyFrom(TKMHouseShipYard(aUnit.Home).GetWarePlan);
                         Res.SetCount(WARES_IN_OUT_COUNT);
                         fIssued := TKMHouseShipYard(aUnit.Home).CanWork;
 

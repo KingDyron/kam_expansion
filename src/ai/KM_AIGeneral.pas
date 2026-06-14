@@ -65,6 +65,7 @@ uses
   KM_Hand, KM_HandsCollection, KM_HandTypes, KM_HandEntity,
   KM_Terrain, KM_AIFields,
   KM_Houses, KM_HouseBarracks,KM_HouseSiegeWorkshop, KM_HouseTownHall,
+  KM_HouseShipyard,
   KM_ResHouses, KM_CommonUtils, KM_DevPerfLog, KM_DevPerfLogTypes,
   KM_UnitGroupTypes,
   KM_ResTypes, KM_Resource, KM_ResUnits;
@@ -388,12 +389,12 @@ var
   procedure EquipShips(aStopBuilding : Boolean);
   var I : Integer;
       houses : TKMArray<TKMHouse>;
-      HS : TShipYard;
+      HS : TKMHouseShipyard;
   begin
     houses := gHands[fOwner].Houses.GetHouses(htShipYard);
     for I := 0 to houses.Count - 1 do
     begin
-      HS := TShipYard(houses[I]);
+      HS := TKMHouseShipyard(houses[I]);
 
       HS.NextShipType := utBattleShip;//only produce battle ships. There is no need to have anything else
       HS.DoWork := not aStopBuilding;

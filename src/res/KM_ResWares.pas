@@ -103,7 +103,6 @@ type
     function GetWare(aIndex: TKMWareType): TKMWareSpec;
     procedure LoadWareFromJson(aJSONFile : TJsonObject);
     procedure LoadVirtualWaresFromJson(aJSONFile : TJsonObject);
-    procedure SaveToJson;
   public
 
     WareDistribution : TKMWareDistributionType;
@@ -997,12 +996,6 @@ begin
 
   end;
       
-
-end;
-
-procedure TKMResWares.SaveToJson;
-begin
-  {$IFNDEF SAVE_JSON_RESOURCES} Exit;{$ENDIF}
 
 end;
 

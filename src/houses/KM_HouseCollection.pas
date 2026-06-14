@@ -70,7 +70,7 @@ uses
   KM_HouseInn, KM_HouseMarket, KM_HouseBarracks, KM_HouseSchool, KM_HouseStore, KM_HouseSwineStable,
   KM_HouseTownHall, KM_HouseWoodcutters, KM_HouseSiegeWorkshop, KM_HouseWoodBurner, KM_HouseQueue,
   KM_HouseCottage, KM_HouseCartographers, KM_HousePearl, KM_HousePasture, KM_HouseForest,
-  KM_HouseArena,
+  KM_HouseArena, KM_HouseShipyard,
   KM_Resource,
   KM_GameTypes,
   KM_TerrainTypes,

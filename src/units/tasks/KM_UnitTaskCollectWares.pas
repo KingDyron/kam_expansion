@@ -3,7 +3,7 @@
 interface
 uses
   Classes, SysUtils,
-  KM_CommonClasses, KM_Defaults, KM_Units, KM_Houses;
+  KM_CommonClasses, KM_Defaults, KM_Units, KM_HouseShipyard;
 
 
 {Throw a rock}
@@ -44,6 +44,7 @@ uses
   KM_Terrain,
   KM_CommonUtils,
   KM_HandsCollection, KM_Entity,
+  KM_Houses,
   KM_UnitWarrior,
   KM_Points,
   KM_ResTypes;

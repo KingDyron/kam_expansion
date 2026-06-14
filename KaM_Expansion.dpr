@@ -471,7 +471,8 @@ uses
   KM_CardGame in 'src\card\KM_CardGame.pas',
   KM_CardGameTypes in 'src\card\KM_CardGameTypes.pas',
   KM_GUIGameCards in 'src\gui\pages_game\house\KM_GUIGameCards.pas',
-  KM_GUICommonGuide in 'src\gui\pages_common\KM_GUICommonGuide.pas';
+  KM_GUICommonGuide in 'src\gui\pages_common\KM_GUICommonGuide.pas',
+  KM_HouseShipyard in 'src\houses\KM_HouseShipyard.pas';
 
 //KM_PerfLog in 'src\unused\KM_PerfLog.pas', //unused
 

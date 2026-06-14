@@ -301,7 +301,8 @@ const
 
 implementation
 uses
-  KromUtils, KM_ResTexts, KM_CommonUtils, KM_CommonClassesExt, KM_Resource,
+  KromUtils, KM_ResTexts, KM_CommonUtils, KM_CommonClassesExt,
+  KM_Resource, KM_ResHouses,
   KM_JSONUtils, KM_CommonShellUtils,
   Math, Windows;
 

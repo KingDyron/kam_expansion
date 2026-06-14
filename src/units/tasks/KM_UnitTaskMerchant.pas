@@ -3,7 +3,8 @@
 interface
 uses
   Classes, SysUtils, KM_ResTypes,
-  KM_CommonClasses, KM_Defaults, KM_Units, KM_Houses, KM_HouseStore;
+  KM_CommonClasses, KM_Defaults, KM_Units,
+  KM_Houses, KM_HouseStore, KM_HouseShipyard;
 
 
 {Throw a rock}

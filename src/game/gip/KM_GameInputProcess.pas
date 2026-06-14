@@ -719,7 +719,7 @@ uses
   KM_HandsCollection, KM_HandEntity,
   KM_HouseMarket, KM_HouseBarracks, KM_HouseSchool, KM_HouseTownHall, KM_HouseStore, KM_HouseArmorWorkshop,
   KM_HouseQueue, KM_HouseCartographers, KM_HousePearl, KM_HouseForest, KM_HousePasture, KM_HouseSiegeWorkshop,
-  KM_HouseArena,
+  KM_HouseArena, KM_HouseShipyard,
   KM_ScriptingEvents, KM_Alerts, KM_CommonUtils, KM_RenderUI,
   KM_ResFonts, KM_Resource, KM_ResDevelopment,
   KM_Log,
@@ -1356,8 +1356,8 @@ begin
                                       if srcHouse.HouseType in [htPearl] then
                                         gHands[srcHouse.Owner].ProceedPearlBell(srcHouse.PointBelowEntrance);
 
-      gicHouseShipDoWork             : TKMHouseShipYard(srcHouse).DoWork := not TKMHouseShipYard(srcHouse).DoWork;
-      gicHouseShipType           : TKMHouseShipYard(srcHouse).SetNextShipType(IntParams[1]);
+      gicHouseShipDoWork           : TKMHouseShipYard(srcHouse).DoWork := not TKMHouseShipYard(srcHouse).DoWork;
+      gicHouseShipType             : TKMHouseShipYard(srcHouse).SetNextShipType(IntParams[1]);
 
       gicHouseForceWork            : srcHouse.ForceWorking := not srcHouse.ForceWorking;
       gicHouseMakeUpgrade          : srcHouse.MakeUpgrade;

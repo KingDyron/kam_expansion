@@ -25,7 +25,7 @@ type
 
 implementation
 uses
-  SysUtils, Math, KM_Resource;
+  SysUtils, Math, KM_Resource, KM_ResHouses;
 
 {TKMWareDistribution}
 constructor TKMWareDistribution.Create;
