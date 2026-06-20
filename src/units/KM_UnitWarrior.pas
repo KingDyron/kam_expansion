@@ -195,6 +195,7 @@ type
     procedure WalkedOut(aHouse : TKMHouse; aIsTrained : Boolean);
 
     procedure SetActionGoIn(aAction: TKMUnitActionType; aGoDir: TKMGoInDirection; aHouse: TKMHouse; aisTrained : Boolean = false); override;
+    procedure SetActionGoOutDock(aAction: TKMUnitActionType; aHouse: TKMHouse; aDock : TKMPointDir; aIsTrained : Boolean = false); override;
 
 
     ///scripting:
@@ -495,7 +496,7 @@ uses
   KM_AIDefensePos, KM_UnitTaskDie, KM_AIFields,
   KM_Hand, KM_HandLogistics, KM_HandTypes, KM_HandEntity,
   KM_HouseShipyard,
-  KM_UnitActionFight, KM_UnitActionGoInOut, KM_UnitActionWalkTo, KM_UnitActionStay,
+  KM_UnitActionFight, KM_UnitActionGoInOut, KM_UnitActionWalkTo, KM_UnitActionStay, KM_UnitActionGoOutDock,
   KM_UnitActionStormAttack, KM_Resource, KM_ResUnits, KM_UnitGroup,
   KM_UnitTaskCollectWares, KM_UnitTaskDismiss, KM_UnitTaskGoHome,
   KM_UnitTaskThrowRock, KM_UnitTaskGoForBoots, KM_UnitTaskGoOutShowHungry,
@@ -1342,14 +1343,15 @@ end;
 
 procedure TKMUnitWarrior.SetActionGoIn(aAction: TKMUnitActionType; aGoDir: TKMGoInDirection; aHouse: TKMHouse; aisTrained : Boolean = false);
 begin
-  //Assert(aGoDir = gdGoOutside, 'Walking inside is not implemented yet');
-  {Assert((aHouse.HouseType = htBarracks)
-          or (aHouse.HouseType = htTownHall)
-          or (aHouse.HouseType = htSiegeWorkshop)
-          or (aHouse.HouseType = htPalace), 'Only Barracks and TownHall so far');}
   inherited;
 
   TKMUnitActionGoInOut(Action).OnWalkedOut := WalkedOut;
+end;
+
+procedure TKMUnitWarrior.SetActionGoOutDock(aAction: TKMUnitActionType; aHouse: TKMHouse; aDock : TKMPointDir; aIsTrained : Boolean = false);
+begin
+  inherited;
+  TKMUnitActionGoOutDock(Action).OnWalkedOut := WalkedOut;
 end;
 
 

@@ -850,7 +850,7 @@ type
         uttGoToWell, uttTakeOverHouse, uttMerchant, uttCartographer, uttBuildPearl, uttPearlRally, uttGoToPearl,
         uttForestCutter, uttFeedGroup, uttShootAtSpot, uttShootFromSiege, uttEnterSiegeTower);
 
-  TKMUnitActionName = (uanStay, uanWalkTo, uanGoInOut, uanAbandonWalk, uanFight, uanStormAttack, uanSteer);
+  TKMUnitActionName = (uanStay, uanWalkTo, uanGoInOut, uanAbandonWalk, uanFight, uanStormAttack, uanSteer, uanGoOutDock);
 
   TKMUnitActionType = (uaWalk=120, uaWork, uaSpec, uaDie, uaWork1,
                        uaWork2, uaWorkEnd, uaEat, uaWalkArm, uaWalkTool,

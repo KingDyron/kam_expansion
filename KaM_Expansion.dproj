@@ -351,7 +351,6 @@
         <DCCReference Include="src\gui\pages_game\KM_GUIGameBuild.pas"/>
         <DCCReference Include="src\gui\pages_game\KM_GUIGameChat.pas"/>
         <DCCReference Include="src\gui\pages_game\KM_GUIGameCustomPanel.pas"/>
-        <DCCReference Include="src\gui\pages_game\KM_GUIGameHouse.pas"/>
         <DCCReference Include="src\gui\pages_game\KM_GUIGameUnit.pas"/>
         <DCCReference Include="src\gui\pages_game\KM_GUIGameRatios.pas"/>
         <DCCReference Include="src\gui\pages_game\KM_GUIGameStats.pas"/>
@@ -677,6 +676,9 @@
         <DCCReference Include="src\gui\pages_game\house\KM_GUIGameCards.pas"/>
         <DCCReference Include="src\gui\pages_common\KM_GUICommonGuide.pas"/>
         <DCCReference Include="src\houses\KM_HouseShipyard.pas"/>
+        <DCCReference Include="src\gui\pages_game\KM_GUIGameHouse.pas"/>
+        <DCCReference Include="src\gui\pages_game\house\KM_GUIGameHouseShipyard.pas"/>
+        <DCCReference Include="src\units\actions\KM_UnitActionGoOutDock.pas"/>
         <None Include="KM_TextIDs.inc"/>
         <None Include="KaM_Remake.dpr"/>
         <None Include="KaM_Remake.inc"/>

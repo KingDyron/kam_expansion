@@ -128,7 +128,6 @@ uses
   KM_GUIGameBuild in 'src\gui\pages_game\KM_GUIGameBuild.pas',
   KM_GUIGameChat in 'src\gui\pages_game\KM_GUIGameChat.pas',
   KM_GUIGameCustomPanel in 'src\gui\pages_game\KM_GUIGameCustomPanel.pas',
-  KM_GUIGameHouse in 'src\gui\pages_game\KM_GUIGameHouse.pas',
   KM_GUIGameUnit in 'src\gui\pages_game\KM_GUIGameUnit.pas',
   KM_GUIGameRatios in 'src\gui\pages_game\KM_GUIGameRatios.pas',
   KM_GUIGameStats in 'src\gui\pages_game\KM_GUIGameStats.pas',
@@ -472,7 +471,10 @@ uses
   KM_CardGameTypes in 'src\card\KM_CardGameTypes.pas',
   KM_GUIGameCards in 'src\gui\pages_game\house\KM_GUIGameCards.pas',
   KM_GUICommonGuide in 'src\gui\pages_common\KM_GUICommonGuide.pas',
-  KM_HouseShipyard in 'src\houses\KM_HouseShipyard.pas';
+  KM_HouseShipyard in 'src\houses\KM_HouseShipyard.pas',
+  KM_GUIGameHouse in 'src\gui\pages_game\KM_GUIGameHouse.pas',
+  KM_GUIGameHouseShipyard in 'src\gui\pages_game\house\KM_GUIGameHouseShipyard.pas',
+  KM_UnitActionGoOutDock in 'src\units\actions\KM_UnitActionGoOutDock.pas';
 
 //KM_PerfLog in 'src\unused\KM_PerfLog.pas', //unused
 

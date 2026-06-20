@@ -218,6 +218,7 @@ type
 
     procedure SetActionAbandonWalk(const aLocB: TKMPoint; aActionType: TKMUnitActionType = uaWalk);
     procedure SetActionGoIn(aAction: TKMUnitActionType; aGoDir: TKMGoInDirection; aHouse: TKMHouse; aIsTrained : Boolean = false); virtual;
+    procedure SetActionGoOutDock(aAction: TKMUnitActionType; aHouse: TKMHouse; aDock : TKMPointDir; aIsTrained : Boolean = false); virtual;
     procedure SetActionStay(aTimeToStay: Integer; aAction: TKMUnitActionType; aStayStill: Boolean = True; aStillFrame: Byte = 0; aStep: Integer = 0);
     procedure SetActionStorm(aRow: Integer);
     procedure SetActionSteer;
@@ -238,7 +239,6 @@ type
     procedure SetActionWalkToRoad(aActionType: TKMUnitActionType = uaWalk; aDistance: Single = 0;
                                          aTargetPassability: TKMTerrainPassability = tpWalkRoad; aTargetWalkConnectSet: TKMByteSet = []);
     procedure SetActionWalkPushed(const aLocB: TKMPoint; aActionType: TKMUnitActionType = uaWalk);
-
     procedure Feed(Amount: Single);
     procedure Heal(aAmount : Byte);
     function IsHungry: Boolean;
@@ -556,6 +556,7 @@ uses
   KM_UnitActionAbandonWalk,
   KM_UnitActionFight,
   KM_UnitActionGoInOut,
+  KM_UnitActionGoOutDock,
   KM_UnitActionStay,
   KM_UnitActionSteer,
   KM_UnitActionStormAttack,
@@ -3045,6 +3046,10 @@ begin
 
 end;
 
+procedure TKMUnit.SetActionGoOutDock(aAction: TKMUnitActionType; aHouse: TKMHouse; aDock : TKMPointDir; aIsTrained : Boolean = false);
+begin
+  SetAction(TKMUnitActionGoOutDock.Create(Self, aAction, aHouse, aDock, aIsTrained), AnimStep);
+end;
 
 procedure TKMUnit.SetActionStay(aTimeToStay: Integer; aAction: TKMUnitActionType; aStayStill: Boolean = True; aStillFrame: Byte = 0; aStep: Integer = 0);
 begin

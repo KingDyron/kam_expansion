@@ -6,7 +6,7 @@ uses
   KM_Defaults,
   KM_ResTypes,
   KM_Controls, KM_ControlsBase, KM_ControlsSwitch,
-  KM_Houses, KM_HouseArena;
+  KM_Houses;
 
 type
   TKMGuiGameSiegeTower = class(TKMPanel)
@@ -44,7 +44,7 @@ const
 var I, top : integer;
   stm : TKMSiegeTowerMode;
 begin
-  Inherited Create(aParent, 0, 100, aParent.Width - 8, 600);
+  Inherited Create(aParent, 0, 100, aParent.Width - 8, 400);
 
   for I := 0 to High(Button_Unit) do
   begin

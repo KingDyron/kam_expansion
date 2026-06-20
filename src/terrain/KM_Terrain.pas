@@ -107,6 +107,8 @@ type
     procedure SetField(const aLoc: TKMPoint; aOwner: TKMHandID; aFieldType: TKMFieldType; aStage: Integer = 0; aGrainType : TKMGrainType = gftNone;
                        aRandomAge: Boolean = False; aKeepOldObject: Boolean = False; aRemoveOverlay: Boolean = True;
                        aDoUpdate: Boolean = True);
+    procedure SetHouseOnSinglePoint(aHouse : Pointer; const aLoc: TKMPoint; aHouseType: TKMHouseType; aHouseStage: TKMHouseStage;
+                                    aOwner: TKMHandID; const aFlattenTerrain: Boolean = False);
     procedure SetHouse(const aLoc: TKMPoint; aHouseType: TKMHouseType; aHouseStage: TKMHouseStage; aOwner: TKMHandID; const aFlattenTerrain: Boolean = False);overload;
     procedure SetHouse(aHouse : Pointer; aOwner: TKMHandID; aHouseStage : TKMHouseStage; const aFlattenTerrain: Boolean = False); overload;
     procedure SetHouseAreaOwner(const aLoc: TKMPoint; aHouseType: TKMHouseType; aOwner: TKMHandID);
@@ -127,6 +129,11 @@ type
     procedure ResetDigState(const aLoc: TKMPoint);
 
     function CanPlaceUnit(const aLoc: TKMPoint; aUnitType: TKMUnitType): Boolean;
+
+
+    procedure GetShipyardCells(X, Y: Word; aList : TKMPointList);
+    procedure GetShipyardMarks(X, Y: Word; aList : TKMPointTagList);
+    procedure GetShipyardDirCells(X, Y: Word; aList : TKMPointDirList);
     function CanPlaceGoldMine(X, Y: Word): Boolean;
     function CanPlaceIronMine(X, Y: Word): Boolean;
     function CanPlaceShipYard(X, Y: Word): Boolean;
@@ -1504,10 +1511,14 @@ function TKMTerrain.CanPlaceShipYard(X,Y: Word): Boolean;
     if TileInMapCoords(aX, aY) then
       Result := CheckPassability(aX, aY, tpFish);
   end;
+var cells : TKMPointList;
 begin
-  //shipyard needs to be close to water
+  cells := TKMPointList.Create;
 
-  Result := HasWater(X - 1, Y + 4)  //under entrance on the right
+  GetShipyardCells(X, Y, cells);
+  //shipyard needs to be close to water
+  Result := cells.Count > 0;
+  {Result := HasWater(X - 1, Y + 4)  //under entrance on the right
             or HasWater(X + 2, Y + 4)
             or HasWater(X + 4, Y + 2)//on the right
             or HasWater(X - 3, Y + 2);//on the left from the entrace
@@ -1517,9 +1528,9 @@ begin
     and TileInMapCoords(X,Y, 1)
     and not HousesNearTile(X,Y)
     and (Land^[Y,X].TileLock = tlNone)
-    and CheckHeightPass(KMPoint(X,Y), hpBuilding);
+    and CheckHeightPass(KMPoint(X,Y), hpBuilding);}
 
-
+  FreeAndNil(cells);
 end;
 
 
@@ -3006,7 +3017,6 @@ type
         aArray[I] := aArray[K];
         aArray[K] := tmp;
       end;
-
       If I = 0 then
       begin
         Case aMode of
@@ -3040,7 +3050,6 @@ const
 var
   I,K: Integer; //Counters
   boundsRect: TKMRect;
-  dX,dY: Integer;
   requiredMaxRad: Single;
   U: TKMUnit;
   P: TKMPoint;
@@ -3068,8 +3077,6 @@ begin
     if U = nil then Continue; //Most tiles are empty, so check it first
 
     //Check archer sector. If it's not within the 90 degree sector for this direction, then don't use this tile (continue)
-    dX := K - aLoc.X;
-    dY := I - aLoc.Y;
     //Alliance is the check that will invalidate most candidates, so do it early on
     if U.IsDeadOrDying //U = nil already checked earlier (above sector check)
     or (gHands.CheckAlliance(aPlayer, U.Owner) <> aAlliance) //How do WE feel about enemy, not how they feel about us
@@ -5370,7 +5377,10 @@ begin
     CanDoWall := CanPlaceWell(aLoc)
   else
   if aHouseType = htShipYard then
+  begin
     CanDoWall := CanPlaceShipYard(aLoc.X, aLoc.Y);
+    GetShipyardMarks(aLoc.X, aLoc.Y, aList);
+  end;
 
   for I := 1 to MAX_HOUSE_SIZE do
     for K := 1 to MAX_HOUSE_SIZE do
@@ -7669,6 +7679,46 @@ begin
 end;
 
 
+procedure TKMTerrain.SetHouseOnSinglePoint(aHouse : Pointer; const aLoc: TKMPoint; aHouseType: TKMHouseType; aHouseStage: TKMHouseStage;
+                                            aOwner: TKMHandID; const aFlattenTerrain: Boolean = False);
+begin
+  if not TileInMapCoords(aLoc) then
+    Exit;
+
+
+  if aHouseStage = hsNone then
+    Land^[aLoc.Y, aLoc.X].TileOwner := -1
+  else
+    Land^[aLoc.Y, aLoc.X].TileOwner := aOwner;
+
+  if aHouseStage <> hsNone then
+    Land^[aLoc.Y, aLoc.X].IsHouse := aHouse
+  else
+    Land^[aLoc.Y, aLoc.X].IsHouse := nil;
+
+  case aHouseStage of
+    hsNone:         Land^[aLoc.Y,aLoc.X].TileLock := tlNone;
+    hsFence:        If aHouseType in WALL_HOUSES then
+                      Land^[aLoc.Y,aLoc.X].TileLock := tlWallFence
+                    else
+                      Land^[aLoc.Y,aLoc.X].TileLock := tlFenced; //Initial state, Laborer should assign NoWalk to each tile he digs
+    hsBuilt:        begin
+                      //Script houses are placed as built, add TileLock for them too
+                      Land^[aLoc.Y,aLoc.X].TileLock := tlHouse;
+                      if (Land^[aLoc.Y,aLoc.X].Obj <> OBJ_NONE) then
+                        Land^[aLoc.Y,aLoc.X].Obj := OBJ_NONE;
+                    end;
+  end;
+  UpdateFences(aLoc);
+
+  If aFlattenTerrain then
+    FlattenTerrain(aLoc);
+
+  //Recalculate Passability for tiles around the house so that they can't be built on too
+  UpdatePassability(KMRectGrow(aLoc, 1) );
+  UpdateWalkConnect([wcWalk, wcRoad, wcWork], KMRectGrow(aLoc, 1), false);
+end;
+
 {Place house plan on terrain and change terrain properties accordingly}
 procedure TKMTerrain.SetHouse(const aLoc: TKMPoint; aHouseType: TKMHouseType; aHouseStage: TKMHouseStage; aOwner: TKMHandID; const aFlattenTerrain: Boolean = False);
 var
@@ -7836,6 +7886,90 @@ begin
     for K := -HOUSE_BLOCK_RADIUS to HOUSE_BLOCK_RADIUS do
       if (Land^[Y + I, X + K].TileLock in [tlFenced, tlDigged, tlWallDigged, tlHouse]) then
         Result := True;
+end;
+
+
+procedure TKMTerrain.GetShipyardCells(X, Y: Word; aList : TKMPointList);
+
+  function HasWaterAround(aX, aY : Word) : Boolean;
+  var I : Integer;
+  begin
+    Result := false;
+    for I := -1 to 1 do
+      If I <> 0 then
+      begin
+        If CheckPassability(aX + I, aY, tpFish) or CheckPassability(aX, aY + I, tpFish) then
+          Exit(true);
+      end;
+
+  end;
+
+  procedure TryToAddCell(aX, aY : Word);
+  begin
+    If CheckPassability(aX, aY, tpCanWalls) and HasWaterAround(aX, aY) then
+      aList.Add(KMPoint(aX, aY));
+  end;
+
+const
+  SHIPYARD_SIZE = 2; // shipyard is 2x2 tiles
+
+var I : Integer;
+begin
+
+  //2 tiles wide, +1 tile margin from both sides, + 1 tile for docks
+  //6 tiles in total to check
+  //let's skip the corners, so it's gonna be 4 on all sides
+  for I := 0 to SHIPYARD_SIZE * 2 - 1 do
+    TryToAddCell(X - 1 + I, Y - 3);//above
+  for I := 0 to SHIPYARD_SIZE * 2 - 1 do
+    TryToAddCell(X - 1 + I, Y + 2);//below
+  for I := 0 to SHIPYARD_SIZE * 2 - 1 do
+    TryToAddCell(X - 2, Y - 2 + I);//Left
+  for I := 0 to SHIPYARD_SIZE * 2 - 1 do
+    TryToAddCell(X + 3, Y - 2 + I);//right
+
+end;
+
+procedure TKMTerrain.GetShipyardDirCells(X, Y: Word; aList : TKMPointDirList);
+var
+  cells : TKMPointList;
+  I : integer;
+  dir : TKMDirection;
+begin
+  cells := TKMPointList.Create;
+  GetShipyardCells(X, Y, cells);
+  for I := 0 to cells.Count - 1 do
+  begin
+    dir := dirNA;
+    IF TileIsWater(KMPointAbove(cells[I])) then
+      dir := dirN
+    else
+    IF TileIsWater(KMPointBelow(cells[I])) then
+      dir := dirS
+    else
+    IF TileIsWater(KMPointRight(cells[I])) then
+      dir := dirE
+    else
+    IF TileIsWater(KMPointLeft(cells[I])) then
+      dir := dirW;
+    if dir <> dirNA then
+      aList.Add(KMPointDir(cells[I], dir));
+  end;
+
+  FreeAndNil(cells);
+end;
+
+procedure TKMTerrain.GetShipyardMarks(X: Word; Y: Word; aList: TKMPointTagList);
+var
+  cells : TKMPointList;
+  I : integer;
+begin
+  cells := TKMPointList.Create;
+  GetShipyardCells(X, Y, cells);
+  for I := 0 to cells.Count - 1 do
+    aList.Add(cells[I], TC_OUTLINE);
+
+  FreeAndNil(cells);
 end;
 
 
@@ -8477,7 +8611,6 @@ var BestDIs : Integer;
   tmpLocs : array of array of Byte;
   minDistance : byte;
   gateFound : Boolean;
-  H : TKMHouse;
 
   procedure ResetTMP;
   begin

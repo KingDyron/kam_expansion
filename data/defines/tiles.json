@@ -998,7 +998,10 @@
     {"ID": 965, "Walkable": false, "Roadable": false, "CornersTerKinds": ["tkStone", "tkStone", "tkStone", "tkStone"]},
     {"ID": 966, "Walkable": true, "Roadable": true, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
     {"ID": 967, "Walkable": true, "Roadable": false, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
-    {"ID": 968, "Walkable": true, "Roadable": false, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]}
+    {"ID": 968, "Walkable": true, "Roadable": false, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
+    {"ID": 969, "Walkable": true, "Roadable": false, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
+    {"ID": 970, "Walkable": true, "Roadable": false, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
+    {"ID": 971, "Walkable": true, "Roadable": false, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]}
 
   ],
   "Overlays" : [

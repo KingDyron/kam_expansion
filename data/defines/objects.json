@@ -6748,6 +6748,22 @@
 			"SnowPic" : 255, 
 			"Ware" : "wtCard",
 			"WareCount" : 1
+		}, 
+		{
+			"ObjectID" : 653, 
+			"AnimSteps":[1569], 
+			"PlaceableInEditor" : true, 
+			"SnowPic" : 255, 
+			"Ware" : "wtCard",
+			"WareCount" : 1
+		}, 
+		{
+			"ObjectID" : 654, 
+			"AnimSteps":[1570], 
+			"PlaceableInEditor" : true, 
+			"SnowPic" : 255, 
+			"Ware" : "wtCard",
+			"WareCount" : 1
 		}
 	], 
 	"Grain Types":

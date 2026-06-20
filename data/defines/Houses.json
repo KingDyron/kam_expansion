@@ -4101,7 +4101,7 @@
 			"DescriptionID" : 2170,
 			"MaxHealth" : 600,
 			"WoodPic" : 2532,
-			"StonePic" : 2531,
+			"StonePic" : 2537,
 			"TerrPics": [ 3103, 3080],
 			"WoodCost" : 6,
 			"StoneCost" : 0,
@@ -4115,7 +4115,7 @@
 			"NeedsPlayerOrder" : False,
 			"BuildIcon" : 872,
 			"TabletID" : 873,
-			"MaxInWares" : 5,
+			"MaxInWares" : 10,
 			"MaxOutWares" : 5,
 			"CanForceWork" : False,
 			"UnoccupiedMsgId" : -1,
@@ -4123,7 +4123,7 @@
 			[
 				{"UnitType" : "utCarpenter","MaxCount" : 1}
 			],
-			"MaxWorkersCount" : 1,
+			"MaxWorkersCount" : 2,
 			"CanOverfill" : False,
 			"GatheringScript" : "gsNone",
 			"WareInput" : ["wtLog","wtSkin","wtSteelE","wtBitinE","wtBolt","wtAxe"],
@@ -4143,8 +4143,8 @@
 			"ha_Fire8" : {"X" : 0,"Y" : -123,"Steps" : [1621,1622,1623,1624,1625,1620]},
 			"WorkAnim" : 
 			[
-				{"WorkType" : "haWork2","Cycles" : 5.00000},
-				{"WorkType" : "haWork3","Cycles" : 5.00000}
+				{"WorkType" : "haWork2","Cycles" : 30.00000},
+				{"WorkType" : "haWork3","Cycles" : 30.00000}
 			],
 			"WoodPileOffset" : {"X" : -30,"Y" : -35},
 			"StonePileOffset" : {"X" : 0,"Y" : -25},
@@ -4154,7 +4154,7 @@
 				[0,1,1,0,0],
 				[0,2,1,0,0],
 				[0,0,0,0,0],
-				[1,1,1,1,0],
+				[0,0,0,0,0],
 				[0,0,0,0,0]
 			],
 			"Ground_Area" : 
@@ -4162,7 +4162,7 @@
 				[0,2,2,0,0],
 				[0,2,2,0,0],
 				[0,0,0,0,0],
-				[1,1,1,1,0],
+				[0,0,0,0,0],
 				[0,0,0,0,0]
 			]
 		},

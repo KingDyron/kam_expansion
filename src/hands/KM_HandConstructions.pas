@@ -71,6 +71,7 @@ type
     Loc: TKMPoint;
     JobStatus: TKMJobStatus;
     Worker: TKMUnit; //So we can tell Worker if plan is cancelled
+    CustomCells : TKMPointList;
     function IsEmpty: Boolean;
   end;
   TKMHousePlanArray = array of TKMHousePlan;
@@ -82,6 +83,7 @@ type
     fPlansCount: Integer;
     fPlans: TKMHousePlanArray;
   public
+    destructor Destroy; override;
     //Player orders
     procedure AddPlan(aHouseType: TKMHouseType; const aLoc: TKMPoint);
     function HasPlan(const aLoc: TKMPoint): Boolean; overload;
@@ -1231,6 +1233,14 @@ end;
 
 
 { TKMHousePlanList }
+destructor TKMHousePlanList.Destroy;
+var I : Integer;
+begin
+  for I := 0 to fPlansCount - 1 do
+    FreeAndNil(fPlans[I].CustomCells);
+  Inherited;
+end;
+
 procedure TKMHousePlanList.AddPlan(aHouseType: TKMHouseType; const aLoc: TKMPoint);
 var
   I: Integer;
@@ -1250,6 +1260,10 @@ begin
   fPlans[I].Loc := aLoc;
   fPlans[I].JobStatus := jsOpen;
   fPlans[I].Worker := nil;
+  fPlans[I].CustomCells := TKMPointList.Create;
+
+  If aHouseType = htShipYard then
+    gTerrain.GetShipyardCells(aLoc.X + gRes.Houses[aHouseType].EntranceOffsetX, aLoc.Y + gRes.Houses[aHouseType].EntranceOffsetY, fPlans[I].CustomCells);
 end;
 
 
@@ -1292,6 +1306,7 @@ begin
   fPlans[aIndex].HouseType := htNone;
   fPlans[aIndex].Loc       := KMPOINT_ZERO;
   fPlans[aIndex].JobStatus := jsEmpty;
+  fPlans[aIndex].CustomCells.Clear;
   gHands.CleanUpUnitPointer(fPlans[aIndex].Worker);
 end;
 
@@ -1355,9 +1370,11 @@ begin
 
   for I := 0 to fPlansCount - 1 do
   if (fPlans[I].HouseType <> htNone)
-  and ((aLoc.X - fPlans[I].Loc.X + 3 in [1..MAX_HOUSE_SIZE]) and
+  and (
+       ((aLoc.X - fPlans[I].Loc.X + 3 in [1..MAX_HOUSE_SIZE]) and
        (aLoc.Y - fPlans[I].Loc.Y + 4 in [1..MAX_HOUSE_SIZE]) and
        (gRes.Houses[fPlans[I].HouseType].BuildArea[aLoc.Y - fPlans[I].Loc.Y + 4, aLoc.X - fPlans[I].Loc.X + 3] <> 0))
+       or fPlans[I].CustomCells.Contains(aLoc) )
   then
   begin
     aHouseType := fPlans[I].HouseType;
@@ -1381,9 +1398,11 @@ var
 begin
   for I := 0 to fPlansCount - 1 do
     if (fPlans[I].HouseType <> htNone)
-    and ((aLoc.X - fPlans[I].Loc.X + 3 in [1..MAX_HOUSE_SIZE]) and
+    and (
+         ((aLoc.X - fPlans[I].Loc.X + 3 in [1..MAX_HOUSE_SIZE]) and
          (aLoc.Y - fPlans[I].Loc.Y + 4 in [1..MAX_HOUSE_SIZE]) and
          (gRes.Houses[fPlans[I].HouseType].BuildArea[aLoc.Y - fPlans[I].Loc.Y + 4, aLoc.X - fPlans[I].Loc.X + 3] <> 0))
+          or fPlans[I].CustomCells.Contains(aLoc) )
     then
     begin
       if fPlans[I].Worker <> nil then
@@ -1401,9 +1420,11 @@ begin
   Result := False;
   for I := 0 to fPlansCount - 1 do
   if (fPlans[I].HouseType <> htNone)
-  and ((aLoc.X - fPlans[I].Loc.X + 3 in [1..MAX_HOUSE_SIZE]) and
+  and (
+       ((aLoc.X - fPlans[I].Loc.X + 3 in [1..MAX_HOUSE_SIZE]) and
        (aLoc.Y - fPlans[I].Loc.Y + 4 in [1..MAX_HOUSE_SIZE]) and
        (gRes.Houses[fPlans[I].HouseType].BuildArea[aLoc.Y - fPlans[I].Loc.Y + 4, aLoc.X - fPlans[I].Loc.X + 3] <> 0))
+       or fPlans[I].CustomCells.Contains(aLoc) )
   then
   begin
     aHousePlan := fPlans[I];
@@ -1453,6 +1474,15 @@ begin
         if (K = MAX_HOUSE_SIZE) or (HA[J, K+1] = 0) then
           aList.Add(KMPointDir(fPlans[I].Loc.X + K - 3, fPlans[I].Loc.Y + J - 4, dirW));
       end;
+
+      for J := 0 to fPlans[I].CustomCells.Count - 1 do
+      begin
+        aList.Add(KMPointDir(fPlans[I].CustomCells[J], dirN));
+        aList.Add(KMPointDir(fPlans[I].CustomCells[J], dirE));
+        aList.Add(KMPointDir(fPlans[I].CustomCells[J], dirS));
+        aList.Add(KMPointDir(fPlans[I].CustomCells[J], dirW));
+      end;
+
     end;
 end;
 
@@ -1487,6 +1517,7 @@ begin
     SaveStream.Write(Loc);
     SaveStream.Write(JobStatus, SizeOf(JobStatus));
     SaveStream.Write(Worker.UID);
+    CustomCells.SaveToStream(SaveStream);
   end;
 end;
 
@@ -1506,6 +1537,8 @@ begin
     LoadStream.Read(Loc);
     LoadStream.Read(JobStatus, SizeOf(JobStatus));
     LoadStream.Read(Worker, 4);
+    CustomCells := TKMPointList.Create;
+    CustomCells.LoadFromStream(LoadStream);
   end;
 end;
 

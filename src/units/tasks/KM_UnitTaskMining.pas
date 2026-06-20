@@ -773,7 +773,7 @@ begin
                               ResAcquired := false;
                               TKMHouseCollectors(fUnit.Home).FillMeat(fObjectType);
                             end;
-              gsShipyard:   TKMHouseShipyard(fUnit.Home).IncSketchPhase(fWorkPlan.Res);
+              //gsShipyard:   TKMHouseShipyard(fUnit.Home).IncSketchPhase(fWorkPlan.Res);
 
               gsMerchant:     ResAcquired := false;
               else            ResAcquired := True;

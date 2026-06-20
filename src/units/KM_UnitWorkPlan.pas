@@ -1118,14 +1118,21 @@ begin
                       end;
     gsShipyard:       begin
                         hardWritten := true;
-                        DefaultPlan(aUnit);
-                        Res.Clear;
-                        Res.CopyFrom(TKMHouseShipYard(aUnit.Home).GetWarePlan);
-                        Res.SetCount(WARES_IN_OUT_COUNT);
-                        fIssued := TKMHouseShipYard(aUnit.Home).CanWork;
+                        TMPInt := TKMHouseShipYard(aUnit.Home).GetDockToWorkOn;
+                        fIssued := TMPInt <> -1;
+                        If fIssued then
+                        begin
+                          //DefaultPlan(aUnit);
+                          Res.Clear;
+                          Res.CopyFrom(TKMHouseShipYard(aUnit.Home).GetWarePlan(TMPInt));
+                          Res.SetCount(WARES_IN_OUT_COUNT);
+                          for I := 1 to TKMHouseShipYard(aUnit.Home).GetShipStages(TmpInt) do
+                            SubActAdd(haWork2,15);
+                          //fIssued := TKMHouseShipYard(aUnit.Home).CanWork;
 
-                        If gHands[aUnit.Owner].ArmyDevUnlocked(3) then
-                          ActSetByMultiplier(aUnit, 0.3);
+                          If gHands[aUnit.Owner].ArmyDevUnlocked(3) then
+                            ActSetByMultiplier(aUnit, 0.5);
+                        end;
                       end;
     gsClayMiner:      begin
                         hardWritten := true;

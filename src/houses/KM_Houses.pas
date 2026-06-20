@@ -193,7 +193,6 @@ type
     fBuildCost : TKMHouseBuildCost;
 
     fSoundPlayedAt : Cardinal;
-    procedure CheckOnTerrain;
     function GetWareInArray: TKMWordArray;
     function GetWareOutArray: TKMWordArray;
     function GetWareOutPoolArray: TKMWordArray;
@@ -270,7 +269,9 @@ type
     procedure SetLevel(aValue : Byte); virtual;
     procedure SetHouseToDeliver(aValue : TKMHouse);
     function PaintHouseWork : Boolean; virtual;
-
+    procedure CheckOnTerrain;
+    procedure SetHouseTerrain(aOwner : TKMHandID; aStage : TKMHouseStage; const aFlattenTerrain: Boolean = False); virtual;
+    property LastOrderProduced : Byte read fLastOrderProduced write fLastOrderProduced;
 
   public
     //fWareIn, fWareBlocked: array[1..WARES_IN_OUT_COUNT] of Byte; // Ware count in input
@@ -315,7 +316,7 @@ type
     procedure GetListOfCellsWithin(aCells: TKMPointList); virtual;
     procedure GetListOfGroundVisibleCells(aCells: TKMPointTagList);
     function GetRandomCellWithin: TKMPoint;
-    function HitTest(X, Y: Integer): Boolean;
+    function HitTest(X, Y: Integer): Boolean; virtual;
     property BuildingRepair: Boolean read fBuildingRepair write SetBuildingRepair;
     property PlacedOverRoad: Boolean read fPlacedOverRoad write fPlacedOverRoad;
 
@@ -1355,10 +1356,10 @@ begin
     Activate(False);
     
     fBuildingProgress := gRes.Houses[fType].MaxHealth;
-    gTerrain.SetHouse(self, Owner, hsBuilt, false {(gGameParams <> nil) and not gGameParams.IsMapEditor}); //Sets passability and flattens terrain if we're not in the map editor
+    SetHouseTerrain(Owner, hsBuilt, false); //Sets passability and flattens terrain if we're not in the map editor
   end
   else
-    gTerrain.SetHouse(self, Owner, hsFence); //Terrain remains neutral yet
+    SetHouseTerrain(Owner, hsFence); //Terrain remains neutral yet
 
   //Built houses accumulate snow slowly, pre-placed houses are already covered
   CheckOnTerrain;
@@ -1366,10 +1367,6 @@ begin
   WorkingTime := 0;
   TotalWorkingTime := 0;
 
-  {firstHouse := gHands[aOwner].FindHouse(fType, 1);
-  if (firstHouse <> nil) and not (firstHouse.IsDestroyed) then
-    for I := 1 to WARES_IN_OUT_COUNT do
-      fWareBlocked[I] := firstHouse.fWareBlocked[I];}
   LastCellID := 0;
   fWasTookOver := false;
   Indestructible := false;
@@ -1697,7 +1694,7 @@ begin
     end;
   end;
 
-  gTerrain.SetHouse(self, HAND_NONE, hsNone);
+  SetHouseTerrain(HAND_NONE, hsNone);
 
   //Leave rubble
   if not IsSilent then
@@ -1747,7 +1744,7 @@ begin
   Assert(gGameParams.IsMapEditor);
 
   //We have to remove the house THEN check to see if we can place it again so we can put it on the old position
-  gTerrain.SetHouse(self, HAND_NONE, hsNone);
+  SetHouseTerrain(HAND_NONE, hsNone);
 
   if gHands[Owner].CanAddHousePlan(aPos, HouseType) then
   begin
@@ -1772,9 +1769,9 @@ begin
   end;
   case fBuildState of
     hbsNoGlyph,
-    hbsWood: gTerrain.SetHouse(self, Owner, hsFence); // Update terrain tiles for house;
+    hbsWood: SetHouseTerrain(Owner, hsFence); // Update terrain tiles for house;
     hbsStone,
-    hbsDone: gTerrain.SetHouse(self, Owner, hsBuilt); // Update terrain tiles for house;
+    hbsDone: SetHouseTerrain(Owner, hsBuilt); // Update terrain tiles for house;
   end;
 
 
@@ -2746,7 +2743,7 @@ procedure TKMHouse.IncBuildingProgress;
       gHands[Owner].Constructions.RepairList.AddHouse(Self);
 
     gScriptEvents.ProcHouseBuilt(Self); //At the end since it could destroy this house
-    gTerrain.SetHouse(self, Owner, hsBuilt);
+    SetHouseTerrain(Owner, hsBuilt);
 
     IF HouseType in FEST_BEST_HOUSES then
       ProduceFestivalPoints(fptBuilding, 10)
@@ -3630,6 +3627,11 @@ end;
 function TKMHouse.PaintHouseWork: Boolean;
 begin
   Result := true;
+end;
+
+procedure TKMHouse.SetHouseTerrain(aOwner: TKMHandID; aStage: TKMHouseStage; const aFlattenTerrain: Boolean = False);
+begin
+  gTerrain.SetHouse(self, aOwner, aStage, aFlattenTerrain);
 end;
 
 function TKMHouse.GetFlagColor : Cardinal;

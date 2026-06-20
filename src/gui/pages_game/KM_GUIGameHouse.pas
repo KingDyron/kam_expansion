@@ -6,7 +6,7 @@ uses
   KM_Controls, KM_ControlsBase, KM_ControlsProgressBar, KM_ControlsSwitch, KM_ControlsWaresRow,
   KM_CommonClasses, KM_CommonTypes, KM_Defaults, KM_Pics, KM_ControlsPopUp, KM_ControlsEdit, KM_ControlsScroll,
   KM_GUIGameHouseCartographer, KM_GuiGameHousePearl, KM_GuiGameHousePasture, KM_GuiGameHouseForest,
-  KM_GuiGameHouseArena, KM_GUIGameHouseST,
+  KM_GuiGameHouseArena, KM_GUIGameHouseST, KM_GUIGameHouseShipyard,
   KM_InterfaceGame, KM_Houses, KM_HouseMarket, KM_HouseQueue, KM_ResWares, KM_ResTypes,
   KM_HandTypes;
 
@@ -305,6 +305,7 @@ type
     Panel_Forest : TKMGuiGameForest;
     Panel_Arena : TKMGuiGameArena;
     Panel_SiegeTower : TKMGuiGameSiegeTower;
+    Panel_Shipyard : TKMGuiGameShipyard;
 
   public
     AskDemolish: Boolean;
@@ -726,6 +727,7 @@ begin
   Panel_Forest := TKMGuiGameForest.Create(Panel_House);
   Panel_Arena := TKMGuiGameArena.Create(Panel_House);
   Panel_SiegeTower := TKMGuiGameSiegeTower.Create(Panel_House);
+  Panel_Shipyard := TKMGuiGameShipyard.Create(Panel_House);
 
   Progress_Beasts := TKMIconProgressBar.Create(Panel_House_Common, 0, 0, TB_WIDTH, 30, false, [[490, 569, 403], [490, 569, 403], [490, 569, 403], [490, 569, 403], [490, 569, 403]]);
   Progress_Beasts.RX := rxHouses;
@@ -2382,7 +2384,7 @@ begin
 
                         Progress_Beasts.Hide;
                       end;
-          htShipYard: begin
+          {htShipYard: begin
                         CostsRow_Common.Top := base + line * 25 + 20;
                         CostsRow_Common.WarePlan := TKMHouseShipyard(fHouse).GetWarePlan;
                         CostsRow_Common.Visible := Ship_ShipType.Visible;
@@ -2396,7 +2398,7 @@ begin
                           Ship_DoWork.TexID := IfThen(TKMHouseShipYard(aHouse).DoWork, 33, 32);
                           Ship_DoWork.Hint := IfThen(TKMHouseShipYard(aHouse).DoWork, gResTexts[2034], gResTexts[2033]);
                         end;
-                      end;
+                      end;}
           htTownhall: begin
                         ShowTownHall(aHouse);
                         Panel_HouseTownHall.Top := 50 + base + line * 25 + 20;
@@ -2427,6 +2429,7 @@ begin
           htForest : Panel_Forest.Show(fHouse, base + line * 25 + 76);
           htArena : Panel_Arena.Show(fHouse, base + 76);
           htSiegeTower : Panel_SiegeTower.Show(fHouse, base + 76);
+          htShipyard : Panel_Shipyard.Show(fHouse, base + line * 25 + 76);
       end;
 
 

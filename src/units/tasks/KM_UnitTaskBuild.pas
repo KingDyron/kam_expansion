@@ -139,8 +139,9 @@ type
     fBuildID: Integer;
     fHouseNeedsWorker: Boolean;
     fHouseReadyToBuild: Boolean;
-    fCellsToDig: array [0..MAX_HOUSE_SIZE*MAX_HOUSE_SIZE - 1] of TKMPoint; //max house square is {4*4} it's 5x5 now
+    fCellsToDig: TKMPointList;//array [0..MAX_HOUSE_SIZE*MAX_HOUSE_SIZE - 1] of TKMPoint; //max house square is {4*4} it's 5x5 now
     fLastToDig: ShortInt;
+    fCustomCellsCount : Byte;
     function GetHouseEntranceLoc: TKMPoint;
   public
     constructor Create(aWorker: TKMUnitWorker; aHouseType: TKMHouseType; const aLoc: TKMPoint; aID: Integer);
@@ -274,7 +275,7 @@ uses
   KM_HandLogistics, KM_HandsCollection, KM_Resource, KM_ResMapElements,
   KM_Game,
   KM_Hand, KM_HandTypes, KM_HandEntity, KM_TerrainTypes,
-  KM_HouseHelpers, KM_HousePasture,
+  KM_HouseHelpers, KM_HousePasture, KM_HouseShipyard,
   Math,
   KM_ScriptingEvents;
 
@@ -1372,11 +1373,17 @@ begin
 
   //Fill Cells left->right, top->bottom. Worker will start flattening from the end (reversed)
   fLastToDig := -1;
+  fCellsToDig := TKMPointList.Create;
+  Inc(fLastToDig, gHands[fUnit.Owner].Constructions.HousePlanList.Plans[fBuildID].CustomCells.Count);
+  fCellsToDig.AddList(gHands[fUnit.Owner].Constructions.HousePlanList.Plans[fBuildID].CustomCells);
+  fCustomCellsCount := fLastToDig + 1;
+
   for I := 1 to MAX_HOUSE_SIZE do for K := 1 to MAX_HOUSE_SIZE do
   if HA[I,K] <> 0 then
   begin
     Inc(fLastToDig);
-    fCellsToDig[fLastToDig] := KMPoint(fHouseLoc.X + K - 3, fHouseLoc.Y + I - 4);
+    //fCellsToDig[fLastToDig] := KMPoint(fHouseLoc.X + K - 3, fHouseLoc.Y + I - 4);
+    fCellsToDig.Add(KMPoint(fHouseLoc.X + K - 3, fHouseLoc.Y + I - 4));
   end;
 end;
 
@@ -1393,7 +1400,11 @@ begin
   LoadStream.Read(fHouseNeedsWorker);
   LoadStream.Read(fHouseReadyToBuild);
   LoadStream.Read(fLastToDig);
-  LoadStream.Read(fCellsToDig, SizeOf(fCellsToDig));
+  LoadStream.Read(fCustomCellsCount);
+  //LoadStream.Read(fCellsToDig, SizeOf(fCellsToDig));
+
+  fCellsToDig := TKMPointList.Create;
+  fCellsToDig.LoadFromStream(LoadStream);
 end;
 
 
@@ -1563,7 +1574,11 @@ begin
           if not ((fHouse.HouseType = htAppleTree) and KMSamePoint(fHouse.Entrance, fCellsToDig[fLastToDig])) then
             gTerrain.RemoveObject(fCellsToDig[fLastToDig]); //All objects are removed
           If fHouse.HouseType = htPasture then
-            gTerrain.SetLand( TKMHousePasture(fHouse).GetPastureTileType, fCellsToDig[fLastToDig].X, fCellsToDig[fLastToDig].Y, 255);
+            gTerrain.SetLand( TKMHousePasture(fHouse).GetPastureTileType, fCellsToDig[fLastToDig].X, fCellsToDig[fLastToDig].Y, 255)
+          else
+          If fHouse.HouseType = htShipYard then
+            If fLastToDig < fCustomCellsCount then
+              TKMHouseShipyard(fHouse).DigDock(fLastToDig);
 
           Dec(fLastToDig);
         end;
@@ -1600,7 +1615,9 @@ begin
   SaveStream.Write(fHouseNeedsWorker);
   SaveStream.Write(fHouseReadyToBuild);
   SaveStream.Write(fLastToDig);
-  SaveStream.Write(fCellsToDig, SizeOf(fCellsToDig));
+  SaveStream.Write(fCustomCellsCount);
+  //SaveStream.Write(fCellsToDig, SizeOf(fCellsToDig));
+  fCellsToDig.SaveToStream(SaveStream);
 end;
 
 

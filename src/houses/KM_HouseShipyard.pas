@@ -10,23 +10,44 @@ uses
   KM_ResTypes;
 
 type
+  TKMShipyardDock = record
+    CurrentShip, NextShip : TKMUnitType;
+    ShipPhase : Byte;
+    Materials : TKMWarePlan;
+    Started, DoRender : Boolean;
+  end;
+
+  TKMShipyardDockWithLoc = record
+    CurrentShip, NextShip : TKMUnitType;
+    ShipPhase : Byte;
+    Materials : TKMWarePlan;
+    Position : TKMPointDir;
+  end;
+
+  TKMShipyardDocks = array of TKMShipyardDock;
+
   TKMHouseShipyard = class(TKMHouse)
     private
-      fWayOutID : Byte;
       fShipType, fNextShipType : TKMUnitType;
-      fShipSketchPosition : TKMPointDir;
       fShipPhase : Byte;
       fShipBuiltOf : TKMWarePlan;
       fDoWork : Boolean;
       fWaresOut : TKMWarePlan;
-      function GetPhasesCount : Byte;
+
+      fOutCells: TKMPointDirList;
+      fDocks: TKMShipyardDocks;
+      function GetPhasesCount(aUnitType : TKMUnitType) : Byte;
       procedure SetNextShipType(aValue : TKMUnitType);overload;
+      procedure ResetDocks;
     protected
        procedure Activate(aWasBuilt: Boolean); override;
+       procedure SetHouseTerrain(aOwner : TKMHandID; aStage : TKMHouseStage; const aFlattenTerrain: Boolean = False); override;
     public
+      constructor Create(aUID: Integer; aHouseType: TKMHouseType; PosX, PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
+      destructor Destroy; override;
       constructor Load(LoadStream: TKMemoryStream); override;
       procedure Save(SaveStream: TKMemoryStream); override;
-
+      procedure UpdatePosition(const aPos: TKMPoint); override;//Used only by map editor
 
       procedure WareAddToOut(aWare: TKMWareType; const aCount: Integer = 1); override;
       function CheckWareOut(aWare: TKMWareType): Word; override;
@@ -39,20 +60,33 @@ type
       procedure SetNextShipType(aAmount : Integer);overload;
       property WaresOut : TKMWarePlan read fWaresOut;
 
-      procedure IncSketchPhase(aWares : TKMWarePlan);
+      procedure IncSketchPhase(aDock : Integer);
       procedure StartWorking;
       function CanWork : Boolean;
 
-      function GetWarePlan : TKMWarePlan;
+      function CanBuildShipAt(aDock : Integer) : Boolean;
+      function GetDockToWorkOn : Integer;
+      function GetWarePlan(aDock : Integer) : TKMWarePlan;
+      function GetShipStages(aDock : Integer) : Integer;
 
+      function GetDock(aIndex : Integer) : TKMShipyardDockWithLoc;
+      function DocksCount: Integer;
+      procedure DigDock(aIndex : Integer);
+      procedure StartBuildingShip(aIndex : Integer);
+      procedure CancelBuildingShip(aIndex : Integer);
+
+
+      function HitTest(X, Y: Integer): Boolean; override;
 
       procedure Paint; Override;
   end;
 
 implementation
 uses
+  SysUtils,
   KM_CommonUtils,
   KM_Entity,
+  KM_GameParams,
   KM_HandsCollection, KM_Hand, KM_HandTypes, KM_HandEntity,
   KM_Units, KM_UnitWarrior,
   KM_Resource, KM_ResUnits,
@@ -61,28 +95,150 @@ uses
   KM_Terrain;
 
 
+constructor TKMHouseShipyard.Create(aUID: Integer; aHouseType: TKMHouseType; PosX: Integer; PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
+begin
+  fOutCells := TKMPointDirList.Create;
+  gTerrain.GetShipyardDirCells(PosX + gRes.Houses[aHouseType].EntranceOffsetX, PosY + gRes.Houses[aHouseType].EntranceOffsetY, fOutCells);
+  Inherited;
+  ResetDocks;
+end;
+
+destructor TKMHouseShipyard.Destroy;
+begin
+  FreeAndNil(fOutCells);
+  Inherited;
+end;
+
 Constructor TKMHouseShipyard.Load(LoadStream: TKMemoryStream);
+var I : integer;
 begin
   Inherited;
 
   LoadStream.Read(fShipType, SizeOf(fShipType));
-  LoadStream.Read(fShipSketchPosition);
   LoadStream.Read(fShipPhase);
   LoadStream.Read(fDoWork);
   LoadStream.Read(fNextShipType, SizeOf(fNextShipType));
-  LoadStream.Read(fWayOutID);
   fWaresOut.Load(LoadStream);
   fShipBuiltOf.Load(LoadStream);
+  fOutCells := TKMPointDirList.Create;
+  fOutCells.LoadFromStream(LoadStream);
+  ResetDocks;
+
+  for I := 0 to fOutCells.Count - 1 do
+    LoadStream.Read(fDocks[I], SizeOf(fDocks[I]) );
+
 end;
 
-function TKMHouseShipyard.GetPhasesCount : Byte;
+function TKMHouseShipyard.GetPhasesCount(aUnitType : TKMUnitType) : Byte;
 begin
-  Result := 0;
-  case fShipType of
-    utBoat: Result := gRes.Units.FishermansShipSketch[fShipSketchPosition.Dir].Count;
-    utBattleShip: Result := gRes.Units.BattleShipSketch[fShipSketchPosition.Dir].Count;
-    utShip : Result := gRes.Units.ShipSketch[fShipSketchPosition.Dir].Count;
+  case aUnitType of
+    utBoat        : Result := gRes.Units.FishermansShipSketch[dirN].Count;
+    utShip        : Result := gRes.Units.ShipSketch[dirN].Count;
+    utBattleShip  : Result := gRes.Units.BattleShipSketch[dirN].Count;
+    else
+      Result := 0;
   end;
+end;
+
+procedure TKMHouseShipyard.SetHouseTerrain(aOwner: TKMHandID; aStage: TKMHouseStage; const aFlattenTerrain: Boolean = False);
+var I : Integer;
+begin
+  Inherited;
+  for I := 0 to fOutCells.Count - 1 do
+    gTerrain.SetHouseOnSinglePoint(self, fOutCells[I].Loc, HouseType, aStage, aOwner, aFlattenTerrain);
+end;
+
+procedure TKMHouseShipyard.UpdatePosition(const aPos: TKMPoint);
+var
+  wasOnSnow : TKMTerrPicType;
+begin
+  Assert(gGameParams.IsMapEditor);
+
+  //We have to remove the house THEN check to see if we can place it again so we can put it on the old position
+  SetHouseTerrain(HAND_NONE, hsNone);
+
+  if gHands[Owner].CanAddHousePlan(aPos, HouseType) then
+  begin
+    //Save if flag point was set for previous position
+    gTerrain.RemRoad(Entrance);
+
+    SetPosition(KMPoint(aPos.X - gRes.Houses[HouseType].EntranceOffsetX, aPos.Y - gRes.Houses[HouseType].EntranceOffsetY));
+    gTerrain.SetRoad(Entrance, Owner, rtStone);
+  end;
+  fOutCells.Clear;
+  gTerrain.GetShipyardDirCells(Position.X + gRes.Houses[HouseType].EntranceOffsetX, Position.Y + gRes.Houses[HouseType].EntranceOffsetY, fOutCells);
+  ResetDocks;
+  case fBuildState of
+    hbsNoGlyph,
+    hbsWood: SetHouseTerrain(Owner, hsFence); // Update terrain tiles for house;
+    hbsStone,
+    hbsDone: SetHouseTerrain(Owner, hsBuilt); // Update terrain tiles for house;
+  end;
+
+
+
+  //Do not remove all snow if house is moved from snow to snow
+  wasOnSnow := fIsOnTerrain;
+  CheckOnTerrain;
+  if not (wasOnSnow <> tptNone) or not (fIsOnTerrain <> tptNone) then
+    fSnowStep := 0;
+end;
+
+procedure TKMHouseShipyard.ResetDocks;
+var I : integer;
+begin
+  SetLength(fDocks, fOutCells.Count);
+  for I := 0 to fOutCells.Count - 1 do
+  begin
+    fDocks[I].CurrentShip := utNone;
+    fDocks[I].NextShip := utNone;
+    fDocks[I].ShipPhase := 0;
+    fDocks[I].Materials.Reset;
+    fDocks[I].DoRender := fBuildState = hbsDone;
+  end;
+end;
+
+function TKMHouseShipyard.GetDock(aIndex : Integer) : TKMShipyardDockWithLoc;
+begin
+  Result.CurrentShip := fDocks[aIndex].CurrentShip;
+  Result.NextShip := fDocks[aIndex].NextShip;
+  Result.ShipPhase := fDocks[aIndex].ShipPhase;
+  Result.Materials.CopyFrom(fDocks[aIndex].Materials);
+  Result.Position := fOutCells[aIndex];
+end;
+
+function TKMHouseShipyard.DocksCount: Integer;
+begin
+  Result := fOutCells.Count;
+end;
+
+procedure TKMHouseShipyard.DigDock(aIndex : Integer);
+begin
+  fDocks[aIndex].DoRender := true;
+end;
+
+procedure TKMHouseShipyard.StartBuildingShip(aIndex : Integer);
+begin
+  fDocks[aIndex].Started := true;
+end;
+
+procedure TKMHouseShipyard.CancelBuildingShip(aIndex: Integer);
+begin
+  fDocks[aIndex].Started := false;
+end;
+
+function TKMHouseShipyard.HitTest(X: Integer; Y: Integer): Boolean;
+  function InOutCells : Boolean;
+  var I : Integer;
+  begin
+    Result := false;
+    for I := 0 to fOutCells.Count - 1 do
+      If KMSamePoint(fOutCells[I].Loc, KMPoint(X,Y) ) then
+        Exit(true);
+  end;
+
+begin
+  Result := Inherited or InOutCells
 end;
 
 procedure TKMHouseShipyard.SetNextShipType(aValue: TKMUnitType);
@@ -96,12 +252,6 @@ begin
 end;
 
 procedure TKMHouseShipyard.Activate(aWasBuilt: Boolean);
-  function CheckWater(aX, aY : Integer) : Boolean;
-  begin
-    Result := false;
-    if gTerrain.TileInMapCoords(aX, aY, 1) then
-      Result := gTerrain.CheckPassability(aX, aY, tpFish);
-  end;
 var I : integer;
 
 begin
@@ -114,129 +264,42 @@ begin
       Break;
     end;
 
-
   fNextShipType := fShipType;
   fShipPhase := 0;
-  fShipSketchPosition.Dir := dirN;
-
-  if CheckWater(Entrance.X - 1, Entrance.Y + 4) then
-  begin
-    fShipSketchPosition.Loc := KMPoint(Entrance.X - 1, Entrance.Y + 4);
-    fShipSketchPosition.Dir := dirS;
-    fWayOutID := 1
-  end
-  else
-  if CheckWater(Entrance.X + 2, Entrance.Y + 4) then
-  begin
-    fShipSketchPosition.Loc := KMPoint(Entrance.X + 2, Entrance.Y + 4);
-    fShipSketchPosition.Dir := dirS;
-    fWayOutID := 2
-  end
-  else
-  if CheckWater(Entrance.X + 4, Entrance.Y + 2) then
-  begin
-    fShipSketchPosition.Loc := KMPoint(Entrance.X + 4, Entrance.Y + 2);
-    fShipSketchPosition.Dir := dirE;
-    fWayOutID := 3
-  end
-  else
-  if CheckWater(Entrance.X - 3, Entrance.Y + 2) then
-  begin
-    fShipSketchPosition.Loc := KMPoint(Entrance.X - 3, Entrance.Y + 2);
-    fShipSketchPosition.Dir := dirW;
-    fWayOutID := 4
-  end else
-    fWayOutID := 0;
-
-  Assert(fWayOutID <> 0, 'TKMHouseShipyard did not found water')
 end;
 
 procedure TKMHouseShipyard.Save(SaveStream: TKMemoryStream);
+var I : integer;
 begin
   Inherited;
 
   SaveStream.Write(fShipType, SizeOf(fShipType));
-  SaveStream.Write(fShipSketchPosition);
   SaveStream.Write(fShipPhase);
   SaveStream.Write(fDoWork);
   SaveStream.Write(fNextShipType, SizeOf(fNextShipType));
-  SaveStream.Write(fWayOutID);
   fWaresOut.Save(SaveStream);
   fShipBuiltOf.Save(SaveStream);
+  fOutCells.SaveToStream(SaveStream);
+  for I := 0 to fOutCells.Count - 1 do
+    SaveStream.Write(fDocks[I], SizeOf(fDocks[I]) );
 end;
 
-procedure TKMHouseShipyard.IncSketchPhase(aWares : TKMWarePlan);
-  procedure FinishShip;
-    var U : TKMUnitWarrior;
-  begin
-
-    //gTerrain.UnlockTile(fShipSketchPosition.Loc);
-    U := gHands[Owner].AddUnitGroup(fShipType, fShipSketchPosition.Loc, fShipSketchPosition.Dir, 1, 1).FlagBearer;
-
-
-    if gHands[Owner].IsComputer then
-    begin
-      U.BoltCount := 100;
-      U.InfinityAmmo := true;
-      if fShipType = utBattleShip then
-        WareTakeFromIn(wtBolt, CheckWareIn(wtBolt), true)
-      else
-      if fShipType = utBoat then
-        WareTakeFromIn(wtAxe, CheckWareIn(wtAxe), true);
-    end;
-
-    if fShipBuiltOf.HasWare(wtBitinE) > 0 then
-    begin
-      U.Defence := U.Defence + (fShipBuiltOf.HasWare(wtBitinE) div 2);
-      U.ProjectilesDefence := U.ProjectilesDefence + (fShipBuiltOf.HasWare(wtBitinE) / 2)
-    end;
-    if fShipBuiltOf.HasWare(wtSteelE) > 5 then
-      U.SetSpeed(fShipBuiltOf.HasWare(wtSteelE) - 5, true);
-
-    if fShipBuiltOf.HasWare(wtSteelE) > 0 then
-      U.HitPointsMax := U.HitPointsMax + (fShipBuiltOf.HasWare(wtSteelE) div 2);
-
-    U.HitPointsChangeFromScript(U.HitPointsMax);
-    U.Condition := UNIT_MAX_CONDITION;
-    //fShipType := utNone;
-    fShipPhase := 0;
-    //fShipSketchPosition.Loc := KMPOINT_INVALID_TILE;
-    if fNextShipType <> fShipType then
-      fShipType := fNextShipType;
-    fShipBuiltOf.Clear;
-    gScriptEvents.ProcWarriorEquipped(U, U.Group);
-  end;
-var count : Integer;
+procedure TKMHouseShipyard.IncSketchPhase(aDock : Integer);
+var
+  I, K, Index, count: Integer;
+  U: TKMUnit;
 begin
-  Inc(fShipPhase);
-  count := GetPhasesCount;
+  //Make new unit
+  U := gHands[Owner].TrainUnit(utShip, Self);
+  U.Visible := False; //Make him invisible as he is inside the barracks
+  U.Condition := UNIT_MAX_CONDITION; //All soldiers start with 3/4, so groups get hungry at the same time
+  U.PositionNext := fOutCells[aDock].Loc;
+  U.SetActionGoOutDock(uaWalk, Self, fOutCells[aDock], true);
 
-  if aWares.HasWare(wtBitinE) > 0 then
-    fShipBuiltOf.AddWare(wtBitinE);
-  if aWares.HasWare(wtSteelE) > 0 then
-    fShipBuiltOf.AddWare(wtSteelE);
+  ProduceFestivalPoints(fptWarfare, 3);
 
-  if ((fShipType = utBoat) and (fShipPhase > 2))
-    or ((fShipType = utShip) and (fShipPhase > 4))
-    or ((fShipType = utBattleShip) and (fShipPhase > 5))
-   then
-  if aWares.HasWare(wtLeather) > 0 then
-    fShipBuiltOf.AddWare(wtLeather);
-
-
-
-  if fShipPhase >= count then
-  begin
-    FinishShip;
-  end else
-  if fShipPhase = 1 then
-  begin
-    //fShipSketchPosition.Dir := KaMRandomDir('TKMHouseShipyard.Activate');
-    //fShipSketchPosition.Loc := gTerrain.FindPlaceForUnit(Position, tpFish, 5);
-    //gTerrain.SetTileLock(fShipSketchPosition.Loc, tlRoadWork);
-  end;
-
-
+  if Assigned(U.OnUnitTrained) then
+    U.OnUnitTrained(U);
 end;
 
 procedure TKMHouseShipyard.StartWorking;
@@ -275,45 +338,71 @@ end;
 
 function TKMHouseShipyard.CanWork: Boolean;
 begin
-  Result := gTerrain.CheckPassability(fShipSketchPosition.Loc, tpFish) or (fShipPhase > 0);
-  Result := Result and (gTerrain.GetUnit(fShipSketchPosition.Loc) = nil);
-  Result := Result and (fDoWork or (fShipPhase > 0));
+  Result := false;
 end;
 
-function TKMHouseShipyard.GetWarePlan: TKMWarePlan;
+function TKMHouseShipyard.CanBuildShipAt(aDock: Integer): Boolean;
+begin
+  Result := (fDocks[aDock].CurrentShip <> utNone) and HasWaresIn( GetWarePlan(aDock) );
+end;
+
+function TKMHouseShipyard.GetDockToWorkOn: Integer;
+var I, dock : Integer;
+begin
+  Result := -1;
+  for I := 0 to fOutCells.Count - 1 do
+  begin
+    dock := ((LastOrderProduced + I) mod fOutCells.Count) + 1;
+    If not CanBuildShipAt(dock) then
+      Continue;
+    LastOrderProduced := dock;
+    Break;
+  end;
+
+end;
+
+function TKMHouseShipyard.GetWarePlan(aDock : Integer) : TKMWarePlan;
 begin
   Result.Reset;
-  case fShipType of
+  Assert(aDock >= 0, 'TKMHouseShipyard.GetWarePlan');
+  If fDocks[aDock].Started then
+    Exit;
+  case fDocks[aDock].CurrentShip of
     utBoat :  begin
-                Result.AddWare(wtLog);
-                Result.AddWare(wtSkin);
+                Result.AddWare(wtLog, 3);
+                Result.AddWare(wtSkin, 1);
 
                 if CheckWareIn(wtSteelE) > 0 then
                   Result.AddWare(wtSteelE);
               end;
     utShip :  begin
-                Result.AddWare(wtLog);
-                Result.AddWare(wtSkin);
+                Result.AddWare(wtLog, 5);
+                Result.AddWare(wtSkin, 2);
 
-                if CheckWareIn(wtSteelE) > 0 then
-                  Result.AddWare(wtSteelE);
-                if CheckWareIn(wtBitinE) > 0 then
-                  Result.AddWare(wtBitinE);
+                if CheckWareIn(wtSteelE) >= 2 then
+                  Result.AddWare(wtSteelE, 2);
+                if CheckWareIn(wtBitinE) >= 2 then
+                  Result.AddWare(wtBitinE, 2);
               end;
     utBattleShip :  begin
-                      Result.AddWare(wtLog);
-                      Result.AddWare(wtSkin);
+                      Result.AddWare(wtLog, 7);
+                      Result.AddWare(wtSkin, 4);
 
-                      if CheckWareIn(wtSteelE) > 0 then
-                        Result.AddWare(wtSteelE);
-                      if CheckWareIn(wtBitinE) > 0 then
-                        Result.AddWare(wtBitinE);
-
-
+                      if CheckWareIn(wtSteelE) >= 3 then
+                        Result.AddWare(wtSteelE, 3);
+                      if CheckWareIn(wtBitinE) >= 3 then
+                        Result.AddWare(wtBitinE, 3);
                     end;
   end;
 
 end;
+
+function TKMHouseShipyard.GetShipStages(aDock: Integer): Integer;
+begin
+  Result := GetPhasesCount(fDocks[aDock].CurrentShip);
+end;
+
+
 
 procedure TKMHouseShipyard.WareAddToOut(aWare: TKMWareType; const aCount: Integer = 1);
 begin
@@ -361,96 +450,51 @@ begin
 end;
 
 procedure TKMHouseShipyard.Paint;
-  function SketchPointF : TKMPointF;
+  function GetRot(aIndex : Integer) : Byte;
   begin
-    Result.X := fShipSketchPosition.Loc.X + 0.5;
-    Result.Y := fShipSketchPosition.Loc.Y + 0.5;
+    Result := (byte(fOutCells[aIndex].Dir) div 2 + 2) mod 4;
   end;
+
+  function GetTex(aIndex : Integer) : Word;
+  begin
+    Result := byte(fOutCells[aIndex].Dir in [dirN, dirE]) + 969;
+  end;
+
+  function GetObjTex(aIndex : Integer) : Word;
+  begin
+    Result := byte(fOutCells[aIndex].Dir in [dirW, dirE]) + 653;
+  end;
+
+var I : integer;
 begin
-  if not IsComplete then
-    Inherited
-  else
-  begin
+  Inherited;
 
-    //Incase we need to render house at desired step in debug mode
-    if HOUSE_BUILDING_STEP = 0 then
+  for I := 0 to fOutCells.Count - 1 do
+    If fDocks[I].DoRender then
     begin
-      //Shipyard is Painted as seperated parts
-      {if fIsOnSnow then
-        gRenderPool.AddHouse(fType, fPosition, 1, 1, fSnowStep, -1, GetStonePic, GetSnowPic, false, false, 0)
-      else
-        gRenderPool.AddHouse(fType, fPosition, 1, 1, 0, -1, GetStonePic, -1, false, false, 0);}
+      gRenderPool.RenderTile(GetTex(I), fOutCells[I].Loc.X, fOutCells[I].Loc.Y, GetRot(I));
+      case fOutCells[I].Dir of
+        dirN : gRenderPool.RenderTile(971, fOutCells[I].Loc.X, fOutCells[I].Loc.Y + 1, 2);
+        dirS : gRenderPool.RenderTile(971, fOutCells[I].Loc.X, fOutCells[I].Loc.Y - 1, 0);
+        dirW : gRenderPool.RenderTile(971, fOutCells[I].Loc.X + 1, fOutCells[I].Loc.Y, 1);
+        dirE : gRenderPool.RenderTile(971, fOutCells[I].Loc.X - 1, fOutCells[I].Loc.Y, 3);
 
-      If fIsOnTerrain <> tptNone then
-      begin
-        If fSnowStep = 1 then
-          gRenderPool.AddSpriteGSnow(fPosition, KMPOINT_ZERO, GetSnowPic + 1, 1, rxHouses, gHands[Owner].FlagColor)
-        else
-        begin
-          gRenderPool.AddSpriteG(fPosition, KMPOINT_ZERO, 2538, rxHouses, gHands[Owner].FlagColor);
-          gRenderPool.AddSpriteGSnow(fPosition, KMPOINT_ZERO, GetSnowPic + 1, fSnowStep, rxHouses, gHands[Owner].FlagColor);
-        end;
-      end else
-      gRenderPool.AddSpriteG(fPosition, KMPOINT_ZERO, 2538, rxHouses, gHands[Owner].FlagColor);//house
-
-      gRenderPool.AddSpriteG(fPosition, KMPOINT_ZERO, 2534, rxHouses, gHands[Owner].FlagColor);//yard
-      case fWayOutID of
-        1: begin
-            gRenderPool.AddSpriteG(fPosition, KMPOINT_ZERO, 2539, rxHouses, gHands[Owner].FlagColor);//bottom Right
-            gRenderPool.AddSpriteG(fPosition, KMPoint(-102, 18), 2540, rxHouses, gHands[Owner].FlagColor);//bottom Right
-           end;
-        2: begin
-            gRenderPool.AddSpriteG(fPosition, KMPOINT_ZERO, 2535, rxHouses, gHands[Owner].FlagColor);//bottom Left
-            gRenderPool.AddSpriteG(fPosition, KMPoint(0, 18), 2540, rxHouses, gHands[Owner].FlagColor);//bottom Right
-           end;
-        3:  begin
-              gRenderPool.AddSpriteG(fPosition, KMPOINT_ZERO, 2536, rxHouses, gHands[Owner].FlagColor);//right
-              gRenderPool.AddSpriteG(fPosition, KMPOINT_ZERO, 2539, rxHouses, gHands[Owner].FlagColor);//bottom Right
-              gRenderPool.AddSpriteG(fPosition, KMPOINT_ZERO, 2535, rxHouses, gHands[Owner].FlagColor);//bottom Left
-            end;
-        4:  begin
-              gRenderPool.AddSpriteG(fPosition, KMPOINT_ZERO, 2537, rxHouses, gHands[Owner].FlagColor);//left
-              gRenderPool.AddSpriteG(fPosition, KMPOINT_ZERO, 2539, rxHouses, gHands[Owner].FlagColor);//bottom Right
-              gRenderPool.AddSpriteG(fPosition, KMPOINT_ZERO, 2535, rxHouses, gHands[Owner].FlagColor);//bottom Left
-            end;
       end;
+      gRenderPool.RenderMapElement(GetObjTex(I), 0, fOutCells[I].Loc.X, fOutCells[I].Loc.Y);
 
+      //try to render obj next to empty spot
+      IF (fOutCells[I].Dir in [dirW, dirE])
+        and (gTerrain.House(fOutCells[I].Loc.X, fOutCells[I].Loc.Y + 1) = nil) then
+        gRenderPool.RenderMapElement(GetObjTex(I), 0, fOutCells[I].Loc.X, fOutCells[I].Loc.Y + 1)
+      else
+      IF (fOutCells[I].Dir in [dirN, dirS])
+        and (gTerrain.House(fOutCells[I].Loc.X + 1, fOutCells[I].Loc.Y) = nil) then
+        gRenderPool.RenderMapElement(GetObjTex(I), 0, fOutCells[I].Loc.X + 1, fOutCells[I].Loc.Y)
+      else
 
-      if CurrentAction <> nil then
-        if PaintHouseWork then
-        gRenderPool.AddHouseWork(HouseType, fPosition, CurrentAction.SubAction, WorkAnimStep, WorkAnimStepPrev, GetFlagColor);
-
-    end
-    else
-      gRenderPool.AddHouse(HouseType, fPosition,
-        Min(HOUSE_BUILDING_STEP * 3, 1),
-        EnsureRange(HOUSE_BUILDING_STEP * 3 - 1, 0, 1),
-        Max(HOUSE_BUILDING_STEP * 3 - 2, 0)
-        ,GetWoodPic, GetStonePic, GetSnowPic
-        );
-  end;
-
-  if fShipPhase > 0 then
-  begin
-    case fShipType of
-      utBoat : gRenderPool.AddAnimation( SketchPointF,
-                                        gRes.Units.FishermansShipSketch[fShipSketchPosition.Dir],
-                                        fShipPhase - 1,
-                                        0, rxUnits
-                                       );
-      utBattleShip : gRenderPool.AddAnimation( SketchPointF,
-                                        gRes.Units.BattleShipSketch[fShipSketchPosition.Dir],
-                                        fShipPhase - 1,
-                                        0, rxUnits
-                                       );
-      utShip : gRenderPool.AddAnimation( SketchPointF,
-                                        gRes.Units.ShipSketch[fShipSketchPosition.Dir],
-                                        fShipPhase - 1,
-                                        0, rxUnits
-                                       );
     end;
 
-  end;
+
 
 end;
 
