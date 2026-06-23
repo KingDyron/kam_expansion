@@ -573,6 +573,8 @@ begin
 
               end;
             end;
+            if WorkPlan.GatheringScript = gsShipyard then
+              TKMHouseShipyard(Home).StartBuildingShip(WorkPlan.TMPInt);
 
             //clay miner brought back clay
             if (WorkPlan.GatheringScript = gsClayMiner) and (WorkPlan.TMPInt = 2) then
@@ -581,13 +583,6 @@ begin
               else
               If Home.HouseType = htProductionThatch then
                 TKMHouseProdThatch(Home).BringTile;
-
-
-            if WorkPlan.GatheringScript = gsShipyard then
-              if TKMHouseShipyard(fUnit.Home).CanWork then
-                TKMHouseShipyard(fUnit.Home).StartWorking
-              else
-                Exit(trTaskDone);
 
             if WorkPlan.GatheringScript = gsAppleTree then
               TKMHouseAppleTree(fUnit.Home).SetAnimation(WorkPlan.TMPInt);
@@ -655,6 +650,8 @@ begin
                 SetActionLockedStay(WorkPlan.HouseAct[fPhase2].TimeToWork - 2, uaWalk); //-2 to compensate 2 UpdateStates of a unit in last Act
 
               CalculateWorkingTime(Home);
+              if WorkPlan.GatheringScript = gsShipyard then
+                TKMHouseShipyard(Home).IncSketchPhase(WorkPlan.TMPInt);
             end
             else
             begin
@@ -773,7 +770,6 @@ begin
                               ResAcquired := false;
                               TKMHouseCollectors(fUnit.Home).FillMeat(fObjectType);
                             end;
-              //gsShipyard:   TKMHouseShipyard(fUnit.Home).IncSketchPhase(fWorkPlan.Res);
 
               gsMerchant:     ResAcquired := false;
               else            ResAcquired := True;

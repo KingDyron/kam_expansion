@@ -28,19 +28,12 @@ type
 
   TKMHouseShipyard = class(TKMHouse)
     private
-      fShipType, fNextShipType : TKMUnitType;
-      fShipPhase : Byte;
-      fShipBuiltOf : TKMWarePlan;
-      fDoWork : Boolean;
       fWaresOut : TKMWarePlan;
-
       fOutCells: TKMPointDirList;
       fDocks: TKMShipyardDocks;
       function GetPhasesCount(aUnitType : TKMUnitType) : Byte;
-      procedure SetNextShipType(aValue : TKMUnitType);overload;
       procedure ResetDocks;
     protected
-       procedure Activate(aWasBuilt: Boolean); override;
        procedure SetHouseTerrain(aOwner : TKMHandID; aStage : TKMHouseStage; const aFlattenTerrain: Boolean = False); override;
     public
       constructor Create(aUID: Integer; aHouseType: TKMHouseType; PosX, PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
@@ -54,15 +47,10 @@ type
       procedure WareTakeFromOut(aWare: TKMWareType; aCount: Word = 1; aFromScript: Boolean = False); override;
       function WareOutputAvailable(aWare: TKMWareType; const aCount: Word): Boolean; override;
 
-      property ShipType : TKMUnitType read fShipType;
-      property NextShipType : TKMUnitType read fNextShipType write SetNextShipType;
-      property DoWork : Boolean read fDoWork write fDoWork;
-      procedure SetNextShipType(aAmount : Integer);overload;
+      procedure SetNextShipType(aDock : Integer; aCount : Integer);
       property WaresOut : TKMWarePlan read fWaresOut;
 
       procedure IncSketchPhase(aDock : Integer);
-      procedure StartWorking;
-      function CanWork : Boolean;
 
       function CanBuildShipAt(aDock : Integer) : Boolean;
       function GetDockToWorkOn : Integer;
@@ -114,12 +102,7 @@ var I : integer;
 begin
   Inherited;
 
-  LoadStream.Read(fShipType, SizeOf(fShipType));
-  LoadStream.Read(fShipPhase);
-  LoadStream.Read(fDoWork);
-  LoadStream.Read(fNextShipType, SizeOf(fNextShipType));
   fWaresOut.Load(LoadStream);
-  fShipBuiltOf.Load(LoadStream);
   fOutCells := TKMPointDirList.Create;
   fOutCells.LoadFromStream(LoadStream);
   ResetDocks;
@@ -159,7 +142,6 @@ begin
 
   if gHands[Owner].CanAddHousePlan(aPos, HouseType) then
   begin
-    //Save if flag point was set for previous position
     gTerrain.RemRoad(Entrance);
 
     SetPosition(KMPoint(aPos.X - gRes.Houses[HouseType].EntranceOffsetX, aPos.Y - gRes.Houses[HouseType].EntranceOffsetY));
@@ -238,34 +220,7 @@ function TKMHouseShipyard.HitTest(X: Integer; Y: Integer): Boolean;
   end;
 
 begin
-  Result := Inherited or InOutCells
-end;
-
-procedure TKMHouseShipyard.SetNextShipType(aValue: TKMUnitType);
-begin
-  if gHands[Owner].Locks.UnitUnlocked(aValue, htShipYard) then
-    fNextShipType := aValue;
-
-  if (fShipPhase = 0) and (GetState <> hstWork) then
-    if fNextShipType <> fShipType then
-      fShipType := fNextShipType;
-end;
-
-procedure TKMHouseShipyard.Activate(aWasBuilt: Boolean);
-var I : integer;
-
-begin
-  Inherited;
-  fShipType := SHIPYARD_ORDER[0];
-  for I := 0 to High(SHIPYARD_ORDER) do
-    if gHands[Owner].Locks.UnitUnlocked(SHIPYARD_ORDER[I], HouseType) then
-    begin
-      fShipType := SHIPYARD_ORDER[I];
-      Break;
-    end;
-
-  fNextShipType := fShipType;
-  fShipPhase := 0;
+  Result := Inherited or InOutCells;
 end;
 
 procedure TKMHouseShipyard.Save(SaveStream: TKMemoryStream);
@@ -273,12 +228,7 @@ var I : integer;
 begin
   Inherited;
 
-  SaveStream.Write(fShipType, SizeOf(fShipType));
-  SaveStream.Write(fShipPhase);
-  SaveStream.Write(fDoWork);
-  SaveStream.Write(fNextShipType, SizeOf(fNextShipType));
   fWaresOut.Save(SaveStream);
-  fShipBuiltOf.Save(SaveStream);
   fOutCells.SaveToStream(SaveStream);
   for I := 0 to fOutCells.Count - 1 do
     SaveStream.Write(fDocks[I], SizeOf(fDocks[I]) );
@@ -286,15 +236,22 @@ end;
 
 procedure TKMHouseShipyard.IncSketchPhase(aDock : Integer);
 var
-  I, K, Index, count: Integer;
   U: TKMUnit;
 begin
+
+  Inc(fDocks[aDock].ShipPhase);
+  If fDocks[aDock].ShipPhase <= GetPhasesCount(fDocks[aDock].CurrentShip) then
+    Exit;
   //Make new unit
-  U := gHands[Owner].TrainUnit(utShip, Self);
+  U := gHands[Owner].TrainUnit(fDocks[aDock].CurrentShip, Self);
   U.Visible := False; //Make him invisible as he is inside the barracks
   U.Condition := UNIT_MAX_CONDITION; //All soldiers start with 3/4, so groups get hungry at the same time
   U.PositionNext := fOutCells[aDock].Loc;
   U.SetActionGoOutDock(uaWalk, Self, fOutCells[aDock], true);
+
+  fDocks[aDock].ShipPhase := 0;
+  fDocks[aDock].CurrentShip := fDocks[aDock].NextShip;
+  fDocks[aDock].Started := false;
 
   ProduceFestivalPoints(fptWarfare, 3);
 
@@ -302,23 +259,19 @@ begin
     U.OnUnitTrained(U);
 end;
 
-procedure TKMHouseShipyard.StartWorking;
-begin
-    //gTerrain.SetTileLock(fShipSketchPosition.Loc, tlRoadWork);
-end;
 
-procedure TKMHouseShipyard.SetNextShipType(aAmount: Integer);
+procedure TKMHouseShipyard.SetNextShipType(aDock: Integer; aCount : Integer);
 var I, Index: Integer;
   procedure SelectNext;
   begin
-    IncLoop(Index, low(SHIPYARD_ORDER), high(SHIPYARD_ORDER), aAmount);
-    fNextShipType := SHIPYARD_ORDER[Index];
+    IncLoop(Index, low(SHIPYARD_ORDER), high(SHIPYARD_ORDER), aCount);
+    fDocks[aDock].NextShip := SHIPYARD_ORDER[Index];
   end;
 
 begin
   Index := -1;
   for I := 0 to High(SHIPYARD_ORDER) do
-    If SHIPYARD_ORDER[I] = fNextShipType then
+    If SHIPYARD_ORDER[I] = fDocks[aDock].NextShip then
     begin
       Index := I;
       Break;
@@ -326,36 +279,28 @@ begin
   if Index = -1 then
     Exit;
   SelectNext;
-  while not gHands[Owner].Locks.UnitUnlocked(fNextShipType, HouseType) do
+  while not gHands[Owner].Locks.UnitUnlocked(fDocks[aDock].NextShip, HouseType) do
     SelectNext;
-
-  if (fShipPhase = 0) and (GetState <> hstWork) then
-    if fNextShipType <> fShipType then
-      fShipType := fNextShipType;
-
-
-end;
-
-function TKMHouseShipyard.CanWork: Boolean;
-begin
-  Result := false;
+  If (fDocks[aDock].CurrentShip <> fDocks[aDock].NextShip) and not fDocks[aDock].Started then
+    fDocks[aDock].CurrentShip := fDocks[aDock].NextShip;
 end;
 
 function TKMHouseShipyard.CanBuildShipAt(aDock: Integer): Boolean;
 begin
-  Result := (fDocks[aDock].CurrentShip <> utNone) and HasWaresIn( GetWarePlan(aDock) );
+  Result := (fDocks[aDock].CurrentShip <> utNone) and not fDocks[aDock].Started and HasWaresIn( GetWarePlan(aDock) );
 end;
 
 function TKMHouseShipyard.GetDockToWorkOn: Integer;
 var I, dock : Integer;
 begin
   Result := -1;
-  for I := 0 to fOutCells.Count - 1 do
+  for I := 1 to fOutCells.Count do
   begin
-    dock := ((LastOrderProduced + I) mod fOutCells.Count) + 1;
+    dock := ((LastOrderProduced + I) mod fOutCells.Count);
     If not CanBuildShipAt(dock) then
       Continue;
     LastOrderProduced := dock;
+    Result := LastOrderProduced;
     Break;
   end;
 
@@ -465,7 +410,7 @@ procedure TKMHouseShipyard.Paint;
     Result := byte(fOutCells[aIndex].Dir in [dirW, dirE]) + 653;
   end;
 
-var I : integer;
+var I, id : integer;
 begin
   Inherited;
 
@@ -481,6 +426,19 @@ begin
 
       end;
       gRenderPool.RenderMapElement(GetObjTex(I), 0, fOutCells[I].Loc.X, fOutCells[I].Loc.Y);
+      if fDocks[I].ShipPhase > 0 then
+      begin
+        case fDocks[I].CurrentShip of
+          utShip : id := gRes.Units.ShipSketch[fOutCells[I].DIr].Step[fDocks[I].ShipPhase];
+          utBattleShip : id := gRes.Units.BattleShipSketch[fOutCells[I].DIr].Step[fDocks[I].ShipPhase];
+          utBoat : id := gRes.Units.FishermansShipSketch[fOutCells[I].DIr].Step[fDocks[I].ShipPhase];
+          else
+            id := 0;
+        end;
+        if id > 0 then
+          gRenderPool.AddSpriteWH(fOutCells[I].Loc, KMPOINT_ZERO, id + 1, rxUnits, GetFlagColor);
+      end;
+
 
       //try to render obj next to empty spot
       IF (fOutCells[I].Dir in [dirW, dirE])

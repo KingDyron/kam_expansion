@@ -7904,7 +7904,7 @@ procedure TKMTerrain.GetShipyardCells(X, Y: Word; aList : TKMPointList);
 
   end;
 
-  procedure TryToAddCell(aX, aY : Word);
+  procedure TryToAddCell(aX, aY : Integer);
   begin
     If CheckPassability(aX, aY, tpCanWalls) and HasWaterAround(aX, aY) then
       aList.Add(KMPoint(aX, aY));

@@ -395,9 +395,6 @@ var
     for I := 0 to houses.Count - 1 do
     begin
       HS := TKMHouseShipyard(houses[I]);
-
-      HS.NextShipType := utBattleShip;//only produce battle ships. There is no need to have anything else
-      HS.DoWork := not aStopBuilding;
     end;
 
   end;

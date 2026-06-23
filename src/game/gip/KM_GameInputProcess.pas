@@ -122,7 +122,6 @@ type
     gicHousePalaceCancelOrder,
     gicHouseFruitTreeToggleType,
     gicHouseShipType,
-    gicHouseShipDoWork,
     gicAssignToShip,
     gicUnloadShip,
     gicPlaceStructurePlan,
@@ -311,7 +310,6 @@ const
     gicHousePalaceCancelOrder,
     gicHouseFruitTreeToggleType,
     gicHouseShipType,
-    gicHouseShipDoWork,
     gicHouseFarmMode,
     gicHouseCollectorsMode,
     gicCartographersMode,
@@ -430,8 +428,7 @@ const
     gicpt_Int1,//gicHouseStoreBell
     gicpt_Int1,//gicHousePalaceCancelOrder
     gicpt_Int2,//gicHouseFruitTreeToggleType
-    gicpt_Int2,//gicHouseShipType
-    gicpt_Int1,//gicHouseShipDoWork
+    gicpt_Int3,//gicHouseShipType
     gicpt_Int2,//gicAssignToShip
     gicpt_Int1,//gicUnloadShip
     gicpt_Int1SmInt3,//gicPlaceBridgePlan
@@ -1192,7 +1189,7 @@ begin
       gicHouseForceWork, gicHouseMakeUpgrade, gicHouseCancelUpgrade, gicHouseTransferWare, gicHouseDontAcceptWorker,
       gicHouseStallBuyCoin, gicHouseStallBuyItem, gicHousePalaceOrder, gicHousePalaceStart, gicHouseQueueAdd, gicHouseQueueRem, gicHouseMerchantSendTo, gicHouseFarmToggleGrain,
       gicHStoreSetNotAcceptFlag, gicHStoreSetNotAllowTakeOutFlag, gicHouseStoreBell, gicHousePalaceCancelOrder, gicHouseFruitTreeToggleType, gicHouseShipType,
-      gicHouseShipDoWork, gicHouseFarmMode, gicHouseCollectorsMode, gicCartographersMode, gicCartographersToggleView, gicCartographersSelectPlayer,
+      gicHouseFarmMode, gicHouseCollectorsMode, gicCartographersMode, gicCartographersToggleView, gicCartographersSelectPlayer,
       gicCartographersDoSpying, gicHouseRepairSet, gicPearlSelectType,gicPearlConfirm, gicPearlSelectResFrom, gicPearlSelectResTo, gicPearlSelectVResTo,//arium
       gicPearlSelectRResTo, gicPearlDoExchange, gicPearlUseSpecial, gicHouseStyleSet, gicStoreHouseUnlockAll, gicStoreHouseBlockAll, gicHouseForestPlantTree,
       gicHousePastureBuyAnimal, gicHousePastureSellAnimal, gicArenaSelectFestival, gicArenaStartFestival, gicHouseQueueNotRem, gicHouseDeliveryTo,
@@ -1356,8 +1353,7 @@ begin
                                       if srcHouse.HouseType in [htPearl] then
                                         gHands[srcHouse.Owner].ProceedPearlBell(srcHouse.PointBelowEntrance);
 
-      gicHouseShipDoWork           : TKMHouseShipYard(srcHouse).DoWork := not TKMHouseShipYard(srcHouse).DoWork;
-      gicHouseShipType             : TKMHouseShipYard(srcHouse).SetNextShipType(IntParams[1]);
+      gicHouseShipType             : TKMHouseShipYard(srcHouse).SetNextShipType(IntParams[1], IntParams[2]);
 
       gicHouseForceWork            : srcHouse.ForceWorking := not srcHouse.ForceWorking;
       gicHouseMakeUpgrade          : srcHouse.MakeUpgrade;
@@ -1688,7 +1684,7 @@ end;
 procedure TKMGameInputProcess.CmdHouse(aCommandType: TKMGameInputCommandType; aHouse: TKMHouse);
 begin
   Assert(aCommandType in [gicHouseRepairToggle, gicHouseClosedForWorkerTgl, gicHBarracksAcceptRecruitsTgl, gicHouseDeliveryModeNext, gicHouseDeliveryModePrev,
-                          gicHouseForceWork, gicHouseMakeUpgrade, gicHouseCancelUpgrade, gicHouseStoreBell, gicHouseShipDoWork, gicHouseCollectorsMode,
+                          gicHouseForceWork, gicHouseMakeUpgrade, gicHouseCancelUpgrade, gicHouseStoreBell, gicHouseCollectorsMode,
                           gicCartographersDoSpying, gicPearlConfirm, gicPearlUseSpecial, gicArenaStartFestival, gicHouseQueueNotRem, gicHousePalaceStart,
                           gicHousePalaceCancelOrder]);
   TakeCommand(MakeCommand(aCommandType, aHouse.UID));
@@ -1699,7 +1695,7 @@ procedure TKMGameInputProcess.CmdHouse(aCommandType: TKMGameInputCommandType; aH
 begin
   Assert(aCommandType in [gicHouseOrderProduct, gicHouseSchoolTrainChOrder, gicHouseStallBuyCoin, gicHouseStallBuyItem,
                           gicHouseQueueAdd, gicHouseFarmToggleGrain, gicHouseMerchantSetType, gicHouseForestPlantTree,
-                          gicHouseVirtualWareClicked]);
+                          gicHouseVirtualWareClicked, gicHouseShipType]);
   TakeCommand(MakeCommand(aCommandType, aHouse.UID, aItem, aAmountChange));
 end;
 
@@ -1736,7 +1732,7 @@ procedure TKMGameInputProcess.CmdHouse(aCommandType: TKMGameInputCommandType; aH
 begin
   Assert(aCommandType in [gicHouseRemoveTrain, gicHouseSchoolTrainChLastUOrder, gicHouseTownHallMaxGold, gicHouseTransferWare,
                           gicHouseDontAcceptWorker, gicHouseQueueRem, gicHouseMerchantSendTo,
-                          gicHouseFruitTreeToggleType, gicHouseShipType, gicHouseTownHallMaxBitin, gicCartographersMode,
+                          gicHouseFruitTreeToggleType, gicHouseTownHallMaxBitin, gicCartographersMode,
                           gicCartographersToggleView, gicCartographersSelectPlayer, gicHouseRepairSet, gicPearlSelectType,
                           gicPearlSelectResFrom, gicPearlSelectResTo, gicPearlSelectVResTo, gicPearlSelectRResTo, gicPearlDoExchange,
                           gicHouseStyleSet, gicStoreHouseUnlockAll, gicStoreHouseBlockAll, gicHousePastureBuyAnimal, gicHousePastureSellAnimal,

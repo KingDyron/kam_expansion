@@ -150,7 +150,6 @@ begin
       gicHouseCollectorsRally,
       gicHouseWoodcuttersCutting:    SetParams(HouseToLoc(command.IntParams[0]), [IntParams[1], IntParams[2]]);//house ID, WoodcutterX, woodcutter Y
       gicHouseStoreBell:             SetParams(HouseToLoc(command.IntParams[0]), []);//house ID
-      gicHouseShipDoWork:            SetParams(HouseToLoc(command.IntParams[0]), []);//house ID
       gicHouseForceWork:             SetParams(HouseToLoc(command.IntParams[0]), []);//house ID
       gicHouseStallBuyCoin,
       gicHouseStallBuyItem:          SetParams(HouseToLoc(command.IntParams[0]), [IntParams[1], IntParams[2]]);//house ID, itemID, count
@@ -280,7 +279,7 @@ begin
   if TKMGameInputCommandType(aCommand.CommandType) in
     [gicHouseDeliveryModeNext, gicHouseDeliveryModePrev, gicHouseClosedForWorkerTgl, gicHouseOrderProduct,
      gicHouseMarketFrom, gicHouseMarketTo, gicHouseWoodcutterMode, gicHouseCollectorsRally, gicHouseWoodcuttersCutting,
-     gicHouseStoreBell, gicHouseShipDoWork, gicHouseForceWork, gicHouseStallBuyCoin, gicHouseStallBuyItem, gicHouseMerchantSendTo,
+     gicHouseStoreBell, gicHouseForceWork, gicHouseStallBuyCoin, gicHouseStallBuyItem, gicHouseMerchantSendTo,
      gicHouseFarmToggleGrain, gicHouseFruitTreeToggleType, gicHouseMerchantSetType, gicHouseStoreNotAcceptFlag, gicHouseDeliveryToggle] then
     if not LocToHouse(aCommand.Loc) then
       Exit//house not found, delete command
@@ -349,8 +348,6 @@ begin
 
       gicHouseStoreBell:             if srcHouse.HouseType in [htStore, htTownhall] then
                                        srcHouse.Hand.ProceedStoreBell(srcHouse.PointBelowEntrance);
-
-      gicHouseShipDoWork:            If srcHouse.Shipyard.NotNil then srcHouse.Shipyard.DoWork := not srcHouse.Shipyard.DoWork;
 
       gicHouseForceWork:             srcHouse.ForceWorking := not srcHouse.ForceWorking;
       gicHouseStallBuyCoin:          If srcHouse.Stall.NotNil then srcHouse.Stall.BuyCoin(Params[0], Params[1]);

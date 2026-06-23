@@ -1126,12 +1126,12 @@ begin
                           Res.Clear;
                           Res.CopyFrom(TKMHouseShipYard(aUnit.Home).GetWarePlan(TMPInt));
                           Res.SetCount(WARES_IN_OUT_COUNT);
-                          for I := 1 to TKMHouseShipYard(aUnit.Home).GetShipStages(TmpInt) do
-                            SubActAdd(haWork2,15);
+                          for I := 0 to TKMHouseShipYard(aUnit.Home).GetShipStages(TmpInt) + 1 do
+                            SubActAdd(haWork2, 20);
                           //fIssued := TKMHouseShipYard(aUnit.Home).CanWork;
 
                           If gHands[aUnit.Owner].ArmyDevUnlocked(3) then
-                            ActSetByMultiplier(aUnit, 0.5);
+                            ActSetByMultiplier(aUnit, 0.6);
                         end;
                       end;
     gsClayMiner:      begin

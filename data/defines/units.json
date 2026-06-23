@@ -5890,5 +5890,5 @@
 	"Townhall Order" : ["utFighter","utRebel","utRogue","utClubMan","utVagabond", "utSkirmisher", "utBerserker","utShieldBearer","utBarbarian","utWarrior", "utMobileTower", "utFeeder", "utHouseBuilder", "utMountedSerf"],
 	"SiegeWorkshop Order" : ["utBallista","utCatapult","utRam","utWoodenWall"],
 	"Palace Order" : ["utFighter","utTrainedWolf","utAlchemist","utTorchMan","utLekter","utMedic","utSpy","utSpikedTrap","utPaladin","utChampion","utAmmoCart", "utWarfareCart","utPikeMachine","utArcher","utPyro"],
-	"Shipyard Order" : ["utBoat","utShip","utBattleShip"]
+	"Shipyard Order" : ["utNone", "utBoat","utShip","utBattleShip"]
 }

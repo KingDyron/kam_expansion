@@ -126,7 +126,6 @@ type
     procedure House_FarmToggleGrain(Sender : TObject; Shift: TShiftState);
     procedure House_FruitTreeToggle(Sender : TObject; Shift: TShiftState);
     procedure Store_BellClick(Sender : TObject);
-    procedure Ship_Clicked(Sender: TObject; Shift : TShiftState);
     procedure CollectorsClicked(Sender: TObject; Shift : TShiftState);
     procedure SetHouseStyleClicked(Sender: TObject; Shift : TShiftState);
     procedure VirtualWareClicked(Sender: TObject; Shift : TShiftState);
@@ -291,7 +290,6 @@ type
     Button_MerchantType : array[0..9] of TKMButton;
     Button_PlayerSelect: array [0..MAX_HANDS-1] of TKMFlatButtonShape;//select player in merchant
 
-    Ship_ShipType, Ship_DoWork : TKMButton;
     WaresOut_ShipYard : TKMWaresButtonsMulti;
 
     Button_ATBoltCount : TKMButtonFlat;
@@ -560,14 +558,6 @@ begin
     Button_CollectorsMode.OnClickShift := CollectorsClicked;
     Button_CollectorsMode.MobilHint := true;
     Button_CollectorsMode.Tag := 0;
-
-    Ship_ShipType := TKMButton.Create(Panel_House, TB_WIDTH - 100, 42 + 30, 30, 25, gRes.Units[utBoat].GUIIcon, rxGui, bsGame );
-    Ship_ShipType.MobilHint := true;
-    Ship_ShipType.OnClickShift := Ship_Clicked;
-
-    Ship_DoWork := TKMButton.Create(Panel_House, TB_WIDTH - 70, 42 + 30, 30, 25, 32, rxGuiMain, bsGame );
-    Ship_DoWork.MobilHint := true;
-    Ship_DoWork.OnClickShift := Ship_Clicked;
 
     Image_HouseConstructionWood  := TKMImage.Create(Panel_House,20,170,40,40,655);
     Image_HouseConstructionWood.ImageCenter;
@@ -1877,9 +1867,6 @@ begin
     htShipYard      : fLastShipUnit.CheckOrder(fHouse.Owner, fHouse.HouseType, SHIPYARD_ORDER);
   end;
 
-  Ship_ShipType.Visible := (aHouse.HouseType = htShipYard) and fLastShipUnit.HasAnyUnit(aHouse.Owner, aHouse.HouseType, true);
-  Ship_DoWork.Visible := Ship_ShipType.Visible;
-
   Button_ATBoltCount.Visible := aHouse.HouseType = htWallTower;
   case aHouse.HouseType of
     htMarket:         begin
@@ -2384,21 +2371,6 @@ begin
 
                         Progress_Beasts.Hide;
                       end;
-          {htShipYard: begin
-                        CostsRow_Common.Top := base + line * 25 + 20;
-                        CostsRow_Common.WarePlan := TKMHouseShipyard(fHouse).GetWarePlan;
-                        CostsRow_Common.Visible := Ship_ShipType.Visible;
-                        WaresOut_ShipYard.Top := CostsRow_Common.Bottom + 15;
-                        WaresOut_ShipYard.WarePlan := TKMHouseShipyard(fHouse).WaresOut;
-                        WaresOut_ShipYard.Show;
-                        if Ship_DoWork.Visible then
-                        begin
-                          Ship_ShipType.TexID := gRes.Units[TKMHouseShipYard(aHouse).NextShipType].GUIIcon;
-                          Ship_ShipType.Hint := gRes.Units[TKMHouseShipYard(aHouse).NextShipType].GUIName;
-                          Ship_DoWork.TexID := IfThen(TKMHouseShipYard(aHouse).DoWork, 33, 32);
-                          Ship_DoWork.Hint := IfThen(TKMHouseShipYard(aHouse).DoWork, gResTexts[2034], gResTexts[2033]);
-                        end;
-                      end;}
           htTownhall: begin
                         ShowTownHall(aHouse);
                         Panel_HouseTownHall.Top := 50 + base + line * 25 + 20;
@@ -2780,10 +2752,10 @@ begin
 
   if Sender = Button_House_DemolishYes then
   begin
-    if TKMHouse(gMySpectator.Selected).HouseType = htWall2 then
+    {if TKMHouse(gMySpectator.Selected).HouseType = htWall2 then
       gGame.GameInputProcess.CmdBuild(gicBuildRemoveHouse, KMPoint(TKMHouse(gMySpectator.Selected).Position.X + 1, TKMHouse(gMySpectator.Selected).Position.Y))
-    else
-      gGame.GameInputProcess.CmdBuild(gicBuildRemoveHouse, TKMHouse(gMySpectator.Selected).Position);
+    else}
+      gGame.GameInputProcess.CmdBuild(gicBuildRemoveHouse, TKMHouse(gMySpectator.Selected).Entrance);
 
     gMySpectator.Selected := nil; //fPlayers.Selected MUST be reset before calling ShowHouseInfo
     Panel_House.Hide; //Simpliest way to reset page and ShownHouse
@@ -4461,22 +4433,6 @@ begin
     Exit;
 
   gGame.GameInputProcess.CmdHouse(gicHouseStoreBell, fHouse);
-
-end;
-
-procedure TKMGUIGameHouse.Ship_Clicked(Sender: TObject; Shift: TShiftState);
-begin
-  if Sender = Ship_ShipType then
-  begin
-    if ssRight in Shift then
-      gGame.GameInputProcess.CmdHouse(gicHouseShipType, fHouse, -1)
-    else
-      gGame.GameInputProcess.CmdHouse(gicHouseShipType, fHouse, 1);
-  end else
-  begin
-      gGame.GameInputProcess.CmdHouse(gicHouseShipDoWork, fHouse);
-
-  end;
 
 end;
 
