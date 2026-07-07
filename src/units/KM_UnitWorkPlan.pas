@@ -1122,13 +1122,14 @@ begin
                         fIssued := TMPInt <> -1;
                         If fIssued then
                         begin
-                          //DefaultPlan(aUnit);
                           Res.Clear;
-                          Res.CopyFrom(TKMHouseShipYard(aUnit.Home).GetWarePlan(TMPInt));
-                          Res.SetCount(WARES_IN_OUT_COUNT);
-                          for I := 0 to TKMHouseShipYard(aUnit.Home).GetShipStages(TmpInt) + 1 do
+                          if not TKMHouseShipYard(aUnit.Home).IsBuildResuming(TMPInt) then
+                          begin
+                            Res.CopyFrom(TKMHouseShipYard(aUnit.Home).GetWarePlan(TMPInt));
+                            Res.SetCount(WARES_IN_OUT_COUNT);
+                          end;
+                          for I := 0 to TKMHouseShipYard(aUnit.Home).GetRemainingShipStages(TmpInt) do
                             SubActAdd(haWork2, 20);
-                          //fIssued := TKMHouseShipYard(aUnit.Home).CanWork;
 
                           If gHands[aUnit.Owner].ArmyDevUnlocked(3) then
                             ActSetByMultiplier(aUnit, 0.6);
