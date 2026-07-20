@@ -961,7 +961,7 @@ var
       with Pictures[picCount - 1] do
       begin
         X := dX;
-        Y := dY;
+        Y := dY + 2;
         ID := num2;
         RX := TRXType(num1-1);
         Inc(dx, Max(0, gGFXData[RX, ID].PxWidth)); // CharSpacing could be negative
