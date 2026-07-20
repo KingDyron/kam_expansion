@@ -902,8 +902,8 @@ class function TKMRenderUI.WriteText(aLeft, aTop, aWidth: SmallInt; aText: Unico
   aColor: TColor4 = $FFFFFFFF; aIgnoreMarkup: Boolean = False; aShowMarkup: Boolean = False; aIgnoreMarkupColor: Boolean = False; aShowEolSymbol: Boolean = False;
   aTabWidth: Integer = FONT_TAB_WIDTH) : TKMPoint;
 var
-  I, K, off: Integer;
-  lineCount, dx, dy, lineHeight, blockWidth, prevAtlas, lineWidthInc: Integer;
+  I, K, off, maxLength: Integer;
+  lineCount, dx, dy, lineHeight, nextLineHeight, blockWidth, prevAtlas, lineWidthInc: Integer;
   lineWidth: array of Integer; //Use signed format since some fonts may have negative CharSpacing
   fontSpec: TKMFontSpec;
   let: TKMLetter;
@@ -912,6 +912,13 @@ var
     FirstChar: Word;
     Color: TColor4;
   end;
+
+  picCount : Word;
+  Pictures : array of record
+    X, Y, ID : Integer;
+    RX : TRXType;
+  end;
+
 
   procedure DrawLetter;
   begin
@@ -934,6 +941,64 @@ var
     Result.X := Max(Result.X, dX);
   end;
 
+  function DrawImage(var aX : Integer) : Boolean;
+  var num1, num2 : Integer;
+  begin
+    Result := false;
+    If (I > maxLength - 7) then
+      Exit;
+
+     If (aText[I] <> ':') then
+      Exit;
+    If (aText[I + 2] <> '_') then
+      Exit;
+    if TryStrToInt(aText[I + 1], num1)
+    and TryStrToInt(Copy(aText, I + 3, 5), num2) then
+    begin
+      Inc(picCount);
+      SetLength(Pictures, picCount);
+      with Pictures[picCount - 1] do
+      begin
+        X := dX;
+        Y := dY;
+        ID := num2;
+        RX := TRXType(num1-1);
+        Inc(dx, Max(0, gGFXData[RX, ID].PxWidth)); // CharSpacing could be negative
+        nextLineHeight := Max(lineHeight, gGFXData[RX, ID].PxHeight div 2);
+      end;
+
+    end else
+      Exit;
+
+
+    Result := true;
+    aX := Max(aX, dX);
+    I := I + 7;
+  end;
+
+  procedure DoDrawImages;
+  var I, J : Integer;
+  begin
+    for I := 0 to picCount - 1 do
+      with Pictures[I] do
+      begin
+        with gGFXData[RX, ID] do
+        begin
+          J := PxHeight div 2;
+          glColor4f(1, 1, 1, 1);
+          TKMRender.BindTexture(Tex.TexID);
+          glBegin(GL_QUADS);
+            glTexCoord2f(Tex.u1, Tex.v1); glVertex2f(X          ,  Y - J + fontSpec.LineSpacing);
+            glTexCoord2f(Tex.u2, Tex.v1); glVertex2f(X + PxWidth,  Y - J + fontSpec.LineSpacing);
+            glTexCoord2f(Tex.u2, Tex.v2); glVertex2f(X + PxWidth,  Y + J + fontSpec.LineSpacing);
+            glTexCoord2f(Tex.u1, Tex.v2); glVertex2f(X          ,  Y + J + fontSpec.LineSpacing);
+          glEnd;
+          Inc(dx, Max(0, PxWidth)); // CharSpacing could be negative
+        end;
+
+      end;
+  end;
+
 var
   setupClipXApplied: Boolean;
 begin
@@ -941,7 +1006,8 @@ begin
   if (aText = '') or (aColor = $00000000) or (SKIP_RENDER_TEXT) then Exit;
 
   SetLength(colors, 0);
-
+  SetLength(Pictures, 0);
+  picCount := 0;
   setupClipXApplied := aWidth <> 0;
   if setupClipXApplied then
     SetupClipX(aLeft, aLeft + aWidth);
@@ -1025,6 +1091,7 @@ begin
   end;
 
   lineHeight := fontSpec.BaseHeight + fontSpec.LineSpacing;
+  nextLineHeight := lineHeight;
 
   dec(lineCount);
   blockWidth := 0;
@@ -1044,7 +1111,9 @@ begin
 
   K := 0;
   prevAtlas := -1;
-  for I := 1 to Length(aText) do
+  maxLength := Length(aText);
+  I := 1;
+  while I <= maxLength do
   begin
     //Loop as there might be adjoined tags on same position
     while (K < Length(colors)) and (I = colors[K].FirstChar) do
@@ -1064,7 +1133,8 @@ begin
             else begin
               //KaM uses #124 or vertical bar (|) for new lines in the LIB files,
               //so lets do the same here. Saves complex conversions...
-              Inc(dy, lineHeight);
+              Inc(dy, nextLineHeight);
+              nextLineHeight := lineHeight;
               Inc(lineCount);
               case aAlign of
                 taLeft:   dx := aLeft;
@@ -1073,12 +1143,13 @@ begin
               end;
             end;
     else
-      DrawLetter;
+      if not DrawImage(Result.X) then
+        DrawLetter;
     end;
-
     //When we reach the end, if we painted something then we need to end it
-    if (I = Length(aText)) and (prevAtlas <> -1) then
+    if (I = maxLength) and (prevAtlas <> -1) then
       glEnd;
+    Inc(I)
   end;
 
   if SHOW_TEXT_OUTLINES then
@@ -1107,11 +1178,11 @@ begin
       glEnd;
     glPopMatrix;
   end;
-
+  DoDrawImages;
   if setupClipXApplied then
     ReleaseClipX;
 
-  Result.Y := length(lineWidth) * fontSpec.LineHeight;
+  Result.Y := dY - aTop;//length(lineWidth) * fontSpec.LineHeight;
 end;
 
 
