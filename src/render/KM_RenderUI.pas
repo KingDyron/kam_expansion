@@ -955,6 +955,7 @@ var
     if TryStrToInt(aText[I + 1], num1)
     and TryStrToInt(Copy(aText, I + 3, 5), num2) then
     begin
+      inc(dX, 5);
       Inc(picCount);
       SetLength(Pictures, picCount);
       with Pictures[picCount - 1] do
@@ -966,6 +967,7 @@ var
         Inc(dx, Max(0, gGFXData[RX, ID].PxWidth)); // CharSpacing could be negative
         nextLineHeight := Max(lineHeight, gGFXData[RX, ID].PxHeight div 2);
       end;
+      inc(dX, 5);
 
     end else
       Exit;
