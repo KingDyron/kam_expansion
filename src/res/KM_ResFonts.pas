@@ -178,7 +178,8 @@ uses
   {$IFNDEF NO_OGL}
   KM_Render,
   {$ENDIF}
-  KM_CommonUtils, KM_Log;
+  KM_CommonUtils, KM_Log,
+  KM_ResSprites, KM_ResTypes;
 
 
 function NameToFont(const aName: string): TKMFont;
@@ -623,6 +624,32 @@ var
   lastColorMarkup, afterWrapClMarkup: UnicodeString;
   dx, prevX: Integer;
   tmpColor: Integer;
+
+  function CheckImage : Boolean;
+  var num1, num2 : Integer;
+    RX : TRXType;
+  begin
+    Result := false;
+    If (I > length(aText) - 7) then
+      Exit;
+
+     If (aText[I] <> ':') then
+      Exit;
+    If (aText[I + 2] <> '_') then
+      Exit;
+    if TryStrToInt(aText[I + 1], num1)
+    and TryStrToInt(Copy(aText, I + 3, 5), num2) then
+    begin
+      RX := TRXType(num1 - 1);
+      inc(dX, 5);
+      Inc(dX, Max(0, gGFXData[RX, num2].PxWidth)); // CharSpacing could be negative
+      inc(dX, 5);
+    end else
+      Exit;
+
+    Result := true;
+    I := I + 7;
+  end;
 begin
   Assert(aMaxPxWidth > 0);
 
@@ -655,16 +682,18 @@ begin
       lastColorMarkup := '';
       Inc(I); //Skip past end of color markup
     end else
-      if (aText[I] = '[') and (I+8 <= Length(aText))
-        and (aText[I+1] = '$') and (aText[I+8] = ']')
-        and TryStrToInt(Copy(aText, I+1, 7), tmpColor) then
-      begin
-        lastColorMarkup := Copy(aText, I, 9);
-        Inc(I,8); //Skip past start of color markup
-      end else if (aText[I] = #9) then
-        dx := (Floor(dx / aTabWidth) + 1) * aTabWidth
-      else
-        Inc(dx, GetCharWidth(aText[I]));
+    if (aText[I] = '[') and (I+8 <= Length(aText))
+      and (aText[I+1] = '$') and (aText[I+8] = ']')
+      and TryStrToInt(Copy(aText, I+1, 7), tmpColor) then
+    begin
+      lastColorMarkup := Copy(aText, I, 9);
+      Inc(I,8); //Skip past start of color markup
+    end else
+    if (aText[I] = #9) then
+      dx := (Floor(dx / aTabWidth) + 1) * aTabWidth
+    else
+    If not CheckImage then
+      Inc(dx, GetCharWidth(aText[I]));
 
     if SysUtils.CharInSet(aText[I], [#9,#32,#124]) then
     begin
@@ -784,10 +813,39 @@ end;
 
 function TKMFontSpec.GetTextSize(const aText: UnicodeString; var aLineCount: Integer; aCountMarkup: Boolean = False;
                                  aConsiderEolSymbol: Boolean = False; aTabWidth: Integer = FONT_TAB_WIDTH): TKMPoint;
+
+
 var
-  I: Integer;
+  I, maxLength, nextLineHeight: Integer;
   lineWidthInc, tmpColor: Integer;
   lineWidth: array of Integer; // Some fonts may have negative CharSpacing
+
+  function CheckImage : Boolean;
+  var num1, num2 : Integer;
+    RX : TRXType;
+  begin
+    Result := false;
+    If (I > maxLength - 7) then
+      Exit;
+
+     If (aText[I] <> ':') then
+      Exit;
+    If (aText[I + 2] <> '_') then
+      Exit;
+    if TryStrToInt(aText[I + 1], num1)
+    and TryStrToInt(Copy(aText, I + 3, 5), num2) then
+    begin
+      RX := TRXType(num1 - 1);
+      inc(lineWidth[aLineCount], 5);
+      Inc(lineWidth[aLineCount], Max(0, gGFXData[RX, num2].PxWidth)); // CharSpacing could be negative
+      nextLineHeight := Max(nextLineHeight, gGFXData[RX, num2].PxHeight);
+      inc(lineWidth[aLineCount], 5);
+    end else
+      Exit;
+
+    Result := true;
+    I := I + 7;
+  end;
 begin
   Result.X := 0;
   Result.Y := 0;
@@ -803,6 +861,8 @@ begin
 
   aLineCount := 1;
   I := 1;
+  maxLength := Length(aText);
+  nextLineHeight := LineHeight;
   while I <= Length(aText) do
   begin
     lineWidthInc := 0;
@@ -816,21 +876,24 @@ begin
       Inc(lineWidth[aLineCount], lineWidthInc);
     end else
       //Ignore color markups [$FFFFFF][]
-      if (aText[I]='[') and (I+1 <= Length(aText)) and (aText[I+1]=']') then
-        Inc(I) //Skip past this markup
-      else
-        if (aText[I]='[') and (I+8 <= Length(aText))
-          and (aText[I+1] = '$') and (aText[I+8]=']')
-          and TryStrToInt(Copy(aText, I+1, 7), tmpColor) then
-          Inc(I,8) //Skip past this markup
-        else begin
-          //Not markup so count width normally
-          if aText[I] = #9 then // Tab char
-            lineWidthInc := (Floor(lineWidth[aLineCount] / aTabWidth) + 1) * aTabWidth - lineWidth[aLineCount]
-          else
-            lineWidthInc := GetCharWidth(aText[I], aConsiderEolSymbol);
-          Inc(lineWidth[aLineCount], lineWidthInc);
-        end;
+      If not CheckImage then
+      begin
+        if (aText[I]='[') and (I+1 <= Length(aText)) and (aText[I+1]=']') then
+          Inc(I) //Skip past this markup
+        else
+          if (aText[I]='[') and (I+8 <= Length(aText))
+            and (aText[I+1] = '$') and (aText[I+8]=']')
+            and TryStrToInt(Copy(aText, I+1, 7), tmpColor) then
+            Inc(I,8) //Skip past this markup
+          else begin
+            //Not markup so count width normally
+            if aText[I] = #9 then // Tab char
+              lineWidthInc := (Floor(lineWidth[aLineCount] / aTabWidth) + 1) * aTabWidth - lineWidth[aLineCount]
+            else
+              lineWidthInc := GetCharWidth(aText[I], aConsiderEolSymbol);
+            Inc(lineWidth[aLineCount], lineWidthInc);
+          end;
+      end;
 
     if (not aConsiderEolSymbol and (aText[I] = #124)) or (I = Length(aText)) then
     begin // If EOL or aText end
@@ -839,12 +902,14 @@ begin
       lineWidth[aLineCount] := Math.Max(0, lineWidth[aLineCount] - CharSpacing - lineWidthInc);
       // Remove last interletter space and negate double EOLs
       Inc(aLineCount);
+      Result.Y := Result.Y + nextLineHeight;
+      nextLineHeight := LineHeight;
     end;
     Inc(I);
   end;
 
   Dec(aLineCount);
-  Result.Y := LineHeight * aLineCount;
+  //Result.Y := LineHeight * aLineCount;
   for I := 1 to aLineCount do
     Result.X := Math.Max(Result.X, lineWidth[I]);
 end;

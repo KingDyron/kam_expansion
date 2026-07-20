@@ -961,11 +961,11 @@ var
       with Pictures[picCount - 1] do
       begin
         X := dX;
-        Y := dY + 2;
+        Y := dY - FontSpec.LineSpacing + 3;
         ID := num2;
         RX := TRXType(num1-1);
         Inc(dx, Max(0, gGFXData[RX, ID].PxWidth)); // CharSpacing could be negative
-        nextLineHeight := Max(lineHeight, gGFXData[RX, ID].PxHeight div 2);
+        nextLineHeight := Max(lineHeight, gGFXData[RX, ID].PxHeight);
       end;
       inc(dX, 5);
 
@@ -986,14 +986,13 @@ var
       begin
         with gGFXData[RX, ID] do
         begin
-          J := PxHeight div 2;
           glColor4f(1, 1, 1, 1);
           TKMRender.BindTexture(Tex.TexID);
           glBegin(GL_QUADS);
-            glTexCoord2f(Tex.u1, Tex.v1); glVertex2f(X          ,  Y - J + fontSpec.LineSpacing);
-            glTexCoord2f(Tex.u2, Tex.v1); glVertex2f(X + PxWidth,  Y - J + fontSpec.LineSpacing);
-            glTexCoord2f(Tex.u2, Tex.v2); glVertex2f(X + PxWidth,  Y + J + fontSpec.LineSpacing);
-            glTexCoord2f(Tex.u1, Tex.v2); glVertex2f(X          ,  Y + J + fontSpec.LineSpacing);
+            glTexCoord2f(Tex.u1, Tex.v1); glVertex2f(X          ,  Y);
+            glTexCoord2f(Tex.u2, Tex.v1); glVertex2f(X + PxWidth,  Y);
+            glTexCoord2f(Tex.u2, Tex.v2); glVertex2f(X + PxWidth,  Y + PxHeight);
+            glTexCoord2f(Tex.u1, Tex.v2); glVertex2f(X          ,  Y + PxHeight);
           glEnd;
           Inc(dx, Max(0, PxWidth)); // CharSpacing could be negative
         end;
