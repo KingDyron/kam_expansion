@@ -958,13 +958,16 @@ begin
   case FindType of
     fnHouse:  Result := gHands[fOwner].CanAddHousePlanAI(X, Y, HouseType, false);
 
-    fnStone:  Result := (gTerrain.TileIsStone(X, Max(Y-1, 1)) >= 1);
+    fnStone:  Result := (gTerrain.TileIsStone(X, Max(Y-1, 1)) >= 1)
+                         and gHands[fOwner].CanAddHousePlanAI(X, Y, HouseType, false);
 
     fnCoal:   Result := (gTerrain.TileIsCoal(X, Y) > 1)
                          and gHands[fOwner].CanAddHousePlanAI(X, Y, htCoalMine, false);
 
-    fnClay:   Result := (gTerrain.TileIsClay(X, Y) >= 1);
-    fnCollect:  Result := gTerrain.TileHasCollectorsGoods(X, Y);
+    fnClay:   Result := (gTerrain.TileIsClay(X, Y) >= 1)
+                         and gHands[fOwner].CanAddHousePlanAI(X, Y, htPottery, false);
+    fnCollect:  Result := gTerrain.TileHasCollectorsGoods(X, Y)
+                         and gHands[fOwner].CanAddHousePlanAI(X, Y, htCollectors, false);
 
     fnIron:   begin
                 Result := gHands[fOwner].CanAddHousePlanAI(X, Y, htIronMine, false);
@@ -999,7 +1002,8 @@ begin
                 Result := False; //Didn't find any ore
               end;
     fnWater:  begin
-                Result := gTerrain.TileHasWater(X, Y);
+                Result := gTerrain.TileHasWater(X, Y)
+                         and gHands[fOwner].CanAddHousePlanAI(X, Y, HouseType, false);
               end;
 
     else      Result := False;
@@ -1026,6 +1030,8 @@ begin
                         or gTerrain.TileHasWater(X, Y);
     fnClay:  Result := (fPassability * gTerrain.Land^[Y,X].Passability <> [])
                         or gTerrain.TileHasClay(X, Y);
+    fnCollect:  Result := (fPassability * gTerrain.Land^[Y,X].Passability <> [])
+                        or gTerrain.TileHasCollectorsGoods(X, Y);
 
     else      Result := (fPassability * gTerrain.Land^[Y,X].Passability <> []);
   end;

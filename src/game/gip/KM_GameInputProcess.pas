@@ -1417,8 +1417,15 @@ begin
                                   end;
 
       gicTempAddScout:            if DEBUG_CHEATS and (MULTIPLAYER_CHEATS or not gGameParams.IsMultiPlayerOrSpec) then
+                                  begin
                                     //Place a warrior
-                                    P.AddUnit(utWarrior, KMPoint(IntParams[0], IntParams[1]), True, 0, True);
+                                    with P.AddUnit(utWarrior, KMPoint(IntParams[0], IntParams[1]), True, 0, True) do
+                                    begin
+                                      Immortal := true;
+                                      InstantKill := true;
+
+                                    end;
+                                  end;
       gicTempRevealMap:           if DEBUG_CHEATS and (MULTIPLAYER_CHEATS or not gGameParams.IsMultiPlayerOrSpec) then
                                     P.FogOfWar.RevealEverything;
       gicTempVictory:             if DEBUG_CHEATS and (MULTIPLAYER_CHEATS or not gGameParams.IsMultiPlayerOrSpec) then
