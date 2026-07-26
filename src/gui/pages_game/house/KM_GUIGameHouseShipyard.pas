@@ -117,11 +117,11 @@ begin
   for I := 0 to High(Ship_Bevel) do
   begin
     U := SHIPYARD_ORDER[I + 1];
-    Ship_Bevel[I] := TKMBevel.Create(self, 0, 350 + I * 60, Width + 5, 50);
-    Ship_Image[I] := TKMImage.Create(self, 5, 365 + I * 60, 40, 30, gRes.Units[U].GUIIcon);
+    Ship_Bevel[I] := TKMBevel.Create(self, 0, 350 + I * 55, Width + 5, 53);
+    Ship_Image[I] := TKMImage.Create(self, 5, 365 + I * 55, 40, 30, gRes.Units[U].GUIIcon);
     Ship_Image[I].AnchorsCenter;
 
-    Ship_Cost[I] := TKMCostsRowMultiCol.Create(self, 40, 350 + I * 60, Width - 37, 50, 3);
+    Ship_Cost[I] := TKMCostsRowMultiCol.Create(self, 40, 350 + I * 55, Width - 37, 53, 3);
   end;
 
 
