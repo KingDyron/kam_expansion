@@ -96,6 +96,10 @@ begin
   gTerrain.GetShipyardDirCells(PosX + gRes.Houses[aHouseType].EntranceOffsetX, PosY + gRes.Houses[aHouseType].EntranceOffsetY, fOutCells);
   Inherited;
   ResetDocks;
+  SetAcceptWareIn(wtBitinE, 10);
+  SetAcceptWareIn(wtSteelE, 10);
+  SetAcceptWareIn(wtAxe, 10);
+  SetAcceptWareIn(wtBolt, 10);
 end;
 
 destructor TKMHouseShipyard.Destroy;
