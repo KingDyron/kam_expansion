@@ -3108,7 +3108,7 @@ begin
     if H.IsValid then
     begin
       H.WareTakeFromIn(wtLog, 1, true);
-      Inc(fHitPoints);
+      fHitPoints := HitPointsMax;
     end;
   end;
 
@@ -3168,7 +3168,7 @@ end;
 
 function TKMUnitWarriorShip.IsCloseToWater: Boolean;
 begin
-  Result := gTerrain.IsTileNearLand(Position);
+  Result := gTerrain.IsTileNearLandForBoat(Position);
 end;
 
 procedure TKMUnitWarriorShip.OrderAmmo;
@@ -3788,7 +3788,7 @@ begin
   if fBoltCount >= 500 then
     Exit;
 
-  if not gTerrain.IsTileNearLand(Position) then
+  if not gTerrain.IsTileNearLandForBoat(Position) then
     Exit;
   HS := gHands[Owner].GetClosestHouse(Position, [htShipYard], [wtBolt], 8);
 
@@ -3799,7 +3799,7 @@ begin
 
 
   HS.WareTakeFromIn(wtBolt, 1, true);
-  Inc(fBoltCount, 50)
+  Inc(fBoltCount, 80)
 end;
 
 constructor TKMUnitWarriorBShip.Load(LoadStream: TKMemoryStream);
@@ -4137,7 +4137,7 @@ begin
 
   if fBoltCount >= 100 then
     Exit;
-  if not gTerrain.IsTileNearLand(Position) then
+  if not gTerrain.IsTileNearLandForBoat(Position) then
     Exit;
 
   HS := gHands[Owner].GetClosestHouse(Position, [htShipYard], [wtAxe], 8);
