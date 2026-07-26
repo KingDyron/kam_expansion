@@ -4087,7 +4087,7 @@ procedure TKMUnitWarriorBoat.UnloadWares;
 var H : TKMHouse;
 begin
   if HasAnyWares then
-    if gTerrain.IsTileNearLand(Position) then
+    if gTerrain.IsTileNearLandForBoat(Position) then
     begin
       H := gHands.GetClosestHouse(Position, [htShipYard], [wtAll], 7);
       if H.IsValid(htShipYard, false, true) then

@@ -389,6 +389,7 @@ type
     function FindWalkableSpot(aLoc : TKMPoint) : TKMPoint;
     function IsTileNearWater(aLoc : TKMPoint) : Boolean;
     function IsTileNearLand(aLoc : TKMPoint) : Boolean;
+    function IsTileNearLandForBoat(aLoc : TKMPoint) : Boolean;
 
     function ScriptTrySetTile(X, Y, aType, aRot: Integer): Boolean;
     function ScriptTrySetTileHeight(X, Y, aHeight: Integer): Boolean;
@@ -3236,6 +3237,16 @@ begin
   for I := Max(aLoc.X - 1, 0) to Min(aLoc.X + 1, fMapX - 1) do
     for K := Max(aLoc.Y - 1, 0) to Min(aLoc.Y + 1, fMapY - 1) do
       if CheckPassability(I, K, tpWalk) then
+        Exit(true);
+end;
+
+function TKMTerrain.IsTileNearLandForBoat(aLoc: TKMPoint): Boolean;
+var I, K : integer;
+begin
+  Result := false;
+  for I := Max(aLoc.X - 1, 0) to Min(aLoc.X + 1, fMapX - 1) do
+    for K := Max(aLoc.Y - 1, 0) to Min(aLoc.Y + 1, fMapY - 1) do
+      if CheckPassability(I, K, tpWalk) or House(I,K).IsValid(htShipyard, false, true) then
         Exit(true);
 end;
 

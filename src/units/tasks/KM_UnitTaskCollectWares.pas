@@ -187,7 +187,7 @@ begin
   Result := (fShipyard = nil)
             or (fShipyard.IsDestroyed)
             or (TKMUnitWarriorBoat(fUnit).TotalWaresCount = 0)
-            or not gTerrain.IsTileNearLand(fUnit.Position);
+            or not gTerrain.IsTileNearLandForBoat(fUnit.Position);
 end;
 
 function TKMTaskUnloadWares.Execute: TKMTaskResult;
