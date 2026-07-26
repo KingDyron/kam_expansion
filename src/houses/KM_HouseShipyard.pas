@@ -55,6 +55,7 @@ type
       function CanBuildShipAt(aDock : Integer) : Boolean;
       function IsBuildResuming(aDock : Integer) : Boolean;
       function GetDockToWorkOn : Integer;
+      function GetShipCost(aShip : TKMUnitType) : TKMWarePlan;
       function GetWarePlan(aDock : Integer) : TKMWarePlan;
       function GetShipStages(aDock : Integer) : Integer;
       function GetRemainingShipStages(aDock : Integer) : Integer;
@@ -72,6 +73,7 @@ type
       function HitTest(X, Y: Integer): Boolean; override;
 
       procedure Paint; Override;
+
   end;
 
 implementation
@@ -379,13 +381,9 @@ begin
     Result := TryPickDock(False);
 end;
 
-function TKMHouseShipyard.GetWarePlan(aDock : Integer) : TKMWarePlan;
+function TKMHouseShipyard.GetShipCost(aShip: TKMUnitType): TKMWarePlan;
 begin
-  Result.Reset;
-  Assert(aDock >= 0, 'TKMHouseShipyard.GetWarePlan');
-  If fDocks[aDock].Started or fDocks[aDock].WaresConsumed then
-    Exit;
-  case fDocks[aDock].CurrentShip of
+  case aShip of
     utBoat :  begin
                 Result.AddWare(wtLog, 3);
                 Result.AddWare(wtSkin, 1);
@@ -411,8 +409,18 @@ begin
                       if CheckWareIn(wtBitinE) >= 3 then
                         Result.AddWare(wtBitinE, 3);
                     end;
+
   end;
 
+end;
+
+function TKMHouseShipyard.GetWarePlan(aDock : Integer) : TKMWarePlan;
+begin
+  Result.Reset;
+  Assert(aDock >= 0, 'TKMHouseShipyard.GetWarePlan');
+  If fDocks[aDock].Started or fDocks[aDock].WaresConsumed then
+    Exit;
+  Result := GetShipCost(fDocks[aDock].CurrentShip);
 end;
 
 function TKMHouseShipyard.GetShipStages(aDock: Integer): Integer;
