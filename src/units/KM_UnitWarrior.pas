@@ -425,17 +425,22 @@ type
     function GetCanCollectWares : Boolean;
   protected
   public
+    const MAX_OUT_WARES = 50;
     function TotalWaresCount : Word;
     procedure AddWare(aWare : TKMWareType; aCount : Integer);overload;
     function AddWare(aWare : TKMWarePlanSingle) : Boolean;overload;
     procedure AddVWare(aObject : Word);
     property Wares : TKMWarePlan read fWares;
 
+    function IsFull : Boolean;
+
     procedure UnloadWares;
     procedure UnloadWare(aShipyard : TKMHouse);
     property CanCollectWares : Boolean read GetCanCollectWares write SetCollectingWares;
     property CanCollectFish : Boolean read fCollectFish write SetCollectingFish;
     procedure OrderAmmo(aForceOrder : Boolean = false); override;
+
+
 
     constructor Create(aID: Cardinal; aUnitType: TKMUnitType; const aLoc: TKMPointDir; aOwner: TKMHandID; aInHouse: TKMHouse);
     constructor Load(LoadStream: TKMemoryStream); override;
@@ -1723,7 +1728,12 @@ end;
 function TKMUnitWarrior.CanInterruptAction(aForced: Boolean = True): Boolean;
 begin
   if (Action is TKMUnitActionStay)
-    and ( (Action.ActionType = uaStay) or (Task is TKMTaskAttackHouse) or (Task is TKMTaskShootAtSpot)) then
+    and ( (Action.ActionType = uaStay)
+          or (Task is TKMTaskAttackHouse)
+          or (Task is TKMTaskShootAtSpot)
+          or (Task is TKMTaskCollectWares)
+          or (Task is TKMTaskUnloadWares)
+          ) then
       Result := True //We can abandon attack house if the action is stay
   else
     Result := Action.CanBeInterrupted(aForced);
@@ -4005,7 +4015,7 @@ begin
   if aWare.W <> wtFish then
     for I := 1 to aWare.C do
       TakeBolt;
-  if TotalWaresCount > 20 then
+  if IsFull then
     SetCollectingWares(false);
 end;
 
@@ -4040,20 +4050,15 @@ begin
     Exit;
   if fCollectWares or fCollectFish and not (fTask is TKMTaskCollectWares) then
   begin
-    if TotalWaresCount < 20 then
+    if not IsFull then
       if not (fTask is TKMTaskCollectWares) then
         fNextOrder := woBoatCollectWares;
-      {
-      begin
-        CancelTask;
-        fTask := TKMTaskCollectWares.Create(self);
-      end;}
   end;
 end;
 
 procedure TKMUnitWarriorBoat.SetCollectingWares(aValue: Boolean);
 begin
-  if TotalWaresCount >= 20 then
+  if IsFull then
   begin
     fCollectWares := false;
     fCollectFish := false;
@@ -4067,7 +4072,7 @@ end;
 
 procedure TKMUnitWarriorBoat.SetCollectingFish(aValue: Boolean);
 begin
-  if TotalWaresCount >= 20 then
+  if IsFull then
   begin
     fCollectWares := false;
     fCollectFish := false;
@@ -4081,6 +4086,11 @@ end;
 function TKMUnitWarriorBoat.GetCanCollectWares: Boolean;
 begin
   Result := fCollectWares and (fBoltCount > 0);
+end;
+
+function TKMUnitWarriorBoat.IsFull: Boolean;
+begin
+  Result := TotalWaresCount >= MAX_OUT_WARES;
 end;
 
 procedure TKMUnitWarriorBoat.UnloadWares;
@@ -4151,7 +4161,10 @@ begin
     //fIdleTimer := Min(fIdleTimer + 1, high(byte));
 
     if fIdleTimer mod 50 = 0 then
-      StartCollectingWares;
+      If IsFull then
+        UnloadWares
+      else
+        StartCollectingWares;
 
 
   end

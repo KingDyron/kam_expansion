@@ -4514,7 +4514,7 @@ begin
   P := aList[KaMRandom(length(aList), 'TKMTerrain.FindWareForBoat 1')];
 
 
-  C := KamRandom(5, 'TKMTerrain.FindWareForBoat 2') + 1;
+  C := KamRandom(10, 'TKMTerrain.FindWareForBoat 2') + 1;
   Result.C := 0;
   //if anything found, decrease it's deposits
   if (Land^[P.Y, P.X].Ware.C > 0) and (TKMWareType(Land^[P.Y, P.X].Ware.W) <> wtNone) then
