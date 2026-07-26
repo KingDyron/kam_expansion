@@ -886,19 +886,30 @@ end;
 
 procedure TKMGUIGameUnit.Boat_Clicked(Sender: TObject);
 var U : TKMUnit;
+  I : Integer;
 begin
   if gMySpectator.Selected is TKMUnitGroup then
   begin
     U := TKMUnitGroup(gMySpectator.Selected).SelectedUnit;
     If U.UnitType = utBoat then
-      If Sender = Button_Boat_Fish then
-        gGame.GameInputProcess.CmdUnit(gicBoatCollectFish, U)
-      else
-      If Sender = Button_Boat_Wares then
-        gGame.GameInputProcess.CmdUnit(gicBoatCollectWares, U)
-      else
-      If Sender = Button_Boat_Unload then
-        gGame.GameInputProcess.CmdUnit(gicBoatUnloadWares, U);
+    begin
+      for I := 0 to TKMUnitGroup(gMySpectator.Selected).Count - 1 do
+      begin
+        U := TKMUnitGroup(gMySpectator.Selected).Members[I];
+        If U.UnitType <> utBoat then
+          Continue;
+
+        If Sender = Button_Boat_Fish then
+          gGame.GameInputProcess.CmdUnit(gicBoatCollectFish, U)
+        else
+        If Sender = Button_Boat_Wares then
+          gGame.GameInputProcess.CmdUnit(gicBoatCollectWares, U)
+        else
+        If Sender = Button_Boat_Unload then
+          gGame.GameInputProcess.CmdUnit(gicBoatUnloadWares, U);
+      end;
+
+    end;
   end;
 
 

@@ -425,7 +425,7 @@ type
     function GetCanCollectWares : Boolean;
   protected
   public
-    const MAX_OUT_WARES = 50;
+    const MAX_OUT_WARES = 30;
     function TotalWaresCount : Word;
     procedure AddWare(aWare : TKMWareType; aCount : Integer);overload;
     function AddWare(aWare : TKMWarePlanSingle) : Boolean;overload;
