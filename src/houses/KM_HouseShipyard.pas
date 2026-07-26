@@ -383,6 +383,7 @@ end;
 
 function TKMHouseShipyard.GetShipCost(aShip: TKMUnitType): TKMWarePlan;
 begin
+  Result.Reset;
   case aShip of
     utBoat :  begin
                 Result.AddWare(wtLog, 3);
