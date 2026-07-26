@@ -106,6 +106,7 @@ begin
                                                   Button_Shipyard.Top + 30 + DOCKS_POSITIONS[I].Y * 30, 30, 30, 0);
     Button_Dock[I].OnClickShift := ButtonClickShift;
     Button_Dock[I].OnMouseWheel := ButtonWheel;
+    Button_Dock[I].Hint := gResTexts[2377];
   end;
 
   Wares_Out := TKMWaresButtonsMulti.Create(self, 0, 250, Width, 60);
@@ -187,6 +188,7 @@ begin
       Ship_Bevel[I].Top := Wares_Out.Bottom + J*60;
       Ship_Image[I].Top := Wares_Out.Bottom + 15 + J*60;
       Ship_Cost[I].Top := Wares_Out.Bottom + J*60;
+      Ship_Cost[I].WarePlan.Reset;
       Ship_Cost[I].WarePlan := Shipyard.GetShipCost(SHIPYARD_ORDER[I + 1]);
       for K := 0 to Ship_Cost[I].WarePlan.Count - 1 do
         If Shipyard.CheckWareIn(Ship_Cost[I].WarePlan[K].W) >= Ship_Cost[I].WarePlan[K].C then
