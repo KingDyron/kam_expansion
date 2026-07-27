@@ -68,25 +68,40 @@ begin
 end;
 
 procedure TKMMapEdPlayerBlockUnit.CreateButtons(var aTop: Integer; aCaption : String; var aButtons: TKMButtonFlatBlockArray; aUnitArr: TKMUnitTypeArray);
-var I : Integer;
+
+  function GetValidUnitsCount : Integer;
+  var I : Integer;
+  begin
+    Result := 0;
+    for I := 0 to High(aUnitArr) do
+      If aUnitArr[I] in UNITS_VALID then
+        Inc(Result);
+  end;
+
+var I, J : Integer;
   UT : TKMUnitType;
 begin
-  SetLength(aButtons, length(aUnitArr));
+
+  SetLength(aButtons, GetValidUnitsCount);
 
   TKMLabel.Create(Panel_BlockUnit, 9, aTop, Panel_BlockUnit.Width - 9, 0, aCaption, fntMetal, taLeft);
   aTop := aTop + 17;
-  for I := 0 to High(aButtons) do
+  J := 0;
+  for I := 0 to High(aUnitArr) do
   begin
     UT := aUnitArr[I];
-    aButtons[I] := TKMButtonFlatBlock.Create(Panel_BlockUnit, 9 + I mod 5 * 37, aTop + I div 5 * 37,
+    If not (UT in UNITS_VALID) then
+      Continue;
+    aButtons[J] := TKMButtonFlatBlock.Create(Panel_BlockUnit, 9 + J mod 5 * 37, aTop + J div 5 * 37,
                                           33, 33,
                                           gRes.Units[UT].GUIIcon, rxGui);
-    aButtons[I].Hint := gRes.Units[UT].GUIName;
-    aButtons[I].Tag := Byte(UT);
-    aButtons[I].Tag2 := BUTTON_BLOCK_Unit_TAG_2;
-    aButtons[I].Tag3 := fCounter;
-    aButtons[I].OnMouseDown := Player_BlockUnitClick;
-    aButtons[I].OnMouseOver := Player_Block_Over;
+    aButtons[J].Hint := gRes.Units[UT].GUIName;
+    aButtons[J].Tag := Byte(UT);
+    aButtons[J].Tag2 := BUTTON_BLOCK_Unit_TAG_2;
+    aButtons[J].Tag3 := fCounter;
+    aButtons[J].OnMouseDown := Player_BlockUnitClick;
+    aButtons[J].OnMouseOver := Player_Block_Over;
+    Inc(J);
   end;
   aTop := aButtons[high(aButtons)].Bottom + 3;
   Inc(fCounter);
