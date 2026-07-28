@@ -9772,8 +9772,6 @@ var aStage : Integer;
   FA : Byte;
   GT : TKMGrainType;
 begin
-  if Land[aLoc.Y, aLoc.X].TileOverlay2.StopsGrowing then
-    Exit;
 
   FA := Land[aLoc.Y, aLoc.X].FieldAge;
   GT := Land[aLoc.Y,aLoc.X].GrainType;
@@ -9903,6 +9901,11 @@ begin
 
       //Reduce JamMeter over time
       Land^[I,K].IncJamMeter(-3);
+      if Land[I, K].TileOverlay2.StopsGrowing then
+      begin
+        Inc(A, TERRAIN_PACE);
+        Continue;
+      end;
 
       if InRange(Land^[I,K].FieldAge, 1, CORN_AGE_DEAD-1) then
         IncFieldAge(KMPoint(K, I));

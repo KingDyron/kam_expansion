@@ -1057,7 +1057,7 @@
 	{"TileID": 685, "IsFirstLayer": true, "Visible": true, "ViewInGame": true, "Ware" : 0, "WareCount" : 0, "Function" : 0, "CanTree" : false, "Hint" : 0},    
 	{"TileID": 686, "IsFirstLayer": true, "Visible": true, "ViewInGame": true, "Ware" : 0, "WareCount" : 0, "Function" : 1, "CanTree" : false, "Hint" : 0},
 	
-	{"TileID": 689, "IsFirstLayer": true, "Visible": true, "ViewInGame": false, "Ware" : 0, "WareCount" : 0, "Function" : 6, "CanTree" : true, "Hint" : 2110},
+	{"TileID": 689, "IsFirstLayer": false, "Visible": true, "ViewInGame": false, "Ware" : 0, "WareCount" : 0, "Function" : 6, "CanTree" : true, "Hint" : 2110},
     
 	{"TileID": 694, "IsFirstLayer": false, "Visible": true, "ViewInGame": false, "Ware" : 4, "WareCount" : 5, "Function" : 0, "CanTree" : true, "Hint" : 0},  	
 	{"TileID": 695, "IsFirstLayer": false, "Visible": true, "ViewInGame": false, "Ware" : 3, "WareCount" : 5, "Function" : 0, "CanTree" : true, "Hint" : 0},    
