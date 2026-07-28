@@ -1177,8 +1177,8 @@ begin
     RegisterMethodCheck(c, 'procedure  MoveCamera(aPlayer, aX, aY : Integer)');
     RegisterMethodCheck(c, 'procedure  ResetZoom(aPlayer: Integer)');
     RegisterMethodCheck(c, 'procedure  UnitSetFlagColor(aUnitID: Integer; aColor: Cardinal)');
-    RegisterMethodCheck(c, 'procedure  SpecialAnimAdd(aX, aY : Single; aAnim : array of Integer; aLoopTimes : Byte)');
-    RegisterMethodCheck(c, 'procedure  SpecialAnimAddFront(aX, aY : Single; aAnim : array of Integer; aLoopTimes : Byte)');
+    RegisterMethodCheck(c, 'procedure  SpecialAnimAdd(aX, aY : Single; aAnim : array of Integer; aLoopTimes : Integer)');
+    RegisterMethodCheck(c, 'procedure  SpecialAnimAddFront(aX, aY : Single; aAnim : array of Integer; aLoopTimes : Integer)');
     RegisterMethodCheck(c, 'procedure  StructureUnlock(aHand, aStructure: Integer; aUnlocked : Boolean)');
     RegisterMethodCheck(c, 'procedure  UnitSetRage(aUnitID: Integer; aDuration: Integer)');
     RegisterMethodCheck(c, 'procedure  UnitSetStats(aUnitID: Integer; aStats: TKMUnitStats)');

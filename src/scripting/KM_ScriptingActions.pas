@@ -298,8 +298,8 @@ type
 
     procedure ResetZoom(aPlayer: Integer);
 
-    procedure SpecialAnimAdd(aX, aY : Single; aAnim :  array of Integer; aLoopTimes : Byte);
-    procedure SpecialAnimAddFront(aX, aY : Single; aAnim :  array of Integer; aLoopTimes : Byte);
+    procedure SpecialAnimAdd(aX, aY : Single; aAnim :  array of Integer; aLoopTimes : Integer);
+    procedure SpecialAnimAddFront(aX, aY : Single; aAnim :  array of Integer; aLoopTimes : Integer);
     procedure StructureUnlock(aHand, aStructure: Integer; aUnlocked : Boolean);
 
     procedure ShowMsgScroll(aHand: Shortint; const aText: AnsiString; aScrollType : Byte);
@@ -5804,7 +5804,7 @@ begin
   end;
 end;
 
-procedure TKMScriptActions.SpecialAnimAdd(aX, aY : Single; aAnim : array of Integer; aLoopTimes : Byte);
+procedure TKMScriptActions.SpecialAnimAdd(aX, aY : Single; aAnim : array of Integer; aLoopTimes : Integer);
 begin
   try
     gSpecAnim.Add(Anim(0, 0, aAnim), KMPointf(aX, aY), aLoopTimes);
@@ -5814,7 +5814,7 @@ begin
   end;
 end;
 
-procedure TKMScriptActions.SpecialAnimAddFront(aX, aY : Single; aAnim :  array of Integer; aLoopTimes : Byte);
+procedure TKMScriptActions.SpecialAnimAddFront(aX, aY : Single; aAnim :  array of Integer; aLoopTimes : Integer);
 begin
   try
     gSpecAnim.Add(Anim(0, 0, aAnim), KMPointf(aX, aY), aLoopTimes, rxTrees, true);
