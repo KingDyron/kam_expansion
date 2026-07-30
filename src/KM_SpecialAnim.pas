@@ -208,7 +208,7 @@ begin
       if Visible and (LoopTimes >= 5) then
       begin
         SaveStream.Write(Pos);
-        SaveStream.Write(Anim, SizeOf(Anim));
+        Anim.SaveToStream(SaveStream);
         SaveStream.Write(AnimStep);
         SaveStream.Write(InFront);
         SaveStream.Write(AlphaStep);
@@ -223,7 +223,7 @@ end;
 procedure TKMSpecialAnims.Load(LoadStream: TKMemoryStream);
 var I, newCount : Integer;
   aLoc : TKMPointF;
-  aAnim : TKMAnimLoop;
+  aAnim : TKMAnimation;
   aAnimStep : Byte;
   aLoopTimes : Integer;
   aInFront, aFirstPaint : Boolean;
@@ -235,7 +235,7 @@ begin
   for I := 0 to newCount - 1 do
   begin
     LoadStream.Read(aLoc);
-    LoadStream.Read(aAnim, SizeOf(aAnim));
+    aAnim.LoadFromStream(LoadStream);
     LoadStream.Read(aAnimStep);
     LoadStream.Read(aInFront);
     LoadStream.Read(aAlphaStep);
