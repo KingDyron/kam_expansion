@@ -318,6 +318,7 @@ type
       procedure Save(SaveStream: TKMemoryStream); override;
       property IsHealing : Boolean read fIsHealing;
       procedure CheckHealing;
+      procedure AIAddHealingInGroup;
       function UpdateState : Boolean; override;
   end;
 
@@ -3689,6 +3690,27 @@ begin
   SaveStream.Write(fIsHealing);
 end;
 
+procedure TKMUnitWarriorMedic.AIAddHealingInGroup;
+var arr : TPointerArray;
+  I : integer;
+  U : TKMUnit;
+begin
+  SetLength(arr, 0);
+  gTerrain.UnitsHitAllTestF(PositionF, 5, arr);
+  for I := 0 to High(arr) do
+  begin
+    U := TKMUnit(arr[I]);
+    If U.IsDeadOrDying or (U = self) or not U.Visible
+    or (U.Owner <> Owner) then
+      Continue;
+
+    U.AddEffect(uetHealingMedic, 150);
+    U.Heal(1);
+  end;
+
+
+end;
+
 procedure TKMUnitWarriorMedic.CheckHealing;
 var arr : TPointerArray;
   I : integer;
@@ -3717,6 +3739,13 @@ end;
 function TKMUnitWarriorMedic.UpdateState: Boolean;
 begin
   Result := inherited;
+  If gHands[Owner].IsComputer then
+  begin
+    If fTicker mod 150 = 0 then
+      AIAddHealingInGroup;
+    Exit;
+  end;
+
   If not IsIdle then
     fHealingTick := 0;
 
