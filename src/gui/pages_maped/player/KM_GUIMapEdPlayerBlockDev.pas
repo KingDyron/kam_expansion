@@ -235,7 +235,7 @@ var dtt : TKMDevelopmentTreeType;
   var I : Integer;
   begin
     unlockedList.Clear;
-    CheckNext(aType, Tree[aType].Button_Tree, 0, locks.DevelopmentLock[aType, 0]);
+    CheckNext(aType, Tree[aType].Button_Tree, 0, locks.DevelopmentLock[aType, Tree[aType].Button_Tree.Dev.ID]);
     for I := 0 to unlockedList.Count - 1 do
       UnlockPrevious(aType, unlockedList[I]);
 
