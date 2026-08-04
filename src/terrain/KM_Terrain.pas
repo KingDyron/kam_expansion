@@ -389,6 +389,7 @@ type
     function FindWalkableSpot(aLoc : TKMPoint) : TKMPoint;
     function IsTileNearWater(aLoc : TKMPoint) : Boolean;
     function IsTileNearLand(aLoc : TKMPoint) : Boolean;
+    function IsTileNearLandForBoat(aLoc : TKMPoint) : Boolean;
 
     function ScriptTrySetTile(X, Y, aType, aRot: Integer): Boolean;
     function ScriptTrySetTileHeight(X, Y, aHeight: Integer): Boolean;
@@ -3239,6 +3240,16 @@ begin
         Exit(true);
 end;
 
+function TKMTerrain.IsTileNearLandForBoat(aLoc: TKMPoint): Boolean;
+var I, K : integer;
+begin
+  Result := false;
+  for I := Max(aLoc.X - 1, 0) to Min(aLoc.X + 1, fMapX - 1) do
+    for K := Max(aLoc.Y - 1, 0) to Min(aLoc.Y + 1, fMapY - 1) do
+      if CheckPassability(I, K, tpWalk) or House(I,K).IsValid(htShipyard, false, true) then
+        Exit(true);
+end;
+
 function TKMTerrain.ObjectIsChopableTree(X,Y: Word): Boolean;
 begin
   Result := KM_ResMapElements.ObjectIsChoppableTree(Land^[Y,X].Obj);
@@ -4503,7 +4514,7 @@ begin
   P := aList[KaMRandom(length(aList), 'TKMTerrain.FindWareForBoat 1')];
 
 
-  C := KamRandom(5, 'TKMTerrain.FindWareForBoat 2') + 1;
+  C := KamRandom(10, 'TKMTerrain.FindWareForBoat 2') + 1;
   Result.C := 0;
   //if anything found, decrease it's deposits
   if (Land^[P.Y, P.X].Ware.C > 0) and (TKMWareType(Land^[P.Y, P.X].Ware.W) <> wtNone) then

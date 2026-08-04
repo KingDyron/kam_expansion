@@ -80,7 +80,19 @@ end;
 
 
 destructor TKMTaskMining.Destroy;
+var
+  dockIdx: Integer;
 begin
+  if (fWorkPlan <> nil)
+    and (fWorkPlan.GatheringScript = gsShipyard)
+    and (fUnit <> nil)
+    and (fUnit.Home is TKMHouseShipyard)
+    and not fUnit.Home.IsDestroyed then
+  begin
+    dockIdx := fWorkPlan.TMPInt;
+    TKMHouseShipyard(fUnit.Home).ReleaseDockIfIncomplete(dockIdx);
+  end;
+
   // Make sure we don't abandon and leave our house with "working" animations
   if (fUnit <> nil)
     and not fUnit.Home.IsDestroyed
@@ -293,7 +305,7 @@ var
   D: TKMDirection;
   TimeToWork, StillFrame: Integer;
   actWalkFrom: TKMUnitActionType;
-  ResAcquired, hasRes: Boolean;
+  ResAcquired, hasRes, shipyardResume: Boolean;
   addPercentage, I, K, L, tmp : integer;
 begin
   Result := trTaskContinues;
@@ -547,22 +559,32 @@ begin
             Home.SetState(hstWork);
             if not (WorkPlan.GatheringScript in [gsMerchant]) then
             begin
-              hasRes := true;
-              for I := 0 to high(WorkPlan.Res) do
-                if WorkPlan.Res[I].W <> wtNone then
-                  if Home.CheckWareIn(WorkPlan.Res[I].W) < WorkPlan.Res[I].C then
-                    hasRes := false;
+              if (WorkPlan.GatheringScript = gsShipyard)
+                and TKMHouseShipyard(Home).IsBuildResuming(WorkPlan.TMPInt) then
+                hasRes := True
+              else
+              begin
+                hasRes := true;
+                for I := 0 to high(WorkPlan.Res) do
+                  if WorkPlan.Res[I].W <> wtNone then
+                    if Home.CheckWareIn(WorkPlan.Res[I].W) < WorkPlan.Res[I].C then
+                      hasRes := false;
+              end;
 
               if not hasRes then
                 Result := trTaskDone
               else
               begin
-                for I := 0 to high(WorkPlan.Res) do
+                if not ((WorkPlan.GatheringScript = gsShipyard)
+                  and TKMHouseShipyard(Home).IsBuildResuming(WorkPlan.TMPInt)) then
                 begin
-                  if WorkPlan.Res[I].W <> wtNone then
-                    Home.WareTakeFromIn(WorkPlan.Res[I].W, WorkPlan.Res[I].C);
+                  for I := 0 to high(WorkPlan.Res) do
+                  begin
+                    if WorkPlan.Res[I].W <> wtNone then
+                      Home.WareTakeFromIn(WorkPlan.Res[I].W, WorkPlan.Res[I].C);
 
-                  gHands[fUnit.Owner].Stats.WareConsumed(WorkPlan.Res[I].W, WorkPlan.Res[I].C);
+                    gHands[fUnit.Owner].Stats.WareConsumed(WorkPlan.Res[I].W, WorkPlan.Res[I].C);
+                  end;
                 end;
                 CalculateWorkingTime(Home);
                 if Home is TKMHouseProdThatch then
@@ -574,7 +596,17 @@ begin
               end;
             end;
             if WorkPlan.GatheringScript = gsShipyard then
+            begin
+              if TKMHouseShipyard(Home).IsDockStarted(WorkPlan.TMPInt) then
+              begin
+                Result := trTaskDone;
+                Exit;
+              end;
+              shipyardResume := TKMHouseShipyard(Home).IsBuildResuming(WorkPlan.TMPInt);
               TKMHouseShipyard(Home).StartBuildingShip(WorkPlan.TMPInt);
+              if not shipyardResume then
+                TKMHouseShipyard(Home).MarkWaresConsumed(WorkPlan.TMPInt);
+            end;
 
             //clay miner brought back clay
             if (WorkPlan.GatheringScript = gsClayMiner) and (WorkPlan.TMPInt = 2) then

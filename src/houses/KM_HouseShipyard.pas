@@ -14,7 +14,7 @@ type
     CurrentShip, NextShip : TKMUnitType;
     ShipPhase : Byte;
     Materials : TKMWarePlan;
-    Started, DoRender : Boolean;
+    Started, WaresConsumed, DoRender : Boolean;
   end;
 
   TKMShipyardDockWithLoc = record
@@ -53,20 +53,27 @@ type
       procedure IncSketchPhase(aDock : Integer);
 
       function CanBuildShipAt(aDock : Integer) : Boolean;
+      function IsBuildResuming(aDock : Integer) : Boolean;
       function GetDockToWorkOn : Integer;
+      function GetShipCost(aShip : TKMUnitType) : TKMWarePlan;
       function GetWarePlan(aDock : Integer) : TKMWarePlan;
       function GetShipStages(aDock : Integer) : Integer;
+      function GetRemainingShipStages(aDock : Integer) : Integer;
 
       function GetDock(aIndex : Integer) : TKMShipyardDockWithLoc;
       function DocksCount: Integer;
       procedure DigDock(aIndex : Integer);
       procedure StartBuildingShip(aIndex : Integer);
       procedure CancelBuildingShip(aIndex : Integer);
+      procedure MarkWaresConsumed(aIndex : Integer);
+      procedure ReleaseDockIfIncomplete(aIndex : Integer);
+      function IsDockStarted(aDock : Integer) : Boolean;
 
 
       function HitTest(X, Y: Integer): Boolean; override;
 
       procedure Paint; Override;
+
   end;
 
 implementation
@@ -89,6 +96,10 @@ begin
   gTerrain.GetShipyardDirCells(PosX + gRes.Houses[aHouseType].EntranceOffsetX, PosY + gRes.Houses[aHouseType].EntranceOffsetY, fOutCells);
   Inherited;
   ResetDocks;
+  SetAcceptWareIn(wtBitinE, 10);
+  SetAcceptWareIn(wtSteelE, 10);
+  SetAcceptWareIn(wtAxe, 10);
+  SetAcceptWareIn(wtBolt, 10);
 end;
 
 destructor TKMHouseShipyard.Destroy;
@@ -109,6 +120,18 @@ begin
 
   for I := 0 to fOutCells.Count - 1 do
     LoadStream.Read(fDocks[I], SizeOf(fDocks[I]) );
+
+  for I := 0 to fOutCells.Count - 1 do
+  begin
+    // Resume partial builds after load; release orphaned Started locks from old saves
+    if fDocks[I].ShipPhase > 0 then
+      fDocks[I].WaresConsumed := True;
+    if fDocks[I].Started then
+    begin
+      fDocks[I].WaresConsumed := True;
+      fDocks[I].Started := False;
+    end;
+  end;
 
 end;
 
@@ -176,6 +199,8 @@ begin
     fDocks[I].NextShip := utNone;
     fDocks[I].ShipPhase := 0;
     fDocks[I].Materials.Reset;
+    fDocks[I].Started := False;
+    fDocks[I].WaresConsumed := False;
     fDocks[I].DoRender := fBuildState = hbsDone;
   end;
 end;
@@ -207,6 +232,34 @@ end;
 procedure TKMHouseShipyard.CancelBuildingShip(aIndex: Integer);
 begin
   fDocks[aIndex].Started := false;
+end;
+
+
+procedure TKMHouseShipyard.MarkWaresConsumed(aIndex: Integer);
+begin
+  fDocks[aIndex].WaresConsumed := True;
+end;
+
+
+procedure TKMHouseShipyard.ReleaseDockIfIncomplete(aIndex: Integer);
+begin
+  if not InRange(aIndex, 0, High(fDocks)) then
+    Exit;
+  if not fDocks[aIndex].Started then
+    Exit;
+  CancelBuildingShip(aIndex);
+end;
+
+
+function TKMHouseShipyard.IsBuildResuming(aDock: Integer): Boolean;
+begin
+  Result := fDocks[aDock].WaresConsumed and not fDocks[aDock].Started;
+end;
+
+
+function TKMHouseShipyard.IsDockStarted(aDock: Integer): Boolean;
+begin
+  Result := fDocks[aDock].Started;
 end;
 
 function TKMHouseShipyard.HitTest(X: Integer; Y: Integer): Boolean;
@@ -252,6 +305,7 @@ begin
   fDocks[aDock].ShipPhase := 0;
   fDocks[aDock].CurrentShip := fDocks[aDock].NextShip;
   fDocks[aDock].Started := false;
+  fDocks[aDock].WaresConsumed := false;
 
   ProduceFestivalPoints(fptWarfare, 3);
 
@@ -281,38 +335,60 @@ begin
   SelectNext;
   while not gHands[Owner].Locks.UnitUnlocked(fDocks[aDock].NextShip, HouseType) do
     SelectNext;
-  If (fDocks[aDock].CurrentShip <> fDocks[aDock].NextShip) and not fDocks[aDock].Started then
+  If (fDocks[aDock].CurrentShip <> fDocks[aDock].NextShip)
+    and not fDocks[aDock].Started
+    and not fDocks[aDock].WaresConsumed then
     fDocks[aDock].CurrentShip := fDocks[aDock].NextShip;
 end;
 
 function TKMHouseShipyard.CanBuildShipAt(aDock: Integer): Boolean;
 begin
-  Result := (fDocks[aDock].CurrentShip <> utNone) and not fDocks[aDock].Started and HasWaresIn( GetWarePlan(aDock) );
+  if (fDocks[aDock].CurrentShip = utNone) or fDocks[aDock].Started then
+    Exit(False);
+
+  if fDocks[aDock].WaresConsumed then
+    Exit(True);
+
+  Result := HasWaresIn(GetWarePlan(aDock));
 end;
 
 function TKMHouseShipyard.GetDockToWorkOn: Integer;
-var I, dock : Integer;
-begin
-  Result := -1;
-  for I := 1 to fOutCells.Count do
+
+  function TryPickDock(aPausedOnly: Boolean): Integer;
+  var
+    I, dock: Integer;
   begin
-    dock := ((LastOrderProduced + I) mod fOutCells.Count);
-    If not CanBuildShipAt(dock) then
-      Continue;
-    LastOrderProduced := dock;
-    Result := LastOrderProduced;
-    Break;
+    Result := -1;
+    for I := 1 to fOutCells.Count do
+    begin
+      dock := (LastOrderProduced + I) mod fOutCells.Count;
+      if aPausedOnly then
+      begin
+        if not IsBuildResuming(dock) then
+          Continue;
+      end
+      else
+      begin
+        if IsBuildResuming(dock) or not CanBuildShipAt(dock) then
+          Continue;
+      end;
+      LastOrderProduced := dock;
+      Result := dock;
+      Break;
+    end;
   end;
 
+begin
+  // Prioritize interrupted builds so stuck docks get finished first
+  Result := TryPickDock(True);
+  if Result = -1 then
+    Result := TryPickDock(False);
 end;
 
-function TKMHouseShipyard.GetWarePlan(aDock : Integer) : TKMWarePlan;
+function TKMHouseShipyard.GetShipCost(aShip: TKMUnitType): TKMWarePlan;
 begin
   Result.Reset;
-  Assert(aDock >= 0, 'TKMHouseShipyard.GetWarePlan');
-  If fDocks[aDock].Started then
-    Exit;
-  case fDocks[aDock].CurrentShip of
+  case aShip of
     utBoat :  begin
                 Result.AddWare(wtLog, 3);
                 Result.AddWare(wtSkin, 1);
@@ -338,13 +414,29 @@ begin
                       if CheckWareIn(wtBitinE) >= 3 then
                         Result.AddWare(wtBitinE, 3);
                     end;
+
   end;
 
+end;
+
+function TKMHouseShipyard.GetWarePlan(aDock : Integer) : TKMWarePlan;
+begin
+  Result.Reset;
+  Assert(aDock >= 0, 'TKMHouseShipyard.GetWarePlan');
+  If fDocks[aDock].Started or fDocks[aDock].WaresConsumed then
+    Exit;
+  Result := GetShipCost(fDocks[aDock].CurrentShip);
 end;
 
 function TKMHouseShipyard.GetShipStages(aDock: Integer): Integer;
 begin
   Result := GetPhasesCount(fDocks[aDock].CurrentShip);
+end;
+
+
+function TKMHouseShipyard.GetRemainingShipStages(aDock: Integer): Integer;
+begin
+  Result := GetPhasesCount(fDocks[aDock].CurrentShip) - fDocks[aDock].ShipPhase + 1;
 end;
 
 

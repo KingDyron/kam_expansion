@@ -82,7 +82,7 @@ begin
   Result := (S = nil)
             or S.IsDeadOrDying
             or not (S.CanCollectWares or S.CanCollectFish)
-            or (S.TotalWaresCount > 20)
+            or (S.IsFull)
             or not (S.NextOrder in [woNone, woBoatCollectWares]);
 
 end;
@@ -132,7 +132,7 @@ begin
               TKMUnitWarriorBoat(fUnit).AddVWare(gTerrain.FindVWareForBoat(Position,
                                                                           SPec.MiningRange));
 
-            SetActionLockedStay(10, uaWalk);
+            SetActionLockedStay(20, uaWalk);
             Thought := thQuest;
           end;
       5:  begin
@@ -187,7 +187,7 @@ begin
   Result := (fShipyard = nil)
             or (fShipyard.IsDestroyed)
             or (TKMUnitWarriorBoat(fUnit).TotalWaresCount = 0)
-            or not gTerrain.IsTileNearLand(fUnit.Position);
+            or not gTerrain.IsTileNearLandForBoat(fUnit.Position);
 end;
 
 function TKMTaskUnloadWares.Execute: TKMTaskResult;

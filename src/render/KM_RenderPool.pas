@@ -1594,7 +1594,7 @@ begin
   groundStone := rxData.Pivot[picStone].Y + rxData.Size[picStone].Y;
 
   gX := aLoc.X + (rxData.Pivot[picWood].X + rxData.Size[picWood].X / 2) / CELL_SIZE_PX - 1;
-  gY := aLoc.Y + Max(groundWood, groundStone) / CELL_SIZE_PX - 1.5;
+  gY := aLoc.Y + gRes.Houses[aHouse].EntranceOffsetY + Max(groundWood, groundStone) / CELL_SIZE_PX - 1.5;
 
   // If it's fully built we can render without alpha
   if (aWoodStep = 1) and (aStoneStep = 1) then

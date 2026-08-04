@@ -2167,6 +2167,8 @@ begin
 
                       end;
 
+    htShipyard :      Panel_Shipyard.Show(fHouse, 76);
+
     htStall:          begin
                         for I := 0 to Panel_House_Common.ChildCount - 1 do
                           Panel_House_Common.Childs[I].Hide;
@@ -2401,7 +2403,6 @@ begin
           htForest : Panel_Forest.Show(fHouse, base + line * 25 + 76);
           htArena : Panel_Arena.Show(fHouse, base + 76);
           htSiegeTower : Panel_SiegeTower.Show(fHouse, base + 76);
-          htShipyard : Panel_Shipyard.Show(fHouse, base + line * 25 + 76);
       end;
 
 
