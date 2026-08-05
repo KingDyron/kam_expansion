@@ -959,13 +959,13 @@ begin
     fnHouse:  Result := gHands[fOwner].CanAddHousePlanAI(X, Y, HouseType, false);
 
     fnStone:  Result := (gTerrain.TileIsStone(X, Max(Y-1, 1)) >= 1)
-                         and gHands[fOwner].CanAddHousePlanAI(X, Y, HouseType, false);
+                         {and gHands[fOwner].CanAddHousePlanAI(X, Y, htQuarry, false)};
 
-    fnCoal:   Result := (gTerrain.TileIsCoal(X, Y) > 1)
+    fnCoal:   Result := (gTerrain.TileIsCoal(X, Y) >= 1)
                          and gHands[fOwner].CanAddHousePlanAI(X, Y, htCoalMine, false);
 
     fnClay:   Result := (gTerrain.TileIsClay(X, Y) >= 1)
-                         and gHands[fOwner].CanAddHousePlanAI(X, Y, htPottery, false);
+                         {and gHands[fOwner].CanAddHousePlanAI(X, Y, htPottery, false)};
     fnCollect:  Result := gTerrain.TileHasCollectorsGoods(X, Y)
                          and gHands[fOwner].CanAddHousePlanAI(X, Y, htCollectors, false);
 
@@ -1003,7 +1003,7 @@ begin
               end;
     fnWater:  begin
                 Result := gTerrain.TileHasWater(X, Y)
-                         and gHands[fOwner].CanAddHousePlanAI(X, Y, HouseType, false);
+                         and gHands[fOwner].CanAddHousePlanAI(X, Y, htFishermans, false);
               end;
 
     else      Result := False;
