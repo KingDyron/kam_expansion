@@ -124,20 +124,28 @@ begin
     with Button_Unit[I] do
     begin
       TexID := gRes.Units[W.UnitType].GuiIcon;
-      minC := W.MinAmmoCountToOrder;
-      curC := W.BoltCount;
+      If W.InfinityAmmo then
+      begin
+        Caption := #1;
+        Font := fntGrey;
+      end else
+      begin
+        minC := W.MinAmmoCountToOrder;
+        curC := W.BoltCount;
 
-      If curC > minC then
-        DownColor := icGreen
-      else
-      If curC > minC * 0.5 then
-        DownColor := icYellow
-      else
-      If curC > 0 then
-        DownColor := icOrange
-      else
-        DownColor := icRed;
-      Caption := curC.ToString;
+        If curC > minC then
+          DownColor := icGreen
+        else
+        If curC > minC * 0.5 then
+          DownColor := icYellow
+        else
+        If curC > 0 then
+          DownColor := icOrange
+        else
+          DownColor := icRed;
+        Caption := curC.ToString;
+        Font := fntGame;
+      end;
       Button_Unit[I].Enabled := true;
       If W.NextOrder = woLeaveSiegeTower then
       Button_Unit[I].BackBevelColor := $40FFB700;
