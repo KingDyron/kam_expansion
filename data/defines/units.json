@@ -5128,7 +5128,7 @@
 			"CanOrderAmmo" : false,
 			"CanStorm" : False,
 			"CanAttackUnits" : true,
-			"CanAttackHouses" : true,
+			"CanAttackHouses" : false,
 			"FightType" : "ftRanged",
 			"AmmoType" : "uatNone",
 			"MinRange" : 2.00000,
