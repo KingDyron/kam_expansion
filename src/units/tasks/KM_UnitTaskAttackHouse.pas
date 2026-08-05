@@ -159,6 +159,12 @@ begin
     Exit;
   end;
 
+  if not gRes.Units[fUnit.UnitType].CanAttackHouses then
+  begin
+    Result := trTaskDone;
+    Exit;
+  end;
+
   with TKMUnitWarrior(fUnit) do
     case fPhase of
       0:  if IsRanged then
