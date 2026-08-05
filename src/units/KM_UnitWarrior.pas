@@ -536,10 +536,9 @@ begin
   and (aUnitType in [utBowMan, utCrossbowman, utRogue, utSkirmisher]) then
     fInfinityAmmo := true;
 
-  If aUnitType in [utAlchemist] then
-    fInfinityAmmo := true;
-
-  If fInfinityAmmo then
+  If aUnitType = utAlchemist then
+    fBoltCount := 20
+  else If fInfinityAmmo then
     fBoltCount := 10000;
 
   fRemovedFromGroup := false;
@@ -905,7 +904,7 @@ begin
     Exit(false);
 
   case fType of
-    utMobileTower:  Result := fBoltCount <= 75;
+    utMobileTower:  Result := fBoltCount <= 225;
     utGolem,
     utArcher,
     utCrossbowman,
@@ -929,6 +928,8 @@ begin
     utCatapult: Result := 5;
     utBallista:  Result := 10;
     utSkirmisher:  Result := 30;
+    utMobileTower: Result := 90;
+    utAlchemist: Result := 10;
     else Result := 10;
   end;
 end;
@@ -967,7 +968,7 @@ begin
       utGolem,
       utArcher,
       utCrossbowMan,
-      utBowMan : count := ammoCart.TakeAmmo(gRes.Units[UnitType].AmmoType, 50);
+      utBowMan : count := ammoCart.TakeAmmo(gRes.Units[UnitType].AmmoType, IfThen(UnitType = utMobileTower, 150, 50));
 
       utRogue : begin
                   count := ammoCart.TakeAmmo(gRes.Units[UnitType].AmmoType, 1);
@@ -1005,7 +1006,10 @@ begin
   else
   case gRes.Units[UnitType].AmmoType of
     //uatNone: ;
-    uatArrow: Inc(fBoltCount, 90 + KamRandom(20, 'TKMUnitWarrior.ReloadAmmo1'));
+    uatArrow: if UnitType = utMobileTower then
+                Inc(fBoltCount, 3 * (90 + KamRandom(20, 'TKMUnitWarrior.ReloadAmmo MobileTower')))
+              else
+                Inc(fBoltCount, 90 + KamRandom(20, 'TKMUnitWarrior.ReloadAmmo1'));
     uatRogueStone: Inc(fBoltCount, 90 + KamRandom(20, 'RTKMUnitWarrior.ReloadAmmo2'));
     uatStoneBolt: If doMax then Inc(fBoltCount, 20) else Inc(fBoltCount, 10);
     uatBolt: If doMax then Inc(fBoltCount, 30) else  Inc(fBoltCount, 15);
@@ -1475,8 +1479,14 @@ end;
 
 function TKMUnitWarrior.TakeBolt: Boolean;
 begin
-  If UnitType in [utAlchemist] then
-    Exit(true);
+  If UnitType = utAlchemist then
+  begin
+    Result := fBoltCount > 0;
+    if Result then
+      Dec(fBoltCount);
+    Exit;
+  end;
+
   Result := gRes.Units[UnitType].CanOrderAmmo;
   if not Result then
     Exit;
@@ -1617,7 +1627,7 @@ procedure TKMUnitWarrior.CheckForTowerEnemy;
       utGolem,
       utArcher,
       utCrossbowMan,
-      utBowMan : count := cart.TakeAmmo(gRes.Units[UnitType].AmmoType, 50);
+      utBowMan : count := cart.TakeAmmo(gRes.Units[UnitType].AmmoType, IfThen(UnitType = utMobileTower, 150, 50));
 
       utRogue : begin
                   count := cart.TakeAmmo(gRes.Units[UnitType].AmmoType, 1);
@@ -1781,7 +1791,8 @@ begin
 
       utCrossbowman: Result := CROSSBOWMEN_AIMING_DELAY_MIN + KaMRandom(CROSSBOWMEN_AIMING_DELAY_ADD, 'TKMUnitWarrior.GetAimingDelay 2');
       utRogue:  Result := SLINGSHOT_AIMING_DELAY_MIN + KaMRandom(SLINGSHOT_AIMING_DELAY_ADD, 'TKMUnitWarrior.GetAimingDelay 3');
-      utBallista:  Result := BALLISTA_AIMING_DELAY_MIN + KaMRandom(BALLISTA_AIMING_DELAY_MIN, 'TKMUnitWarrior.GetAimingDelay 4');
+      utBallista,
+      utMobileTower: Result := CROSSBOWMEN_AIMING_DELAY_MIN + KaMRandom(CROSSBOWMEN_AIMING_DELAY_MIN, 'TKMUnitWarrior.GetAimingDelay 4');
       utCatapult:  Result := CATAPULT_AIMING_DELAY_MIN + KaMRandom(CATAPULT_AIMING_DELAY_ADD, 'TKMUnitWarrior.GetAimingDelay 5');
       utSkirmisher: Result := 10 + KaMRandom(5, 'TKMUnitWarrior.GetAimingDelay 6');
       utAlchemist: Result := 6 + KaMRandom(10, 'TKMUnitWarrior.GetAimingDelay 7');
@@ -2118,6 +2129,9 @@ begin
                         end;
                     end;
     woAttackHouse:  begin
+                      if not gRes.Units[fType].CanAttackHouses then
+                        fNextOrder := woNone
+                      else
                       //No need to update order  if we are going to attack same house
                       if (fOrder <> woAttackHouse)
                           or (Task = nil)
@@ -2776,6 +2790,9 @@ end;
 function TKMUnitWarriorPaladin.UpdateState: Boolean;
 begin
   Result := Inherited;
+
+  If IsDeadOrDying then
+    Exit;
 
   If (fRageTime = 0) and InFight then
   begin
@@ -3739,6 +3756,11 @@ end;
 function TKMUnitWarriorMedic.UpdateState: Boolean;
 begin
   Result := inherited;
+
+  // CloseUnit (via TaskDie) may run inside inherited and set Owner := HAND_NONE
+  If IsDeadOrDying then
+    Exit;
+
   If gHands[Owner].IsComputer then
   begin
     If fTicker mod 150 = 0 then
@@ -4223,6 +4245,10 @@ var I : Integer;
   U : TKMUnit;
   PosF : TKMPointF;
 begin
+  // Garrisoned in a siege tower: parent CheckForTowerEnemy handles shooting.
+  If (Home is TKMHouseSiegeTower) or (InHouse is TKMHouseSiegeTower) then
+    Exit;
+
   If not HasReadyArcher then
     Exit;
   If (BoltCount = 0) and not InfinityAmmo then

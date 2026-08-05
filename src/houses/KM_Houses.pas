@@ -9055,7 +9055,8 @@ begin
     utBowman,
     utCrossbowman,
     utRogue,
-    utSkirmisher: Result := 1;
+    utSkirmisher,
+    utAlchemist: Result := 1;
 
     utBallista:  Result := 5;
     utCatapult:  Result := 6;
