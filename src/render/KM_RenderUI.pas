@@ -978,6 +978,39 @@ var
     I := I + 7;
   end;
 
+  function GetImageWidth : Boolean;
+  var num1, num2 : Integer;
+  begin
+    Result := false;
+    If (I > maxLength - 7) then
+      Exit;
+
+     If (aText[I] <> ':') then
+      Exit;
+    If (aText[I + 2] <> '_') then
+      Exit;
+    if TryStrToInt(aText[I + 1], num1)
+    and TryStrToInt(Copy(aText, I + 3, 5), num2) then
+    begin
+
+      Inc(picCount);
+      SetLength(Pictures, picCount);
+      with Pictures[picCount - 1] do
+      begin
+        X := dX;
+        Y := dY - FontSpec.LineSpacing + 3;
+        ID := num2;
+        RX := TRXType(num1-1);
+        lineWidthInc := gGFXData[RX, ID].PxWidth + 10;
+      end;
+
+    end else
+      Exit;
+
+    Result := true;
+    I := I + 7;
+  end;
+
   procedure DoDrawImages;
   var I, J : Integer;
   begin
@@ -1072,23 +1105,27 @@ begin
   SetLength(lineWidth, lineCount+2); //1..n+1 (for last line)
 
   lineCount := 1;
-
-  for I := 1 to Length(aText) do
+  I := 1;
+  maxLength := Length(aText);
+  while I <= maxLength do
   begin
-    if aText[I] = #9 then // Tab char
-      lineWidthInc := (Floor(lineWidth[lineCount] / aTabWidth) + 1) * aTabWidth - lineWidth[lineCount]
-    else
-      lineWidthInc := fontSpec.GetCharWidth(aText[I], aShowEolSymbol);
+    If not GetImageWidth then
+      if aText[I] = #9 then // Tab char
+        lineWidthInc := (Floor(lineWidth[lineCount] / aTabWidth) + 1) * aTabWidth - lineWidth[lineCount]
+      else
+        lineWidthInc := fontSpec.GetCharWidth(aText[I], aShowEolSymbol);
+
     Inc(lineWidth[lineCount], lineWidthInc);
 
     //If EOL or aText end
-    if (not aShowEolSymbol and (aText[I] = #124)) or (I = Length(aText)) then
+    if (not aShowEolSymbol and (aText[I] = #124)) or (I = maxLength) then
     begin
       if aText[I] <> #9 then // for Tab reduce line width for CharSpacing and also for TAB 'jump'
         lineWidthInc := 0;
       lineWidth[lineCount] := Math.max(0, lineWidth[lineCount] - fontSpec.CharSpacing - lineWidthInc); //Remove last interletter space and negate double EOLs
       Inc(lineCount);
     end;
+    Inc(I);
   end;
 
   lineHeight := fontSpec.BaseHeight + fontSpec.LineSpacing;
@@ -1112,7 +1149,6 @@ begin
 
   K := 0;
   prevAtlas := -1;
-  maxLength := Length(aText);
   I := 1;
   while I <= maxLength do
   begin
