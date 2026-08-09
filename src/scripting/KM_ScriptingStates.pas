@@ -5506,7 +5506,7 @@ end;
 function TKMScriptStates.HouseTypeToID(aHouseType: TKMHouseType): Integer;
 begin
     if (aHouseType in HOUSES_VALID) then
-      Result := KM_ResHouses.HOUSE_TYPE_TO_ID[aHouseType]
+      Result := KM_ResHouses.HOUSE_TYPE_TO_ID[aHouseType] - 1
     else
     begin
       Result := -1;
