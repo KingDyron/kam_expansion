@@ -79,6 +79,7 @@ type
     procedure ExportDataToText;
     procedure ExportScriptCode;
     procedure ExportToXML(aC : TPSCompileTimeClass);
+    procedure ExportForAutoComplete(aC : TPSCompileTimeClass);
     procedure ExportEventsToXML;
 
     procedure Save(SaveStream: TKMemoryStream);
@@ -365,7 +366,7 @@ function TKMScripting.ScriptOnUses(Sender: TPSPascalCompiler; const Name: AnsiSt
   begin
     ExportToXML(aC);
     Exit;
-    path := ExeDir + 'Export' + PathDelim + aC.aType.OriginalName + '.txt';
+    path := ExeDir + 'Export' + PathDelim + 'XMLData' + PathDelim + aC.aType.OriginalName + '.txt';
     list := TStringList.Create;
     funcID.Clear;
     try
@@ -527,6 +528,7 @@ begin
       'utFighter,      utSpikedTrap,   utWoodenWall,    utTorchMan,' +
       'utMedic,        utBattleShip,   utBoat,          utPyro,' +
       'utLekter,       utMobileTower,  utSkirmisher,    utBerserker,' +
+      'utChampion,     utWarfareCart,  utAlchemist,' +
       'utWolf,         utFish,         utWatersnake,    utSeastar, ' +
       'utCrab,         utWaterflower,  utWaterleaf,     utDuck,' +
       'utDeerMale,     utDeerFemale,   utFox,           utBoar,' +
@@ -2235,7 +2237,8 @@ var I, K : Integer;
 begin
   If not EXPORT_SCRIPTING_CLASSES then
     Exit;
-  path := ExeDir + 'Export' + PathDelim + aC.aType.OriginalName + '.xml';
+  ExportForAutoComplete(aC); Exit;
+  path := ExeDir + 'Export' + PathDelim + 'XMLData' + PathDelim + aC.aType.OriginalName + '.xml';
 
   XML := TKMXmlDocument.Create('SEMethodDict');
   root := XML.Root;
@@ -2272,6 +2275,76 @@ begin
   XML.SaveToFile(path);
   FreeAndNil(XML);
 end;
+
+procedure TKMScripting.ExportForAutoComplete(aC: TPSCompileTimeClass);
+
+  procedure ValidateParamType(var S : String);
+  begin
+    If S = 'array of ___Pointer' then
+      S := 'array of const'
+    else
+    If S = 'LongInt' then
+      S := 'Integer'
+    else
+    If S = 'LongWord' then
+      S := 'Cardinal';
+  end;
+
+  function GetParamName(aParam : TPSType) : String;
+  begin
+    Result := aParam.OriginalName;
+    If Result[1] = '!' then
+      Result := aParam.Decl;
+    ValidateParamType(Result);
+  end;
+
+var I, K : Integer;
+  path: String;
+
+  XML: TKMXmlDocument;
+  root, Def, parList, param : TKMXmlNode;
+
+  item : TPSDelphiClassItem;
+begin
+  If not EXPORT_SCRIPTING_CLASSES then
+    Exit;
+  path := ExeDir + 'Export' + PathDelim + 'XMLData' + PathDelim + aC.aType.OriginalName + '.xml';
+
+  XML := TKMXmlDocument.Create('SEMethodDict');
+  root := XML.Root;
+
+  for I := 0 to aC.Count - 1 do
+  begin
+    Def := root.AddChild('KeyWord');
+
+    item := aC.Items[I];
+    {If item.Decl.Result <> nil then
+      Def.Attributes['Type'] := 'function'
+    else
+      Def.Attributes['Type'] := 'procedure';}
+
+    Def.Attributes['name'] := item.OrgName;
+    Def.Attributes['func'] := 'yes';
+
+    parList := Def.AddChild('Overload');
+
+    If item.Decl.Result <> nil then
+      parList.Attributes['retVal'] := GetParamName(item.Decl.Result)
+    else
+      parList.Attributes['retVal'] := '';
+
+    parList.Attributes['descr'] := '';
+
+    for K := 0 to item.Decl.ParamCount - 1 do
+    begin
+      param := parList.AddChild('Param');
+      param.Attributes['name'] := item.Decl.Params[K].OrgName + ' : ' + GetParamName(item.Decl.Params[K].aType);
+    end;
+  end;
+  XML.SaveToFile(path);
+  FreeAndNil(XML);
+end;
+
 
 
 procedure TKMScripting.ExportEventsToXML;
@@ -2373,9 +2446,23 @@ begin
     SetEvent(evtDevUnlocked, ['aOwner', 'aType', 'aID'], ['Integer', 'Integer', 'Integer']);
 
   XML := TKMXmlDocument.Create('SEMethodDict');
-
   for EVT := Low(TKMScriptEventType) to High(TKMScriptEventType) do
   begin
+
+    Def := XML.Root.AddChild('KeyWord');
+    Def.Attributes['name'] := StringReplace(GetEnumName(TypeInfo(TKMScriptEventType), Integer(EVT)), 'evt', 'On', []);
+    Def.Attributes['func'] := 'yes';
+
+    parList := Def.AddChild('Overload');
+    parList.Attributes['retVal'] := '';
+    parList.Attributes['descr'] := '';
+
+    for I := 0 to high(EvtList[EVT].paramNames) do
+    begin
+      param := parList.AddChild('Param');
+      param.Attributes['name'] := EvtList[EVT].paramNames[I] + ' : ' + EvtList[EVT].paramTypes[I];
+    end;
+    {
     Def := XML.Root.AddChild('Definition');
     Def.Attributes['Type'] := 'procedure';
     Def.Attributes['Name'] := StringReplace(GetEnumName(TypeInfo(TKMScriptEventType), Integer(EVT)), 'evt', 'On', []);
@@ -2388,9 +2475,9 @@ begin
       param.Attributes['Name'] := EvtList[EVT].paramNames[I];
       param.Attributes['Type'] := EvtList[EVT].paramTypes[I];
     end;
-    //Sender.Type
+    //Sender.Type}
   end;
-  path := ExeDir + 'Export' + PathDelim + 'Events' + '.xml';
+  path := ExeDir + 'Export' + PathDelim + 'XMLData' + PathDelim + 'Events' + '.xml';
   XML.SaveToFile(path);
   FreeAndNil(XML);
 end;
