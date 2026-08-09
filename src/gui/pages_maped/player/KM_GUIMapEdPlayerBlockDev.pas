@@ -57,7 +57,7 @@ begin
     dlUnlocked : id := 33;
     dlNotVisible : id := 91;
     dlUnlockedSingle : id := 88;
-    dlSkipped : id := 126;
+    dlSkipped : id := 160;
     else id := 0;
   end;
 
