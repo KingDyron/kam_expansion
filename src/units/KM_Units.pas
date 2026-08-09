@@ -2880,7 +2880,7 @@ procedure TKMUnit.AddEffect(aType: TKMUnitEffectType; aDuration: Word);
       SetEffect(aType, aDuration);
   end;
 begin
-  If (aType = uetPoison) and (UnitType in UNITS_NO_POISONS) then
+  If (aType = uetPoison) and (UnitType in UNITS_NO_POISON) then
     Exit;
 
   If (aType = uetPoison) then
