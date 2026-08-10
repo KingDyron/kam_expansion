@@ -691,7 +691,7 @@ var
 begin
   for I := aRect.Top to aRect.Bottom do
     for J := aRect.Left to aRect.Right do
-    If gTerrain.TileInMapCoords(I, J) then
+    If gTerrain.TileInMapCoords(J, I) then
     begin
       if TryGetVertexEffectiveTerKind(J, I, terKind) then
       begin
