@@ -93,6 +93,7 @@ type
 
     procedure SetTileLock(const aLoc: TKMPoint; aTileLock: TKMTileLock);
     procedure UnlockTile(const aLoc: TKMPoint);
+    procedure UnlockWorkerTile(const aLoc: TKMPoint);
     procedure SetRoads(aList: TKMPointTagList; aOwner: TKMHandID; aUpdateWalkConnects: Boolean = True);
     procedure SetRoad(const aLoc: TKMPoint; aOwner: TKMHandID; aRoadType : TKMRoadType);
     procedure SetPalisade(const aLoc: TKMPoint; aOwner: TKMHandID);
@@ -3384,6 +3385,9 @@ procedure TKMTerrain.UnlockTile(const aLoc: TKMPoint);
 var
   R: TKMRect;
 begin
+  if Land^[aLoc.Y, aLoc.X].TileLock = tlNone then
+    Exit;
+
   Assert(Land^[aLoc.Y, aLoc.X].TileLock in [tlDigged, tlWallDigged, tlRoadWork, tlFieldWork, tlWallFence, tlStructure], 'We expect only these 5 locks, that affect only 1 tile an don''t change neighbours Passability');
 
   Land^[aLoc.Y, aLoc.X].TileLock := tlNone;
@@ -3394,6 +3398,15 @@ begin
 
   //Allowed TileLocks affect passability on this single tile
   UpdateWalkConnect([wcWalk, wcRoad, wcWork], R, False);
+end;
+
+
+//Unlock tile only if it still has a worker/plan lock (road, field, dig, etc.).
+//House placement or other systems may replace the lock while a worker is busy.
+procedure TKMTerrain.UnlockWorkerTile(const aLoc: TKMPoint);
+begin
+  if Land^[aLoc.Y, aLoc.X].TileLock in [tlDigged, tlWallDigged, tlRoadWork, tlFieldWork, tlWallFence, tlStructure] then
+    UnlockTile(aLoc);
 end;
 
 
