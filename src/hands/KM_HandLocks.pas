@@ -346,7 +346,7 @@ var dtt : TKMDevelopmentTreeType;
 
 begin
   for dtt := DEVELOPMENT_MIN to DEVELOPMENT_MAX do
-    CheckDev(dtt, gRes.Development[dtt].FirstItem, fDevLock[dtt, 0]);
+    CheckDev(dtt, gRes.Development[dtt].FirstItem, fDevLock[dtt, gRes.Development[dtt].FirstItem.ID]);
 end;
 
 procedure TKMHandLocks.ForceUnlockDevMapEd(aType: TKMDevelopmentTreeType; aID: Integer);
@@ -402,7 +402,7 @@ var dtt : TKMDevelopmentTreeType;
 
 begin
   for dtt := DEVELOPMENT_MIN to DEVELOPMENT_MAX do
-    CheckDev(dtt, gRes.Development[dtt].FirstItem, fDevLock[dtt, 0]);
+    CheckDev(dtt, gRes.Development[dtt].FirstItem, fDevLock[dtt, gRes.Development[dtt].FirstItem.ID]);
 end;
 
 function TKMHandLocks.GetWareTradeLock(aWare : TKMwareType): TKMHandWareTradeLock;

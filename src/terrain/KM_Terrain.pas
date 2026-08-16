@@ -9541,6 +9541,8 @@ begin
 
               S.Read(aB);
               gTerrain.Land^[Y, X].TileOverlay := TKMTileOverlay(aB);
+              S.Read(aB);
+              gTerrain.Land^[Y, X].TileOverlay2 := TKMTileOverlay(aB);
             end;
 
           UpdateLighting(KMRect(1, 1, gGame.MapSize.X,gGame.MapSize.Y));
@@ -9599,6 +9601,7 @@ begin
             S.Write(gTerrain.Land^[Y, X].Height);
             S.Write(gTerrain.Land^[Y, X].Obj);
             S.Write(byte(gTerrain.Land^[Y, X].TileOverlay));
+            S.Write(byte(gTerrain.Land^[Y, X].TileOverlay2));
           end;
 
     end;

@@ -136,10 +136,11 @@ var dtt : TKMDevelopmentTreeType;
     B.Enabled := aState in [dlNone, dlUnlocked, dlUnlockedSingle];
     If B.Enabled then
       B.Clickable := gMySpectator.Hand.Level >= aToButton.Dev.Level;
-    If gMySpectator.Hand.Level < aToButton.Dev.Level then
-      TKMButtonFlatDevGame(B).Lvl := aToButton.Dev.Level
-    else
-      TKMButtonFlatDevGame(B).Lvl := 0;
+    If not (aState in [dlUnlocked, dlUnlockedSingle]) then
+      If gMySpectator.Hand.Level < aToButton.Dev.Level then
+        TKMButtonFlatDevGame(B).Lvl := aToButton.Dev.Level
+      else
+        TKMButtonFlatDevGame(B).Lvl := 0;
 
     //set default
     B.Down := false;
