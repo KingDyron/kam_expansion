@@ -403,7 +403,7 @@ begin
   If not fWaitedTooLong then
   begin
     if fTileLockSet then
-      gTerrain.UnlockTile(fLoc);
+      gTerrain.UnlockWorkerTile(fLoc);
 
     ReOpenPlan;
   end;
@@ -504,7 +504,7 @@ begin
     fWaitedTooLong := true;
 
     if fTileLockSet then
-      gTerrain.UnlockTile(fLoc);
+      gTerrain.UnlockWorkerTile(fLoc);
     fTileLockSet := false;
     ReOpenPlan;
 
@@ -626,7 +626,7 @@ begin
          gTerrain.SetRoad(fLoc, Owner, fRoadType);
          gTerrain.RemoveObjectsKilledByRoad(fLoc);
          SetActionStay(5, uaWalk);
-         gTerrain.UnlockTile(fLoc);
+         gTerrain.UnlockWorkerTile(fLoc);
          fTileLockSet := False;
           case fRoadType of
             rtNone,
@@ -690,7 +690,7 @@ begin
   If not fWaitedTooLong then
   begin
     if fTileLockSet then
-      gTerrain.UnlockTile(fLoc);
+      gTerrain.UnlockWorkerTile(fLoc);
 
     ReOpenPlan;
   end;
@@ -787,7 +787,7 @@ begin
     fWaitedTooLong := true;
 
     if fTileLockSet then
-      gTerrain.UnlockTile(fLoc);
+      gTerrain.UnlockWorkerTile(fLoc);
     fTileLockSet := false;
     ReOpenPlan;
 
@@ -860,7 +860,7 @@ begin
          gTerrain.FlattenTerrain(fLoc, true, false, 0.25); //Flatten the terrain slightly on and around the road
         gTerrain.SetField(fLoc, Owner, ftWine);
         SetActionStay(5, uaWalk);
-        gTerrain.UnlockTile(fLoc);
+        gTerrain.UnlockWorkerTile(fLoc);
         fTileLockSet := False;
         gScriptEvents.ProcFieldPlanBuilt(Owner, fLoc.X, fLoc.Y, lftWineField);
       end;
@@ -917,7 +917,7 @@ begin
       //This plan is not valid anymore
       gHands[fUnit.Owner].Constructions.FieldworksList.CloseField(fBuildID);
 
-  if fTileLockSet then gTerrain.UnlockTile(fLoc);
+  if fTileLockSet then gTerrain.UnlockWorkerTile(fLoc);
   inherited;
 end;
 
@@ -975,7 +975,7 @@ begin
         Thought := thNone; //Keep thinking build until it's done
         gTerrain.SetField(fLoc, Owner, ftCorn);
         SetActionStay(5,uaWalk);
-        gTerrain.UnlockTile(fLoc);
+        gTerrain.UnlockWorkerTile(fLoc);
         fTileLockSet := False;
         gScriptEvents.ProcFieldPlanDigged(Owner, fLoc.X, fLoc.Y, lftField);
        end;
@@ -1029,7 +1029,7 @@ begin
       //This plan is not valid anymore
       gHands[fUnit.Owner].Constructions.FieldworksList.CloseField(fBuildID);
 
-  if fTileLockSet then gTerrain.UnlockTile(fLoc);
+  if fTileLockSet then gTerrain.UnlockWorkerTile(fLoc);
   inherited;
 end;
 
@@ -1087,7 +1087,7 @@ begin
         Thought := thNone; //Keep thinking build until it's done
         gTerrain.SetField(fLoc, Owner, ftGrassLand, 0, gftGrass);
         SetActionStay(5,uaWalk);
-        gTerrain.UnlockTile(fLoc);
+        gTerrain.UnlockWorkerTile(fLoc);
         fTileLockSet := False;
         gScriptEvents.ProcFieldPlanDigged(Owner, fLoc.X, fLoc.Y, lftGrassField);
        end;
@@ -1141,7 +1141,7 @@ begin
       //This plan is not valid anymore
       gHands[fUnit.Owner].Constructions.FieldworksList.CloseField(fBuildID);
 
-  if fTileLockSet then gTerrain.UnlockTile(fLoc);
+  if fTileLockSet then gTerrain.UnlockWorkerTile(fLoc);
   inherited;
 end;
 
@@ -1199,7 +1199,7 @@ begin
         Thought := thNone; //Keep thinking build until it's done
         gTerrain.SetField(fLoc, Owner, ftVegeField, 0, gftPumpkin);
         SetActionStay(5,uaWalk);
-        gTerrain.UnlockTile(fLoc);
+        gTerrain.UnlockWorkerTile(fLoc);
         fTileLockSet := False;
         gScriptEvents.ProcFieldPlanDigged(Owner, fLoc.X, fLoc.Y, lftVegetablesField);
        end;
@@ -1252,7 +1252,7 @@ begin
       //This plan is not valid anymore
       gHands[fUnit.Owner].Constructions.FieldworksList.CloseField(fBuildID);
 
-  if fTileLockSet then gTerrain.UnlockTile(fLoc);
+  if fTileLockSet then gTerrain.UnlockWorkerTile(fLoc);
   inherited;
 end;
 
@@ -1336,7 +1336,7 @@ begin
 
 
         SetActionStay(5,uaWalk);
-        gTerrain.UnlockTile(fLoc);
+        gTerrain.UnlockWorkerTile(fLoc);
         fTileLockSet := False;
         gScriptEvents.ProcFieldPlanDigged(Owner, fLoc.X, fLoc.Y, lftRemove);
        end;
@@ -2480,7 +2480,7 @@ begin
     gHands[fUnit.Owner].Deliveries.Queue.RemDemand(fUnit);
 
   if fTileLockSet then
-    gTerrain.UnlockTile(fLoc);
+    gTerrain.UnlockWorkerTile(fLoc);
 
   //Yet unstarted
   if (fUnit <> nil) then
@@ -2614,7 +2614,7 @@ begin
 
          SetActionStay(5, uaWalk);
          fTileLockSet := False;
-         gTerrain.UnlockTile(fLoc);
+         gTerrain.UnlockWorkerTile(fLoc);
          gScriptEvents.ProcFieldPlanBuilt(Owner, fLoc.X, fLoc.Y, lftPalisade);
        end;
     else Result := trTaskDone;
