@@ -222,14 +222,15 @@ const
   TownHall_Order: array [0..7] of TKMUnitType = (
     utRebel, utRogue, utClubMan, utVagabond, utSkirmisher, utShieldBearer, utBarbarian, utWarrior);
 
-  Soldiers_Order: array[0..40] of TKMUnitType = (
+  Soldiers_Order: array[0..42] of TKMUnitType = (
     utFighter, utMilitia, utAxeFighter, utSwordFighter, utBarbarian, utWarrior, utPaladin,
     utRogue, utBowman, utCrossbowMan, utArcher,
     utRebel, utLanceCarrier, utPikeman, utPikeMachine,
     utClubMan, utMaceFighter, utFlailFighter,
     utVagabond, utScout, utKnight, utTrainedWolf,
     utCatapult, utBallista, utAmmoCart, utSkirmisher, utBerserker, utShieldBearer, utWoodenWall, utRam, utMobileTower,
-    utPyro, utAlchemist, utTorchMan, utLekter, utMedic, utSpy, utSpikedTrap, utBoat, utShip, utBattleShip);
+    utPyro, utAlchemist, utTorchMan, utLekter, utMedic, utSpy, utSpikedTrap, utBoat, utShip, utBattleShip,
+    utGolem, utGiant);
 
   // Stats get stacked by UI logic (so that on taller screens they all were
   // in nice pairs, and would stack up only on short screens)
@@ -274,7 +275,7 @@ const
     (HouseType: (htStore, htSchool, htInn, htMarket, htNone);                             UnitType: (utSerf, utBuilder))
     ); }
 
-  MapEd_Order: array [0..42] of TKMUnitType = (
+  MapEd_Order: array [0..44] of TKMUnitType = (
     utFighter, utMilitia, utAxeFighter, utSwordFighter, utBowman, utCrossbowman,
     utLanceCarrier, utPikeman, utMaceFighter, utFlailFighter,
     utScout, utKnight,
@@ -283,7 +284,7 @@ const
     utAmmoCart, utPikeMachine,
     utTorchMan, utPyro, utAlchemist, utLekter, utMedic, utChampion, utPaladin, utArcher, utSpy, utTrainedWolf, utSpikedTrap,
     utWarfareCart,
-    utBoat, utShip, utBattleShip{, utGolem, utGiant});
+    utBoat, utShip, utBattleShip, utGolem, utGiant);
 
   MapEd_Icon: array [0..26] of Word = (
     61, 62, 63, 64, 65,

@@ -54,7 +54,8 @@ uses
   KM_Sound, KM_UnitWarrior, KM_Resource, KM_Projectiles, KM_ResTypes, KM_HandLogistics,
   KM_Terrain,
   KM_ResUnits, KM_Hand, KM_ScriptingEvents,
-  KM_UnitGroup;
+  KM_UnitGroup,
+  KM_Particles;
 
 
 const
@@ -328,6 +329,8 @@ function TKMUnitActionFight.ExecuteProcessMelee(Step: Byte): Boolean;
         damage := damage + fUnit.AttackHorse;
       if aUnit.UnitType <> utShieldBearer then
         damage := damage * (GetDirModifier(fUnit.Direction, aUnit.Direction) + 1); // Direction modifier
+      If aUnit.UnitType in [utGolem, utGiant] then
+        damage := damage + TKMUnitWarrior(fUnit).DamageHouse * 10;
       //Defence modifier
       //If (UNIT_TO_GROUP_TYPE[fUnit.UnitType] <> gtWreckers) and (aUnit.UnitType <> utPikeMachine) then
       If not TKMUnitWarrior(fUnit).CanIgnoreDefence(aUnit) then
@@ -391,6 +394,12 @@ begin
     HitUnit(fOpponent, doStop);
     If not doStop then
     begin
+      If fUnit.UnitType = utGiant then
+      begin
+        gHands.HitAllInRadius(fUnit, fOpponent, fOpponent.PositionF, 1, 300, 4, 30);
+        gParticles.AddDustParticle(fOpponent.PositionF);
+        gParticles.AddDustParticle(fOpponent.PositionF);
+      end else
       if fUnit.UnitType = utPikeMachine then
       begin
         aLoc := KMPointDir(fUnit.Position, fUnit.Direction);
