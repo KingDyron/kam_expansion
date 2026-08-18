@@ -732,8 +732,10 @@ end;
 //Clear the list and initiate refresh
 procedure TKMMenuMapEditor.ListUpdate;
 begin
-  fCampaigns.TerminateScan;
-  fCampaigns.Refresh(ScanUpdate, ScanTerminate, ScanComplete);
+   //do not scan campaigns every time.
+  //fCampaigns.TerminateScan;
+  //fCampaigns.Refresh(ScanUpdate, ScanTerminate, ScanComplete);
+
   //fCampaigns.SortCampaigns;
   //Terminate all
   fMaps.TerminateScan;
