@@ -780,7 +780,7 @@ const
     gtMelee,            //utMetalBarbarian
     gtMounted,           //utHorseman
     gtMachines,gtMachines,gtMachinesMelee, //utCatapult, utBallista, utRam
-    gtRanged, gtMelee,
+    gtMelee, gtMelee,
     gtMelee,
     gtRanged,
     gtMelee,
