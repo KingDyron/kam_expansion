@@ -6764,6 +6764,62 @@
 			"SnowPic" : 255, 
 			"Ware" : "wtCard",
 			"WareCount" : 1
+		}, 
+		{
+			"ObjectID" : 655, 
+			"AnimSteps":[1610], 
+			"PlaceableInEditor" : true, 
+			"SnowPic" : 255, 
+			"AllBlocked" : true,
+			"WareCount" : 1
+		}, 
+		{
+			"ObjectID" : 656, 
+			"AnimSteps":[1611], 
+			"PlaceableInEditor" : true, 
+			"SnowPic" : 255, 
+			"AllBlocked" : true,
+			"WareCount" : 1
+		}, 
+		{
+			"ObjectID" : 657, 
+			"AnimSteps":[1612], 
+			"PlaceableInEditor" : true, 
+			"SnowPic" : 255, 
+			"AllBlocked" : true,
+			"WareCount" : 1
+		}, 
+		{
+			"ObjectID" : 658, 
+			"AnimSteps":[1613], 
+			"PlaceableInEditor" : true, 
+			"SnowPic" : 255, 
+			"AllBlocked" : true,
+			"WareCount" : 1
+		}, 
+		{
+			"ObjectID" : 659, 
+			"AnimSteps":[1614], 
+			"PlaceableInEditor" : true, 
+			"SnowPic" : 255, 
+			"AllBlocked" : true,
+			"WareCount" : 1
+		}, 
+		{
+			"ObjectID" : 660, 
+			"AnimSteps":[1615], 
+			"PlaceableInEditor" : true, 
+			"SnowPic" : 255, 
+			"AllBlocked" : true,
+			"WareCount" : 1
+		}, 
+		{
+			"ObjectID" : 661, 
+			"AnimSteps":[1616], 
+			"PlaceableInEditor" : true, 
+			"SnowPic" : 255, 
+			"AllBlocked" : true,
+			"WareCount" : 1
 		}
 	], 
 	"Grain Types":
