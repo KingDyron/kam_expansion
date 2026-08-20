@@ -5041,7 +5041,7 @@
 			"HouseDamage" : 1,
 			"UnitDamage" : 1,
 			"ProjectileDefence" : 1.00000,
-			"CanOrderAmmo" : false,
+			"CanOrderAmmo" : true,
 			"CanStorm" : False,
 			"CanAttackUnits" : true,
 			"CanAttackHouses" : false,
