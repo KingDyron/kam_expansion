@@ -99,6 +99,7 @@ type
     //Modify route to go to this destination instead
     procedure ChangeWalkTo(const aLoc: TKMPoint; aDistance: Single); overload;
     procedure ChangeWalkTo(aNewTargetUnit: TKMUnit; aDistance: Single); overload;
+    procedure ChangeWalkTo(aNewTargetGroup: TKMUnitGroup; aDistance: Single); overload;
 
     function Execute: TKMActionResult; override;
     procedure Save(SaveStream: TKMemoryStream); override;
@@ -172,7 +173,7 @@ begin
   IF aTargetGroup <> nil then
   begin
     fTargetGroup := aTargetGroup.GetPointer;
-    fTargetUnit  := fTargetGroup.FlagBearer.GetPointer;
+    //fTargetUnit  := fTargetGroup.FlagBearer.GetPointer;
   end else
   if aTargetUnit  <> nil then
     fTargetUnit  := aTargetUnit.GetPointer;
@@ -541,7 +542,7 @@ end;
 
 function TKMUnitActionWalkTo.CheckTargetHasDied: Boolean;
 begin
-  Result := (fTargetUnit <> nil) and fTargetUnit.IsDeadOrDying;
+  Result := ((fTargetUnit <> nil) and fTargetUnit.IsDeadOrDying) or ((fTargetGroup <> nil) and fTargetGroup.IsDead);
 end;
 
 
@@ -673,6 +674,7 @@ begin
             or ((fTargetHouse = nil) and (round(KMLengthDiag(fUnit.Position,fWalkTo)) <= fDistance))
             or ((fTargetHouse <> nil) and (fTargetHouse.GetDistance(fUnit.Position) <= fDistance))
             or ((fTargetUnit <> nil) and (KMLengthDiag(fUnit.Position,fTargetUnit.Position) <= fDistance))
+            or ((fTargetGroup <> nil) and (KMLengthDiag(fUnit.Position,fTargetGroup.FlagBearer.Position) <= fDistance))
             or ((fUnit.Task <> nil) and fUnit.Task.WalkShouldAbandon);
 end;
 
@@ -1131,6 +1133,7 @@ begin
   //Release pointers if we had them
   gHands.CleanUpHousePointer(fTargetHouse);
   gHands.CleanUpUnitPointer(fTargetUnit);
+  gHands.CleanUpGroupPointer(fTargetGroup);
 end;
 
 
@@ -1146,10 +1149,27 @@ begin
   //Release pointers if we had them
   gHands.CleanUpHousePointer(fTargetHouse);
   gHands.CleanUpUnitPointer(fTargetUnit);
+  gHands.CleanUpGroupPointer(fTargetGroup);
   if aNewTargetUnit <> nil then
     fTargetUnit := aNewTargetUnit.GetPointer; //Change target
 end;
 
+procedure TKMUnitActionWalkTo.ChangeWalkTo(aNewTargetGroup: TKMUnitGroup; aDistance: Single);
+begin
+  //We are no longer being pushed
+  if fInteractionStatus = kisPushed then
+    fInteractionStatus := kisNone;
+
+  fNewWalkTo := aNewTargetGroup.FlagBearer.Position;
+  fDistance  := aDistance;
+
+  //Release pointers if we had them
+  gHands.CleanUpHousePointer(fTargetHouse);
+  gHands.CleanUpUnitPointer(fTargetUnit);
+  gHands.CleanUpGroupPointer(fTargetGroup);
+  if aNewTargetGroup <> nil then
+    fTargetGroup := aNewTargetGroup.GetPointer; //Change target
+end;
 
 // Returns passability that unit is allowed to walk on
 function TKMUnitActionWalkTo.GetEffectivePassability: TKMTerrainPassability;
@@ -1225,6 +1245,18 @@ begin
       ChangeWalkTo(fTargetUnit, fDistance);
     end;
 
+    if CanAbandonInternal
+      and (fTargetGroup <> nil)
+      and (not fTargetGroup.IsDead)
+      and not KMSamePoint(fTargetGroup.FlagBearer.Position, fWalkTo)
+      //It's wasteful to run pathfinding to correct route every step of the way, so if the target unit
+      //is within 8 tiles, update every step. Within 16, every 2 steps, 24, every 3 steps, etc.
+      and (fNodePos mod Max((Round(KMLengthDiag(fUnit.Position, fTargetGroup.FlagBearer.Position)) div 8), 1) = 0) then
+    begin
+      //If target unit has moved then change course and keep following it
+      ChangeWalkTo(fTargetGroup, fDistance);
+    end;
+
     //Check if we need to walk to a new destination
     if CanAbandonInternal and (CheckForNewDestination = dcNoRoute) then
       Exit(arActAborted);
@@ -1248,13 +1280,7 @@ begin
     //Check if target unit (warrior) has died and if so abandon our walk and so delivery task can exit itself
     if CanAbandonInternal then
       if CheckTargetHasDied then
-      begin
-        If (fTargetGroup <> nil) and not (fTargetGroup.IsDead) then
-        begin
-          fTargetUnit := fTargetGroup.FlagBearer;
-        end else
         Exit(arActAborted);
-      end;
 
     //This is sometimes caused by unit interaction changing the route so simply ignore it
     if KMSamePoint(fNodeList[fNodePos], fNodeList[fNodePos+1]) then

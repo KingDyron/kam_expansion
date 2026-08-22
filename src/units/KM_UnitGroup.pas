@@ -548,7 +548,8 @@ end;
 function TKMUnitGroup.GetFlagBearer: TKMUnitWarrior;
 begin
   if Self = nil then Exit(nil);
-  
+  If self.IsDead then
+    Exit(nil);
   Result := fMembers.Items[0];
 end;
 

@@ -161,6 +161,7 @@ type
   private
     function GetTask: TKMUnitTask;
     function GetInHouse: TKMHouse;
+    function GetPositionRound : TKMPoint;
   protected
     fSpecialEffect : TKMUnitEffect;
     function GetSpeed : Byte; virtual;
@@ -205,7 +206,7 @@ type
     property NeverHungry : Boolean read fNeverHungry write fNeverHungry;
     property ConditionPace : Cardinal read fConditionPace write fConditionPace;
     property PositionF: TKMPointF read fPositionF write SetPositionF;
-    property Position: TKMPoint read fPositionRound;
+    property Position: TKMPoint read GetPositionRound;
     property PositionPrev: TKMPoint read fPositionPrev;
     property PositionNext: TKMPoint read fPositionNext write SetPositionNext;
     procedure SetUnitPosition(const aPos: TKMPoint);
@@ -2733,6 +2734,14 @@ begin
   if Self = nil then Exit(nil);
   
   Result := fInHouse;
+end;
+
+function TKMunit.GetPositionRound: TKMPoint;
+begin
+  If self = nil then
+    Exit(KMPOINT_INVALID_TILE);
+  Result := fPositionRound;
+
 end;
 
 
