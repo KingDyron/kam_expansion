@@ -905,14 +905,15 @@ begin
   //In KaM the order of defence positions is the priority: The first defined is higher priority
   for I := 0 to Count - 1 do
   if (Positions[I].CurrentGroup = nil) then
-    for K := I + 1 to Count - 1 do
-    if Positions[I].GroupType = Positions[K].GroupType then
-      if not Positions[K].DontRestock then
-      begin
-        Positions[I].CurrentGroup := Positions[K].CurrentGroup; //Take new position
-        Positions[K].CurrentGroup := nil; //Leave current position
-        Break;
-      end;
+    for K := Count - 1 downto I + 1 do
+    If Positions[K].CurrentGroup <> nil then
+      if Positions[I].CanAccept(Positions[K].CurrentGroup, Positions[K].CurrentGroup.Count) then
+        if not Positions[K].DontRestock then
+        begin
+          Positions[I].CurrentGroup := Positions[K].CurrentGroup; //Take new position
+          Positions[K].CurrentGroup := nil; //Leave current position
+          Break;
+        end;
 end;
 
 
