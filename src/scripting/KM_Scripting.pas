@@ -546,7 +546,7 @@ begin
       'wtWheel,    wtBolt,          wtQuiver,     wtWater,        wtTile,' +
       'wtSeed,     wtSawDust,       wtApple,      wtJewerly,      wtBoots,' +
       'wtHay,      wtMace,          wtFlail,      wtFeathers,     wtPlateArmor,' +
-      'wtBitinArmor, wtEgg,' +
+      'wtBitinArmor, wtEgg,wtCard,' +
       // Special ware types
       'wtAll, wtWarfare, wtFood, wtValuable)');
 
