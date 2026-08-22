@@ -275,7 +275,7 @@ end;
 
 function TAIDefencePosition.CanAccept(aGroup: TKMUnitGroup; aMaxUnits: Integer): Boolean;
 begin
-  Result := aGroup.GetMembersGroupType in [fGroupType, gtAny];
+  Result := (fGroupType = gtAny) or (aGroup.GetMembersGroupType in [fGroupType, gtAny]);
 
   if not Result then Exit;
 
@@ -286,7 +286,7 @@ begin
   // Empty position accepts anything (e.g. happens at mission start)
   // As checked in KaM - it did not link big groups to filled Positions
   Result := (CurrentGroup = nil) or
-            (aGroup.Count = 1);
+            ((aGroup.Count = 1) and (aGroup.GetMembersGroupType in [CurrentGroup.GroupType, gtAny]));
 
 
   Result := Result and ((CurrentGroup = nil) or (CurrentGroup.Count < aMaxUnits));
@@ -756,21 +756,35 @@ end;
 
 procedure TAIDefencePositions.GetArmyDemand(out aDemand : TAIArmyDemand);
 var I, Required: Integer;
-  GT : TKMGroupType;
+  GT, GT2 : TKMGroupType;
 begin
   for GT := Low(TKMGroupType) to High(TKMGroupType) do
     aDemand[GT] := 0;
 
   for I := 0 to Count - 1 do
   begin
-    Required := TroopFormations[Positions[I].GroupType].NumUnits;
-    Inc(aDemand[Positions[I].GroupType], Required);
-    {case Positions[I].GroupType of
-      gtMelee:     Inc(aFootmen, Required);
-      gtAntiHorse: Inc(aPikemen, Required);
-      gtRanged:    Inc(aArchers, Required);
-      gtMounted:   Inc(aHorsemen, Required);
-    end;}
+    if (Positions[I].GroupType = gtAny)  then
+    begin
+      GT2 := Positions[I].GroupType;
+      If Positions[I].CurrentGroup <> nil then
+        GT2 := Positions[I].CurrentGroup.GroupType;
+
+      If GT2 = gtAny then
+      begin
+        for GT := GROUP_TYPE_MIN to GROUP_TYPE_MAX do
+          Inc(aDemand[GT], 1);
+      end else
+      begin
+        Required := TroopFormations[GT2].NumUnits;
+        Inc(aDemand[GT2], Required);
+      end;
+
+    end else
+    begin
+      Required := TroopFormations[Positions[I].GroupType].NumUnits;
+      Inc(aDemand[Positions[I].GroupType], Required);
+    end;
+
   end;
 end;
 
@@ -780,7 +794,10 @@ begin
   Result := 0;
   for I := 0 to Count - 1 do
     if Positions[I].DefenceType = dtBackLine then
-      Inc(Result, TroopFormations[Positions[I].GroupType].NumUnits);
+      If Positions[I].GroupType = gtAny then
+        Inc(Result, TroopFormations[gtMelee].NumUnits)
+      else
+        Inc(Result, TroopFormations[Positions[I].GroupType].NumUnits);
 end;
 
 function TAIDefencePositions.GetAlUnitsCount: Word;
@@ -788,7 +805,10 @@ var I: Integer;
 begin
   Result := 0;
   for I := 0 to Count - 1 do
-    Inc(Result, TroopFormations[Positions[I].GroupType].NumUnits);
+    If Positions[I].GroupType = gtAny then
+      Inc(Result, TroopFormations[gtMelee].NumUnits)
+    else
+      Inc(Result, TroopFormations[Positions[I].GroupType].NumUnits);
 end;
 
 function TAIDefencePositions.GetAttackingPositionsCount(aGroupType: TKMGroupType): Word;
@@ -826,6 +846,8 @@ begin
   begin
     Pos := self.GetPosition(I).fPosition;
     GT := GetPosition(I).GroupType;
+    If GT = gtAny then
+      GT := gtMelee;
     for K := 0 to TroopFormations[GT].NumUnits - 1 do
     begin
       P2 := GetPositionInGroup2(Pos.X, Pos.Y, Pos.Dir, K, TroopFormations[GT].UnitsPerRow,

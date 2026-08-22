@@ -80,14 +80,15 @@ begin
       Image_MarkerPic := TKMImage.Create(Panel_Defence, 0, 10, 32, 32, 338);
 
       DropList_DefenceGroup := TKMDropList.Create(Panel_Defence, 0, 55, Panel_Defence.Width, 20, fntGame, '', bsGame);
-      DropList_DefenceGroup.Add(gResTexts[TX_MAPED_AI_ATTACK_TYPE_MELEE]);
-      DropList_DefenceGroup.Add(gResTexts[TX_MAPED_AI_ATTACK_TYPE_ANTIHORSE]);
-      DropList_DefenceGroup.Add(gResTexts[TX_MAPED_AI_ATTACK_TYPE_RANGED]);
-      DropList_DefenceGroup.Add(gResTexts[TX_MAPED_AI_ATTACK_TYPE_MOUNTED]);
-      DropList_DefenceGroup.Add(gResTexts[1643]);
-      DropList_DefenceGroup.Add(gResTexts[1883]);
-      DropList_DefenceGroup.Add(gResTexts[1963]);
-      DropList_DefenceGroup.Add(gResTexts[2022]);
+      DropList_DefenceGroup.Add(gResTexts[TX_MAPED_AI_ATTACK_TYPE_MELEE], GROUP_TYPE_MIN_OFF);
+      DropList_DefenceGroup.Add(gResTexts[TX_MAPED_AI_ATTACK_TYPE_ANTIHORSE], GROUP_TYPE_MIN_OFF + 1);
+      DropList_DefenceGroup.Add(gResTexts[TX_MAPED_AI_ATTACK_TYPE_RANGED], GROUP_TYPE_MIN_OFF + 2);
+      DropList_DefenceGroup.Add(gResTexts[TX_MAPED_AI_ATTACK_TYPE_MOUNTED], GROUP_TYPE_MIN_OFF + 3);
+      DropList_DefenceGroup.Add(gResTexts[1643], GROUP_TYPE_MIN_OFF + 4);
+      DropList_DefenceGroup.Add(gResTexts[1883], GROUP_TYPE_MIN_OFF + 5);
+      DropList_DefenceGroup.Add(gResTexts[1963], GROUP_TYPE_MIN_OFF + 6);
+      DropList_DefenceGroup.Add(gResTexts[2022], GROUP_TYPE_MIN_OFF + 7);
+      DropList_DefenceGroup.Add(gResTexts[578], GROUP_TYPE_MIN_OFF - 1);
       DropList_DefenceGroup.OnChange := Marker_Change;
       DropList_DefenceType := TKMDropList.Create(Panel_Defence, 0, 85, Panel_Defence.Width, 20, fntGame, '', bsGame);
       DropList_DefenceType.Add(gResTexts[TX_MAPED_AI_DEFENCE_DEFENDERS]);
@@ -159,6 +160,8 @@ begin
   If oldGT = newGT then
     Exit;
   DropList_DefenceUnitType.Clear;
+  If newGT = gtAny then
+    Exit;
   DropList_DefenceUnitType.Add(gRes.Units[utNone].GUIName, ord(utNone));
   for I := 0 to High(AI_TROOP_TRAIN_ORDER_NEW[newGT]) do
   begin
@@ -179,7 +182,7 @@ begin
   oldGT := DP.GroupType;
   DP.Radius := TrackBar_DefenceRad.Position;
   DP.DefenceType := TKMAIDefencePosType(DropList_DefenceType.ItemIndex);
-  DP.GroupType := TKMGroupType(GROUP_TYPE_MIN_OFF + DropList_DefenceGroup.ItemIndex);
+  DP.GroupType := TKMGroupType(DropList_DefenceGroup.GetSelectedTag);
   DP.DontRestock := not CheckBox_OrganizePosition.Checked;
 
   Refresh_UnitType(oldGT, DP.GroupType);
@@ -271,7 +274,7 @@ begin
   fIndex := aIndex;
   Label_MarkerType.Caption := gResTexts[TX_MAPED_AI_DEFENCE_POSITION];
   Image_MarkerPic.TexID := 338;
-  DropList_DefenceGroup.ItemIndex := Ord(gHands[fOwner].AI.General.DefencePositions[fIndex].GroupType) - GROUP_TYPE_MIN_OFF;
+  DropList_DefenceGroup.ItemIndex := GROUP_TYPES[gHands[fOwner].AI.General.DefencePositions[fIndex].GroupType];
   DropList_DefenceType.ItemIndex := Ord(gHands[fOwner].AI.General.DefencePositions[fIndex].DefenceType);
   TrackBar_DefenceRad.Position := gHands[fOwner].AI.General.DefencePositions[fIndex].Radius;
   CheckBox_OrganizePosition.Checked := not gHands[fOwner].AI.General.DefencePositions[fIndex].DontRestock;

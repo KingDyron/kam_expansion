@@ -753,12 +753,13 @@ const
   GROUP_TYPE_MIN = gtMelee;
   GROUP_TYPE_MAX = gtShips;
   GROUP_TYPE_MIN_OFF = Ord(GROUP_TYPE_MIN);
-  GROUP_TYPES: array [GROUP_TYPE_MIN..GROUP_TYPE_MAX] of Byte = (0, 1, 2, 3, 4, 5, 6, 7);
+  GROUP_TYPES: array [gtAny..GROUP_TYPE_MAX] of Byte = (8, 0, 1, 2, 3, 4, 5, 6, 7);
   GROUP_TYPES_VALID = [gtAny, GROUP_TYPE_MIN..GROUP_TYPE_MAX];
   GROUP_TYPES_CNT = Integer(GROUP_TYPE_MAX) - Integer(GROUP_TYPE_MIN) + 1;
   GROUP_TYPE_ORDER : array[0..GROUP_TYPES_CNT - 1] of TKMGroupType = (gtMelee, gtAntiHorse, gtRanged, gtMounted, gtMachines, gtMachinesMelee, gtWreckers, gtShips);
   GROUP_TYPE_GUI_ICON : array[GROUP_TYPE_MIN..GROUP_TYPE_MAX] of Word = (371, 374, 376, 377, 705, 734, 891, 966);
   GROUP_TYPE_GUI_TEXT : array[GROUP_TYPE_MIN..GROUP_TYPE_MAX] of Word = (473, 472, 471, 470, 1643, 1883, 1963, 2022);
+  GROUP_ID_TO_TYPE : array[0..8] of TKMGroupType = (gtMelee, gtAntiHorse, gtRanged, gtMounted, gtMachines, gtMachinesMelee, gtWreckers, gtShips, gtAny);
 type
   TKMGroupTypeArray = array [gtAny..GROUP_TYPE_MAX] of Word;
   TKMGroupTypeValidArray = array [GROUP_TYPE_MIN..GROUP_TYPE_MAX] of Word;
@@ -804,7 +805,7 @@ const
     gtMachines,
     gtRanged,
     gtMelee,
-    gtMelee,
+    gtMounted,
     gtMachinesMelee,//utWarfareCart
     gtRanged //alchemist
     );
@@ -1289,13 +1290,15 @@ const
 //  clGameAlly = icYellow;
 //  clGameEnemy = icCyan;
 
-  GROUP_IMG: array [GROUP_TYPE_MIN..GROUP_TYPE_MAX] of Word = (
+  GROUP_IMG: array [gtAny..GROUP_TYPE_MAX] of Word = (
+    665,
     371, 374,
     376, 377,
     684, 734,
     891, 966);
 
-  GROUP_TXT_COLOR: array [GROUP_TYPE_MIN..GROUP_TYPE_MAX] of Cardinal = (
+  GROUP_TXT_COLOR: array [gtAny..GROUP_TYPE_MAX] of Cardinal = (
+    icBlack,
     icWhite,
     icGreen,
     icPink,

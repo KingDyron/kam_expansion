@@ -200,6 +200,7 @@ end;
 
 function TKMGeneral.RequestedGroups : TKMGroupTypeArray;
 var I : Integer;
+  GT : TKMGroupType;
 begin
   FillChar(Result, Sizeof(Result), #0);
 
@@ -207,9 +208,21 @@ begin
   for I := 0 to fDefencePositions.Count - 1 do
     with fDefencePositions[I] do
     if CurrentGroup = nil then
-      Inc(Result[GroupType], fDefencePositions.TroopFormations[GroupType].NumUnits)
-    else
-      Inc(Result[GroupType], Max(fDefencePositions.TroopFormations[GroupType].NumUnits - CurrentGroup.Count, 0));
+    begin
+      If GroupType = gtAny then
+      begin
+        for GT := GROUP_TYPE_MIN to GROUP_TYPE_MAX do
+          Inc(Result[GT], 1)
+      end
+      else
+        Inc(Result[GroupType], fDefencePositions.TroopFormations[GroupType].NumUnits);
+    end else
+    begin
+      If GroupType = gtAny then
+        Inc(Result[CurrentGroup.GroupType], Max(fDefencePositions.TroopFormations[CurrentGroup.GroupType].NumUnits - CurrentGroup.Count, 0) )
+      else
+        Inc(Result[GroupType], Max(fDefencePositions.TroopFormations[GroupType].NumUnits - CurrentGroup.Count, 0));
+    end;
 end;
 
 procedure TKMGeneral.CheckArmyCount;

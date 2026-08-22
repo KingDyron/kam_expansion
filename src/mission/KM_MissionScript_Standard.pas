@@ -955,12 +955,12 @@ begin
                         end;
 
     ctAIDefence:        if (fLastHand <> HAND_NONE) and PointInMap(P[0]+1, P[1]+1) then
-                          if InRange(P[3], Integer(GROUP_TYPE_MIN) - GROUP_TYPE_MIN_OFF, Integer(GROUP_TYPE_MAX) - GROUP_TYPE_MIN_OFF) then //TPR 3 tries to set TKMGroupType 240 due to a missing space
+                          if InRange(P[3], Integer(GROUP_TYPE_MIN) - GROUP_TYPE_MIN_OFF, Integer(GROUP_TYPE_MAX) - GROUP_TYPE_MIN_OFF + 1) then //TPR 3 tries to set TKMGroupType 240 due to a missing space
                             if P[6] >= 0 then
                             begin
                               with gHands[fLastHand].AI.General.DefencePositions do
                               begin
-                                Add(KMPointDir(P[0]+1, P[1]+1, TKMDirection(P[2]+1)),TKMGroupType(GROUP_TYPE_MIN_OFF + P[3]),P[4],TKMAIDefencePosType(P[5]));
+                                Add(KMPointDir(P[0]+1, P[1]+1, TKMDirection(P[2]+1)),GROUP_ID_TO_TYPE[P[3]],P[4],TKMAIDefencePosType(P[5]));
                                 fLastDP := Positions[Count-1];
                                 if fLastDP <> nil then
                                   if length(P) > 6 then
@@ -969,12 +969,15 @@ begin
                               end
                             end else
                             begin
-                              gHands[fLastHand].AI.General.DefencePositions.Add(KMPointDir(P[0]+1, P[1]+1, TKMDirection(P[2]+1)),TKMGroupType(GROUP_TYPE_MIN_OFF + P[3]),P[4],TKMAIDefencePosType(P[5]));
                               with gHands[fLastHand].AI.General.DefencePositions do
+                              begin
+                                Add(KMPointDir(P[0]+1, P[1]+1, TKMDirection(P[2]+1)),GROUP_ID_TO_TYPE[P[3]],P[4],TKMAIDefencePosType(P[5]));
+
                                 fLastDP := Positions[Count-1];
-                              if fLastDP <> nil then
-                                if length(P) > 6 then
-                                  fLastDP.PositionPatrol := KMPointDir(P[6], P[7], TKMDirection(P[8] + 1));
+                                if fLastDP <> nil then
+                                  if length(P) > 6 then
+                                    fLastDP.PositionPatrol := KMPointDir(P[6], P[7], TKMDirection(P[8] + 1));
+                              end;
                             end;
     ctAIDPSettings:     if (fLastHand <> HAND_NONE) then
                         begin
