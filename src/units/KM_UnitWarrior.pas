@@ -1801,7 +1801,7 @@ begin
 
       utCrossbowman: Result := CROSSBOWMEN_AIMING_DELAY_MIN + KaMRandom(CROSSBOWMEN_AIMING_DELAY_ADD, 'TKMUnitWarrior.GetAimingDelay 2');
       utRogue:  Result := SLINGSHOT_AIMING_DELAY_MIN + KaMRandom(SLINGSHOT_AIMING_DELAY_ADD, 'TKMUnitWarrior.GetAimingDelay 3');
-      utBallista,
+      utBallista: Result := BALLISTA_AIMING_DELAY_MIN + KaMRandom(BALLISTA_AIMING_DELAY_MIN, 'TKMUnitWarrior.GetAimingDelay 4');
       utMobileTower: Result := CROSSBOWMEN_AIMING_DELAY_MIN + KaMRandom(CROSSBOWMEN_AIMING_DELAY_MIN, 'TKMUnitWarrior.GetAimingDelay 4');
       utCatapult:  Result := CATAPULT_AIMING_DELAY_MIN + KaMRandom(CATAPULT_AIMING_DELAY_ADD, 'TKMUnitWarrior.GetAimingDelay 5');
       utSkirmisher: Result := 10 + KaMRandom(5, 'TKMUnitWarrior.GetAimingDelay 6');
