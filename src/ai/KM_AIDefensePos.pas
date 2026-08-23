@@ -290,7 +290,7 @@ begin
 
 
   Result := Result and ((CurrentGroup = nil) or (CurrentGroup.Count < aMaxUnits));
-  Result := Result and ((CurrentGroup <> nil) and not (CurrentGroup.InFight and (CurrentGroup.Count <=2)));
+  Result := Result and ((CurrentGroup = nil) or not (CurrentGroup.InFight and (CurrentGroup.Count <=2)));
 end;
 
 
