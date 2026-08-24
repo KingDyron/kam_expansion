@@ -1522,12 +1522,12 @@ begin
   if TKMButtonFlat(Sender).Tag = 0 then Exit; //with set Tag
 
   Button_Barracks_Recruit.Down := False;
+  fBarracksItem := -1;
   for I := 0 to high(Button_Barracks) do
   begin
     Button_Barracks[I].Down := False;
     if Sender = Button_Barracks[I] then
       fBarracksItem := I;
-
   end;
   TKMButtonFlat(Sender).Down := True;
   BarracksChange(Sender, []);
