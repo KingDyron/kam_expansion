@@ -8480,7 +8480,7 @@ begin
 
   for PT := Low(TKMProdThatchAnimType) to High(TKMProdThatchAnimType) do
     if gGameParams.Tick >= fAnims[PT].StartTick then
-      gRenderPool.AddAnimation(Position, gRes.Houses.ProdThatch_Anims[PT], gGameParams.Tick - fAnims[PT].StartTick, gHands[Owner].FlagColor, rxHouses);
+      gRenderPool.AddHouseAnimation(Position, gRes.Houses.ProdThatch_Anims[PT], gGameParams.Tick - fAnims[PT].StartTick, gHands[Owner].FlagColor);
 
 end;
 
