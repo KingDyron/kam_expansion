@@ -3337,9 +3337,9 @@ var Cells : TKMPointTagList;
   HT : TKMHouseType;
   H : TKMHouse;
 begin
+  Result := false;
   If not gGameParams.IsMapEditor then
     Exit;
-  Result := false;
   Cells := TKMPointTagList.Create;
 
   GetWallPlanPlans(aStart, aEnd, Cells);
