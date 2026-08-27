@@ -33,6 +33,8 @@ type
     procedure Difficulty_Change(Sender: TObject);
     procedure AnimNodes(aTickCount: Cardinal);
     procedure PlayBriefingAudioTrack;
+
+    procedure SetScrollHeight(aHeight : Integer);
   protected
     Panel_Campaign: TKMPanel;
       Image_CampaignBG: TKMImage;
@@ -291,6 +293,19 @@ begin
   Difficulty_Change(nil);
 end;
 
+procedure TKMMenuCampaign.SetScrollHeight(aHeight: Integer);
+begin
+  // Stretch image in case its too small for a briefing text
+  // Stretched scroll does not look good, but its okay for now (only happens for a custom campaigns)
+  // Todo: cut scroll image into 3 pieces (top / center / bottom) and render as many of central part as needed
+  if aHeight > IMG_SCROLL_MAX_HEIGHT then
+    Image_Scroll.ImageAnchors := Image_Scroll.ImageAnchors + [anBottom]
+  else
+    Image_Scroll.ImageAnchors := Image_Scroll.ImageAnchors - [anBottom];
+
+  Panel_CampScroll.Height := aHeight;
+  Panel_CampScroll.Top := Panel_Campaign.Height - Panel_CampScroll.Height;
+end;
 
 procedure TKMMenuCampaign.SelectMap(aMapIndex: Byte);
 var
@@ -353,19 +368,9 @@ begin
   Label_CampaignText.Caption := fCampaign.GetMissionBriefing(fMapIndex);
 
   Panel_CampScroll.Left := IfThen(fCampaign.Maps[fMapIndex].TextPos = bcBottomRight, Panel_Campaign.Width - Panel_CampScroll.Width, 0);
+
   //Add offset from top and space on bottom to fit buttons
-  panHeight := Label_CampaignText.Top + Label_CampaignText.TextSize.Y + 70 + 25 + 25 + 20 * byte(DropBox_Loc.Visible);
-
-  // Stretch image in case its too small for a briefing text
-  // Stretched scroll does not look good, but its okay for now (only happens for a custom campaigns)
-  // Todo: cut scroll image into 3 pieces (top / center / bottom) and render as many of central part as needed
-  if panHeight > IMG_SCROLL_MAX_HEIGHT then
-    Image_Scroll.ImageAnchors := Image_Scroll.ImageAnchors + [anBottom]
-  else
-    Image_Scroll.ImageAnchors := Image_Scroll.ImageAnchors - [anBottom];
-
-  Panel_CampScroll.Height := panHeight;
-  Panel_CampScroll.Top := Panel_Campaign.Height - Panel_CampScroll.Height;
+  SetScrollHeight(Label_CampaignText.Top + Label_CampaignText.TextSize.Y + 70 + 25 + 25 + 20 * byte(DropBox_Loc.Visible));
 
   Image_ScrollRestore.Top := Button_CampaignStart.Top - 53;
 
@@ -523,13 +528,15 @@ begin
   if Sender = Image_ScrollFinish then
   begin
     Label_CampaignTitle.Hide;
-    Label_CampaignText.Caption := fCampaign.GetFinishText
+    Label_CampaignText.Caption := fCampaign.GetFinishText;
+    SetScrollHeight(Label_CampaignText.Top + Label_CampaignText.TextSize.Y + 70 + 25 + 25 + 20 * byte(DropBox_Loc.Visible));
   end
   else
   if Sender = Image_ScrollRestore then
   begin
     Label_CampaignTitle.Visible := true;
     Label_CampaignText.Caption := fCampaign.GetMissionBriefing(fMapIndex);
+    SetScrollHeight(Label_CampaignText.Top + Label_CampaignText.TextSize.Y + 70 + 25 + 25 + 20 * byte(DropBox_Loc.Visible));
   end;
 
   Panel_CampScroll.Visible := not Panel_CampScroll.Visible;
