@@ -1,11 +1,10 @@
 
-To do:
-	-production thatch animation (ptaSawDust..ptaCorn) render Y offset is wrong. 
-	-MapEd: Barracks panel: clicking on recruits icon doesn't change the "ware" to change amount. When you have bow selected then click on recruit it's still bow selected even though bow is not marked as selected.
-	
+To do:	
 	+add "Can't continue" option. After victory you can continue mission, so you can view or play further. I want to add this option so players can't continue cutscene missions or a tactical ones.
 
 
 
 
 Done:
+	-production thatch animation (ptaSawDust..ptaCorn) render Y offset is wrong. 
+	-MapEd: Barracks panel: clicking on recruits icon doesn't change the "ware" to change amount. When you have bow selected then click on recruit it's still bow selected even though bow is not marked as selected.
