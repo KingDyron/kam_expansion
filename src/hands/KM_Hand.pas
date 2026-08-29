@@ -184,6 +184,7 @@ type
     function VirtualWareTake(aIndex : Integer; aCount : Integer = 1) : Boolean;overload;
     //procedure SetVirtualWare(aID, aCnt);
     procedure SetVirtualWareCnt(aName : String; aCnt : Integer; addTo : Boolean = true);
+    procedure BuyVial(aCnt : Integer);
     property AI: TKMHandAI read GetAI;
     property Constructions: TKMHandConstructions read fConstructions;
     property Deliveries: TKMHandLogistics read GetDeliveries;
@@ -4659,6 +4660,24 @@ begin
     VirtualWare[aName] := EnsureRange(VirtualWare[aName] + aCnt, 0, high(word))
   else
     VirtualWare[aName] := EnsureRange(aCnt, 0, high(word));
+end;
+
+procedure TKMHand.BuyVial(aCnt: Integer);
+var I : Integer;
+begin
+  for I := 1 to aCnt do
+  If (VirtualWare['vtHerbs'] >= 3)
+  and (VirtualWare['vtResin'] >= 2)
+  and (VirtualWare['vtHoney'] >= 1) then
+  begin
+    VirtualWareTake('vtHerbs', 3);
+    VirtualWareTake('vtResin', 2);
+    VirtualWareTake('vtHoney', 1);
+    VirtualWareTake('vtVial', -1);
+
+  end else
+    Exit;
+
 end;
 
 procedure TKMHand.SetVWare(aName : String; aValue : Integer);

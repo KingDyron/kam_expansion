@@ -918,6 +918,7 @@ begin
     utCatapult: Result := fBoltCount <= 5;
     utBallista:  Result := fBoltCount <= 10;
     utSkirmisher:  Result := fBoltCount <= 30;
+    utAlchemist:  Result := fBoltCount <= 60;
     else Result := fBoltCount <= 10;
   end;
 end;
@@ -960,6 +961,12 @@ begin
 
   if not CanOrderAmmo then
     Exit;
+  If UnitType = utAlchemist then
+  begin
+    If gHands[Owner].VirtualWareTake('vtVial') then
+      Inc(fBoltCount, 20);
+    Exit;
+  end;
   ammoCart := nil;
   if UnitType in [utCatapult, utBallista, utMobileTower] then
     if fGroup <> nil then

@@ -170,6 +170,7 @@ type
     gicPlanWalls,
     gicSiegeTowerDinner,
     gicSiegeTowerMode,
+    gicArmyBuyVial,
 
     //V.     Delivery ratios changes (and other game-global settings)
     gicWareDistributionChange,   //Change of distribution for 1 ware
@@ -474,6 +475,7 @@ const
     gicpt_Int1SmInt3,//gicPlanWalls
     gicpt_Int2,//gicSiegeTowerDinner,
     gicpt_Int2,//gicSiegeTowerMode,
+    gicpt_Int1,//gicArmyBuyVial
 
     //V.     Delivery ratios changes (and other game-global settings)
     gicpt_Int3,     // gicWareDistributionChange
@@ -667,7 +669,8 @@ type
     procedure CmdGame(aCommandType: TKMGameInputCommandType; aValue: Integer); overload;
     procedure CmdGame(aCommandType: TKMGameInputCommandType; aValue: Single); overload;
 
-    procedure CmdHand(aCommandType: TKMGameInputCommandType; aValue1, aValue2, aValue3 : Integer);
+    procedure CmdHand(aCommandType: TKMGameInputCommandType; aValue1, aValue2, aValue3 : Integer); overload;
+    procedure CmdHand(aCommandType: TKMGameInputCommandType; aValue1 : Integer); overload;
 
     procedure CmdGameBeacon(const aLocF: TKMPointF; aOwner: TKMHandID; aColor: Cardinal);
 
@@ -1404,6 +1407,7 @@ begin
       gicHouseVirtualWareClicked    : srcHouse.HouseVirtualWareClicked(IntParams[1], IntParams[2]);
       gicSiegeTowerDinner           : TKMHouseSiegeTower(srcHouse).TryReserveDinner(IntParams[1]);
       gicSiegeTowerMode             : TKMHouseSiegeTower(srcHouse).SetMode(IntParams[1]);
+      gicArmyBuyVial                : P.BuyVial(IntParams[0]);
 
       gicUnlockDevelopment          : P.TryToUnlockDevelopment(TKMDevelopmentTreeType(IntParams[0]), IntParams[1]{, IntParams[2] = 1});
 
@@ -1825,6 +1829,11 @@ procedure TKMGameInputProcess.CmdHand(aCommandType: TKMGameInputCommandType; aVa
 begin
   Assert(aCommandType in [gicUnlockDevelopment]);
   TakeCommand(MakeCommand(aCommandType, aValue1, aValue2, aValue3));
+end;
+procedure TKMGameInputProcess.CmdHand(aCommandType: TKMGameInputCommandType; aValue1 : Integer);
+begin
+  Assert(aCommandType in [gicArmyBuyVial]);
+  TakeCommand(MakeCommand(aCommandType, aValue1));
 end;
 
 

@@ -357,6 +357,13 @@
 		"ShowInHouses" : ["htInn", "htSiegeTower"],
 		"CoinPrice" : 27,
 		"MaxCountInStall" : 3
+	},  
+	{
+		"Name":"vtVial",
+		"TextID" : 2378, 
+		"IconID" : 1231, 
+		"CoinPrice" : 40,
+		"MaxCountInStall" : 200
 	}
   ],
   "VirtualWaresPalaceOrder" : [

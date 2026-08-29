@@ -732,11 +732,11 @@ const
   OPERATORS_PER_MACHINE = 4;
 
 type
-  TKMUnitAmmoType = (uatNone, uatArrow, uatRogueStone, uatStoneBolt, uatBolt, uatAxe, uatLance);
+  TKMUnitAmmoType = (uatNone, uatArrow, uatRogueStone, uatStoneBolt, uatBolt, uatAxe, uatLance, uatVial);
 
 const
-  AMMO_GUI_ICON : array[TKMUnitAmmoType] of Word = (0, 699, 695, 695, 696, 371, 373);
-  AMMO_GUI_TEXT : array[TKMUnitAmmoType] of Word = (0, 1874, 1874, 1875, 1876, 2098, 2319);
+  AMMO_GUI_ICON : array[TKMUnitAmmoType] of Word = (0, 699, 695, 695, 696, 371, 373, 1231);
+  AMMO_GUI_TEXT : array[TKMUnitAmmoType] of Word = (0, 1874, 1874, 1875, 1876, 2098, 2319, 2378);
   AMMOCART_AMMO : set of TKMUnitAmmoType = [uatStoneBolt, uatBolt, uatArrow];
   AmmoCart_AmmoOrder : array[0..2] of TKMUnitAmmoType = (uatStoneBolt, uatBolt, uatArrow);
 

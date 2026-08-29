@@ -5046,7 +5046,7 @@
 			"CanAttackUnits" : true,
 			"CanAttackHouses" : false,
 			"FightType" : "ftRanged",
-			"AmmoType" : "uatNone",
+			"AmmoType" : "uatVial",
 			"MinRange" : 2.00000,
 			"MaxRange" : 7.999,
 			"StrikeSteps" : [5],

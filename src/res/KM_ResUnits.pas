@@ -419,6 +419,7 @@ begin
     utRogue :  Result := uatRogueStone;
     utBoat :  Result := uatAxe;
     utSkirmisher: Result := uatLance;
+    utAlchemist: Result := uatVial;
     else
       Result := uatNone;
   end;

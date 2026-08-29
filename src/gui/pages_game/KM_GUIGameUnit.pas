@@ -78,6 +78,10 @@ type
       Panel_Army_JoinGroups: TKMPanel;
         Button_Army_Join_Cancel: TKMButton;
         Label_Army_Join_Message: TKMLabel;
+
+      Panel_Alchemist : TKMPanel;
+        Button_Herbs, Button_Resin, Button_Honey : TKMButtonFlat;
+        Button_BuyVial : TKMButtonFlat;
   public
     OnUnitDismiss: TEvent;
     OnSelectingTroopDirection: TBooleanFunc;
@@ -261,6 +265,25 @@ begin
     Button_Army_GoTo.Hide;
     Button_Army_Attack.Hide;
 
+    Panel_Alchemist := TKMPanel.Create(Panel_Army, 0, Button_Army_Feed.Bottom, Panel_Army.Width, 100);
+
+      TKMLabel.Create(Panel_Alchemist, 0, 0, Panel_Alchemist.Width, 20, gResTexts[2379], fntOutline, taCenter);
+
+      Button_Herbs := TKMButtonFlat.Create(Panel_Alchemist, 0, 20, 30, 35, gRes.Wares.VirtualWares.WareS['vtHerbs'].GUIIcon);
+      Button_Herbs.Caption := 'x3';
+      Button_Resin := TKMButtonFlat.Create(Panel_Alchemist, 32, 20, 30, 35, gRes.Wares.VirtualWares.WareS['vtResin'].GUIIcon);
+      Button_Resin.Caption := 'x2';
+      Button_Honey := TKMButtonFlat.Create(Panel_Alchemist, 64, 20, 30, 35, gRes.Wares.VirtualWares.WareS['vtHoney'].GUIIcon);
+      Button_Honey.Caption := 'x1';
+
+      Button_Herbs.LineWidth := 2;
+      Button_Resin.LineWidth := 2;
+      Button_Honey.LineWidth := 2;
+
+      TKMLabel.Create(Panel_Alchemist, 96, 20, 40, 20, 'x1', fntMetal, taCenter);
+      TKMLabel.Create(Panel_Alchemist, 96, 30, 40, 20, '-->', fntMetal, taCenter);
+      Button_BuyVial := TKMButtonFlat.Create(Panel_Alchemist, 140, 20, 30, 35, gRes.Wares.VirtualWares.WareS['vtVial'].GUIIcon);
+      Button_BuyVial.OnClickShift := Army_Issue_Order;
 
     { Army controls...
     Go to     Stop      Attack
@@ -590,6 +613,32 @@ begin
     ImageStack_Army.SetCount(Sender.Count, Sender.UnitsPerRow, Sender.UnitsPerRow div 2);
     Army_ActivateControls(Sender);
     Label_Army_MembersCount.Caption := IntToStr(Sender.Count);
+    Panel_Alchemist.Visible := W.UnitType = utAlchemist;
+    If Panel_Alchemist.Visible then
+    begin
+
+        Button_Herbs.Down := true;
+        Button_Resin.Down := true;
+        Button_Honey.Down := true;
+
+        If gHands[W.Owner].VirtualWare['vtHerbs'] >= 3 then
+          Button_Herbs.DownColor := icWhite
+        else
+          Button_Herbs.DownColor := icRed;
+
+        If gHands[W.Owner].VirtualWare['vtResin'] >= 2 then
+          Button_Resin.DownColor := icWhite
+        else
+          Button_Resin.DownColor := icRed;
+
+        If gHands[W.Owner].VirtualWare['vtHoney'] >= 1 then
+          Button_Honey.DownColor := icWhite
+        else
+          Button_Honey.DownColor := icRed;
+
+        Button_BuyVial.Caption := IntToStr(gHands[W.Owner].VirtualWare['vtVial']);
+    end;
+
   end;
 end;
 
@@ -736,6 +785,12 @@ begin
   end;
 
   // if Sender = Button_Army_Attack  then ; // This command makes no sense unless player has no right-mouse-button
+
+  If Sender = Button_BuyVial then
+  begin
+    gGame.GameInputProcess.CmdHand(gicArmyBuyVial, IfThen(IsRMBInShiftState(Shift), 5, 1) );
+    Exit;
+  end;
 
   if (Sender = Button_Army_RotCW) or (Sender = Button_Army_RotCCW) then
   begin
