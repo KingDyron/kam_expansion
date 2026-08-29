@@ -6778,48 +6778,49 @@
 			"AnimSteps":[1611], 
 			"PlaceableInEditor" : true, 
 			"SnowPic" : 255, 
-			"AllBlocked" : true,
-			"WareCount" : 1
+			"AllBlocked" : true
 		}, 
 		{
 			"ObjectID" : 657, 
 			"AnimSteps":[1612], 
 			"PlaceableInEditor" : true, 
 			"SnowPic" : 255, 
-			"AllBlocked" : true,
-			"WareCount" : 1
+			"AllBlocked" : true
 		}, 
 		{
 			"ObjectID" : 658, 
 			"AnimSteps":[1613], 
 			"PlaceableInEditor" : true, 
 			"SnowPic" : 255, 
-			"AllBlocked" : true,
-			"WareCount" : 1
+			"AllBlocked" : true
 		}, 
 		{
 			"ObjectID" : 659, 
 			"AnimSteps":[1614], 
 			"PlaceableInEditor" : true, 
 			"SnowPic" : 255, 
-			"AllBlocked" : true,
-			"WareCount" : 1
+			"AllBlocked" : true
 		}, 
 		{
 			"ObjectID" : 660, 
 			"AnimSteps":[1615], 
 			"PlaceableInEditor" : true, 
 			"SnowPic" : 255, 
-			"AllBlocked" : true,
-			"WareCount" : 1
+			"AllBlocked" : true
 		}, 
 		{
 			"ObjectID" : 661, 
 			"AnimSteps":[1616], 
 			"PlaceableInEditor" : true, 
 			"SnowPic" : 255, 
-			"AllBlocked" : true,
-			"WareCount" : 1
+			"AllBlocked" : true
+		}, 
+		{
+			"ObjectID" : 662, 
+			"AnimSteps":[1617], 
+			"PlaceableInEditor" : true, 
+			"SnowPic" : 255, 
+			"AllBlocked" : true
 		}
 	], 
 	"Grain Types":
