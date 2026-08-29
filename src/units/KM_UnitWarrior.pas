@@ -1887,7 +1887,7 @@ begin
     If not (UnitType in SPECIAL_UNITS) then
     begin
       If TKMUnitGroup(fGroup).HasUnitType(utChampion) then
-        Result := Result + 4
+        Result := Result + 8
       else
       If TKMUnitGroup(fGroup).HasUnitType(utWarfareCart) then
         Result := Result + 4;
