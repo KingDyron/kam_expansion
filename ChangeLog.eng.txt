@@ -1,5 +1,58 @@
 ﻿[$5555FF] WARNING : The English version may not be written well. The original language is Polish
 
+[$5555FF]KaM Expansion patch v1.2.3
+
+[$55FF55]Buildings
+	- Improved wall planning
+	- Added reservation and purchase of Dinner in the Siege Tower
+	- Added firing modes in the Siege Tower
+	- Improved resource cost calculation in the Stall
+	- Improved ship building in the Shipyard
+	- Improved animation in the Production Thatch
+	
+[$55FF55]Units
+	- Increased attack range of the Battleship
+	- Added ammunition for the Mobile Tower
+	- New unit: Champion
+	- New unit: Reinforcement Cart
+	- New unit: Alchemist
+	- Changed cost of special units in the Palace
+	- Improved animations in the Arena
+	- Added automatic unloading of wares in the boat
+	- Medic heals units when not in a group
+	- New units: Golem and Giant, for the KamStar campaign
+	- The Mealkeeper caused an error when a group was Dead
+	- Increased ballista reload time
+
+[$55FF55]Interface
+	- Added the ability to render textures in text
+		(use the code :<main number>_<graphic ID>, e.g.: :5_00132, an emoticon will be displayed)
+	- Improved parchment extension on the campaign map
+
+[$55FF55]Map Editor
+	- Selected terrain can be extended beyond the map boundaries
+	- Added improved wall planning
+	- New objects: skeletons
+	- Fixed: Unable to change the number of recruits in the Barracks
+	
+[$55FF55]Gameplay
+	- Fixed: Builder was killing units on wall construction plans
+	- Reduced the cost of animals in the pasture by half
+	- Improved and changed several developments in the development tree
+	- Special developments are now unlocked at a certain level
+	- New decorative tiles (allowing walking)
+	- Improved AI planning of the Collector's Hut
+	- Added particles when a unit is wearing Some effect
+
+[$55FF55]Other
+	- Improved unlocking structures using scripts
+	- Fixed: Ammo cart panel not hiding
+	- Added several actions to scripts
+	- A road on the edge of the map is considered a connection to 
+		a non-existent road outside the map (appearance change)
+	- Added flag styles to the campaign map
+
+
 [$5555FF]KaM Expansion patch v1.2.2
 
 [$55FF55]Buildings

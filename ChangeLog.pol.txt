@@ -1,4 +1,61 @@
 ﻿
+[$5555FF]KaM Expansion patch v1.2.3
+
+[$55FF55]Budynki
+	- usprawniono planowanie murów
+	- dodano rezerwację oraz kupno Potrawy w Wieży oblężniczej
+	- dodano tryby strzelania w Wieży oblężniczej
+	- poprawiono liczenie kosztu surowców w Straganie
+	- ulepszono budowanie statków w stoczni
+	- poprawiono animację w strzesze produkcyjnej
+
+[$55FF55]Jednostki
+	- zwiększono zasięg ataku statku bitewnego
+	- dodano amunicję do ruchomej wieży
+	- nowa jednostka: Czempion
+	- nowa jednostka: Wózek zbrojeniowy
+	- nowa jednostka: Alchemik
+	- zmieniono koszt jednostek specjalnych w pałacu
+	- poprawiono animacje w Festynie
+	- dodano automatyczne rozładowanie towarów w łodzi
+	- medyk leczy jednostki kiedy nie jest w oddziale
+	- nowe jednostki: Golem i Gigant, na potrzeby kampanii KamStar
+	- jadłopodawca wywoływał błąd kiedy oddział był martwy
+	- zwiększono czas przeładowania balisty
+	
+	
+
+[$55FF55]Interfejs
+	- dodano możliwość renderowania tekstur w tekście 
+		(użyj kodu :<numer główny>_<ID grafiki>, np: :5_00132, wyświetli się emotka)
+	- poprawiono wydłużanie pergaminu w mapie kampanii
+	
+[$55FF55]Edytor map
+	- zaznaczony teren można wysunąć poza granice mapy
+	- dodano usprawnione planowanie murów
+	- nowe obiekty: szkielety
+	- naprawiono: nie można było zmienić ilości rekrutów w Warowni
+
+[$55FF55]Rozgrywka
+	- naprawiono: budowniczy zabijał jednostki na planach budowy murów
+	- zmniejszono koszt zwierząt w pastwisku o połowę
+	- poprawiono i zmieniono kilka badań w drzewku rozwoju
+	- badania specjalne są teraz odblokowane od pewnego poziomu rozwoju
+	- nowe płytki dekoracyjne (umożliwiające chodzenie)
+	- poprawiono planowanie chaty kolekcjonera przez AI
+	- dodano cząsteczki kiedy jednostka ma na sobie jakiś efekt
+	
+	
+[$55FF55]Inne
+	- poprawiono odblokowanie struktur używając skryptów
+	- naprawiono: panel wózka z amunicją nie chował się 
+	- dodano kilka akcji do skryptów
+	- droga na skraju mapy jest uznana jako połączenie z nieistniejącą drogą poza mapą (zmiana wyglądu)
+	- dodano style flag do mapy kampanii
+
+
+
+
 [$5555FF]KaM Expansion patch v1.2.2
 
 [$55FF55]Budynki
@@ -12,7 +69,7 @@
 	- dodano usprawione planowanie murów
 	- Festyn jest odblokowany po : Targowisku, Garncarni, Jadalni, Domie mieszkalnym
 	- budynek po naprawie jest spowrotem otwarty (pozostawał zamknięty)
-	- poprawiono wyświetlanie się zasięgu wierzy po odblokowaniu badania
+	- poprawiono wyświetlanie się zasięgu wieży po odblokowaniu badania
 	- zmieniono w festynie system otrzymywania punktów rozwoju
 	- drzewa w szkółce leśnej rosną szybciej o 25%
 	- naprawiono błąd z wczytywaniem wieży oblężniczej
