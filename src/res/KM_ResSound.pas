@@ -94,7 +94,7 @@ type
   TSoundFXAmbiance = (
   sfxwRain, sfxwThunder, sfxwWind, sfxwSandStorm, sfxwTornado,
   sfxwFlyingBrids, sfxwChirping, sfxwFire, sfxwExplosion,
-  sfxwLake, sfxwSwamp);
+  sfxwLake, sfxwSwamp, sfxwCrowd);
 
   //Sounds to play on different warrior orders
   TWarriorSpeech = (
@@ -263,7 +263,8 @@ const
   'Fire',
   'Explosion',
   'Lake',
-  'Swamp'
+  'Swamp',
+  'Crowd'
   );
 
 
@@ -530,7 +531,7 @@ begin
   If aSFX in [sfxwRain, sfxwThunder, sfxwWind, sfxwSandStorm, sfxwTornado] then
     Result := gstWeather
   else
-  If aSFX in [sfxwFlyingBrids, sfxwChirping, sfxwLake, sfxwSwamp] then
+  If aSFX in [sfxwFlyingBrids, sfxwChirping, sfxwLake, sfxwSwamp, sfxwCrowd] then
     Result := gstAmbiance
   else
     Result := gstSFX;

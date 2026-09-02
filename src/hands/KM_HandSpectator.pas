@@ -477,7 +477,11 @@ begin
       PlaySound(sfxwSwamp, KMPointF(X, Y))
     else
     If gTerrain.TileIsWater(X, Y) then
-      PlaySound(sfxwLake, KMPointF(X, Y));
+      PlaySound(sfxwLake, KMPointF(X, Y))
+    else
+    If gTerrain.GetUnit(X, Y) <> nil then
+      PlaySound(sfxwCrowd, KMPointF(X, Y));
+
 
     Inc(A, pace);
   end;
