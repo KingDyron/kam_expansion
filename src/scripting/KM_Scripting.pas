@@ -509,8 +509,6 @@ begin
       'end;');
     Sender.AddTypeS('TKMTileMaskKind', '(mkNone, mkSoft1, mkSoft2, mkSoft3, mkStraight, ' +
       'mkGradient)');
-    Sender.AddTypeS('TKMTileOverlay', '(toNone, toDig1, toDig2, toDig3, toDig4, ' +
-      'toRoad)');
     Sender.AddTypeS('TKMUnitType', '(utNone, utAny,' +
       'utSerf,         utWoodcutter,   utMiner,         utAnimalBreeder,' +
       'utFarmer,       utCarpenter,    utBaker,         utButcher,' +
@@ -805,7 +803,7 @@ begin
     RegisterMethodCheck(c, 'function  MapTileIsStone(X, Y: Integer): Integer');
     RegisterMethodCheck(c, 'function  MapTileIsWater(X, Y: Integer; FullTilesOnly: Boolean): Boolean');
     RegisterMethodCheck(c, 'function  MapTileObject(X, Y: Integer): Integer');
-    RegisterMethodCheck(c, 'function  MapTileOverlay(X, Y: Integer): TKMTileOverlay');
+    RegisterMethodCheck(c, 'function  MapTileOverlay(X, Y: Integer): Byte');
     RegisterMethodCheck(c, 'function  MapTileOwner(X, Y: Integer): Integer');
     RegisterMethodCheck(c, 'function  MapTilePassability(X, Y: Integer; aPassability: Byte): Boolean');
     RegisterMethodCheck(c, 'function  MapTilePassabilityEx(X, Y: Integer; aPassability: TKMTerrainPassability): Boolean');
@@ -1061,7 +1059,7 @@ begin
     RegisterMethodCheck(c, 'procedure  MapTileFieldSet(X: Integer; Y: Integer; aOwner: Integer; aType: TKMLockFieldType)');
     RegisterMethodCheck(c, 'function  MapTileHeightSet(X, Y: Integer; Height: Integer): Boolean');
     RegisterMethodCheck(c, 'function  MapTileObjectSet(X, Y: Integer; Obj: Integer): Boolean');
-    RegisterMethodCheck(c, 'function  MapTileOverlaySet(X, Y: Integer; aOverlay: TKMTileOverlay; aOverwrite: Boolean): Boolean');
+    RegisterMethodCheck(c, 'function  MapTileOverlaySet(X, Y: Integer; aOverlay: Byte; aOverwrite: Boolean): Boolean');
     RegisterMethodCheck(c, 'procedure MapSetNightTime(aValue : Single)');
     RegisterMethodCheck(c, 'function  MapTilesArraySet(aTiles: array of TKMTerrainTileBrief; aRevertOnFail: Boolean; aShowDetailedErrors: Boolean): Boolean');
     RegisterMethodCheck(c, 'function  MapTilesArraySetS(aTilesS: TAnsiStringArray; aRevertOnFail: Boolean; aShowDetailedErrors: Boolean): Boolean');

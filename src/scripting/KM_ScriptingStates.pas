@@ -172,7 +172,7 @@ type
     function MapTileRotation(X, Y: Integer): Integer;
     function MapTileHeight(X, Y: Integer): Integer;
     function MapTileObject(X, Y: Integer): Integer;
-    function MapTileOverlay(X, Y: Integer): TKMTileOverlay;
+    function MapTileOverlay(X, Y: Integer): Byte;
     function MapTileOwner(X, Y: Integer): Integer;
     function MapTilePassability(X, Y: Integer; aPassability: Byte): Boolean;
     function MapTilePassabilityEx(X, Y: Integer; aPassability: TKMTerrainPassability): Boolean;
@@ -4461,7 +4461,7 @@ end;
 //* Version: 11000+
 //* Returns the terrain overlay on the tile at the specified XY coordinates.
 //* Result: tile overlay
-function TKMScriptStates.MapTileOverlay(X, Y: Integer): TKMTileOverlay;
+function TKMScriptStates.MapTileOverlay(X, Y: Integer): Byte;
 begin
   try
     if gTerrain.TileInMapCoords(X, Y) then

@@ -161,7 +161,7 @@ type
     procedure MapTileFieldSet(X, Y : Integer; aOwner: Integer;  aType : TKMLockFieldType);
     function MapTileHeightSet(X, Y, Height: Integer): Boolean;
     function MapTileObjectSet(X, Y, Obj: Integer): Boolean;
-    function MapTileOverlaySet(X, Y: Integer; aOverlay: TKMTileOverlay; aOverwrite: Boolean): Boolean;
+    function MapTileOverlaySet(X, Y: Integer; aOverlay: Byte; aOverwrite: Boolean): Boolean;
     procedure MapSetNightTime(aValue : Single);
 
     procedure MarketSetTrade(aMarketID, aFrom, aTo, aAmount: Integer);
@@ -4466,7 +4466,7 @@ end;
 //* Sets the terrain overlay on the tile at the specified XY coordinates.
 //* aOverwrite: False means safe way to change tile overlay, disallowing to set it on top of old fields/roads
 //* aOverwrite: True allows to destroy roads and re-dig fields (like in game we can build road on top of field and when laborer dies there is a digged overlay left)
-function TKMScriptActions.MapTileOverlaySet(X, Y: Integer; aOverlay: TKMTileOverlay; aOverwrite: Boolean): Boolean;
+function TKMScriptActions.MapTileOverlaySet(X, Y: Integer; aOverlay: Byte; aOverwrite: Boolean): Boolean;
 begin
   try
     Result := True;
