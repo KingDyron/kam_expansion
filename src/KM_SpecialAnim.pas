@@ -20,7 +20,6 @@ type
         AlphaStep : Single;
         InFront : Boolean;
         RX : TRXType;
-        FirstPaint : Boolean;
       end;
       function GetLengthOfImportant : Integer;
     public
@@ -77,7 +76,6 @@ begin
     RX := aRX;
     InFront := aInFront;
     AlphaStep := aAlphaStep;
-    FirstPaint := true;
   end;
 end;
 
@@ -97,7 +95,6 @@ begin
     RX := aRX;
     InFront := aInFront;
     AlphaStep := aAlphaStep;
-    FirstPaint := true;
   end;
 end;
 
@@ -140,8 +137,7 @@ begin
     with fItems[I] do
       if Visible then
       begin
-        if not FirstPaint then
-          Inc(AnimStep);
+        Inc(AnimStep);
 
         if AnimStep = Anim.Count then
         begin
@@ -160,8 +156,6 @@ begin
             Visible := True;
           end;
         end;
-        FirstPaint := false;
-
 
       end;
   for I := High(aRemoveArr) downto 0 do
@@ -190,8 +184,6 @@ begin
       begin
         if KMInRect(Pos, KMRectGrow(gRenderPool.ViewPort.GetClip, 1)) then
           gRenderPool.AddSpecAnim(Pos, GPos, Anim, AnimStep, RX, InFront, AlphaStep);
-        if FirstPaint then
-          FirstPaint := false;
       end;
 end;
 
@@ -212,7 +204,6 @@ begin
         SaveStream.Write(AnimStep);
         SaveStream.Write(InFront);
         SaveStream.Write(AlphaStep);
-        SaveStream.Write(FirstPaint);
         SaveStream.Write(LoopTimes);
         SaveStream.Write(RX, SizeOf(RX));
       end;
@@ -226,7 +217,7 @@ var I, newCount : Integer;
   aAnim : TKMAnimation;
   aAnimStep : Byte;
   aLoopTimes : Integer;
-  aInFront, aFirstPaint : Boolean;
+  aInFront : Boolean;
   aAlphaStep : Single;
   aRX : TRXType;
 begin
@@ -239,12 +230,10 @@ begin
     LoadStream.Read(aAnimStep);
     LoadStream.Read(aInFront);
     LoadStream.Read(aAlphaStep);
-    LoadStream.Read(aFirstPaint);
     LoadStream.Read(aLoopTimes);
     LoadStream.Read(aRX, SizeOf(aRX));
     Add(aAnim, aLoc, aLoopTimes,aRX, aInFront, aAlphaStep);
     fItems[high(fItems)].AnimStep :=  aAnimStep;
-    fItems[high(fItems)].FirstPaint :=  aFirstPaint;
   end;
 end;
 
