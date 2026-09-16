@@ -349,7 +349,7 @@ const
   WALL_HOUSES : TKMHouseTypeSet = [ htWall, htWall2, htWall3, htWall4, htWall5];
   WALLS_TO_GATE_DIST = 13;
   IGNORE_HOUSE_BLOCK : TKMHouseTypeSet = [htWall..htWall5, htAppleTree];
-  NO_ROAD_CONNECTION_HOUSES : TKMHouseTypeSet = [ htWall, htWall2, htWall3, htWall4, htWall5, htWell, htSiegeTower];
+  NO_ROAD_CONNECTION_HOUSES : TKMHouseTypeSet = [ htWall, htWall2, htWall3, htWall4, htWall5, htWell, htSiegeTower, htSign];
 
   FEST_BEST_HOUSES = [htPearl, htPalace, htArena, htProductionThatch, htForest, htPasture, htSiegeTower, htCartographers,
                       htTownHall, htSiegeWorkshop, htInn, htMerchant, htShipyard];
