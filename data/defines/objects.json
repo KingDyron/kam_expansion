@@ -6821,6 +6821,27 @@
 			"PlaceableInEditor" : true, 
 			"SnowPic" : 255, 
 			"AllBlocked" : true
+		}, 
+		{
+			"ObjectID" : 663, 
+			"AnimSteps":[1636, 1637, 1638, 1639, 1640, 1641, 1642, 1643, 1644, 1645, 1646, 1647, 1648, 1649, 1650, 1651], 
+			"PlaceableInEditor" : true, 
+			"SnowPic" : 255, 
+			"AllBlocked" : true
+		}, 
+		{
+			"ObjectID" : 664, 
+			"AnimSteps":[1679], 
+			"PlaceableInEditor" : true, 
+			"SnowPic" : 255, 
+			"AllBlocked" : false
+		}, 
+		{
+			"ObjectID" : 664, 
+			"AnimSteps":[1680], 
+			"PlaceableInEditor" : true, 
+			"SnowPic" : 255, 
+			"AllBlocked" : false
 		}
 	], 
 	"Grain Types":

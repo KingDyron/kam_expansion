@@ -2843,7 +2843,10 @@
 			"UnlockAfter" : ["htNone"],
 			"Styles" : 
 			[
-				{"GuiIcon" : 333,"StonePic" : 2709,"TerrPics" : [2709, 2709],"HideSupplies" : False}
+				{"GuiIcon" : 333,"StonePic" : 2709,"TerrPics" : [2709, 2709],"HideSupplies" : False},
+				{"GuiIcon" : 1232,"StonePic" : 3108},
+				{"GuiIcon" : 1233,"StonePic" : 3109},
+				{"GuiIcon" : 1234,"StonePic" : 3110}
 			],
 			"WoodPileOffset" : {"X" : 0,"Y" : 20},
 			"StonePileOffset" : {"X" : 10,"Y" : 30},
