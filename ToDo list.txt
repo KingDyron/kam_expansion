@@ -4,6 +4,7 @@ To do:
     + add color radius for upgraded wall's range to shoot (like watchtower and archery tower). 
 	+ lets try to make a mounted archer to shoot while riding(moving). It'll probably need a new separated animation. I could make a model of a horse and render it in blender.
 	- fix RMG, something is not working there. Clay generation would be needed and bitin ore as well.
+	- MapEd: cannot select square brush in the tile tab
 
 
 Done:
