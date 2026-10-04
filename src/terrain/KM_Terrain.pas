@@ -6353,10 +6353,14 @@ end;
 
 function TKMTerrain.DecStoneDeposit(const aLoc: TKMPoint): Boolean;
 type
-  TKMStoneTransitionType = (sttNone, sttGrass, sttCoastSand, sttDirt, sttSnow, sttSnowOnDirt, sstBarrenLand);
+  TKMStoneTransitionType = (sttNone, sttGrass, sttCoastSand, sttDirt, sttSnow, sttSnowOnDirt, sstBarrenLand,
+                            sttMoss, sttPaleGrass, sttGrassOnDirt, sttGrassSand1, sttGrassSand2, sttGrassSand3,
+                            sttSand, sttSnowOnGrass, sttDeepSnow, sttGravel);
 const
   TRANSITIONS_TER_KINDS: array[TKMStoneTransitionType] of TKMTerrainKind =
-    (tkGrass, tkGrass, tkCoastSand, tkDirt, tkSnow, tkSnowOnDirt, tkBarrenLand);
+    (tkGrass, tkGrass, tkCoastSand, tkDirt, tkSnow, tkSnowOnDirt, tkBarrenLand,
+    tkMoss, tkPaleGrass, tkGrassDirt, tkGrassSand1, tkGrassSand2, tkGrassSand3,
+    tkSand, tkSnowOnGrass, tkDeepSnow, tkGravel);
 
   TRAN_TILES: array[TKMStoneTransitionType] of array[0..6] of Word =
               ((  0, 139, 138, 140, 141, 274, 301),
@@ -6365,7 +6369,18 @@ const
                ( 35, 278, 277, 279, 280, 282, 303),
                ( 46, 286, 285, 287, 288, 290, 304),
                ( 47, 294, 293, 295, 296, 298, 305),
-               ( 698, 742, 741, 743, 744, 745, 746));
+               ( 698, 742, 741, 743, 744, 745, 746),
+
+               ( 8, 1042, 1041, 1043, 1044, 1045, 1046),
+               ( 17, 1049, 1048, 1050, 1051, 1052, 1053),
+               ( 34, 1091, 1090, 1092, 1093, 1094, 1095),
+               ( 26, 1063, 1062, 1064, 1065, 1066, 1067),
+               ( 27, 1070, 1069, 1071, 1072, 1073, 1074),
+               ( 28, 1077, 1076, 1078, 1079, 1080, 1081),
+               ( 29, 1084, 1083, 1085, 1086, 1087, 1088),
+               ( 315, 1105, 1104, 1106, 1107, 1108, 1109),
+               ( 45, 1098, 1097, 1099, 1100, 1101, 1102),
+               ( 20, 1056, 1055, 1057, 1058, 1059, 1060));
 
   TILE_ID_INDEX:      array[1..14] of Word = (1,1,2,1,3,2,4,1,2,3,4,2,4,4);
   ROT_ID:             array[1..14] of Byte = (0,1,0,2,0,1,3,3,3,1,2,2,1,0);
@@ -6374,10 +6389,15 @@ const
 
   NO_REPL = High(Word);
   WATER_DIAG_REPL: array[TKMStoneTransitionType] of Word =
-                     (127, 127, 118, 105, NO_REPL, NO_REPL, NO_REPL);
+                     (127, 127, 118, 105, NO_REPL, NO_REPL, NO_REPL,
+                     NO_REPL, NO_REPL, NO_REPL, NO_REPL, NO_REPL, NO_REPL, NO_REPL,
+                     NO_REPL, NO_REPL, NO_REPL);
 
   WATER_DIAG_REPL_ROT: array[TKMStoneTransitionType] of Byte =
-                         (1, 1, 1, 3, 100, 100, 100);
+                         (1, 1, 1, 3, 100, 100, 100,
+                         100,100,100,100,100,100,100,
+                         100,100,100
+                         );
 
   MAX_STEPS = 5; //steps limit
 
@@ -6418,7 +6438,18 @@ var
       35,277,278,279,280,281,282,303:  Result := sttDirt;
       46,285,286,287,288,289,290,304:  Result := sttSnow;
       47,293,294,295,296,297,298,305:  Result := sttSnowOnDirt;
-      698,742,741,743,744,745,746:  Result := sstBarrenLand;
+      698,742,741,743,744,745,746:      Result := sstBarrenLand;
+
+      8, 1042, 1041, 1043, 1044, 1045, 1046:      Result := sttMoss;
+      17, 1049, 1048, 1050, 1051, 1052, 1053:      Result := sttPaleGrass;
+      34, 1091, 1090, 1092, 1093, 1094, 1095:      Result := sttGrassOnDirt;
+      26, 1063, 1062, 1064, 1065, 1066, 1067:      Result := sttGrassSand1;
+      27, 1070, 1069, 1071, 1072, 1073, 1074:      Result := sttGrassSand2;
+      28, 1077, 1076, 1078, 1079, 1080, 1081:      Result := sttGrassSand3;
+      29, 1084, 1083, 1085, 1086, 1087, 1088:      Result := sttSand;
+      315, 1105, 1104, 1106, 1107, 1108, 1109:      Result := sttSnowOnGrass;
+      45, 1098, 1097, 1099, 1100, 1101, 1102:      Result := sttDeepSnow;
+      20, 1056, 1055, 1057, 1058, 1059, 1060:      Result := sttGravel;
     end;
   end;
 
@@ -6451,7 +6482,9 @@ var
       or TileHasStone(X,Y)      //If tile has stone no need to change it
       or ArrayContains(KMPoint(X,Y), visited, visitedCnt) //If we already changed this tile
       or ((aStep <> 0) and not TileHasTerrainKindPart(X, Y, tkStone)) //If tile has no stone parts (except initial step)
-      or not TileHasOnlyTerrainKinds(X, Y, [tkStone, tkGrass, tkCoastSand, tkDirt, tkSnow, tkSnowOnDirt, tkBarrenLand]) then //Do not update transitions with other terrains (mountains f.e.)
+      or not TileHasOnlyTerrainKinds(X, Y, [tkStone, tkGrass, tkCoastSand, tkDirt, tkSnow, tkSnowOnDirt, tkBarrenLand,
+            tkMoss, tkPaleGrass, tkGrassDirt, tkGrassSand1, tkGrassSand2, tkGrassSand3,
+            tkSand, tkSnowOnGrass, tkDeepSnow, tkGravel]) then //Do not update transitions with other terrains (mountains f.e.)
       Exit;
 
     // 1. Get tile transition type (with grass / sand etc)
@@ -6569,13 +6602,25 @@ transition := GetStoneTransitionType(aLoc.X,aLoc.Y + 1); //Check transition type
                 sttSnow:        Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 283 + KaMRandom(2, 'TKMTerrain.DecStoneDeposit 7');
                 sttSnowOnDirt:  Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 291 + KaMRandom(2, 'TKMTerrain.DecStoneDeposit 8');
                 sstBarrenLand:  Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 739 + KaMRandom(2, 'TKMTerrain.DecStoneDeposit 9');
+
+                sttMoss:  Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1040;
+                sttPaleGrass:  Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1047;
+                sttGrassOnDirt:  Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1089;
+                sttGrassSand1:  Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1061;
+                sttGrassSand2:  Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1068;
+                sttGrassSand3:  Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1075;
+                sttSand:  Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1082;
+                sttSnowOnGrass:  Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1096;
+                sttDeepSnow:  Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1103;
+                sttGravel:  Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1054;
               end;
     128, 133,
     266, 267,
     275, 276,
     283, 284,
     291, 292,
-    739, 740
+    739, 740,
+    1040, 1047, 1089, 1061, 1068, 1075, 1082, 1096, 1103, 1054
     : begin
                 Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain  := TRAN_TILES[transition, 0]; //Remove stone tile (so tile will have no stone)
                 Land^[aLoc.Y,aLoc.X].BaseLayer.Rotation := KaMRandom(4, 'TKMTerrain.DecStoneDeposit 9');
