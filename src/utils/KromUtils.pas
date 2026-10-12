@@ -46,7 +46,8 @@ function Max(const A,B,C: Single): Single; overload;
 
   function Mix(x1,x2,MixValue:single):single; overload;
   function Mix(x1,x2:integer; MixValue:single):integer; overload;
-  function Lerp(A,B: Single; MixValue: Single): Single;
+  function Lerp(A,B: Single; MixValue: Single): Single; overload;
+  function Lerp(A,B: Integer; MixValue: Single): Integer; overload;
 
   procedure decs(var AText: string; const Len: integer = 1); overload;
   procedure decs(var AText: widestring; const Len: integer = 1); overload;
@@ -361,6 +362,10 @@ begin
   Result := A + (B - A) * MixValue;
 end;
 
+function Lerp(A,B: Integer; MixValue: Single): Integer;
+begin
+  Result := Round(A + (B - A) * MixValue);
+end;
 
 procedure decs(var AText: string; const Len: integer = 1);
 begin

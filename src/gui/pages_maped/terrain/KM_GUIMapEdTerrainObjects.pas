@@ -172,7 +172,7 @@ type
 
 implementation
 uses
-  KM_Main, KM_Resource, KM_ResFonts, KM_ResTexts, KM_ResKeys, KM_Terrain,
+  KM_Main, KM_Resource, KM_ResFonts, KM_ResTexts, KM_ResKeys, KM_Terrain, KM_ResPatterns,
   KM_HandsCollection, KM_RenderUI, KM_InterfaceGame, KM_Utils, KM_Game,
   KM_ResTypes;
 
@@ -1546,10 +1546,16 @@ begin
   If id = 0 then
   begin
     for I := 0 to gRes.Patterns.Local.Count - 1 do
-      ColumnBox_PatternsList.AddItem(MakeListRow([String(gRes.Patterns.Local[I].GetName)]));
+      ColumnBox_PatternsList.AddItem(
+                                      MakeListRow([String(gRes.Patterns.Local[I].GetName)],
+                                                  [PATTERN_TYPE_COLOR[gRes.Patterns.Local[I].PatternType]])
+                                    );
   end else
     for I := 0 to gRes.Patterns[id - 1].Count - 1 do
-      ColumnBox_PatternsList.AddItem(MakeListRow([String(gRes.Patterns[id - 1].Pattern[I].GetName)]));
+      ColumnBox_PatternsList.AddItem(
+                                      MakeListRow([String(gRes.Patterns[id - 1].Pattern[I].GetName)],
+                                                  [PATTERN_TYPE_COLOR[gRes.Patterns[id - 1].Pattern[I].PatternType]])
+                                    );
 
   ColumnBox_PatternsList.ItemIndex := itemID;
   ColumnBox_PatternsList.TopIndex := topID;

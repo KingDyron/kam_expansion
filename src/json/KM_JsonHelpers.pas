@@ -193,12 +193,14 @@ type
     function GetCount : Integer;
   public
     destructor Destroy; override;
+    constructor Create(aPath : String = '');
     procedure LoadFromFile(aPath : String);
     procedure SaveToFile(aPath : String);
     procedure SaveToStream(aStream : TKMemoryStream); overload;
     procedure SaveToStream(aPath : String); overload;
     procedure LoadFromStream(aStream : TKMemoryStream); overload;
     procedure LoadFromStream(aPath : String); overload;
+    procedure Clear;
     //basic
     function GetI(aName : String) : Integer; overload;
     function GetD(aName : String) : Single;  overload;
@@ -277,6 +279,7 @@ type
     function GetCount : Integer;
   public
     destructor Destroy; override;
+    procedure Clear;
     //basic
     function GetI(aIndex : Word) : Integer; overload;
     function GetD(aIndex : Word) : Single; overload;
@@ -2015,6 +2018,13 @@ begin
 
 end;
 
+constructor TKMJsonObject.Create(aPath : String = '');
+begin
+  Inherited Create;
+  If aPath <> '' then
+    LoadFromFile(aPath);
+end;
+
 destructor TKMJsonObject.Destroy;
 var I : integer;
 begin
@@ -2024,6 +2034,18 @@ begin
       FreeAndNil(TObject(fList[I].Value));
     end;
   Inherited;
+end;
+
+procedure TKMJsonObject.Clear;
+var I : integer;
+begin
+  for I := 0 to High(fList) do
+    If fList[I].ValueType in [jvtObject, jvtArray] then
+    begin
+      FreeAndNil(TObject(fList[I].Value));
+    end;
+  fCount := 0;
+
 end;
 
 procedure TKMJsonObject.AddTabs(var aText: string; aCount: Integer);
@@ -2566,6 +2588,19 @@ begin
     end;
   Inherited;
 end;
+
+procedure TKMJsonArrayNew.Clear;
+var I : integer;
+begin
+  for I := 0 to High(fList) do
+    If fList[I].ValueType in [jvtObject, jvtArray] then
+    begin
+      FreeAndNil(TObject(fList[I].Value));
+    end;
+  fCount := 0;
+
+end;
+
 procedure TKMJsonArrayNew.Add(aValue : String);     begin AddToList(aValue, jvtString); end;
 procedure TKMJsonArrayNew.Add(aValue : Byte);       begin AddToList(aValue.ToString, jvtInteger); end;
 procedure TKMJsonArrayNew.Add(aValue : ShortInt);   begin AddToList(aValue.ToString, jvtInteger); end;

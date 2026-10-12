@@ -1839,7 +1839,6 @@ begin
   gTerrain.UpdatePassability(R);
 end;
 
-
 procedure TKMTerrainPainter.EditTile(const aLoc: TKMPoint; aTile: Word; aRotation: Byte; aIsCustom: Boolean = True);
 begin
   if not gTerrain.TileInMapCoords(aLoc.X, aLoc.Y) then Exit;

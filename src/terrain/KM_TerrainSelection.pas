@@ -7,7 +7,7 @@ uses
   KromUtils,
   {$IFDEF MSWindows} Windows, {$ENDIF}
   KM_CommonClasses, KM_Points, KM_Terrain, KM_TerrainTypes, KM_TerrainPainter, KM_RenderPool, KM_ResTilesetTypes,
-  KM_ResTypes,
+  KM_ResTypes, KM_ResPatterns,
   KM_MapEdTypes, KM_Defaults;
 
 
@@ -87,7 +87,7 @@ type
     procedure SetNiceCoal;//smooth coal
     procedure DoDebug;
 
-    procedure AddPattern;
+    procedure AddPattern(aType : TKMPatternType);
     procedure SetFromPattern(aColID, aPatternID : Integer; ReplaceObjects, aDeselect : Boolean);
     property Rect : TKMRect read fSelectionRect write fSelectionRect;
 
@@ -1125,17 +1125,22 @@ begin
   end;
 end;
 
-procedure TKMSelection.AddPattern;
+procedure TKMSelection.AddPattern(aType : TKMPatternType);
 var aStartX, aStartY : Integer;
 begin
-  aStartX := Min(fSelectionRect.Left + 1, gTerrain.MapX - 31);
-  aStartY := Min(fSelectionRect.Top + 1, gTerrain.MapY - 31);
-  gRes.Patterns.AddNewPattern(aStartX, aStartY);
+  aStartX := fSelectionRect.Left;
+  aStartY := fSelectionRect.Top;
+  gRes.Patterns.AddNewPattern(aStartX, aStartY, fSelectionRect.Width, fSelectionRect.Height, aType);
 end;
 
 procedure TKMSelection.SetFromPattern(aColID, aPatternID : Integer; ReplaceObjects, aDeselect : Boolean);
-var X, Y: Integer;
+var X, Y, I: Integer;
   RanX, RanY : Integer;
+  patt : PKMPattern;
+  factor : Single;
+  minH, maxH : Integer;
+  smoothHList : TKMPointList;
+  newHeights : array of array of Word;
 begin
   if (aPatternID < 0) or (aColID < 0) then Exit;
 
@@ -1144,21 +1149,88 @@ begin
 
   RanX := Random(100);
   RanY := Random(100);
-
+  If aColID = 0 then
+    patt := gRes.Patterns.Local[aPatternID]
+  else
+    patt := gRes.Patterns.Pattern[aColID - 1, aPatternID];
+  smoothHList := TKMPointList.Create;
   for X := 1 to gTerrain.MapX - 1 do
     for Y := 1 to gTerrain.MapY - 1 do
       if gTerrain.Land^[Y,X].TileSelected then
       begin
-        If (X > 1) and (X < gTerrain.MapX - 1) and (Y > 1) and (Y <= gTerrain.MapY - 1) then
-        if ReplaceObjects or (not ReplaceObjects and (gTerrain.Land^[Y, X].Obj = 255)) then
-          If aColID = 0 then
-            gTerrain.Land^[Y, X].Obj := gRes.Patterns.Local[aPatternID].GetObject(X + RanX,Y + RanY)
-          else
-            gTerrain.Land^[Y, X].Obj := gRes.Patterns.Pattern[aColID - 1, aPatternID].GetObject(X + RanX,Y + RanY);
+        case patt.PatternType of
+          potObjects :If (X > 1) and (X < gTerrain.MapX - 1) and (Y > 1) and (Y <= gTerrain.MapY - 1) then
+                        if ReplaceObjects or (not ReplaceObjects and (gTerrain.Land^[Y, X].Obj = 255)) then
+                          gTerrain.Land^[Y, X].Obj := patt.GetObject(X + RanX,Y + RanY);
+          potHeights :  begin
+                          If (X > 1) and (X < gTerrain.MapX - 1) and (Y > 1) and (Y <= gTerrain.MapY - 1)
+                            and  gTerrain.Land^[Y - 1,X].TileSelected
+                            and gTerrain.Land^[Y + 1,X].TileSelected
+                            and gTerrain.Land^[Y,X + 1].TileSelected
+                            and gTerrain.Land^[Y,X - 1].TileSelected then
+                            begin
+                              factor := 1;
+                            end
+                            else
+                            begin
+                              factor := 0.5;
+                              smoothHList.AddUnique(KMPoint(X, Y));
+                            end;
 
-        If aDeselect then
-          gTerrain.Land^[Y,X].TileSelected := false;
+                          minH := gTerrain.Land^[Y, X].Height;
+                          maxH := patt.GetObject(X + RanX, Y + RanY);
+
+                          gTerrain.Land^[Y, X].Height := Lerp(minH, maxH, factor);
+
+
+                          If (Y > 1) and not gTerrain.Land^[Y - 1,X].TileSelected then
+                            smoothHList.AddUnique(KMPoint(X, Y - 1));
+                          If (Y < gTerrain.MapY) and not gTerrain.Land^[Y + 1,X].TileSelected then
+                            smoothHList.AddUnique(KMPoint(X, Y + 1));
+                          If (X > 1) and not gTerrain.Land^[Y,X - 1].TileSelected then
+                            smoothHList.AddUnique(KMPoint(X - 1, Y));
+                          If (X < gTerrain.MapX) and not gTerrain.Land^[Y,X + 1].TileSelected then
+                            smoothHList.AddUnique(KMPoint(X + 1, Y));
+                        end;
+        end;
+
       end;
+
+  If aDeselect then
+    for X := 1 to gTerrain.MapX - 1 do
+      for Y := 1 to gTerrain.MapY - 1 do
+        gTerrain.Land^[Y,X].TileSelected := false;
+
+
+
+  If patt.PatternType = potHeights then
+  begin
+    SetLength(newHeights, gTerrain.MapY, gTerrain.MapX);
+    for X := 1 to gTerrain.MapX - 1 do
+      for Y := 1 to gTerrain.MapY - 1 do
+        newHeights[Y,X] := gTerrain.Land^[Y,X].Height;
+    for I := 0 to smoothHList.Count - 1 do
+    begin
+      X := smoothHList[I].X;
+      Y := smoothHList[I].Y;
+      If (X <= 1) or (Y <= 1) then
+        Continue;
+      maxH := (gTerrain.Land^[Y,X].Height
+              + gTerrain.Land^[Y - 1,X].Height
+              + gTerrain.Land^[Y + 1,X].Height
+              + gTerrain.Land^[Y,X - 1].Height
+              + gTerrain.Land^[Y,X + 1].Height) div 5;
+      newHeights[Y,X] := maxH;
+    end;
+
+    for X := 1 to gTerrain.MapX - 1 do
+      for Y := 1 to gTerrain.MapY - 1 do
+        gTerrain.Land^[Y,X].Height := newHeights[Y,X];
+
+    gTerrain.UpdateRenderHeight;
+    gTerrain.UpdateLighting;
+  end;
+  FreeAndNil(smoothHList);
 end;
 
 procedure TKMSelection.SyncTempLand;

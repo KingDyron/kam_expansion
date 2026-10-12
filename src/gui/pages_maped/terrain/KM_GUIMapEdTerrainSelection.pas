@@ -23,7 +23,8 @@ type
       Button_SelectPasteApply: TKMButton;
       Button_SelectPasteCancel: TKMButton;
       Button_SelectFlipH, Button_SelectFlipV: TKMButton;
-      Button_AddPatternObj: TKMButton;
+      Button_AddPatternObj,
+      Button_AddPatternHeight: TKMButton;
       Map_PasteType: array [TKMTerrainSelectionPasteType] of  TKMButtonFlat;
       Button_RMGRND: TKMButton;
       Button_SelectSetCoal: TKMButton;
@@ -48,7 +49,7 @@ uses
   KM_Game, KM_Cursor, KM_RenderUI,
   KM_TerrainSelection, KM_MapEdTypes,
   KM_InterfaceGame,
-  KM_ResTypes;
+  KM_ResTypes, KM_ResPatterns;
 
 
 { TKMMapEdTerrainSelection }
@@ -118,6 +119,10 @@ begin
   Button_AddPatternObj.Anchors := [anLeft, anTop, anRight];
   Button_AddPatternObj.OnClick := SelectionClick;
 
+  Button_AddPatternHeight := TKMButton.Create(Panel_Selection, 9, 420, Panel_Selection.Width - 9, 20, 'Add heights pattern', bsGame);
+  Button_AddPatternHeight.Anchors := [anLeft, anTop, anRight];
+  Button_AddPatternHeight.OnClick := SelectionClick;
+
   Button_SelectDebug := TKMButton.Create(Panel_Selection, 9, 420, Panel_Selection.Width - 9, 20, 'D-remove trees', bsGame);
   Button_SelectDebug.Anchors := [anLeft, anTop, anRight];
   Button_SelectDebug.OnClick := SelectionClick;
@@ -174,22 +179,17 @@ begin
   If sender = Button_SelectDebug then
     gGame.MapEditor.Selection.DoDebug
   else
-  if (Sender = Button_AddPatternObj) then
+  if (Sender = Button_AddPatternObj) or (Sender = Button_AddPatternHeight) then
   begin
 
     if (gGame.MapEditor.Selection.Rect.Left >= 1)
-    and (gGame.MapEditor.Selection.Rect.Top >= 1)
-    and (gGame.MapEditor.Selection.Rect.Right - gGame.MapEditor.Selection.Rect.Left = 30)
-    and (gGame.MapEditor.Selection.Rect.Bottom - gGame.MapEditor.Selection.Rect.Top = 30) then
+    and (gGame.MapEditor.Selection.Rect.Top >= 1)then
     begin
       if Sender = Button_AddPatternObj then
-        gGame.MapEditor.Selection.AddPattern;
-    end else
-    begin
-      gGame.MapEditor.Selection.Rect.SetLeft(Min(Max(gGame.MapEditor.Selection.Rect.Left, 1), gGame.MapSize.X - 32));
-      gGame.MapEditor.Selection.Rect.SetTop(Min(Max(gGame.MapEditor.Selection.Rect.Top, 1), gGame.MapSize.Y - 32));
-      gGame.MapEditor.Selection.Rect.SetRight(gGame.MapEditor.Selection.Rect.Left + 30);
-      gGame.MapEditor.Selection.Rect.SetBottom(gGame.MapEditor.Selection.Rect.Top + 30);
+        gGame.MapEditor.Selection.AddPattern(potObjects)
+      else
+      if Sender = Button_AddPatternHeight then
+        gGame.MapEditor.Selection.AddPattern(potHeights);
     end;
 
 
