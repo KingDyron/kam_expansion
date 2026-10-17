@@ -35,7 +35,7 @@ type
   end;
   TKMTerrainOverlayParams = record
     TileID, ViewAs : Word;
-    FirstLayer, RenderFirst : Boolean;
+    FirstLayer, FrontLayer, RenderFirst : Boolean;
     CanTree : Boolean;
     Rotate : Boolean;
     Visible, ViewInGame : Boolean;
@@ -140,6 +140,7 @@ type
     function IsInfinite : Boolean;
     function IsFirstLayer : Boolean;
     function IsSecondLayer : Boolean;
+    function IsFrontLayer : Boolean;
     function StopsGrowing : Boolean;
     function Visible : Boolean;
     function ViewInGame : Boolean;
@@ -947,6 +948,7 @@ begin
         ViewAs := nTile.I['ViewAs'];
         FirstLayer := nTile.B['IsFirstLayer'];
         RenderFirst := nTile.B['RenderFirst'];
+        FrontLayer := nTile.B['IsFrontLayer'];
         Visible := nTile.B['Visible'];
         ViewInGame := nTile.B['ViewInGame'];
         CanTree := nTile.B['CanTree'];
@@ -1040,6 +1042,11 @@ end;
 function TKMTerrainOverlayHelper.IsSecondLayer : Boolean;
 begin
   Result := not gRes.Tileset.Overlay[Word(self)].FirstLayer;
+  //Result := not (gRes.Tileset.Overlay[Word(self)].funct in [tofRoadDig, tofRoad])
+end;
+function TKMTerrainOverlayHelper.IsFrontLayer : Boolean;
+begin
+  Result := not gRes.Tileset.Overlay[Word(self)].FrontLayer and IsSecondLayer;
   //Result := not (gRes.Tileset.Overlay[Word(self)].funct in [tofRoadDig, tofRoad])
 end;
 function TKMTerrainOverlayHelper.StopsGrowing : Boolean;

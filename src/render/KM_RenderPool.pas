@@ -27,14 +27,22 @@ type
     NightLoc : TKMPoint;
   end;
 
+  //new list to render tiles in front so the units can go below it
+  TKMRenderSpriteTile = record
+    Loc : TKMPoint;
+    ID : Integer;
+    Rot : Integer;
+  end;
+
   // List of sprites prepared to be rendered
   TKMRenderList = class
   private
     fUnitsRXData: TRXData; //shortcut
-    fCount: Word;
+    fCount, fFrontCount, fTilesCount: Word;
     fRenderOrder: array of Word; // Order in which sprites will be drawn ()
     fFrontRenderList: array of TKMRenderSprite;
     fRenderList: array of TKMRenderSprite;
+    fRenderTileList : array of TKMRenderSpriteTile;
 
     fDbgSpritesQueued: Word;
     fDbgSpritesDrawn: Word;
@@ -48,12 +56,14 @@ type
     procedure AddSprite(aRX: TRXType; aID: Integer; pX,pY: Single; nX, nY : Integer; aTeam: Cardinal = $0; aAlphaStep: Single = -1);
     procedure AddSpriteFront(aRX: TRXType; aID: Integer; pX,pY: Single; nX, nY : Integer; aTeam: Cardinal = $0; aAlphaStep: Single = -1);
     procedure AddSpriteG(aRX: TRXType; aID: Integer; aUID: Integer; pX,pY,gX,gY: Single; nX, nY : Integer; aTeam: Cardinal = $0; aAlphaStep: Single = -1; aHighlight: Cardinal = $0);
+    procedure AddTile(aX, aY, aID, aRot : Integer);
 
     property DbgSpritesQueued: Word read fDbgSpritesQueued;
     property DbgSpritesDrawn: Word read fDbgSpritesDrawn;
 
     function GetSelectionUID(const aCurPos: TKMPointF): Integer;
     procedure Clear;
+    procedure ClearTiles;
     procedure SortRenderList;
     procedure Render;
   end;
@@ -462,6 +472,7 @@ begin
     {$IFDEF PERFLOG}
     gPerfLogs.SectionEnter(psFrameTerrain);
     {$ENDIF}
+    fRenderList.ClearTiles;
     fRenderTerrain.ClipRect := clipRect;
     fRenderTerrain.RenderBase(gTerrain.AnimStep, gMySpectator.FogOfWar);
 
@@ -4487,7 +4498,12 @@ end;
 procedure TKMRenderList.Clear;
 begin
   fCount := 0;
-  SetLength(fFrontRenderList, 0);
+  fFrontCount := 0;
+end;
+
+procedure TKMRenderList.ClearTiles;
+begin
+  fTilesCount := 0;
 end;
 
 
@@ -4642,8 +4658,6 @@ begin
 
   Inc(fCount); // New item added
 end;
-
-
 // Child items don't need ground level
 procedure TKMRenderList.AddSprite(aRX: TRXType; aID: Integer; pX: Single; pY: Single; nX: Integer; nY: Integer; aTeam: Cardinal = 0; aAlphaStep: Single = -1);
 begin
@@ -4664,23 +4678,35 @@ begin
   Inc(fCount); // New item added
 end;
 
+
 procedure TKMRenderList.AddSpriteFront(aRX: TRXType; aID: Integer; pX: Single; pY: Single; nX: Integer; nY: Integer; aTeam: Cardinal = 0; aAlphaStep: Single = -1);
-var J : Integer;
 begin
-  J := length(fFrontRenderList);
-  SetLength(fFrontRenderList, J + 1); // Book some space
+  If fFrontCount >= length(fFrontRenderList) then
+    SetLength(fFrontRenderList, fFrontCount + 32); // Book some space
 
-  fFrontRenderList[J].Loc        := KMPointF(pX,pY); // Position of sprite, floating-point
-  fFrontRenderList[J].Feet       := KMPointF(pX,pY);  // it doesnt' matter here
-  fFrontRenderList[J].RX         := aRX;             // RX library
-  fFrontRenderList[J].Id         := aId;             // Texture Id
-  fFrontRenderList[J].UID        := 0;
-  fFrontRenderList[J].NewInst    := False;           // Is this a new item (can be occluded), or a child one (always on top of it's parent)
-  fFrontRenderList[J].TeamColor  := aTeam;           // Team Id (determines color)
-  fFrontRenderList[J].HighlightColor  := 0;           // Team Id (determines color)
-  fFrontRenderList[J].AlphaStep  := aAlphaStep;      // Alpha step for wip buildings
-  fFrontRenderList[J].NightLoc  := KMPoint(nX, nY);      // Alpha step for wip buildings
+  fFrontRenderList[fFrontCount].Loc        := KMPointF(pX,pY); // Position of sprite, floating-point
+  fFrontRenderList[fFrontCount].Feet       := KMPointF(pX,pY);  // it doesnt' matter here
+  fFrontRenderList[fFrontCount].RX         := aRX;             // RX library
+  fFrontRenderList[fFrontCount].Id         := aId;             // Texture Id
+  fFrontRenderList[fFrontCount].UID        := 0;
+  fFrontRenderList[fFrontCount].NewInst    := False;           // Is this a new item (can be occluded), or a child one (always on top of it's parent)
+  fFrontRenderList[fFrontCount].TeamColor  := aTeam;           // Team Id (determines color)
+  fFrontRenderList[fFrontCount].HighlightColor  := 0;           // Team Id (determines color)
+  fFrontRenderList[fFrontCount].AlphaStep  := aAlphaStep;      // Alpha step for wip buildings
+  fFrontRenderList[fFrontCount].NightLoc  := KMPoint(nX, nY);      // Alpha step for wip buildings
+  Inc(fFrontCount);
+end;
 
+
+procedure TKMRenderList.AddTile(aX: Integer; aY: Integer; aID: Integer; aRot: Integer);
+begin
+  If fTilesCount >= length(fRenderTileList) then
+    SetLength(fRenderTileList, fTilesCount + 60); // Book some space
+
+  fRenderTileList[fTilesCount].Loc := KMPoint(aX, aY);
+  fRenderTileList[fTilesCount].ID := aID;
+  fRenderTileList[fTilesCount].Rot := aRot;
+  Inc(fTilesCount);
 end;
 
 
@@ -4771,8 +4797,16 @@ begin
       until ((K = fCount) or fRenderList[K].NewInst);
     glPopMatrix;
   end;
+
+  //special case to render tiles above the units and houses
+  //mostly used in tile overlay
+  for I := 0 to fTilesCount - 1 do
+    gRenderPool.RenderTerrain.RenderTile(fRenderTileList[I].ID,
+                              fRenderTileList[I].Loc.X,
+                              fRenderTileList[I].Loc.Y,
+                              fRenderTileList[I].Rot);
   //front render list is mainly for animations and particles
-  for I := 0 to High(fFrontRenderList) do
+  for I := 0 to fFrontCount - 1 do
   begin
 
     glPushMatrix;

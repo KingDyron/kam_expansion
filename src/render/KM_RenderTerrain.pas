@@ -936,25 +936,36 @@ begin
 
   if gTerrain.Land^[pY, pX].TileOverlay2 <> OVERLAY_NONE then
   begin
-    If to2.HasRoadConnection then
+    If to2.FrontLayer then
     begin
-      to3 := gTerrain.Land^[pY, pX].TileOverlay2;
-      road := 0;
-      if (pY - 1 >= 1) then
-        road := road + Byte(gTerrain.Land^[pY - 1, pX].TileOverlay2 = to3) shl 0;
-      if (pX + 1 <= gTerrain.MapX - 1) then
-        road := road + Byte(gTerrain.Land^[pY, pX + 1].TileOverlay2 = to3) shl 1;
-      if (pY + 1 <= gTerrain.MapY - 1) then
-        road := road + Byte(gTerrain.Land^[pY + 1, pX].TileOverlay2 = to3) shl 2;
-      if (pX - 1 >= 1) then
-        road := road + Byte(gTerrain.Land^[pY, pX - 1].TileOverlay2 = to3) shl 3;
-      ID := to2.RoadConnection[road].Tile;
-      rot := to2.RoadConnection[road].Rot;
-      RenderTile(ID, pX, pY, rot, DoHighlight, HighlightColor);
-      //RenderTile(762 + rot, pX, pY, 0, DoHighlight, HighlightColor);
+      If (gGameParams.IsMapEditor or to2.ViewInGame) then
+        gRenderPool.RenderList.AddTile(pX, pY,
+                                      IfThen(not gGameParams.IsMapEditor and (to2.ViewAs > 0), to2.ViewAs, to2.TileID),
+                                      IfThen(to2.Rotate, gTerrain.Land^[pY,pX].BaseLayer.Rotation, 0));
+
     end else
-    If (gGameParams.IsMapEditor or to2.ViewInGame) and not to2.RenderFirst then
-      RenderTile(IfThen(not gGameParams.IsMapEditor and (to2.ViewAs > 0), to2.ViewAs, to2.TileID), pX, pY,  IfThen(to2.Rotate, gTerrain.Land^[pY,pX].BaseLayer.Rotation, 0), DoHighlight, HighlightColor);
+    begin
+      If to2.HasRoadConnection then
+      begin
+        to3 := gTerrain.Land^[pY, pX].TileOverlay2;
+        road := 0;
+        if (pY - 1 >= 1) then
+          road := road + Byte(gTerrain.Land^[pY - 1, pX].TileOverlay2 = to3) shl 0;
+        if (pX + 1 <= gTerrain.MapX - 1) then
+          road := road + Byte(gTerrain.Land^[pY, pX + 1].TileOverlay2 = to3) shl 1;
+        if (pY + 1 <= gTerrain.MapY - 1) then
+          road := road + Byte(gTerrain.Land^[pY + 1, pX].TileOverlay2 = to3) shl 2;
+        if (pX - 1 >= 1) then
+          road := road + Byte(gTerrain.Land^[pY, pX - 1].TileOverlay2 = to3) shl 3;
+        ID := to2.RoadConnection[road].Tile;
+        rot := to2.RoadConnection[road].Rot;
+        RenderTile(ID, pX, pY, rot, DoHighlight, HighlightColor);
+        //RenderTile(762 + rot, pX, pY, 0, DoHighlight, HighlightColor);
+      end else
+      If (gGameParams.IsMapEditor or to2.ViewInGame) and not to2.RenderFirst then
+        RenderTile(IfThen(not gGameParams.IsMapEditor and (to2.ViewAs > 0), to2.ViewAs, to2.TileID), pX, pY,  IfThen(to2.Rotate, gTerrain.Land^[pY,pX].BaseLayer.Rotation, 0), DoHighlight, HighlightColor);
+
+    end;
   end;
 
   if gTerrain.Land^[pY, pX].TileSelected then

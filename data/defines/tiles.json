@@ -1150,7 +1150,9 @@
 	{"ID": 1106, "Walkable": true, "Roadable": false, "CornersTerKinds": ["tkStone", "tkStone", "tkStone", "tkStone"]},
 	{"ID": 1107, "Walkable": true, "Roadable": false, "CornersTerKinds": ["tkStone", "tkStone", "tkStone", "tkStone"]},
 	{"ID": 1108, "Walkable": true, "Sand" : true, "Roadable": true, "CornersTerKinds": ["tkSnowOnGrass", "tkStone", "tkSnowOnGrass", "tkSnowOnGrass"]},
-	{"ID": 1109, "Walkable": true, "Roadable": true, "CornersTerKinds": ["tkStone", "tkStone", "tkSnowOnGrass", "tkSnowOnGrass"]}
+	{"ID": 1109, "Walkable": true, "Roadable": true, "CornersTerKinds": ["tkStone", "tkStone", "tkSnowOnGrass", "tkSnowOnGrass"]},
+	{"ID": 1110, "Walkable": true, "Roadable": true, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]},
+	{"ID": 1111, "Walkable": true, "Roadable": true, "CornersTerKinds": ["tkCustom", "tkCustom", "tkCustom", "tkCustom"]}
 
   ],
   "Overlays" : [
@@ -1233,7 +1235,9 @@
 	{"TileID": 1034, "IsFirstLayer": false, "Visible": true, "ViewInGame": true, "CanTree" : false, "Function" : 0, "Hint" : 0},  
 	{"TileID": 1036, "IsFirstLayer": false, "Visible": true, "ViewInGame": true, "CanTree" : false, "Function" : 0, "Hint" : 0},  
 	{"TileID": 1037, "IsFirstLayer": false, "Visible": true, "ViewInGame": true, "CanTree" : false, "Function" : 0, "Hint" : 0},  
-	{"TileID": 1038, "IsFirstLayer": false, "Visible": true, "ViewInGame": true, "CanTree" : false, "Function" : 0, "Hint" : 0}  
+	{"TileID": 1038, "IsFirstLayer": false, "Visible": true, "ViewInGame": true, "CanTree" : false, "Function" : 0, "Hint" : 0},
+	{"TileID": 1110, "IsFirstLayer": false, "IsFrontLayer": true, "Visible": true, "ViewInGame": true, "CanTree" : false, "Function" : 11, "Hint" : 0},  
+	{"TileID": 1111, "IsFirstLayer": false, "IsFrontLayer": true, "Visible": true, "ViewInGame": true, "CanTree" : false, "Function" : 11, "Hint" : 0}   
   ],
   
   "OverlayGuiOrder" : [0, 1, 2, 3, 4, 5,
@@ -1249,7 +1253,9 @@
     0,
     34, 35, 36, 37, 43, 44, 47, 45,
 	0,
-	50, 51, 52, 54, 53, 55
+	50, 51, 52, 54, 53, 55,
+	0,
+	56,57
 	]
   
 }
