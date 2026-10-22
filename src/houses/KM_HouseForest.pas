@@ -397,8 +397,7 @@ begin
   for I := 0 to fCount - 1 do
   begin
     gRenderPool.RenderTree(fTrees[I].Obj, FlagAnimStep + I,
-                                  fTrees[I].Pos.X + entr.X - 1.75, fTrees[I].Pos.Y + entr.Y - 3.75,
-                                  entr);
+                                  fTrees[I].Pos.X + entr.X - 1.75, fTrees[I].Pos.Y + entr.Y - 3.75);
   end;
 
   If fCuttingAnimStep > 0 then

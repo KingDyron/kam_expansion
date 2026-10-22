@@ -545,9 +545,7 @@ end;
 procedure TKMRenderTerrain.RenderQuadTextureBlended(var TexC: TKMUVRect; tX,tY: Word; aCorners: TKMTileCorners; aBlendingLevel: Byte);
 var
   blendFactor: Single;
-  night : Single;
 begin
-  night := gTerrain.GetNightAtTile(tX, tY);
   blendFactor := 1 - Max(0, Min(1, aBlendingLevel / TERRAIN_MAX_BLENDING_LEVEL));
   with gTerrain do
     if RENDER_3D then
@@ -559,29 +557,29 @@ begin
     end else
     begin
       if aCorners[0] then
-        glColor4f(1 * night, 1 * night, 1 * night, 1)
+        glColor4f(1, 1, 1, 1)
       else
-        glColor4f(1 * night, 1 * night, 1 * night,blendFactor);
+        glColor4f(1, 1, 1,blendFactor);
       glTexCoord2fv(@TexC[1]); glVertex3f(tX-1,tY-1-LandExt^[tY,  tX].RenderHeight / CELL_HEIGHT_DIV, tY-1);
 
       if aCorners[3] then
-        glColor4f(1 * night, 1 * night, 1 * night,1)
+        glColor4f(1, 1, 1,1)
       else
-        glColor4f(1 * night, 1 * night, 1 * night,blendFactor);
+        glColor4f(1, 1, 1,blendFactor);
       glTexCoord2fv(@TexC[2]); glVertex3f(tX-1,tY  -LandExt^[tY+1,tX].RenderHeight / CELL_HEIGHT_DIV, tY-1);
 
       if aCorners[2] then
-        glColor4f(1 * night, 1 * night, 1 * night,1)
+        glColor4f(1, 1, 1,1)
       else
-        glColor4f(1 * night, 1 * night, 1 * night,blendFactor);
+        glColor4f(1, 1, 1,blendFactor);
       glTexCoord2fv(@TexC[3]); glVertex3f(tX  ,tY  -LandExt^[tY+1,tX+1].RenderHeight / CELL_HEIGHT_DIV, tY-1);
 
       if aCorners[1] then
-        glColor4f(1 * night, 1 * night, 1 * night,1)
+        glColor4f(1, 1, 1,1)
       else
-        glColor4f(1 * night, 1 * night, 1 * night,blendFactor);
+        glColor4f(1, 1, 1,blendFactor);
       glTexCoord2fv(@TexC[4]); glVertex3f(tX  ,tY-1-LandExt^[tY,  tX+1].RenderHeight / CELL_HEIGHT_DIV, tY-1);
-      glColor4f(1 * night, 1 * night, 1 * night,1);
+      glColor4f(1, 1, 1,1);
     end;
 end;
 
@@ -592,7 +590,6 @@ var
   texC: TKMUVRect;
   sizeX, sizeY: Word;
   tX, tY: Word;
-  night : Single;
 begin
   {$IFDEF PERFLOG}
   gPerfLogs.SectionEnter(psFrameTiles);
@@ -634,8 +631,7 @@ begin
         begin
           tX := K + fClipRect.Left;
           tY := I + fClipRect.Top;
-          night := gTerrain.GetNightAtTile(tX, tY);
-          glColor4f(1 * night,1 * night,1 * night,1);
+          glColor4f(1,1,1,1);
           if DO_DEBUG_TER_RENDER and not (0 in DEBUG_TERRAIN_LAYERS) then Continue;
 
           if TileHasToBeRendered(I*K = 0, tX, tY, aFow) then // Do not render tiles fully covered by FOW
@@ -665,7 +661,6 @@ var
   sizeX, sizeY: Word;
   tX, tY: Word;
   terInfo: TKMGenTerrainInfo;
-  night : Single;
 begin
   {$IFDEF PERFLOG}
   gPerfLogs.SectionEnter(psFrameTilesLayers);
@@ -710,8 +705,7 @@ begin
         begin
           tX := K + fClipRect.Left;
           tY := I + fClipRect.Top;
-          night := gTerrain.GetNightAtTile(tX, tY);
-          glColor4f(1 * night,1 * night,1 * night,1);
+          glColor4f(1,1,1,1);
 
           if TileHasToBeRendered(I*K = 0,tX,tY,aFow) then // Do not render tiles fully covered by FOW
             for L := 0 to Land^[tY,tX].LayersCnt - 1 do
@@ -748,7 +742,6 @@ var
   texC: TKMUVRect;
   animID: Word;
   tile: TKMTileParams;
-  night : Single;
 begin
   if SKIP_TER_RENDER_ANIMS then Exit;
 
@@ -801,8 +794,7 @@ begin
 
               glBegin(GL_TRIANGLE_FAN);
                 //glColor4f(1 * TERRAIN_DARK,1 * TERRAIN_DARK,1 * TERRAIN_DARK,1);
-                night := gTerrain.GetNightAtTile(K, I);
-                glColor4f(1 * night,1 * night,1 * night,1);
+                glColor4f(1,1,1,1);
                 RenderQuadTexture(texC, K, I);
               glEnd;
             end;
@@ -1100,7 +1092,7 @@ begin
         begin
           tX := K + fClipRect.Left;
           tY := I + fClipRect.Top;
-          night := gTerrain.GetNightAtTile(tX, tY);
+          night := gTerrain.GetNightScale;
           //tile := gTerrain.Land[tY, tX].BaseLayer.Terrain;
           //glColor4f(1 * night,1 * night, 0.6 * night,1);
           if TileHasToBeRendered(I*K = 0,tX,tY,aFow) then // Do not render tiles fully covered by FOW
@@ -1466,15 +1458,13 @@ procedure TKMRenderTerrain.DoRenderTile(aTerrainId: Word; pX,pY,Rot: Integer; aC
                                       aBlendingLvl: Byte = 0);
 var
   texC: TKMUVRect; // Texture UV coordinates
-  night : Single;
 begin
   if not gTerrain.TileInMapCoords(pX,pY) then Exit;
-  night := gTerrain.GetNightAtTile(pX, pY);
 
   if DoHighlight then
     glColor4ub(HighlightColor and $FF, (HighlightColor shr 8) and $FF, (HighlightColor shr 16) and $FF, $FF)
   else
-    glColor4f(1 * night, 1 * night, 1 * night, 1);
+    glColor4f(1, 1, 1, 1);
 
   if aDoBindTexture then
     TKMRender.BindTexture(gGFXData[rxTiles, aTerrainId + 1].Tex.TexID);
@@ -1501,11 +1491,9 @@ const
   NO_CORNERS: TKMTileCorners = (False, False, False, False);
 var
   texC: TKMUVRect; // Texture UV coordinates
-  night : Single;
 begin
   if not gTerrain.TileInMapCoords(pX,pY) then Exit;
-  night := gTerrain.GetNightAtTile(pX, pY);
-  glColor4f(1 * night, 1 * night, 1 * night, 1);
+  glColor4f(1, 1, 1, 1);
   //glColor4f(1, 1, 1, 1);
 
   TKMRender.BindTexture(gGFXData[aRX, aID].Tex.TexID);
@@ -1559,11 +1547,9 @@ var
   texID: Integer;
   x1, y1, y2, fenceX, fenceY: Single;
   heightInPx: Integer;
-  night : Single;
 begin
   if Pos = dirNA then
     Exit;
-  night := gTerrain.GetNightAtTile(pX, pY);
 
   case aFence of
     fncHouseFence: if Pos in [dirN,dirS] then texID:=463 else texID:=467; //WIP (Wood planks)
@@ -1579,7 +1565,7 @@ begin
     else          texID := 0;
   end;
   if not (aFence in [fncHousePlan]) then
-    glColor4f(1 * night,1 * night,1 * night,1)
+    glColor4f(1,1,1,1)
   else
     glColor4f(1, 1, 1, 1);
 

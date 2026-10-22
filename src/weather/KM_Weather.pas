@@ -333,8 +333,8 @@ var I : Integer;
 begin
 
   for I := 1 to length(fClouds) do
-    gRenderPool.RenderSpriteCloud(fAnims[fState].Animation[fAge], fPos.X + fClouds[I - 1].X, fPos.Y + fClouds[I - 1].Y, 0, 1, 1);
-  gRenderPool.RenderSpriteCloud(fAnims[fState].Animation[fAge], fPos.X, fPos.Y, 0, 1, 1);
+    gRenderPool.RenderSpriteCloud(fAnims[fState].Animation[fAge], fPos.X + fClouds[I - 1].X, fPos.Y + fClouds[I - 1].Y, 0, 1);
+  gRenderPool.RenderSpriteCloud(fAnims[fState].Animation[fAge], fPos.X, fPos.Y, 0, 1);
   Exit;
 
   for I := 1 to length(fClouds) do
@@ -723,7 +723,7 @@ begin
   else
     alpha := 1;
 
-  gRenderPool.RenderSpriteCloud(fAnims[fState].Animation[fAge], fPos.X, fPos.Y, fRotation, 1, alpha);
+  gRenderPool.RenderSpriteCloud(fAnims[fState].Animation[fAge], fPos.X, fPos.Y, fRotation, alpha);
 end;
 constructor TKMWeatherBirds.Load(aType : TKMWeatherType; LoadStream : TKMemoryStream);
 begin

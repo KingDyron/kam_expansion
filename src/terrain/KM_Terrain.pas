@@ -482,9 +482,7 @@ type
     procedure UpdateLight(aLoc : TKMPoint; aRadius, aPower : Byte);
     procedure AddLight(aLoc : TKMPoint; aRadius, aPower : Byte);
     procedure RemLight(aLoc : TKMPoint);
-    function GetNightAtTile(aX, aY : Integer) : Single;overload;
     function GetNightScale : Single;overload;
-    function GetNightAtTile(aLoc : TKMPoint) : Single;overload;
     property NightFactor : Single read GetNightFactor write SetNightFactor;
     function LocalNightSpeed : Integer;
     function IsNight : Boolean;
@@ -9815,29 +9813,13 @@ begin
   fNightFactor := Abs(Round(aValue * LocalNightSpeed));
 end;
 
-function TKMTerrain.GetNightAtTile(aX: Integer; aY: Integer): Single;
-begin
-  Result := 1;
-  {if not TileInMapCoords(aX, aY) then
-    Exit(1);
-
-  Result := MIN_NIGHT_DARKNESS + (Sin(GetNightFactor) + 1) * 0.6 * (1 - MIN_NIGHT_DARKNESS);
-  Result := Mix(1, Result, 1 - Land[aY, aX].NightAffection);}
-end;
-
 function TKMTerrain.GetNightScale : Single;
 begin
   Result := MIN_NIGHT_DARKNESS + (Sin(GetNightFactor) + 1) * 0.6 * (1 - MIN_NIGHT_DARKNESS);
 end;
 
-function TKMTerrain.GetNightAtTile(aLoc: TKMPoint): Single;
-begin
-  Result := GetNightAtTile(aLoc.X, aLoc.Y);
-end;
-
 function TKMTerrain.LocalNightSpeed: Integer;
 begin
-  //Result := gGame.Weather.Settings.NightSpeed;
   Result := NIGHT_SPEED * (MAX_NIGHT_SPEED - gGame.Weather.Settings.NightSpeed);
 end;
 

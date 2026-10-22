@@ -520,8 +520,7 @@ begin
                                           fAnimals[I].AnimalType,
                                           fAnimals[I].Action, fAnimals[I].Dir,
                                           fAnimals[I].AnimStep,
-                                          Spec.Colors[fAnimals[I].Color, 1], Spec.Colors[fAnimals[I].Color, 0],
-                                          Entrance);
+                                          Spec.Colors[fAnimals[I].Color, 1], Spec.Colors[fAnimals[I].Color, 0]);
 
       end;
       for I := 0 to High(fObjects) do
@@ -542,25 +541,20 @@ begin
 
         gRenderPool.RenderTree(632, FlagAnimStep,
                               entr.X,
-                              entr.Y - 1,
-                              entr);
+                              entr.Y - 1);
         gRenderPool.RenderTree(632, FlagAnimStep,
                               entr.X + 0.5,
-                              entr.Y - 1,
-                              entr);
+                              entr.Y - 1);
         gRenderPool.RenderTree(632, FlagAnimStep,
                               entr.X + 0.5,
-                              entr.Y - 0.5,
-                              entr);
+                              entr.Y - 0.5);
 
         gRenderPool.RenderTree(632, FlagAnimStep,
                               entr.X + 1,
-                              entr.Y - 1,
-                              entr);
+                              entr.Y - 1);
         gRenderPool.RenderTree(632, FlagAnimStep,
                               entr.X + 1,
-                              entr.Y - 0.5,
-                              entr);
+                              entr.Y - 0.5);
 
 
 

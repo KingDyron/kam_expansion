@@ -24,7 +24,6 @@ type
     TeamColor, HighlightColor: Cardinal;
     AlphaStep: Single; // Only apply-able to HouseBuild
     SelectionRect: TKMRectF; // Used for selecting units by sprite
-    NightLoc : TKMPoint;
   end;
 
   //new list to render tiles in front so the units can go below it
@@ -53,9 +52,9 @@ type
     constructor Create;
     destructor Destroy; override;
 
-    procedure AddSprite(aRX: TRXType; aID: Integer; pX,pY: Single; nX, nY : Integer; aTeam: Cardinal = $0; aAlphaStep: Single = -1);
-    procedure AddSpriteFront(aRX: TRXType; aID: Integer; pX,pY: Single; nX, nY : Integer; aTeam: Cardinal = $0; aAlphaStep: Single = -1);
-    procedure AddSpriteG(aRX: TRXType; aID: Integer; aUID: Integer; pX,pY,gX,gY: Single; nX, nY : Integer; aTeam: Cardinal = $0; aAlphaStep: Single = -1; aHighlight: Cardinal = $0);
+    procedure AddSprite(aRX: TRXType; aID: Integer; pX,pY: Single; aTeam: Cardinal = $0; aAlphaStep: Single = -1);
+    procedure AddSpriteFront(aRX: TRXType; aID: Integer; pX,pY: Single; aTeam: Cardinal = $0; aAlphaStep: Single = -1);
+    procedure AddSpriteG(aRX: TRXType; aID: Integer; aUID: Integer; pX,pY,gX,gY: Single;  aTeam: Cardinal = $0; aAlphaStep: Single = -1; aHighlight: Cardinal = $0);
     procedure AddTile(aX, aY, aID, aRot : Integer);
 
     property DbgSpritesQueued: Word read fDbgSpritesQueued;
@@ -70,31 +69,21 @@ type
 
   TKMRenderDeviceCommon = class
   protected
-    procedure RenderSprite(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+    procedure RenderSprite(aRX: TRXType; aId: Integer; aX, aY: Single; Col: TColor4; DoHighlight: Boolean = False;
                            HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1); overload; virtual;
-    procedure RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+    procedure RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY: Single; Col: TColor4; DoHighlight: Boolean = False;
                            HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1); virtual;
-    procedure RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY, aNight: Single;
+    procedure RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY: Single;
                                     aId2: Integer = 0; aStoneProgress: Single = 0; X2: Single = 0; Y2: Single = 0); virtual;
   end;
 
   TKMRenderDeviceNoShadow = class(TKMRenderDeviceCommon)
   protected
-    procedure RenderSprite(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+    procedure RenderSprite(aRX: TRXType; aId: Integer; aX, aY: Single; Col: TColor4; DoHighlight: Boolean = False;
                            HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1); overload; override;
-    procedure RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+    procedure RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY: Single; Col: TColor4; DoHighlight: Boolean = False;
                            HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1); override;
-    procedure RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY, aNight: Single;
-                                    aId2: Integer = 0; aStoneProgress: Single = 0; X2: Single = 0; Y2: Single = 0); override;
-  end;
-
-  TKMRenderDeviceNoNight = class(TKMRenderDeviceCommon)
-  protected
-    procedure RenderSprite(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
-                           HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1); overload; override;
-    procedure RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
-                           HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1); override;
-    procedure RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY, aNight: Single;
+    procedure RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY: Single;
                                     aId2: Integer = 0; aStoneProgress: Single = 0; X2: Single = 0; Y2: Single = 0); override;
   end;
 
@@ -119,6 +108,12 @@ type
     fMarksList: TKMPointTagList;
     fHouseOutline: TKMPointList;
     fRenderDevice: TKMRenderDeviceCommon;
+
+    fLightsCount : Integer;
+    fLightsList : array of record
+      Loc : TKMPointF;
+      Radius : Integer;
+    end;
 
     fLightFBOInited : Boolean;
     fLightFBO : GLuint;
@@ -179,19 +174,18 @@ type
     procedure RenderBigEraseTileInt(const X,Y: Integer);
     procedure RenderAssignToShip;
 
+    procedure UpdateLights;
     procedure CreateLightFBO;
     procedure RenderLights;
   protected
 
     procedure RenderSprite(aRX: TRXType; aId: Integer; aX, aY: Single; Col: TColor4; DoHighlight: Boolean = False;
                            HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1);overload;
-    procedure RenderSprite(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
-                           HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1); overload; virtual;
-    procedure RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+    procedure RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY: Single; Col: TColor4; DoHighlight: Boolean = False;
                            HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1); virtual;
-    procedure RenderSpriteFront(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+    procedure RenderSpriteFront(aRX: TRXType; aId: Integer; aX, aY: Single; Col: TColor4; DoHighlight: Boolean = False;
                            HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1); virtual;
-    procedure RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY, aNight: Single;
+    procedure RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY: Single;
                                     aId2: Integer = 0; aStoneProgress: Single = 0; X2: Single = 0; Y2: Single = 0); virtual;
   public
     IntScale : Single;
@@ -230,8 +224,7 @@ type
                                   aAnimStep: Cardinal; aFlagColor : Cardinal; aDoImmediateRender: Boolean = False);
 
     procedure AddHousePastureAnimal(const aLoc: TKMPointF; aAnimal : TKMPastureAnimalType; Action : TKMPastureAnimalAction; Dir : TKMDirection;
-                                  aAnimStep: Cardinal; C1, C2: TColor4; aNightLoc : TKMPoint;
-                                  aDoImmediateRender: Boolean = False);
+                                  aAnimStep: Cardinal; C1, C2: TColor4; aDoImmediateRender: Boolean = False);
     procedure AddAnimation(const aLoc: TKMPoint; aAnim : TKMAnimLoop; aAnimStep: Cardinal; aFlagColor: TColor4; aRX : TRXType;
                           aDoImmediateRender: Boolean = False; aDoHighlight: Boolean = False; aHighlightColor: TColor4 = 0; aFront : Boolean = false; aAlphaStep : Single = -1);Overload;
     procedure AddAnimation(const aLoc: TKMPointF; aAnim : TKMAnimLoop; aAnimStep: Cardinal; aFlagColor: TColor4; aRX : TRXType;
@@ -278,17 +271,17 @@ type
     procedure RenderMapElement1(aIndex: Word; aAnimStep: Cardinal; LocX,LocY: Integer; aLoopAnim: Boolean; aDoImmediateRender: Boolean = False; aDeleting: Boolean = False; aOnTop: Boolean = False);
     procedure RenderMapElement4(aIndex: Word; aAnimStep: Cardinal; pX,pY: Integer; aIsDouble: Boolean; aDoImmediateRender: Boolean = False; aDeleting: Boolean = False; aOnTop: Boolean = False);
     procedure RenderMapElement(aIndex: Word; aAnimStep,pX,pY: Integer; aDoImmediateRender: Boolean = False; aDeleting: Boolean = False; aOnTop: Boolean = False);
-    procedure RenderTree(aIndex: Word; aAnimStep: Cardinal; LocX,LocY: Single; nightLoc : TKMPoint;
-                        aDoImmediateRender: Boolean = False; aDeleting: Boolean = False);
+    procedure RenderTree(aIndex: Word; aAnimStep: Cardinal; LocX,LocY: Single; aDoImmediateRender: Boolean = False; aDeleting: Boolean = False);
     procedure RenderSpriteOnTile(const aLoc: TKMPoint; aId: Integer; aFlagColor: TColor4 = $FFFFFFFF; aRX : TRXType = rxGui);
     procedure RenderSpriteOnTerrain(const aLoc: TKMPointF; aId: Integer; aFlagColor: TColor4 = $FFFFFFFF; aForced: Boolean = False; aRX : TRXType = rxGui);
     procedure RenderTile(aTerrainId: Word; pX,pY,Rot: Integer);
     procedure RenderWireTile(const P: TKMPoint; aCol: TColor4; aInset: Single = 0.0; aLineWidth: Single = -1);
     procedure RenderCircle(P: TKMPointF; aRad : Single; aFill, aLine : TColor4; aLineWidth : Integer = -1);
 
-    procedure RenderSpriteCloud(aId: Integer; aX, aY, aRotation, aNight: Single; aAlpha : Single);
+    procedure RenderSpriteCloud(aId: Integer; aX, aY, aRotation: Single; aAlpha : Single);
 
-    procedure UpdateLights;
+    procedure AddLight(aX, aY: Single; aRadius : Integer);
+
 
 
     property RenderDebug: TKMRenderDebug read fRenderDebug;
@@ -405,9 +398,6 @@ procedure TKMRenderPool.CreateRenderDevice(aWeatherSettings : TKMSettingsWeather
 begin
   FreeAndNil(fRenderDevice);
 
-  If (aWeatherSettings.NightTime = 0) and (aWeatherSettings.NightSpeed = 0) then
-    fRenderDevice := TKMRenderDeviceNoNight.Create
-  else
   If not aWeatherSettings.DynamicShadow then
   begin
     fRenderDevice := TKMRenderDeviceNoShadow.Create
@@ -467,7 +457,6 @@ var
   clipRect: TKMRect;
 begin
   if fRender.Blind then Exit;
-  UpdateLights;
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glViewport(0, 0, fRender.ScreenX, fRender.ScreenY);
 
@@ -496,6 +485,7 @@ begin
     {$IFDEF PERFLOG}
     gPerfLogs.SectionEnter(psFrameTerrain);
     {$ENDIF}
+    fLightsCount := 0;
     fRenderList.ClearTiles;
     fRenderTerrain.ClipRect := clipRect;
     fRenderTerrain.RenderBase(gTerrain.AnimStep, gMySpectator.FogOfWar);
@@ -526,6 +516,7 @@ begin
     PaintFlagPoints(True);
     gHands.Paint(clipRect, aTickLag); // Units and houses
     gProjectiles.Paint(aTickLag);
+    UpdateLights;
 
     if not gGameParams.IsMapEditor then
     begin
@@ -564,40 +555,37 @@ var ang : Single;
     P : TKMPointF;
 
 begin
-  If not fLightFBOInited then
-    CreateLightFBO;
+  if (gGameSettings.Weather.NightTime = 0) and (gGameSettings.Weather.NightSpeed = 0) then
+    Exit;
+  If gGame.Params.IsMapEditor then
+    Exit;
+
   If gTerrain = nil then
     Exit;
+  If gTerrain.GetNightScale >= 1 then
+    Exit;
+  If not fLightFBOInited then
+    CreateLightFBO;
   glBindFramebuffer(GL_FRAMEBUFFER, fLightFBO);
-  glViewport(0, 0, fRender.ScreenX, fRender.ScreenY);
+  glViewport(0, 0, fLightTexSizeX, fLightTexSizeY);
   glClearColor(0, 0, 0.05, 1);
   glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT or GL_STENCIL_BUFFER_BIT);
+  glLoadIdentity; // Reset The View
 
   glPushAttrib(GL_LINE_BIT or GL_POINT_BIT);
     //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA); //Set alpha mode
     //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA); //Set alpha mode
     glBlendFunc(GL_ZERO, GL_ONE_MINUS_SRC_COLOR); //Set alpha mode
-    TKMRender.BindTexture(0);
-    glColor4f(1, 1, 1, 1);
-    for L := 0 to gTerrain.Lights.Count - 1 do
-    begin
-      P := KMPointF(gTerrain.Lights[L]);
-      rad := gTerrain.Lights.Tag[L];
-      {glBegin(GL_TRIANGLE_FAN);
-        glColor4f(1, 1, 1, 1);
-        //glColor4f(1, 1, 1, 1);
-        glVertex2f(P.X, P.Y);
 
-        for I := 0 to 16 do
-        begin
-          ang := I / 8 * Pi;
-          glColor4f(0, 0, 0, 0);
-          glVertex2f(P.X - 1 + Sin(ang) * rad, P.Y - 1 + Cos(ang) * rad);
-        end;
-      glEnd;}
-      with gGFXData[rxTrees, 1682] do
+    with gGFXData[rxTrees, 1682] do
+    begin
+      TKMRender.BindTexture(Tex.TexID);
+      //render terrain lights
+      glColor4f(1, 1, 1, 1);
+      for L := 0 to gTerrain.Lights.Count - 1 do
       begin
-        TKMRender.BindTexture(Tex.TexID);
+        P := KMPointF(gTerrain.Lights[L]);
+        rad := gTerrain.Lights.Tag[L];
 
         glBegin(GL_QUADS);
           glTexCoord2f(Tex.u1,Tex.v1); glVertex2f(P.X-rad, P.Y-rad);
@@ -606,11 +594,26 @@ begin
           glTexCoord2f(Tex.u1,Tex.v2); glVertex2f(P.X-rad, P.Y+rad);
         glEnd;
       end;
+      //render lights from units
+      for L := 0 to fLightsCount - 1 do
+      begin
+        P := fLightsList[L].Loc;
+        rad := fLightsList[L].Radius;
+        glBegin(GL_QUADS);
+          glTexCoord2f(Tex.u1,Tex.v1); glVertex2f(P.X-rad, P.Y-rad);
+          glTexCoord2f(Tex.u2,Tex.v1); glVertex2f(P.X+rad, P.Y-rad);
+          glTexCoord2f(Tex.u2,Tex.v2); glVertex2f(P.X+rad, P.Y+rad);
+          glTexCoord2f(Tex.u1,Tex.v2); glVertex2f(P.X-rad, P.Y+rad);
+        glEnd;
 
+      end;
     end;
+
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //Set alpha mode
   glPopAttrib;
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  glViewport(0, 0, fRender.ScreenX, fRender.ScreenY);
+  ApplyTransform;
 end;
 
 procedure TKMRenderPool.CreateLightFBO;
@@ -664,7 +667,11 @@ end;
 
 procedure TKMRenderPool.RenderLights;
 begin
-  If gTerrain.GetNightScale <= 0 then
+  if (gGameSettings.Weather.NightTime = 0) and (gGameSettings.Weather.NightSpeed = 0) then
+    Exit;
+  If gGame.Params.IsMapEditor then
+    Exit;
+  If gTerrain.GetNightScale >= 1 then
     Exit;
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //Set alpha mode
   glTranslatef(0, -1, 0);
@@ -672,9 +679,9 @@ begin
   glColor4f(1, 1, 1, 1 - gTerrain.GetNightScale);
   glBegin(GL_QUADS);
     glTexCoord2f(0, 1); glVertex2f(0, 0);
-    glTexCoord2f(1, 1); glVertex2f(fLightTexSizeX, 0);
-    glTexCoord2f(1, 0); glVertex2f(fLightTexSizeX, fLightTexSizeY);
-    glTexCoord2f(0, 0); glVertex2f(0, fLightTexSizeY);
+    glTexCoord2f(1, 1); glVertex2f(fRender.ScreenX, 0);
+    glTexCoord2f(1, 0); glVertex2f(fRender.ScreenX, fRender.ScreenY);
+    glTexCoord2f(0, 0); glVertex2f(0, fRender.ScreenY);
   glEnd;
   TKMRender.BindTexture(0);
 
@@ -839,8 +846,7 @@ begin
   with gTerrain do
     for I := 0 to FallingTrees.Count - 1 do
     begin
-      RenderTree(FallingTrees.Tag[I], aAnimStep - FallingTrees.Tag2[I], FallingTrees[I].X, FallingTrees[I].Y, KMPoint(FallingTrees[I]));
-      //RenderMapElement1(FallingTrees.Tag[I], aAnimStep - FallingTrees.Tag2[I], FallingTrees[I].X, FallingTrees[I].Y, False);
+      RenderTree(FallingTrees.Tag[I], aAnimStep - FallingTrees.Tag2[I], FallingTrees[I].X, FallingTrees[I].Y);
       Assert(AnimStep - FallingTrees.Tag2[I] <= 100, 'Falling tree overrun?');
     end;
 
@@ -1009,13 +1015,13 @@ begin
       fRenderTerrain.RenderSpriteOnTile(Id, LocX, LocY, gTerrain.Land[LocY, LocX].BaseLayer.Rotation * byte(gMapElements[aIndex].RotateToTile), rxTrees)
     else
     if aOnTop then
-      fRenderList.AddSprite(rxTrees, Id, cornerX, cornerY, LocX,LocY)
+      fRenderList.AddSprite(rxTrees, Id, cornerX, cornerY)
     else
-      fRenderList.AddSpriteG(rxTrees, Id, 0, cornerX, cornerY, gX, gY, LocX,LocY);
+      fRenderList.AddSpriteG(rxTrees, Id, 0, cornerX, cornerY, gX, gY);
   end;
 end;
 
-procedure TKMRenderPool.RenderTree(aIndex: Word; aAnimStep: Cardinal; LocX: Single; LocY: Single; nightLoc : TKMPoint;
+procedure TKMRenderPool.RenderTree(aIndex: Word; aAnimStep: Cardinal; LocX: Single; LocY: Single;
                                   aDoImmediateRender: Boolean = False; aDeleting: Boolean = False);
 var
   R: TRXData;
@@ -1052,7 +1058,7 @@ begin
   if aDoImmediateRender then
       RenderSprite(rxTrees, Id, cornerX, cornerY, $FFFFFFFF, aDeleting, DELETE_COLOR)
   else
-    fRenderList.AddSpriteG(rxTrees, Id, 0, cornerX, cornerY, gX, gY, nightLoc.X,nightLoc.Y);
+    fRenderList.AddSpriteG(rxTrees, Id, 0, cornerX, cornerY, gX, gY);
 end;
 
 
@@ -1062,7 +1068,7 @@ procedure TKMRenderPool.RenderMapElement4(aIndex: Word; aAnimStep: Cardinal; pX:
 var
   R: TRXData;
 
-  procedure AddSpriteBy(aAnimStep: Integer; pX,pY: Single; nX, nY : Integer);
+  procedure AddSpriteBy(aAnimStep: Integer; pX,pY: Single);
   var
     Id, Id0: Integer;
     CornerX, CornerY, gX, gY: Single;
@@ -1081,9 +1087,9 @@ var
       RenderSprite(rxTrees, Id, CornerX, CornerY, $FFFFFFFF, aDeleting, DELETE_COLOR)
     else
     if aOnTop then
-      fRenderList.AddSprite(rxTrees, Id, CornerX, CornerY, nX, nY)
+      fRenderList.AddSprite(rxTrees, Id, CornerX, CornerY)
     else
-      fRenderList.AddSpriteG(rxTrees, Id, 0, CornerX, CornerY, gX, gY, nX, nY);
+      fRenderList.AddSpriteG(rxTrees, Id, 0, CornerX, CornerY, gX, gY);
   end;
 
 var
@@ -1098,15 +1104,15 @@ begin
   R := fRXData[rxTrees];
   if aIsDouble then
   begin
-    AddSpriteBy(aAnimStep  , pX - 0.75, pY - 0.6, pX, pY);
-    AddSpriteBy(aAnimStep+1, pX - 0.25, pY - 0.6, pX, pY);
+    AddSpriteBy(aAnimStep  , pX - 0.75, pY - 0.6);
+    AddSpriteBy(aAnimStep+1, pX - 0.25, pY - 0.6);
   end
   else
   begin
-    AddSpriteBy(aAnimStep  , pX - 0.75, pY - 0.75, pX, pY);
-    AddSpriteBy(aAnimStep+1, pX - 0.25, pY - 0.75, pX, pY);
-    AddSpriteBy(aAnimStep+1, pX - 0.75, pY - 0.25, pX, pY);
-    AddSpriteBy(aAnimStep  , pX - 0.25, pY - 0.25, pX, pY);
+    AddSpriteBy(aAnimStep  , pX - 0.75, pY - 0.75);
+    AddSpriteBy(aAnimStep+1, pX - 0.25, pY - 0.75);
+    AddSpriteBy(aAnimStep+1, pX - 0.75, pY - 0.25);
+    AddSpriteBy(aAnimStep  , pX - 0.25, pY - 0.25);
   end;
 end;
 
@@ -1122,7 +1128,7 @@ begin
   cornerX := aLoc.X + R.Pivot[aId].X / CELL_SIZE_PX;
   cornerY := gTerrain.RenderFlatToHeight(aLoc).Y + R.Pivot[aId].Y / CELL_SIZE_PX;
 
-  fRenderList.AddSpriteG(rxGui, aId, 0, cornerX, cornerY, aLoc.X, aLoc.Y, aLoc.RX, aLoc.RY, aFlagColor);
+  fRenderList.AddSpriteG(rxGui, aId, 0, cornerX, cornerY, aLoc.X, aLoc.Y, aFlagColor);
 end;
 
 
@@ -1140,7 +1146,7 @@ begin
   gY := aLoc.Y + (R.Pivot[Id].Y + R.Size[Id].Y) / CELL_SIZE_PX - 0.45;
   cornerX := aLoc.X + R.Pivot[Id].X / CELL_SIZE_PX - 0.25;
   cornerY := aLoc.Y - gTerrain.RenderHeightAt(gX, gY) + (R.Pivot[Id].Y + R.Size[Id].Y) / CELL_SIZE_PX - 0.55;
-  fRenderList.AddSpriteG(rxGui, Id, 0, cornerX, cornerY, gX, gY, aLoc.X, aLoc.Y);
+  fRenderList.AddSpriteG(rxGui, Id, 0, cornerX, cornerY, gX, gY);
 end;
 
 
@@ -1170,7 +1176,7 @@ begin
     cornerY := Loc.Y + (supply[1].MoveY+ rx.Pivot[id].Y + rx.Size[id].Y - 5) / CELL_SIZE_PX - 1
                      - gTerrain.LandExt^[Loc.Y + 1, Loc.X].RenderHeight / CELL_HEIGHT_DIV;
 
-    fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, Loc.X, Loc.Y);
+    fRenderList.AddSprite(rxHouses, id, cornerX, cornerY);
   end;
 
   //if there is more than 6 wood then add another pile
@@ -1186,7 +1192,7 @@ begin
       cornerY := Loc.Y + (supply[1].MoveY + rx.Pivot[id].Y + rx.Size[id].Y + 8) / CELL_SIZE_PX - 1
                        - gTerrain.LandExt^[Loc.Y + 1, Loc.X].RenderHeight / CELL_HEIGHT_DIV;
 
-      fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, Loc.X, Loc.Y);
+      fRenderList.AddSprite(rxHouses, id, cornerX, cornerY);
 
     end;
 
@@ -1202,7 +1208,7 @@ begin
     cornerX := Loc.X + (supply[2].MoveX + rx.Pivot[id].X) / CELL_SIZE_PX - 1;
     cornerY := Loc.Y + (supply[2].MoveY + rx.Pivot[id].Y + rx.Size[id].Y - 6) / CELL_SIZE_PX - 1
                      - gTerrain.LandExt^[Loc.Y + 1, Loc.X].RenderHeight / CELL_HEIGHT_DIV;
-    fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, Loc.X, Loc.Y);
+    fRenderList.AddSprite(rxHouses, id, cornerX, cornerY);
   end;
 
   //if there is more than 6 stone then add another pile
@@ -1218,7 +1224,7 @@ begin
       cornerY := Loc.Y + (supply[2].MoveY + rx.Pivot[id].Y + rx.Size[id].Y + 8) / CELL_SIZE_PX - 1
                        - gTerrain.LandExt^[Loc.Y + 1, Loc.X].RenderHeight / CELL_HEIGHT_DIV;
 
-      fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, Loc.X, Loc.Y);
+      fRenderList.AddSprite(rxHouses, id, cornerX, cornerY);
 
     end;
 
@@ -1231,7 +1237,7 @@ begin
     cornerX := Loc.X + (supply[3].MoveX + rx.Pivot[id].X) / CELL_SIZE_PX - 1;
     cornerY := Loc.Y + (supply[3].MoveY + rx.Pivot[id].Y + rx.Size[id].Y - 6) / CELL_SIZE_PX - 1
                      - gTerrain.LandExt^[Loc.Y + 1, Loc.X].RenderHeight / CELL_HEIGHT_DIV;
-    fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, Loc.X, Loc.Y);
+    fRenderList.AddSprite(rxHouses, id, cornerX, cornerY);
   end;
 
   //if there is more than 6 tiles then add another pile
@@ -1247,7 +1253,7 @@ begin
       cornerY := Loc.Y + (supply[3].MoveY + rx.Pivot[id].Y + rx.Size[id].Y + 8) / CELL_SIZE_PX - 1
                        - gTerrain.LandExt^[Loc.Y + 1, Loc.X].RenderHeight / CELL_HEIGHT_DIV;
 
-      fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, Loc.X, Loc.Y);
+      fRenderList.AddSprite(rxHouses, id, cornerX, cornerY);
 
     end;
 
@@ -1313,33 +1319,33 @@ begin
     begin
       // If snow is 100% we only need to render snow sprite
       if (aSnowStep = 1)then
-        fRenderList.AddSprite(rxHouses, picSnow, CornerX(picSnow), CornerY(picSnow){, gX, gY}, aLoc.X, aLoc.Y, $0)
+        fRenderList.AddSprite(rxHouses, picSnow, CornerX(picSnow), CornerY(picSnow), $0)
       else
       begin
         // Render stone with snow blended on top using AlphaTest
-        fRenderList.AddSprite(rxHouses, picStone, CornerX(picStone), CornerY(picStone){, gX, gY}, aLoc.X, aLoc.Y, $0);
-        fRenderList.AddSprite(rxHouses, picSnow, CornerX(picSnow), CornerY(picSnow){, gX, gY}, aLoc.X, aLoc.Y, $0, aSnowStep);
+        fRenderList.AddSprite(rxHouses, picStone, CornerX(picStone), CornerY(picStone), $0);
+        fRenderList.AddSprite(rxHouses, picSnow, CornerX(picSnow), CornerY(picSnow), $0, aSnowStep);
       end;
     end
     else if aDoImmediateRender then
       RenderSprite(rxHouses, picStone, CornerX(picStone), CornerY(picStone), $0, aDoHighlight, aHighlightColor)
     else
-      fRenderList.AddSprite(rxHouses, picStone, CornerX(picStone), CornerY(picStone){, gX, gY}, aLoc.X, aLoc.Y, $0);
+      fRenderList.AddSprite(rxHouses, picStone, CornerX(picStone), CornerY(picStone), $0);
 
     for I := IfThen(aSnowStep > 0, P.SnowAnimations, 0) to High(P.A) do
     begin
       id := P.A[I].Animation[gTerrain.AnimStep] + 1;
-      fRenderList.AddSprite(rxHouses, id, CornerX(id) + P.A[I].X / CELL_SIZE_PX, CornerY(id) + P.A[I].Y / CELL_SIZE_PX
-                            {, gX, gY}, aLoc.X, aLoc.Y, aFlagColor);
+      fRenderList.AddSprite(rxHouses, id, CornerX(id) + P.A[I].X / CELL_SIZE_PX, CornerY(id) + P.A[I].Y / CELL_SIZE_PX,
+                            aFlagColor);
     end;
 
   end
   else
   begin
     // Wood part of the house (may be seen below Stone part before construction is complete, e.g. Sawmill)
-    fRenderList.AddSprite(rxHouses, picWood, CornerX(picWood), CornerY(picWood){, gX, gY}, aLoc.X, aLoc.Y, $0, aWoodStep);
+    fRenderList.AddSprite(rxHouses, picWood, CornerX(picWood), CornerY(picWood), $0, aWoodStep);
     if aStoneStep > 0 then
-      fRenderList.AddSprite(rxHouses, picStone, CornerX(picStone), CornerY(picStone), aLoc.X, aLoc.Y, $0, aStoneStep);
+      fRenderList.AddSprite(rxHouses, picStone, CornerX(picStone), CornerY(picStone), $0, aStoneStep);
   end;
 
 end;
@@ -1372,7 +1378,7 @@ var
      if aDoImmediateRender then
       RenderSprite(rxHouses, aID, cX, cY, $0, aDoHighlight, aHighlightColor)
     else
-      fRenderList.AddSpriteG(rxHouses, aID, 0, cX, cY, gX, gY, aX, aY, $0);
+      fRenderList.AddSpriteG(rxHouses, aID, 0, cX, cY, gX, gY, $0);
   end;
 begin
   rxData := fRXData[rxHouses];
@@ -1416,12 +1422,12 @@ begin
     if aDoImmediateRender then
       RenderSprite(rxHouses, id, cornerX, cornerY, 0, true)
     else
-      fRenderList.AddSprite(rxHouses, id, CornerX, CornerY, aLoc.X, aLoc.Y, C, -1);
+      fRenderList.AddSprite(rxHouses, id, CornerX, CornerY, C, -1);
   end;
 end;
 
 procedure TKMRenderPool.AddHousePastureAnimal(const aLoc: TKMPointF; aAnimal : TKMPastureAnimalType; Action : TKMPastureAnimalAction; Dir : TKMDirection;
-                                  aAnimStep: Cardinal; C1, C2: TColor4; aNightLoc : TKMPoint;
+                                  aAnimStep: Cardinal; C1, C2: TColor4;
                                   aDoImmediateRender: Boolean = False);
 var
   id: Cardinal;
@@ -1455,7 +1461,7 @@ begin
   if aDoImmediateRender then
     RenderSprite(rxUnits, id, cornerX, cornerY, C1, true, C2)
   else
-    fRenderList.AddSpriteG(rxUnits, id, 0, cornerX, cornerY, gX, gY, aNightLoc.X, aNightLoc.Y, C1, -1, C2);
+    fRenderList.AddSpriteG(rxUnits, id, 0, cornerX, cornerY, gX, gY, C1, -1, C2);
 end;
 
 
@@ -1478,12 +1484,12 @@ begin
   cornerY := aLoc.Y + (rxData.Pivot[id].Y + aAnim.MoveY + rxData.Size[id].Y) / CELL_SIZE_PX - 1
                    - gTerrain.LandExt^[aLoc.Y + 1, aLoc.X].RenderHeight / CELL_HEIGHT_DIV;
   if aFront then
-    fRenderList.AddSpriteFront(aRX, id, cornerX, cornerY, aLoc.X, aLoc.Y, aFlagColor, aAlphaStep)
+    fRenderList.AddSpriteFront(aRX, id, cornerX, cornerY, aFlagColor, aAlphaStep)
   else
   if aDoImmediateRender then
     RenderSprite(aRX, id, cornerX, cornerY, aFlagColor, aDoHighlight, aHighlightColor)
   else
-    fRenderList.AddSprite(aRX, id, cornerX, cornerY, aLoc.X, aLoc.Y, aFlagColor);
+    fRenderList.AddSprite(aRX, id, cornerX, cornerY, aFlagColor);
 end;
 
 procedure TKMRenderPool.AddAnimation(const aLoc: TKMPointF; aAnim: TKMAnimLoop; aAnimStep: Cardinal;
@@ -1506,12 +1512,12 @@ begin
                    - gTerrain.LandExt^[Round(aLoc.Y) + 1, Round(aLoc.X)].RenderHeight / CELL_HEIGHT_DIV;
 
   if aFront then
-    fRenderList.AddSpriteFront(aRX, id, cornerX, cornerY, aLoc.RX, aLoc.RY, aFlagColor, aAlphaStep)
+    fRenderList.AddSpriteFront(aRX, id, cornerX, cornerY, aFlagColor, aAlphaStep)
   else
   if aDoImmediateRender then
     RenderSprite(aRX, id, cornerX, cornerY, aFlagColor, aDoHighlight, aHighlightColor)
   else
-    fRenderList.AddSprite(aRX, id, cornerX, cornerY, aLoc.RX, aLoc.RY, aFlagColor);
+    fRenderList.AddSprite(aRX, id, cornerX, cornerY, aFlagColor);
 end;
 
 procedure TKMRenderPool.AddAnimation(const aLoc: TKMPoint; aAnim: TKMAnimation; aAnimStep: Cardinal;
@@ -1536,12 +1542,12 @@ begin
   cornerY := aLoc.Y + (rxData.Pivot[id].Y + aAnim.Y + rxData.Size[id].Y) / CELL_SIZE_PX - 1
                     - gTerrain.RenderHeightAt(gX, gY);
   if aFront then
-    fRenderList.AddSpriteFront(aRX, id, cornerX, cornerY, aLoc.X, aLoc.Y, aFlagColor, aAlphaStep)
+    fRenderList.AddSpriteFront(aRX, id, cornerX, cornerY, aFlagColor, aAlphaStep)
   else
   if aDoImmediateRender then
     RenderSprite(aRX, id, cornerX, cornerY, aFlagColor, aDoHighlight, aHighlightColor)
   else
-    fRenderList.AddSprite(aRX, id, cornerX, cornerY, aLoc.X, aLoc.Y, aFlagColor);
+    fRenderList.AddSprite(aRX, id, cornerX, cornerY, aFlagColor);
 end;
 
 procedure TKMRenderPool.AddAnimation(const aLoc: TKMPointF; aAnim: TKMAnimation; aAnimStep: Cardinal;
@@ -1566,12 +1572,12 @@ begin
                     - gTerrain.RenderHeightAt(gX, gY);
 
   if aFront then
-    fRenderList.AddSpriteFront(aRX, id, cornerX, cornerY, aLoc.RX, aLoc.RY, aFlagColor, aAlphaStep)
+    fRenderList.AddSpriteFront(aRX, id, cornerX, cornerY, aFlagColor, aAlphaStep)
   else
   if aDoImmediateRender then
     RenderSprite(aRX, id, cornerX, cornerY, aFlagColor, aDoHighlight, aHighlightColor)
   else
-    fRenderList.AddSprite(aRX, id, cornerX, cornerY, aLoc.RX, aLoc.RY, aFlagColor);
+    fRenderList.AddSprite(aRX, id, cornerX, cornerY, aFlagColor);
 end;
 
 
@@ -1598,12 +1604,12 @@ begin
                     - gTerrain.RenderHeightAt(gX, gY);
 
   if aFront then
-    fRenderList.AddSpriteFront(aRX, id, cornerX, cornerY, aLoc.RX, aLoc.RY, aFlagColor, aAlphaStep)
+    fRenderList.AddSpriteFront(aRX, id, cornerX, cornerY, aFlagColor, aAlphaStep)
   else
   if aDoImmediateRender then
     RenderSprite(aRX, id, cornerX, cornerY, aFlagColor, aDoHighlight, aHighlightColor)
   else
-    fRenderList.AddSpriteG(aRX, id, 0, cornerX, cornerY, gX, gY, aLoc.RX, aLoc.RY, aFlagColor);
+    fRenderList.AddSpriteG(aRX, id, 0, cornerX, cornerY, gX, gY, aFlagColor);
 end;
 
 procedure TKMRenderPool.AddSprite(const aLoc, aOffset: TKMPoint; aID : Word; RX : TRXType; aFlagColor : Cardinal;
@@ -1619,12 +1625,12 @@ begin
   cornerY := aLoc.Y + (rxData.Pivot[aID].Y + rxData.Size[aID].Y + aOffset.Y) / CELL_SIZE_PX - 1;
 
   if aFront then
-    fRenderList.AddSpriteFront(RX, aID, cornerX, cornerY, aLoc.X, aLoc.Y, aFlagColor, aAlphaStep)
+    fRenderList.AddSpriteFront(RX, aID, cornerX, cornerY, aFlagColor, aAlphaStep)
   else
   if aDoImmediateRender then
     RenderSprite(RX, aID, cornerX, cornerY, aFlagColor, aDoHighlight, aHighlightColor)
   else
-    fRenderList.AddSprite(RX, aID, cornerX, cornerY, aLoc.X, aLoc.Y, aFlagColor);
+    fRenderList.AddSprite(RX, aID, cornerX, cornerY, aFlagColor);
 end;
 
 procedure TKMRenderPool.AddSprite(const aLoc: TKMPointF; aID : Word; RX : TRXType; aFlagColor : Cardinal;
@@ -1640,12 +1646,12 @@ begin
   cornerY := aLoc.Y + (rxData.Pivot[aID].Y + rxData.Size[aID].Y) / CELL_SIZE_PX - 1;
 
   if aFront then
-    fRenderList.AddSpriteFront(RX, aID, cornerX, cornerY, 0, 0, aFlagColor, aAlphaStep)
+    fRenderList.AddSpriteFront(RX, aID, cornerX, cornerY, aFlagColor, aAlphaStep)
   else
   if aDoImmediateRender then
     RenderSprite(RX, aID, cornerX, cornerY, aFlagColor, aDoHighlight, aHighlightColor)
   else
-    fRenderList.AddSprite(RX, aID, cornerX, cornerY, Trunc(aLoc.X), Trunc(aLoc.Y), aFlagColor);
+    fRenderList.AddSprite(RX, aID, cornerX, cornerY, aFlagColor);
 end;
 
 procedure TKMRenderPool.AddSpriteWH(const aLoc, aOffset: TKMPoint; aID : Word; RX : TRXType; aFlagColor : Cardinal;
@@ -1662,12 +1668,12 @@ begin
               - gTerrain.LandExt^[aLoc.Y + 1, aLoc.X].RenderHeight / CELL_HEIGHT_DIV;
 
   if aFront then
-    fRenderList.AddSpriteFront(RX, aID, cornerX, cornerY, aLoc.X, aLoc.Y, aFlagColor, aAlphaStep)
+    fRenderList.AddSpriteFront(RX, aID, cornerX, cornerY, aFlagColor, aAlphaStep)
   else
   if aDoImmediateRender then
     RenderSprite(RX, aID, cornerX, cornerY, aFlagColor, aDoHighlight, aHighlightColor)
   else
-    fRenderList.AddSprite(RX, aID, cornerX, cornerY, aLoc.X, aLoc.Y, aFlagColor);
+    fRenderList.AddSprite(RX, aID, cornerX, cornerY, aFlagColor);
 end;
 
 procedure TKMRenderPool.AddSpriteG(const aLoc, aOffset: TKMPoint; aID : Word; RX : TRXType; aFlagColor : Cardinal;
@@ -1686,12 +1692,12 @@ begin
   gX := aLoc.X + (rxData.Pivot[aID].X + rxData.Size[aID].X / 2) / CELL_SIZE_PX - 1;
   gY := aLoc.Y + (rxData.Pivot[aID].Y + rxData.Size[aID].Y) / CELL_SIZE_PX - 1.5;
   if aFront then
-    fRenderList.AddSpriteFront(RX, aID, cornerX, cornerY, aLoc.X, aLoc.Y, aFlagColor, aAlphaStep)
+    fRenderList.AddSpriteFront(RX, aID, cornerX, cornerY, aFlagColor, aAlphaStep)
   else
   if aDoImmediateRender then
     RenderSprite(RX, aID, cornerX, cornerY, aFlagColor, aDoHighlight, aHighlightColor)
   else
-    fRenderList.AddSpriteG(RX, aID, 0, cornerX, cornerY, gX, gY, aLoc.X, aLoc.Y, aFlagColor);
+    fRenderList.AddSpriteG(RX, aID, 0, cornerX, cornerY, gX, gY, aFlagColor);
 end;
 
 procedure TKMRenderPool.AddSpriteGSnow(const aLoc, aOffset: TKMPoint; aID : Word; aProgress : Single; RX : TRXType; aFlagColor : Cardinal;
@@ -1709,12 +1715,12 @@ begin
   gX := aLoc.X + (rxData.Pivot[aID].X + rxData.Size[aID].X / 2) / CELL_SIZE_PX - 1;
   gY := aLoc.Y + (rxData.Pivot[aID].Y + rxData.Size[aID].Y) / CELL_SIZE_PX - 1.5;
   if aFront then
-    fRenderList.AddSpriteFront(RX, aID, cornerX, cornerY, aLoc.X, aLoc.Y, aFlagColor, aAlphaStep)
+    fRenderList.AddSpriteFront(RX, aID, cornerX, cornerY, aFlagColor, aAlphaStep)
   else
   if aDoImmediateRender then
     RenderSprite(RX, aID, cornerX, cornerY, aFlagColor, aDoHighlight, aHighlightColor)
   else
-    fRenderList.AddSpriteG(RX, aID, 0, cornerX, cornerY, gX, gY, aLoc.X, aLoc.Y, aFlagColor, aProgress);
+    fRenderList.AddSpriteG(RX, aID, 0, cornerX, cornerY, gX, gY, aFlagColor, aProgress);
 end;
 
 // Render house in wood
@@ -1763,25 +1769,25 @@ begin
     begin
       // If snow is 100% we only need to render snow sprite
       if (aSnowStep = 1)then
-        fRenderList.AddSpriteG(rxHouses, picSnow, 0, CornerX(picSnow), CornerY(picSnow), gX, gY, aLoc.X, aLoc.Y, $0)
+        fRenderList.AddSpriteG(rxHouses, picSnow, 0, CornerX(picSnow), CornerY(picSnow), gX, gY, $0)
       else
       begin
         // Render stone with snow blended on top using AlphaTest
-        fRenderList.AddSpriteG(rxHouses, picStone, 0, CornerX(picStone), CornerY(picStone), gX, gY, aLoc.X, aLoc.Y, $0);
-        fRenderList.AddSpriteG(rxHouses, picSnow, 0, CornerX(picSnow), CornerY(picSnow), gX, gY, aLoc.X, aLoc.Y, $0, aSnowStep);
+        fRenderList.AddSpriteG(rxHouses, picStone, 0, CornerX(picStone), CornerY(picStone), gX, gY, $0);
+        fRenderList.AddSpriteG(rxHouses, picSnow, 0, CornerX(picSnow), CornerY(picSnow), gX, gY, $0, aSnowStep);
       end;
     end
     else if aDoImmediateRender then
       RenderSprite(rxHouses, picStone, CornerX(picStone), CornerY(picStone), $0, aDoHighlight, aHighlightColor)
     else
-      fRenderList.AddSpriteG(rxHouses, picStone, 0, CornerX(picStone), CornerY(picStone), gX, gY, aLoc.X, aLoc.Y, $0);
+      fRenderList.AddSpriteG(rxHouses, picStone, 0, CornerX(picStone), CornerY(picStone), gX, gY, $0);
   end
   else
   begin
     // Wood part of the house (may be seen below Stone part before construction is complete, e.g. Sawmill)
-    fRenderList.AddSpriteG(rxHouses, picWood, 0, CornerX(picWood), CornerY(picWood), gX, gY, aLoc.X, aLoc.Y, $0, aWoodStep);
+    fRenderList.AddSpriteG(rxHouses, picWood, 0, CornerX(picWood), CornerY(picWood), gX, gY, $0, aWoodStep);
     if aStoneStep > 0 then
-      fRenderList.AddSprite(rxHouses, picStone, CornerX(picStone), CornerY(picStone), aLoc.X, aLoc.Y, $0, aStoneStep);
+      fRenderList.AddSprite(rxHouses, picStone, CornerX(picStone), CornerY(picStone), $0, aStoneStep);
   end;
 end;
 
@@ -1824,7 +1830,7 @@ begin
       if aDoImmediateRender then
         RenderSprite(rxHouses, id, cornerX, cornerY, aFlagColor, aDoHighlight, aHighlightColor)
       else
-        fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, aLoc.X, aLoc.Y, aFlagColor);
+        fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, aFlagColor);
     end;
   end;
 end;
@@ -1849,7 +1855,7 @@ begin
   if aDoImmediateRender then
     RenderSprite(rxHouses, id, cornerX, cornerY, aFlagColor, aDoHighlight, aHighlightColor)
   else
-    fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, aLoc.X, aLoc.Y, aFlagColor);
+    fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, aFlagColor);
 end;
 
 
@@ -1877,7 +1883,7 @@ begin
     if aDoImmediateRender then
       RenderSprite(rxHouses, id, cornerX, cornerY, 0, aDoHighlight, aHighlightColor)
     else
-      fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, aLoc.X, aLoc.Y, 0);
+      fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, 0);
   end;
 end;
 
@@ -1907,7 +1913,7 @@ begin
       if aDoImmediateRender then
         RenderSprite(rxHouses, id, cornerX, cornerY, aFlagColor, false, 0)
       else
-        fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, aLoc.X, aLoc.Y, aFlagColor);
+        fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, aFlagColor);
     end;
   end;
   If aLeft then
@@ -1925,7 +1931,7 @@ begin
       if aDoImmediateRender then
         RenderSprite(rxHouses, id, cornerX, cornerY, aFlagColor, false, 0)
       else
-        fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, aLoc.X, aLoc.Y, aFlagColor);
+        fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, aFlagColor);
     end;
   end;
 end;
@@ -1950,7 +1956,7 @@ var
     begin
       RenderSprite(rxHouses, aId, CornerX, CornerY, $0, aDoHighlight, aHighlightColor)
     end else
-      fRenderList.AddSprite(rxHouses, aId, CornerX, CornerY, aLoc.X, aLoc.Y);
+      fRenderList.AddSprite(rxHouses, aId, CornerX, CornerY);
   end;
 
 begin
@@ -2032,7 +2038,7 @@ var
     begin
       RenderSprite(rxHouses, aId, CornerX, CornerY, $0, aDoHighlight, aHighlightColor)
     end else
-      fRenderList.AddSprite(rxHouses, aId, CornerX, CornerY, aLoc.X, aLoc.Y);
+      fRenderList.AddSprite(rxHouses, aId, CornerX, CornerY);
   end;
 begin
   rxData := fRXData[rxHouses];
@@ -2059,7 +2065,7 @@ var
     begin
       RenderSprite(rxHouses, aId, CornerX, CornerY, $0, aDoHighlight, aHighlightColor)
     end else
-      fRenderList.AddSprite(rxHouses, aId, CornerX, CornerY, aLoc.X, aLoc.Y);
+      fRenderList.AddSprite(rxHouses, aId, CornerX, CornerY);
   end;
 begin
   rxData := fRXData[rxHouses];
@@ -2086,7 +2092,7 @@ begin
     cornerX := aLoc.X + (rxData.Pivot[id].X + MARKET_WARES_OFF_X) / CELL_SIZE_PX - 1;
     cornerY := aLoc.Y + (rxData.Pivot[id].Y + MARKET_WARES_OFF_Y + rxData.Size[id].Y) / CELL_SIZE_PX - 1
                      - gTerrain.LandExt^[aLoc.Y+1,aLoc.X].RenderHeight / CELL_HEIGHT_DIV;
-    fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, aLoc.X, aLoc.Y);
+    fRenderList.AddSprite(rxHouses, id, cornerX, cornerY);
   end;
 end;
 
@@ -2108,7 +2114,7 @@ begin
   cornerY := aLoc.Y + (A.MoveY + rxData.Pivot[id].Y + rxData.Size[id].Y) / CELL_SIZE_PX - 1
                    - gTerrain.LandExt^[aLoc.Y + 1, aLoc.X].RenderHeight / CELL_HEIGHT_DIV;
 
-  fRenderList.AddSprite(aRX, id, cornerX, cornerY, aLoc.X, aLoc.Y);
+  fRenderList.AddSprite(aRX, id, cornerX, cornerY);
 end;
 
 procedure TKMRenderPool.AddHousePalaceFlags(aHouse: TKMHouseType; const aLoc: TKMPoint; aFlagID: Integer; aAnimStep: Integer; FlagColor : Cardinal);
@@ -2128,7 +2134,7 @@ begin
   cornerY := aLoc.Y + (A.Y + rxData.Pivot[id].Y + rxData.Size[id].Y) / CELL_SIZE_PX - 1
                    - gTerrain.LandExt^[aLoc.Y + 1, aLoc.X].RenderHeight / CELL_HEIGHT_DIV;
 
-  fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, aLoc.X, aLoc.Y, FlagColor);
+  fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, FlagColor);
 end;
 
 procedure TKMRenderPool.AddHousePotteryTiles(const aLoc: TKMPoint; aTileID: Byte);
@@ -2150,7 +2156,7 @@ begin
   cornerY := aLoc.Y + (rxData.Pivot[id].Y + rxData.Size[id].Y) / CELL_SIZE_PX - 1
                    - gTerrain.LandExt^[aLoc.Y + 1, aLoc.X].RenderHeight / CELL_HEIGHT_DIV;
 
-  fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, aLoc.X, aLoc.Y);
+  fRenderList.AddSprite(rxHouses, id, cornerX, cornerY);
 
 
 end;
@@ -2172,7 +2178,7 @@ begin
   cornerX := cornerX + aOffsetX / CELL_SIZE_PX;
   cornerY := cornerY + aOffsetY / CELL_SIZE_PX;
 
-  fRenderList.AddSprite(rxHouses, id, cornerX, cornerY, aLoc.X, aLoc.Y);
+  fRenderList.AddSprite(rxHouses, id, cornerX, cornerY);
 
 
 
@@ -2200,9 +2206,9 @@ begin
   cornerX := aLoc.X +  (rxData.Pivot[id].X + aAnim.X) / CELL_SIZE_PX - 1;
   cornerY := aLoc.Y + (rxData.Pivot[id].Y + aAnim.Y + rxData.Size[id].Y) / CELL_SIZE_PX - 1 - gTerrain.LandExt^[Round(aLoc.Y) + 1, Round(aLoc.X)].RenderHeight / CELL_HEIGHT_DIV ;
   if aFront then
-    fRenderList.AddSpriteFront(aRX, id, cornerX, cornerY, aLoc.RX, aLoc.RY, 0, aAlphaStep)
+    fRenderList.AddSpriteFront(aRX, id, cornerX, cornerY, 0, aAlphaStep)
   else
-    fRenderList.AddSpriteG(aRX, id, 0, cornerX, cornerY, cornerX, cornerY, aLoc.RX, aLoc.RY );
+    fRenderList.AddSpriteG(aRX, id, 0, cornerX, cornerY, cornerX, cornerY );
   //RenderSprite(aRX, id, cornerX, cornerY, $0)
 end;
 
@@ -2233,9 +2239,9 @@ begin
   gY := aGround.Y + (rxData.Pivot[id].Y + aAnim.Y + rxData.Size[id].Y) / CELL_SIZE_PX;
 
   if aFront then
-    fRenderList.AddSpriteFront(aRX, id, cornerX, cornerY, aLoc.RX, aLoc.RY, 0, aAlphaStep)
+    fRenderList.AddSpriteFront(aRX, id, cornerX, cornerY, 0, aAlphaStep)
   else
-    fRenderList.AddSpriteG(aRX, id, 0, cornerX, cornerY, aGround.X, gY, aLoc.RX, aLoc.RY );
+    fRenderList.AddSpriteG(aRX, id, 0, cornerX, cornerY, aGround.X, gY );
   //RenderSprite(aRX, id, cornerX, cornerY, $0)
 end;
 
@@ -2327,9 +2333,9 @@ begin
     RenderSprite(rxUnits, id, cornerX, cornerY, FlagColor, DoHighlight, HighlightColor)
   else
     if NewInst then
-      fRenderList.AddSpriteG(rxUnits, id, aUID, cornerX, cornerY, pX, ground, Max(Round(pX), 1), Max(Round(pY), 1), FlagColor, aAlphaStep)
+      fRenderList.AddSpriteG(rxUnits, id, aUID, cornerX, cornerY, pX, ground, FlagColor, aAlphaStep)
     else
-      fRenderList.AddSprite(rxUnits, id, cornerX, cornerY, Round(pX), Round(pY), FlagColor, aAlphaStep);
+      fRenderList.AddSprite(rxUnits, id, cornerX, cornerY, FlagColor, aAlphaStep);
 
   if SHOW_UNIT_MOVEMENT then
     if NewInst then
@@ -2361,7 +2367,7 @@ begin
   cornerY := Loc.Y + OffY + (R.Pivot[id].Y + R.Size[id].Y) / CELL_SIZE_PX - 1
                    - gTerrain.LandExt^[Loc.Y + 1, Loc.X].RenderHeight / CELL_HEIGHT_DIV;
 
-  fRenderList.AddSprite(rxUnits, id, cornerX, cornerY, Loc.X, Loc.Y, FlagColor);
+  fRenderList.AddSprite(rxUnits, id, cornerX, cornerY, FlagColor);
 end;
 
 
@@ -2383,7 +2389,7 @@ begin
 
   cornerX := pX + (R.Pivot[id].X + A.X) / CELL_SIZE_PX;
   cornerY := gTerrain.RenderFlatToHeight(pX, pY) + (R.Pivot[id].Y + R.Size[id].Y + A.Y) / CELL_SIZE_PX;
-  fRenderList.AddSprite(rxUnits, id, cornerX, cornerY, Round(pX), Round(pY), FlagColor);
+  fRenderList.AddSprite(rxUnits, id, cornerX, cornerY, FlagColor);
 end;
 
 
@@ -2417,13 +2423,13 @@ begin
   height := gTerrain.RenderFlatToHeight(pX, pY);
   cornerX := pX + (R.Pivot[id].X + A.X) / CELL_SIZE_PX;
   cornerY := height + (R.Pivot[id].Y + R.Size[id].Y + A.Y) / CELL_SIZE_PX - 1.5;
-  fRenderList.AddSpriteFront(rxUnits, id, cornerX, cornerY, Round(pX), Round(pY));
+  fRenderList.AddSpriteFront(rxUnits, id, cornerX, cornerY);
   //fRenderList.AddSpriteG(rxUnits, id, 0, cornerX, cornerY, pX, ground, Round(pX), Round(pY));
 
   id := THOUGHT_ICON[Thought];
   cornerX := pX + (ICON_OFF_X + R.Pivot[id].X + A.X) / CELL_SIZE_PX;
   cornerY := height + (ICON_OFF_Y + R.Pivot[id].Y + R.Size[id].Y + A.Y) / CELL_SIZE_PX;
-  fRenderList.AddSpriteFront(rxUnits, id, cornerX, cornerY, Round(pX), Round(pY));
+  fRenderList.AddSpriteFront(rxUnits, id, cornerX, cornerY);
   //fRenderList.AddSprite(rxUnits, id, cornerX, cornerY, Round(pX), Round(pY));
 end;
 
@@ -2462,7 +2468,7 @@ begin
   if DoImmediateRender then
     RenderSprite(rxUnits, idFlag, flagX, flagY, FlagColor)
   else
-    fRenderList.AddSpriteG(rxUnits, idFlag, 0, flagX, flagY, pX, ground, Round(pX), Round(pY), FlagColor);
+    fRenderList.AddSpriteG(rxUnits, idFlag, 0, flagX, flagY, pX, ground, FlagColor);
 end;
 
 
@@ -2527,10 +2533,10 @@ end;}
 
 procedure TKMRenderPool.RenderSprite(aRX: TRXType; aId: Integer; aX: Single; aY: Single; Col: Cardinal; DoHighlight: Boolean = False; HighlightColor: Cardinal = 0; aForced: Boolean = False; aAlphaStep: Single = -1);
 begin
-  RenderSprite(aRX, aId, aX, aY, 1, col, DoHighlight, HighlightColor, aForced, aAlphaStep);
+  fRenderDevice.RenderSprite(aRX, aId, aX, aY, col, DoHighlight, HighlightColor, aForced, aAlphaStep);
 end;
 
-procedure TKMRenderPool.RenderSpriteFront(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+procedure TKMRenderPool.RenderSpriteFront(aRX: TRXType; aId: Integer; aX, aY: Single; Col: TColor4; DoHighlight: Boolean = False;
                                    HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1);
 var
   tX, tY: Integer;
@@ -2575,7 +2581,7 @@ begin
     end;
 end;
 
-procedure TKMRenderPool.RenderSpriteCloud(aId: Integer; aX: Single; aY: Single; aRotation: Single; aNight: Single; aAlpha : Single);
+procedure TKMRenderPool.RenderSpriteCloud(aId: Integer; aX: Single; aY: Single; aRotation: Single; aAlpha : Single);
 var
   tX, tY: Integer;
   rX, rY: Single;
@@ -2617,12 +2623,20 @@ begin
   glPopMatrix;
 end;
 
-procedure TKMRenderDeviceCommon.RenderSprite(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+procedure TKMRenderPool.AddLight(aX: Single; aY: Single; aRadius: Integer);
+begin
+  If fLightsCount >= length(fLightsList) then
+    SetLength(fLightsList, fLightsCount + 16);//book some space
+  fLightsList[fLightsCount].Loc := KMPointF(aX, aY);
+  fLightsList[fLightsCount].Radius := aRadius;
+  Inc(fLightsCount);
+end;
+
+procedure TKMRenderDeviceCommon.RenderSprite(aRX: TRXType; aId: Integer; aX, aY: Single; Col: TColor4; DoHighlight: Boolean = False;
                                    HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1);
 var
   tX, tY: Integer;
   rX, rY: Single;
-  night : Single;
 begin
   tX := EnsureRange(Round(aX), 1, gTerrain.MapX) - 1;
   tY := EnsureRange(Round(aY), 1, gTerrain.MapY) - 1;
@@ -2633,7 +2647,6 @@ begin
   rX := RoundToTilePixel(aX);
   rY := RoundToTilePixel(aY);
 
-  night := aNight;//gTerrain.GetNightAtTile(tX, tY);
 
   ///no shadow first
   glClear(GL_STENCIL_BUFFER_BIT);
@@ -2681,7 +2694,7 @@ begin
   begin
     // FOW is rendered over the top so no need to make sprites black anymore
     //glColor4ub(255 * TERRAIN_DARK, 255 * TERRAIN_DARK, 255 * TERRAIN_DARK, 255);
-    glColor4f(1 * night,1 * night,1 * night, 0 - aAlphaStep);
+    glColor4f(1,1,1, 0 - aAlphaStep);
 
     TKMRender.BindTexture(Tex.TexID);
     if DoHighlight then
@@ -2700,10 +2713,10 @@ begin
     with gGFXData[aRX, aId] do
     begin
       //glColor4ubv(@Col);
-      glColor4ub( Round(Col AND $FF * (0.7 + night / 4)),
-                  Round(Col SHR 8 AND $FF * (0.7 + night / 4)),
-                  Round(Col SHR 16 AND $FF * (0.7 + night / 4)),
-                  Round(Col SHR 24 and $FF * (0.7 + night / 4) * Abs(aAlphaStep) )
+      glColor4ub( Col AND $FF,
+                  Col SHR 8 AND $FF,
+                  Col SHR 16 AND $FF,
+                  Round(Col SHR 24 and $FF * Abs(aAlphaStep) )
                   );
       TKMRender.BindTexture(Alt.TexID);
       glBegin(GL_QUADS);
@@ -2762,9 +2775,9 @@ begin
     // FOW is rendered over the top so no need to make sprites black anymore
     //glColor4ub(255 * TERRAIN_DARK, 255 * TERRAIN_DARK, 255 * TERRAIN_DARK, 255);
     if aAlphaStep <> -1 then
-      glColor4f(1,1,1,  (0 - aAlphaStep) * night)
+      glColor4f(1,1,1,  (0 - aAlphaStep))
     else
-      glColor4f(1,1,1,  1 * night);
+      glColor4f(1,1,1,  gTerrain.GetNightScale);
 
     TKMRender.BindTexture(Tex.TexID);
     if DoHighlight then
@@ -2781,10 +2794,10 @@ begin
 end;
 
 
-procedure TKMRenderPool.RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+procedure TKMRenderPool.RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY: Single; Col: TColor4; DoHighlight: Boolean = False;
                                    HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1);
 begin
-  fRenderDevice.RenderSpritePool(aRX, aID, aX, aY, aNight, Col, DoHighlight, HighlightColor, aForced, aAlphaStep);
+  fRenderDevice.RenderSpritePool(aRX, aID, aX, aY, Col, DoHighlight, HighlightColor, aForced, aAlphaStep);
 end;
 
 // Param - defines at which level alpha-test will be set (acts like a threshhold)
@@ -2792,26 +2805,17 @@ end;
 // white there will have sprite rendered
 // If there are two masks then we need to render sprite only there
 // where its mask is white AND where second mask is black
-procedure TKMRenderPool.RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY, aNight: Single;
+procedure TKMRenderPool.RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY: Single;
   aId2: Integer = 0; aStoneProgress: Single = 0; X2: Single = 0; Y2: Single = 0);
 begin
-  fRenderDevice.RenderSpriteAlphaTest(aShadow, aRX, aID, aWoodProgress, aX, aY, aNight, aID2, aStoneProgress, X2, Y2);
+  fRenderDevice.RenderSpriteAlphaTest(aShadow, aRX, aID, aWoodProgress, aX, aY, aID2, aStoneProgress, X2, Y2);
 end;
 
-
-procedure TKMRenderPool.RenderSprite(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
-                                   HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1);
-begin
-  fRenderDevice.RenderSprite(aRX, aID, aX, aY, aNight, Col, DoHighlight, HighlightColor, aForced, aAlphaStep);
-end;
-
-
-procedure TKMRenderDeviceCommon.RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+procedure TKMRenderDeviceCommon.RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY: Single; Col: TColor4; DoHighlight: Boolean = False;
                                    HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1);
 var
   tX, tY: Integer;
   rX, rY: Single;
-  night : Single;
 begin
   tX := EnsureRange(Round(aX), 1, gTerrain.MapX) - 1;
   tY := EnsureRange(Round(aY), 1, gTerrain.MapY) - 1;
@@ -2822,7 +2826,6 @@ begin
   rX := RoundToTilePixel(aX);
   rY := RoundToTilePixel(aY);
 
-  night := Min(aNight, 1);//gTerrain.GetNightAtTile(tX, tY);
 
   ///no shadow first
   glClear(GL_STENCIL_BUFFER_BIT);
@@ -2865,26 +2868,27 @@ begin
   glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
   glColorMask(True, True, True, True);
 
-
   with gGFXData[aRX, aId] do
   begin
     // FOW is rendered over the top so no need to make sprites black anymore
     //glColor4ub(255 * TERRAIN_DARK, 255 * TERRAIN_DARK, 255 * TERRAIN_DARK, 255);
-    glColor4f(1 * night,1 * night,1 * night, 0 - aAlphaStep);
+    glColor4f(1,1,1, 0 - aAlphaStep);
 
     TKMRender.BindTexture(Tex.TexID);
     if DoHighlight then
+      //glColor4ubv(@Col);
       IF (aID >= 15359) and (aID <= 16849) then
-      glColor4ub( Round(HighlightColor AND $FF * night),
-                  Round(HighlightColor SHR 8 AND $FF * night),
-                  Round(HighlightColor SHR 16 AND $FF * night),
-                  Round(HighlightColor SHR 24 and $FF * night)
+      glColor4f( Col AND $FF / 255,
+                  Col SHR 8 AND $FF / 255,
+                  Col SHR 16 AND $FF / 255,
+                  1
                   )
       else
-      glColor4f((HighlightColor AND $FF / 255) * night,
-                (HighlightColor SHR 8 AND $FF / 255) * night,
-                (HighlightColor SHR 16 AND $FF / 255) * night,
-                 0 - aAlphaStep);
+      glColor4ub( Col AND $FF,
+                  Col SHR 8 AND $FF,
+                  Col SHR 16 AND $FF,
+                  Round(Col SHR 24 and $FF * Abs(aAlphaStep) )
+                  );
     glBegin(GL_QUADS);
       glTexCoord2f(Tex.u1, Tex.v2); glVertex2f(rX                     , rY                      );
       glTexCoord2f(Tex.u2, Tex.v2); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY                      );
@@ -2900,16 +2904,16 @@ begin
     begin
       //glColor4ubv(@Col);
       IF (aID > 15359) and (aID < 16849) then
-      glColor4ub( Round(Col AND $FF * night),
-                  Round(Col SHR 8 AND $FF * night),
-                  Round(Col SHR 16 AND $FF * night),
-                  Round(Col SHR 24 and $FF * night * Abs(aAlphaStep) )
+      glColor4ub( Col AND $FF,
+                  Col SHR 8 AND $FF,
+                  Col SHR 16 AND $FF,
+                  Round(Col SHR 24 and $FF * Abs(aAlphaStep) )
                   )
       else
-      glColor4ub( Round(Col AND $FF * (0.7 + night / 4)),
-                  Round(Col SHR 8 AND $FF * (0.7 + night / 4)),
-                  Round(Col SHR 16 AND $FF * (0.7 + night / 4)),
-                  Round(Col SHR 24 and $FF * (0.7 + night / 4) * Abs(aAlphaStep) )
+      glColor4ub( Col AND $FF,
+                  Col SHR 8 AND $FF,
+                  Col SHR 16 AND $FF,
+                  Round((Col SHR 24 and $FF) * Abs(aAlphaStep) )
                   );
       TKMRender.BindTexture(Alt.TexID);
       glBegin(GL_QUADS);
@@ -2969,9 +2973,9 @@ begin
     // FOW is rendered over the top so no need to make sprites black anymore
     //glColor4ub(255 * TERRAIN_DARK, 255 * TERRAIN_DARK, 255 * TERRAIN_DARK, 255);
     if aAlphaStep <> -1 then
-      glColor4f(1,1,1,  (0 - aAlphaStep) * night)
+      glColor4f(1,1,1,  (0 - aAlphaStep))
     else
-      glColor4f(1,1,1,  1 * night);
+      glColor4f(1,1,1, gTerrain.GetNightScale);
 
     TKMRender.BindTexture(Tex.TexID);
     if DoHighlight then
@@ -2992,12 +2996,11 @@ end;
 // white there will have sprite rendered
 // If there are two masks then we need to render sprite only there
 // where its mask is white AND where second mask is black
-procedure TKMRenderDeviceCommon.RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY, aNight: Single;
+procedure TKMRenderDeviceCommon.RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY: Single;
   aId2: Integer = 0; aStoneProgress: Single = 0; X2: Single = 0; Y2: Single = 0);
 var
   tX, tY: Integer;
   rX, rY: Single;
-  night : Single;
 begin
   // Skip rendering if alphas are zero (occurs so non-started houses can still have child sprites)
   if (aWoodProgress = 0) and (aStoneProgress = 0) then Exit;
@@ -3011,7 +3014,6 @@ begin
 
   X2 := RoundToTilePixel(X2);
   Y2 := RoundToTilePixel(Y2);
-  night := aNight;//gTerrain.GetNightAtTile(tX, tY);
   ////no shadow first
   glClear(GL_STENCIL_BUFFER_BIT);
 
@@ -3033,7 +3035,7 @@ begin
     with gGFXData[aRX,aId] do
     begin
       //glColor3f(1, 1, 1);
-      glColor3f(1 * night, 1 * night, 1 * night);
+      glColor3f(1, 1, 1);
       TKMRender.BindTexture(Alt.TexID);
       glBegin(GL_QUADS);
         glTexCoord2f(Alt.u1,Alt.v2); glVertex2f(rX                     , rY         );
@@ -3071,7 +3073,7 @@ begin
       glAlphaFunc(GL_GREATER, 1 - aStoneProgress);
         with gGFXData[aRX,aId2] do
         begin
-          glColor3f(1 * night, 1 * night, 1 * night);
+          glColor3f(1, 1, 1);
           TKMRender.BindTexture(Alt.TexID);
           glBegin(GL_QUADS);
             glTexCoord2f(Alt.u1,Alt.v2); glVertex2f(X2                     ,Y2         );
@@ -3101,9 +3103,9 @@ begin
     //glColor4ub(255, 255, 255, 255);
 
     if aShadow then
-      glColor4f(1, 1, 1, 1 * (night{ - MIN_NIGHT_DARKNESS}))
+      glColor4f(1, 1, 1, 1)
     else
-      glColor4f(1 * night, 1 * night, 1 * night, 1);
+      glColor4f(1, 1, 1, 1);
 
     TKMRender.BindTexture(Tex.TexID);
     glBegin(GL_QUADS);
@@ -3161,221 +3163,7 @@ end;
 
 
 
-procedure TKMRenderDeviceNoNight.RenderSprite(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
-                                   HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1);
-var
-  tX, tY: Integer;
-  rX, rY: Single;
-begin
-  tX := EnsureRange(Round(aX), 1, gTerrain.MapX) - 1;
-  tY := EnsureRange(Round(aY), 1, gTerrain.MapY) - 1;
-  //Do not render if sprite is under FOW
-  if not aForced and (gMySpectator.FogOfWar.CheckVerticeRenderRev(tX, tY) <= FOG_OF_WAR_MIN) then
-    Exit;
-
-  rX := RoundToTilePixel(aX);
-  rY := RoundToTilePixel(aY);
-
-  with gGFXData[aRX, aId] do
-  begin
-    // FOW is rendered over the top so no need to make sprites black anymore
-    glColor4f(1, 1, 1, 0 - aAlphaStep);
-
-    TKMRender.BindTexture(Tex.TexID);
-    if DoHighlight then
-      glColor3ub(HighlightColor AND $FF, HighlightColor SHR 8 AND $FF, HighlightColor SHR 16 AND $FF);
-    glBegin(GL_QUADS);
-      glTexCoord2f(Tex.u1, Tex.v2); glVertex2f(rX                     , rY                      );
-      glTexCoord2f(Tex.u2, Tex.v2); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY                      );
-      glTexCoord2f(Tex.u2, Tex.v1); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY-pxHeight/CELL_SIZE_PX);
-      glTexCoord2f(Tex.u1, Tex.v1); glVertex2f(rX                     , rY-pxHeight/CELL_SIZE_PX);
-    glEnd;
-  end;
-
-  if gGFXData[aRX, aId].Alt.TexID <> 0 then
-    with gGFXData[aRX, aId] do
-    begin
-      //glColor4ubv(@Col);
-      glColor4f((Col AND $FF / 255),
-                (Col SHR 8 AND $FF / 255),
-                (Col SHR 16 AND $FF / 255),
-                 0 - aAlphaStep);
-      TKMRender.BindTexture(Alt.TexID);
-      glBegin(GL_QUADS);
-        glTexCoord2f(Alt.u1, Alt.v2); glVertex2f(rX                     , rY                      );
-        glTexCoord2f(Alt.u2, Alt.v2); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY                      );
-        glTexCoord2f(Alt.u2, Alt.v1); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY-pxHeight/CELL_SIZE_PX);
-        glTexCoord2f(Alt.u1, Alt.v1); glVertex2f(rX                     , rY-pxHeight/CELL_SIZE_PX);
-      glEnd;
-    end;
-end;
-
-
-procedure TKMRenderDeviceNoNight.RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
-                                   HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1);
-var
-  tX, tY: Integer;
-  rX, rY: Single;
-begin
-  tX := EnsureRange(Round(aX), 1, gTerrain.MapX) - 1;
-  tY := EnsureRange(Round(aY), 1, gTerrain.MapY) - 1;
-  //Do not render if sprite is under FOW
-  if not aForced and (gMySpectator.FogOfWar.CheckVerticeRenderRev(tX, tY) <= FOG_OF_WAR_MIN) then
-    Exit;
-
-  rX := RoundToTilePixel(aX);
-  rY := RoundToTilePixel(aY);
-
-  with gGFXData[aRX, aId] do
-  begin
-    // FOW is rendered over the top so no need to make sprites black anymore
-    glColor4f(1, 1, 1, 0 - aAlphaStep);
-
-    TKMRender.BindTexture(Tex.TexID);
-    if DoHighlight then
-      glColor3ub(HighlightColor AND $FF, HighlightColor SHR 8 AND $FF, HighlightColor SHR 16 AND $FF);
-    glBegin(GL_QUADS);
-      glTexCoord2f(Tex.u1, Tex.v2); glVertex2f(rX                     , rY                      );
-      glTexCoord2f(Tex.u2, Tex.v2); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY                      );
-      glTexCoord2f(Tex.u2, Tex.v1); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY-pxHeight/CELL_SIZE_PX);
-      glTexCoord2f(Tex.u1, Tex.v1); glVertex2f(rX                     , rY-pxHeight/CELL_SIZE_PX);
-    glEnd;
-  end;
-
-  if gGFXData[aRX, aId].Alt.TexID <> 0 then
-    with gGFXData[aRX, aId] do
-    begin
-     // glColor4ubv(@Col);
-      //glColor4ubv(@Col);
-      IF (aID >= 15359) and (aID <= 16849) then
-        glColor4ubv(@Col)
-      else
-      If aAlphaStep <> -1 then
-      glColor4f((Col AND $FF / 255),
-                (Col SHR 8 AND $FF / 255),
-                (Col SHR 16 AND $FF / 255),
-                 0 - aAlphaStep)
-      else
-      glColor4f((Col AND $FF / 255),
-                (Col SHR 8 AND $FF / 255),
-                (Col SHR 16 AND $FF / 255),
-                 (Col SHR 24 AND $FF / 255));
-
-      TKMRender.BindTexture(Alt.TexID);
-      glBegin(GL_QUADS);
-        glTexCoord2f(Alt.u1, Alt.v2); glVertex2f(rX                     , rY                      );
-        glTexCoord2f(Alt.u2, Alt.v2); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY                      );
-        glTexCoord2f(Alt.u2, Alt.v1); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY-pxHeight/CELL_SIZE_PX);
-        glTexCoord2f(Alt.u1, Alt.v1); glVertex2f(rX                     , rY-pxHeight/CELL_SIZE_PX);
-      glEnd;
-    end;
-end;
-// Param - defines at which level alpha-test will be set (acts like a threshhold)
-// Then we render alpha-tested Mask to stencil buffer. Only those pixels that are
-// white there will have sprite rendered
-// If there are two masks then we need to render sprite only there
-// where its mask is white AND where second mask is black
-procedure TKMRenderDeviceNoNight.RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY, aNight: Single;
-  aId2: Integer = 0; aStoneProgress: Single = 0; X2: Single = 0; Y2: Single = 0);
-var
-  tX, tY: Integer;
-  rX, rY: Single;
-begin
-  // Skip rendering if alphas are zero (occurs so non-started houses can still have child sprites)
-  if ((aWoodProgress = 0) and (aStoneProgress = 0)) or aShadow then Exit;
-
-  tX := EnsureRange(Round(aX), 1, gTerrain.MapX);
-  tY := EnsureRange(Round(aY), 1, gTerrain.MapY);
-  if gMySpectator.FogOfWar.CheckVerticeRenderRev(tX, tY) <= FOG_OF_WAR_MIN then Exit;
-
-  rX := RoundToTilePixel(aX);
-  rY := RoundToTilePixel(aY);
-
-  X2 := RoundToTilePixel(X2);
-  Y2 := RoundToTilePixel(Y2);
-
-  glClear(GL_STENCIL_BUFFER_BIT);
-
-  // Setup stencil mask
-  glEnable(GL_STENCIL_TEST);
-  glStencilFunc(GL_ALWAYS, 1, 1);
-  glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
-
-  glPushAttrib(GL_COLOR_BUFFER_BIT);
-    // Do not render anything on screen while setting up stencil mask
-    glColorMask(False, False, False, False);
-
-    // Prepare stencil mask. Sprite will be rendered only where are white pixels
-    glEnable(GL_ALPHA_TEST);
-    glBlendFunc(GL_ONE, GL_ZERO);
-
-    // Wood progress
-    glAlphaFunc(GL_GEQUAL, 1 - aWoodProgress);
-    with gGFXData[aRX,aId] do
-    begin
-      glColor3f(1, 1, 1);
-      TKMRender.BindTexture(Alt.TexID);
-      glBegin(GL_QUADS);
-        glTexCoord2f(Alt.u1,Alt.v2); glVertex2f(rX                     , rY         );
-        glTexCoord2f(Alt.u2,Alt.v2); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY         );
-        glTexCoord2f(Alt.u2,Alt.v1); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY-pxHeight/CELL_SIZE_PX);
-        glTexCoord2f(Alt.u1,Alt.v1); glVertex2f(rX                     , rY-pxHeight/CELL_SIZE_PX);
-      glEnd;
-      TKMRender.BindTexture(0);
-    end;
-
-    // Stone progress
-    if aId2 <> 0 then
-    begin
-      glStencilOp(GL_DECR, GL_DECR, GL_DECR);
-
-      glAlphaFunc(GL_GREATER, 1 - aStoneProgress);
-        with gGFXData[aRX,aId2] do
-        begin
-          glColor3f(1, 1, 1);
-          TKMRender.BindTexture(Alt.TexID);
-          glBegin(GL_QUADS);
-            glTexCoord2f(Alt.u1,Alt.v2); glVertex2f(X2                     ,Y2         );
-            glTexCoord2f(Alt.u2,Alt.v2); glVertex2f(X2+pxWidth/CELL_SIZE_PX,Y2         );
-            glTexCoord2f(Alt.u2,Alt.v1); glVertex2f(X2+pxWidth/CELL_SIZE_PX,Y2-pxHeight/CELL_SIZE_PX);
-            glTexCoord2f(Alt.u1,Alt.v1); glVertex2f(X2                     ,Y2-pxHeight/CELL_SIZE_PX);
-          glEnd;
-          TKMRender.BindTexture(0);
-        end;
-    end;
-
-    glDisable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_ALWAYS, 0);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Revert alpha mode
-
-  glPopAttrib;
-
-  glStencilFunc(GL_EQUAL, 1, 1);
-  glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-  glColorMask(True, True, True, True);
-
-  // Render sprite
-  with gGFXData[aRX,aId] do
-  begin
-    // FOW is rendered over the top so no need to make sprites black anymore
-    glColor4ub(255, 255, 255, 255);
-
-    TKMRender.BindTexture(Tex.TexID);
-    glBegin(GL_QUADS);
-      glTexCoord2f(Tex.u1,Tex.v2); glVertex2f(rX                     , rY         );
-      glTexCoord2f(Tex.u2,Tex.v2); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY         );
-      glTexCoord2f(Tex.u2,Tex.v1); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY-pxHeight/CELL_SIZE_PX);
-      glTexCoord2f(Tex.u1,Tex.v1); glVertex2f(rX                     , rY-pxHeight/CELL_SIZE_PX);
-    glEnd;
-    TKMRender.BindTexture(0);
-  end;
-
-  glDisable(GL_STENCIL_TEST);
-end;
-
-
-
-procedure TKMRenderDeviceNoShadow.RenderSprite(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+procedure TKMRenderDeviceNoShadow.RenderSprite(aRX: TRXType; aId: Integer; aX, aY: Single; Col: TColor4; DoHighlight: Boolean = False;
                                    HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1);
 var
   tX, tY: Integer;
@@ -3394,7 +3182,7 @@ begin
   begin
     // FOW is rendered over the top so no need to make sprites black anymore
     //glColor4ub(255, 255, 255, 255);
-    glColor4f(1 * aNight, 1 * aNight, 1 * aNight, 0 - aAlphaStep);
+    glColor4f(1, 1, 1, 0 - aAlphaStep);
 
     TKMRender.BindTexture(Tex.TexID);
     if DoHighlight then
@@ -3406,16 +3194,9 @@ begin
       glTexCoord2f(Tex.u1, Tex.v1); glVertex2f(rX                     , rY-pxHeight/CELL_SIZE_PX);
     glEnd;
   end;
-
   if gGFXData[aRX, aId].Alt.TexID <> 0 then
     with gGFXData[aRX, aId] do
     begin
-      //glColor4ubv(@Col);
-      {glColor4f((Col AND $FF / 255) * aNight,
-                (Col SHR 8 AND $FF / 255) * aNight,
-                (Col SHR 16 AND $FF / 255) * aNight,
-                 0 - aAlphaStep);}
-
       IF (aID >= 15359) and (aID <= 16849) then
         glColor4ubv(@Col)
       else
@@ -3440,7 +3221,7 @@ begin
 end;
 
 
-procedure TKMRenderDeviceNoShadow.RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY, aNight: Single; Col: TColor4; DoHighlight: Boolean = False;
+procedure TKMRenderDeviceNoShadow.RenderSpritePool(aRX: TRXType; aId: Integer; aX, aY: Single; Col: TColor4; DoHighlight: Boolean = False;
                                    HighlightColor: TColor4 = 0; aForced: Boolean = False; aAlphaStep : Single = -1);
 var
   tX, tY: Integer;
@@ -3459,17 +3240,17 @@ begin
   begin
     // FOW is rendered over the top so no need to make sprites black anymore
     //glColor4ub(255, 255, 255, 255);
-    glColor4f(1 * aNight, 1 * aNight, 1 * aNight, 0 - aAlphaStep);
+    glColor4f(1, 1, 1, 1);
     TKMRender.BindTexture(Tex.TexID);
     if DoHighlight then
       IF (aID >= 15359) and (aID <= 16849) then
-      glColor4f( HighlightColor AND $FF * aNight / 255,
-                  HighlightColor SHR 8 AND $FF * aNight / 255,
-                  HighlightColor SHR 16 AND $FF * aNight / 255,
+        glColor4f( HighlightColor AND $FF / 255,
+                  HighlightColor SHR 8 AND $FF / 255,
+                  HighlightColor SHR 16 AND $FF / 255,
                   1
                   )
       else
-        glColor3ub(HighlightColor AND $FF, HighlightColor SHR 8 AND $FF, HighlightColor SHR 16 AND $FF);
+        glColor4ub(HighlightColor AND $FF, HighlightColor SHR 8 AND $FF, HighlightColor SHR 16 AND $FF, 255);
     glBegin(GL_QUADS);
       glTexCoord2f(Tex.u1, Tex.v2); glVertex2f(rX                     , rY                      );
       glTexCoord2f(Tex.u2, Tex.v2); glVertex2f(rX+pxWidth/CELL_SIZE_PX, rY                      );
@@ -3483,16 +3264,16 @@ begin
     begin
       //glColor4ubv(@Col);
       IF (aID >= 15359) and (aID <= 16849) then
-      glColor4f( Col AND $FF * aNight / 255,
-                  Col SHR 8 AND $FF * aNight / 255,
-                  Col SHR 16 AND $FF * aNight / 255,
+      glColor4f( Col AND $FF / 255,
+                  Col SHR 8 AND $FF / 255,
+                  Col SHR 16 AND $FF / 255,
                   1
                   )
       else
-      glColor4ub( Round(Col AND $FF * (0.7 + aNight / 4)),
-                  Round(Col SHR 8 AND $FF * (0.7 + aNight / 4)),
-                  Round(Col SHR 16 AND $FF * (0.7 + aNight / 4)),
-                  Round(Col SHR 24 and $FF * (0.7 + aNight / 4) * Abs(aAlphaStep) )
+      glColor4ub( Col AND $FF,
+                  Col SHR 8 AND $FF,
+                  Col SHR 16 AND $FF,
+                  Round(Col SHR 24 and $FF * Abs(aAlphaStep) )
                   );
       TKMRender.BindTexture(Alt.TexID);
       glBegin(GL_QUADS);
@@ -3508,7 +3289,7 @@ end;
 // white there will have sprite rendered
 // If there are two masks then we need to render sprite only there
 // where its mask is white AND where second mask is black
-procedure TKMRenderDeviceNoShadow.RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY, aNight: Single;
+procedure TKMRenderDeviceNoShadow.RenderSpriteAlphaTest(aShadow : Boolean; aRX: TRXType; aId: Integer; aWoodProgress: Single; aX, aY: Single;
   aId2: Integer = 0; aStoneProgress: Single = 0; X2: Single = 0; Y2: Single = 0);
 var
   tX, tY: Integer;
@@ -3591,7 +3372,7 @@ begin
   with gGFXData[aRX,aId] do
   begin
     // FOW is rendered over the top so no need to make sprites black anymore
-    glColor3f(1 * aNight, 1 * aNight, 1 * aNight);
+    glColor3f(1, 1, 1);
 
     TKMRender.BindTexture(Tex.TexID);
     glBegin(GL_QUADS);
@@ -3714,7 +3495,7 @@ begin
   pX := aLoc.X - 0.5 + fRXData[rxGui].Pivot[aId].X / CELL_SIZE_PX;
   pY := gTerrain.RenderFlatToHeight(aLoc.X - 0.5, aLoc.Y - 0.5) -
         fRXData[rxGui].Pivot[aId].Y / CELL_SIZE_PX;
-  RenderSprite(aRX, aId, pX, pY, gTerrain.GetNightAtTile(aLoc), aFlagColor);
+  RenderSprite(aRX, aId, pX, pY, aFlagColor);
 end;
 
 
@@ -3726,7 +3507,7 @@ begin
   pX := aLoc.X + fRXData[rxGui].Pivot[aId].X / CELL_SIZE_PX;
   pY := gTerrain.RenderFlatToHeight(aLoc.X, aLoc.Y) +
         fRXData[rxGui].Pivot[aId].Y / CELL_SIZE_PX;
-  RenderSprite(aRX, aId, pX, pY, gTerrain.GetNightAtTile(KMPoint(aLoc)), aFlagColor, False, 0, aForced);
+  RenderSprite(aRX, aId, pX, pY, aFlagColor, False, 0, aForced);
 end;
 
 
@@ -4763,7 +4544,7 @@ end;
 
 // New items must provide their ground level
 procedure TKMRenderList.AddSpriteG(aRX: TRXType; aID: Integer; aUID: Integer; pX: Single; pY: Single; gX: Single; gY: Single;
-                                  nX: Integer; nY: Integer; aTeam: Cardinal = 0; aAlphaStep: Single = -1; aHighlight: Cardinal = $0);
+                                  aTeam: Cardinal = 0; aAlphaStep: Single = -1; aHighlight: Cardinal = $0);
 const
   MAX_SEL_RECT_HEIGHT = 60; //Restrict too long images selection rect
 var
@@ -4782,7 +4563,6 @@ begin
   fRenderList[fCount].TeamColor  := aTeam;           // Team Id (determines color)
   fRenderList[fCount].HighlightColor  :=aHighlight;           // Team Id (determines color)
   fRenderList[fCount].AlphaStep  := aAlphaStep;      // Alpha step for wip buildings
-  fRenderList[fCount].NightLoc  := KMPoint(nX, nY);      // Alpha step for wip buildings
 
   if aUID > 0 then
     with fRenderList[fCount].SelectionRect do
@@ -4805,7 +4585,7 @@ begin
   Inc(fCount); // New item added
 end;
 // Child items don't need ground level
-procedure TKMRenderList.AddSprite(aRX: TRXType; aID: Integer; pX: Single; pY: Single; nX: Integer; nY: Integer; aTeam: Cardinal = 0; aAlphaStep: Single = -1);
+procedure TKMRenderList.AddSprite(aRX: TRXType; aID: Integer; pX: Single; pY: Single; aTeam: Cardinal = 0; aAlphaStep: Single = -1);
 begin
   if fCount >= Length(fRenderList) then
     SetLength(fRenderList, fCount + 256); // Book some space
@@ -4819,13 +4599,12 @@ begin
   fRenderList[fCount].TeamColor  := aTeam;           // Team Id (determines color)
   fRenderList[fCount].HighlightColor  := 0;           // Team Id (determines color)
   fRenderList[fCount].AlphaStep  := aAlphaStep;      // Alpha step for wip buildings
-  fRenderList[fCount].NightLoc  := KMPoint(nX, nY);      // Alpha step for wip buildings
 
   Inc(fCount); // New item added
 end;
 
 
-procedure TKMRenderList.AddSpriteFront(aRX: TRXType; aID: Integer; pX: Single; pY: Single; nX: Integer; nY: Integer; aTeam: Cardinal = 0; aAlphaStep: Single = -1);
+procedure TKMRenderList.AddSpriteFront(aRX: TRXType; aID: Integer; pX: Single; pY: Single; aTeam: Cardinal = 0; aAlphaStep: Single = -1);
 begin
   If fFrontCount >= length(fFrontRenderList) then
     SetLength(fFrontRenderList, fFrontCount + 32); // Book some space
@@ -4839,7 +4618,6 @@ begin
   fFrontRenderList[fFrontCount].TeamColor  := aTeam;           // Team Id (determines color)
   fFrontRenderList[fFrontCount].HighlightColor  := 0;           // Team Id (determines color)
   fFrontRenderList[fFrontCount].AlphaStep  := aAlphaStep;      // Alpha step for wip buildings
-  fFrontRenderList[fFrontCount].NightLoc  := KMPoint(nX, nY);      // Alpha step for wip buildings
   Inc(fFrontCount);
 end;
 
@@ -4864,7 +4642,7 @@ begin
   If aFrontList then
   begin
     sp1 := fFrontRenderList[aId];
-    gRenderPool.RenderSpriteFront(sp1.RX, sp1.Id, sp1.Loc.X, sp1.Loc.Y, gTerrain.GetNightAtTile(sp1.NightLoc), sp1.TeamColor, sp1.HighlightColor <> 0, sp1.HighlightColor, false, sp1.AlphaStep);
+    gRenderPool.RenderSpriteFront(sp1.RX, sp1.Id, sp1.Loc.X, sp1.Loc.Y, sp1.TeamColor, sp1.HighlightColor <> 0, sp1.HighlightColor, false, sp1.AlphaStep);
     Exit;
   end;
   // Shortcuts to Sprites info
@@ -4875,7 +4653,7 @@ begin
     sp2 := fRenderList[aId + 1];
 
   if (sp1.AlphaStep = -1) or (sp1.RX = rxUnits) then
-    gRenderPool.RenderSpritePool(sp1.RX, sp1.Id, sp1.Loc.X, sp1.Loc.Y, gTerrain.GetNightAtTile(sp1.NightLoc), sp1.TeamColor, sp1.HighlightColor <> 0, sp1.HighlightColor, false, sp1.AlphaStep)
+    gRenderPool.RenderSpritePool(sp1.RX, sp1.Id, sp1.Loc.X, sp1.Loc.Y, sp1.TeamColor, sp1.HighlightColor <> 0, sp1.HighlightColor, false, sp1.AlphaStep)
   else
   begin
     // Houses are rendered as Wood+Stone part. For Stone we want to skip
@@ -4884,15 +4662,15 @@ begin
     // Check if next comes our child, Stone layer
     if sp2Exists and not sp2.NewInst and (sp2.AlphaStep >= 0) then
     begin
-      gRenderPool.RenderSpriteAlphaTest(false, sp1.RX, sp1.Id, sp1.AlphaStep, sp1.Loc.X, sp1.Loc.Y, gTerrain.GetNightAtTile(sp1.NightLoc),
+      gRenderPool.RenderSpriteAlphaTest(false, sp1.RX, sp1.Id, sp1.AlphaStep, sp1.Loc.X, sp1.Loc.Y,
                                                 sp2.Id, sp2.AlphaStep, sp2.Loc.X, sp2.Loc.Y);
-      gRenderPool.RenderSpriteAlphaTest(true, sp1.RX, sp1.Id, sp1.AlphaStep, sp1.Loc.X, sp1.Loc.Y, gTerrain.GetNightAtTile(sp1.NightLoc),
+      gRenderPool.RenderSpriteAlphaTest(true, sp1.RX, sp1.Id, sp1.AlphaStep, sp1.Loc.X, sp1.Loc.Y,
                                                 sp2.Id, sp2.AlphaStep, sp2.Loc.X, sp2.Loc.Y);
     end
     else
     begin
-      gRenderPool.RenderSpriteAlphaTest(false, sp1.RX, sp1.Id, sp1.AlphaStep, sp1.Loc.X, sp1.Loc.Y, gTerrain.GetNightAtTile(sp1.NightLoc));
-      gRenderPool.RenderSpriteAlphaTest(true, sp1.RX, sp1.Id, sp1.AlphaStep, sp1.Loc.X, sp1.Loc.Y, gTerrain.GetNightAtTile(sp1.NightLoc));
+      gRenderPool.RenderSpriteAlphaTest(false, sp1.RX, sp1.Id, sp1.AlphaStep, sp1.Loc.X, sp1.Loc.Y);
+      gRenderPool.RenderSpriteAlphaTest(true, sp1.RX, sp1.Id, sp1.AlphaStep, sp1.Loc.X, sp1.Loc.Y);
     end;
   end;
 

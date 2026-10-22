@@ -170,6 +170,7 @@ begin
                                     utLekter     : Result := TKMUnitWarriorLekter.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
                                     utPaladin    : Result := TKMUnitWarriorPaladin.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
                                     utChampion   : Result := TKMUnitWarriorChampion.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
+                                    utTorchMan,
                                     utPyro        : Result := TKMUnitWarriorPyro.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
                                     else Result := TKMUnitWarrior.Create(uid, aUnitType, pointDir, aOwner, aInHouse);
                                   end;
@@ -425,6 +426,7 @@ begin
                                   utLekter        : U := TKMUnitWarriorLekter.Load(LoadStream);
                                   utPaladin       : U := TKMUnitWarriorPaladin.Load(LoadStream);
                                   utChampion      : U := TKMUnitWarriorChampion.Load(LoadStream);
+                                  utTorchMan,
                                   utPyro          : U := TKMUnitWarriorPyro.Load(LoadStream);
                                   else U := TKMUnitWarrior.Load(LoadStream);
                                 end;
