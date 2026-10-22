@@ -1163,7 +1163,7 @@ begin
                         if ReplaceObjects or (not ReplaceObjects and (gTerrain.Land^[Y, X].Obj = 255)) then
                           gTerrain.Land^[Y, X].Obj := patt.GetObject(X + RanX,Y + RanY);
           potHeights :  begin
-                          If (X > 1) and (X < gTerrain.MapX - 1) and (Y > 1) and (Y <= gTerrain.MapY - 1)
+                          If (X > 1) and (X < gTerrain.MapX) and (Y > 1) and (Y < gTerrain.MapY)
                             and  gTerrain.Land^[Y - 1,X].TileSelected
                             and gTerrain.Land^[Y + 1,X].TileSelected
                             and gTerrain.Land^[Y,X + 1].TileSelected
@@ -1205,7 +1205,7 @@ begin
 
   If patt.PatternType = potHeights then
   begin
-    SetLength(newHeights, gTerrain.MapY, gTerrain.MapX);
+    SetLength(newHeights, gTerrain.MapY + 1, gTerrain.MapX + 1);
     for X := 1 to gTerrain.MapX - 1 do
       for Y := 1 to gTerrain.MapY - 1 do
         newHeights[Y,X] := gTerrain.Land^[Y,X].Height;
@@ -1213,7 +1213,7 @@ begin
     begin
       X := smoothHList[I].X;
       Y := smoothHList[I].Y;
-      If (X <= 1) or (Y <= 1) then
+      If (X <= 1) or (Y <= 1) or (Y > gTerrain.MapY) or (X > gTerrain.MapX) then
         Continue;
       maxH := (gTerrain.Land^[Y,X].Height
               + gTerrain.Land^[Y - 1,X].Height
