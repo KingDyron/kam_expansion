@@ -483,6 +483,7 @@ type
     procedure AddLight(aLoc : TKMPoint; aRadius, aPower : Byte);
     procedure RemLight(aLoc : TKMPoint);
     function GetNightAtTile(aX, aY : Integer) : Single;overload;
+    function GetNightScale : Single;overload;
     function GetNightAtTile(aLoc : TKMPoint) : Single;overload;
     property NightFactor : Single read GetNightFactor write SetNightFactor;
     function LocalNightSpeed : Integer;
@@ -9816,11 +9817,17 @@ end;
 
 function TKMTerrain.GetNightAtTile(aX: Integer; aY: Integer): Single;
 begin
-  if not TileInMapCoords(aX, aY) then
+  Result := 1;
+  {if not TileInMapCoords(aX, aY) then
     Exit(1);
 
   Result := MIN_NIGHT_DARKNESS + (Sin(GetNightFactor) + 1) * 0.6 * (1 - MIN_NIGHT_DARKNESS);
-  Result := Mix(1, Result, 1 - Land[aY, aX].NightAffection);
+  Result := Mix(1, Result, 1 - Land[aY, aX].NightAffection);}
+end;
+
+function TKMTerrain.GetNightScale : Single;
+begin
+  Result := MIN_NIGHT_DARKNESS + (Sin(GetNightFactor) + 1) * 0.6 * (1 - MIN_NIGHT_DARKNESS);
 end;
 
 function TKMTerrain.GetNightAtTile(aLoc: TKMPoint): Single;

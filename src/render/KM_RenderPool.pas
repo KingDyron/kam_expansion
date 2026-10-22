@@ -119,6 +119,12 @@ type
     fMarksList: TKMPointTagList;
     fHouseOutline: TKMPointList;
     fRenderDevice: TKMRenderDeviceCommon;
+
+    fLightFBOInited : Boolean;
+    fLightFBO : GLuint;
+    fLightTexture : GLuint;
+    fLightTexSizeX : Integer;
+    fLightTexSizeY : Integer;
     procedure UnitsHitTest(const X, Y : Integer);
     procedure ApplyTransform;
     procedure SetDefaultRenderParams;
@@ -172,6 +178,9 @@ type
 
     procedure RenderBigEraseTileInt(const X,Y: Integer);
     procedure RenderAssignToShip;
+
+    procedure CreateLightFBO;
+    procedure RenderLights;
   protected
 
     procedure RenderSprite(aRX: TRXType; aId: Integer; aX, aY: Single; Col: TColor4; DoHighlight: Boolean = False;
@@ -279,6 +288,9 @@ type
 
     procedure RenderSpriteCloud(aId: Integer; aX, aY, aRotation, aNight: Single; aAlpha : Single);
 
+    procedure UpdateLights;
+
+
     property RenderDebug: TKMRenderDebug read fRenderDebug;
     property ViewPort : TKMViewport read fViewport;
 
@@ -287,6 +299,7 @@ type
     procedure SetRotation(aH,aP,aB: Integer);
 
     procedure CreateRenderDevice(aWeatherSettings : TKMSettingsWeather);
+
 
     procedure Render(aTickLag: Single);
 
@@ -343,6 +356,7 @@ begin
   fHouseOutline   := TKMPointList.Create;
   // fSampleHouse := TOBJModel.Create;
   // fSampleHouse.LoadFromFile(ExeDir + 'Store.obj');
+  CreateLightFBO;
 end;
 
 
@@ -361,6 +375,12 @@ begin
   FreeAndNil(gRenderGameAux);
   FreeAndNil(gRenderAux);
   FreeAndNil(fRenderDevice);
+
+  If fLightFBOInited then
+  begin
+    glDeleteFramebuffers(1,@fLightFBO);
+    glDeleteTextures(1,@fLightTexture);
+  end;
 
   inherited;
 end;
@@ -447,14 +467,18 @@ var
   clipRect: TKMRect;
 begin
   if fRender.Blind then Exit;
+  UpdateLights;
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  glViewport(0, 0, fRender.ScreenX, fRender.ScreenY);
 
   Inc(fCounter);
+  glClearColor(0, 0, 0, 0);
+  glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT or GL_STENCIL_BUFFER_BIT);
 
   ApplyTransform;
 
   glPushAttrib(GL_LINE_BIT or GL_POINT_BIT);
     SetDefaultRenderParams;
-
     // Render only within visible area
     clipRect := fViewport.GetClip;
 
@@ -475,7 +499,6 @@ begin
     fRenderList.ClearTiles;
     fRenderTerrain.ClipRect := clipRect;
     fRenderTerrain.RenderBase(gTerrain.AnimStep, gMySpectator.FogOfWar);
-
     // Disable depth test //and write to depth buffer,
     // so that terrain shadows could be applied seamlessly ontop
     glDisable(GL_DEPTH_TEST);
@@ -519,12 +542,11 @@ begin
     fRenderList.Render;
     if not gGameParams.IsMapEditor then
       gGame.Weather.Paint(aTickLag, clipRect);
-
+    RenderLights;
     if mlDefencesAll in gGameParams.VisibleLayers then
       fRenderDebug.PaintDefences;
 
     fRenderTerrain.RenderFOW(gMySpectator.FogOfWar);
-
     // Alerts/rally second pass is rendered after FOW
     PaintFlagPoints(False);
     if gGame.GamePlayInterface <> nil then
@@ -533,6 +555,130 @@ begin
     RenderForegroundUI;
 
   glPopAttrib;
+end;
+
+procedure TKMRenderPool.UpdateLights;
+var ang : Single;
+  I, K, L : Integer;
+    rad : Integer;
+    P : TKMPointF;
+
+begin
+  If not fLightFBOInited then
+    CreateLightFBO;
+  If gTerrain = nil then
+    Exit;
+  glBindFramebuffer(GL_FRAMEBUFFER, fLightFBO);
+  glViewport(0, 0, fRender.ScreenX, fRender.ScreenY);
+  glClearColor(0, 0, 0.05, 1);
+  glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT or GL_STENCIL_BUFFER_BIT);
+
+  glPushAttrib(GL_LINE_BIT or GL_POINT_BIT);
+    //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA); //Set alpha mode
+    //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA); //Set alpha mode
+    glBlendFunc(GL_ZERO, GL_ONE_MINUS_SRC_COLOR); //Set alpha mode
+    TKMRender.BindTexture(0);
+    glColor4f(1, 1, 1, 1);
+    for L := 0 to gTerrain.Lights.Count - 1 do
+    begin
+      P := KMPointF(gTerrain.Lights[L]);
+      rad := gTerrain.Lights.Tag[L];
+      {glBegin(GL_TRIANGLE_FAN);
+        glColor4f(1, 1, 1, 1);
+        //glColor4f(1, 1, 1, 1);
+        glVertex2f(P.X, P.Y);
+
+        for I := 0 to 16 do
+        begin
+          ang := I / 8 * Pi;
+          glColor4f(0, 0, 0, 0);
+          glVertex2f(P.X - 1 + Sin(ang) * rad, P.Y - 1 + Cos(ang) * rad);
+        end;
+      glEnd;}
+      with gGFXData[rxTrees, 1682] do
+      begin
+        TKMRender.BindTexture(Tex.TexID);
+
+        glBegin(GL_QUADS);
+          glTexCoord2f(Tex.u1,Tex.v1); glVertex2f(P.X-rad, P.Y-rad);
+          glTexCoord2f(Tex.u2,Tex.v1); glVertex2f(P.X+rad, P.Y-rad);
+          glTexCoord2f(Tex.u2,Tex.v2); glVertex2f(P.X+rad, P.Y+rad);
+          glTexCoord2f(Tex.u1,Tex.v2); glVertex2f(P.X-rad, P.Y+rad);
+        glEnd;
+      end;
+
+    end;
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //Set alpha mode
+  glPopAttrib;
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+end;
+
+procedure TKMRenderPool.CreateLightFBO;
+begin
+  if fLightFBOInited then Exit;
+
+  fLightFBOInited := True;
+
+
+  // generate texture
+  glGenTextures(1, @fLightTexture);
+  glBindTexture(GL_TEXTURE_2D, fLightTexture);
+
+  fLightTexSizeX := fRender.ScreenX;
+  fLightTexSizeY := fRender.ScreenY;
+  glTexImage2D(
+    GL_TEXTURE_2D,
+    0,
+    GL_RGBA8,
+    fLightTexSizeX,
+    fLightTexSizeY,
+    0,
+    GL_RGBA,
+    GL_UNSIGNED_BYTE,
+    nil
+  );
+
+  //set texture parameters
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+
+  glGenFramebuffers(1, @fLightFBO);
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fLightFBO);
+
+   //bind the texture to the buffer
+  glFramebufferTexture2D(
+    GL_FRAMEBUFFER,
+    GL_COLOR_ATTACHMENT0,
+    GL_TEXTURE_2D,
+    fLightTexture,
+    0
+  );
+  if glCheckFramebufferStatus(GL_FRAMEBUFFER) <> GL_FRAMEBUFFER_COMPLETE then
+    raise Exception.Create('Light FBO is incomplete');
+  // Return to onscreen rendering:
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+end;
+
+procedure TKMRenderPool.RenderLights;
+begin
+  If gTerrain.GetNightScale <= 0 then
+    Exit;
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //Set alpha mode
+  glTranslatef(0, -1, 0);
+  TKMRender.BindTexture(fLightTexture);
+  glColor4f(1, 1, 1, 1 - gTerrain.GetNightScale);
+  glBegin(GL_QUADS);
+    glTexCoord2f(0, 1); glVertex2f(0, 0);
+    glTexCoord2f(1, 1); glVertex2f(fLightTexSizeX, 0);
+    glTexCoord2f(1, 0); glVertex2f(fLightTexSizeX, fLightTexSizeY);
+    glTexCoord2f(0, 0); glVertex2f(0, fLightTexSizeY);
+  glEnd;
+  TKMRender.BindTexture(0);
+
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //Set alpha mode
 end;
 
 

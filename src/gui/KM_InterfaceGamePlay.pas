@@ -5282,7 +5282,7 @@ begin
   if SHOW_GAME_TICK then
   begin
     Result := Result + 'Tick: ' + IntToStr(gGameParams.Tick) + '|';
-    Result := Result + 'NIghtTime: ' + FloatToStr(gTerrain.NightFactor);
+    Result := Result + 'NIghtTime: ' + FloatToStr(gTerrain.GetNightScale);
   end;
   if SHOW_SPRITE_COUNT then
     Result := Result + Format('%d units on map|%d/%d sprites queued/rendered|%d controls rendered|', [
