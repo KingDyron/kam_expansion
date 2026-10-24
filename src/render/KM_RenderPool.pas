@@ -571,7 +571,7 @@ begin
   glClearColor(0, 0, 0.05, 1);
   glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT or GL_STENCIL_BUFFER_BIT);
   glLoadIdentity; // Reset The View
-
+  glScalef(4, 4, 1);
   glPushAttrib(GL_LINE_BIT or GL_POINT_BIT);
     //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA); //Set alpha mode
     //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA); //Set alpha mode
@@ -585,26 +585,33 @@ begin
       for L := 0 to gTerrain.Lights.Count - 1 do
       begin
         P := KMPointF(gTerrain.Lights[L]);
+        P.Y := P.Y - gTerrain.RenderHeightAt(P.X, P.Y);
         rad := gTerrain.Lights.Tag[L];
-
-        glBegin(GL_QUADS);
-          glTexCoord2f(Tex.u1,Tex.v1); glVertex2f(P.X-rad, P.Y-rad);
-          glTexCoord2f(Tex.u2,Tex.v1); glVertex2f(P.X+rad, P.Y-rad);
-          glTexCoord2f(Tex.u2,Tex.v2); glVertex2f(P.X+rad, P.Y+rad);
-          glTexCoord2f(Tex.u1,Tex.v2); glVertex2f(P.X-rad, P.Y+rad);
-        glEnd;
+        glPushMatrix;
+          glTranslatef(P.X, P.Y, 0);
+          glBegin(GL_QUADS);
+            glTexCoord2f(Tex.u1,Tex.v1); glVertex2f(-rad, -rad);
+            glTexCoord2f(Tex.u2,Tex.v1); glVertex2f(+rad, -rad);
+            glTexCoord2f(Tex.u2,Tex.v2); glVertex2f(+rad, +rad);
+            glTexCoord2f(Tex.u1,Tex.v2); glVertex2f(-rad, +rad);
+          glEnd;
+        glPopMatrix;
       end;
       //render lights from units
       for L := 0 to fLightsCount - 1 do
       begin
         P := fLightsList[L].Loc;
+        P.Y := P.Y - gTerrain.RenderHeightAt(P.X, P.Y);
         rad := fLightsList[L].Radius;
-        glBegin(GL_QUADS);
-          glTexCoord2f(Tex.u1,Tex.v1); glVertex2f(P.X-rad, P.Y-rad);
-          glTexCoord2f(Tex.u2,Tex.v1); glVertex2f(P.X+rad, P.Y-rad);
-          glTexCoord2f(Tex.u2,Tex.v2); glVertex2f(P.X+rad, P.Y+rad);
-          glTexCoord2f(Tex.u1,Tex.v2); glVertex2f(P.X-rad, P.Y+rad);
-        glEnd;
+        glPushMatrix;
+          glTranslatef(P.X, P.Y, 0);
+          glBegin(GL_QUADS);
+            glTexCoord2f(Tex.u1,Tex.v1); glVertex2f(-rad, -rad);
+            glTexCoord2f(Tex.u2,Tex.v1); glVertex2f(+rad, -rad);
+            glTexCoord2f(Tex.u2,Tex.v2); glVertex2f(+rad, +rad);
+            glTexCoord2f(Tex.u1,Tex.v2); glVertex2f(-rad, +rad);
+          glEnd;
+        glPopMatrix;
 
       end;
     end;
@@ -673,16 +680,20 @@ begin
     Exit;
   If gTerrain.GetNightScale >= 1 then
     Exit;
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //Set alpha mode
-  glTranslatef(0, -1, 0);
+
   TKMRender.BindTexture(fLightTexture);
-  glColor4f(1, 1, 1, 1 - gTerrain.GetNightScale);
-  glBegin(GL_QUADS);
-    glTexCoord2f(0, 1); glVertex2f(0, 0);
-    glTexCoord2f(1, 1); glVertex2f(fRender.ScreenX, 0);
-    glTexCoord2f(1, 0); glVertex2f(fRender.ScreenX, fRender.ScreenY);
-    glTexCoord2f(0, 0); glVertex2f(0, fRender.ScreenY);
-  glEnd;
+  glPushMatrix;
+    glScaleF(0.25, 0.25, 1);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //Set alpha mode
+    glTranslatef(0, -1, 0);
+    glColor4f(1, 1, 1, 1 - gTerrain.GetNightScale);
+    glBegin(GL_QUADS);
+      glTexCoord2f(0, 1); glVertex2f(0, 0);
+      glTexCoord2f(1, 1); glVertex2f(fRender.ScreenX, 0);
+      glTexCoord2f(1, 0); glVertex2f(fRender.ScreenX, fRender.ScreenY);
+      glTexCoord2f(0, 0); glVertex2f(0, fRender.ScreenY);
+    glEnd;
+  glPopMatrix;
   TKMRender.BindTexture(0);
 
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //Set alpha mode
