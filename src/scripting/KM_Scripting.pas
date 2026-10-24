@@ -1183,6 +1183,7 @@ begin
     RegisterMethodCheck(c, 'procedure  UnitSetRage(aUnitID: Integer; aDuration: Integer)');
     RegisterMethodCheck(c, 'procedure  UnitSetStats(aUnitID: Integer; aStats: TKMUnitStats)');
     RegisterMethodCheck(c, 'procedure  UnitSetThought(aUnitID : Integer; aThought : TKMUnitThought)');
+    RegisterMethodCheck(c, 'procedure  UnitSetLightRadius(aUnitID: Integer; aRadius: Byte)');
     RegisterMethodCheck(c, 'procedure  WeatherSpawn(aType : TKMWeatherType; aLifeTime : Cardinal; aX, aY : Single; aSpeedX, aSpeedY : Single)');
     RegisterMethodCheck(c, 'procedure  WareSetMarketPrice(aWare : TKMWareType; aPrice : Single)');
     RegisterMethodCheck(c, 'procedure  MusicPlay(aName : String; aForceOn : Boolean)');
@@ -2030,6 +2031,7 @@ begin
       RegisterMethod(@TKMScriptActions.UnitSetRage, 'UnitSetRage');
       RegisterMethod(@TKMScriptActions.UnitSetStats, 'UnitSetStats');
       RegisterMethod(@TKMScriptActions.UnitSetThought, 'UnitSetThought');
+      RegisterMethod(@TKMScriptActions.UnitSetLightRadius, 'UnitSetLightRadius');
       RegisterMethod(@TKMScriptActions.WeatherSpawn, 'WeatherSpawn');
       RegisterMethod(@TKMScriptActions.WareSetMarketPrice, 'WareSetMarketPrice');
       RegisterMethod(@TKMScriptActions.MusicPlay, 'MusicPlay');

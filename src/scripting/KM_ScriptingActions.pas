@@ -317,6 +317,7 @@ type
     procedure UnitSetRage(aUnitID, aDuration : Integer);
     procedure UnitSetStats(aUnitID : Integer; aStats : TKMUnitStats);
     procedure UnitSetThought(aUnitID : Integer; aThought : TKMUnitThought);
+    procedure UnitSetLightRadius(aUnitID : Integer; aRadius : Byte);
 
 
     procedure WatchTowerRangeSet(aWatchTower : Integer; aRangeMin, aRangeMax : Single);
@@ -5921,6 +5922,26 @@ begin
       U := fIDCache.GetUnit(aUnitID);
       if U <> nil then
         U.Thought := aThought;
+    end
+    else
+      LogIntParamWarn('Actions.UnitBlockWalking', [aUnitID]);
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
+
+procedure TKMScriptActions.UnitSetLightRadius(aUnitID: Integer; aRadius: Byte);
+var
+  U: TKMUnit;
+begin
+  try
+    if (aUnitID > 0) then
+    begin
+      U := fIDCache.GetUnit(aUnitID);
+      if U <> nil then
+        U.LightRadius := aRadius;
     end
     else
       LogIntParamWarn('Actions.UnitBlockWalking', [aUnitID]);

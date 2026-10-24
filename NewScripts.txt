@@ -71,6 +71,7 @@
     procedure UnitSetRage(aUnitID, aDuration : Integer);//gives unit a rage effect (like the paladin has)
     procedure UnitSetStats(aUnitID : Integer; aStats : TKMUnitStats);//sets the unit's important data 
     procedure UnitSetThought(aUnitID : Integer; aThought : TKMUnitThought);//sets unit's thought 'cloud'
+    procedure UnitSetLightRadius(aUnitID : Integer; aRadius : Byte);
 	
 	procedure CampaignUnlockMission(aMission : Byte; aUnlocked : Boolean);
 

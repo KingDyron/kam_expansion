@@ -450,8 +450,8 @@ type
   end;
 
   TKMUnitWarriorPyro = class(TKMUnitWarrior)
-    protected
-      procedure PaintUnit(aTickLag: Single); override;
+    public
+    constructor Create(aID: Cardinal; aUnitType: TKMUnitType; const aLoc: TKMPointDir; aOwner: TKMHandID; aInHouse: TKMHouse);
   end;
 
   TKMUnitWarriorLekter = class(TKMUnitWarrior)
@@ -4231,19 +4231,10 @@ begin
     fIdleTimer := 0;
 end;
 
-procedure TKMUnitWarriorPyro.PaintUnit(aTickLag: Single);
-var
-  V: TKMUnitVisualState;
-  unitPos: TKMPointF;
-  fillColor, lineColor: Cardinal;
+constructor TKMUnitWarriorPyro.Create(aID: Cardinal; aUnitType: TKMUnitType; const aLoc: TKMPointDir; aOwner: TKMHandID; aInHouse: TKMHouse);
 begin
   Inherited;
-  V := fVisual.GetLerp(aTickLag);
-
-  unitPos.X := V.PositionF.X + UNIT_OFF_X + V.SlideX;
-  unitPos.Y := V.PositionF.Y + UNIT_OFF_Y + V.SlideY;
-
-  gRenderPool.AddLight(unitPos.X, unitPos.Y, 10);
+  fLightRadius := 10;
 end;
 
 procedure TKMUnitWarriorLekter.OrderAttackHouse(aTargetHouse: TKMHouse; aForced: Boolean = True);

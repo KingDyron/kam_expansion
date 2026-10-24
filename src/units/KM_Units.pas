@@ -128,6 +128,7 @@ type
     fConditionPace : Cardinal;
     fVisual: TKMUnitVisual;
     fNeverHungry : Boolean;
+    fLightRadius : Byte;
 
     //pecialEffect : array of Reco
     function GetDesiredPassability: TKMTerrainPassability; virtual;
@@ -158,6 +159,7 @@ type
     function IsSelected : Boolean; virtual;
     function GetSpeedF : Single;
     function GetSpeedFStorm : Single;
+    procedure SetLightRadius(aValue : Byte);
   private
     function GetTask: TKMUnitTask;
     function GetInHouse: TKMHouse;
@@ -293,6 +295,8 @@ type
     function  IsDismissing: Boolean;
     function  IsDismissAvailable: Boolean;
     function  IsDismissCancelAvailable: Boolean;
+
+    property LightRadius : Byte read fLightRadius write SetLightRadius;
 
     function IsAnimal: Boolean; virtual;
 
@@ -2217,6 +2221,7 @@ begin
   LoadStream.Read(Immortal);
   LoadStream.ReadData(fSpecialEffect);
   LoadStream.ReadData(CanNotInteract);
+  LoadStream.ReadData(fLightRadius);
 end;
 
 
@@ -3772,6 +3777,11 @@ begin
   Result := GetSpeedF * 1.5;
 end;
 
+procedure TKMUnit.SetLightRadius(aValue : Byte);
+begin
+  fLightRadius := EnsureRange(aValue, 0, 20);
+end;
+
 function TKMUnit.GetSlide(aCheck: TKMCheckAxis): Single;
 var
   dY, dX, pixelPos, lookupDiagonal: ShortInt;
@@ -4048,6 +4058,7 @@ begin
   SaveStream.Write(Immortal);
   SaveStream.WriteData(fSpecialEffect);
   SaveStream.WriteData(CanNotInteract);
+  SaveStream.WriteData(fLightRadius);
 end;
 
 
@@ -4255,6 +4266,7 @@ procedure TKMUnit.Paint(aTickLag: Single);
 var
   V: TKMUnitVisualState;
   paintPos : TKMPointF;
+  slideX, slideY : Single;
 begin
   //Here should be catched any cases where unit has no current action - this is a flaw in TTasks somewhere
   //Unit always meant to have some Action performed.
@@ -4266,15 +4278,16 @@ begin
 
   if fTask <> nil then
     fTask.Paint;
-
+  slideX := GetSlide(axX);
+  slideY := GetSlide(axY);
   if SHOW_POINTER_DOTS then
-    gRenderAux.UnitPointers(fPositionF.X + 0.5 + GetSlide(axX), fPositionF.Y + 1 + GetSlide(axY), PointerCount);
+    gRenderAux.UnitPointers(fPositionF.X + 0.5 + slideX, fPositionF.Y + 1 + slideY, PointerCount);
 
   if SHOW_TILE_UNIT then
-    gRenderAux.CircleOnTerrain(fPositionF.X - 0.5 + GetSlide(axX), fPositionF.Y - 0.5 + GetSlide(axY), 0.35, GetRandomColorWSeed(UID));
+    gRenderAux.CircleOnTerrain(fPositionF.X - 0.5 + slideX, fPositionF.Y - 0.5 + slideY, 0.35, GetRandomColorWSeed(UID));
 
   if IsHero then
-    gRenderAux.CircleOnTerrain(fPositionF.X - 0.5 + GetSlide(axX), fPositionF.Y - 0.5 + GetSlide(axY), 0.5, IfThen(FlagColor <> 0, FlagColor, gHands[Owner].GameFlagColor) and $55FFFFFF);
+    gRenderAux.CircleOnTerrain(fPositionF.X - 0.5 + slideX, fPositionF.Y - 0.5 + slideY, 0.5, IfThen(FlagColor <> 0, FlagColor, gHands[Owner].GameFlagColor) and $55FFFFFF);
   if Visible and (fAction <> nil) then
     PaintUnit(aTickLag);
 
@@ -4290,6 +4303,9 @@ begin
     gRenderPool.AddSprite(paintPos + KMPointF(0.9, -0.5 + sin(gGameApp.GlobalTickCount) * 0.1),
                 954, rxGui, FlagColor, true, false, 0, true);
   end;
+
+  If fLightRadius > 0 then
+    gRenderPool.AddLight(fPositionF.X - 0.5 + slideX, fPositionF.Y - 0.5 + slideY, fLightRadius);
 
 end;
 
