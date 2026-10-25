@@ -397,7 +397,8 @@ begin
                                     fLastHouse := gHands[fLastHand].AddHouseWip(HOUSE_ID_TO_TYPE[P[0]], KMPoint(nonEntranceX, P[2]+1));
                                     //fLastHouse.UpdatePosition(KMPoint(P[1]+1, P[2]+1));
                                     fLastHouse.BuildingState := hbsWood;
-                                    gTerrain.SetRoad(fLastHouse.Entrance, fLastHand, rtStone);
+
+                                    gTerrain.SetRoadForHouse(fLastHouse.Entrance, fLastHand);
                                     fLastHouse.AddDemandBuildingMaterials;
 
                                     HA := gRes.Houses[fLastHouse.HouseType].BuildArea;

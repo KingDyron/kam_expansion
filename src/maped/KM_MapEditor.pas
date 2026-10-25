@@ -1020,7 +1020,7 @@ begin
                         H := gMySpectator.Hand.AddHouseWip(TKMHouseType(gCursor.Tag1), P);
                         H.UpdatePosition(P);
                         H.UpdatePosition(P);
-                        gTerrain.SetRoad(H.Entrance, H.Owner, rtStone);
+                        gTerrain.SetRoadForHouse(H.Entrance, H.Owner);
                         H.BuildingState := hbsWood;
                       end else
                         H := gMySpectator.Hand.AddHouse(TKMHouseType(gCursor.Tag1), P.X, P.Y, True);
@@ -1281,7 +1281,7 @@ begin
                                   begin
                                     H := gMySpectator.Hand.AddHouseWip(TKMHouseType(gCursor.Tag1), P);
                                     H.UpdatePosition(P);
-                                    gTerrain.SetRoad(H.Entrance, gMySpectator.HandID, rtStone);
+                                    gTerrain.SetRoadForHouse(H.Entrance, gMySpectator.HandID);
                                     H.BuildingState := hbsWood;
                                   end else
                                   begin

@@ -96,6 +96,7 @@ type
     procedure UnlockWorkerTile(const aLoc: TKMPoint);
     procedure SetRoads(aList: TKMPointTagList; aOwner: TKMHandID; aUpdateWalkConnects: Boolean = True);
     procedure SetRoad(const aLoc: TKMPoint; aOwner: TKMHandID; aRoadType : TKMRoadType);
+    procedure SetRoadForHouse(const aLoc: TKMPoint; aOwner: TKMHandID);
     procedure SetPalisade(const aLoc: TKMPoint; aOwner: TKMHandID);
     Procedure UpdatePalisadeAround(const aLoc : TKMPoint; aOwner: TKMHandID);
 
@@ -3670,6 +3671,18 @@ begin
         Land^[P.Y,P.X].RoadType := aRoadType;
     end;
 
+end;
+
+procedure TKMTerrain.SetRoadForHouse(const aLoc: TKMPoint; aOwner: TKMHandID);
+begin
+  if not TileInMapCoords(aLoc) then
+    Exit;
+  //remove road
+  If Land^[aLoc.Y, aLoc.X].TileOverlay = OVERLAY_ROAD then
+    Land^[aLoc.Y, aLoc.X].TileOverlay := OVERLAY_NONE;
+  If Land^[aLoc.Y + 1, aLoc.X].TileOverlay2.IsRoadWalkable then
+    Exit;
+  SetRoad(aLoc, aOwner, GetRoadType(aLoc.X, aLoc.Y + 1));
 end;
 
 procedure TKMTerrain.SetPalisade(const aLoc: TKMPoint; aOwner: TKMHandID);
@@ -7904,7 +7917,8 @@ begin
       if HA[I,K] = 2 then
         if aHouseStage = hsBuilt then
           if TKMHouse(aHouse).PlaceRoad then
-            Land^[Y,X].TileOverlay := OVERLAY_ROAD;
+            If not Land^[Y + 1, X].TileOverlay2.IsRoadWalkable then
+              Land^[Y,X].TileOverlay := OVERLAY_ROAD;
 
     end;
   SetHouse(TKMHouse(aHouse).Position, TKMHouse(aHouse).HouseType, aHouseStage, aOwner, aFlattenTerrain);

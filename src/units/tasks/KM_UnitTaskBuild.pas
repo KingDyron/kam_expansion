@@ -276,6 +276,7 @@ uses
   KM_Game,
   KM_Hand, KM_HandTypes, KM_HandEntity, KM_TerrainTypes,
   KM_HouseHelpers, KM_HousePasture, KM_HouseShipyard,
+  KM_ResTileSet,
   Math,
   KM_ScriptingEvents;
 
@@ -1569,7 +1570,7 @@ begin
 
           if KMSamePoint(fHouse.Entrance, fCellsToDig[fLastToDig]) then
             if fHouse.PlaceRoad then
-                gTerrain.SetRoad(fHouse.Entrance, Owner, gTerrain.GetRoadType(fHouse.Entrance.X, fHouse.Entrance.Y + 1));
+                gTerrain.SetRoadForHouse(fHouse.Entrance, Owner);
 
           if not ((fHouse.HouseType = htAppleTree) and KMSamePoint(fHouse.Entrance, fCellsToDig[fLastToDig])) then
             gTerrain.RemoveObject(fCellsToDig[fLastToDig]); //All objects are removed
@@ -1761,7 +1762,7 @@ begin
             SetActionLockedStay(6, uaWork, False, 0, 5); //Do building and end animation
 
           if fHouse.PlaceRoad then
-              gTerrain.SetRoad(fHouse.Entrance, Owner, gTerrain.GetRoadType(fHouse.Entrance.X, fHouse.Entrance.Y + 1));
+              gTerrain.SetRoadForHouse(fHouse.Entrance, Owner);
           Inc(fPhase2);
         end;
     5:  begin

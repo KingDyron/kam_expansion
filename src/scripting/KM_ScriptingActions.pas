@@ -1411,7 +1411,7 @@ begin
             gTerrain.SetTileLock(KMPoint(nonEntranceX + K - 3, nonEntranceY + I - 4), tlDigged);
           end;
 
-        gTerrain.SetRoad(H.Entrance, aHand, rtStone);
+        gTerrain.SetRoadForHouse(H.Entrance, aHand);
         H.BuildingState := hbsWood;
         if aAddMaterials then
         begin
@@ -1472,7 +1472,7 @@ begin
             gTerrain.SetTileLock(KMPoint(nonEntranceX + K - 3, Y + I - 4), tlDigged);
           end;
 
-        gTerrain.SetRoad(H.Entrance, aHand, rtStone);
+        gTerrain.SetRoadForHouse(H.Entrance, aHand);
         H.BuildingState := hbsWood;
 
         // Add wood

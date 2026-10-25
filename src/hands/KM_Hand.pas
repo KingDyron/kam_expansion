@@ -4514,7 +4514,7 @@ procedure TKMHand.AddFirstStorehouse(aEntrance: TKMPoint);
     Result := CanAddFieldPlan(KMPoint(aPoint.X, aPoint.Y), ftRoad);
     if Result then
     begin
-      gTerrain.SetRoad(aPoint, fID, rtStone);
+      gTerrain.SetRoadForHouse(aPoint, fID);
       //Terrain under roads is flattened (fields are not)
       gTerrain.FlattenTerrain(aPoint);
       if gMapElements[gTerrain.Land^[aPoint.Y,aPoint.X].Obj].WineOrCorn then

@@ -1756,7 +1756,8 @@ begin
     gTerrain.RemRoad(Entrance);
 
     SetPosition(KMPoint(aPos.X - gRes.Houses[fType].EntranceOffsetX, aPos.Y - gRes.Houses[fType].EntranceOffsetY));
-    gTerrain.SetRoad(Entrance, Owner, rtStone);
+
+    gTerrain.SetRoadForHouse(Entrance, Owner);
 
     //Update rally/cutting point position for houses with flag point after change fPosition
     if (Self is TKMHouseWFlagPoint) then
@@ -6401,7 +6402,7 @@ begin
     Exit;
   if fParentTree = nil then
   begin
-    gTerrain.SetRoad(Entrance, Owner, rtStone);
+    gTerrain.SetRoadForHouse(Entrance, Owner);
     self.IsClosedForWorker := false;
   end;
 
