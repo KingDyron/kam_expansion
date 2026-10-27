@@ -7,6 +7,7 @@ To do:
 	- MapEd: cannot select square brush in the tile tab
 	+ Paladin needs a new animation
 	- walls cannot be connected when it was destroyed.
+	- add button to give a worker in house in map-ed. 
 
 
 Done:
