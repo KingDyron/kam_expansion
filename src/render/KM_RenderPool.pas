@@ -571,7 +571,8 @@ begin
   glClearColor(0, 0, 0.05, 1);
   glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT or GL_STENCIL_BUFFER_BIT);
   glLoadIdentity; // Reset The View
-  glScalef(4, 4, 1);
+  glTranslatef(80, 80, 0);
+  glScalef(2, 2, 1);
   glPushAttrib(GL_LINE_BIT or GL_POINT_BIT);
     //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA); //Set alpha mode
     //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA); //Set alpha mode
@@ -634,8 +635,8 @@ begin
   glGenTextures(1, @fLightTexture);
   glBindTexture(GL_TEXTURE_2D, fLightTexture);
 
-  fLightTexSizeX := fRender.ScreenX;
-  fLightTexSizeY := fRender.ScreenY;
+  fLightTexSizeX := fRender.ScreenX + 80;
+  fLightTexSizeY := fRender.ScreenY + 80;
   glTexImage2D(
     GL_TEXTURE_2D,
     0,
@@ -683,9 +684,9 @@ begin
 
   TKMRender.BindTexture(fLightTexture);
   glPushMatrix;
-    glScaleF(0.25, 0.25, 1);
+    glScaleF(0.5, 0.5, 1);
+    glTranslateF(-80, -80, 0);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); //Set alpha mode
-    glTranslatef(0, -1, 0);
     glColor4f(1, 1, 1, 1 - gTerrain.GetNightScale);
     glBegin(GL_QUADS);
       glTexCoord2f(0, 1); glVertex2f(0, 0);
