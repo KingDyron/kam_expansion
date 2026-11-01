@@ -4701,7 +4701,11 @@ begin
 
   case aWare of
     wtGoldOre: begin
-                OD1 := [144, 325, 326, 327, 343, 344, 345];
+                OD1 := [144, 325, 326, 327, 343, 344, 345,
+                        1157, 1158, 1159, 1163, 1164, 1165, 1169, 1170, 1171, 1175, 1176, 1177,
+                        1181, 1182, 1183, 1187, 1188, 1189, 1193, 1194, 1195, 1199, 1200, 1201,
+                        1205, 1206, 1207, 1211, 1212, 1213, 1217, 1218, 1219, 1223, 1224, 1225,
+                        1229, 1230, 1231, 1235, 1236, 1237];
                 OD2 := [145];
                 OD3 := [146];
                 OD4 := [147];
@@ -4709,7 +4713,11 @@ begin
                end;
 
     wtIronOre: begin
-                OD1 := [148, 334, 335, 336, 325, 326, 327, 328, 329, 330, 337, 338, 339];
+                OD1 := [148, 334, 335, 336, 325, 326, 327, 328, 329, 330, 337, 338, 339,
+                        1154, 1155, 1156, 1160, 1161, 1162, 1166, 1167, 1168, 1172, 1173, 1174,
+                        1178, 1179, 1180, 1184, 1185, 1186, 1190, 1191, 1192, 1196, 1197, 1198,
+                        1202, 1203, 1204, 1208, 1209, 1210, 1214, 1215, 1216, 1220, 1221, 1222,
+                        1226, 1227, 1228, 1232, 1233, 1234];
                 OD2 := [149];
                 OD3 := [150, 259];
                 OD4 := [151];
@@ -6654,7 +6662,7 @@ end;
 // It may fail cos of two miners mining the same last piece of ore
 function TKMTerrain.DecOreDeposit(const aLoc: TKMPoint; aWare: TKMWareType): Boolean;
 var isCorner, isOverlayCoal : Boolean;
-  obj : Word;
+  obj, tile : Word;
 begin
   if not (aWare in [wtIronOre,wtGoldOre,wtCoal, wtBitinOre, wtTile, wtJewerly]) then
     raise ELocError.Create('Wrong ore decrease', aLoc);
@@ -6701,8 +6709,8 @@ begin
     Result := true;
     Exit;
   end;
-
-  if ArrayContains(Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain, [325, 326, 327,  343, 344, 345,  334, 335, 336,  328, 329, 330, 337, 338, 339]) then
+  tile := Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain;
+  if ArrayContains(tile, [325, 326, 327,  343, 344, 345,  334, 335, 336,  328, 329, 330, 337, 338, 339]) or InRange(tile, 1154, 1237) then
   begin
     isCorner := true;
     case Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain of
@@ -6725,6 +6733,106 @@ begin
       337: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 188;
       338: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 168;
       339: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 184;
+
+      //grass
+      1156: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 188;
+      1155: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 168;
+      1154: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 184;
+      1159: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 180;
+      1158: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 172;
+      1157: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 176;
+      //moss
+      1160: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1112;
+      1161: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1113;
+      1162: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1114;
+      1163: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1115;
+      1164: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1116;
+      1165: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1117;
+
+      //pale grass
+      1166: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1118;
+      1167: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1119;
+      1168: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1120;
+      1169: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1121;
+      1170: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1122;
+      1171: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1123;
+      //gravel
+      1172: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1124;
+      1173: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1125;
+      1174: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1126;
+      1175: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1127;
+      1176: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1128;
+      1177: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1129;
+      //grass sand 1
+      1178: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1130;
+      1179: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1131;
+      1180: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1132;
+      1181: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1133;
+      1182: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1134;
+      1183: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1135;
+      //grass sand 2
+      1184: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 186;
+      1185: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 170;
+      1186: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 190;
+      1187: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 178;
+      1188: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 174;
+      1189: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 182;
+      //grass sand 3
+      1190: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1136;
+      1191: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1137;
+      1192: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1138;
+      1193: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1139;
+      1194: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1140;
+      1195: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1141;
+      //coast sand
+      1196: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 110;
+      1197: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 109;
+      1198: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 108;
+      1199: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 177;
+      1200: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 173;
+      1201: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 181;
+      //grass dirt
+      1202: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 356;
+      1203: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 355;
+      1204: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 354;
+      1205: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 353;
+      1206: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 352;
+      1207: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 351;
+      //dirt
+      1208: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 187;
+      1209: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 167;
+      1210: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 191;
+      1211: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 179;
+      1212: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 175;
+      1213: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 183;
+      //snow
+      1214: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 54;
+      1215: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 166;
+      1216: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 52;
+      1217: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 306;
+      1218: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 262;
+      1219: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 261;
+      //snow on dirt
+      1220: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 258;
+      1221: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 257;
+      1222: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 256;
+      1223: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 51;
+      1224: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 171;
+      1225: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 49;
+      //snow on grass
+      1226: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1148;
+      1227: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1149;
+      1228: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1150;
+      1229: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1151;
+      1230: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1152;
+      1231: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 1153;
+      //barren land
+      1232: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 734;
+      1233: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 733;
+      1234: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 732;
+      1235: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 737;
+      1236: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 736;
+      1237: Land^[aLoc.Y,aLoc.X].BaseLayer.Terrain := 735;
 
     end;
 
