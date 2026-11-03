@@ -1499,6 +1499,8 @@ begin
       texFilter := ftNearest;
       if LINEAR_FILTER_SPRITES and (fRT in [rxTrees, rxHouses, rxUnits]) then
         texFilter := ftLinear;
+      If (fRT in [rxGui, rxGuiMain]) and SCALE_INTERFACE then
+        TexFilter := ftLinear;
 
       texID := TKMRender.GenTexture(aSpriteInfo[I].Width, aSpriteInfo[I].Height, @atlasData[0], aTexType, texFilter, texFilter);
 
@@ -1638,6 +1640,8 @@ begin
         texFilter := ftNearest;
         if LINEAR_FILTER_SPRITES and (fRT in [rxTrees, rxHouses, rxUnits]) then
           texFilter := ftLinear;
+        If (fRT in [rxGui, rxGuiMain]) and SCALE_INTERFACE then
+          TexFilter := ftLinear;
 
         texID := TKMRender.GenTexture(Container.Width, Container.Height, @Data[0], TexType, texFilter, texFilter);
         //Now that we know texture IDs we can fill GFXData structure

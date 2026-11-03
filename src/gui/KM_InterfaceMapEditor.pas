@@ -1914,7 +1914,7 @@ procedure TKMMapEdInterface.Resize(X,Y: Word);
 begin
   inherited;
 
-  fViewport.Resize(X, Y);
+  fViewport.Resize(Round(X * gRender.InterfaceScale), Round(Y * gRender.InterfaceScale));
   fGuiTerrain.Resize;
   fGuiMenu.Resize;
 

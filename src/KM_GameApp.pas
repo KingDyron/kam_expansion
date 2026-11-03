@@ -419,8 +419,8 @@ begin
 
   If SCALE_INTERFACE and (X > MAX_X_RESOLUTION) and (Y > MAX_Y_RESOLUTION) then
   begin
-    X := MAX_X_RESOLUTION;
-    Y := MAX_Y_RESOLUTION;
+    X := Round(X / gRender.InterfaceScale);
+    Y := Round(Y / gRender.InterfaceScale);
   end;
   //Main menu is invisible while in game, but it still exists and when we return to it
   //it must be properly sized (player could resize the screen while playing)

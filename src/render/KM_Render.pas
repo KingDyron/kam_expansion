@@ -82,7 +82,8 @@ var
 
 implementation
 uses
-  SysUtils, KM_Log, KM_Defaults, KM_IoPNG, KM_CommonClasses;
+  SysUtils, KM_Log, KM_Defaults, KM_IoPNG, KM_CommonClasses,
+  KM_CommonUtils;
 
 const
   // We want to use off-screen FBO buffer to render full map to the file,
@@ -194,6 +195,7 @@ begin
   If SCALE_INTERFACE and (aWidth > MAX_X_RESOLUTION) and (aHeight > MAX_Y_RESOLUTION) then
   begin
     fInterfaceScale := Min(aWidth / MAX_X_RESOLUTION, aHeight / MAX_Y_RESOLUTION);
+    fInterfaceScale := RoundUpTo(fInterfaceScale, 0.1);
   end else
   begin
     fInterfaceScale := 1;

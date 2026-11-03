@@ -216,6 +216,8 @@ const
   function MixValue(const A, B : Single; const aFactor : Single) : Single; Overload;
   function MixColor(Color1, Color2 : Cardinal; aFactor : Single) : Cardinal;
 
+  function RoundUpTo(aValue, aTo : Single) : Single;
+
   procedure IncLoop(var A : Integer; const aLow, aMax : Integer; const aStep : Integer = 1); overload;
   procedure IncLoop(var A : Word; const aLow, aMax : Word; const aStep : Integer = 1); overload;
   procedure IncLoop(var A : Byte; const aLow, aMax : Byte; const aStep : Integer = 1); overload;
@@ -2247,6 +2249,11 @@ begin
                         + IntToHex(MixValue(g1, g2, aFactor))
                         + IntToHex(MixValue(r1, r2, aFactor))
                         );
+end;
+
+function RoundUpTo(aValue, aTo : Single) : Single;
+begin
+  Result := Round(aValue / aTo) * aTo;
 end;
 
 procedure ChangeIfDifferent(var A : Integer; B, C : Integer); begin if B <> C then A := B; end;
