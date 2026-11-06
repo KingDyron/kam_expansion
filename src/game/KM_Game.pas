@@ -119,6 +119,7 @@ type
     procedure GameMPDisconnect(const aData: UnicodeString);
     procedure OtherPlayerDisconnected(aDefeatedPlayerHandId: Integer);
     function GetActiveHandIDs: TKMByteSet;
+    function GetActiveHandIDsForScriptSounds: TKMByteSet;
 
     procedure VisibleLayersWereSet;
 
@@ -1215,11 +1216,37 @@ begin
     end;
   end
   else
+    //we can skip AI for script sounds
     for I := 0 to gHands.Count - 1 do
       if gHands[I].Enabled then
         Include(Result, I);
 end;
 
+// Get active hand ids as set (enabled hands for SP/replay or connected not spectators
+function TKMGame.GetActiveHandIDsForScriptSounds: TKMByteSet;
+var
+  I: Integer;
+  netPlayer: TKMNetPlayerInfo;
+begin
+  Result := [];
+  if fParams.IsMultiPlayerOrSpec then
+  begin
+    for I := 1 to gNetworking.NetPlayers.Count do
+    begin
+      netPlayer := gNetworking.NetPlayers[I];
+      if not netPlayer.IsHuman
+      or netPlayer.IsSpectator
+      or not netPlayer.Connected
+      or (netPlayer.HandIndex = -1)
+      or not gHands[netPlayer.HandIndex].Enabled then
+        Continue;
+
+      Include(Result, netPlayer.HandIndex);
+    end;
+  end
+  else
+    Include(Result, gMySpectator.HandID);
+end;
 
 procedure TKMGame.GameMPDisconnect(const aData: UnicodeString);
 begin
@@ -3627,7 +3654,7 @@ end;
 // Add remove script sounds request to the script sounds manager
 procedure TKMGame.AddScriptSoundRemoveRequest(aScriptSoundUID: Integer; aHandID: TKMHandID);
 begin
-  gScriptSounds.AddRemoveRequest(aScriptSoundUID, aHandID, GetActiveHandIDs);
+  gScriptSounds.AddRemoveRequest(aScriptSoundUID, aHandID, GetActiveHandIDsForScriptSounds);
 end;
 
 
