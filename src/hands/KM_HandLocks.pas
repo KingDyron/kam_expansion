@@ -539,7 +539,7 @@ begin
     SaveStream.WriteData(fStructureLock[I]);
 
   K := length(fDecorationLock);
-  SaveStream.Read(K);
+  SaveStream.Write(K);
   for I := 0 to K - 1 do
     SaveStream.WriteData(fDecorationLock[I]);
 end;
