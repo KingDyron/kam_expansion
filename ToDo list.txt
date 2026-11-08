@@ -8,6 +8,7 @@ To do:
 	+ Paladin needs a new animation
 	- walls cannot be connected when it was destroyed.
 	- add button to give a worker in house in map-ed. 
+	- fix fire animation in the shipyard
 
 
 Done:
