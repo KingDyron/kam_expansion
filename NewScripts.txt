@@ -89,6 +89,7 @@ States:
     function HouseTypeToID(aHouseType: TKMHouseType): Integer;//gets ID of the HouseType from the TKMHouseType
     function HouseIDtoType(aHouseType: Integer): TKMHouseType;//gets TKMHouseType from the ID of the HouseType
     function HouseStats(aHouseID: Integer; aWithWares : Boolean): TKMHouseStats;//Gets all the important data about the house
+	function HouseTypeGuiIcon(aHouseType: Integer): Integer;
 
     function MapFieldType(X, Y: Integer): TKMLockFieldType;//gets current field type on the tile or lftRemove when there is none
     function MapTileSelected(X, Y : Integer): Boolean;//checks if the tile is selected (has a blue mark on it)
@@ -157,6 +158,7 @@ Types:
 	end;
     
 	TKMHouseArea = array [1..4] of array [1..4] of Byte;
+	TKMHouseAreaNew = array [1..5] of array [1..5] of Byte;
 
     TKMCursorRenderType = (crtNone, crtWireTile, crtTile, crtObject, crtUnit, crtHouseSite, crtHouse, crtX, crtDelete);
 	

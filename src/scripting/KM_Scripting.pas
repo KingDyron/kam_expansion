@@ -595,6 +595,7 @@ begin
         'ImageAlphaStep : Single; ' +
       'end;');
     Sender.AddTypeS('TKMHouseArea', 'array [1..4] of array [1..4] of Byte');
+    Sender.AddTypeS('TKMHouseAreaNew', 'array [1..5] of array [1..5] of Byte');
 
     Sender.AddTypeS('TKMCursorRenderType', '(crtNone, crtWireTile, crtTile, crtObject, crtUnit, crtHouseSite, crtHouse, crtX, crtDelete)');
     Sender.AddTypeS('TKMLockFieldType', '(lftRoadStone, lftRoadWooden, lftRoadClay, lftRoadExclusive, lftPalisade,' +
@@ -761,7 +762,7 @@ begin
     RegisterMethodCheck(c, 'function  HouseWoodcutterChopOnly(aHouseID: Integer): Boolean');
     RegisterMethodCheck(c, 'function  HouseWoodcutterMode(aHouseID: Integer): TKMWoodcutterMode');
     RegisterMethodCheck(c, 'function  HouseWorker(aHouseID: Integer): Integer');
-    RegisterMethodCheck(c, 'function  HouseArea(aHouseType: Integer): TKMHouseArea');
+    RegisterMethodCheck(c, 'function  HouseArea(aHouseType: Integer): TKMHouseAreaNew');
     RegisterMethodCheck(c, 'function  HouseEntranceOffset(aHouseType: Integer): TKMPoint');
     RegisterMethodCheck(c, 'function  HouseTypeToID(aHouseType: TKMHouseType): Integer');
     RegisterMethodCheck(c, 'function  HouseIDtoType(aHouseType: Integer): TKMHouseType');
@@ -912,6 +913,7 @@ begin
     RegisterMethodCheck(c, 'function  WareIdToType(aWareType: Integer): TKMWareType');
     RegisterMethodCheck(c, 'function  WarriorInFight(aUnitID: Integer; aCountCitizens: Boolean): Boolean');
     RegisterMethodCheck(c, 'function  HouseStats(aHouseID: Integer; aWithWares : Boolean): TKMHouseStats');
+    RegisterMethodCheck(c, 'function  HouseTypeGuiIcon(aHouseType: Integer): Integer');
     RegisterMethodCheck(c, 'function  UnitStats(aUnitID: Integer): TKMUnitStats');
     //*States-Check*//
     ExportClass('States', c);
@@ -1778,6 +1780,7 @@ begin
       RegisterMethod(@TKMScriptStates.WareIdToType, 'WareIdToType');
       RegisterMethod(@TKMScriptStates.WarriorInFight, 'WarriorInFight');
 
+      RegisterMethod(@TKMScriptStates.HouseTypeGuiIcon, 'HouseTypeGuiIcon');
       RegisterMethod(@TKMScriptStates.HouseStats, 'HouseStats');
       RegisterMethod(@TKMScriptStates.UnitStats, 'UnitStats');
       //*States-Reg*//

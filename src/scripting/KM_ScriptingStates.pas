@@ -280,6 +280,7 @@ type
     function HouseTypeToID(aHouseType: TKMHouseType): Integer;
     function HouseIDtoType(aHouseType: Integer): TKMHouseType;
     function HouseStats(aHouseID: Integer; aWithWares : Boolean): TKMHouseStats;
+    function HouseTypeGuiIcon(aHouseType: Integer): Integer;
 
     function MapFieldType(X, Y: Integer): TKMLockFieldType;
     function MapTileSelected(X, Y : Integer): Boolean;
@@ -3796,7 +3797,7 @@ begin
       Result.Y := gRes.Houses[HOUSE_ID_TO_TYPE[aHouseType]].EntranceOffsetY;
     end
     else
-      LogIntParamWarn('States.HouseArea', [aHouseType]);
+      LogIntParamWarn('States.HouseEntranceOffset', [aHouseType]);
   except
     gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
     raise;
@@ -5382,6 +5383,17 @@ begin
     gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
     raise;
   end;
+end;
+
+function TKMScriptStates.HouseTypeGuiIcon(aHouseType: Integer): Integer;
+begin
+    if (aHouseType in [low(HOUSE_ID_TO_TYPE)..high(HOUSE_ID_TO_TYPE)]) then
+      Result := gRes.Houses[KM_ResHouses.HOUSE_ID_TO_TYPE[aHouseType]].GUIIcon
+    else
+    begin
+      Result := -1;
+      LogParamWarn('States.HouseTypeGuiIcon', [aHouseType]);
+    end;
 end;
 
 function TKMScriptStates.UnitStats(aUnitID: Integer): TKMUnitStats;
