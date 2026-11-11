@@ -163,6 +163,7 @@ type
     function MapTileObjectSet(X, Y, Obj: Integer): Boolean;
     function MapTileOverlaySet(X, Y: Integer; aOverlay: Byte; aOverwrite: Boolean): Boolean;
     procedure MapSetNightTime(aValue : Single);
+    procedure MapSetMinNightDarkness(aValue : Single);
 
     procedure MarketSetTrade(aMarketID, aFrom, aTo, aAmount: Integer);
     procedure MarketSetTradeEx(aMarketID: Integer; aFrom, aTo: TKMWareType; aAmount: Integer);
@@ -4490,6 +4491,17 @@ begin
 
   try
     gTerrain.NightFactor := aValue;
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
+procedure TKMScriptActions.MapSetMinNightDarkness(aValue: Single);
+begin
+
+  try
+    gTerrain.MinNightDarkness := aValue;
   except
     gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
     raise;
