@@ -6280,6 +6280,9 @@ begin
     if aFieldType = ftVegeField then
       aGrainType :=  gftPumpkin
     else
+    if aFieldType = ftGrassland then
+      aGrainType :=  gftGrass
+    else
       aGrainType :=  gftNone;
 
   Land^[aLoc.Y, aLoc.X].GrainType := aGrainType;
