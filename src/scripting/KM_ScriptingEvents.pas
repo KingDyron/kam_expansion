@@ -145,6 +145,7 @@ type
     procedure ProcUnitSelected(aPlayer : TKMHandID; aUnit: TKMUnit; aSelected : Boolean);
     procedure ProcHouseSelected(aPlayer : TKMHandID; aHouse: TKMHouse; aSelected : Boolean);
     procedure ProcHouseUpgraded(aHouse: TKMHouse; aLevel : Integer);
+    procedure ProcHouseTakenOver(aHouse: TKMHouse; aPrevOwner : TKMHandID);
 
     procedure ProcStructureFinished(aOwner : TKMHandID; X, Y, aIndex : Integer);
     procedure ProcPearlSelected(aHouse : TKMHouse; aType : TKMPearlType);
@@ -1496,6 +1497,12 @@ procedure TKMScriptEvents.ProcHouseUpgraded(aHouse: TKMHouse; aLevel: Integer);
 begin
   if MethodAssigned(evtHouseUpgraded) then
     CallEventHandlers(evtHouseUpgraded, [aHouse.UID, aLevel]);
+end;
+
+procedure TKMScriptEvents.ProcHouseTakenOver(aHouse: TKMHouse; aPrevOwner : TKMHandID);
+begin
+  if MethodAssigned(evtHouseTakenOver) then
+    CallEventHandlers(evtHouseTakenOver, [aHouse.UID, aPrevOwner]);
 end;
 
 procedure TKMScriptEvents.ProcStructureFinished(aOwner : TKMHandID; X, Y, aIndex : Integer);

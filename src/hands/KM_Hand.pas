@@ -2965,6 +2965,7 @@ var aWaresIn, aWaresOut : array[WARE_MIN..WARE_MAX] of Word;
   aWariant : Integer;
   WT : TKMWareType;
   H : TKMHouse;
+  oldOwner : TKMHandID;
 begin
   if aHouse.AppleTree.NotNil then
     if aHouse.AppleTree.ParentTree.NotNil then
@@ -2982,6 +2983,7 @@ begin
   aStyle := aHouse.Style;
   aWariant := aHouse.PicWariant;
   aLevel := aHouse.CurrentLevel;
+  oldOwner := aHouse.Owner;
   for WT := WARE_MIN to WARE_MAX do
   begin
     aWaresIn[WT] := aHouse.CheckWareIn(WT);
@@ -3003,6 +3005,8 @@ begin
   end;
   H.AddDamage(aDamage, nil, false);
   H.TakeOver;
+
+  gScriptEvents.ProcHouseTakenOver(H, oldOwner);
 
 
 end;

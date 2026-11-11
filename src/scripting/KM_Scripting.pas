@@ -1063,6 +1063,7 @@ begin
     RegisterMethodCheck(c, 'function  MapTileObjectSet(X, Y: Integer; Obj: Integer): Boolean');
     RegisterMethodCheck(c, 'function  MapTileOverlaySet(X, Y: Integer; aOverlay: Byte; aOverwrite: Boolean): Boolean');
     RegisterMethodCheck(c, 'procedure MapSetNightTime(aValue : Single)');
+    RegisterMethodCheck(c, 'procedure MapSetMinNightDarkness(aValue : Single)');
     RegisterMethodCheck(c, 'function  MapTilesArraySet(aTiles: array of TKMTerrainTileBrief; aRevertOnFail: Boolean; aShowDetailedErrors: Boolean): Boolean');
     RegisterMethodCheck(c, 'function  MapTilesArraySetS(aTilesS: TAnsiStringArray; aRevertOnFail: Boolean; aShowDetailedErrors: Boolean): Boolean');
     RegisterMethodCheck(c, 'function  MapTileSet(X, Y: Integer; aType: Integer; aRotation: Integer): Boolean');
@@ -1378,7 +1379,8 @@ const
     (ParamCount: 4; Typ: (0, btS32 , btS32 , btS32, btS32 ); Dir: (pmIn, pmIn, pmIn, pmIn)), // evtStructureBuilt
     (ParamCount: 2; Typ: (0, btS32 , btS32 , 0,     0     ); Dir: (pmIn, pmIn, pmIn, pmIn)), // evtPearlSelected
     (ParamCount: 2; Typ: (0, btS32 , btS32 , 0,     0     ); Dir: (pmIn, pmIn, pmIn, pmIn)), // evtPearlConfirmed
-    (ParamCount: 3; Typ: (0, btS32 , btS32 , btS32, 0     ); Dir: (pmIn, pmIn, pmIn, pmIn)) // evtDevUnlocked
+    (ParamCount: 3; Typ: (0, btS32 , btS32 , btS32, 0     ); Dir: (pmIn, pmIn, pmIn, pmIn)), // evtDevUnlocked
+    (ParamCount: 2; Typ: (0, btS32 , btS32 , 0,     0     ); Dir: (pmIn, pmIn, pmIn, pmIn)) // OnHouseUpgraded
     //*Events-Check*//
   );
 var
@@ -1920,6 +1922,7 @@ begin
       RegisterMethod(@TKMScriptActions.MapTileObjectSet, 'MapTileObjectSet');
       RegisterMethod(@TKMScriptActions.MapTileOverlaySet, 'MapTileOverlaySet');
       RegisterMethod(@TKMScriptActions.MapSetNightTime, 'MapSetNightTime');
+      RegisterMethod(@TKMScriptActions.MapSetMinNightDarkness, 'MapSetMinNightDarkness');
       RegisterMethod(@TKMScriptActions.MapTilesArraySet, 'MapTilesArraySet');
       RegisterMethod(@TKMScriptActions.MapTilesArraySetS, 'MapTilesArraySetS');
       RegisterMethod(@TKMScriptActions.MapTileSet, 'MapTileSet');

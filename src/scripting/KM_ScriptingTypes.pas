@@ -75,7 +75,8 @@ type
     evtStructureBuilt,
     evtPearlSelected,
     evtPearlConfirmed,
-    evtDevUnlocked
+    evtDevUnlocked,
+    evtHouseTakenOver
 
     //*Events-Reg*//
   );
