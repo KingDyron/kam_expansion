@@ -37,6 +37,7 @@ type
     fHousesPointersTemp,
     fUnitPointersTemp: array [1..MAX_MAP_SIZE, 1..MAX_MAP_SIZE] of Pointer;
     fHasDarkPoints : Boolean;
+    fMinDarkValue : Single;
     function TileHasParameter(X, Y: Word; aCheckTileFunc: TBooleanWordFunc; aAllow2CornerTiles: Boolean = False;
                               aStrictCheck: Boolean = False): Boolean;
 
@@ -66,6 +67,7 @@ type
 
     function GetNightFactor : Single;
     procedure SetNightFactor(aValue : Single);
+    procedure SetMinDarkValue(aValue : Single);
   public
     Land: PKMLand;
     LandExt: PKMLandExt;
@@ -90,6 +92,7 @@ type
     property MapRect: TKMRect read fMapRect;
 
     procedure SetMainLand;
+    property MinNightDarkness : Single read fMinDarkValue write SetMinDarkValue;
 
     procedure SetTileLock(const aLoc: TKMPoint; aTileLock: TKMTileLock);
     procedure UnlockTile(const aLoc: TKMPoint);
@@ -527,7 +530,6 @@ constructor TKMTerrain.Create;
 begin
   inherited;
   fAnimStep := 0;
-  //TERRAIN_DARK := MIN_NIGHT_DARKNESS + (Sin(fNightFactor / NIGHT_SPEED) + 1) * 0.6 * (1 - MIN_NIGHT_DARKNESS);
   FallingTrees := TKMPointFTagList.Create;
   Lights := TKMPointTagList.Create;
   fTileset := gRes.Tileset; //Local shortcut
@@ -535,6 +537,7 @@ begin
   fMainLand := @fLand;
   LandExt := @fLandExt;
   SetMainLand;
+  fMinDarkValue := MIN_NIGHT_DARKNESS;
 end;
 
 
@@ -9213,6 +9216,7 @@ begin
   SaveStream.Write(fAnimStep);
   SaveStream.Write(fNightFactor);
   SaveStream.Write(fHasDarkPoints);
+  SaveStream.Write(fMinDarkValue);
   FallingTrees.SaveToStream(SaveStream);
   Lights.SaveToStream(SaveStream);
   isTxtStream := SaveStream is TKMemoryStreamText;
@@ -9376,8 +9380,7 @@ begin
   LoadStream.Read(fAnimStep);
   LoadStream.Read(fNightFactor);
   LoadStream.Read(fHasDarkPoints);
-
-  //TERRAIN_DARK := MIN_NIGHT_DARKNESS + (Sin(fNightFactor / NIGHT_SPEED) + 1) * 0.6 * (1 - MIN_NIGHT_DARKNESS);
+  LoadStream.Read(fMinDarkValue);
 
   FallingTrees.LoadFromStream(LoadStream);
   Lights.LoadFromStream(LoadStream);
@@ -9935,9 +9938,14 @@ begin
   fNightFactor := Abs(Round(aValue * LocalNightSpeed));
 end;
 
+procedure TKMTerrain.SetMinDarkValue(aValue : Single);
+begin
+  fMinDarkValue := RoundUpTo(EnsureRange(aValue, 0, 0.5), 0.01);
+end;
+
 function TKMTerrain.GetNightScale : Single;
 begin
-  Result := MIN_NIGHT_DARKNESS + (Sin(GetNightFactor) + 1) * 0.6 * (1 - MIN_NIGHT_DARKNESS);
+  Result := MinNightDarkness + (Sin(GetNightFactor) + 1) * 0.6 * (1 - MinNightDarkness);
 end;
 
 function TKMTerrain.LocalNightSpeed: Integer;
@@ -9947,7 +9955,7 @@ end;
 
 function TKMTerrain.IsNight: Boolean;
 begin
-  Result := MIN_NIGHT_DARKNESS + (Sin(GetNightFactor) + 1) * 0.6 * (1 - MIN_NIGHT_DARKNESS) < MIN_NIGHT_DARKNESS + 0.3;
+  Result := MinNightDarkness + (Sin(GetNightFactor) + 1) * 0.6 * (1 - MinNightDarkness) < MinNightDarkness + 0.3;
 end;
 
 procedure TKMTerrain.IncFieldAge(aLoc: TKMPoint);
