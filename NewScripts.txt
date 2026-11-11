@@ -25,6 +25,8 @@
     procedure MusicPlay(aName : String; aForceOn : Boolean);
 
     procedure MapTileSelect(X, Y : Integer; aSelected : Boolean);
+    procedure MapTileFieldSet(X: Integer; Y: Integer; aOwner: Integer; aType: TKMLockFieldType);
+    procedure MapTileFieldSetStaged(X: Integer; Y: Integer; aOwner: Integer; aType: TKMLockFieldType; aStage : Integer);
     procedure MapLayerLoad(aLayerName : String);
 
     procedure OverlayTextSetAlignToCenter(aHand: Shortint; aSet: Boolean);
@@ -117,6 +119,7 @@ Events:
     OnUnitSelected(aPlayer : ShortInt; aUnit: Integer; aSelected : Boolean);//happens when player selects a unit or unselect it
     OnHouseSelected(aPlayer : ShortInt; aHouse: Integer; aSelected : Boolean);//happens when player selects a house or unselect it
     OnHouseUpgraded(aHouse: Integer; aLevel: Integer); //happens when the house is upgraded
+    OnHouseTakenOver(aHouse: Integer; aOldPlayer: Integer); //occurs when the house was taken over by the Lecter
     OnShipLoaded(aShip, aUnit : integer); //happens when unit is loaded on a ship
     OnShipUnLoaded(aShip, aUnit : integer); //happens when unit is unloaded from a ship
 

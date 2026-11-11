@@ -1059,6 +1059,7 @@ begin
       'aBlendingLvl: Integer; aUseMagicBrush: Boolean)');
     RegisterMethodCheck(c, 'procedure MapLayerLoad(aLayerName: string)');
     RegisterMethodCheck(c, 'procedure  MapTileFieldSet(X: Integer; Y: Integer; aOwner: Integer; aType: TKMLockFieldType)');
+    RegisterMethodCheck(c, 'procedure  MapTileFieldSetStaged(X: Integer; Y: Integer; aOwner: Integer; aType: TKMLockFieldType; aStage: Integer)');
     RegisterMethodCheck(c, 'function  MapTileHeightSet(X, Y: Integer; Height: Integer): Boolean');
     RegisterMethodCheck(c, 'function  MapTileObjectSet(X, Y: Integer; Obj: Integer): Boolean');
     RegisterMethodCheck(c, 'function  MapTileOverlaySet(X, Y: Integer; aOverlay: Byte; aOverwrite: Boolean): Boolean');
@@ -1918,6 +1919,7 @@ begin
       RegisterMethod(@TKMScriptActions.MapBrushWithMask, 'MapBrushWithMask');
       RegisterMethod(@TKMScriptActions.MapLayerLoad, 'MapLayerLoad');
       RegisterMethod(@TKMScriptActions.MapTileFieldSet, 'MapTileFieldSet');
+      RegisterMethod(@TKMScriptActions.MapTileFieldSetStaged, 'MapTileFieldSetStaged');
       RegisterMethod(@TKMScriptActions.MapTileHeightSet, 'MapTileHeightSet');
       RegisterMethod(@TKMScriptActions.MapTileObjectSet, 'MapTileObjectSet');
       RegisterMethod(@TKMScriptActions.MapTileOverlaySet, 'MapTileOverlaySet');

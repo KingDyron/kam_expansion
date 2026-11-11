@@ -159,6 +159,7 @@ type
     function MapTilesArraySet(aTiles: array of TKMTerrainTileBrief; aRevertOnFail, aShowDetailedErrors: Boolean): Boolean;
     function MapTilesArraySetS(aTilesS: TAnsiStringArray; aRevertOnFail, aShowDetailedErrors: Boolean): Boolean;
     procedure MapTileFieldSet(X, Y : Integer; aOwner: Integer;  aType : TKMLockFieldType);
+    procedure MapTileFieldSetStaged(X, Y : Integer; aOwner: Integer;  aType : TKMLockFieldType; aStage : Integer);
     function MapTileHeightSet(X, Y, Height: Integer): Boolean;
     function MapTileObjectSet(X, Y, Obj: Integer): Boolean;
     function MapTileOverlaySet(X, Y: Integer; aOverlay: Byte; aOverwrite: Boolean): Boolean;
@@ -4409,6 +4410,22 @@ begin
     else
     begin
       LogIntParamWarn('Actions.MapTileFieldSet', [X, Y, aOwner, byte(aType)]);
+    end;
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
+procedure TKMScriptActions.MapTileFieldSetStaged(X: Integer; Y: Integer; aOwner: Integer; aType: TKMLockFieldType; aStage : Integer);
+begin
+  try
+    //Objects are vertex based not tile based
+    if gTerrain.TileInMapCoords(X, Y) then
+      gTerrain.SetFieldLockType(KMPoint(X, Y), aOwner, aType, aStage)
+    else
+    begin
+      LogIntParamWarn('Actions.MapTileFieldSetStaged', [X, Y, aOwner, byte(aType), aStage]);
     end;
   except
     gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception

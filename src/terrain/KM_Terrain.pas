@@ -107,7 +107,7 @@ type
     procedure SetInitWine(const aLoc: TKMPoint; aOwner: TKMHandID);
     function GetFieldType(const aLoc: TKMPoint): TKMFieldType;
     function GetFieldLockType(const aLoc: TKMPoint): TKMLockFieldType;
-    procedure SetFieldLockType(const aLoc: TKMPoint; aOwner : TKMHandID; aType: TKMLockFieldType);
+    procedure SetFieldLockType(const aLoc: TKMPoint; aOwner : TKMHandID; aType: TKMLockFieldType; aStage : Integer = 0);
 //    procedure SetFieldNoUpdate(const Loc: TKMPoint; aOwner: TKMHandID; aFieldType: TKMFieldType; aStage: Byte = 0);
     procedure SetField(const aLoc: TKMPoint; aOwner: TKMHandID; aFieldType: TKMFieldType; aStage: Integer = 0; aGrainType : TKMGrainType = gftNone;
                        aRandomAge: Boolean = False; aKeepOldObject: Boolean = False; aRemoveOverlay: Boolean = True;
@@ -9613,7 +9613,7 @@ begin
     Result := lftPalisade;
 end;
 
-procedure TKMTerrain.SetFieldLockType(const aLoc: TKMPoint; aOwner : TKMHandID; aType: TKMLockFieldType);
+procedure TKMTerrain.SetFieldLockType(const aLoc: TKMPoint; aOwner : TKMHandID; aType: TKMLockFieldType; aStage : Integer = 0);
 begin
   case aType of
     lftRoadStone : SetRoad(aLoc, aOwner, rtStone);
@@ -9621,10 +9621,10 @@ begin
     lftRoadClay : SetRoad(aLoc, aOwner, rtClay);
     lftRoadExclusive : SetRoad(aLoc, aOwner, rtExclusive);
     lftPalisade: SetPalisade(aLoc, aOwner);
-    lftField: SetField(aLoc, aOwner, ftCorn);
-    lftGrassField: SetField(aLoc, aOwner, ftGrassland);
-    lftVegetablesField: SetField(aLoc, aOwner, ftVegeField);
-    lftWineField: SetField(aLoc, aOwner, ftWine);
+    lftField: SetField(aLoc, aOwner, ftCorn, aStage);
+    lftGrassField: SetField(aLoc, aOwner, ftGrassland, aStage);
+    lftVegetablesField: SetField(aLoc, aOwner, ftVegeField, aStage);
+    lftWineField: SetField(aLoc, aOwner, ftWine, aStage);
     //lftRemove
   end;
 
