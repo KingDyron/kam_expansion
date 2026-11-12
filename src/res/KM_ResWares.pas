@@ -92,6 +92,7 @@ type
     function MinProduction(aHouse : TKMHouseType) : Word;
     function GetProductionCount(aHouse : TKMHouseType) : Word;
     function GetTerrainPic(aCount : Byte) : Integer;
+    function HasTerrainPic : Boolean;
   end;
 
   TKMResWares = class
@@ -401,6 +402,11 @@ begin
   if Length(AtTerrainPic) = 0 then
     Exit;
   Result := AtTerrainPic[Min(aCount - 1, high(AtTerrainPic))];
+end;
+
+function TKMWareSpec.HasTerrainPic: Boolean;
+begin
+  Result := Length(AtTerrainPic) > 0;
 end;
 
 function TKMWareSpec.GetMarketPrice: Single;

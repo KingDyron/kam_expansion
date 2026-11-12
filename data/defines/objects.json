@@ -6844,6 +6844,15 @@
 			"PlaceableInEditor" : true, 
 			"SnowPic" : 255, 
 			"AllBlocked" : false
+		}, 
+		{
+			"ObjectID" : 665, 
+			"AnimSteps":[1716], 
+			"PlaceableInEditor" : true, 
+			"LightPower" : 255, 
+			"LightRadius" : 12, 
+			"SnowPic" : 255, 
+			"AllBlocked" : true
 		}
 	], 
 	"Grain Types":

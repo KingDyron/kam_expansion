@@ -163,6 +163,7 @@ type
     function MapTileHeightSet(X, Y, Height: Integer): Boolean;
     function MapTileObjectSet(X, Y, Obj: Integer): Boolean;
     function MapTileOverlaySet(X, Y: Integer; aOverlay: Byte; aOverwrite: Boolean): Boolean;
+    function MapTileWareOnGroundSet(X, Y: Integer; aWareType: Byte; aAmount: Byte): Boolean;
     procedure MapSetNightTime(aValue : Single);
     procedure MapSetMinNightDarkness(aValue : Single);
 
@@ -4495,6 +4496,25 @@ begin
     else
     begin
       LogIntParamWarn('Actions.MapTileOverlaySet', [X, Y, Byte(aOverlay), Byte(aOverwrite)]);
+      Result := False;
+    end;
+  except
+    gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
+    raise;
+  end;
+end;
+
+function TKMScriptActions.MapTileWareOnGroundSet(X, Y: Integer; aWareType: Byte; aAmount: Byte): Boolean;
+begin
+  try
+    Result := True;
+    if gTerrain.TileInMapCoords(X, Y)
+      and (KM_ResWares.WARE_ID_TO_TYPE[aWareType] in WARES_VALID)
+      and gRes.Wares[WARE_ID_TO_TYPE[aWareType]].HasTerrainPic then
+      gTerrain.SetWareOnGround(KMPoint(X, Y), WARE_ID_TO_TYPE[aWareType], aAmount)
+    else
+    begin
+      LogIntParamWarn('Actions.MapTileWareOnGroundSet', [X, Y, aWareType, aAmount]);
       Result := False;
     end;
   except

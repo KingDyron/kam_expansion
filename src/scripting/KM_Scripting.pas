@@ -1063,6 +1063,7 @@ begin
     RegisterMethodCheck(c, 'function  MapTileHeightSet(X, Y: Integer; Height: Integer): Boolean');
     RegisterMethodCheck(c, 'function  MapTileObjectSet(X, Y: Integer; Obj: Integer): Boolean');
     RegisterMethodCheck(c, 'function  MapTileOverlaySet(X, Y: Integer; aOverlay: Byte; aOverwrite: Boolean): Boolean');
+    RegisterMethodCheck(c, 'function  MapTileWareOnGroundSet(X, Y: Integer; aWareType: Byte; aAmount: Byte): Boolean');
     RegisterMethodCheck(c, 'procedure MapSetNightTime(aValue : Single)');
     RegisterMethodCheck(c, 'procedure MapSetMinNightDarkness(aValue : Single)');
     RegisterMethodCheck(c, 'function  MapTilesArraySet(aTiles: array of TKMTerrainTileBrief; aRevertOnFail: Boolean; aShowDetailedErrors: Boolean): Boolean');
@@ -1923,6 +1924,7 @@ begin
       RegisterMethod(@TKMScriptActions.MapTileHeightSet, 'MapTileHeightSet');
       RegisterMethod(@TKMScriptActions.MapTileObjectSet, 'MapTileObjectSet');
       RegisterMethod(@TKMScriptActions.MapTileOverlaySet, 'MapTileOverlaySet');
+      RegisterMethod(@TKMScriptActions.MapTileWareOnGroundSet, 'MapTileWareOnGroundSet');
       RegisterMethod(@TKMScriptActions.MapSetNightTime, 'MapSetNightTime');
       RegisterMethod(@TKMScriptActions.MapSetMinNightDarkness, 'MapSetMinNightDarkness');
       RegisterMethod(@TKMScriptActions.MapTilesArraySet, 'MapTilesArraySet');
