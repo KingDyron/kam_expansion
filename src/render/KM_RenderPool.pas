@@ -568,7 +568,7 @@ begin
     CreateLightFBO;
   glBindFramebuffer(GL_FRAMEBUFFER, fLightFBO);
   glViewport(0, 0, fLightTexSizeX, fLightTexSizeY);
-  glClearColor(0, 0, 0.05, 1);
+  glClearColor(0, 0, 0, 1);
   glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT or GL_STENCIL_BUFFER_BIT);
   glLoadIdentity; // Reset The View
   glTranslatef(80, 80, 0);
