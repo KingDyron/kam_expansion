@@ -2817,8 +2817,7 @@ begin
     fAttack := aStats.Attack;
   If aStats.Defence > 0 then
     fDefence := aStats.Defence;
-  If aStats.AttackHorse > 0 then
-    fAttackHorse := aStats.AttackHorse;
+  fAttackHorse := aStats.AttackHorse;
   If aStats.HP > 0 then
     fHitPoints := aStats.HP;
   If aStats.MaxHP > 0 then

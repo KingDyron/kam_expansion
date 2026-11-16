@@ -338,10 +338,10 @@ begin
                 begin
                   if fHouse.HouseType in WALL_HOUSES then
                   begin
-                    damage := Max(TKMUnitWarrior(fUnit).DamageHouse div 3, 1);
+                    damage := Max(TKMUnitWarrior(fUnit).DamageHouse div 3, 0);
                     If gHands[Owner].ArmyDevUnlocked(14) then
                       damage := Max(Round(damage * 0.7), 1);
-                    fHouse.AddDamage(Max(TKMUnitWarrior(fUnit).DamageHouse div 3, 1), fUnit)
+                    fHouse.AddDamage(Max(TKMUnitWarrior(fUnit).DamageHouse div 3, 0), fUnit)
                   end
                   else
                     fHouse.AddDamage(TKMUnitWarrior(fUnit).DamageHouse, fUnit);
