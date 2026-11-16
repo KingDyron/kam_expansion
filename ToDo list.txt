@@ -8,9 +8,9 @@ To do:
 	+ Paladin needs a new animation
 	- walls cannot be connected when it was destroyed.
 	- add button to give a worker in house in map-ed. 
-	- fix fire animation in the shipyard
 
 
 Done:
 	- production thatch animation (ptaSawDust..ptaCorn) render Y offset is wrong. 
 	- MapEd: Barracks panel: clicking on recruits icon doesn't change the "ware" to change amount. When you have bow selected then click on recruit it's still bow selected even though bow is not marked as selected.
+	- fix fire animation in the shipyard
