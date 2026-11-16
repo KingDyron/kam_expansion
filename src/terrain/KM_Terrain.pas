@@ -1141,6 +1141,8 @@ begin
 
   Land^[Y, X].Obj := aObject;
   Result := True;
+  if (gMapElements[aObject].LightRadius > 0) and (gMapElements[aObject].LightPower > 0) then
+    AddLight(KMPoint(X, Y), gMapElements[aObject].LightRadius, gMapElements[aObject].LightPower);
   //Apply change
   //UpdatePassability and UpdateWalkConnect are called in SetField so that we only use it in trees and other objects
   {case aObject of
