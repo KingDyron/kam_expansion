@@ -127,7 +127,8 @@ type
     ctForestAddTree,
     ctPastureAddAnimal,
     ctAIFeatures,
-    ctHouseToDeliverSet
+    ctHouseToDeliverSet,
+    ctHouseAddWorkerInside
     );
 
 const
@@ -245,7 +246,8 @@ const
     'ADD_TREE_TO_LAST',
     'ADD_ANIMAL_TO_LAST',
     'SET_AI_FEATURES',
-    'SET_HOUSE_TO_DELIVER_TO_LAST'
+    'SET_HOUSE_TO_DELIVER_TO_LAST',
+    'SET_HOUSE_WORKER_INSIDE'
     );
 type
   TKMMissionParserCommon = class

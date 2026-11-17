@@ -83,6 +83,9 @@ type
 
     procedure Pasture_Refresh;
     procedure Pasture_Clicked(Sender : TObject; Shift: TShiftState);
+
+    procedure WorkersInside(Sender : TObject; Shift: TShiftState);
+    procedure RefreshWorkersInside(aTop : Integer);
   protected
     Panel_HouseAdditional: TKMPanel;
       Button_HouseForceWork : TKMButton;
@@ -121,6 +124,8 @@ type
       Shape_FlagColor: TKMFlatButtonShape;
       CheckBox_Indestructible : TKMCheckBox;
 
+      Label_WorkersInside : TKMLabel;
+      Button_WorkerInside : array of TKMButtonFlat;
 
     Panel_HouseWoodcutters: TKMPanel;
       Button_Woodcutters_CuttingPoint: TKMButtonFlat;
@@ -226,6 +231,8 @@ end;
 procedure TKMMapEdHouse.Create_Common(aParent: TKMPanel);
 var
   I: Integer;
+  HT : TKMHouseType;
+  C : Integer;
 begin
   Panel_House := TKMScrollPanel.Create(aParent, TB_PAD, 45, TB_MAP_ED_WIDTH - TB_PAD + 10, aParent.Height - 50, [saVertical], bsGame, ssCommon);
   Panel_House.ScrollV.Left := Panel_House.ScrollV.Left + 20;
@@ -387,6 +394,19 @@ begin
       Button_PlayerSelect[I].Tag := I;
       Button_PlayerSelect[I].LineWidth := 3;
       Button_PlayerSelect[I].OnClick := MerchantChange;
+    end;
+
+    C := 0;
+    for HT in HOUSES_VALID do
+      C := Max(C, length(gRes.Houses[HT].Workers) );
+
+
+    SetLength(Button_WorkerInside, C);
+    Label_WorkersInside := TKMLabel.Create(Panel_House, 0, 0, Panel_House.Width, 20, gResTexts[2380], fntGrey, taLeft);
+    for I := 0 to C - 1 do
+    begin
+      Button_WorkerInside[I] := TKMButtonFlat.Create(Panel_House, I mod 5 * 36, 0, 33, 36, 0);
+      Button_WorkerInside[I].OnClickShift := WorkersInside;
     end;
 
 end;
@@ -976,6 +996,9 @@ begin
     end;
 
   end;
+
+  If not (fHouse.HouseType in [htBarracks, htPearl]) then
+    RefreshWorkersInside(170 + line * 25);
 end;
 
 
@@ -1029,6 +1052,11 @@ begin
   HealthBar_House.Caption := IntToStr(Round(fHouse.GetHealth)) + '/' + IntToStr(fHouse.MaxHealth);
   HealthBar_House.Position := fHouse.GetHealth / fHouse.MaxHealth;
 
+
+  Label_WorkersInside.Hide;
+  for I := 0 to High(Button_WorkerInside) do
+    Button_WorkerInside[I].Hide;
+
   if not (fHouse.HouseType in [htSign, htPearl]) then
     ShowCommonResources
   else
@@ -1081,6 +1109,7 @@ begin
 
   for I := 0 to High(Button_PlayerSelect) do
     Button_PlayerSelect[I].Hide;
+
   for I := 0 to Panel_House.ChildPanel.ChildCount - 1 do
     if Panel_House.ChildPanel.Childs[I] is TKMPanel then
       Panel_House.ChildPanel.Childs[I].Hide;
@@ -1301,7 +1330,6 @@ begin
   end;
 
   Panel_House.Top := 60 + addToTop;
-
 end;
 
 
@@ -1737,7 +1765,7 @@ begin
     TKMHouseMerchant(fHouse).ToggleSendToHand(TKMControl(Sender).Tag);
 
 
-  top := ResRow_Ware_Input[high(ResRow_Ware_Input)].Bottom + 20;
+  top := ResRow_Ware_Input[high(ResRow_Ware_Input)].Bottom + 20 + IfThen(Button_WorkerInside[0].Visible, 50, 0);
   lastRow := 0;
 
   for I := 0 to High(Button_PlayerSelect) do
@@ -2057,6 +2085,51 @@ begin
   else
     HP.BuyAnimalScript(an, 1);
   Pasture_Refresh;
+end;
+
+procedure TKMMapEdHouse.RefreshWorkersInside(aTop : Integer);
+var I, freeSpace : Integer;
+  UT : TKMUnitPlan;
+begin
+
+  If aTop <> -1 then
+    Label_WorkersInside.Top := aTop;
+
+
+
+  freeSpace := fHouse.GetMapEdWorkersFreeSpace;
+
+  for I := 0 to High(Button_WorkerInside) do
+    If I < length(fHouse.HSpec.Workers) then
+    begin
+      If aTop <> -1 then
+        Button_WorkerInside[I].Top := aTop + 20 + (I div 5 * 38);
+
+      UT := fHouse.HSpec.Workers;
+      Button_WorkerInside[I].TexID := gRes.Units[UT[I].UnitType].GuiIcon;
+      Button_WorkerInside[I].Hint := gRes.Units[UT[I].UnitType].GUIName;
+      Button_WorkerInside[I].Tag := byte(UT[I].UnitType);
+      Button_WorkerInside[I].Caption := Format('%d/%d', [fHouse.MapEdWorkers[I].Count,
+                                                          freeSpace + fHouse.MapEdWorkers[I].Count]);
+      Button_WorkerInside[I].Show;
+      Label_WorkersInside.Show;
+    end else
+      Button_WorkerInside[I].Hide;
+end;
+
+procedure TKMMapEdHouse.WorkersInside(Sender : TObject; Shift: TShiftState);
+var I : Integer;
+  Ut : TKMUnitType;
+begin
+
+  UT := TKMUnitType(TKMButtonFlat(Sender).Tag);
+  I := IfThen(ssShift in Shift, 5, 1);
+
+  If ssRight in Shift then
+    fHouse.ExcludeWorkerInside(UT, I)
+  else
+    fHouse.IncludeWorkerInside(UT, I);
+  RefreshWorkersInside(-1);
 end;
 
 end.

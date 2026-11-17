@@ -288,6 +288,7 @@ type
     LastCellID : Byte;
     Indestructible : Boolean;
     FlagColor : Cardinal;
+    MapEdWorkers : TKMUnitPlan;
 
     constructor Create(aUID: Integer; aHouseType: TKMHouseType; PosX, PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
     constructor Load(LoadStream: TKMemoryStream); override;
@@ -382,6 +383,10 @@ type
     function GetWorkersIcons : TKMWordArray;
     function GetWorker(aIndex: Integer) : Pointer;
 
+    procedure CreateWorkerInside(aUnitType : TKMUnitType; aCount : Integer); //game only
+    function IncludeWorkerInside(aUnitType : TKMUnitType; aCount : Integer) : Boolean; //MapEd only
+    function ExcludeWorkerInside(aUnitType : TKMUnitType; aCount : Integer) : Boolean; //MapEd only
+    function GetMapEdWorkersFreeSpace : Integer;
 
     function GetHealth: Word;
     function GetBuildWoodDelivered: Byte;
@@ -1378,6 +1383,17 @@ begin
   begin
     WareOrder[1] := 1000;
     WareOrder[2] := 0;
+  end;
+
+  If gGameParams.IsMapEditor then
+  begin
+    SetLength(MapEdWorkers, Length(HSpec.Workers));
+    for I := 0 to High(MapEdWorkers) do
+    begin
+      MapEdWorkers[I].UnitType := HSpec.Workers[I].UnitType;
+      MapEdWorkers[I].Count := 0;
+    end;
+
   end;
   AfterCreate(false);
 end;
@@ -2630,6 +2646,66 @@ begin
   Assert(aIndex < WorkersCount);
   Result := fWorkers[aIndex];
 end;
+
+procedure TKMHouse.CreateWorkerInside(aUnitType : TKMUnitType; aCount : Integer); //game only
+var
+  U: TKMUnit;
+  I : Integer;
+begin
+  Assert(not gGameParams.IsMapEditor, 'TKMHouse.CreateWorkerInside(aUnitType : TKMUnitType), called in MapEditor');
+  for I := 1 to aCount do
+  begin
+    If not CanHasWorker(aUnitType) then
+      Exit;
+    U := gHands[Owner].TrainUnit(aUnitType, Self);
+    U.Visible := False;
+    U.Home := Self; //When walking out Home is used to remove recruit from barracks
+    AssignWorker(U);
+    gHands[Owner].Stats.UnitCreated(aUnitType, False);
+  end;
+  SetState(hstIdle);
+end;
+
+function TKMHouse.IncludeWorkerInside(aUnitType : TKMUnitType; aCount : Integer) : Boolean; //MapEd only
+var I, J : Integer;
+begin
+
+  Result := false;
+  J := 0;
+  for I := 0 to High(MapEdWorkers) do
+    Inc(J, MapEdWorkers[I].Count);
+
+  If J >= MaxWorkers then
+    Exit;
+
+  for I := 0 to High(MapEdWorkers) do
+    If (MapEdWorkers[I].UnitType = aUnitType) and (MapEdWorkers[I].Count < MaxWorkers(aUnitType) ) then
+    begin
+      MapEdWorkers[I].Count := EnsureRange(MapEdWorkers[I].Count + aCount, 0, HSpec.Workers[I].Count);
+      Exit(true)
+    end;
+end;
+
+function TKMHouse.ExcludeWorkerInside(aUnitType : TKMUnitType; aCount : Integer) : Boolean; //MapEd only
+var I : Integer;
+begin
+  Result := false;
+  for I := 0 to High(MapEdWorkers) do
+    If (MapEdWorkers[I].UnitType = aUnitType) and (MapEdWorkers[I].Count > 0) then
+    begin
+      MapEdWorkers[I].Count := EnsureRange(MapEdWorkers[I].Count - aCount, 0, HSpec.Workers[I].Count);
+      Exit(true)
+    end;
+end;
+
+function TKMHouse.GetMapEdWorkersFreeSpace : Integer;
+var I : Integer;
+begin
+  Result := MaxWorkers;
+  for I := 0 to High(MapEdWorkers) do
+    Dec(Result, MapEdWorkers[I].Count);
+end;
+
 
 function TKMHouse.GetHealth:word;
 begin

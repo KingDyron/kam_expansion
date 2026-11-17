@@ -1321,6 +1321,18 @@ begin
                           end else
                             AddError('ctHouseToDeliverSet without prior declaration of House');
                          end;
+    ctHouseAddWorkerInside: if fLastHand <> HAND_NONE then
+                           begin
+                              if (fLastHouse <> nil) then
+                              begin
+                                If gGameParams.IsMapEditor then
+                                  fLastHouse.IncludeWorkerInside(UNIT_ID_TO_TYPE[P[0]], P[1])
+                                else
+                                  fLastHouse.CreateWorkerInside(UNIT_ID_TO_TYPE[P[0]], P[1]);
+                                //fLastHouse.HouseToDeliver := gHands.HousesHitTest(P[0], P[1]);
+                              end else
+                                AddError('ctHouseAddWorkerInside without prior declaration of House');
+                           end;
 
    end;
 end;
@@ -1802,6 +1814,10 @@ begin
           end;
         If H.HouseToDeliver <> nil then
           AddCommand(ctHouseToDeliverSet, [H.HouseToDeliver.Entrance.X, H.HouseToDeliver.Entrance.Y]);
+
+        for J := 0 to High(H.MapEdWorkers) do
+          If H.MapEdWorkers[J].Count > 0 then
+            AddCommand(ctHouseAddWorkerInside, [UNIT_TYPE_TO_ID[H.MapEdWorkers[J].UnitType], H.MapEdWorkers[J].Count]);
 
 
       end;
