@@ -1682,7 +1682,7 @@ begin
     Label_House.Show;
     Image_PlayerFlag.Show;
     Image_House_Logo.Show;
-    Image_House_Worker.Visible := gRes.Houses[aHouse.HouseType].CanHasWorker;
+    Image_House_Worker.Visible := gRes.Houses[aHouse.HouseType].CanHaveWorker;
     Button_House_Worker.Hide;
     HealthBar_House.Show;
     Panel_House.Show;
@@ -1691,7 +1691,7 @@ begin
 
   Image_House_Worker.Hide;
   if not (aHouse.HouseType in [htBarracks, htSchool, htCottage, htHouse]) then
-    Button_House_Worker.Visible := gRes.Houses[aHouse.HouseType].CanHasWorker or (aHouse.HouseType in [htSiegeTower])
+    Button_House_Worker.Visible := gRes.Houses[aHouse.HouseType].CanHaveWorker or (aHouse.HouseType in [htSiegeTower])
   else
     Button_House_Worker.Visible := false;
   Button_Bell.Hide;
@@ -2826,7 +2826,7 @@ end;
 
 procedure TKMGUIGameHouse.HandleHouseClosedForWorker(aHouse: TKMHouse);
 begin
-  if aHouse.CanNotBeOccupied and (aHouse.HSpec.CanHasWorker or (aHouse.HouseType in [htSiegeTower])) then
+  if aHouse.CanNotBeOccupied and (aHouse.HSpec.CanHaveWorker or (aHouse.HouseType in [htSiegeTower])) then
   begin
     Button_House_Worker.ShowImageEnabled := False;
     Image_House_Worker_Closed.Show;

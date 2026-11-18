@@ -64,7 +64,7 @@ type
     procedure IncAnimStep;override;
     procedure IncSnowStepPearl;
     procedure WareAddToIn(aWare: TKMWareType; aCount: Integer = 1; aFromStaticScript: Boolean = False); override;
-    function CanHasWorker(aType : TKMUnitType) : Boolean; override;
+    function CanHaveWorker(aType : TKMUnitType) : Boolean; override;
     procedure Demolish(aFrom: TKMHandID; IsSilent: Boolean = False); override;
     //new
     function CanBuild : Boolean;
@@ -331,7 +331,7 @@ begin
   inherited;
 end;
 
-function TKMHousePearl.CanHasWorker(aType : TKMUnitType) : Boolean;
+function TKMHousePearl.CanHaveWorker(aType : TKMUnitType) : Boolean;
 begin
     Result := (fPearlType = ptAgros)
               and Completed

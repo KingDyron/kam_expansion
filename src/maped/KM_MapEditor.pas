@@ -117,6 +117,7 @@ type
     function HitTest(X,Y: Integer): TKMMapEdMarker;
     function HumanCount: Integer;
     procedure AddWorkersToHouses(aAddBoots : Boolean);
+    procedure AddWorkersInsideHouses;
     procedure MouseDown(Button: TMouseButton);
     procedure MouseMove;
     procedure MouseUp(Button: TMouseButton; aOverMap: Boolean);
@@ -1147,6 +1148,11 @@ end;
 procedure TKMMapEditor.AddWorkersToHouses(aAddBoots : Boolean);
 begin
   gMySpectator.Hand.AddWorkersToHouses(aAddBoots);
+end;
+
+procedure TKMMapEditor.AddWorkersInsideHouses;
+begin
+  gMySpectator.Hand.AddWorkersInsideHouses;
 end;
 
 procedure TKMMapEditor.Reset;

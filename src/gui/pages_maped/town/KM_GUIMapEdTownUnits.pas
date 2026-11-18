@@ -43,6 +43,7 @@ type
       CheckBox_AddBoots: TKMCheckBox;
       Button_Citizen: array [0..high(School_Order)] of TKMButtonFlat;
       Button_AddUnitsToHouse:TKMButton;
+      Button_AddUnitsInsideHouses:TKMButton;
     procedure CreateButtons; override;
   public
 
@@ -151,6 +152,10 @@ begin
   lineY := Button_UnitCancel.Bottom + 3;
   Button_AddUnitsToHouse := TKMButton.Create(Panel_Units, 0, lineY, Panel_Units.Width, 30, gResTexts[1828], bsGame);
   Button_AddUnitsToHouse.OnClick := Town_UnitChange;
+  Inc(lineY, 33);
+  Button_AddUnitsInsideHouses := TKMButton.Create(Panel_Units, 0, lineY, Panel_Units.Width, 30, gResTexts[2381], bsGame);
+  Button_AddUnitsInsideHouses.Hint := gResTexts[2382];
+  Button_AddUnitsInsideHouses.OnClick := Town_UnitChange;
 
   CheckBox_AddBoots := TKMCheckBox.Create(Panel_Units, 9, lineY + 35, Panel_Units.Width, 25, gResTexts[1819], fntMetal);
   CheckBox_AddBoots.OnClick := Town_UnitChange;
@@ -348,7 +353,11 @@ end;
 
 procedure TKMMapEdTownUnits.Town_UnitChange(Sender: TObject);
 begin
-
+  If sender = Button_AddUnitsInsideHouses then
+  begin
+    gGame.MapEditor.AddWorkersInsideHouses;
+    Exit;
+  end else
   if sender = Button_AddUnitsToHouse then
   begin
     gGame.MapEditor.AddWorkersToHouses(CheckBox_AddBoots.Checked);

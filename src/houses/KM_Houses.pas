@@ -375,7 +375,7 @@ type
     function CurrentWorkersTypeCount : TKMUnitPlan;
     function MaxWorkers : Byte;overload;
     function MaxWorkers(aType : TKMUnitType) : Byte;overload;
-    function CanHasWorker(aType : TKMUnitType) : Boolean; virtual;
+    function CanHaveWorker(aType : TKMUnitType) : Boolean; virtual;
     procedure AssignWorker(aWorker: Pointer);
     procedure RemoveWorker(aWorker: Pointer);
     function AcceptsWorker(aWorker: Pointer) : Boolean; virtual;
@@ -386,6 +386,7 @@ type
     procedure CreateWorkerInside(aUnitType : TKMUnitType; aCount : Integer); //game only
     function IncludeWorkerInside(aUnitType : TKMUnitType; aCount : Integer) : Boolean; //MapEd only
     function ExcludeWorkerInside(aUnitType : TKMUnitType; aCount : Integer) : Boolean; //MapEd only
+    procedure IncludeAllWorkersInside; //MapEd only
     function GetMapEdWorkersFreeSpace : Integer;
 
     function GetHealth: Word;
@@ -907,7 +908,7 @@ type
 
       function AcceptsWorker(aWorker: Pointer) : Boolean; override;
       procedure CheckWorkersForSlot; override;
-      function CanHasWorker(aType : TKMUnitType) : Boolean; override;
+      function CanHaveWorker(aType : TKMUnitType) : Boolean; override;
       constructor Create(aUID: Integer; aHouseType: TKMHouseType; PosX, PosY: Integer; aOwner: TKMHandID; aBuildState: TKMHouseBuildState);
       constructor Load(LoadStream: TKMemoryStream); override;
       procedure Save(SaveStream: TKMemoryStream); override;
@@ -1073,7 +1074,7 @@ end;
 
 constructor TKMHouseSketch.Create(aUID: Integer; aHouseType: TKMHouseType; PosX, PosY: Integer; aOwner: TKMHandID);
 begin
-  Assert((PosX <> 0) and (PosY <> 0)); // Can create only on map
+  //Assert((PosX <> 0) and (PosY <> 0)); // Can create only on map
 
   inherited Create(etHouse, aUID, aOwner);
 
@@ -2514,7 +2515,7 @@ begin
 
 end;
 
-function TKMHouse.CanHasWorker(aType : TKMUnitType) : Boolean;
+function TKMHouse.CanHaveWorker(aType : TKMUnitType) : Boolean;
   function HasWorkerType(aWType : TKMUnitType) : Boolean;
   var I : Integer;
   begin
@@ -2655,7 +2656,7 @@ begin
   Assert(not gGameParams.IsMapEditor, 'TKMHouse.CreateWorkerInside(aUnitType : TKMUnitType), called in MapEditor');
   for I := 1 to aCount do
   begin
-    If not CanHasWorker(aUnitType) then
+    If not CanHaveWorker(aUnitType) then
       Exit;
     U := gHands[Owner].TrainUnit(aUnitType, Self);
     U.Visible := False;
@@ -2678,10 +2679,13 @@ begin
   If J >= MaxWorkers then
     Exit;
 
+  If not CanHaveWorker(aUnitType) then
+    Exit;
   for I := 0 to High(MapEdWorkers) do
     If (MapEdWorkers[I].UnitType = aUnitType) and (MapEdWorkers[I].Count < MaxWorkers(aUnitType) ) then
     begin
       MapEdWorkers[I].Count := EnsureRange(MapEdWorkers[I].Count + aCount, 0, HSpec.Workers[I].Count);
+      SetState(hstIdle);
       Exit(true)
     end;
 end;
@@ -2690,12 +2694,31 @@ function TKMHouse.ExcludeWorkerInside(aUnitType : TKMUnitType; aCount : Integer)
 var I : Integer;
 begin
   Result := false;
+
+  If not CanHaveWorker(aUnitType) then
+    Exit;
+
   for I := 0 to High(MapEdWorkers) do
     If (MapEdWorkers[I].UnitType = aUnitType) and (MapEdWorkers[I].Count > 0) then
     begin
       MapEdWorkers[I].Count := EnsureRange(MapEdWorkers[I].Count - aCount, 0, HSpec.Workers[I].Count);
-      Exit(true)
+      Result := true;
     end;
+  SetState(hstEmpty);
+  for I := 0 to High(MapEdWorkers) do
+    If MapEdWorkers[I].Count > 0 then
+    begin
+      SetState(hstIdle);
+      Exit;
+    end;
+
+end;
+
+procedure TKMHouse.IncludeAllWorkersInside;
+var I : Integer;
+begin
+  for I := 0 to High(HSpec.Workers) do
+    IncludeWorkerInside(HSpec.Workers[I].UnitType, HSpec.Workers[I].Count);
 end;
 
 function TKMHouse.GetMapEdWorkersFreeSpace : Integer;
@@ -5182,7 +5205,7 @@ begin
   //and is not closed for worker and not a barracks
   if not gGameParams.MBD.IsRealism then
     if not fDisableUnoccupiedMessage and not HasWorker and not CanNotBeOccupied
-    and gRes.Houses[fType].CanHasWorker and (fType <> htBarracks) and ShowUnoccupiedMSG then
+    and gRes.Houses[fType].CanHaveWorker and (fType <> htBarracks) and ShowUnoccupiedMSG then
     begin
       Dec(fTimeSinceUnoccupiedReminder);
       if fTimeSinceUnoccupiedReminder = 0 then
@@ -8524,7 +8547,7 @@ begin
   Result := Result and SlotHasAnyWare(gRes.Units[UT].ProducesWares);
 end;
 
-function TKMHouseProdThatch.CanHasWorker(aType: TKMUnitType): Boolean;
+function TKMHouseProdThatch.CanHaveWorker(aType: TKMUnitType): Boolean;
 begin
   Result := Inherited;
   Result := Result and SlotHasAnyWare(gRes.Units[aType].ProducesWares);

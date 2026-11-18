@@ -404,6 +404,7 @@ type
     function GetGroupsCount: TKMGroupTypeValidArray;
     function GetBestUnit: TKMUnitType;
     procedure AddWorkersToHouses(aAddBoots : Boolean);
+    procedure AddWorkersInsideHouses;
 
     function GetFieldsCount: Integer;
     procedure GetFieldPlans(aList: TKMPointTagList; const aRect: TKMRect; aIncludeFake: Boolean);
@@ -1162,7 +1163,7 @@ var
   procedure FillHSketchByHouse(out aHouseSketchTmp: TKMHouseSketchEdit; aHouse: TKMHouse);
   begin
     if not aHouse.IsDestroyed // not destroyed
-      and (aHouse.HouseType in similarTypes)
+      and ((aHouse.HouseType in similarTypes) or (htAny in similarTypes))
       {and (not aConsiderHousePlan or aHouse.IsComplete)} then
     begin
       aHouseSketchTmp.SetHouseUID(aHouse.UID);
@@ -1174,7 +1175,7 @@ var
   procedure FillHSketchByHPlan(out aHouseSketchTmp: TKMHouseSketchEdit; aHousePlan: TKMHousePlan);
   begin
     if not aHousePlan.IsEmpty
-      and (aHousePlan.HouseType in similarTypes) then
+      and ((aHousePlan.HouseType in similarTypes) or (htAny in similarTypes)) then
     begin
       aHouseSketchTmp.SetHouseUID(aHousePlan.UID);
       aHouseSketchTmp.SetHouseType(aHousePlan.HouseType);
@@ -3926,7 +3927,7 @@ begin
     //check first if units where added automatically
     U := gHands.UnitsHitTest(P.X, P.Y);
     if U <> nil then
-      if (U.Owner = self.ID) and H.CanHasWorker(U.UnitType) then
+      if (U.Owner = self.ID) and H.CanHaveWorker(U.UnitType) then
         Continue;
 
     if H.HouseType = htStore then
@@ -3973,6 +3974,14 @@ begin
       end;
 
   end;
+
+end;
+
+procedure TKMHand.AddWorkersInsideHouses;
+var I: integer;
+begin
+  for I := 0 to Houses.Count - 1 do
+    Houses[I].IncludeAllWorkersInside;
 
 end;
 

@@ -344,7 +344,7 @@ begin
   bestBid := MaxSingle;
 
   for I := 0 to Count - 1 do
-    if Houses[I].CanHasWorker(TKMUnit(aWorker).UnitType) and Houses[I].AcceptsWorker(aWorker) then
+    if Houses[I].CanHaveWorker(TKMUnit(aWorker).UnitType) and Houses[I].AcceptsWorker(aWorker) then
     begin
       //Recruits should not go to a barracks with ware delivery switched off or with not accept flag for recruits
       if (Houses[I].HouseType = htBarracks)

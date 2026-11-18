@@ -305,7 +305,7 @@ var
     aUnitReq[utBuilder] := aUnitReq[utBuilder] * Byte(fPredictor.CityCompleted);
     // Convert planned houses to units
     for HT := HOUSE_MIN to HOUSE_MAX do
-      if gRes.Houses[HT].CanHasWorker AND (HT <> htBarracks) then
+      if gRes.Houses[HT].CanHaveWorker AND (HT <> htBarracks) then
         Inc(aUnitReq[gRes.Houses[HT].WorkerType], fBuilder.Planner.PlannedHouses[HT].Count);
     // Dismiss units
     for UT in DISMISS_UNITS do
@@ -375,7 +375,7 @@ begin
 
     // Convert houses to required units
     for HT := HOUSE_MIN to HOUSE_MAX do
-      if gRes.Houses[HT].CanHasWorker AND (HT <> htBarracks) then
+      if gRes.Houses[HT].CanHaveWorker AND (HT <> htBarracks) then
         Inc(UnitTrain[gRes.Houses[HT].WorkerType], Houses[HT]);
 
     UnitReq[utRecruit] := 0;

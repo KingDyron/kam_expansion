@@ -253,7 +253,7 @@ begin
     if house.IsValid(htAny, false, true) then
     if not house.CanNotBeOccupied then
     if not (house.HouseType in [htBarracks, htStore, htInn, htMarket]) then
-    if gRes.Houses[house.HouseType].CanHasWorker then
+    if gRes.Houses[house.HouseType].CanHaveWorker then
       for K := 0 to high(house.HSpec.Workers) do
         begin
           UT := house.HSpec.Workers[K].UnitType;

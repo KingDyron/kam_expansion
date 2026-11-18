@@ -1649,11 +1649,12 @@ var
   nextUnit: TKMUnit;
   nextUnitGroup: TKMUnitGroup;
   ID : Integer;
-  isShift : Boolean;
+  isShift, isCtrl : Boolean;
 begin
   if gMySpectator.Hand.InCinematic then
     Exit;
   isShift := ssShift in gCursor.SState;
+  isCtrl := ssCtrl in gCursor.SState;
 
   if gMySpectator.Selected is TKMUnit then
   begin
@@ -1667,7 +1668,7 @@ begin
   end else
   if gMySpectator.Selected is TKMHouse then
   begin
-    nextHouse := gHands.GetNextHouseWSameType(TKMHouse(gMySpectator.Selected), isShift);
+    nextHouse := gHands.GetNextHouseWSameType(TKMHouse(gMySpectator.Selected), isShift, isCtrl);
     if nextHouse <> nil then
     begin
       gMySpectator.Selected := nextHouse;

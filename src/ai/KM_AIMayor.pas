@@ -315,7 +315,7 @@ begin
     if house.IsValid(htAny, false, true) then
     if not house.CanNotBeOccupied then
     if not (house.HouseType in [htBarracks, htStore, htInn, htMarket]) then
-    if gRes.Houses[house.HouseType].CanHasWorker then
+    if gRes.Houses[house.HouseType].CanHaveWorker then
     begin
       FillChar(tmpUnitCnt, SizeOf(tmpUnitCnt), #0); //Clear up
 
@@ -330,7 +330,7 @@ begin
           if J > 0 then
           begin
             UT := house.HSpec.Workers[K].UnitType;
-            if house.CanHasWorker(UT) then
+            if house.CanHaveWorker(UT) then
               if tmpUnitCnt[UT] < house.HSpec.Workers[K].Count then
               begin
                 Inc(UnitReq[UT], 1);

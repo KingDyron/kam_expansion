@@ -130,7 +130,7 @@ type
     property Sight: Smallint read fHouseDat.Sight;
     property WorkerType: TKMUnitType read GetWorkerType;
     property GUIWorkerType: TKMUnitType read GetGUIWorkerType;
-    function CanHasWorker: Boolean;overload;
+    function CanHaveWorker: Boolean;overload;
     function CanHasWorker(aUnitType : TKMUnitType): Boolean;overload;
     function HasStoneWariants : Byte;
     function GetStoneWariant(aID : Integer) : Integer;
@@ -583,7 +583,7 @@ begin
 end;
 
 // Returns True if this house could have a worker (or occupant)
-function TKMHouseSpec.CanHasWorker: Boolean;
+function TKMHouseSpec.CanHaveWorker: Boolean;
 var I : Integer;
 begin
   //Result := (MaxWorkersCount > 0) and (WorkerTypes <> []);

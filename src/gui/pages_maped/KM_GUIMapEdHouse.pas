@@ -1290,7 +1290,7 @@ begin
   HandleHouseClosedForWorker(fHouse);
   Button_House_Worker.Hint := Format(gResTexts[TX_HOUSES_CLOSED_FOR_WORKER_HINT], [gRes.Units[houseSpec.WorkerType].GUIName]);
   Button_House_Worker.FlagColor := gHands[fHouse.Owner].FlagColor;
-  Button_House_Worker.Visible := gRes.Houses[fHouse.HouseType].CanHasWorker;
+  Button_House_Worker.Visible := gRes.Houses[fHouse.HouseType].CanHaveWorker;
   Image_House_Worker.TexID := gRes.Units[houseSpec.WorkerType].GUIIcon;
   Image_House_Worker.FlagColor := gHands[fHouse.Owner].FlagColor;
   Image_House_Worker.Hint := gRes.Units[houseSpec.WorkerType].GUIName;
@@ -2104,13 +2104,13 @@ begin
     begin
       If aTop <> -1 then
         Button_WorkerInside[I].Top := aTop + 20 + (I div 5 * 38);
-
       UT := fHouse.HSpec.Workers;
+      Button_WorkerInside[I].Enabled := fHouse.CanHaveWorker(UT[I].UnitType);
       Button_WorkerInside[I].TexID := gRes.Units[UT[I].UnitType].GuiIcon;
       Button_WorkerInside[I].Hint := gRes.Units[UT[I].UnitType].GUIName;
       Button_WorkerInside[I].Tag := byte(UT[I].UnitType);
       Button_WorkerInside[I].Caption := Format('%d/%d', [fHouse.MapEdWorkers[I].Count,
-                                                          freeSpace + fHouse.MapEdWorkers[I].Count]);
+                                                          Min(freeSpace + fHouse.MapEdWorkers[I].Count, fHouse.HSpec.Workers[I].Count)]);
       Button_WorkerInside[I].Show;
       Label_WorkersInside.Show;
     end else
