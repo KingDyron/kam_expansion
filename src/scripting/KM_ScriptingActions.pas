@@ -5954,7 +5954,7 @@ begin
         U.SetStats(aStats);
     end
     else
-      LogIntParamWarn('Actions.UnitBlockWalking', [aUnitID]);
+      LogIntParamWarn('Actions.UnitSetStats', [aUnitID]);
   except
     gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
     raise;
@@ -5973,7 +5973,7 @@ begin
         U.Thought := aThought;
     end
     else
-      LogIntParamWarn('Actions.UnitBlockWalking', [aUnitID]);
+      LogIntParamWarn('Actions.UnitSetThought', [aUnitID]);
   except
     gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
     raise;
