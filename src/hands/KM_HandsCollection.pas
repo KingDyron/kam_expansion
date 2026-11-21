@@ -1354,6 +1354,8 @@ procedure TKMHandsCollection.RevealForTeam(aPlayer: TKMHandID; const Pos: TKMPoi
 var
   I: Integer;
 begin
+  If not fHandsList[aPlayer].ShareFOW[aPlayer] then
+    Exit;
   if fHandsList[aPlayer].IsHuman then
     fHandsList[aPlayer].FogOfWar.RevealCircle(Pos,Radius,Amount, aType)
   else
