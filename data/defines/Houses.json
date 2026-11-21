@@ -1738,9 +1738,9 @@
 			"UnoccupiedMsgId" : -1,
 			"WorkerTypes" : 
 			[
-				{"UnitType" : "utRecruit","MaxCount" : 1}
+				{"UnitType" : "utRecruit","MaxCount" : 255}
 			],
-			"MaxWorkersCount" : 1,
+			"MaxWorkersCount" : 255,
 			"CanOverfill" : False,
 			"GatheringScript" : "gsNone",
 			"WareInput" : ["wtWarfare","wtNone","wtNone","wtNone","wtNone","wtNone"],
