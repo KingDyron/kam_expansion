@@ -2574,24 +2574,13 @@
 					{"VirtualWareName" : "vtHerbs","Count" : 10}
 				]
 			},
+			"FullUnitAnimations" : 
+			[	
+				{"ActionType" : "uaWalk", "StartStep" : 19087, "StepsCount" : 10},
+				{"ActionType" : "uaWork", "StartStep" : 19167, "StepsCount" : 15}
+			],
 			"Animations" : 
 			[
-				{"ActionType" : "uaWalk","Dir" : "dirN","X" : 0,"Y" : 0,"StepStart" : 10096,"Count" : 15},
-				{"ActionType" : "uaWalk","Dir" : "dirNE","X" : 0,"Y" : 0,"StepStart" : 10080,"Count" : 15},
-				{"ActionType" : "uaWalk","Dir" : "dirE","X" : 0,"Y" : 0,"StepStart" : 10063,"Count" : 15},
-				{"ActionType" : "uaWalk","Dir" : "dirSE","X" : 0,"Y" : 0,"StepStart" : 10176,"Count" : 15},
-				{"ActionType" : "uaWalk","Dir" : "dirS","X" : 0,"Y" : 0,"StepStart" : 10160,"Count" : 15},
-				{"ActionType" : "uaWalk","Dir" : "dirSW","X" : 0,"Y" : 0,"StepStart" : 10144,"Count" : 15},
-				{"ActionType" : "uaWalk","Dir" : "dirW","X" : 0,"Y" : 0,"StepStart" : 10128,"Count" : 15},
-				{"ActionType" : "uaWalk","Dir" : "dirNW","X" : 0,"Y" : 0,"StepStart" : 10112,"Count" : 15},
-				{"ActionType" : "uaWork","Dir" : "dirN","X" : 0,"Y" : 0,"StepStart" : 9951,"Count" : 14},
-				{"ActionType" : "uaWork","Dir" : "dirNE","X" : 0,"Y" : 0,"StepStart" : 9934,"Count" : 15},
-				{"ActionType" : "uaWork","Dir" : "dirE","X" : 0,"Y" : 0,"StepStart" : 10046,"Count" : 15},
-				{"ActionType" : "uaWork","Dir" : "dirSE","X" : 0,"Y" : 0,"StepStart" : 10030,"Count" : 15},
-				{"ActionType" : "uaWork","Dir" : "dirS","X" : 0,"Y" : 0,"StepStart" : 10014,"Count" : 15},
-				{"ActionType" : "uaWork","Dir" : "dirSW","X" : 0,"Y" : 0,"StepStart" : 9998,"Count" : 15},
-				{"ActionType" : "uaWork","Dir" : "dirW","X" : 0,"Y" : 0,"StepStart" : 9982,"Count" : 15},
-				{"ActionType" : "uaWork","Dir" : "dirNW","X" : 0,"Y" : 0,"StepStart" : 9966,"Count" : 15},
 				{"ActionType" : "uaSpec","Dir" : "dirN","X" : 0,"Y" : 0,"StepStart" : 4096,"Count" : 8},
 				{"ActionType" : "uaSpec","Dir" : "dirNE","X" : 0,"Y" : 0,"StepStart" : 4088,"Count" : 8},
 				{"ActionType" : "uaSpec","Dir" : "dirE","X" : 0,"Y" : 0,"StepStart" : 4080,"Count" : 8},
@@ -2608,14 +2597,14 @@
 				{"ActionType" : "uaDie","Dir" : "dirSW","X" : 0,"Y" : 0,"StepStart" : 5236,"Count" : 15},
 				{"ActionType" : "uaDie","Dir" : "dirW","X" : 0,"Y" : 0,"StepStart" : 5917,"Count" : 18},
 				{"ActionType" : "uaDie","Dir" : "dirNW","X" : 0,"Y" : 0,"StepStart" : 5917,"Count" : 18},
-				{"ActionType" : "uaWalkArm","Dir" : "dirN","X" : 10,"Y" : -42,"StepStart" : 4962,"Count" : 8},
-				{"ActionType" : "uaWalkArm","Dir" : "dirNE","X" : -1,"Y" : -40,"StepStart" : 4978,"Count" : 8},
-				{"ActionType" : "uaWalkArm","Dir" : "dirE","X" : 2,"Y" : -40,"Steps" : [4988, 4999, 5000, 5001, 5002, 5003, 4986, 4987]},
-				{"ActionType" : "uaWalkArm","Dir" : "dirSE","X" : 1,"Y" : -44,"StepStart" : 4970,"Count" : 8},
-				{"ActionType" : "uaWalkArm","Dir" : "dirS","X" : -6,"Y" : -45,"StepStart" : 4962,"Count" : 8},
-				{"ActionType" : "uaWalkArm","Dir" : "dirSW","X" : -10,"Y" : -46,"StepStart" : 4978,"Count" : 8},
-				{"ActionType" : "uaWalkArm","Dir" : "dirW","X" : 4,"Y" : -45,"Steps" : [4988, 4999, 5000, 5001, 5002, 5003, 4986, 4987]},
-				{"ActionType" : "uaWalkArm","Dir" : "dirNW","X" : 13,"Y" : -43,"StepStart" : 4970,"Count" : 8}
+				{"ActionType" : "uaWalkArm","Dir" : "dirN","X" : 10,"Y" : -47,"StepStart" : 4962,"Count" : 8},
+				{"ActionType" : "uaWalkArm","Dir" : "dirNE","X" : -1,"Y" : -45,"StepStart" : 4978,"Count" : 8},
+				{"ActionType" : "uaWalkArm","Dir" : "dirE","X" : 2,"Y" : -45,"Steps" : [4988, 4999, 5000, 5001, 5002, 5003, 4986, 4987]},
+				{"ActionType" : "uaWalkArm","Dir" : "dirSE","X" : 1,"Y" : -49,"StepStart" : 4970,"Count" : 8},
+				{"ActionType" : "uaWalkArm","Dir" : "dirS","X" : -6,"Y" : -50,"StepStart" : 4962,"Count" : 8},
+				{"ActionType" : "uaWalkArm","Dir" : "dirSW","X" : -10,"Y" : -51,"StepStart" : 4978,"Count" : 8},
+				{"ActionType" : "uaWalkArm","Dir" : "dirW","X" : 4,"Y" : -51,"Steps" : [4988, 4999, 5000, 5001, 5002, 5003, 4986, 4987]},
+				{"ActionType" : "uaWalkArm","Dir" : "dirNW","X" : 13,"Y" : -48,"StepStart" : 4970,"Count" : 8}
 			]
 		},
 		{
