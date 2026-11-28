@@ -72,7 +72,7 @@ type
     function GetGroupsMemberInRadius(const aLoc: TKMPoint; aSqrRadius: Single; aIndex: TKMHandID; aAlliance: TKMAllianceType; var aUGA: TKMUnitGroupArray; aTypes: TKMGroupTypeSet = GROUP_TYPES_VALID): TKMUnitArray;
     function GetClosestUnit(const aLoc: TKMPoint; aIndex: TKMHandID; aAlliance: TKMAllianceType): TKMUnit;
     function GetClosestUnitForAttack(const aGroup: Pointer; aIndex: TKMHandID; aAlliance: TKMAllianceType): TKMUnit;
-    function GetClosestHouse(const aLoc: TKMPoint; aIndex: TKMHandID; aAlliance: TKMAllianceType; aTypes: TKMHouseTypeSet = HOUSES_VALID; aOnlyCompleted: Boolean = True): TKMHouse;overload;
+    function GetClosestHouse(const aLoc: TKMPoint; aIndex: TKMHandID; aAlliance: TKMAllianceType; aTypes: TKMHouseTypeSet = HOUSES_VALID; aOnlyCompleted: Boolean = True; aPass : TKMTerrainPassability = tpWalk): TKMHouse;overload;
     function GetClosestHouse(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aWareSet : TKMWareTypeSet = [wtAll]; aMaxDistance : Single = 999; aOnlyCompleted: Boolean = True): TKMHouse;overload;
     function HasHousePlanNearby(aLoc : TKMPoint; aHouseTypeSet : TKMHouseTypeSet; aMaxDistance : Single = 999): Integer;
     function IsHousePlanAt(aLoc : TKMPoint) : Boolean;
@@ -630,7 +630,7 @@ end;
 //Check opponents for closest House with given Alliance setting
 //Note: we check by house cells, not by entrance
 function TKMHandsCollection.GetClosestHouse(const aLoc: TKMPoint; aIndex: TKMHandID; aAlliance: TKMAllianceType;
-                                            aTypes: TKMHouseTypeSet = HOUSES_VALID; aOnlyCompleted: Boolean = True): TKMHouse;
+                                            aTypes: TKMHouseTypeSet = HOUSES_VALID; aOnlyCompleted: Boolean = True; aPass : TKMTerrainPassability = tpWalk): TKMHouse;
 var
   I: Integer;
   H: TKMHouse;
@@ -642,7 +642,9 @@ begin
   if (aIndex <> I) and (Hands[aIndex].Alliances[I] = aAlliance) then
   begin
     H := fHandsList[I].Houses.FindHouse(aTypes, aLoc.X, aLoc.Y, 1, aOnlyCompleted);
-    if (H <> nil) and ((Result = nil) or (H.GetDistance(aLoc) < Result.GetDistance(aLoc))) then
+    if (H <> nil)
+    and (  (Result = nil) or ((H.GetDistance(aLoc) < Result.GetDistance(aLoc)) and gTerrain.RouteCanBeMade(aLoc, H.PointBelowEntrance, aPass)) )
+       then
       Result := H;
   end;
 end;
